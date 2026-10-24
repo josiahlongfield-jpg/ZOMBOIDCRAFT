@@ -49,20 +49,10 @@ jobs:
           -Ploom_version=${{ steps.versions.outputs.loom }}
           -Pfabric_api_version=${{ steps.versions.outputs.api }}
 
-      # When the build fails, print the real Minecraft class layout and method
-      # signatures so mismatched names are quick to fix.
+      # When the build fails, print the real class layout and signatures.
       - name: Probe Minecraft classes
         if: failure()
-        run: |
-          jar=$(find ~/.gradle/caches .gradle -path '*minecraft*' -name '*.jar' -size +10M 2>/dev/null \
-            | grep -iE 'merged|common|minecraft-' | head -1 || true)
-          echo "Minecraft jar: $jar"
-          [ -n "$jar" ] || exit 0
-          unzip -Z1 "$jar" | grep -E '/(Zombie|Husk|ZombieVillager|GuiGraphics[^/]*|Identifier|MobEffects|EntitySpawnReason|PotionContents|Potions|StreamCodec|ByteBufCodecs|CommandSourceStack|Goal|DamageSources|Heightmap)\.class$' || true
-          for c in $(unzip -Z1 "$jar" | grep -E '/(Zombie|LivingEntity|GuiGraphics|CommandSourceStack|Mob)\.class$' | sed 's/\.class$//'); do
-            echo "===== $c"
-            javap -cp "$jar" -protected "${c//\//.}" | grep -iE 'sun|completeUsingItem|useItem|drawString|fill\(|hasPermission|permission|goalSelector|registerGoals|setCanBreakDoors|isBaby|setBaby|hurtServer|kill\(' || true
-          done
+        run: .github/probe.sh
 
       - uses: actions/upload-artifact@v4
         if: success()
