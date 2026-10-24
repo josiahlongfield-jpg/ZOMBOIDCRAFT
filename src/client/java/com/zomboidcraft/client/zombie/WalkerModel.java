@@ -44,6 +44,11 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
     }
 
     public static LayerDefinition createLayer() {
+        return LayerDefinition.create(createMesh(), 64, 64);
+    }
+
+    /** The body with its gear parts; {@link WalkerAddonModel} builds its pieces onto the same bones. */
+    public static MeshDefinition createMesh() {
         MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, 0f);
         PartDefinition root = mesh.getRoot();
         PartDefinition leftArm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
@@ -67,7 +72,7 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
                 .addBox(-5f, -5.5f, -5f, 10f, 0.5f, 10f), PartPose.ZERO);
         root.getChild("body").addOrReplaceChild("pack", CubeListBuilder.create().texOffs(42, 37)
                 .addBox(-4f, 1f, 2f, 8f, 8f, 3f), PartPose.ZERO);
-        return LayerDefinition.create(mesh, 64, 64);
+        return mesh;
     }
 
     /** Shows an arm whole, as a stump with a bone (forearm gone), or not at all. */

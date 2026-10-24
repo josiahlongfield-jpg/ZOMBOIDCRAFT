@@ -8,6 +8,8 @@ public class WalkerRenderState extends ZombieRenderState {
     public Identifier texture = ZomboidCraft.id("textures/entity/walker/civilian_pale.png");
     /** Stable per-zombie number, so each one lolls and sways a little differently. */
     public int variant;
+    /** Atlas for the outfit's 3D pieces, or null when they are turned off. */
+    public Identifier addonTexture;
     public String outfit = "civilian";
     /** 0 none, 1 right forearm, 2 left forearm, 3 right arm, 4 left arm. */
     public int missingLimb;

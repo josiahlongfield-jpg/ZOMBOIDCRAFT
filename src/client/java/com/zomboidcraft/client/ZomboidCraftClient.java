@@ -2,6 +2,7 @@ package com.zomboidcraft.client;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.client.zombie.WalkerAddonModel;
 import com.zomboidcraft.client.zombie.WalkerModel;
 import com.zomboidcraft.client.zombie.WalkerRenderer;
 import net.fabricmc.api.ClientModInitializer;
@@ -19,6 +20,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
+            ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);
             EntityRendererRegistry.<Zombie>register(EntityTypes.ZOMBIE, WalkerRenderer::new);
             EntityRendererRegistry.<Zombie>register(EntityTypes.HUSK, WalkerRenderer::new);
             EntityRendererRegistry.<Zombie>register(EntityTypes.ZOMBIE_VILLAGER, WalkerRenderer::new);

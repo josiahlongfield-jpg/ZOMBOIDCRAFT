@@ -12,6 +12,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderState, WalkerModel> {
     public WalkerRenderer(EntityRendererProvider.Context context) {
         super(context, new WalkerModel(context.bakeLayer(WalkerModel.LAYER)), 0.5f);
+        addLayer(new WalkerAddonLayer(this, new WalkerAddonModel(context.bakeLayer(WalkerAddonModel.LAYER))));
     }
 
     @Override
@@ -25,10 +26,16 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.isAggressive = zombie.isAggressive();
         state.outfit = ZombieLook.outfit(zombie);
         state.missingLimb = ZombieLook.missingLimb(zombie);
+        ZcConfig.Look look = ZcConfig.get().look;
         String name = state.outfit + "_" + ZombieLook.skin(zombie);
-        state.texture = ZcConfig.get().look.hdSkins
-                ? ZomboidCraft.id("textures/entity/walker_hd/" + name + "_" + ZombieLook.damage(zombie) + ".png")
+        String hd = name + "_" + ZombieLook.damage(zombie) + ".png";
+        state.texture = look.hdSkins
+                ? ZomboidCraft.id("textures/entity/walker_hd/" + hd)
                 : ZomboidCraft.id("textures/entity/walker/" + name + ".png");
+        state.addonTexture = !look.outfitPieces || !WalkerAddonParts.PIECES.containsKey(state.outfit) ? null
+                : look.hdSkins
+                ? ZomboidCraft.id("textures/entity/walker_addons_hd/" + hd)
+                : ZomboidCraft.id("textures/entity/walker_addons/" + name + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
     }
 

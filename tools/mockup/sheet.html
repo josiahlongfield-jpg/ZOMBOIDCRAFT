@@ -15,7 +15,9 @@ const VIEWS = [
   { w: 150, kind: 'front' }, { w: 150, kind: 'left' }, { w: 150, kind: 'back' }, { w: 150, kind: 'right' },
   { w: 200, kind: 'head' }, { w: 260, kind: 'pose' },
 ];
-const H = 260, W = VIEWS.reduce((a, v) => a + v.w, 0);
+const K = +(params.get('k') || 1);  // scale for big close-ups
+VIEWS.forEach((v) => { v.w *= K; });
+const H = 260 * K, W = VIEWS.reduce((a, v) => a + v.w, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
 renderer.setSize(W, H);
@@ -42,7 +44,9 @@ floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
 scene.add(floor);
 
 const addons = params.get('addons');
-const texture = new THREE.TextureLoader().load(tex, t => {
+const pieceOutfit = params.get('pieces');
+const texture = new THREE.TextureLoader().load(tex, async t => {
+  if (pieceOutfit) await addPieces(pieceOutfit, params.get('atlas'));
   if (addons) {
     const s = sampler(t.image);
     addAddons(P, addons, {
@@ -56,7 +60,7 @@ texture.colorSpace = THREE.SRGBColorSpace;
 const mat = new THREE.MeshLambertMaterial({ map: texture, alphaTest: 0.5, side: THREE.DoubleSide });
 
 // Minecraft box UVs: (u, v) corner, box w x h x d, in texture pixels. Model faces +z.
-function box(u, v, w, h, d, inflate = 0, sx = w, sy = h, sz = d) {
+function box(u, v, w, h, d, inflate = 0, sx = w, sy = h, sz = d, material = mat, size = 64) {
   const g = new THREE.BoxGeometry(sx + inflate * 2, sy + inflate * 2, sz + inflate * 2);
   const rect = {
     top: [u + d, v, w, d], bottom: [u + d + w, v, w, d], right: [u, v + d, d, h],
@@ -66,13 +70,36 @@ function box(u, v, w, h, d, inflate = 0, sx = w, sy = h, sz = d) {
   const uv = g.attributes.uv;
   order.forEach((f, i) => {
     const [x, y, rw, rh] = rect[f];
-    const u0 = x / 64, u1 = (x + rw) / 64, vt = 1 - y / 64, vb = 1 - (y + rh) / 64;
+    const u0 = x / size, u1 = (x + rw) / size, vt = 1 - y / size, vb = 1 - (y + rh) / size;
     uv.setXY(i * 4 + 0, u0, vt); uv.setXY(i * 4 + 1, u1, vt);
     uv.setXY(i * 4 + 2, u0, vb); uv.setXY(i * 4 + 3, u1, vb);
   });
-  const m = new THREE.Mesh(g, mat);
+  const m = new THREE.Mesh(g, material);
   m.castShadow = true;
   return m;
+}
+
+// 3D add-on pieces from tools/gen_walker_addons.py: boxes in Minecraft model space (y down,
+// face toward -z) hung off the bones, textured from the outfit's atlas.
+async function addPieces(outfit, atlasUrl) {
+  const data = await (await fetch('walker_addons.json')).json();
+  const atlas = await new THREE.TextureLoader().loadAsync(atlasUrl);
+  atlas.magFilter = THREE.NearestFilter; atlas.minFilter = THREE.NearestFilter; atlas.colorSpace = THREE.SRGBColorSpace;
+  const am = new THREE.MeshLambertMaterial({ map: atlas, alphaTest: 0.5 });
+  const bones = { head: P.head, body: P.body, right_arm: P.rarm, left_arm: P.larm, right_leg: P.rleg, left_leg: P.lleg };
+  for (const pc of data.outfits[outfit] || []) {
+    const [x0, y0, z0, x1, y1, z1] = pc.box;
+    const bp = data.pivots[pc.bone], pv = pc.pivot;
+    const w = x1 - x0, h = y1 - y0, d = z1 - z0;
+    const pivotGroup = new THREE.Group();
+    pivotGroup.position.set(pv[0] - bp[0], -(pv[1] - bp[1]), -(pv[2] - bp[2]));
+    const r = pc.rot.map((a) => a * Math.PI / 180);
+    pivotGroup.rotation.set(r[0], -r[1], -r[2], 'ZYX');
+    const m = box(pc.uv[0], pc.uv[1], w, h, d, 0, w, h, d, am, data.size);
+    m.position.set((x0 + x1) / 2 - pv[0], -((y0 + y1) / 2 - pv[1]), -((z0 + z1) / 2 - pv[2]));
+    pivotGroup.add(m);
+    bones[pc.bone].add(pivotGroup);
+  }
 }
 function pivot(x, y, z, mesh, ox, oy, oz) {
   const p = new THREE.Group(); p.position.set(x, y, z);

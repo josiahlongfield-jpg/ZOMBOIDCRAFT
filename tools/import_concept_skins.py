@@ -102,7 +102,14 @@ INSET = 0.1  # units trimmed off each cut, to drop the anti-aliased edge against
 
 def fill_magenta(pix):
     """Replace leftover background pixels with the average of their painted neighbours."""
-    hole = is_magenta(pix) | (pix[..., 0] + pix[..., 2] > 2.2 * pix[..., 1] + 160)
+    r, g, b = pix[..., 0], pix[..., 1], pix[..., 2]
+    hole = is_magenta(pix) | (r + b > 2.2 * g + 160)
+    # edge pixels blended with the background: purple-pink, red and blue both well above green
+    tinted = (np.minimum(r, b) - g > 40) & (np.abs(r - b) < 100)
+    near = np.zeros_like(hole)
+    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1), (2, 0), (-2, 0), (0, 2), (0, -2)):
+        near |= np.roll(hole, (dy, dx), (0, 1))
+    hole |= tinted | (near & (np.minimum(r, b) - g > 15))
     if hole.all():
         return pix
     pix = pix.copy()
@@ -130,14 +137,56 @@ def cut(img, box, part, units_w, out_w, out_h):
     crop = img.crop((round(bx0 + (ux + INSET) * kx), round(by0 + (uy + INSET) * ky),
                      round(bx0 + (ux + uw - INSET) * kx), round(by0 + (uy + uh - INSET) * ky)))
     pix = fill_magenta(np.asarray(crop.convert("RGB"), dtype=np.float32))
-    small = Image.fromarray(pix.clip(0, 255).astype(np.uint8)).resize((out_w, out_h), Image.LANCZOS)
-    return np.asarray(small, dtype=np.float32)
+    return trim_rim(crisp(pix, out_w, out_h))
+
+
+def trim_rim(pix, depth=2):
+    """The art is rendered with a bright rim light along every box edge. On the model the
+    edge is real, so a painted highlight there just looks like a stray line: replace edge
+    texels that are much brighter than the ones just inside with those."""
+    pix = pix.copy()
+    lum = lambda a: a @ np.array([0.3, 0.59, 0.11], np.float32)
+    h, w = pix.shape[:2]
+    for _ in range(depth):
+        for edge, inner in ((np.s_[:, 0], np.s_[:, 1]), (np.s_[:, -1], np.s_[:, -2]),
+                            (np.s_[0, :], np.s_[1, :]), (np.s_[-1, :], np.s_[-2, :])):
+            e, i = pix[edge], pix[inner]
+            bright = lum(e) > lum(i) + 28
+            e[bright] = i[bright]
+            pix[edge] = e
+    return pix
+
+
+def crisp(pix, out_w, out_h, k=6):
+    """Downscale to texels without smearing: each texel takes the median of the sheet pixels it
+    covers, so the AI's square pixels keep hard edges instead of blending into their neighbours."""
+    big = Image.fromarray(pix.clip(0, 255).astype(np.uint8)).resize((out_w * k, out_h * k), Image.BILINEAR)
+    a = np.asarray(big, dtype=np.float32).reshape(out_h, k, out_w, k, 3)
+    return np.median(a, axis=(1, 3))
 
 
 def put(canvas, box, face, pix):
     x, y, w, h = hd.face_rect(box, face)
     canvas[y:y + h, x:x + w, :3] = pix
     canvas[y:y + h, x:x + w, 3] = 255
+
+
+def head_box(img, box):
+    """A side view's box shifted sideways so the head sits where it was actually painted.
+
+    Art AIs often paint the side-view head a little off the body's centre line. The lower half
+    of the head (below any brim) gives its true left and right edges.
+    """
+    x0, y0, x1, y1 = box
+    k = (x1 - x0) / 8
+    fig = ~is_magenta(np.asarray(img.convert("RGB")))
+    lo = max(0, round(x0 - 1.5 * k))
+    rows = fig[round(y0 + 4 * k):round(y0 + 8 * k), lo:round(x1 + 1.5 * k)]
+    cols = np.nonzero(rows.mean(0) > 0.6)[0]
+    if len(cols) < 6 * k:
+        return box
+    dx = round((cols[0] + cols[-1]) / 2 + lo - (x0 + x1) / 2)
+    return box if abs(dx) > 1.5 * k else (x0 + dx, y0, x1 + dx, y1)
 
 
 def fill_from_edges(top_row, bottom_row, h):
@@ -169,6 +218,8 @@ def project(sheet, outfit, skin_seed):
 
     def side(view, p, w, h):
         box, mirrored = sides[view]
+        if p == "head":
+            box = head_box(sheet, box)
         pix = cut(sheet, box, SIDE_PARTS[p], 8, w * U, h * U)
         return pix[:, ::-1] if mirrored else pix
 

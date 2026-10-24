@@ -100,6 +100,8 @@ public final class ZcConfig {
         public boolean customZombies = true;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
         public boolean hdSkins = true;
+        /** Raised 3D pieces on zombie outfits: caps, helmets, pouches, collars, hoods, a hanging jaw. */
+        public boolean outfitPieces = true;
         /** Worst damage shown on HD zombies: 0 light, 1 medium, 2 heavy, 3 bones showing. */
         public int maxGore = 3;
         /** Share of zombies missing a forearm or a whole arm. */
