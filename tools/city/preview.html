@@ -28,6 +28,12 @@ const SHOTS = {
 const shot = SHOTS[params.get('shot') || 'street'];
 const DAY = params.get('time') === 'day';  // overcast afternoon instead of rainy night
 const DIR = params.get('mesh') || 'mesh';
+// the mod's weather: overcast (grey day, no sun), fog, storm (dark, heavy rain, lightning),
+// moon (night with the moon through a gap), dark (night under full cloud)
+const WX = params.get('wx') || '';
+const GLOOM = WX !== '';                       // the mod's always-overcast sky
+const POWER = params.get('power') !== 'off';  // off: the grid is down, every lamp dark
+const FOGGY = WX === 'fog', STORM = WX === 'storm', MOONLIT = WX === 'moon';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
 renderer.setSize(W, H);
@@ -38,8 +44,9 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc') : DAY ? 0x7d858c : 0x222a36);
-scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || (DAY ? 0.0042 : 0.0052)));
+const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc')
+  : FOGGY ? (DAY ? 0x5c6064 : 0x1c1f24) : STORM ? 0x30353a : GLOOM && DAY ? 0x585d61 : MOONLIT ? 0x1e2633 : GLOOM ? 0x0e1116 : DAY ? 0x7d858c : 0x222a36);
+scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || (FOGGY ? 0.055 : STORM ? 0.011 : DAY ? 0.0042 : 0.0052)));
 const camera = new THREE.PerspectiveCamera(shot.fov, W / H, 0.1, 3000);
 camera.position.set(...shot.pos);
 camera.lookAt(...shot.look);
@@ -47,10 +54,11 @@ camera.lookAt(...shot.look);
 // ------------------------------------------------------------------ sky
 const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.ShaderMaterial({
   side: THREE.BackSide, depthWrite: false, fog: false,
-  uniforms: { moonDir: { value: new THREE.Vector3(0.35, 0.42, -0.84).normalize() }, day: { value: DAY ? 1 : 0 } },
+  uniforms: { moonDir: { value: new THREE.Vector3(0.35, 0.42, -0.84).normalize() }, day: { value: DAY ? 1 : 0 },
+    gloom: { value: GLOOM ? 1 : 0 }, storm: { value: STORM ? 1 : 0 }, moonGap: { value: GLOOM && !MOONLIT ? 0 : 1 } },
   vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); gl_Position.z = gl_Position.w; }`,
   fragmentShader: `
-    varying vec3 vDir; uniform vec3 moonDir; uniform float day;
+    varying vec3 vDir; uniform vec3 moonDir; uniform float day, gloom, storm, moonGap;
     float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
     float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
       return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
@@ -61,7 +69,8 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.Sha
       vec3 col = mix(vec3(0.115,0.135,0.165), vec3(0.025,0.03,0.04), pow(up, .55));
       vec2 uv = d.xz / (d.y + .15) * 1.6;
       float c = fbm(uv + vec2(3.1, 1.7));
-      float m = max(dot(d, moonDir), 0.);
+      float m = max(dot(d, moonDir), 0.) * moonGap;
+      if (moonGap < .5) c = .2 + c * .3;  // one unbroken ceiling of cloud
       vec3 lit = vec3(0.42,0.47,0.55) * (pow(m, 18.) * 1.2 + 0.25);
       col = mix(col, col * 0.55 + lit * c * 0.6, smoothstep(.35, .8, c) * smoothstep(0., .08, d.y));
       // a square Minecraft moon with pixel craters, half hidden by cloud
@@ -79,8 +88,10 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.Sha
         col = mix(hor, top, pow(up, .6));
         float cl = fbm(uv * .8 + vec2(7.3, 2.1));
         col *= .82 + .3 * cl;
-        col += vec3(.1,.09,.07) * pow(max(dot(d, normalize(vec3(-0.5,0.55,-0.65))), 0.), 6.);
-      }
+        if (gloom < .5) col += vec3(.1,.09,.07) * pow(max(dot(d, normalize(vec3(-0.5,0.55,-0.65))), 0.), 6.);
+        else col = mix(col, vec3(dot(col, vec3(.333))), .8) * mix(.6, .38, storm);  // low, heavy, colourless
+      } else if (gloom > .5 && moonGap < .5) col *= .35;  // no moon: a black ceiling
+      else if (gloom > .5) col *= 1.15;
       gl_FragColor = vec4(col, 1.);
     }`,
 }));
@@ -88,8 +99,13 @@ scene.add(sky);
 scene.background = fogColor;
 
 // ------------------------------------------------------------------ lights
-scene.add(DAY ? new THREE.HemisphereLight(0xb4c0cc, 0x55493c, 2.6) : new THREE.HemisphereLight(0x5a6a88, 0x14120f, 0.55));
-const moon = new THREE.DirectionalLight(DAY ? 0xfff1dd : 0x8ea6d8, DAY ? 2.2 : 0.35);
+// the gloom holds daylight near half of vanilla's and takes the sun away; nights go darker
+// until the moon breaks through
+const DAYLIGHT = +(params.get('daylight') || (GLOOM ? (STORM ? 0.42 : 0.55) : 1));
+const NIGHT = GLOOM ? (MOONLIT ? 1.5 : 0.3) : 1;
+scene.add(DAY ? new THREE.HemisphereLight(GLOOM ? 0xa9b1b8 : 0xb4c0cc, 0x4a443d, 2.6 * (GLOOM ? DAYLIGHT * 1.2 : 1))
+  : new THREE.HemisphereLight(MOONLIT ? 0x6478a0 : 0x5a6a88, 0x14120f, 0.55 * NIGHT));
+const moon = new THREE.DirectionalLight(DAY ? (GLOOM ? 0xdfe3e6 : 0xfff1dd) : 0x8ea6d8, DAY ? (GLOOM ? 0.35 * DAYLIGHT : 2.2) : 0.35 * NIGHT);
 moon.position.set(140, 170, -330);
 if (DAY) {
   // a weak sun through thin cloud: soft shadows give the window reveals and ledges their depth
@@ -103,7 +119,24 @@ if (DAY) {
   Object.assign(moon.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 1, far: 420 });
   moon.shadow.bias = -0.0004;
   moon.shadow.normalBias = 0.04;
-  moon.shadow.radius = 4;
+  moon.shadow.radius = GLOOM ? 9 : 4;
+}
+if (STORM) {
+  // a lightning strike off past the buildings: the bolt, and its flash on the street
+  const flash = new THREE.DirectionalLight(0xd8e2ff, 1.6);
+  flash.position.set(camera.position.x + 120, 260, camera.position.z - 260);
+  scene.add(flash);
+  const pts = [];
+  let bx = camera.position.x - 6, by = 420, bz = camera.position.z - 520;
+  while (by > 0) {
+    const nx = bx + (Math.random() - 0.5) * 14, ny = by - 6 - Math.random() * 10, nz = bz + (Math.random() - 0.5) * 6;
+    pts.push(bx, by, bz, nx, ny, nz);
+    if (Math.random() < 0.18) pts.push(nx, ny, nz, nx + (Math.random() - 0.5) * 40, ny - 22, nz);
+    bx = nx; by = ny; bz = nz;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  scene.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: new THREE.Color(7, 7, 9), fog: false, toneMapped: false })));
 }
 scene.add(moon);
 
@@ -180,7 +213,7 @@ async function loadCity() {
     if (e.emissive) {
       mat.emissiveMap = tex(`${base}_e.png`, true);
       mat.emissive = new THREE.Color(0xffffff);
-      mat.emissiveIntensity = (GLOW[e.tex] ?? 2) * (DAY ? 0.15 : 1);
+      mat.emissiveIntensity = (GLOW[e.tex] ?? 2) * (DAY ? 0.15 : 1) * (POWER || e.tex === 'red_light' ? 1 : 0);
     }
     if (WET.some((w) => e.tex.startsWith(w))) wetten(mat, DAY ? 0.6 : 1.0);
     const mesh = new THREE.Mesh(g, mat);
@@ -197,7 +230,7 @@ const index = await loadCity();
 // street lights: the nearest ones cast real light, every one gets a glow cone in the rain
 const lamps = index.lamps.map(([x, y, z]) => new THREE.Vector3(x + 0.5, y + 0.45, z + 0.5));
 lamps.sort((a, b) => a.distanceTo(camera.position) - b.distanceTo(camera.position));
-const LIT = DAY ? 0 : +(params.get('lights') || 22);
+const LIT = DAY || !POWER ? 0 : +(params.get('lights') || 22);
 lamps.slice(0, LIT).forEach((p) => {
   const l = new THREE.PointLight(0xffa955, 90, 34, 2);
   l.position.copy(p);
@@ -206,10 +239,10 @@ lamps.slice(0, LIT).forEach((p) => {
 // lanterns by doorways and lobby ceiling lights near the camera
 const near = (list, n) => list.map(([x, y, z, kind]) => ({ p: new THREE.Vector3(x + 0.5, y + 0.4, z + 0.5), kind }))
   .sort((a, b) => a.p.distanceTo(camera.position) - b.p.distanceTo(camera.position)).slice(0, n);
-for (const { p, kind } of near(index.lights.filter((l) => l[3] === 'wall_lantern'), DAY ? 0 : 10)) {
+for (const { p, kind } of near(index.lights.filter((l) => l[3] === 'wall_lantern'), DAY || !POWER ? 0 : 10)) {
   const l = new THREE.PointLight(0xffb060, 14, 14, 2); l.position.copy(p); scene.add(l);
 }
-for (const { p } of near(index.lights.filter((l) => l[3] === 'ceiling_light' && l[1] < 10), +(params.get('ceil') || 6))) {
+for (const { p } of near(index.lights.filter((l) => l[3] === 'ceiling_light' && l[1] < 10), POWER ? +(params.get('ceil') || 6) : 0)) {
   const l = new THREE.PointLight(0xe8f0ff, 10, 12, 2); l.position.copy(p).y -= 0.6; scene.add(l);
 }
 const coneMat = new THREE.ShaderMaterial({
@@ -221,7 +254,7 @@ const coneMat = new THREE.ShaderMaterial({
       gl_FragColor = vec4(vec3(1.0,0.66,0.33) * a, 1.); }`,
 });
 const cones = [];
-for (const p of lamps.slice(0, DAY ? 0 : 60)) {
+for (const p of lamps.slice(0, DAY || !POWER ? 0 : 60)) {
   const cone = new THREE.Mesh(new THREE.ConeGeometry(3.2, 6.4, 24, 1, true), coneMat);
   cone.position.set(p.x, p.y - 3.2, p.z);
   scene.add(cone);
@@ -270,15 +303,17 @@ scene.add(mirror);
 // rain streaks around the camera
 const drops = [];
 const R = 70;
-for (let i = 0; i < 26000; i++) {
+const RAIN = FOGGY ? 6000 : STORM ? 60000 : 26000;
+for (let i = 0; i < RAIN; i++) {
   const x = camera.position.x + (Math.random() - 0.5) * R * 2, z = camera.position.z - Math.random() * R * 1.6 + 10;
   const y = Math.random() * 60;
   const len = 0.5 + Math.random() * 0.6;
-  drops.push(x, y, z, x + 0.05, y - len, z + 0.02);
+  const slant = STORM ? 0.55 : 0.05;  // gale-driven rain comes in sideways
+  drops.push(x, y, z, x + slant * len, y - len, z + 0.02);
 }
 const rainGeo = new THREE.BufferGeometry();
 rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(drops, 3));
-const rain = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: DAY ? 0xc8d0d8 : 0x8a9bb5, transparent: true, opacity: DAY ? 0.1 : 0.22, fog: true }));
+const rain = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: DAY ? 0xc8d0d8 : 0x8a9bb5, transparent: true, opacity: (DAY ? 0.1 : 0.22) * (STORM ? 1.5 : 1), fog: true }));
 if (!shot.indoor) scene.add(rain);
 // the mirror renders the scene again from below: leave the rain and light cones out of that
 const reflect = mirror.onBeforeRender;
@@ -292,7 +327,7 @@ mirror.onBeforeRender = function (...args) {
 // ------------------------------------------------------------------ post
 const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
 composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), DAY ? 0.2 : 0.75, 0.55, DAY ? 0.95 : 0.9));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), STORM ? 0.6 : DAY ? 0.2 : 0.75, 0.55, DAY ? 0.95 : 0.9));
 composer.addPass(new OutputPass());
 composer.addPass(new ShaderPass({
   uniforms: { tDiffuse: { value: null } },
