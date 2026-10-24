@@ -491,8 +491,8 @@ class HD:
                         if hole[y, x] > 1.1 - amount and self.mat[y0 + y, x0 + x] == HAIR:
                             self.px(x0 + x, y0 + y, self.shadow * 0.95, SKIN)
 
-    def exposed_bone(self):
-        """The chest torn open down to the ribs, and a patch of bare skull."""
+    def exposed_bone(self, skull=True):
+        """The chest torn open down to the ribs, and a patch of bare skull (unless a hat or hood covers it)."""
         r = self.r
         bone = np.array((218, 206, 176), np.float32)
         x0, y0, w, h = face_rect("body", "front")
@@ -524,6 +524,8 @@ class HD:
             for x in (int(cx) - 1, int(cx)):
                 self.px(x0 + x, y0 + y, bone * 0.95, TEETH)
                 self.height[y0 + y, x0 + x] += 60
+        if not skull:
+            return
         # bare skull on the top or side of the head
         box, face = r.choice([("head", "top"), ("head", "left"), ("head", "right")])
         x0, y0, w, h = face_rect(box, face)
