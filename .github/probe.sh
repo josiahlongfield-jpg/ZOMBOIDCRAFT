@@ -100,5 +100,28 @@ sig net.minecraft.client.model.Model 'public'
 sig net.minecraft.client.renderer.SubmitNodeCollector 'submitModel'
 sig net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer 'public|protected|private'
 
+echo "===== stage city blocks"
+sig net.minecraft.world.level.block.state.BlockBehaviour\$Properties 'public'
+sig net.minecraft.world.level.block.Block 'public static .*box|codec|getStateForPlacement|createBlockStateDefinition|protected .*getShape|getCollisionShape|getLightBlock|propagatesSkylightDown|skipRendering|getShadeBrightness|rotate|mirror'
+sig net.minecraft.world.level.block.RotatedPillarBlock 'public'
+sig net.minecraft.world.level.block.HorizontalDirectionalBlock 'public|protected'
+sig net.minecraft.world.phys.shapes.Shapes 'public static'
+sig net.minecraft.world.level.block.SoundType 'public static final'
+sig net.minecraft.world.item.context.BlockPlaceContext 'getHorizontalDirection|getClickedFace|getNearestLookingDirection'
+sig net.minecraft.client.renderer.ItemBlockRenderTypes 'public'
+sig net.minecraft.client.renderer.chunk.ChunkSectionLayer '.'
+sig net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap '.'
+sig net.fabricmc.fabric.api.blockview.v2.FabricBlockView '.'
+sig net.minecraft.world.item.BlockItem 'public BlockItem'
+sig net.minecraft.world.item.Item\$Properties 'setId|useBlockDescriptionPrefix'
+sig net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup '.'
+sig net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab '.'
+sig net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents '.'
+sig net.minecraft.world.item.CreativeModeTab 'public'
+sig net.minecraft.world.item.CreativeModeTab\$Builder 'public'
+ls ~/.gradle/caches/fabric-loom 2>/dev/null | head
+find ~/.gradle/caches -name 'fabric-api-*' -path '*rendering*' 2>/dev/null | head -5
+find ~/.gradle/caches -name '*.jar' 2>/dev/null | grep -i 'fabric-.*render\|creative' | head -10
+
 echo "===== compile errors"
 grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
