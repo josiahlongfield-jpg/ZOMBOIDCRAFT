@@ -136,6 +136,23 @@ javap -cp "$CP" -p net.minecraft.client.renderer.ItemBlockRenderTypes 2>&1 | hea
 classes 'ChunkSectionLayer|RenderLayerHelper|BlockRenderLayer'
 javap -cp "$CP" -p net.fabricmc.fabric.api.client.renderer.v1.render.ChunkSectionLayerHelper 2>&1 | head -20
 
+echo "===== weather3"
+javap -cp "$CP" -p -c net.minecraft.world.attribute.WeatherAttributes 2>&1 | grep -v "^ *[0-9]*: \(aload\|astore\|dup\|pop\|areturn\|return\|iload\|fload\|fstore\)" | head -150
+javap -cp "$CP" -p 'net.minecraft.world.attribute.WeatherAttributes$WeatherAccess' 2>&1 | head -20
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | grep -E "Field|Method|ldc|public|private" | head -80
+javap -cp "$CP" -p -c net.minecraft.world.level.Level 2>&1 | grep -A30 "public int getSkyDarken\|public void updateSkyBrightness\|public float getSunAngle\|getRainLevel(float)" | grep -E "Field|Method|ldc|public|fconst" | head -60
+javap -cp "$CP" -p net.minecraft.world.attribute.modifier.ColorModifier 'net.minecraft.world.attribute.modifier.ColorModifier$BlendToGray' net.minecraft.world.attribute.modifier.FloatModifier 'net.minecraft.world.attribute.modifier.AttributeModifier$OperationId' 2>&1 | head -80
+for j in $MC_JARS; do
+  if unzip -l "$j" data/minecraft/timeline/day.json >/dev/null 2>&1; then
+    unzip -p "$j" data/minecraft/timeline/day.json > /tmp/day.json
+    python3 -c "import json; d=json.load(open('/tmp/day.json')); [print(k, json.dumps(v)[:900]) for k,v in d['tracks'].items() if 'visual' in k or 'light' in k]"
+    unzip -p "$j" data/minecraft/tags/timeline/in_overworld.json; echo " <- in_overworld tag"
+    unzip -p "$j" data/minecraft/world_clock/overworld.json; echo " <- clock"
+    break
+  fi
+done
+exit 0
+
 echo "===== weather2"
 for c in net.minecraft.world.attribute.EnvironmentAttributeLayer 'net.minecraft.world.attribute.EnvironmentAttributeLayer$Constant' 'net.minecraft.world.attribute.EnvironmentAttributeLayer$TimeBased' 'net.minecraft.world.attribute.EnvironmentAttributeLayer$Positional' 'net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder' net.minecraft.world.attribute.EnvironmentAttributeSystem net.minecraft.world.attribute.EnvironmentAttribute net.minecraft.world.attribute.modifier.AttributeModifier net.minecraft.world.level.saveddata.WeatherData net.minecraft.client.renderer.Lightmap net.minecraft.client.renderer.LightmapRenderStateExtractor net.minecraft.client.renderer.state.LightmapRenderState net.minecraft.world.entity.LightningBolt net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment net.minecraft.client.renderer.fog.environment.FogEnvironment net.minecraft.client.renderer.fog.FogData; do
   echo "----- $c"; javap -cp "$CP" -p "$c" 2>&1 | head -70
