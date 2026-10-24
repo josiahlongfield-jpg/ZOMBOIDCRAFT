@@ -27,19 +27,37 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
     private final ModelPart visor;
     private final ModelPart brim;
     private final ModelPart pack;
+    private final ModelPart rightStub;
+    private final ModelPart rightBone;
+    private final ModelPart leftStub;
+    private final ModelPart leftBone;
 
     public WalkerModel(ModelPart root) {
         super(root);
         visor = head.getChild("visor");
         brim = head.getChild("brim");
         pack = body.getChild("pack");
+        rightStub = rightArm.getChild("stub");
+        rightBone = rightArm.getChild("bone");
+        leftStub = leftArm.getChild("stub");
+        leftBone = leftArm.getChild("bone");
     }
 
     public static LayerDefinition createLayer() {
         MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, 0f);
         PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
+        PartDefinition leftArm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
                 .addBox(-1f, -2f, -2f, 4f, 12f, 4f), PartPose.offset(5f, 2f, 0f));
+        // A torn-off forearm: the upper half of the arm (same texture rows) with a bone sticking out.
+        PartDefinition rightArm = root.getChild("right_arm");
+        rightArm.addOrReplaceChild("stub", CubeListBuilder.create().texOffs(40, 16)
+                .addBox(-3f, -2f, -2f, 4f, 6f, 4f), PartPose.ZERO);
+        rightArm.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(56, 16)
+                .addBox(-2f, 4f, -1f, 2f, 6f, 2f), PartPose.ZERO);
+        leftArm.addOrReplaceChild("stub", CubeListBuilder.create().texOffs(32, 48)
+                .addBox(-1f, -2f, -2f, 4f, 6f, 4f), PartPose.ZERO);
+        leftArm.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(56, 24)
+                .addBox(0f, 4f, -1f, 2f, 6f, 2f), PartPose.ZERO);
         root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48)
                 .addBox(-2f, 0f, -2f, 4f, 12f, 4f), PartPose.offset(1.9f, 12f, 0f));
         PartDefinition head = root.getChild("head");
@@ -52,6 +70,14 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
+    /** Shows an arm whole, as a stump with a bone (forearm gone), or not at all. */
+    private static void limb(boolean forearmGone, boolean armGone, ModelPart arm, ModelPart stub, ModelPart bone) {
+        arm.visible = !armGone;
+        arm.skipDraw = forearmGone;
+        stub.visible = forearmGone;
+        bone.visible = forearmGone;
+    }
+
     @Override
     public void setupAnim(WalkerRenderState state) {
         super.setupAnim(state);
@@ -60,6 +86,8 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         brim.visible = gear.brim() > 0;
         brim.xScale = brim.zScale = Math.max(gear.brim(), 0.01f);
         pack.visible = gear.pack();
+        limb(state.missingLimb == 1, state.missingLimb == 3, rightArm, rightStub, rightBone);
+        limb(state.missingLimb == 2, state.missingLimb == 4, leftArm, leftStub, leftBone);
 
         float time = state.ageInTicks;
         float phase = (state.variant & 0xFF) / 40f;

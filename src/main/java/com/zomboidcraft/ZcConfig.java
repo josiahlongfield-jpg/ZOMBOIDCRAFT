@@ -100,8 +100,10 @@ public final class ZcConfig {
         public boolean customZombies = true;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
         public boolean hdSkins = true;
-        /** Worst damage shown on HD zombies: 0 light, 1 medium, 2 heavy (more blood, rot, missing eyes). */
-        public int maxGore = 2;
+        /** Worst damage shown on HD zombies: 0 light, 1 medium, 2 heavy, 3 bones showing. */
+        public int maxGore = 3;
+        /** Share of zombies missing a forearm or a whole arm. */
+        public double missingLimbChance = 0.15;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
     }

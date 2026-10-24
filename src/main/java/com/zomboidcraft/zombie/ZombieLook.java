@@ -59,10 +59,26 @@ public final class ZombieLook {
         return SKINS.get(Math.floorMod(zombie.getUUID().getMostSignificantBits(), SKINS.size()));
     }
 
-    /** How far gone the body is, 0 (fresh) to 2 (rotten and soaked), capped by the gore setting. */
+    /**
+     * How far gone the body is: 0 fresh, 1 medium, 2 rotten and soaked, 3 bones showing.
+     * Capped by the gore setting.
+     */
     public static int damage(Entity zombie) {
-        int max = Math.clamp(ZcConfig.get().look.maxGore, 0, 2);
-        return Math.min(Math.floorMod(zombie.getUUID().getLeastSignificantBits() >>> 20, 3), max);
+        int max = Math.clamp(ZcConfig.get().look.maxGore, 0, 3);
+        int roll = Math.floorMod(zombie.getUUID().getLeastSignificantBits() >>> 20, 100);
+        int level = roll < 30 ? 0 : roll < 60 ? 1 : roll < 85 ? 2 : 3;
+        return Math.min(level, max);
+    }
+
+    /** 0 none, 1 right forearm, 2 left forearm, 3 right arm, 4 left arm. */
+    public static int missingLimb(Entity zombie) {
+        long bits = zombie.getUUID().getLeastSignificantBits() >>> 32;
+        if (Math.floorMod(bits, 10000) >= ZcConfig.get().look.missingLimbChance * 10000) {
+            return 0;
+        }
+        int pick = (int) Math.floorMod(bits >>> 16, 4L);  // three in four lose only the forearm
+        boolean left = Math.floorMod(bits >>> 20, 2L) == 1;
+        return pick < 3 ? (left ? 2 : 1) : (left ? 4 : 3);
     }
 
     /** Texture name under textures/entity/walker, such as "police_pale". */

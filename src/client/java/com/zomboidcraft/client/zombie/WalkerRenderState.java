@@ -9,4 +9,6 @@ public class WalkerRenderState extends ZombieRenderState {
     /** Stable per-zombie number, so each one lolls and sways a little differently. */
     public int variant;
     public String outfit = "civilian";
+    /** 0 none, 1 right forearm, 2 left forearm, 3 right arm, 4 left arm. */
+    public int missingLimb;
 }

@@ -2,7 +2,8 @@
 """Writes one Blockbench project (.bbmodel) per walker skin, with the texture embedded.
 
 Open a file at https://web.blockbench.net, paint on the model, then File > Export texture
-(or right-click the texture > Save As) and drop the PNG into textures/entity/walker.
+(or right-click the texture > Save As) and drop the PNG into textures/entity/walker_hd.
+The _s and _n shine and bump maps are not in the project; repaint those separately if needed.
 The model matches WalkerModel: player-layout limbs, the hat layer, and the visor, brim and
 backpack parts the outfit uses. Run from the repo root after gen_zombie_skins.py:
 
@@ -14,7 +15,10 @@ import sys
 import uuid
 from pathlib import Path
 
-SKINS_DIR = Path("src/main/resources/assets/zomboidcraft/textures/entity/walker")
+from PIL import Image
+
+SKINS_DIR = Path("src/main/resources/assets/zomboidcraft/textures/entity/walker_hd")
+LEVELS = ("0", "1", "2")  # damage levels: light, medium, heavy
 PARTS = json.loads(Path("tools/mockup/walker_parts.json").read_text())
 
 
@@ -51,7 +55,7 @@ def group(name, origin, children):
             "isOpen": True, "visibility": True, "children": children}
 
 
-def model(outfit, skin):
+def model(outfit, skin, level):
     parts = PARTS[outfit]
     els, outliner = [], []
 
@@ -78,8 +82,9 @@ def model(outfit, skin):
     add("right_leg", [1.9, 12, 0], [cube("right_leg", [-0.1, 0, -2], [3.9, 12, 2], [1.9, 12, 0], (0, 16))])
     add("left_leg", [-1.9, 12, 0], [cube("left_leg", [-3.9, 0, -2], [0.1, 12, 2], [-1.9, 12, 0], (16, 48))])
 
-    name = f"{outfit}_{skin}"
+    name = f"{outfit}_{skin}_{level}"
     png = (SKINS_DIR / f"{name}.png").read_bytes()
+    size = Image.open(SKINS_DIR / f"{name}.png").size[0]
     return {
         "meta": {"format_version": "4.10", "model_format": "modded_entity", "box_uv": True},
         "name": f"walker_{name}", "model_identifier": "walker", "modded_entity_version": "Fabric 1.17+",
@@ -88,7 +93,7 @@ def model(outfit, skin):
         "elements": els, "outliner": outliner,
         "textures": [{
             "path": "", "name": f"{name}.png", "folder": "", "namespace": "", "id": "0",
-            "width": 64, "height": 64, "uv_width": 64, "uv_height": 64, "particle": False,
+            "width": size, "height": size, "uv_width": 64, "uv_height": 64, "particle": False,
             "render_mode": "default", "render_sides": "auto", "visible": True, "mode": "bitmap",
             "saved": False, "uuid": uid(), "source": "data:image/png;base64," + base64.b64encode(png).decode(),
         }],
@@ -101,8 +106,9 @@ def main():
     n = 0
     for outfit in PARTS:
         for skin in ("pale", "olive", "dark"):
-            (out / f"walker_{outfit}_{skin}.bbmodel").write_text(json.dumps(model(outfit, skin)))
-            n += 1
+            for level in LEVELS:
+                (out / f"walker_{outfit}_{skin}_{level}.bbmodel").write_text(json.dumps(model(outfit, skin, level)))
+                n += 1
     print(f"wrote {n} Blockbench files to {out}")
 
 

@@ -459,6 +459,56 @@ class HD:
                         if hole[y, x] > 1.1 - amount and self.mat[y0 + y, x0 + x] == HAIR:
                             self.px(x0 + x, y0 + y, self.shadow * 0.95, SKIN)
 
+    def exposed_bone(self):
+        """The chest torn open down to the ribs, and a patch of bare skull."""
+        r = self.r
+        bone = np.array((218, 206, 176), np.float32)
+        x0, y0, w, h = face_rect("body", "front")
+        cx, cy, rx, ry = 16 + r.uniform(-2, 2), 19 + r.uniform(-2, 2), r.uniform(8, 10), r.uniform(10, 13)
+        for y in range(h):
+            for x in range(w):
+                d = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 + r.uniform(-0.12, 0.12)
+                X, Y = x0 + x, y0 + y
+                if d < 1:
+                    self.px(X, Y, np.array((46, 12, 10)) + 40 * d * np.array((1, 0.3, 0.25)), MOUTH)
+                    self.height[Y, X] -= 70
+                elif d < 1.35:
+                    self.px(X, Y, (110, 18, 14) if r.random() < 0.6 else (70, 16, 12), BLOOD)  # torn flesh rim
+                elif d < 1.6:
+                    self.mul(X, Y, 0.65)  # frayed cloth
+        for k in range(5):  # ribs curving down and out from the breastbone
+            ry0 = cy - ry * 0.75 + k * ry * 0.33
+            for side in (-1, 1):
+                for i in range(int(rx) + 1):
+                    x = cx + side * (1.5 + i)
+                    y = ry0 + (i * i) / 22
+                    for t in (0, 1):
+                        X, Y = x0 + int(x), y0 + int(y + t)
+                        inside = ((x - cx) / rx) ** 2 + ((y + t - cy) / ry) ** 2 < 1.05
+                        if inside and 0 <= int(x) < w and 0 <= int(y + t) < h:
+                            self.px(X, Y, bone * (1.0 if t == 0 else 0.78) * r.uniform(0.9, 1.05), TEETH)
+                            self.height[Y, X] += 60
+        for y in range(int(cy - ry * 0.8), int(cy + ry * 0.55)):  # breastbone
+            for x in (int(cx) - 1, int(cx)):
+                self.px(x0 + x, y0 + y, bone * 0.95, TEETH)
+                self.height[y0 + y, x0 + x] += 60
+        # bare skull on the top or side of the head
+        box, face = r.choice([("head", "top"), ("head", "left"), ("head", "right")])
+        x0, y0, w, h = face_rect(box, face)
+        sx, sy = r.uniform(9, w - 9), r.uniform(6, h * 0.55)
+        for y in range(h):
+            for x in range(w):
+                d = ((x - sx) / 6.5) ** 2 + ((y - sy) / 5) ** 2 + r.uniform(-0.15, 0.15)
+                if d < 1:
+                    self.px(x0 + x, y0 + y, bone * r.uniform(0.86, 1.0), TEETH)
+                elif d < 1.5:
+                    self.px(x0 + x, y0 + y, (104, 22, 18), BLOOD)
+        for _ in range(2):  # cracks
+            x, y = sx, sy
+            for _ in range(6):
+                self.px(x0 + int(x), y0 + int(y), (90, 80, 64), TEETH)
+                x += r.choice((-1, 0, 1)); y += r.choice((0, 1))
+
     def tears(self):
         """Holes in the clothes showing grey skin or a wound underneath."""
         r = self.r
@@ -534,7 +584,8 @@ class HD:
 
 
 # Damage levels: (blood range, rot range). Each zombie picks one; the exact amounts are random.
-DAMAGE = [((0.3, 0.7), (0.1, 0.35)), ((0.8, 1.2), (0.4, 0.6)), ((1.3, 1.8), (0.7, 1.0))]
+# Level 3 is the "bones showing" version: heavy damage plus an open ribcage and bare skull.
+DAMAGE = [((0.3, 0.7), (0.1, 0.35)), ((0.8, 1.2), (0.4, 0.6)), ((1.3, 1.8), (0.7, 1.0)), ((1.4, 1.9), (0.8, 1.0))]
 
 
 def make_hd(outfit, skin_name, seed, level=1):
@@ -557,6 +608,8 @@ def make_hd(outfit, skin_name, seed, level=1):
     hd.face(rot)
     hd.rot(rot)
     hd.blood(blood)
+    if level == 3:
+        hd.exposed_bone()
     hd.bevel_and_light()
     return hd
 

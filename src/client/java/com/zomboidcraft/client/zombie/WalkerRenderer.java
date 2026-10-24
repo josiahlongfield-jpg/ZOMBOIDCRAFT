@@ -24,6 +24,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         super.extractRenderState(zombie, state, partialTick);
         state.isAggressive = zombie.isAggressive();
         state.outfit = ZombieLook.outfit(zombie);
+        state.missingLimb = ZombieLook.missingLimb(zombie);
         String name = state.outfit + "_" + ZombieLook.skin(zombie);
         state.texture = ZcConfig.get().look.hdSkins
                 ? ZomboidCraft.id("textures/entity/walker_hd/" + name + "_" + ZombieLook.damage(zombie) + ".png")

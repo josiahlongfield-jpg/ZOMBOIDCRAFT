@@ -39,6 +39,8 @@ BOXES = {  # name: (u, v, w, h, d)
     "visor": (0, 32, 8, 1, 4),
     "brim": (0, 32, 10, 1, 10),
     "pack": (42, 37, 8, 8, 3),
+    # Bone sticking out of an arm stump, for zombies missing a forearm.
+    "rbone": (56, 16, 2, 6, 2), "lbone": (56, 24, 2, 6, 2),
 }
 
 
@@ -259,6 +261,17 @@ class Skin:
         self.parts["brim"] = scale
         paint = mat or solid(c)
         self.paint_box("brim", lambda face, x, y, w, h: shade(paint(x, y, None), 0.8) if face == "bottom" else paint(x, y, None))
+
+    def bones(self):
+        """The bone poking out of an arm stump: off-white, knobbly end, raw flesh where it joins."""
+        def fn(face, x, y, w, h):
+            if face == "bottom":
+                return (196, 186, 160)
+            if face == "top":
+                return (120, 30, 26)
+            return (96, 22, 20) if y == 0 else (206, 196, 168) if y < h - 1 else (226, 218, 196)
+        self.paint_box("rbone", fn)
+        self.paint_box("lbone", fn)
 
     def pack(self, c):
         self.parts["pack"] = 1.0
@@ -644,6 +657,7 @@ def make(outfit, skin_name, seed, clean=False):
     hair = r.choice(HAIR)
     s.head(style, hair)
     OUTFITS[outfit](s, r)
+    s.bones()
     s.weather(blood=1.3 if outfit in ("patient", "nurse", "doctor") else 1.0, clean=clean)
     s.style, s.hair = style, hair
     return s
