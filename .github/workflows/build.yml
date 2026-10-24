@@ -62,17 +62,29 @@ jobs:
       - name: Server smoke test
         run: |
           mkdir -p run && echo 'eula=true' > run/eula.txt
-          ./gradlew runServer --args=nogui > server.log 2>&1 &
+          mkfifo console
+          ./gradlew runServer --args=nogui < console > server.log 2>&1 &
           pid=$!
+          exec 3> console
           for i in $(seq 1 120); do
             if grep -q 'Done (' server.log; then echo "Server started"; break; fi
             if ! kill -0 $pid 2>/dev/null; then break; fi
             sleep 5
           done
+          # Load zombies so their mixins, goals and attachments run, then let them tick.
+          echo 'summon minecraft:zombie 0 100 0' >&3
+          echo 'summon minecraft:husk 2 100 0' >&3
+          echo 'summon minecraft:zombie_villager 4 100 0' >&3
+          echo 'zc config' >&3
+          sleep 10
+          echo 'stop' >&3
+          for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
+          exec 3>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
-          grep -E 'zomboidcraft|The dead walk|Mixin|ERROR|Exception' server.log | head -60 || true
-          grep -q 'The dead walk' server.log && grep -q 'Done (' server.log
+          grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings' server.log | head -60 || true
+          grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
+          ! grep -E 'Exception|Error' server.log | grep -v 'server.properties\|NoSuchFileException' | grep -q .
 
       - uses: actions/upload-artifact@v4
         if: success()
