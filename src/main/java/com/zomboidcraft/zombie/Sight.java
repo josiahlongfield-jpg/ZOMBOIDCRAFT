@@ -1,6 +1,7 @@
 package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.world.weather.WeatherDirector;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import net.minecraft.world.entity.Mob;
@@ -30,7 +31,8 @@ public final class Sight {
     /** How far this zombie could see this player right now. */
     public static double range(Mob zombie, Player player, ZcConfig.Senses config) {
         double light = zombie.level().getMaxLocalRawBrightness(player.blockPosition()) / 15.0;
-        double range = config.sightRange * (config.darkSight + (1 - config.darkSight) * light);
+        double range = config.sightRange * (config.darkSight + (1 - config.darkSight) * light)
+                * WeatherDirector.sight(zombie.level());
         if (player.isCrouching()) {
             range *= config.crouchSight;
         }

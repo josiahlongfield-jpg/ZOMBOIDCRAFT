@@ -29,6 +29,7 @@ public final class ZcConfig {
     public Progression progression = new Progression();
     public Look look = new Look();
     public World world = new World();
+    public Weather weather = new Weather();
 
     public static class Zombies {
         /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
@@ -105,6 +106,32 @@ public final class ZcConfig {
     public static class World {
         /** /zc city builds with vanilla look-alike blocks instead of the city's own. */
         public boolean cityStandIns = false;
+    }
+
+    public static class Weather {
+        /** The mod runs the overworld's weather: never clear, with rain, fog, wind and storms. Off hands it back to vanilla. */
+        public boolean enabled = true;
+        /** Grey cloud ceiling all day: no blue sky, no sun, no sunsets. */
+        public boolean alwaysOvercast = true;
+        /** Daylight as a share of vanilla's; 0.55 is a little darker than a vanilla thunderstorm. */
+        public double daylight = 0.55;
+        /** Night darkness as a share of vanilla's night light; lower is darker. */
+        public double nightLight = 0.8;
+        /** The moon breaks through gaps in the clouds now and then at night. */
+        public boolean moonBreaks = true;
+        /** Scales how often rain, fog, wind and storms come; 0 keeps a steady drizzle. */
+        public double eventFrequency = 1.0;
+        /** Scales how often storms come, and how many of them turn dangerous. */
+        public double stormFrequency = 1.0;
+        public boolean fog = true;
+        /** Strong storms throw real lightning that starts fires (never right on top of you). */
+        public boolean lightningStrikes = true;
+        /** Hail in severe storms hurts anyone out in the open without a helmet. */
+        public boolean hail = true;
+        /** Cyclone winds in severe storms shove you and the dead around and blow in windows. */
+        public boolean windDamage = true;
+        /** Rain and wind cover your noise and fog hides you, for you and the zombies alike. */
+        public boolean affectsZombies = true;
     }
 
     public static class Look {

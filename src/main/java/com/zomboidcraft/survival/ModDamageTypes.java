@@ -11,6 +11,7 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> INFECTION = key("infection");
     public static final ResourceKey<DamageType> BLEEDING = key("bleeding");
     public static final ResourceKey<DamageType> THIRST = key("thirst");
+    public static final ResourceKey<DamageType> HAIL = key("hail");
 
     private static ResourceKey<DamageType> key(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, ZomboidCraft.id(name));

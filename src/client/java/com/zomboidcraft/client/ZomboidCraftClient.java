@@ -5,7 +5,10 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.zombie.WalkerAddonModel;
 import com.zomboidcraft.client.zombie.WalkerModel;
 import com.zomboidcraft.client.zombie.WalkerRenderer;
+import com.zomboidcraft.world.weather.Weather;
+import com.zomboidcraft.world.weather.WeatherView;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -17,6 +20,9 @@ public class ZomboidCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         HudElementRegistry.addLast(ZomboidCraft.id("moodles"), MoodleHud::render);
         SkillsHud.register();
+        // the sky eases toward the weather the server last sent
+        ClientTickEvents.END_CLIENT_TICK.register(client ->
+                WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);

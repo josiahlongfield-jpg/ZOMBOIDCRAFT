@@ -1,6 +1,7 @@
 package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.world.weather.WeatherDirector;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.phys.AABB;
@@ -14,7 +15,7 @@ public final class Noise {
     public static final double BREAK_BLOCK = 12;
 
     public static void emit(ServerLevel level, Vec3 pos, double radius) {
-        radius *= ZcConfig.get().senses.hearing;
+        radius *= ZcConfig.get().senses.hearing * WeatherDirector.hearing(level);
         if (radius <= 0) {
             return;
         }

@@ -9,6 +9,9 @@ import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalStats;
 import com.zomboidcraft.world.CityPlacer;
+import com.zomboidcraft.world.weather.Weather;
+import com.zomboidcraft.world.weather.WeatherDirector;
+import com.zomboidcraft.world.weather.WeatherKind;
 import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
@@ -31,6 +34,12 @@ public final class ZcCommand {
                                 .executes(ctx -> city(ctx, 1L))
                                 .then(Commands.argument("seed", IntegerArgumentType.integer())
                                         .executes(ctx -> city(ctx, IntegerArgumentType.getInteger(ctx, "seed")))))
+                        .then(Commands.literal("weather")
+                                .executes(ZcCommand::weather)
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(
+                                                java.util.Arrays.stream(WeatherKind.values()).map(k -> k.id), b))
+                                        .executes(ctx -> setWeather(ctx, StringArgumentType.getString(ctx, "kind")))))
                         .then(Commands.literal("config")
                                 .executes(ZcCommand::listConfig)
                                 .then(Commands.literal("reload").executes(ctx -> {
@@ -66,6 +75,31 @@ public final class ZcCommand {
         }
         ctx.getSource().sendSuccess(() -> Component.literal(
                 "Building the test city around you; it takes a minute or two. Best in a superflat world."), true);
+        return 1;
+    }
+
+    private static int weather(CommandContext<CommandSourceStack> ctx) {
+        Weather w = WeatherDirector.current();
+        if (w == null) {
+            ctx.getSource().sendFailure(Component.literal("The mod's weather is off (weather.enabled)"));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(String.format(
+                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f",
+                WeatherDirector.kind().id, WeatherDirector.secondsLeft(), w.rain(), w.thunder(), w.fog(), w.wind(),
+                w.moon(), w.hail())), false);
+        return 1;
+    }
+
+    private static int setWeather(CommandContext<CommandSourceStack> ctx, String id) {
+        WeatherKind kind = WeatherKind.byId(id);
+        if (kind == null || WeatherDirector.current() == null) {
+            ctx.getSource().sendFailure(Component.literal(kind == null ? "Unknown weather: " + id
+                    : "The mod's weather is off (weather.enabled)"));
+            return 0;
+        }
+        WeatherDirector.force(kind);
+        ctx.getSource().sendSuccess(() -> Component.literal("Weather set to " + kind.id), true);
         return 1;
     }
 
