@@ -26,6 +26,7 @@ public class ZomboidCraft implements ModInitializer {
         Skills.register();
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
+        com.zomboidcraft.world.blocks.CityBlocks.register();
         ModItems.register();
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();

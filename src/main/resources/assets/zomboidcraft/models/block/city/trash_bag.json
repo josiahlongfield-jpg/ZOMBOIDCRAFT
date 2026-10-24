@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trash_bag": "zomboidcraft:block/city/trash_bag",
+    "particle": "zomboidcraft:block/city/trash_bag"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        9,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trash_bag"
+        },
+        "south": {
+          "texture": "#trash_bag"
+        },
+        "east": {
+          "texture": "#trash_bag"
+        },
+        "west": {
+          "texture": "#trash_bag"
+        },
+        "up": {
+          "texture": "#trash_bag"
+        },
+        "down": {
+          "texture": "#trash_bag",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        14,
+        5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trash_bag"
+        },
+        "south": {
+          "texture": "#trash_bag"
+        },
+        "east": {
+          "texture": "#trash_bag"
+        },
+        "west": {
+          "texture": "#trash_bag"
+        },
+        "up": {
+          "texture": "#trash_bag"
+        },
+        "down": {
+          "texture": "#trash_bag",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        5
+      ],
+      "to": [
+        7,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trash_bag"
+        },
+        "south": {
+          "texture": "#trash_bag"
+        },
+        "east": {
+          "texture": "#trash_bag"
+        },
+        "west": {
+          "texture": "#trash_bag"
+        },
+        "up": {
+          "texture": "#trash_bag"
+        },
+        "down": {
+          "texture": "#trash_bag"
+        }
+      }
+    }
+  ]
+}

@@ -24,6 +24,7 @@ const SHOTS = {
   walkup: { pos: [-2, 1.9, 40], look: [-14, 6, 30], fov: 62 },
 };
 const shot = SHOTS[params.get('shot') || 'street'];
+const DAY = params.get('time') === 'day';  // overcast afternoon instead of rainy night
 const DIR = params.get('mesh') || 'mesh';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
@@ -35,8 +36,8 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc') : 0x222a36);
-scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || 0.0052));
+const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc') : DAY ? 0x7d858c : 0x222a36);
+scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || (DAY ? 0.0042 : 0.0052)));
 const camera = new THREE.PerspectiveCamera(shot.fov, W / H, 0.1, 3000);
 camera.position.set(...shot.pos);
 camera.lookAt(...shot.look);
@@ -44,10 +45,10 @@ camera.lookAt(...shot.look);
 // ------------------------------------------------------------------ sky
 const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.ShaderMaterial({
   side: THREE.BackSide, depthWrite: false, fog: false,
-  uniforms: { moonDir: { value: new THREE.Vector3(0.35, 0.42, -0.84).normalize() } },
+  uniforms: { moonDir: { value: new THREE.Vector3(0.35, 0.42, -0.84).normalize() }, day: { value: DAY ? 1 : 0 } },
   vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); gl_Position.z = gl_Position.w; }`,
   fragmentShader: `
-    varying vec3 vDir; uniform vec3 moonDir;
+    varying vec3 vDir; uniform vec3 moonDir; uniform float day;
     float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
     float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
       return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
@@ -71,6 +72,13 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.Sha
         col = mix(col, vec3(0.86,0.88,0.92) * (1. - crater * .25) * 2.2, 1. - smoothstep(.5, .85, c));
       }
       col += vec3(0.3,0.34,0.42) * pow(m, 40.) * 0.5;
+      if (day > .5) {  // low grey overcast, brighter toward the sun's side
+        vec3 top = vec3(0.36,0.39,0.42), hor = vec3(0.56,0.58,0.59);
+        col = mix(hor, top, pow(up, .6));
+        float cl = fbm(uv * .8 + vec2(7.3, 2.1));
+        col *= .82 + .3 * cl;
+        col += vec3(.1,.09,.07) * pow(max(dot(d, normalize(vec3(-0.5,0.55,-0.65))), 0.), 6.);
+      }
       gl_FragColor = vec4(col, 1.);
     }`,
 }));
@@ -78,9 +86,23 @@ scene.add(sky);
 scene.background = fogColor;
 
 // ------------------------------------------------------------------ lights
-scene.add(new THREE.HemisphereLight(0x5a6a88, 0x14120f, 0.55));
-const moon = new THREE.DirectionalLight(0x8ea6d8, 0.35);
+scene.add(DAY ? new THREE.HemisphereLight(0xb4c0cc, 0x55493c, 2.6) : new THREE.HemisphereLight(0x5a6a88, 0x14120f, 0.55));
+const moon = new THREE.DirectionalLight(DAY ? 0xfff1dd : 0x8ea6d8, DAY ? 2.2 : 0.35);
 moon.position.set(140, 170, -330);
+if (DAY) {
+  // a weak sun through thin cloud: soft shadows give the window reveals and ledges their depth
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  moon.position.set(camera.position.x - 70, 140, camera.position.z + 90);
+  moon.target.position.copy(camera.position);
+  scene.add(moon.target);
+  moon.castShadow = true;
+  moon.shadow.mapSize.set(4096, 4096);
+  Object.assign(moon.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 1, far: 420 });
+  moon.shadow.bias = -0.0004;
+  moon.shadow.normalBias = 0.04;
+  moon.shadow.radius = 4;
+}
 scene.add(moon);
 
 // ------------------------------------------------------------------ city meshes
@@ -97,7 +119,7 @@ function tex(url, srgb) {
   return t;
 }
 const GLASS = new Set(['window', 'window_lit', 'window_broken']);
-const WET = new Set(['asphalt', 'asphalt_line_yellow', 'asphalt_line_white', 'crosswalk', 'sidewalk', 'sidewalk_cracked', 'curb', 'roof_gravel', 'rubble', 'concrete_dark', 'jersey_barrier', 'grate', 'stone_trim']);
+const WET = ['asphalt', 'crosswalk', 'sidewalk', 'curb', 'roof_gravel', 'rubble', 'concrete_dark', 'jersey_barrier', 'grate', 'stone_trim', 'burnt_ground', 'dirt_withered'];
 const GLOW = { lamp_glass: 9, window_lit: 1.5, ceiling_light: 3.0, red_light: 6 };
 
 // rain on horizontal surfaces: darker, glossier, with standing water in the dips
@@ -156,10 +178,11 @@ async function loadCity() {
     if (e.emissive) {
       mat.emissiveMap = tex(`${base}_e.png`, true);
       mat.emissive = new THREE.Color(0xffffff);
-      mat.emissiveIntensity = GLOW[e.tex] ?? 2;
+      mat.emissiveIntensity = (GLOW[e.tex] ?? 2) * (DAY ? 0.15 : 1);
     }
-    if (WET.has(e.tex)) wetten(mat, 1.0);
+    if (WET.some((w) => e.tex.startsWith(w))) wetten(mat, DAY ? 0.6 : 1.0);
     const mesh = new THREE.Mesh(g, mat);
+    mesh.castShadow = mesh.receiveShadow = DAY;
     if (mat.transparent) mesh.renderOrder = 2;
     group.add(mesh);
   }));
@@ -172,7 +195,7 @@ const index = await loadCity();
 // street lights: the nearest ones cast real light, every one gets a glow cone in the rain
 const lamps = index.lamps.map(([x, y, z]) => new THREE.Vector3(x + 0.5, y + 0.45, z + 0.5));
 lamps.sort((a, b) => a.distanceTo(camera.position) - b.distanceTo(camera.position));
-const LIT = +(params.get('lights') || 22);
+const LIT = DAY ? 0 : +(params.get('lights') || 22);
 lamps.slice(0, LIT).forEach((p) => {
   const l = new THREE.PointLight(0xffa955, 90, 34, 2);
   l.position.copy(p);
@@ -181,7 +204,7 @@ lamps.slice(0, LIT).forEach((p) => {
 // lanterns by doorways and lobby ceiling lights near the camera
 const near = (list, n) => list.map(([x, y, z, kind]) => ({ p: new THREE.Vector3(x + 0.5, y + 0.4, z + 0.5), kind }))
   .sort((a, b) => a.p.distanceTo(camera.position) - b.p.distanceTo(camera.position)).slice(0, n);
-for (const { p, kind } of near(index.lights.filter((l) => l[3] === 'wall_lantern'), 10)) {
+for (const { p, kind } of near(index.lights.filter((l) => l[3] === 'wall_lantern'), DAY ? 0 : 10)) {
   const l = new THREE.PointLight(0xffb060, 14, 14, 2); l.position.copy(p); scene.add(l);
 }
 for (const { p } of near(index.lights.filter((l) => l[3] === 'ceiling_light' && l[1] < 10), +(params.get('ceil') || 6))) {
@@ -196,7 +219,7 @@ const coneMat = new THREE.ShaderMaterial({
       gl_FragColor = vec4(vec3(1.0,0.66,0.33) * a, 1.); }`,
 });
 const cones = [];
-for (const p of lamps.slice(0, 60)) {
+for (const p of lamps.slice(0, DAY ? 0 : 60)) {
   const cone = new THREE.Mesh(new THREE.ConeGeometry(3.2, 6.4, 24, 1, true), coneMat);
   cone.position.set(p.x, p.y - 3.2, p.z);
   scene.add(cone);
@@ -226,7 +249,7 @@ const mirrorShader = {
       vec3 r = acc / wsum;
       vec3 v = normalize(cameraPosition - vW);
       float fres = 0.04 + 0.96 * pow(1. - max(v.y, 0.), 5.);
-      float strength = mix(0.35, 1.0, pd) * fres;
+      float strength = mix(0.35, 1.0, pd) * fres * ${DAY ? '0.45' : '1.0'};
       gl_FragColor = vec4(r * strength, 1.);
     }`,
 };
@@ -253,7 +276,7 @@ for (let i = 0; i < 26000; i++) {
 }
 const rainGeo = new THREE.BufferGeometry();
 rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(drops, 3));
-const rain = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0x8a9bb5, transparent: true, opacity: 0.22, fog: true }));
+const rain = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: DAY ? 0xc8d0d8 : 0x8a9bb5, transparent: true, opacity: DAY ? 0.1 : 0.22, fog: true }));
 scene.add(rain);
 // the mirror renders the scene again from below: leave the rain and light cones out of that
 const reflect = mirror.onBeforeRender;
@@ -267,7 +290,7 @@ mirror.onBeforeRender = function (...args) {
 // ------------------------------------------------------------------ post
 const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
 composer.addPass(new RenderPass(scene, camera));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 0.75, 0.55, 0.9));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), DAY ? 0.2 : 0.75, 0.55, DAY ? 0.95 : 0.9));
 composer.addPass(new OutputPass());
 composer.addPass(new ShaderPass({
   uniforms: { tDiffuse: { value: null } },

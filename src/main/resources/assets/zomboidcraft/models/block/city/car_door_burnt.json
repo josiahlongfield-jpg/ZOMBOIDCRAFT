@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "car_burnt": "zomboidcraft:block/city/car_burnt",
+    "particle": "zomboidcraft:block/city/car_burnt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1,
+        7
+      ],
+      "to": [
+        12,
+        15,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#car_burnt"
+        },
+        "south": {
+          "texture": "#car_burnt"
+        },
+        "east": {
+          "texture": "#car_burnt"
+        },
+        "west": {
+          "texture": "#car_burnt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#car_burnt"
+        },
+        "down": {
+          "texture": "#car_burnt"
+        }
+      }
+    }
+  ]
+}

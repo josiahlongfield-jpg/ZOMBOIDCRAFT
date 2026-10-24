@@ -1,6 +1,8 @@
 package com.zomboidcraft.world;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.city.BlockSink;
 import com.zomboidcraft.world.city.CityDemo;
 import java.util.ArrayDeque;
@@ -17,10 +19,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Builds the test downtown ({@link CityDemo}) into a world with vanilla stand-in blocks, a few
- * milliseconds of work per tick so the server keeps running. The generator writes into 16-block
- * sections kept in memory; the placer then copies them section by section, clearing hills and
- * trees in the lower floors so the streets aren't buried.
+ * Builds the test downtown ({@link CityDemo}) into a world with the city's own blocks (or vanilla
+ * stand-ins, with the world.cityStandIns setting), a few milliseconds of work per tick so the
+ * server keeps running. The generator writes into 16-block sections kept in memory; the placer
+ * then copies them section by section, clearing hills and trees in the lower floors so the
+ * streets aren't buried.
  */
 public final class CityPlacer implements BlockSink {
     /** Where the player stands in the generator's coordinates: the south end of the main avenue. */
@@ -153,7 +156,9 @@ public final class CityPlacer implements BlockSink {
                 want = Blocks.AIR.defaultBlockState();
             } else {
                 if (states[id] == null) {
-                    states[id] = StandIns.resolve(palette.get(id));
+                    String name = palette.get(id);
+                    BlockState real = ZcConfig.get().world.cityStandIns ? null : CityBlocks.resolve(name);
+                    states[id] = real != null ? real : StandIns.resolve(name);
                 }
                 want = states[id];
             }

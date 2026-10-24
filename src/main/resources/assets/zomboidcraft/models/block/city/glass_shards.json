@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "glass_shards": "zomboidcraft:block/city/glass_shards",
+    "particle": "zomboidcraft:block/city/glass_shards"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#glass_shards",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#glass_shards",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#glass_shards",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#glass_shards",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#glass_shards"
+        },
+        "down": {
+          "texture": "#glass_shards",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

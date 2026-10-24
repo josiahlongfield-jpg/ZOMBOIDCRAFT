@@ -19,10 +19,12 @@ public final class CityDemo {
     private final BlockSink sink;
     private final SplittableRandom rng;
     private final Props props;
+    private final long seed;
     private List<int[]> lamps = new ArrayList<>();
 
     public CityDemo(BlockSink sink, long seed) {
         this.sink = sink;
+        this.seed = seed;
         this.rng = new SplittableRandom(seed);
         this.props = new Props(sink, rng);
     }
@@ -57,6 +59,7 @@ public final class CityDemo {
         }
         railway(-160);
         avenueLife();
+        new Decay(sink, seed, MIN_X - 8, MAX_X + 8, MIN_Z - 8, MAX_Z + 8, 250).run();
     }
 
     /** Buildings along one side of the main avenue within one block. */

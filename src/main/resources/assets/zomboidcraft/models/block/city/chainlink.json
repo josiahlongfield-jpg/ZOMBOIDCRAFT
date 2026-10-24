@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "chainlink": "zomboidcraft:block/city/chainlink",
+    "particle": "zomboidcraft:block/city/chainlink"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        0
+      ],
+      "to": [
+        8.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#chainlink",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#chainlink",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#chainlink"
+        },
+        "west": {
+          "texture": "#chainlink"
+        },
+        "up": {
+          "texture": "#chainlink",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#chainlink",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

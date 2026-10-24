@@ -28,6 +28,7 @@ public final class ZcConfig {
     public Survival survival = new Survival();
     public Progression progression = new Progression();
     public Look look = new Look();
+    public World world = new World();
 
     public static class Zombies {
         /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
@@ -93,6 +94,11 @@ public final class ZcConfig {
 
     public static class Progression {
         public double xpMultiplier = 1.0;
+    }
+
+    public static class World {
+        /** /zc city builds with vanilla look-alike blocks instead of the city's own. */
+        public boolean cityStandIns = false;
     }
 
     public static class Look {

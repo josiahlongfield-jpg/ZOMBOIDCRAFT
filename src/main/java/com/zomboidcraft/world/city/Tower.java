@@ -68,7 +68,6 @@ public final class Tower {
         facade(roofY);
         core(roofY);
         roof(roofY);
-        weather();
     }
 
     private static int floorY(int k) {
@@ -497,19 +496,5 @@ public final class Tower {
             }
         }
         mast(roofY + 1, w - 4 - in, 3 + in);
-    }
-
-    // ------------------------------------------------------------------ ruin
-
-    private void weather() {
-        // ivy climbing the lower floors
-        for (int x = 0; x < w; x++) {
-            int climb = (int) (Math.max(0, Math.sin(x * 0.37 + rng.nextDouble()) * 22) + rng.nextInt(4));
-            for (int y = 1; y < climb; y++) {
-                if (rng.nextDouble() < 0.85) {
-                    p.setIfAir(x, y, -1, "vines[facing=south]");
-                }
-            }
-        }
     }
 }

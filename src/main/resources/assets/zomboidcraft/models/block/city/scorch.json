@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "scorch": "zomboidcraft:block/city/scorch",
+    "particle": "zomboidcraft:block/city/scorch"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#scorch",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#scorch",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#scorch",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#scorch",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#scorch"
+        },
+        "down": {
+          "texture": "#scorch",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

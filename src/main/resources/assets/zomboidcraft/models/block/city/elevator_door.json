@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "elevator_door": "zomboidcraft:block/city/elevator_door",
+    "steel_mullion": "zomboidcraft:block/city/steel_mullion",
+    "particle": "zomboidcraft:block/city/elevator_door"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#elevator_door",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#steel_mullion",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#steel_mullion",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#steel_mullion",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#steel_mullion",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#steel_mullion",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

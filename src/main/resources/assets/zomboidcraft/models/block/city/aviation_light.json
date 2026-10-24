@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "red_light": "zomboidcraft:block/city/red_light",
+    "particle": "zomboidcraft:block/city/red_light"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#red_light"
+        },
+        "south": {
+          "texture": "#red_light"
+        },
+        "east": {
+          "texture": "#red_light"
+        },
+        "west": {
+          "texture": "#red_light"
+        },
+        "up": {
+          "texture": "#red_light"
+        },
+        "down": {
+          "texture": "#red_light",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

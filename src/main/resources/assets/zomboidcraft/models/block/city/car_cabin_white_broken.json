@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "car_white": "zomboidcraft:block/city/car_white",
+    "window_broken": "zomboidcraft:block/city/window_broken",
+    "particle": "zomboidcraft:block/city/window_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#window_broken",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#window_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#window_broken",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#window_broken",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#car_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#car_white",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

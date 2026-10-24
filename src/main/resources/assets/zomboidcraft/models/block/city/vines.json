@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ivy": "zomboidcraft:block/city/ivy",
+    "particle": "zomboidcraft:block/city/ivy"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ivy",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ivy"
+        },
+        "east": {
+          "texture": "#ivy",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ivy",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ivy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ivy",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

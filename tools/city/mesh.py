@@ -81,6 +81,7 @@ class Palette:
         self.cube = np.zeros(n, bool)          # drawn as a (possibly lowered) cube
         self.opaque = np.zeros(n, bool)        # hides the faces of its neighbours
         self.glass = np.zeros(n, bool)         # translucent cube: glass hides glass
+        self.pane = np.zeros(n, bool)          # a window or shutter filling the wall (solid from afar)
         self.height = np.full(n, 16.0)
         self.face_tex = np.full((n, 6), -1, int)
         self.models = {}                       # id -> list of (corners, uvs, dir, tex, on_edge)
@@ -96,6 +97,7 @@ class Palette:
             elif spec.get("rotate") == "axis":
                 rot = 1 if props.get("axis", "z") == "x" else 0
             model = spec.get("model", "cube")
+            self.pane[i] = base.startswith(("window", "boarded_window", "shutter"))
             if model == "slab":
                 model, spec = "boxes", {"boxes": [[0, 0, 0, 16, 8, 16, spec["tex"]]], "tex": spec["tex"]}
             if model == "cube":
@@ -252,7 +254,7 @@ def main():
         cx, _, cz = map(float, s.split(","))
         near_col |= np.hypot(xx + ox - cx, zz + oz - cz) < a.radius
     opaque = pal.opaque[vox]
-    far_solid = opaque | (pal.glass[vox] & ~near_col[None])
+    far_solid = opaque | ((pal.glass[vox] | pal.pane[vox]) & ~near_col[None])
     # air that sees the sky (or is right next to air that does) counts as outside
     covered = np.flip(np.maximum.accumulate(np.flip(far_solid, 0), 0), 0)
     sky = ~covered

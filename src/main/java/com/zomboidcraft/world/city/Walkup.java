@@ -41,7 +41,6 @@ public final class Walkup {
         if (w >= 9 && floors >= 3) {
             fireEscape(roofY);
         }
-        weather(roofY);
     }
 
     private boolean windowColumn(int along, int length) {
@@ -216,16 +215,5 @@ public final class Walkup {
         }
         // the drop ladder stops a floor above the sidewalk
         p.fill(x1, FLOOR - 2, -2, x1, FLOOR - 1, -2, "ladder[facing=south]");
-    }
-
-    private void weather(int roofY) {
-        for (int x = 0; x < w; x++) {
-            int climb = (int) Math.max(0, (Math.sin(x * 0.45 + rng.nextDouble() * 2) * 0.6 + 0.35) * roofY);
-            for (int y = 4; y < climb; y++) {
-                if (rng.nextDouble() < 0.85) {
-                    p.setIfAir(x, y, -1, "vines[facing=south]");
-                }
-            }
-        }
     }
 }

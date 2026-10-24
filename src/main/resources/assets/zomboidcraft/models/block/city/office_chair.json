@@ -1,0 +1,173 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cubicle_fabric": "zomboidcraft:block/city/cubicle_fabric",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/cubicle_fabric"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        6,
+        4
+      ],
+      "to": [
+        12,
+        7.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric"
+        },
+        "east": {
+          "texture": "#cubicle_fabric"
+        },
+        "west": {
+          "texture": "#cubicle_fabric"
+        },
+        "up": {
+          "texture": "#cubicle_fabric"
+        },
+        "down": {
+          "texture": "#cubicle_fabric"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7.5,
+        11
+      ],
+      "to": [
+        12,
+        16,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric"
+        },
+        "east": {
+          "texture": "#cubicle_fabric"
+        },
+        "west": {
+          "texture": "#cubicle_fabric"
+        },
+        "up": {
+          "texture": "#cubicle_fabric",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cubicle_fabric"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        1,
+        7.5
+      ],
+      "to": [
+        8.5,
+        6,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        7
+      ],
+      "to": [
+        13,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        3
+      ],
+      "to": [
+        9,
+        1,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

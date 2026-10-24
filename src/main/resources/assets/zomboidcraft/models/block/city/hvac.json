@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hvac_grille": "zomboidcraft:block/city/hvac_grille",
+    "steel_mullion": "zomboidcraft:block/city/steel_mullion",
+    "particle": "zomboidcraft:block/city/hvac_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hvac_grille",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hvac_grille",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hvac_grille",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hvac_grille",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#steel_mullion",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#steel_mullion",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

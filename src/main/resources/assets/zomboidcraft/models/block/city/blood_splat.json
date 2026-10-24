@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blood_splat": "zomboidcraft:block/city/blood_splat",
+    "particle": "zomboidcraft:block/city/blood_splat"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blood_splat",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blood_splat",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blood_splat",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#blood_splat",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#blood_splat"
+        },
+        "down": {
+          "texture": "#blood_splat",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

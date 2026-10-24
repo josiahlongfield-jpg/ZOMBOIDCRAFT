@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dumpster": "zomboidcraft:block/city/dumpster",
+    "particle": "zomboidcraft:block/city/dumpster"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        11,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dumpster"
+        },
+        "south": {
+          "texture": "#dumpster"
+        },
+        "east": {
+          "texture": "#dumpster",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dumpster",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dumpster"
+        },
+        "down": {
+          "texture": "#dumpster",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        1
+      ],
+      "to": [
+        16,
+        12.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dumpster"
+        },
+        "south": {
+          "texture": "#dumpster"
+        },
+        "east": {
+          "texture": "#dumpster",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dumpster",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dumpster"
+        },
+        "down": {
+          "texture": "#dumpster"
+        }
+      }
+    }
+  ]
+}

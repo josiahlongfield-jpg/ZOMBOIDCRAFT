@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "steel_mullion": "zomboidcraft:block/city/steel_mullion",
+    "particle": "zomboidcraft:block/city/steel_mullion"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#steel_mullion",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#steel_mullion",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#steel_mullion"
+        },
+        "west": {
+          "texture": "#steel_mullion"
+        },
+        "up": {
+          "texture": "#steel_mullion"
+        },
+        "down": {
+          "texture": "#steel_mullion",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

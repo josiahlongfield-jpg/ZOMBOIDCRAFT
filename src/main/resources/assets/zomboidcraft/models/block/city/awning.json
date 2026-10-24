@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "awning": "zomboidcraft:block/city/awning",
+    "particle": "zomboidcraft:block/city/awning"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#awning",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#awning",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#awning",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#awning",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#awning"
+        },
+        "down": {
+          "texture": "#awning"
+        }
+      }
+    }
+  ]
+}

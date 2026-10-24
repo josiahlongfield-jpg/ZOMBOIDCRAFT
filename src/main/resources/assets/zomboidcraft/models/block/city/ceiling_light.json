@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ceiling_light": "zomboidcraft:block/city/ceiling_light",
+    "particle": "zomboidcraft:block/city/ceiling_light"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        15,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ceiling_light"
+        },
+        "south": {
+          "texture": "#ceiling_light"
+        },
+        "east": {
+          "texture": "#ceiling_light"
+        },
+        "west": {
+          "texture": "#ceiling_light"
+        },
+        "up": {
+          "texture": "#ceiling_light",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ceiling_light"
+        }
+      }
+    }
+  ]
+}

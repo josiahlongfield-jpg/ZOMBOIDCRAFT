@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "leaf_litter": "zomboidcraft:block/city/leaf_litter",
+    "particle": "zomboidcraft:block/city/leaf_litter"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf_litter",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#leaf_litter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#leaf_litter",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#leaf_litter",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#leaf_litter"
+        },
+        "down": {
+          "texture": "#leaf_litter",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

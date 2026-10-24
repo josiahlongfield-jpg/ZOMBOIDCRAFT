@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tank_wood": "zomboidcraft:block/city/tank_wood",
+    "particle": "zomboidcraft:block/city/tank_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tank_wood"
+        },
+        "south": {
+          "texture": "#tank_wood"
+        },
+        "east": {
+          "texture": "#tank_wood"
+        },
+        "west": {
+          "texture": "#tank_wood"
+        },
+        "up": {
+          "texture": "#tank_wood"
+        },
+        "down": {
+          "texture": "#tank_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "to": [
+        12,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tank_wood"
+        },
+        "south": {
+          "texture": "#tank_wood"
+        },
+        "east": {
+          "texture": "#tank_wood"
+        },
+        "west": {
+          "texture": "#tank_wood"
+        },
+        "up": {
+          "texture": "#tank_wood"
+        },
+        "down": {
+          "texture": "#tank_wood"
+        }
+      }
+    }
+  ]
+}

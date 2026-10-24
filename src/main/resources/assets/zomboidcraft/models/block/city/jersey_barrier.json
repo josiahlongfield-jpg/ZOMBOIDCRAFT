@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "jersey_barrier": "zomboidcraft:block/city/jersey_barrier",
+    "particle": "zomboidcraft:block/city/jersey_barrier"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#jersey_barrier"
+        },
+        "south": {
+          "texture": "#jersey_barrier"
+        },
+        "east": {
+          "texture": "#jersey_barrier",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#jersey_barrier",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#jersey_barrier"
+        },
+        "down": {
+          "texture": "#jersey_barrier",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        4
+      ],
+      "to": [
+        16,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#jersey_barrier"
+        },
+        "south": {
+          "texture": "#jersey_barrier"
+        },
+        "east": {
+          "texture": "#jersey_barrier",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#jersey_barrier",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#jersey_barrier"
+        },
+        "down": {
+          "texture": "#jersey_barrier"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        5
+      ],
+      "to": [
+        16,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#jersey_barrier"
+        },
+        "south": {
+          "texture": "#jersey_barrier"
+        },
+        "east": {
+          "texture": "#jersey_barrier",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#jersey_barrier",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#jersey_barrier",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#jersey_barrier"
+        }
+      }
+    }
+  ]
+}

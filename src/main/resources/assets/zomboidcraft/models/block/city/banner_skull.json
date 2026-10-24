@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "banner_skull": "zomboidcraft:block/city/banner_skull",
+    "particle": "zomboidcraft:block/city/banner_skull"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0.5
+      ],
+      "to": [
+        15,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#banner_skull"
+        },
+        "south": {
+          "texture": "#banner_skull"
+        },
+        "east": {
+          "texture": "#banner_skull"
+        },
+        "west": {
+          "texture": "#banner_skull"
+        },
+        "up": {
+          "texture": "#banner_skull",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#banner_skull",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

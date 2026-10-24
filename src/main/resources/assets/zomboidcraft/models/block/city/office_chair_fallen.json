@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cubicle_fabric": "zomboidcraft:block/city/cubicle_fabric",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/cubicle_fabric"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        3
+      ],
+      "to": [
+        12,
+        1.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric"
+        },
+        "east": {
+          "texture": "#cubicle_fabric"
+        },
+        "west": {
+          "texture": "#cubicle_fabric"
+        },
+        "up": {
+          "texture": "#cubicle_fabric"
+        },
+        "down": {
+          "texture": "#cubicle_fabric",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        1.5,
+        11
+      ],
+      "to": [
+        12,
+        8,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric"
+        },
+        "east": {
+          "texture": "#cubicle_fabric"
+        },
+        "west": {
+          "texture": "#cubicle_fabric"
+        },
+        "up": {
+          "texture": "#cubicle_fabric"
+        },
+        "down": {
+          "texture": "#cubicle_fabric"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        1
+      ],
+      "to": [
+        13,
+        1,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

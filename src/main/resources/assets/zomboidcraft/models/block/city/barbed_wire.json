@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "barbed_wire": "zomboidcraft:block/city/barbed_wire",
+    "particle": "zomboidcraft:block/city/barbed_wire"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        0
+      ],
+      "to": [
+        8.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#barbed_wire",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#barbed_wire",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#barbed_wire"
+        },
+        "west": {
+          "texture": "#barbed_wire"
+        },
+        "up": {
+          "texture": "#barbed_wire",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#barbed_wire",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

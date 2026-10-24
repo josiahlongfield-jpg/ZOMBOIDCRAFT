@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "grate": "zomboidcraft:block/city/grate",
+    "particle": "zomboidcraft:block/city/grate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#grate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#grate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#grate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#grate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#grate"
+        },
+        "down": {
+          "texture": "#grate",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

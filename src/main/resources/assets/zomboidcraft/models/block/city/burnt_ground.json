@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "asphalt": "zomboidcraft:block/city/asphalt",
+    "burnt_ground": "zomboidcraft:block/city/burnt_ground",
+    "particle": "zomboidcraft:block/city/asphalt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#asphalt",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#asphalt",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#asphalt",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#asphalt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#burnt_ground"
+        },
+        "down": {
+          "texture": "#asphalt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

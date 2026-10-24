@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "graffiti_3": "zomboidcraft:block/city/graffiti_3",
+    "particle": "zomboidcraft:block/city/graffiti_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#graffiti_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#graffiti_3"
+        },
+        "east": {
+          "texture": "#graffiti_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#graffiti_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#graffiti_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#graffiti_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

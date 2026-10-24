@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "shutter": "zomboidcraft:block/city/shutter",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/streetlight_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0.5,
+        7
+      ],
+      "to": [
+        15.5,
+        15.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shutter"
+        },
+        "south": {
+          "texture": "#shutter"
+        },
+        "east": {
+          "texture": "#shutter"
+        },
+        "west": {
+          "texture": "#shutter"
+        },
+        "up": {
+          "texture": "#shutter"
+        },
+        "down": {
+          "texture": "#shutter"
+        }
+      }
+    }
+  ]
+}

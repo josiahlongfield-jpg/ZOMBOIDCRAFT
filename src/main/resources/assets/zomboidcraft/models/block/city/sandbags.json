@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sandbag": "zomboidcraft:block/city/sandbag",
+    "particle": "zomboidcraft:block/city/sandbag"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sandbag"
+        },
+        "south": {
+          "texture": "#sandbag"
+        },
+        "east": {
+          "texture": "#sandbag",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sandbag",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sandbag"
+        },
+        "down": {
+          "texture": "#sandbag",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        5,
+        3
+      ],
+      "to": [
+        15,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sandbag"
+        },
+        "south": {
+          "texture": "#sandbag"
+        },
+        "east": {
+          "texture": "#sandbag"
+        },
+        "west": {
+          "texture": "#sandbag"
+        },
+        "up": {
+          "texture": "#sandbag"
+        },
+        "down": {
+          "texture": "#sandbag"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "car_grey": "zomboidcraft:block/city/car_grey",
+    "particle": "zomboidcraft:block/city/car_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#car_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#car_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#car_grey",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#car_grey",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#car_grey"
+        },
+        "down": {
+          "texture": "#car_grey",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

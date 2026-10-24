@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cubicle_fabric": "zomboidcraft:block/city/cubicle_fabric",
+    "particle": "zomboidcraft:block/city/cubicle_fabric"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric"
+        },
+        "east": {
+          "texture": "#cubicle_fabric",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cubicle_fabric",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cubicle_fabric",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cubicle_fabric",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

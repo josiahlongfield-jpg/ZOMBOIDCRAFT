@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "stair_concrete": "zomboidcraft:block/city/stair_concrete",
+    "particle": "zomboidcraft:block/city/stair_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stair_concrete",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#stair_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stair_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stair_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stair_concrete"
+        },
+        "down": {
+          "texture": "#stair_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stair_concrete",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#stair_concrete"
+        },
+        "east": {
+          "texture": "#stair_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stair_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stair_concrete",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stair_concrete"
+        }
+      }
+    }
+  ]
+}
