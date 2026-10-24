@@ -24,6 +24,7 @@ document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 const DAY = params.get('mode') === 'day';
+const EYES = params.get('eyes');  // folder of glowing eye masks, named like the skins
 const fogColor = new THREE.Color(DAY ? 0x9aa3a8 : 0x1a2230);
 scene.background = fogColor; scene.fog = new THREE.FogExp2(fogColor, DAY ? 0.03 : 0.045);
 scene.add(new THREE.HemisphereLight(0x6f86b0, 0x1a1612, 0.7));
@@ -106,6 +107,11 @@ function zombie(name, hd, parts, pose) {
   const mat = material(name, hd), root = new THREE.Group();
   const head = pivot(0, 24, 0, box(mat, 0, 0, 8, 8, 8), 0, 4, 0);
   const hat = box(mat, 32, 0, 8, 8, 8, 0.5); hat.position.set(0, 4, 0); head.add(hat);
+  if (EYES) {  // glowing eyes: the mask drawn full-bright over the face, like the game's eye layer
+    const m = new THREE.MeshBasicMaterial({ map: tex(`${EYES}/${name}.png`, true), alphaTest: 0.5, toneMapped: false });
+    m.color.setScalar(1.6);
+    const e = box(m, 0, 0, 8, 8, 8, 0.02); e.position.set(0, 4, 0); head.add(e);
+  }
   if (parts.visor) { const v = box(mat, 0, 32, 8, 1, 4, 0, 8, 0.5, 4); v.position.set(0, 5.75, 6); head.add(v); }
   if (parts.brim) { const b = box(mat, 0, 32, 10, 1, 10, 0, 10, 0.5, 10); b.position.set(0, 5.25, 0); b.scale.set(parts.brim, 1, parts.brim); head.add(b); }
   const body = pivot(0, 24, 0, box(mat, 16, 16, 8, 12, 4), 0, -6, 0);
@@ -134,8 +140,9 @@ for (const [name, hd, outfit, x, z, pose] of cast) {
   zb.position.set(x, 0, z); zb.rotation.y = -x * 0.12; scene.add(zb);
 }
 
-const camera = new THREE.PerspectiveCamera(SHOT === 'wide' ? 38 : 20, W / H, 0.1, 200);
+const camera = new THREE.PerspectiveCamera(SHOT === 'wide' ? 38 : SHOT === 'face' ? 24 : 20, W / H, 0.1, 200);
 if (SHOT === 'wide') { camera.position.set(0, 1.5, 6.2); camera.lookAt(0, 1.05, 0); }
+else if (SHOT === 'face') { camera.position.set(0, 1.72, 2.1); camera.lookAt(0, 1.66, 0.3); }
 else { camera.position.set(0, 1.8, 4.4); camera.lookAt(0, 1.45, 0.3); }
 
 const composer = new EffectComposer(renderer);

@@ -13,6 +13,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
     public WalkerRenderer(EntityRendererProvider.Context context) {
         super(context, new WalkerModel(context.bakeLayer(WalkerModel.LAYER)), 0.5f);
         addLayer(new WalkerAddonLayer(this, new WalkerAddonModel(context.bakeLayer(WalkerAddonModel.LAYER))));
+        addLayer(new WalkerEyesLayer(this));
     }
 
     @Override
@@ -36,6 +37,10 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 : look.hdSkins
                 ? ZomboidCraft.id("textures/entity/walker_addons_hd/" + hd)
                 : ZomboidCraft.id("textures/entity/walker_addons/" + name + ".png");
+        state.eyesTexture = !look.glowingEyes ? null
+                : look.hdSkins
+                ? ZomboidCraft.id("textures/entity/walker_eyes_hd/" + hd)
+                : ZomboidCraft.id("textures/entity/walker_eyes/" + name + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
     }
 

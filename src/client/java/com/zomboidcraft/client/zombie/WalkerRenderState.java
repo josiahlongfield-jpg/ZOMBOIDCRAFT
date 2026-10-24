@@ -10,6 +10,8 @@ public class WalkerRenderState extends ZombieRenderState {
     public int variant;
     /** Atlas for the outfit's 3D pieces, or null when they are turned off. */
     public Identifier addonTexture;
+    /** Glowing eye mask matching the skin, or null when look.glowingEyes is off. */
+    public Identifier eyesTexture;
     public String outfit = "civilian";
     /** 0 none, 1 right forearm, 2 left forearm, 3 right arm, 4 left arm. */
     public int missingLimb;
