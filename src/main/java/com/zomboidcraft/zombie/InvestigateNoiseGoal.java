@@ -52,7 +52,10 @@ public class InvestigateNoiseGoal extends Goal {
 
     @Override
     public void stop() {
-        ears.zomboidcraft$forget();
+        // Only lose interest after arriving or giving up, not when another goal (like bashing) takes over.
+        if (ticks >= GIVE_UP_TICKS || destination == null || zombie.position().distanceToSqr(destination) <= 4.0) {
+            ears.zomboidcraft$forget();
+        }
         destination = null;
         zombie.getNavigation().stop();
     }

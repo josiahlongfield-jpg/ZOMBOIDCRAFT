@@ -1,5 +1,6 @@
 package com.zomboidcraft;
 
+import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalEvents;
 import com.zomboidcraft.survival.SurvivalStats;
 import com.zomboidcraft.zombie.ZombieEvents;
@@ -20,7 +21,11 @@ public class ZomboidCraft implements ModInitializer {
     @Override
     public void onInitialize() {
         SurvivalStats.register();
+        Skills.register();
+        ModBlocks.register();
         ModItems.register();
+        Loot.register();
+        com.zomboidcraft.barricade.Barricades.register();
         SurvivalEvents.register();
         ZombieEvents.register();
         ZombieSpawner.register();

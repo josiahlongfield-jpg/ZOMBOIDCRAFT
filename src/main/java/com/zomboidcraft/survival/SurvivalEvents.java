@@ -1,5 +1,8 @@
 package com.zomboidcraft.survival;
 
+import com.zomboidcraft.skills.Combat;
+import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.zombie.ZombieTypes;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -35,6 +38,7 @@ public final class SurvivalEvents {
             }
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            Combat.onKill(entity, source);
             if (entity instanceof ServerPlayer player && SurvivalStats.get(player).infected()) {
                 reanimate(player);
             }
@@ -58,8 +62,16 @@ public final class SurvivalEvents {
         RandomSource random = player.getRandom();
         SurvivalStats stats = SurvivalStats.get(player);
 
-        // Thirst
-        float thirstDrain = THIRST_PER_SECOND * (player.isSprinting() ? 2.5f : 1f);
+        // Thirst. Sprinting skill makes running less draining.
+        float sprintMultiplier = 2.5f - 0.1f * Skills.level(player, Skill.SPRINTING);
+        float thirstDrain = THIRST_PER_SECOND * (player.isSprinting() ? sprintMultiplier : 1f);
+        if (player.isSprinting()) {
+            Skills.addXp(player, Skill.SPRINTING, 1);
+        }
+        if (player.isShiftKeyDown() && !level.getEntitiesOfClass(net.minecraft.world.entity.monster.zombie.Zombie.class,
+                        player.getBoundingBox().inflate(16), ZombieTypes::isWalker).isEmpty()) {
+            Skills.addXp(player, Skill.SNEAKING, 1);
+        }
         stats = stats.withThirst(stats.thirst() - thirstDrain);
         if (stats.thirst() < 20f) {
             effect(player, MobEffects.SLOWNESS, 0);

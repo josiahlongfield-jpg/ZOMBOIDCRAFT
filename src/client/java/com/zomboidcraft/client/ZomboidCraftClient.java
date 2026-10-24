@@ -8,5 +8,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HudElementRegistry.addLast(ZomboidCraft.id("moodles"), MoodleHud::render);
+        SkillsHud.register();
+        HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
     }
 }

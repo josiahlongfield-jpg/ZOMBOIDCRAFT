@@ -1,5 +1,6 @@
 package com.zomboidcraft.mixin;
 
+import com.zomboidcraft.zombie.BashBarricadeGoal;
 import com.zomboidcraft.zombie.InvestigateNoiseGoal;
 import com.zomboidcraft.zombie.NoiseListener;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -17,8 +18,9 @@ public abstract class ZombieMixin implements NoiseListener {
     private @Nullable Vec3 zomboidcraft$heardAt;
 
     @Inject(method = "registerGoals", at = @At("TAIL"))
-    private void zomboidcraft$addNoiseGoal(CallbackInfo ci) {
+    private void zomboidcraft$addGoals(CallbackInfo ci) {
         Zombie self = (Zombie) (Object) this;
+        ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashBarricadeGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(3, new InvestigateNoiseGoal(self));
     }
 

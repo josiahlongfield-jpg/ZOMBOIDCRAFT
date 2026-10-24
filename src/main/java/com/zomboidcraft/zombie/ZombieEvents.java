@@ -1,6 +1,8 @@
 package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.Skills;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -76,7 +78,8 @@ public final class ZombieEvents {
             Vec3 now = player.position();
             Vec3 before = lastPositions.put(player, now);
             boolean moved = before != null && before.distanceToSqr(now) > 0.04;
-            double radius = !moved || player.isShiftKeyDown() ? 0 : player.isSprinting() ? Noise.SPRINT : Noise.WALK;
+            double walk = Noise.WALK - 0.3 * Skills.level(player, Skill.SNEAKING);
+            double radius = !moved || player.isShiftKeyDown() ? 0 : player.isSprinting() ? Noise.SPRINT : walk;
             Noise.emit((ServerLevel) player.level(), now, radius);
         }
     }

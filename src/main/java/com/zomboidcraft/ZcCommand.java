@@ -4,6 +4,8 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalStats;
 import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -15,6 +17,8 @@ import net.minecraft.server.level.ServerPlayer;
 /** /zc: inspect and set survival stats, for testing. Ops only. */
 public final class ZcCommand {
     public static void register() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
+                Commands.literal("skills").executes(ZcCommand::skills)));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -31,6 +35,16 @@ public final class ZcCommand {
                         .then(Commands.literal("wounds")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 10))
                                         .executes(ctx -> update(ctx, s -> s.withWounds(IntegerArgumentType.getInteger(ctx, "value"))))))));
+    }
+
+    private static int skills(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        StringBuilder text = new StringBuilder("Skills:");
+        for (Skill skill : Skill.values()) {
+            text.append(String.format("%n  %s %d (%d xp)", skill.displayName(), Skills.level(player, skill), Skills.xp(player, skill)));
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(text.toString()), false);
+        return 1;
     }
 
     private static int show(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
