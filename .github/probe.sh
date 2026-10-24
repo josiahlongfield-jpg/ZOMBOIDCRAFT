@@ -136,6 +136,22 @@ javap -cp "$CP" -p net.minecraft.client.renderer.ItemBlockRenderTypes 2>&1 | hea
 classes 'ChunkSectionLayer|RenderLayerHelper|BlockRenderLayer'
 javap -cp "$CP" -p net.fabricmc.fabric.api.client.renderer.v1.render.ChunkSectionLayerHelper 2>&1 | head -20
 
+echo "===== weather2"
+for c in net.minecraft.world.attribute.EnvironmentAttributeLayer 'net.minecraft.world.attribute.EnvironmentAttributeLayer$Constant' 'net.minecraft.world.attribute.EnvironmentAttributeLayer$TimeBased' 'net.minecraft.world.attribute.EnvironmentAttributeLayer$Positional' 'net.minecraft.world.attribute.EnvironmentAttributeSystem$Builder' net.minecraft.world.attribute.EnvironmentAttributeSystem net.minecraft.world.attribute.EnvironmentAttribute net.minecraft.world.attribute.modifier.AttributeModifier net.minecraft.world.level.saveddata.WeatherData net.minecraft.client.renderer.Lightmap net.minecraft.client.renderer.LightmapRenderStateExtractor net.minecraft.client.renderer.state.LightmapRenderState net.minecraft.world.entity.LightningBolt net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment net.minecraft.client.renderer.fog.environment.FogEnvironment net.minecraft.client.renderer.fog.FogData; do
+  echo "----- $c"; javap -cp "$CP" -p "$c" 2>&1 | head -70
+done
+classes 'attribute/|WeatherAttributes|weather/'
+for j in $MC_JARS; do
+  unzip -p "$j" data/minecraft/timeline/day.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); [print(k, json.dumps(v)[:600]) for k,v in d['tracks'].items() if 'visual' in k or 'light' in k]" && echo " <- day visual tracks"
+  unzip -p "$j" data/minecraft/tags/timeline/in_overworld.json 2>/dev/null && echo " <- in_overworld tag"
+  unzip -p "$j" data/minecraft/world_clock/overworld.json 2>/dev/null && echo " <- clock"
+  break
+done
+# where vanilla builds the attribute system and applies weather
+javap -cp "$CP" -p -c net.minecraft.world.level.Level 2>/dev/null | grep -n -B2 -A40 "EnvironmentAttributeSystem addDefaultLayers\|static .*EnvironmentAttributeSystem\|addWeather\|WeatherAttributes" | head -120
+javap -cp "$CP" -p -c net.minecraft.world.attribute.EnvironmentAttributeSystem 2>/dev/null | grep -n "invoke\|Method\|static" | head -80
+exit 0
+
 echo "===== weather"
 classes 'attribute/Environment|EnvironmentAttribute|timeline/|Timeline|level/storage/WeatherData|WeatherData|client/renderer/fog/|FogRenderer|SkyRenderer|LightTexture|Lightmap|CloudRenderer|WeatherEffectRenderer|DimensionSpecialEffects|entity/LightningBolt|Hail|world/clock|WorldClock|GameRules$'
 sig net.minecraft.world.level.Level 'Rain|Thunder|rain|thunder|Weather|weather|Brightness|DayTime|dayTime|TimeOfDay|SkyDarken|skyDarken|environmentAttributes|Attributes'
