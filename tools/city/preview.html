@@ -1,0 +1,288 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0;background:#000}canvas{display:block}</style></head>
+<body>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// City preview: loads the meshes from tools/city/mesh.py and renders a rainy night the way
+// Photon would in game: wet reflective streets, sodium street lights, lit windows, fog, bloom.
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+
+const params = new URLSearchParams(location.search);
+const W = +(params.get('w') || 1440), H = +(params.get('h') || 1080);
+const SHOTS = {
+  street: { pos: [2.5, 2.4, 62], look: [-1, 34, -120], fov: 66 },
+  tower: { pos: [-9, 2.2, 6], look: [16, 45, -40], fov: 70 },
+  aerial: { pos: [-120, 140, 160], look: [10, 20, -120], fov: 50 },
+  lobby: { pos: [15, 2.6, -24], look: [26, 3.5, -50], fov: 75 },
+};
+const shot = SHOTS[params.get('shot') || 'street'];
+const DIR = params.get('mesh') || 'mesh';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setSize(W, H);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = +(params.get('exposure') || 1.0);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc') : 0x222a36);
+scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || 0.0052));
+const camera = new THREE.PerspectiveCamera(shot.fov, W / H, 0.1, 3000);
+camera.position.set(...shot.pos);
+camera.lookAt(...shot.look);
+
+// ------------------------------------------------------------------ sky
+const sky = new THREE.Mesh(new THREE.SphereGeometry(2000, 48, 24), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { moonDir: { value: new THREE.Vector3(0.35, 0.42, -0.84).normalize() } },
+  vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); gl_Position.z = gl_Position.w; }`,
+  fragmentShader: `
+    varying vec3 vDir; uniform vec3 moonDir;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+    float n(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+      return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }
+    float fbm(vec2 p){ float s=0., a=.5; for(int i=0;i<6;i++){ s+=a*n(p); p*=2.03; a*=.5; } return s; }
+    void main(){
+      vec3 d = normalize(vDir);
+      float up = clamp(d.y, 0., 1.);
+      vec3 col = mix(vec3(0.115,0.135,0.165), vec3(0.025,0.03,0.04), pow(up, .55));
+      vec2 uv = d.xz / (d.y + .15) * 1.6;
+      float c = fbm(uv + vec2(3.1, 1.7));
+      float m = max(dot(d, moonDir), 0.);
+      vec3 lit = vec3(0.42,0.47,0.55) * (pow(m, 18.) * 1.2 + 0.25);
+      col = mix(col, col * 0.55 + lit * c * 0.6, smoothstep(.35, .8, c) * smoothstep(0., .08, d.y));
+      // a square Minecraft moon with pixel craters, half hidden by cloud
+      vec3 mu = normalize(cross(moonDir, vec3(0.,1.,0.))), mv = cross(mu, moonDir);
+      vec2 q = vec2(dot(d, mu), dot(d, mv)) / max(dot(d, moonDir), 1e-3);
+      float size = 0.035;
+      if (dot(d, moonDir) > 0. && abs(q.x) < size && abs(q.y) < size) {
+        vec2 px = floor((q / size * .5 + .5) * 8.);
+        float crater = step(.72, h(px + 4.));
+        col = mix(col, vec3(0.86,0.88,0.92) * (1. - crater * .25) * 2.2, 1. - smoothstep(.5, .85, c));
+      }
+      col += vec3(0.3,0.34,0.42) * pow(m, 40.) * 0.5;
+      gl_FragColor = vec4(col, 1.);
+    }`,
+}));
+scene.add(sky);
+scene.background = fogColor;
+
+// ------------------------------------------------------------------ lights
+scene.add(new THREE.HemisphereLight(0x5a6a88, 0x14120f, 0.55));
+const moon = new THREE.DirectionalLight(0x8ea6d8, 0.35);
+moon.position.set(140, 170, -330);
+scene.add(moon);
+
+// ------------------------------------------------------------------ city meshes
+const loader = new THREE.TextureLoader();
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+function tex(url, srgb) {
+  const t = loader.load(url);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(1 / 16, 1 / 16);
+  t.magFilter = THREE.NearestFilter;
+  t.minFilter = THREE.NearestMipmapLinearFilter;
+  t.anisotropy = maxAniso;
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const GLASS = new Set(['window', 'window_lit', 'window_broken']);
+const WET = new Set(['asphalt', 'asphalt_line_yellow', 'asphalt_line_white', 'crosswalk', 'sidewalk', 'sidewalk_cracked', 'curb', 'roof_gravel', 'rubble', 'concrete_dark', 'jersey_barrier', 'grate', 'stone_trim']);
+const GLOW = { lamp_glass: 9, window_lit: 1.5, ceiling_light: 3.0, red_light: 6 };
+
+// rain on horizontal surfaces: darker, glossier, with standing water in the dips
+function wetten(mat, strength) {
+  mat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vWPos; varying vec3 vWNorm;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWPos = (modelMatrix * vec4(transformed,1.)).xyz; vWNorm = normalize(mat3(modelMatrix) * objectNormal);');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        varying vec3 vWPos; varying vec3 vWNorm;
+        float wh(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+        float wn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+          return mix(mix(wh(i),wh(i+vec2(1,0)),f.x), mix(wh(i+vec2(0,1)),wh(i+vec2(1,1)),f.x), f.y); }
+        float puddle(){ vec2 p = vWPos.xz * 0.11; return smoothstep(0.52, 0.66, wn(p) * .65 + wn(p * 2.7) * .35); }`)
+      .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+        float flatW = smoothstep(0.7, 0.95, vWNorm.y);
+        float pd = puddle() * flatW * ${strength.toFixed(2)};
+        roughnessFactor = mix(roughnessFactor * mix(1.0, 0.45, flatW * ${strength.toFixed(2)}), 0.04, pd);`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+        { float flatc = smoothstep(0.7, 0.95, vWNorm.y);
+          diffuseColor.rgb *= mix(1.0, 0.55, flatc * ${strength.toFixed(2)});
+          diffuseColor.rgb *= mix(1.0, 0.85, smoothstep(.3,.8, wn(vWPos.xy * vec2(3., .25)) * (1.-flatc))); }`);
+  };
+  mat.customProgramCacheKey = () => 'wet' + strength;
+}
+
+async function loadCity() {
+  const index = await (await fetch(`${DIR}/mesh.json`)).json();
+  const group = new THREE.Group();
+  group.scale.setScalar(1 / 16);
+  await Promise.all(index.textures.map(async (e) => {
+    const buf = await (await fetch(`${DIR}/${e.tex}.bin`)).arrayBuffer();
+    const V = e.verts, I = e.indices;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Int16Array(buf, 0, V * 3), 3));
+    const nb = new THREE.InterleavedBuffer(new Int8Array(buf, V * 6, V * 4), 4);
+    g.setAttribute('normal', new THREE.InterleavedBufferAttribute(nb, 3, 0, true));
+    g.setAttribute('uv', new THREE.BufferAttribute(new Int16Array(buf, V * 10, V * 2), 2));
+    g.setAttribute('color', new THREE.BufferAttribute(new Uint8Array(buf, V * 14, V * 4), 4, true));
+    g.setIndex(new THREE.BufferAttribute(new Uint32Array(buf, V * 18, I), 1));
+    g.computeBoundingSphere();
+    const base = `${DIR}/${e.tex}`;
+    const orm = tex(`${base}_orm.png`, false);
+    const mat = new THREE.MeshStandardMaterial({
+      map: tex(`${base}.png`, true), normalMap: tex(`${base}_n.png`, false),
+      roughnessMap: orm, metalnessMap: orm, aoMap: orm, aoMapIntensity: 0.6,
+      vertexColors: true, roughness: 1, metalness: 1,
+    });
+    mat.normalScale.set(1, -1);
+    if (e.alpha) {
+      mat.side = THREE.DoubleSide;
+      if (GLASS.has(e.tex)) { mat.transparent = true; mat.depthWrite = false; mat.alphaTest = 0.02; }
+      else mat.alphaTest = 0.5;
+    }
+    if (e.emissive) {
+      mat.emissiveMap = tex(`${base}_e.png`, true);
+      mat.emissive = new THREE.Color(0xffffff);
+      mat.emissiveIntensity = GLOW[e.tex] ?? 2;
+    }
+    if (WET.has(e.tex)) wetten(mat, 1.0);
+    const mesh = new THREE.Mesh(g, mat);
+    if (mat.transparent) mesh.renderOrder = 2;
+    group.add(mesh);
+  }));
+  scene.add(group);
+  return index;
+}
+
+const index = await loadCity();
+
+// street lights: the nearest ones cast real light, every one gets a glow cone in the rain
+const lamps = index.lamps.map(([x, y, z]) => new THREE.Vector3(x + 0.5, y + 0.45, z + 0.5));
+lamps.sort((a, b) => a.distanceTo(camera.position) - b.distanceTo(camera.position));
+const LIT = +(params.get('lights') || 22);
+lamps.slice(0, LIT).forEach((p) => {
+  const l = new THREE.PointLight(0xffa955, 90, 34, 2);
+  l.position.copy(p);
+  scene.add(l);
+});
+// lanterns by doorways and lobby ceiling lights near the camera
+const near = (list, n) => list.map(([x, y, z, kind]) => ({ p: new THREE.Vector3(x + 0.5, y + 0.4, z + 0.5), kind }))
+  .sort((a, b) => a.p.distanceTo(camera.position) - b.p.distanceTo(camera.position)).slice(0, n);
+for (const { p, kind } of near(index.lights.filter((l) => l[3] === 'wall_lantern'), 10)) {
+  const l = new THREE.PointLight(0xffb060, 14, 14, 2); l.position.copy(p); scene.add(l);
+}
+for (const { p } of near(index.lights.filter((l) => l[3] === 'ceiling_light' && l[1] < 10), +(params.get('ceil') || 6))) {
+  const l = new THREE.PointLight(0xe8f0ff, 10, 12, 2); l.position.copy(p).y -= 0.6; scene.add(l);
+}
+const coneMat = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+  vertexShader: `varying float vY; varying vec3 vN; varying vec3 vV;
+    void main(){ vY = -position.y / 6.4 + .5; vec4 mv = modelViewMatrix * vec4(position,1.); vN = normalize(normalMatrix*normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: `varying float vY; varying vec3 vN; varying vec3 vV;
+    void main(){ float edge = pow(abs(dot(vN, vV)), 1.5); float a = (1. - vY) * edge * 0.09;
+      gl_FragColor = vec4(vec3(1.0,0.66,0.33) * a, 1.); }`,
+});
+const cones = [];
+for (const p of lamps.slice(0, 60)) {
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(3.2, 6.4, 24, 1, true), coneMat);
+  cone.position.set(p.x, p.y - 3.2, p.z);
+  scene.add(cone);
+  cones.push(cone);
+}
+
+// wet road mirror: the reflection is added on top of the asphalt, stretched downward like
+// light on rain-soaked tarmac, strongest in the puddles and at grazing angles
+const mirrorShader = {
+  name: 'WetRoad',
+  uniforms: { color: { value: null }, tDiffuse: { value: null }, textureMatrix: { value: null } },
+  vertexShader: `uniform mat4 textureMatrix; varying vec4 vUv; varying vec3 vW;
+    void main(){ vUv = textureMatrix * vec4(position, 1.0); vW = (modelMatrix * vec4(position,1.)).xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `uniform sampler2D tDiffuse; varying vec4 vUv; varying vec3 vW;
+    float wh(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+    float wn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+      return mix(mix(wh(i),wh(i+vec2(1,0)),f.x), mix(wh(i+vec2(0,1)),wh(i+vec2(1,1)),f.x), f.y); }
+    void main(){
+      vec2 p = vW.xz * 0.11;
+      float pd = smoothstep(0.52, 0.66, wn(p) * .65 + wn(p * 2.7) * .35);
+      vec2 uv = vUv.xy / vUv.w;
+      float ripple = (wn(vW.xz * vec2(6., 1.5)) - .5) * 0.0025 * (1. - pd);
+      vec3 acc = vec3(0.); float wsum = 0.;
+      for (int i = 0; i < 10; i++) { float t = float(i) / 9.; float w = 1. - t * .7;
+        acc += texture2D(tDiffuse, uv + vec2(ripple, -t * mix(0.05, 0.012, pd))).rgb * w; wsum += w; }
+      vec3 r = acc / wsum;
+      vec3 v = normalize(cameraPosition - vW);
+      float fres = 0.04 + 0.96 * pow(1. - max(v.y, 0.), 5.);
+      float strength = mix(0.35, 1.0, pd) * fres;
+      gl_FragColor = vec4(r * strength, 1.);
+    }`,
+};
+const mirror = new Reflector(new THREE.PlaneGeometry(1200, 1200), {
+  textureWidth: W, textureHeight: H, clipBias: 0.003, shader: mirrorShader,
+});
+mirror.material.transparent = true;
+mirror.material.blending = THREE.AdditiveBlending;
+mirror.material.depthWrite = false;
+mirror.material.toneMapped = false;
+mirror.rotation.x = -Math.PI / 2;
+mirror.position.y = 14 / 16 + 0.002;
+mirror.renderOrder = 1;
+scene.add(mirror);
+
+// rain streaks around the camera
+const drops = [];
+const R = 70;
+for (let i = 0; i < 26000; i++) {
+  const x = camera.position.x + (Math.random() - 0.5) * R * 2, z = camera.position.z - Math.random() * R * 1.6 + 10;
+  const y = Math.random() * 60;
+  const len = 0.5 + Math.random() * 0.6;
+  drops.push(x, y, z, x + 0.05, y - len, z + 0.02);
+}
+const rainGeo = new THREE.BufferGeometry();
+rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(drops, 3));
+const rain = new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0x8a9bb5, transparent: true, opacity: 0.22, fog: true }));
+scene.add(rain);
+// the mirror renders the scene again from below: leave the rain and light cones out of that
+const reflect = mirror.onBeforeRender;
+mirror.onBeforeRender = function (...args) {
+  const hidden = [rain, ...cones];
+  hidden.forEach((o) => { o.visible = false; });
+  reflect.apply(this, args);
+  hidden.forEach((o) => { o.visible = true; });
+};
+
+// ------------------------------------------------------------------ post
+const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 0.75, 0.55, 0.9));
+composer.addPass(new OutputPass());
+composer.addPass(new ShaderPass({
+  uniforms: { tDiffuse: { value: null } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }',
+  fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+    void main(){ vec3 c = texture2D(tDiffuse, vUv).rgb;
+      float l = dot(c, vec3(.299,.587,.114));
+      c = mix(c * vec3(.92,1.0,1.08), c * vec3(1.06,1.0,.9), smoothstep(.15,.6,l));  // teal shadows, warm lights
+      float v = smoothstep(1.1, .35, length(vUv - .5) * 1.25); c *= mix(.55, 1., v);
+      c += (h(vUv * 1000.) - .5) * .025;
+      gl_FragColor = vec4(c, 1.); }`,
+}));
+
+// wait for every texture, then render once
+await new Promise((res) => { THREE.DefaultLoadingManager.onLoad = res; setTimeout(res, 20000); });
+composer.render();
+window.DONE = true;
+</script>
+</body></html>
