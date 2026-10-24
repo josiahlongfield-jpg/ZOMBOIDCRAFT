@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -48,7 +47,7 @@ public final class CityBlocks {
             BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().setId(key).sound(sound)
                     .strength(strength, Math.max(strength, 3f));
             if (kind == DOOR) {
-                properties.noOcclusion().pushReaction(PushReaction.DESTROY);
+                properties.noOcclusion();
             }
             if ((flags & SEE_THROUGH) != 0) {
                 properties.noOcclusion().isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p, box) -> false);
