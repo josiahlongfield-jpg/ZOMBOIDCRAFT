@@ -3,6 +3,7 @@ package com.zomboidcraft;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalEvents;
 import com.zomboidcraft.survival.SurvivalStats;
+import com.zomboidcraft.world.CityPlacer;
 import com.zomboidcraft.zombie.ZombieEvents;
 import com.zomboidcraft.zombie.ZombieSpawner;
 import net.fabricmc.api.ModInitializer;
@@ -32,6 +33,7 @@ public class ZomboidCraft implements ModInitializer {
         ZombieEvents.register();
         ZombieSpawner.register();
         ZcCommand.register();
+        CityPlacer.register();
         LOGGER.info("The dead walk.");
     }
 }

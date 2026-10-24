@@ -8,12 +8,14 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalStats;
+import com.zomboidcraft.world.CityPlacer;
 import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 /** /zc: inspect and set survival stats, and change settings. Ops only. */
@@ -25,6 +27,10 @@ public final class ZcCommand {
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("stats").executes(ZcCommand::show))
+                        .then(Commands.literal("city")
+                                .executes(ctx -> city(ctx, 1L))
+                                .then(Commands.argument("seed", IntegerArgumentType.integer())
+                                        .executes(ctx -> city(ctx, IntegerArgumentType.getInteger(ctx, "seed")))))
                         .then(Commands.literal("config")
                                 .executes(ZcCommand::listConfig)
                                 .then(Commands.literal("reload").executes(ctx -> {
@@ -50,6 +56,17 @@ public final class ZcCommand {
                         .then(Commands.literal("wounds")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 10))
                                         .executes(ctx -> update(ctx, s -> s.withWounds(IntegerArgumentType.getInteger(ctx, "value"))))))));
+    }
+
+    private static int city(CommandContext<CommandSourceStack> ctx, long seed) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        if (!CityPlacer.start((ServerLevel) player.level(), player.blockPosition(), seed)) {
+            ctx.getSource().sendFailure(Component.literal("A city is already being built"));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(
+                "Building the test city around you with stand-in blocks; it takes a minute or two. Best in a superflat world."), true);
+        return 1;
     }
 
     private static int listConfig(CommandContext<CommandSourceStack> ctx) {
