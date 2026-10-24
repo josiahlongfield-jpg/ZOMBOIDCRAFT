@@ -119,9 +119,9 @@ sig net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab '.'
 sig net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents '.'
 sig net.minecraft.world.item.CreativeModeTab 'public'
 sig net.minecraft.world.item.CreativeModeTab\$Builder 'public'
-ls ~/.gradle/caches/fabric-loom 2>/dev/null | head
-find ~/.gradle/caches -name 'fabric-api-*' -path '*rendering*' 2>/dev/null | head -5
-find ~/.gradle/caches -name '*.jar' 2>/dev/null | grep -i 'fabric-.*render\|creative' | head -10
+classes 'BlockRenderLayerMap|ChunkSectionLayer|ItemBlockRenderTypes|layers/EyesLayer|rendertype/RenderTypes|CreativeModeTabEvents|FabricCreativeModeTab|FabricItemGroup'
+sig net.minecraft.client.renderer.entity.layers.EyesLayer '.'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'eyes|Emissive|entityCutout|entityTranslucent'
 
 echo "===== compile errors"
 grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
