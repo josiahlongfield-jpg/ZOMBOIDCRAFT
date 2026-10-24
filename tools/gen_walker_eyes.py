@@ -14,8 +14,8 @@ import numpy as np
 from PIL import Image
 
 ENTITY = Path(__file__).resolve().parents[1] / "src/main/resources/assets/zomboidcraft/textures/entity"
-HOT = np.array([255, 92, 48], np.float32)
-RIM = np.array([196, 14, 8], np.float32)
+HOT = np.array([255, 38, 22], np.float32)
+RIM = np.array([168, 4, 2], np.float32)
 # outfits still on the generated skins until their painted art arrives
 PROCEDURAL = {"jogger", "patient", "security", "survivor"}
 
@@ -25,7 +25,7 @@ def mask(skin, procedural):
     s = skin.width // 64
     out = np.zeros_like(rgba)
     # the face: front of the head, rows between the brow and the mouth
-    y0, y1, x0, x1 = 8 * s + 2 * s, 8 * s + 5 * s, 8 * s, 16 * s
+    y0, y1, x0, x1 = 8 * s + 2 * s, 8 * s + int(5.5 * s), 8 * s, 16 * s
     face = rgba[y0:y1, x0:x1, :3]
     lo, hi = face.min(-1), face.max(-1)
     if procedural:
@@ -38,8 +38,14 @@ def mask(skin, procedural):
             eye |= ((xx - cx * k) / (2.6 * k)) ** 2 + ((yy - 14.5 * k) / (1.5 * k)) ** 2 <= 1
         eye &= lo > 70
     else:
-        # the painted skins have white eyes
-        eye = (lo > max(100, 0.78 * lo.max(), np.median(lo) + 40)) & (hi - lo < 60)
+        # the painted skins have white eyes: start from the whitest pixels, then take in the
+        # greyer whites around them, so the whole eye glows and not just its brightest row
+        pale = (hi - lo < 70)
+        eye = (lo > max(100, 0.78 * lo.max(), np.median(lo) + 40)) & pale
+        for _ in range(3):
+            grown = np.pad(eye, 1)
+            grown = grown[:-2, 1:-1] | grown[2:, 1:-1] | grown[1:-1, :-2] | grown[1:-1, 2:]
+            eye |= grown & pale & (lo > max(110, 0.55 * lo.max()))
     if not eye.any():
         return None
     # inner pixels (all four neighbours are eye too) get the hot colour

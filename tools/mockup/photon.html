@@ -142,7 +142,7 @@ for (const [name, hd, outfit, x, z, pose] of cast) {
 
 const camera = new THREE.PerspectiveCamera(SHOT === 'wide' ? 38 : SHOT === 'face' ? 24 : 20, W / H, 0.1, 200);
 if (SHOT === 'wide') { camera.position.set(0, 1.5, 6.2); camera.lookAt(0, 1.05, 0); }
-else if (SHOT === 'face') { camera.position.set(0, 1.72, 2.1); camera.lookAt(0, 1.66, 0.3); }
+else if (SHOT === 'face') { camera.position.set(0, 1.72, 3.0); camera.lookAt(0, 1.68, 0.3); }
 else { camera.position.set(0, 1.8, 4.4); camera.lookAt(0, 1.45, 0.3); }
 
 const composer = new EffectComposer(renderer);
