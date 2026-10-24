@@ -52,6 +52,8 @@ public final class WeatherDirector {
     private static int warning;
     private static float windYaw = 45;
     private static int hailLeft;
+    /** A fog bank rolling in over ordinary weather, 0 when there is none. */
+    private static float bank;
     private static long ticks;
     private static boolean running;
 
@@ -161,6 +163,10 @@ public final class WeatherDirector {
         queued = null;
         ticksLeft = (next.minMinutes * 60 + RNG.nextInt((next.maxMinutes - next.minMinutes) * 60 + 1)) * SECOND;
         hailLeft = 0;
+        // now and then thick fog rolls in over ordinary rain, day or night
+        ZcConfig.Weather config = ZcConfig.get().weather;
+        boolean plain = !next.isStorm() && next != WeatherKind.FOG;
+        bank = config.fog && plain && RNG.nextDouble() < 0.15 * config.eventFrequency ? 0.55f + 0.4f * RNG.nextFloat() : 0;
     }
 
     private static WeatherKind pick(Level level) {
@@ -199,7 +205,7 @@ public final class WeatherDirector {
     private static Weather target(Level level) {
         ZcConfig.Weather config = ZcConfig.get().weather;
         WeatherKind k = kind;
-        float rain = k.rain, thunder = k.thunder, fog = config.fog ? k.fog : 0, wind = k.wind;
+        float rain = k.rain, thunder = k.thunder, fog = config.fog ? Math.max(k.fog, bank) : 0, wind = k.wind;
         if (warning > 0 && queued != null) {
             // the calm before: wind rising, darker, rain thickening
             float t = 1 - warning / (float) WARNING_TICKS;

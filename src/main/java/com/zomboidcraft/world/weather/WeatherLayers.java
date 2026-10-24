@@ -44,10 +44,12 @@ public final class WeatherLayers {
         layer(builder, level, EnvironmentAttributes.SUNRISE_SUNSET_COLOR, (v, w, night, c) ->
                 overcast(c) ? ColorModifier.MULTIPLY_ARGB.apply(v, ARGB.vector4fFromARGB32(ARGB.colorFromFloat(0.15f, 0.45f, 0.45f, 0.5f))) : v);
         layer(builder, level, EnvironmentAttributes.STAR_BRIGHTNESS, (v, w, night, c) -> overcast(c) ? v * w.moon() : v);
-        // fog: the street fades out a couple of dozen blocks away
-        layer(builder, level, EnvironmentAttributes.FOG_START_DISTANCE, (v, w, night, c) -> (float) Mth.lerp(w.fog(), v, 0));
-        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 22));
-        layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 30));
+        // a light haze always hangs over the distance; in thick fog the street fades out a
+        // couple of dozen blocks away
+        layer(builder, level, EnvironmentAttributes.FOG_START_DISTANCE, (v, w, night, c) ->
+                (float) Mth.lerp(w.fog(), haze(v, c, 0.15), 0));
+        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 22));
+        layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 30));
         layer(builder, level, EnvironmentAttributes.CLOUD_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 30));
     }
 
@@ -60,6 +62,11 @@ public final class WeatherLayers {
 
     private static float fogEnd(float v, Weather w, float near) {
         return (float) Mth.lerp(w.fog(), v, Math.min(v, near));
+    }
+
+    /** Pulls a fog distance in to the haze (scaled by share), when the haze is on. */
+    private static float haze(float v, ZcConfig.Weather c, double share) {
+        return c.hazeDistance > 0 ? (float) Math.min(v, c.hazeDistance * share) : v;
     }
 
     private static boolean overcast(ZcConfig.Weather c) {

@@ -46,7 +46,8 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const fogColor = new THREE.Color(params.get('fogc') ? '#' + params.get('fogc')
   : FOGGY ? (DAY ? 0x5c6064 : 0x1c1f24) : STORM ? 0x30353a : GLOOM && DAY ? 0x585d61 : MOONLIT ? 0x1e2633 : GLOOM ? 0x0e1116 : DAY ? 0x7d858c : 0x222a36);
-scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || (FOGGY ? 0.055 : STORM ? 0.011 : DAY ? 0.0042 : 0.0052)));
+// the mod's haze (fog fully hides things at about 160 blocks) is close to an exp2 density of 0.010
+scene.fog = new THREE.FogExp2(fogColor, +(params.get('fog') || (FOGGY ? 0.055 : STORM ? 0.013 : GLOOM ? 0.010 : DAY ? 0.0042 : 0.0052)));
 const camera = new THREE.PerspectiveCamera(shot.fov, W / H, 0.1, 3000);
 camera.position.set(...shot.pos);
 camera.lookAt(...shot.look);
