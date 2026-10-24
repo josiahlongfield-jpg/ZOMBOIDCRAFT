@@ -5,7 +5,7 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.zombie.WalkerModel;
 import com.zomboidcraft.client.zombie.WalkerRenderer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.world.entity.EntityTypes;
@@ -18,7 +18,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         SkillsHud.register();
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         if (ZcConfig.get().look.customZombies) {
-            EntityModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
+            ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             EntityRendererRegistry.<Zombie>register(EntityTypes.ZOMBIE, WalkerRenderer::new);
             EntityRendererRegistry.<Zombie>register(EntityTypes.HUSK, WalkerRenderer::new);
             EntityRendererRegistry.<Zombie>register(EntityTypes.ZOMBIE_VILLAGER, WalkerRenderer::new);

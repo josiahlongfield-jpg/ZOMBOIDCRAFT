@@ -28,7 +28,7 @@ sig net.minecraft.client.renderer.entity.EntityRendererProvider\$Context 'public
 sig net.minecraft.client.renderer.entity.EntityRenderer 'public|protected'
 echo "===== stage 3 model layers"
 classes 'EntityModelLayerRegistry|ModelLayerRegistry|client/model/geom/(PartPose|ModelLayerLocation)|client/model/geom/builders/(LayerDefinition|MeshDefinition|PartDefinition|CubeListBuilder|CubeDeformation)'
-sig net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry '.'
+sig net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry '.'
 sig net.minecraft.client.model.geom.ModelLayerLocation 'public'
 sig net.minecraft.client.model.geom.PartPose 'public static'
 sig net.minecraft.client.model.geom.builders.LayerDefinition 'public static'
