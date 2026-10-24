@@ -272,10 +272,10 @@ class HD:
         for y in range(9, 12):
             for x in list(range(3, 14)) + list(range(18, 29)):
                 self.mul(x0 + x, y0 + y, 0.88 if y < 11 else 0.8)
-        for cx in (8.5, 22.5):
-            ellipse(cx, 14.5, 5.2, 3.9, lambda x, y, d: self.px(x, y, sh * (0.35 + 0.35 * d), SKIN))
+        for cx in (8.5, 22.5):  # soft-edged hollows rather than drawn rings
+            ellipse(cx, 14.5, 5.6, 4.2, lambda x, y, d: self.px(x, y, sh * 0.4, SKIN, 0.85 * (1 - d) ** 0.6))
         # milky eyes, each looking a slightly different way
-        eye = np.array((226, 222, 200), np.float32)
+        eye = np.array((178, 172, 148), np.float32)  # dull, yellowed
         lost = r.choice((8.5, 22.5)) if rot > 0.7 else None
         for cx, look in ((8.5, -0.7), (22.5, 0.5)):
             if cx == lost:  # the eye is gone: a wet black hole
@@ -283,15 +283,14 @@ class HD:
                 for y in range(17, 24):
                     self.px(x0 + int(cx) + (y % 2), y0 + y, (100, 12, 10), BLOOD)
                 continue
-            ellipse(cx, 14.5, 3.1, 1.9, lambda x, y, d: self.px(x, y, eye * (1 - 0.18 * d), EYE))
+            ellipse(cx, 14.5, 2.5, 1.4, lambda x, y, d: self.px(x, y, eye * (1 - 0.4 * d), EYE))
             ix, iy = int(cx + look), 14
-            for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
-                self.px(x0 + ix + dx, y0 + iy + dy, (164, 170, 172), EYE)  # clouded iris
-            self.px(x0 + ix, y0 + iy, (120, 126, 132), EYE)
-            for dx in (-3, 3):
-                self.px(x0 + int(cx) + dx, y0 + 15, (150, 40, 40), EYE, 0.7)  # bloodshot corners
+            self.px(x0 + ix, y0 + iy, (132, 138, 140), EYE)  # clouded iris
+            self.px(x0 + ix + 1, y0 + iy, (150, 154, 152), EYE)
+            for dx in (-2, 2):
+                self.px(x0 + int(cx) + dx, y0 + 15, (130, 46, 40), EYE, 0.35)  # bloodshot corners
             for x in range(int(cx) - 2, int(cx) + 3):
-                self.px(x0 + x, y0 + 17, wd, SKIN, 0.6)  # raw lower lid
+                self.px(x0 + x, y0 + 16, wd, SKIN, 0.25)  # raw lower lid
         # nose: a dark bridge and rotten nostrils
         for y in range(12, 20):
             self.mul(x0 + 15, y0 + y, 0.85)
@@ -303,22 +302,23 @@ class HD:
         if rot > 0.45:  # the nose has rotted away to a hole
             ellipse(15.5, 19.0, 2.4, 2.0, lambda x, y, d: self.px(x, y, np.array((40, 12, 10)) + 40 * d, MOUTH))
         # torn open mouth with teeth
-        ellipse(15.5, 25.0, 7.4, 3.6, lambda x, y, d: self.px(x, y, np.array((44, 6, 6)) + 50 * (1 - d) * np.array((1, 0.1, 0.1)), MOUTH))
-        ellipse(15.5, 25.0, 8.4, 4.5, lambda x, y, d: self.px(x, y, wd * (0.8 + 0.2 * d), SKIN, 0.5) if d > 0.75 else None)
-        tooth = np.array((214, 200, 152), np.float32)
-        for x in range(9, 23):
-            if (x - 9) % 3 != 2 and r.random() > 0.12:
-                for y in (22, 23):
-                    self.px(x0 + x, y0 + y, tooth * (0.9 if y == 23 else 1.0), TEETH)
-            if (x - 10) % 3 != 2 and r.random() > 0.25 and 10 <= x <= 21:
-                self.px(x0 + x, y0 + 27, tooth * 0.85, TEETH)
+        ellipse(15.5, 25.0, 6.4, 2.9, lambda x, y, d: self.px(x, y, np.array((30, 8, 7)) + 36 * (1 - d) * np.array((1, 0.15, 0.12)), MOUTH))
+        ellipse(15.5, 25.0, 7.8, 4.0, lambda x, y, d: self.px(x, y, wd * 0.7, SKIN, 0.35 * d) if d > 0.6 else None)
+        tooth = np.array((172, 158, 118), np.float32)  # stained
+        for x in range(10, 22):
+            if (x - 10) % 3 != 2 and r.random() > 0.2:
+                self.px(x0 + x, y0 + 22, tooth * r.uniform(0.8, 1.0), TEETH)
+                if r.random() < 0.6:
+                    self.px(x0 + x, y0 + 23, tooth * 0.75, TEETH)
+            if (x - 11) % 3 != 2 and r.random() > 0.4 and 11 <= x <= 20:
+                self.px(x0 + x, y0 + 27, tooth * 0.7, TEETH)
         side = r.choice((1, -1))  # one cheek torn open to the teeth
         for i in range(5):
             x = 15.5 + side * (8 + i)
             for y in (24, 25, 26):
-                self.px(x0 + int(x), y0 + y, wd * 0.6 if y != 25 else (60, 10, 10), MOUTH)
+                self.px(x0 + int(x), y0 + y, wd * 0.5 if y != 25 else (44, 10, 9), MOUTH)
             if i % 2 == 0:
-                self.px(x0 + int(x), y0 + 23, tooth, TEETH)
+                self.px(x0 + int(x), y0 + 23, tooth * 0.85, TEETH)
         # blood down the chin
         for x in range(10, 22):
             if r.random() < 0.7:
@@ -329,35 +329,67 @@ class HD:
         for x in range(w):
             self.mul(x0 + x, y0 + h - 1, 0.85)
 
+    def grade(self):
+        """Pull the colours toward a grim, realistic look: muted cloth, grey dead skin,
+        dark blood, and soft shadow wherever one material meets another."""
+        rgb = self.c[..., :3]
+        lum = rgb @ np.array((0.3, 0.59, 0.11), np.float32)
+        for m, sat, val in ((CLOTH, 0.68, 0.86), (SKIN, 0.8, 0.9), (HAIR, 0.8, 0.85), (BLOOD, 0.85, 0.78), (TEETH, 0.8, 0.92), (EYE, 0.8, 0.95)):
+            sel = self.mat == m
+            g = (lum[..., None] + (rgb - lum[..., None]) * sat) * val
+            rgb[sel] = g[sel]
+        # contact shadow along material borders (collars, cuffs, wound edges)
+        edge = np.zeros((N, N), np.float32)
+        for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0), (0, 2), (0, -2), (2, 0), (-2, 0)):
+            shifted = np.roll(np.roll(self.mat, dy, 0), dx, 1)
+            edge += (shifted != self.mat) & (shifted != 0) & (self.mat != 0)
+        rgb *= (1 - np.clip(edge, 0, 4) * 0.035)[..., None]
+        self.ao -= np.clip(edge, 0, 4) * 10
+
     def splat(self, box, face, cx, cy, radius, drips=True):
-        """Fresh blood: a lumpy blob from a few circles, darker dried edges, runs going down."""
+        """Blood soaked into whatever it hit: a ragged stain that darkens the cloth or skin
+        underneath, wet and glossy only in the middle, with thin runs going down."""
         r = self.r
         x0, y0, w, h = face_rect(box, face)
-        blobs = [(cx + r.uniform(-radius, radius) * 0.6, cy + r.uniform(-radius, radius) * 0.6, radius * r.uniform(0.4, 0.9))
-                 for _ in range(r.randint(2, 5))]
+        blobs = [(cx + r.uniform(-radius, radius) * 0.7, cy + r.uniform(-radius, radius) * 0.7, radius * r.uniform(0.35, 0.85))
+                 for _ in range(r.randint(3, 7))]
+        rough = smooth_noise(self.np, w, h, 2)
         cells = []
-        for y in range(int(cy - radius * 1.6), int(cy + radius * 1.6) + 1):
-            for x in range(int(cx - radius * 1.6), int(cx + radius * 1.6) + 1):
-                v = sum(br * br / max(0.3, (x - bx) ** 2 + (y - by) ** 2) for bx, by, br in blobs)
-                if v > 1 and 0 <= x < w and 0 <= y < h:
+        for y in range(int(cy - radius * 1.8), int(cy + radius * 1.8) + 1):
+            for x in range(int(cx - radius * 1.8), int(cx + radius * 1.8) + 1):
+                if not (0 <= x < w and 0 <= y < h):
+                    continue
+                v = sum(br * br / max(0.3, (x - bx) ** 2 + (y - by) ** 2) for bx, by, br in blobs) + 0.5 * rough[y, x]
+                if v > 1:
                     cells.append((x, y, v))
         for x, y, v in cells:
-            wet = min(1.0, (v - 1) / 2.5)
-            col = np.array((76, 16, 10)) * (1 - wet) + np.array((138, 14, 12)) * wet
-            if r.random() < 0.06 * wet:
-                col = np.array((172, 34, 28))  # wet highlight
-            self.px(x0 + x, y0 + y, col, BLOOD, 0.95)
+            self.stain(x0 + x, y0 + y, min(1.0, (v - 1) / 2.0))
+        for _ in range(int(radius * 3)):  # flecks thrown off the edge
+            a = r.uniform(0, 6.283)
+            d = radius * r.uniform(1.4, 2.6)
+            x, y = int(cx + d * np.cos(a)), int(cy + d * np.sin(a))
+            if 0 <= x < w and 0 <= y < h:
+                self.stain(x0 + x, y0 + y, r.uniform(0.3, 0.8))
         if drips and cells:
             bottom = {}
             for x, y, _ in cells:
                 bottom[x] = max(bottom.get(x, -1), y)
             for x, yb in bottom.items():
-                if r.random() < 0.3:
-                    end = min(h, yb + r.randint(3, 16))
+                if r.random() < 0.15:
+                    end = min(h, yb + r.randint(3, 12))
                     for y in range(yb + 1, end):
-                        self.px(x0 + x, y0 + y, (112, 12, 10), BLOOD, 0.9)
-                    if end < h:
-                        self.px(x0 + x, y0 + end, (90, 10, 8), BLOOD)  # the drop at the end
+                        self.stain(x0 + x, y0 + y, 0.75 * (1 - (y - yb) / (end - yb + 1)) + 0.2)
+
+    def stain(self, X, Y, wet):
+        """Darken a pixel toward dried blood, and toward fresh red where wet is near 1."""
+        if not (0 <= X < N and 0 <= Y < N) or self.c[Y, X, 3] == 0:
+            return
+        under = self.c[Y, X, :3]
+        soaked = under * np.array((0.42, 0.16, 0.14)) + np.array((26, 4, 3))  # brown-red, keeps the weave
+        fresh = np.array((112, 12, 10)) * self.r.uniform(0.85, 1.1)
+        col = soaked * (1 - wet ** 2) + fresh * wet ** 2
+        self.c[Y, X, :3] = under * 0.15 + col * 0.85
+        self.mat[Y, X] = BLOOD
 
     def blood(self, amount=1.0):
         r = self.r
@@ -365,8 +397,9 @@ class HD:
         x0, y0, w, h = face_rect("body", "front")
         for x in range(10, 22):
             if r.random() < 0.45 + 0.25 * amount:
-                for y in range(0, int(r.randint(4, 26) * min(1.4, amount))):
-                    self.px(x0 + x, y0 + y, base.BLOOD[r.randrange(4)], BLOOD, 0.9)
+                length = int(r.randint(4, 26) * min(1.4, amount))
+                for y in range(0, length):
+                    self.stain(x0 + x, y0 + y, 0.9 - 0.6 * y / max(1, length))
         for _ in range(1 + int(amount * 1.5)):  # a soaked patch on the chest, made of smaller lumps
             self.splat("body", "front", r.uniform(8, 24), r.uniform(6, 20), r.uniform(1.8, 2.2 + 2 * amount))
         # hands soaked to the wrist with a ragged line
@@ -378,8 +411,7 @@ class HD:
                 for x in range(w):
                     line = max(lo - 2, min(hi + 4, line + r.choice((-2, -1, 0, 1, 2))))
                     for y in range(h - line, h):
-                        dried = (y - (h - line)) < 2
-                        self.px(x0 + x, y0 + y, (80, 18, 10) if dried else base.BLOOD[r.randrange(4)], BLOOD, 0.95)
+                        self.stain(x0 + x, y0 + y, min(1.0, 0.25 + (y - (h - line)) / line))
             x0, y0, w, h = face_rect(arm, "bottom")
             self.c[y0:y0 + h, x0:x0 + w, :3] = np.array((96, 12, 10)) + self.np.normal(0, 6, (h, w, 1))
             self.mat[y0:y0 + h, x0:x0 + w] = BLOOD
@@ -610,6 +642,7 @@ def make_hd(outfit, skin_name, seed, level=1):
     hd.blood(blood)
     if level == 3:
         hd.exposed_bone()
+    hd.grade()
     hd.bevel_and_light()
     return hd
 
