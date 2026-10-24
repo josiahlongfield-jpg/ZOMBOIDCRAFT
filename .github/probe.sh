@@ -125,3 +125,13 @@ sig net.minecraft.client.renderer.rendertype.RenderTypes 'eyes|Emissive|entityCu
 
 echo "===== compile errors"
 grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
+
+echo "===== block render layers"
+for j in $MC_JARS; do
+  for m in glass black_stained_glass glass_pane_noside oak_leaves cobweb; do
+    unzip -p "$j" "assets/minecraft/models/block/$m.json" 2>/dev/null && echo " <- $m in $j"
+  done
+done
+javap -cp "$CP" -p net.minecraft.client.renderer.ItemBlockRenderTypes 2>&1 | head -30
+classes 'ChunkSectionLayer|RenderLayerHelper|BlockRenderLayer'
+javap -cp "$CP" -p net.fabricmc.fabric.api.client.renderer.v1.render.ChunkSectionLayerHelper 2>&1 | head -20
