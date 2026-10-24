@@ -2,7 +2,10 @@
   "parent": "minecraft:block/block",
   "textures": {
     "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
-    "window": "zomboidcraft:block/city/window",
+    "window": {
+      "sprite": "zomboidcraft:block/city/window",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/streetlight_metal"
   },
   "elements": [

@@ -1,7 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "scorch": "zomboidcraft:block/city/scorch",
+    "scorch": {
+      "sprite": "zomboidcraft:block/city/scorch",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/scorch"
   },
   "elements": [

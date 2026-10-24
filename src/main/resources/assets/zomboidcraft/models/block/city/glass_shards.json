@@ -1,7 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "glass_shards": "zomboidcraft:block/city/glass_shards",
+    "glass_shards": {
+      "sprite": "zomboidcraft:block/city/glass_shards",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/glass_shards"
   },
   "elements": [

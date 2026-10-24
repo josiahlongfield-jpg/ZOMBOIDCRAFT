@@ -2,7 +2,10 @@
   "parent": "minecraft:block/block",
   "textures": {
     "car_green": "zomboidcraft:block/city/car_green",
-    "window": "zomboidcraft:block/city/window",
+    "window": {
+      "sprite": "zomboidcraft:block/city/window",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/window"
   },
   "elements": [

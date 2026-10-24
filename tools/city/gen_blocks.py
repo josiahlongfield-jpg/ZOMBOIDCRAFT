@@ -88,16 +88,26 @@ def element(b):
     return {"from": [x0, y0, z0], "to": [x1, y1, z1], "faces": faces}
 
 
-def model_json(name, spec):
+def sprite(t, tex_dir):
+    """A texture reference. 26.3 picks a block's render layer from its sprites: see-through pixels
+    give cutout, and only sprites marked force_translucent (like vanilla glass) blend."""
+    ref = f"{NS}:block/city/{t}"
+    a = np.array(Image.open(tex_dir / f"{t}.png").convert("RGBA"))[..., 3]
+    if ((a > 8) & (a < 247)).mean() > 0.02:
+        return {"sprite": ref, "force_translucent": True}
+    return ref
+
+
+def model_json(name, spec, tex_dir):
     if spec.get("model") == "cross":
         t = f"{NS}:block/city/{spec['tex']}"
-        return {"parent": "minecraft:block/cross", "textures": {"cross": t, "particle": t}}
+        return {"parent": "minecraft:block/cross", "textures": {"cross": sprite(spec["tex"], tex_dir), "particle": t}}
     bs = boxes(spec)
     used = sorted({t for b in bs for t in b[6].values()})
-    tex = {t: f"{NS}:block/city/{t}" for t in used}
-    tex["particle"] = tex[bs[0][6]["north"]]
+    tex = {t: sprite(t, tex_dir) for t in used}
+    tex["particle"] = f"{NS}:block/city/{bs[0][6]['north']}"
     if spec.get("model", "cube") == "cube" and isinstance(spec["tex"], str) and spec.get("height", 16) == 16:
-        return {"parent": "minecraft:block/cube_all", "textures": {"all": tex[spec["tex"]], "particle": tex[spec["tex"]]}}
+        return {"parent": "minecraft:block/cube_all", "textures": {"all": tex[spec["tex"]], "particle": tex["particle"]}}
     return {"parent": "minecraft:block/block", "textures": tex, "elements": [element(b) for b in bs]}
 
 
@@ -172,7 +182,7 @@ def main():
     used = set()
     lines = []
     for name, spec in blocks.items():
-        write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec))
+        write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec, tex_dir))
         write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
         write_json(DATA / f"loot_table/blocks/{name}.json", {
