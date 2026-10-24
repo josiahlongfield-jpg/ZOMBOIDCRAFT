@@ -135,3 +135,18 @@ done
 javap -cp "$CP" -p net.minecraft.client.renderer.ItemBlockRenderTypes 2>&1 | head -30
 classes 'ChunkSectionLayer|RenderLayerHelper|BlockRenderLayer'
 javap -cp "$CP" -p net.fabricmc.fabric.api.client.renderer.v1.render.ChunkSectionLayerHelper 2>&1 | head -20
+
+echo "===== weather"
+classes 'attribute/Environment|EnvironmentAttribute|timeline/|Timeline|level/storage/WeatherData|WeatherData|client/renderer/fog/|FogRenderer|SkyRenderer|LightTexture|Lightmap|CloudRenderer|WeatherEffectRenderer|DimensionSpecialEffects|entity/LightningBolt|Hail|world/clock|WorldClock|GameRules$'
+sig net.minecraft.world.level.Level 'Rain|Thunder|rain|thunder|Weather|weather|Brightness|DayTime|dayTime|TimeOfDay|SkyDarken|skyDarken|environmentAttributes|Attributes'
+sig net.minecraft.client.multiplayer.ClientLevel 'Sky|sky|Cloud|cloud|Star|Flash|Rain|Weather|Darken|Attributes|effects'
+sig net.minecraft.server.level.ServerLevel 'Weather|weather|Rain|Thunder|Lightning|lightning|setDayTime|tickTime|advanceWeather'
+for c in $(classes 'attribute/EnvironmentAttributes\.class$|attribute/EnvironmentAttributeSystem\.class$|attribute/EnvironmentAttributeMap\.class$|attribute/EnvironmentAttributeReader\.class$|attribute/EnvironmentAttributeProbe\.class$|fog/FogRenderer\.class$|renderer/LightTexture\.class$|renderer/SkyRenderer\.class$|renderer/WeatherEffectRenderer\.class$|storage/WeatherData\.class$|gamerules/GameRules\.class$'); do
+  sig "$(echo ${c%.class} | tr / .)" 'public|protected'
+done
+for j in $MC_JARS; do
+  unzip -p "$j" data/minecraft/dimension_type/overworld.json 2>/dev/null && echo " <- overworld dimension type"
+  unzip -Z1 "$j" | grep -E 'data/minecraft/(timeline|world_clock|environment)' | head -20
+  for f in $(unzip -Z1 "$j" | grep -E 'data/minecraft/timeline/.*json' | head -4); do echo "--- $f"; unzip -p "$j" "$f" | head -80; done
+  unzip -p "$j" data/minecraft/worldgen/biome/plains.json 2>/dev/null | head -60 && echo " <- plains biome"
+done
