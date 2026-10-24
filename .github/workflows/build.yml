@@ -42,12 +42,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
 
       - name: Build
-        run: >
-          ./gradlew build
-          -Pminecraft_version=$MC_VERSION
-          -Ploader_version=${{ steps.versions.outputs.loader }}
-          -Ploom_version=${{ steps.versions.outputs.loom }}
-          -Pfabric_api_version=${{ steps.versions.outputs.api }}
+        run: |
+          set -o pipefail
+          ./gradlew build \
+            -Pminecraft_version=$MC_VERSION \
+            -Ploader_version=${{ steps.versions.outputs.loader }} \
+            -Ploom_version=${{ steps.versions.outputs.loom }} \
+            -Pfabric_api_version=${{ steps.versions.outputs.api }} 2>&1 | tee build.log
 
       # When the build fails, print the real class layout and signatures.
       - name: Probe Minecraft classes

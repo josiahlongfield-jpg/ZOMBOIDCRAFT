@@ -17,7 +17,7 @@ public final class ZcCommand {
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
-                        .requires(source -> source.hasPermission(2))
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("stats").executes(ZcCommand::show))
                         .then(Commands.literal("infect").executes(ctx -> update(ctx, s -> s.withInfection(0))))
                         .then(Commands.literal("cure").executes(ctx -> update(ctx, s -> s.withInfection(-1).withWounds(0))))

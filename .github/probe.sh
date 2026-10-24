@@ -7,12 +7,10 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== round 2"
-classes 'fabric/api/.*([Ii]tem[Gg]roup|[Cc]reative|Tab)[^$]*\.class$'
-classes 'server/permissions/[^$]*\.class$'
-sig net.minecraft.server.permissions.PermissionSet '.'
-sig net.minecraft.commands.Commands 'ermission|LEVEL'
-sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement '.'
-sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry 'add'
-sig net.minecraft.world.entity.monster.zombie.Zombie 'Sun|registerGoals|BreakDoors|Baby'
-sig net.minecraft.world.entity.Mob 'Sun|burn'
+echo "===== round 3"
+sig net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents '.'
+sig net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput 'accept'
+sig net.minecraft.world.item.CreativeModeTabs 'COMBAT|TOOLS'
+
+echo "===== compile errors"
+grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
