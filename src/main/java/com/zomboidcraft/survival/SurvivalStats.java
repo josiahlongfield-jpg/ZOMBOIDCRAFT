@@ -2,6 +2,7 @@ package com.zomboidcraft.survival;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
@@ -21,8 +22,10 @@ import net.minecraft.world.entity.player.Player;
  * @param infection seconds since infection, or -1 when not infected
  */
 public record SurvivalStats(float thirst, float fatigue, int wounds, int infection) {
-    /** Seconds from infection to death: 40 minutes, two Minecraft days. */
-    public static final int INFECTION_DURATION = 40 * 60;
+    /** Seconds from infection to death: 40 minutes (two Minecraft days) by default. */
+    public static int infectionDuration() {
+        return Math.max(60, ZcConfig.get().survival.infectionMinutes * 60);
+    }
 
     public static final SurvivalStats FRESH = new SurvivalStats(100f, 0f, 0, -1);
 
@@ -67,7 +70,7 @@ public record SurvivalStats(float thirst, float fatigue, int wounds, int infecti
 
     /** 0..1 progress of the infection, or 0 when healthy. */
     public float infectionProgress() {
-        return infected() ? Mth.clamp(infection / (float) INFECTION_DURATION, 0f, 1f) : 0f;
+        return infected() ? Mth.clamp(infection / (float) infectionDuration(), 0f, 1f) : 0f;
     }
 
     public SurvivalStats withThirst(float value) {

@@ -1,5 +1,6 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,11 +21,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  * a player with few zombies around gets a small group spawned out of sight.
  */
 public final class ZombieSpawner {
-    private static final int INTERVAL_TICKS = 200;
-    private static final int NEARBY_CAP = 24;
     private static final double NEARBY_RADIUS = 64;
-    private static final int MIN_DISTANCE = 32;
-    private static final int MAX_DISTANCE = 56;
 
     private static int ticks;
 
@@ -33,7 +30,8 @@ public final class ZombieSpawner {
     }
 
     private static void onServerTick(MinecraftServer server) {
-        if (++ticks % INTERVAL_TICKS != 0) {
+        ZcConfig.Spawning config = ZcConfig.get().spawning;
+        if (++ticks % Math.max(20, config.intervalSeconds * 20) != 0 || !config.enabled) {
             return;
         }
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
@@ -44,16 +42,17 @@ public final class ZombieSpawner {
             }
             int nearby = level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(NEARBY_RADIUS),
                     ZombieTypes::isWalker).size();
-            if (nearby < NEARBY_CAP) {
-                spawnGroup(level, player, Math.min(NEARBY_CAP - nearby, 3 + player.getRandom().nextInt(5)));
+            if (nearby < config.nearbyCap) {
+                int size = config.groupMin + player.getRandom().nextInt(Math.max(1, config.groupMax - config.groupMin + 1));
+                spawnGroup(level, player, Math.min(config.nearbyCap - nearby, size), config);
             }
         }
     }
 
-    private static void spawnGroup(ServerLevel level, ServerPlayer player, int count) {
+    private static void spawnGroup(ServerLevel level, ServerPlayer player, int count, ZcConfig.Spawning config) {
         RandomSource random = player.getRandom();
         double angle = random.nextDouble() * Math.PI * 2;
-        int distance = MIN_DISTANCE + random.nextInt(MAX_DISTANCE - MIN_DISTANCE);
+        int distance = config.minDistance + random.nextInt(Math.max(1, config.maxDistance - config.minDistance));
         int centerX = player.getBlockX() + (int) (Math.cos(angle) * distance);
         int centerZ = player.getBlockZ() + (int) (Math.sin(angle) * distance);
 

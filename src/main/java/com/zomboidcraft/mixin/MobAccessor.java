@@ -9,4 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MobAccessor {
     @Accessor("goalSelector")
     GoalSelector zomboidcraft$goalSelector();
+
+    @Accessor("targetSelector")
+    GoalSelector zomboidcraft$targetSelector();
 }

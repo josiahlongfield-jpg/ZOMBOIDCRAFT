@@ -1,8 +1,14 @@
 package com.zomboidcraft.mixin;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.zombie.BashBarricadeGoal;
 import com.zomboidcraft.zombie.InvestigateNoiseGoal;
 import com.zomboidcraft.zombie.NoiseListener;
+import com.zomboidcraft.zombie.ZombieSightGoal;
+import com.zomboidcraft.zombie.ZombieTypes;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +28,12 @@ public abstract class ZombieMixin implements NoiseListener {
         Zombie self = (Zombie) (Object) this;
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashBarricadeGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(3, new InvestigateNoiseGoal(self));
+        if (ZombieTypes.isWalkerType(self.getType()) && ZcConfig.get().senses.sightEnabled) {
+            GoalSelector targets = ((MobAccessor) self).zomboidcraft$targetSelector();
+            targets.removeAllGoals(goal -> goal instanceof NearestAttackableTargetGoal<?> nearest
+                    && ((NearestAttackableTargetGoalAccessor) nearest).zomboidcraft$targetType() == Player.class);
+            targets.addGoal(2, new ZombieSightGoal(self));
+        }
     }
 
     @Override

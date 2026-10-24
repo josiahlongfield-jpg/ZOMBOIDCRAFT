@@ -1,7 +1,9 @@
 package com.zomboidcraft.mixin;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Combat;
 import com.zomboidcraft.survival.Drinks;
+import com.zomboidcraft.zombie.ZombieTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -31,5 +34,13 @@ public abstract class LivingEntityMixin {
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         return Combat.modifyDamage((LivingEntity) (Object) this, source, amount);
+    }
+
+    /** Deeper, more human groans for the walking dead. */
+    @Inject(method = "getVoicePitch", at = @At("RETURN"), cancellable = true)
+    private void zomboidcraft$deeperGroans(CallbackInfoReturnable<Float> cir) {
+        if (ZombieTypes.isWalker((LivingEntity) (Object) this)) {
+            cir.setReturnValue(cir.getReturnValue() * (float) ZcConfig.get().look.voicePitch);
+        }
     }
 }

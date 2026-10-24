@@ -20,8 +20,10 @@ public class ZomboidCraft implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ZcConfig.load();
         SurvivalStats.register();
         Skills.register();
+        com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         ModItems.register();
         Loot.register();

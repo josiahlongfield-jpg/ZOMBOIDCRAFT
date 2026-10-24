@@ -1,5 +1,6 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import java.util.EnumSet;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -7,8 +8,6 @@ import net.minecraft.world.phys.Vec3;
 
 /** Shamble toward the last thing we heard until we arrive, find a target, or lose interest. */
 public class InvestigateNoiseGoal extends Goal {
-    private static final int GIVE_UP_TICKS = 20 * 30;
-
     private final Zombie zombie;
     private final NoiseListener ears;
     private Vec3 destination;
@@ -27,7 +26,7 @@ public class InvestigateNoiseGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return zombie.getTarget() == null && destination != null && ticks < GIVE_UP_TICKS
+        return zombie.getTarget() == null && destination != null && ticks < giveUpTicks()
                 && zombie.position().distanceToSqr(destination) > 4.0;
     }
 
@@ -50,10 +49,14 @@ public class InvestigateNoiseGoal extends Goal {
         }
     }
 
+    private static int giveUpTicks() {
+        return ZcConfig.get().senses.searchSeconds * 20;
+    }
+
     @Override
     public void stop() {
         // Only lose interest after arriving or giving up, not when another goal (like bashing) takes over.
-        if (ticks >= GIVE_UP_TICKS || destination == null || zombie.position().distanceToSqr(destination) <= 4.0) {
+        if (ticks >= giveUpTicks() || destination == null || zombie.position().distanceToSqr(destination) <= 4.0) {
             ears.zomboidcraft$forget();
         }
         destination = null;

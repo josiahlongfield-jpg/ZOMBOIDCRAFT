@@ -1,5 +1,6 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
@@ -11,13 +12,17 @@ public final class ZombieTypes {
         if (!(entity instanceof Zombie)) {
             return false;
         }
-        EntityType<?> type = entity.getType();
+        return isWalkerType(entity.getType());
+    }
+
+    public static boolean isWalkerType(EntityType<?> type) {
         return type == EntityTypes.ZOMBIE || type == EntityTypes.HUSK || type == EntityTypes.ZOMBIE_VILLAGER;
     }
 
-    /** About one in twenty zombies runs. Derived from the UUID so it never changes. */
+    /** A share of zombies run (one in twenty by default). Derived from the UUID so it never changes. */
     public static boolean isSprinter(Entity entity) {
-        return Math.floorMod(entity.getUUID().getLeastSignificantBits(), 20) == 0;
+        return Math.floorMod(entity.getUUID().getLeastSignificantBits(), 10000)
+                < ZcConfig.get().zombies.sprinterChance * 10000;
     }
 
     private ZombieTypes() {

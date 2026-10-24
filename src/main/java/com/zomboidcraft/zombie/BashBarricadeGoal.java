@@ -1,5 +1,6 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ModBlocks;
 import com.zomboidcraft.barricade.BarricadeBlock;
 import java.util.EnumSet;
@@ -35,7 +36,7 @@ public class BashBarricadeGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (zombie.tickCount % 10 != 0 || !motivated()) {
+        if (zombie.tickCount % 10 != 0 || !ZcConfig.get().zombies.bashBarricades || !motivated()) {
             return false;
         }
         barricade = findBarricade();
@@ -79,7 +80,7 @@ public class BashBarricadeGoal extends Goal {
                 0.9f + zombie.getRandom().nextFloat() * 0.2f);
         Noise.emit(level, center, BANG_NOISE);
 
-        if (zombie.getRandom().nextFloat() < BarricadeBlock.breakChance(state)) {
+        if (zombie.getRandom().nextFloat() < BarricadeBlock.breakChance(state) * ZcConfig.get().zombies.barricadeDamage) {
             int planks = state.getValue(BarricadeBlock.PLANKS);
             if (planks <= 1) {
                 level.destroyBlock(barricade, false);

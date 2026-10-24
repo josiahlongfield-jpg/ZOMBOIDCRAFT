@@ -1,5 +1,6 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
@@ -23,8 +24,6 @@ import net.minecraft.world.phys.Vec3;
 
 public final class ZombieEvents {
     private static final Identifier SPEED_MODIFIER = ZomboidCraft.id("shamble");
-    private static final double SHAMBLER_SPEED = -0.3;
-    private static final double SPRINTER_SPEED = 0.25;
 
     private static final Map<ServerPlayer, Vec3> lastPositions = new WeakHashMap<>();
     private static int ticks;
@@ -55,13 +54,14 @@ public final class ZombieEvents {
 
     /** Grown, slow (or rarely fast), and able to break down doors. */
     private static void setUp(Zombie zombie) {
-        if (zombie.isBaby()) {
+        ZcConfig.Zombies config = ZcConfig.get().zombies;
+        if (zombie.isBaby() && !config.babyZombies) {
             zombie.setBaby(false);
         }
-        zombie.setCanBreakDoors(true);
+        zombie.setCanBreakDoors(config.breakDoors);
         AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
-            double amount = ZombieTypes.isSprinter(zombie) ? SPRINTER_SPEED : SHAMBLER_SPEED;
+            double amount = ZombieTypes.isSprinter(zombie) ? config.sprinterSpeed : config.shamblerSpeed;
             speed.addOrReplacePermanentModifier(new AttributeModifier(
                     SPEED_MODIFIER, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }

@@ -1,0 +1,211 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000;overflow:hidden}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+
+const params = new URLSearchParams(location.search);
+const MODE = params.get('mode') || 'dusk';
+const W = 1600, H = 900;
+const P = 1 / 16;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = MODE === 'dusk' ? 1.05 : 1.2;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const fogColor = MODE === 'dusk' ? 0x8a7a80 : 0x141a26;
+scene.fog = new THREE.FogExp2(fogColor, MODE === 'dusk' ? 0.045 : 0.06);
+
+// Sky: a gradient dome
+{
+  const c = document.createElement('canvas'); c.width = 4; c.height = 256;
+  const g = c.getContext('2d'); const grad = g.createLinearGradient(0, 0, 0, 256);
+  if (MODE === 'dusk') { grad.addColorStop(0, '#2b3350'); grad.addColorStop(0.55, '#8a6f7a'); grad.addColorStop(0.75, '#d9925a'); grad.addColorStop(1, '#5a4a48'); }
+  else { grad.addColorStop(0, '#05070d'); grad.addColorStop(0.7, '#141a26'); grad.addColorStop(1, '#1d2230'); }
+  g.fillStyle = grad; g.fillRect(0, 0, 4, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 16), new THREE.MeshBasicMaterial({ map: t, side: THREE.BackSide, fog: false }));
+  scene.add(sky);
+}
+
+// Pixel textures made on a canvas
+function pixTex(size, paint) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'); paint(g, size);
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestMipmapNearestFilter;
+  t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const noise = (g, s, base, amt) => { for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) { const v = (rnd() - 0.5) * amt; g.fillStyle = `rgb(${base[0] + v},${base[1] + v},${base[2] + v})`; g.fillRect(x, y, 1, 1); } };
+const asphalt = pixTex(16, (g, s) => { noise(g, s, [58, 58, 62], 22); });
+const concrete = pixTex(16, (g, s) => { noise(g, s, [128, 126, 120], 18); g.fillStyle = 'rgba(0,0,0,0.25)'; g.fillRect(0, 0, 16, 1); g.fillRect(0, 0, 1, 16); });
+const brick = pixTex(16, (g, s) => { noise(g, s, [120, 62, 48], 20); g.fillStyle = '#6e6660'; for (let y = 0; y < 16; y += 4) { g.fillRect(0, y, 16, 1); for (let x = (y / 4) % 2 ? 0 : 4; x < 16; x += 8) g.fillRect(x, y, 1, 4); } });
+const grime = pixTex(16, (g, s) => { noise(g, s, [92, 96, 98], 16); });
+const line = pixTex(16, (g, s) => { noise(g, s, [58, 58, 62], 22); g.fillStyle = '#b8a040'; g.fillRect(6, 0, 4, 16); });
+
+const blockGeo = new THREE.BoxGeometry(1, 1, 1);
+function block(tex, x, y, z, sx = 1, sy = 1, sz = 1, extra = {}) {
+  const m = new THREE.Mesh(blockGeo, new THREE.MeshStandardMaterial({ map: tex, roughness: 0.92, ...extra }));
+  m.position.set(x + sx / 2, y + sy / 2, z + sz / 2); m.scale.set(sx, sy, sz);
+  if (tex.repeat) { m.material.map = tex.clone(); m.material.map.needsUpdate = true; m.material.map.repeat.set(Math.max(sx, sz), sy); }
+  m.castShadow = m.receiveShadow = true; scene.add(m); return m;
+}
+
+// Street: asphalt road with a centre line, sidewalks, kerbs
+for (let z = -40; z < 8; z++) for (let x = -4; x < 4; x++) block(x === -1 || x === 0 ? (z % 3 ? line : asphalt) : asphalt, x, -1, z);
+for (let z = -40; z < 8; z++) { for (let x = -8; x < -4; x++) block(concrete, x, -0.875, z, 1, 1); for (let x = 4; x < 8; x++) block(concrete, x, -0.875, z, 1, 1); }
+
+// Wet puddles that mirror the scene
+const puddles = [[-2.6, 1.0, 2.2, 1.4], [0.6, -3.5, 1.6, 2.6], [-1.4, -8, 2.8, 1.6], [1.8, -13, 1.2, 2.0], [-3.2, -5.5, 1.0, 1.0]];
+for (const [x, z, w, d] of puddles) {
+  const r = new Reflector(new THREE.PlaneGeometry(w, d), { textureWidth: 1024, textureHeight: 576, color: 0x6f747c });
+  r.rotation.x = -Math.PI / 2; r.position.set(x, 0.002, z); scene.add(r);
+}
+
+// Buildings: brick and concrete blocks with lit and dark windows
+const windowLit = new THREE.MeshStandardMaterial({ color: 0x221a10, emissive: 0xffb060, emissiveIntensity: MODE === 'dusk' ? 1.2 : 2.2 });
+const windowDark = new THREE.MeshStandardMaterial({ color: 0x0c0f14, roughness: 0.15, metalness: 0.6 });
+function building(x0, z0, w, d, h, tex, side) {
+  block(tex, x0, 0, z0, w, h, d);
+  for (let y = 1.2; y < h - 1; y += 3) for (let z = z0 + 0.6; z < z0 + d - 1; z += 2.2) {
+    const lit = rnd() < 0.18;
+    const win = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.2, 1.1), lit ? windowLit : windowDark);
+    win.position.set(side > 0 ? x0 - 0.02 : x0 + w + 0.02, y + 0.6, z + 0.55); scene.add(win);
+  }
+}
+building(-16, -40, 8, 14, 22, brick, -1); building(-16, -26, 8, 10, 14, grime, -1); building(-16, -16, 8, 12, 30, brick, -1); building(-16, -4, 8, 12, 9, grime, -1);
+building(8, -40, 8, 12, 34, grime, 1); building(8, -28, 8, 12, 18, brick, 1); building(8, -16, 8, 10, 12, grime, 1); building(8, -6, 8, 14, 24, brick, 1);
+
+// A wrecked car (blocky) and a barricade
+const carRed = pixTex(16, (g, s) => { noise(g, s, [110, 34, 30], 18); });
+const rust = pixTex(16, (g, s) => { noise(g, s, [90, 60, 40], 30); });
+block(carRed, 1.2, 0.3, -9.5, 2, 1, 4); block(rust, 1.4, 1.3, -8.8, 1.6, 0.7, 2.2);
+const glass = new THREE.MeshStandardMaterial({ color: 0x223040, roughness: 0.1, metalness: 0.8 });
+const ws = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.6, 0.05), glass); ws.position.set(2.2, 1.65, -6.65); ws.rotation.x = -0.4; scene.add(ws);
+for (const [x, z] of [[1.2, -9.3], [3.0, -9.3], [1.2, -6.4], [3.0, -6.4]]) { const t = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.25, 8), new THREE.MeshStandardMaterial({ color: 0x151515 })); t.rotation.z = Math.PI / 2; t.position.set(x + (x > 2 ? 0.1 : -0.1), 0.35, z); t.castShadow = true; scene.add(t); }
+const plank = pixTex(16, (g, s) => { noise(g, s, [140, 108, 70], 22); g.fillStyle = '#5a4430'; g.fillRect(0, 7, 16, 1); });
+block(plank, -7.5, 0.125, -18, 3, 0.25, 0.25); block(plank, -7.3, 0.6, -18, 2.6, 0.25, 0.25);
+
+// Street lamp
+const pole = new THREE.Mesh(new THREE.BoxGeometry(0.18, 6, 0.18), new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.6 }));
+pole.position.set(4.6, 3, -4); pole.castShadow = true; scene.add(pole);
+const arm = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.14, 0.18), pole.material); arm.position.set(3.9, 6, -4); scene.add(arm);
+const bulb = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.12, 0.3), new THREE.MeshStandardMaterial({ emissive: 0xffc070, emissiveIntensity: 6, color: 0x000000 }));
+bulb.position.set(3.3, 5.9, -4); scene.add(bulb);
+const lamp = new THREE.SpotLight(0xffb868, MODE === 'dusk' ? 40 : 90, 22, 0.9, 0.6, 1.6);
+lamp.position.set(3.3, 5.85, -4); lamp.target.position.set(2.2, 0, -4.5); lamp.castShadow = true;
+lamp.shadow.mapSize.set(2048, 2048); lamp.shadow.radius = 6; scene.add(lamp, lamp.target);
+
+// Sun or moon
+if (MODE === 'dusk') {
+  const sun = new THREE.DirectionalLight(0xffa868, 2.4);
+  sun.position.set(-10, 16, 40); sun.castShadow = true;
+  Object.assign(sun.shadow.camera, { left: -25, right: 25, top: 25, bottom: -25, near: 1, far: 140 });
+  sun.shadow.mapSize.set(4096, 4096); sun.shadow.radius = 4; sun.shadow.bias = -0.0004;
+  scene.add(sun);
+  scene.add(new THREE.HemisphereLight(0x8090c0, 0x4a3a30, 0.9));
+} else {
+  const moon = new THREE.DirectionalLight(0x8fa8ff, 0.35);
+  moon.position.set(20, 30, -20); moon.castShadow = true; scene.add(moon);
+  scene.add(new THREE.HemisphereLight(0x304060, 0x101010, 0.25));
+  // a burning car glow down the street
+  const fire = new THREE.PointLight(0xff6020, 35, 14, 1.8); fire.position.set(-2.5, 1.2, -22); scene.add(fire);
+  const flame = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.8, 1), new THREE.MeshStandardMaterial({ emissive: 0xff5010, emissiveIntensity: 4, color: 0 }));
+  flame.position.set(-2.5, 1.0, -22); scene.add(flame);
+  block(rust, -3.5, 0.2, -23.5, 2, 0.9, 3.5);
+}
+
+// Zombie model: Minecraft humanoid boxes, UV-mapped from the 64x64 skin
+const loader = new THREE.TextureLoader();
+function uvBox(tex, w, h, d, u, v, inflate = 0, transparent = false) {
+  const geo = new THREE.BoxGeometry((w + inflate) * P, (h + inflate) * P, (d + inflate) * P);
+  const R = (x, y, ww, hh) => [x / 64, 1 - (y + hh) / 64, (x + ww) / 64, 1 - y / 64];
+  // three.js face order: +x, -x, +y, -y, +z, -z. The model faces +z, so its right side is -x.
+  const f = {
+    left: R(u + d + w, v + d, d, h), right: R(u, v + d, d, h),
+    top: R(u + d, v, w, d), bottom: R(u + d + w, v, w, d),
+    front: R(u + d, v + d, w, h), back: R(u + 2 * d + w, v + d, w, h),
+  };
+  const order = [f.left, f.right, f.top, f.bottom, f.front, f.back];
+  const uv = geo.attributes.uv;
+  order.forEach((r, i) => {
+    const [u0, v0, u1, v1] = r;
+    uv.setXY(i * 4 + 0, u0, v1); uv.setXY(i * 4 + 1, u1, v1); uv.setXY(i * 4 + 2, u0, v0); uv.setXY(i * 4 + 3, u1, v0);
+  });
+  const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, transparent: false, alphaTest: transparent ? 0.5 : 0, side: transparent ? THREE.DoubleSide : THREE.FrontSide });
+  const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; return m;
+}
+function zombie(name, x, z, yaw, pose) {
+  const tex = loader.load(`skins/${name}.png`);
+  tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestFilter; tex.colorSpace = THREE.SRGBColorSpace;
+  const root = new THREE.Group(); root.position.set(x, 0, z); root.rotation.y = yaw; scene.add(root);
+  const part = (mesh, px, py, pz, ox, oy, oz) => { const g = new THREE.Group(); g.position.set(px * P, py * P, pz * P); mesh.position.set(ox * P, oy * P, oz * P); g.add(mesh); root.add(g); return g; };
+  const body = part(uvBox(tex, 8, 12, 4, 16, 16), 0, 24, 0, 0, -6, 0);
+  const headG = new THREE.Group(); headG.position.set(0, 24 * P, 0); root.add(headG);
+  const head = uvBox(tex, 8, 8, 8, 0, 0); head.position.y = 4 * P; headG.add(head);
+  const hat = uvBox(tex, 8, 8, 8, 32, 0, 1, true); hat.position.y = 4 * P; headG.add(hat);
+  const rArm = part(uvBox(tex, 4, 12, 4, 40, 16), -5, 22, 0, -1, -4, 0);
+  const lArm = part(uvBox(tex, 4, 12, 4, 40, 16), 5, 22, 0, 1, -4, 0); lArm.scale.x = -1;
+  const rLeg = part(uvBox(tex, 4, 12, 4, 0, 16), -2, 12, 0, 0, -6, 0);
+  const lLeg = part(uvBox(tex, 4, 12, 4, 0, 16), 2, 12, 0, 0, -6, 0); lLeg.scale.x = -1;
+  const p = pose;
+  rArm.rotation.set(p.ra[0], p.ra[1], p.ra[2]); lArm.rotation.set(p.la[0], p.la[1], p.la[2]);
+  rLeg.rotation.x = p.legs; lLeg.rotation.x = -p.legs * 0.7;
+  headG.rotation.set(p.head[0], p.head[1], p.head[2]);
+  body.rotation.z = p.sway || 0; root.rotation.z = (p.sway || 0) * 0.5;
+}
+const reach = (a = 0) => ({ ra: [-1.35 + a, 0.1, 0.05], la: [-1.2 - a, -0.12, -0.05], head: [0.15, 0.1, 0.22], legs: 0.45, sway: 0.04 });
+const hang = (a = 0) => ({ ra: [0.15 + a, 0, 0.1], la: [-0.2, 0, -0.08], head: [0.35, -0.2, -0.3], legs: 0.3, sway: -0.05 });
+const shamble = { ra: [-0.6, 0.2, 0.15], la: [0.25, 0, -0.1], head: [0.1, 0.3, 0.35], legs: 0.55, sway: 0.06 };
+
+const lineup = MODE === 'dusk'
+  ? [['police_pale', -0.5, -0.6, 0.15, reach()], ['construction_olive', 1.5, -2.6, -0.3, shamble], ['nurse_dark', -2.4, -3.6, 0.4, hang()],
+     ['civilian_pale', 0.4, -8.4, 0.1, reach(0.2)], ['soldier_olive', -1.8, -11, 0.2, shamble], ['office_dark', 2.8, -13.5, -0.2, hang(0.1)],
+     ['hoodie_olive', -3.2, -15, 0.3, reach(-0.1)], ['farmer_pale', 0.9, -17, 0.0, hang()], ['firefighter_dark', -0.8, -19.5, 0.1, shamble]]
+  : [['soldier_pale', 0.4, -0.8, 0.1, reach()], ['prisoner_olive', -2.0, -2.6, 0.35, shamble], ['patient_pale', 2.0, -4.0, -0.25, hang()],
+     ['survivor_dark', -0.6, -8.5, 0.1, reach(0.15)], ['security_olive', 1.4, -11, -0.1, hang(0.1)], ['jogger_dark', -2.4, -13, 0.25, shamble],
+     ['doctor_pale', 0.2, -15.5, 0.0, reach()], ['civilian_olive', -1.4, -18, 0.2, hang()]];
+for (const [n, x, z, yaw, pose] of lineup) zombie(n, x, z, yaw, pose);
+
+// Rain streaks
+{
+  const N = 4500, pos = new Float32Array(N * 6);
+  for (let i = 0; i < N; i++) {
+    const x = (rnd() - 0.5) * 30, y = rnd() * 16, z = -rnd() * 40 + 6, l = 0.35 + rnd() * 0.3;
+    pos.set([x, y, z, x + 0.03, y - l, z + 0.02], i * 6);
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: MODE === 'dusk' ? 0xc8ccd8 : 0x8090a8, transparent: true, opacity: 0.2 })));
+}
+
+// First-person camera at eye height, with a held baseball bat
+const camera = new THREE.PerspectiveCamera(70, W / H, 0.05, 400);
+camera.position.set(0.2, 1.62, 3.2); camera.lookAt(-0.3, 1.25, -8);
+scene.add(camera);
+const bat = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.7), new THREE.MeshStandardMaterial({ map: plank, roughness: 0.8 }));
+bat.position.set(0.5, -0.42, -0.7); bat.rotation.set(0.9, -0.25, 0.35); camera.add(bat);
+const hand = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.42), new THREE.MeshStandardMaterial({ color: 0x5a6a4a, roughness: 0.9 }));
+hand.position.set(0.5, -0.5, -0.45); hand.rotation.set(0.5, -0.2, 0.2); camera.add(hand);
+if (MODE !== 'dusk') { const torch = new THREE.SpotLight(0xfff2d8, 30, 25, 0.35, 0.5, 1.5); torch.position.set(0.3, -0.2, 0); torch.target.position.set(-0.2, -0.6, -6); torch.castShadow = true; camera.add(torch, torch.target); }
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), MODE === 'dusk' ? 0.45 : 0.7, 0.6, 0.82));
+composer.addPass(new OutputPass());
+
+THREE.DefaultLoadingManager.onLoad = () => { composer.render(); composer.render(); window.DONE = true; };
+setTimeout(() => { if (!window.DONE) { composer.render(); window.DONE = true; } }, 8000);
+</script></body></html>

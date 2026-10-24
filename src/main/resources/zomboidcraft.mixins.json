@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.zomboidcraft.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["LivingEntityMixin", "MobAccessor", "MobMixin", "ZombieMixin"],
+  "mixins": ["LivingEntityMixin", "MobAccessor", "MobMixin", "NearestAttackableTargetGoalAccessor", "ZombieMixin"],
   "injectors": {
     "defaultRequire": 1
   }

@@ -1,5 +1,6 @@
 package com.zomboidcraft.survival;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Combat;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
@@ -20,13 +21,6 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
 public final class SurvivalEvents {
-    private static final float THIRST_PER_SECOND = 0.07f;      // ~24 minutes from full to empty
-    private static final float FATIGUE_PER_SECOND = 0.055f;    // ~30 minutes awake to collapse
-    private static final float BITE_CHANCE = 0.12f;
-    private static final float SCRATCH_CHANCE = 0.30f;
-    private static final float SCRATCH_INFECTION_CHANCE = 0.07f;
-    private static final float WOUND_CLOT_CHANCE = 0.015f;     // per wound per second
-
     private static int ticks;
 
     public static void register() {
@@ -39,7 +33,8 @@ public final class SurvivalEvents {
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             Combat.onKill(entity, source);
-            if (entity instanceof ServerPlayer player && SurvivalStats.get(player).infected()) {
+            if (entity instanceof ServerPlayer player && SurvivalStats.get(player).infected()
+                    && ZcConfig.get().survival.reanimate) {
                 reanimate(player);
             }
         });
@@ -61,10 +56,11 @@ public final class SurvivalEvents {
         ServerLevel level = (ServerLevel) player.level();
         RandomSource random = player.getRandom();
         SurvivalStats stats = SurvivalStats.get(player);
+        ZcConfig.Survival config = ZcConfig.get().survival;
 
         // Thirst. Sprinting skill makes running less draining.
         float sprintMultiplier = 2.5f - 0.1f * Skills.level(player, Skill.SPRINTING);
-        float thirstDrain = THIRST_PER_SECOND * (player.isSprinting() ? sprintMultiplier : 1f);
+        float thirstDrain = config.thirst ? (float) config.thirstPerSecond * (player.isSprinting() ? sprintMultiplier : 1f) : 0f;
         if (player.isSprinting()) {
             Skills.addXp(player, Skill.SPRINTING, 1);
         }
@@ -84,7 +80,7 @@ public final class SurvivalEvents {
         if (player.isSleeping()) {
             stats = player.getSleepTimer() >= 90 ? stats.withFatigue(0f) : stats.withFatigue(stats.fatigue() - 3f);
         } else {
-            stats = stats.withFatigue(stats.fatigue() + FATIGUE_PER_SECOND);
+            stats = stats.withFatigue(stats.fatigue() + (config.fatigue ? (float) config.fatiguePerSecond : 0f));
         }
         if (stats.fatigue() > 75f) {
             effect(player, MobEffects.MINING_FATIGUE, 0);
@@ -95,6 +91,9 @@ public final class SurvivalEvents {
         }
 
         // Bleeding: more wounds bleed faster; wounds slowly clot on their own
+        if (!config.bleeding) {
+            stats = stats.withWounds(0);
+        }
         if (stats.wounds() > 0) {
             int interval = Math.max(1, 5 - stats.wounds());
             if (second % interval == 0) {
@@ -102,7 +101,7 @@ public final class SurvivalEvents {
             }
             int clotted = 0;
             for (int i = 0; i < stats.wounds(); i++) {
-                if (random.nextFloat() < WOUND_CLOT_CHANCE) {
+                if (random.nextFloat() < config.clotChancePerSecond) {
                     clotted++;
                 }
             }
@@ -110,6 +109,9 @@ public final class SurvivalEvents {
         }
 
         // Infection: there is no cure
+        if (stats.infected() && !config.infection) {
+            stats = stats.withInfection(-1);
+        }
         if (stats.infected()) {
             stats = stats.withInfection(stats.infection() + 1);
             float progress = stats.infectionProgress();
@@ -139,16 +141,17 @@ public final class SurvivalEvents {
     private static void onZombieHit(ServerPlayer player) {
         RandomSource random = player.getRandom();
         SurvivalStats stats = SurvivalStats.get(player);
+        ZcConfig.Survival config = ZcConfig.get().survival;
         float roll = random.nextFloat();
-        if (roll < BITE_CHANCE) {
+        if (roll < config.biteChance) {
             stats = stats.withWounds(stats.wounds() + 1);
-            if (!stats.infected()) {
+            if (!stats.infected() && config.infection) {
                 stats = stats.withInfection(0);
             }
             player.sendOverlayMessage(Component.literal("You've been bitten.").withStyle(ChatFormatting.DARK_RED));
-        } else if (roll < BITE_CHANCE + SCRATCH_CHANCE) {
+        } else if (roll < config.biteChance + config.scratchChance) {
             stats = stats.withWounds(stats.wounds() + 1);
-            if (!stats.infected() && random.nextFloat() < SCRATCH_INFECTION_CHANCE) {
+            if (!stats.infected() && config.infection && random.nextFloat() < config.scratchInfectionChance) {
                 stats = stats.withInfection(0);
             }
             player.sendOverlayMessage(Component.literal("You've been scratched.").withStyle(ChatFormatting.RED));
