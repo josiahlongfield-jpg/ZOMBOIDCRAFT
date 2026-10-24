@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import org.lwjgl.glfw.GLFW;
 
 /** Hold K to see skill levels and progress. */
 public final class SkillsHud {
@@ -21,13 +20,13 @@ public final class SkillsHud {
     public static void register() {
         KeyMapping.Category category = KeyMapping.Category.register(ZomboidCraft.id("main"));
         key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.zomboidcraft.skills", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, category, 0));
+                "key.zomboidcraft.skills", InputConstants.Type.KEYBOARD, InputConstants.KEY_K, category, 0));
     }
 
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
-        if (player == null || key == null || !key.isDown() || minecraft.screen != null) {
+        if (player == null || key == null || !key.isDown()) {
             return;
         }
         Font font = minecraft.font;

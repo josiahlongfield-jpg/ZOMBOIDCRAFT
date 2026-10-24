@@ -13,5 +13,7 @@ jobs:
           distribution: temurin
           java-version: '25'
       - uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-cleanup: never
       - run: ./gradlew compileJava > build.log 2>&1 || true
       - run: .github/probe.sh
