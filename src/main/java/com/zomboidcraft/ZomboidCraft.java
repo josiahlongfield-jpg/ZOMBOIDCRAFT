@@ -35,6 +35,7 @@ public class ZomboidCraft implements ModInitializer {
         ZombieSpawner.register();
         ZcCommand.register();
         CityPlacer.register();
+        com.zomboidcraft.world.MobFilter.register();
         LOGGER.info("The dead walk.");
     }
 }

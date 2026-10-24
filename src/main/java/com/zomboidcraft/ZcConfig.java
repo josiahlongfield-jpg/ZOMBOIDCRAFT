@@ -74,6 +74,8 @@ public final class ZcConfig {
         public int groupMax = 7;
         public int minDistance = 32;
         public int maxDistance = 56;
+        /** Creepers, skeletons, spiders and other vanilla monsters in the overworld; off leaves only the dead. */
+        public boolean vanillaMonsters = false;
     }
 
     public static class Survival {
