@@ -91,5 +91,14 @@ sig net.minecraft.world.level.Level 'playSound\('
 sig net.minecraft.server.level.ServerLevel 'sendParticles'
 sig net.minecraft.core.particles.ParticleTypes 'BLOCK|DAMAGE|CRIT|SWEEP'
 
+echo "===== stage addon layer"
+sig net.minecraft.client.renderer.entity.layers.RenderLayer '.'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'addLayer|layers|getModel'
+sig net.minecraft.client.model.geom.ModelPart 'public'
+sig net.minecraft.client.model.HumanoidModel 'public|protected'
+sig net.minecraft.client.model.Model 'public'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitModel'
+sig net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer 'public|protected|private'
+
 echo "===== compile errors"
 grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
