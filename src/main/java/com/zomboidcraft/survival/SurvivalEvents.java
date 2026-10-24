@@ -13,6 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
 public final class SurvivalEvents {
@@ -132,13 +133,13 @@ public final class SurvivalEvents {
             if (!stats.infected()) {
                 stats = stats.withInfection(0);
             }
-            player.displayClientMessage(Component.literal("You've been bitten.").withStyle(ChatFormatting.DARK_RED), true);
+            player.sendOverlayMessage(Component.literal("You've been bitten.").withStyle(ChatFormatting.DARK_RED));
         } else if (roll < BITE_CHANCE + SCRATCH_CHANCE) {
             stats = stats.withWounds(stats.wounds() + 1);
             if (!stats.infected() && random.nextFloat() < SCRATCH_INFECTION_CHANCE) {
                 stats = stats.withInfection(0);
             }
-            player.displayClientMessage(Component.literal("You've been scratched.").withStyle(ChatFormatting.RED), true);
+            player.sendOverlayMessage(Component.literal("You've been scratched.").withStyle(ChatFormatting.RED));
         }
         SurvivalStats.set(player, stats);
     }
@@ -146,7 +147,7 @@ public final class SurvivalEvents {
     /** An infected player rises again where they fell. */
     private static void reanimate(ServerPlayer player) {
         ServerLevel level = (ServerLevel) player.level();
-        Zombie zombie = EntityType.ZOMBIE.spawn(level, player.blockPosition(), EntitySpawnReason.EVENT);
+        Zombie zombie = EntityTypes.ZOMBIE.spawn(level, player.blockPosition(), EntitySpawnReason.EVENT);
         if (zombie != null) {
             zombie.setCustomName(player.getName().copy());
             zombie.setPersistenceRequired();

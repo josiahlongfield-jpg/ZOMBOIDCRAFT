@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 
 /** Zomboid-style status labels stacked in the top-right corner. Infection stays hidden until symptoms show. */
@@ -18,7 +18,7 @@ public final class MoodleHud {
     private record Moodle(String label, int color) {
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player == null || player.isCreative() || player.isSpectator()) {
@@ -33,7 +33,7 @@ public final class MoodleHud {
             int left = right - width;
             graphics.fill(left, y, right, y + 13, 0xB0101010);
             graphics.fill(left, y, left + 3, y + 13, moodle.color());
-            graphics.drawString(font, moodle.label(), left + 6, y + 3, 0xFFE8E8E8);
+            graphics.text(font, moodle.label(), left + 6, y + 3, 0xFFE8E8E8);
             y += 15;
         }
     }

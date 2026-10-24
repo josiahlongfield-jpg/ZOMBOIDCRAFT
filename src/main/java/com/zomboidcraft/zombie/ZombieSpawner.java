@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -61,7 +62,7 @@ public final class ZombieSpawner {
             int z = centerZ + random.nextInt(7) - 3;
             BlockPos pos = new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
             if (canSpawnAt(level, pos)) {
-                Zombie zombie = EntityType.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
+                Zombie zombie = EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
                 if (zombie != null && random.nextInt(4) == 0) {
                     // Some of the horde is already moving toward the player's area.
                     ((NoiseListener) zombie).zomboidcraft$hear(player.position());
