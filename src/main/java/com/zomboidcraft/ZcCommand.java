@@ -65,7 +65,7 @@ public final class ZcCommand {
             return 0;
         }
         ctx.getSource().sendSuccess(() -> Component.literal(
-                "Building the test city around you with stand-in blocks; it takes a minute or two. Best in a superflat world."), true);
+                "Building the test city around you; it takes a minute or two. Best in a superflat world."), true);
         return 1;
     }
 
