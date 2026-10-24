@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -317,8 +318,8 @@ public final class WeatherDirector {
                 }
                 double push = entity.onGround() ? 1 : 0.4;
                 entity.push(dx * push, 0, dz * push);
-                if (entity instanceof ServerPlayer) {
-                    entity.hurtMarked = true;
+                if (entity instanceof ServerPlayer p2) {
+                    p2.connection.send(new ClientboundSetEntityMotionPacket(p2));
                 }
             }
         }

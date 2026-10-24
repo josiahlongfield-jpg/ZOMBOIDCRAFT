@@ -8,6 +8,11 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+
+echo "===== weather4"
+javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -i "hurt\|mark\|sync\|dirty\|impulse\|push"
+javap -cp "$CP" -p net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket 2>&1 | head -20
+
 echo "===== stage 3 rendering"
 classes 'client/renderer/entity/(Zombie|AbstractZombie|HumanoidMob|LivingEntity|Mob)Renderer|client/renderer/entity/state/(Zombie|Humanoid|LivingEntity)RenderState|client/model/(Zombie|AbstractZombie|Humanoid)Model|client/model/geom/ModelLayers|EntityRendererRegistry|EntityRendererProvider|AnimationUtils' 
 sig net.minecraft.client.renderer.entity.ZombieRenderer '.'
