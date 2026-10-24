@@ -21,7 +21,7 @@ public final class SkillsHud {
     public static void register() {
         KeyMapping.Category category = KeyMapping.Category.register(ZomboidCraft.id("main"));
         key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.zomboidcraft.skills", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, category));
+                "key.zomboidcraft.skills", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, category, 0));
     }
 
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {

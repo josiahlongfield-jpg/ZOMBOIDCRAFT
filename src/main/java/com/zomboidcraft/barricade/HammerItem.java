@@ -108,7 +108,7 @@ public class HammerItem extends Item {
             level.setBlockAndUpdate(pos, state.setValue(BarricadeBlock.PLANKS, planks - 1));
         }
         if (!player.getInventory().add(new ItemStack(Items.OAK_PLANKS))) {
-            player.drop(new ItemStack(Items.OAK_PLANKS), false);
+            net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), new ItemStack(Items.OAK_PLANKS));
         }
         level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.PLAYERS, 0.6f, 1.3f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);
