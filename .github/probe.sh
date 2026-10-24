@@ -7,5 +7,10 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== keys"
+javap -cp "$CP" -p 'com.mojang.blaze3d.platform.InputConstants$Type' 2>&1 | head -20
+javap -cp "$CP" -p 'com.mojang.blaze3d.platform.InputConstants' 2>&1 | grep -E 'KEY_K|KEY_J|static' | head -12
+javap -cp "$CP" net.minecraft.client.Minecraft 2>&1 | grep -iE 'screen' | head -10
+
 echo "===== compile errors"
 grep -E -A3 'error:' build.log | grep -v '^--$' | head -120 || true
