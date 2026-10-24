@@ -7,7 +7,8 @@ edges, cloth weave, folds, seams, mottled skin and veins, fingers, a full 32x32 
 hems, tears and fresh blood with drips. The game model keeps its 64x64 UV layout, so these
 drop in as replacements for the 64x64 textures.
 
-Run from the repo root:  python3 tools/gen_hd_skins.py OUT_DIR [outfit ...]
+Run from the repo root:
+    python3 tools/gen_hd_skins.py src/main/resources/assets/zomboidcraft/textures/entity/walker_hd
 """
 import random
 import sys
@@ -239,7 +240,7 @@ class HD:
                     for x in range(x0 + 5, x0 + 11):
                         self.px(x, y, (200, 196, 186), a=0.35)  # laces
 
-    def face(self):
+    def face(self, rot=0.5):
         """A full 32x32 zombie face: hollow sockets, milky eyes, rotten nose, torn open mouth."""
         r = self.r
         x0, y0, w, h = face_rect("head", "front")
@@ -275,7 +276,13 @@ class HD:
             ellipse(cx, 14.5, 5.2, 3.9, lambda x, y, d: self.px(x, y, sh * (0.35 + 0.35 * d), SKIN))
         # milky eyes, each looking a slightly different way
         eye = np.array((226, 222, 200), np.float32)
+        lost = r.choice((8.5, 22.5)) if rot > 0.7 else None
         for cx, look in ((8.5, -0.7), (22.5, 0.5)):
+            if cx == lost:  # the eye is gone: a wet black hole
+                ellipse(cx, 14.5, 3.4, 2.4, lambda x, y, d: self.px(x, y, np.array((24, 6, 6)) + 60 * d * np.array((1, 0.2, 0.2)), MOUTH))
+                for y in range(17, 24):
+                    self.px(x0 + int(cx) + (y % 2), y0 + y, (100, 12, 10), BLOOD)
+                continue
             ellipse(cx, 14.5, 3.1, 1.9, lambda x, y, d: self.px(x, y, eye * (1 - 0.18 * d), EYE))
             ix, iy = int(cx + look), 14
             for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
@@ -293,6 +300,8 @@ class HD:
             self.px(x0 + x, y0 + 20, sh * 0.35, SKIN)
         for x in range(14, 18):
             self.px(x0 + x, y0 + 19, sh * 0.7, SKIN)
+        if rot > 0.45:  # the nose has rotted away to a hole
+            ellipse(15.5, 19.0, 2.4, 2.0, lambda x, y, d: self.px(x, y, np.array((40, 12, 10)) + 40 * d, MOUTH))
         # torn open mouth with teeth
         ellipse(15.5, 25.0, 7.4, 3.6, lambda x, y, d: self.px(x, y, np.array((44, 6, 6)) + 50 * (1 - d) * np.array((1, 0.1, 0.1)), MOUTH))
         ellipse(15.5, 25.0, 8.4, 4.5, lambda x, y, d: self.px(x, y, wd * (0.8 + 0.2 * d), SKIN, 0.5) if d > 0.75 else None)
@@ -355,17 +364,19 @@ class HD:
         # from the mouth down the chest
         x0, y0, w, h = face_rect("body", "front")
         for x in range(10, 22):
-            if r.random() < 0.75:
-                for y in range(0, r.randint(4, 26)):
+            if r.random() < 0.45 + 0.25 * amount:
+                for y in range(0, int(r.randint(4, 26) * min(1.4, amount))):
                     self.px(x0 + x, y0 + y, base.BLOOD[r.randrange(4)], BLOOD, 0.9)
-        self.splat("body", "front", r.uniform(10, 22), r.uniform(8, 18), 6 * amount)
+        for _ in range(1 + int(amount * 1.5)):  # a soaked patch on the chest, made of smaller lumps
+            self.splat("body", "front", r.uniform(8, 24), r.uniform(6, 20), r.uniform(1.8, 2.2 + 2 * amount))
         # hands soaked to the wrist with a ragged line
         for arm in ("rarm", "larm"):
             for face in ("front", "back", "left", "right"):
                 x0, y0, w, h = face_rect(arm, face)
-                line = r.randint(10, 16)
+                lo, hi = int(4 + 6 * amount), int(8 + 10 * amount)
+                line = r.randint(lo, hi)
                 for x in range(w):
-                    line = max(6, min(20, line + r.choice((-2, -1, 0, 1, 2))))
+                    line = max(lo - 2, min(hi + 4, line + r.choice((-2, -1, 0, 1, 2))))
                     for y in range(h - line, h):
                         dried = (y - (h - line)) < 2
                         self.px(x0 + x, y0 + y, (80, 18, 10) if dried else base.BLOOD[r.randrange(4)], BLOOD, 0.95)
@@ -374,10 +385,79 @@ class HD:
             self.mat[y0:y0 + h, x0:x0 + w] = BLOOD
         # splatters over the clothes
         for _ in range(int(r.randint(5, 9) * amount)):
-            box = r.choice(["body", "body", "rarm", "larm", "rleg", "lleg"])
-            face = r.choice(["front", "front", "back", "left", "right"])
+            box = r.choice(["body", "body", "rarm", "larm", "rleg", "lleg", "head"])
+            face = r.choice(["back", "left", "right"] if box == "head" else ["front", "front", "back", "left", "right"])
             _, _, w, h = face_rect(box, face)
             self.splat(box, face, r.uniform(0, w), r.uniform(0, h * 0.8), r.uniform(1.5, 4.5))
+
+    def rot(self, amount):
+        """Decay: discoloured patches, open sores, bite marks, bare bone, hair falling out."""
+        r = self.r
+        if amount <= 0:
+            return
+        skin = self.mat == SKIN
+        patches = smooth_noise(self.np, N, N, 7)
+        bruise = smooth_noise(self.np, N, N, 12)
+        decay = np.clip((patches - (0.85 - 0.9 * amount)) * 2.5, 0, 0.75) * skin
+        rotten = np.array((86, 96, 58), np.float32)  # green-grey
+        dark = np.array((58, 44, 52), np.float32)  # purple-black
+        target = np.where((bruise > 0.25)[..., None], dark, rotten)
+        self.c[..., :3] = self.c[..., :3] * (1 - decay[..., None]) + target * decay[..., None]
+
+        def blob(box, face, cx, cy, rx, ry, inner, rim, m):
+            x0, y0, w, h = face_rect(box, face)
+            for y in range(int(cy - ry - 2), int(cy + ry + 3)):
+                for x in range(int(cx - rx - 2), int(cx + rx + 3)):
+                    if not (0 <= x < w and 0 <= y < h):
+                        continue
+                    X, Y = x0 + x, y0 + y
+                    if self.mat[Y, X] not in (SKIN, MOUTH, BLOOD):
+                        continue
+                    d = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 + r.uniform(-0.25, 0.25)
+                    if d < 0.55:
+                        self.px(X, Y, inner * r.uniform(0.85, 1.1), m)
+                        self.height[Y, X] -= 45
+                    elif d < 1.0:
+                        self.px(X, Y, rim, m, 0.85)
+                    elif d < 1.6:
+                        self.mul(X, Y, 0.78)
+
+        flesh, pus, bone = np.array((150, 64, 58)), np.array((150, 138, 78)), np.array((214, 204, 174))
+        skin_faces = [("rarm", f) for f in ("front", "back", "left", "right")] + [("larm", f) for f in ("front", "back", "left", "right")] \
+            + [("head", f) for f in ("left", "right", "back", "front")] + [("rleg", "front"), ("lleg", "front")]
+        for _ in range(int(2 + 7 * amount)):  # open sores
+            box, face = r.choice(skin_faces)
+            _, _, w, h = face_rect(box, face)
+            rim = pus if r.random() < 0.35 else np.array((90, 24, 22))
+            blob(box, face, r.uniform(3, w - 3), r.uniform(3, h - 3), r.uniform(1.2, 2.5 + 2 * amount), r.uniform(1.0, 2.0 + amount), flesh, rim, MOUTH)
+        if amount > 0.3:  # bite marks: two arcs of tooth holes round a bloody middle
+            for _ in range(r.randint(1, 2)):
+                box, face = r.choice([("rarm", "front"), ("larm", "front"), ("rarm", "left"), ("larm", "right"), ("head", "left"), ("head", "right")])
+                x0, y0, w, h = face_rect(box, face)
+                cx, cy = r.uniform(5, w - 5), r.uniform(5, h - 10)
+                blob(box, face, cx, cy, 2.2, 1.5, np.array((120, 20, 18)), np.array((90, 20, 16)), BLOOD)
+                for i in range(7):
+                    a = 3.14159 * i / 6
+                    for sy in (-1, 1):
+                        X, Y = x0 + int(cx + 4 * np.cos(a)), y0 + int(cy + sy * 3 * np.sin(a))
+                        if self.mat[Y, X] in (SKIN, BLOOD, MOUTH):
+                            self.px(X, Y, (60, 10, 8), BLOOD)
+        if amount > 0.65:  # flesh gone down to the bone on a forearm
+            box, face = r.choice([("rarm", "front"), ("larm", "front"), ("rarm", "back"), ("larm", "back")])
+            x0, y0, w, h = face_rect(box, face)
+            cy = r.uniform(h * 0.5, h * 0.7)
+            blob(box, face, w / 2, cy, 5, 4, flesh * 0.8, np.array((100, 26, 22)), MOUTH)
+            for y in range(int(cy - 3), int(cy + 3)):
+                for x in range(w // 2 - 2, w // 2 + 2):
+                    self.px(x0 + x, y0 + y, bone * r.uniform(0.85, 1.0), TEETH)
+        if amount > 0.5:  # hair coming out in patches
+            for box, face in (("head", "top"), ("head", "back"), ("head", "left"), ("head", "right")):
+                x0, y0, w, h = face_rect(box, face)
+                hole = smooth_noise(self.np, w, h, 6)
+                for y in range(h):
+                    for x in range(w):
+                        if hole[y, x] > 1.1 - amount and self.mat[y0 + y, x0 + x] == HAIR:
+                            self.px(x0 + x, y0 + y, self.shadow * 0.95, SKIN)
 
     def tears(self):
         """Holes in the clothes showing grey skin or a wound underneath."""
@@ -453,9 +533,18 @@ class HD:
         return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGBA")
 
 
-def make_hd(outfit, skin_name, seed):
+# Damage levels: (blood range, rot range). Each zombie picks one; the exact amounts are random.
+DAMAGE = [((0.3, 0.7), (0.1, 0.35)), ((0.8, 1.2), (0.4, 0.6)), ((1.3, 1.8), (0.7, 1.0))]
+
+
+def make_hd(outfit, skin_name, seed, level=1):
     sk = base.make(outfit, skin_name, seed, clean=True)
-    hd = HD(sk, outfit, seed)
+    hd = HD(sk, outfit, seed * 7 + level)
+    dr = random.Random(seed * 13 + level)
+    (b0, b1), (r0, r1) = DAMAGE[level]
+    blood, rot = dr.uniform(b0, b1), dr.uniform(r0, r1)
+    if outfit in ("patient", "nurse", "doctor"):
+        blood *= 1.2
     hd.materials()
     hd.veins()
     hd.frayed_hems()
@@ -465,28 +554,39 @@ def make_hd(outfit, skin_name, seed):
     hd.shoes()
     hd.tears()
     hd.dirt()
-    hd.face()
-    hd.blood(1.3 if outfit in ("patient", "nurse", "doctor") else 1.0)
+    hd.face(rot)
+    hd.rot(rot)
+    hd.blood(blood)
     hd.bevel_and_light()
     return hd
 
 
 def main():
-    out = Path(sys.argv[1] if len(sys.argv) > 1 else "build/hd")
-    only = sys.argv[2:]
+    """Args: OUT_DIR [--preview DIR] [outfit ...]. --preview also writes OpenGL normal maps for three.js."""
+    args = sys.argv[1:]
+    out = Path(args.pop(0) if args else "build/hd")
+    preview = None
+    if "--preview" in args:
+        k = args.index("--preview")
+        preview = Path(args[k + 1])
+        del args[k:k + 2]
+        preview.mkdir(parents=True, exist_ok=True)
+    only = args
     out.mkdir(parents=True, exist_ok=True)
     n = 0
     for i, outfit in enumerate(base.OUTFITS):
         if only and outfit not in only:
             continue
         for j, skin_name in enumerate(base.SKINS):
-            hd = make_hd(outfit, skin_name, seed=1000 + i * 10 + j)
-            name = f"{outfit}_{skin_name}"
-            hd.albedo().save(out / f"{name}.png")
-            hd.specular().save(out / f"{name}_s.png")
-            hd.normal().save(out / f"{name}_n.png")
-            hd.normal(preview=True).save(out / f"{name}_nrm_gl.png")
-            n += 1
+            for level in range(len(DAMAGE)):
+                hd = make_hd(outfit, skin_name, 1000 + i * 10 + j, level)
+                name = f"{outfit}_{skin_name}_{level}"
+                hd.albedo().save(out / f"{name}.png")
+                hd.specular().save(out / f"{name}_s.png")
+                hd.normal().save(out / f"{name}_n.png")
+                if preview:
+                    hd.normal(preview=True).save(preview / f"{name}_nrm_gl.png")
+                n += 1
     print(f"wrote {n} HD skins to {out}")
 
 

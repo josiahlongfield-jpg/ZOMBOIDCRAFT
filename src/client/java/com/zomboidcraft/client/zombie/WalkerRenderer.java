@@ -1,5 +1,6 @@
 package com.zomboidcraft.client.zombie;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -23,7 +24,10 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         super.extractRenderState(zombie, state, partialTick);
         state.isAggressive = zombie.isAggressive();
         state.outfit = ZombieLook.outfit(zombie);
-        state.texture = ZomboidCraft.id("textures/entity/walker/" + state.outfit + "_" + ZombieLook.skin(zombie) + ".png");
+        String name = state.outfit + "_" + ZombieLook.skin(zombie);
+        state.texture = ZcConfig.get().look.hdSkins
+                ? ZomboidCraft.id("textures/entity/walker_hd/" + name + "_" + ZombieLook.damage(zombie) + ".png")
+                : ZomboidCraft.id("textures/entity/walker/" + name + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
     }
 

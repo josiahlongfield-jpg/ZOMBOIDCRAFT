@@ -98,6 +98,10 @@ public final class ZcConfig {
     public static class Look {
         /** Zomboid-style zombie model and outfits. Client side; needs a restart. */
         public boolean customZombies = true;
+        /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
+        public boolean hdSkins = true;
+        /** Worst damage shown on HD zombies: 0 light, 1 medium, 2 heavy (more blood, rot, missing eyes). */
+        public int maxGore = 2;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
     }

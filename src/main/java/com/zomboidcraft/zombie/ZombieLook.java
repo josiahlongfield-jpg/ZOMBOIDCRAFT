@@ -1,6 +1,7 @@
 package com.zomboidcraft.zombie;
 
 import com.mojang.serialization.Codec;
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import java.util.List;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
@@ -56,6 +57,12 @@ public final class ZombieLook {
 
     public static String skin(Entity zombie) {
         return SKINS.get(Math.floorMod(zombie.getUUID().getMostSignificantBits(), SKINS.size()));
+    }
+
+    /** How far gone the body is, 0 (fresh) to 2 (rotten and soaked), capped by the gore setting. */
+    public static int damage(Entity zombie) {
+        int max = Math.clamp(ZcConfig.get().look.maxGore, 0, 2);
+        return Math.min(Math.floorMod(zombie.getUUID().getLeastSignificantBits() >>> 20, 3), max);
     }
 
     /** Texture name under textures/entity/walker, such as "police_pale". */
