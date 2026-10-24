@@ -184,16 +184,16 @@ public final class CityDemo {
 
     /** Abandoned traffic, barricades and the street going back to nature. */
     private void avenueLife() {
-        // parked along both curbs, nose to tail with gaps
+        // a few parked at the curbs and left in the lanes: kept sparse until cars get a proper model
         for (int side = -1; side <= 1; side += 2) {
             for (int z = MAX_Z - 12; z > MIN_Z + 20; z -= 7 + rng.nextInt(4)) {
-                if (Math.floorMod(z + 13, 80) < 28 || rng.nextDouble() < 0.45) {
+                if (Math.floorMod(z + 13, 80) < 28 || rng.nextDouble() < 0.85) {
                     continue;
                 }
                 props.car(side < 0 ? -7 : 5, 1, z, side < 0 ? 2 : 0);
             }
         }
-        for (int z = 30; z > -400; z -= 6 + rng.nextInt(14)) {
+        for (int z = 30; z > -400; z -= 30 + rng.nextInt(40)) {
             if (Math.floorMod(z + 7, 80) < 22) {
                 continue;  // keep junctions mostly clear
             }

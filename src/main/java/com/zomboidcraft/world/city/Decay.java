@@ -216,7 +216,11 @@ public final class Decay {
 
     private void breach(int cx, int cy, int cz, int d, double r) {
         int tx = SIDES[d][1] != 0 ? 1 : 0, tz = 1 - tx;  // along the wall
-        boolean concrete = material(sink.get(cx, cy, cz)).startsWith("concrete");
+        String centre = material(sink.get(cx, cy, cz));
+        if (centre == null) {
+            return;  // an earlier breach already took this wall
+        }
+        boolean concrete = centre.startsWith("concrete");
         int reach = (int) Math.ceil(r) + 1;
         for (int a = -reach; a <= reach; a++) {
             for (int v = -reach; v <= reach; v++) {

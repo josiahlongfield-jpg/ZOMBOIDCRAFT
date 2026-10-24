@@ -111,22 +111,27 @@ public final class Walkup {
     }
 
     private void shopfront() {
-        // pilasters at the ends, glass between, a door in the middle, sign band above
+        // pilasters at the ends, glass between, a glass door in the middle (double doors in a
+        // wide shop), sign band above, and a steel back door onto the yard
         int door = w / 2;
+        boolean wide = w >= 12;
         for (int x = 0; x < w; x++) {
             boolean pier = x == 0 || x == w - 1;
             for (int y = 1; y <= 2; y++) {
                 String glass = rng.nextDouble() < 0.25 ? "window_broken" : rng.nextDouble() < 0.12 ? "boarded_window" : "window";
-                p.set(x, y, 0, pier ? "stone_trim" : (x == door ? "air" : glass));
+                p.set(x, y, 0, pier ? "stone_trim" : glass);
             }
             p.set(x, 3, 0, "stone_trim");
             if (!pier) {
                 p.set(x, 3, -1, "awning[facing=north]");
             }
         }
-        if (rng.nextDouble() < 0.5) {
-            p.set(door, 1, 0, "fire_door[facing=north]");
+        if (wide) {
+            Doors.pair(p, rng, door - 1, 1, 0, Doors.SHOP, "south");
+        } else {
+            Doors.abandoned(p, rng, door, 1, 0, Doors.SHOP, "south", Doors.hinge(rng));
         }
+        Doors.abandoned(p, rng, w - 2, 1, d - 1, Doors.STEEL, "north", Doors.hinge(rng));
         // a lantern by the door, still burning in some of them
         if (rng.nextDouble() < 0.45 && door + 1 < w - 1) {
             p.set(door + 1, 2, -1, rng.nextDouble() < 0.7 ? "wall_lantern" : "wall_lantern_off");
@@ -147,9 +152,10 @@ public final class Walkup {
             int back = d / 2;
             for (int x = 1; x < w - 1; x++) {
                 for (int yy = y + 1; yy < y + FLOOR; yy++) {
-                    p.set(x, yy, back, x == w / 2 && yy < y + 3 ? "air" : "drywall");
+                    p.set(x, yy, back, "drywall");
                 }
             }
+            Doors.abandoned(p, rng, w / 2, y + 1, back, Doors.FLAT, "south", Doors.hinge(rng));
         } else {
             // shop counter and shelves
             for (int x = 2; x < w - 2; x++) {

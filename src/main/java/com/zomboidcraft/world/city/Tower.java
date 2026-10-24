@@ -130,9 +130,11 @@ public final class Tower {
                 }
             }
         }
-        // the entrance: a gap in the lobby glass with a steel canopy over the sidewalk
+        // the entrance: two pairs of glass doors under a transom, a steel canopy over the sidewalk
         int mid = w / 2;
-        p.fill(mid - 2, 1, 0, mid + 1, 3, 0, "air");
+        p.fill(mid - 2, 3, 0, mid + 1, 3, 0, "window");
+        Doors.pair(p, rng, mid - 2, 1, 0, Doors.SHOP, "south");
+        Doors.pair(p, rng, mid, 1, 0, Doors.SHOP, "south");
         p.fill(mid - 3, 4, -3, mid + 2, 4, -1, "steel_mullion");
         p.set(mid - 3, 3, -3, "wall_lantern");
         p.set(mid + 2, 3, -3, "wall_lantern");
@@ -269,12 +271,13 @@ public final class Tower {
         int wallX = cx0 - 2;
         if (wallX - 4 > in) {
             for (int z = cz0; z < cz0 + CORE_D; z++) {
-                boolean door = z == cz0 + 4 || z == cz0 + 5;
                 String wall = z % 3 == 0 ? "drywall" : "window";
                 for (int yy = fy; yy < fy + 3; yy++) {
-                    p.set(wallX, yy, z, door && yy < fy + 2 ? "air" : wall);
+                    p.set(wallX, yy, z, wall);
                 }
             }
+            Doors.abandoned(p, rng, wallX, fy, cz0 + 4, Doors.SHOP, "west", "right");
+            Doors.abandoned(p, rng, wallX, fy, cz0 + 5, Doors.SHOP, "west", "left");
             for (int z = cz0 + 2; z <= cz0 + 7; z++) {
                 p.set(wallX - 3, fy, z, "desk[facing=east]");
                 p.set(wallX - 2, fy, z, "desk[facing=west]");
@@ -367,10 +370,9 @@ public final class Tower {
         int levels = floors + 1;  // lobby, offices, then up to the roof
         for (int level = 0; level <= levels; level++) {
             int y = level == levels ? roofY : floorY(level);
-            // landing at floor level, by the door
+            // landing at floor level, by the fire door
             p.fill(x0, y, land, x0 + 2, y, land + 1, "floor_concrete");
-            p.set(x0 + 1, y + 1, cz0, "air");
-            p.set(x0 + 1, y + 2, cz0, "air");
+            Doors.abandoned(p, rng, x0 + 1, y + 1, cz0, Doors.STEEL, "south", Doors.hinge(rng));
             p.set(x0 + 1, y + 3, land + 1, "ceiling_light_off");
             if (level == levels) {
                 break;

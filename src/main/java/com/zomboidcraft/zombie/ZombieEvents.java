@@ -59,6 +59,10 @@ public final class ZombieEvents {
             zombie.setBaby(false);
         }
         zombie.setCanBreakDoors(config.breakDoors);
+        if (config.bashDoors) {
+            // plan paths through shut doors, so they walk up to them and bash them in
+            zombie.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
+        }
         AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             double amount = ZombieTypes.isSprinter(zombie) ? config.sprinterSpeed : config.shamblerSpeed;

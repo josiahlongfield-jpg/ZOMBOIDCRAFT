@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 public final class StandIns {
     private static final Map<String, String> TABLE = new HashMap<>();
     /** Stand-ins whose facing points the other way from the city block's. */
-    private static final Set<String> FLIP = Set.of("office_chair", "fire_door");
+    private static final Set<String> FLIP = Set.of("office_chair");
 
     static {
         put("air", "air");
@@ -59,7 +59,9 @@ public final class StandIns {
         put("wood_panel", "dark_oak_planks");
         put("awning", "dark_oak_slab[type=top]");
         put("stairs_concrete", "stone_brick_stairs");
-        put("fire_door", "iron_trapdoor[open=true]");
+        put("fire_door", "copper_door");
+        put("shop_door", "copper_door");
+        put("flat_door", "spruce_door");
         put("elevator_door", "iron_block");
         put("hvac", "blast_furnace");
         put("water_tank", "stripped_spruce_log");
@@ -175,6 +177,11 @@ public final class StandIns {
         }
         if (axis != null) {
             state = with(state, "axis", axis);
+        }
+        for (String key : new String[] {"half", "hinge", "open"}) {  // doors
+            if (props.containsKey(key)) {
+                state = with(state, key, props.get(key));
+            }
         }
         return state;
     }

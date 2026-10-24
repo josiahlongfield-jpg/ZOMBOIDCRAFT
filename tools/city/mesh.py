@@ -91,6 +91,9 @@ class Palette:
                 continue
             base, props = parse(name)
             spec = blocks[base]
+            if "door" in spec:
+                self.models[i] = self.door(spec, props)
+                continue
             rot = 0
             if spec.get("rotate") == "facing":
                 rot = FACING.index(props.get("facing", "north"))
@@ -127,6 +130,21 @@ class Palette:
                     uv = np.array([(0, 0), (16, 0), (16, 16), (0, 16)], float)
                     faces.append((c, uv, 2, t, False))
                 self.models[i] = faces
+
+    def door(self, spec, props):
+        """A vanilla door: a 3/16 panel on the side away from its facing when shut, swung a
+        quarter turn toward its hinge (the placer's left or right) when open."""
+        f = FACING.index(props.get("facing", "north"))
+        if props.get("open") == "true":
+            side = (f + 3) % 4 if props.get("hinge", "left") == "left" else (f + 1) % 4
+        else:
+            side = (f + 2) % 4
+        t = self.tex(spec["tex"]["top" if props.get("half") == "upper" else "bottom"])
+        faces = []
+        for d in range(6):
+            c, uv = face_quad(np.array([0, 0, 0, 16, 16, 3]), d)
+            faces.append((rotate_pts(c, side), uv, rotate_dir(d, side), t, d == 5))
+        return faces
 
     @staticmethod
     def tex_for(spec, face):

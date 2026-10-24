@@ -769,6 +769,184 @@ OVERRIDE = {
 }
 
 
+# ---------------------------------------------------------------- doors
+# Each door is two textures, top and bottom half, seen from the front; the outer 12 texels of
+# each side also wrap onto the door's edges.
+
+def recolour(t, colour, keep_rust=45):
+    """Repaints a painted-metal or wood photo in another colour; deep rust and bare spots stay."""
+    lum = t.c.mean(axis=2, keepdims=True)
+    sat = t.c.max(axis=2, keepdims=True) - t.c.min(axis=2, keepdims=True)
+    paint = np.clip(1.6 - sat / keep_rust, 0, 1)
+    t.c = t.c * (1 - paint) + (lum / 150) * np.array(colour, np.float32) * paint
+    return t
+
+
+def bevel(t, x0, y0, x1, y1, depth=0.12, light=1.3, dark=0.55):
+    """A recessed panel: shadow along its top and left edge, a catch light on the bottom and right."""
+    t.h[y0:y1, x0:x1] -= depth
+    t.c[y0:y0 + 2, x0:x1] *= dark
+    t.c[y0:y1, x0:x0 + 2] *= dark
+    t.c[y1 - 1:y1, x0:x1] *= light
+    t.c[y0:y1, x1 - 1:x1] *= light
+
+
+def door_glass(t, x0, y0, x1, y1, seed, cracked=False):
+    """Dark see-through glass in the door, brighter toward the top, with grime at the bottom."""
+    g = P.glass(seed, (54, 66, 78))
+    t.c[y0:y1, x0:x1] = g.c[y0:y1, x0:x1]
+    t.alpha[y0:y1, x0:x1] = 140
+    t.smooth[y0:y1, x0:x1] = 0.95
+    t.f0[y0:y1, x0:x1] = 20
+    t.poro[y0:y1, x0:x1] = 0
+    t.h[y0:y1, x0:x1] = 0.8
+    if cracked:
+        # a starburst where something hit it, cracks running out to the frame
+        cx, cy = t.rng.uniform(x0 + 8, x1 - 8), t.rng.uniform(y0 + 8, y1 - 8)
+        for _ in range(9):
+            a = t.rng.uniform(0, np.pi * 2)
+            x, y = cx, cy
+            for _ in range(60):
+                xi, yi = int(x), int(y)
+                if not (x0 <= xi < x1 and y0 <= yi < y1):
+                    break
+                t.c[yi, xi] = (196, 202, 206)
+                t.alpha[yi, xi] = 230
+                a += t.rng.normal(0, 0.15)
+                x += np.cos(a)
+                y += np.sin(a)
+
+
+def shop_door_frame(seed):
+    t = details(photo("Metal024", span=2, sat=0.3, bright=0.38, metal=True, seed=seed), P.steel_mullion(), 0.4)
+    t.streaks(0.6, 0.75)
+    return t
+
+
+def shop_door_top():
+    """Glass shop door, upper half: dark bronze frame, grimy glass, a faded notice taped on."""
+    t = shop_door_frame(140)
+    door_glass(t, 9, 9, N - 9, N, 141)
+    # the taped notice: a faded sheet with lines of print, a strip of tape at the top
+    t.rect(22, 34, 42, 50, (176, 170, 150))
+    t.alpha[34:50, 22:42] = 235
+    for y in (37, 40, 43, 46):
+        t.rect(25, y, 25 + int(t.rng.uniform(8, 14)), y + 1, (70, 66, 60))
+    t.rect(28, 33, 36, 35, (200, 190, 150))
+    t.alpha[33:35, 28:36] = 200
+    t.c[34:50, 22:42] *= np.linspace(1.0, 0.8, 16)[:, None, None]
+    return t
+
+
+def shop_door_bottom():
+    """Glass shop door, lower half: a steel push bar, a tall kick rail scuffed by boots."""
+    t = shop_door_frame(142)
+    door_glass(t, 9, 0, N - 9, N - 18, 143)
+    # push bar on stand-offs at waist height
+    t.rect(10, 5, N - 10, 10, (150, 150, 146), 1.0, 0.75)
+    t.f0[5:10, 10:N - 10] = 231
+    t.c[5:6, 10:N - 10] *= 1.25
+    t.c[10:12, 10:N - 10] *= 0.5
+    t.alpha[5:12, 10:N - 10] = 255
+    for x in (12, N - 14):
+        t.rect(x, 4, x + 3, 12, (70, 70, 68), 1.0)
+    t.speckle(0.05, (24, 22, 20), 0.6)
+    t.grime(0.5)
+    return t
+
+
+def fire_door_base(seed):
+    t = recolour(photo("rusty_painted_metal", span=2, sat=0.6, bright=0.7, metal=True, seed=seed), (92, 104, 96))
+    t.vary(0.05)
+    t.frame(3, (52, 58, 54), 0.95, 0.3)
+    t.streaks(0.4, 0.8)
+    return t
+
+
+def fire_door_top():
+    """Steel stairwell door, upper half: a narrow wired-glass vision panel."""
+    t = fire_door_base(150)
+    x0, x1, y0, y1 = 24, 40, 14, 52
+    door_glass(t, x0, y0, x1, y1, 151)
+    for k in range(x0, x1, 4):  # the wire mesh in the glass
+        t.c[y0:y1, k] = (30, 32, 32)
+        t.alpha[y0:y1, k] = 230
+    for k in range(y0, y1, 4):
+        t.c[k, x0:x1] = (30, 32, 32)
+        t.alpha[k, x0:x1] = 230
+    bevel(t, x0 - 3, y0 - 3, x1 + 3, y1 + 3, depth=-0.08, light=0.7, dark=1.2)
+    t.alpha[y0 - 3:y0, x0 - 3:x1 + 3] = 255
+    return t
+
+
+def fire_door_bottom():
+    """Steel stairwell door, lower half: panic bar, brushed kick plate, a smeared bloody hand."""
+    t = fire_door_base(152)
+    t.rect(6, 4, N - 6, 10, (128, 130, 128), 1.0, 0.6)
+    t.f0[4:10, 6:N - 6] = 231
+    t.c[4:5, 6:N - 6] *= 1.25
+    t.c[10:12, 6:N - 6] *= 0.55
+    t.rect(6, 3, 14, 11, (60, 62, 60), 1.0)
+    t.rect(N - 14, 3, N - 6, 11, (60, 62, 60), 1.0)
+    # kick plate
+    t.rect(3, 46, N - 3, N - 3, (96, 96, 94), 0.85, 0.55)
+    t.f0[46:N - 3, 3:N - 3] = 231
+    t.c[46:N - 3, 3:N - 3] *= (1 + 0.05 * np.sin(np.arange(3, N - 3) * 2.3))[None, :, None]
+    t.speckle(0.02, (40, 36, 30), 0.4)
+    # a bloody hand dragged down from the bar
+    yy, xx = np.mgrid[0:N, 0:N]
+    hand = ((xx - 44) / 4.5) ** 2 + ((yy - 16) / 5) ** 2 < 1
+    for f, dx in enumerate((-4, -1.5, 1.5, 4)):
+        hand |= (np.abs(xx - 44 - dx) < 1.0) & (yy > 9 - (f in (1, 2))) & (yy < 14)
+    smear = (np.abs(xx - 44 - (yy - 20) * 0.08) < 3.5) & (yy > 18) & (yy < 40) & (t.rng.random((N, N)) < np.clip(1.2 - (yy - 18) / 22, 0, 1))
+    m = hand | smear
+    t.c[m] = t.c[m] * 0.35 + np.array((78, 12, 8), np.float32) * 0.65
+    t.smooth[m] = 0.45
+    return t
+
+
+def flat_door_base(seed):
+    t = recolour(photo("PaintedWood005", span=1, sat=0.6, bright=0.8, seed=seed), (120, 64, 50), keep_rust=60)
+    # the photo is dark and blotchy: lift it to faded paint and calm the blotches
+    mean = t.c.mean(axis=(0, 1))
+    t.c = mean + (t.c - mean) * 0.45
+    t.c *= 74 / max(t.c.mean(), 1)
+    lum = t.c.mean(axis=2, keepdims=True)
+    t.c = lum + (t.c - lum) * 0.6
+    t.vary(0.05)
+    t.grime(0.35)
+    return t
+
+
+def flat_door_top():
+    """Flat's wooden door, upper half: two raised panels, a brass number and a spy hole."""
+    t = flat_door_base(160)
+    bevel(t, 9, 8, 29, N)
+    bevel(t, 35, 8, 55, N)
+    t.rect(29, 18, 35, 26, (150, 122, 62), 0.9, 0.6)  # number plate
+    t.rect(30, 20, 31, 24, (60, 46, 26))
+    t.rect(33, 20, 34, 24, (60, 46, 26))
+    t.rect(31, 32, 33, 34, (30, 28, 26), 0.6)  # spy hole
+    return t
+
+
+def flat_door_bottom():
+    """Flat's wooden door, lower half: two panels, the brass knob and keyhole, a kicked-in split."""
+    t = flat_door_base(161)
+    bevel(t, 9, 0, 29, 52)
+    bevel(t, 35, 0, 55, 52)
+    t.rect(48, 4, 54, 10, (156, 126, 64), 1.0, 0.7)
+    t.c[4:6, 48:54] *= 1.3
+    t.rect(50, 12, 52, 15, (24, 20, 16), 0.6)
+    t.crack(3, 0.3, (30, 20, 14))
+    t.grime(0.4)
+    return t
+
+
+EXTRA.update({f.__name__: f for f in (shop_door_top, shop_door_bottom, fire_door_top, fire_door_bottom,
+                                      flat_door_top, flat_door_bottom)})
+
+
 def match_tone(t, base_name, amount=0.85):
     """Pulls a variant's average colour and contrast toward its base, so neighbouring blocks
     differ in detail rather than in brightness (which reads as a checkerboard)."""

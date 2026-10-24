@@ -4,6 +4,7 @@
 Writes, under src/main:
   java/com/zomboidcraft/world/blocks/CitySpecs.java   one line per block: kind, shape, light, sound
   resources/assets/zomboidcraft/blockstates|models/block/city|items/<name>.json
+    (doors: vanilla's eight door models per door, plus an item model and icon)
   resources/assets/zomboidcraft/textures/block/city/<tex>.png (+ LabPBR _n and _s maps)
   resources/data/zomboidcraft/loot_table/blocks/<name>.json
 and the block names in lang/en_us.json.
@@ -111,6 +112,49 @@ def model_json(name, spec, tex_dir):
     return {"parent": "minecraft:block/block", "textures": tex, "elements": [element(b) for b in bs]}
 
 
+# doors use vanilla's door models and turns: closed doors by facing, open ones a quarter turn
+# toward their hinge
+DOOR_Y = {"east": 0, "south": 90, "west": 180, "north": 270}
+
+
+def door_models(name, spec, tex_dir):
+    """The eight models of a door: bottom and top half, left and right hinge, shut and open."""
+    tex = {"bottom": sprite(spec["tex"]["bottom"], tex_dir), "top": sprite(spec["tex"]["top"], tex_dir),
+           "particle": f"{NS}:block/city/{spec['tex']['bottom']}"}
+    return {f"{name}_{half}_{hinge}{suffix}": {"parent": f"minecraft:block/door_{half}_{hinge}{suffix}", "textures": tex}
+            for half in ("bottom", "top") for hinge in ("left", "right") for suffix in ("", "_open")}
+
+
+def door_blockstate(name):
+    variants = {}
+    for facing, y in DOOR_Y.items():
+        for half, part in (("lower", "bottom"), ("upper", "top")):
+            for hinge in ("left", "right"):
+                for is_open in (False, True):
+                    turn = (y + (0 if not is_open else 90 if hinge == "left" else 270)) % 360
+                    v = {"model": f"{NS}:block/city/{name}_{part}_{hinge}{'_open' if is_open else ''}"}
+                    if turn:
+                        v["y"] = turn
+                    variants[f"facing={facing},half={half},hinge={hinge},open={str(is_open).lower()}"] = v
+    return {"variants": variants}
+
+
+def door_icon(spec, tex_dir, out):
+    """A door's inventory icon: both halves stacked and shrunk, like vanilla's door items."""
+    top = Image.open(tex_dir / f"{spec['tex']['top']}.png").convert("RGBA")
+    bottom = Image.open(tex_dir / f"{spec['tex']['bottom']}.png").convert("RGBA")
+    door = Image.new("RGBA", (top.width, top.height * 2))
+    door.paste(top, (0, 0))
+    door.paste(bottom, (0, top.height))
+    door = door.resize((16, 32), Image.BOX)
+    a = np.array(door)
+    a[..., 3] = np.where(a[..., 3] > 0, np.maximum(a[..., 3], 200), 0)  # icons don't blend
+    icon = Image.new("RGBA", (32, 32))
+    icon.paste(Image.fromarray(a), (8, 0))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    icon.save(out)
+
+
 def blockstate(name, spec):
     model = f"{NS}:block/city/{name}"
     rot = spec.get("rotate")
@@ -135,6 +179,10 @@ def sound(name, spec):
 
 
 def java_line(name, spec, tex_dir):
+    if "door" in spec:
+        s = "METAL" if spec["door"] == "steel" else "WOOD"
+        flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
+        return f'        s("{name}", DOOR, {flag}, 0, SoundType.{s}, 3f);'
     model = spec.get("model", "cube")
     kind = {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
     decor = model == "cross" or name in DECOR or name.startswith(DECOR_PREFIX)
@@ -171,7 +219,7 @@ def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
     # start clean so renamed or dropped blocks don't linger (the old models name the old blocks)
-    old = [p.stem for p in (ASSETS / "models/block/city").glob("*.json")]
+    old = sorted({p.stem.split("_bottom_")[0].split("_top_")[0] for p in (ASSETS / "models/block/city").glob("*.json")})
     for d in (ASSETS / "models/block/city", ASSETS / "textures/block/city"):
         shutil.rmtree(d, ignore_errors=True)
     for name in old:
@@ -182,6 +230,24 @@ def main():
     used = set()
     lines = []
     for name, spec in blocks.items():
+        if "door" in spec:
+            for model, obj in door_models(name, spec, tex_dir).items():
+                write_json(ASSETS / f"models/block/city/{model}.json", obj)
+            write_json(ASSETS / f"blockstates/{name}.json", door_blockstate(name))
+            write_json(ASSETS / f"models/item/{name}.json", {"parent": "minecraft:item/generated",
+                                                             "textures": {"layer0": f"{NS}:item/{name}"}})
+            write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:item/{name}"}})
+            door_icon(spec, tex_dir, ASSETS / f"textures/item/{name}.png")
+            write_json(DATA / f"loot_table/blocks/{name}.json", {
+                "type": "minecraft:block",
+                "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}",
+                           "conditions": [{"condition": "minecraft:block_state_property", "block": f"{NS}:{name}",
+                                           "properties": {"half": "lower"}}]}],
+                           "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+                "random_sequence": f"{NS}:blocks/{name}"})
+            used.update(textures(spec))
+            lines.append(java_line(name, spec, tex_dir))
+            continue
         write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec, tex_dir))
         write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})

@@ -6,7 +6,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:fire_door"
+          "name": "zomboidcraft:fire_door",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "zomboidcraft:fire_door",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ]
         }
       ],
       "conditions": [

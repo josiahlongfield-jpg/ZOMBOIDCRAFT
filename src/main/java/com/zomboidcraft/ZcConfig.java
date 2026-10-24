@@ -42,6 +42,10 @@ public final class ZcConfig {
         public boolean bashBarricades = true;
         /** Scales how quickly zombies knock boards off barricades. */
         public double barricadeDamage = 1.0;
+        /** Zombies on your trail pound shut doors until they break (they never open them). */
+        public boolean bashDoors = true;
+        /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
+        public int doorHits = 12;
     }
 
     public static class Senses {

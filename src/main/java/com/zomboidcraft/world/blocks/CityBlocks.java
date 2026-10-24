@@ -12,19 +12,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * Registers the city's blocks (walls with their weathered variants, windows, street furniture,
- * debris and plants) from the generated {@link CitySpecs}, with an item each in their own
+ * Registers the city's blocks (walls with their weathered variants, windows, doors, street
+ * furniture, debris and plants) from the generated {@link CitySpecs}, with an item each in their own
  * creative tab, and turns the generator's block names into their states.
  */
 public final class CityBlocks {
@@ -33,7 +37,7 @@ public final class CityBlocks {
 
     /** The table {@link CitySpecs} fills in; one call to {@link #s} per block. */
     abstract static class Specs {
-        static final int PLAIN = 0, FACING = 1, AXIS = 2;
+        static final int PLAIN = 0, FACING = 1, AXIS = 2, DOOR = 3;
         /** Has see-through pixels, so it mustn't hide its neighbours' faces. */
         static final int SEE_THROUGH = 1;
         /** Plants and decals: no collision, breaks at once, other blocks can replace it. */
@@ -43,6 +47,9 @@ public final class CityBlocks {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
             BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().setId(key).sound(sound)
                     .strength(strength, Math.max(strength, 3f));
+            if (kind == DOOR) {
+                properties.noOcclusion().pushReaction(PushReaction.DESTROY);
+            }
             if ((flags & SEE_THROUGH) != 0) {
                 properties.noOcclusion().isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p, box) -> false);
             }
@@ -58,14 +65,17 @@ public final class CityBlocks {
                 shape = Shapes.or(shape, Block.box(boxes[i], boxes[i + 1], boxes[i + 2], boxes[i + 3], boxes[i + 4], boxes[i + 5]));
             }
             Block block = switch (kind) {
+                // opened by hand like a wooden door; zombies bash them in (BashGoal)
+                case DOOR -> new DoorBlock(sound == SoundType.METAL ? BlockSetType.COPPER : BlockSetType.SPRUCE, properties);
                 case FACING -> new CityBlock.Facing(properties, shape, (flags & DECOR) != 0);
                 case AXIS -> new CityBlock.Axis(properties, shape);
                 default -> new CityBlock(properties, shape);
             };
             BLOCKS.put(name, Registry.register(BuiltInRegistries.BLOCK, key, block));
             ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(name));
-            Registry.register(BuiltInRegistries.ITEM, itemKey,
-                    new BlockItem(block, new Item.Properties().setId(itemKey).useBlockDescriptionPrefix()));
+            Item.Properties itemProperties = new Item.Properties().setId(itemKey).useBlockDescriptionPrefix();
+            Registry.register(BuiltInRegistries.ITEM, itemKey, kind == DOOR
+                    ? new DoubleHighBlockItem(block, itemProperties) : new BlockItem(block, itemProperties));
         }
     }
 

@@ -1,7 +1,7 @@
 package com.zomboidcraft.mixin;
 
 import com.zomboidcraft.ZcConfig;
-import com.zomboidcraft.zombie.BashBarricadeGoal;
+import com.zomboidcraft.zombie.BashGoal;
 import com.zomboidcraft.zombie.InvestigateNoiseGoal;
 import com.zomboidcraft.zombie.NoiseListener;
 import com.zomboidcraft.zombie.ZombieSightGoal;
@@ -26,7 +26,7 @@ public abstract class ZombieMixin implements NoiseListener {
     @Inject(method = "registerGoals", at = @At("TAIL"))
     private void zomboidcraft$addGoals(CallbackInfo ci) {
         Zombie self = (Zombie) (Object) this;
-        ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashBarricadeGoal(self));
+        ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(3, new InvestigateNoiseGoal(self));
         if (ZombieTypes.isWalkerType(self.getType()) && ZcConfig.get().senses.sightEnabled) {
             GoalSelector targets = ((MobAccessor) self).zomboidcraft$targetSelector();

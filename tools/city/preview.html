@@ -22,6 +22,8 @@ const SHOTS = {
   lobby: { pos: [15, 2.6, -24], look: [26, 3.5, -50], fov: 75, indoor: true },
   curb: { pos: [2, 2.1, 46], look: [13, 3.2, 33], fov: 60 },
   walkup: { pos: [-2, 1.9, 40], look: [-14, 6, 30], fov: 62 },
+  shopdoor: { pos: [8, 2.1, 49], look: [12.5, 1.7, 53.5], fov: 58 },
+  entrance: { pos: [7.5, 2.3, -33], look: [12.5, 1.8, -37.5], fov: 60 },
 };
 const shot = SHOTS[params.get('shot') || 'street'];
 const DAY = params.get('time') === 'day';  // overcast afternoon instead of rainy night

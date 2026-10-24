@@ -35,7 +35,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("awning", FACING, 0, 0, SoundType.STONE, 2f, 0, 12, 0, 16, 13, 16);
         s("stairs_concrete", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8, 16, 0, 8, 0, 16, 16, 8);
         s("railing", FACING, 0, 0, SoundType.METAL, 2f, 0, 14, 0, 16, 16, 2, 7, 0, 0, 9, 14, 2, 0, 7, 0.5, 16, 8, 1.5);
-        s("fire_door", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 3);
+        s("fire_door", DOOR, SEE_THROUGH, 0, SoundType.METAL, 3f);
+        s("shop_door", DOOR, SEE_THROUGH, 0, SoundType.METAL, 3f);
+        s("flat_door", DOOR, 0, 0, SoundType.WOOD, 3f);
         s("elevator_door", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("desk", FACING, 0, 0, SoundType.WOOD, 1f, 0, 12, 0, 16, 13, 16, 0, 0, 0, 1, 12, 16, 15, 0, 0, 16, 12, 16, 1, 3, 1, 15, 12, 2);
         s("office_chair", FACING, 0, 0, SoundType.WOOL, 1f, 4, 6, 4, 12, 7.5, 12, 4, 7.5, 11, 12, 16, 12.5, 7.5, 1, 7.5, 8.5, 6, 8.5, 3, 0, 7, 13, 1, 9, 7, 0, 3, 9, 1, 13);
