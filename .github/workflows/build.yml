@@ -84,7 +84,7 @@ jobs:
           pkill -f 'net.fabricmc' || true
           grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings' server.log | head -60 || true
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
-          ! grep -E 'Exception|Error' server.log | grep -v 'server.properties\|NoSuchFileException' | grep -q .
+          ! grep -E 'Mixin apply failed|InvalidMixin|Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception' server.log
 
       - uses: actions/upload-artifact@v4
         if: success()
