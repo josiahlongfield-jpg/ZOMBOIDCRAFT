@@ -126,7 +126,7 @@ public final class ZcConfig {
         /** Thick fog now and then, as its own weather or rolling in over the rain. */
         public boolean fog = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
-        public int hazeDistance = 160;
+        public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
         public boolean lightningStrikes = true;
         /** Hail in severe storms hurts anyone out in the open without a helmet. */
