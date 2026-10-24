@@ -107,6 +107,8 @@ class Skin:
         self.img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
         self.skin, self.shadow, self.wound = SKINS[skin_name]
         self.parts = {}  # extra model parts this outfit shows, e.g. {"brim": 1.3}
+        self.mat = {}  # (x, y) -> 1 cloth, 2 skin, 3 hair; read by gen_hd_skins.py
+        self.hair_c = None
 
     def put(self, x, y, c, amount=4):
         self.img.putpixel((x, y), jitter(c, self.rng, amount))
@@ -118,12 +120,15 @@ class Skin:
                 for x in range(w):
                     c = fn(face, x, y, w, h)
                     if c is not None:
+                        is_skin = box in ("head", "rarm", "larm", "rleg", "lleg") and (c is self.skin or c is self.shadow)
+                        self.mat[(fx + x, fy + y)] = 3 if c is self.hair_c else 2 if is_skin else 1
                         side = face in ("right", "left", "back")
                         self.put(fx + x, fy + y, shade(c, 0.9 if side else 1.0))
 
     # --- body parts ---
     def head(self, hair_style, hair):
         sk, sh, wd = self.skin, self.shadow, self.wound
+        self.hair_c = hair
         r = self.rng
 
         def fn(face, x, y, w, h):
@@ -329,7 +334,8 @@ class Skin:
             if self.img.getpixel((fx + cx, fy + cy))[3]:
                 self.put(fx + cx, fy + cy, r.choice(BLOOD), 6)
 
-    def weather(self, blood=1.0):
+    def weather(self, blood=1.0, clean=False):
+        """Dirt, tears and blood. clean=True stops after the dirt (the HD painter adds the rest)."""
         r = self.rng
         img = self.img
         clothing_boxes = ["body", "rarm", "rleg", "larm", "lleg"]
@@ -340,6 +346,8 @@ class Skin:
                     x, y = fx + r.randrange(w), fy + r.randrange(h)
                     if img.getpixel((x, y))[3]:
                         self.put(x, y, mix(img.getpixel((x, y)), (70, 58, 42), 0.25))
+        if clean:
+            return
         # tears showing skin or wounds
         for _ in range(r.randint(3, 7)):
             box = r.choice(clothing_boxes)
@@ -629,14 +637,15 @@ OUTFITS = {
 HAIR_STYLES = ["short", "short", "long", "bald"]
 
 
-def make(outfit, skin_name, seed):
+def make(outfit, skin_name, seed, clean=False):
     s = Skin(skin_name, seed)
     r = random.Random(seed * 31 + 7)
     style = r.choice(HAIR_STYLES)
     hair = r.choice(HAIR)
     s.head(style, hair)
     OUTFITS[outfit](s, r)
-    s.weather(blood=1.3 if outfit in ("patient", "nurse", "doctor") else 1.0)
+    s.weather(blood=1.3 if outfit in ("patient", "nurse", "doctor") else 1.0, clean=clean)
+    s.style, s.hair = style, hair
     return s
 
 

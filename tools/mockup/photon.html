@@ -1,0 +1,144 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0;background:#000}canvas{display:block}</style></head>
+<body>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// Rainy night street lit roughly the way Photon lights it, comparing 64px and 256px skins.
+const params = new URLSearchParams(location.search);
+const SHOT = params.get('shot') || 'wide';
+const W = 1600, H = 900;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H); renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.25;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const fogColor = new THREE.Color(0x1a2230);
+scene.background = fogColor; scene.fog = new THREE.FogExp2(fogColor, 0.045);
+scene.add(new THREE.HemisphereLight(0x6f86b0, 0x1a1612, 0.7));
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.18;
+const moon = new THREE.DirectionalLight(0x8fb0ff, 1.4); moon.position.set(8, 14, -10); scene.add(moon);
+
+// wet street: a mirror under a patchy asphalt layer
+const mirror = new Reflector(new THREE.PlaneGeometry(60, 60), { textureWidth: 1600, textureHeight: 900, color: 0x5a6068 });
+mirror.rotation.x = -Math.PI / 2; scene.add(mirror);
+const cv = document.createElement('canvas'); cv.width = cv.height = 512;
+const g = cv.getContext('2d'); g.fillStyle = 'rgba(14,15,17,0.93)'; g.fillRect(0, 0, 512, 512);
+for (let i = 0; i < 70; i++) { // puddles let the mirror through
+  const x = Math.random() * 512, y = Math.random() * 512, r = 8 + Math.random() * 40;
+  const grad = g.createRadialGradient(x, y, 0, x, y, r);
+  grad.addColorStop(0, 'rgba(0,0,0,1)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.globalCompositeOperation = 'destination-out'; g.fillStyle = grad; g.fillRect(x - r, y - r, r * 2, r * 2);
+}
+g.globalCompositeOperation = 'source-over';
+const asphaltTex = new THREE.CanvasTexture(cv); asphaltTex.wrapS = asphaltTex.wrapT = THREE.RepeatWrapping; asphaltTex.repeat.set(4, 4);
+const asphalt = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ map: asphaltTex, transparent: true, roughness: 0.55, metalness: 0 }));
+asphalt.rotation.x = -Math.PI / 2; asphalt.position.y = 0.005; asphalt.receiveShadow = true; scene.add(asphalt);
+
+// street lamp and a few lit windows behind
+const lamp = new THREE.SpotLight(0xffb86a, 70, 30, 0.8, 0.6, 1.5);
+lamp.position.set(-2.6, 5.5, 3.2); lamp.target.position.set(0, 0, 0.5); lamp.castShadow = true;
+lamp.shadow.mapSize.set(2048, 2048); scene.add(lamp, lamp.target);
+const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.18), new THREE.MeshBasicMaterial({ color: 0xffd9a0 }));
+bulb.position.copy(lamp.position); scene.add(bulb);
+const pole = new THREE.Mesh(new THREE.BoxGeometry(0.15, 5.5, 0.15), new THREE.MeshStandardMaterial({ color: 0x222428 }));
+pole.position.set(-3.0, 2.75, 3.2); scene.add(pole);
+const rim = new THREE.PointLight(0x6f9cff, 25, 14, 1.6); rim.position.set(3, 3, -4); scene.add(rim);
+const fill = new THREE.PointLight(0xffc89a, 10, 12, 1.5); fill.position.set(1.5, 2.2, 5); scene.add(fill);
+for (let i = 0; i < 9; i++) {
+  const b = new THREE.Mesh(new THREE.BoxGeometry(5 + Math.random() * 4, 8 + Math.random() * 14, 4), new THREE.MeshStandardMaterial({ color: 0x15171c, roughness: 0.9 }));
+  b.position.set(-24 + i * 6, b.geometry.parameters.height / 2, -26 - Math.random() * 4); scene.add(b);
+  for (let k = 0; k < 10; k++) {
+    if (true) continue;
+    const win = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 0.6), new THREE.MeshBasicMaterial({ color: Math.random() < 0.5 ? 0xa86a30 : 0xb89060 }));
+    win.position.set(b.position.x - 2 + Math.random() * 4, 1 + Math.random() * (b.geometry.parameters.height - 2), b.position.z + 2.01);
+    scene.add(win);
+  }
+}
+// rain
+const drops = [];
+for (let i = 0; i < 2600; i++) {
+  const x = (Math.random() - 0.5) * 24, y = Math.random() * 10, z = -8 + Math.random() * 14;
+  drops.push(x, y, z, x + 0.02, y - 0.35, z);
+}
+const rainGeo = new THREE.BufferGeometry(); rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(drops, 3));
+scene.add(new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0x9fb2cc, transparent: true, opacity: 0.35 })));
+
+// ---- zombies ----
+const loader = new THREE.TextureLoader();
+function tex(url, srgb) {
+  const t = loader.load(url); t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter;
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+function material(name, hd) {
+  if (!hd) return new THREE.MeshStandardMaterial({ map: tex(`skins/${name}.png`, true), alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.85 });
+  const rm = tex(`hd/${name}_rm.png`);
+  return new THREE.MeshStandardMaterial({
+    map: tex(`hd/${name}.png`, true), normalMap: tex(`hd/${name}_nrm_gl.png`), normalScale: new THREE.Vector2(1, 1),
+    roughnessMap: rm, metalnessMap: rm, roughness: 1, metalness: 1, alphaTest: 0.5, side: THREE.DoubleSide,
+  });
+}
+function box(mat, u, v, w, h, d, inflate = 0, sx = w, sy = h, sz = d) {
+  const geo = new THREE.BoxGeometry(sx + inflate * 2, sy + inflate * 2, sz + inflate * 2);
+  const rect = { top: [u + d, v, w, d], bottom: [u + d + w, v, w, d], right: [u, v + d, d, h], front: [u + d, v + d, w, h], left: [u + d + w, v + d, d, h], back: [u + 2 * d + w, v + d, w, h] };
+  ['left', 'right', 'top', 'bottom', 'front', 'back'].forEach((f, i) => {
+    const [x, y, rw, rh] = rect[f], u0 = x / 64, u1 = (x + rw) / 64, vt = 1 - y / 64, vb = 1 - (y + rh) / 64;
+    const uv = geo.attributes.uv; uv.setXY(i * 4, u0, vt); uv.setXY(i * 4 + 1, u1, vt); uv.setXY(i * 4 + 2, u0, vb); uv.setXY(i * 4 + 3, u1, vb);
+  });
+  const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; return m;
+}
+function pivot(x, y, z, mesh, ox, oy, oz) { const p = new THREE.Group(); p.position.set(x, y, z); mesh.position.set(ox, oy, oz); p.add(mesh); return p; }
+function zombie(name, hd, parts, pose) {
+  const mat = material(name, hd), root = new THREE.Group();
+  const head = pivot(0, 24, 0, box(mat, 0, 0, 8, 8, 8), 0, 4, 0);
+  const hat = box(mat, 32, 0, 8, 8, 8, 0.5); hat.position.set(0, 4, 0); head.add(hat);
+  if (parts.visor) { const v = box(mat, 0, 32, 8, 1, 4, 0, 8, 0.5, 4); v.position.set(0, 5.75, 6); head.add(v); }
+  if (parts.brim) { const b = box(mat, 0, 32, 10, 1, 10, 0, 10, 0.5, 10); b.position.set(0, 5.25, 0); b.scale.set(parts.brim, 1, parts.brim); head.add(b); }
+  const body = pivot(0, 24, 0, box(mat, 16, 16, 8, 12, 4), 0, -6, 0);
+  if (parts.pack) { const p = box(mat, 42, 37, 8, 8, 3); p.position.set(0, -5, -3.5); body.add(p); }
+  const rarm = pivot(-5, 22, 0, box(mat, 40, 16, 4, 12, 4), -1, -4, 0);
+  const larm = pivot(5, 22, 0, box(mat, 32, 48, 4, 12, 4), 1, -4, 0);
+  const rleg = pivot(-2, 12, 0, box(mat, 0, 16, 4, 12, 4), 0, -6, 0);
+  const lleg = pivot(2, 12, 0, box(mat, 16, 48, 4, 12, 4), 0, -6, 0);
+  root.add(head, body, rarm, larm, rleg, lleg);
+  const [a, b] = pose;
+  head.rotation.set(0.15, 0.1 * a, 0.2 * a);
+  rarm.rotation.set(-1.35 - 0.1 * b, 0.1, 0.05); larm.rotation.set(-1.15 + 0.1 * b, -0.1, -0.06);
+  rleg.rotation.x = 0.35 * b; lleg.rotation.x = -0.35 * b; body.rotation.set(0.07, 0, 0.04 * a);
+  root.scale.setScalar(1 / 16);
+  return root;
+}
+const parts = await (await fetch('skins/walker_parts.json')).json();
+const cast = [
+  ['civilian_pale', false, 'civilian', -2.2, 0.7, [1, 1]],
+  ['civilian_pale', true, 'civilian', -0.65, 0.3, [-1, -1]],
+  ['police_olive', true, 'police', 0.65, 0.3, [1, -1]],
+  ['police_olive', false, 'police', 2.2, 0.7, [-1, 1]],
+];
+for (const [name, hd, outfit, x, z, pose] of cast) {
+  const zb = zombie(name, hd, parts[outfit], pose);
+  zb.position.set(x, 0, z); zb.rotation.y = -x * 0.12; scene.add(zb);
+}
+
+const camera = new THREE.PerspectiveCamera(SHOT === 'wide' ? 38 : 20, W / H, 0.1, 200);
+if (SHOT === 'wide') { camera.position.set(0, 1.5, 6.2); camera.lookAt(0, 1.05, 0); }
+else { camera.position.set(0, 1.8, 4.4); camera.lookAt(0, 1.45, 0.3); }
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 0.55, 0.6, 0.8));
+composer.addPass(new OutputPass());
+THREE.DefaultLoadingManager.onLoad = () => { composer.render(); requestAnimationFrame(() => { composer.render(); window.DONE = true; }); };
+</script>
+</body></html>
