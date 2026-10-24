@@ -1,22 +1,66 @@
 package com.zomboidcraft.client.zombie;
 
+import com.zomboidcraft.ZomboidCraft;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
 /**
  * A human body that moves like one of Zomboid's dead: head lolling to one side, short
  * dragging steps, arms hanging and swaying until it has a target, then reaching for it.
+ *
+ * Unlike the vanilla zombie, the left arm and leg have their own texture (player layout), and
+ * the model carries a cap visor, a hat brim and a backpack that each outfit turns on or off.
+ * The extra parts are painted in the texture's overlay rows (see tools/gen_zombie_skins.py).
  */
 public class WalkerModel extends HumanoidModel<WalkerRenderState> {
+    public static final ModelLayerLocation LAYER = new ModelLayerLocation(ZomboidCraft.id("walker"), "main");
+
+    private final ModelPart visor;
+    private final ModelPart brim;
+    private final ModelPart pack;
+
     public WalkerModel(ModelPart root) {
         super(root);
+        visor = head.getChild("visor");
+        brim = head.getChild("brim");
+        pack = body.getChild("pack");
+    }
+
+    public static LayerDefinition createLayer() {
+        MeshDefinition mesh = HumanoidModel.createMesh(CubeDeformation.NONE, 0f);
+        PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
+                .addBox(-1f, -2f, -2f, 4f, 12f, 4f), PartPose.offset(5f, 2f, 0f));
+        root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48)
+                .addBox(-2f, 0f, -2f, 4f, 12f, 4f), PartPose.offset(1.9f, 12f, 0f));
+        PartDefinition head = root.getChild("head");
+        head.addOrReplaceChild("visor", CubeListBuilder.create().texOffs(0, 32)
+                .addBox(-4f, -6f, -8f, 8f, 0.5f, 4f), PartPose.ZERO);
+        head.addOrReplaceChild("brim", CubeListBuilder.create().texOffs(0, 32)
+                .addBox(-5f, -5.5f, -5f, 10f, 0.5f, 10f), PartPose.ZERO);
+        root.getChild("body").addOrReplaceChild("pack", CubeListBuilder.create().texOffs(42, 37)
+                .addBox(-4f, 1f, 2f, 8f, 8f, 3f), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 64);
     }
 
     @Override
     public void setupAnim(WalkerRenderState state) {
         super.setupAnim(state);
+        WalkerGear gear = WalkerGear.of(state.outfit);
+        visor.visible = gear.visor();
+        brim.visible = gear.brim() > 0;
+        brim.xScale = brim.zScale = Math.max(gear.brim(), 0.01f);
+        pack.visible = gear.pack();
+
         float time = state.ageInTicks;
         float phase = (state.variant & 0xFF) / 40f;
         float side = (state.variant & 0x100) == 0 ? 1f : -1f;

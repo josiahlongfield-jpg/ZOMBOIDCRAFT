@@ -26,6 +26,15 @@ sig net.minecraft.client.model.geom.ModelPart 'public float|public void|public b
 sig net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry '.'
 sig net.minecraft.client.renderer.entity.EntityRendererProvider\$Context 'public'
 sig net.minecraft.client.renderer.entity.EntityRenderer 'public|protected'
+echo "===== stage 3 model layers"
+classes 'EntityModelLayerRegistry|ModelLayerRegistry|client/model/geom/(PartPose|ModelLayerLocation)|client/model/geom/builders/(LayerDefinition|MeshDefinition|PartDefinition|CubeListBuilder|CubeDeformation)'
+sig net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry '.'
+sig net.minecraft.client.model.geom.ModelLayerLocation 'public'
+sig net.minecraft.client.model.geom.PartPose 'public static'
+sig net.minecraft.client.model.geom.builders.LayerDefinition 'public static'
+sig net.minecraft.client.model.geom.builders.PartDefinition 'public'
+sig net.minecraft.client.model.geom.builders.CubeListBuilder 'texOffs|addBox|create'
+sig net.minecraft.client.model.geom.ModelPart 'getChild'
 echo "===== stage 3 AI"
 sig net.minecraft.world.entity.ai.goal.GoalSelector 'public'
 sig net.minecraft.world.entity.ai.goal.WrappedGoal 'public'

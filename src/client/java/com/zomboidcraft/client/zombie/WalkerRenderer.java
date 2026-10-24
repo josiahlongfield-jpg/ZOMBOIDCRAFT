@@ -2,7 +2,6 @@ package com.zomboidcraft.client.zombie;
 
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.Identifier;
@@ -11,7 +10,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 /** Draws every walker (zombie, husk, zombie villager) as a dressed, slumped human. */
 public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderState, WalkerModel> {
     public WalkerRenderer(EntityRendererProvider.Context context) {
-        super(context, new WalkerModel(context.bakeLayer(ModelLayers.ZOMBIE)), 0.5f);
+        super(context, new WalkerModel(context.bakeLayer(WalkerModel.LAYER)), 0.5f);
     }
 
     @Override
@@ -23,7 +22,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
     public void extractRenderState(Zombie zombie, WalkerRenderState state, float partialTick) {
         super.extractRenderState(zombie, state, partialTick);
         state.isAggressive = zombie.isAggressive();
-        state.texture = ZomboidCraft.id("textures/entity/walker/" + ZombieLook.textureName(zombie) + ".png");
+        state.outfit = ZombieLook.outfit(zombie);
+        state.texture = ZomboidCraft.id("textures/entity/walker/" + state.outfit + "_" + ZombieLook.skin(zombie) + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
     }
 

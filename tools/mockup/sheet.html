@@ -1,0 +1,138 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0;background:#111}canvas{display:block}</style></head>
+<body>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+// One row of the outfit sheet: front, left, back, right, head close-up and a lunging pose.
+const params = new URLSearchParams(location.search);
+const tex = params.get('tex');
+const parts = JSON.parse(params.get('parts') || '{}');
+const VIEWS = [
+  { w: 150, kind: 'front' }, { w: 150, kind: 'left' }, { w: 150, kind: 'back' }, { w: 150, kind: 'right' },
+  { w: 200, kind: 'head' }, { w: 260, kind: 'pose' },
+];
+const H = 260, W = VIEWS.reduce((a, v) => a + v.w, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x15181c);
+scene.fog = new THREE.Fog(0x15181c, 90, 200);
+scene.add(new THREE.HemisphereLight(0xc4ccdc, 0x3a3830, 2.4));
+const key = new THREE.DirectionalLight(0xffe6c8, 2.6);
+key.position.set(-25, 45, 70); key.castShadow = true;
+key.shadow.camera.left = -30; key.shadow.camera.right = 30; key.shadow.camera.top = 40; key.shadow.camera.bottom = -10;
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x9ab4ff, 2.0);
+rim.position.set(30, 30, -50);
+const fill = new THREE.DirectionalLight(0xffffff, 1.2); fill.position.set(60, 20, 10); scene.add(fill);
+const fill2 = new THREE.DirectionalLight(0xffffff, 1.0); fill2.position.set(-60, 20, -10); scene.add(fill2);
+scene.add(rim);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshLambertMaterial({ color: 0x1c1e22 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+scene.add(floor);
+
+const texture = new THREE.TextureLoader().load(tex, () => draw());
+texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter;
+texture.colorSpace = THREE.SRGBColorSpace;
+const mat = new THREE.MeshLambertMaterial({ map: texture, alphaTest: 0.5, side: THREE.DoubleSide });
+
+// Minecraft box UVs: (u, v) corner, box w x h x d, in texture pixels. Model faces +z.
+function box(u, v, w, h, d, inflate = 0, sx = w, sy = h, sz = d) {
+  const g = new THREE.BoxGeometry(sx + inflate * 2, sy + inflate * 2, sz + inflate * 2);
+  const rect = {
+    top: [u + d, v, w, d], bottom: [u + d + w, v, w, d], right: [u, v + d, d, h],
+    front: [u + d, v + d, w, h], left: [u + d + w, v + d, d, h], back: [u + 2 * d + w, v + d, w, h],
+  };
+  const order = ['left', 'right', 'top', 'bottom', 'front', 'back']; // px nx py ny pz nz
+  const uv = g.attributes.uv;
+  order.forEach((f, i) => {
+    const [x, y, rw, rh] = rect[f];
+    const u0 = x / 64, u1 = (x + rw) / 64, vt = 1 - y / 64, vb = 1 - (y + rh) / 64;
+    uv.setXY(i * 4 + 0, u0, vt); uv.setXY(i * 4 + 1, u1, vt);
+    uv.setXY(i * 4 + 2, u0, vb); uv.setXY(i * 4 + 3, u1, vb);
+  });
+  const m = new THREE.Mesh(g, mat);
+  m.castShadow = true;
+  return m;
+}
+function pivot(x, y, z, mesh, ox, oy, oz) {
+  const p = new THREE.Group(); p.position.set(x, y, z);
+  mesh.position.set(ox, oy, oz); p.add(mesh); return p;
+}
+
+function zombie() {
+  const root = new THREE.Group();
+  const head = pivot(0, 24, 0, box(0, 0, 8, 8, 8), 0, 4, 0);
+  const hat = box(32, 0, 8, 8, 8, 0.5); hat.position.set(0, 4, 0); head.add(hat);
+  if (parts.visor) { const v = box(0, 32, 8, 1, 4, 0, 8, 0.5, 4); v.position.set(0, 5.75, 6); head.add(v); }
+  if (parts.brim) {
+    const b = box(0, 32, 10, 1, 10, 0, 10, 0.5, 10); b.position.set(0, 5.25, 0);
+    b.scale.set(parts.brim, 1, parts.brim); head.add(b);
+  }
+  const body = pivot(0, 24, 0, box(16, 16, 8, 12, 4), 0, -6, 0);
+  if (parts.pack) { const p = box(42, 37, 8, 8, 3); p.position.set(0, -5, -3.5); body.add(p); }
+  const rarm = pivot(-5, 22, 0, box(40, 16, 4, 12, 4), -1, -4, 0);
+  const larm = pivot(5, 22, 0, box(32, 48, 4, 12, 4), 1, -4, 0);
+  const rleg = pivot(-2, 12, 0, box(0, 16, 4, 12, 4), 0, -6, 0);
+  const lleg = pivot(2, 12, 0, box(16, 48, 4, 12, 4), 0, -6, 0);
+  root.add(head, body, rarm, larm, rleg, lleg);
+  root.userData = { head, body, rarm, larm, rleg, lleg };
+  return root;
+}
+
+const z = zombie();
+scene.add(z);
+const P = z.userData;
+
+function setPose(kind) {
+  for (const k of ['head', 'body', 'rarm', 'larm', 'rleg', 'lleg']) P[k].rotation.set(0, 0, 0);
+  z.rotation.set(0, 0, 0); z.position.set(0, 0, 0);
+  if (kind === 'pose') {
+    P.head.rotation.set(0.15, 0.1, 0.22);
+    P.rarm.rotation.set(-1.45, 0.12, 0.05);
+    P.larm.rotation.set(-1.2, -0.1, -0.08);
+    P.rleg.rotation.set(0.45, 0, 0.02);
+    P.lleg.rotation.set(-0.4, 0, -0.02);
+    P.body.rotation.set(0.08, 0, 0.05);
+    z.rotation.y = 0.5;
+  } else {
+    P.rarm.rotation.z = -0.06; P.larm.rotation.z = 0.06;
+    P.head.rotation.z = kind === 'head' ? 0 : 0.0;
+  }
+}
+
+function camFor(kind, aspect) {
+  const c = new THREE.PerspectiveCamera(kind === 'head' ? 26 : 30, aspect, 1, 500);
+  const d = 72;
+  if (kind === 'front') c.position.set(0, 18, d);
+  if (kind === 'back') c.position.set(0, 18, -d);
+  if (kind === 'left') c.position.set(d, 18, 0);
+  if (kind === 'right') c.position.set(-d, 18, 0);
+  if (kind === 'head') { c.position.set(0, 28.5, 38); c.lookAt(0, 28, 0); return c; }
+  if (kind === 'pose') { c.position.set(10, 22, 62); c.lookAt(0, 15, 0); return c; }
+  c.lookAt(0, 16, 0);
+  return c;
+}
+
+function draw() {
+  renderer.setScissorTest(true);
+  let x = 0;
+  for (const v of VIEWS) {
+    setPose(v.kind);
+    renderer.setViewport(x, 0, v.w, H);
+    renderer.setScissor(x, 0, v.w, H);
+    renderer.render(scene, camFor(v.kind, v.w / H));
+    x += v.w;
+  }
+  window.DONE = true;
+}
+</script>
+</body></html>
