@@ -44,7 +44,7 @@ public final class CityBlocks {
             BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().setId(key).sound(sound)
                     .strength(strength, Math.max(strength, 3f));
             if ((flags & SEE_THROUGH) != 0) {
-                properties.noOcclusion().isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p) -> false);
+                properties.noOcclusion().isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p, box) -> false);
             }
             if ((flags & DECOR) != 0) {
                 properties.noCollision().replaceable();

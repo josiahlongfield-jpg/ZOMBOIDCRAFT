@@ -346,19 +346,25 @@ def cutout(seed, base):
 
 
 def blade(t, x, h, lean, col, width=1, top=N - 1):
+    """One curving blade from the bottom up; lean is how far its tip bends sideways, in texels."""
+    last = None
     for y in range(h):
-        px = int(x + lean * y * y / max(h, 1)) % N
+        px = int(round(x + lean * (y / max(h, 1)) ** 2))
         shade = 0.7 + 0.5 * y / h
-        for w in range(width):
-            t.c[top - y, (px + w) % N] = np.array(col, np.float32) * shade
-            t.alpha[top - y, (px + w) % N] = 255
+        lo, hi = (px, px) if last is None else (min(px, last), max(px, last))
+        for cx in range(lo, hi + width):  # no gaps where the blade bends fast
+            if 0 <= cx < N:
+                t.c[top - y, cx] = np.array(col, np.float32) * shade
+                t.alpha[top - y, cx] = 255
+        last = px
+    return last, top - h + 1
 
 
 def grass_tuft():
     """Low, dense tufts of dead and living grass for road cracks and ledges."""
     t = cutout(60, (80, 90, 50))
     for _ in range(46):
-        col = (86, 98, 52) if t.rng.random() < 0.55 else (128, 114, 70)
+        col = (70, 80, 46) if t.rng.random() < 0.5 else (108, 96, 64)
         blade(t, t.rng.uniform(4, 60), int(t.rng.uniform(12, 38)), t.rng.uniform(-7, 7), col, 2)
     t.smooth[:] = 0.1
     t.poro[:] = 64
@@ -368,11 +374,13 @@ def grass_tuft():
 def weeds_tall():
     """Tall dry weeds and thistles, knee high."""
     t = cutout(61, (100, 96, 60))
-    for _ in range(16):
-        col = (112, 104, 62) if t.rng.random() < 0.6 else (70, 86, 44)
-        blade(t, t.rng.uniform(4, 60), int(t.rng.uniform(36, 63)), t.rng.uniform(-8, 8), col, 2)
-    for _ in range(6):  # seed heads
-        x, y = int(t.rng.uniform(6, 58)), int(t.rng.uniform(2, 20))
+    tips = []
+    for _ in range(22):
+        col = (96, 86, 56) if t.rng.random() < 0.6 else (62, 72, 42)
+        tips.append(blade(t, t.rng.uniform(4, 60), int(t.rng.uniform(30, 63)), t.rng.uniform(-9, 9), col,
+                          1 + (t.rng.random() < 0.4)))
+    for x, y in tips[:6]:  # seed heads on the tallest stalks
+        x, y = min(max(x - 1, 0), N - 3), max(y - 2, 0)
         t.c[y:y + 3, x:x + 3] = (88, 74, 52)
         t.alpha[y:y + 3, x:x + 3] = 255
     t.smooth[:] = 0.1
@@ -733,7 +741,6 @@ OVERRIDE = {
     "barrel_rust": lambda: photo("green_metal_rust", span=2, sat=0.55, bright=0.65),
     "ivy": ivy_photo,
     "leaves_dark": leaves_photo,
-    "weeds_tall": lambda: blades("Foliage003", 85, 30, 0.07, (N - 2, N), (0.75, 0.75)),
     # better damage from photos
     "brick_red_holes": lambda: photo("broken_brick_wall", span=2, sat=0.7, bright=0.75, height=1.4),
     "brick_dark_moss": lambda: photo("mossy_brick", span=2, sat=0.7, bright=0.9, height=1.2),

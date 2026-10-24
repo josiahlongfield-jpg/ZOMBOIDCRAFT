@@ -329,10 +329,11 @@ public final class Decay {
         if (!air(x, ay, z)) {
             return;
         }
-        boolean out = outdoor(x, ay, z);
+        // floors are indoors even under a tall lobby ceiling
+        boolean floor = FLOORS.contains(m) || m.startsWith("office_floor") || m.startsWith("lobby_floor");
         double r = rng.nextDouble();
-        if (!out) {
-            if (FLOORS.contains(m) || m.startsWith("office_floor") || m.startsWith("lobby_floor")) {
+        if (floor || !outdoor(x, ay, z)) {
+            if (floor) {
                 put(x, ay, z, r, new Object[][] {{0.07, "paper"}, {0.015, "blood_splat"}, {0.012, "rubble_pile"},
                         {0.01, "debris_chunk[facing=" + FACING[rng.nextInt(4)] + "]"},
                         {0.008, "office_chair_fallen[facing=" + FACING[rng.nextInt(4)] + "]"}, {0.006, "glass_shards"}});
