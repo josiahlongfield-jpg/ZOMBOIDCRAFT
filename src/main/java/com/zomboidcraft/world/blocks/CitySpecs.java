@@ -145,6 +145,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("floor_concrete_moss", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("roof_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("roof_moss", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("lobby_floor_white_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("lobby_floor_white_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("lobby_floor_dark_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("lobby_floor_dark_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("window_empty", AXIS, 0, 0, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10);
         s("grass_tuft", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 13, 14);
         s("weeds_tall", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 13, 14);

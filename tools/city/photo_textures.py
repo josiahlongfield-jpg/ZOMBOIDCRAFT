@@ -329,6 +329,8 @@ VARIANTS = {
     "drywall": ["b", "stain", "soot"],
     "floor_concrete": ["b", "crack", "moss"],
     "roof_gravel": ["b", "moss"],
+    "marble_white": ["b", "crack"],
+    "marble_dark": ["b", "crack"],
 }
 
 

@@ -22,17 +22,19 @@ public final class Decay {
     private static final String[] FACING = {"north", "east", "south", "west"};
 
     /** Wall and ground blocks with weathered versions, and which versions each has. */
-    private static final Map<String, String[]> VARIANTS = Map.of(
-            "brick_red", new String[] {"b", "crack", "moss", "soot", "stain", "holes"},
-            "brick_dark", new String[] {"b", "crack", "moss", "soot", "stain", "holes"},
-            "concrete_panel", new String[] {"b", "crack", "moss", "soot", "stain"},
-            "concrete_dark", new String[] {"b", "crack", "moss", "soot", "stain"},
-            "stone_trim", new String[] {"b", "crack", "moss", "soot"},
-            "asphalt", new String[] {"b", "crack", "patch", "moss"},
-            "sidewalk", new String[] {"b", "moss", "stain"},
-            "drywall", new String[] {"b", "stain", "soot", "peel", "brick"},
-            "floor_concrete", new String[] {"b", "crack", "moss"},
-            "roof", new String[] {"b", "moss"});
+    private static final Map<String, String[]> VARIANTS = Map.ofEntries(
+            Map.entry("brick_red", new String[] {"b", "crack", "moss", "soot", "stain", "holes"}),
+            Map.entry("brick_dark", new String[] {"b", "crack", "moss", "soot", "stain", "holes"}),
+            Map.entry("concrete_panel", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("concrete_dark", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("stone_trim", new String[] {"b", "crack", "moss", "soot"}),
+            Map.entry("asphalt", new String[] {"b", "crack", "patch", "moss"}),
+            Map.entry("sidewalk", new String[] {"b", "moss", "stain"}),
+            Map.entry("drywall", new String[] {"b", "stain", "soot", "peel", "brick"}),
+            Map.entry("floor_concrete", new String[] {"b", "crack", "moss"}),
+            Map.entry("roof", new String[] {"b", "moss"}),
+            Map.entry("lobby_floor_white", new String[] {"b", "crack"}),
+            Map.entry("lobby_floor_dark", new String[] {"b", "crack"}));
     private static final Set<String> WALLS = Set.of("brick_red", "brick_dark", "concrete_panel", "concrete_dark",
             "stone_trim", "steel_mullion", "glass_spandrel", "drywall");
     private static final Set<String> WINDOWS = Set.of("window", "window_lit", "window_broken", "window_empty",
@@ -334,9 +336,10 @@ public final class Decay {
         double r = rng.nextDouble();
         if (floor || !outdoor(x, ay, z)) {
             if (floor) {
-                put(x, ay, z, r, new Object[][] {{0.07, "paper"}, {0.015, "blood_splat"}, {0.012, "rubble_pile"},
-                        {0.01, "debris_chunk[facing=" + FACING[rng.nextInt(4)] + "]"},
-                        {0.008, "office_chair_fallen[facing=" + FACING[rng.nextInt(4)] + "]"}, {0.006, "glass_shards"}});
+                put(x, ay, z, r, new Object[][] {{0.11, "paper"}, {0.02, "blood_splat"}, {0.02, "rubble_pile"},
+                        {0.02, "debris_chunk[facing=" + FACING[rng.nextInt(4)] + "]"}, {0.025, "leaf_litter"},
+                        {0.008, "office_chair_fallen[facing=" + FACING[rng.nextInt(4)] + "]"}, {0.015, "glass_shards"},
+                        {0.006, "trash_bag[facing=" + FACING[rng.nextInt(4)] + "]"}, {0.006, "cardboard_box[facing=" + FACING[rng.nextInt(4)] + "]"}});
             }
             return;
         }
