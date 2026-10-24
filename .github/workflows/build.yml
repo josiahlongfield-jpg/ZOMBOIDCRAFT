@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      minecraft_version:
+        description: Minecraft version
+        default: '26.3'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MC_VERSION: ${{ github.event.inputs.minecraft_version || '26.3' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Resolve latest Fabric versions
+        id: versions
+        run: |
+          set -euo pipefail
+          loader=$(curl -sf https://meta.fabricmc.net/v2/versions/loader | jq -r '[.[] | select(.stable)][0].version')
+          loom=$(curl -sf https://maven.fabricmc.net/net/fabricmc/fabric-loom/net.fabricmc.fabric-loom.gradle.plugin/maven-metadata.xml \
+            | grep -oP '(?<=<version>)[^<]+' | grep -v -- '-SNAPSHOT' | tail -1)
+          api=$(curl -sfG https://api.modrinth.com/v2/project/fabric-api/version \
+            --data-urlencode "game_versions=[\"$MC_VERSION\"]" --data-urlencode 'loaders=["fabric"]' \
+            | jq -r '.[0].version_number')
+          echo "Minecraft $MC_VERSION | loader $loader | loom $loom | fabric-api $api"
+          {
+            echo "loader=$loader"
+            echo "loom=$loom"
+            echo "api=$api"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: >
+          ./gradlew build --stacktrace
+          -Pminecraft_version=$MC_VERSION
+          -Ploader_version=${{ steps.versions.outputs.loader }}
+          -Ploom_version=${{ steps.versions.outputs.loom }}
+          -Pfabric_api_version=${{ steps.versions.outputs.api }}
+
+      # When the build fails, print the real Minecraft class layout and method
+      # signatures so mismatched names are quick to fix.
+      - name: Probe Minecraft classes
+        if: failure()
+        run: |
+          jar=$(find ~/.gradle/caches .gradle -path '*minecraft*' -name '*.jar' -size +10M 2>/dev/null \
+            | grep -iE 'merged|common|minecraft-' | head -1 || true)
+          echo "Minecraft jar: $jar"
+          [ -n "$jar" ] || exit 0
+          unzip -Z1 "$jar" | grep -E '/(Zombie|Husk|ZombieVillager|GuiGraphics[^/]*|Identifier|MobEffects|EntitySpawnReason|PotionContents|Potions|StreamCodec|ByteBufCodecs|CommandSourceStack|Goal|DamageSources|Heightmap)\.class$' || true
+          for c in $(unzip -Z1 "$jar" | grep -E '/(Zombie|LivingEntity|GuiGraphics|CommandSourceStack|Mob)\.class$' | sed 's/\.class$//'); do
+            echo "===== $c"
+            javap -cp "$jar" -protected "${c//\//.}" | grep -iE 'sun|completeUsingItem|useItem|drawString|fill\(|hasPermission|permission|goalSelector|registerGoals|setCanBreakDoors|isBaby|setBaby|hurtServer|kill\(' || true
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: zomboidcraft-jar
+          path: build/libs/*.jar

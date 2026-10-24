@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "zomboidcraft",
+  "version": "${version}",
+  "name": "ZomboidCraft",
+  "description": "Project Zomboid-style survival: slow sound-hunting zombies, incurable bites, thirst, bleeding and exhaustion.",
+  "authors": ["Josiah Longfield"],
+  "license": "MIT",
+  "icon": "assets/zomboidcraft/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.zomboidcraft.ZomboidCraft"],
+    "client": ["com.zomboidcraft.client.ZomboidCraftClient"]
+  },
+  "mixins": ["zomboidcraft.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
