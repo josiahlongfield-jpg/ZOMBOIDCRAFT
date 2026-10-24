@@ -26,7 +26,7 @@ N = hd.N
 VIEWS = {"front": (2, 16), "back": (22, 16), "left": (42, 8), "right": (54, 8)}
 # Outfits whose hat or hood is painted onto the head itself, so no bare skull shows through it.
 COVERED_HEADS = {"hoodie", "police", "construction", "firefighter", "farmer", "soldier", "survivor", "security"}
-TEMPLATE_W, TEMPLATE_H, UNIT = 64, 38, 32
+TEMPLATE_W, TEMPLATE_H, FIGURE_TOP = 64, 38, 4
 # Parts inside a view, in units relative to the figure's top-left: (x, y, w, h)
 FRONT_PARTS = {"head": (4, 0, 8, 8), "body": (4, 8, 8, 12), "arm_vl": (0, 8, 4, 12), "arm_vr": (12, 8, 4, 12),
                "leg_vl": (4, 20, 4, 12), "leg_vr": (8, 20, 4, 12)}
@@ -39,29 +39,87 @@ def is_magenta(rgb):
 
 
 def find_views(img):
-    """The bounding box of the figure in each view's column of the sheet."""
+    """Where each view sits on the sheet: the template's own rectangles, scaled to the image.
+
+    Art AIs follow the template's positions closely but paint things outside the rectangles
+    (hat brims), so a bounding box of the paint is less reliable than the template itself.
+    """
     rgb = np.asarray(img.convert("RGB"))
     h, w = rgb.shape[:2]
-    sx, sy = w / (TEMPLATE_W * UNIT), h / (TEMPLATE_H * UNIT)
+    kx, ky = w / TEMPLATE_W, h / TEMPLATE_H
     figure = ~is_magenta(rgb)
-    figure[: int(3.5 * UNIT * sy)] = False  # titles
-    figure[int(36.5 * UNIT * sy):] = False  # footer text
     boxes = {}
     for name, (ux, uw) in VIEWS.items():
-        x0, x1 = int((ux - 1) * UNIT * sx), int((ux + uw + 1) * UNIT * sx)
-        cols = figure[:, x0:x1]
-        ys, xs = np.where(cols)
-        if len(xs) == 0:
-            raise ValueError(f"no figure found in the {name} view")
-        # trim stray pixels: keep rows/columns with a real amount of paint
-        col_counts, row_counts = cols.sum(0), cols.sum(1)
-        good_x = np.where(col_counts > col_counts.max() * 0.05)[0]
-        good_y = np.where(row_counts > row_counts.max() * 0.05)[0]
-        boxes[name] = (x0 + good_x[0], good_y[0], x0 + good_x[-1] + 1, good_y[-1] + 1)
-        aspect = (good_x[-1] - good_x[0] + 1) / sx / ((good_y[-1] - good_y[0] + 1) / sy)
-        if abs(aspect / (uw / 32) - 1) > 0.15:
-            print(f"  warning: the {name} view is {aspect * 32:.1f} x 32 units, expected {uw} x 32; check the cut")
+        box = (round(ux * kx), round(FIGURE_TOP * ky), round((ux + uw) * kx), round((FIGURE_TOP + 32) * ky))
+        # the body and legs (or, in a side view, the arm and leg) should be fully painted
+        x0, y0, x1, y1 = box
+        c0, c1 = (4, 12) if uw == 16 else (2, 6)
+        part = figure[round((FIGURE_TOP + 8) * ky):y1, x0 + round(c0 * kx):x0 + round(c1 * kx)]
+        if part.mean() < 0.9:
+            print(f"  warning: the {name} view is only {part.mean():.0%} painted where the body should be")
+        boxes[name] = box
     return boxes
+
+
+def facing(img, box):
+    """Which way a side view faces, from where the white of the eye is: -1 left, 1 right, 0 unsure."""
+    rgb = np.asarray(img.convert("RGB")).astype(int)
+    x0, y0, x1, y1 = box
+    head = rgb[y0:y0 + (y1 - y0) // 4, x0:x1]
+    white = (head.min(-1) > 200) & (head.max(-1) - head.min(-1) < 40)
+    xs = np.where(white)[1]
+    if len(xs) < 20:
+        return 0
+    f = xs.mean() / head.shape[1]
+    return -1 if f < 0.35 else 1 if f > 0.65 else 0
+
+
+def side_views(img, boxes):
+    """Map the two side views to the zombie's own left and right side.
+
+    A view facing right shows the zombie's right side. Art AIs often swap the two, so the eyes
+    decide. Returns {"left": (box, mirrored), "right": (box, mirrored)}.
+    """
+    a, b = facing(img, boxes["left"]), facing(img, boxes["right"])
+    if a == 0 and b == 0:
+        a, b = -1, 1  # trust the labels
+    elif a == 0:
+        a = -b
+    elif b == 0:
+        b = -a
+    if a != b:
+        return {"left": (boxes["left"] if a < 0 else boxes["right"], False),
+                "right": (boxes["right"] if b > 0 else boxes["left"], False)}
+    # both face the same way: one of them is a mirror image
+    same = boxes["left"] if a < 0 else boxes["right"]
+    other = boxes["right"] if a < 0 else boxes["left"]
+    return ({"left": (same, False), "right": (other, True)} if a < 0
+            else {"right": (same, False), "left": (other, True)})
+
+
+INSET = 0.1  # units trimmed off each cut, to drop the anti-aliased edge against the magenta
+
+
+def fill_magenta(pix):
+    """Replace leftover background pixels with the average of their painted neighbours."""
+    hole = is_magenta(pix) | (pix[..., 0] + pix[..., 2] > 2.2 * pix[..., 1] + 160)
+    if hole.all():
+        return pix
+    pix = pix.copy()
+    for _ in range(64):
+        if not hole.any():
+            break
+        total = np.zeros_like(pix)
+        count = np.zeros(hole.shape, np.float32)
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            src = np.roll(pix, (dy, dx), (0, 1))
+            ok = ~np.roll(hole, (dy, dx), (0, 1))
+            total += src * ok[..., None]
+            count += ok
+        fill = hole & (count > 0)
+        pix[fill] = total[fill] / count[fill][:, None]
+        hole &= ~fill
+    return pix
 
 
 def cut(img, box, part, units_w, out_w, out_h):
@@ -69,8 +127,11 @@ def cut(img, box, part, units_w, out_w, out_h):
     bx0, by0, bx1, by1 = box
     ux, uy, uw, uh = part
     kx, ky = (bx1 - bx0) / units_w, (by1 - by0) / 32
-    crop = img.crop((int(bx0 + ux * kx), int(by0 + uy * ky), int(bx0 + (ux + uw) * kx), int(by0 + (uy + uh) * ky)))
-    return np.asarray(crop.convert("RGB").resize((out_w, out_h), Image.LANCZOS), dtype=np.float32)
+    crop = img.crop((round(bx0 + (ux + INSET) * kx), round(by0 + (uy + INSET) * ky),
+                     round(bx0 + (ux + uw - INSET) * kx), round(by0 + (uy + uh - INSET) * ky)))
+    pix = fill_magenta(np.asarray(crop.convert("RGB"), dtype=np.float32))
+    small = Image.fromarray(pix.clip(0, 255).astype(np.uint8)).resize((out_w, out_h), Image.LANCZOS)
+    return np.asarray(small, dtype=np.float32)
 
 
 def put(canvas, box, face, pix):
@@ -104,8 +165,12 @@ def project(sheet, outfit, skin_seed):
     def back(p, w, h):
         return cut(sheet, boxes["back"], FRONT_PARTS[p], 16, w * U, h * U)
 
+    sides = side_views(sheet, boxes)
+
     def side(view, p, w, h):
-        return cut(sheet, boxes[view], SIDE_PARTS[p], 8, w * U, h * U)
+        box, mirrored = sides[view]
+        pix = cut(sheet, box, SIDE_PARTS[p], 8, w * U, h * U)
+        return pix[:, ::-1] if mirrored else pix
 
     # head
     put(canvas, "head", "front", front("head", 8, 8))
@@ -145,34 +210,60 @@ def project(sheet, outfit, skin_seed):
     return canvas, sk
 
 
-def classify(canvas, outfit):
-    """Guess each pixel's material for the shine map: skin near the face's colour, blood, metal, cloth."""
-    rgb = canvas[..., :3]
-    mat = np.where(canvas[..., 3] > 0, hd.CLOTH, 0).astype(np.uint8)
-    x, y, w, h = hd.face_rect("head", "front")
-    cheeks = np.concatenate([rgb[y + 16:y + 21, x + 3:x + 8].reshape(-1, 3), rgb[y + 16:y + 21, x + 24:x + 29].reshape(-1, 3)])
-    ref = np.median(cheeks, 0)
-    def chroma(c):
-        return c / np.maximum(c.sum(-1, keepdims=True), 1)
-    near = (np.abs(chroma(rgb) - chroma(ref)).sum(-1) < 0.06) & (rgb.sum(-1) > ref.sum() * 0.35) & (rgb.sum(-1) < ref.sum() * 1.4)
-    limbs_and_head = np.zeros_like(near)
+def head_and_limbs():
+    region = np.zeros((N, N), bool)
     for b in ("head", "rarm", "larm", "rleg", "lleg"):
         for f in ("front", "back", "left", "right", "top", "bottom"):
             fx, fy, fw, fh = hd.face_rect(b, f)
-            limbs_and_head[fy:fy + fh, fx:fx + fw] = True
-    mat[near & limbs_and_head & (mat > 0)] = hd.SKIN
+            region[fy:fy + fh, fx:fx + fw] = True
+    return region
+
+
+def chroma(c):
+    return c / np.maximum(c.sum(-1, keepdims=True), 1)
+
+
+def skin_weight(canvas):
+    """How much each pixel looks like bare skin (0 to 1), and the typical skin colour.
+
+    Skin is the tan, mid-saturation colour found on the head and limbs. Matching is soft so a
+    retone doesn't leave speckles where shading or grime pushes a pixel over a hard line.
+    """
+    rgb = canvas[..., :3]
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    region = head_and_limbs() & (canvas[..., 3] > 0)
+    candidate = region & (r > g) & (g > b) & ((r - b) / np.maximum(r, 1) > 0.18) & ((r - b) / np.maximum(r, 1) < 0.5) \
+        & (r > 110) & (r < 240)
+    if candidate.sum() < 50:
+        return np.zeros((N, N), np.float32), np.array(base.SKINS["pale"][0], np.float32)
+    ref = np.median(rgb[candidate], 0)
+    d = np.abs(chroma(rgb) - chroma(ref)).sum(-1)
+    lum, ref_lum = rgb.sum(-1), ref.sum()
+    w = np.clip((0.13 - d) / 0.06, 0, 1) * (lum > ref_lum * 0.3) * (lum < ref_lum * 1.5) * region
+    return w.astype(np.float32), ref
+
+
+def classify(canvas, weight):
+    """Guess each pixel's material for the shine map: skin, blood, cloth (metal is found later)."""
+    rgb = canvas[..., :3]
+    mat = np.where(canvas[..., 3] > 0, hd.CLOTH, 0).astype(np.uint8)
+    mat[(weight > 0.5) & (mat > 0)] = hd.SKIN
     red = (rgb[..., 0] > rgb[..., 1] * 1.8) & (rgb[..., 0] > rgb[..., 2] * 1.8) & (rgb[..., 0] > 50)
     mat[red & (mat > 0)] = hd.BLOOD
-    return mat, ref
+    return mat
 
 
-def retone(canvas, mat, ref, skin_name):
-    """Shift the skin pixels to another skin tone, keeping the painted shading."""
-    target = np.array(base.SKINS[skin_name][0], np.float32)
+# The painted skin is kept for the first tone; the others shift it, keeping the shading.
+TONES = {"pale": None, "olive": base.SKINS["olive"][0], "dark": base.SKINS["dark"][0]}
+
+
+def retone(canvas, weight, ref, skin_name):
+    target = TONES[skin_name]
+    if target is None:
+        return canvas.copy()
     out = canvas.copy()
-    gain = target / np.maximum(ref, 1)
-    sel = mat == hd.SKIN
-    out[sel, :3] = np.clip(out[sel, :3] * gain, 0, 255)
+    gain = np.array(target, np.float32) / np.maximum(ref, 1)
+    out[..., :3] = np.clip(out[..., :3] * (1 + (gain - 1) * weight[..., None]), 0, 255)
     return out
 
 
@@ -180,10 +271,11 @@ def build(sheet_path, outfit, out_dir, preview=None):
     sheet = Image.open(sheet_path)
     i = list(base.OUTFITS).index(outfit)
     canvas, sk = project(sheet, outfit, 1000 + i * 10)
-    mat, ref = classify(canvas, outfit)
+    weight, ref = skin_weight(canvas)
+    mat = classify(canvas, weight)
     n = 0
     for j, skin_name in enumerate(base.SKINS):
-        toned = retone(canvas, mat, ref, skin_name)
+        toned = retone(canvas, weight, ref, skin_name)
         for level in range(len(hd.DAMAGE)):
             seed = 1000 + i * 10 + j
             painter = hd.HD(sk, outfit, seed * 7 + level)

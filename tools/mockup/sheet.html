@@ -4,6 +4,7 @@
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
 <script type="module">
 import * as THREE from 'three';
+import { addAddons, sampler } from './addons.js';
 
 // One row of the outfit sheet: front, left, back, right, head close-up and a lunging pose.
 const params = new URLSearchParams(location.search);
@@ -40,7 +41,16 @@ const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshLa
 floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
 scene.add(floor);
 
-const texture = new THREE.TextureLoader().load(tex, () => draw());
+const addons = params.get('addons');
+const texture = new THREE.TextureLoader().load(tex, t => {
+  if (addons) {
+    const s = sampler(t.image);
+    addAddons(P, addons, {
+      skin: s(44, 26, 48, 28), shoe: s(4, 30, 8, 32), cloth: s(21, 22, 27, 26), hat: s(40, 8, 48, 10),
+    });
+  }
+  draw();
+});
 texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter;
 texture.colorSpace = THREE.SRGBColorSpace;
 const mat = new THREE.MeshLambertMaterial({ map: texture, alphaTest: 0.5, side: THREE.DoubleSide });
