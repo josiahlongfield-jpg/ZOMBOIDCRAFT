@@ -23,12 +23,14 @@ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadow
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const fogColor = new THREE.Color(0x1a2230);
-scene.background = fogColor; scene.fog = new THREE.FogExp2(fogColor, 0.045);
+const DAY = params.get('mode') === 'day';
+const fogColor = new THREE.Color(DAY ? 0x9aa3a8 : 0x1a2230);
+scene.background = fogColor; scene.fog = new THREE.FogExp2(fogColor, DAY ? 0.03 : 0.045);
 scene.add(new THREE.HemisphereLight(0x6f86b0, 0x1a1612, 0.7));
 scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.18;
-const moon = new THREE.DirectionalLight(0x8fb0ff, 1.4); moon.position.set(8, 14, -10); scene.add(moon);
+const moon = new THREE.DirectionalLight(DAY ? 0xdfe6ee : 0x8fb0ff, DAY ? 2.2 : 1.4); moon.position.set(DAY ? -6 : 8, 14, DAY ? 8 : -10); moon.castShadow = DAY; scene.add(moon);
+if (DAY) { scene.add(new THREE.HemisphereLight(0xc8d2dc, 0x4a5236, 1.6)); }
 
 // wet street: a mirror under a patchy asphalt layer
 const mirror = new Reflector(new THREE.PlaneGeometry(60, 60), { textureWidth: 1600, textureHeight: 900, color: 0x5a6068 });
@@ -47,14 +49,14 @@ const asphalt = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshSt
 asphalt.rotation.x = -Math.PI / 2; asphalt.position.y = 0.005; asphalt.receiveShadow = true; scene.add(asphalt);
 
 // street lamp and a few lit windows behind
-const lamp = new THREE.SpotLight(0xffb86a, 70, 30, 0.8, 0.6, 1.5);
+const lamp = new THREE.SpotLight(0xffb86a, DAY ? 0 : 70, 30, 0.8, 0.6, 1.5);
 lamp.position.set(-2.6, 5.5, 3.2); lamp.target.position.set(0, 0, 0.5); lamp.castShadow = true;
 lamp.shadow.mapSize.set(2048, 2048); scene.add(lamp, lamp.target);
 const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.18), new THREE.MeshBasicMaterial({ color: 0xffd9a0 }));
 bulb.position.copy(lamp.position); scene.add(bulb);
 const pole = new THREE.Mesh(new THREE.BoxGeometry(0.15, 5.5, 0.15), new THREE.MeshStandardMaterial({ color: 0x222428 }));
 pole.position.set(-3.0, 2.75, 3.2); scene.add(pole);
-const rim = new THREE.PointLight(0x6f9cff, 25, 14, 1.6); rim.position.set(3, 3, -4); scene.add(rim);
+const rim = new THREE.PointLight(0x6f9cff, DAY ? 6 : 25, 14, 1.6); rim.position.set(3, 3, -4); scene.add(rim);
 const fill = new THREE.PointLight(0xffc89a, 10, 12, 1.5); fill.position.set(1.5, 2.2, 5); scene.add(fill);
 for (let i = 0; i < 9; i++) {
   const b = new THREE.Mesh(new THREE.BoxGeometry(5 + Math.random() * 4, 8 + Math.random() * 14, 4), new THREE.MeshStandardMaterial({ color: 0x15171c, roughness: 0.9 }));
@@ -73,7 +75,7 @@ for (let i = 0; i < 2600; i++) {
   drops.push(x, y, z, x + 0.02, y - 0.35, z);
 }
 const rainGeo = new THREE.BufferGeometry(); rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(drops, 3));
-scene.add(new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0x9fb2cc, transparent: true, opacity: 0.35 })));
+if (!DAY) scene.add(new THREE.LineSegments(rainGeo, new THREE.LineBasicMaterial({ color: 0x9fb2cc, transparent: true, opacity: 0.35 })));
 
 // ---- zombies ----
 const loader = new THREE.TextureLoader();
@@ -82,10 +84,11 @@ function tex(url, srgb) {
   if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 function material(name, hd) {
+  if (hd === true) hd = 'hd';
   if (!hd) return new THREE.MeshStandardMaterial({ map: tex(`skins/${name}.png`, true), alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.85 });
-  const rm = tex(`hd/${name}_rm.png`);
+  const rm = tex(`${hd}/${name}_rm.png`);
   return new THREE.MeshStandardMaterial({
-    map: tex(`hd/${name}.png`, true), normalMap: tex(`hd/${name}_nrm_gl.png`), normalScale: new THREE.Vector2(1, 1),
+    map: tex(`${hd}/${name}.png`, true), normalMap: tex(`${hd}/${name}_nrm_gl.png`), normalScale: new THREE.Vector2(1, 1),
     roughnessMap: rm, metalnessMap: rm, roughness: 1, metalness: 1, alphaTest: 0.5, side: THREE.DoubleSide,
   });
 }
@@ -120,7 +123,7 @@ function zombie(name, hd, parts, pose) {
   return root;
 }
 const parts = await (await fetch('skins/walker_parts.json')).json();
-const cast = [
+const cast = params.get('cast') ? JSON.parse(params.get('cast')) : [
   ['civilian_pale', false, 'civilian', -2.2, 0.7, [1, 1]],
   ['civilian_pale', true, 'civilian', -0.65, 0.3, [-1, -1]],
   ['police_olive', true, 'police', 0.65, 0.3, [1, -1]],
