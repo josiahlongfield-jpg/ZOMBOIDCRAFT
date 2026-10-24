@@ -9,6 +9,7 @@ import * as THREE from 'three';
 const params = new URLSearchParams(location.search);
 const tex = params.get('tex');
 const parts = JSON.parse(params.get('parts') || '{}');
+const limb = +(params.get('limb') || 0);  // 1 right forearm, 2 left forearm, 3 right arm, 4 left arm
 const VIEWS = [
   { w: 150, kind: 'front' }, { w: 150, kind: 'left' }, { w: 150, kind: 'back' }, { w: 150, kind: 'right' },
   { w: 200, kind: 'head' }, { w: 260, kind: 'pose' },
@@ -81,6 +82,14 @@ function zombie() {
   if (parts.pack) { const p = box(42, 37, 8, 8, 3); p.position.set(0, -5, -3.5); body.add(p); }
   const rarm = pivot(-5, 22, 0, box(40, 16, 4, 12, 4), -1, -4, 0);
   const larm = pivot(5, 22, 0, box(32, 48, 4, 12, 4), 1, -4, 0);
+  if (limb === 1 || limb === 2) {
+    const arm = limb === 1 ? rarm : larm, sgn = limb === 1 ? -1 : 1;
+    arm.children[0].visible = false;
+    const stub = box(...(limb === 1 ? [40, 16] : [32, 48]), 4, 6, 4); stub.position.set(sgn, 1, 0); arm.add(stub);
+    const bone = box(56, limb === 1 ? 16 : 24, 2, 6, 2); bone.position.set(sgn, -5, 0); arm.add(bone);
+  }
+  if (limb === 3) rarm.visible = false;
+  if (limb === 4) larm.visible = false;
   const rleg = pivot(-2, 12, 0, box(0, 16, 4, 12, 4), 0, -6, 0);
   const lleg = pivot(2, 12, 0, box(16, 48, 4, 12, 4), 0, -6, 0);
   root.add(head, body, rarm, larm, rleg, lleg);

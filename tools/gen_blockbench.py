@@ -18,7 +18,7 @@ from pathlib import Path
 from PIL import Image
 
 SKINS_DIR = Path("src/main/resources/assets/zomboidcraft/textures/entity/walker_hd")
-LEVELS = ("0", "1", "2")  # damage levels: light, medium, heavy
+LEVELS = ("0", "1", "2", "3")  # damage levels: light, medium, heavy, bones showing
 PARTS = json.loads(Path("tools/mockup/walker_parts.json").read_text())
 
 
