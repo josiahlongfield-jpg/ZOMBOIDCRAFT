@@ -161,8 +161,8 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | amb.wind | RMB10_AMBIENCE_CITY RUMBLE_Large city_Light wind debris (Collected Transients - Diffuse City) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.wind | Wind,Ext,Marina,Masts,Wires,Buffeting,Whistle,Clank (Hzandbits - Urban Winds II) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.night | [Wind singing in the mountain, some night cricket in background](https://freesound.org/people/felix.blume/sounds/165526/) | felix.blume | CC0 1.0 |
-| amb.night | [screech_owl.wav](https://freesound.org/people/ivolipa/sounds/353173/) | ivolipa | CC0 1.0 |
 | amb.night | AMB PARK Solo Cricket, Seagulls, City Rumble, Montreal, Canada, LOOP (Articulated Sounds - Nature in the City) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| amb.owl | [screech_owl.wav](https://freesound.org/people/ivolipa/sounds/353173/) | ivolipa | CC0 1.0 |
 | amb.thunder | Thunder_Boom_Fienup_005 (Soundopolis - Natures Fury_Thunder) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
 | amb.thunder | thunder_clap_04 (Soundrangers – Thunder) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | amb.thunder | Thunder_Very-Close_Rain_08 (InspectorJ - 44.1 General Library) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |

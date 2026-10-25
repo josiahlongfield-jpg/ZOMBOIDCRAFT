@@ -20,9 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - amb_hail2
-          - amb_alarm
-          - amb_animal
+          - car_start,car_stall
+          - car_idle
+          - car_horn,car_door
+          - car_crash
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

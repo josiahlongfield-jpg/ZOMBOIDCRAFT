@@ -78,6 +78,12 @@ CANDIDATES = {
     "amb.night": ("Night: crickets and owls", 6.0, 12.0, 2, []),
     "amb.hail2": ("Heavier hail: a real hailstorm on roofs and cars", 4.0, 10.0, 2, []),
     "amb.alarm": ("Car and house alarms, sirens, far off in the city", 2.0, 8.0, 2, []),
+    "car.start": ("Engine starting: the old car turns over and catches", 1.0, 5.0, 2, []),
+    "car.idle": ("Engine idling: looped and pitched up with speed while driving", 4.0, 10.0, 2, []),
+    "car.horn": ("Horn: one honk (loud, and the dead hear it)", 0.3, 2.5, 3, []),
+    "car.crash": ("Crash: hitting a wall, a car or a zombie at speed", 0.4, 4.0, 3, []),
+    "car.door": ("Car door opening and shutting", 0.3, 2.0, 3, []),
+    "car.stall": ("Engine failing to start or stalling", 1.0, 5.0, 2, []),
     "amb.animal": ("Far-off animals: dogs howling, coyotes, foxes, wolves", 1.0, 7.0, 2, []),
 }
 
@@ -125,6 +131,12 @@ EXTRA = {
     "amb.night": [("amb_night", r"."), ("s_amb_night", r".")],
     "amb.hail2": [("amb_hail2", r"."), ("s_amb_hail2", r".")],
     "amb.alarm": [("amb_alarm", r"."), ("s_amb_alarm", r".")],
+    "car.start": [("car_start", r"."), ("s_car_start", r".")],
+    "car.idle": [("car_idle", r"."), ("s_car_idle", r".")],
+    "car.horn": [("car_horn", r"."), ("s_car_horn", r".")],
+    "car.crash": [("car_crash", r"."), ("s_car_crash", r".")],
+    "car.door": [("car_door", r"."), ("s_car_door", r".")],
+    "car.stall": [("car_stall", r"."), ("s_car_stall", r".")],
     "amb.animal": [("amb_animal", r"."), ("s_amb_animal", r".")],
 }
 

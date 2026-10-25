@@ -81,6 +81,13 @@ QUERIES = {
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
     "amb_alarm": ["car alarm", "house alarm ringing", "burglar alarm bell", "alarm bell ringing outside"],
     "amb_animal": ["dog howling distant", "coyote howl", "fox scream night", "dogs barking in the distance"],
+    # cars: old American saloons and trucks, worn rather than sporty
+    "car_start": ["car engine start", "old car starting", "truck engine start", "car ignition start"],
+    "car_idle": ["car engine idle loop", "old car idling", "v8 engine idle", "truck idle"],
+    "car_horn": ["car horn", "old car horn honk", "truck horn"],
+    "car_crash": ["car crash", "car collision impact", "metal crash impact car", "car hitting object"],
+    "car_door": ["car door open close", "car door slam", "old car door"],
+    "car_stall": ["car engine failing to start", "car won't start", "engine stall sputter"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }
