@@ -80,8 +80,8 @@ final class ChunkWriter implements ChunkSink {
                     Fittings.stock(entity, loot);
                 }
             }
-        } else if (!state.getFluidState().isEmpty() || needsUpdate(state)) {
-            chunk.markPosForPostprocessing(pos.set(x, y, z));
+        } else if ((!state.getFluidState().isEmpty() || needsUpdate(state)) && chunk instanceof ProtoChunk proto) {
+            proto.markPosForPostProcessing(pos.set(x, y, z));
         }
     }
 
@@ -96,11 +96,11 @@ final class ChunkWriter implements ChunkSink {
         }
     }
 
-    /** Blocks whose shape depends on their neighbours (fences, panes, walls) get fixed up later. */
+    /** Blocks whose shape depends on their neighbours (fences, panes, walls, stairs) get fixed up later. */
     private static boolean needsUpdate(BlockState state) {
-        return state.is(Blocks.IRON_BARS) || state.getBlock() instanceof net.minecraft.world.level.block.FenceBlock
-                || state.getBlock() instanceof net.minecraft.world.level.block.IronBarsBlock
-                || state.getBlock() instanceof net.minecraft.world.level.block.WallBlock;
+        return state.getBlock() instanceof net.minecraft.world.level.block.CrossCollisionBlock
+                || state.getBlock() instanceof net.minecraft.world.level.block.WallBlock
+                || state.getBlock() instanceof net.minecraft.world.level.block.StairBlock;
     }
 
     @Override
