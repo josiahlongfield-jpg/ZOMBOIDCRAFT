@@ -206,11 +206,22 @@ public final class Shops {
             put(right, 1, z, "store_dryer[facing=west]");
             put(right, 2, z, "store_dryer[facing=west]");
         }
+        // folding tables in short runs down the middle, plastic chairs pulled up to them
         int mid = (left + right) / 2;
+        boolean wideRoom = right - left >= 10;
         for (int z = 5; z <= back - 1; z++) {
+            if ((z - 5) % 4 == 3) {
+                continue;
+            }
             put(mid, 1, z, "store_table");
-            if (right - left >= 10) {
+            if (wideRoom) {
                 put(mid + 1, 1, z, "store_table");
+            }
+            if (rng.nextDouble() < 0.35) {
+                put(mid - 1, 1, z, "store_chair[facing=east]");
+            }
+            if (rng.nextDouble() < 0.35) {
+                put(wideRoom ? mid + 2 : mid + 1, 1, z, "store_chair[facing=west]");
             }
         }
         for (int x = left + 1; x < door - 1; x++) {
