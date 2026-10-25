@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_casings": "zomboidcraft:block/city/bunk_casings",
+    "particle": "zomboidcraft:block/city/bunk_casings"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_casings",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_casings",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_casings",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_casings",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_casings"
+        },
+        "down": {
+          "texture": "#bunk_casings",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ship_engine_green": "zomboidcraft:block/city/ship_engine_green",
+    "ship_engine_lo": "zomboidcraft:block/city/ship_engine_lo",
+    "ship_engine_top": "zomboidcraft:block/city/ship_engine_top",
+    "particle": "zomboidcraft:block/city/ship_engine_lo"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_engine_lo"
+        },
+        "south": {
+          "texture": "#ship_engine_lo"
+        },
+        "east": {
+          "texture": "#ship_engine_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ship_engine_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ship_engine_top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ship_engine_green",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

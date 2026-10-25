@@ -400,6 +400,24 @@ def atlas_for(pieces, offs, skin_maps):
     return out
 
 
+# The walker's arms and legs bend at the elbow and knee (WalkerModel.ELBOW, KNEE): pieces that sit
+# wholly below the joint hang off the forearm or shin so they follow it. Sampling is unchanged.
+JOINTS = {"right_arm": ("right_forearm", (-1, 3, 0)), "left_arm": ("left_forearm", (1, 3, 0)),
+          "right_leg": ("right_shin", (0, 6, 0)), "left_leg": ("left_shin", (0, 6, 0))}
+MODEL_PIVOTS = dict(PIVOTS)
+for _bone, (_lower, _off) in JOINTS.items():
+    MODEL_PIVOTS[_lower] = tuple(PIVOTS[_bone][k] + _off[k] for k in range(3))
+
+
+def model_bone(p):
+    """The bone a piece hangs off in the jointed walker."""
+    if p.bone in JOINTS:
+        lower, _ = JOINTS[p.bone]
+        if p.box[1] >= MODEL_PIVOTS[lower][1] - 0.01:
+            return lower
+    return p.bone
+
+
 def java(all_pieces, all_offs):
     lines = [
         "package com.zomboidcraft.client.zombie;",
@@ -435,7 +453,8 @@ def java(all_pieces, all_offs):
     ]
     for o, pieces in all_pieces.items():
         for i, (p, (u, v)) in enumerate(zip(pieces, all_offs[o])):
-            bp = PIVOTS[p.bone]
+            bone = model_bone(p)
+            bp = MODEL_PIVOTS[bone]
             piv = p.pivot if p.pivot is not None else bp
             x0, y0, z0, x1, y1, z1 = p.box
             w, h, d = p.size
@@ -443,14 +462,14 @@ def java(all_pieces, all_offs):
             rx, ry, rz = (math.radians(a) for a in p.rot)
             pose = (f"PartPose.offsetAndRotation({off[0]:g}f, {off[1]:g}f, {off[2]:g}f, {rx:.4f}f, {ry:.4f}f, {rz:.4f}f)"
                     if any(p.rot) else f"PartPose.offset({off[0]:g}f, {off[1]:g}f, {off[2]:g}f)")
-            lines.append(f'        bones.get("{p.bone}").addOrReplaceChild("{o}_{i}", CubeListBuilder.create().texOffs({u}, {v})'
+            lines.append(f'        bones.get("{bone}").addOrReplaceChild("{o}_{i}", CubeListBuilder.create().texOffs({u}, {v})'
                          f'.addBox({x0 - piv[0]:g}f, {y0 - piv[1]:g}f, {z0 - piv[2]:g}f, {w:g}f, {h:g}f, {d:g}f), {pose});')
     lines += ["    }", "", "    /** Which bone each piece hangs off, so pieces on a lost arm can be hidden. */",
               "    public static final Map<String, String> BONE = Map.ofEntries("]
     entries = []
     for o, pieces in all_pieces.items():
         for i, p in enumerate(pieces):
-            entries.append(f'            Map.entry("{o}_{i}", "{p.bone}")')
+            entries.append(f'            Map.entry("{o}_{i}", "{model_bone(p)}")')
     lines.append(",\n".join(entries) + ");")
     lines.append("}")
     JAVA.write_text("\n".join(lines) + "\n")

@@ -1,6 +1,8 @@
 package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.Stat;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.ZombieTypes;
@@ -79,7 +81,7 @@ public final class CombatEvents {
         if (!target.isAlive() || Downed.isLow(target)) {
             return;
         }
-        float chance = spec != null ? spec.knockdown() : 0.05f;
+        float chance = spec != null ? spec.knockdown() * (float) Rolls.multiplier(weapon, Stat.KNOCKDOWN) : 0.05f;
         // a blow from behind, or with a run-up, takes them off their feet more often
         Vec3 facing = Vec3.directionFromRotation(0, target.getYRot());
         Vec3 swing = target.position().subtract(player.position()).multiply(1, 0, 1);

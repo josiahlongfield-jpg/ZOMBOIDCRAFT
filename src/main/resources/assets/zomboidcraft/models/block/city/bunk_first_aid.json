@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_firstaid": "zomboidcraft:block/city/bunk_firstaid",
+    "bunk_white_steel": "zomboidcraft:block/city/bunk_white_steel",
+    "particle": "zomboidcraft:block/city/bunk_firstaid"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        6,
+        13.5
+      ],
+      "to": [
+        13,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_firstaid"
+        },
+        "south": {
+          "texture": "#bunk_white_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_white_steel"
+        },
+        "west": {
+          "texture": "#bunk_white_steel"
+        },
+        "up": {
+          "texture": "#bunk_white_steel"
+        },
+        "down": {
+          "texture": "#bunk_white_steel"
+        }
+      }
+    }
+  ]
+}

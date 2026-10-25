@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_crate_gun": "zomboidcraft:block/city/bunk_crate_gun",
+    "bunk_olive": "zomboidcraft:block/city/bunk_olive",
+    "particle": "zomboidcraft:block/city/bunk_crate_gun"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        7,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_crate_gun"
+        },
+        "south": {
+          "texture": "#bunk_olive"
+        },
+        "east": {
+          "texture": "#bunk_olive",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_olive",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_olive"
+        },
+        "down": {
+          "texture": "#bunk_olive",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        3
+      ],
+      "to": [
+        16,
+        8,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_olive"
+        },
+        "south": {
+          "texture": "#bunk_olive"
+        },
+        "east": {
+          "texture": "#bunk_olive",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_olive",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_olive"
+        },
+        "down": {
+          "texture": "#bunk_olive"
+        }
+      }
+    }
+  ]
+}

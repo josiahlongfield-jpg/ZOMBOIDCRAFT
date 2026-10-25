@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cable_post": "zomboidcraft:block/city/bunk_cable_post",
+    "bunk_concrete": "zomboidcraft:block/city/bunk_concrete",
+    "particle": "zomboidcraft:block/city/bunk_cable_post"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cable_post"
+        },
+        "south": {
+          "texture": "#bunk_cable_post"
+        },
+        "east": {
+          "texture": "#bunk_cable_post"
+        },
+        "west": {
+          "texture": "#bunk_cable_post"
+        },
+        "up": {
+          "texture": "#bunk_concrete"
+        },
+        "down": {
+          "texture": "#bunk_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

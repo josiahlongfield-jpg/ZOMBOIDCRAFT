@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_copper": "zomboidcraft:block/city/home_copper",
+    "ship_telegraph": "zomboidcraft:block/city/ship_telegraph",
+    "particle": "zomboidcraft:block/city/home_copper"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_copper"
+        },
+        "south": {
+          "texture": "#home_copper"
+        },
+        "east": {
+          "texture": "#home_copper"
+        },
+        "west": {
+          "texture": "#home_copper"
+        },
+        "up": {
+          "texture": "#home_copper"
+        },
+        "down": {
+          "texture": "#home_copper",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        10,
+        6.5
+      ],
+      "to": [
+        12,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_telegraph"
+        },
+        "south": {
+          "texture": "#ship_telegraph"
+        },
+        "east": {
+          "texture": "#home_copper"
+        },
+        "west": {
+          "texture": "#home_copper"
+        },
+        "up": {
+          "texture": "#home_copper",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_copper"
+        }
+      }
+    }
+  ]
+}

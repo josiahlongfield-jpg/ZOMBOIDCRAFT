@@ -27,16 +27,17 @@ public class WalkerAddonModel extends WalkerModel {
     public WalkerAddonModel(ModelPart root) {
         super(root);
         Map<String, ModelPart> bones = Map.of("head", head, "body", body, "right_arm", rightArm,
-                "left_arm", leftArm, "right_leg", rightLeg, "left_leg", leftLeg);
+                "left_arm", leftArm, "right_leg", rightLeg, "left_leg", leftLeg,
+                "right_forearm", rightForearm, "left_forearm", leftForearm, "right_shin", rightShin, "left_shin", leftShin);
         WalkerAddonParts.PIECES.forEach((outfit, names) -> {
             List<ModelPart> parts = new ArrayList<>();
             for (String name : names) {
                 String bone = WalkerAddonParts.BONE.get(name);
                 ModelPart part = bones.get(bone).getChild(name);
                 parts.add(part);
-                if (bone.equals("right_arm")) {
+                if (bone.equals("right_arm") || bone.equals("right_forearm")) {
                     rightArmPieces.add(part);
-                } else if (bone.equals("left_arm")) {
+                } else if (bone.equals("left_arm") || bone.equals("left_forearm")) {
                     leftArmPieces.add(part);
                 }
             }
@@ -53,6 +54,10 @@ public class WalkerAddonModel extends WalkerModel {
         for (String bone : List.of("head", "body", "right_arm", "left_arm", "right_leg", "left_leg")) {
             bones.put(bone, root.getChild(bone));
         }
+        bones.put("right_forearm", bones.get("right_arm").getChild("forearm"));
+        bones.put("left_forearm", bones.get("left_arm").getChild("forearm"));
+        bones.put("right_shin", bones.get("right_leg").getChild("shin"));
+        bones.put("left_shin", bones.get("left_leg").getChild("shin"));
         WalkerAddonParts.define(bones);
         return LayerDefinition.create(mesh, WalkerAddonParts.TEX_SIZE, WalkerAddonParts.TEX_SIZE);
     }
@@ -60,7 +65,7 @@ public class WalkerAddonModel extends WalkerModel {
     @Override
     public void setupAnim(WalkerRenderState state) {
         super.setupAnim(state);
-        for (ModelPart part : List.of(head, body, rightArm, leftArm, rightLeg, leftLeg)) {
+        for (ModelPart part : bodyParts) {
             part.skipDraw = true;
         }
         hat.visible = false;
@@ -73,7 +78,8 @@ public class WalkerAddonModel extends WalkerModel {
                 part.visible = show;
             }
         });
-        // A torn-off forearm takes its sleeve pieces with it; a missing arm hides its bone already.
+        // A torn-off forearm takes its upper-arm sleeve pieces with it too (the forearm's own go with
+        // the forearm); a missing arm hides its bone already.
         if (state.missingLimb == 1) {
             rightArmPieces.forEach(part -> part.visible = false);
         } else if (state.missingLimb == 2) {

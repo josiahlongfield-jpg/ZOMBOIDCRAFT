@@ -2,6 +2,8 @@ package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.Stat;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.ModDamageTypes;
@@ -121,7 +123,8 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        if (config.jams && !type.manual() && !type.tube && player.getRandom().nextFloat() < 0.08f * wear * wear) {
+        double jam = (Rolls.get(gun) != null ? ZcConfig.get().rolls.jamFloor : 0) + 0.08 * wear * wear;
+        if (config.jams && type.canJam() && player.getRandom().nextDouble() < jam * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
@@ -149,7 +152,7 @@ public final class Guns {
         Vec3 look = player.getLookAngle();
         int aimLevel = Skills.level(player, Skill.AIMING);
         double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
-                * (1 - 0.05 * aimLevel);
+                * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
         }
@@ -167,6 +170,7 @@ public final class Guns {
         // one blow, since a target only takes the first of several hits in the same moment
         int pellets = type.pellets();
         double pelletSpread = stats instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+        float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         boolean ricochet = false;
         for (int i = 0; i < pellets; i++) {
@@ -178,7 +182,7 @@ public final class Guns {
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
                     eye.distanceToSqr(stop));
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                hits.computeIfAbsent(target, t -> new Hit(dir)).add(pellet(target, eye, dir, stats));
+                hits.computeIfAbsent(target, t -> new Hit(dir)).add(pellet(target, eye, dir, stats, power));
             } else if (block.getType() != HitResult.Type.MISS) {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
@@ -226,14 +230,17 @@ public final class Guns {
     private record Pellet(float damage, boolean head, boolean legs, Vec3 at) {
     }
 
-    /** One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot). */
-    private static Pellet pellet(LivingEntity target, Vec3 eye, Vec3 dir, ZcConfig.GunStats stats) {
+    /**
+     * One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot;
+     * power is the gun's rolled damage).
+     */
+    private static Pellet pellet(LivingEntity target, Vec3 eye, Vec3 dir, ZcConfig.GunStats stats, float power) {
         Vec3 at = target.getBoundingBox().inflate(0.1).clip(eye, eye.add(dir.scale(stats.range))).orElse(target.position());
         boolean downed = Downed.isLow(target);
         double headY = target.getEyeY() - 0.28;
         boolean head = !downed && at.y >= headY;
         boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
-        float damage = (float) (stats.damage * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
+        float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));

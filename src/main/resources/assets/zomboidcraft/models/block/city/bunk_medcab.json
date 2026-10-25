@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_medcab": "zomboidcraft:block/city/bunk_medcab",
+    "bunk_white_steel": "zomboidcraft:block/city/bunk_white_steel",
+    "particle": "zomboidcraft:block/city/bunk_medcab"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        4
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_medcab"
+        },
+        "south": {
+          "texture": "#bunk_white_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_white_steel"
+        },
+        "west": {
+          "texture": "#bunk_white_steel"
+        },
+        "up": {
+          "texture": "#bunk_white_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_white_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

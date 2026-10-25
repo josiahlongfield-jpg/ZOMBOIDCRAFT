@@ -1,0 +1,181 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_rust_pipe": "zomboidcraft:block/city/bunk_rust_pipe",
+    "home_copper": "zomboidcraft:block/city/home_copper",
+    "ship_engine_green": "zomboidcraft:block/city/ship_engine_green",
+    "ship_engine_hi": "zomboidcraft:block/city/ship_engine_hi",
+    "ship_engine_top": "zomboidcraft:block/city/ship_engine_top",
+    "particle": "zomboidcraft:block/city/ship_engine_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_engine_hi"
+        },
+        "south": {
+          "texture": "#ship_engine_hi"
+        },
+        "east": {
+          "texture": "#ship_engine_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ship_engine_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ship_engine_top"
+        },
+        "down": {
+          "texture": "#ship_engine_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        8,
+        3
+      ],
+      "to": [
+        7.5,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_engine_hi"
+        },
+        "south": {
+          "texture": "#ship_engine_hi"
+        },
+        "east": {
+          "texture": "#ship_engine_green"
+        },
+        "west": {
+          "texture": "#ship_engine_green"
+        },
+        "up": {
+          "texture": "#ship_engine_top"
+        },
+        "down": {
+          "texture": "#ship_engine_green"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        8,
+        3
+      ],
+      "to": [
+        14.5,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_engine_hi"
+        },
+        "south": {
+          "texture": "#ship_engine_hi"
+        },
+        "east": {
+          "texture": "#ship_engine_green"
+        },
+        "west": {
+          "texture": "#ship_engine_green"
+        },
+        "up": {
+          "texture": "#ship_engine_top"
+        },
+        "down": {
+          "texture": "#ship_engine_green"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        13.5
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "south": {
+          "texture": "#bunk_rust_pipe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_rust_pipe",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_rust_pipe",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "down": {
+          "texture": "#bunk_rust_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        1.4
+      ],
+      "to": [
+        16,
+        7,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_copper"
+        },
+        "south": {
+          "texture": "#home_copper"
+        },
+        "east": {
+          "texture": "#home_copper",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_copper",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_copper"
+        },
+        "down": {
+          "texture": "#home_copper"
+        }
+      }
+    }
+  ]
+}

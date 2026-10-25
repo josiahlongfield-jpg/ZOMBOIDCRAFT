@@ -188,6 +188,40 @@ def door_icon(spec, tex_dir, out):
     icon.save(out)
 
 
+# trapdoors use vanilla's orientable trapdoor templates and turns
+TRAPDOOR_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
+
+
+def trapdoor_models(name, spec, tex_dir):
+    tex = {"texture": sprite(spec["tex"], tex_dir), "particle": f"{NS}:block/city/{spec['tex']}"}
+    return {f"{name}_{part}": {"parent": f"minecraft:block/template_orientable_trapdoor_{part}", "textures": tex}
+            for part in ("bottom", "top", "open")}
+
+
+def trapdoor_blockstate(name):
+    variants = {}
+    for facing, y in TRAPDOOR_Y.items():
+        for half in ("bottom", "top"):
+            for is_open in (False, True):
+                v = {"model": f"{NS}:block/city/{name}_{'open' if is_open else half}"}
+                if is_open and half == "top":
+                    v["x"] = 180
+                    v["y"] = (y + 180) % 360
+                elif y:
+                    v["y"] = y
+                if v.get("y") == 0:
+                    del v["y"]
+                variants[f"facing={facing},half={half},open={str(is_open).lower()}"] = v
+    return {"variants": variants}
+
+
+def climbable(blocks):
+    """Ladders: the climbable block tag lists the city blocks marked climb."""
+    names = [f"{NS}:{n}" for n, spec in blocks.items() if spec.get("climb")]
+    write_json(MAIN / "resources/data/minecraft/tags/block/climbable.json", {"replace": False, "values": names})
+    return len(names)
+
+
 def blockstate(name, spec):
     model = f"{NS}:block/city/{name}"
     rot = spec.get("rotate")
@@ -214,6 +248,9 @@ def sound(name, spec):
 
 
 def java_line(name, spec, tex_dir):
+    if "trapdoor" in spec:
+        flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
+        return f'        s("{name}", TRAPDOOR, {flag}, 0, SoundType.{spec.get("sound", "METAL")}, 3f);'
     if "door" in spec:
         s = "METAL" if spec["door"] == "steel" else "WOOD"
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
@@ -277,6 +314,20 @@ def main():
     used = set()
     lines = []
     for name, spec in blocks.items():
+        if "trapdoor" in spec:
+            for model, obj in trapdoor_models(name, spec, tex_dir).items():
+                write_json(ASSETS / f"models/block/city/{model}.json", obj)
+            write_json(ASSETS / f"blockstates/{name}.json", trapdoor_blockstate(name))
+            write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model",
+                                                                 "model": f"{NS}:block/city/{name}_bottom"}})
+            write_json(DATA / f"loot_table/blocks/{name}.json", {
+                "type": "minecraft:block",
+                "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}"}],
+                           "conditions": [{"condition": "minecraft:survives_explosion"}]}],
+                "random_sequence": f"{NS}:blocks/{name}"})
+            used.update(textures(spec))
+            lines.append(java_line(name, spec, tex_dir))
+            continue
         if "door" in spec:
             for model, obj in door_models(name, spec, tex_dir).items():
                 write_json(ASSETS / f"models/block/city/{model}.json", obj)
@@ -345,7 +396,7 @@ final class CitySpecs extends CityBlocks.Specs {{
 {bodies}}}
 """)
     import heightmap_tags
-    print(f"{len(blocks)} blocks, {len(used)} textures, {heightmap_tags.write()} stop rain")
+    print(f"{len(blocks)} blocks, {len(used)} textures, {heightmap_tags.write()} stop rain, {climbable(blocks)} climbable")
 
 
 if __name__ == "__main__":

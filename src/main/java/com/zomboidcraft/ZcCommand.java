@@ -89,10 +89,29 @@ public final class ZcCommand {
                                                         java.util.List.of("scratch", "cut", "bite", "burn", "break"), builder))
                                                 .executes(ctx -> injure(ctx, StringArgumentType.getString(ctx, "part"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("roll")
+                                .then(Commands.argument("tier", IntegerArgumentType.integer(1, 5))
+                                        .executes(ctx -> reroll(ctx, IntegerArgumentType.getInteger(ctx, "tier")))))
                         .then(Commands.literal("heal").executes(ctx -> {
                             com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
                             return show(ctx);
                         }))));
+    }
+
+    /** Rolls the weapon in your hand again at a tier, to try one out. */
+    private static int reroll(CommandContext<CommandSourceStack> ctx, int tier) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.item.ItemStack held = player.getMainHandItem();
+        if (com.zomboidcraft.combat.rolls.Rarity.of(held) == null) {
+            ctx.getSource().sendFailure(Component.literal("Hold a weapon to roll it"));
+            return 0;
+        }
+        var old = com.zomboidcraft.combat.rolls.Rolls.get(held);
+        String place = old != null ? old.place() : com.zomboidcraft.combat.rolls.Rolls.UNKNOWN;
+        com.zomboidcraft.combat.rolls.Rolls.set(held,
+                com.zomboidcraft.combat.rolls.Rolls.rolled(held, tier, place, player.getRandom()), player.getRandom());
+        ctx.getSource().sendSuccess(() -> Component.literal("Rolled your " + held.getHoverName().getString() + " at tier " + tier), false);
+        return 1;
     }
 
     private static int city(CommandContext<CommandSourceStack> ctx, long seed) throws CommandSyntaxException {
