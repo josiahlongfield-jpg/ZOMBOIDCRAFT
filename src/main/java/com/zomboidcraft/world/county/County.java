@@ -257,9 +257,9 @@ public final class County {
 
     private Place roadside(int px, int pz, double v, long h) {
         String[] kinds = {"gas_station", "motel", "diner", "church", "school", "warehouse", "trailer_lot"};
-        int[][] sizes = {{56, 44}, {76, 52}, {44, 40}, {54, 64}, {96, 84}, {80, 64}, {60, 56}};
+        int[][] sizes = {{90, 108}, {100, 112}, {90, 108}, {96, 128}, {150, 190}, {104, 136}, {90, 116}};
         int k = (int) (v * kinds.length);
-        return fit(PlaceType.ROADSIDE, kinds[k], px, pz, sizes[k][0], sizes[k][1], h);
+        return fitOrShrink(PlaceType.ROADSIDE, kinds[k], px, pz, sizes[k][0], sizes[k][1], h);
     }
 
     private Place fitOrShrink(PlaceType type, String variant, int px, int pz, int w, int d, long h) {
