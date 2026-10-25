@@ -9,6 +9,22 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== hands"
+for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
+  sig "$c" '.'
+done
+IIH=$(classes 'ItemInHandRenderer\.class' | head -1 | sed 's|\.class$||; s|/|.|g')
+echo "IIH=$IIH"
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A80 'void renderPlayerArm(' | head -100
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A120 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|ldc' | head -60
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A200 'void renderArmWithItem(' | grep -E 'invoke|getfield|getstatic|Method|Field|ldc' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'bob|Bob' | head -20
+for c in $(classes 'renderer/GameRenderer|client/Camera\.class' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'bob|Bob|private void|ItemInHand'; done
+sig net.minecraft.world.entity.player.Player 'bob|Bob|walkDist'
+sig net.minecraft.world.entity.Entity 'walkDist'
+sig net.minecraft.client.entity.ClientAvatarEntity '.'
+sig net.minecraft.client.entity.ClientAvatarState '.'
+
 echo "===== arms"
 sig net.minecraft.client.renderer.ItemInHandRenderer '.'
 javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A70 'void renderPlayerArm(' | head -90
