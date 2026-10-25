@@ -1,8 +1,9 @@
 """Cuts candidate recordings into short clips for the listen-and-pick page.
 
-    python3 tools/audio/slice_candidates.py RAW_DIR OUT_DIR
+    python3 tools/audio/slice_candidates.py RAW_DIR[,RAW_DIR...] OUT_DIR
 
-RAW_DIR is the sounds-raw branch. For each event in CANDIDATES it splits every listed recording
+Each RAW_DIR holds a manifest.json: the sounds-raw branch (Freesound) and the private Sonniss
+folder (fetch_sonniss.py). For each event in CANDIDATES it splits every listed recording
 at its silences, keeps the loudest phrases that fit the event's length range, levels them and
 writes OUT_DIR/<event>/<id>_<start>.ogg plus OUT_DIR/clips.json (event -> clips with id, start,
 length, title, author, page). A picked clip goes straight into pick_sounds.py PINS as
@@ -32,16 +33,32 @@ CANDIDATES = {
     "zombie.death": ("Dying: last gurgles and the body hitting the floor", 0.5, 3.5, 3, [
         "555412", "534602", "445986", "830016", "396046", "640217", "163445", "476437", "417994",
         "395331"]),
-    "zombie.step": ("Footsteps: shuffling and dragging feet", 0.3, 1.5, 3, [
-        "154662", "319210", "319204", "319205", "319203"]),
+    "zombie.step": ("Footsteps: slow, dragging, scuffing feet", 0.4, 2.0, 3, []),
     "door.bash": ("Pounding on a wooden door", 0.3, 1.5, 3, [
         "211450", "362633", "256857", "218890", "268500"]),
     "door.bash_metal": ("Pounding on a metal door", 0.3, 1.8, 3, [
         "268126", "188063", "218888", "218889", "144510"]),
     "door.break": ("A door giving way", 0.6, 3.0, 2, [
         "160213", "262538", "520720", "438331", "536777"]),
-    "horde": ("A horde in the distance", 4.0, 12.0, 2, [
-        "210826", "516697", "666317", "669845", "239923", "165872", "338059", "25279"]),
+    "horde.dormant": ("Dormant horde: a low murmur from a street full of them", 6.0, 14.0, 2, [
+        "210826", "666317", "239923", "165872", "338059", "25279"]),
+    "horde.angry": ("Horde coming for you: it swells as more of them chase", 4.0, 10.0, 2, [
+        "516697", "669845"]),
+}
+
+MAX_CLIPS = 90   # per moment; the page builder trims each round further
+
+# Extra candidates by category in any manifest (Freesound or Sonniss): event -> [(category, title/pack regex)]
+EXTRA = {
+    "zombie.idle": [("idle", r"zombie|groan|creature|breath|undead|death vocal|shudder")],
+    "zombie.alert": [("scream", r"roar|growl|attack|serial|shock|scream"), ("idle", r"aggressive|rage")],
+    "zombie.chase": [("idle", r"aggressive|rage|attack|hiss|ragging"), ("scream", r"struggle|grunt")],
+    "zombie.attack": [("gore", r"bite|flesh|rip|pry|crunch")],
+    "zombie.step": [("step_drag", r"."), ("step", r"drag|stagger|scrape|shuffl|slow|doormat|scuff|tackle")],
+    "door.bash": [("crowd", r"kicking wood door"), ("door", r"knock|impact|designed")],
+    "door.bash_metal": [("door", r"metal|rusty|ronk|gate")],
+    "horde.dormant": [("horde_dormant", r"."), ("crowd", r"murmur|moan|begging|unrest")],
+    "horde.angry": [("horde_angry", r"."), ("crowd", r"approach|battle cry|agony scream|fighting|group scream|war unit")],
 }
 
 
@@ -78,10 +95,19 @@ def phrases(path, min_len, max_len):
 
 
 def main():
-    raw, out = Path(sys.argv[1]), Path(sys.argv[2])
-    manifest = json.loads((raw / "manifest.json").read_text())
+    out = Path(sys.argv[2])
+    manifest, base = {}, {}
+    for d in sys.argv[1].split(","):
+        d = Path(d)
+        for sid, info in json.loads((d / "manifest.json").read_text()).items():
+            manifest[sid], base[sid] = info, d
     clips = {}
     for event, (label, lo, hi, per, ids) in CANDIDATES.items():
+        ids = list(ids)
+        listed = set(ids)
+        for cat, rx in EXTRA.get(event, []):
+            ids += [sid for sid, i in manifest.items() if i["category"] == cat and sid not in ids
+                    and re.search(rx, (i["title"] + " " + i.get("pack", "")).lower())]
         (out / event).mkdir(parents=True, exist_ok=True)
         rows = []
         for sid in ids:
@@ -89,9 +115,11 @@ def main():
             if not info:
                 print("missing", sid)
                 continue
-            src = raw / info["file"]
+            src = base[sid] / info["file"]
             user = unquote(info["user"])
-            for start, length in phrases(src, lo, hi)[:per]:
+            if len(rows) >= MAX_CLIPS:
+                break
+            for start, length in phrases(src, lo, hi)[:per if sid in listed else min(per, 2)]:
                 name = f"{sid}_{start:.2f}.ogg"
                 fade = min(0.12, length / 4)
                 tmp = out / event / "tmp.wav"
@@ -104,8 +132,9 @@ def main():
                     "-q:a", "4", str(out / event / name))
                 tmp.unlink(missing_ok=True)
                 rows.append({"file": f"{event}/{name}", "id": sid, "start": start, "length": length,
-                             "title": info["title"].removesuffix(f" by {user}"), "user": user, "page": info["page"]})
-        clips[event] = {"label": label, "clips": rows}
+                             "title": info["title"].removesuffix(f" by {user}"), "user": user, "page": info["page"],
+                             "source": info.get("bundle", "Freesound")})
+        clips[event] = {"label": label, "clips": rows[:MAX_CLIPS]}
         print(event, len(rows), "clips")
     (out / "clips.json").write_text(json.dumps(clips, indent=1))
 
