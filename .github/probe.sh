@@ -9,51 +9,44 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
-echo "===== weapons"
-classes 'ItemAttributeModifiers|ai/attributes/AttributeModifier\.class|EquipmentSlotGroup|ItemUseAnimation|ClientPreAttackCallback|AttackEntityCallback|UseItemCallback|component/DataComponentType\.class|core/component/DataComponents\.class|item/component/(CustomData|TooltipDisplay|UseCooldown|Weapon|Tool)\.class|properties/conditional/|properties/numeric/|ProjectileUtil|level/ClipContext|sounds/SoundEvent\.class|AbstractClientPlayer|client/Camera\.class|ItemInHandRenderer|renderer/GameRenderer\.class|KeyMappingHelper'
-sig net.minecraft.world.item.component.ItemAttributeModifiers 'public'
-sig 'net.minecraft.world.item.component.ItemAttributeModifiers$Builder' 'public'
-sig net.minecraft.world.entity.ai.attributes.AttributeModifier 'public'
-sig 'net.minecraft.world.entity.ai.attributes.AttributeModifier$Operation' 'public static final'
-sig net.minecraft.world.entity.ai.attributes.Attributes 'ATTACK|INTERACTION|RANGE|MOVEMENT_SPEED|KNOCKBACK'
-sig net.minecraft.world.entity.EquipmentSlotGroup 'public static final'
-sig 'net.minecraft.world.item.Item$Properties' 'public'
-sig net.minecraft.world.item.Item 'public|protected'
-sig net.minecraft.world.item.ItemUseAnimation 'public static final'
-sig net.minecraft.core.component.DataComponentType 'public'
-sig 'net.minecraft.core.component.DataComponentType$Builder' 'public'
-sig net.minecraft.core.component.DataComponents 'MAX_DAMAGE|DAMAGE|CUSTOM_DATA|ATTRIBUTE|WEAPON|TOOL|USE_COOLDOWN|LORE|TOOLTIP|CUSTOM_NAME'
-sig net.minecraft.world.item.component.Weapon 'public'
-sig net.minecraft.world.item.ItemStack 'hurtAndBreak|getDamageValue|setDamageValue|getMaxDamage|isDamageableItem|set\(|get\(|getOrDefault|update\('
-sig net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback '.'
-sig net.fabricmc.fabric.api.event.player.AttackEntityCallback '.'
-sig net.minecraft.world.entity.projectile.ProjectileUtil 'public static'
-sig net.minecraft.world.level.ClipContext 'public'
-sig 'net.minecraft.world.level.ClipContext$Block' 'public static final'
-sig 'net.minecraft.world.level.ClipContext$Fluid' 'public static final'
-sig net.minecraft.sounds.SoundEvent 'public static'
-sig net.minecraft.client.player.AbstractClientPlayer 'Fov|fov|Scop|scop'
-sig net.minecraft.world.entity.player.Player 'isScoping|getAttackStrengthScale|resetAttackStrengthTicker|getCurrentItemAttackStrengthDelay|attack\(|sweepAttack|getEntityInteractionRange|getCooldowns'
-sig net.minecraft.world.entity.LivingEntity 'getUseItem|isUsingItem|getTicksUsingItem|knockback\(|setPose|getPose|isAutoSpinAttack|stopUsingItem'
-sig net.minecraft.world.entity.Entity 'getDimensions|refreshDimensions|setPose|hasPose|getEyeHeight|makeBoundingBox'
-sig net.minecraft.world.entity.Pose 'public static final'
-sig net.minecraft.client.renderer.ItemInHandRenderer 'public|private void render|applyItemArmTransform'
-sig net.minecraft.client.renderer.GameRenderer 'Fov|fov|bob'
-sig net.minecraft.client.Camera 'public'
-sig net.minecraft.world.item.SpyglassItem '.'
-sig net.minecraft.world.item.CrossbowItem 'public|protected'
-sig net.minecraft.core.particles.ParticleTypes 'FLASH|SMOKE|CRIT|DAMAGE|BLOCK|POOF|ELECTRIC|DUST'
-sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'setupRotations'
-sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public'
-sig net.minecraft.world.entity.ai.attributes.AttributeInstance 'public'
-sig net.minecraft.world.entity.player.Player 'getFoodData|causeFoodExhaustion|isSprinting|setSprinting'
+echo "===== guns2"
+classes 'item/properties/conditional/ConditionalItemModelProperties|item/properties/numeric/RangeSelectItemModelProperties|item/properties/select/SelectItemModelProperties|FabricItem\.class|component/CustomModelData\.class|HumanoidModel\$ArmPose|attachment/v1/AttachmentSyncPredicate|ClientTickEvents|PayloadTypeRegistry|ClientPlayNetworking|ServerPlayNetworking|LocalPlayer\.class|ItemModelGenerators|CustomModelDataProperty'
+for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '^net/minecraft/client/.*\.class$' | sed 's/\.class$//;s|/|.|g' | grep -vE '\$[0-9]'); do :; done
+echo "--- classes mentioning fov in method names"
+for cls in net.minecraft.client.player.AbstractClientPlayer net.minecraft.client.player.LocalPlayer net.minecraft.client.renderer.GameRenderer net.minecraft.client.Camera net.minecraft.client.Options net.minecraft.world.entity.player.Player net.minecraft.client.renderer.ItemInHandRenderer; do
+  echo "## $cls"; javap -cp "$CP" -p "$cls" 2>&1 | grep -iE 'fov|scop|zoom|ArmTransform|renderArmWithItem|renderHandsWithItems|renderItem\(|getFieldOfView|Bob' ; done
+sig net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties '.'
+sig net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties '.'
+sig net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty '.'
+sig net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty '.'
+sig net.minecraft.client.renderer.item.properties.conditional.IsUsingItem '.'
+sig net.minecraft.client.renderer.item.properties.numeric.UseDuration '.'
+sig net.minecraft.client.renderer.item.properties.numeric.CustomModelDataProperty '.'
+sig net.minecraft.util.ExtraCodecs\$LateBoundIdMapper 'public'
+sig net.minecraft.world.item.component.CustomModelData '.'
+sig net.fabricmc.fabric.api.item.v1.FabricItem '.'
+sig 'net.minecraft.client.model.HumanoidModel$ArmPose' 'public static final|public'
+sig net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate 'static'
+sig net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry 'static|public'
+sig net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking 'static'
+sig net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking 'static'
+sig net.minecraft.network.protocol.common.custom.CustomPacketPayload '.'
+sig 'net.minecraft.network.protocol.common.custom.CustomPacketPayload$Type' '.'
+sig net.minecraft.network.codec.StreamCodec 'static'
+sig net.minecraft.network.codec.ByteBufCodecs 'public static final'
+sig net.minecraft.client.renderer.entity.player.AvatarRenderer 'ArmPose|getArmPose'
+sig net.minecraft.client.renderer.entity.player.PlayerRenderer 'ArmPose|getArmPose'
+classes 'renderer/entity/player/'
+sig net.minecraft.world.entity.LivingEntity 'getTicksUsingItem|getUseItemRemainingTicks|releaseUsingItem|startUsingItem'
+sig net.minecraft.world.entity.Entity 'getBoundingBox|getEyeY|getViewVector|getLookAngle|getEyePosition'
+sig net.minecraft.server.level.ServerLevel 'sendParticles|playSound'
+sig net.minecraft.world.level.Level 'playSound\(|playLocalSound|clip\('
+sig net.minecraft.client.player.LocalPlayer 'public'
 for j in $MC_JARS; do
-  unzip -p "$j" assets/minecraft/items/crossbow.json 2>/dev/null && echo " <- crossbow item model"
-  unzip -p "$j" assets/minecraft/items/spyglass.json 2>/dev/null && echo " <- spyglass item model"
-  unzip -p "$j" assets/minecraft/models/item/trident_in_hand.json 2>/dev/null | head -40
-  unzip -p "$j" assets/minecraft/models/item/handheld.json 2>/dev/null
+  unzip -p "$j" assets/minecraft/models/item/crossbow.json 2>/dev/null
+  unzip -p "$j" assets/minecraft/models/item/generated.json 2>/dev/null
+  unzip -p "$j" assets/minecraft/models/item/spyglass_in_hand.json 2>/dev/null
 done
-ls ~/.gradle/caches/fabric-loom 2>/dev/null | head
 exit 0
 
 echo "===== signs"
