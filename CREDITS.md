@@ -4,7 +4,7 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 
 | Sound | Recording | By | Licence |
 |---|---|---|---|
-| weapon.rifle.shot | [AR15 rifle shot](https://freesound.org/people/michorvath/sounds/427596/) | michorvath | CC0 1.0 |
+| weapon.rifle.shot | [SemiAutoRifleShot.wav](https://freesound.org/people/SuperPhat/sounds/421710/) | SuperPhat | CC0 1.0 |
 | weapon.rifle.shot_distant | [SemiAutoRifleShot.wav](https://freesound.org/people/SuperPhat/sounds/421710/) | SuperPhat | CC0 1.0 |
 | weapon.rifle.dry | [357 Magnum Ext 2 shots Empty Chamber Clicks.wav](https://freesound.org/people/klangfabrik/sounds/232867/) | klangfabrik | CC0 1.0 |
 | weapon.rifle.mag_out | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |

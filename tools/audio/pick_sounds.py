@@ -71,8 +71,8 @@ FALLBACK = {
 # (id, start seconds, length) to cut one action out of a longer take, such as a full reload.
 # Cut points come from the transients in each take (loudness over 10 ms windows).
 PINS = {
-    # Josiah: take 1 is the shooter's own shot, take 3 the shot heard when someone else fires
-    "weapon.rifle.shot": ["427596"],
+    # Josiah: take 3 for both the shooter's own shot and the shot heard from far off, a bit louder
+    "weapon.rifle.shot": [("421710", 0.0, 2.2)],
     "weapon.rifle.shot_distant": ["421710"],
     "weapon.rifle.dry": [("232867", 4.45, 0.4), ("232867", 7.5, 0.4)],
     # an M16 reloaded from empty, and a second rifle reload, each cut into its three actions
@@ -91,6 +91,10 @@ PINS = {
     "weapon.melee.stomp": [("739191", 4.45, 0.8), "703115"],
     "weapon.melee.shove": ["582294", ("573691", 0.25, 0.7)],
 }
+
+
+# Extra loudness in dB for an event, pushed through a limiter so the peak stays put.
+BOOST = {"weapon.rifle.shot": 3.0, "weapon.rifle.shot_distant": 3.0}
 
 
 def duration(path):
@@ -123,7 +127,7 @@ def score(sid, info, cats, want, avoid, max_len, raw):
     return s, length
 
 
-def process(src, dst, max_len, peak, start=0.0, length=None):
+def process(src, dst, max_len, peak, start=0.0, length=None, boost=0.0):
     """Trim leading silence, mono, cut to length with a fade, then set the peak level."""
     max_len = min(max_len, length or max_len)
     fade = min(0.15, max_len / 4)
@@ -137,7 +141,10 @@ def process(src, dst, max_len, peak, start=0.0, length=None):
                          capture_output=True, text=True).stderr
     m = re.search(r"max_volume: (-?[\d.]+) dB", vol)
     gain = peak - float(m.group(1)) if m else 0.0
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(tmp), "-af", f"volume={gain:.2f}dB",
+    chain = f"volume={gain:.2f}dB"
+    if boost:
+        chain += f",volume={boost:.1f}dB,alimiter=limit={10 ** (peak / 20):.3f}:attack=1:release=60:level=disabled"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(tmp), "-af", chain,
                     "-c:a", "libvorbis", "-q:a", "5", str(dst)], check=True)
     tmp.unlink()
 
@@ -180,7 +187,8 @@ def main():
         for n, (s, key, length) in enumerate(picks, 1):
             sid = key.split("@")[0]
             folder.mkdir(parents=True, exist_ok=True)
-            process(raw / manifest[sid]["file"], folder / f"{n}.ogg", max_len, peak, *cuts.get(key, (0.0, None)))
+            process(raw / manifest[sid]["file"], folder / f"{n}.ogg", max_len, peak, *cuts.get(key, (0.0, None)),
+                    boost=BOOST.get(event, 0.0))
             entries.append({"name": f"zomboidcraft:{event.replace('.', '/')}/{n}", **extra})
             used.update({key, sid})
             info = manifest[sid]
