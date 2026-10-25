@@ -1063,12 +1063,12 @@ public final class RifleView {
         return new Hand(gun.point(openLocal(k).transformPosition(new Vector3f(sp[0], sp[1], sp[2]))), LEFT_HIP, PALM_UP);
     }
 
-    /** The hand round a shell's back end, u ticks into its go into chamber j. */
+    /** The hand under a shell's back end, u ticks into its go into chamber j, the arm coming up from below. */
     private static Hand onRound(Pose gun, float u, int j) {
         float[] h = rig.magHold();
         Matrix4f m = openLocal(openAmount(clockStart + type.raise)).mul(chamberLocal(Math.max(0, j))).mul(roundPath(u));
-        return new Hand(gun.point(m.transformPosition(new Vector3f(h[0], h[1], h[2]))), new Vector3f(-0.1f, -0.9f, 0.42f),
-                new Vector3f(-0.5f, -1f, 0f));
+        return new Hand(gun.point(m.transformPosition(new Vector3f(h[0], h[1], h[2]))), new Vector3f(-0.3f, -0.95f, 0f),
+                new Vector3f(0.2f, -1f, 0.3f));
     }
 
     // ------------------------------------------------------------------ what other code asks

@@ -853,7 +853,7 @@ DOUBLE_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 20.0, -10.
                         reload={'mag_out': (14, -0.04), 'mag_in': (14, -0.04), 'charge': (6, -0.02)},
                         irons=(0.0, 0.0, -7.5), irons_scale=0.85, handle_travel=0.0,
                         charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04),
-                        load_turn=(-6, -14, 4), load_push=(-0.10, 0.08, 0.10),
+                        load_turn=(-6, -14, 4), load_push=(-0.12, -0.02, -0.20),
                         bead=DB.frame_point(0, DB.BEAD_TOP, DB.BEAD_Z) - _DB_SIGHT, eye_rise=0.9,
                         wrist_grip=True, opens=True, open_axis=(1.0, 0.0, 0.0), open_angle=-DB.OPEN,
                         chamber_step=-DB.LOOSE_GAP * IN)
@@ -1437,7 +1437,7 @@ def double_points(gun, g):
     shift = g - gun.hand
     fp = DB.frame_point
     # the off hand cups the forend from below; to load, it brings each shell up behind the right chamber (the
-    # loose shell's place, home in it) and pushes it in, its fingers round the shell's back end
+    # loose shell's place, home in it) and pushes it in, the hand held under the shell so the shell shows above it
     support = fp(0, -1.0, (DB.FOREND[0] + DB.FOREND[1]) / 2) + shift + np.array([0, -0.8, 0])
     home = fp(*DB.LOOSE_SHELL) + shift
     return {
@@ -1445,7 +1445,7 @@ def double_points(gun, g):
         'support': support,
         'foregrip': support,
         'magTop': home,
-        'magHold': home + np.array([0, -0.9, 0.6]),
+        'magHold': home + np.array([-0.4, -3.2, 0.6]),
         'magCentre': home,
         'handle': support,
         'laser': kit.flash_tip(gun) + shift,      # no rail: nothing beams from it
