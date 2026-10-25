@@ -40,7 +40,8 @@ PICKS = {
 }
 
 
-def main():
+def build(picks_by_event, heading, script):
+    """Cuts and levels each event's picks, registers them in sounds.json and writes the CREDITS.md section."""
     manifest, raw = {}, {}
     for d in sys.argv[1].split(","):
         for sid, info in json.loads((Path(d) / "manifest.json").read_text()).items():
@@ -49,7 +50,7 @@ def main():
     ours_path = RES / "zomboidcraft/sounds.json"
     ours = json.loads(ours_path.read_text())
     used = {}
-    for event, (folder, peak, dist, picks) in PICKS.items():
+    for event, (folder, peak, dist, picks) in picks_by_event.items():
         out = sounds / folder
         out.mkdir(parents=True, exist_ok=True)
         for old in out.glob("*.ogg"):
@@ -72,16 +73,16 @@ def main():
             rows.append(f"| {', '.join(sorted(events))} | {title} ({info['pack']}) | {info['bundle']} | Sonniss royalty-free |")
         else:
             rows.append(f"| {', '.join(sorted(events))} | [{title}]({info['page']}) | {user} | CC0 1.0 |")
-    section = ("## Looting and item sounds\n\nCC0 (public domain) recordings from [Freesound](https://freesound.org) and "
+    section = (f"## {heading}\n\nCC0 (public domain) recordings from [Freesound](https://freesound.org) and "
                "royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, "
-               "cut, mixed to mono and levelled by tools/audio/build_loot_sounds.py.\n\n"
+               f"cut, mixed to mono and levelled by tools/audio/{script}.\n\n"
                "| Sound | Recording | By | Licence |\n|---|---|---|---|\n" + "\n".join(rows) + "\n")
     credits = ROOT / "CREDITS.md"
     text = credits.read_text()
-    text = re.sub(r"\n## Looting and item sounds\n.*?(?=\n## |\Z)", "", text, flags=re.S).rstrip("\n") + "\n\n" + section
+    text = re.sub(rf"\n## {heading}\n.*?(?=\n## |\Z)", "", text, flags=re.S).rstrip("\n") + "\n\n" + section
     credits.write_text(text)
-    print({e: len(p[3]) for e, p in PICKS.items()})
+    print({e: len(p[3]) for e, p in picks_by_event.items()})
 
 
 if __name__ == "__main__":
-    main()
+    build(PICKS, "Looting and item sounds", "build_loot_sounds.py")
