@@ -181,7 +181,7 @@ def paint(models, px=PX, eyes=()):
                             rgb = fx(f, rgb)
                     rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
-                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb), n=pbr.normal(f, rgb, lu, lv, M.PX))))
+                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb), n=pbr.normal(f, rgb, lu, lv, M.PX, bevel=0.12, tilt=0.6, rel=True))))
     finally:
         M.PX = old
     return patches
