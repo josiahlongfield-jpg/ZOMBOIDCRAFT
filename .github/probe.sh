@@ -9,6 +9,32 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== arms"
+sig net.minecraft.client.renderer.ItemInHandRenderer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A70 'void renderPlayerArm(' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A60 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|fload|ldc' | head -60
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A40 'void renderArmWithItem(' | head -45
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.player.AvatarRenderer 2>&1 | grep -A50 'private void renderHand(' | head -60
+sig net.minecraft.client.renderer.GameRenderer 'bob|Bob|renderItemInHand|ItemInHand'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B2 -A40 'void renderItemInHand(' | grep -E 'invoke|Method|getfield' | head -40
+sig net.minecraft.client.renderer.SubmitNodeCollector '.'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector 'submitModelPart|submitModel'
+sig net.minecraft.world.entity.player.PlayerSkin '.'
+sig net.minecraft.core.ClientAsset\$Texture '.'
+sig net.minecraft.client.renderer.entity.EntityRenderDispatcher 'Player|Avatar|getRenderer'
+sig net.minecraft.client.player.LocalPlayer 'Bob|bob'
+sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
+sig net.minecraft.core.particles.DustParticleOptions 'public'
+sig net.minecraft.world.level.block.LightBlock 'LEVEL|public static'
+sig com.mojang.blaze3d.platform.Window 'GuiScale|getWidth|getHeight'
+sig net.minecraft.client.multiplayer.ClientLevel 'setBlock|players\(|addParticle'
+classes 'rendertype/RenderTypes|renderer/RenderType\.class|rendertype/RenderType\.class'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entityTranslucent|entityCutout|entitySolid'
+sig net.minecraft.client.renderer.RenderType 'entityTranslucent|entityCutout'
+sig net.minecraft.client.model.geom.ModelPart 'resetPose|render|visible|xRot|public float'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.world.entity.HumanoidArm '.'
+
 echo "===== crosshair"
 sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement '.'
 sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements 'CROSSHAIR'
