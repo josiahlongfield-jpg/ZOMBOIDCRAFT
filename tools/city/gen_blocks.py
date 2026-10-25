@@ -295,7 +295,8 @@ final class CitySpecs extends CityBlocks.Specs {{
     }}
 }}
 """)
-    print(f"{len(blocks)} blocks, {len(used)} textures")
+    import heightmap_tags
+    print(f"{len(blocks)} blocks, {len(used)} textures, {heightmap_tags.write()} stop rain")
 
 
 if __name__ == "__main__":

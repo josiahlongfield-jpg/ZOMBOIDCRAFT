@@ -1,0 +1,222 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>body{margin:0;background:#000}canvas{display:block}</style></head>
+<body>
+<script>
+// County preview without dependencies: draws tools/city/mesh.py output with plain WebGL2 under the
+// mod's overcast daylight (sky light from above, a weak sun with soft shadows, haze).
+//   view.html?mesh=DIR&cam=x,y,z,lookx,looky,lookz[,fov]&w=1440&h=1080[&fog=0.006][&sun=0.35]
+const P = new URLSearchParams(location.search);
+const W = +(P.get('w') || 1440), H = +(P.get('h') || 1080);
+const DIR = P.get('mesh') || 'mesh';
+const cam = (P.get('cam') || '0,40,60,0,20,0,60').split(',').map(Number);
+const FOV = cam[6] || 60;
+const FOG = +(P.get('fog') || 0.0045);
+const SUN = +(P.get('sun') || 0.55);
+const SKY = [0.50, 0.53, 0.56], HAZE = [0.47, 0.50, 0.52];
+
+const cv = document.createElement('canvas');
+cv.width = W; cv.height = H;
+document.body.appendChild(cv);
+const gl = cv.getContext('webgl2', { antialias: true, preserveDrawingBuffer: true });
+const aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+
+// ---------------------------------------------------------------- maths
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const norm = (a) => { const l = Math.hypot(...a); return a.map((v) => v / l); };
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+function lookAt(eye, at) {
+  const f = norm(sub(at, eye)), s = norm(cross(f, [0, 1, 0])), u = cross(s, f);
+  return [s[0], u[0], -f[0], 0, s[1], u[1], -f[1], 0, s[2], u[2], -f[2], 0, -dot(s, eye), -dot(u, eye), dot(f, eye), 1];
+}
+function persp(fov, aspect, n, f) {
+  const t = 1 / Math.tan(fov * Math.PI / 360);
+  return [t / aspect, 0, 0, 0, 0, t, 0, 0, 0, 0, (f + n) / (n - f), -1, 0, 0, 2 * f * n / (n - f), 0];
+}
+function ortho(r, n, f) {
+  return [1 / r, 0, 0, 0, 0, 1 / r, 0, 0, 0, 0, -2 / (f - n), 0, 0, 0, -(f + n) / (f - n), 1];
+}
+function mul(a, b) {  // column-major a*b
+  const o = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) o[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
+  return o;
+}
+
+// ---------------------------------------------------------------- shaders
+function program(vs, fs) {
+  const p = gl.createProgram();
+  for (const [type, src] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, '#version 300 es\nprecision highp float;\n' + src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s));
+    gl.attachShader(p, s);
+  }
+  gl.bindAttribLocation(p, 0, 'pos'); gl.bindAttribLocation(p, 1, 'nrm');
+  gl.bindAttribLocation(p, 2, 'uv'); gl.bindAttribLocation(p, 3, 'ao');
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) console.error(gl.getProgramInfoLog(p));
+  return p;
+}
+const MAIN = program(`
+  in vec3 pos; in vec3 nrm; in vec2 uv; in vec4 ao;
+  uniform mat4 view, proj, sunMat;
+  out vec3 vW; out vec3 vN; out vec2 vUV; out float vAO; out vec4 vSun;
+  void main() {
+    vec3 w = pos / 16.0;
+    vW = w; vN = nrm; vUV = uv / 16.0; vAO = ao.r;
+    vSun = sunMat * vec4(w + nrm * 0.06, 1.0);
+    gl_Position = proj * view * vec4(w, 1.0);
+  }`, `
+  in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec4 vSun;
+  uniform sampler2D tex; uniform highp sampler2DShadow shadow;
+  uniform vec3 eye, sunDir, sky, haze; uniform float fogD, sunI, cutout;
+  out vec4 col;
+  void main() {
+    vec4 t = texture(tex, vUV);
+    if (t.a < cutout) discard;
+    vec3 n = normalize(vN);
+    if (!gl_FrontFacing) n = -n;
+    vec3 alb = pow(t.rgb, vec3(2.2));
+    // overcast: most light comes from the whole sky; sides get less, undersides bounce light
+    float skyL = mix(0.42, 1.0, n.y * 0.5 + 0.5);
+    vec3 p = vSun.xyz / vSun.w * 0.5 + 0.5;
+    float lit = 0.0;
+    for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++)
+      lit += texture(shadow, vec3(p.xy + vec2(i, j) / 4096.0 * 1.5, p.z - 0.0008));
+    lit /= 9.0;
+    if (p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0) lit = 1.0;
+    float sunL = max(dot(n, sunDir), 0.0) * lit * sunI;
+    vec3 light = vec3(0.80, 0.84, 0.88) * skyL * (0.55 + 0.45 * vAO) + vec3(1.0, 0.96, 0.88) * sunL * (0.6 + 0.4 * vAO);
+    vec3 c = alb * light * 1.15;
+    float d = length(vW - eye);
+    float f = 1.0 - exp(-pow(d * fogD, 2.0));
+    c = mix(c, pow(haze, vec3(2.2)), f);
+    col = vec4(pow(c, vec3(1.0 / 2.2)), 1.0);
+  }`);
+const DEPTH = program(`
+  in vec3 pos; in vec2 uv; uniform mat4 sunMat; out vec2 vUV;
+  void main() { vUV = uv / 16.0; gl_Position = sunMat * vec4(pos / 16.0, 1.0); }`, `
+  in vec2 vUV; uniform sampler2D tex; uniform float cutout; out vec4 col;
+  void main() { if (texture(tex, vUV).a < cutout) discard; col = vec4(1.0); }`);
+const SKYP = program(`
+  in vec3 pos; out vec2 v; void main() { v = pos.xy; gl_Position = vec4(pos.xy, 0.9999, 1.0); }`, `
+  in vec2 v; uniform vec3 sky, haze; out vec4 col;
+  void main() { col = vec4(mix(haze, sky * 0.9, smoothstep(-0.2, 1.0, v.y)), 1.0); }`);
+
+// ---------------------------------------------------------------- loading
+function loadTex(url) {
+  return new Promise((res) => {
+    const img = new Image();
+    img.onload = () => {
+      const t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
+      if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, 8);
+      res(t);
+    };
+    img.onerror = () => res(null);
+    img.src = url;
+  });
+}
+
+(async () => {
+  const index = await (await fetch(`${DIR}/mesh.json`)).json();
+  const parts = await Promise.all(index.textures.map(async (e) => {
+    const buf = await (await fetch(`${DIR}/${e.tex}.bin`)).arrayBuffer();
+    const V = e.verts, I = e.indices;
+    const vao = gl.createVertexArray();
+    gl.bindVertexArray(vao);
+    const vb = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vb);
+    gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(buf, 0, V * 18), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.SHORT, false, 0, 0);
+    gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 3, gl.BYTE, true, 4, V * 6);
+    gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2, 2, gl.SHORT, false, 0, V * 10);
+    gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3, 4, gl.UNSIGNED_BYTE, true, 0, V * 14);
+    const ib = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(buf, V * 18, I), gl.STATIC_DRAW);
+    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0 };
+  }));
+
+  const eye = cam.slice(0, 3), at = cam.slice(3, 6);
+  const view = lookAt(eye, at), proj = persp(FOV, W / H, 0.1, 3000);
+  // the sun: low and to one side, fixed to the scene; its shadow box follows the camera's view
+  const sunDir = norm([-0.45, 0.62, 0.55]);
+  const fwd = norm(sub(at, eye));
+  const centre = [eye[0] + fwd[0] * 90, eye[1] + fwd[1] * 40, eye[2] + fwd[2] * 90];
+  const sunEye = [centre[0] + sunDir[0] * 400, centre[1] + sunDir[1] * 400, centre[2] + sunDir[2] * 400];
+  const sunMat = mul(ortho(+(P.get('shadow') || 140), 1, 900), lookAt(sunEye, centre));
+
+  // shadow map
+  const S = 4096;
+  const depthTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, depthTex);
+  gl.texStorage2D(gl.TEXTURE_2D, 1, gl.DEPTH_COMPONENT24, S, S);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.COMPARE_REF_TO_TEXTURE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  const fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTex, 0);
+  gl.viewport(0, 0, S, S);
+  gl.enable(gl.DEPTH_TEST);
+  gl.clear(gl.DEPTH_BUFFER_BIT);
+  gl.useProgram(DEPTH);
+  gl.uniformMatrix4fv(gl.getUniformLocation(DEPTH, 'sunMat'), false, sunMat);
+  gl.activeTexture(gl.TEXTURE0);
+  for (const p of parts) {
+    if (!p.tex) continue;
+    gl.bindTexture(gl.TEXTURE_2D, p.tex);
+    gl.uniform1f(gl.getUniformLocation(DEPTH, 'cutout'), p.cutout);
+    gl.bindVertexArray(p.vao);
+    gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);
+  }
+
+  // sky
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, W, H);
+  gl.clearColor(...HAZE, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  const quad = gl.createVertexArray();
+  gl.bindVertexArray(quad);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+  gl.useProgram(SKYP);
+  gl.uniform3fv(gl.getUniformLocation(SKYP, 'sky'), SKY);
+  gl.uniform3fv(gl.getUniformLocation(SKYP, 'haze'), HAZE);
+  gl.depthMask(false);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.depthMask(true);
+
+  // scene
+  gl.useProgram(MAIN);
+  const u = (n) => gl.getUniformLocation(MAIN, n);
+  gl.uniformMatrix4fv(u('view'), false, view);
+  gl.uniformMatrix4fv(u('proj'), false, proj);
+  gl.uniformMatrix4fv(u('sunMat'), false, sunMat);
+  gl.uniform3fv(u('eye'), eye); gl.uniform3fv(u('sunDir'), sunDir);
+  gl.uniform3fv(u('sky'), SKY); gl.uniform3fv(u('haze'), HAZE);
+  gl.uniform1f(u('fogD'), FOG); gl.uniform1f(u('sunI'), SUN);
+  gl.uniform1i(u('tex'), 0); gl.uniform1i(u('shadow'), 1);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, depthTex);
+  gl.activeTexture(gl.TEXTURE0);
+  for (const p of parts) {
+    if (!p.tex) continue;
+    gl.bindTexture(gl.TEXTURE_2D, p.tex);
+    gl.uniform1f(u('cutout'), p.cutout);
+    gl.bindVertexArray(p.vao);
+    gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);
+  }
+  gl.finish();
+  window.DONE = true;
+})();
+</script>
+</body></html>

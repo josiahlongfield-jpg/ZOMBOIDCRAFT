@@ -5,7 +5,11 @@ Faces between solid blocks are dropped, coplanar runs of the same texture are me
 quads with a repeating texture, and corners get Minecraft-style ambient occlusion. Far from the
 camera, interiors are dropped and windows count as solid, like a distant-horizons LOD.
 
-    python3 tools/city/mesh.py DUMP TEX_DIR OUT_DIR [--near x,y,z ...] [--radius 110]
+    python3 tools/city/mesh.py DUMP TEX_DIR OUT_DIR [--near x,y,z ...] [--radius 110] [--extra SPECS]
+
+--extra adds block specs (tools/county/vanilla.py writes them for the vanilla blocks in a county
+dump); besides cube/boxes/cross/slab they may use the vanilla shapes stairs, fence, gate, wall,
+pane, trapdoor, log and flat.
 
 Output: OUT_DIR/mesh.json plus one <texture>.bin per texture holding, per vertex, int16 x,y,z in
 1/16 block, int8 normal (padded to 4), int16 u,v in texels and uint8 AO (padded to 4), then
@@ -72,6 +76,85 @@ def parse(name):
     return base, dict(kv.split("=") for kv in rest.split(","))
 
 
+VANILLA_SHAPES = {"slab", "stairs", "fence", "gate", "wall", "pane", "trapdoor", "trapdoor_open", "flat"}
+VANILLA_FACING = {"stairs", "gate", "trapdoor", "trapdoor_open"}
+# what each connecting shape joins up with, besides solid cubes
+CONNECTS = {"fence": ("fence", "gate"), "wall": ("wall",), "pane": ("pane",)}
+
+
+def turn_box(box, rot):
+    """A box turned by quarter turns clockwise seen from above (north -> east)."""
+    x0, y0, z0, x1, y1, z1 = box
+    for _ in range(rot):
+        x0, z0, x1, z1 = 16 - z1, x0, 16 - z0, x1
+    return [x0, y0, z0, x1, y1, z1]
+
+
+def vanilla_boxes(model, props, spec):
+    """Boxes (in 16ths, before the block's facing turn) for Minecraft's own block shapes."""
+    if model == "slab":
+        return [[0, 8, 0, 16, 16, 16]] if props.get("type") == "top" else [[0, 0, 0, 16, 8, 16]]
+    if model == "flat":
+        return [[0, 0, 0, 16, spec.get("height", 1), 16]]
+    if model == "stairs":
+        boxes = [[0, 0, 0, 16, 8, 16], [0, 8, 0, 16, 16, 8]]
+        if props.get("half") == "top":
+            boxes = [[b[0], 16 - b[4], b[2], b[3], 16 - b[1], b[5]] for b in boxes]
+        return boxes
+    if model == "trapdoor":
+        if props.get("open") == "true":
+            return [[0, 0, 13, 16, 16, 16]]
+        return [[0, 13, 0, 16, 16, 16]] if props.get("half") == "top" else [[0, 0, 0, 16, 3, 16]]
+    if model == "trapdoor_open":
+        return [[0, 0, 15, 16, 16, 16]]
+    if model == "gate":
+        return [[0, 5, 7, 2, 16, 9], [14, 5, 7, 16, 16, 9], [2, 6, 7, 14, 9, 9], [2, 12, 7, 14, 15, 9]]
+    post, arms = {
+        "fence": ([6, 0, 6, 10, 16, 10], [[7, 12, 0, 9, 15, 6], [7, 6, 0, 9, 9, 6]]),
+        "wall": ([4, 0, 4, 12, 16, 12], [[5, 0, 0, 11, 14, 4]]),
+        "pane": ([7, 0, 7, 9, 16, 9], [[7, 0, 0, 9, 16, 7]]),
+    }[model]
+    boxes = [post]
+    for r, side in enumerate(FACING):
+        if props.get(side) == "true":
+            boxes += [turn_box(a, r) for a in arms]
+    return boxes
+
+
+def connect(names, vox, blocks):
+    """Fences, walls and panes join their neighbours: gives each its north/east/south/west props
+    (new palette entries) the way the game's post-processing would."""
+    kind = []
+    for name in names:
+        spec = blocks.get(parse(name)[0], {}) if name != "air" else {}
+        m = spec.get("model", "cube")
+        solid = m in ("cube", "log") and spec.get("height", 16) == 16 and not parse(name)[0].endswith(("_leaves", "water")) \
+            and not parse(name)[0].startswith(("window", "glass"))
+        kind.append("solid" if solid else m)
+    kind = np.array(kind)
+    names = list(names)
+    for i in range(len(kind)):
+        if kind[i] not in CONNECTS:
+            continue
+        ys, zs, xs = np.nonzero(vox == i)
+        if not len(ys):
+            continue
+        ok = np.isin(kind, CONNECTS[kind[i]] + ("solid",))
+        bits = np.zeros(len(ys), int)
+        for b, (dx, dz) in enumerate(((0, -1), (1, 0), (0, 1), (-1, 0))):
+            nx, nz = np.clip(xs + dx, 0, vox.shape[2] - 1), np.clip(zs + dz, 0, vox.shape[1] - 1)
+            bits |= ok[vox[ys, nz, nx]].astype(int) << b
+        base, props = parse(names[i])
+        for v in np.unique(bits):
+            p = dict(props)
+            for b, side in enumerate(FACING):
+                p[side] = "true" if v >> b & 1 else "false"
+            names.append(base + "[" + ",".join(f"{k}={x}" for k, x in p.items()) + "]")
+            m = bits == v
+            vox[ys[m], zs[m], xs[m]] = len(names) - 1
+    return names
+
+
 class Palette:
     def __init__(self, names, blocks, tex_dir):
         self.tex_names = []
@@ -95,14 +178,28 @@ class Palette:
                 self.models[i] = self.door(spec, props)
                 continue
             rot = 0
-            if spec.get("rotate") == "facing":
+            if spec.get("rotate") == "facing" or (spec.get("model") in VANILLA_FACING and "facing" in props):
                 rot = FACING.index(props.get("facing", "north"))
             elif spec.get("rotate") == "axis":
                 rot = 1 if props.get("axis", "z") == "x" else 0
             model = spec.get("model", "cube")
             self.pane[i] = base.startswith(("window", "boarded_window", "shutter"))
-            if model == "slab":
-                model, spec = "boxes", {"boxes": [[0, 0, 0, 16, 8, 16, spec["tex"]]], "tex": spec["tex"]}
+            if model == "slab" and props.get("type") == "double":
+                model = "cube"
+            elif model in VANILLA_SHAPES:
+                tex = spec["tex"]
+                spec = {"boxes": [b + [tex] for b in vanilla_boxes(model, props, spec)], "tex": tex}
+                if model == "flat" or (model == "trapdoor" and props.get("open") != "true"):
+                    rot = 0
+                model = "boxes"
+            if model == "log":
+                axis = props.get("axis", "y")
+                ends = {"y": (2, 3), "x": (0, 1), "z": (4, 5)}[axis]
+                self.cube[i] = True
+                for d in range(6):
+                    self.face_tex[i, d] = self.tex(spec["tex"]["top" if d in ends else "side"])
+                self.opaque[i] = True
+                continue
             if model == "cube":
                 self.cube[i] = True
                 self.height[i] = spec.get("height", 16)
@@ -257,12 +354,16 @@ def main():
     ap.add_argument("out_dir", type=Path)
     ap.add_argument("--near", action="append", default=[])
     ap.add_argument("--radius", type=float, default=110)
+    ap.add_argument("--extra", action="append", default=[])
     a = ap.parse_args()
     meta = json.load(open(a.dump + ".json"))
     sx, H, sz = meta["size"]
     ox, _, oz = meta["origin"]
     vox = np.fromfile(a.dump + ".vox", dtype="<u2").reshape(H, sz, sx)
     blocks = json.load(open(HERE / "blocks.json"))["blocks"]
+    for extra in a.extra:
+        blocks.update(json.load(open(extra))["blocks"])
+    meta["palette"] = connect(meta["palette"], vox, blocks)
     pal = Palette(meta["palette"], blocks, a.tex_dir)
 
     # near: within the radius of any camera; far: LOD (no interiors, windows solid)
@@ -395,7 +496,7 @@ def main():
         keep = near_col[zs, xs]
         for x, y, z in zip(xs[keep], ys[keep], zs[keep]):
             lights.append([int(x + ox), int(y), int(z + oz), base])
-    json.dump({"textures": index, "lamps": meta["lamps"], "lights": lights}, open(a.out_dir / "mesh.json", "w"))
+    json.dump({"textures": index, "lamps": meta.get("lamps", []), "lights": lights}, open(a.out_dir / "mesh.json", "w"))
 
 
 if __name__ == "__main__":

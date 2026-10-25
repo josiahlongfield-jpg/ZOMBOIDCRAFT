@@ -7,11 +7,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DoubleHighBlockItem;
@@ -36,6 +39,12 @@ public final class CityBlocks {
     private static final Map<String, Block> BLOCKS = new LinkedHashMap<>();
     private static final Map<String, BlockState> CACHE = new HashMap<>();
     private static final List<Block> FITTINGS = new ArrayList<>();
+    /**
+     * Since 26.3 Minecraft asks this tag, not the block's shape, whether a block stops rain (the
+     * MOTION_BLOCKING heightmaps) and falling things; a solid block left out lets rain through.
+     */
+    private static final TagKey<Block> BLOCKS_MOTION = TagKey.create(Registries.BLOCK,
+            Identifier.fromNamespaceAndPath("minecraft", "blocks_motion"));
 
     /** The table {@link CitySpecs} fills in; one call to {@link #s} per block. */
     abstract static class Specs {
@@ -102,6 +111,33 @@ public final class CityBlocks {
                 .icon(() -> new ItemStack(BLOCKS.get("brick_red_moss")))
                 .displayItems((parameters, output) -> BLOCKS.values().forEach(output::accept))
                 .build());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> checkRainCover());
+    }
+
+    /**
+     * Warns about mod blocks the old shape rule calls solid that aren't in the blocks_motion
+     * tag (tools/city/heightmap_tags.py writes it for the city blocks): rain falls through them.
+     */
+    private static void checkRainCover() {
+        List<String> leaky = new ArrayList<>();
+        int covered = 0;
+        for (Block block : BuiltInRegistries.BLOCK) {
+            Identifier id = BuiltInRegistries.BLOCK.getKey(block);
+            if (!id.getNamespace().equals(ZomboidCraft.MOD_ID) || id.getPath().equals("car_hull")) {
+                continue;
+            }
+            BlockState state = block.defaultBlockState();
+            if (state.is(BLOCKS_MOTION)) {
+                covered++;
+            } else if (state.isSolid()) {
+                leaky.add(id.getPath());
+            }
+        }
+        if (leaky.isEmpty()) {
+            ZomboidCraft.LOGGER.info("Rain cover: {} ZomboidCraft blocks stop rain", covered);
+        } else {
+            ZomboidCraft.LOGGER.warn("Rain falls through these solid blocks (run tools/city/heightmap_tags.py): {}", leaky);
+        }
     }
 
     /** The state for a generator name like "window[axis=x]", or null when it isn't a city block. */
