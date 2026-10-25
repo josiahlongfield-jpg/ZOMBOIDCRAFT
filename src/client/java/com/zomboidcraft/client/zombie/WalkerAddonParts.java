@@ -57,8 +57,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("police_22", CubeListBuilder.create().texOffs(6, 19).addBox(3f, -1f, -1.25f, 0.25f, 2.5f, 2.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("police_23", CubeListBuilder.create().texOffs(12, 19).addBox(-2.6f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("police_24", CubeListBuilder.create().texOffs(20, 19).addBox(1.85f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("police_25", CubeListBuilder.create().texOffs(28, 19).addBox(-2.35f, 9f, -3f, 4.5f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("police_26", CubeListBuilder.create().texOffs(48, 19).addBox(-2.15f, 9f, -3f, 4.5f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("police_25", CubeListBuilder.create().texOffs(28, 19).addBox(-2.35f, 3f, -3f, 4.5f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("police_26", CubeListBuilder.create().texOffs(48, 19).addBox(-2.15f, 3f, -3f, 4.5f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("soldier_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("soldier_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.75f, -8.75f, -4.75f, 9.5f, 3.5f, 9.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("soldier_2", CubeListBuilder.create().texOffs(50, 0).addBox(-5f, -5.5f, -5f, 10f, 0.75f, 10f), PartPose.offset(0f, 0f, 0f));
@@ -79,8 +79,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("soldier_17", CubeListBuilder.create().texOffs(113, 16).addBox(3f, -0.75f, -1f, 0.25f, 2.25f, 2f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("soldier_18", CubeListBuilder.create().texOffs(118, 16).addBox(-2.6f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("soldier_19", CubeListBuilder.create().texOffs(0, 23).addBox(1.85f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("soldier_20", CubeListBuilder.create().texOffs(8, 23).addBox(-2.35f, 9f, -3f, 4.75f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("soldier_21", CubeListBuilder.create().texOffs(28, 23).addBox(-2.4f, 9f, -3f, 4.75f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("soldier_20", CubeListBuilder.create().texOffs(8, 23).addBox(-2.35f, 3f, -3f, 4.75f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("soldier_21", CubeListBuilder.create().texOffs(28, 23).addBox(-2.4f, 3f, -3f, 4.75f, 3f, 5.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("doctor_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("body").addOrReplaceChild("doctor_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.25f, -0.25f, -2.25f, 8.5f, 12.25f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("body").addOrReplaceChild("doctor_2", CubeListBuilder.create().texOffs(38, 0).addBox(-2.25f, 0f, -0.25f, 4.25f, 3.5f, 0.5f), PartPose.offsetAndRotation(-2f, 12f, -2f, 0.1047f, 0.0000f, 0.0000f));
@@ -97,8 +97,8 @@ public final class WalkerAddonParts {
         bones.get("body").addOrReplaceChild("doctor_13", CubeListBuilder.create().texOffs(0, 17).addBox(1.5f, 8.75f, -2.5f, 2.25f, 2f, 0.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_arm").addOrReplaceChild("doctor_14", CubeListBuilder.create().texOffs(5, 17).addBox(-3.25f, 2.5f, -2.25f, 4.5f, 1.25f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_arm").addOrReplaceChild("doctor_15", CubeListBuilder.create().texOffs(23, 17).addBox(-1.25f, 2.5f, -2.25f, 4.5f, 1.25f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("doctor_16", CubeListBuilder.create().texOffs(41, 17).addBox(-2.1f, 9.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("doctor_17", CubeListBuilder.create().texOffs(60, 17).addBox(-2.15f, 9.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("doctor_16", CubeListBuilder.create().texOffs(41, 17).addBox(-2.1f, 3.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("doctor_17", CubeListBuilder.create().texOffs(60, 17).addBox(-2.15f, 3.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("hoodie_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("hoodie_1", CubeListBuilder.create().texOffs(12, 0).addBox(-5f, -9f, -5.25f, 10f, 1f, 10.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("hoodie_2", CubeListBuilder.create().texOffs(53, 0).addBox(-5f, -8f, 4.25f, 10f, 9f, 1f), PartPose.offset(0f, 0f, 0f));
@@ -118,8 +118,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("hoodie_16", CubeListBuilder.create().texOffs(95, 15).addBox(-1.5f, 2.25f, -2.5f, 5f, 1.5f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("hoodie_17", CubeListBuilder.create().texOffs(115, 15).addBox(-2.6f, 1.25f, -1.5f, 0.75f, 3.25f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("hoodie_18", CubeListBuilder.create().texOffs(0, 24).addBox(1.85f, 1.25f, -1.5f, 0.75f, 3.25f, 3f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("hoodie_19", CubeListBuilder.create().texOffs(8, 24).addBox(-2.35f, 9.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("hoodie_20", CubeListBuilder.create().texOffs(28, 24).addBox(-2.15f, 9.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("hoodie_19", CubeListBuilder.create().texOffs(8, 24).addBox(-2.35f, 3.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("hoodie_20", CubeListBuilder.create().texOffs(28, 24).addBox(-2.15f, 3.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("farmer_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("farmer_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.25f, -8.75f, -4.25f, 8.5f, 3.5f, 8.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("farmer_2", CubeListBuilder.create().texOffs(46, 0).addBox(-3.5f, -10f, -3.5f, 7f, 1.25f, 7f), PartPose.offset(0f, 0f, 0f));
@@ -133,8 +133,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("farmer_10", CubeListBuilder.create().texOffs(20, 12).addBox(-1.5f, 2.25f, -2.5f, 5f, 1.25f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("farmer_11", CubeListBuilder.create().texOffs(40, 12).addBox(-2.6f, 1f, -1.5f, 0.75f, 3.25f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("farmer_12", CubeListBuilder.create().texOffs(48, 12).addBox(1.85f, 1f, -1.5f, 0.75f, 3.25f, 3f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("farmer_13", CubeListBuilder.create().texOffs(56, 12).addBox(-2.35f, 9.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("farmer_14", CubeListBuilder.create().texOffs(76, 12).addBox(-2.15f, 9.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("farmer_13", CubeListBuilder.create().texOffs(56, 12).addBox(-2.35f, 3.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("farmer_14", CubeListBuilder.create().texOffs(76, 12).addBox(-2.15f, 3.25f, -3f, 4.5f, 2.75f, 5.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("firefighter_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("firefighter_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.5f, -9f, -4.5f, 9f, 3.75f, 9f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("firefighter_2", CubeListBuilder.create().texOffs(48, 0).addBox(-0.75f, -9.75f, -4f, 1.5f, 0.75f, 8.5f), PartPose.offset(0f, 0f, 0f));
@@ -146,16 +146,16 @@ public final class WalkerAddonParts {
         bones.get("body").addOrReplaceChild("firefighter_8", CubeListBuilder.create().texOffs(54, 18).addBox(-0.5f, 0f, -2.75f, 1f, 11f, 0.25f), PartPose.offset(0f, 0f, 0f));
         bones.get("body").addOrReplaceChild("firefighter_9", CubeListBuilder.create().texOffs(57, 18).addBox(-4.75f, 7.75f, -2.75f, 9.5f, 1.25f, 5.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("body").addOrReplaceChild("firefighter_10", CubeListBuilder.create().texOffs(87, 18).addBox(-1f, 7.5f, -3f, 2f, 1.75f, 0.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_arm").addOrReplaceChild("firefighter_11", CubeListBuilder.create().texOffs(92, 18).addBox(-3.25f, 3f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_arm").addOrReplaceChild("firefighter_12", CubeListBuilder.create().texOffs(110, 18).addBox(-1.25f, 3f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_arm").addOrReplaceChild("firefighter_13", CubeListBuilder.create().texOffs(0, 30).addBox(-3.25f, 8f, -2.25f, 4.5f, 2f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_arm").addOrReplaceChild("firefighter_14", CubeListBuilder.create().texOffs(18, 30).addBox(-1.25f, 8f, -2.25f, 4.5f, 2f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_forearm").addOrReplaceChild("firefighter_11", CubeListBuilder.create().texOffs(92, 18).addBox(-2.25f, 0f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_forearm").addOrReplaceChild("firefighter_12", CubeListBuilder.create().texOffs(110, 18).addBox(-2.25f, 0f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_forearm").addOrReplaceChild("firefighter_13", CubeListBuilder.create().texOffs(0, 30).addBox(-2.25f, 5f, -2.25f, 4.5f, 2f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_forearm").addOrReplaceChild("firefighter_14", CubeListBuilder.create().texOffs(18, 30).addBox(-2.25f, 5f, -2.25f, 4.5f, 2f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("firefighter_15", CubeListBuilder.create().texOffs(36, 30).addBox(-2.6f, 1f, -1.5f, 0.75f, 3f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("firefighter_16", CubeListBuilder.create().texOffs(44, 30).addBox(1.85f, 1f, -1.5f, 0.75f, 3f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("firefighter_17", CubeListBuilder.create().texOffs(52, 30).addBox(-2.35f, 5.25f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("firefighter_18", CubeListBuilder.create().texOffs(70, 30).addBox(-2.15f, 5.25f, -2.25f, 4.5f, 1.5f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("firefighter_19", CubeListBuilder.create().texOffs(88, 30).addBox(-2.6f, 8f, -3.25f, 5f, 4f, 5.75f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("firefighter_20", CubeListBuilder.create().texOffs(0, 40).addBox(-2.4f, 8f, -3.25f, 5f, 4f, 5.75f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("firefighter_19", CubeListBuilder.create().texOffs(88, 30).addBox(-2.6f, 2f, -3.25f, 5f, 4f, 5.75f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("firefighter_20", CubeListBuilder.create().texOffs(0, 40).addBox(-2.4f, 2f, -3.25f, 5f, 4f, 5.75f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("construction_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("construction_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.5f, -9.25f, -4.5f, 9f, 3.5f, 9f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("construction_2", CubeListBuilder.create().texOffs(48, 0).addBox(-0.75f, -9.75f, -4.25f, 1.5f, 0.5f, 8.5f), PartPose.offset(0f, 0f, 0f));
@@ -166,8 +166,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("construction_7", CubeListBuilder.create().texOffs(0, 16).addBox(-1.25f, 2.25f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("construction_8", CubeListBuilder.create().texOffs(18, 16).addBox(-2.6f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("construction_9", CubeListBuilder.create().texOffs(26, 16).addBox(1.85f, 1f, -1.5f, 0.75f, 3.5f, 3f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("construction_10", CubeListBuilder.create().texOffs(34, 16).addBox(-2.6f, 9f, -3.5f, 5f, 3f, 6f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("construction_11", CubeListBuilder.create().texOffs(56, 16).addBox(-2.4f, 9f, -3.5f, 5f, 3f, 6f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("construction_10", CubeListBuilder.create().texOffs(34, 16).addBox(-2.6f, 3f, -3.5f, 5f, 3f, 6f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("construction_11", CubeListBuilder.create().texOffs(56, 16).addBox(-2.4f, 3f, -3.5f, 5f, 3f, 6f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("civilian_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("body").addOrReplaceChild("civilian_1", CubeListBuilder.create().texOffs(12, 0).addBox(-2.25f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(-0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, -0.3142f));
         bones.get("body").addOrReplaceChild("civilian_2", CubeListBuilder.create().texOffs(18, 0).addBox(0f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, 0.3142f));
@@ -181,8 +181,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("civilian_10", CubeListBuilder.create().texOffs(89, 0).addBox(-1.25f, 2.25f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("civilian_11", CubeListBuilder.create().texOffs(107, 0).addBox(-2.6f, 2f, -1.25f, 0.75f, 3f, 2.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("civilian_12", CubeListBuilder.create().texOffs(114, 0).addBox(1.85f, 2f, -1.25f, 0.75f, 3f, 2.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("civilian_13", CubeListBuilder.create().texOffs(0, 6).addBox(-2.35f, 9.25f, -2.75f, 4.5f, 2.75f, 5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("civilian_14", CubeListBuilder.create().texOffs(19, 6).addBox(-2.15f, 9.25f, -2.75f, 4.5f, 2.75f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("civilian_13", CubeListBuilder.create().texOffs(0, 6).addBox(-2.35f, 3.25f, -2.75f, 4.5f, 2.75f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("civilian_14", CubeListBuilder.create().texOffs(19, 6).addBox(-2.15f, 3.25f, -2.75f, 4.5f, 2.75f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("office_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("body").addOrReplaceChild("office_1", CubeListBuilder.create().texOffs(12, 0).addBox(-2.25f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(-0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, -0.1396f));
         bones.get("body").addOrReplaceChild("office_2", CubeListBuilder.create().texOffs(18, 0).addBox(0f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, 0.1396f));
@@ -195,8 +195,8 @@ public final class WalkerAddonParts {
         bones.get("left_arm").addOrReplaceChild("office_9", CubeListBuilder.create().texOffs(82, 0).addBox(-1.25f, 2.25f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_leg").addOrReplaceChild("office_10", CubeListBuilder.create().texOffs(100, 0).addBox(-2.6f, 1f, -1.25f, 0.75f, 2.5f, 2.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_leg").addOrReplaceChild("office_11", CubeListBuilder.create().texOffs(107, 0).addBox(1.85f, 1f, -1.25f, 0.75f, 2.5f, 2.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("office_12", CubeListBuilder.create().texOffs(0, 8).addBox(-2.1f, 9.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("office_13", CubeListBuilder.create().texOffs(19, 8).addBox(-2.15f, 9.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("office_12", CubeListBuilder.create().texOffs(0, 8).addBox(-2.1f, 3.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("office_13", CubeListBuilder.create().texOffs(19, 8).addBox(-2.15f, 3.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("prisoner_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("body").addOrReplaceChild("prisoner_1", CubeListBuilder.create().texOffs(12, 0).addBox(-2.25f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(-0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, -0.2443f));
         bones.get("body").addOrReplaceChild("prisoner_2", CubeListBuilder.create().texOffs(18, 0).addBox(0f, 0f, 0f, 2.25f, 1.5f, 0.5f), PartPose.offsetAndRotation(0.5f, -0.25f, -2.5f, 0.0000f, 0.0000f, 0.2443f));
@@ -204,10 +204,10 @@ public final class WalkerAddonParts {
         bones.get("body").addOrReplaceChild("prisoner_4", CubeListBuilder.create().texOffs(30, 0).addBox(-4.25f, 11.25f, -2.25f, 8.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_arm").addOrReplaceChild("prisoner_5", CubeListBuilder.create().texOffs(56, 0).addBox(-3.25f, 2.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_arm").addOrReplaceChild("prisoner_6", CubeListBuilder.create().texOffs(74, 0).addBox(-1.25f, 2.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("prisoner_7", CubeListBuilder.create().texOffs(92, 0).addBox(-2.35f, 8.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("prisoner_8", CubeListBuilder.create().texOffs(110, 0).addBox(-2.15f, 8.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("prisoner_9", CubeListBuilder.create().texOffs(0, 6).addBox(-2.1f, 9.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("prisoner_10", CubeListBuilder.create().texOffs(19, 6).addBox(-2.15f, 9.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("prisoner_7", CubeListBuilder.create().texOffs(92, 0).addBox(-2.35f, 2.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("prisoner_8", CubeListBuilder.create().texOffs(110, 0).addBox(-2.15f, 2.5f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("prisoner_9", CubeListBuilder.create().texOffs(0, 6).addBox(-2.1f, 3.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("prisoner_10", CubeListBuilder.create().texOffs(19, 6).addBox(-2.15f, 3.5f, -2.75f, 4.25f, 2.5f, 5f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("nurse_0", CubeListBuilder.create().texOffs(0, 0).addBox(-2.25f, 0f, -0.5f, 4.5f, 1.25f, 1.25f), PartPose.offsetAndRotation(0f, -1.25f, -4f, 0.3142f, 0.0000f, 0.0000f));
         bones.get("head").addOrReplaceChild("nurse_1", CubeListBuilder.create().texOffs(12, 0).addBox(-4.5f, -8.75f, -4.5f, 9f, 3.25f, 9f), PartPose.offset(0f, 0f, 0f));
         bones.get("head").addOrReplaceChild("nurse_2", CubeListBuilder.create().texOffs(48, 0).addBox(-4.75f, -6f, -4.75f, 9.5f, 0.75f, 9.5f), PartPose.offset(0f, 0f, 0f));
@@ -215,8 +215,8 @@ public final class WalkerAddonParts {
         bones.get("body").addOrReplaceChild("nurse_4", CubeListBuilder.create().texOffs(90, 0).addBox(-4.25f, 11.25f, -2.25f, 8.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("right_arm").addOrReplaceChild("nurse_5", CubeListBuilder.create().texOffs(0, 13).addBox(-3.25f, 2.25f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
         bones.get("left_arm").addOrReplaceChild("nurse_6", CubeListBuilder.create().texOffs(18, 13).addBox(-1.25f, 2.25f, -2.25f, 4.5f, 1f, 4.5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("right_leg").addOrReplaceChild("nurse_7", CubeListBuilder.create().texOffs(36, 13).addBox(-2.1f, 9.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
-        bones.get("left_leg").addOrReplaceChild("nurse_8", CubeListBuilder.create().texOffs(55, 13).addBox(-2.15f, 9.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("right_shin").addOrReplaceChild("nurse_7", CubeListBuilder.create().texOffs(36, 13).addBox(-2.1f, 3.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
+        bones.get("left_shin").addOrReplaceChild("nurse_8", CubeListBuilder.create().texOffs(55, 13).addBox(-2.15f, 3.75f, -2.75f, 4.25f, 2.25f, 5f), PartPose.offset(0f, 0f, 0f));
     }
 
     /** Which bone each piece hangs off, so pieces on a lost arm can be hidden. */
@@ -246,8 +246,8 @@ public final class WalkerAddonParts {
             Map.entry("police_22", "left_arm"),
             Map.entry("police_23", "right_leg"),
             Map.entry("police_24", "left_leg"),
-            Map.entry("police_25", "right_leg"),
-            Map.entry("police_26", "left_leg"),
+            Map.entry("police_25", "right_shin"),
+            Map.entry("police_26", "left_shin"),
             Map.entry("soldier_0", "head"),
             Map.entry("soldier_1", "head"),
             Map.entry("soldier_2", "head"),
@@ -268,8 +268,8 @@ public final class WalkerAddonParts {
             Map.entry("soldier_17", "left_arm"),
             Map.entry("soldier_18", "right_leg"),
             Map.entry("soldier_19", "left_leg"),
-            Map.entry("soldier_20", "right_leg"),
-            Map.entry("soldier_21", "left_leg"),
+            Map.entry("soldier_20", "right_shin"),
+            Map.entry("soldier_21", "left_shin"),
             Map.entry("doctor_0", "head"),
             Map.entry("doctor_1", "body"),
             Map.entry("doctor_2", "body"),
@@ -286,8 +286,8 @@ public final class WalkerAddonParts {
             Map.entry("doctor_13", "body"),
             Map.entry("doctor_14", "right_arm"),
             Map.entry("doctor_15", "left_arm"),
-            Map.entry("doctor_16", "right_leg"),
-            Map.entry("doctor_17", "left_leg"),
+            Map.entry("doctor_16", "right_shin"),
+            Map.entry("doctor_17", "left_shin"),
             Map.entry("hoodie_0", "head"),
             Map.entry("hoodie_1", "head"),
             Map.entry("hoodie_2", "head"),
@@ -307,8 +307,8 @@ public final class WalkerAddonParts {
             Map.entry("hoodie_16", "left_arm"),
             Map.entry("hoodie_17", "right_leg"),
             Map.entry("hoodie_18", "left_leg"),
-            Map.entry("hoodie_19", "right_leg"),
-            Map.entry("hoodie_20", "left_leg"),
+            Map.entry("hoodie_19", "right_shin"),
+            Map.entry("hoodie_20", "left_shin"),
             Map.entry("farmer_0", "head"),
             Map.entry("farmer_1", "head"),
             Map.entry("farmer_2", "head"),
@@ -322,8 +322,8 @@ public final class WalkerAddonParts {
             Map.entry("farmer_10", "left_arm"),
             Map.entry("farmer_11", "right_leg"),
             Map.entry("farmer_12", "left_leg"),
-            Map.entry("farmer_13", "right_leg"),
-            Map.entry("farmer_14", "left_leg"),
+            Map.entry("farmer_13", "right_shin"),
+            Map.entry("farmer_14", "left_shin"),
             Map.entry("firefighter_0", "head"),
             Map.entry("firefighter_1", "head"),
             Map.entry("firefighter_2", "head"),
@@ -335,16 +335,16 @@ public final class WalkerAddonParts {
             Map.entry("firefighter_8", "body"),
             Map.entry("firefighter_9", "body"),
             Map.entry("firefighter_10", "body"),
-            Map.entry("firefighter_11", "right_arm"),
-            Map.entry("firefighter_12", "left_arm"),
-            Map.entry("firefighter_13", "right_arm"),
-            Map.entry("firefighter_14", "left_arm"),
+            Map.entry("firefighter_11", "right_forearm"),
+            Map.entry("firefighter_12", "left_forearm"),
+            Map.entry("firefighter_13", "right_forearm"),
+            Map.entry("firefighter_14", "left_forearm"),
             Map.entry("firefighter_15", "right_leg"),
             Map.entry("firefighter_16", "left_leg"),
             Map.entry("firefighter_17", "right_leg"),
             Map.entry("firefighter_18", "left_leg"),
-            Map.entry("firefighter_19", "right_leg"),
-            Map.entry("firefighter_20", "left_leg"),
+            Map.entry("firefighter_19", "right_shin"),
+            Map.entry("firefighter_20", "left_shin"),
             Map.entry("construction_0", "head"),
             Map.entry("construction_1", "head"),
             Map.entry("construction_2", "head"),
@@ -355,8 +355,8 @@ public final class WalkerAddonParts {
             Map.entry("construction_7", "left_arm"),
             Map.entry("construction_8", "right_leg"),
             Map.entry("construction_9", "left_leg"),
-            Map.entry("construction_10", "right_leg"),
-            Map.entry("construction_11", "left_leg"),
+            Map.entry("construction_10", "right_shin"),
+            Map.entry("construction_11", "left_shin"),
             Map.entry("civilian_0", "head"),
             Map.entry("civilian_1", "body"),
             Map.entry("civilian_2", "body"),
@@ -370,8 +370,8 @@ public final class WalkerAddonParts {
             Map.entry("civilian_10", "left_arm"),
             Map.entry("civilian_11", "right_leg"),
             Map.entry("civilian_12", "left_leg"),
-            Map.entry("civilian_13", "right_leg"),
-            Map.entry("civilian_14", "left_leg"),
+            Map.entry("civilian_13", "right_shin"),
+            Map.entry("civilian_14", "left_shin"),
             Map.entry("office_0", "head"),
             Map.entry("office_1", "body"),
             Map.entry("office_2", "body"),
@@ -384,8 +384,8 @@ public final class WalkerAddonParts {
             Map.entry("office_9", "left_arm"),
             Map.entry("office_10", "right_leg"),
             Map.entry("office_11", "left_leg"),
-            Map.entry("office_12", "right_leg"),
-            Map.entry("office_13", "left_leg"),
+            Map.entry("office_12", "right_shin"),
+            Map.entry("office_13", "left_shin"),
             Map.entry("prisoner_0", "head"),
             Map.entry("prisoner_1", "body"),
             Map.entry("prisoner_2", "body"),
@@ -393,10 +393,10 @@ public final class WalkerAddonParts {
             Map.entry("prisoner_4", "body"),
             Map.entry("prisoner_5", "right_arm"),
             Map.entry("prisoner_6", "left_arm"),
-            Map.entry("prisoner_7", "right_leg"),
-            Map.entry("prisoner_8", "left_leg"),
-            Map.entry("prisoner_9", "right_leg"),
-            Map.entry("prisoner_10", "left_leg"),
+            Map.entry("prisoner_7", "right_shin"),
+            Map.entry("prisoner_8", "left_shin"),
+            Map.entry("prisoner_9", "right_shin"),
+            Map.entry("prisoner_10", "left_shin"),
             Map.entry("nurse_0", "head"),
             Map.entry("nurse_1", "head"),
             Map.entry("nurse_2", "head"),
@@ -404,6 +404,6 @@ public final class WalkerAddonParts {
             Map.entry("nurse_4", "body"),
             Map.entry("nurse_5", "right_arm"),
             Map.entry("nurse_6", "left_arm"),
-            Map.entry("nurse_7", "right_leg"),
-            Map.entry("nurse_8", "left_leg"));
+            Map.entry("nurse_7", "right_shin"),
+            Map.entry("nurse_8", "left_shin"));
 }
