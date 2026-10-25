@@ -1025,6 +1025,8 @@ import signs  # noqa: E402
 EXTRA.update(signs.textures())
 import interiors  # noqa: E402
 EXTRA.update(interiors.textures())
+import county_textures  # noqa: E402
+county_textures.register(sys.modules[__name__])
 
 
 def build(name):

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_fuel_2": "zomboidcraft:block/city/sign_fuel_2",
+    "particle": "zomboidcraft:block/city/sign_fuel_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_fuel_2",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_fuel_2"
+        },
+        "east": {
+          "texture": "#sign_fuel_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_fuel_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_fuel_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_fuel_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

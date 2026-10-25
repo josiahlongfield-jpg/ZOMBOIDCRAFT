@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mailbox": "zomboidcraft:block/city/mailbox",
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "particle": "zomboidcraft:block/city/pole_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood"
+        },
+        "west": {
+          "texture": "#pole_wood"
+        },
+        "up": {
+          "texture": "#pole_wood"
+        },
+        "down": {
+          "texture": "#pole_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        10,
+        3
+      ],
+      "to": [
+        11,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mailbox"
+        },
+        "south": {
+          "texture": "#mailbox"
+        },
+        "east": {
+          "texture": "#mailbox"
+        },
+        "west": {
+          "texture": "#mailbox"
+        },
+        "up": {
+          "texture": "#mailbox"
+        },
+        "down": {
+          "texture": "#mailbox"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "plate_biohazard": "zomboidcraft:block/city/plate_biohazard",
+    "particle": "zomboidcraft:block/city/plate_biohazard"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        15
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#plate_biohazard"
+        },
+        "south": {
+          "texture": "#plate_biohazard",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#plate_biohazard"
+        },
+        "west": {
+          "texture": "#plate_biohazard"
+        },
+        "up": {
+          "texture": "#plate_biohazard"
+        },
+        "down": {
+          "texture": "#plate_biohazard"
+        }
+      }
+    }
+  ]
+}

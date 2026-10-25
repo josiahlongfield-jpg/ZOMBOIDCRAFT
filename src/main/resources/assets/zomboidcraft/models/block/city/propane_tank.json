@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "propane": "zomboidcraft:block/city/propane",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/propane"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        0
+      ],
+      "to": [
+        13,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#propane",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#propane",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#propane"
+        },
+        "west": {
+          "texture": "#propane"
+        },
+        "up": {
+          "texture": "#propane"
+        },
+        "down": {
+          "texture": "#propane"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        2
+      ],
+      "to": [
+        6,
+        2,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        12
+      ],
+      "to": [
+        12,
+        2,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

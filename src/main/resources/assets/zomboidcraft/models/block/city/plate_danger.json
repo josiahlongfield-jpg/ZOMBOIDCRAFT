@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "plate_danger": "zomboidcraft:block/city/plate_danger",
+    "particle": "zomboidcraft:block/city/plate_danger"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        15
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#plate_danger"
+        },
+        "south": {
+          "texture": "#plate_danger",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#plate_danger"
+        },
+        "west": {
+          "texture": "#plate_danger"
+        },
+        "up": {
+          "texture": "#plate_danger"
+        },
+        "down": {
+          "texture": "#plate_danger"
+        }
+      }
+    }
+  ]
+}

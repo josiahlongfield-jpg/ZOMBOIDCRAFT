@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "container_orange": "zomboidcraft:block/city/container_orange",
+    "container_orange_door": "zomboidcraft:block/city/container_orange_door",
+    "particle": "zomboidcraft:block/city/container_orange_door"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#container_orange_door",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#container_orange",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#container_orange",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#container_orange",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#container_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#container_orange",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

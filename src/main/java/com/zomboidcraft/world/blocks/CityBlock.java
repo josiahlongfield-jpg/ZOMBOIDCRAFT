@@ -90,7 +90,7 @@ public class CityBlock extends Block {
 
         @Override
         public BlockState getStateForPlacement(BlockPlaceContext context) {
-            return defaultBlockState().setValue(AXIS, context.getHorizontalDirection().getAxis());
+            return defaultBlockState().setValue(AXIS, context.getHorizontalDirection().getClockWise().getAxis());
         }
     }
 }

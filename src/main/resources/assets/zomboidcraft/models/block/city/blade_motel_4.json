@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_motel_4": "zomboidcraft:block/city/blade_motel_4",
+    "particle": "zomboidcraft:block/city/blade_motel_4"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_motel_4",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_motel_4",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_motel_4"
+        },
+        "west": {
+          "texture": "#blade_motel_4"
+        },
+        "up": {
+          "texture": "#blade_motel_4",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_motel_4",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

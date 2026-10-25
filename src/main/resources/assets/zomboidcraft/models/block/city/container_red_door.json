@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "container_red": "zomboidcraft:block/city/container_red",
+    "container_red_door": "zomboidcraft:block/city/container_red_door",
+    "particle": "zomboidcraft:block/city/container_red_door"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#container_red_door",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#container_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#container_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#container_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#container_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#container_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

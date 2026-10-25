@@ -209,7 +209,7 @@ public final class House {
         boolean open = rng.nextDouble() < 0.45;
         for (int x = garageX0 + 1; x <= garageX1 - 1; x++) {
             for (int y = 1; y <= 3; y++) {
-                p.set(x, y, z0, open && y < 3 ? "air" : "shutter[facing=north]");
+                p.set(x, y, z0, open && y < 3 ? "air" : "garage_door[facing=north]");
             }
         }
         // shelves of junk, a workbench, maybe a car
