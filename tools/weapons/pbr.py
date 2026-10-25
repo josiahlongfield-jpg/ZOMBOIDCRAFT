@@ -37,6 +37,8 @@ MATERIALS = {
     'tan': (0.30, NONMETAL, None),
     'mag': (0.30, NONMETAL, None),
     'rubber': (0.12, 8, None),
+    'bore': (0.08, 6, None),
+    'housing': (0.42, NONMETAL, None),
     'can': (0.20, NONMETAL, (0.42, IRON, 0.5)),
     'lens': (0.96, 18, None),
     'glass': (0.96, 18, None),

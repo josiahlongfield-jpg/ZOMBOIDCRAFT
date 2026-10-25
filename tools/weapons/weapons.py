@@ -34,6 +34,7 @@ import poses as Q  # noqa: E402
 import kit  # noqa: E402
 import rifle as RF  # noqa: E402
 import attachments as AT  # noqa: E402
+from inch import IN  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
@@ -517,7 +518,12 @@ def rifle_frame():
 RELOAD_POSE = {'mag_out': (28, 0.06), 'mag_in': (28, 0.06), 'charge': (-14, 0.03)}
 # where the sight sits in front of the eye when aiming, in pixels: far enough that the rear sight doesn't fill
 # the view. Through the scope the gun isn't drawn at all: the game draws the scope picture over the screen.
-ADS_TARGET = {None: np.array([0.0, 0.0, -4.2]), 'red_dot': np.array([0.0, 0.0, -3.6]), 'holo': np.array([0.0, 0.0, -3.6])}
+ADS_TARGET = {None: np.array([0.0, 0.0, -4.2])}
+# Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
+# the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
+# face's distance plus the eye relief the sight was shaped for), and the scale they're drawn at.
+ADS_EYE = {'red_dot': 0.85 + AT.RED_DOT_EYE, 'holo': 0.20 + AT.HOLO_EYE}
+ADS_SCALE = 1.2
 HIDDEN_WHEN_AIMING = ('scope_4x',)
 
 
@@ -535,8 +541,12 @@ def gun_displays(g, holds):
         optic = state[4:] or None
         if ads and optic in HIDDEN_WHEN_AIMING:
             d['firstperson_righthand'] = M.transform([0, 0, 0], [0, 0, 0], 0)
+        elif ads and optic in ADS_EYE:
+            Sa = ADS_SCALE
+            T = np.array([0.0, 0.0, -ADS_EYE[optic] * IN * Sa]) - armv - Sa * (np.asarray(sight) - C)
+            d['firstperson_righthand'] = M.transform([0, 0, 0], T, Sa)
         elif ads:
-            T = ADS_TARGET.get(optic, ADS_TARGET[None]) - armv - S * (np.asarray(sight) - C)
+            T = ADS_TARGET[None] - armv - S * (np.asarray(sight) - C)
             d['firstperson_righthand'] = M.transform([0, 0, 0], T, S)
         else:
             R = M.R_xyz(2 + cant * 0.6, 4 + cant * 0.3, -cant)

@@ -28,47 +28,62 @@ def jaws(b, z0, z1, half=0.47, mat='anod'):
 
 # ---------------------------------------------------------------- optics
 
+RED_DOT_EYE = 1.5      # how far behind each sight's back face the eye sits when aiming (see weapons.ADS_EYE)
+HOLO_EYE = 1.8
+
+
 def red_dot(m):
-    """A micro red dot (Aimpoint T-2 style) on a quick-release riser: the tube is open so you look
-    straight through it to the dot."""
+    """A red dot with a wide objective (Trijicon MRO style) on a quick-release riser. Inside, the housing
+    steps out toward the front just wider than the cone the eye sees the front lens through, so aiming
+    you look at the dot and the world through a thin rim, not down a tunnel. The linings are flat black."""
     b = Inch(m)
     H = CO_WITNESS
+    rear, front, lens_r = 0.85, -1.15, 0.66
+    eye = rear + RED_DOT_EYE
+    cone = lens_r / (eye - front)                 # half-angle of the clear view, radians
     b.box((-0.47, 0.0, -0.62), (0.47, 0.30, 0.62), 'anod')
     jaws(b, -0.62, 0.62)
     b.box((-0.62, 0.02, -0.50), (-0.52, 0.24, 0.40), 'anod')                 # throw lever
     b.box((-0.33, 0.30, -0.52), (0.33, 0.66, 0.52), 'anod')                  # riser
-    b.box((-0.40, 0.66, -0.78), (0.40, 0.88, 0.78), 'anod')                  # sight's own base
-    b.tube(-1.18, 1.18, 0.46, 0.60, 'anod', at=(0.0, H))
-    b.tube(-1.26, -1.10, 0.46, 0.64, 'anod', at=(0.0, H))                    # lens rims
-    b.tube(1.10, 1.26, 0.46, 0.64, 'anod', at=(0.0, H))
-    b.rod(H + 0.50, H + 0.82, 0.27, 'anod', axis=1, at=(0.0, 0.05))          # elevation turret
-    b.rod(0.52, 0.86, 0.30, 'knurl', axis=0, at=(H, 0.25))                    # brightness dial
-    b.box((-0.03, H - 0.03, -0.96), (0.03, H + 0.03, -0.92), 'dot', light=15, noshade=True)
+    b.box((-0.40, 0.66, -0.80), (0.40, 0.84, 0.70), 'anod')                  # sight's own base
+    steps = [(0.65, rear, 0.10), (0.15, 0.65, 0.08), (-0.35, 0.15, 0.08), (-0.85, -0.35, 0.08), (front, -0.85, 0.11)]
+    for z0, z1, wall in steps:
+        r_in = max(cone * (eye - z0) + 0.01, 0.30)
+        b.tube(z0, z1, r_in + 0.02, r_in + 0.02 + wall, 'housing', at=(0.0, H))
+        b.tube(z0, z1, r_in, r_in + 0.02, 'bore', at=(0.0, H), noshade=True)
+    b.rod(H + 0.54, H + 0.80, 0.24, 'anod', axis=1, at=(0.0, -0.10))         # elevation turret
+    b.rod(0.62, 0.90, 0.28, 'knurl', axis=0, at=(H, -0.10))                   # brightness dial
+    b.box((-0.035, H - 0.035, front + 0.08), (0.035, H + 0.035, front + 0.12), 'dot', light=15, noshade=True)
 
 
 def holo(m):
-    """A holographic sight (EOTech EXPS3 style): a hood open front and back over the body, the 65 MOA
-    ring and dot floating in the window."""
+    """A holographic sight (EOTech EXPS3 style): a big window in a thin, shallow hood, the body with the
+    battery and buttons kept down below the window, and the 65 MOA ring and dot floating in the front glass."""
     b = Inch(m)
     H = CO_WITNESS
-    L0, L1 = -1.85, 1.30
-    b.box((-0.68, 0.0, L0), (0.68, 0.32, 1.75), 'anod')
+    L0, L1 = -1.85, 1.75                                                      # body, front and back
+    W0, W1 = -0.40, 0.20                                                      # the window's hood
+    xi, xo, sill, top = 0.55, 0.65, H - 0.48, H + 0.50
+    deck = H - 0.80                                                           # the body's top
+    b.box((-0.68, 0.0, L0), (0.68, 0.32, L1), 'anod')
     jaws(b, -1.30, 0.70, half=0.66)
     for z0 in (-1.05, 0.05):                                                  # QD levers
         b.box((-0.84, 0.03, z0), (-0.70, 0.27, z0 + 0.75), 'anod')
-    b.box((-0.62, 0.32, L0), (0.62, H - 0.52, 1.75), 'anod')                 # body, battery in the back
-    for x0, x1 in ((-0.62, -0.44), (0.44, 0.62)):                             # hood walls
-        b.box((x0, H - 0.52, L0), (x1, H + 0.76, L1), 'anod')
-    b.box((-0.62, H + 0.54, L0), (0.62, H + 0.76, L1), 'anod')               # hood top
-    b.box((-0.44, H - 0.52, L0), (0.44, H - 0.46, L1), 'anod')                # window sill
-    for z0 in (L0, L1 - 0.06):                                                # window frames, front and back
-        b.box((-0.44, H + 0.48, z0), (0.44, H + 0.54, z0 + 0.06), 'anod')
+    b.box((-0.62, 0.32, L0), (0.62, deck, L1), 'anod')                       # body, battery in the back
+    b.box((-xo, deck, W0), (xo, sill, W1), 'anod')                            # under the window
+    b.box((-xi, sill - 0.02, W0), (xi, sill, W1), 'bore', noshade=True)      # dark sill
+    for x0, x1 in ((-xo, -xi), (xi, xo)):                                     # hood walls
+        b.box((x0, sill, W0), (x1, top + 0.10, W1), 'anod')
+    b.box((-xo, top, W0), (xo, top + 0.10, W1), 'anod')                       # hood top
+    for x0, x1 in ((-xi, -xi + 0.015), (xi - 0.015, xi)):                     # flat black inside the hood
+        b.box((x0, sill, W0), (x1, top, W1), 'bore', noshade=True)
+    b.box((-xi, top - 0.015, W0), (xi, top, W1), 'bore', noshade=True)
     for x0 in (-0.36, 0.10):                                                  # brightness buttons on the back
-        b.box((x0, 0.55, 1.75), (x0 + 0.26, 0.75, 1.82), 'rubber')
-    b.box((0.62, H - 0.30, -0.95), (0.70, H - 0.08, -0.55), 'steel')          # windage screw
-    b.box((-0.08, H + 0.76, -0.55), (0.08, H + 0.80, -0.20), 'steel')         # elevation screw
-    b.ring(-0.22, -0.20, 0.17, 'dot', at=(0.0, H), steps=8, w=0.025, light=15, noshade=True)
-    b.box((-0.02, H - 0.02, -0.22), (0.02, H + 0.02, -0.20), 'dot', light=15, noshade=True)
+        b.box((x0, 0.40, L1), (x0 + 0.26, 0.56, L1 + 0.07), 'rubber')
+    b.box((xo, sill - 0.20, -0.30), (xo + 0.08, sill + 0.04, 0.05), 'steel')  # windage screw
+    b.box((-0.08, top + 0.10, -0.25), (0.08, top + 0.14, 0.10), 'steel')      # elevation screw
+    b.ring(W0 + 0.02, W0 + 0.04, 0.17, 'dot', at=(0.0, H), steps=8, w=0.025, light=15, noshade=True)
+    b.box((-0.02, H - 0.02, W0 + 0.02), (0.02, H + 0.02, W0 + 0.04), 'dot', light=15, noshade=True)
 
 
 SCOPE_H = 1.50
@@ -179,6 +194,14 @@ def look(wear=0.4):
     def dot(f):
         return np.ones(f.shape + (3,)) * P.col('#ff2a1a')
 
+    def bore(f):
+        return P.plain(f, '#0f1012', 0.05)
+
+    def housing(f):
+        # round housings are many staves: no edge wear on each, just scuffs, so they read as one smooth tube
+        c = P.anodised(f, '#232629', '#232629')
+        return P.mix(c, c * 1.6, np.clip((f.noise(1.3, 37, 3) - 0.62) * 3, 0, 0.5))
+
     def can(f):
         c = P.parkerised(f, '#34332f')
         heat = f.noise(0.8, 211, 3)
@@ -204,7 +227,7 @@ def look(wear=0.4):
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
-    d = dict(anod=anod, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
+    d = dict(anod=anod, bore=bore, housing=housing, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
              cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.45, spread=0.14),
              poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
