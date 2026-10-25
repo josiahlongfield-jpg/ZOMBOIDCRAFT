@@ -3,6 +3,7 @@ package com.zomboidcraft.barricade;
 import com.zomboidcraft.ModBlocks;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.combat.MeleeWeaponItem;
+import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.zombie.Noise;
@@ -110,15 +111,14 @@ public class HammerItem extends MeleeWeaponItem {
         if (!player.getInventory().add(new ItemStack(Items.OAK_PLANKS))) {
             net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), new ItemStack(Items.OAK_PLANKS));
         }
-        level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.PLAYERS, 0.6f, 1.3f);
+        level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.9f, 0.8f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);
         Skills.addXp(player, Skill.CARPENTRY, 2);
         return InteractionResult.SUCCESS;
     }
 
     private void hammered(ServerLevel level, ServerPlayer player, BlockPos pos, UseOnContext context) {
-        level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 1f, 0.8f);
-        level.playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.PLAYERS, 0.15f, 1.8f);
+        level.playSound(null, pos, ModSounds.HAMMER_NAIL, SoundSource.PLAYERS, 1f, 0.92f + level.getRandom().nextFloat() * 0.16f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE);
         context.getItemInHand().hurtAndBreak(1, player, context.getHand());
         Skills.addXp(player, Skill.CARPENTRY, 6);

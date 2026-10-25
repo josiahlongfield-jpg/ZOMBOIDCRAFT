@@ -6,12 +6,17 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
-/** Weapon sounds: recorded CC0 samples, listed in assets/zomboidcraft/sounds.json and credited in CREDITS.md. */
+/** Weapon and zombie sounds: recorded samples (CC0 or royalty-free), listed in assets/zomboidcraft/sounds.json and credited in CREDITS.md. */
 public final class ModSounds {
     /** The shooter's own shot, played on their client. */
     public static final SoundEvent RIFLE_SHOT = register("weapon.rifle.shot");
     /** What everyone else hears of a shot, out to 128 blocks. */
     public static final SoundEvent RIFLE_SHOT_DISTANT = register("weapon.rifle.shot_distant", 128f);
+    /** The same pair through a suppressor (Sonniss recordings), heard out to 40 blocks. */
+    public static final SoundEvent RIFLE_SHOT_SUPPRESSED = register("weapon.rifle.shot_suppressed");
+    public static final SoundEvent RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.rifle.shot_suppressed_distant", 40f);
+    public static final SoundEvent PISTOL_SHOT_SUPPRESSED = register("weapon.pistol.shot_suppressed");
+    public static final SoundEvent PISTOL_SHOT_SUPPRESSED_DISTANT = register("weapon.pistol.shot_suppressed_distant", 24f);
     public static final SoundEvent RIFLE_DRY = register("weapon.rifle.dry");
     public static final SoundEvent RIFLE_MAG_OUT = register("weapon.rifle.mag_out");
     public static final SoundEvent RIFLE_MAG_IN = register("weapon.rifle.mag_in");
@@ -28,6 +33,17 @@ public final class ModSounds {
     public static final SoundEvent STOMP = register("weapon.melee.stomp");
     public static final SoundEvent SHOVE = register("weapon.melee.shove");
     public static final SoundEvent GRAB = register("zombie.grab");
+    /** A walker's scream when it first spots someone. */
+    public static final SoundEvent ZOMBIE_ALERT = register("zombie.alert", 32f);
+    /** Snarls while it chases. */
+    public static final SoundEvent ZOMBIE_CHASE = register("zombie.chase", 24f);
+    /** Crowd beds that swell with the horde round you: a murmur of nearby walkers, a roar of the ones after you. */
+    public static final SoundEvent ZOMBIE_HORDE_DORMANT = register("zombie.horde_dormant");
+    public static final SoundEvent ZOMBIE_HORDE_ANGRY = register("zombie.horde_angry");
+
+    /** Nailing a board up; heard a fair way off, like the noise zombies follow. */
+    public static final SoundEvent HAMMER_NAIL = register("item.hammer.nail", 32f);
+    public static final SoundEvent BANDAGE = register("item.bandage");
 
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);

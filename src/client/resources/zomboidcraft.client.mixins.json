@@ -5,7 +5,9 @@
   "client": [
     "AbstractClientPlayerMixin",
     "GuiMixin",
-    "SlotAccessor"
+    "SlotAccessor",
+    "PlayerModelMixin",
+    "SoundEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 0

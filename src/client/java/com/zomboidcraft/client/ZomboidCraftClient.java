@@ -4,6 +4,9 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.combat.CombatClient;
 import com.zomboidcraft.client.combat.CombatHud;
+import com.zomboidcraft.client.combat.Crosshair;
+import com.zomboidcraft.client.sound.SoundSliders;
+import com.zomboidcraft.client.zombie.HordeSounds;
 import com.zomboidcraft.client.zombie.WalkerAddonModel;
 import com.zomboidcraft.client.zombie.WalkerModel;
 import com.zomboidcraft.client.zombie.WalkerRenderer;
@@ -14,6 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
@@ -29,7 +33,11 @@ public class ZomboidCraftClient implements ClientModInitializer {
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
+        HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
+        HordeSounds.register();
+        SoundSliders.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

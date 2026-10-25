@@ -15,6 +15,38 @@
       }
     ]
   },
+  "weapon.rifle.shot_suppressed": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/shot_suppressed/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.rifle.shot_suppressed_distant": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/shot_suppressed_distant/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.pistol.shot_suppressed": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/pistol/shot_suppressed/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon.pistol.shot_suppressed_distant": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/pistol/shot_suppressed_distant/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
   "weapon.rifle.dry": {
     "sounds": [
       {
@@ -194,15 +226,296 @@
   "zombie.grab": {
     "sounds": [
       {
-        "name": "minecraft:entity.zombie.ambient",
-        "type": "event",
-        "pitch": 0.8
+        "name": "zomboidcraft:zombie/bite/1",
+        "attenuation_distance": 16
       },
       {
-        "name": "minecraft:entity.zombie.attack_wooden_door",
-        "type": "event",
-        "pitch": 1.4,
-        "volume": 0.5
+        "name": "zomboidcraft:zombie/bite/2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "zombie.alert": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:zombie/alert/1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:zombie/alert/2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:zombie/alert/3",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "zombie.chase": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:zombie/chase/1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:zombie/chase/2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:zombie/chase/3",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:zombie/chase/4",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:zombie/chase/5",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:zombie/chase/6",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "zombie.horde_dormant": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:horde/dormant/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:horde/dormant/2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:horde/dormant/3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:horde/dormant/4",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "zombie.horde_angry": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:horde/angry/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:horde/angry/2",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "loot.drawer": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/drawer/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/4",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/5",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/6",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/7",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/8",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/9",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/drawer/10",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "loot.cupboard": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/cupboard/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/cupboard/2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "loot.fridge": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/fridge/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/fridge/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/fridge/3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/fridge/4",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/fridge/5",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "loot.register": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/register/1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:loot/register/2",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "loot.box": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/box/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:loot/box/2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "loot.safe": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/safe/1",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "loot.shelf": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:loot/shelf/1",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "item.eat": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:item/eat/1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/eat/2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/eat/3",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/eat/4",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/eat/5",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "item.drink": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:item/drink/1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/drink/2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/drink/3",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/drink/4",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "item.bandage": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:item/bandage/1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/bandage/2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/bandage/3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "item.hammer.nail": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:item/hammer_nail/1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:item/hammer_nail/2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:item/hammer_nail/3",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "item.bag": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:item/bag/1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:item/bag/2",
+        "attenuation_distance": 12
       }
     ]
   }

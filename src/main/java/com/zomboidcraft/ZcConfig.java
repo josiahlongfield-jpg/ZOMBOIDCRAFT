@@ -63,6 +63,26 @@ public final class ZcConfig {
         public boolean bashDoors = true;
         /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
         public int doorHits = 12;
+        /** A walker screams when it first spots you. */
+        public boolean alertScreams = true;
+        /** Seconds before the same zombie can scream again. */
+        public int alertCooldownSeconds = 20;
+        /** At most this many zombies within 16 blocks scream in the same two seconds, so a crowd doesn't scream as one. */
+        public int alertMaxTogether = 3;
+        /** Snarls every few seconds while chasing. */
+        public boolean chaseSnarls = true;
+        public double chaseSnarlMinSeconds = 2;
+        public double chaseSnarlMaxSeconds = 4;
+        /** A crowd murmur swells as walkers gather within 48 blocks, and a roar as more of them come after you. */
+        public boolean hordeSounds = true;
+        /** Walkers nearby for the murmur to start, and to reach full volume; kept under the single voices. */
+        public int hordeMurmurFrom = 6;
+        public int hordeMurmurFull = 30;
+        public double hordeMurmurVolume = 0.45;
+        /** Zombies after you for the roar to start, and to reach full volume. */
+        public int hordeRoarFrom = 3;
+        public int hordeRoarFull = 15;
+        public double hordeRoarVolume = 0.8;
     }
 
     public static class Senses {
@@ -172,9 +192,15 @@ public final class ZcConfig {
         public double voicePitch = 0.8;
         /** The field-kit inventory screen; off brings back Minecraft's. Client side. */
         public boolean fieldKitInventory = true;
+        /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
+        public double crosshairScale = 0.5;
+        /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
+        public boolean hideCrosshairWhenAiming = true;
     }
 
     public static class Combat {
+        /** Other players see rifles carried at the low ready or shouldered, and big melee weapons in both hands. */
+        public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
         /** Weapons lose condition with each hit and break (needs a restart). */
@@ -242,6 +268,25 @@ public final class ZcConfig {
         public boolean jams = true;
         /** Rounds in a rifle magazine. */
         public int magazineSize = 30;
+        /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
+        public boolean attachments = true;
+        /** Multiply aimed spread with each optic mounted. */
+        public double redDotAimSpread = 0.6;
+        public double holoAimSpread = 0.6;
+        public double scopeAimSpread = 0.35;
+        /** Field of view looking through the 4x scope, as a share of normal. */
+        public double scopeZoom = 0.25;
+        /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
+        public double suppressedNoise = 0.3;
+        public double suppressedVolume = 1.0;
+        /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
+        public double foregripRecoil = 0.75;
+        public double noStockRecoil = 1.5;
+        public double noStockSpread = 1.6;
+        /** A laser multiplies spread from the hip. */
+        public double laserHipSpread = 0.6;
+        /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). The gun's own flash still shows. */
+        public boolean muzzleSmoke = false;
     }
 
     public static ZcConfig get() {

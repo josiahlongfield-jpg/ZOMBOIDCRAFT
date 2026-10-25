@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.CombatNet;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.Grabs;
@@ -102,9 +103,11 @@ public final class CombatClient {
         if (!g.mag() || g.rounds() <= 0 || g.jammed() || reloading(gun)) {
             return;     // the server answers with the dry click
         }
-        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
-                1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
-        float kick = (aiming ? 1.1f : 2.0f) * (float) config.recoil;
+        boolean suppressed = Attachments.suppressed(gun);
+        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(),
+                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED : ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
+                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
+        float kick = (aiming ? 1.1f : 2.0f) * (float) (config.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);

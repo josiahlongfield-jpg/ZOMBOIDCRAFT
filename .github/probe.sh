@@ -133,6 +133,98 @@ exit 0
 
 
 
+echo "===== arms"
+sig net.minecraft.client.renderer.ItemInHandRenderer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A70 'void renderPlayerArm(' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A60 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|fload|ldc' | head -60
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A40 'void renderArmWithItem(' | head -45
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.player.AvatarRenderer 2>&1 | grep -A50 'private void renderHand(' | head -60
+sig net.minecraft.client.renderer.GameRenderer 'bob|Bob|renderItemInHand|ItemInHand'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B2 -A40 'void renderItemInHand(' | grep -E 'invoke|Method|getfield' | head -40
+sig net.minecraft.client.renderer.SubmitNodeCollector '.'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector 'submitModelPart|submitModel'
+sig net.minecraft.world.entity.player.PlayerSkin '.'
+sig net.minecraft.core.ClientAsset\$Texture '.'
+sig net.minecraft.client.renderer.entity.EntityRenderDispatcher 'Player|Avatar|getRenderer'
+sig net.minecraft.client.player.LocalPlayer 'Bob|bob'
+sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
+sig net.minecraft.core.particles.DustParticleOptions 'public'
+sig net.minecraft.world.level.block.LightBlock 'LEVEL|public static'
+sig com.mojang.blaze3d.platform.Window 'GuiScale|getWidth|getHeight'
+sig net.minecraft.client.multiplayer.ClientLevel 'setBlock|players\(|addParticle'
+classes 'rendertype/RenderTypes|renderer/RenderType\.class|rendertype/RenderType\.class'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entityTranslucent|entityCutout|entitySolid'
+sig net.minecraft.client.renderer.RenderType 'entityTranslucent|entityCutout'
+sig net.minecraft.client.model.geom.ModelPart 'resetPose|render|visible|xRot|public float'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.world.entity.HumanoidArm '.'
+
+echo "===== crosshair"
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement '.'
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements 'CROSSHAIR'
+sig net.minecraft.client.gui.Gui 'Crosshair|crosshair'
+sig org.joml.Matrix3x2fStack 'push|pop'
+sig org.joml.Matrix3x2f 'translate\(float, float\)|scale\(float, float\)'
+sig net.minecraft.world.food.FoodProperties 'public'
+sig net.minecraft.world.item.component.Consumable 'public'
+sig net.minecraft.world.item.component.Consumables 'public'
+classes 'item/component/Consumable|consume_effects|ItemUseAnimation'
+
+echo "===== volume"
+classes 'client/sounds/SoundEngine|client/sounds/SoundManager|client/sounds/ChannelAccess|options/SoundOptionsScreen|options/OptionsSubScreen|components/AbstractSliderButton|screen/v1/ScreenEvents|screen/v1/Screens|client/OptionInstance|components/OptionsList'
+sig net.minecraft.client.sounds.SoundEngine '.'
+javap -cp "$CP" -c -p net.minecraft.client.sounds.SoundEngine 2>&1 | grep -B2 -A14 'float calculateVolume' | head -60
+sig net.minecraft.client.sounds.SoundManager 'public'
+sig net.minecraft.client.gui.screens.options.SoundOptionsScreen '.'
+sig net.minecraft.client.gui.screens.options.OptionsSubScreen '.'
+sig net.minecraft.client.gui.components.AbstractSliderButton '.'
+sig net.minecraft.client.gui.components.Button 'builder|public static'
+sig 'net.minecraft.client.gui.components.Button$Builder' '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|addRenderableWidget|onClose|init|render\(|public'
+sig net.minecraft.client.gui.layouts.HeaderAndFooterLayout '.'
+sig net.minecraft.client.gui.components.OptionsList '.'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+sig net.fabricmc.fabric.api.client.screen.v1.Screens '.'
+sig net.minecraft.client.resources.sounds.SoundInstance 'getIdentifier|getLocation|getVolume|getSource'
+
+echo "===== sound"
+sig net.minecraft.client.resources.sounds.AbstractSoundInstance '.'
+sig net.minecraft.client.resources.sounds.SoundInstance '.'
+sig net.minecraft.client.resources.sounds.Sound 'public'
+
+echo "===== scope"
+classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+for j in $MC_JARS; do unzip -Z1 "$j" | grep -E 'RenderPipelines' | sed "s|^|$j: |"; done | head
+javap -cp "$CP" -c -p net.minecraft.client.gui.Gui 2>&1 | grep -A40 -i 'Spyglass' | grep -E 'invoke|getstatic|Method|Field' | head -40
+sig net.minecraft.client.gui.Gui 'Spyglass|scope|Vignette'
+sig net.minecraft.world.entity.player.Player 'isScoping'
+
+echo "===== pose"
+classes 'model/.*HumanoidModel|model/.*PlayerModel|model/.*AnimationUtils|entity/player/.*Renderer|entity/.*AvatarRenderer|state/AvatarRenderState|state/PlayerRenderState|state/HumanoidRenderState|state/ArmedEntityRenderState|state/LivingEntityRenderState|layers/ItemInHandLayer|layers/PlayerItemInHandLayer|rendering/v1/RenderStateDataKey|rendering/v1/FabricRenderState|rendering/v1/.*RenderState'
+for c in net.minecraft.client.model.HumanoidModel net.minecraft.client.model.HumanoidModel\$ArmPose net.minecraft.client.model.player.PlayerModel net.minecraft.client.model.PlayerModel net.minecraft.client.model.AnimationUtils net.minecraft.client.model.geom.ModelPart; do sig "$c" '.'; done
+for c in net.minecraft.client.renderer.entity.player.AvatarRenderer net.minecraft.client.renderer.entity.player.PlayerRenderer net.minecraft.client.renderer.entity.HumanoidMobRenderer net.minecraft.client.renderer.entity.state.AvatarRenderState net.minecraft.client.renderer.entity.state.PlayerRenderState net.minecraft.client.renderer.entity.state.HumanoidRenderState net.minecraft.client.renderer.entity.state.ArmedEntityRenderState net.minecraft.client.renderer.entity.layers.ItemInHandLayer net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer; do sig "$c" '.'; done
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public|protected'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public|protected'
+sig net.minecraft.world.entity.LivingEntity 'isUsingItem|getUseItem|getTicksUsingItem|getUsedItemHand|getMainArm|swinging|attackAnim'
+for j in $FAPI_JARS; do unzip -Z1 "$j" | grep -E 'rendering/v1/.*(RenderState|ArmPose|Avatar|Humanoid)' | sed "s|^|$j: |"; done | head -40
+
+echo "===== attach"
+sig net.minecraft.world.item.Item 'overrideOtherStackedOnMe|overrideStackedOnOther|appendHoverText|getName'
+sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|listMatches|hashStackList|hashItemAndComponents|isSameItemSameComponents|matches\(|copyWithCount|EMPTY'
+sig net.minecraft.world.inventory.ClickAction '.'
+sig net.minecraft.world.entity.SlotAccess '.'
+sig net.minecraft.world.inventory.Slot 'getItem|set\(|mayPlace|allowModification|safeInsert|safeTake'
+sig net.minecraft.world.item.component.CustomModelData '.'
+sig net.minecraft.world.item.component.ItemContainerContents 'equals|hashCode|CODEC|STREAM_CODEC'
+sig net.minecraft.network.codec.ByteBufCodecs 'map\(|STRING_UTF8|idMapper|list'
+sig net.minecraft.util.StringRepresentable 'fromEnum|EnumCodec|getSerializedName'
+sig net.minecraft.sounds.SoundEvents 'BUNDLE_INSERT|BUNDLE_REMOVE|ARMOR_EQUIP_GENERIC|CROSSBOW_LOADING_END|ITEM_PICKUP'
+sig net.minecraft.world.item.BundleItem 'override|playInsert|playRemove'
+classes 'renderer/item/CompositeModel|renderer/item/SelectItemModel|properties/select/CustomModelDataProperty|renderer/item/ConditionalItemModel|properties/conditional/HasComponent|properties/select/ComponentContents'
+sig net.minecraft.client.renderer.item.properties.select.CustomModelDataProperty '.'
+sig net.minecraft.client.renderer.item.CompositeModel '.'
+
 echo "===== combat3"
 sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'
 classes 'component/SwingAnimation|component/UseEffects|KeyMapping\$Category|keybinding/v1/KeyBindingHelper|state/HumanoidRenderState|state/ZombieRenderState|ai/goal/MeleeAttackGoal|ai/goal/ZombieAttackGoal'

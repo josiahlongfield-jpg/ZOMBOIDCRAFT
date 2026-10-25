@@ -1,6 +1,9 @@
 package com.zomboidcraft;
 
 import com.zomboidcraft.barricade.HammerItem;
+import com.zomboidcraft.combat.AttachmentItem;
+import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
@@ -66,6 +69,21 @@ public final class ModItems {
         return register(name, properties -> new com.zomboidcraft.carry.BagItem(spec, properties), new Item.Properties());
     }
 
+    // Gun parts: each names its slot; the key the gun's item model switches on comes from GunSlotData.
+    public static final Item RED_DOT_SIGHT = part("red_dot_sight", Attachments.Slot.OPTIC);
+    public static final Item HOLO_SIGHT = part("holo_sight", Attachments.Slot.OPTIC);
+    public static final Item SCOPE_4X = part("scope_4x", Attachments.Slot.OPTIC);
+    public static final Item RIFLE_SUPPRESSOR = part("rifle_suppressor", Attachments.Slot.MUZZLE);
+    public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
+    public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
+    public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.SIDE_RAIL);
+    public static final Item RIFLE_STOCK = part("rifle_stock", Attachments.Slot.STOCK);
+
+    private static Item part(String name, Attachments.Slot slot) {
+        String key = GunSlotData.MODEL_KEYS.get(name);
+        return register(name, p -> new AttachmentItem(slot, key, p), new Item.Properties().stacksTo(1));
+    }
+
     private static Item weapon(String name, Function<Item.Properties, Item> factory) {
         return register(name, factory, MeleeWeaponItem.properties(Weapons.byName(name)));
     }
@@ -88,6 +106,12 @@ public final class ModItems {
             ItemStack mag = new ItemStack(RIFLE_MAGAZINE);
             mag.set(GunState.MAG_ROUNDS, RifleItem.capacity());
             output.accept(mag);
+            // and one with everything on it
+            ItemStack kitted = rifle.copy();
+            for (Item part : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
+                Attachments.mount(kitted, new ItemStack(part));
+            }
+            output.accept(kitted);
         });
     }
 

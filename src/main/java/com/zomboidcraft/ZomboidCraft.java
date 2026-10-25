@@ -28,6 +28,7 @@ public class ZomboidCraft implements ModInitializer {
         ModBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.combat.GunState.register();
+        com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();
         com.zomboidcraft.carry.Carry.register();
@@ -37,6 +38,7 @@ public class ZomboidCraft implements ModInitializer {
         SurvivalEvents.register();
         ZombieEvents.register();
         ZombieSpawner.register();
+        com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Guns.register();

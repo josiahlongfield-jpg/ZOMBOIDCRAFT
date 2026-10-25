@@ -20,14 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - zombie_idle
-          - zombie_alert,zombie_chase
-          - zombie_attack,zombie_hurt
-          - zombie_death,zombie_step
-          - door_bash,door_bash_metal
-          - door_break,horde
-          - human_dread
-          - human_scream
+          - loot_rummage,loot_drawer
+          - loot_fridge,loot_register
+          - loot_box,loot_appliance
+          - loot_safe,item_eat
+          - item_drink,item_bandage
+          - item_hammer,item_bag
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
