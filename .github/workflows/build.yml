@@ -62,6 +62,7 @@ jobs:
       - name: Server smoke test
         run: |
           mkdir -p run && echo 'eula=true' > run/eula.txt
+          trap 'echo "----- server.log tail"; tail -n 120 server.log' EXIT
           mkfifo console
           ./gradlew runServer --args=nogui < console > server.log 2>&1 &
           pid=$!
