@@ -256,7 +256,6 @@ final class RoadsideSite extends Site {
             return;
         }
         Placer q = lot.placer(out);
-        if (System.getenv("RS_DEBUG") != null) System.err.println("gas lot " + style + " " + lot.w() + "x" + lot.d());
         switch (style) {
             case 1 -> modernStation(q, lot.w(), lot.d());
             case 0 -> serviceStation(q, lot.w(), lot.d());

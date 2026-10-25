@@ -247,12 +247,14 @@ public final class County {
     }
 
     private Place military(int px, int pz, double v, long h) {
+        // each one its own size, a tenth either way
+        double s = 0.9 + ((h >>> 24) & 31) / 31.0 * 0.2;
         if (v < 0.4) {
-            return fitOrShrink(PlaceType.MILITARY, "quarantine", px, pz, 220, 200, h);
+            return fitOrShrink(PlaceType.MILITARY, "quarantine", px, pz, (int) (210 * s), (int) (190 * s), h);
         } else if (v < 0.75) {
-            return fitOrShrink(PlaceType.MILITARY, "army_base", px, pz, 320, 300, h);
+            return fitOrShrink(PlaceType.MILITARY, "army_base", px, pz, (int) (280 * s), (int) (260 * s), h);
         }
-        return fitOrShrink(PlaceType.MILITARY, "depot", px, pz, 190, 170, h);
+        return fitOrShrink(PlaceType.MILITARY, "depot", px, pz, (int) (190 * s), (int) (170 * s), h);
     }
 
     private Place roadside(int px, int pz, double v, long h) {
