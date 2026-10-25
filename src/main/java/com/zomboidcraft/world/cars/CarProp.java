@@ -598,7 +598,7 @@ public class CarProp extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 160 * 160;
+        return distance < 96 * 96;  // a town parks a hundred or more; further off they're lost in the haze anyway
     }
 
     @Override

@@ -14,11 +14,13 @@ import java.util.Set;
  */
 final class CarLod {
     /** Grid cell (metres) for each level; level 0 is the full mesh. */
-    private static final float[] CELL = {0, 0.08f, 0.16f, 0.32f};
+    private static final float[] CELL = {0, 0.08f, 0.16f, 0.32f, 0.6f};
     /** How far (blocks) the camera must be for each level. */
-    private static final double[] FROM = {0, 12, 28, 56};
+    private static final double[] FROM = {0, 10, 24, 44, 68};
 
     static final int LEVELS = CELL.length;
+    /** From this level on the windows are drawn solid and dark: no see-through pass for far cars. */
+    static final int SOLID_GLASS = 3;
 
     /** The level to draw a car at, from its squared distance to the camera. */
     static int level(double distanceSq) {
