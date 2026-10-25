@@ -125,7 +125,7 @@ public final class TimedActions {
             double dx = at.x - r.from.x, dz = at.z - r.from.z;
             if (dx * dx + dz * dz > STRAY * STRAY) why = "You stop to move.";
             else if (player.hurtTime > r.hurt) why = "You're hit and stop.";
-            else if (player.swinging && r.left < r.total - 1) why = "You stop to swing.";
+            else if (player.getAttackAnim(1f) > 0 && r.left < r.total - 1) why = "You stop to swing.";
             r.hurt = player.hurtTime;
             if (why != null) {
                 it.remove();

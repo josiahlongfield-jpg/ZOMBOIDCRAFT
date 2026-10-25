@@ -67,6 +67,7 @@ public final class Stamina {
 
     /** A swing at a zombie: heavier weapons cost more. */
     public static void onSwing(ServerPlayer player) {
+        com.zomboidcraft.survival.TimedActions.cancel(player, "You stop to swing.");
         WeaponSpecs.WeaponSpec spec = Weapons.spec(player.getMainHandItem());
         double cost = spec != null ? spec.stamina() : 2.5;
         // Blunt or Blade 5: practised swings cost a fifth less
