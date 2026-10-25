@@ -864,27 +864,35 @@ def phone(seed):
     return wear(t, 0.35, 0)
 
 
-def curtains(seed, rgb):
-    """Two drapes pulled to the sides, tied back, moth-eaten; open between them."""
+def curtains(seed, rgb, part="bottom"):
+    """Floor-length drapes in two blocks, pulled to the sides and moth-eaten; open between them.
+    The top block hangs from the rail; the bottom one is gathered at the tie-backs and flares out."""
     t = mat("Fabric028", rgb, 1.2, seed=seed, smooth=0.1)
     xx = np.arange(N)
     t.c *= (0.7 + 0.3 * np.abs(np.sin(xx * 0.55)))[None, :, None]  # folds
     t.alpha[:] = 0
-    for x0, x1 in ((0, 20), (44, N)):
-        t.alpha[:, x0:x1] = 255
-    # gathered at the tie-backs: narrower around row 40
-    for y in range(28, 52):
-        k = int(5 * np.sin(np.pi * (y - 28) / 24))
-        t.alpha[y, 20 - k:20] = 0
-        t.alpha[y, 44:44 + k] = 0
-    area(t, 0, 38, 20, 41, (190, 160, 80))
-    area(t, 44, 38, N, 41, (190, 160, 80))
-    for _ in range(7):
-        x, y = t.rng.uniform(0, 20) if t.rng.random() < 0.5 else t.rng.uniform(44, 64), t.rng.uniform(0, N)
+    for y in range(N):
+        if part == "top":
+            w = 22 - int(6 * y / N)
+        else:
+            w = 14 + int(3 * abs(y - 8) / 8) if y < 16 else 17 + int(7 * (y - 16) / (N - 16))
+        t.alpha[y, :w] = 255
+        t.alpha[y, N - w:] = 255
+    if part == "top":
+        area(t, 0, 0, N, 2, (60, 56, 50), alpha=255)  # the rail
+        for x in range(2, N, 6):
+            area(t, x, 2, x + 1, 3, (90, 86, 76), alpha=255)  # the rings
+    else:
+        area(t, 0, 6, 15, 9, (190, 160, 80))
+        area(t, N - 15, 6, N, 9, (190, 160, 80))
+    for _ in range(5):
+        x, y = t.rng.uniform(0, 14) if t.rng.random() < 0.5 else t.rng.uniform(50, 64), t.rng.uniform(4, N)
         disc(t, x, y, t.rng.uniform(0.6, 1.6), alpha=0)
-    area(t, 0, 0, N, 2, (60, 56, 50), alpha=255)  # the rail
     t.grime(0.35, (60, 50, 40))
     return t
+
+
+CURTAINS = {"gold": (170, 140, 64), "rose": (150, 96, 96), "green": (88, 112, 80)}
 
 
 def blinds(seed):
@@ -1459,9 +1467,19 @@ PAPERS = {"stripe": ((150, 160, 130), (120, 132, 104)), "floral": ((206, 190, 16
 
 def wallpaper(kind, seed, worn=False):
     ground, ink = PAPERS[kind]
-    t = mat("beige_wall_001", ground, 0.5, seed=seed, smooth=0.12)
+    t = mat("beige_wall_001", ground, 0.3 if ink is None else 0.5, seed=seed, smooth=0.12)
     yy, xx = np.mgrid[0:N, 0:N]
-    if kind == "stripe":
+    if kind == "cream":
+        # a faint pinstripe pair, so it reads as paper rather than bare plaster
+        t.mix((((xx % 12) == 3) | ((xx % 12) == 5)).astype(np.float32), (180, 166, 134), 0.45)
+    elif kind == "sage":
+        # a small trellis of diamonds
+        d = (np.abs((xx % 16) - 8) + np.abs((yy % 16) - 8)) == 6
+        t.mix(d.astype(np.float32), (124, 138, 110), 0.55)
+    elif kind == "blue":
+        dots = (((xx + 4 * ((yy // 8) % 2)) % 8) == 2) & ((yy % 8) == 3)
+        t.mix(dots.astype(np.float32), (214, 214, 200), 0.7)
+    elif kind == "stripe":
         t.mix(((xx % 16) < 7).astype(np.float32), ink, 0.8)
         t.mix(((xx % 16) == 10).astype(np.float32), (190, 176, 120), 0.7)
     elif kind == "floral":
@@ -1493,7 +1511,7 @@ def wallpaper(kind, seed, worn=False):
         t.mix(edge, (90, 80, 64), 0.8)
         mould = np.clip((yy - 36) / 28, 0, 1) * np.clip(P.fbm(rng, ((16, 1.0), (32, 0.6))) * 2 + 0.1, 0, 1)
         t.mix(mould, (40, 46, 34), 0.75)
-    return wear(t, 0.25, 0)
+    return wear(t, 0.25 if worn else 0.12, 0)
 
 
 TILES = {"pink": (214, 170, 168), "teal": (130, 178, 166), "white": (222, 220, 210)}
@@ -1611,7 +1629,8 @@ def textures():
         "home_picture_lake": lambda: picture("lake", 992), "home_picture_family": lambda: picture("family", 993),
         "home_picture_stitch": lambda: picture("stitch", 994), "home_mirror": lambda: mirror(995),
         "home_calendar": lambda: calendar(996), "home_phone": lambda: phone(997),
-        "home_curtains_gold": lambda: curtains(998, (170, 140, 64)), "home_curtains_rose": lambda: curtains(999, (150, 96, 96)),
+        **{f"home_curtains_{c}{part}": (lambda c=c, part=part: curtains(seed, CURTAINS[c], part.strip("_") or "bottom"))
+           for seed, c in ((998, "gold"), (999, "rose"), (1003, "green")) for part in ("", "_top")},
         "home_blinds": lambda: blinds(1000),
         "home_mattress": lambda: mattress(1001), "home_mattress_stained": lambda: mattress(1002, True),
         "home_pillow": lambda: pillow(1003), "home_sheet": lambda: wear(plain(1004, (226, 222, 210), 0.04, 0.1), 0.25, 0),
@@ -1830,8 +1849,9 @@ def blocks():
     add("home_calendar", [[5, 3, 0, 11, 13, 0.3, "home_calendar"]], "Calendar", "WOOL", decor=True)
     add("home_phone", [[6, 7, 0, 10, 12, 1.5, "home_phone"], [6.5, 8, 1.5, 9.5, 11.5, 2.3, "home_phone"],
                        [7.5, 2, 0.8, 8.5, 8, 1.6, "home_rubber"]], "Telephone", "METAL", decor=True)
-    for c in ("gold", "rose"):
+    for c in CURTAINS:
         add(f"home_curtains_{c}", [[0, 0, 15, 16, 16, 15.5, f"home_curtains_{c}"]], "Curtains", "WOOL", decor=True)
+        add(f"home_curtains_{c}_top", [[0, 0, 15, 16, 16, 15.5, f"home_curtains_{c}_top"]], "Curtains", "WOOL", decor=True)
     add("home_blinds", [[0, 0, 1, 16, 16, 1.5, "home_blinds"]], "Blinds", "WOOL", decor=True)
 
     for q in QUILTS:

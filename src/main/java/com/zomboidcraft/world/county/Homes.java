@@ -52,14 +52,15 @@ final class Homes {
     /** Width, depth (porch included) and floors for a style, before fitting the lot. */
     private int[] size(House.Style s) {
         return switch (s) {
-            case RANCH -> new int[] {16 + rng.nextInt(5), 10 + rng.nextInt(3), 1};
-            case COLONIAL -> new int[] {11 + rng.nextInt(4), 13 + rng.nextInt(3), 2};
-            case BUNGALOW -> new int[] {10 + rng.nextInt(3), 13 + rng.nextInt(3), 1};
-            case FARMHOUSE -> new int[] {12 + rng.nextInt(3), 14 + rng.nextInt(3), 2};
-            case CABIN -> new int[] {8 + rng.nextInt(3), 10 + rng.nextInt(2), 1};
-            case TRAILER -> new int[] {14 + rng.nextInt(3), 6 + rng.nextInt(2), 1};
-            case SHOTGUN -> new int[] {6 + rng.nextInt(2), 15 + rng.nextInt(4), 1};
-            case MANSION -> new int[] {20 + rng.nextInt(7), 16 + rng.nextInt(3), 2};
+            // roomy enough for a hall, rooms off it and walls two layers thick (see Interior)
+            case RANCH -> new int[] {22 + rng.nextInt(6), 16 + rng.nextInt(3), 1};
+            case COLONIAL -> new int[] {17 + rng.nextInt(5), 15 + rng.nextInt(3), 2};
+            case BUNGALOW -> new int[] {12 + rng.nextInt(4), 16 + rng.nextInt(4), 1};
+            case FARMHOUSE -> new int[] {16 + rng.nextInt(4), 17 + rng.nextInt(3), 2};
+            case CABIN -> new int[] {9 + rng.nextInt(4), 12 + rng.nextInt(3), 1};
+            case TRAILER -> new int[] {18 + rng.nextInt(4), 7 + rng.nextInt(2), 1};
+            case SHOTGUN -> new int[] {7 + rng.nextInt(2), 21 + rng.nextInt(5), 1};
+            case MANSION -> new int[] {24 + rng.nextInt(7), 19 + rng.nextInt(5), 2};
         };
     }
 
@@ -73,14 +74,11 @@ final class Homes {
         int lw = lot.w(), ld = lot.d();
         int[] sz = size(style);
         int hw = sz[0], hd = sz[1], floors = sz[2];
-        if (style == House.Style.MANSION && rng.nextDouble() < 0.3) {
-            floors = 3;
-        }
         // fit the lot: narrow the house, or drop to a smaller style
         if (hw > lw - 5) {
             hw = lw - 5;
-            if (style == House.Style.RANCH && hw < 16 || style == House.Style.MANSION && hw < 16) {
-                style = hw >= 10 ? House.Style.BUNGALOW : House.Style.SHOTGUN;
+            if (style == House.Style.RANCH && hw < 20 || style == House.Style.MANSION && hw < 20) {
+                style = hw >= 11 ? House.Style.BUNGALOW : House.Style.SHOTGUN;
                 int[] alt = size(style);
                 hd = alt[1];
                 floors = alt[2];
@@ -91,7 +89,10 @@ final class Homes {
         if (hd > ld - back - 3) {
             hd = Math.max(8, ld - back - 3);
         }
-        if (hw < 6 || hd < (style == House.Style.TRAILER ? 5 : 8)) {
+        if (floors > 1 && hw < 14) {
+            floors = 1;  // too narrow for a hall with the stairs beside it
+        }
+        if (hw < 7 || hd < (style == House.Style.TRAILER ? 7 : 9)) {
             yardOnly(p, lw, ld, mix);
             return;
         }

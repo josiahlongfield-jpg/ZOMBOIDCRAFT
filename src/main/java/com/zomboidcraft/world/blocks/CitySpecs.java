@@ -975,7 +975,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_calendar", FACING, DECOR, 0, SoundType.WOOL, 0f, 5, 3, 0, 11, 13, 0.3);
         s("home_phone", FACING, DECOR, 0, SoundType.METAL, 0f, 6, 7, 0, 10, 12, 1.5, 6.5, 8, 1.5, 9.5, 11.5, 2.3, 7.5, 2, 0.8, 8.5, 8, 1.6);
         s("home_curtains_gold", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
+        s("home_curtains_gold_top", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
         s("home_curtains_rose", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
+        s("home_curtains_rose_top", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
+        s("home_curtains_green", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
+        s("home_curtains_green_top", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15, 16, 16, 15.5);
         s("home_blinds", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 1, 16, 16, 1.5);
         s("home_bed_quilt_head", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1, 0, 16, 3.5, 14.5, 0, 3.5, 0, 16, 8, 14.5, 0, 0, 14.5, 16, 15, 16, 2, 8, 9.5, 14, 10.5, 14, 0, 8, 0, 16, 9, 8, 0, 8, 7.5, 16, 9.3, 9.5, 0.5, 0, 12.5, 2, 1, 14, 14, 0, 12.5, 15.5, 1, 14);
         s("home_bed_quilt_foot", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1, 1.5, 16, 3.5, 16, 0, 3.5, 1.5, 16, 8, 16, 0, 8, 1.5, 16, 9, 16, 0, 4, 1.2, 16, 9, 1.5, 0, 0, 0, 16, 7, 1.2);
