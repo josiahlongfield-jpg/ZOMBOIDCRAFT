@@ -65,6 +65,17 @@ CANDIDATES = {
     "ui.drop": ("Dropping an item on the floor", 0.1, 1.0, 2, []),
     "ui.moodle": ("A bad moodle appears: thirst, exhaustion, panic", 0.4, 3.0, 2, []),
     "ui.skill": ("A skill levels up", 0.3, 2.0, 2, []),
+    # World ambience: beds that loop under the weather, and sparse one-shots
+    "amb.rain": ("Rain outdoors: the bed you hear in the street", 6.0, 12.0, 2, []),
+    "amb.roof": ("Rain heard from inside: on the roof and windows", 6.0, 12.0, 2, []),
+    "amb.wind": ("Wind: gusts and howling between buildings", 6.0, 12.0, 2, []),
+    "amb.thunder": ("Thunder: close cracks and distant rolls", 2.0, 9.0, 2, []),
+    "amb.hail": ("Hail on glass, roofs and cars", 4.0, 10.0, 2, []),
+    "amb.distant": ("Far off in the city: alarms, dogs, sirens, shots", 1.5, 7.0, 2, []),
+    "amb.creak": ("Inside an empty building: creaks and settling", 0.5, 4.0, 2, []),
+    "amb.drip": ("Dripping water inside", 3.0, 10.0, 2, []),
+    "amb.crow": ("Crows and ravens by day", 0.5, 4.0, 2, []),
+    "amb.night": ("Night: crickets and owls", 6.0, 12.0, 2, []),
 }
 
 MAX_CLIPS = 90   # per moment; the page builder trims each round further
@@ -99,6 +110,16 @@ EXTRA = {
     "ui.drop": [("ui_drop", r"."), ("s_ui_drop", r".")],
     "ui.moodle": [("ui_sting", r"."), ("s_ui_sting", r".")],
     "ui.skill": [("ui_page", r"."), ("s_ui_page", r".")],
+    "amb.rain": [("amb_rain", r"."), ("s_amb_rain", r".")],
+    "amb.roof": [("amb_roof", r"."), ("s_amb_roof", r".")],
+    "amb.wind": [("amb_wind", r"."), ("s_amb_wind", r".")],
+    "amb.thunder": [("amb_thunder", r"."), ("s_amb_thunder", r".")],
+    "amb.hail": [("amb_hail", r"."), ("s_amb_hail", r".")],
+    "amb.distant": [("amb_distant", r"."), ("s_amb_distant", r".")],
+    "amb.creak": [("amb_creak", r"."), ("s_amb_creak", r".")],
+    "amb.drip": [("amb_drip", r"."), ("s_amb_drip", r".")],
+    "amb.crow": [("amb_crow", r"."), ("s_amb_crow", r".")],
+    "amb.night": [("amb_night", r"."), ("s_amb_night", r".")],
 }
 
 
