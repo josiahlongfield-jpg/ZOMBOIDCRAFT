@@ -8,7 +8,9 @@ from those in 3D so it flows across chart seams.
 
 Geometry damage uses the separate parts the models ship with: doors swing open or go missing,
 glass panes get knocked out, tyres go flat or come off (and the body sags onto that corner), the
-nose crumples, and a burnt shell sits low on its rims.
+nose crumples, and a burnt shell sits low on its rims. The boot (back doors, tailgate, hatch, or
+a lid cut out of the body) is split off with its hinge so the game can swing it open, and the load
+space behind it gets a dark lining and some boxes and bags.
 
     python3 tools/cars/wreck.py MODEL.glb OUT_DIR --variants abandoned,wrecked,burnt --seed 3
 writes OUT_DIR/<name>_<variant>.json (positions, uvs, normals) and .png (+ _s.png LabPBR specular)
@@ -101,29 +103,37 @@ class Car:
         self._wheels()
 
     def _doors(self):
-        """Hinges for each door; door windows ride along with their door."""
+        """Hinges for each door; door windows (and a spare wheel on a back door) ride along with it."""
         self.door_of = {}  # part index -> door part index
         doors = [i for i, p in enumerate(self.parts) if p['cls'] == 'door']
+        width = self.hi[0] - self.lo[0]
         for i in doors:
             lo, hi = bbox(self.P[self.pid == i])
             s = hi - lo
             p = self.parts[i]
             p['lo'], p['hi'] = lo, hi
+            p['back'] = (lo[2] + hi[2]) / 2 < self.lo[2] + 0.3 * (self.hi[2] - self.lo[2])
             if s[2] >= s[0]:
                 p['kind'] = 'side'
             elif s[1] < 0.5 * s[0]:
-                p['kind'] = 'tailgate'
+                p['kind'] = 'tailgate'  # hinged at the bottom, folds down
+            elif s[0] > 0.55 * width:
+                p['kind'] = 'hatch'  # full width, hinged at the top, lifts
             else:
-                p['kind'] = 'rear'
+                p['kind'] = 'rear'  # one of a pair, hinged at the outer edge
             self.door_of[i] = i
         for i, p in enumerate(self.parts):
-            if p['cls'] != 'glass':
+            if p['cls'] == 'door' or not (p['cls'] == 'glass' or 'wheel' in p['name'].lower()):
                 continue
             lo, hi = bbox(self.P[self.pid == i])
             c = (lo + hi) / 2
             for d in doors:
-                dl, dh = self.parts[d]['lo'] - 0.06, self.parts[d]['hi'] + 0.06
-                if dl[0] <= c[0] <= dh[0] and dl[2] <= c[2] <= dh[2] and lo[1] >= dl[1] - 0.05 and (hi - lo)[0] < 0.5:
+                dp = self.parts[d]
+                reach = 0.3 if dp['back'] else 0.06
+                dl, dh = dp['lo'] - [0.06, 0.06, reach], dp['hi'] + [0.06, 0.06, reach]
+                narrow = (hi - lo)[0] < 0.5 or (dp['back'] and (hi - lo)[0] <= (dp['hi'] - dp['lo'])[0] + 0.1)
+                if (dl[0] <= c[0] <= dh[0] and dl[2] <= c[2] <= dh[2] and lo[1] >= dl[1] - 0.05 and hi[1] <= dh[1]
+                        and narrow and (p['cls'] == 'glass' or dp['back'])):
                     self.door_of[i] = d
                     break
 
@@ -436,29 +446,42 @@ def rot_x(Q, pivot, a):
     return np.stack([d[..., 0], y, z], -1) + pivot
 
 
+def swing(kind, lo, hi):
+    """Pivot, axis and full opening angle for a door of this kind with this closed bounding box."""
+    sgn = 1 if (lo[0] + hi[0]) > 0 else -1
+    if kind == 'side':
+        return np.array([hi[0] if sgn > 0 else lo[0], 0, hi[2]]), 'y', -sgn * 1.15
+    if kind == 'tailgate':
+        return np.array([0, lo[1], lo[2]]), 'x', -1.5
+    if kind == 'hatch':
+        return np.array([0, hi[1], hi[2]]), 'x', 1.2
+    if kind == 'shutter':  # a box truck's roll-up door, folded up under the roof inside
+        return np.array([0, hi[1] - 0.08, lo[2]]), 'x', -1.6
+    return np.array([hi[0] if sgn > 0 else lo[0], 0, lo[2]]), 'y', sgn * 1.6
+
+
+def turn(Q, pivot, axis, a):
+    return rot_x(Q, pivot, a) if axis == 'x' else rot_y(Q, pivot, a)
+
+
 def damage(car, v, rng):
+    """Damaged positions, which triangles stay, broken and cracked panes, and the doors still shut."""
     P = car.P.copy()
     keep = np.ones(len(P), bool)
+    shut = []
     # doors
     for i, p in enumerate(car.parts):
         if p['cls'] != 'door':
             continue
         sel = np.isin(car.pid, [j for j, d in car.door_of.items() if d == i])
-        lo, hi = p['lo'], p['hi']
         r = rng.random()
         if r < v['missing']:
             keep &= ~sel
         elif r < v['missing'] + v['open']:
-            if p['kind'] == 'side':
-                sgn = 1 if (lo[0] + hi[0]) > 0 else -1
-                pivot = np.array([hi[0] if sgn > 0 else lo[0], 0, hi[2]])
-                P[sel] = rot_y(P[sel], pivot, -sgn * rng.uniform(0.5, 1.15))
-            elif p['kind'] == 'tailgate':
-                P[sel] = rot_x(P[sel], np.array([0, lo[1], lo[2]]), rng.uniform(1.3, 1.57))
-            else:
-                sgn = 1 if (lo[0] + hi[0]) > 0 else -1
-                pivot = np.array([hi[0] if sgn > 0 else lo[0], 0, lo[2]])
-                P[sel] = rot_y(P[sel], pivot, sgn * rng.uniform(0.8, 1.6))
+            pivot, axis, a = swing(p['kind'], p['lo'], p['hi'])
+            P[sel] = turn(P[sel], pivot, axis, a * rng.uniform(0.5, 1.0))
+        else:
+            shut.append(i)
     # glass
     broken, cracked = set(), set()
     for k in range(car.npanes):
@@ -508,27 +531,213 @@ def damage(car, v, rng):
         P[..., 0] += t ** 2 * jag * 0.08
         cracked |= {k for k in range(car.npanes) if k not in broken}
     P[..., 1] = np.maximum(P[..., 1], -0.02)
-    return P, keep, broken, cracked
+    return P, keep, broken, cracked, shut
+
+
+# ---------------------------------------------------------------- opening boots
+
+def boot(car, P, keep, shut, mode):
+    """
+    The parts that swing open when someone searches the car: the shut back doors, tailgate or hatch
+    the model has, or else a lid cut out of the body (a saloon's boot lid, a hatchback's or estate's
+    hatch, a box truck's back doors). Returns a lid index per triangle (-1 for the fixed body), each
+    lid's (pivot, axis, angle) on the damaged positions, and dark backing triangles that close the
+    hole behind each lid.
+    """
+    lid = np.full(len(P), -1)
+    specs, openings = [], []
+    if mode is None:
+        return lid, specs, []
+    O, n, c = car.P, car.nrm, car.P.mean(1)
+    lo, hi = car.lo, car.hi
+    width, length = hi[0] - lo[0], hi[2] - lo[2]
+    body = (car.cls == 'body') & np.isin(car.pid, list(car.door_of), invert=True)
+
+    def add(sel, kind=None, pivot=None, axis=None, a=None):
+        sel = sel & keep & (lid < 0)
+        if sel.sum() < 2:
+            return
+        if kind is not None:
+            pivot, axis, a = swing(kind, *bbox(P[sel]))
+        lid[sel] = len(specs)
+        specs.append((pivot, axis, a))
+        openings.append((kind, bbox(P[sel])))
+
+    doors = [i for i in shut if car.parts[i]['back'] and car.parts[i]['kind'] != 'side']
+    has_back = any(p['cls'] == 'door' and p['back'] and p['kind'] != 'side' for p in car.parts)
+    if doors:
+        for i in doors:
+            add(np.isin(car.pid, [j for j, d in car.door_of.items() if d == i]), car.parts[i]['kind'])
+    elif has_back:
+        # its back doors hang open or are gone already: nothing to swing, but still stuff inside
+        for p in car.parts:
+            if p['cls'] == 'door' and p['back'] and p['kind'] != 'side':
+                openings.append((p['kind'], (p['lo'], p['hi'])))
+    elif mode == 'truck':
+        back = body & (n[:, 2] < -0.7) & (c[:, 1] > 0.5 * hi[1]) & (np.abs(c[:, 0]) < 0.44 * width)
+        if not back.any():
+            return lid, specs, []
+        # the roll-up door: every face of the panel (both sides and its slat edges) at the back
+        add(body & (c[:, 2] < c[back, 2].min() + 0.08) & (c[:, 1] > 0.3 * hi[1]) & (np.abs(c[:, 0]) < 0.44 * width), 'shutter')
+    else:
+        panes = []
+        for k in range(car.npanes):
+            m = car.pane == k
+            pl, ph = bbox(O[m])
+            if ph[0] - pl[0] > 0.45 * width and (pl[2] + ph[2]) / 2 < lo[2] + 0.5 * length and pl[1] > 0.5 * hi[1]:
+                panes.append((pl[2], k, pl, ph))
+        if panes:
+            _, k, wl, wh = min(panes, key=lambda t: t[0])
+        else:  # a convertible: the boot is the rear fifth
+            k, wl, wh = -2, lo + [0, 0, 0.2 * length], hi
+        inner = (np.abs(n[:, 0]) < 0.6) & (np.abs(c[:, 0]) < 0.46 * width)
+        if wl[2] - lo[2] > 0.35:
+            # saloon: the deck behind the rear window and the panel below it down to the lamps
+            deck = body & (O[..., 2].max(1) < wl[2] - 0.02)
+            top = O[deck][..., 1].max()
+            sel = deck & inner & (O[..., 1].min(1) > top - 0.28)
+            if (sel & keep).sum() >= 2:
+                q = P[sel & keep]
+                add(sel, pivot=np.array([0, q[..., 1].max(), q[..., 2].max()]), axis='x', a=1.1)
+        else:
+            # hatchback or estate: the rear window and the panel below it, hinged at the roof
+            sel = ((car.pane == k) | (body & inner & (c[:, 2] < wl[2] + 0.15) & (n[:, 2] < -0.3))) \
+                & (c[:, 1] > wl[1] - 0.45) & (c[:, 1] < wh[1] + 0.02)
+            add(sel, 'hatch')
+    return lid, specs, rooms(openings, hi[2] - lo[2])
+
+
+def rooms(openings, length):
+    """The load space behind the lids, as boxes (lo, hi, open faces): what you see once it's open."""
+    back = [o for o in openings if o[0] in ('rear', 'shutter', 'hatch')]
+    out = []
+    if back:
+        l = np.min([b[1][0] for b in back], 0); h = np.max([b[1][1] for b in back], 0)
+        kind = back[0][0]
+        if kind == 'hatch':
+            out.append((l + [0.06, 0.02, 0.08], np.array([h[0] - 0.06, h[1] - 0.1, h[2] + 0.45]), ('-z',)))
+        else:
+            depth = min(0.45 * length, 3.5) if kind == 'shutter' else min(0.3 * length, 1.6)
+            out.append((l + [0.04, 0.02, 0.06], np.array([h[0] - 0.04, h[1] - 0.03, l[2] + depth]), ('-z',)))
+    for kind, (l, h) in openings:
+        if kind is None:  # a saloon's boot under its lid
+            out.append((l + [0.15, -0.08, 0.08], h - [0.15, 0.04, 0.03], ('-z', '+y')))
+    return out
+
+
+# load-space contents: (width, height, depth) ranges in metres and the colours they come in
+ITEMS = {
+    'box': ((0.3, 0.5), (0.22, 0.4), (0.28, 0.45), ['card', 'card_dark']),
+    'bag': ((0.5, 0.7), (0.2, 0.3), (0.25, 0.32), ['olive', 'black', 'navy']),
+    'case': ((0.45, 0.6), (0.14, 0.2), (0.35, 0.45), ['brown', 'black']),
+    'can': ((0.18, 0.22), (0.28, 0.32), (0.26, 0.3), ['red']),
+    'tools': ((0.4, 0.5), (0.18, 0.22), (0.2, 0.24), ['red', 'navy']),
+    'medic': ((0.4, 0.55), (0.22, 0.3), (0.25, 0.3), ['orange', 'medic_red']),
+    'crate': ((0.4, 0.6), (0.25, 0.35), (0.3, 0.4), ['black', 'olive']),
+}
+THEMES = {
+    'trunk': ['box', 'bag', 'case', 'bag', 'can'], 'work': ['box', 'tools', 'can', 'box', 'bag'],
+    'police': ['bag', 'box', 'crate'], 'swat': ['crate', 'crate', 'bag'], 'ambulance': ['medic', 'medic', 'box'],
+    'fire': ['tools', 'bag', 'box'], 'cargo': ['box', 'box', 'box', 'crate'],
+}
+COLOURS = {'liner': (0.055, 0.055, 0.06), 'card': (0.4, 0.31, 0.2), 'card_dark': (0.31, 0.24, 0.16),
+           'olive': (0.19, 0.21, 0.14), 'black': (0.07, 0.07, 0.075), 'navy': (0.11, 0.13, 0.2),
+           'brown': (0.26, 0.17, 0.11), 'red': (0.38, 0.09, 0.07), 'orange': (0.5, 0.25, 0.08),
+           'medic_red': (0.45, 0.12, 0.1)}
+
+
+def cuboid(lo, hi, yaw=0.0, skip=(), both=False):
+    """A box's faces as triangles (outward, or both ways for a liner), turned by yaw about its centre."""
+    c = (lo + hi) / 2
+    v = np.array([[x, y, z] for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])])
+    if yaw:
+        v = rot_y(v, c, yaw)
+    faces = {'-x': (0, 1, 3, 2), '+x': (4, 6, 7, 5), '-y': (0, 4, 5, 1), '+y': (2, 3, 7, 6),
+             '-z': (0, 2, 6, 4), '+z': (1, 5, 7, 3)}
+    tris = []
+    for name, (a, b, cc, d) in faces.items():
+        if name in skip:
+            continue
+        tris += [v[[a, b, cc]], v[[a, cc, d]]]
+        if both:
+            tris += [v[[cc, b, a]], v[[d, cc, a]]]
+    return tris
+
+
+def contents(room, theme, rng, full):
+    """The liner of a load space and some boxes and bags on its floor: [(triangles, colour)]."""
+    lo, hi, open_faces = room
+    out = [(cuboid(lo, hi, skip=open_faces, both=True), 'liner')]
+    if full <= 0:
+        return out
+    room_h = hi[1] - lo[1] - 0.04
+    z = lo[2] + 0.05
+    for row in range(3):
+        if z > hi[2] - 0.25:
+            break
+        x, depth = lo[0] + 0.05, 0.0
+        while x < hi[0] - 0.2:
+            kind = THEMES[theme][rng.integers(len(THEMES[theme]))]
+            (w0, w1), (h0, h1), (d0, d1), cols = ITEMS[kind]
+            w, h, d = rng.uniform(w0, w1), min(rng.uniform(h0, h1), room_h), rng.uniform(d0, d1)
+            if x + w > hi[0] - 0.05 or z + d > hi[2] - 0.03 or h < 0.1:
+                x += 0.15
+                continue
+            if rng.random() < full:
+                b = np.array([x, lo[1], z]); t = b + [w, h, d]
+                col = cols[rng.integers(len(cols))]
+                out.append((cuboid(b, t, rng.uniform(-0.18, 0.18)), col))
+                if kind == 'box' and rng.random() < 0.35 and h * 1.8 < room_h:  # one stacked on top
+                    s = rng.uniform(0.6, 0.9)
+                    b2 = b + [w * (1 - s) / 2, h, d * (1 - s) / 2]
+                    out.append((cuboid(b2, b2 + [w * s, h * s, d * s], rng.uniform(-0.3, 0.3)), col))
+                depth = max(depth, d)
+            x += w + rng.uniform(0.03, 0.12)
+        z += max(depth, 0.3) + 0.05
+    return out
 
 
 # ---------------------------------------------------------------- output
 
-def build_variant(car, vname, seed):
-    """Damaged triangles (n,3,3), their atlas uvs (n,3,2) in 0-1, and the colour and specular images."""
+def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
+    """
+    The damaged car as a dict: tris (n,3,3) and uv (n,3,2, 0-1), lid (n, -1 for the fixed body) and
+    lids [(pivot, axis, angle)] for the parts that open, plus the colour and specular images.
+    """
     rng = np.random.default_rng(seed)
     v = VARIANTS[vname]
-    P, keep, broken, cracked = damage(car, v, rng)
+    P, keep, broken, cracked, shut = damage(car, v, rng)
+    lid, lids, spaces = boot(car, P, keep, shut, boot_mode)
     c, sm, f0 = paint(car, v, np.random.default_rng(seed + 99), broken, cracked)
     W, H = car.atlas
     img = np.zeros((H, W, 3), np.float32); img[car.tex['ok']] = c
     spec = np.zeros((H, W, 4), np.float32); spec[car.tex['ok']] = np.stack([sm, f0, np.zeros_like(sm), np.zeros_like(sm)], -1)
+    uv = car.uvpx[keep] / np.array([W, H])
+    tris, lid = P[keep], lid[keep]
+    full = 0.0 if v['burnt'] else {'usable': 0.8}.get(vname, 0.55)
+    stuff = [piece for room in spaces for piece in contents(room, theme, rng, full)]
+    if stuff:
+        # each colour samples an 8x8 block the atlas doesn't use, painted flat
+        free = np.argwhere(~car.tex['ok'][:H // 8 * 8, :W // 8 * 8].reshape(H // 8, 8, W // 8, 8).any((1, 3)))
+        spot = {}
+        for name in dict.fromkeys(col for _, col in stuff):
+            by, bx = free[-1 - len(spot)] if len(free) > len(spot) else (0, 0)
+            img[by * 8:by * 8 + 8, bx * 8:bx * 8 + 8] = COLOURS[name]
+            spot[name] = [(bx * 8 + 4) / W, (by * 8 + 4) / H]
+        add = np.array([t for ts, _ in stuff for t in ts])
+        uv = np.concatenate([uv, np.array([[spot[col]] * 3 for ts, col in stuff for _ in ts])])
+        tris = np.concatenate([tris, add])
+        lid = np.concatenate([lid, np.full(len(add), -1)])
     colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
     specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
-    return P[keep], car.uvpx[keep] / np.array([W, H]), colour, specular
+    return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'colour': colour, 'specular': specular}
 
 
-def make_variant(car, vname, seed, out_dir):
-    Pk, uv, colour, specular = build_variant(car, vname, seed)
+def make_variant(car, vname, seed, out_dir, opened=0.0):
+    b = build_variant(car, vname, seed)
+    Pk, uv, colour, specular = b['tris'].copy(), b['uv'], b['colour'], b['specular']
+    for k, (pivot, axis, a) in enumerate(b['lids']):
+        Pk[b['lid'] == k] = turn(Pk[b['lid'] == k], pivot, axis, a * opened)
     stem = f"{car.name.lower()}_{vname}"
     colour.save(os.path.join(out_dir, stem + '.png'))
     specular.save(os.path.join(out_dir, stem + '_s.png'))
@@ -556,11 +765,12 @@ def main():
     ap.add_argument('model'); ap.add_argument('out')
     ap.add_argument('--variants', default='usable,abandoned,wrecked,burnt')
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--open', type=float, default=0.0, help='how far the boot is open, 0-1')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     car = prepare(a.model)
     for i, vn in enumerate(a.variants.split(',')):
-        print(make_variant(car, vn, a.seed * 1000 + i, a.out), car.atlas)
+        print(make_variant(car, vn, a.seed * 1000 + i, a.out, a.open), car.atlas)
 
 
 if __name__ == '__main__':

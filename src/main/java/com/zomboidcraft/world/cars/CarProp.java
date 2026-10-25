@@ -42,6 +42,8 @@ import net.minecraft.world.phys.Vec3;
 public class CarProp extends Entity {
     private static final EntityDataAccessor<String> MODEL = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
+    /** Someone has the boot open; clients swing the lid or back doors up while it is. */
+    private static final EntityDataAccessor<Boolean> OPEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -50,6 +52,8 @@ public class CarProp extends Entity {
         }
     };
     private boolean searched;
+    /** How far the boot is open, 0 to 1, last tick and this one (client side). */
+    public float lidOpen, lidOpenO;
 
     public CarProp(EntityType<? extends CarProp> type, Level level) {
         super(type, level);
@@ -75,6 +79,7 @@ public class CarProp extends Entity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(MODEL, "sedan");
         builder.define(VARIANT, "usable");
+        builder.define(OPEN, false);
     }
 
     @Override
@@ -135,7 +140,10 @@ public class CarProp extends Entity {
             default -> "Boot";
         };
         player.openMenu(new SimpleMenuProvider((id, inventory, p) -> ChestMenu.threeRows(id, inventory, boot), Component.literal(title)));
-        server.playSound(null, getX(), getY(), getZ(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5f, 0.6f);
+        if (!entityData.get(OPEN)) {
+            entityData.set(OPEN, true);
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.7f);
+        }
         return InteractionResult.SUCCESS;
     }
 
@@ -159,9 +167,27 @@ public class CarProp extends Entity {
         }
     }
 
+    /** A parked car does nothing but open its boot while someone searches it and shut it after. */
     @Override
     public void tick() {
-        // a parked car does nothing
+        if (level() instanceof ServerLevel server) {
+            if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
+                entityData.set(OPEN, false);
+                server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
+            }
+        } else {
+            lidOpenO = lidOpen;
+            lidOpen = Math.clamp(lidOpen + (entityData.get(OPEN) ? 0.08f : -0.1f), 0f, 1f);
+        }
+    }
+
+    private boolean beingSearched(ServerLevel server) {
+        for (Player player : server.players()) {
+            if (player.containerMenu instanceof ChestMenu menu && menu.getContainer() == boot) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
