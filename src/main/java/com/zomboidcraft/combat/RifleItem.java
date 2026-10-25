@@ -2,15 +2,18 @@ package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.WeaponCard;
+import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -106,6 +109,11 @@ public class RifleItem extends Item {
         }
         player.playSound(type.magIn(), 0.6f, 1.3f);
         return true;
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        return WeaponCard.of(stack);
     }
 
     @Override
