@@ -31,6 +31,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();
         com.zomboidcraft.carry.Carry.register();
+        com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();
         SurvivalEvents.register();
