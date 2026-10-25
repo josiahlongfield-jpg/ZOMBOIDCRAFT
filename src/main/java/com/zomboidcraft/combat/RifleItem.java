@@ -57,8 +57,9 @@ public class RifleItem extends Item {
     }
 
     /**
-     * Stand-in for the weapon screen: right-click the rifle with an attachment to mount it (whatever
-     * held that slot comes back on the cursor), or with an empty cursor to take the optic off.
+     * Stand-in for the weapon screen: right-click the gun with a part to fit it (whatever held that slot
+     * comes back on the cursor), or with an empty cursor to take the first part off, optic first and
+     * the magazine last.
      */
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack self, ItemStack other, net.minecraft.world.inventory.Slot slot,
@@ -67,7 +68,7 @@ public class RifleItem extends Item {
             return false;
         }
         if (other.isEmpty()) {
-            Attachments.Slot filled = Attachments.firstFilled(self);
+            Attachments.Slot filled = ZcConfig.get().guns.attachments ? Attachments.firstFilled(self) : null;
             if (filled == null) {
                 return false;
             }
@@ -79,7 +80,7 @@ public class RifleItem extends Item {
             return false;
         }
         // a swap hands back what was on the gun, which needs the cursor free
-        Attachments.Slot into = ((AttachmentItem) other.getItem()).slot();
+        Attachments.Slot into = Attachments.slotOf(other);
         if (other.getCount() > 1 && !Attachments.get(self, into).isEmpty()) {
             return false;
         }
@@ -103,11 +104,17 @@ public class RifleItem extends Item {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
-        Attachments.of(stack).mounted().forEach((slot, att) -> tooltip.accept(
-                Component.literal(AttachmentItem.slotName(slot) + ": ").withStyle(ChatFormatting.GRAY)
-                        .append(att.getHoverName().copy().withStyle(ChatFormatting.WHITE))));
-        if (!Attachments.of(stack).isEmpty()) {
-            tooltip.accept(Component.literal("Right-click with an empty hand to take it off").withStyle(ChatFormatting.DARK_GRAY));
+        for (Attachments.Slot part : Attachments.slots(stack)) {
+            ItemStack att = Attachments.get(stack, part);
+            if (part == Attachments.Slot.MAGAZINE) {
+                continue;
+            }
+            tooltip.accept(Component.literal(AttachmentItem.slotName(part) + ": ").withStyle(ChatFormatting.GRAY)
+                    .append(att.isEmpty() ? Component.literal("empty").withStyle(ChatFormatting.DARK_GRAY)
+                            : att.getHoverName().copy().withStyle(ChatFormatting.WHITE)));
+        }
+        if (Attachments.firstFilled(stack) != null) {
+            tooltip.accept(Component.literal("Right-click with an empty hand to take a part off").withStyle(ChatFormatting.DARK_GRAY));
         }
         tooltip.accept(Component.literal("Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
     }

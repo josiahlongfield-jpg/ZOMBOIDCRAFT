@@ -102,17 +102,21 @@ public final class Guns {
         st.flashLeft = FLASH_TICKS;
         setModelData(gun, 0, 1);
 
-        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once
+        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
+        // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
+        boolean suppressed = Attachments.suppressed(gun);
         level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
-                1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+                suppressed ? (float) config.suppressedVolume : 1f,
+                (suppressed ? 1.25f : 0.95f) + player.getRandom().nextFloat() * 0.1f);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
-        Noise.emit(level, player.position(), config.shotNoise);
+        Noise.emit(level, player.position(), config.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
 
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
         int aimLevel = Skills.level(player, Skill.AIMING);
-        double spread = (aiming ? config.aimSpread * Attachments.aimSpreadFactor(gun) : config.hipSpread) * (1 - 0.05 * aimLevel);
+        double spread = (aiming ? config.aimSpread * Attachments.aimSpreadFactor(gun) : config.hipSpread * Attachments.hipSpreadFactor(gun))
+                * (1 - 0.05 * aimLevel);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= 1.6;
         }
@@ -120,7 +124,9 @@ public final class Guns {
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
         level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
-        level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0.0, 0.0, 0.0, 0.0);
+        if (!suppressed) {
+            level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0.0, 0.0, 0.0, 0.0);
+        }
 
         Vec3 end = eye.add(dir.scale(config.range));
         BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
@@ -208,7 +214,6 @@ public final class Guns {
         player.stopUsingItem();
         st.reloadTick = MAG_OUT_AT;
         st.needsCharge = !g.mag() || g.rounds() == 0;
-        setModelData(gun, 1, 0);
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
             ItemStack old = new ItemStack(ModItems.RIFLE_MAGAZINE);
@@ -218,6 +223,7 @@ public final class Guns {
             }
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
+        setModelData(gun, 1, 0);
         sound(player, ModSounds.RIFLE_MAG_OUT);
     }
 

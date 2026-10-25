@@ -7,22 +7,713 @@
    {
     "threshold": 1,
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle_mag_out"
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash_suppressor"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock"
+       }
+      }
+     ]
     }
    },
    {
     "threshold": 2,
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle_mag_in"
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash_suppressor"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock"
+       }
+      },
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag_drop"
+      }
+     ]
     }
    },
    {
     "threshold": 3,
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle_charge"
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/charge/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/charge/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash_suppressor"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/stock"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/charge/stock"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/charge/mag"
+       }
+      }
+     ]
     }
    }
   ],
@@ -30,40 +721,1106 @@
    "type": "minecraft:condition",
    "property": "minecraft:using_item",
    "on_true": {
-    "type": "minecraft:range_dispatch",
+    "type": "minecraft:select",
     "property": "minecraft:custom_model_data",
-    "index": 1,
-    "entries": [
+    "index": 0,
+    "cases": [
      {
-      "threshold": 1,
+      "when": "red_dot",
       "model": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle_ads_flash"
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/body"
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/red_dot"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash_suppressor"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/light"
+           }
+          },
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "holo",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/body"
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/holo"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash_suppressor"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/light"
+           }
+          },
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "scope_4x",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/body"
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/scope_4x"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash_suppressor"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/light"
+           }
+          },
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag"
+         }
+        }
+       ]
       }
      }
     ],
     "fallback": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle_ads"
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/ads/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/ads/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash_suppressor"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/stock"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/ads/stock"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/ads/mag"
+       }
+      }
+     ]
     }
    },
    "on_false": {
-    "type": "minecraft:range_dispatch",
-    "property": "minecraft:custom_model_data",
-    "index": 1,
-    "entries": [
+    "type": "minecraft:composite",
+    "models": [
      {
-      "threshold": 1,
-      "model": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/assault_rifle/hip/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 0,
+      "cases": [
+       {
+        "when": "red_dot",
+        "model": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/red_dot"
+          }
+         ]
+        }
+       },
+       {
+        "when": "holo",
+        "model": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/holo"
+          }
+         ]
+        }
+       },
+       {
+        "when": "scope_4x",
+        "model": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/scope_4x"
+          }
+         ]
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/irons_up"
+        }
+       }
+      ],
+      "fallback": {
        "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle_flash"
+       "model": "zomboidcraft:item/weapon/assault_rifle/hip/irons_up"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 1,
+      "cases": [
+       {
+        "when": "suppressor",
+        "model": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/suppressor"
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash_suppressor"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         ]
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:range_dispatch",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "entries": [
+        {
+         "threshold": 1,
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 2,
+      "cases": [
+       {
+        "when": "foregrip",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/foregrip"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 3,
+      "cases": [
+       {
+        "when": "light",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/light"
+        }
+       },
+       {
+        "when": "laser",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/laser"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 4,
+      "cases": [
+       {
+        "when": "stock",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/stock"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/hip/stock"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 5,
+      "cases": [
+       {
+        "when": "mag",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/mag"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/hip/mag"
       }
      }
-    ],
-    "fallback": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle"
-    }
+    ]
    }
   }
  }

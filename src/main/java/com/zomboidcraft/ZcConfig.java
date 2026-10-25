@@ -238,10 +238,23 @@ public final class ZcConfig {
         public boolean jams = true;
         /** Rounds in a rifle magazine. */
         public int magazineSize = 30;
-        /** Attachments (red dot sights so far) can be mounted on guns. */
+        /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
-        /** Multiplies aimed spread with a red dot mounted. */
+        /** Multiply aimed spread with each optic mounted. */
         public double redDotAimSpread = 0.6;
+        public double holoAimSpread = 0.6;
+        public double scopeAimSpread = 0.35;
+        /** Field of view looking through the 4x scope, as a share of normal. */
+        public double scopeZoom = 0.25;
+        /** A suppressor multiplies how far zombies hear the shot, and how loud it sounds. */
+        public double suppressedNoise = 0.3;
+        public double suppressedVolume = 0.35;
+        /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
+        public double foregripRecoil = 0.75;
+        public double noStockRecoil = 1.5;
+        public double noStockSpread = 1.6;
+        /** A laser multiplies spread from the hip. */
+        public double laserHipSpread = 0.6;
     }
 
     public static ZcConfig get() {

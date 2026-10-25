@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
@@ -27,6 +28,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
         CombatClient.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);

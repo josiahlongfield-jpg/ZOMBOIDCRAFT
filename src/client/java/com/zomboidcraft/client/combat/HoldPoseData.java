@@ -10,13 +10,13 @@ import java.util.Map;
  */
 final class HoldPoseData {
     static final float REACH = 9.2f;
-    static final float[] RIFLE_READY = {-0.99933f, -0.70079f, 0.00000f};
-    static final float[] RIFLE_AIM = {-1.34569f, -0.61665f, 0.00000f};
+    static final float[] RIFLE_READY = {-1.04936f, -0.71307f, 0.00000f};
+    static final float[] RIFLE_AIM = {-1.34428f, -0.64338f, 0.00000f};
     static final float[] MELEE_READY = {-1.09171f, -0.72489f, 0.00000f};
     static final float[] MELEE_WINDUP = {-1.36313f, 0.36953f, 0.36347f};
     static final float[] MELEE_STRIKE = {1.50327f, -1.31919f, -2.38106f};
-    static final float[] RIFLE_READY_SUPPORT = {0.48757f, 12.16414f, -0.10965f, 0.14941f, 16.38550f, -0.47895f};
-    static final float[] RIFLE_AIM_SUPPORT = {-1.33054f, 12.05392f, -1.29637f, -3.76869f, 15.28521f, -2.59437f};
+    static final float[] RIFLE_READY_SUPPORT = {0.41480f, 12.55366f, 0.05981f, -0.09526f, 18.48688f, 0.40402f};
+    static final float[] RIFLE_AIM_SUPPORT = {-1.67771f, 12.41494f, -1.39951f, -5.25413f, 17.01744f, -2.66758f};
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
             "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},
