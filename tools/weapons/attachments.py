@@ -294,11 +294,11 @@ def look(wear=0.4):
         return np.where(crenel[..., None], c * 0.4, c)
 
     d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can,
-             cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.45, spread=0.14),
+             cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.26, tint='#7d8186', spread=0.08),
              poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
     d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.4 * (0.3 + wear))]
+                   lambda f, c: P.scratches(f, c, 0.2 * (0.3 + wear))]
     return d
 
 
