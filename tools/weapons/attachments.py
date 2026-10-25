@@ -65,7 +65,8 @@ def red_dot(m):
     b.rod(0.62, 0.88, 0.28, 'knurl', axis=0, at=(H, -0.10))                   # brightness dial
     b.rod(0.88, 0.92, 0.20, 'anod', axis=0, at=(H, -0.10))
     b.box((0.92, H + 0.10, -0.13), (0.925, H + 0.16, -0.07), 'mark')          # its setting mark
-    b.box((-0.04, H - 0.04, front + 0.08), (0.04, H + 0.04, front + 0.12), 'dot', light=15, noshade=True)
+    # the dot: 0.02 inch at 3.4 inches from the eye, about six screen pixels at 1080p while aiming
+    b.box((-0.01, H - 0.01, front + 0.10), (0.01, H + 0.01, front + 0.12), 'dot', light=15, noshade=True)
 
 
 def holo(m):

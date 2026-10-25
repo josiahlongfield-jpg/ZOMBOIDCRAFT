@@ -176,6 +176,10 @@ public final class ZcConfig {
         public double missingLimbChance = 0.15;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
+        /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
+        public double crosshairScale = 0.5;
+        /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
+        public boolean hideCrosshairWhenAiming = true;
     }
 
     public static class Combat {
@@ -265,6 +269,8 @@ public final class ZcConfig {
         public double noStockSpread = 1.6;
         /** A laser multiplies spread from the hip. */
         public double laserHipSpread = 0.6;
+        /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). The gun's own flash still shows. */
+        public boolean muzzleSmoke = false;
     }
 
     public static ZcConfig get() {

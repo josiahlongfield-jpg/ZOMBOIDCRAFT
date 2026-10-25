@@ -41,6 +41,10 @@ public final class ModSounds {
     public static final SoundEvent ZOMBIE_HORDE_DORMANT = register("zombie.horde_dormant");
     public static final SoundEvent ZOMBIE_HORDE_ANGRY = register("zombie.horde_angry");
 
+    /** Nailing a board up; heard a fair way off, like the noise zombies follow. */
+    public static final SoundEvent HAMMER_NAIL = register("item.hammer.nail", 32f);
+    public static final SoundEvent BANDAGE = register("item.bandage");
+
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
