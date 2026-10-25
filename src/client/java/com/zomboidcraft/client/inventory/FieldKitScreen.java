@@ -17,8 +17,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.sounds.SoundEvents;
+import com.zomboidcraft.client.sound.UiSounds;
+import net.minecraft.world.inventory.ContainerInput;
 import com.zomboidcraft.mixin.client.SlotAccessor;
 import java.util.HashMap;
 import java.util.Map;
@@ -247,18 +247,44 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         }
     }
 
+    /** What the gear slots held last tick, so putting a bag on or off buckles however it happened. */
+    private List<ItemStack> wornLast;
+
     @Override
     protected void containerTick() {
         super.containerTick();
         // bags put on or taken off while the kit is open change the tabs and grids
         layoutSlots();
+        List<ItemStack> worn = new ArrayList<>();
+        for (Slot slot : menu.slots) {
+            if (slot instanceof CarrySlots.GearSlot) worn.add(slot.getItem());
+        }
+        if (wornLast != null && !same(worn, wornLast)) UiSounds.play(UiSounds.WEAR);
+        wornLast = worn.stream().map(ItemStack::copy).toList();
+    }
+
+    private static boolean same(List<ItemStack> a, List<ItemStack> b) {
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++) {
+            if (!ItemStack.matches(a.get(i), b.get(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void slotClicked(Slot slot, int slotId, int button, ContainerInput input) {
+        // gear slots buckle instead (see containerTick)
+        if (slot != null && !(slot instanceof CarrySlots.GearSlot) && (slot.hasItem() || !menu.getCarried().isEmpty())) {
+            UiSounds.play(UiSounds.ITEM_MOVE);
+        }
+        super.slotClicked(slot, slotId, button, input);
     }
 
     /** Where the "take all" tape was last drawn, for clicks. */
     private int takeX, takeY, takeW;
 
     private void tabSound() {
-        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1.2f, 0.5f));
+        UiSounds.play(UiSounds.TAB);
     }
 
     /** The nearby tab under the mouse, or -1. */
@@ -299,7 +325,7 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         if (!bench && near != null && takeW > 0 && event.x() >= takeX && event.x() < takeX + takeW && event.y() >= takeY
                 && event.y() < takeY + 13) {
             minecraft.gameMode.handleInventoryButtonClick(menu.containerId, NearbyMenu.TAKE_ALL + near.selected);
-            tabSound();
+            UiSounds.play(UiSounds.CLICK);
             return true;
         }
         int tx = leftPos + carryX() + 10;
