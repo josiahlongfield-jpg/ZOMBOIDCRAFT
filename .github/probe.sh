@@ -8,6 +8,15 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== inventory2"
+echo "## InventoryScreen.init / constructor bytecode"
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/void init()/,/^$/p' | head -60
+echo "## Minecraft: methods mentioning Screen"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -i "screen"
+echo "## Minecraft: call sites creating InventoryScreen"
+javap -cp "$CP" -c -p net.minecraft.client.Minecraft 2>&1 | grep -n -B3 -A12 "class net/minecraft/client/gui/screens/inventory/InventoryScreen" | head -80
+exit 0
+
 echo "===== inventory1"
 classes 'gui/screens/inventory/(InventoryScreen|AbstractContainerScreen|AbstractRecipeBookScreen|EffectsInInventory|CreativeModeInventoryScreen|ContainerScreen)\.class|world/inventory/(InventoryMenu|AbstractContainerMenu|Slot|ChestMenu|MenuType)\.class|gui/screens/MenuScreens|renderer/RenderPipelines|resources/(Identifier|ResourceLocation)\.class|screenhandler|menu/v1|screen/v1/Screen|item/component/(ItemContainerContents|BundleContents)\.class|client/gui/render/state|GuiItemRenderState|client/renderer/state/'
 sig net.minecraft.client.gui.screens.inventory.InventoryScreen '.'
