@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundSource;
 public final class SoundVolumes {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft-sounds.json");
+    static final String MUFFLE_KEY = "wall_muffling";
 
     public enum Group {
         ZOMBIE_VOICES("zombie_voices"),
@@ -49,6 +50,17 @@ public final class SoundVolumes {
         public Component label() {
             return Component.translatable("options.zomboidcraft.sound." + key);
         }
+    }
+
+    /** How strongly walls and floors muffle sounds behind them (see Muffler); 0 lets sound pass like vanilla. */
+    private static volatile double muffle = 1.0;
+
+    public static double muffle() {
+        return muffle;
+    }
+
+    public static void setMuffle(double strength) {
+        muffle = Math.max(0.0, Math.min(1.0, strength));
     }
 
     /** Which group a sound event belongs to, or null for sounds the sliders leave alone. */
@@ -119,6 +131,10 @@ public final class SoundVolumes {
                         group.volume = Math.max(0.0, Math.min(1.0, v));
                     }
                 }
+                Double m = saved.get(MUFFLE_KEY);
+                if (m != null) {
+                    setMuffle(m);
+                }
             }
         } catch (IOException | RuntimeException e) {
             ZomboidCraft.LOGGER.warn("Couldn't read {}, using full volume for every group", FILE, e);
@@ -130,6 +146,7 @@ public final class SoundVolumes {
         for (Group group : Group.values()) {
             out.put(group.key, Math.round(group.volume * 100) / 100.0);
         }
+        out.put(MUFFLE_KEY, Math.round(muffle * 100) / 100.0);
         try (Writer writer = Files.newBufferedWriter(FILE)) {
             GSON.toJson(out, writer);
         } catch (IOException e) {

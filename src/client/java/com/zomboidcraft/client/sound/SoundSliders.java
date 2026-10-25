@@ -25,6 +25,7 @@ public final class SoundSliders {
                     for (SoundVolumes.Group group : SoundVolumes.Group.values()) {
                         sliders.add(new Slider(group));
                     }
+                    sliders.add(new MuffleSlider());
                     list.addSmall(sliders);
                     break;
                 }
@@ -51,6 +52,26 @@ public final class SoundSliders {
         @Override
         protected void applyValue() {
             SoundVolumes.set(group, value);
+        }
+    }
+
+    /** How much walls and floors muffle what's behind them. */
+    private static final class MuffleSlider extends AbstractSliderButton {
+        MuffleSlider() {
+            super(0, 0, 150, 20, Component.empty(), SoundVolumes.muffle());
+            updateMessage();
+        }
+
+        @Override
+        protected void updateMessage() {
+            Component label = Component.translatable("options.zomboidcraft.sound." + SoundVolumes.MUFFLE_KEY);
+            setMessage(value <= 0 ? Component.translatable("options.generic_value", label, Component.translatable("options.off"))
+                    : Component.translatable("options.percent_value", label, (int) Math.round(value * 100)));
+        }
+
+        @Override
+        protected void applyValue() {
+            SoundVolumes.setMuffle(value);
         }
     }
 
