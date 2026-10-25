@@ -43,6 +43,9 @@ QUERIES = {
     "door_break": ["door break", "wood door smash", "door kicked in", "wood splinter crash"],
     "human_dread": ["death rattle", "choking gurgle", "raspy breathing", "wet breathing", "man moaning in pain", "dying breath", "throat gurgle"],
     "human_scream": ["man scream horror", "screaming in agony", "woman shriek horror", "feral scream"],
+    "step_drag": ["foot drag", "dragging foot", "limping walk", "slow footsteps scuff", "shoe scuff", "dragging leg", "staggering footsteps", "zombie footsteps"],
+    "horde_dormant": ["crowd murmur distant", "zombie ambience", "groaning crowd", "moaning crowd distant", "undead ambience"],
+    "horde_angry": ["angry mob", "crowd screaming", "zombie horde attack", "rioting crowd", "zombies screaming", "monster crowd roar"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }
