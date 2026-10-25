@@ -218,7 +218,7 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         float lead = side > 0 ? 0.75f : 0.4f, drag = side > 0 ? 0.4f : 0.75f;
         rightShin.xRot = 0.14f + Math.max(0f, -Mth.cos(step)) * lead * speed;
         leftShin.xRot = 0.14f + Math.max(0f, Mth.cos(step)) * drag * speed;
-        float grab = state.attackTime > 0f ? Mth.sin(state.attackTime * Mth.PI) : 0f;
+        float grab = Mth.sin(state.attack * Mth.PI);
         if (state.isAggressive) {
             rightForearm.xRot = -0.25f - 0.5f * (1f - grab) + Mth.sin(time * 0.17f + phase) * 0.12f;
             leftForearm.xRot = -0.35f - 0.5f * (1f - grab) + Mth.cos(time * 0.15f + phase) * 0.12f;

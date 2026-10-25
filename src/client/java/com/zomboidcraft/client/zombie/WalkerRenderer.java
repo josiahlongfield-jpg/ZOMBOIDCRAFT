@@ -46,6 +46,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 : ZomboidCraft.id("textures/entity/walker_eyes/" + name + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
         state.crawler = Downed.isCrawler(zombie);
+        state.attack = zombie.getAttackAnim(partialTick);
     }
 
     /**
