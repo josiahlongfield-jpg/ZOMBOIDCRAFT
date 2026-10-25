@@ -9,22 +9,28 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
-echo "===== fp"
-# who renders the first-person hand: any client renderer class with a method about hands, arms or the item in hand
-ALL=$(classes '^net/minecraft/client/(renderer/[A-Za-z]+|renderer/item/[A-Za-z]+|renderer/entity/player/[A-Za-z]+|player/[A-Za-z]+|[A-Z][A-Za-z]+)\.class$' | sed 's|\.class$||; s|/|.|g')
-echo "classes: $(echo $ALL | wc -w)"
-javap -cp "$CP" -p $ALL 2>/dev/null | awk '/^(public |final |abstract )*(class|interface|record|enum)|^[a-z ]*class /{c=$0; shown=0} tolower($0) ~ /hand|bob|sway|armwith|playerarm/ { if(!shown){print "-----", c; shown=1} print }' | head -300
-echo "--- GameRenderer members"
-javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | head -150
-echo "--- GameRenderer invokes"
-javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'invoke' | grep -iE 'hand|item|arm|bob' | sort -u | head -40
-echo "--- bobView"
-javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -A60 'private void bobView(' | head -70
-echo "--- methods calling bobView"
-javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | awk '/^  [a-z].*\(/{m=$0} /bobView:\(/{print m}' | sort -u
-echo "--- CameraEntityRenderState"
-javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraEntityRenderState 2>&1
-for c in $(classes 'AvatarRenderer\.class|FirstPerson|HandRender|HeldItem' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do sig "$c" '.'; done
+echo "===== fp2"
+FP=net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer
+javap -cp "$CP" -p $FP 2>&1
+javap -cp "$CP" -c -p $FP 2>&1 | awk '/public void submitHandsWithItems\(/,/^$/' | grep -vE '^ *[0-9]+: (aload|iload|fload|astore|istore|fstore|dup|pop|iconst|fconst)' | head -150
+echo "--- submitArmWithItem"
+javap -cp "$CP" -c -p $FP 2>&1 | awk '/private void submitArmWithItem\(/,/^$/' | grep -E 'invoke|getfield|getstatic|ldc|instanceof|checkcast|tableswitch|lookupswitch|if|goto' | head -220
+echo "--- renderPlayerArm"
+javap -cp "$CP" -c -p $FP 2>&1 | awk '/private void renderPlayerArm\(/,/^$/' | grep -E 'invoke|getfield|getstatic|ldc' | head -80
+echo "--- extractRenderState"
+javap -cp "$CP" -c -p net.minecraft.client.player.FirstPersonHandsAndItems 2>&1 | awk '/public void extractRenderState\(/,/^$/' | grep -E 'invoke|getfield|putfield|getstatic|ldc' | head -80
+echo "--- PlayerRenderState"
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.PlayerRenderState 2>&1
+sig net.minecraft.client.renderer.item.ItemStackRenderState 'public'
+sig net.minecraft.client.renderer.item.ItemModelResolver 'public'
+echo "--- particles"
+for c in $(classes 'client/particle/(SingleQuadParticle|Particle|ParticleProvider|GlowParticle|DustParticleBase|DustParticle|TextureSheetParticle|ParticleRenderType|SpriteSet|SimpleAnimatedParticle)\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'public|protected'; done
+sig 'net.minecraft.client.particle.SingleQuadParticle$Layer' 'public'
+sig 'net.minecraft.client.particle.GlowParticle$GlowSquidProvider' '.'
+javap -cp "$CP" -c -p net.minecraft.client.particle.GlowParticle 2>&1 | grep -A12 'getLightColor\|GlowParticle(' | head -40
+for c in $(classes 'fabric.*[Pp]article.*(Registry|Types)[^$]*\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'public'; done
+sig net.minecraft.core.particles.SimpleParticleType 'public|protected'
+sig net.minecraft.client.particle.ParticleEngine 'public.*(add|createParticle|register)'
 
 echo "===== hands"
 for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
