@@ -60,6 +60,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** Someone has the boot open; clients swing the lid or back doors up while it is. */
     private static final EntityDataAccessor<Boolean> OPEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** The engine is running: it drives, and clients play its loop. */
+    private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -79,6 +81,13 @@ public class CarProp extends Entity {
     private Vec3 lastPos;
     /** When the driver got in, so the speedo waits until they've read how to drive. */
     private int mountedAt;
+    /** Server side: who was driving last tick, when the engine catches after the starter, when a door shuts, when the horn is free. */
+    private Entity lastDriver;
+    private int catchAt = -1, doorShutAt = -1, hornFreeAt;
+    private double lastSpeed, speedBefore;
+
+    /** Called on the client every tick a car's engine runs, to keep its sound going; the client sets this. */
+    public static java.util.function.Consumer<CarProp> engineSound = car -> { };
 
     /** The local player's driving keys; the client sets this, a server never needs it. */
     public static Function<Player, Input> clientInput = p -> Input.EMPTY;
@@ -111,6 +120,7 @@ public class CarProp extends Entity {
         builder.define(MODEL, "sedan");
         builder.define(VARIANT, "usable");
         builder.define(OPEN, false);
+        builder.define(ENGINE, false);
     }
 
     @Override
@@ -221,9 +231,54 @@ public class CarProp extends Entity {
             return;
         }
         player.startRiding(this);
-        if (getControllingPassenger() == player) {
-            player.sendOverlayMessage(Component.literal(engineRuns() ? "W/S to drive, A/D to steer, space for the handbrake, sneak or interact to get out."
-                    : "It won't start."));
+    }
+
+    public boolean engineOn() {
+        return entityData.get(ENGINE);
+    }
+
+    /**
+     * The server's engine: a new driver turns the key (it catches about three seconds into the
+     * starter, or a wreck just cranks), and it stops when nobody's at the wheel.
+     */
+    private void engine(ServerLevel server, Entity driver) {
+        if (driver != lastDriver) {
+            lastDriver = driver;
+            if (driver == null) {
+                entityData.set(ENGINE, false);
+                catchAt = -1;
+            } else if (!engineOn() && driver instanceof Player player) {
+                boolean runs = engineRuns();
+                server.playSound(null, getX(), getY(), getZ(), runs ? CarSounds.START : CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+                catchAt = runs ? tickCount + 58 : -1;
+                player.sendOverlayMessage(Component.literal(runs
+                        ? "W/S to drive, A/D to steer, space for the handbrake, H for the horn, sneak or interact to get out."
+                        : "It won't start."));
+            }
+        }
+        if (catchAt >= 0 && tickCount >= catchAt) {
+            catchAt = -1;
+            entityData.set(ENGINE, true);
+            Noise.emit(server, position(), 24);
+        }
+        if (doorShutAt >= 0 && tickCount >= doorShutAt) {
+            doorShutAt = -1;
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.DOOR_CLOSE, SoundSource.NEUTRAL, 1f, 0.95f + random.nextFloat() * 0.1f);
+        }
+    }
+
+    /** A door opens to let someone in or out, and swings shut behind them. */
+    private void door(ServerLevel server) {
+        server.playSound(null, getX(), getY(), getZ(), CarSounds.DOOR_OPEN, SoundSource.NEUTRAL, 1f, 0.95f + random.nextFloat() * 0.1f);
+        doorShutAt = tickCount + 14;
+    }
+
+    /** The driver leans on the horn: loud, and every zombie in earshot comes. */
+    public void honk(Player driver) {
+        if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt) {
+            hornFreeAt = tickCount + 40;
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
+            Noise.emit(server, position(), 48);
         }
     }
 
@@ -298,6 +353,9 @@ public class CarProp extends Entity {
             parkPending = false;
             mountedAt = tickCount;
         }
+        if (level() instanceof ServerLevel server) {
+            door(server);
+        }
         if (passenger instanceof Player player && player.isLocalPlayer()) {
             player.setYRot(getYRot());
             player.setYHeadRot(getYRot());
@@ -308,6 +366,9 @@ public class CarProp extends Entity {
     @Override
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
+        if (level() instanceof ServerLevel server && !isRemoved()) {
+            door(server);
+        }
         if (getPassengers().isEmpty()) {
             setDeltaMovement(Vec3.ZERO);
             parkPending = level() instanceof ServerLevel;
@@ -398,12 +459,16 @@ public class CarProp extends Entity {
             }
             Vec3 moved = lastPos == null ? Vec3.ZERO : position().subtract(lastPos);
             lastPos = position();
+            engine(server, getControllingPassenger());
             if (getControllingPassenger() instanceof Player driver) {
                 driven(server, driver, moved);
             }
         } else {
             lidOpen = Math.clamp(lidOpen + (entityData.get(OPEN) ? 0.08f : -0.1f), 0f, 1f);
             wheels();
+            if (engineOn()) {
+                engineSound.accept(this);
+            }
         }
     }
 
@@ -418,7 +483,7 @@ public class CarProp extends Entity {
         double fx = -Math.sin(rad), fz = Math.cos(rad);
         double speed = v.x * fx + v.z * fz, lx = v.x - fx * speed, lz = v.z - fz * speed;
         double top = topSpeed();
-        boolean runs = engineRuns(), ground = onGround();
+        boolean runs = engineOn(), ground = onGround();
         if (ground) {
             if (in.forward() && !in.backward() && runs) {
                 speed = speed < -0.02 ? approach(speed, 0, BRAKE) : speed + ACCEL * Math.max(0, 1 - (speed / top) * (speed / top));
@@ -525,6 +590,17 @@ public class CarProp extends Entity {
             return;
         }
         double speed = moved.horizontalDistance();
+        // a sudden stop from speed is a crash: walls, other cars. Two slow ticks in a row, since the
+        // driver's moves arrive unevenly and one tick can see none
+        if (speedBefore > 0.35 && lastSpeed < speedBefore * 0.45 && speed < speedBefore * 0.45) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
+                    (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
+            Noise.emit(server, position(), 30);
+            speedBefore = 0;
+        } else {
+            speedBefore = lastSpeed;
+        }
+        lastSpeed = speed;
         if (speed > 0.12) {
             for (LivingEntity hit : struck(m)) {
                 float damage = (float) (speed * speed * 25 + speed * 5);
@@ -534,14 +610,16 @@ public class CarProp extends Entity {
                     hit.knockback(Math.min(2.5, speed * 2.5), -away.x, -away.z, source, damage);
                     if (speed > 0.35) {
                         Downed.knockDown(hit);
+                        server.playSound(null, hit.getX(), hit.getY(), hit.getZ(), CarSounds.CRASH, SoundSource.NEUTRAL, 0.6f,
+                                1.1f + random.nextFloat() * 0.2f);
                     }
                 }
             }
         }
-        if (engineRuns() && tickCount % 10 == 0) {
+        if (engineOn() && tickCount % 10 == 0) {
             Noise.emit(server, position(), 18 + 30 * speed);
         }
-        if (engineRuns() && tickCount % 5 == 0 && tickCount - mountedAt > 60) {
+        if (engineOn() && tickCount % 5 == 0 && tickCount - mountedAt > 100) {
             driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h"));
         }
     }

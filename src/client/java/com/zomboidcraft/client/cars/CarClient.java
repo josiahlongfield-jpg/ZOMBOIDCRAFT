@@ -21,17 +21,20 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * The player's side of cars: the interact key (G unless rebound in Controls) gets in, searches
- * the boot from the back end, or gets out again; a hint shows while you look at one; and the
- * driving keys are handed to the car you drive.
+ * the boot from the back end, or gets out again; H sounds the horn; a hint shows while you look
+ * at one; the driving keys are handed to the car you drive; and running engines are heard.
  */
 public final class CarClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("vehicles"));
     public static final KeyMapping INTERACT = new KeyMapping("key.zomboidcraft.interact", InputConstants.KEY_G, CATEGORY);
+    public static final KeyMapping HORN = new KeyMapping("key.zomboidcraft.horn", InputConstants.KEY_H, CATEGORY);
 
     private static CarProp hinted;
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(INTERACT);
+        KeyMappingHelper.registerKeyMapping(HORN);
+        CarProp.engineSound = CarEngineSound::keep;
         // a car you drive moves on your side, from your movement keys
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
@@ -47,10 +50,15 @@ public final class CarClient {
         CarProp car = inCar ? null : lookedAt(client, hit);
         while (INTERACT.consumeClick()) {
             if (inCar) {
-                ClientPlayNetworking.send(new CarNet.Use(-1, 0, 0, 0));
+                ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
+            }
+        }
+        while (HORN.consumeClick()) {
+            if (inCar) {
+                ClientPlayNetworking.send(new CarNet.Use(CarNet.HORN, 0, 0, 0));
             }
         }
         if (car != null && (car != hinted || player.tickCount % 20 == 0)) {
