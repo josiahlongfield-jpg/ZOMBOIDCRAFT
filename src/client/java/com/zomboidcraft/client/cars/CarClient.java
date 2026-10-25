@@ -22,7 +22,8 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The player's side of cars: the interact key (G unless rebound in Controls) gets in, searches
  * the boot from the back end, or gets out again; H sounds the horn; a hint shows while you look
- * at one; the driving keys are handed to the car you drive; and running engines are heard.
+ * at one; the driving keys are handed to the car you drive; running engines are heard; and
+ * running cars' headlights light the road.
  */
 public final class CarClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("vehicles"));
@@ -38,6 +39,7 @@ public final class CarClient {
         // a car you drive moves on your side, from your movement keys
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
+        CarLights.register();
     }
 
     private static void tick(Minecraft client) {

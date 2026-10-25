@@ -78,6 +78,9 @@ public class CarProp extends Entity {
     /** How far the wheels have rolled (metres) and the front wheels' steer (radians, left +), for drawing. */
     public double rolled, rolledO;
     public float steer, steerO;
+    /** On each computer, for the lamps: ticks left on the brake lights and the reversing lights. */
+    public int braking, reversing;
+    private double alongO;
     /** The hull goes back down the tick after the last person gets out. */
     private boolean parkPending;
     /** Where the car was last tick, server side: a driven car's speed comes from how far it went. */
@@ -567,6 +570,10 @@ public class CarProp extends Entity {
         double speed = v.x * fx + v.z * fz, lx = v.x - fx * speed, lz = v.z - fz * speed;
         double top = topSpeed();
         boolean runs = engineOn(), ground = onGround();
+        if (runs && (in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02
+                || in.jump() && Math.abs(speed) > 0.01)) {
+            braking = 4;
+        }
         if (ground) {
             if (in.forward() && !in.backward() && runs) {
                 speed = speed < -0.02 ? approach(speed, 0, BRAKE) : speed + ACCEL * Math.max(0, 1 - (speed / top) * (speed / top));
@@ -625,6 +632,9 @@ public class CarProp extends Entity {
             vz = went.z;
         }
         setDeltaMovement(vx, onGround() ? 0 : vy, vz);
+        if (runs && speed < -0.01) {
+            reversing = 4;
+        }
     }
 
     private static double approach(double value, double target, double step) {
@@ -707,11 +717,26 @@ public class CarProp extends Entity {
         }
     }
 
-    /** Rolls the wheels on by how far the car went, and on other players' cars guesses the steer from the turn. */
+    /**
+     * Rolls the wheels on by how far the car went, and on other players' cars guesses the steer from the turn
+     * and the brake and reversing lights from the speed.
+     */
     private void wheels() {
         double rad = Math.toRadians(getYRot());
         double along = (getX() - xo) * -Math.sin(rad) + (getZ() - zo) * Math.cos(rad);
         rolled += along;
+        braking = Math.max(0, braking - 1);
+        reversing = Math.max(0, reversing - 1);
+        if (!isLocalInstanceAuthoritative()) {
+            // someone else's car: the brake lights come on when it slows harder than it coasts
+            if (along > 0.02 && along < alongO - 0.015) {
+                braking = 6;
+            }
+            if (along < -0.01) {
+                reversing = 3;
+            }
+        }
+        alongO = along;
         if (!isLocalInstanceAuthoritative()) {
             CarModels.Model m = CarModels.get(model());
             float want = 0;
