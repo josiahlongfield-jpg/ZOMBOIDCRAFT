@@ -9,6 +9,23 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== volume"
+classes 'client/sounds/SoundEngine|client/sounds/SoundManager|client/sounds/ChannelAccess|options/SoundOptionsScreen|options/OptionsSubScreen|components/AbstractSliderButton|screen/v1/ScreenEvents|screen/v1/Screens|client/OptionInstance|components/OptionsList'
+sig net.minecraft.client.sounds.SoundEngine '.'
+javap -cp "$CP" -c -p net.minecraft.client.sounds.SoundEngine 2>&1 | grep -B2 -A14 'float calculateVolume' | head -60
+sig net.minecraft.client.sounds.SoundManager 'public'
+sig net.minecraft.client.gui.screens.options.SoundOptionsScreen '.'
+sig net.minecraft.client.gui.screens.options.OptionsSubScreen '.'
+sig net.minecraft.client.gui.components.AbstractSliderButton '.'
+sig net.minecraft.client.gui.components.Button 'builder|public static'
+sig 'net.minecraft.client.gui.components.Button$Builder' '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|addRenderableWidget|onClose|init|render\(|public'
+sig net.minecraft.client.gui.layouts.HeaderAndFooterLayout '.'
+sig net.minecraft.client.gui.components.OptionsList '.'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+sig net.fabricmc.fabric.api.client.screen.v1.Screens '.'
+sig net.minecraft.client.resources.sounds.SoundInstance 'getIdentifier|getLocation|getVolume|getSource'
+
 echo "===== sound"
 sig net.minecraft.client.resources.sounds.AbstractSoundInstance '.'
 sig net.minecraft.client.resources.sounds.SoundInstance '.'
