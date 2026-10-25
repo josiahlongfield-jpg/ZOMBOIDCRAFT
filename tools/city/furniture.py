@@ -2016,7 +2016,7 @@ def bed(q, part):
 
 
 def shelving(frame, plane, top=False):
-    out = [[0, 0, 4, 1, 16, 16, frame], [15, 0, 4, 16, 16, 16, frame], [1, 0, 5, 15, 16, 15, plane],
+    out = [[0, 0, 4, 1, 16, 16, frame], [15, 0, 4, 16, 16, 16, frame], [1, 0, 5, 15, 15, 15, plane],
            [1, 0, 15, 15, 16, 16, frame]]
     out += [[1, y, 4, 15, y + 1, 15, frame] for y in (0, 5, 10)]
     out.append([0, 15, 3 if top else 4, 16, 16, 16, frame])

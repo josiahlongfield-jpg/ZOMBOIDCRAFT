@@ -12,6 +12,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part4();
         part5();
         part6();
+        part7();
     }
 
     private void part0() {
@@ -974,9 +975,9 @@ final class CitySpecs extends CityBlocks.Specs {
     }
 
     private void part4() {
-        s("home_bookcase", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 16, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        s("home_bookcase", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("home_bookcase", "home_books");
-        s("home_bookcase_top", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 16, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 3, 16, 16, 16);
+        s("home_bookcase_top", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 3, 16, 16, 16);
         loot("home_bookcase_top", "home_books");
         s("home_nightstand", FACING, LOOT, 0, SoundType.WOOD, 1f, 2, 0, 2, 14, 10, 14, 2, 0, 1.5, 14, 10, 2, 6, 10, 6, 10, 11, 10, 7.5, 11, 7.5, 8.5, 15, 8.5, 5, 15, 5, 11, 20, 11);
         loot("home_nightstand", "home_nightstand");
@@ -1041,7 +1042,7 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("home_workbench", "home_garage");
         s("home_tool_chest", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 1, 3, 15, 14, 14, 1, 1, 2.5, 15, 14, 3, 0.5, 14, 2.5, 15.5, 15, 14.5, 2, 0, 4, 3.5, 1, 5.5, 2, 0, 11.5, 3.5, 1, 13, 12.5, 0, 4, 14, 1, 5.5, 12.5, 0, 11.5, 14, 1, 13);
         loot("home_tool_chest", "home_tools");
-        s("home_garage_shelf", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 16, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        s("home_garage_shelf", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("home_garage_shelf", "home_garage");
         s("home_mower", FACING, 0, 0, SoundType.METAL, 2f, 3, 1, 2, 13, 5, 12, 5, 5, 4, 11, 9, 10, 2, 0, 2.5, 3, 2.5, 5, 13, 0, 2.5, 14, 2.5, 5, 2, 0, 9, 3, 2.5, 11.5, 13, 0, 9, 14, 2.5, 11.5, 4, 5, 12, 5, 13, 13, 11, 5, 12, 12, 13, 13, 4, 12, 12, 12, 13, 13);
         s("home_freezer", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 2, 16, 13, 16, 0, 13, 1.5, 16, 14, 16, 0, 0, 1.5, 16, 13, 2);
@@ -1340,5 +1341,32 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ext_doormat_blood", FACING, DECOR, 0, SoundType.WOOL, 0f, 1, 0, 3, 15, 0.4, 13);
         s("ext_hose", FACING, 0, 0, SoundType.WOOL, 1f, 3, 0, 11, 13, 10, 15, 5, 2, 15, 11, 8, 16);
         s("ext_shrub_dead", PLAIN, DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 9, 14, 4, 9, 4, 12, 12, 12);
+        s("cellar_shelf_preserves", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        loot("cellar_shelf_preserves", "basement_food");
+        s("cellar_shelf_cans", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        loot("cellar_shelf_cans", "basement_food");
+    }
+
+    private void part7() {
+        s("cellar_shelf_medical", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        loot("cellar_shelf_medical", "basement_medicine");
+        s("cellar_shelf_ammo", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
+        loot("cellar_shelf_ammo", "basement_guns");
+        s("cellar_wall", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cellar_wall_damp", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cellar_joists", AXIS, DECOR, 0, SoundType.WOOD, 0f, 0, 15, 0, 16, 16, 16, 1, 10, 0, 3, 15, 16, 9, 10, 0, 11, 15, 16);
+        s("cellar_bulb", AXIS, DECOR, 0, SoundType.GLASS, 0f, 1, 10, 0, 3, 15, 16, 9, 10, 0, 11, 15, 16, 0, 15, 0, 16, 16, 16, 6, 13, 6, 10, 15, 10, 6.5, 9.5, 6.5, 9.5, 13, 9.5, 5.5, 6, 7.9, 5.7, 13, 8.1);
+        s("cellar_bulb_lit", AXIS, DECOR, 10, SoundType.GLASS, 0f, 1, 10, 0, 3, 15, 16, 9, 10, 0, 11, 15, 16, 0, 15, 0, 16, 16, 16, 6, 13, 6, 10, 15, 10, 6.5, 9.5, 6.5, 9.5, 13, 9.5, 5.5, 6, 7.9, 5.7, 13, 8.1);
+        s("cellar_furnace", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 2, 14, 16, 14);
+        s("cellar_furnace_top", FACING, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 9, 13, 5, 9, 5, 11, 16, 11, 5, 12, 11, 11, 16, 16);
+        s("cellar_duct", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 15, 0, 16, 16, 16, 5, 9, 0, 11, 15, 16);
+        s("cellar_duct_up", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 15, 0, 16, 16, 16, 5, 0, 5, 11, 15, 11);
+        s("cellar_safe", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 16);
+        loot("cellar_safe", "basement_guns");
+        s("cellar_safe_top", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 16);
+        loot("cellar_safe_top", "basement_guns");
+        s("cellar_jugs", FACING, 0, 0, SoundType.WOOL, 1f, 1.5, 0, 2, 7.5, 9, 8, 3.5, 9, 4, 5.5, 11, 6, 8.5, 0, 2, 14.5, 9, 8, 10.5, 9, 4, 12.5, 11, 6, 1.5, 0, 9, 7.5, 9, 15, 3.5, 9, 11, 5.5, 11, 13, 8.5, 0, 9, 14.5, 9, 15, 10.5, 9, 11, 12.5, 11, 13);
+        s("cellar_wine_rack", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 16, 16, 16);
+        loot("cellar_wine_rack", "liquor");
     }
 }

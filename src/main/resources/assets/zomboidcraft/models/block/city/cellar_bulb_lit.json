@@ -1,0 +1,214 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cellar_joist": "zomboidcraft:block/city/cellar_joist",
+    "cellar_subfloor": "zomboidcraft:block/city/cellar_subfloor",
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "lamp_glass": "zomboidcraft:block/city/lamp_glass",
+    "particle": "zomboidcraft:block/city/cellar_joist"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        10,
+        0
+      ],
+      "to": [
+        3,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_joist",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cellar_joist",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cellar_joist"
+        },
+        "west": {
+          "texture": "#cellar_joist"
+        },
+        "up": {
+          "texture": "#cellar_joist"
+        },
+        "down": {
+          "texture": "#cellar_joist"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        10,
+        0
+      ],
+      "to": [
+        11,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_joist",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cellar_joist",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cellar_joist"
+        },
+        "west": {
+          "texture": "#cellar_joist"
+        },
+        "up": {
+          "texture": "#cellar_joist"
+        },
+        "down": {
+          "texture": "#cellar_joist"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_subfloor",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cellar_subfloor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cellar_subfloor",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cellar_subfloor",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cellar_subfloor",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cellar_subfloor"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "to": [
+        10,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        9.5,
+        6.5
+      ],
+      "to": [
+        9.5,
+        13,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_glass"
+        },
+        "south": {
+          "texture": "#lamp_glass"
+        },
+        "east": {
+          "texture": "#lamp_glass"
+        },
+        "west": {
+          "texture": "#lamp_glass"
+        },
+        "up": {
+          "texture": "#lamp_glass"
+        },
+        "down": {
+          "texture": "#lamp_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        6,
+        7.9
+      ],
+      "to": [
+        5.7,
+        13,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel"
+        }
+      }
+    }
+  ]
+}

@@ -64,6 +64,8 @@ public final class House {
     private double lit;
     /** The rooms, stairs and furniture; null for a house burnt out to its shell. */
     private Interior interior;
+    /** The basement, for the few houses that have one. */
+    private Cellar cellar;
 
     // the roof, in its own frame: u runs along the ridge, v across it
     private boolean alongZ;
@@ -113,7 +115,7 @@ public final class House {
 
     /** After {@link #build()}: the rooms in the house's frame, one per line (for previews). */
     public String describe() {
-        return interior == null ? "" : interior.describe();
+        return interior == null ? "" : interior.describe() + (cellar == null ? "" : cellar.describe());
     }
 
     /** A random palette suited to the style. */
@@ -225,6 +227,14 @@ public final class House {
         if (cond != Condition.BURNT) {
             interior = new Interior(p, rng, style, cond, x0, x1, z0, z1, floors, style != Style.CABIN, garageX0 >= 0, lit);
             interior.plan();
+            // the basement's dice are the household's own, so a house without one comes out as before
+            SplittableRandom dice = new SplittableRandom(interior.seed() * 0x9E3779B97F4A7C15L + 1);
+            if (dice.nextDouble() < Cellar.odds(style)) {
+                int[] way = interior.cellar(dice);
+                if (way != null) {
+                    cellar = new Cellar(p, dice, style, cond, lit, way, x0, x1, z0, z1);
+                }
+            }
         }
         shell(x0, x1, z0, z1, height);
         if (garageX0 >= 0) {
@@ -233,6 +243,9 @@ public final class House {
         windowsAndDoors(height);
         if (interior != null) {
             interior.build();
+        }
+        if (cellar != null) {
+            cellar.build();
         }
         if (style == Style.TRAILER) {
             flatRoof(height);

@@ -23,8 +23,10 @@ import java.util.SplittableRandom;
  *
  *   java -cp build/county HousePreview OUT seed cut STYLE[:CONDITION[:floors]] ...
  *
- * cut is in blocks above the ground (0 for none). Houses stand 8 apart along x, fronts to the north
- * (z = 0 at the front of each lot). Ground is dump y = 4.
+ * cut is in blocks above the ground (0 for none; -2 looks down into the basements, under the joists).
+ * Houses stand 8 apart along x, fronts to the north (z = 0 at the front of each lot). Ground is dump
+ * y = 4. CELLAR=any (or a use: food, armoury...), or a fourth field STYLE:COND:floors:use, picks
+ * the first seed from the given one whose house has such a basement.
  */
 public final class HousePreview {
     private static final int LEVEL = 4;
@@ -53,7 +55,17 @@ public final class HousePreview {
             if (a.length > 2) {
                 size[2] = Integer.parseInt(a[2]);
             }
-            SplittableRandom rng = new SplittableRandom(seed * 31 + i);
+            long hs = seed * 31 + i;
+            String want = a.length > 3 ? a[3] : System.getenv("CELLAR");
+            for (int k = 0; want != null && k < 5000; k++, hs += 7919) {
+                SplittableRandom tr = new SplittableRandom(hs);
+                House t = new House(new Placer(new Voxels(), 0, 0, 0, 0), tr, style, cond, House.palette(style, tr), size[0], size[1], size[2]);
+                t.build();
+                if (t.describe().contains(want.equals("any") ? "cellar " : "cellar " + want)) {
+                    break;
+                }
+            }
+            SplittableRandom rng = new SplittableRandom(hs);
             House h = new House(new Placer(v, x + 2, 0, 2, 0), rng, style, cond, House.palette(style, rng), size[0], size[1], size[2]);
             h.build();
             labels.add(style + ":" + cond + "@" + (x + 2));
@@ -69,10 +81,10 @@ public final class HousePreview {
         short[] vox = new short[sx * sz * h];
         List<String> palette = new ArrayList<>(List.of("air"));
         Map<String, Short> ids = new HashMap<>(Map.of("air", (short) 0));
-        int top = cut > 0 ? LEVEL + cut : Integer.MAX_VALUE;
+        int top = cut != 0 ? LEVEL + cut : Integer.MAX_VALUE;
         for (int px = 0; px < sx; px++) {
             for (int pz = 0; pz < sz; pz++) {
-                for (int y = 0; y < LEVEL; y++) {
+                for (int y = 0; y < LEVEL && y <= top; y++) {
                     put(vox, palette, ids, sx, sz, h, px, y, pz, y < LEVEL - 1 ? "minecraft:dirt" : "minecraft:grass_block");
                 }
             }

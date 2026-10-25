@@ -37,7 +37,8 @@ final class Interior {
             "home_gun_cabinet", "home_dresser", "home_fireplace", "home_wood_stove", "home_tool_chest", "home_freezer",
             "home_vanity", "home_toilet", "home_tv", "home_tv_smashed", "home_piano_l", "home_piano_r", "home_garage_shelf");
     /** Pieces without a facing. */
-    private static final Set<String> PLAIN = Set.of("home_table", "home_floor_lamp", "home_trash_can", "home_laundry",
+    /** Pieces with no facing: their state is dropped when they are placed. */
+    static final Set<String> PLAIN = Set.of("home_table", "home_floor_lamp", "home_trash_can", "home_laundry",
             "home_boxes", "home_water_heater", "home_water_heater_top", "home_rug_red", "home_rug_blue", "home_candles",
             "home_clothes_pile", "home_blood_pool", "ceiling_light", "ceiling_light_off", "paper", "glass_shards",
             "blood_splat", "home_stain_brown", "home_stain_dark", "scorch", "home_plant", "home_plant_dead", "home_bin_bags");
@@ -99,6 +100,8 @@ final class Interior {
     private int sc0 = -1, sz0;
     /** The hall's clear columns, beside the stairs. */
     private int hx0 = -1, hx1 = -1;
+    /** The way down to a {@link Cellar}: {0 for stairs or 1 for a hatch, x, z, side}; null for none. */
+    private int[] cellarWay;
     // the household's taste
     private final String finish, sofa, drapes, rug, stairsKind, hallPaper, hallFloor;
     private final double worn;
@@ -165,6 +168,69 @@ final class Interior {
     }
 
     /** After {@link #build()}: the hearths, for the chimneys outside. */
+    /** A seed of the household's own, for choices that mustn't disturb the house's other dice. */
+    long seed() {
+        return seedBits;
+    }
+
+    /**
+     * Makes the way down to a basement, after {@link #plan()} and before {@link #build()}. A house
+     * with stairs gets a flight down under its stairs, in the column away from the hall, reached
+     * from the hall behind them; one without has a trapdoor against a wall, in the laundry, a
+     * closet, the hall or the kitchen if it can. The cells are kept clear like a doorway, so the
+     * furniture leaves a way to them. Returns {0 for stairs or 1 for a hatch, x, z, side}: for
+     * stairs the column, the bottom step's z and the side the column is on away from the hall;
+     * for a hatch its cell and the wall the ladder goes down. Null when there is nowhere for one.
+     */
+    int[] cellar(SplittableRandom r) {
+        if (sc0 >= 0) {
+            boolean outerLeft = sc0 == hx0 - 2;
+            int col = outerLeft ? sc0 : sc0 + 1, other = outerLeft ? sc0 + 1 : sc0;
+            Room hall = ownerAt(0, col, sz0 + 4);
+            if (hall != null && cellAt(0, col, sz0 + 4) == ROOM && cellAt(0, other, sz0 + 4) == ROOM) {
+                hall.ways.add(new int[] {col, sz0 + 4, 0});
+                return cellarWay = new int[] {0, col, sz0, outerLeft ? 3 : 1};
+            }
+        }
+        for (String kind : List.of("laundry", "closet", "hall", "kitchen", "den", "dining", "living", "studio")) {
+            List<int[]> spots = new ArrayList<>();
+            for (Room rm : rooms.get(0)) {
+                if (!rm.kind.equals(kind)) {
+                    continue;
+                }
+                for (int x = rm.a0; x <= rm.a1; x++) {
+                    for (int z = rm.b0; z <= rm.b1; z++) {
+                        if (!inRoom(0, rm, x, z) || cellAt(0, x, z) != ROOM || nearWay(rm, x, z)) {
+                            continue;
+                        }
+                        for (int s = 0; s < 4; s++) {
+                            int ix = x - STEP[s][0], iz = z - STEP[s][1];
+                            if (wallBehind(0, x, z, s) && inRoom(0, rm, ix, iz) && cellAt(0, ix, iz) == ROOM) {
+                                spots.add(new int[] {x, z, s});
+                            }
+                        }
+                    }
+                }
+            }
+            if (!spots.isEmpty()) {
+                int[] c = spots.get(r.nextInt(spots.size()));
+                ownerAt(0, c[0], c[1]).ways.add(new int[] {c[0], c[1], c[2]});
+                return cellarWay = new int[] {1, c[0], c[1], c[2]};
+            }
+        }
+        return null;
+    }
+
+    /** True on or beside one of the room's ways in. */
+    private static boolean nearWay(Room r, int x, int z) {
+        for (int[] w : r.ways) {
+            if (Math.abs(w[0] - x) + Math.abs(w[1] - z) <= 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     List<int[]> hearths() {
         return hearths;
     }
@@ -697,8 +763,15 @@ final class Interior {
                 for (int z = z0 + 1; z < z1; z++) {
                     byte t = cell[f][x - x0][z - z0];
                     // the floor (the ceiling of the floor below)
-                    if (t == VOID) {
+                    if (t == VOID || f == 0 && cellarOpen(x, z)) {
                         p.set(x, base, z, "air");
+                    } else if (f == 0 && cellarWay != null && cellarWay[0] == 0 && x == cellarWay[1] && z == sz0 + 3) {
+                        p.set(x, base, z, "home_stairs_oak[facing=south]");
+                    } else if (f == 0 && cellarWay != null && cellarWay[0] == 1 && x == cellarWay[1] && z == cellarWay[2]) {
+                        // looters leave the hatch thrown open
+                        boolean open = (cond == House.Condition.LOOTED || cond == House.Condition.RUIN) && rng.nextBoolean();
+                        String facing = DIRS[(cellarWay[3] + 2) & 3];
+                        p.set(x, base, z, "minecraft:spruce_trapdoor[facing=" + facing + ",half=top,open=" + open + "]");
                     } else if (t == TOP) {
                         p.set(x, base, z, "home_stairs_" + stairsKind + "[facing=south]");
                     } else {
@@ -737,12 +810,18 @@ final class Interior {
             case ARCH -> row == 3 ? partition(f, x, z, row) : "air";
             case PASS -> row == 3 ? lining(f, x, z, row) : "air";
             case STAIR -> {
-                // under the flight: solid up to each step
+                // under the flight: solid up to each step, but for the way down to the basement
                 int i = z - sz0;
-                yield row <= i ? wallBlock(hallPaper, row, f, x, z) : "air";
+                boolean down = f == 0 && cellarWay != null && cellarWay[0] == 0 && x == cellarWay[1] && row <= 2;
+                yield row <= i && !down ? wallBlock(hallPaper, row, f, x, z) : "air";
             }
             default -> "air";
         };
+    }
+
+    /** The ground floor opened over the basement stairs: the cells the flight goes down through. */
+    private boolean cellarOpen(int x, int z) {
+        return cellarWay != null && cellarWay[0] == 0 && x == cellarWay[1] && z >= sz0 && z <= sz0 + 2;
     }
 
     private String door(int f, int x, int z, int row) {
@@ -863,6 +942,9 @@ final class Interior {
         List<Room> list = rooms.get(f);
         for (Room r : list) {
             keepClear(f, r);
+        }
+        if (f == 0 && cellarWay != null && cellarWay[0] == 1) {
+            occ[cellarWay[1] - x0][cellarWay[2] - z0][1] = 2;  // nothing, not even a rug, over the hatch
         }
         for (Room r : list) {
             switch (r.kind) {
