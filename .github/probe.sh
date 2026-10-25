@@ -8,6 +8,29 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== inventory1"
+classes 'gui/screens/inventory/(InventoryScreen|AbstractContainerScreen|AbstractRecipeBookScreen|EffectsInInventory|CreativeModeInventoryScreen|ContainerScreen)\.class|world/inventory/(InventoryMenu|AbstractContainerMenu|Slot|ChestMenu|MenuType)\.class|gui/screens/MenuScreens|renderer/RenderPipelines|resources/(Identifier|ResourceLocation)\.class|screenhandler|menu/v1|screen/v1/Screen|item/component/(ItemContainerContents|BundleContents)\.class|client/gui/render/state|GuiItemRenderState|client/renderer/state/'
+sig net.minecraft.client.gui.screens.inventory.InventoryScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|public'
+sig net.minecraft.client.gui.GuiGraphicsExtractor '.'
+sig net.minecraft.client.gui.screens.MenuScreens 'public'
+sig net.minecraft.world.inventory.InventoryMenu 'public'
+sig net.minecraft.world.inventory.AbstractContainerMenu 'public|protected'
+sig net.minecraft.world.inventory.Slot 'public'
+sig net.minecraft.world.inventory.MenuType 'public'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+sig net.minecraft.world.entity.player.Inventory 'public'
+sig net.minecraft.world.item.component.ItemContainerContents 'public'
+sig net.minecraft.client.Minecraft 'setScreen|getWindow|gameRenderer'
+sig net.minecraft.client.gui.components.AbstractWidget 'public'
+sig net.minecraft.client.gui.components.Renderable '.'
+classes 'fabric/api/(screenhandler|menu|client/screen)'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+exit 0
+
+
 
 echo "===== combat3"
 sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'
