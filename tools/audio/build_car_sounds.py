@@ -20,7 +20,9 @@ FADE = 1.5   # seconds of the idle's tail crossfaded into its head
 PICKS = {
     "car.start": ("car/start", -3.0, 32, [("50898", 0.0, 4.91)]),
     "car.stall": ("car/stall", -3.0, 32, [("50898", 0.05, 1.25)]),
-    "car.idle": ("car/idle", -6.0, 32, [("sxe48535c9", 0.0, 10.0)]),
+    # round 9: the first idle revved by itself, hiding the pitch-with-speed; this one holds one steady speed,
+    # and Josiah wants it for driving too (just pitched up)
+    "car.idle": ("car/idle", -6.0, 32, [("sx6cc09fea", 7.0, 9.5)]),
     "car.horn": ("car/horn", -1.0, 96, [("546528", 0.0, 2.5)]),
     "car.crash": ("car/crash", -1.0, 48, [("151624", 0.0, 0.67)]),
     # Josiah: NachtmahrTV's take for opening, nmscher's for shutting

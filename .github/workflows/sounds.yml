@@ -20,10 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - car_start,car_stall
-          - car_idle
-          - car_horn,car_door
-          - car_crash
+          - gun_pistol
+          - gun_pistol_foley
+          - gun_shotgun
+          - gun_shotgun_foley
+          - gun_distant
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
