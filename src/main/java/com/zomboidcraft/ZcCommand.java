@@ -102,7 +102,7 @@ public final class ZcCommand {
         double yaw = Math.toRadians(player.getYRot());
         double reach = m.size[0] / 2 + 2.5;
         double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
-        Cars.spawn((ServerLevel) player.level(), x, player.getBlockY(), z, player.getYRot() + 90, m.id, look, true);
+        Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
         ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + look + ")"), false);
         return 1;
     }

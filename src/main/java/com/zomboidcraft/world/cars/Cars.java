@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.random.RandomGenerator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** The car prop entity and its hull block, and how a car is laid into the world. */
 public final class Cars {
@@ -67,6 +69,22 @@ public final class Cars {
         return out;
     }
 
+    /** The top of the first solid thing at or below y (hull blocks aside), up to four blocks down. */
+    public static double groundY(ServerLevel level, double x, double y, double z) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(Mth.floor(x), Mth.floor(y + 0.5), Mth.floor(z));
+        for (int i = 0; i < 5; i++, pos.move(Direction.DOWN)) {
+            BlockState state = level.getBlockState(pos);
+            if (state.is(HULL)) {
+                continue;
+            }
+            VoxelShape shape = state.getCollisionShape(level, pos);
+            if (!shape.isEmpty()) {
+                return pos.getY() + shape.max(Direction.Axis.Y);
+            }
+        }
+        return y;
+    }
+
     /** One column's hull blocks from the ground up: sixteenths for each layer, 16 for full ones. */
     public static int[] layers(int centimetres) {
         int n = (centimetres + 99) / 100;
@@ -95,21 +113,27 @@ public final class Cars {
         return names.get(0);
     }
 
-    /** Puts a car in the world, standing on the block below y, with its hull where there's room. */
+    /**
+     * Puts a car in the world on the ground under (x, y, z), with its hull where there's room. The
+     * ground is found rather than assumed, since roads are only 14/16 of a block tall.
+     */
     public static CarProp spawn(ServerLevel level, double x, double y, double z, float yaw, String model, String variant,
             boolean hull) {
         CarProp car = CAR.create(level, EntitySpawnReason.STRUCTURE);
         if (car == null) {
             return null;
         }
+        y = groundY(level, x, y, z);
         car.setLook(model, variant);
         car.snapTo(x, y, z, yaw, 0f);
         level.addFreshEntity(car);
         CarModels.Model m = CarModels.get(model);
         if (hull && m != null) {
-            int base = Mth.floor(y + 0.01);
+            // hull layers start at the first whole block above the ground, so take off the gap
+            int base = Mth.ceil(y - 0.05);
+            int lift = (int) Math.round((base - y) * 100);
             for (int[] col : hullColumns(m, x, z, yaw)) {
-                int[] layers = layers(col[2]);
+                int[] layers = layers(col[2] - lift);
                 for (int i = 0; i < layers.length; i++) {
                     BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                     if (level.getBlockState(pos).canBeReplaced()) {
