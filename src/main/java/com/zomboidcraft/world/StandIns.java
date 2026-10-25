@@ -25,6 +25,7 @@ public final class StandIns {
         put("air", "air");
         // streets
         put("asphalt", "polished_deepslate");
+        put("asphalt_low", "polished_deepslate_slab");
         put("road_line_yellow", "yellow_terracotta");
         put("road_line_white", "light_gray_concrete");
         put("crosswalk", "light_gray_concrete");

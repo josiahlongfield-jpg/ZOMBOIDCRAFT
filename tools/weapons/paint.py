@@ -165,12 +165,14 @@ def paint(f, colour, steel_base=0.42, chips=0.5, gloss=0.05):
     return c
 
 
-def anodised(f, base='#2b2e33', wear_to='#9aa0a6'):
+def anodised(f, base='#2b2e33', wear_to='#70767c'):
     c = np.ones(f.shape + (3,)) * col(base)
     c = c * (1 + (f.noise(6.0, 31, 2) - 0.5) * 0.25 + (f.noise(0.7, 32, 2) - 0.5) * 0.2)[..., None]
     n = f.noise(3.5, 33, 3)
-    worn = (f.edge < 0.035 + 0.05 * f.wear) & (n > 0.45 - 0.2 * f.wear)
-    c = np.where(worn[..., None], mix(col(wear_to), c, 0.25), c)
+    # hard anodising only wears through in thin broken lines along the most handled edges: a wide pale rim
+    # round every face is what turned the whole rifle grey once the texture was shrunk on screen
+    worn = (f.edge < 0.012 + 0.012 * f.wear) & (n > 0.64 - 0.1 * f.wear)
+    c = np.where(worn[..., None], mix(col(wear_to), c, 0.4), c)
     return c
 
 
@@ -186,8 +188,8 @@ def parkerised(f, base='#474940'):
     c = np.ones(f.shape + (3,)) * col(base)
     s = white(f.shape, f.rng)
     c = c * (1 + (s - 0.5) * 0.22 + (f.noise(1.4, 51, 3) - 0.5) * 0.25)[..., None]
-    worn = (f.edge < 0.03) & (f.noise(3.0, 52, 2) > 0.55)
-    return np.where(worn[..., None], mix(c, col('#7c7f80'), 0.6), c)
+    worn = (f.edge < 0.015) & (f.noise(3.0, 52, 2) > 0.65)
+    return np.where(worn[..., None], mix(c, col('#6a6d6e'), 0.45), c)
 
 
 def tape(f, base='#18181a', band=0.55, sheen=0.08):

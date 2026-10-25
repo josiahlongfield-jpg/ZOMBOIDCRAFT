@@ -33,6 +33,16 @@ public final class Placer {
         };
     }
 
+    /** A placer drawing in the same turned frame, with its origin moved to local (dx, dy, dz). */
+    public Placer shifted(int dx, int dy, int dz) {
+        return switch (rot) {
+            case 0 -> new Placer(sink, ox + dx, oy + dy, oz + dz, rot);
+            case 1 -> new Placer(sink, ox - dz, oy + dy, oz + dx, rot);
+            case 2 -> new Placer(sink, ox - dx, oy + dy, oz - dz, rot);
+            default -> new Placer(sink, ox + dz, oy + dy, oz - dx, rot);
+        };
+    }
+
     public void set(int x, int y, int z, String block) {
         int wx, wz;
         switch (rot) {

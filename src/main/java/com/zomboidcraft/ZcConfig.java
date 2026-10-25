@@ -32,6 +32,20 @@ public final class ZcConfig {
     public Weather weather = new Weather();
     public Combat combat = new Combat();
     public Guns guns = new Guns();
+    public Carry carry = new Carry();
+
+    public static class Carry {
+        /** Only a few main-inventory slots are pockets; bags carry the rest. Creative ignores it. */
+        public boolean pocketsOnly = true;
+        /** Pocket slots, on top of the 9 belt-and-hands slots. */
+        public int pocketSlots = 4;
+        /** Things have weight, and carrying too much slows and tires you. */
+        public boolean weight = true;
+        /** Kilograms you carry before Heavy Load sets in. */
+        public double capacity = 8;
+        /** A bag you pick up goes straight on when its place (back, vest, waist, off hand) is free. */
+        public boolean autoWear = true;
+    }
 
     public static class Zombies {
         /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
@@ -49,6 +63,26 @@ public final class ZcConfig {
         public boolean bashDoors = true;
         /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
         public int doorHits = 12;
+        /** A walker screams when it first spots you. */
+        public boolean alertScreams = true;
+        /** Seconds before the same zombie can scream again. */
+        public int alertCooldownSeconds = 20;
+        /** At most this many zombies within 16 blocks scream in the same two seconds, so a crowd doesn't scream as one. */
+        public int alertMaxTogether = 3;
+        /** Snarls every few seconds while chasing. */
+        public boolean chaseSnarls = true;
+        public double chaseSnarlMinSeconds = 2;
+        public double chaseSnarlMaxSeconds = 4;
+        /** A crowd murmur swells as walkers gather within 48 blocks, and a roar as more of them come after you. */
+        public boolean hordeSounds = true;
+        /** Walkers nearby for the murmur to start, and to reach full volume; kept under the single voices. */
+        public int hordeMurmurFrom = 6;
+        public int hordeMurmurFull = 30;
+        public double hordeMurmurVolume = 0.45;
+        /** Zombies after you for the roar to start, and to reach full volume. */
+        public int hordeRoarFrom = 3;
+        public int hordeRoarFull = 15;
+        public double hordeRoarVolume = 0.8;
     }
 
     public static class Senses {
@@ -110,6 +144,15 @@ public final class ZcConfig {
         public boolean cityStandIns = false;
         /** Shop shelves, coolers, cases and stockroom crates hold themed loot; off leaves them empty. */
         public boolean shopLoot = true;
+        /** Real 3D cars on the streets; off leaves the roads empty. */
+        public boolean streetCars = true;
+        /** How the city's cars are left, as shares: whole and dusty (drivable later), abandoned, wrecked, burnt out. */
+        public double carUsable = 0.45;
+        public double carAbandoned = 0.3;
+        public double carWrecked = 0.18;
+        public double carBurnt = 0.07;
+        /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
+        public boolean carLoot = true;
     }
 
     public static class Weather {
@@ -156,9 +199,19 @@ public final class ZcConfig {
         public double missingLimbChance = 0.15;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
+        /** The field-kit inventory screen; off brings back Minecraft's. Client side. */
+        public boolean fieldKitInventory = true;
+        /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
+        public double crosshairScale = 0.5;
+        /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
+        public boolean hideCrosshairWhenAiming = true;
+        /** Your own arms, in your own skin, hold guns in first person. Client side. */
+        public boolean firstPersonArms = true;
     }
 
     public static class Combat {
+        /** Other players see rifles carried at the low ready or shouldered, and big melee weapons in both hands. */
+        public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
         /** Weapons lose condition with each hit and break (needs a restart). */
@@ -226,6 +279,31 @@ public final class ZcConfig {
         public boolean jams = true;
         /** Rounds in a rifle magazine. */
         public int magazineSize = 30;
+        /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
+        public boolean attachments = true;
+        /** Multiply aimed spread with each optic mounted. */
+        public double redDotAimSpread = 0.6;
+        public double holoAimSpread = 0.6;
+        public double scopeAimSpread = 0.35;
+        /** Field of view looking through the 4x scope, as a share of normal. */
+        public double scopeZoom = 0.25;
+        /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
+        public double suppressedNoise = 0.3;
+        public double suppressedVolume = 1.0;
+        /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
+        public double foregripRecoil = 0.75;
+        public double noStockRecoil = 1.5;
+        public double noStockSpread = 1.6;
+        /** A laser multiplies spread from the hip. */
+        public double laserHipSpread = 0.6;
+        /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). The gun's own flash still shows. */
+        public boolean muzzleSmoke = false;
+        /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
+        public double aimSway = 0.15;
+        /** First person animates reloads: the old magazine drops away, a new one goes in, the charging handle is worked on an empty gun. Client side. */
+        public boolean reloadAnimation = true;
+        /** A faint green beam shows in the air between a laser and its dot. Client side. */
+        public boolean laserBeam = true;
     }
 
     public static ZcConfig get() {

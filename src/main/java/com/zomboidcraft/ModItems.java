@@ -1,6 +1,9 @@
 package com.zomboidcraft;
 
 import com.zomboidcraft.barricade.HammerItem;
+import com.zomboidcraft.combat.AttachmentItem;
+import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
@@ -54,6 +57,33 @@ public final class ModItems {
                     .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.6f)));
     public static final Item RIFLE_AMMO = register("rifle_ammo", Item::new, new Item.Properties().stacksTo(60));
 
+    // Gun parts: each names its slot; the key the gun's item model switches on comes from GunSlotData.
+    public static final Item RED_DOT_SIGHT = part("red_dot_sight", Attachments.Slot.OPTIC);
+    public static final Item HOLO_SIGHT = part("holo_sight", Attachments.Slot.OPTIC);
+    public static final Item SCOPE_4X = part("scope_4x", Attachments.Slot.OPTIC);
+    public static final Item RIFLE_SUPPRESSOR = part("rifle_suppressor", Attachments.Slot.MUZZLE);
+    public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
+    public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
+    public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.SIDE_RAIL);
+    public static final Item RIFLE_STOCK = part("rifle_stock", Attachments.Slot.STOCK);
+
+    private static Item part(String name, Attachments.Slot slot) {
+        String key = GunSlotData.MODEL_KEYS.get(name);
+        return register(name, p -> new AttachmentItem(slot, key, p), new Item.Properties().stacksTo(1));
+    }
+
+    // Bags: what they hold and weigh in carry/BagSpec.
+    public static final Item SCHOOL_BACKPACK = bag("school_backpack", com.zomboidcraft.carry.BagSpec.SCHOOL);
+    public static final Item HIKING_BACKPACK = bag("hiking_backpack", com.zomboidcraft.carry.BagSpec.HIKING);
+    public static final Item MILITARY_RUCKSACK = bag("military_rucksack", com.zomboidcraft.carry.BagSpec.RUCKSACK);
+    public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
+    public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
+    public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
+
+    private static Item bag(String name, com.zomboidcraft.carry.BagSpec spec) {
+        return register(name, properties -> new com.zomboidcraft.carry.BagItem(spec, properties), new Item.Properties());
+    }
+
     private static Item weapon(String name, Function<Item.Properties, Item> factory) {
         return register(name, factory, MeleeWeaponItem.properties(Weapons.byName(name)));
     }
@@ -76,6 +106,12 @@ public final class ModItems {
             ItemStack mag = new ItemStack(RIFLE_MAGAZINE);
             mag.set(GunState.MAG_ROUNDS, RifleItem.capacity());
             output.accept(mag);
+            // and one with everything on it
+            ItemStack kitted = rifle.copy();
+            for (Item part : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
+                Attachments.mount(kitted, new ItemStack(part));
+            }
+            output.accept(kitted);
         });
     }
 

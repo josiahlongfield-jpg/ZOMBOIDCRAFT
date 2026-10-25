@@ -9,6 +9,8 @@ import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalStats;
 import com.zomboidcraft.world.CityPlacer;
+import com.zomboidcraft.world.cars.CarModels;
+import com.zomboidcraft.world.cars.Cars;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherDirector;
 import com.zomboidcraft.world.weather.WeatherKind;
@@ -34,6 +36,15 @@ public final class ZcCommand {
                                 .executes(ctx -> city(ctx, 1L))
                                 .then(Commands.argument("seed", IntegerArgumentType.integer())
                                         .executes(ctx -> city(ctx, IntegerArgumentType.getInteger(ctx, "seed")))))
+                        .then(Commands.literal("car")
+                                .executes(ctx -> car(ctx, null, null))
+                                .then(Commands.argument("model", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.all().keySet(), b))
+                                        .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"), null))
+                                        .then(Commands.argument("variant", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
+                                                .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
+                                                        StringArgumentType.getString(ctx, "variant"))))))
                         .then(Commands.literal("weather")
                                 .executes(ZcCommand::weather)
                                 .then(Commands.argument("kind", StringArgumentType.word())
@@ -75,6 +86,24 @@ public final class ZcCommand {
         }
         ctx.getSource().sendSuccess(() -> Component.literal(
                 "Building the test city around you; it takes a minute or two. Best in a superflat world."), true);
+        return 1;
+    }
+
+    /** Drops a car side-on a few blocks in front of you: a random one, or the model and state named. */
+    private static int car(CommandContext<CommandSourceStack> ctx, String model, String variant) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        java.util.Random rng = new java.util.Random();
+        CarModels.Model m = model == null ? CarModels.pick(rng, c -> true) : CarModels.get(model);
+        if (m == null || (variant != null && !CarModels.variants().contains(variant))) {
+            ctx.getSource().sendFailure(Component.literal("Unknown car: " + model + (variant == null ? "" : " " + variant)));
+            return 0;
+        }
+        String look = variant != null ? variant : Cars.pickVariant(rng);
+        double yaw = Math.toRadians(player.getYRot());
+        double reach = m.size[0] / 2 + 2.5;
+        double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
+        Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
+        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + look + ")"), false);
         return 1;
     }
 

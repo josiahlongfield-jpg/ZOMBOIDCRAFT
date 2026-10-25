@@ -27,14 +27,20 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
+        com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.combat.GunState.register();
+        com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.ModSounds.register();
+        com.zomboidcraft.combat.ModParticles.register();
         ModItems.register();
+        com.zomboidcraft.carry.Carry.register();
+        com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();
         SurvivalEvents.register();
         ZombieEvents.register();
         ZombieSpawner.register();
+        com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Guns.register();
@@ -45,6 +51,8 @@ public class ZomboidCraft implements ModInitializer {
         CityPlacer.register();
         com.zomboidcraft.world.MobFilter.register();
         com.zomboidcraft.world.weather.WeatherDirector.register();
+        com.zomboidcraft.world.gen.Worldgen.register();
+        com.zomboidcraft.world.gen.CountyCommand.register();
         LOGGER.info("The dead walk.");
     }
 }

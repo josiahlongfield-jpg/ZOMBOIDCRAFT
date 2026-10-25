@@ -86,6 +86,15 @@ jobs:
           for t in $(ls src/main/resources/data/zomboidcraft/loot_table/shop | sed 's/.json//'); do
             echo "loot spawn 0 101 0 loot zomboidcraft:shop/$t" >&3
           done
+          for t in $(ls src/main/resources/data/zomboidcraft/loot_table/car | sed 's/.json//'); do
+            echo "loot spawn 0 101 0 loot zomboidcraft:car/$t" >&3
+          done
+          # A car prop loads its model index, saves and reloads its state.
+          echo 'summon zomboidcraft:car 0 101 0 {model:"swat_van",variant:"wrecked"}' >&3
+          sleep 6  # let the force-loaded chunk start ticking so the selector can see the car
+          echo 'data get entity @e[type=zomboidcraft:car,limit=1] model' >&3
+          echo 'data get entity @e[type=minecraft:husk,limit=1] Health' >&3
+          echo 'execute as @e[type=zomboidcraft:car] run say car here' >&3
           sleep 10
           echo 'stop' >&3
           for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
@@ -94,9 +103,53 @@ jobs:
           pkill -f 'net.fabricmc' || true
           grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
-          [ "$(grep -c 'Dropped' server.log)" -ge 10 ]
+          grep -q 'swat_van' server.log
+          [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
+          grep -E 'Rain (cover|falls through)' server.log
+          grep -q 'Rain cover:' server.log
           ! grep -E 'Mixin apply failed|InvalidMixin|Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception' server.log
+
+      # Boot again on a fresh ZomboidCraft County world: the planner, chunk generator and every
+      # kind of place get generated, and /zc places reports what's around.
+      - name: County world smoke test
+        run: |
+          rm -rf run/world
+          mkdir -p build/county
+          javac -d build/county src/main/java/com/zomboidcraft/world/city/*.java src/main/java/com/zomboidcraft/world/county/*.java tools/county/ListPlaces.java
+          java -cp build/county ListPlaces 12345 6000 | tee places.txt
+          printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
+          grep level- run/server.properties
+          trap 'echo "----- county server.log tail"; tail -n 80 county.log' EXIT
+          rm -f console2 && mkfifo console2
+          ./gradlew runServer --args=nogui < console2 > county.log 2>&1 &
+          pid=$!
+          exec 4> console2
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' county.log; then echo "Server started"; break; fi
+            if ! kill -0 $pid 2>/dev/null; then break; fi
+            sleep 5
+          done
+          echo 'zc places' >&4
+          for t in downtown town suburb farm port military roadside; do
+            echo "zc places $t" >&4
+          done
+          sleep 3
+          # generate chunks in the middle of the nearest place of each kind and variant
+          while read -r type variant cx cz rest; do
+            echo "forceload add $((cx - 20)) $((cz - 20)) $((cx + 20)) $((cz + 20))" >&4
+          done < places.txt
+          echo 'forceload add -100 -100 100 100' >&4
+          sleep 90
+          echo 'stop' >&4
+          for i in $(seq 1 24); do kill -0 $pid 2>/dev/null || break; sleep 5; done
+          exec 4>&-
+          kill $pid 2>/dev/null || true
+          pkill -f 'net.fabricmc' || true
+          grep -E 'county|blocks (north|south|east|west)|ERROR|Exception' county.log | head -80 || true
+          grep -q 'ZomboidCraft county planned' county.log
+          grep -q 'Done (' county.log
+          ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 
       - uses: actions/upload-artifact@v4
         if: success()
@@ -113,3 +166,18 @@ jobs:
           gh release create latest build/libs/zomboidcraft-*.jar \
             --prerelease --title "Latest build" \
             --notes "Automatic build of ${GITHUB_SHA::7} for Minecraft $MC_VERSION. Needs Fabric Loader and Fabric API."
+
+      # The playtest branch gathers every thread's work so there is one jar to try.
+      - name: Publish playtest build
+        if: success() && github.ref == 'refs/heads/playtest'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete playtest-build --yes --cleanup-tag || true
+          # (the tag must not share the branch name, or git refs get ambiguous)
+          gh release delete playtest --yes --cleanup-tag || true
+          # one fixed name, so a new download replaces the old file instead of sitting beside it
+          cp build/libs/zomboidcraft-*.jar zomboidcraft-playtest.jar
+          gh release create playtest-build zomboidcraft-playtest.jar \
+            --prerelease --title "Playtest build" --target "$GITHUB_SHA" \
+            --notes "Everything in progress, merged together, from ${GITHUB_SHA::7}. Delete any other ZomboidCraft jar (zomboidcraft-0.5.x.jar) from your mods folder. Needs Fabric Loader and Fabric API. Replace any other ZomboidCraft jar with this one."

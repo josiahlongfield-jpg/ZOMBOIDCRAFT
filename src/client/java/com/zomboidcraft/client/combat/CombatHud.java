@@ -1,6 +1,8 @@
 package com.zomboidcraft.client.combat;
 
 import com.zomboidcraft.ModItems;
+import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.Grabs;
 import com.zomboidcraft.combat.RifleItem;
@@ -9,10 +11,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
-/** The rounds left beside the hotbar while you hold the rifle, and the struggle prompt when grabbed. */
+/**
+ * The rounds left beside the hotbar while you hold the rifle, the struggle prompt when grabbed, and the
+ * view through a 4x scope (the gun itself isn't drawn then: you're looking down the tube).
+ */
 public final class CombatHud {
+    private static final Identifier SCOPE = ZomboidCraft.id("textures/gui/scope_4x.png");
+    private static final int BLACK = 0xFF050505;
+
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
@@ -28,6 +38,22 @@ public final class CombatHud {
         if (grabbed != null && grabbed > 0) {
             grabbed(graphics, font, grabbed, player.tickCount);
         }
+    }
+
+    /** Drawn under the rest of the HUD, like the spyglass. */
+    public static void scope(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+        if (player == null || !minecraft.options.getCameraType().isFirstPerson() || !player.isUsingItem()
+                || !player.getUseItem().is(ModItems.ASSAULT_RIFLE) || !Attachments.scoped(player.getUseItem())
+                || CombatClient.reloading(player.getUseItem())) {
+            return;
+        }
+        int w = graphics.guiWidth(), h = graphics.guiHeight();
+        int x = (w - h) / 2;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, SCOPE, x, 0, 0, 0, h, h, h, h);
+        graphics.fill(0, 0, x, h, BLACK);
+        graphics.fill(x + h, 0, w, h, BLACK);
     }
 
     private static void ammo(GuiGraphicsExtractor graphics, Font font, ItemStack gun) {

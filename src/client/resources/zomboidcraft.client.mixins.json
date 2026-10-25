@@ -3,7 +3,15 @@
   "package": "com.zomboidcraft.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "AbstractClientPlayerMixin"
+    "AbstractClientPlayerMixin",
+    "PlayerModelMixin",
+    "GuiMixin",
+    "SlotAccessor",
+    "SoundEngineMixin",
+    "FirstPersonHandsRendererMixin",
+    "FirstPersonHandsAndItemsMixin",
+    "GameRendererMixin",
+    "EntityTurnMixin"
   ],
   "injectors": {
     "defaultRequire": 0

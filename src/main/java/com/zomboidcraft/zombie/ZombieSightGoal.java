@@ -10,11 +10,13 @@ import net.minecraft.world.entity.player.Player;
 /**
  * Replaces vanilla's "see a player within 35 blocks through any angle" targeting. Zombies
  * notice players with {@link Sight}, chase while they can see them, keep chasing for a
- * while after losing sight, then go and search the spot they lost them.
+ * while after losing sight, then go and search the spot they lost them. They scream when they first
+ * spot someone and snarl on the chase ({@link ZombieVoice}).
  */
 public class ZombieSightGoal extends TargetGoal {
     private final Zombie zombie;
     private Player spotted;
+    private long nextSnarl;
 
     public ZombieSightGoal(Zombie zombie) {
         super(zombie, true, false);
@@ -42,8 +44,23 @@ public class ZombieSightGoal extends TargetGoal {
 
     @Override
     public void start() {
+        boolean fresh = zombie.getTarget() == null;
         zombie.setTarget(spotted);
         super.start();
+        if (fresh) {
+            ZombieVoice.spotted(zombie);
+        }
+        nextSnarl = zombie.level().getGameTime() + ZombieVoice.nextSnarl(zombie);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        long now = zombie.level().getGameTime();
+        if (zombie.getTarget() != null && now >= nextSnarl) {
+            ZombieVoice.snarl(zombie);
+            nextSnarl = now + ZombieVoice.nextSnarl(zombie);
+        }
     }
 
     @Override

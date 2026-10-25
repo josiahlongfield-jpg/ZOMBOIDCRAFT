@@ -3,12 +3,17 @@
   "package": "com.zomboidcraft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CraftingMenuAccessor",
     "EnvironmentAttributeSystemMixin",
+    "InventoryMenuMixin",
+    "InventoryMixin",
     "LevelWeatherMixin",
     "LivingEntityMixin",
+    "MenuInvoker",
     "MobAccessor",
     "MobMixin",
     "NearestAttackableTargetGoalAccessor",
+    "SlotMixin",
     "ZombieMixin"
   ],
   "injectors": {

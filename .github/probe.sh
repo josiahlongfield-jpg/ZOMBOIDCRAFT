@@ -8,6 +8,289 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== bench2"
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.ItemEntityRenderState 2>&1
+javap -cp "$CP" -c -p net.minecraft.world.entity.item.ItemEntity 2>&1 | sed -n '/public static float getSpin(float, float)/,/^$/p'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.ItemEntityRenderer 2>&1 | sed -n '/public void submit(net.minecraft.client.renderer.entity.state.ItemEntityRenderState/,/^$/p' | grep -E "invoke|ldc|getfield|fload|fmul|fadd|fdiv|fneg"
+javap -cp "$CP" -c -p net.minecraft.client.gui.render.pip.GuiEntityRenderer 2>&1 | sed -n '/protected void renderToTexture(net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState/,/^$/p;/protected float getTranslateY/,/^$/p' | grep -E "invoke|ldc|getfield|fload|fmul|fadd|fdiv|iload|i2f|freturn"
+javap -cp "$CP" -c -p net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | sed -n '/public void prepare(/,/^$/p' | grep -E "invoke|ldc|getfield|fmul|i2f|iload|fload"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.item.ItemStackRenderState 2>&1 | sed -n '/public net.minecraft.world.phys.AABB getModelBoundingBox()/,/^$/p;/public void visitExtents(/,/^$/p' | grep -E "invoke|ldc|getfield"
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState' 2>&1 | sed -n '/void visitExtents(/,/^$/p;/void applyTransform(/,/^$/p' | grep -E "invoke|ldc|getfield"
+javap -cp "$CP" -p net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState 2>&1 | head -20
+javap -cp "$CP" -c -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | sed -n '/public void entity(/,/^$/p' | grep -E "invoke|new"
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/public static void extractEntityInInventory(/,/^$/p' | grep -E "invoke|ldc|getstatic"
+exit 0
+
+echo "===== bench1"
+classes 'gui/render/pip/|gui/render/state/pip/|SpecialGuiElement|gui/render/state/GuiItemRenderState|state/ItemClusterRenderState|state/ItemEntityRenderState|state/ItemDisplayEntityRenderState|state/DisplayEntityRenderState'
+for c in $(classes 'gui/render/pip/[A-Za-z]*.class|gui/render/state/pip/[A-Za-z]*.class|SpecialGuiElement' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
+sig net.minecraft.client.gui.GuiGraphicsExtractor 'submit|entity|Entity|pip|Picture|item\(|scissor|enableScissor|nextStratum|guiRenderState'
+sig net.minecraft.client.renderer.entity.state.ItemClusterRenderState 'public'
+sig net.minecraft.client.renderer.entity.ItemEntityRenderer 'public|static'
+sig net.minecraft.client.Minecraft 'getItemModelResolver|getEntityRenderDispatcher|gameRenderer|itemModelResolver'
+sig net.minecraft.client.renderer.MultiBufferSource 'public|static'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitItem|submitModel'
+classes 'client/renderer/feature/FeatureRenderDispatcher|client/renderer/SubmitNodeStorage|client/renderer/SubmitNodeCollection'
+sig net.minecraft.client.renderer.feature.FeatureRenderDispatcher 'public'
+sig net.minecraft.client.renderer.SubmitNodeStorage 'public'
+sig net.minecraft.client.renderer.GameRenderer 'getFeatureRenderDispatcher|getSubmitNodeStorage|featureRender|submitNode|getLighting|lighting'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'itemEntityTranslucentCull|translucent|entityTranslucent'
+exit 0
+
+echo "===== render2"
+echo "$MC_JARS" | tr ' ' '\n'
+classes 'client/(menu|screenhandler)/|gui/screens/MenuScreens'
+for c in $(classes 'client/(menu|screenhandler)/' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+sig 'net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback$RegistrationHelper' '.'
+for j in $MC_JARS; do echo "-- $j"; javap -cp "$j" -p net.minecraft.client.gui.screens.MenuScreens 2>&1 | grep -E "register|ScreenConstructor"; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState' 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc" | head -12
+sig com.mojang.math.Axis 'YP|rotationDegrees'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.client.model.geom.ModelPart 'translateAndRotate'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen 'protected|public'
+find ~/.gradle/caches -name '*.accesswidener' -o -name '*.classtweaker' 2>/dev/null | head
+for j in $FAPI_JARS; do unzip -p "$j" '*.accesswidener' '*.classtweaker' 2>/dev/null | grep -iE "MenuScreens|ScreenConstructor"; done | sort -u
+exit 0
+
+echo "===== render1"
+classes 'rendering/v1/.*(Layer|RenderState|Feature)|renderer/entity/player/|renderer/entity/state/(Avatar|Player|HumanoidRender|LivingEntityRender|EntityRender)|client/model/player/|model/(PlayerModel|HumanoidModel)|renderer/item/(ItemModelResolver|ItemStackRenderState)|layers/(ItemInHandLayer|CustomHeadLayer|CapeLayer|PlayerItemInHandLayer)|state/v1|renderstate'
+for c in $(classes 'rendering/v1/.*(LayerRegistration|RenderState)|renderstate|state/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+for c in $(classes 'renderer/entity/player/[A-Za-z]*Renderer.class|state/(AvatarRenderState|PlayerRenderState).class|model/player/PlayerModel.class|model/PlayerModel.class' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.HumanoidRenderState 'public'
+sig net.minecraft.client.model.HumanoidModel 'public'
+sig net.minecraft.client.renderer.item.ItemModelResolver 'public'
+sig net.minecraft.client.renderer.item.ItemStackRenderState 'public'
+sig net.minecraft.client.renderer.entity.layers.CustomHeadLayer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.layers.CustomHeadLayer 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc|getfield" | head -40
+sig net.minecraft.client.renderer.entity.EntityRendererProvider\$Context 'public'
+sig net.minecraft.world.item.ItemDisplayContext 'public static final'
+
+
+echo "===== nearby1"
+classes 'screenhandler/v1|menu/v1|world/inventory/(AbstractCraftingMenu|RecipeBookMenu|CraftingMenu|ResultSlot|ArmorSlot|TransientCraftingContainer|CraftingContainer|ResultContainer|ContainerData|MenuType|ChestMenu)|ContainerUser|ContainerOpenersCounter|entity/item/ItemEntity.class|block/entity/(ChestBlockEntity|BarrelBlockEntity|RandomizableContainerBlockEntity|BaseContainerBlockEntity)|RandomizableContainer.class'
+for c in $(classes 'screenhandler/v1|menu/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+sig net.minecraft.world.inventory.AbstractCraftingMenu '.'
+sig net.minecraft.world.inventory.RecipeBookMenu '.'
+sig net.minecraft.world.inventory.InventoryMenu '.'
+javap -cp "$CP" -p net.minecraft.world.inventory.InventoryMenu 2>&1
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/public net.minecraft.world.inventory.InventoryMenu(/,/^$/p' | grep -E "invoke|new|getstatic|bipush|iconst" | head -60
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/void slotsChanged/,/^$/p;/void removed/,/^$/p' | grep -E "invoke|getstatic|getfield" | head -30
+sig net.minecraft.world.inventory.CraftingMenu 'static|public'
+sig net.minecraft.world.inventory.ResultSlot 'public'
+sig net.minecraft.world.inventory.ArmorSlot '.'
+javap -cp "$CP" -p net.minecraft.world.inventory.ArmorSlot 2>&1 | head -5
+sig net.minecraft.world.inventory.TransientCraftingContainer 'public'
+sig net.minecraft.world.inventory.MenuType 'public'
+sig net.minecraft.world.Container 'startOpen|stopOpen|stillValid|getEntities|ContainerUser'
+sig net.minecraft.world.entity.ContainerUser '.'
+sig net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity 'public|protected'
+sig net.minecraft.world.RandomizableContainer 'public|default|static'
+sig net.minecraft.world.level.block.entity.BaseContainerBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.entity.ChestBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.entity.BarrelBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.ChestBlock 'static|getContainer'
+sig net.minecraft.world.entity.item.ItemEntity 'public'
+sig net.minecraft.server.level.ServerPlayer 'openMenu|closeContainer|containerMenu|initMenu|doCloseContainer'
+sig net.minecraft.world.entity.player.Player 'containerMenu|inventoryMenu|closeContainer|canInteractWith|isWithinBlockInteractionRange|blockInteractionRange'
+sig net.minecraft.world.level.Level 'getEntitiesOfClass|getBlockEntity'
+sig net.minecraft.client.gui.screens.MenuScreens 'public|static'
+sig net.minecraft.core.BlockPos 'STREAM_CODEC'
+sig net.minecraft.network.chat.ComponentSerialization 'STREAM_CODEC'
+sig net.minecraft.network.codec.ByteBufCodecs 'list|collection|VAR_INT|STRING_UTF8'
+sig net.minecraft.world.item.ItemStack 'STREAM_CODEC'
+sig net.minecraft.world.inventory.AbstractContainerMenu 'public|protected'
+sig net.minecraft.world.inventory.Slot 'public'
+sig net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking 'canSend|send'
+grep -E "error:|warning: \[removal" build.log | head -20
+exit 0
+
+echo "===== carry1"
+classes 'client/item/v1/|attachment/v1/AttachmentRegistry|attachment/v1/AttachmentRegistry\$Builder|world/ContainerHelper|entity/v1/ServerPlayerEvents|entity/event/v1/ServerPlayerEvents|item/ItemStackTemplate'
+sig net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback '.'
+sig 'net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry$Builder' '.'
+sig net.minecraft.world.ContainerHelper 'public'
+sig net.minecraft.world.item.Item 'Hover|Tooltip|onDestroyed|inventoryTick|canFitInside|overrideStackedOnOther|overrideOtherStackedOnMe'
+sig net.minecraft.world.entity.player.Player ' drop\(|hasInfiniteMaterials|isCreative|getInventory'
+sig net.minecraft.world.Container 'public|default'
+sig net.minecraft.world.SimpleContainer 'public'
+sig net.minecraft.world.item.ItemStackTemplate 'public'
+sig net.minecraft.world.item.ItemStack 'OPTIONAL_CODEC|CODEC|isSameItemSameComponents|copyWithCount|getMaxStackSize|isStackable|limitSize|split'
+sig net.minecraft.core.NonNullList 'public static'
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/quickMoveStack(net.minecraft.world.entity.player.Player, int)/,/^$/p' | grep -E "bipush|sipush|iconst|if_|invoke" | head -60
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public boolean add(int, net.minecraft.world.item.ItemStack)/,/^$/p' | grep -E "invoke|ireturn" | head -30
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public void dropAll()/,/^$/p' | grep -E "invoke" | head -20
+exit 0
+
+echo "===== inventory2"
+echo "## InventoryScreen.init / constructor bytecode"
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/void init()/,/^$/p' | head -60
+echo "## Minecraft: methods mentioning Screen"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -i "screen"
+echo "## Window"
+javap -cp "$CP" -p com.mojang.blaze3d.platform.Window 2>&1 | grep -iE "scale|width|height"
+echo "## Options gui scale"
+javap -cp "$CP" -p net.minecraft.client.Options 2>&1 | grep -iE "guiScale|unicode"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "resize|getWindow"
+echo "## Gui setScreen"
+javap -cp "$CP" -p net.minecraft.client.gui.Gui 2>&1 | grep -iE "screen"
+echo "## Minecraft: call sites creating InventoryScreen"
+javap -cp "$CP" -c -p net.minecraft.client.Minecraft 2>&1 | grep -n -B3 -A12 "class net/minecraft/client/gui/screens/inventory/InventoryScreen" | head -80
+exit 0
+
+echo "===== inventory1"
+classes 'gui/screens/inventory/(InventoryScreen|AbstractContainerScreen|AbstractRecipeBookScreen|EffectsInInventory|CreativeModeInventoryScreen|ContainerScreen)\.class|world/inventory/(InventoryMenu|AbstractContainerMenu|Slot|ChestMenu|MenuType)\.class|gui/screens/MenuScreens|renderer/RenderPipelines|resources/(Identifier|ResourceLocation)\.class|screenhandler|menu/v1|screen/v1/Screen|item/component/(ItemContainerContents|BundleContents)\.class|client/gui/render/state|GuiItemRenderState|client/renderer/state/'
+sig net.minecraft.client.gui.screens.inventory.InventoryScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|public'
+sig net.minecraft.client.gui.GuiGraphicsExtractor '.'
+sig net.minecraft.client.gui.screens.MenuScreens 'public'
+sig net.minecraft.world.inventory.InventoryMenu 'public'
+sig net.minecraft.world.inventory.AbstractContainerMenu 'public|protected'
+sig net.minecraft.world.inventory.Slot 'public'
+sig net.minecraft.world.inventory.MenuType 'public'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+sig net.minecraft.world.entity.player.Inventory 'public'
+sig net.minecraft.world.item.component.ItemContainerContents 'public'
+sig net.minecraft.client.Minecraft 'setScreen|getWindow|gameRenderer'
+sig net.minecraft.client.gui.components.AbstractWidget 'public'
+sig net.minecraft.client.gui.components.Renderable '.'
+classes 'fabric/api/(screenhandler|menu|client/screen)'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+exit 0
+
+
+
+echo "===== fp3"
+sig net.minecraft.world.entity.Entity 'void turn\('
+javap -cp "$CP" -c -p net.minecraft.client.MouseHandler 2>&1 | awk '/private void turnPlayer\(|public void turnPlayer\(|void handleAccumulatedMovement\(/,/^$/' | grep -E 'invoke|getfield|ldc|Method' | head -60
+for c in $(classes 'screens/options/(Mouse|Controls|Sound)[A-Za-z]*Screen\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'class|protected|public'; done
+sig com.mojang.blaze3d.vertex.PoseStack 'public'
+sig net.minecraft.world.entity.player.Player 'isModelPartShown'
+sig net.minecraft.world.entity.player.PlayerModelPart 'public static final'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'isInvisible|ageInTicks'
+sig net.minecraft.client.renderer.entity.state.AvatarRenderState 'Sleeve|skin|isInvisible'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'getModel'
+sig net.minecraft.client.model.HumanoidModel 'rightArm|leftArm'
+sig net.minecraft.client.model.player.PlayerModel 'Sleeve|slim|public'
+sig net.minecraft.client.model.geom.ModelPart 'getChild|hasChild|children'
+sig net.minecraft.world.item.ItemStack 'public static final|public net.minecraft.world.item.ItemStack\('
+sig net.minecraft.core.component.DataComponents 'ITEM_MODEL'
+sig net.minecraft.client.Minecraft 'getItemModelResolver|getEntityRenderDispatcher|getWindow|getDeltaTracker|particleEngine'
+sig net.minecraft.client.particle.ParticleEngine 'createParticle|add\('
+sig 'net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry$PendingParticleProvider' '.'
+sig net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider '.'
+sig net.minecraft.client.Options 'sensitivity|fov\(|getCameraType'
+sig net.minecraft.client.renderer.LightTexture 'FULL'
+
+echo "===== hands"
+for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
+  sig "$c" '.'
+done
+IIH=$(classes 'ItemInHandRenderer\.class' | head -1 | sed 's|\.class$||; s|/|.|g')
+echo "IIH=$IIH"
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A80 'void renderPlayerArm(' | head -100
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A120 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|ldc' | head -60
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A200 'void renderArmWithItem(' | grep -E 'invoke|getfield|getstatic|Method|Field|ldc' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'bob|Bob' | head -20
+for c in $(classes 'renderer/GameRenderer|client/Camera\.class' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'bob|Bob|private void|ItemInHand'; done
+sig net.minecraft.world.entity.player.Player 'bob|Bob|walkDist'
+sig net.minecraft.world.entity.Entity 'walkDist'
+sig net.minecraft.client.entity.ClientAvatarEntity '.'
+sig net.minecraft.client.entity.ClientAvatarState '.'
+
+echo "===== arms"
+sig net.minecraft.client.renderer.ItemInHandRenderer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A70 'void renderPlayerArm(' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A60 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|fload|ldc' | head -60
+javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A40 'void renderArmWithItem(' | head -45
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.player.AvatarRenderer 2>&1 | grep -A50 'private void renderHand(' | head -60
+sig net.minecraft.client.renderer.GameRenderer 'bob|Bob|renderItemInHand|ItemInHand'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B2 -A40 'void renderItemInHand(' | grep -E 'invoke|Method|getfield' | head -40
+sig net.minecraft.client.renderer.SubmitNodeCollector '.'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector 'submitModelPart|submitModel'
+sig net.minecraft.world.entity.player.PlayerSkin '.'
+sig net.minecraft.core.ClientAsset\$Texture '.'
+sig net.minecraft.client.renderer.entity.EntityRenderDispatcher 'Player|Avatar|getRenderer'
+sig net.minecraft.client.player.LocalPlayer 'Bob|bob'
+sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
+sig net.minecraft.core.particles.DustParticleOptions 'public'
+sig net.minecraft.world.level.block.LightBlock 'LEVEL|public static'
+sig com.mojang.blaze3d.platform.Window 'GuiScale|getWidth|getHeight'
+sig net.minecraft.client.multiplayer.ClientLevel 'setBlock|players\(|addParticle'
+classes 'rendertype/RenderTypes|renderer/RenderType\.class|rendertype/RenderType\.class'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entityTranslucent|entityCutout|entitySolid'
+sig net.minecraft.client.renderer.RenderType 'entityTranslucent|entityCutout'
+sig net.minecraft.client.model.geom.ModelPart 'resetPose|render|visible|xRot|public float'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.world.entity.HumanoidArm '.'
+
+echo "===== crosshair"
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement '.'
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements 'CROSSHAIR'
+sig net.minecraft.client.gui.Gui 'Crosshair|crosshair'
+sig org.joml.Matrix3x2fStack 'push|pop'
+sig org.joml.Matrix3x2f 'translate\(float, float\)|scale\(float, float\)'
+sig net.minecraft.world.food.FoodProperties 'public'
+sig net.minecraft.world.item.component.Consumable 'public'
+sig net.minecraft.world.item.component.Consumables 'public'
+classes 'item/component/Consumable|consume_effects|ItemUseAnimation'
+
+echo "===== volume"
+classes 'client/sounds/SoundEngine|client/sounds/SoundManager|client/sounds/ChannelAccess|options/SoundOptionsScreen|options/OptionsSubScreen|components/AbstractSliderButton|screen/v1/ScreenEvents|screen/v1/Screens|client/OptionInstance|components/OptionsList'
+sig net.minecraft.client.sounds.SoundEngine '.'
+javap -cp "$CP" -c -p net.minecraft.client.sounds.SoundEngine 2>&1 | grep -B2 -A14 'float calculateVolume' | head -60
+sig net.minecraft.client.sounds.SoundManager 'public'
+sig net.minecraft.client.gui.screens.options.SoundOptionsScreen '.'
+sig net.minecraft.client.gui.screens.options.OptionsSubScreen '.'
+sig net.minecraft.client.gui.components.AbstractSliderButton '.'
+sig net.minecraft.client.gui.components.Button 'builder|public static'
+sig 'net.minecraft.client.gui.components.Button$Builder' '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|addRenderableWidget|onClose|init|render\(|public'
+sig net.minecraft.client.gui.layouts.HeaderAndFooterLayout '.'
+sig net.minecraft.client.gui.components.OptionsList '.'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+sig net.fabricmc.fabric.api.client.screen.v1.Screens '.'
+sig net.minecraft.client.resources.sounds.SoundInstance 'getIdentifier|getLocation|getVolume|getSource'
+
+echo "===== sound"
+sig net.minecraft.client.resources.sounds.AbstractSoundInstance '.'
+sig net.minecraft.client.resources.sounds.SoundInstance '.'
+sig net.minecraft.client.resources.sounds.Sound 'public'
+
+echo "===== scope"
+classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+for j in $MC_JARS; do unzip -Z1 "$j" | grep -E 'RenderPipelines' | sed "s|^|$j: |"; done | head
+javap -cp "$CP" -c -p net.minecraft.client.gui.Gui 2>&1 | grep -A40 -i 'Spyglass' | grep -E 'invoke|getstatic|Method|Field' | head -40
+sig net.minecraft.client.gui.Gui 'Spyglass|scope|Vignette'
+sig net.minecraft.world.entity.player.Player 'isScoping'
+
+echo "===== pose"
+classes 'model/.*HumanoidModel|model/.*PlayerModel|model/.*AnimationUtils|entity/player/.*Renderer|entity/.*AvatarRenderer|state/AvatarRenderState|state/PlayerRenderState|state/HumanoidRenderState|state/ArmedEntityRenderState|state/LivingEntityRenderState|layers/ItemInHandLayer|layers/PlayerItemInHandLayer|rendering/v1/RenderStateDataKey|rendering/v1/FabricRenderState|rendering/v1/.*RenderState'
+for c in net.minecraft.client.model.HumanoidModel net.minecraft.client.model.HumanoidModel\$ArmPose net.minecraft.client.model.player.PlayerModel net.minecraft.client.model.PlayerModel net.minecraft.client.model.AnimationUtils net.minecraft.client.model.geom.ModelPart; do sig "$c" '.'; done
+for c in net.minecraft.client.renderer.entity.player.AvatarRenderer net.minecraft.client.renderer.entity.player.PlayerRenderer net.minecraft.client.renderer.entity.HumanoidMobRenderer net.minecraft.client.renderer.entity.state.AvatarRenderState net.minecraft.client.renderer.entity.state.PlayerRenderState net.minecraft.client.renderer.entity.state.HumanoidRenderState net.minecraft.client.renderer.entity.state.ArmedEntityRenderState net.minecraft.client.renderer.entity.layers.ItemInHandLayer net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer; do sig "$c" '.'; done
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public|protected'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public|protected'
+sig net.minecraft.world.entity.LivingEntity 'isUsingItem|getUseItem|getTicksUsingItem|getUsedItemHand|getMainArm|swinging|attackAnim'
+for j in $FAPI_JARS; do unzip -Z1 "$j" | grep -E 'rendering/v1/.*(RenderState|ArmPose|Avatar|Humanoid)' | sed "s|^|$j: |"; done | head -40
+
+echo "===== attach"
+sig net.minecraft.world.item.Item 'overrideOtherStackedOnMe|overrideStackedOnOther|appendHoverText|getName'
+sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|listMatches|hashStackList|hashItemAndComponents|isSameItemSameComponents|matches\(|copyWithCount|EMPTY'
+sig net.minecraft.world.inventory.ClickAction '.'
+sig net.minecraft.world.entity.SlotAccess '.'
+sig net.minecraft.world.inventory.Slot 'getItem|set\(|mayPlace|allowModification|safeInsert|safeTake'
+sig net.minecraft.world.item.component.CustomModelData '.'
+sig net.minecraft.world.item.component.ItemContainerContents 'equals|hashCode|CODEC|STREAM_CODEC'
+sig net.minecraft.network.codec.ByteBufCodecs 'map\(|STRING_UTF8|idMapper|list'
+sig net.minecraft.util.StringRepresentable 'fromEnum|EnumCodec|getSerializedName'
+sig net.minecraft.sounds.SoundEvents 'BUNDLE_INSERT|BUNDLE_REMOVE|ARMOR_EQUIP_GENERIC|CROSSBOW_LOADING_END|ITEM_PICKUP'
+sig net.minecraft.world.item.BundleItem 'override|playInsert|playRemove'
+classes 'renderer/item/CompositeModel|renderer/item/SelectItemModel|properties/select/CustomModelDataProperty|renderer/item/ConditionalItemModel|properties/conditional/HasComponent|properties/select/ComponentContents'
+sig net.minecraft.client.renderer.item.properties.select.CustomModelDataProperty '.'
+sig net.minecraft.client.renderer.item.CompositeModel '.'
 
 echo "===== combat3"
 sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'

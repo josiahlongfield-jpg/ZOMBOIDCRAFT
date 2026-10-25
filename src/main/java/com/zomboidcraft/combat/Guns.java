@@ -7,7 +7,6 @@ import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.Noise;
 import com.zomboidcraft.zombie.ZombieTypes;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -19,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,13 +40,19 @@ import net.minecraft.world.phys.Vec3;
  * in, charging handle) that also drives the reload item models.
  *
  * The rifle's custom model data carries two numbers for its item model: [0] the reload step
- * (1 magazine out, 2 magazine going in, 3 charging handle) and [1] the muzzle flash.
+ * (1 magazine out, 2 magazine in, 3 charging handle; 1.5 is magazine out on an empty gun, so first
+ * person knows the handle will be worked) and [1] the muzzle flash, plus the attachment keys
+ * {@link Attachments} writes. First person animates between the steps (RifleView), on these timings.
  */
 public final class Guns {
     private static final int MAG_OUT_AT = 0;
     private static final int MAG_IN_AT = 16;
-    private static final int CHARGE_AT = 28;
-    private static final int RELOAD_DONE = 36;
+    private static final int CHARGE_AT = 22;
+    /** A reload onto a round still chambered skips the charging handle and ends sooner. */
+    private static final int TACTICAL_DONE = 25;
+    private static final int RELOAD_DONE = 34;
+    /** Clearing a jam starts here, so the hand has time to reach the handle before it's worked at CHARGE_AT. */
+    private static final int JAM_CLEAR_AT = 18;
     private static final int FLASH_TICKS = 2;
 
     private static final class State {
@@ -102,25 +108,33 @@ public final class Guns {
         st.flashLeft = FLASH_TICKS;
         setModelData(gun, 0, 1);
 
-        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
-                1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
+        // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
+        boolean suppressed = Attachments.suppressed(gun);
+        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(),
+                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
+                suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
-        Noise.emit(level, player.position(), config.shotNoise);
+        Noise.emit(level, player.position(), config.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
 
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
         int aimLevel = Skills.level(player, Skill.AIMING);
-        double spread = (aiming ? config.aimSpread : config.hipSpread) * (1 - 0.05 * aimLevel);
+        double spread = (aiming ? config.aimSpread * Attachments.aimSpreadFactor(gun) : config.hipSpread * Attachments.hipSpreadFactor(gun))
+                * (1 - 0.05 * aimLevel);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= 1.6;
         }
         Vec3 dir = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
-        level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
-        level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0.0, 0.0, 0.0, 0.0);
+        if (config.muzzleSmoke) {
+            level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
+            if (!suppressed) {
+                level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
+        }
 
         Vec3 end = eye.add(dir.scale(config.range));
         BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
@@ -174,6 +188,21 @@ public final class Guns {
         return look.add(right.scale(Math.cos(a) * Math.tan(r))).add(up.scale(Math.sin(a) * Math.tan(r))).normalize();
     }
 
+    // ------------------------------------------------------------------ light and laser
+
+    /** Switches the light or laser on the side rail on or off, with a click. */
+    public static void toggleRail(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (!gun.is(ModItems.ASSAULT_RIFLE) || !(Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "light")
+                || Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "laser"))) {
+            return;
+        }
+        boolean on = !Attachments.railOn(gun);
+        gun.set(GunState.RAIL_ON, on);
+        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
+                SoundSource.PLAYERS, 0.25f, on ? 2.0f : 1.7f);
+    }
+
     // ------------------------------------------------------------------ reloading
 
     public static void reload(ServerPlayer player) {
@@ -189,10 +218,10 @@ public final class Guns {
         if (g.jammed()) {
             // clear the jam: work the charging handle, losing the stuck round
             gun.set(GunState.TYPE, new GunState(g.mag(), Math.max(0, g.rounds() - 1), false));
-            st.reloadTick = CHARGE_AT;
-            st.needsCharge = false;
+            player.stopUsingItem();
+            st.reloadTick = JAM_CLEAR_AT;
+            st.needsCharge = true;
             setModelData(gun, 3, 0);
-            sound(player, ModSounds.RIFLE_BOLT);
             return;
         }
         int best = bestMagazine(player);
@@ -208,7 +237,6 @@ public final class Guns {
         player.stopUsingItem();
         st.reloadTick = MAG_OUT_AT;
         st.needsCharge = !g.mag() || g.rounds() == 0;
-        setModelData(gun, 1, 0);
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
             ItemStack old = new ItemStack(ModItems.RIFLE_MAGAZINE);
@@ -218,6 +246,7 @@ public final class Guns {
             }
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
+        setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         sound(player, ModSounds.RIFLE_MAG_OUT);
     }
 
@@ -259,9 +288,7 @@ public final class Guns {
             } else if (st.reloadTick == CHARGE_AT && st.needsCharge) {
                 setModelData(gun, 3, 0);
                 sound(player, ModSounds.RIFLE_BOLT);
-            } else if (st.reloadTick == CHARGE_AT && !st.needsCharge && gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag()) {
-                setModelData(gun, 0, 0);
-            } else if (st.reloadTick >= RELOAD_DONE) {
+            } else if (st.reloadTick >= (st.needsCharge ? RELOAD_DONE : TACTICAL_DONE)) {
                 setModelData(gun, 0, 0);
                 st.reloadTick = -1;
             }
@@ -284,16 +311,11 @@ public final class Guns {
         Skills.addXp(player, Skill.AIMING, 1);
     }
 
-    /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data. */
-    private static void setModelData(ItemStack gun, int step, int flash) {
+    /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data, keeping its attachments. */
+    private static void setModelData(ItemStack gun, float step, int flash) {
         CustomModelData old = gun.get(DataComponents.CUSTOM_MODEL_DATA);
         float oldStep = old != null && !old.floats().isEmpty() ? old.floats().get(0) : 0;
-        float s = step < 0 ? oldStep : step;
-        if (s == 0 && flash == 0) {
-            gun.remove(DataComponents.CUSTOM_MODEL_DATA);
-            return;
-        }
-        gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(s, (float) flash), List.of(), List.of(), List.of()));
+        Attachments.writeModelData(gun, step < 0 ? oldStep : step, flash);
     }
 
     private static ServerLevel level(ServerPlayer player) {

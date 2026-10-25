@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.CombatNet;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.Grabs;
@@ -34,6 +35,7 @@ public final class CombatClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("zomboidcraft"));
     public static final KeyMapping RELOAD = new KeyMapping("key.zomboidcraft.reload", InputConstants.KEY_R, CATEGORY);
     public static final KeyMapping SHOVE = new KeyMapping("key.zomboidcraft.shove", InputConstants.KEY_V, CATEGORY);
+    public static final KeyMapping RAIL = new KeyMapping("key.zomboidcraft.rail", InputConstants.KEY_L, CATEGORY);
 
     private static long lastShot = -100;
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
@@ -43,6 +45,7 @@ public final class CombatClient {
     public static void register() {
         KeyMappingHelper.registerKeyMapping(RELOAD);
         KeyMappingHelper.registerKeyMapping(SHOVE);
+        KeyMappingHelper.registerKeyMapping(RAIL);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
             if (hand.is(ModItems.ASSAULT_RIFLE)) {
@@ -76,6 +79,11 @@ public final class CombatClient {
         while (SHOVE.consumeClick()) {
             ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
         }
+        while (RAIL.consumeClick()) {
+            if (player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RAIL));
+            }
+        }
         Integer grabbed = player.getAttached(Grabs.GRABBED);
         if (grabbed != null && grabbed > 0) {
             while (client.options.keyJump.consumeClick()) {
@@ -102,9 +110,11 @@ public final class CombatClient {
         if (!g.mag() || g.rounds() <= 0 || g.jammed() || reloading(gun)) {
             return;     // the server answers with the dry click
         }
-        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
-                1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
-        float kick = (aiming ? 1.1f : 2.0f) * (float) config.recoil;
+        boolean suppressed = Attachments.suppressed(gun);
+        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(),
+                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED : ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
+                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
+        float kick = (aiming ? 1.1f : 2.0f) * (float) (config.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);

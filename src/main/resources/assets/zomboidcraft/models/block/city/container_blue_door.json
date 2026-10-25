@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "container_blue": "zomboidcraft:block/city/container_blue",
+    "container_blue_door": "zomboidcraft:block/city/container_blue_door",
+    "particle": "zomboidcraft:block/city/container_blue_door"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#container_blue_door",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#container_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#container_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#container_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#container_blue",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#container_blue",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

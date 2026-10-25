@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "camo_net": "zomboidcraft:block/city/camo_net",
+    "particle": "zomboidcraft:block/city/camo_net"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#camo_net",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#camo_net",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#camo_net",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#camo_net",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#camo_net"
+        },
+        "down": {
+          "texture": "#camo_net"
+        }
+      }
+    }
+  ]
+}
