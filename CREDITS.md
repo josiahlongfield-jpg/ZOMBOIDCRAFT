@@ -38,3 +38,25 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 | weapon.melee.stomp | [crush1.wav](https://freesound.org/people/franzzle/sounds/703115/) | franzzle | CC0 1.0 |
 | weapon.melee.shove | [body touch 01.mp3](https://freesound.org/people/TitanKaempfer/sounds/582294/) | TitanKaempfer | CC0 1.0 |
 | weapon.melee.shove | [Against the Wall.wav](https://freesound.org/people/MWsfx/sounds/573691/) | MWsfx | CC0 1.0 |
+
+## Zombie and door sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org), picked by ear, cut, mixed to mono and levelled by tools/audio/build_zombie_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| zombie/idle | [INFECTED ZOMBIE MAN DYING GROWL](https://freesound.org/people/spootyskater/sounds/612699/) | spootyskater | CC0 1.0 |
+| zombie/idle | [Masked_Breathing_Raspy_Loop](https://freesound.org/people/Mediasaur/sounds/788055/) | Mediasaur | CC0 1.0 |
+| zombie/idle | [Dying Rasp](https://freesound.org/people/metrostock99/sounds/147078/) | metrostock99 | CC0 1.0 |
+| zombie/alert | [Zombie Demon Scream](https://freesound.org/people/Wakerone/sounds/435651/) | Wakerone | CC0 1.0 |
+| zombie/alert | [Voice_Monster_Rattle_Mono.wav](https://freesound.org/people/Nox_Sound/sounds/496080/) | Nox_Sound | CC0 1.0 |
+| zombie/chase | [Zombies](https://freesound.org/people/JossuTossu/sounds/483592/) | JossuTossu | CC0 1.0 |
+| zombie/chase | [Monster Groans, Grunts, Slobbers.aif](https://freesound.org/people/jasonLON/sounds/125405/) | jasonLON | CC0 1.0 |
+| zombie/bite | [Zombie Flesh Bites](https://freesound.org/people/MrPokephile/sounds/155973/) | MrPokephile | CC0 1.0 |
+| zombie/hurt | [zombie pains.wav](https://freesound.org/people/VHBC/sounds/633193/) | VHBC | CC0 1.0 |
+| door/bash | [Body Hitting Wooden Door](https://freesound.org/people/FlatHill/sounds/211450/) | FlatHill | CC0 1.0 |
+| door/bash_metal | [hard door banging](https://freesound.org/people/vate/sounds/268126/) | vate | CC0 1.0 |
+| door/break | [Kicking/Forcing/Breaking Wooden Door](https://freesound.org/people/qubodup/sounds/160213/) | qubodup | CC0 1.0 |
+| zombie/death | [Zombie dies 2](https://freesound.org/people/Breviceps/sounds/445986/) | Breviceps | CC0 1.0 |
+| zombie/death | [Body falling on the ground 1](https://freesound.org/people/ihitokage/sounds/395331/) | ihitokage | CC0 1.0 |
+| zombie/death | [Body fall.wav](https://freesound.org/people/DylanTheFish/sounds/417994/) | DylanTheFish | CC0 1.0 |

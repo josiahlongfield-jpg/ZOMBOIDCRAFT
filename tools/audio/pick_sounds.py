@@ -205,11 +205,16 @@ def main():
     sounds_json["zombie.grab"] = {"sounds": [
         {"name": "minecraft:entity.zombie.ambient", "type": "event", "pitch": 0.8},
         {"name": "minecraft:entity.zombie.attack_wooden_door", "type": "event", "pitch": 1.4, "volume": 0.5}]}
+    # keep other tools' events (zombies, doors) and credit sections
+    old = json.loads((ASSETS / "sounds.json").read_text()) if (ASSETS / "sounds.json").exists() else {}
+    sounds_json = {**{k: v for k, v in old.items() if not k.startswith("weapon.")}, **sounds_json}
     (ASSETS / "sounds.json").write_text(json.dumps(sounds_json, indent=2) + "\n")
+    old_credits = (ROOT / "CREDITS.md").read_text() if (ROOT / "CREDITS.md").exists() else ""
+    rest = old_credits[old_credits.index("\n## "):] if "\n## " in old_credits else ""
     (ROOT / "CREDITS.md").write_text(
         "# Credits\n\nWeapon sounds are CC0 (public domain) recordings from [Freesound](https://freesound.org), "
         "trimmed, mixed to mono and levelled by tools/audio/pick_sounds.py. Thank you to the recordists.\n\n"
-        "| Sound | Recording | By | Licence |\n|---|---|---|---|\n" + "\n".join(credits) + "\n")
+        "| Sound | Recording | By | Licence |\n|---|---|---|---|\n" + "\n".join(credits) + "\n" + rest)
     if "--bank" in sys.argv:
         out = Path(sys.argv[sys.argv.index("--bank") + 1])
         for event in bank:
