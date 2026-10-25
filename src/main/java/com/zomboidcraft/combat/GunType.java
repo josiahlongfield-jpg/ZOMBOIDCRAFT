@@ -108,6 +108,11 @@ public enum GunType {
         return cycle > 0;
     }
 
+    /** A worn gun can jam: one the shot itself cycles from a magazine (a pump, bolt, double or revolver can't). */
+    public boolean canJam() {
+        return !manual() && !tube;
+    }
+
     /** Ticks between shots: the setting, but never before a pump or bolt has been worked. */
     public int fireDelay() {
         return Math.max(stats().fireDelayTicks, cycleAfterShot + cycle);

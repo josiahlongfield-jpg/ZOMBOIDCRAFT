@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.rolls.Rolls;
 import com.zomboidcraft.carry.BagItem;
 import com.zomboidcraft.carry.BagSpec;
 import java.util.ArrayList;
@@ -82,6 +83,7 @@ public class CaseItem extends BagItem {
         if (part != null) {
             Attachments.mount(gun, new ItemStack(part));
         }
+        Rolls.roll(gun, Rolls.CASE, random);     // its tier sets its condition over the wear above
         GunFinish.roll(gun, random);
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);

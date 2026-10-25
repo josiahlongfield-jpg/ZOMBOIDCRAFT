@@ -1,6 +1,7 @@
 package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.rolls.Rolls;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -111,6 +112,7 @@ public class RifleItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+        Rolls.tooltip(stack, tooltip);
         if (type.tube) {
             String what = type.rounds();        // a revolver holds rounds, the shotguns shells
             tooltip.accept(Component.literal(Character.toUpperCase(what.charAt(0)) + what.substring(1) + ": " + gun.rounds()
@@ -128,6 +130,7 @@ public class RifleItem extends Item {
             tooltip.accept(finish);
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
+        Rolls.details(stack, tooltip);
         for (Attachments.Slot part : Attachments.slots(stack)) {
             ItemStack att = Attachments.get(stack, part);
             if (part == Attachments.Slot.MAGAZINE) {
