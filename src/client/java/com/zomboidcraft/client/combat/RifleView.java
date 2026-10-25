@@ -385,6 +385,9 @@ public final class RifleView {
             if (bolt >= 0) {
                 right = boltHand(want, bolt, right);
             }
+            if (animate && rig.cylinder()) {
+                right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
+            }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
         }
@@ -956,8 +959,8 @@ public final class RifleView {
     // first shell at LET_GO. Each shell then goes like a tube gun's (shellTime), but up behind its chamber and pushed in
     // along the bore. When the loading stops the hand goes back to the forend and swings it shut at closeAt().
     private static final float OPEN_START = 0.8f, OPEN_DONE = 3.2f, EJECT_AT = 3.0f, EJECT_LIFE = 7f, LET_GO = 4.5f;
-    /** Item pixels behind its chamber a shell lines up before it's pushed home. */
-    private static final float BEHIND = 2.6f;
+    /** Item pixels behind its chamber a shell (a revolver's shorter round) lines up before it's pushed home. */
+    private static final float BEHIND = 2.6f, CYL_BEHIND = 1.5f;
 
     /** Ticks after the loading stopped that it's snapped shut: halfway through the server's close. */
     private static float closeAt() {
@@ -988,25 +991,32 @@ public final class RifleView {
      * rocked about its head, then lined up on the bore and pushed home.
      */
     private static Matrix4f roundPath(float u) {
+        float[] p = pathOf(u);
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(0, -p[0], p[2])
+                .translate(h[0], h[1], h[2]).rotateX(p[1] * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /** A shell's way in, u ticks in: how far below its chamber (pixels), how rocked (degrees), how far behind it. */
+    private static float[] pathOf(float u) {
         float drop, rock, back;
+        float behind = rig.cylinder() ? CYL_BEHIND : BEHIND;
         if (u < UNDER) {
             float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
             float o = 1 - (1 - v) * (1 - v) * (1 - v);
             drop = Mth.lerp(o, 24f, 1.0f);
             rock = Mth.lerp(o, 35f, 10f);
-            back = Mth.lerp(o, 6f, BEHIND + 0.6f);
+            back = Mth.lerp(o, 6f, behind + 0.6f);
         } else if (u < UP) {
             float v = smooth01(u, UNDER, UP);
             drop = 1.0f * (1 - v);
             rock = 10f * (1 - v);
-            back = Mth.lerp(v, BEHIND + 0.6f, BEHIND);
+            back = Mth.lerp(v, behind + 0.6f, behind);
         } else {
             drop = rock = 0;
-            back = BEHIND * (1 - smooth01(u, UP + 0.2f, type.perShell - 0.3f));
+            back = behind * (1 - smooth01(u, UP + 0.2f, type.perShell - 0.3f));
         }
-        float[] h = rig.magCentre();
-        return new Matrix4f().translation(0, -drop, back)
-                .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+        return new float[] {drop, rock, back};
     }
 
     /** The gun opened to load: canted and brought up so the breech shows, jolted as it's snapped shut, then down. */
@@ -1107,6 +1117,10 @@ public final class RifleView {
 
     /** The hand under a shell's back end, u ticks into its go into chamber j, the arm coming up from below. */
     private static Hand onRound(Pose gun, float u, int j) {
+        if (rig.cylinder()) {
+            CylRound r = cylRound(gun, openAmount(clockStart + type.raise), u);
+            return new Hand(new Vector3f(r.centre()).add(r.dx(), r.dy(), 0).add(CYL_HAND), CYL_ELBOW, CYL_PALM);
+        }
         float[] h = rig.magHold();
         Matrix4f m = openLocal(openAmount(clockStart + type.raise)).mul(roundAt(Math.max(0, j))).mul(roundPath(u));
         return new Hand(gun.point(m.transformPosition(new Vector3f(h[0], h[1], h[2]))), new Vector3f(-0.3f, -0.95f, 0f),
@@ -1127,7 +1141,27 @@ public final class RifleView {
     // empties slide out the back and fall; the hand lets go of the cylinder at CYL_LET_GO. For each round the thumb
     // first turns the next empty chamber round to LOAD_SPOT (degrees from the top chamber's place, counter-clockwise
     // from behind, a whole number of chambers) over TURN ticks while the hand fetches it.
-    private static final float SPIN = 1.5f, CYL_EJECT_AT = 4.5f, CYL_LET_GO = 6f, TURN = 2f, LOAD_SPOT = 0f;
+    private static final float SPIN = 1.5f, CYL_EJECT_AT = 4.5f, CYL_LET_GO = 6f, TURN = 2f, LOAD_SPOT = -60f;
+    // Each round comes up from the lower left of the screen (FROM_LEFT of the way across for each block it rises) on the
+    // off hand's fist, which stays CYL_HAND (blocks, in view) off its back end so the round shows above it, the arm
+    // reaching up from below; the shooting forearm drops to RIGHT_LOAD while it's swung out, clear of the cylinder.
+    private static final float FROM_LEFT = 0.5f;
+    private static final Vector3f CYL_HAND = new Vector3f(-0.02f, -0.075f, -0.01f), CYL_ELBOW = new Vector3f(-0.45f, -0.85f, 0.1f),
+            CYL_PALM = new Vector3f(0.2f, -1f, 0.3f), RIGHT_LOAD = new Vector3f(0.45f, -0.85f, 0.25f);
+
+    /** A revolver's round on its way in: the chamber it goes into, where its back end is in view, and its offset. */
+    private record CylRound(Matrix4f seat, Vector3f centre, float dx, float dy, float rock) {
+    }
+
+    /** The round u ticks into its go, the cylinder open k: lined up behind the loading spot's chamber, brought up. */
+    private static CylRound cylRound(Pose gun, float k, float u) {
+        float[] p = pathOf(u);
+        float[] c = rig.magCentre();
+        Matrix4f seat = openLocal(k).mul(roundAt(0)).translate(0, 0, p[2]);
+        Vector3f centre = gun.point(seat.transformPosition(new Vector3f(c[0], c[1], c[2])));
+        float drop = p[0] / 16 * gun.scale();
+        return new CylRound(seat, centre, -drop * FROM_LEFT, -drop, p[1]);
+    }
 
     /** Turned deg degrees about the cylinder's axis (counter-clockwise from behind). */
     private static Matrix4f cylTurn(float deg) {
@@ -1203,8 +1237,13 @@ public final class RifleView {
         }
         float u = stopAt < 0 ? shellTime(age) : -1;
         if (u >= FETCHED && shells < cap) {
+            CylRound r = cylRound(gun, k, u);
+            Vector3f c = r.centre();
             pose.pushPose();
-            drawPiece(pose, out, light, player, gun, openLocal(k).mul(roundAt(shells)).mul(roundPath(u)), LOOSE_MAG);
+            pose.translate(c.x + r.dx(), c.y + r.dy(), c.z);
+            pose.rotate(new Quaternionf().rotationX(-r.rock() * Mth.DEG_TO_RAD));
+            pose.translate(-c.x, -c.y, -c.z);
+            drawPiece(pose, out, light, player, gun, r.seat(), LOOSE_MAG);
             pose.popPose();
         }
     }

@@ -785,9 +785,11 @@ def revolver():
 
     finishes = {k: (v[0], RV.look(k)) for k, v in RV.FINISHES.items()}
     # third person shows it swung out by moving it clear (its cylinder's staves are turned already)
-    return kit.Gun('revolver', 'Service Revolver', RV.body, finishes['service'][1], RV.HAND, {}, {},
-                   aperture=fp(0, RV.SIGHT, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
-                   finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
+    gun = kit.Gun('revolver', 'Service Revolver', RV.body, finishes['service'][1], RV.HAND, {}, {},
+                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
+                  finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
+    gun.gap_flash = fp(0, 0, RV.CYL_FRONT)      # the side flash out of the barrel-cylinder gap
+    return gun
 
 
 AT_SEED = {a.key: kit.Part(a.key, a.item, a.title, a.slot, a.build, a.look).seed for a in AT.ALL}
@@ -897,11 +899,11 @@ DOUBLE_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 20.0, -10.
 
 # the revolver held out like the pistol; to load, tipped muzzle down and rolled so the swung-out cylinder's back
 # faces the eye; its cylinder turns counter-clockwise from behind, a chamber (60 degrees) a shot
-REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.25,
+REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.35,
                           reload={'mag_out': (-20, -0.05), 'mag_in': (-20, -0.05), 'charge': (-6, 0.02)},
                           irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=0.0,
                           charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
-                          load_turn=(-15, 10, 25), load_push=(-0.04, 0.04, 0.0),
+                          load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
                           opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0)
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of

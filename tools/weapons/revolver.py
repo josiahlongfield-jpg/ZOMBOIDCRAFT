@@ -42,7 +42,9 @@ STRAP_BOT = CYL_Y + CYL_R + 0.015
 FRAME_BOT = -1.42       # the frame's belly under the cylinder
 SHIELD_BACK = CYL_BACK + 0.32   # the recoil shield behind the cylinder
 FRAME_BACK = 3.40
-SIGHT = STRAP_TOP - GROOVE      # the line of sight: the rear notch's floor and the front blade's top
+SIGHT = STRAP_TOP - GROOVE      # the sight groove's floor
+NOTCH_TOP = STRAP_TOP + 0.035   # the line of sight: the rear notch's top, level with the front blade's
+NOTCH_W = 0.085                 # half the notch's width: a sliver of light shows each side of the blade
 REAR_SIGHT = 1.98
 FRONT_SIGHT = (-3.85, -3.30)
 CRANE = (-0.56, -0.012)  # the crane arm, in front of the cylinder
@@ -94,14 +96,14 @@ def body(m):
     b.rod(MUZZLE - 0.012, MUZZLE + 0.03, 0.18, 'bore', axis=2)
     f0, f1 = FRONT_SIGHT
     b.box((-0.055, BARREL_R, f0), (0.055, SIGHT - 0.08, f1), 'sight')
-    b.box((-0.055, SIGHT - 0.08, f0 + 0.10), (0.055, SIGHT, f1 - 0.10), 'sight')
+    b.box((-0.055, SIGHT - 0.08, f0 + 0.10), (0.055, NOTCH_TOP, f1 - 0.10), 'sight')
     b.box((-0.13, CYL_Y - 0.17, LUG[0]), (0.13, -BARREL_R + 0.03, LUG[1]), fr)
     # ---- the frame: its nose round the barrel's shank, the top strap with the sight groove down it, the belly
     b.box((-0.40, CYL_Y + ROD_R + 0.05, FRAME_FRONT), (0.40, SIGHT, 0.0), fr)
     b.box((-0.36, STRAP_BOT, 0.0), (0.36, SIGHT, REAR_SIGHT + 0.06), fr)
     for s in (-1, 1):                                       # the groove's edges, and the notch's sides at the back
-        b.box((s * 0.055, SIGHT, FRAME_FRONT + 0.30), (s * 0.36, STRAP_TOP, REAR_SIGHT - 0.20), fr)
-        b.box((s * 0.055, SIGHT, REAR_SIGHT - 0.20), (s * 0.30, STRAP_TOP + 0.035, REAR_SIGHT + 0.06), fr)
+        b.box((s * NOTCH_W, SIGHT, FRAME_FRONT + 0.30), (s * 0.36, STRAP_TOP, REAR_SIGHT - 0.20), fr)
+        b.box((s * NOTCH_W, SIGHT, REAR_SIGHT - 0.20), (s * 0.30, NOTCH_TOP, REAR_SIGHT + 0.06), fr)
     b.box((-FRAME_W, FRAME_BOT, FRAME_FRONT), (FRAME_W, CYL_Y - CYL_R - 0.015, CYL_BACK), fr)
     # ---- the recoil shield behind the cylinder, then the frame body the hammer and lockwork sit in
     _round(b, 0.0, CYL_Y, 0.66, CYL_BACK + 0.004, SHIELD_BACK, fr)
@@ -197,13 +199,13 @@ def round_look():
 
 
 def flash(m, z_tip, r=1.0):
-    """Muzzle flash: crossed glowing planes and a core, and the side flash spat out of the barrel-cylinder gap."""
+    """Muzzle flash: crossed glowing planes and a core. (The side flash spat out of the barrel-cylinder gap is
+    GAP_FLASH, drawn with it by the kit.)"""
     b = Inch(m, (0.0, BORE_Y, Z0))
     L = 1.8 * r
     b.box((-0.02, -1.0 * r, z_tip - L), (0.02, 1.0 * r, z_tip), 'flash', light=15, noshade=True)
     b.box((-1.0 * r, -0.02, z_tip - L), (1.0 * r, 0.02, z_tip), 'flash', light=15, noshade=True)
     b.box((-0.32 * r, -0.32 * r, z_tip - 0.7 * r), (0.32 * r, 0.32 * r, z_tip), 'flash', light=15, noshade=True)
-    b.box((-0.95, -0.12, CYL_FRONT - 0.03), (0.95, 0.12, CYL_FRONT + 0.03), 'flash', light=15, noshade=True)
 
 
 def flash_paint(f):

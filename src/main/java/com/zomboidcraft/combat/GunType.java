@@ -25,7 +25,7 @@ public enum GunType {
     DOUBLE_BARREL("double_barrel", "12 gauge", 8, 10, 6, true),
     // the latch pushed and the cylinder swung out, the ejector rod pushed to clear the empties, a round thumbed into
     // each chamber, the cylinder snapped shut
-    REVOLVER("revolver", ".38 Special", 10, 8, 5, true);
+    REVOLVER("revolver", ".38 Special", 10, 10, 5, true);
 
     private final String id;
     private final String caliber;

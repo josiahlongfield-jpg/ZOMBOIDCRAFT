@@ -72,6 +72,7 @@ class Gun:
         self.seed, self.wear = seed, wear
         self.handle = handle                    # fn(m): the charging handle or slide, drawn apart so it can be worked
         self.flash_size = flash_size
+        self.gap_flash = None                   # a second flash's point, build frame (a revolver's cylinder gap)
         # {key: (title, look)}: the finishes it comes in, the first the plainest (look is then the first's)
         self.finishes = finishes
         # (axis, degrees, origin): how the handle (a double's barrels, a revolver's cylinder) is turned to show it
@@ -324,6 +325,14 @@ def quiet_tip(gun):
     return np.array([tip[0], tip[1], lo[2]])
 
 
+def star_flash(at, star):
+    """A flat star of flame facing down the bore (a revolver's barrel-cylinder gap spits one sideways). Pixels."""
+    x, y, z = (round(float(v), 4) for v in at)
+    return {'shade': False, 'light_emission': 15,
+            'from': [round(x - star, 4), round(y - star, 4), z], 'to': [round(x + star, 4), round(y + star, 4), z],
+            'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'}, 'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}}
+
+
 def flash_model(tip, length=2.4, half=0.75, star=1.1):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
     see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
@@ -479,7 +488,10 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                    assets / f'models/item/{base}/{f}/{n}.json')
     if gun.flash:
         k = gun.flash_size
-        M.dump(flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k), assets / f'models/item/{base}/muzzle_flash.json')
+        flash = flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k)
+        if gun.gap_flash is not None:
+            flash['elements'].append(star_flash(gun.gap_flash + shift, 0.9 * k))
+        M.dump(flash, assets / f'models/item/{base}/muzzle_flash.json')
         names_posed = names + ['muzzle_flash']
         quiet = quiet_tip(gun)
         if quiet is not None:
