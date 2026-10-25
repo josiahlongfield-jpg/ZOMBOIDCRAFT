@@ -32,8 +32,9 @@ import org.joml.Vector3f;
  * Guns in first person, posed by the mod on top of their item models: a gun eases up to the sights and back, cants
  * and settles through a reload while the old magazine drops away, the off hand fetches a new one and seats it and
  * works the charging handle (a pistol's slide) on an empty gun, and the player's own arms hold it (see
- * {@link RifleArms}). A pistol's slide runs back with every shot and locks open on the last one. Each gun's
- * numbers are its {@link GunRig}.
+ * {@link RifleArms}). A pistol's slide runs back with every shot and locks open on the last one. A pump shotgun
+ * is canted over to load, and the off hand pushes its shells into the loading port one at a time, then rides the
+ * pump to work it after each shot. Each gun's numbers are its {@link GunRig}.
  *
  * The item model still picks a pose for each reload step, so third person and other views stay right. Here the
  * pose stack the game draws it with is corrected from the pose the model applies to the one the animation wants.
@@ -61,6 +62,9 @@ public final class RifleView {
     private static float aim, aimO;
     /** How far onto the sights the gun was drawn last frame (0 to 1): the bob and sway ease with it. */
     private static float aimShown;
+    /** A tube gun's loading: when it stopped, and when the pump was taken up after it (ages, or -1); shells in it. */
+    private static float stopAt = -1, pumpFrom = -1;
+    private static int shells;
     /**
      * How far the gun is turned to point its rail at what's under the crosshair (0 to 1, eased): at the hip with its
      * light or laser on, so the beam runs along the barrel to the crosshair.
@@ -78,7 +82,10 @@ public final class RifleView {
     private static final ItemStackRenderState LOOSE_HANDLE = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_FLASH = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_QUIET_FLASH = new ItemStackRenderState();
-    /** Each gun's loose pieces: its magazine, its handle or slide, its flash, its smaller flash through a suppressor. */
+    /**
+     * Each gun's loose pieces: its magazine (a tube gun's: a shell), its handle, slide or pump, its flash, its smaller
+     * flash through a suppressor.
+     */
     private static final Map<GunType, ItemStack[]> LOOSE = new EnumMap<>(GunType.class);
 
     /** The last shot: its tick, then its first frame; whether it flashed, and whether it was the last round. */
@@ -113,6 +120,21 @@ public final class RifleView {
         float raw = step(gun);
         int step = (int) raw;
         int age = player.tickCount;
+        if (type.tube) {
+            tickTube(gun, raw, step, age);
+        } else {
+            tickMagazine(raw, step, age);
+        }
+        hadMag = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag();
+        aimO = aim;
+        boolean aiming = step == 0 && player.isUsingItem() && GunType.isGun(player.getUseItem());
+        aim = Mth.clamp(aim + (aiming ? 1f : -1f) / AIM_TICKS, 0f, 1f);
+        pointO = point;
+        boolean lit = Attachments.lightOn(gun) || Attachments.laserOn(gun);
+        point = Mth.clamp(point + (lit && step == 0 && !active ? 1f : -1f) / POINT_TICKS, 0f, 1f);
+    }
+
+    private static void tickMagazine(float raw, int step, int age) {
         if (step != lastStep) {
             if (step == 1) {
                 start(age, 0);
@@ -141,13 +163,39 @@ public final class RifleView {
         if (active && age - clockStart > (charge ? type.chargeDone : type.tacticalDone)) {
             active = false;
         }
-        hadMag = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag();
-        aimO = aim;
-        boolean aiming = step == 0 && player.isUsingItem() && GunType.isGun(player.getUseItem());
-        aim = Mth.clamp(aim + (aiming ? 1f : -1f) / AIM_TICKS, 0f, 1f);
-        pointO = point;
-        boolean lit = Attachments.lightOn(gun) || Attachments.laserOn(gun);
-        point = Mth.clamp(point + (lit && step == 0 && !active ? 1f : -1f) / POINT_TICKS, 0f, 1f);
+    }
+
+    /**
+     * A tube gun: step 1 while shells go in (1.5 onto an empty chamber), then 0 as it comes down, or 3 while the
+     * pump is worked to chamber one. The hand's pushes keep to the shells the server puts in.
+     */
+    private static void tickTube(ItemStack gun, float raw, int step, int age) {
+        int rounds = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds();
+        if (step != lastStep) {
+            if (step == 1) {
+                start(age, 0);
+                charge = raw > 1.25f;
+                stopAt = pumpFrom = -1;
+            } else if (active && stopAt < 0) {
+                stopAt = age;           // full, out of shells, or the trigger pulled
+            }
+            if (step == 3) {
+                if (!active) {
+                    start(age, 0);      // only the pump: never canted over
+                    stopAt = age;
+                }
+                pumpFrom = age;
+            }
+            lastStep = step;
+        }
+        if (active && stopAt < 0 && rounds > shells) {
+            int k = Math.max(1, Math.round((age - clockStart - type.raise) / type.perShell));
+            resync(age, type.raise + k * type.perShell);
+        }
+        shells = rounds;
+        if (active && stopAt >= 0 && age - stopAt > (pumpFrom >= 0 ? PUMP_DONE : LOWER) + 1) {
+            active = false;
+        }
     }
 
     private static void use(GunType gun) {
@@ -245,15 +293,15 @@ public final class RifleView {
             shown = hip(0, 0, 0);
         }
 
-        // the pose the animation wants
-        float t = active ? anim(age - clockStart) : -1;
+        // the pose the animation wants (a tube gun's goes by age)
+        float t = active ? rig.pump() ? age - clockStart : anim(age - clockStart) : -1;
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
         Pose sights = sights(optic);
         if (sights == null) {
             a = 0;
         }
-        Pose want = animate ? reloadPose(t) : step >= 1 ? shown : hip(0, 0, 0);
+        Pose want = animate ? rig.pump() ? tubePose(age) : reloadPose(t) : step >= 1 ? shown : hip(0, 0, 0);
         float p = smooth(Mth.lerp(partial(age), pointO, point));
         if (p > 0) {
             want = pointed(want, p, Attachments.laserOn(gun) ? rig.laser() : rig.light());
@@ -273,20 +321,24 @@ public final class RifleView {
         drawGun.run();
         pose.popPose();
 
-        // the model leaves the handle or slide to us in first person
-        drawHandle(pose, out, light, player, want, pull(gun, t, animate, age));
+        // the model leaves the handle, slide or pump to us in first person
+        float pulled = pull(gun, t, animate, age);
+        drawHandle(pose, out, light, player, want, pulled);
         drawFlash(pose, out, player, want, gun, age);
         Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
         rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
                 turn.transform(want.q().transform(new Vector3f(0, 0, -1))), Math.max(p, aimShown));
         railDrawn = System.nanoTime();
         if (animate) {
-            drawLoose(pose, out, light, player, want, t, step);
+            drawLoose(pose, out, light, player, want, t, step, age);
         }
         if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
-            Hand left = animate ? leftHand(want, t, foregrip) : support(want, foregrip, a);
-            Hand right = new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
+            float pump = rig.pump() ? pulled : 0;
+            Hand left = !animate ? support(want, foregrip, a, pump)
+                    : rig.pump() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
+            Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
+                    : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
         }
@@ -316,9 +368,18 @@ public final class RifleView {
         return turn.transform(gun.point(px).add(ARM[0], ARM[1], ARM[2]));
     }
 
-    /** The old magazine falling away, and the new one coming up and in. */
+    /** The old magazine falling away, and the new one coming up and in; or a tube gun's shell. */
     private static void drawLoose(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
-                                  float t, int step) {
+                                  float t, int step, float age) {
+        if (rig.pump()) {
+            float u = stopAt < 0 ? shellTime(age) : -1;
+            if (u >= FETCHED) {
+                pose.pushPose();
+                drawPiece(pose, out, light, player, gun, shellLocal(u, SHELL_FWD), LOOSE_MAG);
+                pose.popPose();
+            }
+            return;
+        }
         if (oldMag && t < 10) {
             // it slides out of the well, then falls clear of the screen, turning as it goes
             float slide = 4.5f * easeIn(t, 0.5f, 2.5f);
@@ -386,7 +447,8 @@ public final class RifleView {
                                   Matrix4f local, ItemStackRenderState state) {
         Minecraft mc = Minecraft.getInstance();
         ItemStack[] loose = LOOSE.computeIfAbsent(type, g -> new ItemStack[] {
-                piece(new ItemStack(g.magazine()), g.id() + "_loose_mag"),
+                g.magazine() == null ? piece(new ItemStack(g.ammo()), g.id() + "_loose_shell")
+                        : piece(new ItemStack(g.magazine()), g.id() + "_loose_mag"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_charging_handle"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_flash"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_flash_quiet")});
@@ -441,6 +503,11 @@ public final class RifleView {
      * open on an empty gun until the slide is racked, and run back by each shot.
      */
     private static float pull(ItemStack gun, float t, boolean animate, float age) {
+        if (rig.pump()) {
+            // worked after each shot, and to chamber a shell after loading onto an empty gun
+            float shot = pumpStroke(age - shotAt - (type.pumpAfterShot - 0.5f));
+            return animate && pumpFrom >= 0 ? Math.max(shot, pumpStroke(age - pumpFrom - PUMP_START)) : shot;
+        }
         float travel = rig.handleTravel();
         if (animate && charge) {
             if (jam || !rig.locksBack()) {
@@ -486,18 +553,27 @@ public final class RifleView {
         float[] o = rig.magOut(), c = rig.charge();
         // the magazine slapped home and the handle let go each jolt the muzzle up a little
         float kick = bump(t, MAG_IN, 2.5f) * 3f + (charge ? bump(t, RELEASE, 2.5f) * 2f : 0);
-        Pose gun = hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick);
-        if (chg <= 0) {
+        return worked(hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick), chg);
+    }
+
+    /**
+     * To work the handle the gun comes up and out, muzzle high and to the left, so the hand on the back of it
+     * doesn't hide the whole gun: turned about the grip, then pushed away, chg of the way.
+     */
+    private static Pose worked(Pose gun, float chg) {
+        return turned(gun, rig.chargeTurn(), rig.chargePush(), chg);
+    }
+
+    /** The gun turned about the grip (degrees) and then pushed (blocks), k of the way. */
+    private static Pose turned(Pose gun, float[] turn, float[] push, float k) {
+        if (k <= 0) {
             return gun;
         }
-        // to work the handle the gun comes up and out, muzzle high and to the left, so the hand on the back of it
-        // doesn't hide the whole gun: turned about the grip, then pushed away
-        float[] turn = rig.chargeTurn(), push = rig.chargePush();
         Vector3f grip = gun.point(rig.grip());
-        Quaternionf q = new Quaternionf().rotationXYZ(turn[0] * chg * Mth.DEG_TO_RAD, turn[1] * chg * Mth.DEG_TO_RAD,
-                turn[2] * chg * Mth.DEG_TO_RAD).mul(gun.q());
+        Quaternionf q = new Quaternionf().rotationXYZ(turn[0] * k * Mth.DEG_TO_RAD, turn[1] * k * Mth.DEG_TO_RAD,
+                turn[2] * k * Mth.DEG_TO_RAD).mul(gun.q());
         Pose turned = new Pose(new Vector3f(gun.t()), q, gun.scale());
-        turned.t().add(grip.sub(turned.point(rig.grip()))).add(new Vector3f(push[0], push[1], push[2]).mul(chg));
+        turned.t().add(grip.sub(turned.point(rig.grip()))).add(new Vector3f(push[0], push[1], push[2]).mul(k));
         return turned;
     }
 
@@ -509,6 +585,75 @@ public final class RifleView {
         Vector3f grip = q.transform(new Vector3f(g[0] - 8, g[1] - 8, g[2] - 8)).mul(rig.hipScale() / 16f);
         Vector3f t = new Vector3f(at[0] - ARM[0], at[1] - drop - ARM[1], at[2] - ARM[2]).sub(grip);
         return new Pose(t, q, rig.hipScale());
+    }
+
+    // ------------------------------------------------------------------ a tube gun's loading and pump
+
+    // Each shell takes perShell ticks after the gun is up (raise): the hand goes down for it (to FETCHED), brings
+    // it up under the loading port (UNDER), pushes it up in (UP, IN) and thumbs it forward into the tube, where it
+    // is at perShell, the tick the server puts it in.
+    private static final float FETCHED = 3.5f, UNDER = 7.5f, UP = 8.5f, IN = 9.2f;
+    /** Item pixels a shell goes up from under the port to the tube's line, and forward into the tube; how far the thumb follows. */
+    private static final float SHELL_UP = 0.78f, SHELL_FWD = 3.2f, THUMB_FWD = 1.6f;
+    /** A tube gun comes down from loading over LOWER ticks; the pump after it is taken up for PUMP_START ticks, then worked. */
+    private static final float LOWER = 5, PUMP_START = 3, PUMP_DONE = 9.5f;
+    /** The pump's stroke: smartly back, then forward to close. */
+    private static final float PUMP_BACK = 1.5f, PUMP_FORWARD = 1.5f;
+
+    /** Ticks into the current shell (0 to perShell), or -1 while the gun is still coming up for the first. */
+    private static float shellTime(float age) {
+        float s = age - clockStart - type.raise;
+        return s < 0 ? -1 : s - Mth.floor(s / type.perShell) * type.perShell;
+    }
+
+    /** How far over for loading the gun is (0 to 1): up as the loading starts, down when it stops. */
+    private static float loadAmount(float age) {
+        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, type.raise - 1);
+        return stopAt < 0 ? up : up * (1 - smooth01(age - stopAt, 0, pumpFrom >= 0 ? PUMP_START : LOWER));
+    }
+
+    /** The gun loading: canted so the port shows, jolted as each shell goes home; then over to work the pump. */
+    private static Pose tubePose(float age) {
+        float load = loadAmount(age);
+        float p = pumpFrom < 0 ? -1 : age - pumpFrom;
+        float chg = p < 0 ? 0 : smooth01(p, 0, PUMP_START) * (1 - smooth01(p, PUMP_START + 3.5f, PUMP_DONE));
+        float u = stopAt < 0 ? shellTime(age) : -1;
+        float kick = (u >= 0 ? bump(u, UP, type.perShell - UP) * 1.5f : 0)
+                + (p < 0 ? 0 : bump(p, PUMP_START + PUMP_BACK + PUMP_FORWARD, 2.5f) * 1.5f);
+        float[] o = rig.magOut(), c = rig.charge();
+        Pose canted = hip(o[0] * load + c[0] * chg, o[1] * load + c[1] * chg, kick);
+        return worked(turned(canted, rig.loadTurn(), rig.loadPush(), load), chg);
+    }
+
+    /**
+     * A shell u ticks into its go: from below the screen to under the port, rocked nose up about its head
+     * (magCentre), then up into the tube's line and forward into it, at most fwd pixels.
+     */
+    private static Matrix4f shellLocal(float u, float fwd) {
+        float drop, rock, in = 0, along = 0;
+        if (u < UNDER) {
+            float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
+            float out = 1 - (1 - v) * (1 - v) * (1 - v);
+            drop = Mth.lerp(out, 24f, 1.2f);
+            rock = Mth.lerp(out, 30f, 12f);
+        } else {
+            float v = smooth01(u, UNDER, UP);
+            drop = 1.2f * (1 - v);
+            rock = 12f * (1 - v);
+            in = SHELL_UP * smooth01(u, UP, IN);
+            along = Math.min(fwd, SHELL_FWD * smooth01(u, UP + 0.3f, type.perShell));
+        }
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(0, in - drop, -along)
+                .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /** Item pixels the pump is back, p ticks into a stroke. */
+    private static float pumpStroke(float p) {
+        if (p <= 0 || p >= PUMP_BACK + PUMP_FORWARD) {
+            return 0;
+        }
+        return rig.handleTravel() * (p < PUMP_BACK ? smooth(p / PUMP_BACK) : 1 - smooth((p - PUMP_BACK) / PUMP_FORWARD));
     }
 
     /**
@@ -535,7 +680,8 @@ public final class RifleView {
             return null;
         }
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));
-        return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf(), d[3]);
+        // a bead gun is tipped up a little so the bead lands on the eye line
+        return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf().rotationX(d.length > 4 ? d[4] * Mth.DEG_TO_RAD : 0), d[3]);
     }
 
     /** A display transform: translate (blocks), turn, uniform scale. */
@@ -579,6 +725,9 @@ public final class RifleView {
     private static final Vector3f RIGHT_HIP = new Vector3f(0.35f, -0.55f, 0.75f);
     private static final Vector3f RIGHT_ADS = new Vector3f(0.55f, -0.6f, 0.6f);
     private static final Vector3f RIGHT_HINT = new Vector3f(-1f, 0f, 0f);
+    /** Holding a stock's wrist on the sights: the forearm comes up from below, the elbow down and out. */
+    private static final Vector3f RIGHT_WRIST_ADS = new Vector3f(0.3f, -0.95f, -0.1f);
+    private static final Vector3f RIGHT_WRIST_HINT = new Vector3f(-0.7f, 0.7f, 0f);
     private static final Vector3f LEFT_HIP = new Vector3f(-0.25f, -0.55f, 0.8f);
     private static final Vector3f LEFT_ADS = new Vector3f(-0.3f, -0.65f, 0.7f);
     private static final Vector3f LEFT_GRIP = new Vector3f(-0.3f, -0.7f, 0.65f);
@@ -588,15 +737,19 @@ public final class RifleView {
     private static final Vector3f PALM_UP = new Vector3f(-0.2f, -1f, 0f);
     private static final Vector3f PALM_IN = new Vector3f(-1f, -0.2f, 0f);
 
-    /** The off hand on the handguard (palm up under it), round the foregrip, or round a pistol's grip. */
-    private static Hand support(Pose gun, boolean foregrip, float aimed) {
+    /**
+     * The off hand on the handguard (palm up under it), round the foregrip, or round a pistol's grip; on a pump,
+     * riding it pump pixels back.
+     */
+    private static Hand support(Pose gun, boolean foregrip, float aimed, float pump) {
         if (rig.supportGrip()) {
             return new Hand(gun.point(rig.support()), lerp(LEFT_WRAP_HIP, LEFT_WRAP_ADS, aimed), PALM_IN);
         }
         if (foregrip) {
             return new Hand(gun.point(rig.foregrip()), LEFT_GRIP, PALM_IN);
         }
-        return new Hand(gun.point(rig.support()), lerp(LEFT_HIP, LEFT_ADS, aimed), PALM_UP);
+        float[] s = rig.support();
+        return new Hand(gun.point(new Vector3f(s[0], s[1], s[2] + pump)), lerp(LEFT_HIP, LEFT_ADS, aimed), PALM_UP);
     }
 
     private static Hand onMag(Pose gun, Matrix4f mag) {
@@ -618,9 +771,38 @@ public final class RifleView {
         return new Hand(new Vector3f(POUCH), new Vector3f(-0.2f, -0.75f, 0.6f), PALM_UP);
     }
 
+    /** The hand under a shell, its thumb behind the head, u ticks into the shell's go. */
+    private static Hand onShell(Pose gun, float u) {
+        float[] h = rig.magHold();
+        Vector3f hold = shellLocal(u, THUMB_FWD).transformPosition(new Vector3f(h[0], h[1], h[2]));
+        return new Hand(gun.point(hold), new Vector3f(-0.1f, -0.9f, 0.42f), new Vector3f(-0.5f, -1f, 0f));
+    }
+
+    /** The off hand loading a tube gun: down for each shell and up to push it in. */
+    private static Hand loadHand(Pose gun, float age) {
+        float u = shellTime(age);
+        if (u < 0) {
+            return support(gun, false, 0, 0).lerp(pouch(), smooth01(age - clockStart, 0, type.raise));
+        }
+        if (u >= FETCHED) {
+            return onShell(gun, u);
+        }
+        boolean first = age - clockStart - type.raise < type.perShell;
+        return first ? pouch() : onShell(gun, type.perShell).lerp(pouch(), smooth01(u, 0, FETCHED));
+    }
+
+    /** The off hand through a tube gun's loading, then back onto the pump (pump pixels back) when it stops. */
+    private static Hand tubeHand(Pose gun, float age, float pump) {
+        if (stopAt < 0) {
+            return loadHand(gun, age);
+        }
+        float back = pumpFrom >= 0 ? PUMP_START : LOWER - 1;
+        return loadHand(gun, stopAt).lerp(support(gun, false, 0, pump), smooth01(age - stopAt, 0, back));
+    }
+
     /** Where the off hand is through the reload. */
     private static Hand leftHand(Pose gun, float t, boolean foregrip) {
-        Hand rest = support(gun, foregrip, 0);
+        Hand rest = support(gun, foregrip, 0, 0);
         if (!jam && t < 9) {
             return rest.lerp(pouch(), smooth01(t, 0, 5));      // off to fetch the new magazine
         }

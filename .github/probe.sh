@@ -29,6 +29,22 @@ sig net.minecraft.util.Mth 'clamp|lerp|wrapDegrees'
 javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/public static void extractEntityInInventoryFollowsMouse(/,/^$/p' | grep -E "invoke|ldc|fmul|fadd|putfield|getfield"
 exit 0
 
+echo "===== level render events 2"
+for c in 'LevelRenderEvents$CollectSubmits' 'LevelRenderEvents$AfterTranslucentFeatures' 'LevelRenderEvents$EndMain' 'LevelRenderEvents$AfterSolidFeatures' 'LevelExtractionEvents$EndExtraction'; do
+  javap -cp "$CP" -p "net.fabricmc.fabric.api.client.rendering.v1.level.$c" 2>&1
+done
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.LevelRenderState 2>&1 | head -40
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.OrderedSubmitNodeCollector 2>&1 | grep -E "Custom|interface"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer' 2>&1
+classes 'fabric/impl/client/rendering/.*(Level|level)|fabric/mixin/client/rendering/.*Level'
+for c in $(classes 'fabric/mixin/client/rendering/LevelRendererMixin.class|fabric/mixin/client/rendering/.*LevelRenderer.*\.class' | sed 's/\.class$//; s#/#.#g'); do
+  echo "----- $c"; javap -cp "$CP" -c -p "$c" 2>&1 | grep -E "invoke|Method|getstatic|private|public" | head -80
+done
+javap -cp "$CP" -c -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -nE "submitBlockOutline|private void submit|PoseStack|translate\(DDD|camera" | head -40
+exit 0
+
+
 echo "===== bob"
 javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | sed -n '/void bobView(/,/^$/p' | grep -E "invoke|getfield|putfield|ldc|return"
 javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -nE "^  [a-z].*\(|bobView" | grep -B1 bobView

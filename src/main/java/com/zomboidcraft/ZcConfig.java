@@ -34,6 +34,8 @@ public final class ZcConfig {
     public Guns guns = new Guns();
     /** The M9-style pistol's own numbers (shared gun settings are in guns). */
     public GunStats pistol = GunStats.pistol();
+    /** The pump shotgun's own numbers, with its pellets. */
+    public ShotgunStats shotgun = new ShotgunStats();
     public Carry carry = new Carry();
 
     public static class Carry {
@@ -264,7 +266,7 @@ public final class ZcConfig {
 
     /**
      * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
-     * gun has a group of its own (pistol).
+     * gun has a group of its own (pistol, shotgun).
      */
     public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
@@ -296,6 +298,35 @@ public final class ZcConfig {
             s.range = 60.0;
             s.magazineSize = 15;
             return s;
+        }
+    }
+
+    /**
+     * The pump shotgun's numbers: each shot is a spread of buckshot pellets, deadly close up and weak far off. Its
+     * damage is per pellet, its magazine size is the shells it holds (four in the tube and one chambered), and its
+     * time between shots covers working the pump.
+     */
+    public static class ShotgunStats extends GunStats {
+        /** Pellets in each shell (00 buckshot has eight or nine). */
+        public int pellets = 8;
+        /** How far the pellets spread from where the shot goes, in degrees. */
+        public double pelletSpread = 2.5;
+        /** Pellets hit full strength out to this many blocks, then weaken to a quarter at the gun's range. */
+        public double falloffStart = 10.0;
+        /** How hard a close hit shoves a zombie back. */
+        public double knockback = 0.45;
+
+        ShotgunStats() {
+            damage = 3.5;
+            headshotMultiplier = 2.5;
+            hipSpread = 2.0;
+            aimSpread = 0.6;
+            recoil = 2.2;
+            shotNoise = 120.0;
+            aimZoom = 0.85;
+            range = 40.0;
+            fireDelayTicks = 15;
+            magazineSize = 5;
         }
     }
 

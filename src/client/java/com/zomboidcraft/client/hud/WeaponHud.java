@@ -90,7 +90,8 @@ final class WeaponHud {
 
         boolean jammed = state.jammed();
         boolean reloading = CombatClient.reloading(hand);
-        String caption = jammed ? "Jammed, press R" : reloading ? "Reloading" : !state.mag() ? "No magazine, press R"
+        boolean tube = GunType.of(hand) != null && GunType.of(hand).tube;
+        String caption = jammed ? "Jammed, press R" : reloading ? (tube ? "Loading shells" : "Reloading") : !state.mag() ? "No magazine, press R"
                 : state.rounds() == 0 ? "Empty, press R" : caliber(hand);
         float cw = Hud.capsWidth(font, caption, 1.2f, .75f);
         int captionInk = jammed ? 0xFFE03020 : state.mag() && state.rounds() == 0 || !state.mag() ? 0xFFE07A5A : Hud.BONE_DIM;

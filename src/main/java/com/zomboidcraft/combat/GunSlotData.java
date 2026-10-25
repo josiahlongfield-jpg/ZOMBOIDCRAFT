@@ -22,11 +22,14 @@ public final class GunSlotData {
                 Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
                 Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("pistol_magazine")),
-                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))));
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
+        Map.entry("shotgun", Map.ofEntries(
+)));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
         Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
-        Map.entry("pistol", Map.ofEntries()));
+        Map.entry("pistol", Map.ofEntries()),
+        Map.entry("shotgun", Map.ofEntries()));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),
