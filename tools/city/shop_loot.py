@@ -69,7 +69,7 @@ TABLES = {
         ("shield", 1, 1, 1, worn()), ("gunpowder", 3, 1, 4), ("string", 3, 1, 4), ("-", 8, 1, 1)]),
     "pawn": ((2, 5), [
         ("gold_nugget", 8, 2, 9), ("gold_ingot", 3, 1, 2), ("emerald", 4, 1, 3), ("diamond", 1, 1, 1),
-        ("clock", 3, 1, 1), ("compass", 3, 1, 1), ("spyglass", 2, 1, 1), ("goat_horn", 1, 1, 1),
+        (f"{ZC}:digital_watch", 4, 1, 1), ("clock", 1, 1, 1), ("compass", 3, 1, 1), ("spyglass", 2, 1, 1), ("goat_horn", 1, 1, 1),
         ("music_disc_13", 1, 1, 1), ("music_disc_cat", 1, 1, 1), ("music_disc_stal", 1, 1, 1), ("name_tag", 2, 1, 1),
         ("amethyst_shard", 3, 1, 4), ("lead", 2, 1, 1), (f"{ZC}:baseball_bat", 2, 1, 1), (f"{ZC}:katana", 1, 1, 1),
         (f"{ZC}:golf_club", 2, 1, 1, worn(0, .5)), (f"{ZC}:hockey_stick", 1, 1, 1, worn(0, .5)), (f"{ZC}:rifle_ammo", 1, 3, 12), ("iron_sword", 1, 1, 1, worn()),
@@ -79,7 +79,7 @@ TABLES = {
         ("leather_helmet", 4, 1, 1, worn()), ("leather_chestplate", 4, 1, 1, worn()), ("leather_leggings", 4, 1, 1, worn()),
         ("leather_boots", 4, 1, 1, worn()), ("leather", 4, 1, 3), ("white_wool", 3, 1, 3), ("gray_wool", 3, 1, 3),
         ("brown_wool", 3, 1, 3), ("red_carpet", 2, 1, 2), ("string", 4, 1, 5), ("book", 4, 1, 3), ("painting", 2, 1, 1),
-        ("item_frame", 2, 1, 1), ("flower_pot", 2, 1, 1), ("bowl", 2, 1, 3), ("clock", 1, 1, 1),
+        ("item_frame", 2, 1, 1), ("flower_pot", 2, 1, 1), ("bowl", 2, 1, 3), (f"{ZC}:digital_watch", 2, 1, 1),
         (f"{ZC}:golf_club", 2, 1, 1, worn()), (f"{ZC}:hockey_stick", 2, 1, 1, worn()), (f"{ZC}:baseball_bat", 1, 1, 1, worn()),
         (f"{ZC}:frying_pan", 1, 1, 1, worn()), (f"{ZC}:school_backpack", 2, 1, 1), (f"{ZC}:duffel_bag", 1, 1, 1),
         (f"{ZC}:fanny_pack", 1, 1, 1), ("-", 8, 1, 1)]),
@@ -104,7 +104,7 @@ TABLES = {
         ("potion", 3, 1, 1, WATER), ("bucket", 1, 1, 1), ("-", 10, 1, 1)]),
     "office": ((1, 4), [
         ("paper", 14, 2, 10), ("book", 5, 1, 2), ("writable_book", 3, 1, 1), ("map", 2, 1, 1), ("ink_sac", 3, 1, 2),
-        ("compass", 1, 1, 1), ("clock", 1, 1, 1), (f"{ZC}:bandage", 2, 1, 1), ("-", 12, 1, 1)]),
+        ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1), (f"{ZC}:bandage", 2, 1, 1), ("-", 12, 1, 1)]),
     "storage": ((1, 4), [
         (f"{ZC}:nails", 6, 2, 10), ("oak_planks", 5, 2, 8), ("stick", 4, 2, 6), ("string", 4, 1, 4), ("paper", 4, 1, 4),
         ("torch", 3, 1, 4), ("bread", 3, 1, 2), ("potion", 3, 1, 1, WATER), ("bone", 2, 1, 3), ("leather", 2, 1, 2),

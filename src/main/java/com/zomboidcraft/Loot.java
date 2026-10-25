@@ -47,6 +47,7 @@ public final class Loot {
         maybe(random, drops, 0.08f, ModItems.NAILS, 1, 3);
         maybe(random, drops, 0.04f, ModItems.BANDAGE, 1, 1);
         maybe(random, drops, 0.01f, ModItems.KITCHEN_KNIFE, 1, 1);
+        maybe(random, drops, 0.03f, ModItems.DIGITAL_WATCH, 1, 1);
         // the dead still wear what they ran with
         maybe(random, drops, 0.015f, ModItems.SCHOOL_BACKPACK, 1, 1);
         maybe(random, drops, 0.01f, ModItems.FANNY_PACK, 1, 1);

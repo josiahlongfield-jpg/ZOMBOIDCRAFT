@@ -8,8 +8,6 @@ import java.util.Map;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,12 +51,7 @@ public final class Skills {
         Map<String, Integer> updated = new HashMap<>(player.getAttachedOrCreate(TYPE));
         updated.put(skill.name(), after);
         player.setAttached(TYPE, updated);
-
-        int newLevel = Skill.levelForXp(after);
-        if (newLevel > Skill.levelForXp(before)) {
-            player.sendOverlayMessage(Component.literal(skill.displayName() + " increased to level " + newLevel)
-                    .withStyle(ChatFormatting.GOLD));
-        }
+        // the client's skill tape shows a level going up
     }
 
     private Skills() {
