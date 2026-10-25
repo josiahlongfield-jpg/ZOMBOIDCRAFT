@@ -78,3 +78,50 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | zombie/step | [footsteps shoes dirt floor slow scuff stop.flac](https://freesound.org/people/kyles/sounds/451861/) | kyles | CC0 1.0 |
 | horde/angry | [Zombies](https://freesound.org/people/JossuTossu/sounds/483592/) | JossuTossu | CC0 1.0 |
 | horde/angry | [Monster Groans, Grunts, Slobbers.aif](https://freesound.org/people/jasonLON/sounds/125405/) | jasonLON | CC0 1.0 |
+
+## Looting and item sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_loot_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| loot.drawer | [FilingCabinet.aif](https://freesound.org/people/klakmart/sounds/108268/) | klakmart | CC0 1.0 |
+| loot.drawer | [Filing Cabinet Drawer Open/Close](https://freesound.org/people/SamsterBirdies/sounds/581404/) | SamsterBirdies | CC0 1.0 |
+| loot.drawer | KITCHEN drawer opening closing (Articulated Sounds - Essential Kitchen) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| loot.drawer | TM_MTFILCAB_Filing cabinet, metal, close, slow open and shut, bottom (Tone Manufacture - MicroTone Filing Cabinets) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| loot.drawer | Nightstand_Modern_Drawers_Wood_Close_x6_Fienup_001 (Soundopolis - Household Doors HD) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| loot.drawer | CST_Cutlery_Drawer_Open_Medium_SFXWiz (SoundFxwizard - Closets Small Doors) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| loot.drawer | [cabinet.wav](https://freesound.org/people/j1987/sounds/94986/) | j1987 | CC0 1.0 |
+| loot.drawer | Nightstand_Old_Drawers_Wood_Open_x11_Fienup_001 (Soundopolis - Household Doors HD) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| loot.drawer | [Metal drawer with objects inside](https://freesound.org/people/LloydEvans09/sounds/185838/) | LloydEvans09 | CC0 1.0 |
+| loot.drawer | [Metal drawer](https://freesound.org/people/LloydEvans09/sounds/185842/) | LloydEvans09 | CC0 1.0 |
+| loot.cupboard | [Oven Door open 2 inches.wav](https://freesound.org/people/Jbricker1997/sounds/426392/) | Jbricker1997 | CC0 1.0 |
+| loot.cupboard | [Closing a Laundry Dryer Door](https://freesound.org/people/ryanharding95/sounds/272429/) | ryanharding95 | CC0 1.0 |
+| loot.fridge | [Fridge door1.wav](https://freesound.org/people/babuhr/sounds/513340/) | babuhr | CC0 1.0 |
+| loot.fridge | [refrigerator door opening and closing.wav](https://freesound.org/people/sethlind/sounds/265024/) | sethlind | CC0 1.0 |
+| loot.fridge | [Fridge open and close.wav](https://freesound.org/people/bdunis4/sounds/271454/) | bdunis4 | CC0 1.0 |
+| loot.fridge | [refrigerator door open](https://freesound.org/people/Yoyodaman234/sounds/183531/) | Yoyodaman234 | CC0 1.0 |
+| loot.fridge | [Fridge Open/Close (medium)](https://freesound.org/people/RealSquink/sounds/788308/) | RealSquink | CC0 1.0 |
+| loot.register | [old cash register open and close with a bing](https://freesound.org/people/clubmydia+/sounds/584168/) | clubmydia+ | CC0 1.0 |
+| loot.register | [Metal Till Cash Drawer Slide In And Out.wav](https://freesound.org/people/lolamadeus/sounds/217173/) | lolamadeus | CC0 1.0 |
+| loot.box | [open-cardboard-box-compartment.wav](https://freesound.org/people/newagesoup/sounds/364740/) | newagesoup | CC0 1.0 |
+| loot.box | [Box open](https://freesound.org/people/LeonsFlashlight/sounds/135014/) | LeonsFlashlight | CC0 1.0 |
+| loot.safe | [Keycard lock + code.aif](https://freesound.org/people/Ubehag/sounds/262277/) | Ubehag | CC0 1.0 |
+| loot.shelf | [Toolbox](https://freesound.org/people/artemditkovsky/sounds/860292/) | artemditkovsky | CC0 1.0 |
+| item.eat | [Eating a Toastie.wav](https://freesound.org/people/squashy555/sounds/235905/) | squashy555 | CC0 1.0 |
+| item.eat | Celery,Bite,Crunch,Slow,Bone,Break,Stick,Creak,Various07 (Mattia Cellotto - Crunch Mode) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| item.eat | [Bite (Apple)](https://freesound.org/people/wadaltmon/sounds/275015/) | wadaltmon | CC0 1.0 |
+| item.eat | [Crunching](https://freesound.org/people/Ezcah/sounds/202145/) | Ezcah | CC0 1.0 |
+| item.eat | [Munching Food](https://freesound.org/people/Kodack/sounds/256311/) | Kodack | CC0 1.0 |
+| item.drink | [Beer can open and drink.wav](https://freesound.org/people/DMDoom/sounds/445239/) | DMDoom | CC0 1.0 |
+| item.drink | [Open Soda can](https://freesound.org/people/Robotter112/sounds/418988/) | Robotter112 | CC0 1.0 |
+| item.drink | [Opening a bottle of beer.WAV](https://freesound.org/people/13GPanska_Gorbusinova_Anna/sounds/377991/) | 13GPanska_Gorbusinova_Anna | CC0 1.0 |
+| item.drink | [Water_Drink.wav](https://freesound.org/people/Q.K./sounds/56270/) | Q.K. | CC0 1.0 |
+| item.bandage | RIPS AND TEARS T-Shirt Rip 02 (RDGSFX007 - Rips and Tears v.2) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| item.bandage | Sinematic - Source Recordings - Tape Duct Rips (SoundMorph - Sinematic) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| item.bandage | [Wrapping cloth](https://freesound.org/people/ChuckleNutsDev/sounds/718668/) | ChuckleNutsDev | CC0 1.0 |
+| item.hammer.nail | Nail Hammering 03 (The Sound Pack Tree - Construction & Tools) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| item.hammer.nail | [hammering 2.wav](https://freesound.org/people/cognito%20perceptu/sounds/17012/) | cognito perceptu | CC0 1.0 |
+| item.hammer.nail | [hammer pounding on wood.wav](https://freesound.org/people/Ryujin95/sounds/394891/) | Ryujin95 | CC0 1.0 |
+| item.bag | Zipper_SmallBag_01_04 (SoundBits - Open & Close) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| item.bag | [Open Bag Sound](https://freesound.org/people/Rickplayer/sounds/531499/) | Rickplayer | CC0 1.0 |
