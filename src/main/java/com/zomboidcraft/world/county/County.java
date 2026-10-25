@@ -243,23 +243,25 @@ public final class County {
         } else if (v < 0.85) {
             return fitOrShrink(PlaceType.FARM, "orchard", px, pz, 180, 170, h);
         }
-        return fitOrShrink(PlaceType.FARM, "homestead", px, pz, 110, 100, h);
+        return fit(PlaceType.FARM, "homestead", px, pz, 130, 120, h);  // any smaller and the crossroads leave no room for the yard
     }
 
     private Place military(int px, int pz, double v, long h) {
+        // each one its own size, a tenth either way
+        double s = 0.9 + ((h >>> 24) & 31) / 31.0 * 0.2;
         if (v < 0.4) {
-            return fitOrShrink(PlaceType.MILITARY, "quarantine", px, pz, 220, 200, h);
+            return fitOrShrink(PlaceType.MILITARY, "quarantine", px, pz, (int) (210 * s), (int) (190 * s), h);
         } else if (v < 0.75) {
-            return fitOrShrink(PlaceType.MILITARY, "army_base", px, pz, 320, 300, h);
+            return fitOrShrink(PlaceType.MILITARY, "army_base", px, pz, (int) (280 * s), (int) (260 * s), h);
         }
-        return fitOrShrink(PlaceType.MILITARY, "depot", px, pz, 190, 170, h);
+        return fitOrShrink(PlaceType.MILITARY, "depot", px, pz, (int) (190 * s), (int) (170 * s), h);
     }
 
     private Place roadside(int px, int pz, double v, long h) {
         String[] kinds = {"gas_station", "motel", "diner", "church", "school", "warehouse", "trailer_lot"};
-        int[][] sizes = {{56, 44}, {76, 52}, {44, 40}, {54, 64}, {96, 84}, {80, 64}, {60, 56}};
+        int[][] sizes = {{90, 108}, {100, 112}, {90, 108}, {96, 128}, {150, 190}, {104, 136}, {90, 116}};
         int k = (int) (v * kinds.length);
-        return fit(PlaceType.ROADSIDE, kinds[k], px, pz, sizes[k][0], sizes[k][1], h);
+        return fitOrShrink(PlaceType.ROADSIDE, kinds[k], px, pz, sizes[k][0], sizes[k][1], h);
     }
 
     private Place fitOrShrink(PlaceType type, String variant, int px, int pz, int w, int d, long h) {

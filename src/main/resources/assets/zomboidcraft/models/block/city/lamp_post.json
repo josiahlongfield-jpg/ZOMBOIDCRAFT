@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "lamp_iron": "zomboidcraft:block/city/lamp_iron",
+    "particle": "zomboidcraft:block/city/lamp_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#lamp_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -21,7 +21,7 @@ TABLES = {
         ("potion", 6, 1, 2, WATER), ("bread", 4, 1, 2), ("cookie", 3, 1, 4), ("dried_kelp", 3, 2, 6),
         (f"{ZC}:bandage", 3, 1, 2), ("leather_chestplate", 2, 1, 1, worn()), ("leather_boots", 2, 1, 1, worn()),
         ("white_wool", 2, 1, 2), ("string", 3, 1, 4), ("paper", 4, 1, 4), ("book", 2, 1, 1), ("map", 1, 1, 1),
-        ("bucket", 2, 1, 1), ("torch", 3, 1, 4), ("lead", 1, 1, 1), ("compass", 1, 1, 1),
+        ("bucket", 2, 1, 1), ("torch", 3, 1, 4), ("lead", 1, 1, 1), ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1),
         (f"{ZC}:pipe_wrench", 2, 1, 1, worn(0, .5)), (f"{ZC}:crowbar", 2, 1, 1, worn(0, .5)), (f"{ZC}:hammer", 1, 1, 1),
         (f"{ZC}:golf_club", 2, 1, 1, worn()), (f"{ZC}:baseball_bat", 1, 1, 1, worn()), ("-", 12, 1, 1)]),
     # vans, pickups and trucks: a tradesman's gear
@@ -36,7 +36,7 @@ TABLES = {
         (f"{ZC}:pistol_ammo", 8, 4, 16), (f"{ZC}:pistol_magazine", 3, 1, 1), (f"{ZC}:pistol_magazine", 2, 1, 1, rounds(15)),
         (f"{ZC}:pistol", 2, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun_shell", 6, 4, 12),
         ("iron_chestplate", 2, 1, 1, worn(.2, .7)), ("iron_helmet", 2, 1, 1, worn(.2, .7)), (f"{ZC}:bandage", 5, 1, 3),
-        ("shield", 2, 1, 1, worn()), ("lead", 2, 1, 1), ("paper", 4, 1, 3), ("compass", 1, 1, 1),
+        ("shield", 2, 1, 1, worn()), ("lead", 2, 1, 1), ("paper", 4, 1, 3), ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1),
         ("potion", 3, 1, 1, WATER), ("-", 6, 1, 1)]),
     # the back of a SWAT van: rare, and the best gear on the street
     "swat": ((3, 6), [

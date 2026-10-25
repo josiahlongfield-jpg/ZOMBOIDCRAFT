@@ -9,17 +9,17 @@ import java.util.SplittableRandom;
  * Facing works like vanilla doors: a door facing south sits on the north side of its block, so
  * a door set into a wall at local z = 0 faces south to sit flush with the street.
  */
-final class Doors {
-    static final String SHOP = "shop_door", STEEL = "fire_door", FLAT = "flat_door";
+public final class Doors {
+    public static final String SHOP = "shop_door", STEEL = "fire_door", FLAT = "flat_door";
 
-    static void place(Placer p, int x, int y, int z, String type, String facing, String hinge, boolean open) {
+    public static void place(Placer p, int x, int y, int z, String type, String facing, String hinge, boolean open) {
         String props = "[facing=" + facing + ",hinge=" + hinge + ",open=" + open;
         p.set(x, y, z, type + props + ",half=lower]");
         p.set(x, y + 1, z, type + props + ",half=upper]");
     }
 
     /** A door left shut, open or gone; a missing glass door leaves its shards behind. */
-    static void abandoned(Placer p, SplittableRandom rng, int x, int y, int z, String type, String facing, String hinge) {
+    public static void abandoned(Placer p, SplittableRandom rng, int x, int y, int z, String type, String facing, String hinge) {
         double r = rng.nextDouble();
         if (r < 0.12) {
             p.set(x, y, z, type.equals(SHOP) ? "glass_shards" : "air");
@@ -30,13 +30,13 @@ final class Doors {
     }
 
     /** Double doors at x and x + 1 of a wall along x, hinged on their outer edges. */
-    static void pair(Placer p, SplittableRandom rng, int x, int y, int z, String type, String facing) {
+    public static void pair(Placer p, SplittableRandom rng, int x, int y, int z, String type, String facing) {
         boolean south = facing.equals("south");
         abandoned(p, rng, x, y, z, type, facing, south ? "right" : "left");
         abandoned(p, rng, x + 1, y, z, type, facing, south ? "left" : "right");
     }
 
-    static String hinge(SplittableRandom rng) {
+    public static String hinge(SplittableRandom rng) {
         return rng.nextBoolean() ? "left" : "right";
     }
 

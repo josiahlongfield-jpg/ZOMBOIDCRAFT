@@ -34,7 +34,9 @@ public final class SoundVolumes {
         DOOR_BASHING("door_bashing"),
         GUNS("guns"),
         MELEE("melee"),
-        LOOTING("looting");
+        LOOTING("looting"),
+        AMBIENCE("ambience"),
+        VEHICLES("vehicles");
 
         public final String key;
         private volatile double volume = 1.0;
@@ -82,7 +84,16 @@ public final class SoundVolumes {
             if (path.startsWith("loot.") || path.startsWith("item.")) {
                 return Group.LOOTING;
             }
+            if (path.startsWith("car.")) {
+                return Group.VEHICLES;
+            }
+            if (path.startsWith("amb.")) {
+                return Group.AMBIENCE;
+            }
             return null;
+        }
+        if (id.getNamespace().equals("minecraft") && path.equals("entity.lightning_bolt.thunder")) {
+            return Group.AMBIENCE;  // the thunder takes come from the ambience set
         }
         // the walkers use the game's zombie sound events, which the mod's sounds replace
         if (id.getNamespace().equals("minecraft") && path.startsWith("entity.")) {

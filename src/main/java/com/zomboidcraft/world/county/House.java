@@ -44,7 +44,10 @@ public final class House {
     private final int floors;
     private int x0, x1, z0, z1;
     private int garageX0 = -1, garageX1 = -1;
+    private int doorX;
     private final String shutterWood;
+    /** Share of windows still lit, for the few houses with a generator running. */
+    private double lit;
 
     public House(Placer p, SplittableRandom rng, Style style, Condition cond, Palette pal, int w, int d, int floors) {
         this.p = p;
@@ -56,6 +59,31 @@ public final class House {
         this.d = d;
         this.floors = floors;
         this.shutterWood = rng.nextBoolean() ? "minecraft:dark_oak" : rng.nextBoolean() ? "minecraft:spruce" : "minecraft:pale_oak";
+    }
+
+    /** Lights some of the windows and the porch lamp: someone, or a generator, is still here. */
+    public House lit(double share) {
+        this.lit = share;
+        return this;
+    }
+
+    /** After {@link #build()}: the front door's x, in the house's frame. */
+    public int doorX() {
+        return doorX;
+    }
+
+    /** After {@link #build()}: the z of the front wall (behind any porch). */
+    public int frontZ() {
+        return z0;
+    }
+
+    /** After {@link #build()}: the garage's x span, or -1 when there is none. */
+    public int garageX0() {
+        return garageX0;
+    }
+
+    public int garageX1() {
+        return garageX1;
     }
 
     /** A random palette suited to the style. */
@@ -188,7 +216,7 @@ public final class House {
         if (style == Style.TRAILER) {
             // skirting and the hitch
             for (int x = a0; x <= a1; x++) {
-                p.set(x, 0, b0, "chainlink[facing=north]");
+                p.set(x, 0, b0, "chainlink[axis=x]");
             }
             p.set(-1, 0, (b0 + b1) / 2, "rust");
         }
@@ -224,7 +252,7 @@ public final class House {
 
     /** Window openings with sills and shutters, and the doors. */
     private void windowsAndDoors(int height) {
-        int doorX = style == Style.SHOTGUN ? x0 + 2 : (x0 + x1) / 2 + (rng.nextBoolean() ? 0 : -1);
+        doorX = style == Style.SHOTGUN ? x0 + 2 : (x0 + x1) / 2 + (rng.nextBoolean() ? 0 : -1);
         for (int f = 0; f < floors; f++) {
             int y = f * STOREY + 2;
             // front and back
@@ -248,6 +276,9 @@ public final class House {
             }
         }
         door(doorX, z0, "south");
+        // the porch lamp beside the door
+        boolean on = lit > 0 && rng.nextDouble() < 0.8;
+        p.set(doorX + 1, 3, z0 - 1, on ? "wall_lantern" : "wall_lantern_off");
         // a back door to the yard
         door((x0 + x1) / 2 + 2 <= x1 - 1 ? (x0 + x1) / 2 + 2 : (x0 + x1) / 2, z1, "north");
     }
@@ -260,7 +291,7 @@ public final class House {
         } else if (cond == Condition.BURNT || cond == Condition.RUIN || r < 0.55) {
             glass = r < 0.75 ? "window_broken[axis=" + axis + "]" : "window_empty[axis=" + axis + "]";
         } else {
-            glass = "window[axis=" + axis + "]";
+            glass = (rng.nextDouble() < lit ? "window_lit" : "window") + "[axis=" + axis + "]";
         }
         p.set(x, y, z, glass);
         p.set(x, y + 1, z, glass);

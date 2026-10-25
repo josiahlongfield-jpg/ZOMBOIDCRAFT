@@ -138,6 +138,9 @@ public final class Tower {
         p.fill(mid - 3, 4, -3, mid + 2, 4, -1, "steel_mullion");
         p.set(mid - 3, 3, -3, "wall_lantern");
         p.set(mid + 2, 3, -3, "wall_lantern");
+        // lamp boxes under the canopy, throwing their colour onto the wet sidewalk
+        p.set(mid - 2, 3, -2, ShopLights.lamp(rng, 0.15));
+        p.set(mid + 1, 3, -2, ShopLights.lamp(rng, 0.15));
     }
 
     private String wallMaterial() {

@@ -20,11 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - amb_rain,amb_roof
-          - amb_wind,amb_thunder
-          - amb_hail,amb_distant
-          - amb_creak,amb_drip
-          - amb_crow,amb_night
+          - gun_pistol
+          - gun_pistol_foley
+          - gun_shotgun
+          - gun_shotgun_foley
+          - gun_distant
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

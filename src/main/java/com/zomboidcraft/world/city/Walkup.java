@@ -166,6 +166,10 @@ public final class Walkup {
         if (rng.nextDouble() < 0.45 && door + 1 < w - 1) {
             p.set(door + 1, 2, -1, rng.nextDouble() < 0.7 ? "wall_lantern" : "wall_lantern_off");
         }
+        // a lamp box over the door: set into the awning, or lighting the sign from above
+        if (rng.nextDouble() < 0.6) {
+            p.set(door, sign ? 4 : 3, -1, ShopLights.lamp(rng, 0.2));
+        }
     }
 
     private void interior(int y) {

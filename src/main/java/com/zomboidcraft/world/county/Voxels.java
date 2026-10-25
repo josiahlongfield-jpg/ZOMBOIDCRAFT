@@ -15,7 +15,7 @@ public final class Voxels implements BlockSink {
     /** Lowest y a builder may write (basements, tunnels). */
     public static final int MIN_Y = -32;
 
-    public record Car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {}
+    public record Car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed, String models) {}
 
     private final Map<Long, short[]> sections = new HashMap<>();
     private final List<String> palette = new ArrayList<>(List.of("air"));
@@ -65,7 +65,12 @@ public final class Voxels implements BlockSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        cars.add(new Car(x, y, z, yaw, minLength, maxLength, seed));
+        cars.add(new Car(x, y, z, yaw, minLength, maxLength, seed, null));
+    }
+
+    @Override
+    public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        cars.add(new Car(x, y, z, yaw, 0, 99, seed, models));
     }
 
     public int maxY() {

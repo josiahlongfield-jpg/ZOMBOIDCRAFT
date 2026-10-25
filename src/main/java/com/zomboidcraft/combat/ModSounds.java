@@ -37,7 +37,7 @@ public final class ModSounds {
     public static final SoundEvent SHOTGUN_PUMP = register("weapon.shotgun.pump");
     public static final SoundEvent SHOTGUN_SHELL_IN = register("weapon.shotgun.shell_in");
     public static final SoundEvent CASING = register("weapon.casing");
-    public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh");
+    public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");
     public static final SoundEvent SWING = register("weapon.melee.swing");
     public static final SoundEvent SWING_HEAVY = register("weapon.melee.swing_heavy");

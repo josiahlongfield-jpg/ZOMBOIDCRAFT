@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_trespass_2": "zomboidcraft:block/city/sign_trespass_2",
+    "particle": "zomboidcraft:block/city/sign_trespass_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_trespass_2",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_trespass_2"
+        },
+        "east": {
+          "texture": "#sign_trespass_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_trespass_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_trespass_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_trespass_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

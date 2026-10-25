@@ -95,6 +95,14 @@ def level(src, dst, peak):
     src.unlink()
 
 
+def merge_vanilla(entries):
+    """Writes these overrides into assets/minecraft/sounds.json, keeping the ones other build scripts own."""
+    path = RES / "minecraft/sounds.json"
+    current = json.loads(path.read_text()) if path.exists() else {}
+    current.update(entries)
+    path.write_text(json.dumps(current, indent=2) + "\n")
+
+
 def main():
     manifest, raw = {}, {}
     for d in sys.argv[1].split(","):
@@ -204,7 +212,7 @@ def main():
 
     vanilla = {ev: {"replace": True, "subtitle": "subtitles." + ev, "sounds": entries(f, d)} for ev, (f, d) in VANILLA.items()}
     (RES / "minecraft").mkdir(exist_ok=True)
-    (RES / "minecraft/sounds.json").write_text(json.dumps(vanilla, indent=2) + "\n")
+    merge_vanilla(vanilla)
 
     ours_path = RES / "zomboidcraft/sounds.json"
     ours = json.loads(ours_path.read_text())

@@ -5,17 +5,21 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 /**
  * Draws a car's 3D model, each triangle sent as a quad with its last corner doubled: the body,
  * boot lids swung open while it's searched, wheels rolled and steered, then the glass see-through.
+ * Cars further off are drawn from coarser copies of the mesh ({@link CarLod}), with solid
+ * windows past a point.
  */
 public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
     public CarRenderer(EntityRendererProvider.Context context) {
@@ -33,7 +37,14 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         super.extractRenderState(car, state, partialTick);
         state.model = car.model();
         state.variant = car.variant();
-        state.yaw = car.getYRot();
+        // turned smoothly between ticks, or a car you're steering judders against your smooth view
+        state.yaw = car.getYRot(partialTick);
+        // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
+        Minecraft mc = Minecraft.getInstance();
+        state.smashed = car.smashed();
+        state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
+        Entity eye = mc.getCameraEntity();
+        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye));
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
@@ -51,7 +62,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     @Override
     public void submit(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        CarAssets.Ready car = CarAssets.get(state.model, state.variant);
+        CarAssets.Ready car = CarAssets.get(state.model, state.variant, state.lod);
         if (car == null) {
             return;
         }
@@ -66,17 +77,27 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         for (int i = 0; i < wheels.length; i++) {
             wheels[i] = wheel(car.wheels().get(i), state.rolled, state.steer);
         }
+        boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, (mesh, turn) -> draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1));
+            each(car, lids, wheels, (mesh, turn) -> {
+                draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1);
+                if (solidGlass) {
+                    draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, FAR_GLASS);
+                }
+            });
         });
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
-        });
+        if (!state.inside && !state.smashed && !solidGlass) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
+                each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
+            });
+        }
         poseStack.popPose();
     }
 
     /** Glass keeps its colour from the texture but lets most of the light through. */
     private static final int GLASS = 0x80FFFFFF;
+    /** Far off, glass is drawn solid, darkened to look like the dim inside seen through it. */
+    private static final int FAR_GLASS = 0xFF5A6068;
 
     /** Moves a point (or, with normal set, a direction) of a moving part into place, in place. */
     private interface Turn {

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "windfall": "zomboidcraft:block/city/windfall",
+    "particle": "zomboidcraft:block/city/windfall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#windfall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#windfall",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#windfall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#windfall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#windfall"
+        },
+        "down": {
+          "texture": "#windfall",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

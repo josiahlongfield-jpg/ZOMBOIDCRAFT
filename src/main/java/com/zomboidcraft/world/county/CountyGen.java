@@ -211,7 +211,11 @@ public final class CountyGen {
         for (Voxels.Car car : v.cars) {
             double wx = car.x() + p.x0, wz = car.z() + p.z0;
             if (wx >= bx && wx < bx + 16 && wz >= bz && wz < bz + 16) {
-                out.car(wx, car.y() + p.level, wz, car.yaw(), car.minLength(), car.maxLength(), car.seed());
+                if (car.models() != null) {
+                    out.vehicle(wx, car.y() + p.level, wz, car.yaw(), car.models(), car.seed());
+                } else {
+                    out.car(wx, car.y() + p.level, wz, car.yaw(), car.minLength(), car.maxLength(), car.seed());
+                }
             }
         }
     }

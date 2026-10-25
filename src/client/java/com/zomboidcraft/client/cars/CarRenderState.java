@@ -11,4 +11,10 @@ public class CarRenderState extends EntityRenderState {
     /** How far the wheels have rolled (metres), and the front wheels' steer (radians, left +). */
     public double rolled;
     public float steer;
+    /** The local player is sitting in this car, looking out of it. */
+    public boolean inside;
+    /** Zombies have smashed the windows in: no glass. */
+    public boolean smashed;
+    /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
+    public int lod;
 }

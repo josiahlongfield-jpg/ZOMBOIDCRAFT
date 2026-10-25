@@ -27,7 +27,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HudElementRegistry.addLast(ZomboidCraft.id("moodles"), MoodleHud::render);
+        com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.inventory.FieldKitScreen.register();
         SkillsHud.register();
@@ -35,7 +35,6 @@ public class ZomboidCraftClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
-        HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
         HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
@@ -45,9 +44,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         SoundSliders.register();
-        // a car you drive moves on your side, from your movement keys
-        com.zomboidcraft.world.cars.CarProp.clientInput = player -> player instanceof net.minecraft.client.player.LocalPlayer local
-                ? local.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
+        com.zomboidcraft.client.cars.CarClient.register();
+        com.zomboidcraft.client.sound.Ambience.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

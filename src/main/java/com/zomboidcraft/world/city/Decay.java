@@ -334,6 +334,9 @@ public final class Decay {
 
     private void dress(int x, int y, int z) {
         String m = material(sink.get(x, y, z));
+        if (m == null) {
+            return;  // a breach took it
+        }
         int ay = y + 1;
         if (m.equals("asphalt") && nearBurntCar(x, ay, z)) {
             sink.set(x, y, z, "burnt_ground");

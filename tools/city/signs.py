@@ -60,6 +60,42 @@ FASCIA = [
     ("storage", "box", "COUNTY SELF STORAGE", (226, 186, 52), (30, 30, 28), 5, "black"),
     ("shadyacres", "painted", "SHADY ACRES MOBILE HOMES", (64, 88, 52), (232, 224, 190), 6, "serif"),
     ("sheriff", "box", "COUNTY SHERIFF", (30, 40, 70), (230, 226, 210), 4, "black"),
+    # the small towns: main street shops, the courthouse square, the mill
+    ("grocery", "box", "GROCERY", (172, 32, 28), (240, 234, 222), 4, "black"),
+    ("bank", "channel", "FIRST NATIONAL BANK", None, (204, 194, 164), 6, "serif"),
+    ("postoffice", "channel", "U.S. POST OFFICE", None, (200, 196, 184), 5, "sans"),
+    ("courthouse", "channel", "KNOX COUNTY COURTHOUSE", None, (210, 204, 188), 7, "serif"),
+    ("library", "channel", "PUBLIC LIBRARY", None, (204, 198, 182), 5, "serif"),
+    ("firedept", "box", "FIRE DEPT.", (150, 32, 28), (238, 232, 216), 4, "black"),
+    ("rialto", "box", "RIALTO", (232, 200, 96), (128, 26, 22), 3, "black"),
+    ("hotel", "painted", "COMMERCIAL HOTEL", (44, 52, 70), (226, 210, 160), 5, "serif"),
+    ("tavern", "painted", "RUSTY NAIL TAVERN", (64, 38, 28), (224, 196, 140), 5, "serif"),
+    ("barber", "painted", "BARBER SHOP", (232, 228, 216), (150, 30, 30), 4, "serif"),
+    ("drugstore", "box", "CORNER DRUG STORE", (222, 220, 208), (36, 70, 130), 5, "sans"),
+    ("cafe", "painted", "MAIN ST. CAFE", (34, 70, 76), (232, 220, 180), 4, "serif"),
+    ("dime", "painted", "BEN'S 5 & 10", (150, 36, 32), (236, 210, 120), 4, "serif"),
+    ("furniture", "painted", "HOME FURNITURE", (72, 56, 40), (230, 214, 170), 5, "serif"),
+    ("autoparts", "box", "AUTO PARTS", (36, 60, 120), (238, 200, 60), 4, "black"),
+    ("townhall", "channel", "TOWN HALL", None, (212, 206, 188), 4, "serif"),
+    ("mill", "painted", "KNOX TEXTILE MILLS", (120, 36, 30), (232, 222, 196), 6, "serif"),
+    ("company", "painted", "COMPANY STORE", (52, 64, 48), (230, 216, 170), 5, "serif"),
+    ("elementary", "channel", "KNOX ELEMENTARY SCHOOL", None, (212, 208, 192), 7, "sans"),
+    ("methodist", "painted", "UNITED METHODIST CHURCH", (232, 228, 216), (60, 40, 30), 6, "serif"),
+    ("stmary", "channel", "ST. MARY'S CHURCH", None, (204, 198, 182), 5, "serif"),
+    ("generalstore", "painted", "GENERAL STORE", (226, 216, 186), (110, 30, 26), 5, "serif"),
+    ("antiques", "painted", "ANTIQUES", (40, 54, 70), (230, 214, 160), 3, "serif"),
+    ("realty", "box", "KNOX REALTY", (232, 230, 220), (30, 90, 60), 4, "sans"),
+    ("vfw", "box", "VFW POST 1186", (32, 46, 90), (230, 224, 206), 4, "black"),
+    # the farms: the name on the barn or the gate, the stand by the road, the field signs
+    ("hollowcreek", "painted", "HOLLOW CREEK FARM", (120, 36, 30), (234, 226, 206), 6, "serif"),
+    ("dairy", "painted", "MAPLE RIDGE DAIRY", (232, 228, 216), (40, 64, 44), 6, "serif"),
+    ("ranch", "painted", "BAR K RANCH", (72, 52, 36), (232, 214, 170), 4, "serif"),
+    ("orchard", "painted", "MILLER ORCHARDS", (52, 80, 46), (236, 226, 190), 5, "serif"),
+    ("apples", "painted", "U-PICK APPLES", (150, 36, 30), (236, 226, 200), 5, "serif"),
+    ("produce", "painted", "FRESH PRODUCE", (52, 80, 46), (236, 226, 190), 5, "serif"),
+    ("eggs", "painted", "FARM EGGS", (232, 228, 216), (150, 40, 30), 4, "serif"),
+    ("trespass", "box", "NO TRESPASSING", (196, 42, 34), (236, 232, 222), 4, "black"),
+    ("seedcorn", "box", "KNOX HYBRID SEED", (238, 214, 60), (30, 70, 40), 5, "black"),
 ]
 # hanging neon, a letter per block: id, letters, tube colour
 BLADES = [
@@ -69,6 +105,9 @@ BLADES = [
     ("diner", "DINER", (255, 90, 190)),
     ("motel", "MOTEL", (255, 70, 60)),
     ("eat", "EAT", (255, 170, 60)),
+    ("rialto", "RIALTO", (255, 196, 80)),
+    ("drugs", "DRUGS", (90, 230, 130)),
+    ("cafe", "CAFE", (255, 120, 60)),
 ]
 OPEN_TUBE, OPEN_RIM = (255, 60, 50), (60, 130, 255)
 
@@ -460,7 +499,8 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("sign_", "blade_", "neon_"))}
+    kept = {k: v for k, v in data["blocks"].items()
+            if not k.startswith(("sign_", "blade_", "neon_")) or k == "sign_post"}  # the bare post isn't a board
     kept.update(blocks())
     data["blocks"] = kept
     # one block per line, like the hand-written entries

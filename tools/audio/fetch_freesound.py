@@ -77,6 +77,23 @@ QUERIES = {
     "amb_drip": ["water dripping interior", "leaking roof drip", "pipe drip"],
     "amb_crow": ["crow caw", "crows calling distant", "ravens"],
     "amb_night": ["crickets night", "night ambience insects", "owl hoot"],
+    # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
+    "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
+    "amb_alarm": ["car alarm", "house alarm ringing", "burglar alarm bell", "alarm bell ringing outside"],
+    "amb_animal": ["dog howling distant", "coyote howl", "fox scream night", "dogs barking in the distance"],
+    # guns, round 2: the M9 pistol and the 870 pump shotgun
+    "gun_pistol": ["9mm pistol shot", "handgun gunshot", "pistol gunshot outdoor", "beretta pistol shot"],
+    "gun_pistol_foley": ["pistol slide rack", "pistol magazine insert", "handgun reload", "pistol dry fire click"],
+    "gun_shotgun": ["shotgun blast", "12 gauge shotgun shot", "pump shotgun firing", "shotgun gunshot outdoor"],
+    "gun_shotgun_foley": ["shotgun pump rack", "shotgun shell loading", "pump action shotgun reload", "shotgun dry fire"],
+    "gun_distant": ["distant gunshot", "gunshot far away", "shotgun distant", "gunfire echo distance"],
+    # cars: old American saloons and trucks, worn rather than sporty
+    "car_start": ["car engine start", "old car starting", "truck engine start", "car ignition start"],
+    "car_idle": ["car engine idle loop", "old car idling", "v8 engine idle", "truck idle"],
+    "car_horn": ["car horn", "old car horn honk", "truck horn"],
+    "car_crash": ["car crash", "car collision impact", "metal crash impact car", "car hitting object"],
+    "car_door": ["car door open close", "car door slam", "old car door"],
+    "car_stall": ["car engine failing to start", "car won't start", "engine stall sputter"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }

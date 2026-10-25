@@ -205,6 +205,8 @@ public final class ZcConfig {
         public double voicePitch = 0.8;
         /** The field-kit inventory screen; off brings back Minecraft's. Client side. */
         public boolean fieldKitInventory = true;
+        /** The field-kit HUD: belt, moodle plates, your figure for health, a wristwatch; off brings back Minecraft's. Client side. */
+        public boolean fieldKitHud = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */

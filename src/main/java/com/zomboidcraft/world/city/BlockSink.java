@@ -22,4 +22,12 @@ public interface BlockSink {
      */
     default void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
     }
+
+    /**
+     * Like {@link #car}, but one of the named models or kinds ("school_bus", "police_sedan,police_suv",
+     * "emergency"): the fire engine at the fire station, the cruisers outside the sheriff's.
+     */
+    default void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        car(x, y, z, yaw, 0, 99, seed);
+    }
 }

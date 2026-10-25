@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_courthouse_1": "zomboidcraft:block/city/sign_courthouse_1",
+    "particle": "zomboidcraft:block/city/sign_courthouse_1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_courthouse_1",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_courthouse_1"
+        },
+        "east": {
+          "texture": "#sign_courthouse_1",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_courthouse_1",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_courthouse_1",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_courthouse_1",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

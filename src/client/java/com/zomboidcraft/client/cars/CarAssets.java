@@ -49,13 +49,20 @@ public final class CarAssets {
         List<Wheel> wheels;
         byte[] jpeg;
         Identifier texture;
+        /** The car at each level of detail, simplified the first time it's needed. */
+        final Ready[] levels = new Ready[CarLod.LEVELS];
     }
 
     private static final Map<String, Map<String, Variant>> MODELS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
 
-    /** The mesh and texture for a model in a state, or null if it can't be loaded. Render thread only. */
+    /** The full mesh and texture for a model in a state, or null if it can't be loaded. Render thread only. */
     public static Ready get(String model, String state) {
+        return get(model, state, 0);
+    }
+
+    /** The mesh at a level of detail ({@link CarLod}) and texture, or null if it can't be loaded. Render thread only. */
+    public static Ready get(String model, String state, int level) {
         if (MISSING.contains(model)) {
             return null;
         }
@@ -90,7 +97,20 @@ public final class CarAssets {
             v.texture = id;
             v.jpeg = null;
         }
-        return new Ready(v.mesh, v.lids, v.wheels, v.texture);
+        Ready ready = v.levels[level];
+        if (ready == null) {
+            List<Lid> lids = new ArrayList<>(v.lids.size());
+            for (Lid lid : v.lids) {
+                lids.add(new Lid(lid.yAxis(), lid.px(), lid.py(), lid.pz(), lid.angle(), CarLod.simplify(lid.mesh(), level)));
+            }
+            List<Wheel> wheels = new ArrayList<>(v.wheels.size());
+            for (Wheel w : v.wheels) {
+                wheels.add(new Wheel(w.cx(), w.cy(), w.cz(), w.radius(), w.steers(), CarLod.simplify(w.mesh(), level)));
+            }
+            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, v.texture);
+            v.levels[level] = ready;
+        }
+        return ready;
     }
 
     private static Map<String, Variant> read(String model) throws IOException {

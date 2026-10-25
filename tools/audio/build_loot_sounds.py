@@ -40,8 +40,9 @@ PICKS = {
 }
 
 
-def build(picks_by_event, heading, script):
-    """Cuts and levels each event's picks, registers them in sounds.json and writes the CREDITS.md section."""
+def build(picks_by_event, heading, script, cutter=None):
+    """Cuts and levels each event's picks, registers them in sounds.json and writes the CREDITS.md section.
+    cutter(event, raw, manifest, pick, dst) replaces the plain mono cut where it returns True."""
     manifest, raw = {}, {}
     for d in sys.argv[1].split(","):
         for sid, info in json.loads((Path(d) / "manifest.json").read_text()).items():
@@ -57,7 +58,8 @@ def build(picks_by_event, heading, script):
             old.unlink()
         for n, pick in enumerate(picks, 1):
             tmp = out / f"{n}.wav"
-            cut(raw, manifest, pick, tmp)
+            if not (cutter and cutter(event, raw, manifest, pick, tmp)):
+                cut(raw, manifest, pick, tmp)
             level(tmp, out / f"{n}.ogg", peak)
             used.setdefault(pick[0], set()).add(event)
         ours[event] = {"sounds": [{"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist}

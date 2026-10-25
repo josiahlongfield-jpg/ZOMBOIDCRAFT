@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_drugs_1_off": "zomboidcraft:block/city/blade_drugs_1_off",
+    "particle": "zomboidcraft:block/city/blade_drugs_1_off"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_drugs_1_off",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_drugs_1_off",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_drugs_1_off"
+        },
+        "west": {
+          "texture": "#blade_drugs_1_off"
+        },
+        "up": {
+          "texture": "#blade_drugs_1_off",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_drugs_1_off",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

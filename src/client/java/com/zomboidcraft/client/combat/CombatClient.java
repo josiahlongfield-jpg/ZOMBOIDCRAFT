@@ -107,9 +107,10 @@ public final class CombatClient {
     private static void pullTrigger(Minecraft client, LocalPlayer player, ItemStack gun) {
         long now = client.level.getGameTime();
         ZcConfig.Guns config = ZcConfig.get().guns;
+        // each world keeps its own clock, so a last shot "after" now was fired in another world
         GunType type = GunType.of(gun);
         ZcConfig.GunStats stats = type.stats();
-        if (now >= lastShot && now - lastShot < stats.fireDelayTicks) {      // a newer world's clock can be behind the last one's
+        if (now >= lastShot && now - lastShot < stats.fireDelayTicks) {
             return;
         }
         lastShot = now;
