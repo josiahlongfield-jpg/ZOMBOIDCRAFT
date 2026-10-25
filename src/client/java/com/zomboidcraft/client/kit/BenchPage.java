@@ -220,8 +220,8 @@ final class BenchPage {
         int tier = KitItems.tier(weapon);
         row(g, font, "Tier", tier > 0 ? KitItems.tierName(tier) + " (" + tier + "/5)" : "Unrolled", tier > 0 ? KitDraw.TEXT : KitDraw.FAINT, x, cy);
         cy += 10;
-        int flaws = KitItems.flaws(weapon);
-        row(g, font, "Flaws", flaws == 0 ? "None" : String.valueOf(flaws), flaws == 0 ? KitDraw.TEXT : KitDraw.BAD, x, cy);
+        List<String> flaws = KitItems.flaws(weapon);
+        row(g, font, "Flaws", flaws.isEmpty() ? "None" : String.join(", ", flaws), flaws.isEmpty() ? KitDraw.TEXT : KitDraw.BAD, x, cy);
         cy += 10;
         String place = KitItems.place(weapon);
         if (place != null) {
@@ -241,7 +241,7 @@ final class BenchPage {
             for (KitItems.Stat s : rolled) {
                 KitDraw.text(g, font, s.label(), x, cy, KitDraw.DIM, 0.85f);
                 KitDraw.bar(g, x + 62, cy + 2, 60, 3, s.value(), Float.NaN);
-                KitDraw.textRight(g, font, String.valueOf(Math.round(s.value() * 100)), x + 139, cy, KitDraw.TEXT, 0.85f);
+                KitDraw.textRight(g, font, s.shown(), x + 139, cy, KitDraw.TEXT, 0.85f);
                 cy += 10;
             }
         }

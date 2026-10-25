@@ -122,8 +122,18 @@ final class KitItems {
     }
 
     /** Flaws rolled into a weapon (a pitted bore, a loose stock), or 0. */
-    static int flaws(ItemStack stack) {
-        return call(roll(stack), "flaws") instanceof Integer n ? n : 0;
+    static List<String> flaws(ItemStack stack) {
+        List<String> out = new ArrayList<>();
+        if (roll(stack) == null) return out;
+        try {
+            Object list = Class.forName("com.zomboidcraft.combat.rolls.Rolls").getMethod("flaws", ItemStack.class).invoke(null, stack);
+            if (list instanceof List<?> flaws) {
+                for (Object f : flaws) out.add(String.valueOf(call(f, "label")));
+            }
+        } catch (ReflectiveOperationException | IllegalArgumentException | LinkageError ignored) {
+            out.clear();
+        }
+        return out;
     }
 
     /** Where a weapon was found, in words, when its roll remembers. */
@@ -145,14 +155,17 @@ final class KitItems {
         Object roll = roll(stack);
         if (roll == null || statOf == null) return out;
         try {
-            List<?> stats = (List<?>) statOf.invoke(null, stack);
-            List<?> values = (List<?>) call(roll, "stats");
-            if (values == null) return out;
-            for (int i = 0; i < Math.min(stats.size(), values.size()); i++) {
-                Object label = call(stats.get(i), "label");
-                out.add(new Stat(String.valueOf(label), ((Number) values.get(i)).intValue() / 100f, Float.NaN, ""));
+            Class<?> statClass = Class.forName("com.zomboidcraft.combat.rolls.Stat");
+            Class<?> rolls = Class.forName("com.zomboidcraft.combat.rolls.Rolls");
+            Method position = rolls.getMethod("position", ItemStack.class, statClass);
+            Method percent = rolls.getMethod("percent", ItemStack.class, statClass);
+            for (Object stat : (List<?>) statOf.invoke(null, stack)) {
+                float at = ((Number) position.invoke(null, stack, stat)).floatValue();
+                Object pct = percent.invoke(null, stack, stat);
+                String shown = pct instanceof Number n ? (n.doubleValue() > 0 ? "+" : "") + Math.round(n.doubleValue()) + "%" : String.valueOf(pct);
+                out.add(new Stat(String.valueOf(call(stat, "label")), at, Float.NaN, shown));
             }
-        } catch (ReflectiveOperationException | ClassCastException | IllegalArgumentException ignored) {
+        } catch (ReflectiveOperationException | ClassCastException | IllegalArgumentException | LinkageError ignored) {
             out.clear();
         }
         return out;
