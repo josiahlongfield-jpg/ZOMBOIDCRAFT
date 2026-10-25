@@ -30,6 +30,18 @@ const SHOTS = {
   neon: { pos: [-5, 2.0, -12.5], look: [-11, 6.6, -23], fov: 60 },
   hotel: { pos: [6.5, 2.0, -15], look: [11, 7, -26], fov: 58 },
   pawn: { pos: [6, 2.0, 53], look: [11, 6.4, 44], fov: 58 },
+  // inside one shop of each kind, from the front corner looking to the back
+  in_laundromat: { pos: [-12.6, 2.6, 50.5], look: [-30.0, 1.7, 55.5], fov: 78, indoor: true },
+  in_guns: { pos: [-12.6, 2.6, 40.5], look: [-21.0, 1.7, 44.0], fov: 78, indoor: true },
+  in_cash: { pos: [-12.6, 2.6, 24.5], look: [-30.0, 1.7, 29.5], fov: 78, indoor: true },
+  in_diner: { pos: [-13.5, 2.6, 20.4], look: [-18.0, 1.7, 15.0], fov: 78, indoor: true },
+  in_pawnshop: { pos: [13.6, 2.6, 49.5], look: [29.0, 1.7, 45.0], fov: 78, indoor: true },
+  in_pizza: { pos: [13.6, 2.6, 23.5], look: [29.0, 1.7, 19.0], fov: 78, indoor: true },
+  in_liquor: { pos: [13.6, 2.6, -13.5], look: [30.0, 1.7, -18.5], fov: 78, indoor: true },
+  in_hardware: { pos: [168.6, 2.6, -17.5], look: [188.0, 1.7, -25.0], fov: 78, indoor: true },
+  in_pharmacy: { pos: [-12.6, 2.6, -35.5], look: [-29.0, 1.7, -31.5], fov: 78, indoor: true },
+  in_thriftshop: { pos: [-12.6, 2.6, -49.5], look: [-28.0, 1.7, -44.0], fov: 78, indoor: true },
+  in_grocery: { pos: [13.6, 2.6, -54.5], look: [22.0, 1.7, -60.0], fov: 78, indoor: true },
 };
 const shot = SHOTS[params.get('shot') || 'street'];
 const DAY = params.get('time') === 'day';  // overcast afternoon instead of rainy night

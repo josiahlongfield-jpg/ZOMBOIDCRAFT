@@ -47,7 +47,7 @@ TABLES = {
     "hardware": ((2, 6), [
         (f"{ZC}:nails", 12, 4, 16), (f"{ZC}:hammer", 4, 1, 1), (f"{ZC}:crowbar", 2, 1, 1), ("iron_axe", 2, 1, 1, worn(0, .3)),
         ("iron_shovel", 2, 1, 1), ("iron_pickaxe", 1, 1, 1), ("shears", 2, 1, 1), ("flint_and_steel", 2, 1, 1),
-        ("string", 4, 2, 6), ("chain", 3, 1, 3), ("iron_nugget", 4, 2, 9), ("torch", 4, 2, 8), ("lantern", 2, 1, 1),
+        ("string", 4, 2, 6), ("iron_nugget", 4, 2, 9), ("torch", 4, 2, 8), ("lantern", 2, 1, 1),
         ("oak_planks", 5, 4, 12), ("stick", 4, 2, 8), ("bucket", 2, 1, 1), ("ladder", 2, 1, 4), ("iron_bars", 2, 1, 4),
         ("oak_trapdoor", 1, 1, 2), ("-", 6, 1, 1)]),
     "guns": ((2, 5), [
