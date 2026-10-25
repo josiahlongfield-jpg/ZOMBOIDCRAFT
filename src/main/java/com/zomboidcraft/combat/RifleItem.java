@@ -136,5 +136,8 @@ public class RifleItem extends Item {
         }
         tooltip.accept(Component.literal(type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
+        if (type.bolt) {
+            tooltip.accept(Component.literal("Bolt action: the bolt is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
+        }
     }
 }

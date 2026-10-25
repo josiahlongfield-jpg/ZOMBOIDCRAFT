@@ -36,6 +36,8 @@ public final class ZcConfig {
     public GunStats pistol = GunStats.pistol();
     /** The pump shotgun's own numbers, with its pellets. */
     public ShotgunStats shotgun = new ShotgunStats();
+    /** The bolt-action hunting rifle's own numbers. */
+    public GunStats huntingRifle = GunStats.huntingRifle();
     public Carry carry = new Carry();
 
     public static class Carry {
@@ -268,7 +270,7 @@ public final class ZcConfig {
 
     /**
      * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
-     * gun has a group of its own (pistol, shotgun).
+     * gun has a group of its own (pistol, shotgun, huntingRifle).
      */
     public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
@@ -299,6 +301,25 @@ public final class ZcConfig {
             s.aimZoom = 0.88;
             s.range = 60.0;
             s.magazineSize = 15;
+            return s;
+        }
+
+        /**
+         * The .308 bolt action: one hard-hitting, accurate round, a heavy kick, heard a long way off; its time between
+         * shots covers working the bolt (lifted, back, home and down, then the hand back on the stock).
+         */
+        static GunStats huntingRifle() {
+            GunStats s = new GunStats();
+            s.damage = 30.0;
+            s.headshotMultiplier = 3.0;
+            s.hipSpread = 3.5;
+            s.aimSpread = 0.12;
+            s.recoil = 2.6;
+            s.shotNoise = 140.0;
+            s.aimZoom = 0.80;
+            s.range = 200.0;
+            s.fireDelayTicks = 20;
+            s.magazineSize = 5;
             return s;
         }
     }

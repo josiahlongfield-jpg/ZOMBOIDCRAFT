@@ -58,6 +58,9 @@ public final class Weights {
         mod("pistol_suppressor", 0.3);
         mod("shotgun", 3.4);
         mod("shotgun_shell", 0.04);
+        mod("hunting_rifle", 3.6);
+        mod("hunting_rifle_magazine", 0.2);
+        mod("hunting_rifle_ammo", 0.025);
         vanilla("stick", 0.1);
         vanilla("arrow", 0.03);
         vanilla("bow", 0.8);

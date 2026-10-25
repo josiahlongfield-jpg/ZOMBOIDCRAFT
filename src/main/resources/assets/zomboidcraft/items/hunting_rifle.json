@@ -1,0 +1,603 @@
+{
+ "model": {
+  "type": "minecraft:range_dispatch",
+  "property": "minecraft:custom_model_data",
+  "index": 0,
+  "entries": [
+   {
+    "threshold": 1,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/red_dot"
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/holo"
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/scope_4x"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "threshold": 2,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/red_dot"
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/holo"
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/scope_4x"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/mag"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "threshold": 3,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/charge/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/charge/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/charge/red_dot"
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/charge/holo"
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/charge/scope_4x"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/charge/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/charge/mag"
+       }
+      }
+     ]
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:condition",
+   "property": "minecraft:using_item",
+   "on_true": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+     {
+      "when": "red_dot",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/red_dot"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/mag"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "holo",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/holo"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/mag"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "scope_4x",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/scope_4x"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/mag"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/mag"
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "fallback": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/ads/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/ads/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads/red_dot"
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads/holo"
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads/scope_4x"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/hunting_rifle/ads/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/hunting_rifle/ads/mag"
+       }
+      }
+     ]
+    }
+   },
+   "on_false": {
+    "type": "minecraft:composite",
+    "models": [
+     {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/hunting_rifle/hip/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/hip/charging_handle"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 0,
+      "cases": [
+       {
+        "when": "red_dot",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/hip/red_dot"
+        }
+       },
+       {
+        "when": "holo",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/hip/holo"
+        }
+       },
+       {
+        "when": "scope_4x",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/hip/scope_4x"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 5,
+      "cases": [
+       {
+        "when": "mag",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/hunting_rifle/hip/mag"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/hunting_rifle/hip/mag"
+      }
+     }
+    ]
+   }
+  }
+ }
+}
