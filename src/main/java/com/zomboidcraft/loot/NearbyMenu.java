@@ -267,8 +267,9 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
             slot.setChanged();
         }
         slot.onTake(player, stack);
-        if (index == InventoryMenu.RESULT_SLOT) {
-            player.drop(stack, false);
+        if (index == InventoryMenu.RESULT_SLOT && !stack.isEmpty()) {
+            // what's left of the craft no longer sits in the result slot: keep it, or drop it if there's no room
+            player.getInventory().placeItemBackInInventory(stack);
         }
         return before;
     }
