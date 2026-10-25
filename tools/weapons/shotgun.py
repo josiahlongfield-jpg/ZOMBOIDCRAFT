@@ -30,6 +30,9 @@ FOREND = (-9.30, -1.05)     # the forend's front and back at rest
 FOREND_TOP, FOREND_BOT, FOREND_W = -0.40, -2.18, 0.98
 PORT = (1.30, 4.15)     # the ejection port, right side
 SIGHT = 0.56            # the line of sight above the bore: down the receiver's top to the bead
+BEAD_R = 0.09           # the bead: big enough to find at a glance, as on a riot gun
+BEAD_Z = MUZZLE + 0.325
+BEAD_TOP = BARREL_R + 0.06 + BEAD_R
 GUARD = (3.55, 6.55)    # the trigger guard's front and back
 STOCK_END = 20.60       # the butt plate's back face (38.5" overall)
 
@@ -74,7 +77,7 @@ def body(m):
     b.rod(-2.8, BREECH, 0.56, bar, axis=2)
     b.rod(MUZZLE, -2.8, BARREL_R, bar, axis=2)
     b.rod(MUZZLE - 0.02, MUZZLE + 0.06, 0.37, 'bore', axis=2)          # the dark 12-bore at the muzzle
-    b.rod(MUZZLE + 0.25, MUZZLE + 0.40, 0.065, 'bead', axis=2, at=(0.0, BARREL_R + 0.05))
+    b.rod(BEAD_Z - 0.075, BEAD_Z + 0.075, BEAD_R, 'bead', axis=2, at=(0.0, BARREL_R + 0.06))
     # ---- the magazine tube under it, the lug that clamps the barrel to it, the knurled cap
     b.rod(TUBE_END, 0.0, TUBE_R, 'tube', axis=2, at=(0.0, TUBE_Y))
     b.box((-0.30, TUBE_Y + 0.25, TUBE_END + 0.25), (0.30, -0.25, TUBE_END + 0.95), bar)   # barrel lug

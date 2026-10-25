@@ -337,7 +337,8 @@ public final class RifleView {
             float pump = rig.pump() ? pulled : 0;
             Hand left = !animate ? support(want, foregrip, a, pump)
                     : rig.pump() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
-            Hand right = new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
+            Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
+                    : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
         }
@@ -560,15 +561,19 @@ public final class RifleView {
      * doesn't hide the whole gun: turned about the grip, then pushed away, chg of the way.
      */
     private static Pose worked(Pose gun, float chg) {
-        if (chg <= 0) {
+        return turned(gun, rig.chargeTurn(), rig.chargePush(), chg);
+    }
+
+    /** The gun turned about the grip (degrees) and then pushed (blocks), k of the way. */
+    private static Pose turned(Pose gun, float[] turn, float[] push, float k) {
+        if (k <= 0) {
             return gun;
         }
-        float[] turn = rig.chargeTurn(), push = rig.chargePush();
         Vector3f grip = gun.point(rig.grip());
-        Quaternionf q = new Quaternionf().rotationXYZ(turn[0] * chg * Mth.DEG_TO_RAD, turn[1] * chg * Mth.DEG_TO_RAD,
-                turn[2] * chg * Mth.DEG_TO_RAD).mul(gun.q());
+        Quaternionf q = new Quaternionf().rotationXYZ(turn[0] * k * Mth.DEG_TO_RAD, turn[1] * k * Mth.DEG_TO_RAD,
+                turn[2] * k * Mth.DEG_TO_RAD).mul(gun.q());
         Pose turned = new Pose(new Vector3f(gun.t()), q, gun.scale());
-        turned.t().add(grip.sub(turned.point(rig.grip()))).add(new Vector3f(push[0], push[1], push[2]).mul(chg));
+        turned.t().add(grip.sub(turned.point(rig.grip()))).add(new Vector3f(push[0], push[1], push[2]).mul(k));
         return turned;
     }
 
@@ -616,7 +621,8 @@ public final class RifleView {
         float kick = (u >= 0 ? bump(u, UP, type.perShell - UP) * 1.5f : 0)
                 + (p < 0 ? 0 : bump(p, PUMP_START + PUMP_BACK + PUMP_FORWARD, 2.5f) * 1.5f);
         float[] o = rig.magOut(), c = rig.charge();
-        return worked(hip(o[0] * load + c[0] * chg, o[1] * load + c[1] * chg, kick), chg);
+        Pose canted = hip(o[0] * load + c[0] * chg, o[1] * load + c[1] * chg, kick);
+        return worked(turned(canted, rig.loadTurn(), rig.loadPush(), load), chg);
     }
 
     /**
@@ -674,7 +680,8 @@ public final class RifleView {
             return null;
         }
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));
-        return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf(), d[3]);
+        // a bead gun is tipped up a little so the bead lands on the eye line
+        return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf().rotationX(d.length > 4 ? d[4] * Mth.DEG_TO_RAD : 0), d[3]);
     }
 
     /** A display transform: translate (blocks), turn, uniform scale. */
@@ -718,6 +725,9 @@ public final class RifleView {
     private static final Vector3f RIGHT_HIP = new Vector3f(0.35f, -0.55f, 0.75f);
     private static final Vector3f RIGHT_ADS = new Vector3f(0.55f, -0.6f, 0.6f);
     private static final Vector3f RIGHT_HINT = new Vector3f(-1f, 0f, 0f);
+    /** Holding a stock's wrist on the sights: the forearm comes up from below, the elbow down and out. */
+    private static final Vector3f RIGHT_WRIST_ADS = new Vector3f(0.3f, -0.95f, -0.1f);
+    private static final Vector3f RIGHT_WRIST_HINT = new Vector3f(-0.7f, 0.7f, 0f);
     private static final Vector3f LEFT_HIP = new Vector3f(-0.25f, -0.55f, 0.8f);
     private static final Vector3f LEFT_ADS = new Vector3f(-0.3f, -0.65f, 0.7f);
     private static final Vector3f LEFT_GRIP = new Vector3f(-0.3f, -0.7f, 0.65f);
