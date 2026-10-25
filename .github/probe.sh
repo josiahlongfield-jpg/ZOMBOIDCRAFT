@@ -8,6 +8,62 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== carry1"
+classes 'client/item/v1/|attachment/v1/AttachmentRegistry|attachment/v1/AttachmentRegistry\$Builder|world/ContainerHelper|entity/v1/ServerPlayerEvents|entity/event/v1/ServerPlayerEvents|item/ItemStackTemplate'
+sig net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback '.'
+sig 'net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry$Builder' '.'
+sig net.minecraft.world.ContainerHelper 'public'
+sig net.minecraft.world.item.Item 'Hover|Tooltip|onDestroyed|inventoryTick|canFitInside|overrideStackedOnOther|overrideOtherStackedOnMe'
+sig net.minecraft.world.entity.player.Player ' drop\(|hasInfiniteMaterials|isCreative|getInventory'
+sig net.minecraft.world.Container 'public|default'
+sig net.minecraft.world.SimpleContainer 'public'
+sig net.minecraft.world.item.ItemStackTemplate 'public'
+sig net.minecraft.world.item.ItemStack 'OPTIONAL_CODEC|CODEC|isSameItemSameComponents|copyWithCount|getMaxStackSize|isStackable|limitSize|split'
+sig net.minecraft.core.NonNullList 'public static'
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/quickMoveStack(net.minecraft.world.entity.player.Player, int)/,/^$/p' | grep -E "bipush|sipush|iconst|if_|invoke" | head -60
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public boolean add(int, net.minecraft.world.item.ItemStack)/,/^$/p' | grep -E "invoke|ireturn" | head -30
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public void dropAll()/,/^$/p' | grep -E "invoke" | head -20
+exit 0
+
+echo "===== inventory2"
+echo "## InventoryScreen.init / constructor bytecode"
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/void init()/,/^$/p' | head -60
+echo "## Minecraft: methods mentioning Screen"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -i "screen"
+echo "## Window"
+javap -cp "$CP" -p com.mojang.blaze3d.platform.Window 2>&1 | grep -iE "scale|width|height"
+echo "## Options gui scale"
+javap -cp "$CP" -p net.minecraft.client.Options 2>&1 | grep -iE "guiScale|unicode"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "resize|getWindow"
+echo "## Gui setScreen"
+javap -cp "$CP" -p net.minecraft.client.gui.Gui 2>&1 | grep -iE "screen"
+echo "## Minecraft: call sites creating InventoryScreen"
+javap -cp "$CP" -c -p net.minecraft.client.Minecraft 2>&1 | grep -n -B3 -A12 "class net/minecraft/client/gui/screens/inventory/InventoryScreen" | head -80
+exit 0
+
+echo "===== inventory1"
+classes 'gui/screens/inventory/(InventoryScreen|AbstractContainerScreen|AbstractRecipeBookScreen|EffectsInInventory|CreativeModeInventoryScreen|ContainerScreen)\.class|world/inventory/(InventoryMenu|AbstractContainerMenu|Slot|ChestMenu|MenuType)\.class|gui/screens/MenuScreens|renderer/RenderPipelines|resources/(Identifier|ResourceLocation)\.class|screenhandler|menu/v1|screen/v1/Screen|item/component/(ItemContainerContents|BundleContents)\.class|client/gui/render/state|GuiItemRenderState|client/renderer/state/'
+sig net.minecraft.client.gui.screens.inventory.InventoryScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen '.'
+sig net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen '.'
+sig net.minecraft.client.gui.screens.Screen 'protected|public'
+sig net.minecraft.client.gui.GuiGraphicsExtractor '.'
+sig net.minecraft.client.gui.screens.MenuScreens 'public'
+sig net.minecraft.world.inventory.InventoryMenu 'public'
+sig net.minecraft.world.inventory.AbstractContainerMenu 'public|protected'
+sig net.minecraft.world.inventory.Slot 'public'
+sig net.minecraft.world.inventory.MenuType 'public'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+sig net.minecraft.world.entity.player.Inventory 'public'
+sig net.minecraft.world.item.component.ItemContainerContents 'public'
+sig net.minecraft.client.Minecraft 'setScreen|getWindow|gameRenderer'
+sig net.minecraft.client.gui.components.AbstractWidget 'public'
+sig net.minecraft.client.gui.components.Renderable '.'
+classes 'fabric/api/(screenhandler|menu|client/screen)'
+sig net.fabricmc.fabric.api.client.screen.v1.ScreenEvents '.'
+exit 0
+
+
 
 echo "===== scope"
 classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
