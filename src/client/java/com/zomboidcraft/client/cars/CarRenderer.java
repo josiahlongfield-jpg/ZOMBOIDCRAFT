@@ -12,11 +12,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 /**
  * Draws a car's 3D model, each triangle sent as a quad with its last corner doubled: the body,
  * boot lids swung open while it's searched, wheels rolled and steered, then the glass see-through.
+ * Cars further off are drawn from coarser copies of the mesh ({@link CarLod}).
  */
 public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
     public CarRenderer(EntityRendererProvider.Context context) {
@@ -39,6 +41,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
         state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
+        Entity eye = mc.getCameraEntity();
+        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye));
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
@@ -56,7 +60,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     @Override
     public void submit(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        CarAssets.Ready car = CarAssets.get(state.model, state.variant);
+        CarAssets.Ready car = CarAssets.get(state.model, state.variant, state.lod);
         if (car == null) {
             return;
         }
