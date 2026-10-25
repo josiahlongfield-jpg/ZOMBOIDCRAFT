@@ -221,6 +221,31 @@
         {
           "type": "minecraft:empty",
           "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:duct_tape",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wood_glue",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gun_oil",
+          "weight": 1
         }
       ]
     },

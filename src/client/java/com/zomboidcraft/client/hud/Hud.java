@@ -121,23 +121,23 @@ public final class Hud {
 
     // ------------------------------------------------------------------ drawing helpers
 
-    static Component text(String s) {
+    public static Component text(String s) {
         return Component.literal(s).withStyle(st -> st.withFont(TEXT));
     }
 
-    static Component big(String s) {
+    public static Component big(String s) {
         return Component.literal(s).withStyle(st -> st.withFont(BIG));
     }
 
     /** Width of capitals drawn with {@link #caps}. */
-    static float capsWidth(Font font, String s, float spacing, float scale) {
+    public static float capsWidth(Font font, String s, float spacing, float scale) {
         float w = 0;
         for (int i = 0; i < s.length(); i++) w += font.width(text(s.substring(i, i + 1))) + spacing;
         return (w - spacing) * scale;
     }
 
     /** Letter-spaced capitals, the way the stencilled labels read. Returns the width drawn. */
-    static float caps(GuiGraphicsExtractor g, Font font, String s, float x, float y, int color, float spacing, float scale) {
+    public static float caps(GuiGraphicsExtractor g, Font font, String s, float x, float y, int color, float spacing, float scale) {
         s = s.toUpperCase();
         if (ARGB.alpha(color) < 5) return capsWidth(font, s, spacing, scale);
         Matrix3x2fStack pose = g.pose();
@@ -169,7 +169,7 @@ public final class Hud {
         return ZomboidCraft.id("hud/" + name);
     }
 
-    static int alpha(int color, float a) {
+    public static int alpha(int color, float a) {
         return ARGB.multiplyAlpha(color, Math.max(0f, Math.min(1f, a)));
     }
 
