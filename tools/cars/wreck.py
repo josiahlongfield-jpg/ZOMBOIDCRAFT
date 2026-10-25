@@ -11,7 +11,8 @@ glass panes get knocked out, tyres go flat or come off (and the body sags onto t
 nose crumples, and a burnt shell sits low on its rims.
 
     python3 tools/cars/wreck.py MODEL.glb OUT_DIR --variants abandoned,wrecked,burnt --seed 3
-writes OUT_DIR/<name>_<variant>.json (positions, uvs, normals) and .png (+ _s.png, _n.png LabPBR).
+writes OUT_DIR/<name>_<variant>.json (positions, uvs, normals) and .png (+ _s.png LabPBR specular)
+for previews; tools/cars/pack.py builds the packed files the mod ships.
 """
 import argparse, json, os, sys
 import numpy as np
@@ -310,7 +311,8 @@ def mix(a, b, t):
 
 VARIANTS = {
     # rust, dirt, fade, moss, blood chance, doors open, doors missing, panes broken, flat tyres, missing wheels, crash, burnt
-    'parked':    dict(rust=0.12, dirt=0.55, fade=0.35, moss=0.1, blood=0.0, open=0.0, missing=0.0, smash=0.1, flat=0.25, gone=0.0, crash=0, burnt=0),
+    # left at the kerb: dusty and sun-faded but whole, the ones worth hot-wiring later
+    'usable':    dict(rust=0.06, dirt=0.5, fade=0.3, moss=0.0, blood=0.0, open=0.0, missing=0.0, smash=0.0, flat=0.0, gone=0.0, crash=0, burnt=0),
     'abandoned': dict(rust=0.3, dirt=0.75, fade=0.6, moss=0.35, blood=0.35, open=0.35, missing=0.0, smash=0.35, flat=0.4, gone=0.0, crash=0, burnt=0),
     'wrecked':   dict(rust=0.45, dirt=0.9, fade=0.7, moss=0.45, blood=0.7, open=0.4, missing=0.25, smash=0.75, flat=0.5, gone=0.3, crash=1, burnt=0),
     'burnt':     dict(rust=0.6, dirt=0.6, fade=0, moss=0.25, blood=0, open=0.15, missing=0.1, smash=1.0, flat=0, gone=0, crash=0, burnt=1),
@@ -511,14 +513,8 @@ def damage(car, v, rng):
 
 # ---------------------------------------------------------------- output
 
-def normal_map(W, H):
-    """Flat tangent-space normals with a little noise on rust; LabPBR _n (AO in blue, height in alpha)."""
-    n = np.zeros((H, W, 4), np.uint8)
-    n[..., 0] = 128; n[..., 1] = 128; n[..., 2] = 255; n[..., 3] = 255
-    return n
-
-
-def make_variant(car, vname, seed, out_dir):
+def build_variant(car, vname, seed):
+    """Damaged triangles (n,3,3), their atlas uvs (n,3,2) in 0-1, and the colour and specular images."""
     rng = np.random.default_rng(seed)
     v = VARIANTS[vname]
     P, keep, broken, cracked = damage(car, v, rng)
@@ -526,11 +522,16 @@ def make_variant(car, vname, seed, out_dir):
     W, H = car.atlas
     img = np.zeros((H, W, 3), np.float32); img[car.tex['ok']] = c
     spec = np.zeros((H, W, 4), np.float32); spec[car.tex['ok']] = np.stack([sm, f0, np.zeros_like(sm), np.zeros_like(sm)], -1)
+    colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
+    specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
+    return P[keep], car.uvpx[keep] / np.array([W, H]), colour, specular
+
+
+def make_variant(car, vname, seed, out_dir):
+    Pk, uv, colour, specular = build_variant(car, vname, seed)
     stem = f"{car.name.lower()}_{vname}"
-    Image.fromarray((img * 255 + 0.5).astype(np.uint8)).save(os.path.join(out_dir, stem + '.png'))
-    Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA').save(os.path.join(out_dir, stem + '_s.png'))
-    Image.fromarray(normal_map(W, H), 'RGBA').save(os.path.join(out_dir, stem + '_n.png'))
-    Pk = P[keep]; uv = car.uvpx[keep] / np.array([W, H])
+    colour.save(os.path.join(out_dir, stem + '.png'))
+    specular.save(os.path.join(out_dir, stem + '_s.png'))
     nr = np.cross(Pk[:, 1] - Pk[:, 0], Pk[:, 2] - Pk[:, 0]); nr /= np.linalg.norm(nr, axis=1, keepdims=True) + 1e-12
     lo, hi = bbox(Pk)
     json.dump({'name': stem, 'texture': stem + '.png', 'size': [round(x, 3) for x in (hi - lo)],
@@ -540,18 +541,24 @@ def make_variant(car, vname, seed, out_dir):
     return stem
 
 
+def prepare(path):
+    """Loads a model and lays out its atlas (smaller texels for buses and trucks)."""
+    car = Car(path)
+    ppm = PX_PER_M
+    while build_atlas(car, ppm)[1][1] > 2048:  # keep the atlas at 1024x2048 at most
+        ppm *= 0.85
+    rasterize(car)
+    return car
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('model'); ap.add_argument('out')
-    ap.add_argument('--variants', default='parked,abandoned,wrecked,burnt')
+    ap.add_argument('--variants', default='usable,abandoned,wrecked,burnt')
     ap.add_argument('--seed', type=int, default=1)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
-    car = Car(a.model)
-    ppm = PX_PER_M
-    while build_atlas(car, ppm)[1][1] > 2048:  # buses and trucks: keep the atlas at 1024x2048
-        ppm *= 0.85
-    rasterize(car)
+    car = prepare(a.model)
     for i, vn in enumerate(a.variants.split(',')):
         print(make_variant(car, vn, a.seed * 1000 + i, a.out), car.atlas)
 

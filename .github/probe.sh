@@ -39,6 +39,13 @@ sig net.minecraft.world.level.block.state.properties.IntegerProperty 'create'
 sig 'net.minecraft.world.level.block.state.BlockBehaviour$Properties' 'noLootTable|noCollission|noOcclusion|replaceable|strength|air|instabreak|pushReaction|isViewBlocking|isSuffocating|noTerrainParticles|forceSolidOn'
 sig net.minecraft.world.level.Level 'addFreshEntity'
 sig net.minecraft.server.level.ServerLevel 'addFreshEntity|getEntitiesOfClass'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector 'submit'
+sig net.minecraft.world.entity.vehicle.ContainerEntity '.'
+classes 'ChestBoat|AbstractChestBoat|ContainerEntity|HasCustomInventoryScreen'
+sig net.minecraft.world.entity.vehicle.boat.AbstractChestBoat 'public|protected'
+sig net.minecraft.world.entity.Entity 'interact|makeBoundingBox|setBoundingBox|getBoundingBox|onSyncedDataUpdated|refreshDimensions'
+sig com.mojang.blaze3d.vertex.PoseStack 'push|pop|mulPose|rotateDegrees'
+sig com.mojang.blaze3d.platform.NativeImage 'public NativeImage|setPixel'
 exit 0
 
 

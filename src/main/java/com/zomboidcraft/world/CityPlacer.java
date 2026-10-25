@@ -6,11 +6,14 @@ import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.city.BlockSink;
 import com.zomboidcraft.world.city.CityDemo;
+import com.zomboidcraft.world.cars.CarModels;
+import com.zomboidcraft.world.cars.Cars;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SplittableRandom;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -39,6 +42,8 @@ public final class CityPlacer implements BlockSink {
     private final List<String> palette = new ArrayList<>(List.of("air"));
     private final Map<String, Short> ids = new HashMap<>(Map.of("air", (short) 0));
     private final ArrayDeque<long[]> queue = new ArrayDeque<>();
+    /** Cars waiting to be spawned, by the section they stand in (it's loaded once we place it). */
+    private final Map<Long, List<Parked>> cars = new HashMap<>();
     private final ServerLevel level;
     private final BlockPos origin;
     private final MinecraftServer server;
@@ -72,6 +77,9 @@ public final class CityPlacer implements BlockSink {
         return true;
     }
 
+    private record Parked(double x, int y, double z, float yaw, String model, String variant) {
+    }
+
     private static long key(int sx, int sy, int sz) {
         return ((long) sx & 0x1FFFFF) << 42 | ((long) sz & 0x1FFFFF) << 21 | ((long) sy & 0x1FFFFF);
     }
@@ -96,6 +104,29 @@ public final class CityPlacer implements BlockSink {
             sections.put(key(x >> 4, y >> 4, z >> 4), s);
         }
         s[(y & 15) << 8 | (z & 15) << 4 | (x & 15)] = id;
+    }
+
+    /** Picks the model and how wrecked it is now, lays its hull blocks, and spawns it with its section. */
+    @Override
+    public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
+        if (!ZcConfig.get().world.streetCars || y < 0) {
+            return;
+        }
+        SplittableRandom rng = new SplittableRandom(seed);
+        CarModels.Model model = CarModels.pick(rng, m -> m.length() >= minLength && m.length() <= maxLength);
+        if (model == null) {
+            return;
+        }
+        for (int[] col : Cars.hullColumns(model, x, z, yaw)) {
+            int[] layers = Cars.layers(col[2]);
+            for (int i = 0; i < layers.length; i++) {
+                if (get(col[0], y + i, col[1]) == null) {
+                    set(col[0], y + i, col[1], "car_hull[h=" + layers[i] + "]");
+                }
+            }
+        }
+        cars.computeIfAbsent(key((int) Math.floor(x) >> 4, y >> 4, (int) Math.floor(z) >> 4), k -> new ArrayList<>())
+                .add(new Parked(x, y, z, yaw, model.id, Cars.pickVariant(rng)));
     }
 
     @Override
@@ -130,6 +161,7 @@ public final class CityPlacer implements BlockSink {
         if (queue.isEmpty()) {
             running = null;
             sections.clear();
+            cars.clear();
             broadcast("City built. Walk north up the avenue.");
         } else if (percent >= lastReport + 10) {
             lastReport = percent - percent % 10;
@@ -159,7 +191,8 @@ public final class CityPlacer implements BlockSink {
             } else {
                 if (states[id] == null) {
                     String name = palette.get(id);
-                    BlockState real = ZcConfig.get().world.cityStandIns ? null : CityBlocks.resolve(name);
+                    BlockState real = name.startsWith("car_hull") ? Cars.hull(Integer.parseInt(name.replaceAll("\\D", "")))
+                            : ZcConfig.get().world.cityStandIns ? null : CityBlocks.resolve(name);
                     states[id] = real != null ? real : StandIns.resolve(name);
                     loot[id] = lootTable(name);
                 }
@@ -168,6 +201,13 @@ public final class CityPlacer implements BlockSink {
             level.setBlock(pos, want, FLAGS);
             if (id != 0 && loot[id] != null) {
                 Fittings.stock(level.getBlockEntity(pos), loot[id]);
+            }
+        }
+        List<Parked> here = cars.remove(key(sx, sy, sz));
+        if (here != null) {
+            for (Parked car : here) {
+                Cars.spawn(level, origin.getX() + car.x(), origin.getY() + car.y(), origin.getZ() + car.z(), car.yaw(),
+                        car.model(), car.variant(), false);
             }
         }
     }

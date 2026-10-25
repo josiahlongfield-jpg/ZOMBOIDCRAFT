@@ -110,6 +110,15 @@ public final class ZcConfig {
         public boolean cityStandIns = false;
         /** Shop shelves, coolers, cases and stockroom crates hold themed loot; off leaves them empty. */
         public boolean shopLoot = true;
+        /** Real 3D cars on the streets; off leaves the roads empty. */
+        public boolean streetCars = true;
+        /** How the city's cars are left, as shares: whole and dusty (drivable later), abandoned, wrecked, burnt out. */
+        public double carUsable = 0.45;
+        public double carAbandoned = 0.3;
+        public double carWrecked = 0.18;
+        public double carBurnt = 0.07;
+        /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
+        public boolean carLoot = true;
     }
 
     public static class Weather {

@@ -13,4 +13,13 @@ public interface BlockSink {
     default String get(int x, int y, int z) {
         return null;
     }
+
+    /**
+     * A car standing on the block below y, centred on (x, z) and turned to yaw (Minecraft's: 0
+     * faces south, 90 west). The game picks a model between minLength and maxLength metres long and
+     * how wrecked it is, from seed; it also lays the car's invisible collision blocks. The preview
+     * ignores cars.
+     */
+    default void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
+    }
 }
