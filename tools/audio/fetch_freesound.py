@@ -1,4 +1,4 @@
-"""Collects candidate weapon sounds from Freesound: CC0 recordings only, as their HQ previews.
+"""Collects candidate sounds (weapons, zombies) from Freesound: CC0 recordings only, as their HQ previews.
 
     python3 tools/audio/fetch_freesound.py OUT_DIR [CATEGORY,CATEGORY...]
 
@@ -31,6 +31,19 @@ QUERIES = {
     "break": ["wood break", "stick snap", "bat break", "metal snap"],
     "equip": ["gun foley", "weapon equip", "gun handling", "rifle sling"],
     "load_round": ["bullet into magazine", "loading magazine rounds", "cartridge insert", "loading bullets"],
+    "zombie_idle": ["zombie groan", "zombie moan", "undead groan", "zombie breathing", "creature groan low"],
+    "zombie_alert": ["zombie scream", "zombie roar", "zombie growl aggressive", "monster screech human"],
+    "zombie_chase": ["zombie snarl", "zombie running breath", "zombie growl", "rabid growl human"],
+    "zombie_attack": ["zombie bite", "zombie attack", "flesh bite", "zombie eating"],
+    "zombie_hurt": ["zombie hurt", "zombie pain", "monster hurt grunt"],
+    "zombie_death": ["zombie death", "zombie dying", "death gurgle", "body collapse"],
+    "zombie_step": ["shuffling footsteps", "dragging feet", "footsteps shuffle concrete", "limping footsteps"],
+    "door_bash": ["door banging", "pounding on door", "door knock heavy fist", "wooden door hit"],
+    "door_bash_metal": ["metal door banging", "pounding metal door", "steel door hit"],
+    "door_break": ["door break", "wood door smash", "door kicked in", "wood splinter crash"],
+    "human_dread": ["death rattle", "choking gurgle", "raspy breathing", "wet breathing", "man moaning in pain", "dying breath", "throat gurgle"],
+    "human_scream": ["man scream horror", "screaming in agony", "woman shriek horror", "feral scream"],
+    "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }
 PER_QUERY = 6
