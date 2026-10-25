@@ -118,10 +118,10 @@ public final class CityPlacer implements BlockSink {
             return;
         }
         for (int[] col : Cars.hullColumns(model, x, z, yaw)) {
-            int[] layers = Cars.layers(col[2]);
+            int[] layers = Cars.layers(col, 0);
             for (int i = 0; i < layers.length; i++) {
-                if (get(col[0], y + i, col[1]) == null) {
-                    set(col[0], y + i, col[1], "car_hull[h=" + layers[i] + "]");
+                if (layers[i] != 0 && get(col[0], y + i, col[1]) == null) {
+                    set(col[0], y + i, col[1], "car_hull[code=" + layers[i] + "]");
                 }
             }
         }
