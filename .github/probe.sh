@@ -8,6 +8,21 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== render1"
+classes 'rendering/v1/.*(Layer|RenderState|Feature)|renderer/entity/player/|renderer/entity/state/(Avatar|Player|HumanoidRender|LivingEntityRender|EntityRender)|client/model/player/|model/(PlayerModel|HumanoidModel)|renderer/item/(ItemModelResolver|ItemStackRenderState)|layers/(ItemInHandLayer|CustomHeadLayer|CapeLayer|PlayerItemInHandLayer)|state/v1|renderstate'
+for c in $(classes 'rendering/v1/.*(LayerRegistration|RenderState)|renderstate|state/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+for c in $(classes 'renderer/entity/player/[A-Za-z]*Renderer.class|state/(AvatarRenderState|PlayerRenderState).class|model/player/PlayerModel.class|model/PlayerModel.class' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.HumanoidRenderState 'public'
+sig net.minecraft.client.model.HumanoidModel 'public'
+sig net.minecraft.client.renderer.item.ItemModelResolver 'public'
+sig net.minecraft.client.renderer.item.ItemStackRenderState 'public'
+sig net.minecraft.client.renderer.entity.layers.CustomHeadLayer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.layers.CustomHeadLayer 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc|getfield" | head -40
+sig net.minecraft.client.renderer.entity.EntityRendererProvider\$Context 'public'
+sig net.minecraft.world.item.ItemDisplayContext 'public static final'
+
+
 echo "===== nearby1"
 classes 'screenhandler/v1|menu/v1|world/inventory/(AbstractCraftingMenu|RecipeBookMenu|CraftingMenu|ResultSlot|ArmorSlot|TransientCraftingContainer|CraftingContainer|ResultContainer|ContainerData|MenuType|ChestMenu)|ContainerUser|ContainerOpenersCounter|entity/item/ItemEntity.class|block/entity/(ChestBlockEntity|BarrelBlockEntity|RandomizableContainerBlockEntity|BaseContainerBlockEntity)|RandomizableContainer.class'
 for c in $(classes 'screenhandler/v1|menu/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
