@@ -56,7 +56,7 @@ class Part:
 
 class Gun:
     def __init__(self, name, title, body, look, hand, slots, parts, irons=None, aperture=None, flash=None,
-                 seed=556, wear=0.4, mag_drop=1.3):
+                 seed=556, wear=0.4, handle=None):
         self.name, self.title, self.body, self.look = name, title, body, look
         self.hand = np.asarray(hand, float)     # centre of the shooting hand on the grip, build frame
         self.slots = slots                      # {slot name: Slot}
@@ -65,7 +65,7 @@ class Gun:
         self.aperture = aperture                # rear sight's peep, build frame
         self.flash = flash                      # fn(m, muzzle part key or None)
         self.seed, self.wear = seed, wear
-        self.mag_drop = mag_drop                # how low the magazine sits while it's being seated
+        self.handle = handle                    # fn(m): the charging handle, drawn apart so it can be worked
 
     def mount(self, key):
         part = self.parts[key]
@@ -177,7 +177,7 @@ def paint(models, px=PX, eyes=()):
                     rgb = look[mat](f)
                     rgb = P.round_shade(f, rgb)
                     for fx in look.get('_after', []):
-                        if mat not in ('dot', 'flash', 'lens', 'lens_red', 'lamp'):
+                        if mat not in ('dot', 'flash', 'lens', 'lens_green', 'lamp'):
                             rgb = fx(f, rgb)
                     rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
@@ -295,11 +295,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     for key, part in gun.parts.items():
         R, t = gun.mount(key)
         models[key] = drawn(key, part.build, R, t, part.look, part.seed, wear)
-    mag_key = gun.slots['magazine'].default if 'magazine' in gun.slots else None
-    if mag_key:
-        R, t = gun.mount(mag_key)
-        part = gun.parts[mag_key]
-        models['mag_drop'] = drawn('mag_drop', part.build, R, t + np.array([0, -gun.mag_drop, 0]), part.look, part.seed, wear)
+    if gun.handle:
+        models['charging_handle'] = drawn('charging_handle', gun.handle, look=look, seed=seed + 3, wear=wear)
     muzzles = [None] + (gun.slots['muzzle'].fits if 'muzzle' in gun.slots else [])
     for mk in muzzles:
         name = 'flash' if mk is None else f'flash_{mk}'
@@ -335,6 +332,11 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     def pose(st):
         r = lambda n: ref(f'{base}/{st}/{n}')
         entries = [r('body')]
+        if gun.handle:
+            # while it's being worked, first person draws the handle itself (sliding back and snapping home)
+            entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
+                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': r('charging_handle')}
+                           if st == 'charge' else r('charging_handle'))
         for slot_name in SLOTS:
             s = gun.slots.get(slot_name)
             if not s:
@@ -355,10 +357,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select('muzzle', cases, bare))
             elif slot_name == 'magazine':
                 if st == 'mag_out':
-                    continue
-                if st == 'mag_in':
-                    entries.append(r('mag_drop'))
-                    continue
+                    continue    # first person draws the old magazine falling away and the new one coming up
                 cases = {k: r(k) for k in s.fits}
                 cases['none'] = EMPTY
                 entries.append(select('magazine', cases, r(s.default) if s.default else EMPTY))
@@ -376,6 +375,12 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                                    'on_true': aim, 'on_false': pose('hip')}}},
            assets / f'items/{gun.name}.json')
     lang[f'item.{NS}.{gun.name}'] = gun.title
+    # the loose pieces first person draws during a reload, in the gun's own model space (no display of their own)
+    loose = {'mag': gun.slots['magazine'].default if 'magazine' in gun.slots else None,
+             'charging_handle': 'charging_handle' if gun.handle else None}
+    for name, key in loose.items():
+        if key:
+            M.dump({'model': ref(f'{base}/{key}')}, assets / f'items/{gun.name}_loose_{name}.json')
 
     # ghosts and the weapon screen's slot data
     slot_data = []

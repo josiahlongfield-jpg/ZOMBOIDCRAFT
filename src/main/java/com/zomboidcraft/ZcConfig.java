@@ -205,6 +205,8 @@ public final class ZcConfig {
         public double crosshairScale = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
+        /** Your own arms, in your own skin, hold guns in first person. Client side. */
+        public boolean firstPersonArms = true;
     }
 
     public static class Combat {
@@ -296,6 +298,12 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). The gun's own flash still shows. */
         public boolean muzzleSmoke = false;
+        /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
+        public double aimSway = 0.15;
+        /** First person animates reloads: the old magazine drops away, a new one goes in, the charging handle is worked on an empty gun. Client side. */
+        public boolean reloadAnimation = true;
+        /** A faint green beam shows in the air between a laser and its dot. Client side. */
+        public boolean laserBeam = true;
     }
 
     public static ZcConfig get() {

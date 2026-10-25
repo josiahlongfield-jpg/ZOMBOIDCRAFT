@@ -23,11 +23,12 @@ public final class CombatNet {
         }
     }
 
-    /** One of the action keys: reload, shove, a struggle tap. */
+    /** One of the action keys: reload, shove, a struggle tap, the light or laser switch. */
     public record Action(int action) implements CustomPacketPayload {
         public static final int RELOAD = 0;
         public static final int SHOVE = 1;
         public static final int STRUGGLE = 2;
+        public static final int RAIL = 3;
         public static final Type<Action> TYPE = new Type<>(ZomboidCraft.id("action"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Action> CODEC =
                 StreamCodec.composite(ByteBufCodecs.VAR_INT, Action::action, Action::new);
@@ -52,6 +53,7 @@ public final class CombatNet {
                     case Action.RELOAD -> Guns.reload(player);
                     case Action.SHOVE -> Shove.shove(player);
                     case Action.STRUGGLE -> Grabs.struggle(player);
+                    case Action.RAIL -> Guns.toggleRail(player);
                     default -> {
                     }
                 }

@@ -71,7 +71,7 @@ def red_dot(m):
 
 def holo(m):
     """A holographic sight (EOTech EXPS3 style): a big window in a thin, shallow hood, the body with the
-    battery and buttons kept down below the window, and the 68 MOA ring (ticks at the four points) and dot
+    battery and buttons kept down below the window, and a fine ring (ticks at the four points) and dot
     floating in the front glass. From behind you see the window's bezels, the hood's ribs and screws, and
     the buttons and battery cap on the deck."""
     b = Inch(m)
@@ -113,13 +113,16 @@ def holo(m):
     b.box((xo, sill - 0.20, -0.30), (xo + 0.08, sill + 0.04, 0.05), 'steel')  # windage screw
     b.box((-0.08, top + 0.13, -0.25), (0.08, top + 0.17, 0.10), 'steel')      # elevation screw
     z0, z1 = W0 + 0.035, W0 + 0.05
-    b.ring(z0, z1, 0.17, 'dot', at=(0.0, H), steps=16, w=0.022, light=15, noshade=True)
-    t, L = 0.011, 0.045                                                       # the ring's four ticks
-    b.box((-t, H + 0.17 - L, z0), (t, H + 0.17, z1), 'dot', light=15, noshade=True)
-    b.box((-t, H - 0.17, z0), (t, H - 0.17 + L, z1), 'dot', light=15, noshade=True)
-    b.box((0.17 - L, H - t, z0), (0.17, H + t, z1), 'dot', light=15, noshade=True)
-    b.box((-0.17, H - t, z0), (-0.17 + L, H + t, z1), 'dot', light=15, noshade=True)
-    b.box((-0.018, H - 0.018, z0), (0.018, H + 0.018, z1), 'dot', light=15, noshade=True)
+    # a fine ring, and a dot the same size to the eye as the red dot's (it sits closer, so it's drawn smaller)
+    r = 0.14
+    b.ring(z0, z1, r, 'dot', at=(0.0, H), steps=20, w=0.012, light=15, noshade=True)
+    t, L = 0.006, 0.035                                                       # the ring's four ticks
+    b.box((-t, H + r - L, z0), (t, H + r, z1), 'dot', light=15, noshade=True)
+    b.box((-t, H - r, z0), (t, H - r + L, z1), 'dot', light=15, noshade=True)
+    b.box((r - L, H - t, z0), (r, H + t, z1), 'dot', light=15, noshade=True)
+    b.box((-r, H - t, z0), (-r + L, H + t, z1), 'dot', light=15, noshade=True)
+    d = 0.01 * (HOLO_EYE + W1 - z0) / (RED_DOT_EYE + 0.85 + 1.04)
+    b.box((-d, H - d, z0), (d, H + d, z1), 'dot', light=15, noshade=True)
 
 
 SCOPE_H = 1.50
@@ -184,13 +187,13 @@ def light(m):
 
 
 def laser(m):
-    """A visible laser in a tan box (PEQ style)."""
+    """A visible green laser in a tan box (PEQ style)."""
     b = Inch(m)
     b.box((-0.47, 0.0, -0.85), (0.47, 0.30, 0.85), 'anod')
     jaws(b, -0.85, 0.85)
     b.box((-0.64, 0.30, -1.35), (0.64, 1.20, 1.25), 'tan')
     b.box((-0.60, 0.40, -1.42), (0.60, 1.10, -1.35), 'tan')
-    b.box((-0.45, 0.55, -1.45), (-0.12, 0.88, -1.42), 'lens_red')
+    b.box((-0.45, 0.55, -1.45), (-0.12, 0.88, -1.42), 'lens_green')
     b.box((0.12, 0.55, -1.45), (0.45, 0.88, -1.42), 'lens')
     b.box((-0.30, 0.50, 1.25), (0.30, 0.95, 1.36), 'rubber')
     for x0 in (-0.42, 0.16):
@@ -218,8 +221,8 @@ def look(wear=0.4):
         glint = (np.abs(f.X - f.Y * 0.6 - 0.1) % 0.6) < 0.05
         return np.where(glint[..., None], P.col('#9fd3e0'), c)
 
-    def lens_red(f):
-        return P.plain(f, '#5c1410', 0.2)
+    def lens_green(f):
+        return P.plain(f, '#1f5a22', 0.2)
 
     def lamp(f):
         a, b = f.across()
@@ -290,7 +293,7 @@ def look(wear=0.4):
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
-    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
+    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can,
              cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.45, spread=0.14),
              poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))

@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,14 +40,19 @@ import net.minecraft.world.phys.Vec3;
  * in, charging handle) that also drives the reload item models.
  *
  * The rifle's custom model data carries two numbers for its item model: [0] the reload step
- * (1 magazine out, 2 magazine going in, 3 charging handle) and [1] the muzzle flash, plus the
- * attachment keys {@link Attachments} writes.
+ * (1 magazine out, 2 magazine in, 3 charging handle; 1.5 is magazine out on an empty gun, so first
+ * person knows the handle will be worked) and [1] the muzzle flash, plus the attachment keys
+ * {@link Attachments} writes. First person animates between the steps (RifleView), on these timings.
  */
 public final class Guns {
     private static final int MAG_OUT_AT = 0;
     private static final int MAG_IN_AT = 16;
-    private static final int CHARGE_AT = 28;
-    private static final int RELOAD_DONE = 36;
+    private static final int CHARGE_AT = 22;
+    /** A reload onto a round still chambered skips the charging handle and ends sooner. */
+    private static final int TACTICAL_DONE = 25;
+    private static final int RELOAD_DONE = 34;
+    /** Clearing a jam starts here, so the hand has time to reach the handle before it's worked at CHARGE_AT. */
+    private static final int JAM_CLEAR_AT = 18;
     private static final int FLASH_TICKS = 2;
 
     private static final class State {
@@ -182,6 +188,21 @@ public final class Guns {
         return look.add(right.scale(Math.cos(a) * Math.tan(r))).add(up.scale(Math.sin(a) * Math.tan(r))).normalize();
     }
 
+    // ------------------------------------------------------------------ light and laser
+
+    /** Switches the light or laser on the side rail on or off, with a click. */
+    public static void toggleRail(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (!gun.is(ModItems.ASSAULT_RIFLE) || !(Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "light")
+                || Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "laser"))) {
+            return;
+        }
+        boolean on = !Attachments.railOn(gun);
+        gun.set(GunState.RAIL_ON, on);
+        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
+                SoundSource.PLAYERS, 0.25f, on ? 2.0f : 1.7f);
+    }
+
     // ------------------------------------------------------------------ reloading
 
     public static void reload(ServerPlayer player) {
@@ -197,10 +218,10 @@ public final class Guns {
         if (g.jammed()) {
             // clear the jam: work the charging handle, losing the stuck round
             gun.set(GunState.TYPE, new GunState(g.mag(), Math.max(0, g.rounds() - 1), false));
-            st.reloadTick = CHARGE_AT;
-            st.needsCharge = false;
+            player.stopUsingItem();
+            st.reloadTick = JAM_CLEAR_AT;
+            st.needsCharge = true;
             setModelData(gun, 3, 0);
-            sound(player, ModSounds.RIFLE_BOLT);
             return;
         }
         int best = bestMagazine(player);
@@ -225,7 +246,7 @@ public final class Guns {
             }
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
-        setModelData(gun, 1, 0);
+        setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         sound(player, ModSounds.RIFLE_MAG_OUT);
     }
 
@@ -267,9 +288,7 @@ public final class Guns {
             } else if (st.reloadTick == CHARGE_AT && st.needsCharge) {
                 setModelData(gun, 3, 0);
                 sound(player, ModSounds.RIFLE_BOLT);
-            } else if (st.reloadTick == CHARGE_AT && !st.needsCharge && gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag()) {
-                setModelData(gun, 0, 0);
-            } else if (st.reloadTick >= RELOAD_DONE) {
+            } else if (st.reloadTick >= (st.needsCharge ? RELOAD_DONE : TACTICAL_DONE)) {
                 setModelData(gun, 0, 0);
                 st.reloadTick = -1;
             }
@@ -293,7 +312,7 @@ public final class Guns {
     }
 
     /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data, keeping its attachments. */
-    private static void setModelData(ItemStack gun, int step, int flash) {
+    private static void setModelData(ItemStack gun, float step, int flash) {
         CustomModelData old = gun.get(DataComponents.CUSTOM_MODEL_DATA);
         float oldStep = old != null && !old.floats().isEmpty() ? old.floats().get(0) : 0;
         Attachments.writeModelData(gun, step < 0 ? oldStep : step, flash);

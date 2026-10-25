@@ -162,6 +162,44 @@ exit 0
 
 
 
+echo "===== fp3"
+sig net.minecraft.world.entity.Entity 'void turn\('
+javap -cp "$CP" -c -p net.minecraft.client.MouseHandler 2>&1 | awk '/private void turnPlayer\(|public void turnPlayer\(|void handleAccumulatedMovement\(/,/^$/' | grep -E 'invoke|getfield|ldc|Method' | head -60
+for c in $(classes 'screens/options/(Mouse|Controls|Sound)[A-Za-z]*Screen\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'class|protected|public'; done
+sig com.mojang.blaze3d.vertex.PoseStack 'public'
+sig net.minecraft.world.entity.player.Player 'isModelPartShown'
+sig net.minecraft.world.entity.player.PlayerModelPart 'public static final'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'isInvisible|ageInTicks'
+sig net.minecraft.client.renderer.entity.state.AvatarRenderState 'Sleeve|skin|isInvisible'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'getModel'
+sig net.minecraft.client.model.HumanoidModel 'rightArm|leftArm'
+sig net.minecraft.client.model.player.PlayerModel 'Sleeve|slim|public'
+sig net.minecraft.client.model.geom.ModelPart 'getChild|hasChild|children'
+sig net.minecraft.world.item.ItemStack 'public static final|public net.minecraft.world.item.ItemStack\('
+sig net.minecraft.core.component.DataComponents 'ITEM_MODEL'
+sig net.minecraft.client.Minecraft 'getItemModelResolver|getEntityRenderDispatcher|getWindow|getDeltaTracker|particleEngine'
+sig net.minecraft.client.particle.ParticleEngine 'createParticle|add\('
+sig 'net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry$PendingParticleProvider' '.'
+sig net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider '.'
+sig net.minecraft.client.Options 'sensitivity|fov\(|getCameraType'
+sig net.minecraft.client.renderer.LightTexture 'FULL'
+
+echo "===== hands"
+for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
+  sig "$c" '.'
+done
+IIH=$(classes 'ItemInHandRenderer\.class' | head -1 | sed 's|\.class$||; s|/|.|g')
+echo "IIH=$IIH"
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A80 'void renderPlayerArm(' | head -100
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A120 'void renderHandsWithItems(' | grep -E 'invoke|getfield|Method|Field|ldc' | head -60
+javap -cp "$CP" -c -p "$IIH" 2>&1 | grep -A200 'void renderArmWithItem(' | grep -E 'invoke|getfield|getstatic|Method|Field|ldc' | head -90
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'bob|Bob' | head -20
+for c in $(classes 'renderer/GameRenderer|client/Camera\.class' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'bob|Bob|private void|ItemInHand'; done
+sig net.minecraft.world.entity.player.Player 'bob|Bob|walkDist'
+sig net.minecraft.world.entity.Entity 'walkDist'
+sig net.minecraft.client.entity.ClientAvatarEntity '.'
+sig net.minecraft.client.entity.ClientAvatarState '.'
+
 echo "===== arms"
 sig net.minecraft.client.renderer.ItemInHandRenderer '.'
 javap -cp "$CP" -c -p net.minecraft.client.renderer.ItemInHandRenderer 2>&1 | grep -A70 'void renderPlayerArm(' | head -90

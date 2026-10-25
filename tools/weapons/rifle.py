@@ -27,6 +27,16 @@ def frame_point(x, y, z):
 
 
 HAND = frame_point(0.0, -3.0, 6.6)      # middle of the shooting hand on the pistol grip
+HANDLE_TRAVEL = 2.8     # inches the charging handle comes back when it's worked
+
+
+def charging_handle(m):
+    """The charging handle sticking out of the back of the upper, latch on the left. A part of its own so the
+    first-person reload can pull it back."""
+    b = Inch(m, (0.0, BORE_Y, Z0))
+    b.box((-0.30, 0.52, UPPER_LEN), (0.30, 0.80, UPPER_LEN + 0.40), 'park')
+    b.box((-0.62, 0.55, UPPER_LEN + 0.18), (0.30, 0.78, UPPER_LEN + 0.40), 'park')
+    b.box((-0.88, 0.58, UPPER_LEN + 0.10), (-0.62, 0.76, UPPER_LEN + 0.40), 'park')
 
 
 def body(m):
@@ -44,10 +54,6 @@ def body(m):
     b.box((0.43, 0.30, 3.75), (0.66, 0.55, 4.05), anod)
     b.rod(4.25, 5.30, 0.23, anod, axis=2, at=(0.48, 0.38))                  # forward assist housing
     b.rod(5.30, 5.70, 0.21, steel, axis=2, at=(0.48, 0.38))                 # and its plunger
-    # charging handle sticking out of the back, latch on the left
-    b.box((-0.30, 0.52, UPPER_LEN), (0.30, 0.80, UPPER_LEN + 0.40), park)
-    b.box((-0.62, 0.55, UPPER_LEN + 0.18), (0.30, 0.78, UPPER_LEN + 0.40), park)
-    b.box((-0.88, 0.58, UPPER_LEN + 0.10), (-0.62, 0.76, UPPER_LEN + 0.40), park)
     # ---- lower receiver
     b.box((-0.45, -1.55, 0.30), (0.45, -0.60, UPPER_LEN), anod)
     b.box((-0.50, -0.60, 6.30), (0.50, 0.15, UPPER_LEN), anod)               # buffer tower
@@ -153,8 +159,6 @@ def magazine(m):
     b.seg((-0.08, -5.60), (-0.22, -5.95), 2.50, 1.08, mag, over=0.05)          # floorplate
     b.box((-0.34, 0.40, 0.25), (0.34, 0.62, 1.70), 'steel')                  # follower and feed lips
 
-
-MAG_DROP = 1.3          # build units the magazine sits low while being seated
 
 
 def look(wear=0.4):

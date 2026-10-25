@@ -282,10 +282,22 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return f * (stockless(gun) ? cfg.noStockSpread : 1.0);
     }
 
-    /** Multiplies spread from the hip: a laser tightens it. */
+    /** Multiplies spread from the hip: a laser tightens it while it's switched on. */
     public static double hipSpreadFactor(ItemStack gun) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
-        return (has(gun, Slot.SIDE_RAIL, "laser") ? cfg.laserHipSpread : 1.0) * (stockless(gun) ? cfg.noStockSpread : 1.0);
+        return (laserOn(gun) ? cfg.laserHipSpread : 1.0) * (stockless(gun) ? cfg.noStockSpread : 1.0);
+    }
+
+    public static boolean railOn(ItemStack gun) {
+        return gun.getOrDefault(GunState.RAIL_ON, false);
+    }
+
+    public static boolean lightOn(ItemStack gun) {
+        return railOn(gun) && has(gun, Slot.SIDE_RAIL, "light");
+    }
+
+    public static boolean laserOn(ItemStack gun) {
+        return railOn(gun) && has(gun, Slot.SIDE_RAIL, "laser");
     }
 
     /** Multiplies the kick: a foregrip tames it, no stock makes it worse. */
