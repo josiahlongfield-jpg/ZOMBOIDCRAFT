@@ -1,7 +1,8 @@
 name: Fetch sounds
 
 # Collects CC0 candidate sounds from Freesound (this cloud dev machine can't reach it) and
-# pushes them to the sounds-raw branch for picking. Not part of the build.
+# adds them to the sounds-raw branch for picking. One runner per group of categories, since a
+# single runner is slow; the last job merges them with what the branch already holds.
 on:
   workflow_dispatch:
   push:
@@ -13,16 +14,61 @@ permissions:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - dry_fire,casing
+          - rifle_bolt,load_round
+          - bullet_hit,flesh_impact
+          - swing,shove
+          - hit_blunt,stomp
+          - hit_blade,hit_metal
     steps:
       - uses: actions/checkout@v5
-      - run: python3 -u tools/audio/fetch_freesound.py raw
-      - name: Push to sounds-raw
+      - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sounds-${{ strategy.job-index }}
+          path: raw
+
+  merge:
+    needs: fetch
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: sounds-raw
+          path: raw
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sounds-*
+          path: parts
+      - name: Merge and push to sounds-raw
         run: |
+          python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          raw = Path("raw")
+          manifest = json.loads((raw / "manifest.json").read_text()) if (raw / "manifest.json").exists() else {}
+          for part in sorted(Path("parts").iterdir()):
+              m = part / "manifest.json"
+              if not m.exists():
+                  continue
+              for sid, info in json.loads(m.read_text()).items():
+                  src = part / info["file"]
+                  if src.exists():
+                      (raw / info["file"]).parent.mkdir(parents=True, exist_ok=True)
+                      shutil.copy(src, raw / info["file"])
+                      manifest[sid] = info
+          (raw / "manifest.json").write_text(json.dumps(manifest, indent=1))
+          print(len(manifest), "sounds")
+          PY
           cd raw
-          git init -q -b sounds-raw
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
-          git commit -qm "Candidate CC0 sounds from Freesound"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" sounds-raw
+          git commit -qm "More candidate CC0 sounds from Freesound" || true
+          git push "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:sounds-raw

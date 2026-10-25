@@ -1,6 +1,6 @@
 """Collects candidate weapon sounds from Freesound: CC0 recordings only, as their HQ previews.
 
-    python3 tools/audio/fetch_freesound.py OUT_DIR
+    python3 tools/audio/fetch_freesound.py OUT_DIR [CATEGORY,CATEGORY...]
 
 Runs in CI (the build machine can reach Freesound). For each query it takes the most downloaded
 CC0 results, checks the licence on the sound's own page, and saves OUT_DIR/<category>/<id>.ogg
@@ -30,12 +30,14 @@ QUERIES = {
     "shove": ["body push", "shove grunt", "body fall"],
     "break": ["wood break", "stick snap", "bat break", "metal snap"],
     "equip": ["gun foley", "weapon equip", "gun handling", "rifle sling"],
+    "load_round": ["bullet into magazine", "loading magazine rounds", "cartridge insert", "loading bullets"],
+    "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }
 PER_QUERY = 6
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}
 
 
-BUDGET = 25 * 60   # seconds; stop and save what we have
+BUDGET = 20 * 60   # seconds; stop and save what we have
 START = time.time()
 
 
@@ -77,11 +79,13 @@ def search(q):
 def main():
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
+    only = sys.argv[2].split(",") if len(sys.argv) > 2 else list(QUERIES)
     manifest = {}
     dumped = False
     home = get("https://freesound.org/")
     print("freesound home:", "ok" if home else "unreachable", len(home or ""))
-    for cat, queries in QUERIES.items():
+    for cat in only:
+        queries = QUERIES[cat]
         (out / cat).mkdir(exist_ok=True)
         for q in queries:
             if over_budget():
