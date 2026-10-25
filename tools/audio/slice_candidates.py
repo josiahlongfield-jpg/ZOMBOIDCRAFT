@@ -76,6 +76,9 @@ CANDIDATES = {
     "amb.drip": ("Dripping water inside", 3.0, 10.0, 2, []),
     "amb.crow": ("Crows and ravens by day", 0.5, 4.0, 2, []),
     "amb.night": ("Night: crickets and owls", 6.0, 12.0, 2, []),
+    "amb.hail2": ("Heavier hail: a real hailstorm on roofs and cars", 4.0, 10.0, 2, []),
+    "amb.alarm": ("Car and house alarms, sirens, far off in the city", 2.0, 8.0, 2, []),
+    "amb.animal": ("Far-off animals: dogs howling, coyotes, foxes, wolves", 1.0, 7.0, 2, []),
 }
 
 MAX_CLIPS = 90   # per moment; the page builder trims each round further
@@ -120,6 +123,9 @@ EXTRA = {
     "amb.drip": [("amb_drip", r"."), ("s_amb_drip", r".")],
     "amb.crow": [("amb_crow", r"."), ("s_amb_crow", r".")],
     "amb.night": [("amb_night", r"."), ("s_amb_night", r".")],
+    "amb.hail2": [("amb_hail2", r"."), ("s_amb_hail2", r".")],
+    "amb.alarm": [("amb_alarm", r"."), ("s_amb_alarm", r".")],
+    "amb.animal": [("amb_animal", r"."), ("s_amb_animal", r".")],
 }
 
 
