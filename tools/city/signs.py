@@ -96,6 +96,16 @@ FASCIA = [
     ("eggs", "painted", "FARM EGGS", (232, 228, 216), (150, 40, 30), 4, "serif"),
     ("trespass", "box", "NO TRESPASSING", (196, 42, 34), (236, 232, 222), 4, "black"),
     ("seedcorn", "box", "KNOX HYBRID SEED", (238, 214, 60), (30, 70, 40), 5, "black"),
+    # the big city: the hospital, police headquarters, the subway, the garage, the aid station
+    ("emergency", "box", "EMERGENCY", (238, 236, 230), (188, 26, 28), 5, "black"),
+    ("mercy", "channel", "MERCY GENERAL HOSPITAL", None, (228, 230, 224), 7, "sans"),
+    ("police", "box", "POLICE", (24, 42, 104), (240, 240, 234), 4, "black"),
+    ("precinct", "channel", "CENTRAL PRECINCT", None, (214, 210, 196), 6, "serif"),
+    ("subway", "box", "SUBWAY", (30, 90, 54), (240, 240, 230), 3, "black"),
+    ("central", "painted", "CENTRAL STATION", (26, 28, 32), (228, 226, 216), 5, "sans"),
+    ("parking", "box", "PUBLIC PARKING", (28, 64, 150), (242, 242, 236), 5, "black"),
+    ("aid", "box", "FEMA AID STATION", (30, 50, 92), (236, 232, 220), 5, "black"),
+    ("hardhat", "painted", "HARD HAT AREA - KEEP OUT", (232, 188, 40), (26, 26, 24), 6, "black"),
 ]
 # hanging neon, a letter per block: id, letters, tube colour
 BLADES = [
