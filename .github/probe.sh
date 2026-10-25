@@ -9,6 +9,14 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== scope"
+classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
+sig net.minecraft.client.renderer.RenderPipelines 'GUI'
+for j in $MC_JARS; do unzip -Z1 "$j" | grep -E 'RenderPipelines' | sed "s|^|$j: |"; done | head
+javap -cp "$CP" -c -p net.minecraft.client.gui.Gui 2>&1 | grep -A40 -i 'Spyglass' | grep -E 'invoke|getstatic|Method|Field' | head -40
+sig net.minecraft.client.gui.Gui 'Spyglass|scope|Vignette'
+sig net.minecraft.world.entity.player.Player 'isScoping'
+
 echo "===== pose"
 classes 'model/.*HumanoidModel|model/.*PlayerModel|model/.*AnimationUtils|entity/player/.*Renderer|entity/.*AvatarRenderer|state/AvatarRenderState|state/PlayerRenderState|state/HumanoidRenderState|state/ArmedEntityRenderState|state/LivingEntityRenderState|layers/ItemInHandLayer|layers/PlayerItemInHandLayer|rendering/v1/RenderStateDataKey|rendering/v1/FabricRenderState|rendering/v1/.*RenderState'
 for c in net.minecraft.client.model.HumanoidModel net.minecraft.client.model.HumanoidModel\$ArmPose net.minecraft.client.model.player.PlayerModel net.minecraft.client.model.PlayerModel net.minecraft.client.model.AnimationUtils net.minecraft.client.model.geom.ModelPart; do sig "$c" '.'; done
