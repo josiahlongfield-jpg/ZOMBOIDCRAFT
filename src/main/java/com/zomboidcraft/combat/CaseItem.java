@@ -2,6 +2,7 @@ package com.zomboidcraft.combat;
 
 import com.mojang.serialization.Codec;
 import com.zomboidcraft.ModItems;
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.carry.BagItem;
 import com.zomboidcraft.carry.BagSpec;
@@ -47,30 +48,34 @@ public class CaseItem extends BagItem {
         if (!(stack.getItem() instanceof CaseItem item) || !stack.getOrDefault(PACKED, false)) {
             return false;
         }
-        List<ItemStack> load = switch (item.kind) {
-            case RIFLE -> gunCase(random, pick(random, new GunType[] {GunType.ASSAULT_RIFLE, GunType.HUNTING_RIFLE,
-                    GunType.SHOTGUN}, new int[] {4, 4, 3}));
-            case PISTOL -> gunCase(random, GunType.PISTOL);
-            case AMMO -> ammoCan(random);
-        };
-        stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(load));
+        ZcConfig.Cases cfg = ZcConfig.get().cases;
+        if (cfg.packed) {
+            List<ItemStack> load = switch (item.kind) {
+                case RIFLE -> gunCase(random, cfg, pick(random, new GunType[] {GunType.ASSAULT_RIFLE,
+                        GunType.HUNTING_RIFLE, GunType.SHOTGUN}, new int[] {cfg.assaultRifleWeight,
+                        cfg.huntingRifleWeight, cfg.shotgunWeight}));
+                case PISTOL -> gunCase(random, cfg, GunType.PISTOL);
+                case AMMO -> ammoCan(random, cfg);
+            };
+            stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(load));
+        }
         stack.set(PACKED, false);
         return true;
     }
 
     /** A gun put away unloaded and looked after, with what feeds it. */
-    private static List<ItemStack> gunCase(RandomSource random, GunType type) {
+    private static List<ItemStack> gunCase(RandomSource random, ZcConfig.Cases cfg, GunType type) {
         List<ItemStack> load = new ArrayList<>();
         ItemStack gun = new ItemStack(type.item());
         gun.set(GunState.TYPE, new GunState(type.tube, 0, false));         // stored with its magazine out
         if (gun.isDamageableItem()) {
-            gun.setDamageValue(random.nextInt(Math.max(1, gun.getMaxDamage() / 6)));
+            gun.setDamageValue(random.nextInt(Math.max(1, (int) (gun.getMaxDamage() * cfg.maxWear) + 1)));
         }
         // now and then someone left a part on it
         Item part = switch (type) {
-            case HUNTING_RIFLE -> random.nextFloat() < 0.4f ? ModItems.SCOPE_4X : null;
-            case ASSAULT_RIFLE -> random.nextFloat() < 0.2f ? ModItems.RED_DOT_SIGHT : null;
-            case PISTOL -> random.nextFloat() < 0.15f ? ModItems.WEAPON_LIGHT : null;
+            case HUNTING_RIFLE -> random.nextDouble() < cfg.scopeChance ? ModItems.SCOPE_4X : null;
+            case ASSAULT_RIFLE -> random.nextDouble() < cfg.redDotChance ? ModItems.RED_DOT_SIGHT : null;
+            case PISTOL -> random.nextDouble() < cfg.lightChance ? ModItems.WEAPON_LIGHT : null;
             default -> null;
         };
         if (part != null) {
@@ -79,10 +84,10 @@ public class CaseItem extends BagItem {
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);
         if (type.magazine() != null) {
-            int mags = type == GunType.PISTOL ? 1 : 1 + random.nextInt(2);
+            int mags = type == GunType.PISTOL ? 1 : 1 + random.nextInt(Math.max(1, cfg.maxMagazines));
             for (int i = 0; i < mags; i++) {
                 ItemStack mag = new ItemStack(type.magazine());
-                mag.set(GunState.MAG_ROUNDS, random.nextFloat() < 0.5f ? type.capacity() : random.nextInt(type.capacity() + 1));
+                mag.set(GunState.MAG_ROUNDS, random.nextDouble() < cfg.fullMagazineChance ? type.capacity() : random.nextInt(type.capacity() + 1));
                 load.add(mag);
             }
         }
@@ -92,10 +97,10 @@ public class CaseItem extends BagItem {
     }
 
     /** Boxes of one or two kinds of rounds, three or four stacks of them. */
-    private static List<ItemStack> ammoCan(RandomSource random) {
+    private static List<ItemStack> ammoCan(RandomSource random, ZcConfig.Cases cfg) {
         GunType[] kinds = {GunType.ASSAULT_RIFLE, GunType.PISTOL, GunType.SHOTGUN, GunType.HUNTING_RIFLE};
         int[] weights = {4, 4, 3, 3};
-        GunType first = pick(random, kinds, weights), second = random.nextFloat() < 0.35f ? pick(random, kinds, weights) : first;
+        GunType first = pick(random, kinds, weights), second = random.nextDouble() < cfg.secondCalibreChance ? pick(random, kinds, weights) : first;
         List<ItemStack> load = new ArrayList<>();
         int stacks = 3 + random.nextInt(2);
         for (int i = 0; i < stacks; i++) {
@@ -109,11 +114,14 @@ public class CaseItem extends BagItem {
     private static GunType pick(RandomSource random, GunType[] types, int[] weights) {
         int total = 0;
         for (int w : weights) {
-            total += w;
+            total += Math.max(0, w);
+        }
+        if (total <= 0) {
+            return types[0];
         }
         int r = random.nextInt(total);
         for (int i = 0; i < types.length; i++) {
-            r -= weights[i];
+            r -= Math.max(0, weights[i]);
             if (r < 0) {
                 return types[i];
             }

@@ -39,6 +39,29 @@ public final class ZcConfig {
     /** The bolt-action hunting rifle's own numbers. */
     public GunStats huntingRifle = GunStats.huntingRifle();
     public Carry carry = new Carry();
+    /** What a gun case or an ammo can has in it when it's found shut. */
+    public Cases cases = new Cases();
+
+    public static class Cases {
+        /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
+        public boolean packed = true;
+        /** How often a rifle case holds each long gun, against the others. */
+        public int assaultRifleWeight = 4;
+        public int huntingRifleWeight = 4;
+        public int shotgunWeight = 3;
+        /** Most of a packed gun's durability that's already worn off, as a fraction. */
+        public double maxWear = 0.17;
+        /** Chance someone left a part on: a 4x scope on the hunting rifle, a red dot on the rifle, a light on the pistol. */
+        public double scopeChance = 0.4;
+        public double redDotChance = 0.2;
+        public double lightChance = 0.15;
+        /** Most magazines packed with a long gun (a pistol case has one). */
+        public int maxMagazines = 2;
+        /** Chance each packed magazine is full; otherwise it holds anything from none to full. */
+        public double fullMagazineChance = 0.5;
+        /** Chance an ammo can holds a second calibre. */
+        public double secondCalibreChance = 0.35;
+    }
 
     public static class Carry {
         /** Only a few main-inventory slots are pockets; bags carry the rest. Creative ignores it. */
