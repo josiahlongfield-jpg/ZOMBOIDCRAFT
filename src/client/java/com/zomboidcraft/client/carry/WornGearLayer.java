@@ -1,7 +1,6 @@
 package com.zomboidcraft.client.carry;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.zomboidcraft.carry.BagItem;
 import com.zomboidcraft.carry.BagSpec;
 import com.zomboidcraft.carry.Carry;
@@ -70,11 +69,13 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             pose.pushPose();
             getParentModel().body.translateAndRotate(pose);
             pose.translate(0, fit.down() / 16f, fit.back() / 16f);
+            // model space has y down; these turn the item model upright, its front facing away from the back or
+            // (turned half round) forward from the chest
             if (fit.front()) {
-                pose.mulPose(Axis.YP.rotationDegrees(180));
+                pose.scale(fit.sx(), -fit.sy(), -fit.sz());
+            } else {
+                pose.scale(-fit.sx(), -fit.sy(), fit.sz());
             }
-            // model space has y down; this turns the item model upright with its front facing away from the body
-            pose.scale(-fit.sx(), -fit.sy(), fit.sz());
             items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
