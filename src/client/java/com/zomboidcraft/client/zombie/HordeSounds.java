@@ -8,6 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.sounds.WeighedSoundEvents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -18,8 +21,8 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Crowd beds under the single zombie voices: a murmur that swells with the walkers round you and a roar
  * with the ones coming after you (the server sends both counts). Each bed is a run of takes with their own
- * fades, the next started before the last ends so they crossfade into one sound. It comes from where the
- * crowd is, kept close so it stays heard.
+ * fades, the next started before the last ends so they crossfade into one sound, and never the same take
+ * twice running. It comes from where the crowd is, kept close so it stays heard.
  */
 public final class HordeSounds {
     /** The murmur's takes run 16 s and the roar's 12 s; each next one starts 2 s early. */
@@ -79,6 +82,7 @@ public final class HordeSounds {
         private final int period;
         private float level;
         private Vec3 at = Vec3.ZERO;
+        private Identifier lastTake;
         private Take latest;
         private int sinceStart;
 
@@ -107,6 +111,7 @@ public final class HordeSounds {
     private static final class Take extends AbstractTickableSoundInstance {
         private final Bed bed;
         private int age;
+        private boolean picked;
 
         Take(Bed bed) {
             super(bed.event, SoundSource.HOSTILE, SoundInstance.createUnseededRandom());
@@ -121,6 +126,20 @@ public final class HordeSounds {
             x = at.x;
             y = at.y;
             z = at.z;
+        }
+
+        /** The first time the take is looked up, picks one other than the one the bed played last. */
+        @Override
+        public WeighedSoundEvents getOrResolve(SoundManager manager) {
+            WeighedSoundEvents events = super.getOrResolve(manager);
+            if (!picked && events != null && sound != null) {
+                picked = true;
+                for (int i = 0; i < 8 && sound.getLocation().equals(bed.lastTake); i++) {
+                    sound = events.getSound(random);
+                }
+                bed.lastTake = sound.getLocation();
+            }
+            return events;
         }
 
         @Override
