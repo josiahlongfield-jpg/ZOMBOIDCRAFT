@@ -9,26 +9,51 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
-echo "===== shop containers"
-classes 'world/level/block/entity/(RandomizableContainerBlockEntity|BarrelBlockEntity|BaseContainerBlockEntity|BlockEntityType|BlockEntity)\.class|world/RandomizableContainer\.class|inventory/ChestMenu\.class|block/(BaseEntityBlock|EntityBlock|BarrelBlock)\.class|FabricBlockEntityTypeBuilder|storage/(ValueInput|ValueOutput)\.class|world/Containers\.class|ContainerHelper'
-sig net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity '.'
-sig net.minecraft.world.RandomizableContainer '.'
-sig net.minecraft.world.level.block.entity.BaseContainerBlockEntity '.'
-sig net.minecraft.world.level.block.entity.BarrelBlockEntity '.'
-javap -cp "$CP" -p -c net.minecraft.world.level.block.entity.BarrelBlockEntity 2>&1 | grep -E "Method|Field|invoke|ldc" | head -80
-sig net.minecraft.world.level.block.entity.BlockEntityType 'public|Builder'
-sig 'net.minecraft.world.level.block.entity.BlockEntityType$BlockEntitySupplier' '.'
-sig net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder 'public'
-sig net.minecraft.world.level.block.BarrelBlock '.'
-javap -cp "$CP" -p -c net.minecraft.world.level.block.BarrelBlock 2>&1 | grep -E "Method|invoke" | head -60
-sig net.minecraft.world.level.block.EntityBlock '.'
-sig net.minecraft.world.level.block.BaseEntityBlock '.'
-sig net.minecraft.world.level.block.state.BlockBehaviour 'useWithoutItem|useItemOn|onRemove|affectNeighborsAfterRemoval|getMenuProvider|playerDestroy|getAnalogOutputSignal'
-sig net.minecraft.world.inventory.ChestMenu 'public static'
-sig net.minecraft.world.Containers 'public static'
-sig net.minecraft.world.level.storage.loot.LootTable 'KEY_CODEC|public static'
-sig net.minecraft.core.registries.Registries 'LOOT_TABLE|BLOCK_ENTITY'
-sig net.minecraft.world.level.block.entity.BlockEntity 'public|protected'
+echo "===== weapons"
+classes 'ItemAttributeModifiers|ai/attributes/AttributeModifier\.class|EquipmentSlotGroup|ItemUseAnimation|ClientPreAttackCallback|AttackEntityCallback|UseItemCallback|component/DataComponentType\.class|core/component/DataComponents\.class|item/component/(CustomData|TooltipDisplay|UseCooldown|Weapon|Tool)\.class|properties/conditional/|properties/numeric/|ProjectileUtil|level/ClipContext|sounds/SoundEvent\.class|AbstractClientPlayer|client/Camera\.class|ItemInHandRenderer|renderer/GameRenderer\.class|KeyMappingHelper'
+sig net.minecraft.world.item.component.ItemAttributeModifiers 'public'
+sig 'net.minecraft.world.item.component.ItemAttributeModifiers$Builder' 'public'
+sig net.minecraft.world.entity.ai.attributes.AttributeModifier 'public'
+sig 'net.minecraft.world.entity.ai.attributes.AttributeModifier$Operation' 'public static final'
+sig net.minecraft.world.entity.ai.attributes.Attributes 'ATTACK|INTERACTION|RANGE|MOVEMENT_SPEED|KNOCKBACK'
+sig net.minecraft.world.entity.EquipmentSlotGroup 'public static final'
+sig 'net.minecraft.world.item.Item$Properties' 'public'
+sig net.minecraft.world.item.Item 'public|protected'
+sig net.minecraft.world.item.ItemUseAnimation 'public static final'
+sig net.minecraft.core.component.DataComponentType 'public'
+sig 'net.minecraft.core.component.DataComponentType$Builder' 'public'
+sig net.minecraft.core.component.DataComponents 'MAX_DAMAGE|DAMAGE|CUSTOM_DATA|ATTRIBUTE|WEAPON|TOOL|USE_COOLDOWN|LORE|TOOLTIP|CUSTOM_NAME'
+sig net.minecraft.world.item.component.Weapon 'public'
+sig net.minecraft.world.item.ItemStack 'hurtAndBreak|getDamageValue|setDamageValue|getMaxDamage|isDamageableItem|set\(|get\(|getOrDefault|update\('
+sig net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback '.'
+sig net.fabricmc.fabric.api.event.player.AttackEntityCallback '.'
+sig net.minecraft.world.entity.projectile.ProjectileUtil 'public static'
+sig net.minecraft.world.level.ClipContext 'public'
+sig 'net.minecraft.world.level.ClipContext$Block' 'public static final'
+sig 'net.minecraft.world.level.ClipContext$Fluid' 'public static final'
+sig net.minecraft.sounds.SoundEvent 'public static'
+sig net.minecraft.client.player.AbstractClientPlayer 'Fov|fov|Scop|scop'
+sig net.minecraft.world.entity.player.Player 'isScoping|getAttackStrengthScale|resetAttackStrengthTicker|getCurrentItemAttackStrengthDelay|attack\(|sweepAttack|getEntityInteractionRange|getCooldowns'
+sig net.minecraft.world.entity.LivingEntity 'getUseItem|isUsingItem|getTicksUsingItem|knockback\(|setPose|getPose|isAutoSpinAttack|stopUsingItem'
+sig net.minecraft.world.entity.Entity 'getDimensions|refreshDimensions|setPose|hasPose|getEyeHeight|makeBoundingBox'
+sig net.minecraft.world.entity.Pose 'public static final'
+sig net.minecraft.client.renderer.ItemInHandRenderer 'public|private void render|applyItemArmTransform'
+sig net.minecraft.client.renderer.GameRenderer 'Fov|fov|bob'
+sig net.minecraft.client.Camera 'public'
+sig net.minecraft.world.item.SpyglassItem '.'
+sig net.minecraft.world.item.CrossbowItem 'public|protected'
+sig net.minecraft.core.particles.ParticleTypes 'FLASH|SMOKE|CRIT|DAMAGE|BLOCK|POOF|ELECTRIC|DUST'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'setupRotations'
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public'
+sig net.minecraft.world.entity.ai.attributes.AttributeInstance 'public'
+sig net.minecraft.world.entity.player.Player 'getFoodData|causeFoodExhaustion|isSprinting|setSprinting'
+for j in $MC_JARS; do
+  unzip -p "$j" assets/minecraft/items/crossbow.json 2>/dev/null && echo " <- crossbow item model"
+  unzip -p "$j" assets/minecraft/items/spyglass.json 2>/dev/null && echo " <- spyglass item model"
+  unzip -p "$j" assets/minecraft/models/item/trident_in_hand.json 2>/dev/null | head -40
+  unzip -p "$j" assets/minecraft/models/item/handheld.json 2>/dev/null
+done
+ls ~/.gradle/caches/fabric-loom 2>/dev/null | head
 exit 0
 
 echo "===== signs"
