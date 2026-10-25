@@ -27,7 +27,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HudElementRegistry.addLast(ZomboidCraft.id("moodles"), MoodleHud::render);
+        com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.inventory.FieldKitScreen.register();
         SkillsHud.register();
@@ -35,7 +35,6 @@ public class ZomboidCraftClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
-        HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
         HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
