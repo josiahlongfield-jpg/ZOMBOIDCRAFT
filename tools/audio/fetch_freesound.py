@@ -66,6 +66,17 @@ QUERIES = {
     "ui_drop": ["drop item floor", "bag drop floor", "object drop wood floor"],
     "ui_sting": ["heartbeat single", "low tension hit", "horror stinger dark"],
     "ui_page": ["page turn", "pencil writing", "notebook paper"],
+    # World ambience: weather beds, roof rain heard indoors, and sparse one-shots for an abandoned city
+    "amb_rain": ["rain on street city", "steady rain loop", "heavy rain downpour"],
+    "amb_roof": ["rain on roof interior", "rain on window inside", "rain on tin roof"],
+    "amb_wind": ["wind gust howling", "wind through buildings", "strong wind loop"],
+    "amb_thunder": ["thunder close crack", "thunder distant rumble", "thunder roll"],
+    "amb_hail": ["hail storm", "hail on roof", "hail on car"],
+    "amb_distant": ["car alarm distant", "distant dog barking night", "distant scream", "distant gunshots"],
+    "amb_creak": ["house creaking", "wooden floor creak", "building creak metal"],
+    "amb_drip": ["water dripping interior", "leaking roof drip", "pipe drip"],
+    "amb_crow": ["crow caw", "crows calling distant", "ravens"],
+    "amb_night": ["crickets night", "night ambience insects", "owl hoot"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }
