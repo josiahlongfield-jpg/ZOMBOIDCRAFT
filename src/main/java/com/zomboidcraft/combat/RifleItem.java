@@ -112,7 +112,9 @@ public class RifleItem extends Item {
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (type.tube) {
-            tooltip.accept(Component.literal("Shells: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
+            String what = type.rounds();        // a revolver holds rounds, the shotguns shells
+            tooltip.accept(Component.literal(Character.toUpperCase(what.charAt(0)) + what.substring(1) + ": " + gun.rounds()
+                    + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.accept(gun.mag()
                     ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
