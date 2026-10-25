@@ -5,6 +5,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.inventory.KitArt;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
@@ -48,6 +50,9 @@ public final class Hud {
     public static void register() {
         KeyMappingHelper.registerKeyMapping(PEEK);
         HudSettings.register();
+        LivingEntityRenderLayerRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
+            if (renderer instanceof AvatarRenderer<?> avatar) helper.register(new InjuryGlowLayer(avatar));
+        });
         // Minecraft's own pieces step aside while the field kit is up, and come back in creative or with it off
         HudElementRegistry.replaceElement(VanillaHudElements.HOTBAR, vanilla -> (g, delta) -> {
             if (active()) BeltHud.render(g, delta);

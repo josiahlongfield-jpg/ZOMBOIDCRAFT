@@ -1,6 +1,6 @@
 package com.zomboidcraft.client.hud;
 
-import com.zomboidcraft.survival.SurvivalStats;
+import com.zomboidcraft.survival.Body;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -53,14 +53,17 @@ final class BodyHud {
         LocalPlayer player = mc.player;
         if (player == null) return;
         float health = player.getHealth(), max = player.getMaxHealth(), f = health / max;
-        int wounds = SurvivalStats.get(player).wounds();
+        Body injuries = Body.get(player);
+        int wounds = injuries.bleeding();
+        Body.Region worst = injuries.worst();
         sinceChange += Hud.dt;
         if (lastHealth >= 0 && Math.abs(health - lastHealth) > 0.01f) {
             if (health < lastHealth) beat();
             sinceChange = 0;
         }
         lastHealth = health;
-        float a = fade.update(HudSettings.figureAlways || Hud.peek || sinceChange < SHOW || wounds > 0 || f < .5f);
+        float a = fade.update(HudSettings.figureAlways || Hud.peek || sinceChange < SHOW || wounds > 0 || f < .5f
+                || worst != null && injuries.part(worst).severity() >= 2);
         if (a <= 0) return;
 
         // tucks away down and to the left
@@ -79,13 +82,19 @@ final class BodyHud {
         yaw += (wantYaw - yaw) * ease;
         pitch += (wantPitch - pitch) * ease;
         float cx = x + W / 2f, cy = y + H / 2f;
-        InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + W, y + H, 34, 0.0625f,
-                cx - 40 * (float) Math.tan(yaw), cy - 40 * (float) Math.tan(pitch), player);
+        InjuryGlowLayer.capturing = true;
+        try {
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + W, y + H, 34, 0.0625f,
+                    cx - 40 * (float) Math.tan(yaw), cy - 40 * (float) Math.tan(pitch), player);
+        } finally {
+            InjuryGlowLayer.capturing = false;
+        }
 
         Font font = mc.font;
-        String word = wounds >= 3 ? "Heavy bleeding" : wounds > 0 ? "Bleeding"
+        // the worst injury names itself; otherwise a word for your health
+        String word = worst != null ? Body.describe(worst, injuries.part(worst))
                 : f >= .9f ? "Fine" : f >= .6f ? "Bruised" : f >= .35f ? "Hurt" : "Critical";
-        int ink = wounds > 0 || f < .35f ? 0xFFE07A5A : Hud.BONE_DIM;
+        int ink = wounds > 0 || f < .35f || worst != null && injuries.part(worst).severity() >= 2 ? 0xFFE07A5A : Hud.BONE_DIM;
         float ww = Hud.capsWidth(font, word, 1.4f, .8f);
         Hud.caps(g, font, word, cx - ww / 2, y + H + 1, Hud.alpha(ink, a), 1.4f, .8f);
     }

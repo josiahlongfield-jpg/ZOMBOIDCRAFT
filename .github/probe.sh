@@ -7,6 +7,19 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== injuries"
+javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
+sig net.minecraft.client.renderer.SubmitNodeCollector '.'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector '.'
+javap -cp "$CP" -p net.minecraft.client.model.HumanoidModel 2>&1 | grep -E "ModelPart|slim"
+javap -cp "$CP" -p net.minecraft.client.model.player.PlayerModel 2>&1 | grep -E "ModelPart|slim|Slim"
+javap -cp "$CP" -p net.minecraft.client.model.geom.ModelPart 2>&1 | grep -E "public|Scale|visible|skipDraw"
+javap -cp "$CP" -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | grep -E "static"
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.AvatarRenderState 2>&1 | head -40
+sig net.minecraft.tags.DamageTypeTags 'IS_FALL|IS_FIRE|IS_PROJECTILE|IS_EXPLOSION|BYPASSES'
+sig net.minecraft.world.entity.LivingEntity 'causeFallDamage|calculateFallDamage'
+exit 0
+
 echo "===== hud"
 sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements '.'
 classes 'world/clock/|[Cc]lock[A-Za-z]*\.class|level/storage/LevelData|TimeOfDay' | head -40

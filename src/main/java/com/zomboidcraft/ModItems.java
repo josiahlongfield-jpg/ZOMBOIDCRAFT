@@ -30,6 +30,7 @@ public final class ModItems {
     private static final List<Item> ALL = new ArrayList<>();
 
     public static final Item BANDAGE = register("bandage", BandageItem::new, new Item.Properties().stacksTo(16));
+    public static final Item SPLINT = register("splint", com.zomboidcraft.survival.SplintItem::new, new Item.Properties().stacksTo(4));
     public static final Item NAILS = register("nails", Item::new, new Item.Properties());
     /** A cheap digital wristwatch: while you have one on you, the HUD shows the time and the day. */
     public static final Item DIGITAL_WATCH = register("digital_watch", Item::new, new Item.Properties().stacksTo(1));

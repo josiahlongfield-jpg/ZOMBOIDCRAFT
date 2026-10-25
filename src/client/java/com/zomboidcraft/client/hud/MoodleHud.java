@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.combat.Stamina;
+import com.zomboidcraft.survival.Body;
 import com.zomboidcraft.survival.SurvivalStats;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,9 +157,19 @@ public final class MoodleHud {
                 "Thirsty", "Parched", "Dying of thirst");
         add(list, "tired", "eye", s.fatigue() > 90 ? 3 : s.fatigue() > 75 ? 2 : s.fatigue() > 60 ? 1 : 0,
                 "Tired", "Very tired", "Exhausted");
-        if (s.wounds() > 0) {
-            add(list, "bleeding", "blood", s.wounds() >= 3 ? 3 : 2, "Bleeding",
-                    s.wounds() == 1 ? "Bleeding" : "Bleeding x" + s.wounds(), "Heavy bleeding");
+        Body body = Body.get(player);
+        int bleeding = body.bleeding();
+        if (bleeding > 0) {
+            add(list, "bleeding", "blood", bleeding >= 3 ? 3 : 2, "Bleeding",
+                    bleeding == 1 ? "Bleeding" : "Bleeding x" + bleeding, "Heavy bleeding");
+        }
+        // the worst injury gets a plate of its own: a bone for a break, a flame for a burn, a slash for a wound
+        Body.Region worst = body.worst();
+        if (worst != null) {
+            Body.Part part = body.part(worst);
+            String icon = part.fractured() ? "bone" : part.wound() == Body.Wound.BURN ? "flame" : "cut";
+            String label = Body.describe(worst, part);
+            add(list, "injury", icon, part.severity(), label, label, label);
         }
         float infection = s.infectionProgress();
         add(list, "ill", "thermo", infection > 0.8f ? 3 : infection > 0.5f ? 2 : infection > 0.25f ? 1 : 0,
