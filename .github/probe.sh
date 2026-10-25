@@ -8,6 +8,43 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== worldgen"
+sig net.minecraft.world.level.chunk.ChunkGenerator 'public|protected'
+sig net.minecraft.world.level.biome.BiomeSource 'public|protected'
+sig net.minecraft.world.level.biome.FixedBiomeSource 'public'
+sig net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator 'public'
+sig net.minecraft.world.level.levelgen.FlatLevelSource 'public'
+sig net.minecraft.world.level.chunk.ChunkAccess 'setBlockState|getHeight|getMinY|getPos|getOrCreateHeightmapUnprimed|getSection|getSections|markPosForPostprocessing|getHeightmap|getMaxY|getSectionsCount|getMinSection'
+sig net.minecraft.world.level.chunk.LevelChunkSection 'public'
+sig net.minecraft.world.level.levelgen.Heightmap 'public'
+sig 'net.minecraft.world.level.levelgen.Heightmap$Types' 'public'
+sig net.minecraft.world.level.NoiseColumn 'public'
+sig net.minecraft.server.level.WorldGenRegion 'public'
+sig net.minecraft.world.level.ChunkPos 'public'
+sig net.minecraft.core.registries.BuiltInRegistries 'CHUNK_GENERATOR|BIOME_SOURCE'
+sig net.minecraft.core.registries.Registries 'BIOME;|WORLD_PRESET|CHUNK_GENERATOR'
+sig net.minecraft.resources.RegistryOps 'retrieve|public static'
+sig net.minecraft.core.HolderGetter 'public|abstract'
+sig net.minecraft.world.level.biome.Biomes 'PLAINS|FOREST|SWAMP|RIVER|OCEAN|BEACH|DARK_FOREST|BIRCH|TAIGA|MEADOW'
+sig net.minecraft.world.level.biome.Climate 'public'
+sig net.minecraft.world.level.levelgen.RandomState 'public'
+sig net.minecraft.world.level.levelgen.blending.Blender 'public'
+sig net.minecraft.world.level.StructureManager 'public'
+sig net.minecraft.world.level.chunk.ProtoChunk 'public'
+sig net.minecraft.world.level.LevelHeightAccessor 'public'
+sig net.minecraft.world.level.biome.BiomeManager 'public'
+sig net.minecraft.world.level.levelgen.GenerationStep 'public'
+classes 'world_preset/|worldgen/biome/plains|worldgen/biome/swamp|dimension_type/overworld|ChunkGenerators|BiomeSources|levelgen/presets'
+for j in $MC_JARS; do
+  for f in data/minecraft/worldgen/world_preset/normal.json data/minecraft/worldgen/world_preset/flat.json data/minecraft/worldgen/biome/plains.json data/minecraft/worldgen/biome/swamp.json data/minecraft/tags/worldgen/world_preset/normal.json; do
+    unzip -p "$j" "$f" 2>/dev/null | head -c 6000 && echo " <<< $f"
+  done
+done
+sig net.minecraft.world.level.levelgen.presets.WorldPreset 'public'
+sig net.minecraft.world.level.chunk.ChunkGenerators 'public'
+sig net.minecraft.world.level.biome.BiomeSources 'public'
+exit 0
+
 
 echo "===== cars"
 sig net.minecraft.world.entity.Entity 'abstract|defineSynchedData|readAdditionalSaveData|addAdditionalSaveData|hurtServer|isPickable|canBeCollidedWith|isPushable|shouldRenderAtSqrDistance|public Entity\(|setNoGravity|setInvulnerable|noPhysics|blocksBuilding|getBoundingBoxForCulling|moveTo|snapTo|setYRot|absSnapTo|setPos\(|void tick\(|onRemoval|remove\(|isAttackable|skipAttackInteraction'
