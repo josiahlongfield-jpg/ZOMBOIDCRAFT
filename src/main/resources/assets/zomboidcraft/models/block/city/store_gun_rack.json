@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_gun_rack": "zomboidcraft:block/city/store_gun_rack",
+    "particle": "zomboidcraft:block/city/store_gun_rack"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_gun_rack",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_gun_rack"
+        },
+        "east": {
+          "texture": "#store_gun_rack",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_gun_rack",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_gun_rack",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_gun_rack",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

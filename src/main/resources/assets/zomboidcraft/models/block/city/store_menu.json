@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_menu": "zomboidcraft:block/city/store_menu",
+    "particle": "zomboidcraft:block/city/store_menu"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_menu",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_menu"
+        },
+        "east": {
+          "texture": "#store_menu",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_menu",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_menu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_menu",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

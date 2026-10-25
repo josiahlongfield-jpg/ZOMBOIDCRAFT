@@ -1,8 +1,10 @@
 package com.zomboidcraft.world.blocks;
 
 import com.zomboidcraft.ZomboidCraft;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -33,6 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public final class CityBlocks {
     private static final Map<String, Block> BLOCKS = new LinkedHashMap<>();
     private static final Map<String, BlockState> CACHE = new HashMap<>();
+    private static final List<Block> FITTINGS = new ArrayList<>();
 
     /** The table {@link CitySpecs} fills in; one call to {@link #s} per block. */
     abstract static class Specs {
@@ -41,6 +44,8 @@ public final class CityBlocks {
         static final int SEE_THROUGH = 1;
         /** Plants and decals: no collision, breaks at once, other blocks can replace it. */
         static final int DECOR = 2;
+        /** Opens like a chest with loot rolled from a table (see {@link Fittings}). */
+        static final int LOOT = 4;
 
         protected void s(String name, int kind, int flags, int light, SoundType sound, float strength, double... boxes) {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
@@ -63,23 +68,34 @@ public final class CityBlocks {
             for (int i = 0; i + 5 < boxes.length; i += 6) {
                 shape = Shapes.or(shape, Block.box(boxes[i], boxes[i + 1], boxes[i + 2], boxes[i + 3], boxes[i + 4], boxes[i + 5]));
             }
+            boolean loot = (flags & LOOT) != 0;
             Block block = switch (kind) {
                 // opened by hand like a wooden door; zombies bash them in (BashGoal)
                 case DOOR -> new DoorBlock(sound == SoundType.METAL ? BlockSetType.COPPER : BlockSetType.SPRUCE, properties);
-                case FACING -> new CityBlock.Facing(properties, shape, (flags & DECOR) != 0);
+                case FACING -> loot ? new Fittings.Facing(properties, shape, (flags & DECOR) != 0)
+                        : new CityBlock.Facing(properties, shape, (flags & DECOR) != 0);
                 case AXIS -> new CityBlock.Axis(properties, shape);
-                default -> new CityBlock(properties, shape);
+                default -> loot ? new Fittings.Plain(properties, shape) : new CityBlock(properties, shape);
             };
             BLOCKS.put(name, Registry.register(BuiltInRegistries.BLOCK, key, block));
+            if (loot) {
+                FITTINGS.add(block);
+            }
             ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(name));
             Item.Properties itemProperties = new Item.Properties().setId(itemKey).useBlockDescriptionPrefix();
             Registry.register(BuiltInRegistries.ITEM, itemKey, kind == DOOR
                     ? new DoubleHighBlockItem(block, itemProperties) : new BlockItem(block, itemProperties));
         }
+
+        /** The loot table a searchable fitting rolls when the generator didn't name one. */
+        protected void loot(String name, String table) {
+            Fittings.defaultTable(BLOCKS.get(name), table);
+        }
     }
 
     public static void register() {
         new CitySpecs();
+        Fittings.register(FITTINGS);
         ResourceKey<CreativeModeTab> tab = ResourceKey.create(Registries.CREATIVE_MODE_TAB, ZomboidCraft.id("city"));
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, tab, FabricCreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.zomboidcraft.city"))

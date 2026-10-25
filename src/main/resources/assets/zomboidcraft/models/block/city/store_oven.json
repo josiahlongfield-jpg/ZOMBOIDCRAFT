@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_appliance": "zomboidcraft:block/city/store_appliance",
+    "store_oven": "zomboidcraft:block/city/store_oven",
+    "particle": "zomboidcraft:block/city/store_oven"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_oven",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_appliance",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_appliance",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_appliance",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_appliance",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_appliance",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

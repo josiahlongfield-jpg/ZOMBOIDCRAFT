@@ -3,6 +3,7 @@ package com.zomboidcraft.world;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.world.blocks.CityBlocks;
+import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.city.BlockSink;
 import com.zomboidcraft.world.city.CityDemo;
 import java.util.ArrayDeque;
@@ -139,6 +140,7 @@ public final class CityPlacer implements BlockSink {
     private void place(int sx, int sy, int sz) {
         short[] s = sections.get(key(sx, sy, sz));
         BlockState[] states = new BlockState[palette.size()];
+        String[] loot = new String[palette.size()];
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         int top = level.getMaxY();
         for (int i = 0; i < 4096; i++) {
@@ -159,11 +161,28 @@ public final class CityPlacer implements BlockSink {
                     String name = palette.get(id);
                     BlockState real = ZcConfig.get().world.cityStandIns ? null : CityBlocks.resolve(name);
                     states[id] = real != null ? real : StandIns.resolve(name);
+                    loot[id] = lootTable(name);
                 }
                 want = states[id];
             }
             level.setBlock(pos, want, FLAGS);
+            if (id != 0 && loot[id] != null) {
+                Fittings.stock(level.getBlockEntity(pos), loot[id]);
+            }
         }
+    }
+
+    /** The shop loot table a fitting's name carries, as in "store_cooler[facing=west,loot=drinks]". */
+    private static String lootTable(String name) {
+        int at = name.indexOf("loot=");
+        if (at < 0) {
+            return null;
+        }
+        int end = at + 5;
+        while (end < name.length() && name.charAt(end) != ',' && name.charAt(end) != ']') {
+            end++;
+        }
+        return name.substring(at + 5, end);
     }
 
     private void broadcast(String text) {

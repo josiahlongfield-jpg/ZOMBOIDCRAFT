@@ -1023,6 +1023,8 @@ EXTRA.update(AWNINGS)
 # shop signs and neon, drawn by signs.py
 import signs  # noqa: E402
 EXTRA.update(signs.textures())
+import interiors  # noqa: E402
+EXTRA.update(interiors.textures())
 
 
 def build(name):

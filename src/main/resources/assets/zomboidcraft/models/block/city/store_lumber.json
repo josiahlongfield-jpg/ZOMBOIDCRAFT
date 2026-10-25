@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_lumber": "zomboidcraft:block/city/store_lumber",
+    "particle": "zomboidcraft:block/city/store_lumber"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_lumber"
+        },
+        "south": {
+          "texture": "#store_lumber",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_lumber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_lumber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_lumber",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_lumber",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

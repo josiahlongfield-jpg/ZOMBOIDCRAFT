@@ -29,12 +29,29 @@ public final class Signs {
         for (int tries = 0; tries < FASCIA.length && (FASCIA_WIDTH[pick] > span || recent(pick)); tries++) {
             pick = (pick + 1) % FASCIA.length;
         }
-        int k = FASCIA_WIDTH[pick];
-        if (k > span) {
-            return;
+        if (FASCIA_WIDTH[pick] <= span) {
+            RECENT[recentAt] = pick;
+            recentAt = (recentAt + 1) % RECENT.length;
+            hang(p, rng, pick, x0, y, z, span);
         }
-        RECENT[recentAt] = pick;
-        recentAt = (recentAt + 1) % RECENT.length;
+    }
+
+    /** The sign for one brand, centred over the span; false (nothing placed) when it doesn't fit. */
+    public static boolean fascia(Placer p, SplittableRandom rng, String brand, int x0, int y, int z, int span) {
+        for (int pick = 0; pick < FASCIA.length; pick++) {
+            if (FASCIA[pick].equals(brand)) {
+                if (FASCIA_WIDTH[pick] > span) {
+                    return false;
+                }
+                hang(p, rng, pick, x0, y, z, span);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void hang(Placer p, SplittableRandom rng, int pick, int x0, int y, int z, int span) {
+        int k = FASCIA_WIDTH[pick];
         int start = x0 + (span - k) / 2;
         int fallen = rng.nextDouble() < 0.12 ? rng.nextInt(k) : -1;
         for (int i = 0; i < k; i++) {

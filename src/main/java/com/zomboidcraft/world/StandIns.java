@@ -117,6 +117,35 @@ public final class StandIns {
         String[][] cars = {{"red", "red_terracotta", "red_carpet"}, {"white", "white_concrete", "white_carpet"},
                 {"blue", "blue_terracotta", "blue_carpet"}, {"green", "green_terracotta", "green_carpet"},
                 {"grey", "gray_terracotta", "gray_carpet"}, {"burnt", "blackstone", "black_carpet"}};
+        // shop fittings (anything else from a shop is left out)
+        put("floor_checker", "white_terracotta");
+        put("floor_lino", "light_gray_terracotta");
+        put("floor_boards", "spruce_planks");
+        for (String shelf : new String[] {"grocery", "pharmacy", "liquor", "hardware", "thrift", "pawn", "ammo", "empty"}) {
+            put("store_shelf_" + shelf, "chiseled_bookshelf");
+        }
+        put("store_cooler", "white_concrete");
+        put("store_cooler_top", "glass");
+        put("store_vending", "red_concrete");
+        put("store_vending_top", "red_concrete");
+        put("store_counter", "smooth_quartz");
+        put("store_register", "smooth_quartz");
+        put("store_coffee", "smooth_quartz");
+        put("store_case_guns", "glass");
+        put("store_case_jewelry", "glass");
+        put("store_case_pies", "glass");
+        put("store_washer", "white_concrete");
+        put("store_dryer", "white_concrete");
+        put("store_oven", "iron_block");
+        put("store_grill", "blast_furnace");
+        put("store_safe", "iron_block");
+        put("store_teller_glass", "glass_pane");
+        put("store_table", "spruce_pressure_plate");
+        put("store_booth", "red_wool");
+        put("store_lumber", "stripped_spruce_log[axis=x]");
+        put("store_produce", "composter");
+        put("store_bin", "composter");
+        put("store_paint_cans", "flower_pot");
         for (String[] car : cars) {
             put("car_" + car[0], car[1]);
             put("car_door_" + car[0], car[1]);
@@ -154,8 +183,9 @@ public final class StandIns {
             props = new HashMap<>();
         } else {
             id = TABLE.get(name);
-            if (id == null && (name.startsWith("sign_") || name.startsWith("blade_") || name.startsWith("neon_"))) {
-                return Blocks.AIR.defaultBlockState();  // shop signs only come with the real blocks
+            if (id == null && (name.startsWith("sign_") || name.startsWith("blade_") || name.startsWith("neon_")
+                    || name.startsWith("store_"))) {
+                return Blocks.AIR.defaultBlockState();  // shop signs and small fittings only come with the real blocks
             }
             if (id == null) {
                 return Blocks.STONE.defaultBlockState();

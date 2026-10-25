@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_pegboard": "zomboidcraft:block/city/store_pegboard",
+    "particle": "zomboidcraft:block/city/store_pegboard"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_pegboard",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_pegboard"
+        },
+        "east": {
+          "texture": "#store_pegboard",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_pegboard",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_pegboard",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_pegboard",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

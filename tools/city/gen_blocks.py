@@ -34,7 +34,7 @@ FACING_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
 DIRS = ["north", "south", "east", "west", "up", "down"]
 # blocks you walk through and can build over: plants, wall and floor decals
 DECOR_PREFIX = ("graffiti_", "sign_", "blade_", "neon_")
-DECOR = {"vines", "paper", "glass_shards", "blood_splat", "scorch", "leaf_litter", "banner_skull"}
+DECOR = {"store_spill", "vines", "paper", "glass_shards", "blood_splat", "scorch", "leaf_litter", "banner_skull"}
 SOUNDS = [  # first keyword in the block's name or textures wins
     (("window", "glass", "cabin"), "GLASS"),
     (("grass", "weeds", "vines", "ivy", "leaves", "leaf", "moss_carpet"), "GRASS"),
@@ -194,6 +194,8 @@ def java_line(name, spec, tex_dir):
         flags.append("SEE_THROUGH")
     if decor:
         flags.append("DECOR")
+    if "loot" in spec:
+        flags.append("LOOT")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
     else:
@@ -202,7 +204,10 @@ def java_line(name, spec, tex_dir):
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
     nums = ", ".join(f"{v:g}" for v in shape)
     flag = " | ".join(flags) or "0"
-    return (f'        s("{name}", {kind}, {flag}, {spec.get("light", 0)}, SoundType.{s}, {strength:g}f, {nums});')
+    line = f'        s("{name}", {kind}, {flag}, {spec.get("light", 0)}, SoundType.{s}, {strength:g}f, {nums});'
+    if "loot" in spec:
+        line += f'\n        loot("{name}", "{spec["loot"]}");'
+    return line
 
 
 def write_json(path, obj):
@@ -211,6 +216,10 @@ def write_json(path, obj):
 
 
 def title(name):
+    if name.startswith("store_shelf_"):  # the shelf's name heads its loot screen: "Grocery Shelf"
+        return name[len("store_shelf_"):].replace("_", " ").title() + " Shelf"
+    if name.startswith("store_"):
+        name = name[len("store_"):]
     words = ["weathered" if w == "b" else w for w in name.split("_")]
     return " ".join(w.capitalize() for w in words)
 

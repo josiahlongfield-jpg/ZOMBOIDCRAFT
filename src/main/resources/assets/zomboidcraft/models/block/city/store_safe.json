@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_safe": "zomboidcraft:block/city/store_safe",
+    "store_safe_side": "zomboidcraft:block/city/store_safe_side",
+    "particle": "zomboidcraft:block/city/store_safe_side"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        14,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_safe_side"
+        },
+        "south": {
+          "texture": "#store_safe_side"
+        },
+        "east": {
+          "texture": "#store_safe_side"
+        },
+        "west": {
+          "texture": "#store_safe_side"
+        },
+        "up": {
+          "texture": "#store_safe_side"
+        },
+        "down": {
+          "texture": "#store_safe_side",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        1.5
+      ],
+      "to": [
+        14,
+        14,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_safe"
+        },
+        "south": {
+          "texture": "#store_safe"
+        },
+        "east": {
+          "texture": "#store_safe"
+        },
+        "west": {
+          "texture": "#store_safe"
+        },
+        "up": {
+          "texture": "#store_safe"
+        },
+        "down": {
+          "texture": "#store_safe",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

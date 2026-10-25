@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_appliance": "zomboidcraft:block/city/store_appliance",
+    "store_grill": "zomboidcraft:block/city/store_grill",
+    "store_grill_top": "zomboidcraft:block/city/store_grill_top",
+    "particle": "zomboidcraft:block/city/store_grill"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_grill",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_appliance",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_appliance",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_appliance",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_grill_top"
+        },
+        "down": {
+          "texture": "#store_appliance",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

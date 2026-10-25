@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_teller_glass": {
+      "sprite": "zomboidcraft:block/city/store_teller_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/store_teller_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_teller_glass"
+        },
+        "south": {
+          "texture": "#store_teller_glass"
+        },
+        "east": {
+          "texture": "#store_teller_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_teller_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_teller_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_teller_glass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

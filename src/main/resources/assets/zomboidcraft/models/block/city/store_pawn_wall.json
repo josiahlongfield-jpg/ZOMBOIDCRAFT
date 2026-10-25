@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_pawn_wall": "zomboidcraft:block/city/store_pawn_wall",
+    "particle": "zomboidcraft:block/city/store_pawn_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_pawn_wall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_pawn_wall"
+        },
+        "east": {
+          "texture": "#store_pawn_wall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_pawn_wall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_pawn_wall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_pawn_wall",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

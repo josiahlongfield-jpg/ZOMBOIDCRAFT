@@ -25,6 +25,8 @@ public final class Walkup {
     private final int w, d, floors;
     private final boolean furnished;
     private final String wall;
+    /** What the ground-floor shop sells; its sign and fit-out follow it. */
+    private final Shops.Type shop;
 
     public Walkup(Placer p, SplittableRandom rng, int w, int d, int floors, boolean furnished) {
         this.p = p;
@@ -34,6 +36,7 @@ public final class Walkup {
         this.floors = floors;
         this.furnished = furnished;
         this.wall = WALLS[rng.nextInt(WALLS.length)];
+        this.shop = Shops.pick(rng);
     }
 
     public void build() {
@@ -139,6 +142,9 @@ public final class Walkup {
         boolean sign = rng.nextDouble() < 0.65;
         String trim = rng.nextDouble() < 0.7 ? SHOP_PAINT[rng.nextInt(SHOP_PAINT.length)] : "stone_trim";
         String awning = AWNINGS[rng.nextInt(AWNINGS.length)];
+        if (sign) {
+            sign = Signs.fascia(p, rng, shop.brand, 1, 3, -1, w - 2);
+        }
         for (int x = 0; x < w; x++) {
             boolean pier = x == 0 || x == w - 1;
             for (int y = 1; y <= 2; y++) {
@@ -149,13 +155,6 @@ public final class Walkup {
             if (!pier && !sign) {
                 p.set(x, 3, -1, awning + "[facing=north]");
             }
-        }
-        if (sign) {
-            Signs.fascia(p, rng, 1, 3, -1, w - 2);
-        }
-        // a neon OPEN sign behind the glass at the left end, as you face the shop
-        if (furnished && w >= 8 && rng.nextDouble() < 0.3) {
-            Signs.open(p, rng, w - 2, 2, 1);
         }
         if (wide) {
             Doors.pair(p, rng, door - 1, 1, 0, Doors.SHOP, "south");
@@ -170,32 +169,27 @@ public final class Walkup {
     }
 
     private void interior(int y) {
-        // ceiling lights off (one in a while still on), a back partition on the upper floors
+        // ceiling lights off (one in a while still on); the shop fitted out, a back partition upstairs
         for (int x = 2; x < w - 1; x += 4) {
             for (int z = 2; z < d - 1; z += 4) {
                 p.set(x, y + 3, z, rng.nextDouble() < 0.05 ? "ceiling_light" : "ceiling_light_off");
             }
         }
+        if (y == 0) {
+            // the shop is always fitted out (see Shops), stocked or not
+            new Shops(p, rng, shop, w, d).fitOut();
+            return;
+        }
         if (!furnished) {
             return;
         }
-        if (y > 0) {
-            int back = d / 2;
-            for (int x = 1; x < w - 1; x++) {
-                for (int yy = y + 1; yy < y + FLOOR; yy++) {
-                    p.set(x, yy, back, "drywall");
-                }
-            }
-            Doors.abandoned(p, rng, w / 2, y + 1, back, Doors.FLAT, "south", Doors.hinge(rng));
-        } else {
-            // shop counter and shelves
-            for (int x = 2; x < w - 2; x++) {
-                p.set(x, 1, d - 4, "reception_desk");
-            }
-            for (int z = 2; z < d - 5; z += 2) {
-                p.set(1, 1, z, "filing_cabinet[facing=east]");
+        int back = d / 2;
+        for (int x = 1; x < w - 1; x++) {
+            for (int yy = y + 1; yy < y + FLOOR; yy++) {
+                p.set(x, yy, back, "drywall");
             }
         }
+        Doors.abandoned(p, rng, w / 2, y + 1, back, Doors.FLAT, "south", Doors.hinge(rng));
         for (int i = 0; i < 2; i++) {
             int x = 1 + rng.nextInt(w - 2), z = 1 + rng.nextInt(d - 2);
             p.set(x, y + 1, z, rng.nextBoolean() ? "rubble_pile" : "moss_carpet");

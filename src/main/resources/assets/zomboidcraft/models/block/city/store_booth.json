@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_vinyl": "zomboidcraft:block/city/store_vinyl",
+    "particle": "zomboidcraft:block/city/store_vinyl"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        7,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_vinyl"
+        },
+        "south": {
+          "texture": "#store_vinyl"
+        },
+        "east": {
+          "texture": "#store_vinyl",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_vinyl",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_vinyl"
+        },
+        "down": {
+          "texture": "#store_vinyl",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_vinyl"
+        },
+        "south": {
+          "texture": "#store_vinyl",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_vinyl",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_vinyl",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_vinyl",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_vinyl",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_spill": "zomboidcraft:block/city/store_spill",
+    "particle": "zomboidcraft:block/city/store_spill"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_spill",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_spill",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_spill",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_spill",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_spill"
+        },
+        "down": {
+          "texture": "#store_spill",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

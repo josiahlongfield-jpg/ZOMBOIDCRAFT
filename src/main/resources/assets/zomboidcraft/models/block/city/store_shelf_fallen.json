@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_shelf_fallen": "zomboidcraft:block/city/store_shelf_fallen",
+    "particle": "zomboidcraft:block/city/store_shelf_fallen"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_shelf_fallen"
+        },
+        "south": {
+          "texture": "#store_shelf_fallen"
+        },
+        "east": {
+          "texture": "#store_shelf_fallen",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_shelf_fallen",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_shelf_fallen"
+        },
+        "down": {
+          "texture": "#store_shelf_fallen",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

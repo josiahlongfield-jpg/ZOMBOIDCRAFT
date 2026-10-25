@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "store_paint_can": "zomboidcraft:block/city/store_paint_can",
+    "particle": "zomboidcraft:block/city/store_paint_can"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        8,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_paint_can"
+        },
+        "south": {
+          "texture": "#store_paint_can"
+        },
+        "east": {
+          "texture": "#store_paint_can"
+        },
+        "west": {
+          "texture": "#store_paint_can"
+        },
+        "up": {
+          "texture": "#store_paint_can"
+        },
+        "down": {
+          "texture": "#store_paint_can",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_paint_can"
+        },
+        "south": {
+          "texture": "#store_paint_can"
+        },
+        "east": {
+          "texture": "#store_paint_can"
+        },
+        "west": {
+          "texture": "#store_paint_can"
+        },
+        "up": {
+          "texture": "#store_paint_can"
+        },
+        "down": {
+          "texture": "#store_paint_can",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        9
+      ],
+      "to": [
+        10,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_paint_can"
+        },
+        "south": {
+          "texture": "#store_paint_can"
+        },
+        "east": {
+          "texture": "#store_paint_can"
+        },
+        "west": {
+          "texture": "#store_paint_can"
+        },
+        "up": {
+          "texture": "#store_paint_can"
+        },
+        "down": {
+          "texture": "#store_paint_can",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        3
+      ],
+      "to": [
+        11,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#store_paint_can"
+        },
+        "south": {
+          "texture": "#store_paint_can"
+        },
+        "east": {
+          "texture": "#store_paint_can"
+        },
+        "west": {
+          "texture": "#store_paint_can"
+        },
+        "up": {
+          "texture": "#store_paint_can"
+        },
+        "down": {
+          "texture": "#store_paint_can"
+        }
+      }
+    }
+  ]
+}

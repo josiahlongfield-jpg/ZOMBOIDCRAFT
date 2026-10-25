@@ -106,6 +106,8 @@ public final class ZcConfig {
     public static class World {
         /** /zc city builds with vanilla look-alike blocks instead of the city's own. */
         public boolean cityStandIns = false;
+        /** Shop shelves, coolers, cases and stockroom crates hold themed loot; off leaves them empty. */
+        public boolean shopLoot = true;
     }
 
     public static class Weather {
