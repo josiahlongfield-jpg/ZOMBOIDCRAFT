@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cellar_subfloor": "zomboidcraft:block/city/cellar_subfloor",
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "particle": "zomboidcraft:block/city/cellar_subfloor"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_subfloor",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cellar_subfloor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cellar_subfloor",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cellar_subfloor",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cellar_subfloor",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cellar_subfloor"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        0
+      ],
+      "to": [
+        11,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    }
+  ]
+}

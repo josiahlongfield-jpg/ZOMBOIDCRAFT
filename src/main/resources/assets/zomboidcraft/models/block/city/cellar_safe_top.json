@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cellar_safe": "zomboidcraft:block/city/cellar_safe",
+    "cellar_safe_top": "zomboidcraft:block/city/cellar_safe_top",
+    "particle": "zomboidcraft:block/city/cellar_safe_top"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_safe_top"
+        },
+        "south": {
+          "texture": "#cellar_safe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cellar_safe"
+        },
+        "west": {
+          "texture": "#cellar_safe"
+        },
+        "up": {
+          "texture": "#cellar_safe",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cellar_safe",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

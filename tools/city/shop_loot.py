@@ -222,6 +222,34 @@ TABLES.update({
         ("arrow", 3, 4, 12), ("bow", 1, 1, 1, worn(0, .5)), ("-", 6, 1, 1)]),
 })
 
+# basements: a rare find in any house, so their shelves are stocked deeper than a kitchen's
+TABLES.update({
+    "basement_food": ((2, 6), [
+        ("potato", 8, 1, 6), ("carrot", 6, 1, 5), ("beetroot", 5, 1, 5), ("apple", 6, 1, 5), ("dried_kelp", 8, 2, 10),
+        ("honey_bottle", 4, 1, 2), ("sugar", 3, 1, 4), ("mushroom_stew", 4, 1, 1), ("beetroot_soup", 3, 1, 1),
+        ("rabbit_stew", 2, 1, 1), ("bread", 3, 1, 3), ("cookie", 3, 2, 8), ("potion", 8, 1, 3, WATER),
+        ("glass_bottle", 3, 1, 3), ("-", 10, 1, 1)]),
+    "basement_medicine": ((1, 5), [
+        (f"{ZC}:bandage", 12, 1, 4), (f"{ZC}:splint", 5, 1, 2), ("potion", 5, 1, 2, potion("healing")),
+        ("potion", 3, 1, 1, potion("regeneration")), ("potion", 6, 1, 2, WATER), ("honey_bottle", 3, 1, 2),
+        ("glass_bottle", 3, 1, 3), ("paper", 2, 1, 4), ("golden_carrot", 1, 1, 2), ("milk_bucket", 1, 1, 1),
+        ("-", 8, 1, 1)]),
+    "basement_guns": ((2, 5), [
+        (f"{ZC}:shotgun", 3, 1, 1, worn(.05, .5)), (f"{ZC}:shotgun_shell", 10, 6, 24),
+        (f"{ZC}:hunting_rifle", 3, 1, 1, worn(.05, .5)), (f"{ZC}:hunting_rifle_ammo", 8, 4, 20),
+        (f"{ZC}:hunting_rifle_magazine", 3, 1, 1), (f"{ZC}:hunting_rifle_magazine", 1, 1, 1, rounds(3)),
+        (f"{ZC}:pistol", 3, 1, 1, worn(.05, .5)), (f"{ZC}:pistol_ammo", 9, 6, 24), (f"{ZC}:pistol_magazine", 3, 1, 1),
+        (f"{ZC}:pistol_magazine", 1, 1, 1, rounds(8)), (f"{ZC}:rifle_ammo", 6, 6, 30), (f"{ZC}:rifle_magazine", 2, 1, 1),
+        (f"{ZC}:assault_rifle", 1, 1, 1, worn(.05, .5)), (f"{ZC}:red_dot_sight", 2, 1, 1), (f"{ZC}:scope_4x", 1, 1, 1),
+        (f"{ZC}:weapon_light", 2, 1, 1), (f"{ZC}:laser_sight", 1, 1, 1), (f"{ZC}:machete", 2, 1, 1),
+        (f"{ZC}:military_rucksack", 1, 1, 1), ("gunpowder", 2, 1, 4), ("-", 4, 1, 1)]),
+    "basement_supplies": ((1, 5), [
+        ("dried_kelp", 6, 4, 16), ("potion", 6, 1, 3, WATER), (f"{ZC}:bandage", 5, 1, 4), ("torch", 4, 2, 8),
+        ("candle", 3, 1, 4), ("flint_and_steel", 2, 1, 1), ("string", 3, 2, 8), (f"{ZC}:nails", 4, 4, 16),
+        ("coal", 3, 2, 8), ("arrow", 3, 4, 16), ("gunpowder", 2, 1, 3), (f"{ZC}:duffel_bag", 1, 1, 1),
+        (f"{ZC}:hiking_backpack", 1, 1, 1), (f"{ZC}:crowbar", 1, 1, 1), ("-", 6, 1, 1)]),
+})
+
 # a rare find on top of the shelf's own stock
 RARE = {
     "grocery": [(f"{ZC}:kitchen_knife", 1), (f"{ZC}:frying_pan", 1)],
@@ -235,6 +263,10 @@ RARE = {
     "home_nightstand": [(f"{ZC}:pistol", 1)], "home_garage": [(f"{ZC}:fire_axe", 1), (f"{ZC}:machete", 1)],
     "home_wardrobe": [(f"{ZC}:hunting_rifle", 1), (f"{ZC}:military_rucksack", 1)], "home_toys": [(f"{ZC}:baseball_bat", 1)],
     "home_guns": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:scope_4x", 1)],
+    "basement_food": [("golden_apple", 1)], "basement_medicine": [("golden_apple", 1), ("totem_of_undying", 1)],
+    "basement_guns": [(f"{ZC}:assault_rifle", 3), (f"{ZC}:rifle_suppressor", 1), (f"{ZC}:pistol_suppressor", 1),
+                      (f"{ZC}:scope_4x", 2), (f"{ZC}:katana", 1)],
+    "basement_supplies": [(f"{ZC}:military_rucksack", 1), (f"{ZC}:shotgun", 1)],
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2),
              (f"{ZC}:hunting_rifle", 2), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
 }
