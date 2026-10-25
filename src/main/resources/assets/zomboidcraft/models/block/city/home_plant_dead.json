@@ -1,0 +1,203 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_foliage_dead": "zomboidcraft:block/city/home_foliage_dead",
+    "home_terracotta": "zomboidcraft:block/city/home_terracotta",
+    "particle": "zomboidcraft:block/city/home_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_terracotta"
+        },
+        "south": {
+          "texture": "#home_terracotta"
+        },
+        "east": {
+          "texture": "#home_terracotta"
+        },
+        "west": {
+          "texture": "#home_terracotta"
+        },
+        "up": {
+          "texture": "#home_terracotta"
+        },
+        "down": {
+          "texture": "#home_terracotta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        4,
+        4.5
+      ],
+      "to": [
+        11.5,
+        5.5,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_terracotta"
+        },
+        "south": {
+          "texture": "#home_terracotta"
+        },
+        "east": {
+          "texture": "#home_terracotta"
+        },
+        "west": {
+          "texture": "#home_terracotta"
+        },
+        "up": {
+          "texture": "#home_terracotta"
+        },
+        "down": {
+          "texture": "#home_terracotta"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        5.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        12,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        6
+      ],
+      "to": [
+        8,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        6,
+        7
+      ],
+      "to": [
+        12,
+        7,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5.5,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    }
+  ]
+}

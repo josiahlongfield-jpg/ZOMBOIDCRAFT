@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wardrobe": "zomboidcraft:block/city/home_wardrobe",
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "particle": "zomboidcraft:block/city/home_wood_walnut"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_walnut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_walnut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1.5
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wardrobe"
+        },
+        "south": {
+          "texture": "#home_wardrobe"
+        },
+        "east": {
+          "texture": "#home_wardrobe",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wardrobe",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wardrobe",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wardrobe",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

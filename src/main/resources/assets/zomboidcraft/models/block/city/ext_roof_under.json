@@ -1,0 +1,115 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_roof_deck": "zomboidcraft:block/city/ext_roof_deck",
+    "particle": "zomboidcraft:block/city/ext_roof_deck"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_roof_deck"
+        },
+        "south": {
+          "texture": "#ext_roof_deck"
+        },
+        "east": {
+          "texture": "#ext_roof_deck",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_roof_deck",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_roof_deck",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_roof_deck"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_roof_deck"
+        },
+        "south": {
+          "texture": "#ext_roof_deck"
+        },
+        "east": {
+          "texture": "#ext_roof_deck",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_roof_deck",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_roof_deck",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_roof_deck"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_roof_deck"
+        },
+        "south": {
+          "texture": "#ext_roof_deck",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_roof_deck",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_roof_deck",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_roof_deck",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_roof_deck"
+        }
+      }
+    }
+  ]
+}

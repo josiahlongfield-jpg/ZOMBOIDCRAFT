@@ -91,15 +91,15 @@ final class SuburbSite extends Site {
             Kit.Bulb b = circles.get(i);
             double[] end = c.point(c.length());
             double entry = Math.atan2(-end[3], -end[2]);
-            for (Kit.Lot lot : kit.lotsAround(b, 5, 16, 26, entry + 0.9, entry + Math.PI * 2 - 0.9)) {
+            for (Kit.Lot lot : kit.lotsAround(b, 5, 20, 30, entry + 0.9, entry + Math.PI * 2 - 0.9)) {
                 homes.home(lot, mix);
             }
-            for (Kit.Lot lot : kit.lotsAlong(c, 16, 20, 26, 1, 14, c.length() - 10, 0)) {
+            for (Kit.Lot lot : kit.lotsAlong(c, 20, 25, 30, 1, 14, c.length() - 10, 0)) {
                 homes.home(lot, mix);
             }
         }
         for (Kit.Lane l : new Kit.Lane[] {we, ns}) {
-            for (Kit.Lot lot : kit.lotsAlong(l, 17, 22, 28, 1, 0, l.length(), 0)) {
+            for (Kit.Lot lot : kit.lotsAlong(l, 21, 27, 32, 1, 0, l.length(), 0)) {
                 homes.home(lot, mix);
             }
         }
@@ -191,7 +191,7 @@ final class SuburbSite extends Site {
                 0.35, 0.08, 0.7, true, false);
         int shops = 0;
         for (Kit.Lane st : streets) {
-            List<Kit.Lot> lots = kit.lotsAlong(st, 12, 15, 30, 0, 12, st.length() - 12, 0);
+            List<Kit.Lot> lots = kit.lotsAlong(st, 14, 18, 32, 0, 12, st.length() - 12, 0);
             for (Kit.Lot lot : lots) {
                 double r = rng.nextDouble();
                 if (shops < 3 && r < 0.06 && lot.w() >= 12) {
@@ -204,7 +204,7 @@ final class SuburbSite extends Site {
             }
         }
         for (Kit.Lane av : avenues) {
-            for (Kit.Lot lot : kit.lotsAlong(av, 13, 15, 24, 0, 0, av.length(), 0)) {
+            for (Kit.Lot lot : kit.lotsAlong(av, 15, 18, 26, 0, 0, av.length(), 0)) {
                 homes.home(lot, new Homes.Mix(mix.styles(), 5, 0.3, 0.2, 0.3, 0.35, 0.4, 0.08, 0.7, false, false));
             }
         }
@@ -358,10 +358,10 @@ final class SuburbSite extends Site {
         laundry((int) south[0] - 16, (int) z1 + 5);
         Homes.Mix mix = new Homes.Mix(Homes.Mix.weights(0, 0, 0, 0, 0.08, 0.86, 0.06, 0), 3, 0.05, 0.05, 0.1, 0.45,
                 0.45, 0.12, 0.85, false, false);
-        for (Kit.Lot lot : kit.lotsAlong(loop, 19, 21, 17, 1, 0, loop.length(), 0)) {
+        for (Kit.Lot lot : kit.lotsAlong(loop, 23, 26, 17, 1, 0, loop.length(), 0)) {
             homes.home(lot, mix);
         }
-        for (Kit.Lot lot : kit.lotsAlong(middle, 19, 21, 16, 1, 8, middle.length() - 8, 0)) {
+        for (Kit.Lot lot : kit.lotsAlong(middle, 23, 26, 16, 1, 8, middle.length() - 8, 0)) {
             homes.home(lot, mix);
         }
         // overhead power down the straight sides

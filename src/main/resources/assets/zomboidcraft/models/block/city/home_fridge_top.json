@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_almond": "zomboidcraft:block/city/home_almond",
+    "home_fridge_door_top": "zomboidcraft:block/city/home_fridge_door_top",
+    "particle": "zomboidcraft:block/city/home_almond"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_almond"
+        },
+        "south": {
+          "texture": "#home_almond",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_almond"
+        },
+        "west": {
+          "texture": "#home_almond"
+        },
+        "up": {
+          "texture": "#home_almond"
+        },
+        "down": {
+          "texture": "#home_almond",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        0.5
+      ],
+      "to": [
+        15,
+        13,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_fridge_door_top"
+        },
+        "south": {
+          "texture": "#home_fridge_door_top"
+        },
+        "east": {
+          "texture": "#home_fridge_door_top"
+        },
+        "west": {
+          "texture": "#home_fridge_door_top"
+        },
+        "up": {
+          "texture": "#home_fridge_door_top"
+        },
+        "down": {
+          "texture": "#home_fridge_door_top",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

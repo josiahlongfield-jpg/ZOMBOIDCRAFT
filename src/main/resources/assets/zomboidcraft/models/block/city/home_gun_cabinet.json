@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_gun_glass": "zomboidcraft:block/city/home_gun_glass",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "particle": "zomboidcraft:block/city/home_wood_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark"
+        },
+        "south": {
+          "texture": "#home_wood_dark",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_dark",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        3.5
+      ],
+      "to": [
+        16,
+        16,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_gun_glass"
+        },
+        "south": {
+          "texture": "#home_gun_glass"
+        },
+        "east": {
+          "texture": "#home_gun_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_gun_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_gun_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_gun_glass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

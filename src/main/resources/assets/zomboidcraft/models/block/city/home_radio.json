@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_radio": "zomboidcraft:block/city/home_radio",
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "particle": "zomboidcraft:block/city/home_wood_walnut"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        6.5
+      ],
+      "to": [
+        13,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut"
+        },
+        "east": {
+          "texture": "#home_wood_walnut"
+        },
+        "west": {
+          "texture": "#home_wood_walnut"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        6
+      ],
+      "to": [
+        13,
+        6,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_radio"
+        },
+        "south": {
+          "texture": "#home_radio"
+        },
+        "east": {
+          "texture": "#home_radio"
+        },
+        "west": {
+          "texture": "#home_radio"
+        },
+        "up": {
+          "texture": "#home_radio"
+        },
+        "down": {
+          "texture": "#home_radio",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        6,
+        8
+      ],
+      "to": [
+        10.5,
+        12,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

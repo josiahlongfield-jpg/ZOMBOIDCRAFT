@@ -60,11 +60,12 @@ function program(vs, fs) {
 }
 const MAIN = program(`
   in vec3 pos; in vec3 nrm; in vec2 uv; in vec4 ao;
-  uniform mat4 view, proj, sunMat;
+  uniform mat4 view, proj, sunMat; uniform float unit;
   out vec3 vW; out vec3 vN; out vec2 vUV; out float vAO; out vec4 vSun;
   void main() {
-    vec3 w = pos / 16.0;
-    vW = w; vN = nrm; vUV = vec2(uv.x, 16.0 - uv.y) / 16.0;  // face UVs count up from the bottom; images load top row first vAO = ao.r;
+    vec3 w = pos / unit;
+    // face UVs count up from the bottom; images load top row first
+    vW = w; vN = nrm; vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; vAO = ao.r;
     vSun = sunMat * vec4(w + nrm * 0.06, 1.0);
     gl_Position = proj * view * vec4(w, 1.0);
   }`, `
@@ -95,8 +96,8 @@ const MAIN = program(`
     col = vec4(pow(c, vec3(1.0 / 2.2)), 1.0);
   }`);
 const DEPTH = program(`
-  in vec3 pos; in vec2 uv; uniform mat4 sunMat; out vec2 vUV;
-  void main() { vUV = vec2(uv.x, 16.0 - uv.y) / 16.0;  // face UVs count up from the bottom; images load top row first gl_Position = sunMat * vec4(pos / 16.0, 1.0); }`, `
+  in vec3 pos; in vec2 uv; uniform mat4 sunMat; uniform float unit; out vec2 vUV;
+  void main() { vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; gl_Position = sunMat * vec4(pos / unit, 1.0); }`, `
   in vec2 vUV; uniform sampler2D tex; uniform float cutout; out vec4 col;
   void main() { if (texture(tex, vUV).a < cutout) discard; col = vec4(1.0); }`);
 const SKYP = program(`
@@ -170,6 +171,7 @@ function loadTex(url) {
   gl.clear(gl.DEPTH_BUFFER_BIT);
   gl.useProgram(DEPTH);
   gl.uniformMatrix4fv(gl.getUniformLocation(DEPTH, 'sunMat'), false, sunMat);
+  gl.uniform1f(gl.getUniformLocation(DEPTH, 'unit'), index.unit || 16);
   gl.activeTexture(gl.TEXTURE0);
   for (const p of parts) {
     if (!p.tex) continue;
@@ -201,7 +203,7 @@ function loadTex(url) {
   const u = (n) => gl.getUniformLocation(MAIN, n);
   gl.uniformMatrix4fv(u('view'), false, view);
   gl.uniformMatrix4fv(u('proj'), false, proj);
-  gl.uniformMatrix4fv(u('sunMat'), false, sunMat);
+  gl.uniformMatrix4fv(u('sunMat'), false, sunMat); gl.uniform1f(u('unit'), index.unit || 16);
   gl.uniform3fv(u('eye'), eye); gl.uniform3fv(u('sunDir'), sunDir);
   gl.uniform3fv(u('sky'), SKY); gl.uniform3fv(u('haze'), HAZE);
   gl.uniform1f(u('fogD'), FOG); gl.uniform1f(u('sunI'), SUN);

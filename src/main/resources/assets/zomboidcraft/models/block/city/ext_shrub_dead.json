@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_foliage_dead": "zomboidcraft:block/city/home_foliage_dead",
+    "particle": "zomboidcraft:block/city/home_foliage_dead"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        9,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead"
+        },
+        "south": {
+          "texture": "#home_foliage_dead"
+        },
+        "east": {
+          "texture": "#home_foliage_dead"
+        },
+        "west": {
+          "texture": "#home_foliage_dead"
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    }
+  ]
+}

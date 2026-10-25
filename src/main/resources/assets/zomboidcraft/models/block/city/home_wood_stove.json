@@ -1,0 +1,305 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_cast_iron": "zomboidcraft:block/city/home_cast_iron",
+    "home_hearth": "zomboidcraft:block/city/home_hearth",
+    "home_stove_door": "zomboidcraft:block/city/home_stove_door",
+    "particle": "zomboidcraft:block/city/home_hearth"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        0.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_hearth"
+        },
+        "south": {
+          "texture": "#home_hearth"
+        },
+        "east": {
+          "texture": "#home_hearth"
+        },
+        "west": {
+          "texture": "#home_hearth"
+        },
+        "up": {
+          "texture": "#home_hearth"
+        },
+        "down": {
+          "texture": "#home_hearth",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        4
+      ],
+      "to": [
+        13,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        3.5
+      ],
+      "to": [
+        12,
+        9.5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stove_door"
+        },
+        "south": {
+          "texture": "#home_stove_door"
+        },
+        "east": {
+          "texture": "#home_stove_door"
+        },
+        "west": {
+          "texture": "#home_stove_door"
+        },
+        "up": {
+          "texture": "#home_stove_door"
+        },
+        "down": {
+          "texture": "#home_stove_door"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        11,
+        3.5
+      ],
+      "to": [
+        13.5,
+        12,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        12,
+        8
+      ],
+      "to": [
+        9.5,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_cast_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        0,
+        4.5
+      ],
+      "to": [
+        4.5,
+        2,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.5,
+        0,
+        4.5
+      ],
+      "to": [
+        12.5,
+        2,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        0,
+        12.5
+      ],
+      "to": [
+        4.5,
+        2,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.5,
+        0,
+        12.5
+      ],
+      "to": [
+        12.5,
+        2,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron"
+        },
+        "down": {
+          "texture": "#home_cast_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wardrobe_top": "zomboidcraft:block/city/home_wardrobe_top",
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "particle": "zomboidcraft:block/city/home_wood_walnut"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1.5
+      ],
+      "to": [
+        16,
+        14,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wardrobe_top"
+        },
+        "south": {
+          "texture": "#home_wardrobe_top"
+        },
+        "east": {
+          "texture": "#home_wardrobe_top",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wardrobe_top",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wardrobe_top"
+        },
+        "down": {
+          "texture": "#home_wardrobe_top",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        1
+      ],
+      "to": [
+        16,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut"
+        }
+      }
+    }
+  ]
+}

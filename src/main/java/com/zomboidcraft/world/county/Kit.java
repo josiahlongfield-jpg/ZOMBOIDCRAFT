@@ -26,6 +26,8 @@ final class Kit {
     enum Style {
         /** A town's main street: four lanes, centre line, wide sidewalks straight off the curb. */
         MAIN(7, 0, 4, true, true),
+        /** A downtown cross street: two lanes and a dashed line, wide sidewalks straight off the curb. */
+        CITY(5, 0, 4, true, true),
         /** A collector road: two lanes with a dashed centre line, a grass verge and sidewalks. */
         ROAD(5, 1, 2, true, true),
         /** A residential street: curb, grass verge with the trees, a narrow sidewalk. */

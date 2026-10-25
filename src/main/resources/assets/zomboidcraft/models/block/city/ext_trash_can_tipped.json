@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "ext_soot_top": "zomboidcraft:block/city/ext_soot_top",
+    "home_bin_bag": "zomboidcraft:block/city/home_bin_bag",
+    "particle": "zomboidcraft:block/city/ext_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_soot_top"
+        },
+        "west": {
+          "texture": "#ext_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bin_bag"
+        },
+        "south": {
+          "texture": "#home_bin_bag"
+        },
+        "east": {
+          "texture": "#home_bin_bag",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_bin_bag"
+        },
+        "up": {
+          "texture": "#home_bin_bag"
+        },
+        "down": {
+          "texture": "#home_bin_bag",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

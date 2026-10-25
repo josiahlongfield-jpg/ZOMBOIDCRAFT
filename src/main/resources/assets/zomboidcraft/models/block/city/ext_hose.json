@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "ext_hose": "zomboidcraft:block/city/ext_hose",
+    "particle": "zomboidcraft:block/city/ext_hose"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        11
+      ],
+      "to": [
+        13,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_hose"
+        },
+        "south": {
+          "texture": "#ext_hose"
+        },
+        "east": {
+          "texture": "#ext_hose"
+        },
+        "west": {
+          "texture": "#ext_hose"
+        },
+        "up": {
+          "texture": "#ext_hose"
+        },
+        "down": {
+          "texture": "#ext_hose",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        15
+      ],
+      "to": [
+        11,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    }
+  ]
+}

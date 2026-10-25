@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_fire_brick": "zomboidcraft:block/city/home_fire_brick",
+    "particle": "zomboidcraft:block/city/home_fire_brick"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        8
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_fire_brick"
+        },
+        "south": {
+          "texture": "#home_fire_brick",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_fire_brick"
+        },
+        "west": {
+          "texture": "#home_fire_brick"
+        },
+        "up": {
+          "texture": "#home_fire_brick",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_fire_brick",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

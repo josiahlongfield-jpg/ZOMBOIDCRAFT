@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_book_spines": "zomboidcraft:block/city/home_book_spines",
+    "particle": "zomboidcraft:block/city/home_book_spines"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        -2.5,
+        4
+      ],
+      "to": [
+        13,
+        -0.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines",
+          "uv": [
+            3,
+            14.0,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_book_spines",
+          "uv": [
+            3,
+            14.0,
+            13,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_book_spines",
+          "uv": [
+            4,
+            14.0,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_book_spines",
+          "uv": [
+            4,
+            14.0,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        -0.5,
+        3.5
+      ],
+      "to": [
+        12.5,
+        1.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines",
+          "uv": [
+            3.5,
+            14.0,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_book_spines",
+          "uv": [
+            4,
+            14.0,
+            12.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_book_spines",
+          "uv": [
+            5,
+            14.0,
+            12.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_book_spines",
+          "uv": [
+            3.5,
+            14.0,
+            11,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        1.5,
+        5
+      ],
+      "to": [
+        12,
+        3.0,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines"
+        },
+        "south": {
+          "texture": "#home_book_spines"
+        },
+        "east": {
+          "texture": "#home_book_spines"
+        },
+        "west": {
+          "texture": "#home_book_spines"
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        -2.5,
+        1
+      ],
+      "to": [
+        15,
+        -2.0,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines",
+          "uv": [
+            1,
+            15.5,
+            6,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_book_spines",
+          "uv": [
+            10,
+            15.5,
+            15,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_book_spines",
+          "uv": [
+            12,
+            15.5,
+            15,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_book_spines",
+          "uv": [
+            1,
+            15.5,
+            4,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    }
+  ]
+}

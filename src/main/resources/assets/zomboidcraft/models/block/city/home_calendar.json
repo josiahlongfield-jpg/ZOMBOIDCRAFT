@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_calendar": "zomboidcraft:block/city/home_calendar",
+    "particle": "zomboidcraft:block/city/home_calendar"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        3,
+        0
+      ],
+      "to": [
+        11,
+        13,
+        0.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_calendar",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_calendar"
+        },
+        "east": {
+          "texture": "#home_calendar"
+        },
+        "west": {
+          "texture": "#home_calendar"
+        },
+        "up": {
+          "texture": "#home_calendar"
+        },
+        "down": {
+          "texture": "#home_calendar"
+        }
+      }
+    }
+  ]
+}
