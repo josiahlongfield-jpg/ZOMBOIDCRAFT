@@ -9,6 +9,28 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== shop containers"
+classes 'world/level/block/entity/(RandomizableContainerBlockEntity|BarrelBlockEntity|BaseContainerBlockEntity|BlockEntityType|BlockEntity)\.class|world/RandomizableContainer\.class|inventory/ChestMenu\.class|block/(BaseEntityBlock|EntityBlock|BarrelBlock)\.class|FabricBlockEntityTypeBuilder|storage/(ValueInput|ValueOutput)\.class|world/Containers\.class|ContainerHelper'
+sig net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity '.'
+sig net.minecraft.world.RandomizableContainer '.'
+sig net.minecraft.world.level.block.entity.BaseContainerBlockEntity '.'
+sig net.minecraft.world.level.block.entity.BarrelBlockEntity '.'
+javap -cp "$CP" -p -c net.minecraft.world.level.block.entity.BarrelBlockEntity 2>&1 | grep -E "Method|Field|invoke|ldc" | head -80
+sig net.minecraft.world.level.block.entity.BlockEntityType 'public|Builder'
+sig 'net.minecraft.world.level.block.entity.BlockEntityType$BlockEntitySupplier' '.'
+sig net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder 'public'
+sig net.minecraft.world.level.block.BarrelBlock '.'
+javap -cp "$CP" -p -c net.minecraft.world.level.block.BarrelBlock 2>&1 | grep -E "Method|invoke" | head -60
+sig net.minecraft.world.level.block.EntityBlock '.'
+sig net.minecraft.world.level.block.BaseEntityBlock '.'
+sig net.minecraft.world.level.block.state.BlockBehaviour 'useWithoutItem|useItemOn|onRemove|affectNeighborsAfterRemoval|getMenuProvider|playerDestroy|getAnalogOutputSignal'
+sig net.minecraft.world.inventory.ChestMenu 'public static'
+sig net.minecraft.world.Containers 'public static'
+sig net.minecraft.world.level.storage.loot.LootTable 'KEY_CODEC|public static'
+sig net.minecraft.core.registries.Registries 'LOOT_TABLE|BLOCK_ENTITY'
+sig net.minecraft.world.level.block.entity.BlockEntity 'public|protected'
+exit 0
+
 echo "===== signs"
 for j in $MC_JARS; do unzip -l "$j" | grep -c "class" ; done
 for j in $MC_JARS; do unzip -p "$j" net/minecraft/client/renderer/block/model/BlockElement\$Deserializer.class 2>/dev/null | strings | grep -i "emission\|shade" ; done
