@@ -35,11 +35,6 @@ sig net.minecraft.world.level.LevelHeightAccessor 'public'
 sig net.minecraft.world.level.biome.BiomeManager 'public'
 sig net.minecraft.world.level.levelgen.GenerationStep 'public'
 classes 'world_preset/|worldgen/biome/plains|worldgen/biome/swamp|dimension_type/overworld|ChunkGenerators|BiomeSources|levelgen/presets'
-for j in $MC_JARS; do
-  for f in data/minecraft/worldgen/world_preset/normal.json data/minecraft/worldgen/world_preset/flat.json data/minecraft/worldgen/biome/plains.json data/minecraft/worldgen/biome/swamp.json data/minecraft/tags/worldgen/world_preset/normal.json; do
-    unzip -p "$j" "$f" 2>/dev/null | head -c 6000 && echo " <<< $f"
-  done
-done
 sig net.minecraft.world.level.levelgen.presets.WorldPreset 'public'
 sig net.minecraft.world.level.chunk.ChunkGenerators 'public'
 sig net.minecraft.world.level.biome.BiomeSources 'public'
