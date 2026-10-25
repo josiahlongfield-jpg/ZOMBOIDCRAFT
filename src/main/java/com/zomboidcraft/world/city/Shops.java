@@ -245,6 +245,12 @@ public final class Shops {
             put(x1, 1, z, caseBlock + "[facing=east]");
         }
         put((x0 + x1) / 2, 1, back - 1, "store_register[facing=north]");
+        // a big shop keeps more stock behind the counter: shelving islands, with room to walk
+        for (int x = x0 + 3; x <= x1 - 3; x += 3) {
+            for (int z = z0 + 3; z <= back - 4; z++) {
+                stack(x, z, shelf + "[facing=east]", 2);
+            }
+        }
         for (int z = 2; z <= back; z++) {
             put(left, 1, z, shelf + "[facing=east]");
             put(left, 2, z, board + "[facing=west]");
@@ -276,6 +282,12 @@ public final class Shops {
         for (int x = left; x < door - 1; x++) {
             put(x, 1, 1, "store_chair[facing=south]");
         }
+        // a writing counter for the forms in the lobby, a drinks machine by the wall
+        if (z >= 5) {
+            put(door + (pairDoor ? 3 : 2), 1, 3, "store_table");
+            put(right, 1, z - 1, "store_vending[facing=west]");
+            put(right, 2, z - 1, "store_vending_top[facing=west]");
+        }
         put(left, 2, 3, "store_menu[facing=west]");
         put(right, 2, 3, "store_menu[facing=east]");
         openSign();
@@ -296,6 +308,9 @@ public final class Shops {
         }
         booths(left, back - 5);
         booths(right, back - 5);
+        if (right - left >= 11) {
+            tables(back - 6, 4, left + 3, right - 3);
+        }
         openSign();
     }
 
@@ -312,14 +327,7 @@ public final class Shops {
         for (int x = left + 1; x <= right - 1; x++) {
             put(x, 1, back - 2, x == right - 1 ? "store_register[facing=north]" : "store_counter[facing=north]");
         }
-        // a few tables with chairs either side
-        for (int z = 2; z <= back - 5; z += 3) {
-            for (int x : new int[] {left + 1, right - 1}) {
-                put(x, 1, z + 1, "store_table");
-                put(x, 1, z, "store_chair[facing=south]");
-                put(x, 1, z + 2, "store_chair[facing=north]");
-            }
-        }
+        tables(back - 5, 3);
         openSign();
     }
 
@@ -401,6 +409,26 @@ public final class Shops {
                 put(x + 1, 1, z, "store_shelf_fallen[facing=north]");
                 p.setIfAir(x + 1, 1, z + 1, "store_spill");
                 return;
+            }
+        }
+    }
+
+    /** Café tables with a chair either side, in a grid over the floor from the window back to z1. */
+    private void tables(int z1, int stepX) {
+        tables(z1, stepX, left + 1, right - 1);
+    }
+
+    private void tables(int z1, int stepX, int x0, int x1) {
+        for (int z = 2; z + 2 <= z1; z += 3) {
+            for (int x = x0; x <= x1; x += stepX) {
+                if (Math.abs(x - door) <= (pairDoor ? 2 : 1) || !air(x, 1, z + 1)) {
+                    continue;  // keep the way in from the door clear
+                }
+                put(x, 1, z + 1, "store_table");
+                put(x, 1, z, "store_chair[facing=south]");
+                if (rng.nextDouble() < 0.8) {
+                    put(x, 1, z + 2, rng.nextDouble() < 0.15 ? "store_chair[facing=east]" : "store_chair[facing=north]");
+                }
             }
         }
     }

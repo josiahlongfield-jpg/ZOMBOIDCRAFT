@@ -256,11 +256,12 @@ def counter_top(seed=311):
 
 def register(seed=312):
     t = tex(seed, (52, 52, 54))
-    rect(t, 6, 6, 40, 26, (28, 60, 40), 0.95, 0.9)  # little green display
-    for y in range(32, 58, 7):
-        for x in range(6, 46, 9):
-            rect(t, x, y, x + 6, y + 5, (196, 192, 180), 1.0, 0.5)
-    rect(t, 48, 30, 60, 60, (150, 30, 30), 0.95)
+    rect(t, 8, 6, 40, 20, (28, 60, 40), 0.95, 0.9)  # little green display
+    for y in range(28, 56, 5):  # a keypad of small worn keys
+        for x in range(8, 42, 5):
+            rect(t, x, y, x + 3, y + 3, (176, 172, 160), 1.0, 0.5)
+    rect(t, 46, 28, 58, 40, (150, 30, 30), 0.95)  # the drawer key
+    rect(t, 46, 44, 58, 56, (36, 36, 38), 0.95)  # receipt slot
     return age(t, 0.3)
 
 
@@ -442,7 +443,7 @@ def safe(front, seed):
 
 
 def teller_glass(seed=380):
-    """Bulletproof teller glass: thick, scratched, a speaking grille, one spider-webbed hit."""
+    """Bulletproof teller glass: thick, scratched, a speaking grille."""
     t = P.glass(seed, (70, 80, 84))
     t.alpha[:] = 110
     rect(t, 0, 0, N, 3, (90, 92, 92), 1.0)
@@ -452,14 +453,12 @@ def teller_glass(seed=380):
     t.c[grille] = (150, 150, 146)
     t.alpha[grille] = 255
     rng = t.rng
-    cx, cy = rng.uniform(16, 48), rng.uniform(10, 30)  # a hit that didn't go through
-    for k in range(10):
-        a = k / 10 * np.pi * 2 + rng.uniform(0, 0.4)
-        for s in range(1, int(rng.uniform(8, 18))):
-            x, y = int(cx + np.cos(a) * s), int(cy + np.sin(a) * s)
-            if 0 <= x < N and 0 <= y < N:
-                t.c[y, x] = (210, 214, 214)
-                t.alpha[y, x] = 230
+    for _ in range(6):  # faint scratches from years of keys and coins
+        x, y = rng.integers(4, N - 20), rng.integers(6, N - 8)
+        for k in range(int(rng.uniform(6, 16))):
+            if x + k < N:
+                t.c[y, x + k] = (120, 128, 130)
+                t.alpha[y, x + k] = 140
     return t
 
 
