@@ -1,5 +1,6 @@
 package com.zomboidcraft.combat;
 
+import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
