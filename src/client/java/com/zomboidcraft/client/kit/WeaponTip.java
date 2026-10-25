@@ -88,8 +88,8 @@ public final class WeaponTip implements ClientTooltipComponent {
     }
 
     @Override
-    public void extractImage(Font font, int left, int top, int width, int tall, GuiGraphicsExtractor g) {
-        int x = left - PAD, y = top - PAD;
+    public void extractImage(Font font, int innerX, int innerY, int width, int tall, GuiGraphicsExtractor g) {
+        int x = innerX - PAD, y = innerY - PAD;
 
         // the band
         g.fill(x, y, x + W, y + 34, rarity.band);
