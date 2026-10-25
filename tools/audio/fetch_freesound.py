@@ -90,6 +90,8 @@ QUERIES = {
     # guns, round 3: the Remington 700-style bolt-action hunting rifle
     "gun_bolt": ["hunting rifle shot", "30-06 rifle shot", "308 rifle gunshot", "bolt action rifle shot", "deer rifle shot"],
     "gun_bolt_foley": ["bolt action rifle cycling", "rifle bolt open close", "bolt action reload", "rifle magazine insert"],
+    "gun_sup_sniper": ["suppressed sniper rifle", "silenced sniper shot", "suppressed rifle gunshot", "silencer rifle shot",
+                       "suppressed 308", "subsonic rifle suppressed", "silenced rifle"],
     "gun_bolt_distant": ["distant rifle shot", "rifle shot echo valley", "hunting gunshot far away"],
     # cars: old American saloons and trucks, worn rather than sporty
     "car_start": ["car engine start", "old car starting", "truck engine start", "car ignition start"],
