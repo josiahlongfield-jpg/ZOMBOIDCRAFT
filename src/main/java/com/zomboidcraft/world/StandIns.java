@@ -58,6 +58,21 @@ public final class StandIns {
         put("drywall", "calcite");
         put("wood_panel", "dark_oak_planks");
         put("awning", "dark_oak_slab[type=top]");
+        for (String c : new String[] {"red", "blue", "maroon", "yellow", "teal"}) {
+            put("awning_" + c, "dark_oak_slab[type=top]");
+        }
+        put("plaster_sage", "green_terracotta");
+        put("plaster_cream", "white_terracotta");
+        put("plaster_blue", "cyan_terracotta");
+        put("plaster_rose", "pink_terracotta");
+        put("brick_buff", "cut_sandstone");
+        put("brick_orange", "bricks");
+        put("shop_paint_red", "red_terracotta");
+        put("shop_paint_navy", "blue_terracotta");
+        put("shop_paint_teal", "cyan_terracotta");
+        put("shop_paint_black", "black_terracotta");
+        put("shop_paint_mustard", "yellow_terracotta");
+        put("shop_paint_green", "green_terracotta");
         put("stairs_concrete", "stone_brick_stairs");
         put("fire_door", "copper_door");
         put("shop_door", "copper_door");
@@ -139,6 +154,9 @@ public final class StandIns {
             props = new HashMap<>();
         } else {
             id = TABLE.get(name);
+            if (id == null && (name.startsWith("sign_") || name.startsWith("blade_") || name.startsWith("neon_"))) {
+                return Blocks.AIR.defaultBlockState();  // shop signs only come with the real blocks
+            }
             if (id == null) {
                 return Blocks.STONE.defaultBlockState();
             }

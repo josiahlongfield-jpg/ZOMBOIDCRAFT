@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "awning_maroon": "zomboidcraft:block/city/awning_maroon",
+    "particle": "zomboidcraft:block/city/awning_maroon"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#awning_maroon",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#awning_maroon",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#awning_maroon",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#awning_maroon",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#awning_maroon"
+        },
+        "down": {
+          "texture": "#awning_maroon"
+        }
+      }
+    }
+  ]
+}

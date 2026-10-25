@@ -31,17 +31,26 @@ public final class Decay {
             Map.entry("asphalt", new String[] {"b", "crack", "patch", "moss"}),
             Map.entry("sidewalk", new String[] {"b", "moss", "stain"}),
             Map.entry("drywall", new String[] {"b", "stain", "soot", "peel", "brick"}),
+            Map.entry("plaster_sage", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("plaster_cream", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("plaster_blue", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("plaster_rose", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("brick_buff", new String[] {"b", "crack", "moss", "soot", "stain"}),
+            Map.entry("brick_orange", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("floor_concrete", new String[] {"b", "crack", "moss"}),
             Map.entry("roof", new String[] {"b", "moss"}),
             Map.entry("lobby_floor_white", new String[] {"b", "crack"}),
             Map.entry("lobby_floor_dark", new String[] {"b", "crack"}));
     private static final Set<String> WALLS = Set.of("brick_red", "brick_dark", "concrete_panel", "concrete_dark",
-            "stone_trim", "steel_mullion", "glass_spandrel", "drywall");
+            "stone_trim", "steel_mullion", "glass_spandrel", "drywall", "plaster_sage", "plaster_cream", "plaster_blue",
+            "plaster_rose", "brick_buff", "brick_orange", "shop_paint_red", "shop_paint_navy", "shop_paint_teal",
+            "shop_paint_black", "shop_paint_mustard", "shop_paint_green");
     private static final Set<String> WINDOWS = Set.of("window", "window_lit", "window_broken", "window_empty",
             "boarded_window");
     private static final Set<String> FLOORS = Set.of("office_floor", "lobby_floor_white", "lobby_floor_dark",
             "floor_concrete");
-    private static final Set<String> LEDGES = Set.of("stone_trim", "sill", "roof", "awning", "concrete_dark");
+    private static final Set<String> LEDGES = Set.of("stone_trim", "sill", "roof", "awning", "concrete_dark",
+            "awning_red", "awning_blue", "awning_maroon", "awning_yellow", "awning_teal");
 
     private final BlockSink sink;
     private final SplittableRandom rng;

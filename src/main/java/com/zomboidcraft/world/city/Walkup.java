@@ -12,7 +12,13 @@ import java.util.SplittableRandom;
 public final class Walkup {
     public static final int FLOOR = 4;
 
-    private static final String[] WALLS = {"brick_red", "brick_red", "brick_dark", "concrete_panel"};
+    private static final String[] WALLS = {"brick_red", "brick_red", "brick_dark", "concrete_panel", "brick_buff",
+            "brick_orange", "plaster_sage", "plaster_cream", "plaster_blue", "plaster_rose"};
+    /** Painted shopfronts and faded awnings: the streets stay grey, the shops break them up. */
+    private static final String[] SHOP_PAINT = {"shop_paint_red", "shop_paint_navy", "shop_paint_teal",
+            "shop_paint_black", "shop_paint_mustard", "shop_paint_green"};
+    private static final String[] AWNINGS = {"awning", "awning_red", "awning_blue", "awning_maroon", "awning_yellow",
+            "awning_teal"};
 
     private final Placer p;
     private final SplittableRandom rng;
@@ -41,6 +47,21 @@ public final class Walkup {
         if (w >= 9 && floors >= 3) {
             fireEscape(roofY);
         }
+        if (floors >= 3 && rng.nextDouble() < 0.4) {
+            neonBlade(roofY);
+        }
+    }
+
+    private void neonBlade(int roofY) {
+        // hung off the left-hand corner pier (as you face it), above the shop sign: the fire
+        // escape never reaches that corner, and next door's blade never hangs beside it
+        int pick = Signs.pickBlade(rng);
+        int n = Signs.bladeLength(pick);
+        int bottom = FLOOR + 1;
+        if (bottom + n > roofY) {
+            return;
+        }
+        Signs.blade(p, rng, pick, w - 1, bottom, -1);
     }
 
     private boolean windowColumn(int along, int length) {
@@ -112,19 +133,29 @@ public final class Walkup {
 
     private void shopfront() {
         // pilasters at the ends, glass between, a glass door in the middle (double doors in a
-        // wide shop), sign band above, and a steel back door onto the yard
+        // wide shop), a sign or an awning over the windows, and a steel back door onto the yard
         int door = w / 2;
         boolean wide = w >= 12;
+        boolean sign = rng.nextDouble() < 0.65;
+        String trim = rng.nextDouble() < 0.7 ? SHOP_PAINT[rng.nextInt(SHOP_PAINT.length)] : "stone_trim";
+        String awning = AWNINGS[rng.nextInt(AWNINGS.length)];
         for (int x = 0; x < w; x++) {
             boolean pier = x == 0 || x == w - 1;
             for (int y = 1; y <= 2; y++) {
                 String glass = rng.nextDouble() < 0.25 ? "window_broken" : rng.nextDouble() < 0.12 ? "boarded_window" : "window";
-                p.set(x, y, 0, pier ? "stone_trim" : glass);
+                p.set(x, y, 0, pier ? trim : glass);
             }
-            p.set(x, 3, 0, "stone_trim");
-            if (!pier) {
-                p.set(x, 3, -1, "awning[facing=north]");
+            p.set(x, 3, 0, trim);
+            if (!pier && !sign) {
+                p.set(x, 3, -1, awning + "[facing=north]");
             }
+        }
+        if (sign) {
+            Signs.fascia(p, rng, 1, 3, -1, w - 2);
+        }
+        // a neon OPEN sign behind the glass at the left end, as you face the shop
+        if (furnished && w >= 8 && rng.nextDouble() < 0.3) {
+            Signs.open(p, rng, w - 2, 2, 1);
         }
         if (wide) {
             Doors.pair(p, rng, door - 1, 1, 0, Doors.SHOP, "south");

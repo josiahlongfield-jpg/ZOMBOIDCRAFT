@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "neon_open_0_off": "zomboidcraft:block/city/neon_open_0_off",
+    "particle": "zomboidcraft:block/city/neon_open_0_off"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#neon_open_0_off",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#neon_open_0_off"
+        },
+        "east": {
+          "texture": "#neon_open_0_off",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#neon_open_0_off",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#neon_open_0_off",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#neon_open_0_off",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

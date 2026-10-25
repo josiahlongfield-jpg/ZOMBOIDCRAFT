@@ -163,6 +163,13 @@ PHOTO = {
     "floor_concrete": lambda: photo("Concrete047A", span=2, sat=0.6, bright=0.85),
     "brick_red": lambda: rain_streaks(photo("Bricks085", span=2, sat=0.8, bright=0.82, height=1.2), 0.4),
     "brick_dark": lambda: rain_streaks(photo("Bricks097", span=2, sat=0.75, bright=0.8, height=1.2), 0.4),
+    # colour for the smaller buildings: old paint over brick, buff and orange brick
+    "plaster_sage": lambda: rain_streaks(photo("PaintedPlaster010", span=2, sat=0.75, bright=0.82, height=1.0), 0.5),
+    "plaster_cream": lambda: rain_streaks(photo("PaintedPlaster016", span=2, sat=0.7, bright=0.8, height=1.0), 0.5),
+    "plaster_blue": lambda: rain_streaks(recolour(photo("PaintedPlaster016", span=2, offset=(0.55, 0.6), sat=0.7, bright=0.8, height=1.0), (112, 132, 150), 30), 0.5),
+    "plaster_rose": lambda: rain_streaks(photo("peeling_painted_wall", span=2, sat=0.7, bright=0.82), 0.5),
+    "brick_buff": lambda: rain_streaks(photo("Bricks062", span=2, sat=0.5, bright=0.82, height=1.2), 0.4),
+    "brick_orange": lambda: rain_streaks(photo("Bricks090", span=2, sat=0.7, bright=0.78, height=1.2), 0.4),
     "stone_trim": lambda: rain_streaks(details(photo("Concrete044D", span=2, sat=0.5, bright=1.05, tint=(1.04, 1.0, 0.94)), P.stone_trim(), 0.8)),
     "stair_concrete": lambda: details(photo("Concrete044D", span=2, offset=(0.6, 0.6)), P.stair_concrete(), 1.0),
     "steel_mullion": lambda: details(photo("Metal024", span=2, sat=0.5, bright=0.45, metal=True), P.steel_mullion(), 0.6),
@@ -327,6 +334,12 @@ VARIANTS = {
     "asphalt": ["b", "crack", "patch", "moss"],
     "sidewalk": ["b", "moss", "stain"],
     "drywall": ["b", "stain", "soot"],
+    "plaster_sage": ["b", "crack", "moss", "soot", "stain"],
+    "plaster_cream": ["b", "crack", "moss", "soot", "stain"],
+    "plaster_blue": ["b", "crack", "moss", "soot", "stain"],
+    "plaster_rose": ["b", "crack", "moss", "soot", "stain"],
+    "brick_buff": ["b", "crack", "moss", "soot", "stain"],
+    "brick_orange": ["b", "crack", "moss", "soot", "stain"],
     "floor_concrete": ["b", "crack", "moss"],
     "roof_gravel": ["b", "moss"],
     "marble_white": ["b", "crack"],
@@ -956,6 +969,60 @@ def match_tone(t, base_name, amount=0.85):
         target = (c - c.mean()) * (r.std() / max(c.std(), 1e-3)) ** amount + r.mean()
         t.c[..., k] = c * (1 - amount) + target * amount
     return t
+
+
+# ---------------------------------------------------------------- shopfront colour
+# painted timber for shopfront piers and fascias, and awnings in faded colours: the street stays
+# grey and wet, the shops break it up
+
+def shop_paint(material, colour=None, offset=(0.2, 0.3), sat=0.7, bright=0.75):
+    def build_it():
+        t = photo(material, span=2, offset=offset, sat=sat, bright=bright)
+        if colour:
+            recolour(t, colour, 40)
+        return rain_streaks(t, 0.7)
+    return build_it
+
+
+SHOP_PAINT = {
+    "shop_paint_red": shop_paint("PaintedWood003", sat=0.6, bright=0.62),
+    "shop_paint_navy": shop_paint("PaintedWood007B", sat=0.75, bright=0.8),
+    "shop_paint_teal": shop_paint("PaintedMetal006", sat=0.6, bright=0.7),
+    "shop_paint_black": shop_paint("PaintedWood005", bright=0.9),
+    "shop_paint_mustard": shop_paint("PaintedPlaster015", (168, 132, 52), bright=0.85),
+    "shop_paint_green": shop_paint("PaintedPlaster015", (52, 88, 60), offset=(0.6, 0.5), bright=0.85),
+}
+
+
+def awning_colour(seed, a, b=None, width=8):
+    """Torn canvas awning: one colour, or stripes of two, sun-faded and rain-streaked."""
+    def build_it():
+        t = P.Tex(seed, a)
+        if b is not None:
+            t.c[:, (np.arange(N) // width) % 2 == 1] = b
+        t.vary(0.12)
+        t.mix(np.clip(P.fbm(t.rng) + 0.3, 0, 1), (150, 145, 135), 0.25)  # faded in patches
+        t.grime(0.55)
+        t.streaks(0.9)
+        t.smooth[:] = 0.1
+        return t
+    return build_it
+
+
+AWNINGS = {
+    "awning_red": awning_colour(47, (128, 34, 30), (186, 176, 156)),
+    "awning_blue": awning_colour(48, (40, 62, 104), (180, 178, 168)),
+    "awning_maroon": awning_colour(49, (92, 30, 38)),
+    "awning_yellow": awning_colour(50, (184, 146, 50), (190, 184, 166), 6),
+    "awning_teal": awning_colour(51, (36, 92, 90)),
+}
+EXTRA.update(SHOP_PAINT)
+EXTRA.update(AWNINGS)
+
+
+# shop signs and neon, drawn by signs.py
+import signs  # noqa: E402
+EXTRA.update(signs.textures())
 
 
 def build(name):

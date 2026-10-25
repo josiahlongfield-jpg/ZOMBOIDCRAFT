@@ -33,7 +33,7 @@ NS = "zomboidcraft"
 FACING_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
 DIRS = ["north", "south", "east", "west", "up", "down"]
 # blocks you walk through and can build over: plants, wall and floor decals
-DECOR_PREFIX = ("graffiti_",)
+DECOR_PREFIX = ("graffiti_", "sign_", "blade_", "neon_")
 DECOR = {"vines", "paper", "glass_shards", "blood_splat", "scorch", "leaf_litter", "banner_skull"}
 SOUNDS = [  # first keyword in the block's name or textures wins
     (("window", "glass", "cabin"), "GLASS"),
@@ -43,7 +43,7 @@ SOUNDS = [  # first keyword in the block's name or textures wins
     (("dirt", "burnt_ground", "rubble"), "GRAVEL"),
     (("car_", "steel", "metal", "rail", "grate", "chainlink", "barbed", "ladder", "hvac", "dumpster",
       "barrel", "shutter", "pole", "streetlight", "rebar", "elevator", "fire_door", "filing", "train",
-      "water_tank", "lantern", "light", "rust", "girder", "chair"), "METAL"),
+      "water_tank", "lantern", "light", "rust", "girder", "chair", "sign_", "blade_"), "METAL"),
 ]
 
 
