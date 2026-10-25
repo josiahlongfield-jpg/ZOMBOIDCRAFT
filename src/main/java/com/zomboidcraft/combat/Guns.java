@@ -102,9 +102,9 @@ public final class Guns {
         st.flashLeft = FLASH_TICKS;
         setModelData(gun, 0, 1);
 
-        // the bang: heard by others and the zombies; the shooter's client plays its own copy at once
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
-                4f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once
+        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
+                1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         Noise.emit(level, player.position(), config.shotNoise);

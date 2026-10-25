@@ -8,7 +8,10 @@ import net.minecraft.sounds.SoundEvent;
 
 /** Weapon sounds: recorded CC0 samples, listed in assets/zomboidcraft/sounds.json and credited in CREDITS.md. */
 public final class ModSounds {
+    /** The shooter's own shot, played on their client. */
     public static final SoundEvent RIFLE_SHOT = register("weapon.rifle.shot");
+    /** What everyone else hears of a shot, out to 128 blocks. */
+    public static final SoundEvent RIFLE_SHOT_DISTANT = register("weapon.rifle.shot_distant", 128f);
     public static final SoundEvent RIFLE_DRY = register("weapon.rifle.dry");
     public static final SoundEvent RIFLE_MAG_OUT = register("weapon.rifle.mag_out");
     public static final SoundEvent RIFLE_MAG_IN = register("weapon.rifle.mag_in");
@@ -29,6 +32,11 @@ public final class ModSounds {
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
+    }
+
+    private static SoundEvent register(String name, float range) {
+        Identifier id = ZomboidCraft.id(name);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createFixedRangeEvent(id, range));
     }
 
     public static void register() {
