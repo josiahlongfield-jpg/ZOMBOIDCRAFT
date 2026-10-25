@@ -44,7 +44,7 @@ public final class Ambience {
     private static final int ROOF_HEIGHT = 24, WINDOW_REACH = 4;
 
     private static float indoors, nearWindow;
-    private static int nextCreak = 400, nextCrow = 600, nextDistant = 1600;
+    private static int nextCreak = 400, nextCrow = 2400, nextDistant = 6000;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(Ambience::tick);
@@ -88,13 +88,13 @@ public final class Ambience {
             }
         }
         if (--nextCrow <= 0) {
-            nextCrow = between(30, 90);
+            nextCrow = between(120, 300);  // Josiah: animals and far-off guns much rarer
             if (night < 0.3f && rain < 0.6f) {
                 shot(client, CROW, around(player.getEyePosition(), 20, 40, 4, 12), (0.5f + RANDOM.nextFloat() * 0.5f) * (1 - 0.5f * indoors));
             }
         }
         if (--nextDistant <= 0) {
-            nextDistant = between(60, 180);
+            nextDistant = between(360, 720);
             shot(client, DISTANT, around(player.getEyePosition(), 60, 90, 0, 10), 0.8f + RANDOM.nextFloat() * 0.2f);
         }
     }
