@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_gen_b": "zomboidcraft:block/city/bunk_gen_b",
+    "bunk_gen_green": "zomboidcraft:block/city/bunk_gen_green",
+    "bunk_skid": "zomboidcraft:block/city/bunk_skid",
+    "particle": "zomboidcraft:block/city/bunk_skid"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_skid"
+        },
+        "south": {
+          "texture": "#bunk_skid"
+        },
+        "east": {
+          "texture": "#bunk_skid",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_skid",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_skid"
+        },
+        "down": {
+          "texture": "#bunk_skid",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        3
+      ],
+      "to": [
+        12,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_gen_b"
+        },
+        "south": {
+          "texture": "#bunk_gen_b"
+        },
+        "east": {
+          "texture": "#bunk_gen_green"
+        },
+        "west": {
+          "texture": "#bunk_gen_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_gen_green"
+        },
+        "down": {
+          "texture": "#bunk_gen_green"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        2,
+        1
+      ],
+      "to": [
+        15,
+        15,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_gen_b"
+        },
+        "south": {
+          "texture": "#bunk_gen_green"
+        },
+        "east": {
+          "texture": "#bunk_gen_green"
+        },
+        "west": {
+          "texture": "#bunk_gen_green"
+        },
+        "up": {
+          "texture": "#bunk_gen_green"
+        },
+        "down": {
+          "texture": "#bunk_gen_green"
+        }
+      }
+    }
+  ]
+}

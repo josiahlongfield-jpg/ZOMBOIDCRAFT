@@ -1061,6 +1061,8 @@ import exterior  # noqa: E402
 exterior.register(sys.modules[__name__])
 import basement  # noqa: E402
 basement.register(sys.modules[__name__])
+import bunker  # noqa: E402
+bunker.register(sys.modules[__name__])
 
 
 def build(name):

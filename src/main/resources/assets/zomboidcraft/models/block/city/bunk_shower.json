@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_wheel": "zomboidcraft:block/city/bunk_wheel",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        14.5
+      ],
+      "to": [
+        9,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        13,
+        10
+      ],
+      "to": [
+        9,
+        15,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        12,
+        9
+      ],
+      "to": [
+        10.5,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        13.5
+      ],
+      "to": [
+        11,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_wheel"
+        },
+        "south": {
+          "texture": "#bunk_wheel"
+        },
+        "east": {
+          "texture": "#bunk_wheel"
+        },
+        "west": {
+          "texture": "#bunk_wheel"
+        },
+        "up": {
+          "texture": "#bunk_wheel"
+        },
+        "down": {
+          "texture": "#bunk_wheel"
+        }
+      }
+    }
+  ]
+}

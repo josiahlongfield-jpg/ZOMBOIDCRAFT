@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_tank": "zomboidcraft:block/city/bunk_tank",
+    "bunk_tank_top": "zomboidcraft:block/city/bunk_tank_top",
+    "particle": "zomboidcraft:block/city/bunk_tank"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tank"
+        },
+        "south": {
+          "texture": "#bunk_tank"
+        },
+        "east": {
+          "texture": "#bunk_tank"
+        },
+        "west": {
+          "texture": "#bunk_tank"
+        },
+        "up": {
+          "texture": "#bunk_tank_top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_tank_top",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
