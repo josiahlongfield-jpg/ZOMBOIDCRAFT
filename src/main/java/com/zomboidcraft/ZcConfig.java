@@ -43,6 +43,8 @@ public final class ZcConfig {
         public boolean weight = true;
         /** Kilograms you carry before Heavy Load sets in. */
         public double capacity = 8;
+        /** A bag you pick up goes straight on when its place (back, vest, waist, off hand) is free. */
+        public boolean autoWear = true;
     }
 
     public static class Zombies {

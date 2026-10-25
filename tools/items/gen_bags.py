@@ -161,17 +161,18 @@ def build_duffel(m):
 
 
 def build_carrier(m):
-    m.box([-4.5, 0, 0.5], [4.5, 10, 2], 'body')                           # front plate bag
-    m.box([-4.5, 0, -3], [4.5, 10, -1.5], 'body')                         # back plate bag
+    # the plates sit a torso's depth apart (4.6 px), so the carrier wraps the body when it is worn
+    m.box([-4.5, 0, 2.3], [4.5, 10, 3.6], 'body')                         # front plate bag
+    m.box([-4.5, 0, -3.6], [4.5, 10, -2.3], 'body')                       # back plate bag
     for x in (-3.6, 2.4):                                                 # shoulder straps
-        m.box([x, 9.6, -3], [x + 1.2, 10.8, 2], 'strap')
-    for x in (-4.7, 4.1):                                                 # cummerbund
-        m.box([x, 1.5, -3], [x + 0.6, 6, 2], 'strap')
+        m.box([x, 9.6, -3.6], [x + 1.2, 10.8, 3.6], 'strap')
+    for x in (-5.1, 4.5):                                                 # cummerbund
+        m.box([x, 1.5, -3.6], [x + 0.6, 6, 3.6], 'strap')
     for i, x in enumerate((-3.6, -1.1, 1.4)):                             # three magazine pouches
-        m.box([x, 1.2, 2], [x + 2.2, 5.8, 3.4], 'pouch')
-        m.box([x - 0.05, 5.2, 1.95], [x + 2.25, 6.3, 3.5], 'pouch')
-    m.box([-3.0, 7.0, 2.0], [3.0, 9.2, 2.4], 'velcro')                    # name tape panel
-    m.box([-1.8, 7.5, 2.38], [1.8, 8.7, 2.5], 'patch')
+        m.box([x, 1.2, 3.6], [x + 2.2, 5.8, 5.0], 'pouch')
+        m.box([x - 0.05, 5.2, 3.55], [x + 2.25, 6.3, 5.1], 'pouch')
+    m.box([-3.0, 7.0, 3.6], [3.0, 9.2, 4.0], 'velcro')                    # name tape panel
+    m.box([-1.8, 7.5, 3.98], [1.8, 8.7, 4.1], 'patch')
 
 
 def build_fanny(m):
