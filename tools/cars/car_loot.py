@@ -66,7 +66,8 @@ TABLES = {
 
 # a rare find on top
 RARE = {
-    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:hunting_rifle", 1),
+    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1),
+              (f"{ZC}:hunting_rifle", 1),
               (f"{ZC}:machete", 1), (f"{ZC}:katana", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:pistol_case", 2), (f"{ZC}:ammo_can", 1)],
     "police": [(f"{ZC}:assault_rifle", 2)],
     "swat": [("totem_of_undying", 1), ("diamond_chestplate", 1)],

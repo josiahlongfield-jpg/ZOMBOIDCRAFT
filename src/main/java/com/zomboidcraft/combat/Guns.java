@@ -50,6 +50,8 @@ import net.minecraft.world.phys.Vec3;
  * chamber), until it's full, the shells run out or the trigger is pulled; then step 3 while the pump is worked
  * to chamber one, if it was empty. Each shot is a spread of pellets, and the pump is worked after it.
  * A bolt gun (the hunting rifle) reloads like a magazine gun, its bolt worked at step 3, and after each shot.
+ * A gun that opens to load (the double-barrel) loads like a tube gun with its action open (step 1, its spent shells
+ * coming out as it opens), then shuts at step 3 however it stopped; the trigger only stops the loading.
  */
 public final class Guns {
     private static final int FLASH_TICKS = 2;
@@ -99,8 +101,8 @@ public final class Guns {
                 return;
             }
             // the trigger stops the loading: with a shell chambered it goes off at once, onto an empty chamber
-            // the pump is worked first
-            if (st.needsCharge) {
+            // the pump is worked first; a gun open to load is shut first
+            if (st.needsCharge || type.opens) {
                 stopLoading(st);
                 return;
             }
@@ -118,7 +120,7 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        if (config.jams && !type.manual() && player.getRandom().nextFloat() < 0.08f * wear * wear) {
+        if (config.jams && !type.manual() && !type.tube && player.getRandom().nextFloat() < 0.08f * wear * wear) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
@@ -136,7 +138,7 @@ public final class Guns {
                 suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
-        } else {
+        } else if (!type.opens) {                       // a double keeps its empties till it's opened
             level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
@@ -357,10 +359,15 @@ public final class Guns {
         player.stopUsingItem();
         st.reloadTick = 0;
         st.reloading = type;
-        st.needsCharge = g.rounds() == 0;
+        st.needsCharge = !type.opens && g.rounds() == 0;
         st.loadStopped = false;
         st.loading = gun;
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
+        if (type.opens) {
+            // thrown open: the empties come out as the barrels drop
+            sound(player, type.magOut());
+            st.caseAt = player.level().getGameTime() + type.raise / 2;
+        }
     }
 
     private static void tickLoading(ServerPlayer player, ItemStack gun, GunType type, State st) {
@@ -381,6 +388,18 @@ public final class Guns {
             return;
         }
         int since = st.reloadTick - st.stopTick;
+        if (type.opens) {
+            // shut again: snapped closed halfway through
+            if (since == 1) {
+                setModelData(gun, 3, 0);
+            } else if (since == 1 + type.close / 2) {
+                sound(player, type.charged());
+            } else if (since >= 1 + type.close) {
+                endReload(gun, st);
+                Skills.addXp(player, Skill.AIMING, 1);
+            }
+            return;
+        }
         if (!st.needsCharge) {
             endReload(gun, st);
         } else if (since == 1) {
@@ -463,7 +482,7 @@ public final class Guns {
             if (st.caseAt >= 0 && player.level().getGameTime() >= st.caseAt) {
                 st.caseAt = -1;
                 GunType held = GunType.of(gun);
-                if (held != null && held.manual()) {
+                if (held != null && (held.manual() || held.opens)) {
                     // a shotgun hull lands with a dull plastic bounce, a rifle case with a ring
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
                             SoundSource.PLAYERS, held.tube ? 0.35f : 0.4f,

@@ -255,6 +255,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:double_barrel",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.2,
+                "max": 0.8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:hunting_rifle",
           "weight": 1,
           "functions": [

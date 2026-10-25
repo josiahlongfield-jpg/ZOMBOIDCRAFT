@@ -343,13 +343,15 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         writeModelData(gun, floats.isEmpty() ? 0 : floats.get(0), floats.size() < 2 ? 0 : floats.get(1));
     }
 
-    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot. */
+    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot, then its finish. */
     static void writeModelData(ItemStack gun, float step, float flash) {
         List<String> keys = new ArrayList<>();
         for (Slot slot : Slot.values()) {
             String key = key(gun, slot);
             keys.add(key == null ? EMPTY_KEY : key);
         }
+        String finish = GunFinish.key(gun);
+        keys.add(finish == null ? EMPTY_KEY : finish);
         gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(step, flash), List.of(), keys, List.of()));
     }
 

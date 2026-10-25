@@ -121,8 +121,9 @@ public final class CombatClient {
         boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
         ClientPlayNetworking.send(new CombatNet.Fire(aiming));
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-        // a tube gun being loaded goes off at once when there's a shell chambered (step 1; 1.5 is onto an empty one)
-        boolean busy = reloading(gun) && !(type.tube && step(gun) == 1f);
+        // a tube gun being loaded goes off at once when there's a shell chambered (step 1; 1.5 is onto an empty one);
+        // a gun open to load has to be shut first
+        boolean busy = reloading(gun) && !(type.tube && !type.opens && step(gun) == 1f);
         if (!g.mag() || g.rounds() <= 0 || g.jammed() || busy) {
             return;     // the server answers with the dry click
         }

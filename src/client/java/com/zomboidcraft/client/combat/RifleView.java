@@ -35,7 +35,8 @@ import org.joml.Vector3f;
  * {@link RifleArms}). A pistol's slide runs back with every shot and locks open on the last one. A pump shotgun
  * is canted over to load, and the off hand pushes its shells into the loading port one at a time, then rides the
  * pump to work it after each shot. A bolt gun's shooting hand leaves the stock after each shot to work the bolt (lift,
- * back, home, down) and goes back to it, and does the same after a fresh magazine on an empty gun. Each gun's numbers
+ * back, home, down) and goes back to it, and does the same after a fresh magazine on an empty gun. A double-barrel is
+ * broken open to load, its empties thrown clear, a shell pushed into each chamber, and snapped shut. Each gun's numbers
  * are its {@link GunRig}.
  *
  * The item model still picks a pose for each reload step, so third person and other views stay right. Here the
@@ -67,6 +68,8 @@ public final class RifleView {
     /** A tube gun's loading: when it stopped, and when the pump was taken up after it (ages, or -1); shells in it. */
     private static float stopAt = -1, pumpFrom = -1;
     private static int shells;
+    /** A gun that opens to load: the rounds in it when it was opened (the rest of its chambers held empties). */
+    private static int shellsAtOpen;
     /**
      * How far the gun is turned to point its rail at what's under the crosshair (0 to 1, eased): at the hip with its
      * light or laser on, so the beam runs along the barrel to the crosshair.
@@ -93,6 +96,8 @@ public final class RifleView {
     /** The last shot: its tick, then its first frame; whether it flashed, and whether it was the last round. */
     private static final float FLASH_LIFE = 1.6f, QUIET_FLASH_LIFE = 1.0f;
     private static int shotTick = -100;
+    /** Which chamber the last shot was fired from (a double's right barrel is 0, its left 1). */
+    private static int shotChamber;
     private static boolean shotWaiting, shotFlash, shotEmptied;
     private static float shotAt = -100, flashRoll, flashSize;
 
@@ -179,6 +184,7 @@ public final class RifleView {
                 start(age, 0);
                 charge = raw > 1.25f;
                 stopAt = pumpFrom = -1;
+                shellsAtOpen = rounds;
             } else if (active && stopAt < 0) {
                 stopAt = age;           // full, out of shells, or the trigger pulled
             }
@@ -196,7 +202,8 @@ public final class RifleView {
             resync(age, type.raise + k * type.perShell);
         }
         shells = rounds;
-        if (active && stopAt >= 0 && age - stopAt > (pumpFrom >= 0 ? PUMP_DONE : LOWER) + 1) {
+        float done = rig.opens() ? closeAt() + LOWER : pumpFrom >= 0 ? PUMP_DONE : LOWER;
+        if (active && stopAt >= 0 && age - stopAt > done + 1) {
             active = false;
         }
     }
@@ -299,14 +306,15 @@ public final class RifleView {
         }
 
         // the pose the animation wants (a tube gun's goes by age)
-        float t = active ? rig.pump() ? age - clockStart : anim(age - clockStart) : -1;
+        float t = active ? type.tube ? age - clockStart : anim(age - clockStart) : -1;
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
         Pose sights = sights(optic);
         if (sights == null) {
             a = 0;
         }
-        Pose want = animate ? rig.pump() ? tubePose(age) : reloadPose(t) : step >= 1 ? shown : hip(0, 0, 0);
+        Pose want = animate ? rig.opens() ? openPose(age) : rig.pump() ? tubePose(age) : reloadPose(t)
+                : step >= 1 ? shown : hip(0, 0, 0);
         // a bolt worked after a shot: the gun rolled port up and turned in a little while the hand is on it
         float bolt = rig.bolt() ? boltTime(t, animate, age) : -1;
         float work = bolt >= 0 && !animate && step == 0 ? boltWork(bolt) : 0;
@@ -342,7 +350,8 @@ public final class RifleView {
 
         // the model leaves the handle, slide or pump to us in first person
         float pulled = pull(gun, t, animate, age);
-        drawHandle(pose, out, light, player, want, bolt >= 0 ? boltLocal(bolt) : new Matrix4f().translation(0, 0, pulled));
+        drawHandle(pose, out, light, player, want, bolt >= 0 ? boltLocal(bolt)
+                : rig.opens() ? openLocal(animate ? openAmount(age) : 0) : new Matrix4f().translation(0, 0, pulled));
         drawFlash(pose, out, player, want, gun, age);
         Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
         rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
@@ -354,7 +363,7 @@ public final class RifleView {
         if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             float pump = rig.pump() ? pulled : 0;
-            Hand left = !animate ? support(want, foregrip, a, pump)
+            Hand left = !animate ? support(want, foregrip, a, pump) : rig.opens() ? openHand(want, age)
                     : rig.pump() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
             Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
                     : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
@@ -393,6 +402,10 @@ public final class RifleView {
     /** The old magazine falling away, and the new one coming up and in; or a tube gun's shell. */
     private static void drawLoose(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
                                   float t, int step, float age) {
+        if (rig.opens()) {
+            drawChambers(pose, out, light, player, gun, age);
+            return;
+        }
         if (rig.pump()) {
             float u = stopAt < 0 ? shellTime(age) : -1;
             if (u >= FETCHED) {
@@ -438,7 +451,9 @@ public final class RifleView {
         shotTick = player.tickCount;
         shotWaiting = true;
         shotFlash = flash;
-        shotEmptied = player.getMainHandItem().getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() <= 1;
+        int rounds = player.getMainHandItem().getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds();
+        shotEmptied = rounds <= 1;
+        shotChamber = Math.max(0, type.capacity() - rounds);     // the lowest loaded chamber goes first
     }
 
     /**
@@ -457,7 +472,9 @@ public final class RifleView {
         float half = life / 2;
         float size = flashSize * (since < half ? 1 : Mth.lerp((since - half) / half, 1f, 0.4f));
         float[] m = quiet ? rig.quietMuzzle() : rig.muzzle();
-        Matrix4f local = new Matrix4f().translation(m[0], m[1], m[2]).rotateZ(flashRoll).scale(size).translate(-m[0], -m[1], -m[2]);
+        // a double's flash is from whichever barrel fired
+        float barrel = rig.opens() && !rig.cylinder() ? shotChamber * rig.chamberStep() : 0;
+        Matrix4f local = new Matrix4f().translation(m[0] + barrel, m[1], m[2]).rotateZ(flashRoll).scale(size).translate(-m[0], -m[1], -m[2]);
         pose.pushPose();
         drawPiece(pose, out, FULL_BRIGHT, player, gun, local, quiet ? LOOSE_QUIET_FLASH : LOOSE_FLASH);
         pose.popPose();
@@ -904,6 +921,154 @@ public final class RifleView {
             return onHandle(gun, t < RELEASE ? Mth.lerp(smooth01(t, CHARGE, RELEASE), grab, back) : back);
         }
         return onHandle(gun, back).lerp(rest, smooth01(t, RELEASE + 1, 31));
+    }
+
+    // ------------------------------------------------------------------ a gun that opens to load
+
+    // Opening, in ticks from the start: the lever thrown at OPEN_START, the barrels down by OPEN_DONE, the empties
+    // thrown back out of the chambers from EJECT_AT; the off hand rides the forend down, then leaves it for the
+    // first shell at LET_GO. Each shell then goes like a tube gun's (shellTime), but up behind its chamber and pushed in
+    // along the bore. When the loading stops the hand goes back to the forend and swings it shut at closeAt().
+    private static final float OPEN_START = 0.8f, OPEN_DONE = 3.2f, EJECT_AT = 3.0f, EJECT_LIFE = 7f, LET_GO = 4.5f;
+    /** Item pixels behind its chamber a shell lines up before it's pushed home. */
+    private static final float BEHIND = 2.6f;
+
+    /** Ticks after the loading stopped that it's snapped shut: halfway through the server's close. */
+    private static float closeAt() {
+        return 1 + type.close / 2f;
+    }
+
+    /** How far open it is (0 to 1): thrown open as the loading starts, swung shut after it stops. */
+    private static float openAmount(float age) {
+        float s = age - clockStart;
+        float open = smooth01(s, OPEN_START, OPEN_DONE) + bump(s, OPEN_DONE - 0.3f, 2.5f) * 0.08f;
+        return stopAt < 0 ? open : open * (1 - smooth01(age - stopAt, closeAt() - 1.4f, closeAt()));
+    }
+
+    /** The handle (a double's barrels and forend) turned open k of the way about the hinge. */
+    private static Matrix4f openLocal(float k) {
+        float[] h = rig.hinge(), ax = rig.openAxis();
+        return new Matrix4f().translation(h[0], h[1], h[2])
+                .rotate(rig.openAngle() * k * Mth.DEG_TO_RAD, ax[0], ax[1], ax[2]).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /** From the first chamber (where the loose round sits home) to chamber j: side by side along x. */
+    private static Matrix4f chamberLocal(int j) {
+        return new Matrix4f().translation(j * rig.chamberStep(), 0, 0);
+    }
+
+    /**
+     * A shell u ticks into its go, from home in its chamber: from below the screen up behind the chamber, nose up and
+     * rocked about its head, then lined up on the bore and pushed home.
+     */
+    private static Matrix4f roundPath(float u) {
+        float drop, rock, back;
+        if (u < UNDER) {
+            float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
+            float o = 1 - (1 - v) * (1 - v) * (1 - v);
+            drop = Mth.lerp(o, 24f, 1.0f);
+            rock = Mth.lerp(o, 35f, 10f);
+            back = Mth.lerp(o, 6f, BEHIND + 0.6f);
+        } else if (u < UP) {
+            float v = smooth01(u, UNDER, UP);
+            drop = 1.0f * (1 - v);
+            rock = 10f * (1 - v);
+            back = Mth.lerp(v, BEHIND + 0.6f, BEHIND);
+        } else {
+            drop = rock = 0;
+            back = BEHIND * (1 - smooth01(u, UP + 0.2f, type.perShell - 0.3f));
+        }
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(0, -drop, back)
+                .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /** The gun opened to load: canted and brought up so the breech shows, jolted as it's snapped shut, then down. */
+    private static Pose openPose(float age) {
+        float s = age - clockStart;
+        float up = smooth01(stopAt < 0 ? s : Math.min(age, stopAt) - clockStart, 0, type.raise - 1);
+        float load = stopAt < 0 ? up : up * (1 - smooth01(age - stopAt, closeAt(), closeAt() + LOWER));
+        float kick = bump(s, OPEN_START, 2f) * 1.5f + (stopAt < 0 ? 0 : bump(age - stopAt, closeAt(), 2.5f) * 3f);
+        float[] o = rig.magOut();
+        return turned(hip(o[0] * load, o[1] * load, kick), rig.loadTurn(), rig.loadPush(), load);
+    }
+
+    /** The shells in the open chambers, the one going in, and the empties thrown out as it opened. */
+    private static void drawChambers(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
+                                     float age) {
+        float k = openAmount(age);
+        if (k <= 0.001f) {
+            return;     // shut: they're out of sight in the chambers
+        }
+        Matrix4f open = openLocal(k);
+        int cap = type.capacity();
+        float ej = age - clockStart - EJECT_AT;
+        if (ej >= 0 && ej < EJECT_LIFE) {
+            float slide = 4.5f * (1 - (1 - Math.min(1, ej / 1.4f)) * (1 - Math.min(1, ej / 1.4f)));
+            float fall = Math.max(0, ej - 0.8f);
+            float[] c = rig.magCentre();
+            for (int j = 0; j < cap - shellsAtOpen; j++) {
+                Matrix4f local = new Matrix4f(open).mul(chamberLocal(j)).translate(0, 0, slide);
+                Vector3f centre = gun.point(local.transformPosition(new Vector3f(c[0], c[1], c[2] - 1f)));
+                pose.pushPose();
+                // thrown up and back past the shoulder, tumbling
+                pose.translate(0.03f * fall * (j == 0 ? 1 : -0.4f), 0.05f * Math.min(1, ej) - (0.035f * fall * fall + 0.02f * fall), 0.04f * fall);
+                pose.translate(centre.x, centre.y, centre.z);
+                pose.rotate(new Quaternionf().rotationXYZ(-30f * fall * Mth.DEG_TO_RAD, 0, (j == 0 ? 12f : -12f) * fall * Mth.DEG_TO_RAD));
+                pose.translate(-centre.x, -centre.y, -centre.z);
+                drawPiece(pose, out, light, player, gun, local, LOOSE_MAG);
+                pose.popPose();
+            }
+        }
+        for (int j = Math.max(0, cap - shells); j < cap; j++) {
+            pose.pushPose();
+            drawPiece(pose, out, light, player, gun, new Matrix4f(open).mul(chamberLocal(j)), LOOSE_MAG);
+            pose.popPose();
+        }
+        float u = stopAt < 0 ? shellTime(age) : -1;
+        if (u >= FETCHED && shells < cap) {
+            pose.pushPose();
+            drawPiece(pose, out, light, player, gun, new Matrix4f(open).mul(chamberLocal(cap - 1 - shells)).mul(roundPath(u)), LOOSE_MAG);
+            pose.popPose();
+        }
+    }
+
+    /** The off hand on the forend (riding it open), off for each shell and pushing it home, back to swing it shut. */
+    private static Hand openHand(Pose gun, float age) {
+        Hand forend = onForend(gun, openAmount(age));
+        if (stopAt >= 0) {
+            float back = closeAt() - 1.6f;
+            return openHand(gun, stopAt, forend).lerp(forend, smooth01(age - stopAt, 0, back));
+        }
+        return openHand(gun, age, forend);
+    }
+
+    private static Hand openHand(Pose gun, float age, Hand forend) {
+        float s = age - clockStart, u = shellTime(age);
+        int cap = type.capacity();
+        if (u < 0) {
+            return forend.lerp(pouch(), smooth01(s, LET_GO, type.raise));
+        }
+        Hand onShell = onRound(gun, u, cap - 1 - Math.min(shells, cap - 1));
+        if (u >= FETCHED) {
+            return onShell;
+        }
+        boolean first = s - type.raise < type.perShell;
+        return first ? pouch() : onRound(gun, type.perShell, Math.min(cap - 1, cap - shells)).lerp(pouch(), smooth01(u, 0, FETCHED));
+    }
+
+    /** The off hand under the forend of a gun open k of the way. */
+    private static Hand onForend(Pose gun, float k) {
+        float[] sp = rig.support();
+        return new Hand(gun.point(openLocal(k).transformPosition(new Vector3f(sp[0], sp[1], sp[2]))), LEFT_HIP, PALM_UP);
+    }
+
+    /** The hand round a shell's back end, u ticks into its go into chamber j. */
+    private static Hand onRound(Pose gun, float u, int j) {
+        float[] h = rig.magHold();
+        Matrix4f m = openLocal(openAmount(clockStart + type.raise)).mul(chamberLocal(Math.max(0, j))).mul(roundPath(u));
+        return new Hand(gun.point(m.transformPosition(new Vector3f(h[0], h[1], h[2]))), new Vector3f(-0.1f, -0.9f, 0.42f),
+                new Vector3f(-0.5f, -1f, 0f));
     }
 
     // ------------------------------------------------------------------ what other code asks

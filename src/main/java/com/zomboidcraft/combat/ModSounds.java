@@ -37,6 +37,16 @@ public final class ModSounds {
     public static final SoundEvent SHOTGUN_PUMP = register("weapon.shotgun.pump");
     public static final SoundEvent SHOTGUN_SHELL_IN = register("weapon.shotgun.shell_in");
     /**
+     * The double-barrel: both barrels' boom like the pump's, the top lever thrown and the barrels dropping open, a shell
+     * thumbed into a chamber, the action snapped shut.
+     */
+    public static final SoundEvent DOUBLE_BARREL_SHOT = register("weapon.double_barrel.shot");
+    public static final SoundEvent DOUBLE_BARREL_SHOT_DISTANT = register("weapon.double_barrel.shot_distant", 160f);
+    public static final SoundEvent DOUBLE_BARREL_DRY = register("weapon.double_barrel.dry");
+    public static final SoundEvent DOUBLE_BARREL_OPEN = register("weapon.double_barrel.open");
+    public static final SoundEvent DOUBLE_BARREL_CLOSE = register("weapon.double_barrel.close");
+    public static final SoundEvent DOUBLE_BARREL_SHELL_IN = register("weapon.double_barrel.shell_in");
+    /**
      * The hunting rifle: a .308's hard crack heard out to 176 blocks, and its bolt worked through, lift to lock (about
      * a third of a second).
      */

@@ -193,10 +193,11 @@ public final class Carry {
             if (ticks % 10 != 0) {
                 continue;
             }
-            // a gun case or ammo can found shut is filled the first time someone has it
+            // a gun case or ammo can found shut is filled the first time someone has it; a found gun's finish is rolled
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {
-                if (CaseItem.unpack(inventory.getItem(i), player.getRandom())) {
+                if (CaseItem.unpack(inventory.getItem(i), player.getRandom())
+                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())) {
                     inventory.setChanged();
                 }
             }

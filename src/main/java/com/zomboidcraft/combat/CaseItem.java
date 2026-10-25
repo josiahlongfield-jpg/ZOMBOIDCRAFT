@@ -52,8 +52,8 @@ public class CaseItem extends BagItem {
         if (cfg.packed) {
             List<ItemStack> load = switch (item.kind) {
                 case RIFLE -> gunCase(random, cfg, pick(random, new GunType[] {GunType.ASSAULT_RIFLE,
-                        GunType.HUNTING_RIFLE, GunType.SHOTGUN}, new int[] {cfg.assaultRifleWeight,
-                        cfg.huntingRifleWeight, cfg.shotgunWeight}));
+                        GunType.HUNTING_RIFLE, GunType.SHOTGUN, GunType.DOUBLE_BARREL}, new int[] {cfg.assaultRifleWeight,
+                        cfg.huntingRifleWeight, cfg.shotgunWeight, cfg.doubleBarrelWeight}));
                 case PISTOL -> gunCase(random, cfg, GunType.PISTOL);
                 case AMMO -> ammoCan(random, cfg);
             };
@@ -81,6 +81,7 @@ public class CaseItem extends BagItem {
         if (part != null) {
             Attachments.mount(gun, new ItemStack(part));
         }
+        GunFinish.roll(gun, random);
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);
         if (type.magazine() != null) {

@@ -3,6 +3,7 @@ package com.zomboidcraft;
 import com.zomboidcraft.barricade.HammerItem;
 import com.zomboidcraft.combat.AttachmentItem;
 import com.zomboidcraft.combat.CaseItem;
+import com.zomboidcraft.combat.GunFinish;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
@@ -64,6 +65,7 @@ public final class ModItems {
     public static final Item HUNTING_RIFLE = gun("hunting_rifle", GunType.HUNTING_RIFLE, 1800);
     public static final Item HUNTING_RIFLE_MAGAZINE = magazine("hunting_rifle_magazine", GunType.HUNTING_RIFLE);
     public static final Item HUNTING_RIFLE_AMMO = register("hunting_rifle_ammo", Item::new, new Item.Properties().stacksTo(40));
+    public static final Item DOUBLE_BARREL = gun("double_barrel", GunType.DOUBLE_BARREL, 1500);
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -134,7 +136,16 @@ public final class ModItems {
             for (GunType type : GunType.values()) {
                 ItemStack gun = new ItemStack(type.item());
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
+                List<GunFinish.Finish> finishes = GunFinish.of(type);
+                if (!finishes.isEmpty()) {
+                    GunFinish.set(gun, finishes.get(0).key());
+                }
                 output.accept(gun);
+                for (GunFinish.Finish finish : finishes.stream().skip(1).toList()) {
+                    ItemStack fine = gun.copy();        // and one in each of its better finishes
+                    GunFinish.set(fine, finish.key());
+                    output.accept(fine);
+                }
                 if (type.magazine() == null) {
                     continue;   // its shells are already in the tab (a creative tab only takes single items)
                 }

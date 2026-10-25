@@ -1,0 +1,27 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:custom_model_data",
+  "index": 8,
+  "cases": [
+   {
+    "when": "case_hardened",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charging_handle"
+    }
+   },
+   {
+    "when": "engraved",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/double_barrel/engraved/charging_handle"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/weapon/double_barrel/charging_handle"
+  }
+ }
+}

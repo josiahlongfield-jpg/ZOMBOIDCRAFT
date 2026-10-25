@@ -12,13 +12,17 @@ import org.jetbrains.annotations.Nullable;
  * sounds, and their reload timings in ticks (first person animates on the same numbers, see RifleView).
  * A tube gun (the pump shotgun) has no magazine: its shells go in one at a time, and it's pumped after each shot.
  * A bolt gun (the hunting rifle) takes a magazine, and its bolt is worked by hand after each shot.
+ * A gun that opens to load (the double-barrel broken open, a revolver's cylinder swung out) is loaded by hand like a
+ * tube gun, then closed: its spent shells come out as it opens.
  */
 public enum GunType {
     ASSAULT_RIFLE("assault_rifle", "5.56mm", 16, 22, 25, 34, 18),
     PISTOL("pistol", "9mm", 12, 16, 18, 24, 12),
     SHOTGUN("shotgun", "12 gauge", 6, 10, 8, 4),
     // its bolt is worked at the pace of its recording (lift, back, home, down over 16 ticks), so an empty reload runs long
-    HUNTING_RIFLE("hunting_rifle", ".308", 16, 22, 25, 41, 18, 16, 7);
+    HUNTING_RIFLE("hunting_rifle", ".308", 16, 22, 25, 41, 18, 16, 7),
+    // the lever pushed over and the barrels dropped, the empties plucked out, a shell into each chamber, snapped shut
+    DOUBLE_BARREL("double_barrel", "12 gauge", 8, 10, 6, true);
 
     private final String id;
     private final String caliber;
@@ -41,6 +45,9 @@ public enum GunType {
     public static final int CASE_OUT = 6;
     /** The handle is a bolt the shooting hand works: after each shot, and to chamber a round after a fresh magazine. */
     public final boolean bolt;
+    /** Opens to load (broken open, or its cylinder swung out), and takes close ticks to shut again after. */
+    public final boolean opens;
+    public final int close;
 
     GunType(String id, String caliber, int magIn, int charge, int tacticalDone, int chargeDone, int jamClear) {
         this(id, caliber, magIn, charge, tacticalDone, chargeDone, jamClear, 0, 0);
@@ -61,6 +68,8 @@ public enum GunType {
         this.cycle = cycle;
         this.cycleAfterShot = cycleAfterShot;
         this.bolt = cycle > 0;
+        this.opens = false;
+        this.close = 0;
     }
 
     GunType(String id, String caliber, int raise, int perShell, int pump, int pumpAfterShot) {
@@ -72,6 +81,22 @@ public enum GunType {
         this.cycle = pump;
         this.cycleAfterShot = pumpAfterShot;
         this.bolt = false;
+        this.opens = false;
+        this.close = 0;
+        this.magIn = this.charge = this.tacticalDone = this.chargeDone = this.jamClear = 0;
+    }
+
+    /** A gun that opens to load: opened over raise ticks, a round in every perShell, then shut over close. */
+    GunType(String id, String caliber, int raise, int perShell, int close, boolean opens) {
+        this.id = id;
+        this.caliber = caliber;
+        this.tube = true;
+        this.raise = raise;
+        this.perShell = perShell;
+        this.cycle = this.cycleAfterShot = 0;
+        this.bolt = false;
+        this.opens = opens;
+        this.close = close;
         this.magIn = this.charge = this.tacticalDone = this.chargeDone = this.jamClear = 0;
     }
 
@@ -100,6 +125,7 @@ public enum GunType {
             case PISTOL -> ModItems.PISTOL;
             case SHOTGUN -> ModItems.SHOTGUN;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE;
+            case DOUBLE_BARREL -> ModItems.DOUBLE_BARREL;
         };
     }
 
@@ -108,7 +134,7 @@ public enum GunType {
         return switch (this) {
             case ASSAULT_RIFLE -> ModItems.RIFLE_MAGAZINE;
             case PISTOL -> ModItems.PISTOL_MAGAZINE;
-            case SHOTGUN -> null;
+            case SHOTGUN, DOUBLE_BARREL -> null;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_MAGAZINE;
         };
     }
@@ -117,14 +143,14 @@ public enum GunType {
         return switch (this) {
             case ASSAULT_RIFLE -> ModItems.RIFLE_AMMO;
             case PISTOL -> ModItems.PISTOL_AMMO;
-            case SHOTGUN -> ModItems.SHOTGUN_SHELL;
+            case SHOTGUN, DOUBLE_BARREL -> ModItems.SHOTGUN_SHELL;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
         };
     }
 
     /**
      * Damage, spread, kick, noise, zoom, range, rate and magazine size: the rifle's in guns, the pistol's in pistol,
-     * the shotgun's in shotgun (with its pellets), the hunting rifle's in huntingRifle.
+     * the shotgun's in shotgun (with its pellets), the hunting rifle's in huntingRifle, the double's in doubleBarrel.
      */
     public ZcConfig.GunStats stats() {
         return switch (this) {
@@ -132,6 +158,7 @@ public enum GunType {
             case PISTOL -> ZcConfig.get().pistol;
             case SHOTGUN -> ZcConfig.get().shotgun;
             case HUNTING_RIFLE -> ZcConfig.get().huntingRifle;
+            case DOUBLE_BARREL -> ZcConfig.get().doubleBarrel;
         };
     }
 
@@ -154,6 +181,7 @@ public enum GunType {
             case SHOTGUN -> distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
             case HUNTING_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
+            case DOUBLE_BARREL -> distant ? ModSounds.DOUBLE_BARREL_SHOT_DISTANT : ModSounds.DOUBLE_BARREL_SHOT;
         };
     }
 
@@ -163,13 +191,16 @@ public enum GunType {
             case PISTOL -> ModSounds.PISTOL_DRY;
             case SHOTGUN -> ModSounds.SHOTGUN_DRY;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_DRY;
+            case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_DRY;
         };
     }
 
+    /** The magazine out, or a gun opened to load. */
     public SoundEvent magOut() {
         return switch (this) {
             case PISTOL -> ModSounds.PISTOL_MAG_OUT;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_OUT;
+            case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_OPEN;
             default -> ModSounds.RIFLE_MAG_OUT;
         };
     }
@@ -181,16 +212,21 @@ public enum GunType {
             case PISTOL -> ModSounds.PISTOL_MAG_IN;
             case SHOTGUN -> ModSounds.SHOTGUN_SHELL_IN;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_IN;
+            case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_SHELL_IN;
         };
     }
 
-    /** The charging handle worked, the slide racked, the pump worked, or the bolt worked (lifted, back, home, down). */
+    /**
+     * The charging handle worked, the slide racked, the pump worked, the bolt worked (lifted, back, home, down), or a
+     * gun that opened to load shut again.
+     */
     public SoundEvent charged() {
         return switch (this) {
             case ASSAULT_RIFLE -> ModSounds.RIFLE_BOLT;
             case PISTOL -> ModSounds.PISTOL_SLIDE;
             case SHOTGUN -> ModSounds.SHOTGUN_PUMP;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_BOLT;
+            case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_CLOSE;
         };
     }
 

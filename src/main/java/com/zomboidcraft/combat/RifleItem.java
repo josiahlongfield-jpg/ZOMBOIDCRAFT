@@ -121,6 +121,10 @@ public class RifleItem extends Item {
         if (gun.jammed()) {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
         }
+        Component finish = GunFinish.line(stack);
+        if (finish != null) {
+            tooltip.accept(finish);
+        }
         tooltip.accept(MeleeWeaponItem.condition(stack));
         for (Attachments.Slot part : Attachments.slots(stack)) {
             ItemStack att = Attachments.get(stack, part);
@@ -134,7 +138,8 @@ public class RifleItem extends Item {
         if (Attachments.firstFilled(stack) != null) {
             tooltip.accept(Component.literal("Right-click with an empty hand to take a part off").withStyle(ChatFormatting.DARK_GRAY));
         }
-        tooltip.accept(Component.literal(type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
+        tooltip.accept(Component.literal(type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
+                : type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
         if (type.bolt) {
             tooltip.accept(Component.literal("Bolt action: the bolt is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
