@@ -49,9 +49,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         SoundSliders.register();
-        // a car you drive moves on your side, from your movement keys
-        com.zomboidcraft.world.cars.CarProp.clientInput = player -> player instanceof net.minecraft.client.player.LocalPlayer local
-                ? local.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
+        com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);

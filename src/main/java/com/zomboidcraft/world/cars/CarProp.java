@@ -149,13 +149,20 @@ public class CarProp extends Entity {
         };
     }
 
+    /** Right-click does nothing to a car, so it can aim a gun; the interact key ({@link CarNet}) uses it. */
     @Override
     public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        return InteractionResult.PASS;
+    }
+
+    /** The interact key on this car, at location relative to it: the back end searches the boot, elsewhere gets in. */
+    public void use(Player player, Vec3 location) {
         if (!(level() instanceof ServerLevel server)) {
-            return InteractionResult.SUCCESS;
+            return;
         }
         if (!player.isSecondaryUseActive() && !atBoot(location)) {
-            return getIn(player);
+            getIn(player);
+            return;
         }
         if (!searched) {
             searched = true;
@@ -178,11 +185,10 @@ public class CarProp extends Entity {
             entityData.set(OPEN, true);
             server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.7f);
         }
-        return InteractionResult.SUCCESS;
     }
 
-    /** Whether a click at location (relative to the car, or in the world) landed on its back end. */
-    private boolean atBoot(Vec3 location) {
+    /** Whether a point (relative to the car, or in the world) is at its back end, where the boot is. */
+    public boolean atBoot(Vec3 location) {
         CarModels.Model m = CarModels.get(model());
         if (m == null) {
             return true;
@@ -203,23 +209,22 @@ public class CarProp extends Entity {
         return new Vec3(lx, ly, lz).yRot((float) -Math.toRadians(getYRot()));
     }
 
-    private InteractionResult getIn(Player player) {
+    private void getIn(Player player) {
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
-            return InteractionResult.SUCCESS;
+            return;
         }
         if (player.isPassenger() || !canAddPassenger(player)) {
             if (!hasPassenger(player)) {
                 player.sendOverlayMessage(Component.literal("There's no room."));
             }
-            return InteractionResult.SUCCESS;
+            return;
         }
         player.startRiding(this);
         if (getControllingPassenger() == player) {
-            player.sendOverlayMessage(Component.literal(engineRuns() ? "W/S to drive, A/D to steer, space for the handbrake, sneak to get out."
+            player.sendOverlayMessage(Component.literal(engineRuns() ? "W/S to drive, A/D to steer, space for the handbrake, sneak or interact to get out."
                     : "It won't start."));
         }
-        return InteractionResult.SUCCESS;
     }
 
     /** Wrecks and burnt-out shells don't run, whatever you do. */
