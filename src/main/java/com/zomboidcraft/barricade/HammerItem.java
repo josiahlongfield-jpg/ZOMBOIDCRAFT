@@ -110,7 +110,7 @@ public class HammerItem extends MeleeWeaponItem {
         if (!player.getInventory().add(new ItemStack(Items.OAK_PLANKS))) {
             net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), new ItemStack(Items.OAK_PLANKS));
         }
-        level.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.PLAYERS, 0.6f, 1.3f);
+        level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.9f, 0.8f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);
         Skills.addXp(player, Skill.CARPENTRY, 2);
         return InteractionResult.SUCCESS;
