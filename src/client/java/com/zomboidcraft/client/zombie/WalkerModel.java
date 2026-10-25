@@ -20,8 +20,8 @@ import net.minecraft.util.Mth;
  * dragging steps on bent knees, arms hanging and swaying until it has a target, then reaching for it.
  *
  * It is built like a Zomboid character rather than a Minecraft one: arms and legs bend at the
- * elbow and knee, the hands are mittens, limbs are slimmer, the head is a little
- * smaller, and the face has a real brow, nose, cheekbones, jaw and ears. Every new block samples
+ * elbow and knee, the hands are mittens, limbs are slimmer, the torso narrower over longer
+ * legs, and a smaller head sits on a neck. Every new block samples
  * the part of the player-layout skin it sits on, so the existing skins, gear and eye masks fit.
  *
  * Unlike the vanilla zombie, the left arm and leg have their own texture (player layout), and
@@ -47,8 +47,13 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
 
     /** Where the joints sit inside the vanilla limb boxes, in model pixels from the limb's top. */
     public static final float ELBOW = 5f, WRIST = 4f, KNEE = 6f;
-    /** Slimmer limbs and a smaller head than Minecraft's, closer to a Zomboid figure. */
-    private static final float ARM_SLIM = 0.8f, LEG_SLIM = 0.86f, HEAD_SIZE = 0.9f;
+    /**
+     * A Zomboid figure's proportions on Minecraft's boxes: slim arms and legs, a narrower and
+     * shorter torso, longer legs, a smaller head on a neck. Height stays 2 blocks.
+     */
+    private static final float ARM_SLIM = 0.68f, ARM_LONG = 1.1f, LEG_SLIM = 0.85f, TORSO_WIDE = 0.9f,
+            TORSO_TALL = 0.92f, HEAD_SIZE = 0.8f, NECK = 1.2f;
+    private static final float HIP = 12f * TORSO_TALL, LEG_LONG = (24f - HIP) / 12f, SHOULDER = 4.4f;
 
     public WalkerModel(ModelPart root) {
         super(root);
@@ -66,13 +71,10 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         List<ModelPart> parts = new ArrayList<>(List.of(head, body, rightArm, leftArm, rightLeg, leftLeg,
                 rightForearm, leftForearm, rightForearm.getChild("hand"), leftForearm.getChild("hand"),
                 rightShin, leftShin));
-        for (String feature : FACE) {
-            parts.add(head.getChild(feature));
-        }
+        parts.add(body.getChild("neck"));
         bodyParts = List.copyOf(parts);
     }
 
-    private static final List<String> FACE = List.of("brow", "nose", "jaw", "right_cheek", "left_cheek", "right_ear", "left_ear");
 
     public static LayerDefinition createLayer() {
         return LayerDefinition.create(createMesh(), 64, 64);
@@ -84,9 +86,9 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         PartDefinition root = mesh.getRoot();
         // Each limb is three boxes that read the top, middle and bottom rows of the vanilla limb's skin.
         PartDefinition rightArm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16)
-                .addBox(-3f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(-5f, 2f, 0f));
+                .addBox(-3f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(-SHOULDER, 2f, 0f));
         PartDefinition leftArm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
-                .addBox(-1f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(5f, 2f, 0f));
+                .addBox(-1f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(SHOULDER, 2f, 0f));
         arm(rightArm, 40, 16, -1f);
         arm(leftArm, 32, 48, 1f);
         // The stump of a torn-off forearm is the upper arm itself, with a bone sticking out.
@@ -97,14 +99,16 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         leftArm.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(56, 24)
                 .addBox(0f, ELBOW - 2.5f, -1f, 2f, 6f, 2f), PartPose.ZERO);
         PartDefinition rightLeg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 16)
-                .addBox(-2f, 0f, -2f, 4f, KNEE, 4f), PartPose.offset(-1.9f, 12f, 0f));
+                .addBox(-2f, 0f, -2f, 4f, KNEE, 4f), PartPose.offset(-1.9f, HIP, 0f));
         PartDefinition leftLeg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48)
-                .addBox(-2f, 0f, -2f, 4f, KNEE, 4f), PartPose.offset(1.9f, 12f, 0f));
+                .addBox(-2f, 0f, -2f, 4f, KNEE, 4f), PartPose.offset(1.9f, HIP, 0f));
         rightLeg.addOrReplaceChild("shin", CubeListBuilder.create().texOffs(0, 16 + (int) KNEE)
                 .addBox(-2f, 0f, -2f, 4f, 12f - KNEE, 4f, new CubeDeformation(-0.1f, 0f, -0.1f)), PartPose.offset(0f, KNEE, 0f));
         leftLeg.addOrReplaceChild("shin", CubeListBuilder.create().texOffs(16, 48 + (int) KNEE)
                 .addBox(-2f, 0f, -2f, 4f, 12f - KNEE, 4f, new CubeDeformation(-0.1f, 0f, -0.1f)), PartPose.offset(0f, KNEE, 0f));
-        face(root.getChild("head"));
+        // a neck, so the smaller head sits up off the shoulders (skin from under the chin)
+        root.getChild("body").addOrReplaceChild("neck", CubeListBuilder.create().texOffs(16, 0)
+                .addBox(-1.6f, -NECK - 0.3f, -1.5f, 3.2f, NECK + 0.3f, 3f), PartPose.ZERO);
         PartDefinition head = root.getChild("head");
         head.addOrReplaceChild("visor", CubeListBuilder.create().texOffs(0, 32)
                 .addBox(-4f, -6f, -8f, 8f, 0.5f, 4f), PartPose.ZERO);
@@ -130,29 +134,6 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
                 PartPose.offset(0f, WRIST, 0f));
     }
 
-    /**
-     * A face you can see from across the street: brow ridge, nose, cheekbones, jaw and ears as
-     * blocks of their own. Each samples the face rows under it (brow row 2, eyes 3, nose 4,
-     * mouth 5-7 of the 8x8 face), so a painted mouth sits on the jaw and the eyes sink under the brow.
-     */
-    private static void face(PartDefinition head) {
-        head.addOrReplaceChild("brow", CubeListBuilder.create().texOffs(7, 9)
-                .addBox(-4f, 0f, -1f, 8f, 1f, 1f, new CubeDeformation(-0.45f, 0.12f, 0.15f)), PartPose.offset(0f, -6f, -4.05f));
-        head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(9, 9)
-                .addBox(-1f, 0f, -2f, 2f, 2f, 2f, new CubeDeformation(-0.1f, 0f, -0.2f)),
-                PartPose.offsetAndRotation(0f, -5f, -3.6f, -0.18f, 0f, 0f));
-        head.addOrReplaceChild("jaw", CubeListBuilder.create().texOffs(8, 12)
-                .addBox(-3f, 0f, -1f, 6f, 3f, 1f, new CubeDeformation(0.2f, 0.1f, 0f)), PartPose.offset(0f, -2.8f, -3.75f));
-        head.addOrReplaceChild("right_cheek", CubeListBuilder.create().texOffs(8, 11)
-                .addBox(-0.5f, 0f, -1f, 1f, 1f, 1f, new CubeDeformation(0.1f, 0f, -0.2f)), PartPose.offset(-2.6f, -4f, -3.75f));
-        head.addOrReplaceChild("left_cheek", CubeListBuilder.create().texOffs(13, 11)
-                .addBox(-0.5f, 0f, -1f, 1f, 1f, 1f, new CubeDeformation(0.1f, 0f, -0.2f)), PartPose.offset(2.6f, -4f, -3.75f));
-        head.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(3, 8)
-                .addBox(-1f, 0f, -1f, 1f, 2f, 2f, new CubeDeformation(-0.15f, 0.1f, -0.2f)), PartPose.offset(-3.9f, -5.5f, 0.5f));
-        head.addOrReplaceChild("left_ear", CubeListBuilder.create().texOffs(16, 8)
-                .addBox(0f, 0f, -1f, 1f, 2f, 2f, new CubeDeformation(-0.15f, 0.1f, -0.2f)), PartPose.offset(3.9f, -5.5f, 0.5f));
-    }
-
     /** Shows an arm whole, as a stump with a bone (forearm gone), or not at all. */
     private static void limb(boolean forearmGone, boolean armGone, ModelPart arm, ModelPart fore, ModelPart stub, ModelPart bone) {
         arm.visible = !armGone;
@@ -173,10 +154,14 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         limb(state.missingLimb == 2, state.missingLimb == 4, leftArm, leftForearm, leftStub, leftBone);
         for (ModelPart arm : new ModelPart[] {rightArm, leftArm}) {
             arm.xScale = arm.zScale = ARM_SLIM;
+            arm.yScale = ARM_LONG;
         }
         for (ModelPart leg : new ModelPart[] {rightLeg, leftLeg}) {
             leg.xScale = leg.zScale = LEG_SLIM;
+            leg.yScale = LEG_LONG;
         }
+        body.xScale = TORSO_WIDE;
+        body.yScale = TORSO_TALL;
         head.xScale = head.yScale = head.zScale = HEAD_SIZE;
         hat.xScale = hat.yScale = hat.zScale = HEAD_SIZE;
 
@@ -209,8 +194,9 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         // Knees and elbows: always a little bent, the dragging leg barely lifting its foot.
         float step = walk * 0.6662f;
         float lead = side > 0 ? 0.75f : 0.4f, drag = side > 0 ? 0.4f : 0.75f;
-        rightShin.xRot = 0.14f + Math.max(0f, -Mth.cos(step)) * lead * speed;
-        leftShin.xRot = 0.14f + Math.max(0f, Mth.cos(step)) * drag * speed;
+        float stride = Math.min(1f, speed * 2.5f);
+        rightShin.xRot = 0.15f + Math.max(0f, -Mth.cos(step)) * (lead + 0.2f) * stride;
+        leftShin.xRot = 0.15f + Math.max(0f, Mth.cos(step)) * (drag + 0.2f) * stride;
         float grab = Mth.sin(state.swingAnimation * Mth.PI);  // hands close mid-swing
         if (state.isAggressive) {
             rightForearm.xRot = -0.25f - 0.5f * (1f - grab) + Mth.sin(time * 0.17f + phase) * 0.12f;
@@ -218,9 +204,16 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
             rightArm.xRot -= grab * 0.35f;
             leftArm.xRot -= grab * 0.35f;
         } else {
-            rightForearm.xRot = -0.3f - Math.max(0f, Mth.cos(step)) * 0.25f * speed;
-            leftForearm.xRot = -0.45f - Math.max(0f, -Mth.cos(step)) * 0.25f * speed;
+            rightForearm.xRot = -0.3f - Math.max(0f, Mth.cos(step)) * 0.35f * stride;
+            leftForearm.xRot = -0.4f - Math.max(0f, -Mth.cos(step)) * 0.35f * stride;
         }
+        // the whole body dips as each knee takes the weight, and the head rides up on its neck
+        float dip = Math.abs(Mth.sin(step)) * 0.45f * stride;
+        for (ModelPart part : new ModelPart[] {body, rightArm, leftArm, rightLeg, leftLeg}) {
+            part.y += dip;
+        }
+        head.y += dip - NECK;
+        hat.y = head.y;
         if (state.swimAmount > 0f) {
             lying(state, state.swimAmount, time + phase * 40f, walk, speed);
         }
