@@ -92,7 +92,7 @@ public final class ZcCommand {
                         .then(Commands.literal("heal").executes(ctx -> {
                             com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
                             return show(ctx);
-                        })));
+                        }))));
     }
 
     private static int city(CommandContext<CommandSourceStack> ctx, long seed) throws CommandSyntaxException {
