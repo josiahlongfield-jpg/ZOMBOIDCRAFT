@@ -9,6 +9,11 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== sound"
+sig net.minecraft.client.resources.sounds.AbstractSoundInstance '.'
+sig net.minecraft.client.resources.sounds.SoundInstance '.'
+sig net.minecraft.client.resources.sounds.Sound 'public'
+
 echo "===== scope"
 classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
 sig net.minecraft.client.renderer.RenderPipelines 'GUI'
