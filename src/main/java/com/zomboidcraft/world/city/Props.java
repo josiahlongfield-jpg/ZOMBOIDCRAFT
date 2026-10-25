@@ -7,8 +7,6 @@ import java.util.SplittableRandom;
  * barriers, fallen masonry, weeds pushing through the asphalt, chain-link around empty lots.
  */
 public final class Props {
-    private static final String[] COLOURS = {"red", "white", "blue", "white", "green", "grey"};
-
     private final BlockSink sink;
     private final SplittableRandom rng;
 
@@ -18,38 +16,28 @@ public final class Props {
     }
 
     /**
-     * A car three wide and six long, its nose toward `facing`, with its rear-left corner block
-     * at (x, y, z) in world space. Wrecks lose glass and rust through; a few are burnt out.
+     * A car in a three by six block space, its nose toward `facing` (0 north, 1 east, 2 south,
+     * 3 west), the space's corner block at (x, y, z) in world space. Parked a little crooked.
      */
     public void car(int x, int y, int z, int facing) {
-        Placer p = Placer.forLot(sink, x, y, z, 3, 6, facing);
-        boolean burnt = rng.nextDouble() < 0.2;
-        String c = burnt ? "burnt" : COLOURS[rng.nextInt(COLOURS.length)];
-        double rot = burnt ? 1 : rng.nextDouble() * 0.5;
-        for (int dz = 0; dz < 6; dz++) {
-            for (int dx = 0; dx < 3; dx++) {
-                boolean wheel = (dz == 1 || dz == 4) && dx != 1;
-                p.set(dx, 0, dz, wheel ? "tire[axis=x]" : body(c, rot));
-                String top;
-                if (dz <= 1) {
-                    top = "car_hood_" + c;
-                } else if (dz == 5) {
-                    top = "car_hood_" + c;
-                } else {
-                    boolean smashed = burnt || rng.nextDouble() < 0.3;
-                    top = "car_cabin_" + c + (smashed ? "_broken" : "");
-                }
-                p.set(dx, 1, dz, top);
-            }
-        }
-        if (!burnt && rng.nextDouble() < 0.3) {
-            // a door hanging open
-            p.set(rng.nextBoolean() ? -1 : 3, 0, 2 + rng.nextInt(2), "car_door_" + c + "[facing=" + (rng.nextBoolean() ? "east" : "west") + "]");
-        }
+        boolean alongZ = (facing & 1) == 0;
+        double cx = x + (alongZ ? 1.5 : 3.0) + (rng.nextDouble() - 0.5) * 0.4;
+        double cz = z + (alongZ ? 3.0 : 1.5) + (rng.nextDouble() - 0.5) * 0.4;
+        vehicle(cx, y, cz, yaw(facing) + (float) ((rng.nextDouble() - 0.5) * 14), 0, 5.6);
     }
 
-    private String body(String c, double rust) {
-        return rng.nextDouble() < rust * 0.6 ? "rust" : "car_" + c;
+    /**
+     * Any vehicle between minLength and maxLength metres long (cars are 4 to 5.5, vans and trucks
+     * 5 to 9.5, buses 11 to 12), centred on (x, z) and standing on the block below y, at any
+     * angle. Street lanes, car park bays and multi-storey decks all use this.
+     */
+    public void vehicle(double x, int y, double z, float yaw, double minLength, double maxLength) {
+        sink.car(x, y, z, yaw, minLength, maxLength, rng.nextLong());
+    }
+
+    /** Minecraft's yaw for a quarter-turn facing: north 180, east 270, south 0, west 90. */
+    public static float yaw(int facing) {
+        return ((facing & 3) * 90 + 180) % 360;
     }
 
     /** A row of concrete barriers across a road, with a gap someone pushed open. */

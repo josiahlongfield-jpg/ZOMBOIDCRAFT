@@ -1,0 +1,133 @@
+"""Builds the car files the mod ships from the source car pack.
+
+The source models (CGTrader "American Cars 80s Pack", Royalty Free licence) must never be
+committed: the licence forbids redistributing them, and the repo is public. Keep them in the
+project's files (zomboid-mod/cars/source/) and run
+
+    python3 tools/cars/pack.py SOURCE_DIR
+
+which weathers every model (tools/cars/wreck.py) and writes, per model,
+    src/main/resources/assets/zomboidcraft/cars/<id>.zcar   meshes + textures, packed and scrambled
+and one collision/placement index for the server,
+    src/main/resources/data/zomboidcraft/zc_cars/models.json
+
+A .zcar is zlib-deflated, then XORed with an xorshift32 stream seeded from the model id, so
+the files in the jar aren't usable models on their own. Deflated payload, big-endian:
+    "ZCAR" int version, int variants, then per variant:
+    UTF name, int jpegLength, jpeg bytes (the texture), int triangles, triangles*3 * (short x,y,z in mm, char u,v)
+"""
+import argparse, glob, io, json, os, struct, sys, zlib
+from multiprocessing import Pool
+import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import wreck
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+VARIANTS = ['usable', 'abandoned', 'wrecked', 'burnt']
+
+# source file -> (id, kind, how often it turns up on a street)
+MODELS = {
+    '10_SEDAN_01': ('sedan_ltd', 'car', 10), '14_SEDAN_02': ('sedan', 'car', 10),
+    '17_WAGON_01': ('wagon', 'car', 8), '32_hatchback': ('hatchback', 'car', 9),
+    '33_minivan': ('minivan', 'car', 7), '08_COUPE': ('coupe', 'car', 6),
+    '31_COUPE': ('sports_coupe', 'car', 3), '09_CONVERTIBLE': ('convertible', 'car', 3),
+    '35_LIMOUSINE': ('limousine', 'car', 1), '16_PICKUP_01': ('pickup', 'car', 8),
+    'SUV_02': ('suv', 'car', 7), 'jeep_type1': ('jeep_open', 'car', 2), 'jeep_type2': ('jeep', 'car', 3),
+    '14_SEDAN_TAXI_01': ('taxi', 'car', 4), '07_VAN': ('van', 'van', 5),
+    'stepvan_delivery': ('step_van', 'van', 2), 'MOVING_TRUCK': ('moving_truck', 'truck', 2),
+    '036_TOW_TRUCK': ('tow_truck', 'truck', 1), '10_SEDAN_POLICE_01': ('police_sedan', 'emergency', 3),
+    '12_SUV_POLICE_01': ('police_suv', 'emergency', 2), 'stepvan_swat': ('swat_van', 'emergency', 1),
+    '06_AMBULANCE': ('ambulance_van', 'emergency', 1), 'AMBULANCE_V2': ('ambulance', 'emergency', 1),
+    '05_FIRE_TRUCK': ('fire_truck', 'emergency', 1), '03_CITY_TRUCK': ('box_truck', 'truck', 2),
+    '04_1_GARBAGE_TRUCK': ('garbage_truck', 'truck', 1), '04_2_GARBAGE_TRUCK': ('garbage_truck_rear', 'truck', 1),
+    '01_CITY_BUS': ('city_bus', 'bus', 1), '02_SCHOOL_BUS': ('school_bus', 'bus', 1),
+}
+
+CELL = 0.25  # collision height grid, metres
+
+
+def java_hash(s):
+    h = 0
+    for ch in s:
+        h = (31 * h + ord(ch)) & 0xFFFFFFFF
+    return h
+
+
+def scramble(data, model_id):
+    """XOR with xorshift32; CarAssets.java undoes it."""
+    x = (0x5A0C4A55 ^ java_hash(model_id)) & 0xFFFFFFFF or 1
+    out = bytearray(len(data))
+    for i in range(0, len(data), 4):
+        x ^= (x << 13) & 0xFFFFFFFF; x ^= x >> 17; x ^= (x << 5) & 0xFFFFFFFF
+        k = x.to_bytes(4, 'big')
+        for j in range(min(4, len(data) - i)):
+            out[i + j] = data[i + j] ^ k[j]
+    return bytes(out)
+
+
+def heights(P):
+    """Highest point of the car over each CELL x CELL column, sampling across every triangle."""
+    lo = P.reshape(-1, 3).min(0); hi = P.reshape(-1, 3).max(0)
+    nx = int(np.ceil((hi[0] - lo[0]) / CELL)); nz = int(np.ceil((hi[2] - lo[2]) / CELL))
+    grid = np.zeros((nz, nx))
+    for a in np.linspace(0, 1, 9):
+        for b in np.linspace(0, 1 - a, max(2, int(9 * (1 - a)))):
+            q = P[:, 0] * (1 - a - b) + P[:, 1] * a + P[:, 2] * b
+            ix = np.clip(((q[:, 0] - lo[0]) / CELL).astype(int), 0, nx - 1)
+            iz = np.clip(((q[:, 2] - lo[2]) / CELL).astype(int), 0, nz - 1)
+            np.maximum.at(grid, (iz, ix), q[:, 1])
+    return lo, nx, nz, grid
+
+
+def build(path):
+    stem = os.path.basename(path)[:-4]
+    mid, kind, weight = MODELS[stem]
+    car = wreck.prepare(path)
+    variants = [wreck.build_variant(car, v, java_hash(mid) % 100000 * 10 + i) for i, v in enumerate(VARIANTS)]
+    base = variants[0][0]
+    lo, hi = base.reshape(-1, 3).min(0), base.reshape(-1, 3).max(0)
+    centre = np.array([(lo[0] + hi[0]) / 2, 0, (lo[2] + hi[2]) / 2])
+    buf = io.BytesIO()
+    buf.write(b'ZCAR'); buf.write(struct.pack('>ii', 1, len(VARIANTS)))
+    for name, (P, uv, colour, _) in zip(VARIANTS, variants):
+        jpg = io.BytesIO(); colour.save(jpg, 'JPEG', quality=90, subsampling=0); jpg = jpg.getvalue()
+        nb = name.encode()
+        buf.write(struct.pack('>H', len(nb))); buf.write(nb)
+        buf.write(struct.pack('>i', len(jpg))); buf.write(jpg)
+        Q = np.round((P - centre) * 1000).astype('>i2').reshape(-1, 3)
+        U = np.round(np.clip(uv, 0, 1) * 65535).astype('>u2').reshape(-1, 2)
+        buf.write(struct.pack('>i', len(P)))
+        buf.write(np.concatenate([Q.view('>u2'), U], 1).astype('>u2').tobytes())
+    blob = scramble(zlib.compress(buf.getvalue(), 9), mid)
+    out = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars', mid + '.zcar')
+    with open(out, 'wb') as f:
+        f.write(blob)
+    glo, nx, nz, grid = heights(base - centre)
+    size = hi - lo
+    print(f'{mid:20s} {len(blob) // 1024:5d} KB  {size[0]:.1f} x {size[1]:.1f} x {size[2]:.1f} m  atlas {car.atlas}', flush=True)
+    return {'id': mid, 'kind': kind, 'weight': weight, 'size': [round(float(x), 3) for x in size],
+            'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
+            'heights': [int(round(h * 100)) for h in grid.ravel()]}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('source')
+    ap.add_argument('--jobs', type=int, default=4)
+    a = ap.parse_args()
+    files = sorted(f for f in glob.glob(os.path.join(a.source, '**', '*.glb'), recursive=True)
+                   if os.path.basename(f)[:-4] in MODELS)
+    os.makedirs(os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars'), exist_ok=True)
+    with Pool(a.jobs) as pool:
+        models = pool.map(build, files)
+    models.sort(key=lambda m: m['id'])
+    idx = os.path.join(ROOT, 'src/main/resources/data/zomboidcraft/zc_cars')
+    os.makedirs(idx, exist_ok=True)
+    with open(os.path.join(idx, 'models.json'), 'w') as f:
+        json.dump({'variants': VARIANTS, 'models': models}, f, separators=(',', ':'))
+    print(len(models), 'models')
+
+
+if __name__ == '__main__':
+    main()

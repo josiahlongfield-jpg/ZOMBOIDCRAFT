@@ -78,3 +78,7 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | zombie/step | [footsteps shoes dirt floor slow scuff stop.flac](https://freesound.org/people/kyles/sounds/451861/) | kyles | CC0 1.0 |
 | horde/angry | [Zombies](https://freesound.org/people/JossuTossu/sounds/483592/) | JossuTossu | CC0 1.0 |
 | horde/angry | [Monster Groans, Grunts, Slobbers.aif](https://freesound.org/people/jasonLON/sounds/125405/) | jasonLON | CC0 1.0 |
+
+## Vehicles
+
+The street cars, vans, trucks and buses are from the [American Cars 80s Pack](https://www.cgtrader.com/3d-model-packs/american-cars-80s-pack) on CGTrader, used under CGTrader's Royalty Free licence. They were repainted, weathered and damaged for ZomboidCraft by tools/cars/wreck.py and ship only as packed meshes inside the mod. The original model files are not part of this repository and may not be redistributed.
