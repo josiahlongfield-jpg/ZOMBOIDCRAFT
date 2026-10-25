@@ -189,7 +189,7 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | Sound | Recording | By | Licence |
 |---|---|---|---|
 | car.stall, car.start | [Car Ignition Key - Engine Starting Running Idle 2.wav](https://freesound.org/people/RutgerMuller/sounds/50898/) | RutgerMuller | CC0 1.0 |
-| car.idle | Car_Idling-Mixture_ENGINE_06 (SoundBits - Mercedes E53 AMG) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| car.idle | BMW E46, Cars, Vehicles, Engine, Idle, Loop 07 (NTG4) Exhaust (Andrew Vailcross - BMW 3 Series E46) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | car.horn | [powerfull horn](https://freesound.org/people/trezz77/sounds/546528/) | trezz77 | CC0 1.0 |
 | car.crash | [Clank Car Crash Collision](https://freesound.org/people/qubodup/sounds/151624/) | qubodup | CC0 1.0 |
 | car.door.open | [Car Door open and close 3.wav](https://freesound.org/people/NachtmahrTV/sounds/556690/) | NachtmahrTV | CC0 1.0 |
