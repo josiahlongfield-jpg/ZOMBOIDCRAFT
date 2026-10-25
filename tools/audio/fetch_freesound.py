@@ -35,10 +35,18 @@ PER_QUERY = 6
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}
 
 
+BUDGET = 25 * 60   # seconds; stop and save what we have
+START = time.time()
+
+
+def over_budget():
+    return time.time() - START > BUDGET
+
+
 def get(url, binary=False):
-    for attempt in range(3):
+    for attempt in range(2):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=40) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r:
                 data = r.read()
                 return data if binary else data.decode("utf-8", "replace")
         except Exception as e:  # noqa: BLE001
@@ -71,9 +79,14 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     manifest = {}
     dumped = False
+    home = get("https://freesound.org/")
+    print("freesound home:", "ok" if home else "unreachable", len(home or ""))
     for cat, queries in QUERIES.items():
         (out / cat).mkdir(exist_ok=True)
         for q in queries:
+            if over_budget():
+                print("time budget used up")
+                break
             ids, html = search(q)
             print(f"{cat} / {q}: {len(ids)} results")
             if not ids and not dumped:
@@ -111,6 +124,7 @@ def main():
                                  "tags": sorted(set(tags))[:20], "downloads": dl.group(1) if dl else "",
                                  "page": page_url, "license": "CC0 1.0"}
                 taken += 1
+                (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
                 time.sleep(0.5)
             time.sleep(1)
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
