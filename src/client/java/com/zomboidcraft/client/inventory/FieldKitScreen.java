@@ -204,7 +204,7 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
                 if (tab != t) {
                     tab = t;
                     layoutSlots();
-                    minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_LEATHER, 1.2f, 0.5f));
+                    minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1.2f, 0.5f));
                 }
                 return true;
             }
