@@ -4,6 +4,8 @@ name: Fetch sounds
 # pushes them to the sounds-raw branch for picking. Not part of the build.
 on:
   workflow_dispatch:
+  push:
+    branches: [sounds-fetch]
 
 permissions:
   contents: write
