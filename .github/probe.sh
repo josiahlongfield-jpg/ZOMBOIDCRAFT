@@ -9,6 +9,47 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== cars"
+sig net.minecraft.world.entity.Entity 'abstract|defineSynchedData|readAdditionalSaveData|addAdditionalSaveData|hurtServer|isPickable|canBeCollidedWith|isPushable|shouldRenderAtSqrDistance|public Entity\(|setNoGravity|setInvulnerable|noPhysics|blocksBuilding|getBoundingBoxForCulling|moveTo|snapTo|setYRot|absSnapTo|setPos\(|void tick\(|onRemoval|remove\(|isAttackable|skipAttackInteraction'
+sig 'net.minecraft.world.entity.EntityType$Builder' '.'
+sig 'net.minecraft.world.entity.EntityType$EntityFactory' '.'
+sig net.minecraft.world.entity.EntityType 'create\(|spawn\('
+sig net.minecraft.world.entity.EntitySpawnReason 'public static'
+sig net.minecraft.world.level.storage.ValueInput 'getString|getInt|getFloat'
+sig net.minecraft.world.level.storage.ValueOutput 'putString|putInt|putFloat'
+sig 'net.minecraft.network.syncher.SynchedEntityData$Builder' '.'
+sig net.minecraft.network.syncher.SynchedEntityData 'defineId|get\(|set\('
+sig net.minecraft.network.syncher.EntityDataSerializers 'STRING|FLOAT|INT;'
+sig net.minecraft.client.renderer.entity.EntityRenderer 'public|protected'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public'
+sig net.minecraft.client.renderer.SubmitNodeCollector '.'
+sig 'net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer' '.'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entityCutout|entitySolid|entityTranslucent\('
+sig com.mojang.blaze3d.vertex.VertexConsumer '.'
+sig 'com.mojang.blaze3d.vertex.PoseStack$Pose' '.'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.client.renderer.texture.DynamicTexture 'public'
+sig com.mojang.blaze3d.platform.NativeImage 'static.*read'
+sig net.minecraft.client.renderer.texture.TextureManager 'register|release'
+sig net.minecraft.server.packs.resources.ResourceProvider 'getResource|open'
+sig net.minecraft.client.Minecraft 'getResourceManager|getTextureManager'
+sig net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry '.'
+sig net.minecraft.world.level.block.state.BlockBehaviour 'getRenderShape|getCollisionShape|getShape\(|propagatesSkylight|getShadeBrightness|getVisualShape'
+sig net.minecraft.world.level.block.state.properties.IntegerProperty 'create'
+sig 'net.minecraft.world.level.block.state.BlockBehaviour$Properties' 'noLootTable|noCollission|noOcclusion|replaceable|strength|air|instabreak|pushReaction|isViewBlocking|isSuffocating|noTerrainParticles|forceSolidOn'
+sig net.minecraft.world.level.Level 'addFreshEntity'
+sig net.minecraft.server.level.ServerLevel 'addFreshEntity|getEntitiesOfClass'
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector 'submit'
+sig net.minecraft.world.entity.vehicle.ContainerEntity '.'
+classes 'ChestBoat|AbstractChestBoat|ContainerEntity|HasCustomInventoryScreen'
+sig net.minecraft.world.entity.vehicle.boat.AbstractChestBoat 'public|protected'
+sig net.minecraft.world.entity.Entity 'interact|makeBoundingBox|setBoundingBox|getBoundingBox|onSyncedDataUpdated|refreshDimensions'
+sig com.mojang.blaze3d.vertex.PoseStack 'push|pop|mulPose|rotateDegrees'
+sig com.mojang.blaze3d.platform.NativeImage 'public NativeImage|setPixel'
+exit 0
+
+
+
 echo "===== combat3"
 sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'
 classes 'component/SwingAnimation|component/UseEffects|KeyMapping\$Category|keybinding/v1/KeyBindingHelper|state/HumanoidRenderState|state/ZombieRenderState|ai/goal/MeleeAttackGoal|ai/goal/ZombieAttackGoal'

@@ -27,6 +27,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
+        com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();

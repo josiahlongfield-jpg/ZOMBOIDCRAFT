@@ -38,3 +38,7 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 | weapon.melee.stomp | [crush1.wav](https://freesound.org/people/franzzle/sounds/703115/) | franzzle | CC0 1.0 |
 | weapon.melee.shove | [body touch 01.mp3](https://freesound.org/people/TitanKaempfer/sounds/582294/) | TitanKaempfer | CC0 1.0 |
 | weapon.melee.shove | [Against the Wall.wav](https://freesound.org/people/MWsfx/sounds/573691/) | MWsfx | CC0 1.0 |
+
+## Vehicles
+
+The street cars, vans, trucks and buses are from the [American Cars 80s Pack](https://www.cgtrader.com/3d-model-packs/american-cars-80s-pack) on CGTrader, used under CGTrader's Royalty Free licence. They were repainted, weathered and damaged for ZomboidCraft by tools/cars/wreck.py and ship only as packed meshes inside the mod. The original model files are not part of this repository and may not be redistributed.

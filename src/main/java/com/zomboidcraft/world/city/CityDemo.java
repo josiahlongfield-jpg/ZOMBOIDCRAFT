@@ -184,10 +184,10 @@ public final class CityDemo {
 
     /** Abandoned traffic, barricades and the street going back to nature. */
     private void avenueLife() {
-        // a few parked at the curbs and left in the lanes: kept sparse until cars get a proper model
+        // parked along the curbs and left in the lanes
         for (int side = -1; side <= 1; side += 2) {
             for (int z = MAX_Z - 12; z > MIN_Z + 20; z -= 7 + rng.nextInt(4)) {
-                if (Math.floorMod(z + 13, 80) < 28 || rng.nextDouble() < 0.85) {
+                if (Math.floorMod(z + 13, 80) < 28 || rng.nextDouble() < 0.5) {
                     continue;
                 }
                 props.car(side < 0 ? -7 : 5, 1, z, side < 0 ? 2 : 0);
@@ -200,7 +200,12 @@ public final class CityDemo {
             boolean northbound = rng.nextBoolean();
             int lane = northbound ? 1 + rng.nextInt(3) : -4 - rng.nextInt(3);
             int facing = rng.nextDouble() < 0.15 ? (rng.nextBoolean() ? 1 : 3) : northbound ? 0 : 2;
-            props.car(lane, 1, z, facing);
+            if (facing == (northbound ? 0 : 2) && rng.nextDouble() < 0.2) {
+                // a bus, truck or fire engine abandoned mid-lane
+                props.vehicle(lane + 1.5, 1, z, Props.yaw(facing) + (float) (rng.nextDouble() * 10 - 5), 5.5, 12);
+            } else {
+                props.car(lane, 1, z, facing);
+            }
         }
         props.barrierLine(-7, -88, 7, -88, 1);
         props.barrierLine(-7, -232, 7, -232, 1);
