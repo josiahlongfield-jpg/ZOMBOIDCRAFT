@@ -121,6 +121,56 @@ def register(ns):
         t.grime(0.3)
         return t
 
+    yy, xx = np.mgrid[0:N, 0:N] + 0.5
+
+    def clock_face():
+        """The courthouse clock: a cream dial in a black rim, its hands stopped at ten past eight."""
+        t = P.Tex(91, (212, 204, 180))
+        r = np.hypot(xx - N / 2, yy - N / 2)
+        t.alpha = np.where(r < 31.5, 255, 0).astype(np.float32)
+        rim = (r >= 27) & (r < 31.5)
+        t.c[rim] = (38, 36, 32)
+        t.h[rim] = 0.95
+        for k in range(12):
+            a = k * np.pi / 6
+            for s in np.linspace(21, 25.5, 10):
+                x, y = int(N / 2 + np.sin(a) * s), int(N / 2 - np.cos(a) * s)
+                t.c[y - 1:y + 1, x - 1:x + 1] = (30, 30, 28)
+        for a, length, half in ((np.radians(8 * 30 + 5), 13, 2), (np.radians(10 * 6), 20, 1)):
+            for s in np.linspace(0, length, 60):
+                x, y = int(N / 2 + np.sin(a) * s), int(N / 2 - np.cos(a) * s)
+                t.c[y - half:y + half, x - half:x + half] = (24, 24, 22)
+        t.vary(0.12)
+        t.grime(0.45)
+        t.streaks(0.7, 0.65)
+        return t
+
+    def octagon(r):
+        dx, dy = np.abs(xx - N / 2), np.abs(yy - N / 2)
+        return (dx < r) & (dy < r) & (dx + dy < r * 1.414)
+
+    def stop_sign():
+        """A stop sign: red octagon, white border and letters, sun-faded and peppered with shot."""
+        from signs import lettering
+        t = P.Tex(92, (166, 30, 28))
+        outer, inner = octagon(30), octagon(27)
+        t.alpha = np.where(outer, 255, 0).astype(np.float32)
+        t.c[outer & ~inner] = (226, 222, 214)
+        mask, _ = lettering("STOP", "black", N, N, fill=0.36)
+        t.mix(mask, (236, 232, 222), 0.95)
+        t.mix(np.full((N, N), 1.0), (190, 150, 140), 0.12)
+        t.speckle(0.004, (40, 36, 34), 0.9)
+        t.grime(0.25)
+        t.streaks(0.6, 0.75)
+        t.smooth[:] = 0.5
+        return t
+
+    def stop_sign_back():
+        t = tone(ns.photo("PaintedMetal012", span=1), (128, 130, 128), 0.8)
+        t.alpha = np.where(octagon(30), 255, 0).astype(np.float32)
+        t.grime(0.4)
+        return t
+
     photos = {f"siding_{k}": siding(v) for k, v in SIDING.items()}
     photos.update({
         "corrugated_grey": lambda: ns.rain_streaks(ns.photo("worn_corrugated_iron", span=2, sat=0.6, bright=0.85, height=1.5), 0.5),
@@ -162,5 +212,12 @@ def register(ns):
         "pump_face": pump,
         "propane": painted_metal("PaintedMetal012", (206, 204, 198), 84, 0.15),
         "mailbox": painted_metal("PaintedMetal010", (58, 60, 62), 85, 0.2),
+        "tank_white": painted_metal("PaintedMetal012", (196, 198, 192), 86, 0.3, span=3),
+        "tank_blue": painted_metal("PaintedMetal012", (104, 134, 158), 87, 0.3, span=3),
+        "lamp_iron": painted_metal("PaintedMetal014", (36, 36, 34), 88, 0.15),
+        "garage_door_red": garage("painted_metal_shutter", (148, 40, 34)),
+        "clock_face": clock_face,
+        "stop_sign": stop_sign,
+        "stop_sign_back": stop_sign_back,
     })
     ns.EXTRA.update(extra)

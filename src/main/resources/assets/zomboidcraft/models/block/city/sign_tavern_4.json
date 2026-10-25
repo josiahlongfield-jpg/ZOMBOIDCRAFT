@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_tavern_4": "zomboidcraft:block/city/sign_tavern_4",
+    "particle": "zomboidcraft:block/city/sign_tavern_4"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_tavern_4",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_tavern_4"
+        },
+        "east": {
+          "texture": "#sign_tavern_4",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_tavern_4",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_tavern_4",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_tavern_4",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

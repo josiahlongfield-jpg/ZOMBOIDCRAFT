@@ -20,6 +20,11 @@ public interface ChunkSink {
     default void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
     }
 
+    /** One of the named models or kinds (see {@link com.zomboidcraft.world.city.BlockSink#vehicle}). */
+    default void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        car(x, y, z, yaw, 0, 99, seed);
+    }
+
     /** The bottom of the world. */
     default int minY() {
         return -64;

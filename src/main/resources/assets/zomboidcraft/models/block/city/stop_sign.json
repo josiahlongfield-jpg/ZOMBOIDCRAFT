@@ -1,0 +1,117 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "stop_sign": "zomboidcraft:block/city/stop_sign",
+    "stop_sign_back": "zomboidcraft:block/city/stop_sign_back",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/streetlight_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        0,
+        7.25
+      ],
+      "to": [
+        8.75,
+        16,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        5.75
+      ],
+      "to": [
+        16,
+        16,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stop_sign"
+        },
+        "south": {
+          "texture": "#stop_sign"
+        },
+        "east": {
+          "texture": "#stop_sign",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stop_sign",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stop_sign",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stop_sign",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        6.5
+      ],
+      "to": [
+        16,
+        16,
+        7.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stop_sign_back"
+        },
+        "south": {
+          "texture": "#stop_sign_back"
+        },
+        "east": {
+          "texture": "#stop_sign_back",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stop_sign_back",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stop_sign_back",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stop_sign_back",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

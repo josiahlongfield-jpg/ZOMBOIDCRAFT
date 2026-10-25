@@ -1,5 +1,6 @@
 package com.zomboidcraft.world;
 
+import com.zomboidcraft.ZomboidCraft;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -199,7 +200,12 @@ public final class StandIns {
             fixed = parseProps(id.substring(at + 1, id.length() - 1));
             id = id.substring(0, at);
         }
-        Block vanilla = BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(id));
+        Identifier key = Identifier.withDefaultNamespace(id);
+        if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+            // a renamed or misspelt vanilla block would quietly come out as air
+            ZomboidCraft.LOGGER.warn("Unknown vanilla block in the generator: minecraft:{}", id);
+        }
+        Block vanilla = BuiltInRegistries.BLOCK.getValue(key);
         BlockState state = vanilla.defaultBlockState();
         for (Map.Entry<String, String> e : fixed.entrySet()) {
             state = with(state, e.getKey(), e.getValue());
@@ -227,9 +233,9 @@ public final class StandIns {
         if (axis != null) {
             state = with(state, "axis", axis);
         }
-        for (String key : new String[] {"half", "hinge", "open"}) {  // doors
-            if (props.containsKey(key)) {
-                state = with(state, key, props.get(key));
+        for (String prop : new String[] {"half", "hinge", "open"}) {  // doors
+            if (props.containsKey(prop)) {
+                state = with(state, prop, props.get(prop));
             }
         }
         return state;

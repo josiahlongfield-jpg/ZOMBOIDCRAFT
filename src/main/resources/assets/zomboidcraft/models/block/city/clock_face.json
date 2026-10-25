@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "clock_face": "zomboidcraft:block/city/clock_face",
+    "particle": "zomboidcraft:block/city/clock_face"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#clock_face",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#clock_face"
+        },
+        "east": {
+          "texture": "#clock_face",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#clock_face",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#clock_face",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#clock_face",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
