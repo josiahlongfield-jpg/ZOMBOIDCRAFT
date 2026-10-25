@@ -7,29 +7,29 @@
   "elements": [
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        0
       ],
       "to": [
+        9,
         16,
-        16,
-        9
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#fence_boards"
+          "texture": "#fence_boards",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#fence_boards"
+          "texture": "#fence_boards",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#fence_boards",
-          "cullface": "east"
+          "texture": "#fence_boards"
         },
         "west": {
-          "texture": "#fence_boards",
-          "cullface": "west"
+          "texture": "#fence_boards"
         },
         "up": {
           "texture": "#fence_boards",

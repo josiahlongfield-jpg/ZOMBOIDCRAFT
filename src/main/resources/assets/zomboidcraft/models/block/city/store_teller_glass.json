@@ -10,29 +10,29 @@
   "elements": [
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        0
       ],
       "to": [
+        9,
         16,
-        16,
-        9
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#store_teller_glass"
+          "texture": "#store_teller_glass",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#store_teller_glass"
+          "texture": "#store_teller_glass",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#store_teller_glass",
-          "cullface": "east"
+          "texture": "#store_teller_glass"
         },
         "west": {
-          "texture": "#store_teller_glass",
-          "cullface": "west"
+          "texture": "#store_teller_glass"
         },
         "up": {
           "texture": "#store_teller_glass",

@@ -271,8 +271,8 @@ public final class Shops {
         int z = Math.min(back - 3, 6);
         for (int x = left; x <= right; x++) {
             put(x, 1, z, (x - left) % 3 == 1 ? "store_register[facing=north]" : "store_counter[facing=north]");
-            put(x, 2, z, "store_teller_glass[axis=z]");
-            put(x, 3, z, "store_teller_glass[axis=z]");
+            put(x, 2, z, "store_teller_glass[axis=x]");
+            put(x, 3, z, "store_teller_glass[axis=x]");
         }
         put(left + 1, 1, back, "store_safe[facing=north]");
         put(right - 1, 1, back, "store_safe[facing=north]");

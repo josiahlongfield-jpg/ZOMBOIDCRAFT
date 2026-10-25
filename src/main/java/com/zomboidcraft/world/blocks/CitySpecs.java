@@ -18,9 +18,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("brick_dark", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("stone_trim", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("steel_mullion", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
-        s("window", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10, 7.5, 2, 7, 8.5, 14, 9, 2, 2, 7.75, 14, 14, 8.25);
-        s("window_lit", AXIS, SEE_THROUGH, 9, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10, 7.5, 2, 7, 8.5, 14, 9, 2, 2, 7.75, 14, 14, 8.25);
-        s("window_broken", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10, 2, 2, 7.75, 14, 14, 8.25);
+        s("window", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 6, 14, 0, 10, 16, 16, 5, 0, 0, 11, 2, 16, 6, 2, 0, 10, 14, 2, 6, 2, 14, 10, 14, 16, 7, 2, 7.5, 9, 14, 8.5, 7.75, 2, 2, 8.25, 14, 14);
+        s("window_lit", AXIS, SEE_THROUGH, 9, SoundType.GLASS, 0.3f, 6, 14, 0, 10, 16, 16, 5, 0, 0, 11, 2, 16, 6, 2, 0, 10, 14, 2, 6, 2, 14, 10, 14, 16, 7, 2, 7.5, 9, 14, 8.5, 7.75, 2, 2, 8.25, 14, 14);
+        s("window_broken", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 6, 14, 0, 10, 16, 16, 5, 0, 0, 11, 2, 16, 6, 2, 0, 10, 14, 2, 6, 2, 14, 10, 14, 16, 7.75, 2, 2, 8.25, 14, 14);
         s("office_floor", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 16);
         s("lobby_floor_white", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("lobby_floor_dark", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -137,7 +137,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("car_cabin_burnt", PLAIN, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 16);
         s("car_cabin_burnt_broken", PLAIN, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 16);
         s("car_door_burnt", FACING, 0, 0, SoundType.METAL, 2f, 0, 1, 7, 12, 15, 9);
-        s("boarded_window", AXIS, 0, 0, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10, 2, 2, 7, 14, 14, 9);
+        s("boarded_window", AXIS, 0, 0, SoundType.GLASS, 0.3f, 6, 14, 0, 10, 16, 16, 5, 0, 0, 11, 2, 16, 6, 2, 0, 10, 14, 2, 6, 2, 14, 10, 14, 16, 7, 2, 2, 9, 14, 14);
         s("sill", FACING, 0, 0, SoundType.STONE, 2f, 0, 13, 10, 16, 16, 16);
         s("water_tank", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
         s("water_tank_top", PLAIN, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 3, 15, 4, 3, 4, 12, 5, 12);
@@ -199,7 +199,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("lobby_floor_white_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("lobby_floor_dark_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("lobby_floor_dark_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
-        s("window_empty", AXIS, 0, 0, SoundType.GLASS, 0.3f, 0, 14, 6, 16, 16, 10, 0, 0, 5, 16, 2, 11, 0, 2, 6, 2, 14, 10, 14, 2, 6, 16, 14, 10);
+        s("window_empty", AXIS, 0, 0, SoundType.GLASS, 0.3f, 6, 14, 0, 10, 16, 16, 5, 0, 0, 11, 2, 16, 6, 2, 0, 10, 14, 2, 6, 2, 14, 10, 14, 16);
         s("grass_tuft", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 13, 14);
         s("weeds_tall", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 13, 14);
         s("rebar", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 2, 0, 2, 14, 13, 14);
@@ -220,7 +220,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("drywall_peel", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("drywall_brick", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("wallpaper_rotten", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
-        s("shutter", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 6, 16, 16, 10, 0.5, 0.5, 7, 15.5, 15.5, 9);
+        s("shutter", AXIS, 0, 0, SoundType.METAL, 2f, 6, 0, 0, 10, 16, 16, 7, 0.5, 0.5, 9, 15.5, 15.5);
         s("dumpster", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 11, 15, 0, 11, 1, 16, 12.5, 9);
         s("cardboard_box", FACING, LOOT, 0, SoundType.WOOD, 1f, 2, 0, 3, 11, 8, 12, 8, 0, 9, 15, 5, 15);
         loot("cardboard_box", "storage");
@@ -272,7 +272,7 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("store_oven", "kitchen");
         s("store_safe", FACING, LOOT, 0, SoundType.STONE, 2f, 2, 0, 2, 14, 14, 14, 2, 0, 1.5, 14, 14, 2);
         loot("store_safe", "till");
-        s("store_teller_glass", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 7, 16, 16, 9);
+        s("store_teller_glass", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 7, 0, 0, 9, 16, 16);
         s("store_clothes_rack", FACING, SEE_THROUGH | LOOT, 0, SoundType.METAL, 2f, 0, 15, 7.5, 16, 16, 8.5, 0, 0, 7.5, 1, 15, 8.5, 15, 0, 7.5, 16, 15, 8.5, 1, 3, 5, 15, 15, 11);
         loot("store_clothes_rack", "clothes");
         s("store_table", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 12, 0, 16, 13, 16, 7, 0, 7, 9, 12, 9, 4, 0, 4, 12, 0.5, 12);
@@ -372,7 +372,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("barn_grey", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
         s("barn_grey_b", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
         s("barn_grey_moss", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
-        s("fence_boards", AXIS, 0, 0, SoundType.WOOD, 1f, 0, 0, 7, 16, 16, 9);
+        s("fence_boards", AXIS, 0, 0, SoundType.WOOD, 1f, 7, 0, 0, 9, 16, 16);
         s("container_red", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("container_red_door", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("container_blue", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
