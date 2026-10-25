@@ -96,6 +96,7 @@ public final class WeatherDirector {
     /** Starts a kind of weather now, skipping the build-up (for /zc weather). */
     public static void force(WeatherKind next) {
         start(next);
+        bank = 0;  // what you asked for, without a fog bank rolling in over it
         warning = 0;
         current = target(null);
     }
