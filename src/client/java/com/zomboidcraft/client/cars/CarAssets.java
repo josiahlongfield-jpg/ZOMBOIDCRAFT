@@ -25,29 +25,44 @@ import net.minecraft.resources.Identifier;
  * a state's texture into a GPU texture only once a car in that state shows up.
  */
 public final class CarAssets {
-    /** Triangles in model space (metres, nose toward +z), their uvs, and a flat normal each. */
-    public record Mesh(int triangles, float[] pos, float[] uv, float[] normal) {
+    /**
+     * Triangles in model space (metres, nose toward +z), their uvs, and a flat normal each. The
+     * first {@code opaque} are solid; the rest are glass, drawn see-through.
+     */
+    public record Mesh(int triangles, int opaque, float[] pos, float[] uv, float[] normal) {
     }
 
     /** A boot lid, tailgate or back door: turns about the axis through pivot by up to angle radians. */
     public record Lid(boolean yAxis, float px, float py, float pz, float angle, Mesh mesh) {
     }
 
-    public record Ready(Mesh mesh, List<Lid> lids, Identifier texture) {
+    /** A road wheel: spins about the x axis through its centre, and the front ones steer. */
+    public record Wheel(float cx, float cy, float cz, float radius, boolean steers, Mesh mesh) {
+    }
+
+    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, Identifier texture) {
     }
 
     private static final class Variant {
         Mesh mesh;
         List<Lid> lids;
+        List<Wheel> wheels;
         byte[] jpeg;
         Identifier texture;
+        /** The car at each level of detail, simplified the first time it's needed. */
+        final Ready[] levels = new Ready[CarLod.LEVELS];
     }
 
     private static final Map<String, Map<String, Variant>> MODELS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
 
-    /** The mesh and texture for a model in a state, or null if it can't be loaded. Render thread only. */
+    /** The full mesh and texture for a model in a state, or null if it can't be loaded. Render thread only. */
     public static Ready get(String model, String state) {
+        return get(model, state, 0);
+    }
+
+    /** The mesh at a level of detail ({@link CarLod}) and texture, or null if it can't be loaded. Render thread only. */
+    public static Ready get(String model, String state, int level) {
         if (MISSING.contains(model)) {
             return null;
         }
@@ -82,7 +97,20 @@ public final class CarAssets {
             v.texture = id;
             v.jpeg = null;
         }
-        return new Ready(v.mesh, v.lids, v.texture);
+        Ready ready = v.levels[level];
+        if (ready == null) {
+            List<Lid> lids = new ArrayList<>(v.lids.size());
+            for (Lid lid : v.lids) {
+                lids.add(new Lid(lid.yAxis(), lid.px(), lid.py(), lid.pz(), lid.angle(), CarLod.simplify(lid.mesh(), level)));
+            }
+            List<Wheel> wheels = new ArrayList<>(v.wheels.size());
+            for (Wheel w : v.wheels) {
+                wheels.add(new Wheel(w.cx(), w.cy(), w.cz(), w.radius(), w.steers(), CarLod.simplify(w.mesh(), level)));
+            }
+            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, v.texture);
+            v.levels[level] = ready;
+        }
+        return ready;
     }
 
     private static Map<String, Variant> read(String model) throws IOException {
@@ -94,7 +122,7 @@ public final class CarAssets {
         Map<String, Variant> out = new HashMap<>();
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 2) {
+            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 3) {
                 throw new IOException("not a car file");
             }
             int count = in.readInt();
@@ -110,6 +138,13 @@ public final class CarAssets {
                     float px = in.readFloat(), py = in.readFloat(), pz = in.readFloat(), angle = in.readFloat();
                     v.lids.add(new Lid(yAxis, px, py, pz, angle, readMesh(in)));
                 }
+                int wheels = in.readInt();
+                v.wheels = new ArrayList<>(wheels);
+                for (int k = 0; k < wheels; k++) {
+                    float cx = in.readFloat(), cy = in.readFloat(), cz = in.readFloat(), r = in.readFloat();
+                    boolean steers = in.readByte() == 1;
+                    v.wheels.add(new Wheel(cx, cy, cz, r, steers, readMesh(in)));
+                }
                 out.put(name, v);
             }
         }
@@ -117,7 +152,7 @@ public final class CarAssets {
     }
 
     private static Mesh readMesh(DataInputStream in) throws IOException {
-        int tris = in.readInt();
+        int opaque = in.readInt(), tris = opaque + in.readInt();
         float[] pos = new float[tris * 9], uv = new float[tris * 6], normal = new float[tris * 3];
         for (int t = 0; t < tris * 3; t++) {
             pos[t * 3] = in.readShort() / 1000f;
@@ -140,7 +175,7 @@ public final class CarAssets {
             normal[t * 3 + 1] = ny / len;
             normal[t * 3 + 2] = nz / len;
         }
-        return new Mesh(tris, pos, uv, normal);
+        return new Mesh(tris, opaque, pos, uv, normal);
     }
 
     /** Textures ship as JPEG to keep the mod small; Minecraft only reads PNG, so Java decodes them. */

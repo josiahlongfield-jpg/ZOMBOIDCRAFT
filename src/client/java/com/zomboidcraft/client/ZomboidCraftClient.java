@@ -29,6 +29,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
         CombatClient.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
+        com.zomboidcraft.client.cars.CarClient.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);
