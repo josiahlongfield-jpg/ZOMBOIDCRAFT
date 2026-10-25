@@ -49,6 +49,16 @@ public final class ZcConfig {
         public boolean bashDoors = true;
         /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
         public int doorHits = 12;
+        /** A walker screams when it first spots you. */
+        public boolean alertScreams = true;
+        /** Seconds before the same zombie can scream again. */
+        public int alertCooldownSeconds = 20;
+        /** At most this many zombies within 16 blocks scream in the same two seconds, so a crowd doesn't scream as one. */
+        public int alertMaxTogether = 3;
+        /** Snarls every few seconds while chasing. */
+        public boolean chaseSnarls = true;
+        public double chaseSnarlMinSeconds = 2;
+        public double chaseSnarlMaxSeconds = 4;
     }
 
     public static class Senses {

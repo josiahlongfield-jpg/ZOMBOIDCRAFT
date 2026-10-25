@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
-/** Weapon sounds: recorded CC0 samples, listed in assets/zomboidcraft/sounds.json and credited in CREDITS.md. */
+/** Weapon and zombie sounds: recorded CC0 samples, listed in assets/zomboidcraft/sounds.json and credited in CREDITS.md. */
 public final class ModSounds {
     /** The shooter's own shot, played on their client. */
     public static final SoundEvent RIFLE_SHOT = register("weapon.rifle.shot");
@@ -28,6 +28,10 @@ public final class ModSounds {
     public static final SoundEvent STOMP = register("weapon.melee.stomp");
     public static final SoundEvent SHOVE = register("weapon.melee.shove");
     public static final SoundEvent GRAB = register("zombie.grab");
+    /** A walker's scream when it first spots someone. */
+    public static final SoundEvent ZOMBIE_ALERT = register("zombie.alert", 32f);
+    /** Snarls while it chases. */
+    public static final SoundEvent ZOMBIE_CHASE = register("zombie.chase", 24f);
 
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);
