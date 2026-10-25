@@ -21,22 +21,22 @@ NONMETAL = 10           # about 4% reflectance, plastics, paint, rubber, glass
 # Named metals (iron, aluminium) ignore the colour and shine silver whatever it is, and on thin edges the
 # texture's smaller copies blend their reflectance byte into the non-metal range as a near mirror: that is
 # what made the rifle look silver.
-WORN = 0.52
+WORN = 0.48
 MATERIALS = {
-    'anod': (0.44, NONMETAL, (0.36, NONMETAL, WORN)),
-    'rail': (0.42, NONMETAL, (0.34, NONMETAL, WORN)),
-    'guard': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'anod': (0.40, NONMETAL, (0.36, NONMETAL, WORN)),
+    'rail': (0.38, NONMETAL, (0.34, NONMETAL, WORN)),
+    'guard': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
     'park': (0.32, NONMETAL, (0.40, NONMETAL, 0.46)),
     'hider': (0.30, NONMETAL, (0.40, NONMETAL, 0.46)),
     'steel': (0.50, TINTED_METAL, None),
     'bright': (0.58, TINTED_METAL, None),
     'port': (0.36, NONMETAL, (0.40, NONMETAL, 0.46)),
-    'poly': (0.38, NONMETAL, None),
+    'poly': (0.34, NONMETAL, None),
     'grip': (0.28, NONMETAL, None),
     'gripper': (0.28, NONMETAL, None),
-    'scope': (0.44, NONMETAL, (0.36, NONMETAL, WORN)),
+    'scope': (0.40, NONMETAL, (0.36, NONMETAL, WORN)),
     'knurl': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
-    'bezel': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'bezel': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
     'cap': (0.30, NONMETAL, (0.40, NONMETAL, 0.44)),
     'lamp': (0.92, 18, None),
     'lens_green': (0.92, 18, None),
@@ -44,8 +44,8 @@ MATERIALS = {
     'mag': (0.34, NONMETAL, None),
     'rubber': (0.14, 8, None),
     'bore': (0.08, 6, None),
-    'housing': (0.42, NONMETAL, None),
-    'bezel_r': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'housing': (0.38, NONMETAL, None),
+    'bezel_r': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
     'mark': (0.40, NONMETAL, (0.40, NONMETAL, WORN)),
     'screw': (0.50, TINTED_METAL, None),
     'can': (0.28, NONMETAL, (0.42, NONMETAL, 0.42)),

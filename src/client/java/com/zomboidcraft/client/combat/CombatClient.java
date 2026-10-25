@@ -114,6 +114,9 @@ public final class CombatClient {
         client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(),
                 suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED : ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
+        if (!suppressed && config.muzzleFlash) {
+            RifleView.fired(player);
+        }
         float kick = (aiming ? 1.1f : 2.0f) * (float) (config.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));

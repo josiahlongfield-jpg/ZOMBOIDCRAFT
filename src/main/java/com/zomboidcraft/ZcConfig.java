@@ -271,8 +271,10 @@ public final class ZcConfig {
         public double noStockSpread = 1.6;
         /** A laser multiplies spread from the hip. */
         public double laserHipSpread = 0.6;
-        /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). The gun's own flash still shows. */
+        /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** A short, soft flash at the muzzle with each shot (none through a suppressor). */
+        public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
         public double aimSway = 0.15;
         /** First person animates reloads: the old magazine drops away, a new one goes in, the charging handle is worked on an empty gun. Client side. */

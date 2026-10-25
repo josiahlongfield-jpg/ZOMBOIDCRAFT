@@ -106,7 +106,7 @@ public final class Guns {
         gun.set(GunState.TYPE, g.withRounds(g.rounds() - 1));
         gun.hurtAndBreak(1, player, net.minecraft.world.InteractionHand.MAIN_HAND);
         st.flashLeft = FLASH_TICKS;
-        setModelData(gun, 0, 1);
+        setModelData(gun, 0, config.muzzleFlash ? 1 : 0);
 
         // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.

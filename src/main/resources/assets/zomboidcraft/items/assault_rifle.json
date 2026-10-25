@@ -91,30 +91,8 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash_suppressor"
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/suppressor"
          }
         },
         {
@@ -127,8 +105,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/muzzle_flash"
+             }
             }
            }
           ],
@@ -146,8 +139,23 @@
          {
           "threshold": 1,
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/flash"
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/muzzle_flash"
+           }
           }
          }
         ],
@@ -323,30 +331,8 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash_suppressor"
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/suppressor"
          }
         },
         {
@@ -359,8 +345,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/muzzle_flash"
+             }
             }
            }
           ],
@@ -378,8 +379,23 @@
          {
           "threshold": 1,
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/flash"
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/muzzle_flash"
+           }
           }
          }
         ],
@@ -591,30 +607,8 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/charge/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash_suppressor"
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/suppressor"
          }
         },
         {
@@ -627,8 +621,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/charge/muzzle_flash"
+             }
             }
            }
           ],
@@ -646,8 +655,23 @@
          {
           "threshold": 1,
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/charge/flash"
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/muzzle_flash"
+           }
           }
          }
         ],
@@ -803,30 +827,8 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:composite",
-            "models": [
-             {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/suppressor"
-             },
-             {
-              "type": "minecraft:range_dispatch",
-              "property": "minecraft:custom_model_data",
-              "index": 1,
-              "entries": [
-               {
-                "threshold": 1,
-                "model": {
-                 "type": "minecraft:model",
-                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash_suppressor"
-                }
-               }
-              ],
-              "fallback": {
-               "type": "minecraft:empty"
-              }
-             }
-            ]
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/suppressor"
            }
           },
           {
@@ -839,8 +841,23 @@
              {
               "threshold": 1,
               "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash"
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/muzzle_flash"
+               }
               }
              }
             ],
@@ -858,8 +875,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/muzzle_flash"
+             }
             }
            }
           ],
@@ -1006,30 +1038,8 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:composite",
-            "models": [
-             {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/suppressor"
-             },
-             {
-              "type": "minecraft:range_dispatch",
-              "property": "minecraft:custom_model_data",
-              "index": 1,
-              "entries": [
-               {
-                "threshold": 1,
-                "model": {
-                 "type": "minecraft:model",
-                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash_suppressor"
-                }
-               }
-              ],
-              "fallback": {
-               "type": "minecraft:empty"
-              }
-             }
-            ]
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/suppressor"
            }
           },
           {
@@ -1042,8 +1052,23 @@
              {
               "threshold": 1,
               "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash"
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/muzzle_flash"
+               }
               }
              }
             ],
@@ -1061,8 +1086,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/muzzle_flash"
+             }
             }
            }
           ],
@@ -1209,30 +1249,8 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:composite",
-            "models": [
-             {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/suppressor"
-             },
-             {
-              "type": "minecraft:range_dispatch",
-              "property": "minecraft:custom_model_data",
-              "index": 1,
-              "entries": [
-               {
-                "threshold": 1,
-                "model": {
-                 "type": "minecraft:model",
-                 "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash_suppressor"
-                }
-               }
-              ],
-              "fallback": {
-               "type": "minecraft:empty"
-              }
-             }
-            ]
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/suppressor"
            }
           },
           {
@@ -1245,8 +1263,23 @@
              {
               "threshold": 1,
               "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash"
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/muzzle_flash"
+               }
               }
              }
             ],
@@ -1264,8 +1297,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/muzzle_flash"
+             }
             }
            }
           ],
@@ -1464,30 +1512,8 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash_suppressor"
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/suppressor"
          }
         },
         {
@@ -1500,8 +1526,23 @@
            {
             "threshold": 1,
             "model": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads/muzzle_flash"
+             }
             }
            }
           ],
@@ -1519,8 +1560,23 @@
          {
           "threshold": 1,
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/ads/flash"
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/muzzle_flash"
+           }
           }
          }
         ],
@@ -1718,30 +1774,8 @@
        {
         "when": "suppressor",
         "model": {
-         "type": "minecraft:composite",
-         "models": [
-          {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/hip/suppressor"
-          },
-          {
-           "type": "minecraft:range_dispatch",
-           "property": "minecraft:custom_model_data",
-           "index": 1,
-           "entries": [
-            {
-             "threshold": 1,
-             "model": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash_suppressor"
-             }
-            }
-           ],
-           "fallback": {
-            "type": "minecraft:empty"
-           }
-          }
-         ]
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/suppressor"
         }
        },
        {
@@ -1754,8 +1788,23 @@
           {
            "threshold": 1,
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash"
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/assault_rifle/hip/muzzle_flash"
+            }
            }
           }
          ],
@@ -1773,8 +1822,23 @@
         {
          "threshold": 1,
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/hip/flash"
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": [
+             "firstperson_righthand",
+             "firstperson_lefthand"
+            ],
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/muzzle_flash"
+          }
          }
         }
        ],
