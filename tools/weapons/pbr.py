@@ -74,18 +74,35 @@ def spec(mat, f, rgb):
     return out
 
 
-def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55):
-    """Edge bevels (so blocky parts catch the light like machined edges) plus a little relief from the
-    painted detail. lu, lv: the face's size in model units; px: texture pixels per unit."""
+def round_tilt(f, k=0.7):
+    """A round bar's faces lean outward toward their sides, so the stepped boxes of a rod catch the light
+    like a cylinder: returns the tilt along the patch's u and v (zero on flat parts and end faces)."""
+    r = f.box.get('round')
+    if not r or f.end_face():
+        return 0.0, 0.0
+    a, b = f.across()
+    axes = [i for i in range(3) if i != f.axis]
+    off = np.clip((a if abs(f.n[axes[0]]) < 0.5 else b) / r, -1, 1)
+    H, W = off.shape
+    du = np.sign(off[:, -1].mean() - off[:, 0].mean()) if W > 1 else 0.0
+    dv = np.sign(off[-1, :].mean() - off[0, :].mean()) if H > 1 else 0.0
+    return off * k * du, off * k * dv
+
+
+def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None):
+    """Edge bevels (so blocky parts catch the light like machined edges), the lean of round bars, plus a
+    little relief from the painted detail (and `height`, if given). lu, lv: the face's size in model units;
+    px: texture pixels per unit."""
     u, v = f.uv[..., 0], f.uv[..., 1]
     b = max(1.0 / px, min(bevel, 0.3 * min(lu, lv)))
 
     def t(d):
         return tilt * np.clip(1 - d / b, 0, 1)
 
-    nx = -t(u) + t(lu - u)
-    ny = -t(v) + t(lv - v)
-    L = lum(rgb)
+    ru, rv = round_tilt(f)
+    nx = -t(u) + t(lu - u) + ru
+    ny = -t(v) + t(lv - v) + rv
+    L = lum(rgb) if height is None else lum(rgb) + height
     if L.shape[0] > 2 and L.shape[1] > 2:
         dv, du = np.gradient(L)
         nx = nx - du * bump
@@ -98,3 +115,127 @@ def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55):
     out[..., 0] = nx * 0.5 + 0.5
     out[..., 1] = ny * 0.5 + 0.5
     return out
+
+
+# ---------------------------------------------------------------- melee weapons
+# Each melee material is one of these kinds. The kind reads the painted colour (before grime, scratches
+# and blood go on) to tell the finish from bare metal from rust; those passes then change it where they
+# landed. B in _s is porosity (0-64): how much a surface soaks up rain and darkens in it, which shader packs
+# with wetness use.
+
+PLAIN = {  # smoothness, reflectance byte, porosity
+    'lacquer': (0.56, NONMETAL, 6),       # a lacquered bat or stick
+    'varnish': (0.40, NONMETAL, 22),      # a varnished tool handle, worn thin
+    'cloth_tape': (0.10, NONMETAL, 52),
+    'grip_tape': (0.22, NONMETAL, 28),
+    'duct': (0.46, NONMETAL, 4),
+    'polymer': (0.36, NONMETAL, 2),
+    'rubber': (0.14, 8, 0),
+    'fibreglass': (0.60, NONMETAL, 2),
+    'cord': (0.30, NONMETAL, 40),         # silk cord over ray skin
+    'card': (0.18, NONMETAL, 60),
+}
+METAL_UNDER = {'steel', 'blade', 'painted', 'cast_iron', 'galvanised', 'chrome', 'brass'}
+RUST = (0.12, NONMETAL, 56)
+BLOOD = (0.48, 6, 0)
+
+
+def sat(rgb):
+    mx = rgb.max(-1)
+    return (mx - rgb.min(-1)) / np.maximum(mx, 1e-3)
+
+
+def rustiness(rgb):
+    """How much of each pixel is orange-brown corrosion: rust is warm and saturated, steel is grey, and red
+    paint is far redder (much less green) than rust."""
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    ratio = g / np.maximum(r, 1e-3)
+    warm = (r > g) & (g > b) & (ratio > 0.3) & (ratio < 0.8)
+    return np.where(warm, np.clip((sat(rgb) - 0.15) / 0.4, 0, 1), 0.0)
+
+
+def melee_spec(kind, f, rgb, wear):
+    """Smoothness, reflectance (0-1) and porosity (0-1 of the byte) for a melee surface of this kind."""
+    H, W = f.shape
+    jitter = (f.noise(3.0, 401, 2) - 0.5) * 0.08
+    if kind in PLAIN:
+        s0, g0, p0 = PLAIN[kind]
+        if kind in ('lacquer', 'varnish'):
+            s0 -= 0.18 * wear          # the finish wears dull where hands and hits go
+        return (np.full((H, W), s0) + jitter, np.full((H, W), g0 / 255.0), np.full((H, W), p0 / 255.0))
+    L = lum(rgb)
+    s = np.zeros((H, W))
+    g = np.full((H, W), IRON / 255.0)
+    p = np.zeros((H, W))
+    if kind in ('steel', 'blade'):
+        s = 0.42 + 0.42 * np.clip((L - 0.3) / 0.55, 0, 1)        # the brighter, the more polished
+        if kind == 'blade':                                   # a dark coated blade (the machete's)
+            coat = (L < 0.42) & (sat(rgb) < 0.2)
+            s = np.where(coat, 0.32, s)
+            g = np.where(coat, NONMETAL / 255.0, g)
+    elif kind == 'painted':
+        bare = sat(rgb) < 0.18
+        s = np.where(bare, 0.5, 0.5 - 0.14 * wear)
+        g = np.where(bare, IRON / 255.0, NONMETAL / 255.0)
+    elif kind == 'cast_iron':                                 # seasoned or blackened, scuffed to bare iron
+        bare = L > 0.3
+        s = np.where(bare, 0.46, 0.40)
+        g = np.where(bare, IRON / 255.0, NONMETAL / 255.0)
+        p = np.where(bare, 0.0, 6 / 255.0)
+    elif kind == 'galvanised':                                # zinc, with white oxide bloom
+        bloom = L > 0.63
+        s = np.where(bloom, 0.2, 0.42)
+        g = np.where(bloom, NONMETAL / 255.0, TINTED_METAL / 255.0)
+        p = np.where(bloom, 20 / 255.0, 0.0)
+    elif kind == 'chrome':
+        s = np.full((H, W), 0.86)
+        g = np.full((H, W), CHROME / 255.0)
+    elif kind == 'brass':
+        s = np.full((H, W), 0.62)
+        g = np.full((H, W), TINTED_METAL / 255.0)
+    else:
+        raise KeyError(f'no melee PBR kind {kind!r}')
+    if kind != 'chrome' and kind != 'brass':
+        rust = rustiness(rgb)
+        s = s * (1 - rust) + RUST[0] * rust
+        g = np.where(rust > 0.5, RUST[1] / 255.0, g)
+        p = p * (1 - rust) + RUST[2] / 255.0 * rust
+    return s + jitter, g, p
+
+
+def melee_layers(kind, f, base, final, wear, marks, lu, lv, px):
+    """The _s and _n patches for one melee face. base: the painted colour; final: after grime, scratches
+    and blood; marks: how strongly each of those passes landed on each pixel."""
+    s, g, p = melee_spec(kind, f, base, wear)
+    grime = marks.get('grime')
+    if grime is not None:
+        s = s * (1 - 0.6 * grime)
+        g = np.where((grime > 0.55) & (g > 229 / 255.0), NONMETAL / 255.0, g)
+        p = np.maximum(p, 40 / 255.0 * grime)
+    scratch = marks.get('scratch')
+    if scratch is not None:
+        if kind in METAL_UNDER:                               # scored through to bright metal
+            s = np.where(scratch, 0.56, s)
+            g = np.where(scratch, IRON / 255.0 if kind != 'galvanised' else TINTED_METAL / 255.0, g)
+        else:                                                 # scuffed: rougher, and wood soaks through
+            s = np.where(scratch, s * 0.6, s)
+            p = np.where(scratch, np.maximum(p, 36 / 255.0), p)
+    blood = marks.get('blood')
+    if blood is not None:
+        tack = (f.noise(2.2, 409, 2) - 0.5) * 0.24          # some patches still tacky, some dried flat
+        s = np.where(blood, BLOOD[0] + tack, s)
+        g = np.where(blood, BLOOD[1] / 255.0, g)
+        p = np.where(blood, 0.0, p)
+    H, W = f.shape
+    sp = np.zeros((H, W, 4))
+    sp[..., 0] = np.clip(s, 0, 1)
+    sp[..., 1] = g
+    sp[..., 2] = np.clip(p, 0, 64 / 255.0)
+    sp[..., 3] = 1.0
+    height = None
+    if kind not in PLAIN and kind not in ('chrome', 'brass'):
+        height = rustiness(base) * (f.noise(9.0, 411, 2) - 0.5) * 0.9     # pitted where it's rusted
+    if blood is not None:
+        bl = blood * 0.12                                     # blood stands a little proud
+        height = bl if height is None else height + bl
+    return sp, normal(f, final, lu, lv, px, height=height)
