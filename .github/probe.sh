@@ -8,6 +8,23 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== carry1"
+classes 'client/item/v1/|attachment/v1/AttachmentRegistry|attachment/v1/AttachmentRegistry\$Builder|world/ContainerHelper|entity/v1/ServerPlayerEvents|entity/event/v1/ServerPlayerEvents|item/ItemStackTemplate'
+sig net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback '.'
+sig 'net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry$Builder' '.'
+sig net.minecraft.world.ContainerHelper 'public'
+sig net.minecraft.world.item.Item 'Hover|Tooltip|onDestroyed|inventoryTick|canFitInside|overrideStackedOnOther|overrideOtherStackedOnMe'
+sig net.minecraft.world.entity.player.Player ' drop\(|hasInfiniteMaterials|isCreative|getInventory'
+sig net.minecraft.world.Container 'public|default'
+sig net.minecraft.world.SimpleContainer 'public'
+sig net.minecraft.world.item.ItemStackTemplate 'public'
+sig net.minecraft.world.item.ItemStack 'OPTIONAL_CODEC|CODEC|isSameItemSameComponents|copyWithCount|getMaxStackSize|isStackable|limitSize|split'
+sig net.minecraft.core.NonNullList 'public static'
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/quickMoveStack(net.minecraft.world.entity.player.Player, int)/,/^$/p' | grep -E "bipush|sipush|iconst|if_|invoke" | head -60
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public boolean add(int, net.minecraft.world.item.ItemStack)/,/^$/p' | grep -E "invoke|ireturn" | head -30
+javap -cp "$CP" -c -p net.minecraft.world.entity.player.Inventory 2>&1 | sed -n '/public void dropAll()/,/^$/p' | grep -E "invoke" | head -20
+exit 0
+
 echo "===== inventory2"
 echo "## InventoryScreen.init / constructor bytecode"
 javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/void init()/,/^$/p' | head -60
