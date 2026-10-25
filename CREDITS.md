@@ -143,3 +143,41 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | ui.wear | [holster.wav](https://freesound.org/people/isbeorn/sounds/350461/) | isbeorn | CC0 1.0 |
 | ui.item_move | Lock01_outdoor_opening_lite03 (Alexander Ahura - Locks & Keys) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | ui.moodle | [Single Heartbeat Clean HQ_BeatSmith.wav](https://freesound.org/people/Lunardrive/sounds/22440/) | Lunardrive | CC0 1.0 |
+
+## World ambience
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_ambience_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| amb.rain | [Lightning 4-30-2016.aif](https://freesound.org/people/AVstudent/sounds/344994/) | AVstudent | CC0 1.0 |
+| amb.rain | ambient rain light washed out stereo MS (Soundholder - Rain & Thunder) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| amb.roof | Soft rain, water flowing down from the roof and splashes on cement, city ambience, loop (Sound Ex Machina - RAIN CITY) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| amb.roof | RAINInt_Rain Light Interior Hail Storm_The Noisery_City Rain (The Noisery - City Rain) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
+| amb.roof | GAF SFX04 - LIQUIDS - Hard rain, plexiglas ceiling, inside, hard drops (Game Audio Factory - GAFSFX04 - Liquids Materials) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| amb.window | [Rain on window (interior)](https://freesound.org/people/xkeril/sounds/669486/) | xkeril | CC0 1.0 |
+| amb.drip | [0307_051735 rain close drips.WAV](https://freesound.org/people/cinningbao/sounds/653415/) | cinningbao | CC0 1.0 |
+| amb.wind | Wind,Ext,Alley,Urban,Howl,Pronounced,Metal,Clinking (Hzandbits - Urban Winds) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| amb.wind | RMB10_AMBIENCE_CITY RUMBLE_Large city_Light wind debris (Collected Transients - Diffuse City) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| amb.wind | Wind,Ext,Marina,Masts,Wires,Buffeting,Whistle,Clank (Hzandbits - Urban Winds II) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| amb.night | [Wind singing in the mountain, some night cricket in background](https://freesound.org/people/felix.blume/sounds/165526/) | felix.blume | CC0 1.0 |
+| amb.night | [screech_owl.wav](https://freesound.org/people/ivolipa/sounds/353173/) | ivolipa | CC0 1.0 |
+| amb.night | AMB PARK Solo Cricket, Seagulls, City Rumble, Montreal, Canada, LOOP (Articulated Sounds - Nature in the City) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| amb.thunder | Thunder_Boom_Fienup_005 (Soundopolis - Natures Fury_Thunder) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| amb.thunder | thunder_clap_04 (Soundrangers – Thunder) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| amb.thunder | Thunder_Very-Close_Rain_08 (InspectorJ - 44.1 General Library) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| amb.thunder | rain_shower of rain_steady rain_thunder (Invisible - Storm, gale and thunderstorm) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| amb.thunder | ambient thunder clap distant with rain mono (Soundholder - Rain & Thunder) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| amb.thunder | thunderstorm_summer_morning_distant_rumble_sparse_approaching_2 (Pole Position - Thunder & Rain) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| amb.thunder | THUN_InsJ_Thunder_Distant_01_EQ (InspectorJ - Essentials 01 Thunder) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| amb.creak | [Wood Creak Single V1](https://freesound.org/people/Rudmer_Rotteveel/sounds/502505/) | Rudmer_Rotteveel | CC0 1.0 |
+| amb.creak | Plastic_Creak_Bottle_File_2_Takes_7 (Effectsworks – CREAKS, SQUEAKS & SQUEALS) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| amb.creak | Bluezone_BC0254_wood_creaking_tree_005 (BlueZone - Wood Sound Effects) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| amb.creak | [creaking floor OWI.wav](https://freesound.org/people/miekyj/sounds/326460/) | miekyj | CC0 1.0 |
+| amb.creak | [Door opening stairs walking.wav](https://freesound.org/people/BonnyOrbit/sounds/334143/) | BonnyOrbit | CC0 1.0 |
+| amb.crow | [Raven call.wav](https://freesound.org/people/deleted_user_958643/sounds/328846/) | deleted_user_958643 | CC0 1.0 |
+| amb.crow | Ravens 2015 Medlock Ravens 3 (Discover Oregon - Ravens and Robins) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| amb.crow | AMB SUBURB Crow in City, Sparrow Chirps, Montreal, Canada, LOOP (Articulated Sounds - Nature in the City) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| amb.crow | [A Murder of Crows](https://freesound.org/people/Franki-01234/sounds/214869/) | Franki-01234 | CC0 1.0 |
+| amb.distant | explosion_far_distant_02 (Gamemaster Audio -  Explosion Sound Pack) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| amb.distant | warfare_t1b_cannon_firing_forest_distant_MKH8060_2 (Pole Position - The Warfare Library) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
