@@ -7,7 +7,7 @@ import numpy as np
 
 import model as M
 import paint as P
-from inch import Inch
+from inch import IN, Inch
 
 CO_WITNESS = 1.41       # optics put their reticle this far over the rail, level with folding irons
 
@@ -35,7 +35,9 @@ HOLO_EYE = 1.8
 def red_dot(m):
     """A red dot with a wide objective (Trijicon MRO style) on a quick-release riser. Inside, the housing
     steps out toward the front just wider than the cone the eye sees the front lens through, so aiming
-    you look at the dot and the world through a thin rim, not down a tunnel. The linings are flat black."""
+    you look at the dot and the world through a thin rim, not down a tunnel. The linings are flat black;
+    what the eye does see from behind (the machined rear bezel, the turret and dial, the riser's screws
+    and cross-bolt) carries the detail."""
     b = Inch(m)
     H = CO_WITNESS
     rear, front, lens_r = 0.85, -1.15, 0.66
@@ -44,21 +46,33 @@ def red_dot(m):
     b.box((-0.47, 0.0, -0.62), (0.47, 0.30, 0.62), 'anod')
     jaws(b, -0.62, 0.62)
     b.box((-0.62, 0.02, -0.50), (-0.52, 0.24, 0.40), 'anod')                 # throw lever
+    b.box((-0.66, 0.08, 0.30), (-0.60, 0.20, 0.55), 'anod')                  # its thumb tab
+    b.rod(0.47, 0.58, 0.10, 'steel', axis=0, at=(0.15, -0.20))               # cross-bolt nut, right
     b.box((-0.33, 0.30, -0.52), (0.33, 0.66, 0.52), 'anod')                  # riser
+    b.box((-0.22, 0.38, 0.52), (0.22, 0.58, 0.53), 'mark')                   # riser's engraved plate
     b.box((-0.40, 0.66, -0.80), (0.40, 0.84, 0.70), 'anod')                  # sight's own base
+    for x in (-0.30, 0.18):                                                   # base screws, seen from behind
+        b.box((x, 0.70, 0.70), (x + 0.12, 0.80, 0.73), 'screw')
     steps = [(0.65, rear, 0.10), (0.15, 0.65, 0.08), (-0.35, 0.15, 0.08), (-0.85, -0.35, 0.08), (front, -0.85, 0.11)]
-    for z0, z1, wall in steps:
+    for i, (z0, z1, wall) in enumerate(steps):
         r_in = max(cone * (eye - z0) + 0.01, 0.30)
-        b.tube(z0, z1, r_in + 0.02, r_in + 0.02 + wall, 'housing', at=(0.0, H))
+        b.tube(z0, z1, r_in + 0.02, r_in + 0.02 + wall, 'bezel_r' if i in (0, len(steps) - 1) else 'housing', at=(0.0, H))
         b.tube(z0, z1, r_in, r_in + 0.02, 'bore', at=(0.0, H), noshade=True)
-    b.rod(H + 0.54, H + 0.80, 0.24, 'anod', axis=1, at=(0.0, -0.10))         # elevation turret
-    b.rod(0.62, 0.90, 0.28, 'knurl', axis=0, at=(H, -0.10))                   # brightness dial
-    b.box((-0.035, H - 0.035, front + 0.08), (0.035, H + 0.035, front + 0.12), 'dot', light=15, noshade=True)
+    b.rod(H + 0.54, H + 0.76, 0.24, 'knurl', axis=1, at=(0.0, -0.10))        # elevation turret
+    b.rod(H + 0.76, H + 0.82, 0.20, 'anod', axis=1, at=(0.0, -0.10))         # its cap
+    b.box((-0.15, H + 0.82, -0.125), (0.15, H + 0.835, -0.075), 'bore')       # coin slot
+    b.box((-0.03, H + 0.60, 0.14), (0.03, H + 0.74, 0.145), 'mark')           # index line toward the eye
+    b.rod(0.62, 0.88, 0.28, 'knurl', axis=0, at=(H, -0.10))                   # brightness dial
+    b.rod(0.88, 0.92, 0.20, 'anod', axis=0, at=(H, -0.10))
+    b.box((0.92, H + 0.10, -0.13), (0.925, H + 0.16, -0.07), 'mark')          # its setting mark
+    b.box((-0.04, H - 0.04, front + 0.08), (0.04, H + 0.04, front + 0.12), 'dot', light=15, noshade=True)
 
 
 def holo(m):
     """A holographic sight (EOTech EXPS3 style): a big window in a thin, shallow hood, the body with the
-    battery and buttons kept down below the window, and the 65 MOA ring and dot floating in the front glass."""
+    battery and buttons kept down below the window, and the 68 MOA ring (ticks at the four points) and dot
+    floating in the front glass. From behind you see the window's bezels, the hood's ribs and screws, and
+    the buttons and battery cap on the deck."""
     b = Inch(m)
     H = CO_WITNESS
     L0, L1 = -1.85, 1.75                                                      # body, front and back
@@ -69,6 +83,7 @@ def holo(m):
     jaws(b, -1.30, 0.70, half=0.66)
     for z0 in (-1.05, 0.05):                                                  # QD levers
         b.box((-0.84, 0.03, z0), (-0.70, 0.27, z0 + 0.75), 'anod')
+        b.box((-0.88, 0.08, z0 + 0.55), (-0.84, 0.22, z0 + 0.75), 'anod')     # lever tips
     b.box((-0.62, 0.32, L0), (0.62, deck, L1), 'anod')                       # body, battery in the back
     b.box((-xo, deck, W0), (xo, sill, W1), 'anod')                            # under the window
     b.box((-xi, sill - 0.02, W0), (xi, sill, W1), 'bore', noshade=True)      # dark sill
@@ -78,12 +93,32 @@ def holo(m):
     for x0, x1 in ((-xi, -xi + 0.015), (xi - 0.015, xi)):                     # flat black inside the hood
         b.box((x0, sill, W0), (x1, top, W1), 'bore', noshade=True)
     b.box((-xi, top - 0.015, W0), (xi, top, W1), 'bore', noshade=True)
-    for x0 in (-0.36, 0.10):                                                  # brightness buttons on the back
-        b.box((x0, 0.40, L1), (x0 + 0.26, 0.56, L1 + 0.07), 'rubber')
+    lip = 0.035                                                               # window bezels, back and front
+    for z0, z1 in ((W1 - 0.04, W1), (W0, W0 + 0.03)):
+        b.box((-xi, top - 0.015 - lip, z0), (xi, top - 0.015, z1), 'anod')
+        b.box((-xi, sill, z0), (xi, sill + lip * 0.6, z1), 'anod')
+        b.box((-xi, sill, z0), (-xi + 0.015 + lip, top, z1), 'anod')
+        b.box((xi - 0.015 - lip, sill, z0), (xi, top, z1), 'anod')
+    for k in range(4):                                                        # grip ribs across the hood top
+        z = W0 + 0.08 + k * 0.13
+        b.box((-xo + 0.06, top + 0.10, z), (xo - 0.06, top + 0.13, z + 0.05), 'anod')
+    for x in (-xo + 0.04, xo - 0.12):                                         # hood screws
+        b.box((x, top + 0.10, W1 - 0.10), (x + 0.08, top + 0.125, W1 - 0.02), 'screw')
+    for i, x0 in enumerate((-0.40, -0.11, 0.18)):                              # up, down and night-vision buttons
+        b.box((x0, 0.38, L1), (x0 + 0.22, 0.58, L1 + 0.06), 'rubber')
+        b.box((x0 + 0.06, 0.45, L1 + 0.06), (x0 + 0.16, 0.51, L1 + 0.065), 'mark' if i < 2 else 'rubber')
+    b.rod(0.62, 0.70, 0.17, 'knurl', axis=0, at=(0.30, 1.20))                 # battery cap, right side
+    b.box((-0.22, deck, 0.95), (0.22, deck + 0.012, 1.35), 'mark')            # engraved deck plate
     b.box((xo, sill - 0.20, -0.30), (xo + 0.08, sill + 0.04, 0.05), 'steel')  # windage screw
-    b.box((-0.08, top + 0.10, -0.25), (0.08, top + 0.14, 0.10), 'steel')      # elevation screw
-    b.ring(W0 + 0.02, W0 + 0.04, 0.17, 'dot', at=(0.0, H), steps=8, w=0.025, light=15, noshade=True)
-    b.box((-0.02, H - 0.02, W0 + 0.02), (0.02, H + 0.02, W0 + 0.04), 'dot', light=15, noshade=True)
+    b.box((-0.08, top + 0.13, -0.25), (0.08, top + 0.17, 0.10), 'steel')      # elevation screw
+    z0, z1 = W0 + 0.035, W0 + 0.05
+    b.ring(z0, z1, 0.17, 'dot', at=(0.0, H), steps=16, w=0.022, light=15, noshade=True)
+    t, L = 0.011, 0.045                                                       # the ring's four ticks
+    b.box((-t, H + 0.17 - L, z0), (t, H + 0.17, z1), 'dot', light=15, noshade=True)
+    b.box((-t, H - 0.17, z0), (t, H - 0.17 + L, z1), 'dot', light=15, noshade=True)
+    b.box((0.17 - L, H - t, z0), (0.17, H + t, z1), 'dot', light=15, noshade=True)
+    b.box((-0.17, H - t, z0), (-0.17 + L, H + t, z1), 'dot', light=15, noshade=True)
+    b.box((-0.018, H - 0.018, z0), (0.018, H + 0.018, z1), 'dot', light=15, noshade=True)
 
 
 SCOPE_H = 1.50
@@ -197,6 +232,33 @@ def look(wear=0.4):
     def bore(f):
         return P.plain(f, '#0f1012', 0.05)
 
+    def mark(f):
+        # laser-engraved markings: pale grey flecks in lines, like small print
+        c = P.anodised(f, '#2a2d31', '#2a2d31')
+        a, b = f.uv[..., 0], f.uv[..., 1]
+        rows = ((b * 34) % 1 < 0.5) & ((b * 34) % 3 < 2)
+        chars = (np.sin(a * 170 + np.floor(b * 34) * 2.1) + np.sin(a * 71 + np.floor(b * 34)) > 0.7)
+        return np.where((rows & chars)[..., None], P.mix(c, P.col('#7a7f85'), 0.6), c)
+
+    def screw(f):
+        # a cap screw head: the hex socket on the face that shows, scuffed bright at the rim
+        c = P.steel(f, 0.32, spread=0.1)
+        a, b = f.uv[..., 0], f.uv[..., 1]
+        cu, cv = f.uv[..., 0].max() / 2, f.uv[..., 1].max() / 2
+        r = np.hypot(a - cu, b - cv) / max(min(cu, cv), 1e-3)
+        c = np.where((r < 0.45)[..., None], c * 0.25, c)
+        return np.where((r > 0.85)[..., None], c * 1.25, c)
+
+    def bezel_r(f):
+        # the rear and front bezels: machined rings on the faces you look at, knurled bands round the outside
+        c = housing(f)
+        if abs(f.n[2]) > 0.5:
+            r = np.hypot(f.X, f.Y - CO_WITNESS * IN)
+            g = (r * 60) % 1 < 0.3
+        else:
+            g = (f.Z * 45) % 1 < 0.35
+        return np.where(g[..., None], c * 0.6, c)
+
     def housing(f):
         # round housings are many staves: no edge wear on each, just scuffs, so they read as one smooth tube
         c = P.anodised(f, '#232629', '#232629')
@@ -227,7 +289,7 @@ def look(wear=0.4):
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
-    d = dict(anod=anod, bore=bore, housing=housing, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
+    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
              cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.45, spread=0.14),
              poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
