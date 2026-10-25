@@ -105,9 +105,9 @@ public final class Guns {
         // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1f,
-                (suppressed ? 1.25f : 0.95f) + player.getRandom().nextFloat() * 0.1f);
+        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(),
+                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
+                suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         Noise.emit(level, player.position(), config.shotNoise * (suppressed ? config.suppressedNoise : 1.0));

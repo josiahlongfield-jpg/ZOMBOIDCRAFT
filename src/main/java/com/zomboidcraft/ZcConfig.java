@@ -59,6 +59,16 @@ public final class ZcConfig {
         public boolean chaseSnarls = true;
         public double chaseSnarlMinSeconds = 2;
         public double chaseSnarlMaxSeconds = 4;
+        /** A crowd murmur swells as walkers gather within 48 blocks, and a roar as more of them come after you. */
+        public boolean hordeSounds = true;
+        /** Walkers nearby for the murmur to start, and to reach full volume; kept under the single voices. */
+        public int hordeMurmurFrom = 6;
+        public int hordeMurmurFull = 30;
+        public double hordeMurmurVolume = 0.45;
+        /** Zombies after you for the roar to start, and to reach full volume. */
+        public int hordeRoarFrom = 3;
+        public int hordeRoarFull = 15;
+        public double hordeRoarVolume = 0.8;
     }
 
     public static class Senses {
@@ -246,9 +256,9 @@ public final class ZcConfig {
         public double scopeAimSpread = 0.35;
         /** Field of view looking through the 4x scope, as a share of normal. */
         public double scopeZoom = 0.25;
-        /** A suppressor multiplies how far zombies hear the shot, and how loud it sounds. */
+        /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
         public double suppressedNoise = 0.3;
-        public double suppressedVolume = 0.35;
+        public double suppressedVolume = 1.0;
         /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
