@@ -9,6 +9,11 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== signs"
+for j in $MC_JARS; do unzip -l "$j" | grep -c "class" ; done
+for j in $MC_JARS; do unzip -p "$j" net/minecraft/client/renderer/block/model/BlockElement\$Deserializer.class 2>/dev/null | strings | grep -i "emission\|shade" ; done
+javap -cp "$CP" -p 'net.minecraft.client.renderer.block.model.BlockElement' 2>&1 | head -20
+
 echo "===== weather4"
 javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -i "hurt\|mark\|sync\|dirty\|impulse\|push"
 javap -cp "$CP" -p net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket 2>&1 | head -20
