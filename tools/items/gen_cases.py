@@ -56,13 +56,13 @@ def od(colour='#4a5130'):
     return fn
 
 
-# a 3 by 5 stencil alphabet: just what an ammo can says
+# a 5-high stencil alphabet, 3 wide but for the M: just what an ammo can says
 FONT = {'C': ('111', '100', '100', '100', '111'), 'A': ('010', '101', '111', '101', '101'),
-        'L': ('100', '100', '100', '100', '111'), '.': ('000', '000', '000', '000', '010'),
+        'L': ('100', '100', '100', '100', '111'), '.': ('0', '0', '0', '0', '1'),
         '5': ('111', '100', '111', '001', '111'), '0': ('111', '101', '101', '101', '111'),
         '1': ('010', '110', '010', '010', '111'), '-': ('000', '000', '111', '000', '000'),
-        'M': ('101', '111', '111', '101', '101'), '2': ('111', '001', '111', '100', '111'),
-        ' ': ('000', '000', '000', '000', '000')}
+        'M': ('10001', '11011', '10101', '10001', '10001'), '2': ('111', '001', '111', '100', '111'),
+        ' ': ('00', '00', '00', '00', '00')}
 
 
 def stencil(lines=('CAL .50', '1-M2A1'), colour='#c9b44a', scale=2):
@@ -79,16 +79,18 @@ def stencil(lines=('CAL .50', '1-M2A1'), colour='#c9b44a', scale=2):
         y0 = (H - (len(lines) * line_h + (len(lines) - 1) * scale)) / 2
         ink = np.zeros(f.shape, bool)
         for li, text in enumerate(lines):
-            x0 = (W - (len(text) * 4 - 1) * scale) / 2
+            widths = [len(FONT[ch][0]) for ch in text]
+            x0 = (W - (sum(widths) + len(text) - 1) * scale) / 2
             gx = np.floor((u - x0) / scale).astype(int)
             gy = np.floor((v - y0 - li * (line_h + scale)) / scale).astype(int)
-            ci, cx = gx // 4, gx % 4
-            for k, ch in enumerate(text):
+            at = 0
+            for ch, w in zip(text, widths):
                 for r, row in enumerate(FONT[ch]):
                     for col, bit in enumerate(row):
                         if bit == '1':
-                            ink |= (gx >= 0) & (ci == k) & (cx == col) & (gy == r)
-        worn = f.noise(3.0, 311, 2) > 0.72
+                            ink |= (gx == at + col) & (gy == r)
+                at += w + 1
+        worn = f.noise(3.0, 311, 2) > 0.8
         return np.where((ink & ~worn)[..., None], P.mix(c, P.col(colour), 0.85), c)
     return fn
 
