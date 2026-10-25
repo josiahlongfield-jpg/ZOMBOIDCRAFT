@@ -14,6 +14,8 @@ public final class CarSounds {
     public static final SoundEvent STALL = register("car.stall", 32f);
     /** The running engine, looped by the client with its pitch rising with speed. */
     public static final SoundEvent IDLE = register("car.idle", 32f);
+    /** The engine at cruising revs, looped by the client and faded in over the idle as the car speeds up. */
+    public static final SoundEvent DRIVE = register("car.drive", 32f);
     public static final SoundEvent HORN = register("car.horn", 96f);
     public static final SoundEvent CRASH = register("car.crash", 48f);
     public static final SoundEvent DOOR_OPEN = register("car.door.open", 16f);
