@@ -7,22 +7,6 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== tooltips"
-sig net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent '.'
-classes 'gui/screens/inventory/tooltip/'
-sig net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil '.'
-javap -cp "$CP" -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | grep -iE "tooltip"
-javap -cp "$CP" -p -c net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | sed -n '/void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, java.util.Optional/,/return/p' | head -60
-javap -cp "$CP" -p -c net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | sed -n '/void setTooltipForNextFrameInternal/,/return/p' | head -40
-javap -cp "$CP" -p -c net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil 2>&1 | sed -n '/renderTooltipBackground\|extractTooltipBackground/,/return/p' | head -60
-javap -cp "$CP" -p -c net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | sed -n '/private void \(render\|extract\)Tooltip(/,/return/p' | head -160
-sig net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback '.'
-classes 'TooltipComponentCallback|tooltip/v1|ItemTooltipCallback'
-sig net.minecraft.world.inventory.tooltip.TooltipComponent '.'
-sig net.minecraft.world.item.Item 'TooltipImage|appendHoverText'
-sig net.minecraft.core.component.DataComponents 'TOOLTIP'
-exit 0
-
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
