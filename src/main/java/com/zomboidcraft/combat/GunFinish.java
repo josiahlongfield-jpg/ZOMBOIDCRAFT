@@ -90,12 +90,12 @@ public final class GunFinish {
         Attachments.refreshModel(gun);
     }
 
-    /** The tooltip line: the finish's name, coloured by how rare it is. */
+    /** The tooltip line: the finish's name, coloured by how rare it is; empty for a gun that has only the one look. */
     public static Component line(ItemStack gun) {
         GunType type = GunType.of(gun);
         String key = key(gun);
         if (type == null || key == null) {
-            return null;
+            return Component.empty();
         }
         int grade = of(type).stream().filter(f -> f.key().equals(key)).mapToInt(Finish::grade).findFirst().orElse(0);
         ChatFormatting colour = grade == 0 ? ChatFormatting.GRAY : grade == 1 ? ChatFormatting.AQUA : ChatFormatting.GOLD;
