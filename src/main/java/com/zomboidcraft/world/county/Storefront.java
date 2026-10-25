@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.ShopLights;
 import com.zomboidcraft.world.city.Shops;
 import java.util.SplittableRandom;
 
@@ -217,6 +218,22 @@ final class Storefront {
         }
         if (rng.nextDouble() < 0.5) {
             p.set(door + 1 < w - 1 ? door + 1 : door - 1, 3, -1, rng.nextDouble() < b.lit + 0.1 ? "wall_lantern" : "wall_lantern_off");
+        }
+        // a lamp box over the door: hung under a canopy, set into the awning, or lighting the sign
+        if (modern && rng.nextDouble() < 0.7) {
+            p.set(door, 3, -2, ShopLights.lamp(rng, 0.2));
+            if (w >= 10 && rng.nextDouble() < 0.5) {
+                p.set(1, 3, -2, ShopLights.lamp(rng, 0.3));
+                p.set(w - 2, 3, -2, ShopLights.lamp(rng, 0.3));
+            }
+        } else if (!wood && rng.nextDouble() < 0.85) {
+            int y = awning ? 3 : 5;
+            if (w >= 10 && rng.nextDouble() < 0.5) {
+                p.set(2, y, -1, ShopLights.lamp(rng, 0.15));
+                p.set(w - 3, y, -1, ShopLights.lamp(rng, 0.15));
+            } else {
+                p.set(door, y, -1, ShopLights.lamp(rng, 0.15));
+            }
         }
         // neon hung off the corner, for the trades that had it
         String blade = switch (trade) {

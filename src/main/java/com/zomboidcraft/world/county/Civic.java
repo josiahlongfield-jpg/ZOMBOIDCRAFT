@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.ShopLights;
 import java.util.SplittableRandom;
 
 /**
@@ -565,6 +566,8 @@ final class Civic {
         }
         b.doors(cx - 1, 1, 0, "fire_door", "north");
         Boards.fascia(p, rng, "bank", 1, storey + 1, -1, w - 2);
+        p.set(cx - 2, 3, -1, ShopLights.lamp(rng, 0.2));  // lamp boxes either side of the doors
+        p.set(cx + 1, 3, -1, ShopLights.lamp(rng, 0.2));
         b.flat(0, 0, w - 1, d - 1, storey, wall, 2, "minecraft:stone_brick_slab[type=bottom]");
         int counter = d / 2;
         for (int x = 1; x < w - 1; x++) {
@@ -612,6 +615,7 @@ final class Civic {
             x += bayW + 1;
         }
         b.door(w - 2, 1, 0, "fire_door", "north");
+        p.set(w - 2, 3, -1, ShopLights.lamp(rng, 0.2));
         b.windowRow(2, w - 3, 3, 0, storey + 2, "north", 2, "sill");
         Boards.fascia(p, rng, "firedept", 1, storey, -1, w - 2);
         b.flat(0, 0, w - 1, d - 1, floors * storey, wall, 2, "stone_trim");
@@ -659,6 +663,8 @@ final class Civic {
         int cx = w / 2;
         b.doors(cx - 1, 1, z0, "fire_door", "north");
         Boards.fascia(p, rng, "sheriff", 1, storey - 1, z0 - 1, w - 2);
+        p.set(cx - 2, 3, z0 - 1, ShopLights.lamp(rng, 0.2));
+        p.set(cx + 1, 3, z0 - 1, ShopLights.lamp(rng, 0.2));
         b.flat(0, z0, w - 1, d - 1, storey, wall, 1, "stone_trim");
         // front desk, then a corridor of cells at the back
         p.set(cx, 1, z0 + 3, "reception_desk[facing=north]");
@@ -840,7 +846,7 @@ final class Civic {
                 p.set(x, 5, z, x == 0 || x == w - 1 || z == -3 ? "minecraft:smooth_quartz" : "concrete_dark");
             }
             if (x % 2 == 0) {
-                p.set(x, 3, -3, rng.nextDouble() < 0.2 ? "minecraft:pearlescent_froglight" : "minecraft:iron_chain[axis=y]");
+                p.set(x, 3, -3, rng.nextDouble() < 0.5 ? ShopLights.lamp(rng, 0.2) : "minecraft:iron_chain[axis=y]");
             }
         }
         Boards.fascia(p, rng, "rialto", 1, 5, -4, w - 2);
