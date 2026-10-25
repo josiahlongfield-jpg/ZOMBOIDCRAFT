@@ -3,7 +3,9 @@
   "package": "com.zomboidcraft.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "AbstractClientPlayerMixin"
+    "AbstractClientPlayerMixin",
+    "MinecraftMixin",
+    "SlotAccessor"
   ],
   "injectors": {
     "defaultRequire": 0

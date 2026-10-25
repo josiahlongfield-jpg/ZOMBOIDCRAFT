@@ -156,6 +156,8 @@ public final class ZcConfig {
         public double missingLimbChance = 0.15;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
+        /** The field-kit inventory screen; off brings back Minecraft's. Client side. */
+        public boolean fieldKitInventory = true;
     }
 
     public static class Combat {
