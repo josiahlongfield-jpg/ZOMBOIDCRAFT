@@ -27,10 +27,12 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent))
 import model as M  # noqa: E402
 import paint as P  # noqa: E402
+import poses as Q  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
 JAVA = ROOT / 'src/main/java/com/zomboidcraft/combat/WeaponSpecs.java'
+POSE_JAVA = ROOT / 'src/client/java/com/zomboidcraft/client/combat/HoldPoseData.java'
 NS = 'zomboidcraft'
 
 # Held size relative to vanilla's sword sprite. At 0.7 one model unit is about 3.2 cm.
@@ -413,6 +415,58 @@ def grip_y():
     return 8 - 4 / (math.sqrt(0.5) * K)
 
 
+# ================================================================== third-person holds (see poses.py)
+
+S3 = 0.68       # rifle third-person scale, model pixels per build unit: a touch over life size so the arms don't hide it
+S3M = 0.85 * K  # melee third-person scale, vanilla's
+
+# Weapons carried in both hands, and where the off hand holds the handle (build-frame y range). A right-
+# handed grip puts the left hand below the right on bats, axes and swords, and up the shaft on a shovel.
+TWO_HAND_GRIPS = {
+    'baseball_bat': (-2.6, -3.7), 'spiked_bat': (-2.6, -3.7), 'golf_club': (-2.4, -3.0),
+    'hockey_stick': (-2.6, -3.4), 'shovel': (3.0, 6.5), 'katana': (-2.6, -4.4), 'fire_axe': (-2.6, -3.9),
+    'sledgehammer': (-2.6, -3.9),
+}
+
+# where the off hand's centre goes: under the magazine well and forward along the handguard, an arm's
+# half-thickness below them so the rifle rests on the forearm instead of sinking into it
+RIFLE_SUPPORT = [(0, -1.4, -2.6), (0, -0.6, -8.8)]
+RIFLE_HAND = (-2.1, 0.5, 0.0)     # the fist beside the grip, outboard and a little low
+RIFLE_BUTT = (0, 1.9, 10.35)
+RIFLE_CLEAR = [(0, 3.5, 6.5), (0, 3.3, 9.6), (0, 0.4, 10.35), (0, 4.6, 2.3), (0, 3.6, 3.3), (0, -3.5, -3.4),
+               (0, -1.7, 1.2), (0, 2.95, -16.9)]
+
+
+def rifle_holds():
+    """Low ready (muzzle down and across, stock at the right shoulder) and aiming (shouldered, muzzle on
+    the line of sight, as high as Minecraft's big head allows)."""
+    out = {}
+    for name, R, G0, butt_at, hand in (
+            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            # the rifle rides on top of the forearms, stock in the right of the chest, top just under the chin
+            ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
+        h = Q.Hold(R, S3, HAND, RIFLE_SUPPORT, hand_off=hand)
+        G = Q.solve_grip(h, G0, [(RIFLE_BUTT, np.array(butt_at), 1.0)], RIFLE_CLEAR)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
+def melee_holds():
+    """Two-handed ready (held across the body, head up past the right shoulder, both hands low in front)
+    and the swing's wind-up and follow-through: the gun arm sweeps round from the right, up and back, to
+    low on the left, and the off hand follows the handle."""
+    R = Q.frame(Q.unit(-0.62, -0.72, -0.3), (0, 0, -1))
+    h = Q.Hold(R, S3M, (0, 0, 0), [(0, -2.6, 0), (0, -3.7, 0)])
+    G = Q.solve_grip(h, [0, 6.3, -6.8], [((0, 0, 0), np.array([-0.5, 6.3, -6.8]), 0.6)], [(0, 14, 0), (0, 22, 0)])
+    arm, _ = Q.arm_for(h, G)
+    Ra = Q.R_zyx(*arm)
+    keys = {'ready': arm,
+            'windup': Q.euler_zyx(Q.Ry(60) @ Q.Rx(-30) @ Ra),
+            'strike': Q.euler_zyx(Q.Ry(-60) @ Q.Rx(15) @ Ra)}
+    return h, G, keys
+
+
 # ================================================================== the assault rifle
 
 SIGHT_Y = 4.30
@@ -555,12 +609,10 @@ def rifle_frame():
     return Pm, g
 
 
-def rifle_display(m, g, ads=False, cant=0.0, drop=0.0):
-    Pm, _ = rifle_frame()
+def rifle_display(m, g, holds, ads=False, cant=0.0, drop=0.0):
     disp = {}
-    rot, trans, s = VANILLA['thirdperson_righthand']
-    R = M.R_xyz(*rot) @ Pm
-    disp['thirdperson_righthand'] = M.transform(M.euler_xyz(R), trans, s * K)
+    h, G, arm = holds['aim' if ads else 'ready']
+    disp['thirdperson_righthand'] = Q.display_for(h, G, arm, g, S3)
     arm = np.array([0.56, -0.52, -0.72]) * 16
     S = 0.72
     if ads:
@@ -680,6 +732,7 @@ def main():
     gy = grip_y()
     lang = {}
     summary = []
+    mh, mG, mkeys = melee_holds()
     for spec, build, mats in WEAPONS:
         m = M.Model(spec.name)
         build(m)
@@ -688,6 +741,8 @@ def main():
         m.shift([8, gy, 8])
         m.tidy()
         disp = melee_display(m)
+        if spec.name in TWO_HAND_GRIPS:
+            disp['thirdperson_righthand'] = Q.display_for(mh, mG, mkeys['ready'], [8, gy, 8], S3M)
         for variant, wear, blood in (('', 0.2, 0.0), ('_worn', 0.85, 1.0)):
             lk = look(wear, reach, blood=blood, **mats)
             uvs, T = write_texture(m, lk, wear, zlib.crc32(spec.name.encode()) % 1000 + (7 if variant else 0), spec.name + variant)
@@ -701,6 +756,7 @@ def main():
 
     # the rifle: every variant shares one texture, painted once over the union of their parts
     models, g = rifle_models()
+    holds = rifle_holds()
     lk = rifle_look(0.4)
     union, seen = M.Model('assault_rifle_all'), {}
     union.offset = next(iter(models.values()))[0].offset
@@ -717,7 +773,7 @@ def main():
             for face in M.FACES:
                 if (j, face) in uvs and face not in p.get('skip', ()):
                     sub[(i, face)] = uvs[(j, face)]
-        disp = rifle_display(m, g, ads=v.get('ads', False), cant=v.get('cant', 0.0), drop=v.get('drop', 0.0))
+        disp = rifle_display(m, g, holds, ads=v.get('ads', False), cant=v.get('cant', 0.0), drop=v.get('drop', 0.0))
         M.dump(M.model_json(m, sub, f'{NS}:item/weapon/assault_rifle', disp), ASSETS / f'models/item/weapon/{name}.json')
     summary.append(f'assault_rifle: {len(union.parts)} boxes, {T}px')
 
@@ -759,9 +815,11 @@ def main():
 
     merge_lang(lang)
     write_java()
+    pose_data = write_pose_java(holds, (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
+        (preview / 'poses.json').write_text(json.dumps(pose_data, indent=1))
 
 
 def key_of(p):
@@ -811,6 +869,53 @@ public final class WeaponSpecs {{
     }}
 }}
 ''')
+
+
+def write_pose_java(rifle, melee):
+    """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame."""
+    def f3(v):
+        return ', '.join(f'{float(x):.5f}f' for x in v)
+
+    data = {'arms': {}, 'support': {}, 'reach': Q.REACH}
+    for name in ('ready', 'aim'):
+        h, G, arm = rifle[name]
+        data['arms']['rifle_' + name] = [float(x) for x in arm]
+        data['support']['rifle_' + name] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
+    mh, mG, keys = melee
+    for k, arm in keys.items():
+        data['arms']['melee_' + k] = [float(x) for x in arm]
+    for name, (y0, y1) in TWO_HAND_GRIPS.items():
+        data['support'][name] = [float(x) for b in ((0, y0, 0), (0, y1, 0))
+                                 for x in Q.arm_local(mh, mG, keys['ready'], b)]
+    arms = '\n'.join(f'    static final float[] {k.upper()} = {{{f3(v)}}};' for k, v in data['arms'].items())
+    rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
+                           for k, v in data['support'].items() if k.startswith('rifle_'))
+    melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
+                            if not k.startswith('rifle_'))
+    POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
+    POSE_JAVA.write_text(f'''package com.zomboidcraft.client.combat;
+
+import java.util.Map;
+
+/**
+ * Third-person holds. Generated by tools/weapons/weapons.py (poses.py): edit the poses there, since the
+ * weapons' item models are fitted to these same arm angles.
+ * Arms: gun-arm angles (x, y, z radians, the order ModelPart turns in). Supports: the line the off hand
+ * reaches for (x0, y0, z0, x1, y1, z1), in the gun arm's own frame, in model pixels.
+ */
+final class HoldPoseData {{
+    static final float REACH = {Q.REACH}f;
+{arms}
+{rifle_sup}
+    /** Two-handed melee weapons and where the off hand holds the handle. */
+    static final Map<String, float[]> MELEE_SUPPORT = Map.of(
+{melee_sup});
+
+    private HoldPoseData() {{
+    }}
+}}
+''')
+    return data
 
 
 def write_preview(out):

@@ -159,6 +159,8 @@ public final class ZcConfig {
     }
 
     public static class Combat {
+        /** Other players see rifles carried at the low ready or shouldered, and big melee weapons in both hands. */
+        public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
         /** Weapons lose condition with each hit and break (needs a restart). */

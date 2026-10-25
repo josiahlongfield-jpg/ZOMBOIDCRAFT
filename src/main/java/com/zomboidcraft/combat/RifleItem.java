@@ -83,8 +83,8 @@ public class RifleItem extends Item {
         if (old != null && !old.isEmpty()) {
             if (other.isEmpty()) {
                 carried.set(old);
-            } else if (!player.getInventory().add(old)) {
-                player.drop(old, false);
+            } else {
+                player.getInventory().placeItemBackInInventory(old);
             }
         }
         player.playSound(ModSounds.RIFLE_MAG_IN, 0.6f, 1.3f);
