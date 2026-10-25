@@ -428,11 +428,60 @@ MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held we
 # ================================================================== display transforms
 
 
+# First person: the hand low on the right and the weapon leaning in toward the crosshair, its head (and a blade's
+# edge) turned to the target. Worked in the hand camera's space: blocks, looking down -z, a 70 degree tall view.
+FP_ARM = np.array([0.56, -0.52, -0.72])   # vanilla's arm offset, taken back out of the translation
+FP_GRIP = (0.47, -0.82, 0.75)             # where the hand sits: screen x and y (-1..1 on a 16:9 screen), depth
+FP_SHAFT = (-0.36, 0.84, -0.40)           # the handle's direction: up toward the crosshair and away
+FP_HEAD = (-0.70, 0.0, -0.70)             # the way the head faces
+FP_TIP = 0.36                             # long weapons are scaled so their far end reaches this screen height
+FP_SCALE = (0.52, 0.92)                   # model scale range, a little over life size up to twice it for short ones
+# a pan is turned about its handle so its inside shows rather than its whole bottom, and kept smaller: its face
+# would otherwise fill the middle of the screen
+FP_SPIN = {'frying_pan': 145}
+FP_TOP = {'frying_pan': 0.62}
+FP_TAN = math.tan(math.radians(35))
+
+
+def fp_screen(p):
+    return p[0] / (-p[2] * FP_TAN * 16 / 9), p[1] / (-p[2] * FP_TAN)
+
+
+def melee_first_person(m, grip):
+    Y = np.array(FP_SHAFT) / np.linalg.norm(FP_SHAFT)
+    X = np.array(FP_HEAD) - Y * np.dot(FP_HEAD, Y)
+    X /= np.linalg.norm(X)
+    a = math.radians(FP_SPIN.get(m.name, 0))
+    X = math.cos(a) * X + math.sin(a) * np.cross(X, Y)
+    R = np.column_stack([X, Y, np.cross(X, Y)])
+    gx, gy, d = FP_GRIP
+    G = np.array([gx * d * FP_TAN * 16 / 9, gy * d * FP_TAN, -d])
+    pts = np.array([c for p in m.parts for c in M.corners(p)])
+    tip = pts[np.argmax(pts[:, 1])] - grip
+
+    def tip_height(s):
+        return fp_screen(G + s * (R @ tip) / 16)[1]
+    lo, hi = FP_SCALE[0], FP_TOP.get(m.name, FP_SCALE[1])
+    if tip_height(hi) <= FP_TIP:
+        s = hi
+    elif tip_height(lo) >= FP_TIP:
+        s = lo
+    else:
+        for _ in range(40):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if tip_height(mid) < FP_TIP else (lo, mid)
+        s = (lo + hi) / 2
+    T = 16 * (G - FP_ARM) - s * (R @ (np.asarray(grip) - C))
+    return M.transform(M.euler_xyz(R), T, s)
+
+
 def melee_display(m):
-    """Vanilla-equivalent hand transforms (the model is a sword sprite turned upright), fitted views."""
+    """Vanilla-equivalent third-person transform (the model is a sword sprite turned upright), the first-person
+    pose above, and fitted views."""
     disp = {}
     for ctx, (rot, trans, s) in VANILLA.items():
         disp[ctx] = M.transform([rot[0], rot[1], rot[2] - 45], trans, s * K)
+    disp['firstperson_righthand'] = melee_first_person(m, [8, grip_y(), 8])
     Rg = M.R_xyz(0, 0, -45) @ M.R_xyz(0, 28, 0)
     rg = M.euler_xyz(Rg)
     s, t = M.fit(m, Rg, 15.2)
@@ -554,6 +603,12 @@ ADS_TARGET = {None: np.array([0.0, 0.0, -4.2])}
 ADS_EYE = {'red_dot': 0.85 + AT.RED_DOT_EYE, 'holo': 0.20 + AT.HOLO_EYE}
 ADS_SCALE = 1.2
 HIDDEN_WHEN_AIMING = ('scope_4x',)
+# At the hip: where the pistol grip sits in the hand camera (blocks), the gun's turn (degrees: muzzle up, muzzle
+# in toward the crosshair, roll) and its scale, so the upper receiver and magazine show and the front sight
+# stops a little under the crosshair.
+HIP_GRIP = (0.25, -0.30, -0.58)
+HIP_TURN = (2.0, 8.0, -3.0)
+HIP_SCALE = 0.85
 
 
 def ads_eyes(gun):
@@ -588,10 +643,10 @@ def gun_displays(g, holds):
             T = ADS_TARGET[None] - armv - S * (np.asarray(sight) - C)
             d['firstperson_righthand'] = M.transform([0, 0, 0], T, S)
         else:
-            R = M.R_xyz(2 + cant * 0.6, 4 + cant * 0.3, -cant)
-            target = np.array([0.30, -0.43 - drop, -0.58]) * 16
-            T = target - armv - S * (R @ (g - C))
-            d['firstperson_righthand'] = M.transform(M.euler_xyz(R), T, S)
+            R = M.R_xyz(HIP_TURN[0] + cant * 0.6, HIP_TURN[1] + cant * 0.3, HIP_TURN[2] - cant)
+            target = (np.array(HIP_GRIP) + [0, -drop, 0]) * 16
+            T = target - armv - HIP_SCALE * (R @ (g - C))
+            d['firstperson_righthand'] = M.transform(M.euler_xyz(R), T, HIP_SCALE)
         Rg = M.R_xyz(12, 0, 0) @ M.R_xyz(0, -90 - 22, 0)
         s2, t2 = M.fit(fit, Rg, 15.6)
         d['gui'] = M.transform(M.euler_xyz(Rg), t2, s2)

@@ -2,7 +2,7 @@
 
 Shader packs that read LabPBR (Photon among them) use these; vanilla ignores them. The format:
   _s: R perceptual smoothness, G reflectance (0-229 = F0 of a non-metal, 230-237 = a named metal, 255 =
-      metal tinted by the colour), B porosity (0 here), A emission (0-254, 255 = none).
+      metal tinted by the colour), B porosity (0-64), A emission (0-254, 255 = none).
   _n: R and G the normal's tilt (DirectX: G points down the image), B ambient occlusion (255 = none),
       A height (255 = top).
 
@@ -15,40 +15,47 @@ IRON, GOLD, ALUMINIUM, CHROME, COPPER = 230, 231, 232, 233, 234
 TINTED_METAL = 255
 NONMETAL = 10           # about 4% reflectance, plastics, paint, rubber, glass
 
-# smoothness, reflectance byte, and optionally (lightness over which it's bare metal, metal, its smoothness)
+# smoothness, reflectance byte, and optionally (lightness over which it's bare metal, metal, its smoothness).
+# Gun finishes are satin rather than matte, so a shader pack's sun and sky slide along them: hard anodising
+# (its oxide reflects a little more than paint), oiled phosphate on the steel, moulded polymer, and edges
+# and rail tops worn through to bright metal.
+ANODISED = 20
 MATERIALS = {
-    'anod': (0.46, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'rail': (0.44, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'guard': (0.44, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'park': (0.24, NONMETAL, (0.40, IRON, 0.58)),
-    'hider': (0.22, NONMETAL, (0.40, IRON, 0.55)),
-    'steel': (0.62, IRON, None),
-    'bright': (0.74, IRON, None),
-    'port': (0.30, NONMETAL, (0.40, IRON, 0.6)),
-    'poly': (0.34, NONMETAL, None),
-    'grip': (0.26, NONMETAL, None),
-    'gripper': (0.26, NONMETAL, None),
-    'scope': (0.50, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'knurl': (0.40, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'bezel': (0.46, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'cap': (0.22, NONMETAL, (0.40, IRON, 0.55)),
+    'anod': (0.66, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'rail': (0.64, ANODISED, (0.32, ALUMINIUM, 0.78)),
+    'guard': (0.64, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'park': (0.42, NONMETAL, (0.38, IRON, 0.66)),
+    'hider': (0.40, NONMETAL, (0.38, IRON, 0.64)),
+    'steel': (0.68, IRON, None),
+    'bright': (0.80, IRON, None),
+    'port': (0.46, NONMETAL, (0.38, IRON, 0.66)),
+    'poly': (0.46, NONMETAL, None),
+    'grip': (0.34, NONMETAL, None),
+    'gripper': (0.34, NONMETAL, None),
+    'scope': (0.66, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'knurl': (0.50, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'bezel': (0.64, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'cap': (0.40, NONMETAL, (0.38, IRON, 0.62)),
     'lamp': (0.92, 18, None),
     'lens_red': (0.92, 18, None),
-    'tan': (0.30, NONMETAL, None),
-    'mag': (0.30, NONMETAL, None),
-    'rubber': (0.12, 8, None),
+    'tan': (0.42, NONMETAL, None),
+    'mag': (0.42, NONMETAL, None),
+    'rubber': (0.16, 8, None),
     'bore': (0.08, 6, None),
-    'housing': (0.42, NONMETAL, None),
-    'bezel_r': (0.42, NONMETAL, (0.36, ALUMINIUM, 0.72)),
-    'mark': (0.40, NONMETAL, (0.40, ALUMINIUM, 0.75)),
-    'screw': (0.55, IRON, None),
-    'can': (0.20, NONMETAL, (0.42, IRON, 0.5)),
+    'housing': (0.54, NONMETAL, None),
+    'bezel_r': (0.58, ANODISED, (0.34, ALUMINIUM, 0.76)),
+    'mark': (0.50, NONMETAL, (0.40, ALUMINIUM, 0.78)),
+    'screw': (0.62, IRON, None),
+    'can': (0.36, NONMETAL, (0.40, IRON, 0.56)),
     'lens': (0.96, 18, None),
     'glass': (0.96, 18, None),
     'dot': (0.5, NONMETAL, None),
     'flash': (0.0, NONMETAL, None),
-    'brass': (0.62, TINTED_METAL, None),
+    'brass': (0.66, TINTED_METAL, None),
 }
+# how much rain darkens a finish (LabPBR porosity, 0-64): stippled grips and phosphate soak a little
+POROSITY = {'grip': 18, 'gripper': 18, 'park': 10, 'hider': 10, 'cap': 10, 'can': 14, 'rubber': 6, 'tan': 6,
+            'mag': 6, 'poly': 4}
 EMISSIVE = {'dot': 254, 'flash': 254, 'reticle': 254}
 
 
@@ -69,7 +76,7 @@ def spec(mat, f, rgb):
         g = np.where(m, metal / 255.0, g)
     out[..., 0] = np.clip(s, 0, 1)
     out[..., 1] = g
-    out[..., 2] = 0
+    out[..., 2] = np.where(g > 229 / 255.0, 0, POROSITY.get(mat, 0) / 255.0)
     out[..., 3] = EMISSIVE.get(mat, 255) / 255.0
     return out
 
@@ -89,10 +96,11 @@ def round_tilt(f, k=0.7):
     return off * k * du, off * k * dv
 
 
-def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None):
+def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel=False):
     """Edge bevels (so blocky parts catch the light like machined edges), the lean of round bars, plus a
     little relief from the painted detail (and `height`, if given). lu, lv: the face's size in model units;
-    px: texture pixels per unit."""
+    px: texture pixels per unit. rel: relief from the detail's contrast against the face's own lightness, so
+    checkering and serrations on a near-black finish stand out as much as on a light one."""
     u, v = f.uv[..., 0], f.uv[..., 1]
     b = max(1.0 / px, min(bevel, 0.3 * min(lu, lv)))
 
@@ -102,7 +110,11 @@ def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None):
     ru, rv = round_tilt(f)
     nx = -t(u) + t(lu - u) + ru
     ny = -t(v) + t(lv - v) + rv
-    L = lum(rgb) if height is None else lum(rgb) + height
+    L = lum(rgb)
+    if rel:
+        L = L * 0.35 / np.clip(L.mean(), 0.1, 0.35)
+    if height is not None:
+        L = L + height
     if L.shape[0] > 2 and L.shape[1] > 2:
         dv, du = np.gradient(L)
         nx = nx - du * bump
