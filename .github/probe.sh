@@ -8,6 +8,21 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== render2"
+echo "$MC_JARS" | tr ' ' '\n'
+classes 'client/(menu|screenhandler)/|gui/screens/MenuScreens'
+for c in $(classes 'client/(menu|screenhandler)/' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+sig 'net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback$RegistrationHelper' '.'
+for j in $MC_JARS; do echo "-- $j"; javap -cp "$j" -p net.minecraft.client.gui.screens.MenuScreens 2>&1 | grep -E "register|ScreenConstructor"; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState' 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc" | head -12
+sig com.mojang.math.Axis 'YP|rotationDegrees'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.client.model.geom.ModelPart 'translateAndRotate'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen 'protected|public'
+find ~/.gradle/caches -name '*.accesswidener' -o -name '*.classtweaker' 2>/dev/null | head
+for j in $FAPI_JARS; do unzip -p "$j" '*.accesswidener' '*.classtweaker' 2>/dev/null | grep -iE "MenuScreens|ScreenConstructor"; done | sort -u
+exit 0
+
 echo "===== render1"
 classes 'rendering/v1/.*(Layer|RenderState|Feature)|renderer/entity/player/|renderer/entity/state/(Avatar|Player|HumanoidRender|LivingEntityRender|EntityRender)|client/model/player/|model/(PlayerModel|HumanoidModel)|renderer/item/(ItemModelResolver|ItemStackRenderState)|layers/(ItemInHandLayer|CustomHeadLayer|CapeLayer|PlayerItemInHandLayer)|state/v1|renderstate'
 for c in $(classes 'rendering/v1/.*(LayerRegistration|RenderState)|renderstate|state/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
