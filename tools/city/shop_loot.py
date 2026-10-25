@@ -39,7 +39,7 @@ TABLES = {
         ("pumpkin_pie", 2, 1, 1), ("cooked_chicken", 2, 1, 2), ("milk_bucket", 1, 1, 1), ("potion", 6, 1, 2, WATER),
         ("glass_bottle", 2, 1, 2), ("-", 8, 1, 1)]),
     "pharmacy": ((2, 5), [
-        (f"{ZC}:bandage", 12, 1, 3), ("potion", 4, 1, 1, potion("healing")), ("potion", 2, 1, 1, potion("regeneration")),
+        (f"{ZC}:bandage", 12, 1, 3), (f"{ZC}:splint", 4, 1, 1), ("potion", 4, 1, 1, potion("healing")), ("potion", 2, 1, 1, potion("regeneration")),
         ("potion", 6, 1, 2, WATER), ("honey_bottle", 4, 1, 2), ("milk_bucket", 2, 1, 1), ("glass_bottle", 4, 1, 3),
         ("paper", 4, 1, 4), ("sugar", 2, 1, 2), ("golden_carrot", 1, 1, 1), ("-", 8, 1, 1)]),
     "liquor": ((2, 6), [

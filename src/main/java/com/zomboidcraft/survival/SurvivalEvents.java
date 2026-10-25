@@ -90,23 +90,7 @@ public final class SurvivalEvents {
             effect(player, MobEffects.WEAKNESS, 0);
         }
 
-        // Bleeding: more wounds bleed faster; wounds slowly clot on their own
-        if (!config.bleeding) {
-            stats = stats.withWounds(0);
-        }
-        if (stats.wounds() > 0) {
-            int interval = Math.max(1, 5 - stats.wounds());
-            if (second % interval == 0) {
-                player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BLEEDING), 1f);
-            }
-            int clotted = 0;
-            for (int i = 0; i < stats.wounds(); i++) {
-                if (random.nextFloat() < config.clotChancePerSecond) {
-                    clotted++;
-                }
-            }
-            stats = stats.withWounds(stats.wounds() - clotted);
-        }
+        // Bleeding and healing are per body part now: see Injuries
 
         // Infection: there is no cure
         if (stats.infected() && !config.infection) {
@@ -136,6 +120,7 @@ public final class SurvivalEvents {
         }
 
         SurvivalStats.set(player, stats);
+        Injuries.tick(player, second);
     }
 
     private static void onZombieHit(ServerPlayer player) {
@@ -144,17 +129,17 @@ public final class SurvivalEvents {
         ZcConfig.Survival config = ZcConfig.get().survival;
         float roll = random.nextFloat();
         if (roll < config.biteChance) {
-            stats = stats.withWounds(stats.wounds() + 1);
+            Body.Region where = Injuries.zombieWound(player, true);
             if (!stats.infected() && config.infection) {
                 stats = stats.withInfection(0);
             }
-            player.sendOverlayMessage(Component.literal("You've been bitten.").withStyle(ChatFormatting.DARK_RED));
+            player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
         } else if (roll < config.biteChance + config.scratchChance) {
-            stats = stats.withWounds(stats.wounds() + 1);
+            Body.Region where = Injuries.zombieWound(player, false);
             if (!stats.infected() && config.infection && random.nextFloat() < config.scratchInfectionChance) {
                 stats = stats.withInfection(0);
             }
-            player.sendOverlayMessage(Component.literal("You've been scratched.").withStyle(ChatFormatting.RED));
+            player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));
         }
         SurvivalStats.set(player, stats);
     }

@@ -312,7 +312,10 @@ public final class RifleView {
         aimShown = step == 0 ? a : 0;
 
         pose.pushPose();
-        Quaternionf breath = breath(age, aimShown, (float) config.guns.aimSway);
+        // hurt arms shake the sights: up to three times the sway with both broken
+        var me = net.minecraft.client.Minecraft.getInstance().player;
+        float shake = me == null ? 0 : com.zomboidcraft.survival.Injuries.armShake(me);
+        Quaternionf breath = breath(age, aimShown, (float) config.guns.aimSway * (1 + 2 * shake));
         breathe(pose, breath);
         // the gun: undo the model's pose, apply the wanted one
         pose.pushPose();

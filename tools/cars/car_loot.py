@@ -49,7 +49,7 @@ TABLES = {
         (f"{ZC}:sledgehammer", 1, 1, 1), ("spyglass", 1, 1, 1)]),
     # the back of an ambulance: medicine, rare and plenty of it
     "ambulance": ((3, 7), [
-        (f"{ZC}:bandage", 14, 2, 6), ("potion", 5, 1, 2, potion("healing")), ("potion", 3, 1, 1, potion("regeneration")),
+        (f"{ZC}:bandage", 14, 2, 6), (f"{ZC}:splint", 5, 1, 2), ("potion", 5, 1, 2, potion("healing")), ("potion", 3, 1, 1, potion("regeneration")),
         ("potion", 4, 1, 3, WATER), ("honey_bottle", 3, 1, 2), ("milk_bucket", 2, 1, 1), ("golden_carrot", 2, 1, 2),
         ("golden_apple", 1, 1, 1), ("white_wool", 3, 1, 3), ("paper", 2, 1, 3), ("glass_bottle", 2, 1, 3)]),
     # fire engine lockers

@@ -65,7 +65,10 @@ public final class ZcCommand {
                                                 .executes(ctx -> setConfig(ctx, StringArgumentType.getString(ctx, "key"),
                                                         StringArgumentType.getString(ctx, "value"))))))
                         .then(Commands.literal("infect").executes(ctx -> update(ctx, s -> s.withInfection(0))))
-                        .then(Commands.literal("cure").executes(ctx -> update(ctx, s -> s.withInfection(-1).withWounds(0))))
+                        .then(Commands.literal("cure").executes(ctx -> {
+                            com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
+                            return update(ctx, s -> s.withInfection(-1).withWounds(0));
+                        }))
                         .then(Commands.literal("reset").executes(ctx -> update(ctx, s -> SurvivalStats.FRESH)))
                         .then(Commands.literal("thirst")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0, 100))
@@ -75,7 +78,21 @@ public final class ZcCommand {
                                         .executes(ctx -> update(ctx, s -> s.withFatigue(FloatArgumentType.getFloat(ctx, "value"))))))
                         .then(Commands.literal("wounds")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 10))
-                                        .executes(ctx -> update(ctx, s -> s.withWounds(IntegerArgumentType.getInteger(ctx, "value"))))))));
+                                        .executes(ctx -> update(ctx, s -> s.withWounds(IntegerArgumentType.getInteger(ctx, "value"))))))
+                        .then(Commands.literal("injure")
+                                .then(Commands.argument("part", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                java.util.Arrays.stream(com.zomboidcraft.survival.Body.Region.values())
+                                                        .map(r -> r.name().toLowerCase(java.util.Locale.ROOT)), builder))
+                                        .then(Commands.argument("kind", StringArgumentType.word())
+                                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                        java.util.List.of("scratch", "cut", "bite", "burn", "break"), builder))
+                                                .executes(ctx -> injure(ctx, StringArgumentType.getString(ctx, "part"),
+                                                        StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("heal").executes(ctx -> {
+                            com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
+                            return show(ctx);
+                        })));
     }
 
     private static int city(CommandContext<CommandSourceStack> ctx, long seed) throws CommandSyntaxException {
@@ -174,12 +191,48 @@ public final class ZcCommand {
     }
 
     private static int show(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        SurvivalStats s = SurvivalStats.get(ctx.getSource().getPlayerOrException());
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        SurvivalStats s = SurvivalStats.get(player);
+        com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(player);
         String infection = s.infected() ? Math.round(s.infectionProgress() * 100) + "%" : "none";
+        StringBuilder hurt = new StringBuilder();
+        for (com.zomboidcraft.survival.Body.Region r : com.zomboidcraft.survival.Body.Region.values()) {
+            com.zomboidcraft.survival.Body.Part p = body.part(r);
+            if (!p.fine()) hurt.append(hurt.isEmpty() ? "" : ", ").append(com.zomboidcraft.survival.Body.describe(r, p))
+                    .append(p.bleeding() ? " (bleeding)" : "");
+        }
+        String injuries = hurt.isEmpty() ? "none" : hurt.toString();
         ctx.getSource().sendSuccess(() -> Component.literal(String.format(
-                "Thirst %.0f | Fatigue %.0f | Wounds %d | Infection %s",
-                s.thirst(), s.fatigue(), s.wounds(), infection)), false);
+                "Thirst %.0f | Fatigue %.0f | Infection %s | Injuries: %s",
+                s.thirst(), s.fatigue(), infection, injuries)), false);
         return 1;
+    }
+
+    /** /zc injure left_leg break: try out an injury and how the HUD's figure shows it. */
+    private static int injure(CommandContext<CommandSourceStack> ctx, String part, String kind) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.survival.Body.Region region;
+        try {
+            region = com.zomboidcraft.survival.Body.Region.valueOf(part.toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            ctx.getSource().sendFailure(Component.literal("No body part called " + part));
+            return 0;
+        }
+        com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(player);
+        body = switch (kind) {
+            case "scratch" -> body.wound(region, com.zomboidcraft.survival.Body.Wound.SCRATCH, true);
+            case "cut" -> body.wound(region, com.zomboidcraft.survival.Body.Wound.LACERATION, true);
+            case "bite" -> body.wound(region, com.zomboidcraft.survival.Body.Wound.BITE, true);
+            case "burn" -> body.wound(region, com.zomboidcraft.survival.Body.Wound.BURN, false);
+            case "break" -> body.fracture(region);
+            default -> null;
+        };
+        if (body == null) {
+            ctx.getSource().sendFailure(Component.literal("Injuries: scratch, cut, bite, burn or break"));
+            return 0;
+        }
+        com.zomboidcraft.survival.Body.set(player, body);
+        return show(ctx);
     }
 
     private static int update(CommandContext<CommandSourceStack> ctx, UnaryOperator<SurvivalStats> change)

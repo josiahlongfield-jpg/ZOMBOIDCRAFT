@@ -129,6 +129,8 @@ public final class ZcConfig {
         public boolean fatigue = true;
         public double fatiguePerSecond = 0.055;
         public boolean bleeding = true;
+        /** Injuries by body part: falls break legs, zombies scratch and bite where they reach, splints and bandages. */
+        public boolean injuries = true;
         public double clotChancePerSecond = 0.015;
         public boolean infection = true;
         public double biteChance = 0.12;

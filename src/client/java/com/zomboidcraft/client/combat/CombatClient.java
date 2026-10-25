@@ -101,6 +101,10 @@ public final class CombatClient {
                 && player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL) < 10) {
             player.setSprinting(false);
         }
+        // a broken leg with no splint won't take a sprint
+        if (player.isSprinting() && !player.isCreative() && com.zomboidcraft.survival.Injuries.cantSprint(player)) {
+            player.setSprinting(false);
+        }
         recoil(player);
     }
 

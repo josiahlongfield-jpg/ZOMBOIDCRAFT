@@ -39,6 +39,7 @@ public class ZomboidCraft implements ModInitializer {
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();
         SurvivalEvents.register();
+        com.zomboidcraft.survival.Injuries.register();
         ZombieEvents.register();
         ZombieSpawner.register();
         com.zomboidcraft.zombie.Hordes.register();
