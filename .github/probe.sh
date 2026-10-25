@@ -38,6 +38,12 @@ classes 'world_preset/|worldgen/biome/plains|worldgen/biome/swamp|dimension_type
 sig net.minecraft.world.level.levelgen.presets.WorldPreset 'public'
 sig net.minecraft.world.level.chunk.ChunkGenerators 'public'
 sig net.minecraft.world.level.biome.BiomeSources 'public'
+sig net.minecraft.world.level.biome.BiomeResolver '.'
+sig net.minecraft.world.level.levelgen.densityfunction.SamplerContext 'public'
+sig net.minecraft.world.level.EmptyBlockGetter 'INSTANCE'
+sig net.minecraft.world.level.block.EntityBlock 'newBlockEntity'
+sig net.minecraft.server.level.ServerLevel 'getSeed'
+sig net.minecraft.server.level.ServerChunkCache 'getGenerator'
 exit 0
 
 

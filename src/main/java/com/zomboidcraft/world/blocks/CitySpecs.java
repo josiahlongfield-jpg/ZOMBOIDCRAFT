@@ -398,5 +398,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("floor_checker", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("floor_lino", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("floor_boards", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("asphalt_low", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 6, 16);
     }
 }
