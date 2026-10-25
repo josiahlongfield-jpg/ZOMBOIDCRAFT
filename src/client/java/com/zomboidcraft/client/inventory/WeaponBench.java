@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.entity.state.ItemEntityRenderState;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -160,7 +160,7 @@ final class WeaponBench {
             }
         }
         if (gunState.item.isEmpty()) return;
-        gunState.entityType = EntityType.ITEM;
+        gunState.entityType = EntityTypes.ITEM;
         gunState.count = 1;
         gunState.lightCoords = 0xF000F0;
         // pin the dropped-item renderer: its spin becomes our turn and its bob a fixed lift
