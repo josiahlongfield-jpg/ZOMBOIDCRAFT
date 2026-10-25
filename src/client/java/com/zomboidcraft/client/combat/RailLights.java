@@ -50,12 +50,15 @@ import org.joml.Vector3f;
  * The laser runs from its lens on the right rail to a green dot on whatever is under the crosshair, with the gun on
  * the sights or pointed from the hip (RifleView turns it so its barrel lines up); while the gun is busy, in a
  * reload, it goes wherever the barrel does. The light throws a cone from its lens on the left rail: a soft pool
- * where it lands and a faint beam in the air, both in the dark only. It also lights the world there with a light
- * block put only into this computer's copy of the world, kept dim (guns.lightLevel) so it doesn't flood the rooms
- * around: the server's world never changes.
+ * where it lands and a faint beam in the air, both in the dark only. It also lights the world with light blocks put
+ * only into this computer's copy of the world, spaced down the beam: brightest just ahead of the gun
+ * (guns.lightLevel), fading as the beam widens, so the floor and walls round it light up whether or not it lands on
+ * anything. The server's world never changes.
  */
 public final class RailLights {
     private static final double RANGE = 32, LIGHT_RANGE = 24;
+    /** The light blocks down a beam: the first this far ahead of the lens, at least this far apart, a level dimmer every LIGHT_FADE blocks. */
+    private static final double FIRST_LIGHT = 1.5, LIGHT_GAP = 3, LIGHT_FADE = 3;
     private static final Identifier GLOW = ZomboidCraft.id("textures/effect/rail_glow.png");
     private static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -64,8 +67,9 @@ public final class RailLights {
     /** From outside, where the laser and the light sit from a player's eye (x right, y up, z back). */
     private static final Vector3f LASER_OUTSIDE = new Vector3f(0.20f, -0.24f, -0.55f), LIGHT_OUTSIDE = new Vector3f(0.10f, -0.30f, -0.55f);
 
-    private static final Map<UUID, BlockPos> LIT = new HashMap<>();
-    /** Where each player's light landed in the last frame drawn, for the light block. */
+    /** The light blocks each player's gun light has put in, and how bright each is. */
+    private static final Map<UUID, Map<BlockPos, Integer>> LIT = new HashMap<>();
+    /** Where each player's light went in the last frame drawn, for the light blocks. */
     private static final Map<UUID, Land> LANDS = new HashMap<>();
     /** Iris's own "is a shader pack on" call, looked up once (none without Iris). */
     private static boolean irisAsked;
@@ -73,8 +77,8 @@ public final class RailLights {
     private static Method shaderPackInUse;
     private static ClientLevel litIn;
 
-    /** Where a light landed (null for nothing in reach), the way its beam came, and how far it went. */
-    private record Land(Vec3 at, Vec3 dir, double distance) {
+    /** Where a light came from, where it landed (null for nothing in reach), the way it went, and how far. */
+    private record Land(Vec3 from, Vec3 at, Vec3 dir, double distance) {
     }
 
     /**
@@ -110,48 +114,57 @@ public final class RailLights {
                 continue;
             }
             lit.add(player.getUUID());
-            moveLight(level, player.getUUID(), land, brightest);
+            moveLights(level, player.getUUID(), land, brightest, Mth.clamp(ZcConfig.get().guns.lightSources, 1, 8));
         }
         LIT.entrySet().removeIf(e -> {
             if (lit.contains(e.getKey())) {
                 return false;
             }
-            clear(level, e.getValue());     // switched off, put away, or gone
+            e.getValue().keySet().forEach(pos -> clear(level, pos));      // switched off, put away, or gone
             return true;
         });
     }
 
-    private static void moveLight(ClientLevel level, UUID id, Land land, int brightest) {
-        BlockPos pos = null;
-        if (land.at() != null) {
-            // in the air just short of where it lands, back along the beam: always on the gun's side of the surface
-            for (double back = 0.5; back < 3 && pos == null; back += 1) {
-                BlockPos p = BlockPos.containing(land.at().subtract(land.dir().scale(back)));
+    /**
+     * Puts one player's light blocks where the beam is now: spaced down it from just ahead of the gun, brightest
+     * there and fading a level every few blocks as it widens, the last just short of whatever it lands on.
+     */
+    private static void moveLights(ClientLevel level, UUID id, Land land, int brightest, int sources) {
+        Map<BlockPos, Integer> had = LIT.getOrDefault(id, Map.of()), want = new HashMap<>();
+        double end = land.at() != null ? land.distance() - 0.5 : land.distance();
+        int count = Math.min(sources, 1 + (int) (Math.max(0, end - FIRST_LIGHT) / LIGHT_GAP));
+        for (int i = 0; i < count; i++) {
+            double s = count == 1 ? Math.min(end, FIRST_LIGHT) : FIRST_LIGHT + (end - FIRST_LIGHT) * i / (count - 1);
+            int brightness = Mth.clamp(brightest - (int) (Math.max(0, s - FIRST_LIGHT) / LIGHT_FADE), Math.min(2, brightest), 15);
+            // in the air on the gun's side of anything in the way: back along the beam a little if it's taken
+            for (double back = 0; back < 2 && s - back > 0.2; back += 0.5) {
+                BlockPos p = BlockPos.containing(land.from().add(land.dir().scale(s - back)));
                 BlockState here = level.getBlockState(p);
-                if (here.isAir() || here.is(Blocks.LIGHT) && p.equals(LIT.get(id))) {
-                    pos = p;
+                if (here.isAir() || here.is(Blocks.LIGHT) && had.containsKey(p)) {
+                    want.merge(p, brightness, Math::max);
+                    break;
                 }
             }
         }
-        // brightest up close, dimming as the beam spreads out
-        int brightness = pos == null ? 0 : Mth.clamp(brightest - (int) (land.distance() / 5), Math.min(3, brightest), 15);
-        BlockPos old = LIT.get(id);
-        if (old != null && !old.equals(pos)) {
-            clear(level, old);
-            LIT.remove(id);
-        }
-        if (pos == null) {
-            return;
-        }
-        BlockState here = level.getBlockState(pos);
-        if (here.is(Blocks.LIGHT)) {
-            if (here.getValue(LightBlock.LEVEL) != brightness && pos.equals(LIT.get(id))) {
-                level.setBlock(pos, here.setValue(LightBlock.LEVEL, brightness), FLAGS);
+        for (BlockPos old : had.keySet()) {
+            if (!want.containsKey(old)) {
+                clear(level, old);
             }
-        } else if (here.isAir()) {
-            level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, brightness), FLAGS);
-            LIT.put(id, pos);
         }
+        Map<BlockPos, Integer> placed = new HashMap<>();
+        want.forEach((pos, brightness) -> {
+            BlockState here = level.getBlockState(pos);
+            if (here.is(Blocks.LIGHT) && had.containsKey(pos)) {
+                if (!brightness.equals(had.get(pos))) {
+                    level.setBlock(pos, here.setValue(LightBlock.LEVEL, brightness), FLAGS);
+                }
+                placed.put(pos, brightness);
+            } else if (here.isAir()) {
+                level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, brightness), FLAGS);
+                placed.put(pos, brightness);
+            }
+        });
+        LIT.put(id, placed);
     }
 
     private static void clear(ClientLevel level, BlockPos pos) {
@@ -268,7 +281,7 @@ public final class RailLights {
                 ClipContext.Fluid.NONE, player));
         boolean lands = centre.getType() != HitResult.Type.MISS;
         double reach = lands ? centre.getLocation().distanceTo(from) : LIGHT_RANGE;
-        LANDS.put(player.getUUID(), new Land(lands ? centre.getLocation() : null, axis, reach));
+        LANDS.put(player.getUUID(), new Land(from, lands ? centre.getLocation() : null, axis, reach));
 
         float glow = (float) config.lightGlow;
         if (glow <= 0 || !drawn) {
