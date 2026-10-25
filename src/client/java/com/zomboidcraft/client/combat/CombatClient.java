@@ -3,6 +3,7 @@ package com.zomboidcraft.client.combat;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.client.sound.EarSound;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.CombatNet;
 import com.zomboidcraft.combat.GunState;
@@ -59,9 +60,8 @@ public final class CombatClient {
             if (clicks > 0 && hand.getItem() instanceof MeleeWeaponItem && player.getAttackStrengthScale(0f) > 0.9f) {
                 WeaponSpecs.WeaponSpec spec = Weapons.spec(hand);
                 boolean heavy = spec != null && (spec.twoHanded() || spec.kind() == WeaponSpecs.Kind.HEAVY_BLUNT);
-                client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(),
-                        heavy ? ModSounds.SWING_HEAVY : ModSounds.SWING, SoundSource.PLAYERS, 0.6f,
-                        0.9f + player.getRandom().nextFloat() * 0.2f, false);
+                EarSound.play(heavy ? ModSounds.SWING_HEAVY : ModSounds.SWING, SoundSource.PLAYERS, 0.6f,
+                        0.9f + player.getRandom().nextFloat() * 0.2f);
             }
             return false;
         });
@@ -123,8 +123,9 @@ public final class CombatClient {
             return;     // the server answers with the dry click
         }
         boolean suppressed = Attachments.suppressed(gun);
-        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, false), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
+        // at your ears, so it doesn't stay behind where you fired as you strafe
+        EarSound.play(type.shot(suppressed, false), SoundSource.PLAYERS,
+                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
