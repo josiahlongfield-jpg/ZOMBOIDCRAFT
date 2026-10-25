@@ -11,7 +11,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,6 +28,9 @@ import java.util.List;
  * something; carry past your limit and you slow down and tire faster.
  */
 public final class Carry {
+    /** The buckle clip when a bag goes on (sounds.json ui.wear). */
+    private static final SoundEvent WEAR_SOUND = SoundEvent.createVariableRangeEvent(ZomboidCraft.id("ui.wear"));
+
     public static final AttachmentType<GearStore> GEAR = AttachmentRegistry.create(
             ZomboidCraft.id("gear"),
             builder -> builder.persistent(GearStore.CODEC).initializer(GearStore::new).copyOnDeath());
@@ -77,8 +80,8 @@ public final class Carry {
         } else {
             return false;
         }
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
-                SoundSource.PLAYERS, 0.8f, 0.9f);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), WEAR_SOUND,
+                SoundSource.PLAYERS, 1.0f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         return true;
     }
 
