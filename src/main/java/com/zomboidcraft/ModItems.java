@@ -54,6 +54,18 @@ public final class ModItems {
                     .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.6f)));
     public static final Item RIFLE_AMMO = register("rifle_ammo", Item::new, new Item.Properties().stacksTo(60));
 
+    // Bags: what they hold and weigh in carry/BagSpec.
+    public static final Item SCHOOL_BACKPACK = bag("school_backpack", com.zomboidcraft.carry.BagSpec.SCHOOL);
+    public static final Item HIKING_BACKPACK = bag("hiking_backpack", com.zomboidcraft.carry.BagSpec.HIKING);
+    public static final Item MILITARY_RUCKSACK = bag("military_rucksack", com.zomboidcraft.carry.BagSpec.RUCKSACK);
+    public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
+    public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
+    public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
+
+    private static Item bag(String name, com.zomboidcraft.carry.BagSpec spec) {
+        return register(name, properties -> new com.zomboidcraft.carry.BagItem(spec, properties), new Item.Properties());
+    }
+
     private static Item weapon(String name, Function<Item.Properties, Item> factory) {
         return register(name, factory, MeleeWeaponItem.properties(Weapons.byName(name)));
     }

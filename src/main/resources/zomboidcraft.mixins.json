@@ -4,11 +4,16 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "EnvironmentAttributeSystemMixin",
+    "InventoryMenuMixin",
+    "InventoryMixin",
     "LevelWeatherMixin",
     "LivingEntityMixin",
+    "MenuInvoker",
     "MobAccessor",
     "MobMixin",
     "NearestAttackableTargetGoalAccessor",
+    "PlayerInvoker",
+    "SlotMixin",
     "ZombieMixin"
   ],
   "injectors": {

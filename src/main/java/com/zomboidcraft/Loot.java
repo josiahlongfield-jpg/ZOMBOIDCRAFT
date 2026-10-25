@@ -32,6 +32,12 @@ public final class Loot {
         maybe(random, drops, 0.05f, ModItems.CROWBAR, 1, 1);
         maybe(random, drops, 0.06f, ModItems.KITCHEN_KNIFE, 1, 1);
         maybe(random, drops, 0.03f, ModItems.MACHETE, 1, 1);
+        maybe(random, drops, 0.05f, ModItems.SCHOOL_BACKPACK, 1, 1);
+        maybe(random, drops, 0.04f, ModItems.FANNY_PACK, 1, 1);
+        maybe(random, drops, 0.025f, ModItems.HIKING_BACKPACK, 1, 1);
+        maybe(random, drops, 0.02f, ModItems.DUFFEL_BAG, 1, 1);
+        maybe(random, drops, 0.008f, ModItems.MILITARY_RUCKSACK, 1, 1);
+        maybe(random, drops, 0.006f, ModItems.PLATE_CARRIER, 1, 1);
         if (random.nextFloat() < 0.25f) {
             drops.add(PotionContents.createItemStack(Items.POTION, Potions.WATER));
         }
@@ -41,6 +47,10 @@ public final class Loot {
         maybe(random, drops, 0.08f, ModItems.NAILS, 1, 3);
         maybe(random, drops, 0.04f, ModItems.BANDAGE, 1, 1);
         maybe(random, drops, 0.01f, ModItems.KITCHEN_KNIFE, 1, 1);
+        // the dead still wear what they ran with
+        maybe(random, drops, 0.015f, ModItems.SCHOOL_BACKPACK, 1, 1);
+        maybe(random, drops, 0.01f, ModItems.FANNY_PACK, 1, 1);
+        maybe(random, drops, 0.006f, ModItems.HIKING_BACKPACK, 1, 1);
         if (random.nextFloat() < 0.02f) {
             drops.add(PotionContents.createItemStack(Items.POTION, Potions.WATER));
         }
