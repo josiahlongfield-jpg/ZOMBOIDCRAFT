@@ -32,11 +32,8 @@ import net.minecraft.world.item.ItemStack;
  */
 public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
     public static final int TAKE_ALL = 100;
-    /** Weapon bench clicks: BENCH + (menu slot holding the gun) * 8 + socket. */
-    public static final int BENCH = 1000;
-
     public static int benchButton(int gunSlot, com.zomboidcraft.combat.Attachments.Slot socket) {
-        return BENCH + gunSlot * 8 + socket.ordinal();
+        return com.zomboidcraft.combat.Bench.cursorButton(gunSlot, socket);
     }
 
     private final Player player;
@@ -205,63 +202,7 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
             }
             return true;
         }
-        if (id >= BENCH) {
-            return bench(player, (id - BENCH) / 8, (id - BENCH) % 8);
-        }
-        return false;
-    }
-
-    /**
-     * A click on a weapon bench socket. Holding a part that goes there fits it (whatever was there comes back to
-     * the cursor, or to you if the cursor still holds more parts); with nothing held, the fitted part comes off
-     * onto the cursor. The gun must be one you carry.
-     */
-    private boolean bench(Player player, int gunSlot, int socketIndex) {
-        var sockets = com.zomboidcraft.combat.Attachments.Slot.values();
-        boolean carried = gunSlot >= InventoryMenu.INV_SLOT_START && gunSlot <= InventoryMenu.SHIELD_SLOT
-                || gunSlot >= firstGear && gunSlot < firstGear + GearStore.SIZE;
-        if (!carried || gunSlot >= slots.size() || socketIndex >= sockets.length) {
-            return false;
-        }
-        Slot slot = slots.get(gunSlot);
-        ItemStack gun = slot.getItem();
-        var socket = sockets[socketIndex];
-        if (!com.zomboidcraft.combat.Attachments.slots(gun).contains(socket)) {
-            return false;
-        }
-        ItemStack held = getCarried();
-        boolean fitting = !held.isEmpty();
-        if (fitting) {
-            if (com.zomboidcraft.combat.Attachments.slotOf(held) != socket) {
-                return false;
-            }
-            ItemStack old = com.zomboidcraft.combat.Attachments.mount(gun, held);
-            if (old == null) {
-                return false;
-            }
-            held.shrink(1);
-            if (!old.isEmpty()) {
-                if (held.isEmpty()) {
-                    setCarried(old);
-                } else if (!player.getInventory().add(old) || !old.isEmpty()) {
-                    player.level().addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(player.level(),
-                            player.getX(), player.getEyeY() - 0.3, player.getZ(), old));
-                }
-            }
-        } else {
-            ItemStack off = com.zomboidcraft.combat.Attachments.unmount(gun, socket);
-            if (off.isEmpty()) {
-                return false;
-            }
-            setCarried(off);
-        }
-        slot.setChanged();
-        net.minecraft.sounds.SoundEvent sound = socket == com.zomboidcraft.combat.Attachments.Slot.MAGAZINE
-                ? (fitting ? com.zomboidcraft.combat.ModSounds.RIFLE_MAG_IN : com.zomboidcraft.combat.ModSounds.RIFLE_MAG_OUT)
-                : net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_IRON.value();
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound,
-                net.minecraft.sounds.SoundSource.PLAYERS, 0.7f, 1.2f);
-        return true;
+        return com.zomboidcraft.combat.Bench.click(this, player, id, sourceStart(0));
     }
 
     private boolean isContainerTab(int source) {

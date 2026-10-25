@@ -37,7 +37,7 @@ public class InjuryGlowLayer extends RenderLayer<AvatarRenderState, PlayerModel>
     private static final float[][] SHELLS = {{0.35f, 0.30f}, {0.8f, 0.18f}, {1.35f, 0.09f}};
 
     /** Set while the HUD draws its figure, so the render state made then is the one to mark. */
-    static boolean capturing;
+    public static boolean capturing;
     private static EntityRenderState figure;
 
     public InjuryGlowLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent) {

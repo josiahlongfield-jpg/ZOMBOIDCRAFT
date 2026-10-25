@@ -26,6 +26,10 @@ public final class Weights {
     static {
         mod("bandage", 0.05);
         mod("nails", 0.01);
+        mod("duct_tape", 0.15);
+        mod("wood_glue", 0.2);
+        mod("gun_oil", 0.15);
+        mod("gun_parts", 0.25);
         mod("hammer", 0.7);
         mod("kitchen_knife", 0.3);
         mod("frying_pan", 1.2);
