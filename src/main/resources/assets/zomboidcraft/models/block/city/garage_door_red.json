@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "garage_door_red": "zomboidcraft:block/city/garage_door_red",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/garage_door_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#garage_door_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#garage_door_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

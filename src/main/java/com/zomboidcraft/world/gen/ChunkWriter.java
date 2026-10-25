@@ -105,11 +105,21 @@ final class ChunkWriter implements ChunkSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
+        spawn(x, y, z, yaw, m -> m.length() >= minLength && m.length() <= maxLength, seed);
+    }
+
+    @Override
+    public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        java.util.Set<String> names = java.util.Set.of(models.split(","));
+        spawn(x, y, z, yaw, m -> names.contains(m.id) || names.contains(m.kind), seed);
+    }
+
+    private void spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, long seed) {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
             return;
         }
         SplittableRandom rng = new SplittableRandom(seed);
-        CarModels.Model model = CarModels.pick(rng, m -> m.length() >= minLength && m.length() <= maxLength);
+        CarModels.Model model = CarModels.pick(rng, filter);
         if (model == null) {
             return;
         }

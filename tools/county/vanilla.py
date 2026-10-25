@@ -189,6 +189,12 @@ CUBE = {
     "smooth_quartz": painted((226, 222, 214), 0.03),
     "quartz_block": painted((226, 222, 214), 0.04),
     "chiseled_stone_bricks": ph("stone_brick_wall_001", (128, 128, 124)),
+    "red_nether_bricks": ph("stone_brick_wall_001", (86, 22, 24)),
+    "quartz_pillar": painted((222, 218, 208), 0.03),
+    "pearlescent_froglight": painted((236, 220, 226), 0.04),
+    "ochre_froglight": painted((240, 220, 150), 0.04),
+    "verdant_froglight": painted((200, 236, 200), 0.04),
+    "coal_block": painted((26, 26, 28), 0.1),
 }
 WOODS = list(PLANK)
 for w in WOODS:
@@ -219,6 +225,8 @@ def material(prefix):
             return name
     if prefix.endswith("_brick"):
         return material(prefix + "s")
+    if prefix == "iron":
+        return "iron_block"
     return None
 
 
@@ -302,6 +310,8 @@ def spec(base):
     if base.endswith("_terracotta") and not base.endswith("glazed_terracotta") and base[:-11] in COLOURS:
         rgb = tuple(np.array(COLOURS[base[:-11]]) * 0.75 + np.array((150, 100, 80)) * 0.25)
         return {"model": "cube", "tex": made("mc_" + base, painted(rgb, 0.08))}
+    if base.endswith("_wool") and base[:-5] in COLOURS:
+        return {"model": "cube", "tex": made("mc_" + base, painted(COLOURS[base[:-5]], 0.1))}
     if base.endswith("_concrete") and base[:-9] in COLOURS:
         return {"model": "cube", "tex": made("mc_" + base, painted(COLOURS[base[:-9]], 0.04))}
     if base in ("iron_chain", "lightning_rod", "end_rod"):
@@ -346,6 +356,17 @@ def spec(base):
         return {"model": "cube", "tex": made("mc_" + base, painted((100, 92, 84), 0.15))}
     if base in ("pumpkin", "carved_pumpkin", "melon"):
         return {"model": "cube", "tex": made("mc_" + base, painted((170, 100, 30) if "pumpkin" in base else (100, 140, 40), 0.15))}
+    if base == "bell":
+        t = made("mc_bell", painted((176, 140, 60), 0.12))
+        return {"model": "boxes", "tex": t, "boxes": [[4, 2, 4, 12, 4, 12, t], [5, 4, 5, 11, 11, 11, t], [7, 11, 7, 9, 16, 9, t]]}
+    if base == "candle" or base.endswith("_candle"):
+        t = made("mc_candle", painted((220, 210, 180), 0.1))
+        return {"model": "boxes", "tex": t, "boxes": [[7, 0, 7, 9, 6, 9, t]]}
+    if base.endswith("_wall_banner"):
+        t = made("mc_" + base, painted(COLOURS.get(base[:-12], (150, 150, 150)), 0.1))
+        return {"model": "boxes", "tex": t, "rotate": "facing", "boxes": [[1, 0, 14.5, 15, 16, 16, t]]}
+    if base.startswith("waxed_"):
+        return spec(base[6:])
     return {"model": "cube", "tex": tex_of(base)}
 
 

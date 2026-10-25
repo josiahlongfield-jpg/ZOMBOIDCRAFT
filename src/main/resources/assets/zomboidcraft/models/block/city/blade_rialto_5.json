@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_rialto_5": "zomboidcraft:block/city/blade_rialto_5",
+    "particle": "zomboidcraft:block/city/blade_rialto_5"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_rialto_5",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_rialto_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_rialto_5"
+        },
+        "west": {
+          "texture": "#blade_rialto_5"
+        },
+        "up": {
+          "texture": "#blade_rialto_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_rialto_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

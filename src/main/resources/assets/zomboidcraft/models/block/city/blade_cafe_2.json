@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_cafe_2": "zomboidcraft:block/city/blade_cafe_2",
+    "particle": "zomboidcraft:block/city/blade_cafe_2"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_cafe_2",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_cafe_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_cafe_2"
+        },
+        "west": {
+          "texture": "#blade_cafe_2"
+        },
+        "up": {
+          "texture": "#blade_cafe_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_cafe_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

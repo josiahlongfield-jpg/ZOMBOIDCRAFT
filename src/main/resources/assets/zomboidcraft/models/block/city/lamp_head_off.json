@@ -1,0 +1,203 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "lamp_iron": "zomboidcraft:block/city/lamp_iron",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/lamp_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        2,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron"
+        },
+        "down": {
+          "texture": "#lamp_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        5
+      ],
+      "to": [
+        11,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron"
+        },
+        "down": {
+          "texture": "#lamp_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        3,
+        5.5
+      ],
+      "to": [
+        10.5,
+        10,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        10,
+        4.5
+      ],
+      "to": [
+        11.5,
+        11,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron"
+        },
+        "down": {
+          "texture": "#lamp_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        11,
+        5.5
+      ],
+      "to": [
+        10.5,
+        12.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron"
+        },
+        "down": {
+          "texture": "#lamp_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12.5,
+        7
+      ],
+      "to": [
+        9,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_iron"
+        },
+        "south": {
+          "texture": "#lamp_iron"
+        },
+        "east": {
+          "texture": "#lamp_iron"
+        },
+        "west": {
+          "texture": "#lamp_iron"
+        },
+        "up": {
+          "texture": "#lamp_iron"
+        },
+        "down": {
+          "texture": "#lamp_iron"
+        }
+      }
+    }
+  ]
+}

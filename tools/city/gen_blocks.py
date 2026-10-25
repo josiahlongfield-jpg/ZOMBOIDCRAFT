@@ -35,7 +35,7 @@ DIRS = ["north", "south", "east", "west", "up", "down"]
 # blocks you walk through and can build over: plants, wall and floor decals
 DECOR_PREFIX = ("graffiti_", "sign_", "blade_", "neon_")
 DECOR = {"store_spill", "vines", "paper", "glass_shards", "blood_splat", "scorch", "leaf_litter", "banner_skull",
-         "camo_net", "power_line"}
+         "camo_net", "power_line", "clock_face"}
 SOUNDS = [  # first keyword in the block's name or textures wins
     (("window", "glass", "cabin"), "GLASS"),
     (("grass", "weeds", "vines", "ivy", "leaves", "leaf", "moss_carpet"), "GRASS"),
@@ -45,7 +45,8 @@ SOUNDS = [  # first keyword in the block's name or textures wins
     (("car_", "steel", "metal", "rail", "grate", "chainlink", "barbed", "ladder", "hvac", "dumpster",
       "barrel", "shutter", "pole", "streetlight", "rebar", "elevator", "fire_door", "filing", "train",
       "water_tank", "lantern", "light", "rust", "girder", "chair", "sign_", "blade_", "corrugated", "container",
-      "hull", "deck", "truss", "plate_", "hazard", "garage", "power_line", "mailbox", "pump", "propane"), "METAL"),
+      "hull", "deck", "truss", "plate_", "hazard", "garage", "power_line", "mailbox", "pump", "propane", "tank_",
+      "lamp_", "stop_sign", "sign_post", "clock"), "METAL"),
 ]
 
 

@@ -43,6 +43,16 @@ public final class Placer {
         };
     }
 
+    /**
+     * A placer whose own frame starts at local (dx, dy, dz) and is turned a further quarters
+     * clockwise: draws a side or back wall as if it were a front (quarters 1 for the east side,
+     * 2 the back, 3 the west side).
+     */
+    public Placer turned(int dx, int dy, int dz, int quarters) {
+        Placer s = shifted(dx, dy, dz);
+        return new Placer(sink, s.ox, s.oy, s.oz, rot + quarters);
+    }
+
     public void set(int x, int y, int z, String block) {
         int wx, wz;
         switch (rot) {
@@ -67,6 +77,18 @@ public final class Placer {
             default -> { wx = lz; wz = -lx; }
         }
         sink.car(ox + wx + 0.5, oy + y, oz + wz + 0.5, yaw + 90 * rot, minLength, maxLength, seed);
+    }
+
+    /** One of the named models or kinds at local (x, z); see {@link BlockSink#vehicle}. */
+    public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        double lx = x - 0.5, lz = z - 0.5, wx, wz;
+        switch (rot) {
+            case 0 -> { wx = lx; wz = lz; }
+            case 1 -> { wx = -lz; wz = lx; }
+            case 2 -> { wx = -lx; wz = -lz; }
+            default -> { wx = lz; wz = -lx; }
+        }
+        sink.vehicle(ox + wx + 0.5, oy + y, oz + wz + 0.5, yaw + 90 * rot, models, seed);
     }
 
     /** The place (sink) coordinates of a local block, as {x, z}. */
