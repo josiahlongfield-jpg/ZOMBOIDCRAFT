@@ -327,6 +327,8 @@ final class BenchPage {
             screen.hot(x, cy, 139, 20, material, () -> screen.button(Bench.repairButton(i, weaponSlot)), null, null, -1);
             cy += 23;
         }
+    }
+
     private static void row(GuiGraphicsExtractor g, Font font, String name, String value, int colour, int x, int y) {
         KitDraw.text(g, font, name, x, y, KitDraw.DIM, 0.9f);
         KitDraw.textRight(g, font, value, x + 139, y, colour, 0.9f);
