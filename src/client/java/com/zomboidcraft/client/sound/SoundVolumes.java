@@ -35,7 +35,8 @@ public final class SoundVolumes {
         GUNS("guns"),
         MELEE("melee"),
         LOOTING("looting"),
-        AMBIENCE("ambience");
+        AMBIENCE("ambience"),
+        VEHICLES("vehicles");
 
         public final String key;
         private volatile double volume = 1.0;
@@ -82,6 +83,9 @@ public final class SoundVolumes {
             }
             if (path.startsWith("loot.") || path.startsWith("item.")) {
                 return Group.LOOTING;
+            }
+            if (path.startsWith("car.")) {
+                return Group.VEHICLES;
             }
             if (path.startsWith("amb.")) {
                 return Group.AMBIENCE;

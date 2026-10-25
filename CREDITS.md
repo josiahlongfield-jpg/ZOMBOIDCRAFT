@@ -181,3 +181,16 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | amb.crow | [A Murder of Crows](https://freesound.org/people/Franki-01234/sounds/214869/) | Franki-01234 | CC0 1.0 |
 | amb.distant | explosion_far_distant_02 (Gamemaster Audio -  Explosion Sound Pack) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.distant | warfare_t1b_cannon_firing_forest_distant_MKH8060_2 (Pole Position - The Warfare Library) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+
+## Vehicle sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_car_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| car.stall, car.start | [Car Ignition Key - Engine Starting Running Idle 2.wav](https://freesound.org/people/RutgerMuller/sounds/50898/) | RutgerMuller | CC0 1.0 |
+| car.idle | Car_Idling-Mixture_ENGINE_06 (SoundBits - Mercedes E53 AMG) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| car.horn | [powerfull horn](https://freesound.org/people/trezz77/sounds/546528/) | trezz77 | CC0 1.0 |
+| car.crash | [Clank Car Crash Collision](https://freesound.org/people/qubodup/sounds/151624/) | qubodup | CC0 1.0 |
+| car.door.open | [Car Door open and close 3.wav](https://freesound.org/people/NachtmahrTV/sounds/556690/) | NachtmahrTV | CC0 1.0 |
+| car.door.close | [Car_Door-open-close.aif](https://freesound.org/people/nmscher/sounds/86232/) | nmscher | CC0 1.0 |
