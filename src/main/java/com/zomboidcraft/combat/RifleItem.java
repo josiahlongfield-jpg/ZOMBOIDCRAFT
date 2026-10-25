@@ -1,15 +1,19 @@
 package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.WeaponCard;
+import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -108,9 +112,15 @@ public class RifleItem extends Item {
     }
 
     @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        return WeaponCard.of(stack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+        Rolls.tooltip(stack, tooltip);
         if (type.tube) {
             String what = type.rounds();        // a revolver holds rounds, the shotguns shells
             tooltip.accept(Component.literal(Character.toUpperCase(what.charAt(0)) + what.substring(1) + ": " + gun.rounds()
@@ -128,6 +138,7 @@ public class RifleItem extends Item {
             tooltip.accept(finish);
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
+        Rolls.details(stack, tooltip);
         for (Attachments.Slot part : Attachments.slots(stack)) {
             ItemStack att = Attachments.get(stack, part);
             if (part == Attachments.Slot.MAGAZINE) {

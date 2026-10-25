@@ -47,6 +47,8 @@ public final class ZcConfig {
     public Carry carry = new Carry();
     /** What a gun case or an ammo can has in it when it's found shut. */
     public Cases cases = new Cases();
+    /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
+    public WeaponRolls rolls = new WeaponRolls();
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -71,6 +73,61 @@ public final class ZcConfig {
         public double fullMagazineChance = 0.5;
         /** Chance an ammo can holds a second calibre. */
         public double secondCalibreChance = 0.35;
+    }
+
+    /**
+     * Every weapon rolls a tier, 1 (Rough) to 5 (Pristine), where it's found. The place sets the tier range (tiers
+     * written low-high), a dense horde town around it can push it up one, and distance from your start plays no part.
+     */
+    public static class WeaponRolls {
+        /** Weapons roll a tier, stats and flaws when found. Off, new finds stay as they are. */
+        public boolean enabled = true;
+        /** How often each tier turns up against the others (tiers 1 to 5), before the place narrows it down. */
+        public String tierWeights = "30,30,22,12,6";
+        /** Tier range in houses, stores, farms and cars. */
+        public String houses = "1-3";
+        /** Tier range of weapons the dead drop. */
+        public String onTheDead = "1-2";
+        /** Tier range in gun cabinets and gun safes. */
+        public String gunCabinets = "3-5";
+        /** Tier range in gun shops and pawn shops. */
+        public String gunShops = "2-4";
+        /** Tier range in police cars. */
+        public String police = "2-4";
+        /** Tier range with military kit (SWAT vans for now). */
+        public String military = "3-5";
+        /** Tier range of a gun found packed in its case. */
+        public String gunCases = "2-4";
+        /** Tier range of a weapon from anywhere else (the floor, a crafting bench). */
+        public String elsewhere = "1-3";
+        /** Zombies within denseTownRadius blocks that make a place a dense horde town (0 = off). */
+        public int denseTownZombies = 20;
+        public int denseTownRadius = 48;
+        /** Chance loot in a dense horde town rolls one tier higher. */
+        public double denseTownBump = 0.5;
+        /** How far a model's stat can sit from its average copy, each way (0.15 = 15% worse to 15% better). */
+        public double damageRange = 0.15;
+        /** Bullet spread. */
+        public double accuracyRange = 0.3;
+        /** Recoil. */
+        public double stabilityRange = 0.25;
+        /** Aim sway on the sights. */
+        public double handlingRange = 0.3;
+        /** Jam chance, for guns that can jam. */
+        public double reliabilityRange = 0.6;
+        /** Full condition: how long it lasts. */
+        public double durabilityRange = 0.3;
+        /** Melee swings a second. */
+        public double speedRange = 0.08;
+        public double reachRange = 0.05;
+        public double knockdownRange = 0.3;
+        /** Chance a tier 1 or tier 2 find comes with a flaw. */
+        public double tier1FlawChance = 0.6;
+        public double tier2FlawChance = 0.25;
+        /** How much a flaw worsens the stat it hits (1.3 = 30% worse). */
+        public double flawPenalty = 1.3;
+        /** Jam chance per shot of a rolled gun in new condition, before its roll (worn guns jam more on top). */
+        public double jamFloor = 0.003;
     }
 
     /** Weights: how often a found gun turns up in each of its finishes, against its others. */
@@ -256,6 +313,8 @@ public final class ZcConfig {
         public boolean fieldKitInventory = true;
         /** The field-kit HUD: belt, moodle plates, your figure for health, a wristwatch; off brings back Minecraft's. Client side. */
         public boolean fieldKitHud = true;
+        /** Weapon tooltips drawn as the kit screen's card (rarity band, tier pips, stat bars); off shows lines of text. Client side. */
+        public boolean weaponCards = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */

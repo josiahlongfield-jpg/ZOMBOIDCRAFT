@@ -31,6 +31,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.inventory.FieldKitScreen.register();
         com.zomboidcraft.client.kit.KitScreen.register();
+        com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->

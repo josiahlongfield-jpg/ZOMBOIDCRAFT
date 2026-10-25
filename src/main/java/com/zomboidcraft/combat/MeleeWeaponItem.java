@@ -2,6 +2,9 @@ package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.WeaponCard;
+import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -11,6 +14,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,20 +29,24 @@ public class MeleeWeaponItem extends Item {
     }
 
     public static Properties properties(WeaponSpecs.WeaponSpec spec) {
-        ItemAttributeModifiers attributes = ItemAttributeModifiers.builder()
+        int wear = ZcConfig.get().combat.weaponWear ? 1 : 0;
+        return new Properties().stacksTo(1).durability(spec.durability()).attributes(attributes(spec, 1, 1, 1))
+                .component(DataComponents.WEAPON, new Weapon(wear, 0f)).enchantable(10);
+    }
+
+    /** The weapon's swing in the hand: its damage, speed and reach, each scaled (by a rolled copy's stats). */
+    public static ItemAttributeModifiers attributes(WeaponSpecs.WeaponSpec spec, double damage, double speed, double reach) {
+        return ItemAttributeModifiers.builder()
                 .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID,
-                        spec.damage() * ZcConfig.get().combat.meleeDamage - 1, AttributeModifier.Operation.ADD_VALUE),
+                        spec.damage() * damage * ZcConfig.get().combat.meleeDamage - 1, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID,
-                        spec.speed() - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        spec.speed() * speed - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(ZomboidCraft.id("weapon_reach"),
-                        spec.reach() - 3, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        spec.reach() * reach - 3, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(ZomboidCraft.id("weapon_knockback"),
                         spec.knockback(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .build();
-        int wear = ZcConfig.get().combat.weaponWear ? 1 : 0;
-        return new Properties().stacksTo(1).durability(spec.durability()).attributes(attributes)
-                .component(DataComponents.WEAPON, new Weapon(wear, 0f)).enchantable(10);
     }
 
     /** Wearing down doesn't make the weapon dip out of view as if it had been swapped. */
@@ -48,13 +56,20 @@ public class MeleeWeaponItem extends Item {
     }
 
     @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        return WeaponCard.of(stack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         WeaponSpecs.WeaponSpec spec = Weapons.spec(stack);
         if (spec == null) {
             return;
         }
+        Rolls.tooltip(stack, tooltip);
         tooltip.accept(condition(stack));
+        Rolls.details(stack, tooltip);
         if (spec.twoHanded()) {
             tooltip.accept(Component.literal("Two-handed: hits harder with nothing in your off hand")
                     .withStyle(ChatFormatting.DARK_GRAY));

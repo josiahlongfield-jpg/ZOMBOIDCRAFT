@@ -5,6 +5,8 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.sound.EarSound;
 import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.rolls.Rolls;
+import com.zomboidcraft.combat.rolls.Stat;
 import com.zomboidcraft.combat.CombatNet;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.Grabs;
@@ -132,7 +134,8 @@ public final class CombatClient {
         EarSound.play(type.shot(suppressed, false), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         RifleView.fired(player, config.muzzleFlash);
-        float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun));
+        float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
+                * Rolls.multiplier(gun, Stat.STABILITY));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);
