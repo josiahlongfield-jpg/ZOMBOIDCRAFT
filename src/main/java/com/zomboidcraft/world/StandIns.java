@@ -233,9 +233,9 @@ public final class StandIns {
         if (axis != null) {
             state = with(state, "axis", axis);
         }
-        for (String key : new String[] {"half", "hinge", "open"}) {  // doors
-            if (props.containsKey(key)) {
-                state = with(state, key, props.get(key));
+        for (String prop : new String[] {"half", "hinge", "open"}) {  // doors
+            if (props.containsKey(prop)) {
+                state = with(state, prop, props.get(prop));
             }
         }
         return state;
