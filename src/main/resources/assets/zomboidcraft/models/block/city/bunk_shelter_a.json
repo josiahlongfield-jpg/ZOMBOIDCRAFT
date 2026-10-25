@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_shelter_a": "zomboidcraft:block/city/bunk_shelter_a",
+    "particle": "zomboidcraft:block/city/bunk_shelter_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1,
+        15.5
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_shelter_a"
+        },
+        "south": {
+          "texture": "#bunk_shelter_a",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_shelter_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_shelter_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_shelter_a"
+        },
+        "down": {
+          "texture": "#bunk_shelter_a"
+        }
+      }
+    }
+  ]
+}

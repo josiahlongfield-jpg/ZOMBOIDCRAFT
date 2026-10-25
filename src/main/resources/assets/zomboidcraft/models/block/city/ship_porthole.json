@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ship_porthole": "zomboidcraft:block/city/ship_porthole",
+    "ship_wall_white": "zomboidcraft:block/city/ship_wall_white",
+    "particle": "zomboidcraft:block/city/ship_porthole"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_porthole",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ship_wall_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ship_wall_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ship_wall_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ship_wall_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ship_wall_white",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_rust_pipe": "zomboidcraft:block/city/bunk_rust_pipe",
+    "particle": "zomboidcraft:block/city/bunk_rust_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "south": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "east": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "west": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "up": {
+          "texture": "#bunk_rust_pipe",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_rust_pipe",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

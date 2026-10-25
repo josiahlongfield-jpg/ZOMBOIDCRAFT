@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_tins": "zomboidcraft:block/city/bunk_tins",
+    "home_cardboard": "zomboidcraft:block/city/home_cardboard",
+    "particle": "zomboidcraft:block/city/bunk_tins"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tins"
+        },
+        "south": {
+          "texture": "#bunk_tins"
+        },
+        "east": {
+          "texture": "#bunk_tins"
+        },
+        "west": {
+          "texture": "#bunk_tins"
+        },
+        "up": {
+          "texture": "#home_cardboard"
+        },
+        "down": {
+          "texture": "#home_cardboard",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

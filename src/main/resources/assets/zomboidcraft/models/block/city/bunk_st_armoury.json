@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_st_armoury": "zomboidcraft:block/city/bunk_st_armoury",
+    "particle": "zomboidcraft:block/city/bunk_st_armoury"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_st_armoury"
+        },
+        "south": {
+          "texture": "#bunk_st_armoury",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_st_armoury",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_st_armoury",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_st_armoury",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_st_armoury",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

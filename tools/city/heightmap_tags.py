@@ -26,7 +26,7 @@ LINE = re.compile(r'\s*s\("([a-z0-9_]+)", (\w+), ([\w |]+), \d+, SoundType\.\w+,
 def solid(kind, flags, boxes):
     if "DECOR" in flags:
         return False  # no collision
-    if kind == "DOOR":
+    if kind in ("DOOR", "TRAPDOOR"):
         return True  # a door's 3/16 slab just makes the cut, as in vanilla
     if not boxes:
         return False

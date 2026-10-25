@@ -59,6 +59,15 @@ public abstract class InventoryMenuMixin implements Carry.Bags {
         return zomboidcraft$bags;
     }
 
+    /**
+     * Weapon bench clicks from the kit screen, which runs on this menu. Minecraft's inventory menu has no buttons of
+     * its own, so this adds the override.
+     */
+    public boolean clickMenuButton(Player player, int id) {
+        AbstractContainerMenu self = (AbstractContainerMenu) (Object) this;
+        return com.zomboidcraft.combat.Bench.click(self, player, id, self.slots.size());
+    }
+
     /** Shift-click: bags go on, carried things go into bags, and anything from gear or bags comes back to hand. */
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$quickMove(Player player, int index, CallbackInfoReturnable<ItemStack> cir) {

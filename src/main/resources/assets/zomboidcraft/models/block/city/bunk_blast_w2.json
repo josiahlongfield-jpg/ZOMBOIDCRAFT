@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_blast_w2": "zomboidcraft:block/city/bunk_blast_w2",
+    "bunk_plate": "zomboidcraft:block/city/bunk_plate",
+    "particle": "zomboidcraft:block/city/bunk_blast_w2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_blast_w2"
+        },
+        "south": {
+          "texture": "#bunk_blast_w2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_blast_w2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_blast_w2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_blast_w2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_blast_w2",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate"
+        },
+        "south": {
+          "texture": "#bunk_plate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_plate"
+        },
+        "west": {
+          "texture": "#bunk_plate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_plate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_plate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate"
+        },
+        "south": {
+          "texture": "#bunk_plate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_plate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_plate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_plate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_plate"
+        }
+      }
+    }
+  ]
+}

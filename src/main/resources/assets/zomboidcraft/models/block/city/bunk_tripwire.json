@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_wire": "zomboidcraft:block/city/bunk_wire",
+    "home_can": "zomboidcraft:block/city/home_can",
+    "particle": "zomboidcraft:block/city/bunk_wire"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        7.9
+      ],
+      "to": [
+        16,
+        2.2,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_wire"
+        },
+        "south": {
+          "texture": "#bunk_wire"
+        },
+        "east": {
+          "texture": "#bunk_wire",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_wire",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_wire"
+        },
+        "down": {
+          "texture": "#bunk_wire"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0.6,
+        7
+      ],
+      "to": [
+        7,
+        2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_can"
+        },
+        "south": {
+          "texture": "#home_can"
+        },
+        "east": {
+          "texture": "#home_can"
+        },
+        "west": {
+          "texture": "#home_can"
+        },
+        "up": {
+          "texture": "#home_can"
+        },
+        "down": {
+          "texture": "#home_can"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0.4,
+        7.2
+      ],
+      "to": [
+        11,
+        1.8,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_can"
+        },
+        "south": {
+          "texture": "#home_can"
+        },
+        "east": {
+          "texture": "#home_can"
+        },
+        "west": {
+          "texture": "#home_can"
+        },
+        "up": {
+          "texture": "#home_can"
+        },
+        "down": {
+          "texture": "#home_can"
+        }
+      }
+    }
+  ]
+}

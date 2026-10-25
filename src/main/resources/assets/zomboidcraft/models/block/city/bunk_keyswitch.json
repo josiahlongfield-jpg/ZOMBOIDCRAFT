@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_keyswitch": "zomboidcraft:block/city/bunk_keyswitch",
+    "particle": "zomboidcraft:block/city/bunk_keyswitch"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        4,
+        15.5
+      ],
+      "to": [
+        11,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_keyswitch"
+        },
+        "south": {
+          "texture": "#bunk_keyswitch",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_keyswitch"
+        },
+        "west": {
+          "texture": "#bunk_keyswitch"
+        },
+        "up": {
+          "texture": "#bunk_keyswitch"
+        },
+        "down": {
+          "texture": "#bunk_keyswitch"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_drum_top": "zomboidcraft:block/city/bunk_drum_top",
+    "bunk_drum_water": "zomboidcraft:block/city/bunk_drum_water",
+    "particle": "zomboidcraft:block/city/bunk_drum_water"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_drum_water"
+        },
+        "south": {
+          "texture": "#bunk_drum_water"
+        },
+        "east": {
+          "texture": "#bunk_drum_water"
+        },
+        "west": {
+          "texture": "#bunk_drum_water"
+        },
+        "up": {
+          "texture": "#bunk_drum_top"
+        },
+        "down": {
+          "texture": "#bunk_drum_top",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        1,
+        2.5
+      ],
+      "to": [
+        13.5,
+        2,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_drum_water"
+        },
+        "south": {
+          "texture": "#bunk_drum_water"
+        },
+        "east": {
+          "texture": "#bunk_drum_water"
+        },
+        "west": {
+          "texture": "#bunk_drum_water"
+        },
+        "up": {
+          "texture": "#bunk_drum_water"
+        },
+        "down": {
+          "texture": "#bunk_drum_water"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        13,
+        2.5
+      ],
+      "to": [
+        13.5,
+        14,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_drum_water"
+        },
+        "south": {
+          "texture": "#bunk_drum_water"
+        },
+        "east": {
+          "texture": "#bunk_drum_water"
+        },
+        "west": {
+          "texture": "#bunk_drum_water"
+        },
+        "up": {
+          "texture": "#bunk_drum_water"
+        },
+        "down": {
+          "texture": "#bunk_drum_water"
+        }
+      }
+    }
+  ]
+}

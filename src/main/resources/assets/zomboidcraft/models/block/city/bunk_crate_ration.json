@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_crate_ration": "zomboidcraft:block/city/bunk_crate_ration",
+    "bunk_crate_wood": "zomboidcraft:block/city/bunk_crate_wood",
+    "particle": "zomboidcraft:block/city/bunk_crate_ration"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_crate_ration"
+        },
+        "south": {
+          "texture": "#bunk_crate_wood"
+        },
+        "east": {
+          "texture": "#bunk_crate_wood"
+        },
+        "west": {
+          "texture": "#bunk_crate_wood"
+        },
+        "up": {
+          "texture": "#bunk_crate_wood"
+        },
+        "down": {
+          "texture": "#bunk_crate_wood",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

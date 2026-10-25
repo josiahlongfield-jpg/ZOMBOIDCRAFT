@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_filter_front": "zomboidcraft:block/city/bunk_filter_front",
+    "bunk_olive": "zomboidcraft:block/city/bunk_olive",
+    "particle": "zomboidcraft:block/city/bunk_filter_front"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_filter_front"
+        },
+        "south": {
+          "texture": "#bunk_olive"
+        },
+        "east": {
+          "texture": "#bunk_olive"
+        },
+        "west": {
+          "texture": "#bunk_olive"
+        },
+        "up": {
+          "texture": "#bunk_olive",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_olive",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

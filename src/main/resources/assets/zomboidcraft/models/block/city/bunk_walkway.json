@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_walkway": "zomboidcraft:block/city/bunk_walkway",
+    "particle": "zomboidcraft:block/city/bunk_walkway"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_walkway",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_walkway",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_walkway",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_walkway",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_walkway",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_walkway"
+        }
+      }
+    }
+  ]
+}

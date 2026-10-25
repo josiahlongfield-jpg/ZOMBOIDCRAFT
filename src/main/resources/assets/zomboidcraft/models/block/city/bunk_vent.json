@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grille": "zomboidcraft:block/city/bunk_grille",
+    "particle": "zomboidcraft:block/city/bunk_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        5,
+        15.5
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grille"
+        },
+        "south": {
+          "texture": "#bunk_grille",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_grille"
+        },
+        "west": {
+          "texture": "#bunk_grille"
+        },
+        "up": {
+          "texture": "#bunk_grille"
+        },
+        "down": {
+          "texture": "#bunk_grille"
+        }
+      }
+    }
+  ]
+}
