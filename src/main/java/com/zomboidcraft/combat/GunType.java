@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
  * sounds, and their reload timings in ticks (first person animates on the same numbers, see RifleView).
  * A tube gun (the pump shotgun) has no magazine: its shells go in one at a time, and it's pumped after each shot.
  * A bolt gun (the hunting rifle) takes a magazine, and its bolt is worked by hand after each shot.
- * A gun that opens to load (the double-barrel broken open, a revolver's cylinder swung out) is loaded by hand like a
- * tube gun, then closed: its spent shells come out as it opens.
+ * A gun that opens to load (the double-barrel broken open, the revolver's cylinder swung out) is loaded by hand like a
+ * tube gun, then closed: its spent shells or cases come out as it opens.
  */
 public enum GunType {
     ASSAULT_RIFLE("assault_rifle", "5.56mm", 16, 22, 25, 34, 18),
@@ -22,7 +22,10 @@ public enum GunType {
     // its bolt is worked at the pace of its recording (lift, back, home, down over 16 ticks), so an empty reload runs long
     HUNTING_RIFLE("hunting_rifle", ".308", 16, 22, 25, 41, 18, 16, 7),
     // the lever pushed over and the barrels dropped, the empties plucked out, a shell into each chamber, snapped shut
-    DOUBLE_BARREL("double_barrel", "12 gauge", 8, 10, 6, true);
+    DOUBLE_BARREL("double_barrel", "12 gauge", 8, 10, 6, true),
+    // the latch pushed and the cylinder swung out, the ejector rod pushed to clear the empties, a round thumbed into
+    // each chamber, the cylinder snapped shut
+    REVOLVER("revolver", ".38 Special", 10, 8, 5, true);
 
     private final String id;
     private final String caliber;
@@ -126,6 +129,7 @@ public enum GunType {
             case SHOTGUN -> ModItems.SHOTGUN;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE;
             case DOUBLE_BARREL -> ModItems.DOUBLE_BARREL;
+            case REVOLVER -> ModItems.REVOLVER;
         };
     }
 
@@ -134,7 +138,7 @@ public enum GunType {
         return switch (this) {
             case ASSAULT_RIFLE -> ModItems.RIFLE_MAGAZINE;
             case PISTOL -> ModItems.PISTOL_MAGAZINE;
-            case SHOTGUN, DOUBLE_BARREL -> null;
+            case SHOTGUN, DOUBLE_BARREL, REVOLVER -> null;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_MAGAZINE;
         };
     }
@@ -144,13 +148,15 @@ public enum GunType {
             case ASSAULT_RIFLE -> ModItems.RIFLE_AMMO;
             case PISTOL -> ModItems.PISTOL_AMMO;
             case SHOTGUN, DOUBLE_BARREL -> ModItems.SHOTGUN_SHELL;
+            case REVOLVER -> ModItems.REVOLVER_AMMO;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
         };
     }
 
     /**
      * Damage, spread, kick, noise, zoom, range, rate and magazine size: the rifle's in guns, the pistol's in pistol,
-     * the shotgun's in shotgun (with its pellets), the hunting rifle's in huntingRifle, the double's in doubleBarrel.
+     * the shotgun's in shotgun (with its pellets), the hunting rifle's in huntingRifle, the double's in doubleBarrel,
+     * the revolver's in revolver.
      */
     public ZcConfig.GunStats stats() {
         return switch (this) {
@@ -159,6 +165,7 @@ public enum GunType {
             case SHOTGUN -> ZcConfig.get().shotgun;
             case HUNTING_RIFLE -> ZcConfig.get().huntingRifle;
             case DOUBLE_BARREL -> ZcConfig.get().doubleBarrel;
+            case REVOLVER -> ZcConfig.get().revolver;
         };
     }
 
@@ -182,6 +189,7 @@ public enum GunType {
             case HUNTING_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
             case DOUBLE_BARREL -> distant ? ModSounds.DOUBLE_BARREL_SHOT_DISTANT : ModSounds.DOUBLE_BARREL_SHOT;
+            case REVOLVER -> distant ? ModSounds.REVOLVER_SHOT_DISTANT : ModSounds.REVOLVER_SHOT;
         };
     }
 
@@ -192,6 +200,7 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_DRY;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_DRY;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_DRY;
+            case REVOLVER -> ModSounds.REVOLVER_DRY;
         };
     }
 
@@ -201,6 +210,7 @@ public enum GunType {
             case PISTOL -> ModSounds.PISTOL_MAG_OUT;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_OUT;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_OPEN;
+            case REVOLVER -> ModSounds.REVOLVER_OPEN;
             default -> ModSounds.RIFLE_MAG_OUT;
         };
     }
@@ -213,6 +223,7 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_SHELL_IN;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_IN;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_SHELL_IN;
+            case REVOLVER -> ModSounds.REVOLVER_ROUND_IN;
         };
     }
 
@@ -227,7 +238,18 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_PUMP;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_BOLT;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_CLOSE;
+            case REVOLVER -> ModSounds.REVOLVER_CLOSE;
         };
+    }
+
+    /** The empties pushed out as it opens (the ejector rod), or null where they just fall out with the opening. */
+    public @Nullable SoundEvent eject() {
+        return this == REVOLVER ? ModSounds.REVOLVER_EJECT : null;
+    }
+
+    /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */
+    public String rounds() {
+        return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : "rounds";
     }
 
     /** The gun a stack is, or null if it isn't one. */

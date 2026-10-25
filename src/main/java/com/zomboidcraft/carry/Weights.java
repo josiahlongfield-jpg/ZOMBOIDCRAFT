@@ -59,6 +59,8 @@ public final class Weights {
         mod("shotgun", 3.4);
         mod("shotgun_shell", 0.04);
         mod("double_barrel", 3.2);
+        mod("revolver", 1.0);
+        mod("revolver_ammo", 0.011);
         mod("hunting_rifle", 3.6);
         mod("hunting_rifle_magazine", 0.2);
         mod("hunting_rifle_ammo", 0.025);

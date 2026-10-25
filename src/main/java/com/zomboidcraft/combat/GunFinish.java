@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The finish a gun came in: a plain working gun, or a better one (colour case hardening and figured walnut, an engraved
- * coin finish and exhibition walnut). Each gun lists its own, plainest first, with how often each turns up (in /zc
+ * coin finish and exhibition walnut; nickel and rosewood, gold-inlaid royal blue). Each gun lists its own, plainest first, with how often each turns up (in /zc
  * config under finishes). A found gun's finish is rolled the first time a player has it; the item model shows the
  * finish by the model data string after the part keys (see Attachments.writeModelData).
  */
@@ -34,11 +34,16 @@ public final class GunFinish {
             new Finish("field", 0, f -> f.doubleBarrelField),
             new Finish("case_hardened", 1, f -> f.doubleBarrelCaseHardened),
             new Finish("engraved", 2, f -> f.doubleBarrelEngraved));
+    private static final List<Finish> REVOLVER = List.of(
+            new Finish("service", 0, f -> f.revolverService),
+            new Finish("nickel", 1, f -> f.revolverNickel),
+            new Finish("engraved", 2, f -> f.revolverEngraved));
 
     /** The finishes a gun comes in, the plainest first; none for a gun that has only the one look. */
     public static List<Finish> of(GunType type) {
         return switch (type) {
             case DOUBLE_BARREL -> DOUBLE_BARREL;
+            case REVOLVER -> REVOLVER;
             default -> List.of();
         };
     }

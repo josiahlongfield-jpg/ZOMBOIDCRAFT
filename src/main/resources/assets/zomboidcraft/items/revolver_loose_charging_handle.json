@@ -1,0 +1,27 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:custom_model_data",
+  "index": 8,
+  "cases": [
+   {
+    "when": "nickel",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/revolver/nickel/charging_handle"
+    }
+   },
+   {
+    "when": "engraved",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/revolver/engraved/charging_handle"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/weapon/revolver/charging_handle"
+  }
+ }
+}

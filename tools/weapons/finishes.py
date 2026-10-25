@@ -132,16 +132,17 @@ def case_hardened(f):
     return np.where(worn[..., None], P.mix(P.col('#9a9fa4'), c, 0.4), c)
 
 
-def coin(f, engraved=True, cell=0.95):
+def coin(f, engraved=True, cell=0.95, base=None, ink='#2a2c2e', inlay=0.8, line=0.055, border=True):
     """A silver coin finish (bright steel, finely brushed) with English scroll engraving: scrolls a cell
     across, each one a cut spiral shaded on its inner side, leaves sprouting off where it ends, and a cut
-    border round each face."""
-    c = P.steel(f, 0.74, tint='#cfd2d4', spread=0.08)
+    border round each face. base: another finish to engrave (a fn of the face); ink: what fills the cuts (dark, or
+    gold inlaid), and how strongly; line: the cuts' width; border: whether each face gets its cut border."""
+    c = base(f) if base else P.steel(f, 0.74, tint='#cfd2d4', spread=0.08)
     if not engraved:
         return c
-    dark = P.col('#2a2c2e')
+    dark = P.col(ink)
     uu, vv = f.uv[..., 0] / cell, f.uv[..., 1] / cell
-    ink = np.zeros(f.shape)
+    cuts = np.zeros(f.shape)
     tone = np.zeros(f.shape)
     for shift in (0.0, 0.5):                            # two offset grids, so scrolls interlock
         su, sv = uu + shift, vv + shift * 0.7
@@ -157,23 +158,25 @@ def coin(f, engraved=True, cell=0.95):
         grad = np.sqrt((5.0 / size) ** 2 + (0.5 / r) ** 2)
         dist = np.abs(np.sin(phase)) / grad * cell      # model units from the spiral's cut
         inside = r < size
-        ink = np.maximum(ink, _line(dist, 0.055) * inside)
+        cuts = np.maximum(cuts, _line(dist, line) * inside)
         tone = np.maximum(tone, (np.sin(phase) > 0) * (np.sin(phase) < 0.55) * inside * (r > 0.04))
         # leaves: almond shapes curling off the end of the scroll
         lr = r - size * 1.05
         leaf = (np.abs(lr) < 0.045) & (np.cos(th * 3.0 + h2 * 5) > 0.6)
-        ink = np.maximum(ink, leaf * 0.6)
+        cuts = np.maximum(cuts, leaf * 0.6)
     c = c * (1 - 0.22 * tone)[..., None]
-    c = P.mix(c, dark, ink * 0.8)
-    border = _line(np.abs(f.edge - 0.075), 0.05)
-    return P.mix(c, dark, border * 0.8)
+    c = P.mix(c, dark, cuts * inlay)
+    if not border:
+        return c
+    edge = _line(np.abs(f.edge - 0.075), 0.05)
+    return P.mix(c, dark, edge * inlay)
 
 
 def nickel(f):
     """Bright nickel plate: warm silver, soft reflections."""
     a, b = f.across()
     t = np.sin((a + b) * 2.0 + f.noise(0.35, 621, 2) * 3.5) * 0.5 + 0.5
-    c = P.mix(P.col('#8e918f'), P.col('#e3e3dc'), t ** 1.3)
+    c = P.mix(P.col('#5d6160'), P.col('#d8d8d0'), t ** 1.6)
     return c * (1 + (f.noise(5.0, 622, 2, P.stretch_for(f, 0.06)) - 0.5) * 0.06)[..., None]
 
 

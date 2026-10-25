@@ -65,6 +65,7 @@ TABLES = {
         (f"{ZC}:pistol_ammo", 12, 5, 30), (f"{ZC}:pistol_suppressor", 1, 1, 1),
         (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .7)), (f"{ZC}:shotgun_shell", 12, 4, 20),
         (f"{ZC}:double_barrel", 2, 1, 1, worn(.1, .6)),
+        (f"{ZC}:revolver", 3, 1, 1, worn(.1, .7)), (f"{ZC}:revolver_ammo", 10, 5, 24),
         (f"{ZC}:hunting_rifle", 2, 1, 1, worn(.1, .6)), (f"{ZC}:hunting_rifle_magazine", 3, 1, 1),
         (f"{ZC}:hunting_rifle_magazine", 1, 1, 1, rounds(3)), (f"{ZC}:hunting_rifle_ammo", 8, 3, 15),
         (f"{ZC}:rifle_case", 2, 1, 1), (f"{ZC}:pistol_case", 2, 1, 1), (f"{ZC}:ammo_can", 3, 1, 1),
@@ -81,6 +82,7 @@ TABLES = {
         (f"{ZC}:pistol", 1, 1, 1, worn(.2, .8)), (f"{ZC}:pistol_ammo", 2, 3, 15),
         (f"{ZC}:shotgun", 1, 1, 1, worn(.2, .8)), (f"{ZC}:shotgun_shell", 2, 2, 10),
         (f"{ZC}:double_barrel", 1, 1, 1, worn(.2, .8)),
+        (f"{ZC}:revolver", 2, 1, 1, worn(.2, .8)), (f"{ZC}:revolver_ammo", 2, 3, 12),
         (f"{ZC}:hunting_rifle", 1, 1, 1, worn(.2, .8)), (f"{ZC}:hunting_rifle_ammo", 1, 2, 8),
         (f"{ZC}:rifle_case", 1, 1, 1), (f"{ZC}:pistol_case", 1, 1, 1),
         ("golden_helmet", 1, 1, 1, worn()), ("book", 2, 1, 2), ("-", 8, 1, 1)]),
@@ -142,9 +144,10 @@ RARE = {
     "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1), (f"{ZC}:red_dot_sight", 1),
              (f"{ZC}:holo_sight", 1)],
     "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1), (f"{ZC}:military_rucksack", 1),
-                (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1), (f"{ZC}:rifle_case", 1), (f"{ZC}:pistol_case", 1)],
+                (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1), (f"{ZC}:revolver", 1), (f"{ZC}:rifle_case", 1),
+                (f"{ZC}:pistol_case", 1)],
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2), (f"{ZC}:double_barrel", 3),
-             (f"{ZC}:hunting_rifle", 2), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
+             (f"{ZC}:hunting_rifle", 2), (f"{ZC}:revolver", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
 }
 
 

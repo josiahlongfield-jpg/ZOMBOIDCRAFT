@@ -405,8 +405,17 @@ def write_flash_texture(assets):
 
 def opened(m, axis, angle, origin):
     """A copy of a model with every element turned about origin, for a handle drawn open (only parts that aren't
-    turned already can be: an element takes one turn)."""
+    turned already can be: an element takes one turn). axis 'shift' moves it by origin instead (angle unused), for
+    a handle whose elements are turned already (a revolver's cylinder, swung out)."""
     out = M.Model(m.name)
+    if axis == 'shift':
+        d = np.array(origin, float)
+        for p in m.parts:
+            q = dict(p, lo=p['lo'] + d, hi=p['hi'] + d)
+            if p['rot']:
+                q['rot'] = dict(p['rot'], origin=[float(v) for v in np.array(p['rot']['origin']) + d])
+            out.parts.append(q)
+        return out
     for p in m.parts:
         q = dict(p)
         if not p['rot']:

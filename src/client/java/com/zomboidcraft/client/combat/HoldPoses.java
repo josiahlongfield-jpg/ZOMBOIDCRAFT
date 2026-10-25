@@ -63,6 +63,7 @@ public final class HoldPoses {
                     case SHOTGUN -> HoldPoseData.SHOTGUN_AIM;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM;
+                    case REVOLVER -> HoldPoseData.REVOLVER_AIM;
                     default -> HoldPoseData.RIFLE_AIM;
                 }));
                 support = switch (item.type()) {
@@ -70,6 +71,7 @@ public final class HoldPoses {
                     case SHOTGUN -> HoldPoseData.SHOTGUN_AIM_SUPPORT;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM_SUPPORT;
+                    case REVOLVER -> HoldPoseData.REVOLVER_AIM_SUPPORT;
                     default -> HoldPoseData.RIFLE_AIM_SUPPORT;
                 };
             } else {
@@ -78,6 +80,7 @@ public final class HoldPoses {
                     case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY;
+                    case REVOLVER -> HoldPoseData.REVOLVER_READY;
                     default -> HoldPoseData.RIFLE_READY;
                 }));
                 support = switch (item.type()) {
@@ -85,6 +88,7 @@ public final class HoldPoses {
                     case SHOTGUN -> HoldPoseData.SHOTGUN_READY_SUPPORT;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY_SUPPORT;
+                    case REVOLVER -> HoldPoseData.REVOLVER_READY_SUPPORT;
                     default -> HoldPoseData.RIFLE_READY_SUPPORT;
                 };
             }

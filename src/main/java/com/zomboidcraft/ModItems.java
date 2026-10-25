@@ -66,6 +66,8 @@ public final class ModItems {
     public static final Item HUNTING_RIFLE_MAGAZINE = magazine("hunting_rifle_magazine", GunType.HUNTING_RIFLE);
     public static final Item HUNTING_RIFLE_AMMO = register("hunting_rifle_ammo", Item::new, new Item.Properties().stacksTo(40));
     public static final Item DOUBLE_BARREL = gun("double_barrel", GunType.DOUBLE_BARREL, 1500);
+    public static final Item REVOLVER = gun("revolver", GunType.REVOLVER, 1400);
+    public static final Item REVOLVER_AMMO = register("revolver_ammo", Item::new, new Item.Properties().stacksTo(60));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),

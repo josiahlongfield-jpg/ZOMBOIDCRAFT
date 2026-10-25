@@ -40,6 +40,8 @@ public final class ZcConfig {
     public GunStats huntingRifle = GunStats.huntingRifle();
     /** The side-by-side double-barrel's own numbers, with its pellets. */
     public ShotgunStats doubleBarrel = ShotgunStats.doubleBarrel();
+    /** The .38 service revolver's own numbers. */
+    public GunStats revolver = GunStats.revolver();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -54,6 +56,9 @@ public final class ZcConfig {
         public int huntingRifleWeight = 4;
         public int shotgunWeight = 3;
         public int doubleBarrelWeight = 2;
+        /** How often a pistol case holds the revolver rather than the pistol, against it. */
+        public int pistolWeight = 3;
+        public int revolverWeight = 2;
         /** Most of a packed gun's durability that's already worn off, as a fraction. */
         public double maxWear = 0.17;
         /** Chance someone left a part on: a 4x scope on the hunting rifle, a red dot on the rifle, a light on the pistol. */
@@ -74,6 +79,10 @@ public final class ZcConfig {
         public int doubleBarrelField = 70;
         public int doubleBarrelCaseHardened = 25;
         public int doubleBarrelEngraved = 5;
+        /** The revolver: blued with checkered walnut, nickel with rosewood, engraved royal blue with exhibition walnut. */
+        public int revolverService = 70;
+        public int revolverNickel = 25;
+        public int revolverEngraved = 5;
     }
 
     public static class Carry {
@@ -337,6 +346,24 @@ public final class ZcConfig {
             s.aimZoom = 0.88;
             s.range = 60.0;
             s.magazineSize = 15;
+            return s;
+        }
+
+        /**
+         * The .38 service revolver: a little less than the 9mm per hit, six shots, a heavier double-action pull between
+         * them, then the cylinder swung out and loaded by hand.
+         */
+        static GunStats revolver() {
+            GunStats s = new GunStats();
+            s.damage = 6.5;
+            s.hipSpread = 2.6;
+            s.aimSpread = 0.6;
+            s.recoil = 1.1;
+            s.shotNoise = 70.0;
+            s.aimZoom = 0.88;
+            s.range = 60.0;
+            s.fireDelayTicks = 6;
+            s.magazineSize = 6;
             return s;
         }
 

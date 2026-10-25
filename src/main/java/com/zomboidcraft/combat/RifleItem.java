@@ -138,7 +138,8 @@ public class RifleItem extends Item {
         if (Attachments.firstFilled(stack) != null) {
             tooltip.accept(Component.literal("Right-click with an empty hand to take a part off").withStyle(ChatFormatting.DARK_GRAY));
         }
-        tooltip.accept(Component.literal(type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
+        tooltip.accept(Component.literal(type == GunType.REVOLVER ? "Right-click: aim   Left-click: fire   R: swing out and load (fire to stop)"
+                : type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
                 : type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
         if (type.bolt) {

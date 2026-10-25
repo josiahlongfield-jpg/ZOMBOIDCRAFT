@@ -353,7 +353,7 @@ public final class Guns {
             return;
         }
         if (countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
-            player.sendOverlayMessage(Component.literal("You have no " + type.caliber() + " shells.").withStyle(ChatFormatting.GRAY));
+            player.sendOverlayMessage(Component.literal("You have no " + type.caliber() + " " + type.rounds() + ".").withStyle(ChatFormatting.GRAY));
             return;
         }
         player.stopUsingItem();
@@ -483,10 +483,13 @@ public final class Guns {
                 st.caseAt = -1;
                 GunType held = GunType.of(gun);
                 if (held != null && (held.manual() || held.opens)) {
-                    // a shotgun hull lands with a dull plastic bounce, a rifle case with a ring
+                    if (held.eject() != null) {
+                        sound(player, held.eject());
+                    }
+                    // a shotgun hull lands with a dull plastic bounce, a brass case with a ring
+                    boolean hull = held.ammo() == ModItems.SHOTGUN_SHELL;
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
-                            SoundSource.PLAYERS, held.tube ? 0.35f : 0.4f,
-                            (held.tube ? 0.6f : 0.85f) + player.getRandom().nextFloat() * 0.15f);
+                            SoundSource.PLAYERS, hull ? 0.35f : 0.4f, (hull ? 0.6f : 0.85f) + player.getRandom().nextFloat() * 0.15f);
                 }
             }
             if (st.reloadTick < 0) {

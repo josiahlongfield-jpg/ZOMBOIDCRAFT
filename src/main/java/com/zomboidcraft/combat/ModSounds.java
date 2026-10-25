@@ -47,6 +47,19 @@ public final class ModSounds {
     public static final SoundEvent DOUBLE_BARREL_CLOSE = register("weapon.double_barrel.close");
     public static final SoundEvent DOUBLE_BARREL_SHELL_IN = register("weapon.double_barrel.shell_in");
     /**
+     * The revolver: a .38's bark heard out to 100 blocks, the hammer falling on an empty chamber, the latch and the
+     * cylinder swinging out, the ejector rod pushing the empties out, a round dropped into a chamber, the cylinder
+     * snapped shut. The hammer cocked is there for single action.
+     */
+    public static final SoundEvent REVOLVER_SHOT = register("weapon.revolver.shot");
+    public static final SoundEvent REVOLVER_SHOT_DISTANT = register("weapon.revolver.shot_distant", 100f);
+    public static final SoundEvent REVOLVER_DRY = register("weapon.revolver.dry");
+    public static final SoundEvent REVOLVER_COCK = register("weapon.revolver.cock");
+    public static final SoundEvent REVOLVER_OPEN = register("weapon.revolver.open");
+    public static final SoundEvent REVOLVER_EJECT = register("weapon.revolver.eject");
+    public static final SoundEvent REVOLVER_ROUND_IN = register("weapon.revolver.round_in");
+    public static final SoundEvent REVOLVER_CLOSE = register("weapon.revolver.close");
+    /**
      * The hunting rifle: a .308's hard crack heard out to 176 blocks, and its bolt worked through, lift to lock (about
      * a third of a second).
      */

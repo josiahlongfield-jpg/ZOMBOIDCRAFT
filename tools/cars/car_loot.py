@@ -35,6 +35,7 @@ TABLES = {
         (f"{ZC}:rifle_ammo", 8, 4, 16), (f"{ZC}:rifle_magazine", 3, 1, 1), (f"{ZC}:rifle_magazine", 2, 1, 1, rounds(12)),
         (f"{ZC}:pistol_ammo", 8, 4, 16), (f"{ZC}:pistol_magazine", 3, 1, 1), (f"{ZC}:pistol_magazine", 2, 1, 1, rounds(15)),
         (f"{ZC}:pistol", 2, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun_shell", 6, 4, 12),
+        (f"{ZC}:revolver", 1, 1, 1, worn(.2, .7)), (f"{ZC}:revolver_ammo", 3, 4, 12),
         ("iron_chestplate", 2, 1, 1, worn(.2, .7)), ("iron_helmet", 2, 1, 1, worn(.2, .7)), (f"{ZC}:bandage", 5, 1, 3),
         ("shield", 2, 1, 1, worn()), ("lead", 2, 1, 1), ("paper", 4, 1, 3), ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1),
         ("potion", 3, 1, 1, WATER), (f"{ZC}:pistol_case", 1, 1, 1), (f"{ZC}:ammo_can", 1, 1, 1), ("-", 6, 1, 1)]),
@@ -66,7 +67,7 @@ TABLES = {
 
 # a rare find on top
 RARE = {
-    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1),
+    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1), (f"{ZC}:revolver", 2),
               (f"{ZC}:hunting_rifle", 1),
               (f"{ZC}:machete", 1), (f"{ZC}:katana", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:pistol_case", 2), (f"{ZC}:ammo_can", 1)],
     "police": [(f"{ZC}:assault_rifle", 2)],
