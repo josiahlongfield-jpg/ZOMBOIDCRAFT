@@ -123,8 +123,7 @@ public final class ModItems {
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 output.accept(gun);
                 if (type.magazine() == null) {
-                    output.accept(new ItemStack(type.ammo(), 25));
-                    continue;
+                    continue;   // its shells are already in the tab (a creative tab only takes single items)
                 }
                 ItemStack mag = new ItemStack(type.magazine());
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
