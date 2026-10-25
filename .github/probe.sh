@@ -9,6 +9,40 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== combat3"
+classes 'component/SwingAnimation|component/UseEffects|KeyMapping\$Category|keybinding/v1/KeyBindingHelper|state/HumanoidRenderState|state/ZombieRenderState|ai/goal/MeleeAttackGoal|ai/goal/ZombieAttackGoal'
+sig net.minecraft.world.item.component.SwingAnimation '.'
+sig net.minecraft.world.item.component.UseEffects '.'
+sig 'net.minecraft.client.KeyMapping$Category' '.'
+sig net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper '.'
+sig net.minecraft.core.component.DataComponents 'USE|SWING|ATTACK|KINETIC|PIERC|MINIMUM'
+sig net.minecraft.client.renderer.entity.state.HumanoidRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.ZombieRenderState 'public'
+sig net.minecraft.client.player.LocalPlayer 'setXRot|turn|input|swing|isUsingItem'
+sig net.minecraft.world.entity.Entity 'setXRot|setYRot|isVisuallySwimming|hasPose|turn\(|getRandom|distanceTo|hurtMarked'
+sig net.minecraft.client.Options 'keyAttack|keyJump|keyUse|getCameraType|keyShift|keySprint'
+sig net.minecraft.client.CameraType 'public'
+sig net.minecraft.client.gui.GuiGraphicsExtractor 'public'
+sig net.minecraft.world.entity.Mob 'isImmobile|aiStep|tick\('
+sig net.minecraft.world.entity.LivingEntity 'isImmobile|swing|getSwimAmount|updateSwimAmount|isVisuallySwimming|addEffect|hasEffect|setPose'
+sig net.minecraft.world.item.ItemStack 'hurtAndBreak|getDamageValue|getMaxDamage|isDamageableItem'
+sig net.minecraft.client.multiplayer.ClientLevel 'playLocalSound|playSound'
+sig net.minecraft.world.level.Level 'playLocalSound|playPlayerSound'
+sig net.minecraft.client.renderer.entity.HumanoidMobRenderer 'public|protected'
+sig net.minecraft.client.model.HumanoidModel 'setupAnim|public|protected'
+sig net.minecraft.client.model.geom.ModelPart 'public'
+sig net.minecraft.client.Minecraft 'options|player;|level;|gameMode|hitResult|getInstance|font;|screen;'
+sig net.minecraft.world.entity.player.Player 'getAttackStrengthScale|isSecondaryUseActive|getAttackStrength'
+sig com.mojang.blaze3d.platform.InputConstants 'KEY_R|KEY_V|KEY_B|Type'
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry '.'
+sig net.minecraft.world.entity.ai.goal.MeleeAttackGoal 'public|protected'
+sig net.minecraft.world.effect.MobEffects 'SLOW|WEAK|MINING'
+sig net.minecraft.server.level.ServerPlayer 'connection|hurtMarked|swing'
+sig net.minecraft.world.entity.LivingEntity 'getUseItem|isUsingItem|getMainHandItem'
+sig net.minecraft.client.player.AbstractClientPlayer 'public'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'setupRotations|getBedOrientation|sleepDirection'
+exit 0
+
 echo "===== guns2"
 classes 'item/properties/conditional/ConditionalItemModelProperties|item/properties/numeric/RangeSelectItemModelProperties|item/properties/select/SelectItemModelProperties|FabricItem\.class|component/CustomModelData\.class|HumanoidModel\$ArmPose|attachment/v1/AttachmentSyncPredicate|ClientTickEvents|PayloadTypeRegistry|ClientPlayNetworking|ServerPlayNetworking|LocalPlayer\.class|ItemModelGenerators|CustomModelDataProperty'
 for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '^net/minecraft/client/.*\.class$' | sed 's/\.class$//;s|/|.|g' | grep -vE '\$[0-9]'); do :; done
