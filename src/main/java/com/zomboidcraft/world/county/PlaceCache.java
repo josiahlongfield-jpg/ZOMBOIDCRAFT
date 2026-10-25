@@ -44,7 +44,8 @@ public final class PlaceCache {
                     Builders.build(p, county, v);
                 }
                 f.complete(v);
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | Error e) {
+                // complete it either way: a chunk waiting on a build that died would wait forever
                 f.completeExceptionally(e);
                 synchronized (built) {
                     built.remove(p);
