@@ -106,6 +106,8 @@ jobs:
           grep -q 'swat_van' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
+          grep -E 'Rain (cover|falls through)' server.log
+          grep -q 'Rain cover:' server.log
           ! grep -E 'Mixin apply failed|InvalidMixin|Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception' server.log
 
       # Boot again on a fresh ZomboidCraft County world: the planner, chunk generator and every
