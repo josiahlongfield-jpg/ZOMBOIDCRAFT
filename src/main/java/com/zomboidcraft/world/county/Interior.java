@@ -33,7 +33,7 @@ final class Interior {
     private static final Set<String> PLAIN = Set.of("home_table", "home_floor_lamp", "home_trash_can", "home_laundry",
             "home_boxes", "home_water_heater", "home_water_heater_top", "home_rug_red", "home_rug_blue", "home_candles",
             "home_clothes_pile", "home_blood_pool", "ceiling_light", "ceiling_light_off", "paper", "glass_shards",
-            "blood_splat", "home_stain_brown", "home_stain_dark", "scorch");
+            "blood_splat", "home_stain_brown", "home_stain_dark", "scorch", "home_plant", "home_plant_dead", "home_bin_bags");
     /**
      * Kinds of room from the first to go when space is short to the last (every home keeps its
      * kitchen and bathroom), the smallest depth along the strip each needs, and its share of what's left.
@@ -97,6 +97,8 @@ final class Interior {
     // per floor while furnishing: what's in each row of each cell, and the paths kept clear
     private byte[][][] occ;
     private boolean[][] path;
+    /** What stands in each cell and row on the floor being furnished (the block's name, no state). */
+    private String[][][] what;
 
     Interior(Placer p, SplittableRandom rng, House.Style style, House.Condition cond, int x0, int x1, int z0, int z1,
              int floors, boolean lined, boolean garageEast, double lit) {
@@ -837,6 +839,7 @@ final class Interior {
     private void furnish(int f) {
         occ = new byte[nx][nz][H];
         path = new boolean[nx][nz];
+        what = new String[nx][nz][H];
         List<Room> list = rooms.get(f);
         for (Room r : list) {
             keepClear(f, r);
@@ -858,6 +861,13 @@ final class Interior {
             }
             light(f, r);
         }
+        if (f == 0) {
+            entry(f);
+        }
+        for (Room r : list) {
+            extras(f, r);
+        }
+        surfaces(f);
         story(f);
     }
 
@@ -987,10 +997,55 @@ final class Interior {
                 }
             }
         }
+        if (n >= 3 && r.w() >= 4 && r.d() >= 4) {
+            kitchenL(f, r, s);
+        }
         table(f, r, 2, 4);
         corner(f, r, "home_trash_can");
         decor(f, r, "home_calendar", 2);
         radiator(f, r);
+    }
+
+    /** More cupboards round the corner from the main run, wall cabinets over them. */
+    private void kitchenL(int f, Room r, int s) {
+        for (int s2 : rng.nextBoolean() ? new int[] {(s + 1) & 3, (s + 3) & 3} : new int[] {(s + 3) & 3, (s + 1) & 3}) {
+            List<int[]> run = run(f, r, s2, false);
+            if (run.size() < 2) {
+                continue;
+            }
+            int fs = (s2 + 2) & 3;
+            int len = Math.min(run.size(), r.kind.equals("kitchen") ? 4 : 2);
+            // start at the end by the main run, round the corner from it
+            boolean fromEnd = toWall(r, run.get(run.size() - 1), s) < toWall(r, run.get(0), s);
+            int placed = 0;
+            for (int k = 0; k < len; k++) {
+                int[] c = run.get(fromEnd ? run.size() - 1 - k : k);
+                if (k > 0 && !adjacent(run, fromEnd ? run.size() - 1 - k : k - 1, 1)) {
+                    break;
+                }
+                String block = (k % 2 == 0 ? "home_counter_" : "home_drawers_") + finish;
+                if (!put(f, c[0], 1, c[1], block + face(fs))) {
+                    break;
+                }
+                placed++;
+                if (!window(f, c, s2) && occ[c[0] - x0][c[1] - z0][3] == 0) {
+                    put(f, c[0], 3, c[1], "home_wallcab_" + finish + face(fs));
+                }
+            }
+            if (placed > 0) {
+                return;
+            }
+        }
+    }
+
+    /** How many cells a cell of the room stands out from its wall on side s. */
+    private static int toWall(Room r, int[] c, int s) {
+        return switch (s) {
+            case 0 -> c[1] - r.b0;
+            case 1 -> r.a1 - c[0];
+            case 2 -> r.b1 - c[1];
+            default -> c[0] - r.a0;
+        };
     }
 
     private void living(int f, Room r) {
@@ -1312,6 +1367,279 @@ final class Interior {
             boolean on = lit > 0 && rng.nextDouble() < lit + 0.2;
             put(f, x, 3, z, on ? "ceiling_light" : "ceiling_light_off");
         }
+    }
+
+    // ------------------------------------------------------------------ the lived-in layer
+
+    /** A coat rack and shoes inside the front door. */
+    private void entry(int f) {
+        int z = uz0;
+        Room r = ownerAt(f, doorX, z);
+        if (r == null) {
+            return;
+        }
+        boolean rack = false, shoes = false;
+        for (int d : new int[] {-1, 1, -2, 2}) {
+            int x = doorX + d;
+            if (!inRoom(f, r, x, z) || cellAt(f, x, z) != ROOM) {
+                continue;
+            }
+            if (!rack && freeFloor(f, r, x, z) && wallBehind(f, x, z, 0) && rng.nextDouble() < 0.6) {
+                rack = put(f, x, 1, z, "home_coat_rack" + face(2));
+            } else if (!shoes && occ[x - x0][z - z0][1] == 0 && rng.nextDouble() < 0.7) {
+                shoes = put(f, x, 1, z, "home_shoes" + face(2));
+            }
+        }
+    }
+
+    /** What makes a room someone's: the hearth, the piano, plants, the fan, the baby's things. */
+    private void extras(int f, Room r) {
+        boolean grand = style == House.Style.COLONIAL || style == House.Style.MANSION;
+        boolean rural = style == House.Style.FARMHOUSE || style == House.Style.CABIN;
+        boolean big = r.w() * r.d() >= 30;
+        switch (r.kind) {
+            case "living" -> {
+                if (rng.nextDouble() < (grand || rural ? 0.75 : 0.3)) {
+                    hearth(f, r, style == House.Style.CABIN);
+                }
+                if (rng.nextDouble() < (style == House.Style.MANSION ? 0.6 : grand ? 0.3 : 0.08)) {
+                    piano(f, r);
+                }
+                plants(f, r, big ? 2 : 1);
+                fill(f, r, "home_armchair_" + sofa, "home_bookcase/home_bookcase_top", "home_dresser", "home_nightstand",
+                        "home_floor_lamp", "home_boxes", "home_plant_dead");
+            }
+            case "studio" -> {
+                hearth(f, r, true);
+                plants(f, r, 1);
+                if (rng.nextDouble() < 0.4) {
+                    against(f, r, "home_fan");
+                }
+            }
+            case "dining" -> {
+                plants(f, r, big ? 2 : 1);
+                if (style == House.Style.MANSION && rng.nextDouble() < 0.3) {
+                    piano(f, r);
+                }
+                fill(f, r, "home_dresser", "home_bookcase/home_bookcase_top", "home_chair", "home_floor_lamp", "home_plant_dead");
+            }
+            case "den" -> {
+                if (rng.nextDouble() < 0.35) {
+                    against(f, r, "home_fan");
+                }
+                plants(f, r, 1);
+                fill(f, r, "home_bookcase/home_bookcase_top", "home_desk", "home_boxes", "home_garage_shelf", "home_floor_lamp");
+            }
+            case "bed_master", "bed", "bed_kid" -> {
+                boolean kid = r.kind.equals("bed_kid");
+                if (kid && rng.nextDouble() < 0.6) {
+                    scatter(f, r, "home_teddy", 1);
+                }
+                if (kid && r.w() * r.d() <= 16 && rng.nextDouble() < 0.3) {
+                    against(f, r, "home_crib");
+                }
+                if (rng.nextDouble() < 0.35) {
+                    against(f, r, "home_fan");
+                }
+                if (rng.nextDouble() < 0.3) {
+                    plants(f, r, 1);
+                }
+                if (kid) {
+                    fill(f, r, "home_bookcase/home_bookcase_top", "home_dresser", "home_boxes", "home_laundry", "home_floor_lamp");
+                } else {
+                    fill(f, r, "home_armchair_" + sofa, "home_dresser", "home_wardrobe/home_wardrobe_top", "home_desk",
+                            "home_bookcase/home_bookcase_top", "home_floor_lamp", "home_laundry", "home_boxes");
+                }
+            }
+            case "laundry" -> {
+                against(f, r, "home_ironing_board");
+                corner(f, r, "home_vacuum");
+            }
+            case "closet" -> {
+                if (rng.nextDouble() < 0.5) {
+                    corner(f, r, "home_vacuum");
+                }
+                if (rng.nextDouble() < 0.3) {
+                    against(f, r, "home_ironing_board");
+                }
+                corner(f, r, "home_boxes");
+            }
+            case "kitchen" -> {
+                boolean messy = cond == House.Condition.LOOTED || cond == House.Condition.RUIN || cond == House.Condition.BOARDED;
+                if (messy && rng.nextDouble() < 0.6) {
+                    corner(f, r, "home_bin_bags");
+                }
+            }
+            case "hall" -> {
+                if (f == 0 && rng.nextDouble() < 0.5) {
+                    plants(f, r, 1);
+                }
+            }
+            default -> {
+            }
+        }
+    }
+
+    /**
+     * Furniture against the walls until at most half the wall is bare, from a list in the order
+     * it's wanted: "low/top" for a two-high piece, a desk comes with its chair.
+     */
+    private void fill(int f, Room r, String... pieces) {
+        int perimeter = 2 * (r.w() + r.d());
+        for (int i = 0, misses = 0; misses < pieces.length && bareWall(f, r) * 2 > perimeter; i++) {
+            String piece = pieces[i % pieces.length];
+            boolean in;
+            if (piece.contains("/")) {
+                String[] lt = piece.split("/");
+                int before = bareWall(f, r);
+                tall(f, r, lt[0], lt[1]);
+                in = bareWall(f, r) < before;
+            } else {
+                int[] at = against(f, r, piece);
+                in = at != null;
+                if (in && piece.equals("home_desk")) {
+                    int[] ft = STEP[at[2]];
+                    if (freeFloor(f, r, at[0] + ft[0], at[1] + ft[1])) {
+                        put(f, at[0] + ft[0], 1, at[1] + ft[1], "home_chair" + face((at[2] + 2) & 3));
+                    }
+                }
+            }
+            misses = in ? 0 : misses + 1;
+        }
+    }
+
+    /** Cells along the room's walls still free to stand something against. */
+    private int bareWall(int f, Room r) {
+        int n = 0;
+        for (int s = 0; s < 4; s++) {
+            n += run(f, r, s, false).size();
+        }
+        return n;
+    }
+
+    /** Houseplants in the corners: dead, mostly, nobody having watered them since. */
+    private void plants(int f, Room r, int n) {
+        for (int i = 0; i < n; i++) {
+            corner(f, r, cond == House.Condition.SHUT && rng.nextDouble() < 0.3 ? "home_plant" : "home_plant_dead");
+        }
+    }
+
+    /**
+     * A fireplace against an outside wall, the chimney breast going up to the ceiling; in a cabin
+     * (or with stove) a wood stove and its pipe.
+     */
+    private void hearth(int f, Room r, boolean stove) {
+        String low = stove ? "home_wood_stove" : "home_fireplace", up = stove ? "home_stove_pipe" : "home_chimney";
+        int[] order = {0, 1, 2, 3};
+        for (int i = 3; i > 0; i--) {
+            int j = rng.nextInt(i + 1), t = order[i];
+            order[i] = order[j];
+            order[j] = t;
+        }
+        for (int s : order) {
+            List<int[]> run = run(f, r, s, false);
+            int fs = (s + 2) & 3;
+            for (int k = 0; k < run.size(); k++) {
+                // from the middle of the wall outward
+                int i = run.size() / 2 + (k % 2 == 0 ? k / 2 : -(k + 1) / 2);
+                if (i < 0 || i >= run.size()) {
+                    continue;
+                }
+                int[] c = run.get(i);
+                byte out = cellAt(f, c[0] + STEP[s][0], c[1] + STEP[s][1]);
+                if ((out != LINING && out != OUT) || window(f, c, s) || occ[c[0] - x0][c[1] - z0][2] != 0
+                        || occ[c[0] - x0][c[1] - z0][3] != 0) {
+                    continue;
+                }
+                if (putAll(f, new int[][] {{c[0], 1, c[1]}, {c[0], 2, c[1]}, {c[0], 3, c[1]}},
+                        new String[] {low + face(fs), up + face(fs), up + face(fs)})) {
+                    return;
+                }
+            }
+        }
+    }
+
+    /** An upright piano against a wall, a chair drawn up to it. */
+    private void piano(int f, Room r) {
+        int s0 = rng.nextInt(4);
+        for (int k = 0; k < 4; k++) {
+            int s = (s0 + k) & 3;
+            List<int[]> run = run(f, r, s, false);
+            int fs = (s + 2) & 3;
+            for (int i = 0; i + 1 < run.size(); i++) {
+                int[] a = run.get(i), b = run.get(i + 1);
+                if (!adjacent(run, i, 1) || window(f, a, s) || window(f, b, s)) {
+                    continue;
+                }
+                if (putAll(f, new int[][] {{a[0], 1, a[1]}, {b[0], 1, b[1]}},
+                        new String[] {"home_piano_l" + face(fs), "home_piano_r" + face(fs)})) {
+                    int[] ft = STEP[fs];
+                    if (freeFloor(f, r, a[0] + ft[0], a[1] + ft[1])) {
+                        put(f, a[0] + ft[0], 1, a[1] + ft[1], "home_chair" + face(s));
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * What sits on every surface: canisters, cans, bottles, the radio and books on the worktops,
+     * dishes and cans left on the table, a lamp and a book on the dresser and the desk.
+     */
+    private void surfaces(int f) {
+        boolean radio = false;
+        boolean holdout = cond == House.Condition.BOARDED;
+        for (Room r : rooms.get(f)) {
+            boolean lamp = false;
+            for (int x = r.a0; x <= r.a1; x++) {
+                for (int z = r.b0; z <= r.b1; z++) {
+                    if (!inRoom(f, r, x, z)) {
+                        continue;
+                    }
+                    String on = what[x - x0][z - z0][1];
+                    if (on == null || occ[x - x0][z - z0][2] != 0) {
+                        continue;
+                    }
+                    String put = null;
+                    if (on.startsWith("home_counter_") || on.startsWith("home_drawers_")) {
+                        if (rng.nextDouble() < 0.45) {
+                            put = pick("home_jars", "home_cans", "home_bottles", "home_books_stack", "home_dishes",
+                                    radio ? "home_cans" : "home_radio");
+                        }
+                    } else if (on.equals("home_table")) {
+                        if (rng.nextDouble() < (holdout ? 0.8 : 0.45)) {
+                            put = holdout ? pick("home_cans_low", "home_bottles_low", "home_cans_low")
+                                    : pick("home_dishes_low", "home_dishes_low", "home_cans_low", "home_bottles_low",
+                                    "home_books_stack_low");
+                        }
+                    } else if (on.equals("home_dresser") || on.equals("home_desk")) {
+                        if (rng.nextDouble() < 0.6) {
+                            put = lamp ? pick("home_books_stack_low", radio ? "home_books_stack_low" : "home_radio_low")
+                                    : "home_lamp_table_low";
+                        }
+                    }
+                    if (put == null) {
+                        continue;
+                    }
+                    int fs = facingAt(f, x, z);
+                    if (put(f, x, 2, z, put + face(fs))) {
+                        radio |= put.startsWith("home_radio");
+                        lamp |= put.startsWith("home_lamp");
+                    }
+                }
+            }
+        }
+    }
+
+    /** The way a cell's piece faces, read back from the walls round it (into the room). */
+    private int facingAt(int f, int x, int z) {
+        for (int s = 0; s < 4; s++) {
+            if (wallBehind(f, x, z, s)) {
+                return (s + 2) & 3;
+            }
+        }
+        return rng.nextInt(4);
     }
 
     // ------------------------------------------------------------------ the story
@@ -1746,6 +2074,9 @@ final class Interior {
             if (inside(c[0], c[2]) && occ[c[0] - x0][c[2] - z0][c[1]] == 0) {
                 occ[c[0] - x0][c[2] - z0][c[1]] = 2;
             }
+            if (inside(c[0], c[2]) && c[1] < H) {
+                what[c[0] - x0][c[2] - z0][c[1]] = open > 0 ? block.substring(0, open) : block;
+            }
         }
         return true;
     }
@@ -1756,7 +2087,8 @@ final class Interior {
         return !(b.startsWith("home_rug") || b.startsWith("home_stain") || b.startsWith("home_blood")
                 || b.startsWith("home_corpse") || b.equals("paper") || b.equals("glass_shards") || b.equals("blood_splat")
                 || b.equals("scorch") || b.equals("home_pills") || b.equals("home_clothes_pile")
-                || b.equals("home_shower_curtain") || b.equals("home_candles") || b.equals("home_mattress_floor"));
+                || b.equals("home_shower_curtain") || b.equals("home_candles") || b.equals("home_mattress_floor")
+                || b.equals("home_shoes") || b.equals("home_teddy"));
     }
 
     private boolean freeFloor(int f, Room r, int x, int z) {

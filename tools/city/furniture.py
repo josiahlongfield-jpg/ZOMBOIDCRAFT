@@ -1593,6 +1593,253 @@ def stair_tread(seed, kind):
     return wear(wood(seed, "oak"), 0.35, 12)
 
 
+# ---------------------------------------------------------------- the lived-in layer
+# hearths, the piano, plants, the coat rack by the door, and what sits on every surface
+
+def fire_brick(seed, soot=False):
+    """Old red brick round a fireplace, blacked above the opening by years of fires."""
+    t = mat("Bricks075B", (150, 78, 58), 1.1, seed=seed, span=0.5, smooth=0.15)
+    if soot:
+        yy, xx = np.mgrid[0:N, 0:N]
+        m = np.clip(1 - np.abs(xx - 32) / 26, 0, 1) * np.clip((yy - 4) / 30, 0, 1) * np.clip((60 - yy) / 12, 0, 1)
+        t.mix(m * 0.75, (28, 24, 22), 1.0)
+    return wear(t, 0.3, 0, specks=0.004)
+
+
+def soot(seed):
+    t = plain(seed, (26, 24, 22), 0.15, 0.05)
+    t.speckle(0.08, (96, 92, 86), 0.6)
+    t.f0[:] = 20
+    return t
+
+
+def hearth(seed):
+    """Slate tiles under the fire."""
+    t = mat("Tiles008", (78, 80, 84), 1.0, seed=seed, smooth=0.4)
+    for x in range(0, N, 16):
+        area(t, x, 0, x + 1, N, mul=0.55, dh=-0.2)
+    for y in range(0, N, 16):
+        area(t, 0, y, N, y + 1, mul=0.55, dh=-0.2)
+    t.speckle(0.05, (140, 136, 128), 0.5)
+    return wear(t, 0.35, 0)
+
+
+def charred(seed):
+    t = mat("Bark001", (58, 44, 34), 1.3, seed=seed, smooth=0.1)
+    m = np.clip(P.fbm(t.rng) * 2.5 - 0.3, 0, 1)
+    t.mix(m, (22, 20, 20), 0.9)
+    t.speckle(0.04, (150, 144, 136), 0.7)
+    return t
+
+
+def cast_iron(seed):
+    t = plain(seed, (40, 40, 42), 0.08, 0.35)
+    t.f0[:] = 120
+    m = np.clip(P.fbm(t.rng, ((8, 1.0), (16, 0.6))) * 2 - 0.9, 0, 1)
+    t.mix(m, (96, 52, 30), 0.6)  # rust where the kettle boiled over
+    return wear(t, 0.2, 4)
+
+
+def stove_door(seed):
+    """Front plate rows 26-48: a mica window with dead embers behind it, a cast border, the latch."""
+    t = cast_iron(seed)
+    area(t, 20, 28, 44, 44, (30, 20, 14), smooth=0.8, f0=40)
+    for _ in range(6):
+        disc(t, t.rng.uniform(22, 42), t.rng.uniform(38, 43), t.rng.uniform(1, 2), (120, 60, 30))
+    edges(t, 18, 26, 46, 46, light=1.3, dark=0.5)
+    bar(t, 12, 34, 16, 37, (90, 88, 86))
+    return t
+
+
+def piano_wood(seed):
+    t = wood(seed, "dark")
+    tone(t, (48, 30, 22), 0.6)
+    t.smooth[:] = 0.7
+    t.f0[:] = 40
+    return wear(t, 0.25, 12)
+
+
+def piano_keys(seed):
+    """Up face of the keyboard (rows 16-36): white keys, the black keys at the back (rows 26-31);
+    the front face (rows 32-38) shows the white keys' ends."""
+    t = plain(seed, (226, 218, 196), 0.03, 0.6)
+    for x in range(0, N, 3):
+        area(t, x, 0, x + 1, N, mul=0.7, dh=-0.1)
+    pattern = (1, 1, 0, 1, 1, 1, 0)  # black keys between C-D, D-E, F-G, G-A, A-B
+    for i in range(N // 3):
+        if pattern[i % 7]:
+            area(t, i * 3 + 2, 24, i * 3 + 4, 31, (24, 22, 20), h=1.0, smooth=0.75)
+    # a few keys yellowed, one missing its ivory
+    for _ in range(4):
+        k = int(t.rng.integers(0, N // 3))
+        area(t, k * 3 + 1, 31, k * 3 + 3, 40, mul=(0.92, 0.86, 0.7))
+    area(t, 30, 31, 32, 40, (90, 70, 50))
+    return wear(t, 0.2, 0)
+
+
+def terracotta(seed):
+    t = plain(seed, (168, 92, 60), 0.08, 0.2)
+    area(t, 0, 0, N, 8, mul=1.12)  # the rim
+    area(t, 0, 8, N, 9, mul=0.6)
+    m = np.clip(P.fbm(t.rng) * 2 - 0.4, 0, 1) * np.clip((np.mgrid[0:N, 0:N][0] - 30) / 30, 0, 1)
+    t.mix(m, (200, 196, 180), 0.5)  # white salt bloom from overwatering, long ago
+    return wear(t, 0.3, 0)
+
+
+def foliage(seed, dead=False):
+    """A mass of leaves: overlapping leaf shapes in a few greens over deep shadow, or the
+    brown curl of a plant nobody watered."""
+    t = plain(seed, (24, 40, 20) if not dead else (52, 40, 26), 0.1, 0.25)
+    rng = t.rng
+    greens = [(58, 104, 46), (76, 124, 54), (44, 86, 40), (96, 132, 60)]
+    browns = [(118, 92, 52), (96, 70, 40), (140, 116, 70), (78, 60, 36)]
+    yy, xx = np.mgrid[0:N, 0:N]
+    for _ in range(140):
+        cx, cy = rng.uniform(0, N, 2)
+        a = rng.uniform(0, np.pi)
+        ln, wd = rng.uniform(3, 6), rng.uniform(1.2, 2.2)
+        dx = (xx - cx + N / 2) % N - N / 2
+        dy = (yy - cy + N / 2) % N - N / 2
+        u = dx * np.cos(a) + dy * np.sin(a)
+        v = -dx * np.sin(a) + dy * np.cos(a)
+        m = (u / ln) ** 2 + (v / wd) ** 2 <= 1
+        col = np.array((browns if dead else greens)[int(rng.integers(4))], np.float32) * rng.uniform(0.85, 1.15)
+        t.c[m] = col
+        t.h[m] = rng.uniform(0.3, 1.0)
+    if not dead:
+        m = np.clip(P.fbm(rng) * 2 - 0.5, 0, 1)
+        t.mix(m, (140, 128, 60), 0.35)  # yellowing
+    return t
+
+
+def leather(seed, rgb=(92, 58, 36)):
+    t = mat("Leather009", rgb, 1.0, seed=seed, smooth=0.45)
+    return wear(t, 0.3, 4)
+
+
+def radio(seed):
+    """Front plate, viewer's left to right (cols 12-52, rows 40-64): speaker cloth, the tuning
+    dial with its stations, two bakelite knobs."""
+    t = plain(seed, (96, 62, 38), 0.05, 0.5)
+    area(t, 13, 42, 32, 62, (150, 128, 96), smooth=0.1)
+    for x in range(13, 32, 2):
+        area(t, x, 42, x + 1, 62, mul=0.8)
+    area(t, 34, 42, 51, 52, (214, 196, 150), smooth=0.8, f0=40)
+    for x in range(35, 51, 3):
+        area(t, x, 47, x + 1, 50, (60, 40, 30))
+    area(t, 41, 43, 42, 51, (170, 30, 20))  # the needle
+    for x in (37, 47):
+        disc(t, x, 57, 2.4, (30, 24, 20), h=1.0, smooth=0.7)
+    edges(t, 12, 40, 52, 64, light=1.2, dark=0.6)
+    return wear(t, 0.3, 4)
+
+
+def canister(seed):
+    """Three kitchen canisters (viewer's left to right: cols 8-20, 24-38, 42-56), cream enamel
+    with a red band and a label each."""
+    t = enamel(seed, (226, 214, 184))
+    area(t, 0, 38, N, 41, (170, 40, 34))
+    for x0, x1, ink in ((8, 20, (60, 40, 30)), (24, 38, (40, 60, 90)), (42, 56, (90, 30, 30))):
+        area(t, x0 + 1, 46, x1 - 1, 55, (238, 232, 214))
+        for y in (48, 51):
+            area(t, x0 + 2, y, x1 - 2, y + 1, ink)
+    return wear(t, 0.3, 4)
+
+
+CANS = [(176, 36, 30), (60, 120, 60), (220, 170, 40), (40, 70, 140), (200, 200, 190)]
+
+
+def can(seed):
+    """Tin cans: every few columns a different label, a rim of bare tin top and bottom."""
+    t = plain(seed, (190, 190, 186), 0.04, 0.6)
+    t.f0[:] = 200
+    for i, x in enumerate(range(0, N, 12)):
+        col = CANS[i % len(CANS)]
+        area(t, x, 0, x + 12, N, col, smooth=0.3, f0=30)
+        area(t, x + 2, 0, x + 10, N, mul=1.12)
+        if i % 3 == 0:
+            area(t, x + 3, 0, x + 9, N, (236, 232, 220))  # a white panel on the soup
+    for y in range(0, N, 18):
+        area(t, 0, y, N, y + 2, (170, 170, 166), smooth=0.7, f0=200)
+    return wear(t, 0.25, 0)
+
+
+def bottle(seed, rgb):
+    t = plain(seed, rgb, 0.05, 0.9)
+    t.f0[:] = 40
+    for x in range(0, N, 8):
+        area(t, x + 1, 0, x + 2, N, mul=1.6)  # the glint down each bottle
+    area(t, 0, 44, N, 56, (214, 200, 160), smooth=0.2, f0=4)  # the labels
+    area(t, 0, 48, N, 50, (130, 40, 30))
+    return wear(t, 0.25, 0)
+
+
+def book_spines(seed):
+    """A stack of books and magazines from the side: a band per book, pages showing at one end."""
+    t = plain(seed, (160, 140, 110), 0.03, 0.3)
+    rng = t.rng
+    cols = [(120, 36, 30), (36, 60, 100), (50, 90, 60), (200, 180, 120), (70, 50, 40), (180, 170, 160)]
+    y = 0
+    while y < N:
+        hgt = int(rng.integers(4, 9))
+        area(t, 0, y, N, y + hgt, cols[int(rng.integers(len(cols)))])
+        area(t, 0, y, N, y + 1, mul=0.6, dh=-0.2)
+        area(t, 54, y + 1, N, y + hgt, (222, 214, 192))  # the pages
+        y += hgt
+    return wear(t, 0.3, 0)
+
+
+def fur(seed, rgb=(138, 98, 58)):
+    t = plain(seed, rgb, 0.1, 0.05)
+    t.speckle(0.25, (rgb[0] * 0.7, rgb[1] * 0.7, rgb[2] * 0.7), 0.6)
+    t.speckle(0.15, (min(255, rgb[0] * 1.3), min(255, rgb[1] * 1.3), min(255, rgb[2] * 1.3)), 0.5)
+    return wear(t, 0.3, 0)
+
+
+def ironing_cover(seed):
+    t = plain(seed, (200, 196, 180), 0.04, 0.1)
+    for gy in range(0, N, 8):
+        for gx in range(0, N, 8):
+            disc(t, gx + (4 if (gy // 8) % 2 else 0), gy + 4, 1.4, (150, 80, 90))
+    stain(t, 30, 30, 9, (120, 80, 40), 0.5)  # an iron left face down
+    return wear(t, 0.3, 0)
+
+
+def fan_grille(seed):
+    t = plain(seed, (70, 72, 76), 0.04, 0.5)
+    for r in (6, 11, 16, 21, 26, 31):
+        disc(t, 32, 32, r, (190, 192, 194), ring=1, smooth=0.7, f0=200)
+    for k in range(8):
+        a = k * np.pi / 4
+        for i in range(30):
+            x, y = int(32 + np.cos(a) * i), int(32 + np.sin(a) * i)
+            area(t, x, y, x + 1, y + 1, (190, 192, 194))
+    disc(t, 32, 32, 4, (220, 220, 214))
+    return wear(t, 0.35, 0)
+
+
+def bin_bag(seed):
+    t = plain(seed, (22, 22, 24), 0.1, 0.75)
+    t.f0[:] = 30
+    rng = t.rng
+    for _ in range(14):  # creases catching the light
+        x, y = rng.uniform(0, N, 2)
+        a = rng.uniform(0, np.pi)
+        for i in range(int(rng.integers(6, 16))):
+            xi, yi = int(x + np.cos(a) * i) % N, int(y + np.sin(a) * i) % N
+            t.c[yi, xi] = (70, 70, 74)
+    return t
+
+
+def coat(seed, rgb):
+    t = mat("Fabric023", rgb, 1.2, seed=seed, smooth=0.1)
+    for x in (30, 31):
+        area(t, x, 0, x + 1, N, mul=0.6)  # the front opening
+    for y in range(10, 60, 12):
+        disc(t, 28, y, 1.2, (40, 30, 24))
+    return wear(t, 0.3, 0)
+
+
 # ---------------------------------------------------------------- the texture table
 
 def textures():
@@ -1661,6 +1908,18 @@ def textures():
         "home_door_white_top": lambda: door_leaf(1050, "white", True), "home_door_white_bottom": lambda: door_leaf(1051, "white", False),
         "home_door_oak_top": lambda: door_leaf(1052, "oak", True), "home_door_oak_bottom": lambda: door_leaf(1053, "oak", False),
         "home_stairs_oak": lambda: stair_tread(1054, "oak"), "home_stairs_carpet": lambda: stair_tread(1055, "carpet"),
+        "home_fire_brick": lambda: fire_brick(1200), "home_fire_brick_soot": lambda: fire_brick(1201, True),
+        "home_soot": lambda: soot(1202), "home_hearth": lambda: hearth(1203), "home_charred": lambda: charred(1204),
+        "home_cast_iron": lambda: cast_iron(1205), "home_stove_door": lambda: stove_door(1206),
+        "home_piano_wood": lambda: piano_wood(1207), "home_piano_keys": lambda: piano_keys(1208),
+        "home_terracotta": lambda: terracotta(1209), "home_foliage": lambda: foliage(1210),
+        "home_foliage_dead": lambda: foliage(1211, True), "home_leather": lambda: leather(1212),
+        "home_radio": lambda: radio(1213), "home_canister": lambda: canister(1214), "home_can": lambda: can(1215),
+        "home_bottle_green": lambda: bottle(1216, (40, 90, 48)), "home_bottle_brown": lambda: bottle(1217, (96, 56, 24)),
+        "home_book_spines": lambda: book_spines(1218), "home_fur": lambda: fur(1219),
+        "home_ironing": lambda: ironing_cover(1220), "home_fan": lambda: fan_grille(1221),
+        "home_bin_bag": lambda: bin_bag(1222), "home_coat_tan": lambda: coat(1223, (150, 120, 80)),
+        "home_coat_navy": lambda: coat(1224, (40, 48, 70)),
     })
     for i, k in enumerate(FABRICS):
         T[f"home_fab_{k}"] = lambda k=k, i=i: fabric(k, 1100 + i)
@@ -1858,8 +2117,8 @@ def blocks():
         add(f"home_bed_{q}_head", bed(q, "head"), "Bed", "WOOL")
         add(f"home_bed_{q}_foot", bed(q, "foot"), "Bed", "WOOL")
     add("home_dresser", [[0, 0, 2, 16, 12, 16, "home_wood_walnut"], [0, 0, 1.5, 16, 12, 2, "home_dresser"],
-                         [0, 12, 1, 16, 13, 16, "home_wood_walnut"], [2, 13, 9, 6, 15.5, 12, "home_wood_dark"],
-                         [10, 13, 10, 11, 15, 11, "home_chrome"], [12, 13, 9.5, 13, 16, 10.5, "home_ceramic"]],
+                         [0, 12, 1, 16, 13.5, 16, "home_wood_walnut"], [2, 13.5, 9, 6, 16, 12, "home_wood_dark"],
+                         [10, 13.5, 10, 11, 15.5, 11, "home_chrome"], [12, 13.5, 9.5, 13, 16.5, 10.5, "home_ceramic"]],
         "Dresser", "WOOD", "home_dresser")
     add("home_wardrobe", [[0, 0, 2, 16, 16, 16, "home_wood_walnut"], [0, 0, 1.5, 16, 16, 2, "home_wardrobe"]],
         "Wardrobe", "WOOD", "home_wardrobe")
@@ -1945,6 +2204,93 @@ def blocks():
         for part in (0, 1):
             add(f"home_spray_{k}_{part}", [[0, 0, 0, 16, 16, 0.3, f"home_spray_{k}_{part}"]], "Spray Paint", "WOOL", decor=True)
     add("home_x_code", [[0, 0, 0, 16, 16, 0.3, "home_x_code"]], "Search Mark", "WOOL", decor=True)
+
+    # ---- the lived-in layer
+    brick, sooty = "home_fire_brick", "home_fire_brick_soot"
+    add("home_fireplace", [[0, 0, 7, 3, 12, 16, brick], [13, 0, 7, 16, 12, 16, brick], [3, 8, 7, 13, 12, 16, sooty],
+                           [3, 0, 14, 13, 8, 16, "home_soot"], [3, 0, 7, 13, 0.5, 14, "home_soot"],
+                           [4, 0.5, 9, 12, 2.5, 11, "home_charred"], [5, 0.5, 10.5, 11, 2, 12.5, "home_charred"],
+                           [0, 0, 2.5, 16, 0.8, 7, "home_hearth"], [0, 12, 5, 16, 13.5, 16, "home_wood_walnut"],
+                           [1, 13.5, 8, 15, 16, 16, brick], [6.5, 13.5, 5.5, 9.5, 16.5, 7.5, "home_wood_dark"],
+                           [7.2, 14.2, 5.4, 8.8, 15.8, 5.5, "home_ceramic"], [2, 13.5, 6, 3, 16, 7, "home_chrome"],
+                           [13, 13.5, 6, 14, 16, 7, "home_chrome"]], "Fireplace", "STONE")
+    add("home_chimney", [[1, 0, 8, 15, 16, 16, brick]], "Chimney Breast", "STONE")
+    add("home_wood_stove", [[1, 0, 1, 15, 0.5, 15, "home_hearth"], [3, 2, 4, 13, 11, 14, "home_cast_iron"],
+                            [4, 4, 3.5, 12, 9.5, 4, "home_stove_door"], [2.5, 11, 3.5, 13.5, 12, 14.5, "home_cast_iron"],
+                            [6.5, 12, 8, 9.5, 16, 11, "home_cast_iron"]] + legs(3.5, 4.5, 12.5, 13.5, 2, "home_cast_iron", 1),
+        "Wood Stove", "METAL")
+    add("home_stove_pipe", [[6.5, 0, 8, 9.5, 16, 11, "home_cast_iron"]], "Stove Pipe", "METAL")
+    for part in ("l", "r"):
+        cheek = [0, 0, 4, 1, 9, 9, "home_piano_wood"] if part == "l" else [15, 0, 4, 16, 9, 9, "home_piano_wood"]
+        add(f"home_piano_{part}", [[0, 0, 9, 16, 15, 16, "home_piano_wood"], [0, 15, 8.5, 16, 16, 16, "home_piano_wood"],
+                                   [0, 6.5, 4, 16, 8, 9, "home_piano_keys"], [0, 0, 8.5, 16, 6.5, 9, "home_piano_wood"],
+                                   [0, 8, 8.5, 16, 13, 9, "home_piano_wood"], cheek,
+                                   [2 if part == "l" else 0, 8, 7, 16 if part == "l" else 14, 12, 7.5, "home_piano_wood"]],
+            "Piano", "WOOD")
+    pot = [[5, 0, 5, 11, 5, 11, "home_terracotta"], [4.5, 4, 4.5, 11.5, 5.5, 11.5, "home_terracotta"]]
+    add("home_plant", pot + [[3, 5.5, 3, 13, 11, 13, "home_foliage"], [5, 11, 4, 11, 15, 10, "home_foliage"],
+                             [6, 9, 11, 10, 13, 14, "home_foliage"]], "Houseplant", "GRASS", rotate=None)
+    add("home_plant_dead", pot + [[7.5, 5.5, 7.5, 8.5, 12, 8.5, "home_foliage_dead"], [5, 8, 6, 8, 9, 10, "home_foliage_dead"],
+                                  [8, 6, 7, 12, 7, 11, "home_foliage_dead"], [4, 5.5, 4, 12, 6, 12, "home_foliage_dead"]],
+        "Dead Houseplant", "GRASS", rotate=None)
+    add("home_coat_rack", [[5, 0, 5, 11, 1, 11, "home_wood_dark"], [7.5, 1, 7.5, 8.5, 28, 8.5, "home_wood_dark"],
+                           [5, 26, 7.5, 11, 27, 8.5, "home_wood_dark"], [7.5, 26, 5, 8.5, 27, 11, "home_wood_dark"],
+                           [4, 12, 8.5, 9.5, 26, 11.5, "home_coat_tan"], [8, 15, 4.5, 12.5, 26, 7.5, "home_coat_navy"],
+                           [5, 26, 5, 10, 28.5, 10, "home_fab_brown"]], "Coat Rack", "WOOD")
+    add("home_shoes", [[2, 0, 3, 4.5, 2.5, 9, "home_leather"], [5, 0, 3.5, 7.5, 2.5, 9.5, "home_leather"],
+                       [9, 0, 8, 11, 2, 13, "home_rubber"], [11.5, 0, 7, 13.5, 2, 12, "home_rubber"]],
+        "Shoes", "WOOL", decor=True)
+    radio_b = [[3, 0, 6.5, 13, 6, 11, "home_wood_walnut"], [3, 0, 6, 13, 6, 6.5, "home_radio"],
+               [10, 6, 8, 10.5, 12, 8.5, "home_chrome"]]
+    lamp_b = [[6, 0, 6, 10, 1, 10, "home_ceramic"], [6.5, 1, 6.5, 9.5, 6, 9.5, "home_ceramic"],
+              [7.5, 6, 7.5, 8.5, 8, 8.5, "home_chrome"], [4.5, 8, 4.5, 11.5, 13, 11.5, "home_shade"]]
+    books_b = [[3, 0, 4, 13, 2, 12, "home_book_spines"], [4, 2, 3.5, 12.5, 4, 11, "home_book_spines"],
+               [3.5, 4, 5, 12, 5.5, 12.5, "home_book_spines"], [10, 0, 1, 15, 0.5, 4, "home_book_spines"]]
+    bottles_b = [[3, 0, 4, 5, 7, 6, "home_bottle_green"], [3.5, 7, 4.5, 4.5, 10, 5.5, "home_bottle_green"],
+                 [7, 0, 7, 9, 6, 9, "home_bottle_brown"], [7.5, 6, 7.5, 8.5, 8.5, 8.5, "home_bottle_brown"],
+                 [9, 0, 2, 15, 2, 4, "home_bottle_green"], [15, 0.5, 2.5, 16, 1.5, 3.5, "home_bottle_green"]]
+    cans_b = []
+    for x, z, y in ((2, 4, 0), (6, 4, 0), (10, 4, 0), (4, 5, 4.5), (8, 5, 4.5), (5, 10, 0)):
+        cans_b += [[x, y, z, x + 3.5, y + 4.2, z + 3.5, "home_can"], [x, y + 4.2, z, x + 3.5, y + 4.5, z + 3.5, "home_steel"]]
+    dishes_b = out["home_dishes"]["boxes"]
+    surface = {"home_radio": (radio_b, "Radio", "METAL"), "home_lamp_table": (lamp_b, "Table Lamp", "METAL"),
+               "home_books_stack": (books_b, "Books", "WOOD"), "home_bottles": (bottles_b, "Bottles", "GLASS"),
+               "home_cans": (cans_b, "Canned Food", "METAL")}
+    for name, (bx, title, sound) in surface.items():
+        add(name, bx, title, sound, decor=True)
+    # the same things sat on a table, desk or dresser top (13.5) rather than a worktop (16)
+    for name, (bx, title, sound) in list(surface.items()) + [("home_dishes", (dishes_b, "Dirty Dishes", "GLASS"))]:
+        add(name + "_low", [b[:1] + [b[1] - 2.5] + b[2:4] + [b[4] - 2.5] + b[5:] for b in bx], title, sound, decor=True)
+    add("home_jars", [[2, 0, 5, 5.5, 7, 8.5, "home_canister"], [6.5, 0, 5, 10, 6, 8.5, "home_canister"],
+                      [11, 0, 5, 14, 5, 8.5, "home_canister"], [2, 7, 5, 5.5, 7.6, 8.5, "home_steel"],
+                      [6.5, 6, 5, 10, 6.6, 8.5, "home_steel"], [11, 5, 5, 14, 5.6, 8.5, "home_steel"]], "Canisters", "METAL",
+        decor=True)
+    add("home_crib", [[0, 0, 0, 1.5, 15, 1.5, "home_white"], [14.5, 0, 0, 16, 15, 1.5, "home_white"],
+                      [0, 0, 14.5, 1.5, 15, 16, "home_white"], [14.5, 0, 14.5, 16, 15, 16, "home_white"],
+                      [1.5, 13, 0.3, 14.5, 14, 1.2, "home_white"], [1.5, 13, 14.8, 14.5, 14, 15.7, "home_white"],
+                      [0.3, 13, 1.5, 1.2, 14, 14.5, "home_white"], [14.8, 13, 1.5, 15.7, 14, 14.5, "home_white"],
+                      [1.5, 3, 1.5, 14.5, 5, 14.5, "home_mattress"], [3, 5, 3, 11, 5.6, 11, "home_duvet_blue"],
+                      [10, 5, 9, 13, 8, 12, "home_fur"]]
+        + [[x, 3, 0.4, x + 0.8, 13, 1.1, "home_white"] for x in (3, 5.5, 8, 10.5, 13)]
+        + [[x, 3, 14.9, x + 0.8, 13, 15.6, "home_white"] for x in (3, 5.5, 8, 10.5, 13)]
+        + [[0.4, 3, z, 1.1, 13, z + 0.8, "home_white"] for z in (4, 7.5, 11)]
+        + [[14.9, 3, z, 15.6, 13, z + 0.8, "home_white"] for z in (4, 7.5, 11)], "Crib", "WOOD")
+    add("home_teddy", [[5, 0, 6, 11, 6, 11, "home_fur"], [6, 6, 6.5, 10, 10, 10.5, "home_fur"],
+                       [5.5, 9, 8, 7, 11, 9, "home_fur"], [9, 9, 8, 10.5, 11, 9, "home_fur"],
+                       [3.5, 2, 7, 5, 5, 9, "home_fur"], [11, 2, 7, 12.5, 5, 9, "home_fur"],
+                       [5.5, 0, 4, 7.5, 2, 6, "home_fur"], [8.5, 0, 4, 10.5, 2, 6, "home_fur"],
+                       [7.2, 7.5, 6.2, 8.8, 8.5, 6.5, "home_plastic_black"]], "Teddy Bear", "WOOL", decor=True)
+    add("home_ironing_board", [[0, 10, 6, 16, 11, 10.5, "home_ironing"], [11, 11, 7, 14.5, 13, 9.5, "home_chrome"],
+                               [3, 0, 7.5, 4, 10, 8.5, "home_steel"], [12, 0, 7.5, 13, 10, 8.5, "home_steel"],
+                               [3, 4.5, 7.5, 13, 5.5, 8.5, "home_steel"]], "Ironing Board", "METAL")
+    add("home_vacuum", [[4, 0, 3, 12, 3, 10, "home_red_steel"], [5.5, 3, 8, 10.5, 15, 11, "home_fab_blue"],
+                        [7.5, 15, 9, 8.5, 24, 10, "home_chrome"], [6, 23, 9, 10, 24, 10, "home_plastic_black"],
+                        [4.5, 0, 2.5, 11.5, 1, 3, "home_rubber"]], "Vacuum Cleaner", "METAL")
+    add("home_fan", [[5, 0, 5, 11, 1, 11, "home_plastic_black"], [7.5, 1, 7.5, 8.5, 17, 8.5, "home_chrome"],
+                     [4, 17, 6.5, 12, 25, 7.5, "home_fan"], [5, 18, 7.5, 11, 24, 9, "home_plastic_black"]], "Fan", "METAL")
+    add("home_bin_bags", [[1, 0, 2, 9, 7, 10, "home_bin_bag"], [7, 0, 6, 15, 6, 14, "home_bin_bag"],
+                          [4, 6, 4, 10, 10, 9, "home_bin_bag"], [4.5, 7, 9, 6, 9, 10.5, "home_bin_bag"]],
+        "Garbage Bags", "WOOL", "home_trash", rotate=None)
 
     # floors carry the ceiling of the room below; walls are papered, tiled or panelled
     floors = {f"carpet_{k}": f"home_carpet_{k}" for k in CARPETS}

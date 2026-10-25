@@ -1,0 +1,206 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_bottle_brown": "zomboidcraft:block/city/home_bottle_brown",
+    "home_bottle_green": "zomboidcraft:block/city/home_bottle_green",
+    "particle": "zomboidcraft:block/city/home_bottle_green"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        5,
+        7,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_green"
+        },
+        "south": {
+          "texture": "#home_bottle_green"
+        },
+        "east": {
+          "texture": "#home_bottle_green"
+        },
+        "west": {
+          "texture": "#home_bottle_green"
+        },
+        "up": {
+          "texture": "#home_bottle_green"
+        },
+        "down": {
+          "texture": "#home_bottle_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        7,
+        4.5
+      ],
+      "to": [
+        4.5,
+        10,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_green"
+        },
+        "south": {
+          "texture": "#home_bottle_green"
+        },
+        "east": {
+          "texture": "#home_bottle_green"
+        },
+        "west": {
+          "texture": "#home_bottle_green"
+        },
+        "up": {
+          "texture": "#home_bottle_green"
+        },
+        "down": {
+          "texture": "#home_bottle_green"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_brown"
+        },
+        "south": {
+          "texture": "#home_bottle_brown"
+        },
+        "east": {
+          "texture": "#home_bottle_brown"
+        },
+        "west": {
+          "texture": "#home_bottle_brown"
+        },
+        "up": {
+          "texture": "#home_bottle_brown"
+        },
+        "down": {
+          "texture": "#home_bottle_brown",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        6,
+        7.5
+      ],
+      "to": [
+        8.5,
+        8.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_brown"
+        },
+        "south": {
+          "texture": "#home_bottle_brown"
+        },
+        "east": {
+          "texture": "#home_bottle_brown"
+        },
+        "west": {
+          "texture": "#home_bottle_brown"
+        },
+        "up": {
+          "texture": "#home_bottle_brown"
+        },
+        "down": {
+          "texture": "#home_bottle_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        2,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_green"
+        },
+        "south": {
+          "texture": "#home_bottle_green"
+        },
+        "east": {
+          "texture": "#home_bottle_green"
+        },
+        "west": {
+          "texture": "#home_bottle_green"
+        },
+        "up": {
+          "texture": "#home_bottle_green"
+        },
+        "down": {
+          "texture": "#home_bottle_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0.5,
+        2.5
+      ],
+      "to": [
+        16,
+        1.5,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_bottle_green"
+        },
+        "south": {
+          "texture": "#home_bottle_green"
+        },
+        "east": {
+          "texture": "#home_bottle_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_bottle_green"
+        },
+        "up": {
+          "texture": "#home_bottle_green"
+        },
+        "down": {
+          "texture": "#home_bottle_green"
+        }
+      }
+    }
+  ]
+}
