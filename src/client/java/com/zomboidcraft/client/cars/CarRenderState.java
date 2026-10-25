@@ -13,4 +13,6 @@ public class CarRenderState extends EntityRenderState {
     public float steer;
     /** The local player is sitting in this car, looking out of it. */
     public boolean inside;
+    /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
+    public int lod;
 }
