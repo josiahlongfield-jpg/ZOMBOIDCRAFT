@@ -17,6 +17,4 @@ public class WalkerRenderState extends ZombieRenderState {
     public int missingLimb;
     /** Crawls for good: lies face down. A zombie knocked over without this lies on its back. */
     public boolean crawler;
-    /** Swing of its attack, 0 to 1: the hands close on the grab at the middle of it. */
-    public float attack;
 }
