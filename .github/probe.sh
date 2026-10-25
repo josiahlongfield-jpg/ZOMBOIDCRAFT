@@ -9,6 +9,27 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== drive"
+sig net.minecraft.world.entity.Entity 'Passenger|Rider|ControlledByLocal|LocalInstance|Authoritative|getInterpolation|lerp|maxUpStep|move\(|onGround|horizontalCollision|verticalCollision|setDeltaMovement|getDeltaMovement|positionRider|Dismount|startRiding|stopRiding|canRide|isVehicle|getControlling|ejectPassengers|walkDist|tickCount|setOnGround|isInWater|updateFluid|checkInsideBlocks|applyEffectsFromBlocks|makeBoundingBox|refreshDimensions|getDimensions'
+sig net.minecraft.world.entity.InterpolationHandler '.'
+sig net.minecraft.world.entity.vehicle.boat.AbstractBoat 'Input|tick|Interpolation|Passenger|controll|getControllingPassenger|positionRider|clamp|setInput|isLocal'
+sig net.minecraft.world.entity.vehicle.AbstractBoat 'Input|tick|Interpolation|Passenger|controll|getControllingPassenger|positionRider|clamp|setInput|isLocal'
+classes 'vehicle/.*Boat|InterpolationHandler|MoveVehicle|ServerboundPlayerInput|ClientInput|net/minecraft/world/entity/player/Input'
+sig net.minecraft.client.player.LocalPlayer 'input|rideTick|aiStep|handsBusy|jumpable|Vehicle'
+sig net.minecraft.client.player.ClientInput '.'
+sig net.minecraft.world.entity.player.Input '.'
+sig net.minecraft.world.entity.player.Player 'getLastClientInput|lastClientInput|setLastClientInput|Input'
+sig net.minecraft.server.level.ServerPlayer 'getLastClientInput|Input'
+sig net.minecraft.client.Options 'keyUp|keyDown|keyLeft|keyRight|keyJump|keyShift|keySprint'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entity'
+sig net.minecraft.world.entity.LivingEntity 'isJumping|jumping|xxa|zza|knockback|hurtServer'
+sig net.minecraft.world.damagesource.DamageSources 'public'
+sig net.minecraft.world.entity.EntityAttachments '.'
+sig net.minecraft.client.Camera 'public|protected'
+sig net.minecraft.world.level.Level 'isRaining|isRainingAt|getEntities\('
+sig net.minecraft.world.entity.Entity 'getEntities|level\(\)|isInWall|getPassengers|getFirstPassenger|hasPassenger|addPassenger|removePassenger'
+exit 0
+
 echo "===== cars"
 sig net.minecraft.world.entity.Entity 'abstract|defineSynchedData|readAdditionalSaveData|addAdditionalSaveData|hurtServer|isPickable|canBeCollidedWith|isPushable|shouldRenderAtSqrDistance|public Entity\(|setNoGravity|setInvulnerable|noPhysics|blocksBuilding|getBoundingBoxForCulling|moveTo|snapTo|setYRot|absSnapTo|setPos\(|void tick\(|onRemoval|remove\(|isAttackable|skipAttackInteraction'
 sig 'net.minecraft.world.entity.EntityType$Builder' '.'
