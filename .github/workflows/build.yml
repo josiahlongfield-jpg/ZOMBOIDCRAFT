@@ -91,6 +91,7 @@ jobs:
           done
           # A car prop loads its model index, saves and reloads its state.
           echo 'summon zomboidcraft:car 0 101 0 {model:"swat_van",variant:"wrecked"}' >&3
+          sleep 3  # let the force-loaded chunk start ticking so the selector can see the car
           echo 'data get entity @e[type=zomboidcraft:car,limit=1] model' >&3
           sleep 10
           echo 'stop' >&3
