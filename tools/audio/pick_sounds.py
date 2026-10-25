@@ -32,8 +32,8 @@ EVENTS = {
     # suppressed shots: hand-picked Sonniss takes (see PINS), so no ranking terms
     "weapon.rifle.shot_suppressed": (["suppressed"], r"", r"", 4, 1.0, -2.0, {"attenuation_distance": 40}),
     "weapon.rifle.shot_suppressed_distant": (["suppressed"], r"", r"", 3, 1.6, -3.0, {"attenuation_distance": 40}),
-    "weapon.pistol.shot_suppressed": (["suppressed"], r"", r"", 4, 0.9, -2.0, {"attenuation_distance": 24}),
-    "weapon.pistol.shot_suppressed_distant": (["suppressed"], r"", r"", 3, 1.2, -3.0, {"attenuation_distance": 24}),
+    "weapon.pistol.shot_suppressed": (["suppressed"], r"", r"", 4, 0.9, -2.0, {"attenuation_distance": 40}),
+    "weapon.pistol.shot_suppressed_distant": (["suppressed"], r"", r"", 3, 1.2, -3.0, {"attenuation_distance": 40}),
     "weapon.rifle.dry": (["dry_fire"], r"dry|empty|click|trigger", r"mouse|keyboard|pen|switch", 2, 0.5, -3.0, {}),
     "weapon.rifle.mag_out": (["rifle_mag"], r"out|release|eject|remov|drop", r"in$|insert", 2, 1.0, -3.0, {}),
     "weapon.rifle.mag_in": (["rifle_mag"], r"insert|in\b|load|seat|magazine", r"eject|release|out", 2, 1.0, -3.0, {}),
@@ -109,7 +109,9 @@ PINS = {
 COLOR = {"weapon.rifle.shot_suppressed_distant": "lowpass=f=2200,aecho=0.8:0.6:90|210:0.35|0.2"}
 
 # Extra loudness in dB for an event, pushed through a limiter so the peak stays put.
-BOOST = {"weapon.rifle.shot": 3.0, "weapon.rifle.shot_distant": 3.0}
+BOOST = {"weapon.rifle.shot": 3.0, "weapon.rifle.shot_distant": 3.0,
+         # Josiah: the suppressed pistol was too quiet
+         "weapon.pistol.shot_suppressed": 10.0, "weapon.pistol.shot_suppressed_distant": 10.0}
 
 
 def duration(path):
