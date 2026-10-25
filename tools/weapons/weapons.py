@@ -37,6 +37,8 @@ import rifle as RF  # noqa: E402
 import pistol as PI  # noqa: E402
 import shotgun as SG  # noqa: E402
 import hunting_rifle as HR  # noqa: E402
+import double_barrel as DB  # noqa: E402
+import revolver as RV  # noqa: E402
 import attachments as AT  # noqa: E402
 from inch import IN  # noqa: E402
 
@@ -427,6 +429,7 @@ MELEE_PBR = {
     'rifle_ammo': dict(carton='card'),
     'pistol_ammo': dict(carton='card'),
     'hunting_rifle_ammo': dict(carton='card'),
+    'revolver_ammo': dict(carton='card'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
 
@@ -606,6 +609,47 @@ def hunting_holds():
     return out
 
 
+# the double: the off hand under the splinter forend, the butt plate in the shoulder
+DOUBLE_SUPPORT = [tuple(DB.frame_point(0, -1.05, DB.FOREND[1] - 1.0) + (0, -1.7, 0)),
+                  tuple(DB.frame_point(0, -0.95, DB.FOREND[0] + 1.5) + (0, -1.7, 0))]
+DOUBLE_BUTT = tuple(DB.frame_point(0, DB.HEEL_Y - 1.3, DB.STOCK_END - 0.3))
+DOUBLE_CLEAR = [tuple(DB.frame_point(*p)) for p in (
+    (0, DB.COMB_Y, 8.6), (0, DB.HEEL_Y, 16.0), (0, DB.TOE_Y, 16.2), (0, DB.STANDING_TOP, 0.4), (0, -2.6, 2.7),
+    (0, 0, DB.MUZZLE))]
+
+
+def double_holds():
+    """The rifle's two holds, fitted to the double's long barrels and dropped stock."""
+    out = {}
+    for name, R, G0, butt_at, hand in (
+            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
+        h = Q.Hold(R, S3, DB.HAND, DOUBLE_SUPPORT, hand_off=hand)
+        G = Q.solve_grip(h, G0, [(DOUBLE_BUTT, np.array(butt_at), 1.0)], DOUBLE_CLEAR)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
+# the revolver: two hands round its grip like the pistol's; the hammer, muzzle and butt stay clear
+REVOLVER_SUPPORT = [tuple(RV.frame_point(-0.95, *reversed(RV._grip(2.7)))),
+                    tuple(RV.frame_point(-0.95, *reversed(RV._grip(0.9))))]
+REVOLVER_CLEAR = [tuple(RV.frame_point(*p)) for p in ((0, 0.62, 2.8), (0, 0, RV.MUZZLE - 0.1), (0, -4.5, 4.5),
+                                                       (0, 0.62, 1.0))]
+
+
+def revolver_holds():
+    """The pistol's two holds, fitted to the revolver."""
+    out = {}
+    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+                        ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
+        h = Q.Hold(R, S3, RV.HAND, REVOLVER_SUPPORT, hand_off=PISTOL_HAND)
+        G = Q.solve_grip(h, G0, [], REVOLVER_CLEAR)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
 def melee_holds():
     """Two-handed ready (held across the body, head up past the right shoulder, both hands low in front)
     and the swing's wind-up and follow-through: the gun arm sweeps round from the right, up and back, to
@@ -716,6 +760,38 @@ def hunting_rifle():
                    aperture=fp(0, HR.SIGHT, HR.REAR_SIGHT), flash=flash, handle=HR.bolt, seed=915, flash_size=1.15)
 
 
+def double_barrel():
+    """The side-by-side: no rails or threads, a bead on the rib to aim by, its barrels and forend (its handle)
+    swinging down about the hinge to load two shells by hand. It comes in DB.FINISHES."""
+    fp = DB.frame_point
+
+    def flash(m, muzzle):
+        DB.flash(m, DB.MUZZLE)
+
+    finishes = {k: (v[0], DB.look(k)) for k, v in DB.FINISHES.items()}
+    return kit.Gun('double_barrel', 'Double-Barrel Shotgun', DB.body, finishes['field'][1], DB.HAND, {}, {},
+                   aperture=fp(0, DB.SIGHT, DB.SIGHT_Z), flash=flash, handle=DB.barrels, seed=917, flash_size=1.3,
+                   finishes=finishes, opened=('x', -22.5, DB.HINGE_POINT))
+
+
+def revolver():
+    """The service revolver: fixed sights, no rails or threads; its cylinder, crane and ejector rod (its handle)
+    swing out to the left to load six rounds by hand, and the cylinder turns a chamber each shot. It comes in
+    RV.FINISHES."""
+    fp = RV.frame_point
+
+    def flash(m, muzzle):
+        RV.flash(m, RV.MUZZLE)
+
+    finishes = {k: (v[0], RV.look(k)) for k, v in RV.FINISHES.items()}
+    # third person shows it swung out by moving it clear (its cylinder's staves are turned already)
+    gun = kit.Gun('revolver', 'Service Revolver', RV.body, finishes['service'][1], RV.HAND, {}, {},
+                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
+                  finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
+    gun.gap_flash = fp(0, 0, RV.CYL_FRONT)      # the side flash out of the barrel-cylinder gap
+    return gun
+
+
 AT_SEED = {a.key: kit.Part(a.key, a.item, a.title, a.slot, a.build, a.look).seed for a in AT.ALL}
 
 
@@ -749,12 +825,17 @@ class FirstPerson:
     wrist_grip: the shooting hand holds a stock's wrist, not a pistol grip, so on the sights its forearm comes
       in from lower down;
     bolt, bolt_lift: the handle is a bolt the shooting hand works after every shot (and after a fresh magazine on an
-      empty gun): lifted bolt_lift degrees about the bore, run back handle_travel, pushed home and turned down."""
+      empty gun): lifted bolt_lift degrees about the bore, run back handle_travel, pushed home and turned down;
+    opens, open_axis, open_angle: loaded by hand with the action open: the handle (a double's barrels, a revolver's
+      cylinder on its crane) turns open_angle degrees about open_axis through the hinge point to show the chambers;
+    cylinder, chamber_step: the rounds sit in a cylinder that turns chamber_step degrees for each one (about its
+      axis point); without one, the chambers sit side by side chamber_step item pixels apart along x."""
 
     def __init__(self, hip_grip, hip_turn, hip_scale, reload, irons, irons_scale, handle_travel, charge_turn,
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
-                 wrist_grip=False, bolt=False, bolt_lift=0.0):
+                 wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
+                 cylinder=False, chamber_step=0.0):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -766,6 +847,8 @@ class FirstPerson:
         self.bead = None if bead is None else np.asarray(bead, float)
         self.eye_rise, self.wrist_grip = eye_rise, wrist_grip
         self.bolt, self.bolt_lift = bolt, bolt_lift
+        self.opens, self.open_axis, self.open_angle = opens, open_axis, open_angle
+        self.cylinder, self.chamber_step = cylinder, chamber_step
 
 
 # the rifle at the hip shows its upper receiver and magazine, the front sight a little under the crosshair; on
@@ -801,6 +884,27 @@ HUNTING_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 18.0, -8.
                          irons=(0.0, 0.0, -(HUNTING_EYE_Z - HR.REAR_SIGHT) * IN * 0.85), irons_scale=0.85,
                          handle_travel=HR.HANDLE_TRAVEL, charge_turn=(10, 22, -22), charge_push=(0.0, 0.03, -0.04),
                          wrist_grip=True, bolt=True, bolt_lift=HR.BOLT_LIFT)
+
+# the double low at the hip like the shotgun; to load, tipped muzzle down and brought up so the open breech faces the
+# eye, the barrels dropped about the hinge; on the bead the eye sits just over the rib, a cheek on the comb
+_DB_SIGHT = DB.frame_point(0, DB.SIGHT, DB.SIGHT_Z)
+DOUBLE_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 20.0, -10.0), hip_scale=0.90,
+                        reload={'mag_out': (14, -0.04), 'mag_in': (14, -0.04), 'charge': (6, -0.02)},
+                        irons=(0.0, 0.0, -7.5), irons_scale=0.85, handle_travel=0.0,
+                        charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04),
+                        load_turn=(-6, -14, 4), load_push=(-0.12, -0.02, -0.20),
+                        bead=DB.frame_point(0, DB.BEAD_TOP, DB.BEAD_Z) - _DB_SIGHT, eye_rise=0.9,
+                        wrist_grip=True, opens=True, open_axis=(1.0, 0.0, 0.0), open_angle=-DB.OPEN,
+                        chamber_step=-DB.LOOSE_GAP * IN)
+
+# the revolver held out like the pistol; to load, tipped muzzle down and rolled so the swung-out cylinder's back
+# faces the eye; its cylinder turns counter-clockwise from behind, a chamber (60 degrees) a shot
+REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.35,
+                          reload={'mag_out': (-20, -0.05), 'mag_in': (-20, -0.05), 'charge': (-6, 0.02)},
+                          irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=0.0,
+                          charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
+                          load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
+                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0)
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
 # the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
@@ -888,6 +992,18 @@ def write_shells(shift, lang):
     M.dump({'gui_light': 'front', 'textures': {'0': tex, 'particle': tex}, 'elements': kit.elements(loose, 1, uvs, shift)},
            ASSETS / 'models/item/weapon/shotgun/loose_shell.json')
     M.dump({'model': ref('shotgun/loose_shell')}, ASSETS / 'items/shotgun_loose_shell.json')
+
+
+def write_loose_round(gun, build, look, at, shift, seed, name='loose_shell'):
+    """The loose round first person loads into a hand-loaded gun's chamber, drawn in the gun's model space where it
+    sits home in the first chamber (name: loose_shell, or loose_case for a revolver's empty)."""
+    loose = kit.drawn(name, build, t=at, look=look, seed=seed)
+    img, uvs, T = kit.pack(kit.paint([loose]))
+    kit.save_textures(img, ASSETS / f'textures/item/weapon/{gun}_{name}.png')
+    tex = f'{NS}:item/weapon/{gun}_{name}'
+    M.dump({'gui_light': 'front', 'textures': {'0': tex, 'particle': tex}, 'elements': kit.elements(loose, 0, uvs, shift)},
+           ASSETS / f'models/item/weapon/{gun}/{name}.json')
+    M.dump({'model': ref(f'{gun}/{name}')}, ASSETS / f'items/{gun}_{name}.json')
 
 
 def build_ammo_box(m):
@@ -1034,6 +1150,20 @@ def main():
     hr_hold = hunting_holds()
     line, _ = kit.write_gun(hr, ASSETS, gh - hr.hand, gun_displays(gh, hr_hold, HUNTING_FP), lang, ads_eyes(hr, HUNTING_FP))
     summary.append(line)
+    db = double_barrel()
+    _Pm, gd = rifle_frame()
+    db_hold = double_holds()
+    line, _ = kit.write_gun(db, ASSETS, gd - db.hand, gun_displays(gd, db_hold, DOUBLE_FP), lang, ads_eyes(db, DOUBLE_FP))
+    summary.append(line)
+    write_loose_round('double_barrel', SG.shell, SG.look(), DB.frame_point(*DB.LOOSE_SHELL), gd - db.hand, 914)
+    rv = revolver()
+    gr = centred_grip(rv)
+    rv_hold = revolver_holds()
+    line, _ = kit.write_gun(rv, ASSETS, gr - rv.hand, gun_displays(gr, rv_hold, REVOLVER_FP), lang, ads_eyes(rv, REVOLVER_FP))
+    summary.append(line)
+    home = RV.frame_point(*RV.LOOSE_ROUND)
+    write_loose_round('revolver', RV.round38, RV.round_look(), home, gr - rv.hand, 922)
+    write_loose_round('revolver', RV.case38, RV.round_look(), home, gr - rv.hand, 923, 'loose_case')
     part_display = lambda m: small_display(m, (20, 60, 0))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
@@ -1044,15 +1174,18 @@ def main():
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv])
     write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
                      (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
                      (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
-                     (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh))])
+                     (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
+                     (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
+                     (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr))])
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
-                                      ('hunting_rifle_ammo', '.308 Rounds', '#6e2a22', 560)):
+                                      ('hunting_rifle_ammo', '.308 Rounds', '#6e2a22', 560),
+                                      ('revolver_ammo', '.38 Special Rounds', '#2f4a63', 561)):
         box = M.Model(name)
         build_ammo_box(box)
         lo, hi = box.bounds()
@@ -1067,7 +1200,8 @@ def main():
 
     merge_lang(lang)
     write_java()
-    pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold},
+    pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
+                                 'double_barrel': db_hold, 'revolver': rv_hold},
                                 (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
@@ -1357,6 +1491,53 @@ def hunting_points(gun, g):
     }
 
 
+def double_points(gun, g):
+    shift = g - gun.hand
+    fp = DB.frame_point
+    # the off hand cups the forend from below; to load, it brings each shell up behind the right chamber (the
+    # loose shell's place, home in it) and pushes it in, the hand held under the shell so the shell shows above it
+    support = fp(0, -1.0, (DB.FOREND[0] + DB.FOREND[1]) / 2) + shift + np.array([0, -0.8, 0])
+    home = fp(*DB.LOOSE_SHELL) + shift
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': home,
+        'magHold': home + np.array([-0.4, -3.2, 0.6]),
+        'magCentre': home,
+        'handle': support,
+        'laser': kit.flash_tip(gun) + shift,      # no rail: nothing beams from it
+        'light': kit.flash_tip(gun) + shift,
+        'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
+        'hinge': DB.HINGE_POINT + shift,
+    }
+
+
+def revolver_points(gun, g):
+    shift = g - gun.hand
+    fp = RV.frame_point
+    home = fp(*RV.LOOSE_ROUND) + shift
+    support = fp(-1.0, *reversed(RV._grip(1.9))) + shift      # the off hand wrapped round the shooting hand
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': home,
+        # to load, the hand under each round's back end, so the round shows above it
+        'magHold': home + np.array([-0.3, -2.6, 0.8]),
+        'magCentre': home,
+        # the off hand's fingers on the cylinder's left side, pushing it out and back in
+        'handle': fp(-RV.CYL_R - 0.25, RV.CYL_Y, 0.8) + shift,
+        'laser': kit.flash_tip(gun) + shift,      # no rail: nothing beams from it
+        'light': kit.flash_tip(gun) + shift,
+        'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
+        'hinge': RV.PIVOT_POINT + shift,
+        'cylAxis': RV.CYL_AXIS + shift,
+    }
+
+
 def rig_data(gun, g, holds, fp, points):
     """One gun's first-person rig (GunRig's fields, in order): the hip pose's numbers, so a reload can cant it
     smoothly, each sight's aiming pose, how its handle or slide is worked, the points the hands hold (item
@@ -1378,10 +1559,14 @@ def rig_data(gun, g, holds, fp, points):
             'boltLift': float(fp.bolt_lift)}
     points = dict(points)
     axis = points.pop('boltAxis', points['handle'])
+    hinge = points.pop('hinge', points['handle'])
+    cyl = points.pop('cylAxis', hinge)
     data.update({k: vec(v) for k, v in points.items()})
     data['boltAxis'] = vec(axis)
     data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
                  'supportGrip': fp.support_grip, 'pump': fp.pump, 'wristGrip': fp.wrist_grip, 'bolt': fp.bolt})
+    data.update({'hinge': vec(hinge), 'openAxis': vec(fp.open_axis), 'openAngle': float(fp.open_angle),
+                 'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder})
     return data
 
 
@@ -1397,6 +1582,10 @@ RIG_NOTES = {
     'pump': 'a pump the off hand rides, loaded a shell at a time', 'wristGrip': "the shooting hand holds the stock's wrist",
     'boltLift': 'a bolt: degrees it turns up to open', 'boltAxis': 'a point on the bore the bolt turns about',
     'bolt': 'a bolt the shooting hand works after each shot',
+    'hinge': 'what the handle turns about to open', 'openAxis': 'the axis it turns about',
+    'openAngle': 'how far it turns open (degrees)', 'cylAxis': "a point on the cylinder's axis",
+    'chamberStep': 'between chambers: pixels along x, or degrees round a cylinder',
+    'opens': 'loaded by hand with the action open', 'cylinder': 'the rounds sit in a turning cylinder',
 }
 
 
@@ -1452,7 +1641,7 @@ def write_preview(out):
         'melee': [{'name': s.name, 'title': s.title, 'damage': s.damage, 'speed': s.speed, 'reach': s.reach,
                    'durability': s.durability, 'two_handed': s.two_handed} for s, _b, _m in WEAPONS],
         'rifle': gun_models('assault_rifle'), 'pistol': gun_models('pistol'),
-        'other': ['rifle_magazine', 'rifle_ammo', 'pistol_ammo', 'hunting_rifle_ammo'], 'all': names}, indent=1))
+        'other': ['rifle_magazine', 'rifle_ammo', 'pistol_ammo', 'hunting_rifle_ammo', 'revolver_ammo'], 'all': names}, indent=1))
 
 
 def gun_models(name):

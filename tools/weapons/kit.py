@@ -9,6 +9,10 @@ from before attachments still shows its stock and magazine. A mounted optic fold
 Every part is its own block model (elements and the gun's texture, painted once for all of them); each pose
 then has a tiny model per part that names it as parent and adds that pose's display transforms.
 
+A gun can come in finishes (its own materials: blued or nickel, plain or figured walnut): each finish paints
+the same texture layout, its part models name the first finish's as parent and swap the texture, and the
+item model picks the finish by the model data's string after the slot keys.
+
 For the weapon screen there's a ghost model per slot (the slot's stand-in part, drawn in a flat green
 glass texture), and gun_slots/<gun>.json saying where each slot's mount point is and what fits it.
 """
@@ -24,6 +28,7 @@ import pbr
 
 NS = 'zomboidcraft'
 SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
+FINISH = len(SLOTS)     # the model data string after the slot keys: the gun's finish
 PX = 16
 
 # how a part drawn on a top rail turns to sit on each face (columns: where its x, y, z end up)
@@ -56,7 +61,7 @@ class Part:
 
 class Gun:
     def __init__(self, name, title, body, look, hand, slots, parts, irons=None, aperture=None, flash=None,
-                 seed=556, wear=0.4, handle=None, flash_size=1.0):
+                 seed=556, wear=0.4, handle=None, flash_size=1.0, finishes=None, opened=None):
         self.name, self.title, self.body, self.look = name, title, body, look
         self.hand = np.asarray(hand, float)     # centre of the shooting hand on the grip, build frame
         self.slots = slots                      # {slot name: Slot}
@@ -67,6 +72,12 @@ class Gun:
         self.seed, self.wear = seed, wear
         self.handle = handle                    # fn(m): the charging handle or slide, drawn apart so it can be worked
         self.flash_size = flash_size
+        self.gap_flash = None                   # a second flash's point, build frame (a revolver's cylinder gap)
+        # {key: (title, look)}: the finishes it comes in, the first the plainest (look is then the first's)
+        self.finishes = finishes
+        # (axis, degrees, origin): how the handle (a double's barrels, a revolver's cylinder) is turned to show it
+        # opened in third person while it's loaded; the steps the game takes (22.5 degrees) limit it
+        self.opened = opened
 
     def mount(self, key):
         part = self.parts[key]
@@ -167,6 +178,7 @@ def paint(models, px=PX, eyes=()):
                     if name in p.get('skip', ()):
                         continue
                     M.PX = face_density(p, name, eyes, px) if eyes else px
+                    M.PX = max(M.PX, look.get('_px', {}).get(p['mat'], 0))   # finishes with fine detail
                     pos, n, edge, uv = M.face_grid(p, name)
                     pos_l = (pos - t) @ R
                     n_l = R.T @ n
@@ -182,7 +194,10 @@ def paint(models, px=PX, eyes=()):
                             rgb = fx(f, rgb)
                     rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
-                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb), n=pbr.normal(f, rgb, lu, lv, M.PX, bevel=0.12, tilt=0.6, rel=True))))
+                    seam = p.get('seam', ())                    # slices: no bevel where one meets the next
+                    flat = (M.FACES[name][2] in seam, M.FACES[name][4] in seam)
+                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb, look.get('_spec')),
+                                                        n=pbr.normal(f, rgb, lu, lv, M.PX, bevel=0.12, tilt=0.6, rel=True, flat=flat))))
     finally:
         M.PX = old
     return patches
@@ -310,6 +325,14 @@ def quiet_tip(gun):
     return np.array([tip[0], tip[1], lo[2]])
 
 
+def star_flash(at, star):
+    """A flat star of flame facing down the bore (a revolver's barrel-cylinder gap spits one sideways). Pixels."""
+    x, y, z = (round(float(v), 4) for v in at)
+    return {'shade': False, 'light_emission': 15,
+            'from': [round(x - star, 4), round(y - star, 4), z], 'to': [round(x + star, 4), round(y + star, 4), z],
+            'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'}, 'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}}
+
+
 def flash_model(tip, length=2.4, half=0.75, star=1.1):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
     see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
@@ -389,31 +412,86 @@ def write_flash_texture(assets):
     M.save_png(spec, path.with_name('muzzle_flash_s.png'))
 
 
+def opened(m, axis, angle, origin):
+    """A copy of a model with every element turned about origin, for a handle drawn open (only parts that aren't
+    turned already can be: an element takes one turn). axis 'shift' moves it by origin instead (angle unused), for
+    a handle whose elements are turned already (a revolver's cylinder, swung out)."""
+    out = M.Model(m.name)
+    if axis == 'shift':
+        d = np.array(origin, float)
+        for p in m.parts:
+            q = dict(p, lo=p['lo'] + d, hi=p['hi'] + d)
+            if p['rot']:
+                q['rot'] = dict(p['rot'], origin=[float(v) for v in np.array(p['rot']['origin']) + d])
+            out.parts.append(q)
+        return out
+    for p in m.parts:
+        q = dict(p)
+        if not p['rot']:
+            q['rot'] = dict(axis=axis, angle=angle, origin=[float(v) for v in origin])
+        out.parts.append(q)
+    return out
+
+
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
     Returns a summary line and the data the preview page reads."""
-    look, seed, wear = gun.look, gun.seed, gun.wear
-    models = {'body': drawn('body', gun.body, look=look, seed=seed, wear=wear)}
-    if gun.irons:
-        models['irons_up'] = drawn('irons_up', lambda m: gun.irons(m, True), look=look, seed=seed + 1, wear=wear)
-        models['irons_folded'] = drawn('irons_folded', lambda m: gun.irons(m, False), look=look, seed=seed + 1, wear=wear)
-    for key, part in gun.parts.items():
-        R, t = gun.mount(key)
-        models[key] = drawn(key, part.build, R, t, part.look, part.seed, wear)
-    if gun.handle:
-        models['charging_handle'] = drawn('charging_handle', gun.handle, look=look, seed=seed + 3, wear=wear)
-    names = list(models)
-    patches = paint([models[n] for n in names], eyes=eyes)
-    img, uvs, T = pack(patches)
-    tex = f'item/weapon/{gun.name}'
-    save_textures(img, assets / f'textures/{tex}.png')
+    seed, wear = gun.seed, gun.wear
+    fins = list(gun.finishes) if gun.finishes else [None]
+    base_fin = fins[0]
+
+    def finish_look(f):
+        return gun.finishes[f][1] if f else gun.look
+
+    # every finish shares one texture layout: each material gets the most texels any finish gives it
+    px = {}
+    for f in fins:
+        for mat, d in finish_look(f).get('_px', {}).items():
+            px[mat] = max(px.get(mat, 0), d)
+
+    def build(look):
+        models = {'body': drawn('body', gun.body, look=look, seed=seed, wear=wear)}
+        if gun.irons:
+            models['irons_up'] = drawn('irons_up', lambda m: gun.irons(m, True), look=look, seed=seed + 1, wear=wear)
+            models['irons_folded'] = drawn('irons_folded', lambda m: gun.irons(m, False), look=look, seed=seed + 1, wear=wear)
+        for key, part in gun.parts.items():
+            R, t = gun.mount(key)
+            models[key] = drawn(key, part.build, R, t, part.look, part.seed, wear)
+        if gun.handle:
+            models['charging_handle'] = drawn('charging_handle', gun.handle, look=look, seed=seed + 3, wear=wear)
+            if gun.opened:
+                models['charging_handle_open'] = opened(models['charging_handle'], *gun.opened)
+        return models
+
     base = f'weapon/{gun.name}'
-    for mi, n in enumerate(names):
-        M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
+    texs = {}
+    for f in fins:
+        look = dict(finish_look(f), _px=px) if px else finish_look(f)
+        fm = build(look)
+        painted = [n for n in fm if n != 'charging_handle_open']      # the open handle is the closed one, turned
+        patches = paint([fm[n] for n in painted], eyes=eyes)
+        img, fuvs, T = pack(patches)
+        if f == base_fin:
+            models, uvs = fm, fuvs
+        elif fuvs != uvs:
+            raise ValueError(f'{gun.name}: finish {f} packs its texture differently')
+        tex = f'item/weapon/{gun.name}' + ('' if f == base_fin else f'_{f}')
+        save_textures(img, assets / f'textures/{tex}.png')
+        texs[f] = f'{NS}:{tex}'
+    names = list(models)
+    for n in names:
+        mi = painted.index('charging_handle' if n == 'charging_handle_open' else n)
+        M.dump({'gui_light': 'front', 'textures': {'0': texs[base_fin], 'particle': texs[base_fin]},
                 'elements': elements(models[n], mi, uvs, shift)}, assets / f'models/item/{base}/{n}.json')
+        for f in fins[1:]:
+            M.dump({'parent': f'{NS}:item/{base}/{n}', 'textures': {'0': texs[f], 'particle': texs[f]}},
+                   assets / f'models/item/{base}/{f}/{n}.json')
     if gun.flash:
         k = gun.flash_size
-        M.dump(flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k), assets / f'models/item/{base}/muzzle_flash.json')
+        flash = flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k)
+        if gun.gap_flash is not None:
+            flash['elements'].append(star_flash(gun.gap_flash + shift, 0.9 * k))
+        M.dump(flash, assets / f'models/item/{base}/muzzle_flash.json')
         names_posed = names + ['muzzle_flash']
         quiet = quiet_tip(gun)
         if quiet is not None:
@@ -439,14 +517,20 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         shown[st] = disp
         for n in names_posed:
             M.dump({'parent': f'{NS}:item/{base}/{n}', 'display': disp}, assets / f'models/item/{base}/{st}/{n}.json')
+            for f in fins[1:]:
+                if n in names:      # the flash has its own texture
+                    M.dump({'parent': f'{NS}:item/{base}/{st}/{n}', 'textures': {'0': texs[f], 'particle': texs[f]}},
+                           assets / f'models/item/{base}/{f}/{st}/{n}.json')
 
-    def pose(st):
-        r = lambda n: ref(f'{base}/{st}/{n}')
+    def pose(st, fin=base_fin):
+        r = lambda n: ref(f'{base}/{st}/{n}' if fin == base_fin or n not in names else f'{base}/{fin}/{st}/{n}')
         entries = [r('body')]
         if gun.handle:
-            # first person draws the handle or slide itself: worked in a reload, run back by each shot, locked open
+            # first person draws the handle or slide itself: worked in a reload, run back by each shot, locked open;
+            # others see a double's barrels or a revolver's cylinder open while it's loaded
+            shown = r('charging_handle_open' if gun.opened and st in ('mag_out', 'mag_in') else 'charging_handle')
             entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
-                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': r('charging_handle')})
+                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': shown})
         for slot_name in SLOTS:
             s = gun.slots.get(slot_name)
             if not s:
@@ -479,14 +563,19 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select(slot_name, cases, r(s.default) if s.default else EMPTY))
         return composite(entries)
 
-    aim = select('optic', {k: pose(f'ads_{k}') for k in gun.optics()}, pose('ads')) if gun.optics() else pose('ads')
-    M.dump({'model': {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
-                      'entries': [{'threshold': 1, 'model': pose('mag_out')}, {'threshold': 2, 'model': pose('mag_in')},
-                                  {'threshold': 3, 'model': pose('charge')}],
-                      'fallback': {'type': 'minecraft:condition', 'property': 'minecraft:using_item',
-                                   'on_true': aim, 'on_false': pose('hip')}}},
-           assets / f'items/{gun.name}.json')
+    def tree(fin):
+        aim = select('optic', {k: pose(f'ads_{k}', fin) for k in gun.optics()}, pose('ads', fin)) if gun.optics() else pose('ads', fin)
+        return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
+                'entries': [{'threshold': 1, 'model': pose('mag_out', fin)}, {'threshold': 2, 'model': pose('mag_in', fin)},
+                            {'threshold': 3, 'model': pose('charge', fin)}],
+                'fallback': {'type': 'minecraft:condition', 'property': 'minecraft:using_item',
+                             'on_true': aim, 'on_false': pose('hip', fin)}}
+
+    M.dump({'model': by_finish(fins, tree)}, assets / f'items/{gun.name}.json')
     lang[f'item.{NS}.{gun.name}'] = gun.title
+    for f in fins:
+        if f:
+            lang[f'finish.{NS}.{gun.name}.{f}'] = gun.finishes[f][0]
     # the loose pieces first person draws during a reload, in the gun's own model space (no display of their own)
     loose = {'mag': gun.slots['magazine'].default if 'magazine' in gun.slots else None,
              'charging_handle': 'charging_handle' if gun.handle else None,
@@ -494,7 +583,9 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
              'flash_quiet': 'muzzle_flash_quiet' if gun.flash and quiet_tip(gun) is not None else None}
     for name, key in loose.items():
         if key:
-            M.dump({'model': ref(f'{base}/{key}')}, assets / f'items/{gun.name}_loose_{name}.json')
+            own = key in names         # the flash has no finish
+            M.dump({'model': by_finish(fins if own else [None], lambda f: ref(f'{base}/{key}' if f == base_fin else f'{base}/{f}/{key}'))},
+                   assets / f'items/{gun.name}_loose_{name}.json')
 
     # ghosts and the weapon screen's slot data
     slot_data = []
@@ -525,6 +616,14 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     M.dump({'gun': f'{NS}:{gun.name}', 'note': 'Generated by tools/weapons/weapons.py. Mount points are in item '
             'model pixels, before the display transform.', 'slots': slot_data}, assets / f'gun_slots/{gun.name}.json')
     return f'{gun.name}: {sum(len(m.parts) for m in models.values())} boxes in {len(models)} parts, {T}px', slot_data
+
+
+def by_finish(fins, model):
+    """The model for each finish, picked by the model data's finish string (the first finish when there's none)."""
+    if len(fins) == 1:
+        return model(fins[0])
+    return {'type': 'minecraft:select', 'property': 'minecraft:custom_model_data', 'index': FINISH,
+            'cases': [{'when': f, 'model': model(f)} for f in fins[1:]], 'fallback': model(fins[0])}
 
 
 def write_part_items(parts, assets, display, lang, file=lambda part: part.key):

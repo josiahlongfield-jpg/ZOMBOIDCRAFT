@@ -52,9 +52,10 @@ public class CaseItem extends BagItem {
         if (cfg.packed) {
             List<ItemStack> load = switch (item.kind) {
                 case RIFLE -> gunCase(random, cfg, pick(random, new GunType[] {GunType.ASSAULT_RIFLE,
-                        GunType.HUNTING_RIFLE, GunType.SHOTGUN}, new int[] {cfg.assaultRifleWeight,
-                        cfg.huntingRifleWeight, cfg.shotgunWeight}));
-                case PISTOL -> gunCase(random, cfg, GunType.PISTOL);
+                        GunType.HUNTING_RIFLE, GunType.SHOTGUN, GunType.DOUBLE_BARREL}, new int[] {cfg.assaultRifleWeight,
+                        cfg.huntingRifleWeight, cfg.shotgunWeight, cfg.doubleBarrelWeight}));
+                case PISTOL -> gunCase(random, cfg, pick(random, new GunType[] {GunType.PISTOL, GunType.REVOLVER},
+                        new int[] {cfg.pistolWeight, cfg.revolverWeight}));
                 case AMMO -> ammoCan(random, cfg);
             };
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(load));
@@ -81,6 +82,7 @@ public class CaseItem extends BagItem {
         if (part != null) {
             Attachments.mount(gun, new ItemStack(part));
         }
+        GunFinish.roll(gun, random);
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);
         if (type.magazine() != null) {
@@ -98,8 +100,8 @@ public class CaseItem extends BagItem {
 
     /** Boxes of one or two kinds of rounds, three or four stacks of them. */
     private static List<ItemStack> ammoCan(RandomSource random, ZcConfig.Cases cfg) {
-        GunType[] kinds = {GunType.ASSAULT_RIFLE, GunType.PISTOL, GunType.SHOTGUN, GunType.HUNTING_RIFLE};
-        int[] weights = {4, 4, 3, 3};
+        GunType[] kinds = {GunType.ASSAULT_RIFLE, GunType.PISTOL, GunType.SHOTGUN, GunType.HUNTING_RIFLE, GunType.REVOLVER};
+        int[] weights = {4, 4, 3, 3, 2};
         GunType first = pick(random, kinds, weights), second = random.nextDouble() < cfg.secondCalibreChance ? pick(random, kinds, weights) : first;
         List<ItemStack> load = new ArrayList<>();
         int stacks = 3 + random.nextInt(2);

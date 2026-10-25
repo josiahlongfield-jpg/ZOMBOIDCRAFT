@@ -93,8 +93,12 @@ def lum(rgb):
     return rgb[..., 0] * 0.2126 + rgb[..., 1] * 0.7152 + rgb[..., 2] * 0.0722
 
 
-def spec(mat, f, rgb):
-    smooth, f0, bare = MATERIALS.get(mat, (0.3, NONMETAL, None))
+def spec(mat, f, rgb, override=None):
+    """The _s patch for a face of material mat. override: a look's own numbers by material (smoothness,
+    reflectance, bare and optionally porosity), for finishes that share a material name but not a sheen."""
+    own = (override or {}).get(mat)
+    smooth, f0, bare = own[:3] if own else MATERIALS.get(mat, (0.3, NONMETAL, None))
+    porosity = own[3] if own and len(own) > 3 else POROSITY.get(mat, 0)
     H, W = f.shape
     out = np.zeros((H, W, 4))
     s = np.full((H, W), smooth) + (f.noise(3.0, 401, 2) - 0.5) * 0.08
@@ -106,7 +110,7 @@ def spec(mat, f, rgb):
         g = np.where(m, f0_worn / 255.0, g)
     out[..., 0] = np.clip(s, 0, 1)
     out[..., 1] = g
-    out[..., 2] = np.where(g > 229 / 255.0, 0, POROSITY.get(mat, 0) / 255.0)
+    out[..., 2] = np.where(g > 229 / 255.0, 0, porosity / 255.0)
     out[..., 3] = EMISSIVE.get(mat, 255) / 255.0
     return out
 
@@ -126,11 +130,12 @@ def round_tilt(f, k=0.7):
     return off * k * du, off * k * dv
 
 
-def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel=False):
+def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel=False, flat=(False, False)):
     """Edge bevels (so blocky parts catch the light like machined edges), the lean of round bars, plus a
     little relief from the painted detail (and `height`, if given). lu, lv: the face's size in model units;
     px: texture pixels per unit. rel: relief from the detail's contrast against the face's own lightness, so
-    checkering and serrations on a near-black finish stand out as much as on a light one."""
+    checkering and serrations on a near-black finish stand out as much as on a light one. flat: no bevel on the
+    u (or v) edges, where the face carries straight on into the next slice of a part built from slices."""
     u, v = f.uv[..., 0], f.uv[..., 1]
     b = max(1.0 / px, min(bevel, 0.3 * min(lu, lv)))
 
@@ -138,8 +143,8 @@ def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel
         return tilt * np.clip(1 - d / b, 0, 1)
 
     ru, rv = round_tilt(f)
-    nx = -t(u) + t(lu - u) + ru
-    ny = -t(v) + t(lv - v) + rv
+    nx = (0 if flat[0] else -t(u) + t(lu - u)) + ru
+    ny = (0 if flat[1] else -t(v) + t(lv - v)) + rv
     L = lum(rgb)
     if rel:
         L = L * 0.35 / np.clip(L.mean(), 0.1, 0.35)

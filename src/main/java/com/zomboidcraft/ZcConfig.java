@@ -38,6 +38,12 @@ public final class ZcConfig {
     public ShotgunStats shotgun = new ShotgunStats();
     /** The bolt-action hunting rifle's own numbers. */
     public GunStats huntingRifle = GunStats.huntingRifle();
+    /** The side-by-side double-barrel's own numbers, with its pellets. */
+    public ShotgunStats doubleBarrel = ShotgunStats.doubleBarrel();
+    /** The .38 service revolver's own numbers. */
+    public GunStats revolver = GunStats.revolver();
+    /** How often a found gun comes in each of its finishes. */
+    public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
     /** What a gun case or an ammo can has in it when it's found shut. */
     public Cases cases = new Cases();
@@ -49,6 +55,10 @@ public final class ZcConfig {
         public int assaultRifleWeight = 4;
         public int huntingRifleWeight = 4;
         public int shotgunWeight = 3;
+        public int doubleBarrelWeight = 2;
+        /** How often a pistol case holds the revolver rather than the pistol, against it. */
+        public int pistolWeight = 3;
+        public int revolverWeight = 2;
         /** Most of a packed gun's durability that's already worn off, as a fraction. */
         public double maxWear = 0.17;
         /** Chance someone left a part on: a 4x scope on the hunting rifle, a red dot on the rifle, a light on the pistol. */
@@ -61,6 +71,18 @@ public final class ZcConfig {
         public double fullMagazineChance = 0.5;
         /** Chance an ammo can holds a second calibre. */
         public double secondCalibreChance = 0.35;
+    }
+
+    /** Weights: how often a found gun turns up in each of its finishes, against its others. */
+    public static class Finishes {
+        /** The double-barrel: blued with plain walnut, colour case hardened with figured walnut, engraved with exhibition walnut. */
+        public int doubleBarrelField = 70;
+        public int doubleBarrelCaseHardened = 25;
+        public int doubleBarrelEngraved = 5;
+        /** The revolver: blued with checkered walnut, nickel with rosewood, engraved royal blue with exhibition walnut. */
+        public int revolverService = 70;
+        public int revolverNickel = 25;
+        public int revolverEngraved = 5;
     }
 
     public static class Carry {
@@ -328,6 +350,24 @@ public final class ZcConfig {
         }
 
         /**
+         * The .38 service revolver: a little less than the 9mm per hit, six shots, a heavier double-action pull between
+         * them, then the cylinder swung out and loaded by hand.
+         */
+        static GunStats revolver() {
+            GunStats s = new GunStats();
+            s.damage = 6.5;
+            s.hipSpread = 2.6;
+            s.aimSpread = 0.6;
+            s.recoil = 1.1;
+            s.shotNoise = 70.0;
+            s.aimZoom = 0.88;
+            s.range = 60.0;
+            s.fireDelayTicks = 6;
+            s.magazineSize = 6;
+            return s;
+        }
+
+        /**
          * The .308 bolt action: one hard-hitting, accurate round, a heavy kick, heard a long way off; its time between
          * shots covers working the bolt (lifted, back, home and down, then the hand back on the stock).
          */
@@ -373,6 +413,24 @@ public final class ZcConfig {
             range = 40.0;
             fireDelayTicks = 15;
             magazineSize = 5;
+        }
+
+        /**
+         * The side-by-side: the pump's buckshot from a longer, tighter-choked pair of barrels, and two shots as fast as
+         * the triggers can be pulled, then it's broken open and loaded by hand. Its magazine size is its two barrels.
+         */
+        static ShotgunStats doubleBarrel() {
+            ShotgunStats s = new ShotgunStats();
+            s.damage = 3.8;
+            s.pelletSpread = 2.1;
+            s.falloffStart = 12.0;
+            s.knockback = 0.5;
+            s.recoil = 2.5;
+            s.shotNoise = 125.0;
+            s.range = 45.0;
+            s.fireDelayTicks = 5;
+            s.magazineSize = 2;
+            return s;
         }
     }
 

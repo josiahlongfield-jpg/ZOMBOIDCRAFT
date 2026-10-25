@@ -31,6 +31,14 @@ import java.util.Map;
  * @param wristGrip    the shooting hand holds a stock's wrist rather than a pistol grip
  * @param bolt         the handle is a bolt the shooting hand works (its knob is handle) after each shot, and to
  *                     chamber a round after a fresh magazine on an empty gun
+ * @param hinge        what the handle (a double's barrels, a revolver's cylinder and crane) turns about to open
+ * @param openAxis     the axis it turns about there
+ * @param openAngle    how far it turns open (degrees)
+ * @param cylAxis      a point on a cylinder's axis (closed), which its rounds turn about
+ * @param chamberStep  from one chamber to the next: item pixels along x side by side, or degrees round a cylinder
+ * @param opens        loaded by hand with the action open; the loose round (in magTop's chamber when home) goes in
+ *                     one chamber at a time
+ * @param cylinder     the rounds sit in a cylinder that turns a chamber with each shot
  */
 record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, float[] charge,
               Map<String, float[]> sights, float handleTravel, float[] chargeTurn, float[] chargePush,
@@ -38,5 +46,7 @@ record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, 
               float[] grip, float[] support, float[] foregrip, float[] magTop, float[] magHold, float[] magCentre,
               float[] handle, float[] laser, float[] light, float[] muzzle, float[] quietMuzzle, float[] boltAxis,
               float[] magAxis,
-              boolean locksBack, boolean cycles, boolean supportGrip, boolean pump, boolean wristGrip, boolean bolt) {
+              boolean locksBack, boolean cycles, boolean supportGrip, boolean pump, boolean wristGrip, boolean bolt,
+              float[] hinge, float[] openAxis, float openAngle, float[] cylAxis, float chamberStep, boolean opens,
+              boolean cylinder) {
 }

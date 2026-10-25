@@ -28,13 +28,19 @@ public final class GunSlotData {
         Map.entry("hunting_rifle", Map.ofEntries(
                 Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
                 Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("hunting_rifle_magazine")))));
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("hunting_rifle_magazine")))),
+        Map.entry("double_barrel", Map.ofEntries(
+)),
+        Map.entry("revolver", Map.ofEntries(
+)));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
         Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
         Map.entry("pistol", Map.ofEntries()),
         Map.entry("shotgun", Map.ofEntries()),
-        Map.entry("hunting_rifle", Map.ofEntries()));
+        Map.entry("hunting_rifle", Map.ofEntries()),
+        Map.entry("double_barrel", Map.ofEntries()),
+        Map.entry("revolver", Map.ofEntries()));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),

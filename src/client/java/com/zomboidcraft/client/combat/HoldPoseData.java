@@ -18,6 +18,10 @@ final class HoldPoseData {
     static final float[] SHOTGUN_AIM = {-1.45007f, -1.22814f, 0.00000f};
     static final float[] HUNTING_READY = {-1.23301f, -0.82286f, 0.00000f};
     static final float[] HUNTING_AIM = {-1.31504f, -1.27662f, 0.00000f};
+    static final float[] DOUBLE_BARREL_READY = {-1.33662f, -0.76331f, 0.00000f};
+    static final float[] DOUBLE_BARREL_AIM = {-1.46413f, -0.80792f, 0.00000f};
+    static final float[] REVOLVER_READY = {-0.95547f, -0.68836f, 0.00000f};
+    static final float[] REVOLVER_AIM = {-1.90860f, -0.59020f, 0.00000f};
     static final float[] MELEE_READY = {-1.09171f, -0.72489f, 0.00000f};
     static final float[] MELEE_WINDUP = {-1.36313f, 0.36953f, 0.36347f};
     static final float[] MELEE_STRIKE = {1.50327f, -1.31919f, -2.38106f};
@@ -29,6 +33,10 @@ final class HoldPoseData {
     static final float[] SHOTGUN_AIM_SUPPORT = {-6.97277f, 12.18472f, -1.23770f, -10.25258f, 13.34623f, -1.37861f};
     static final float[] HUNTING_READY_SUPPORT = {-0.79771f, 16.40386f, 1.56029f, -1.28997f, 19.06407f, 2.23239f};
     static final float[] HUNTING_AIM_SUPPORT = {-7.79728f, 10.94376f, -1.99514f, -10.46341f, 11.69987f, -2.29651f};
+    static final float[] DOUBLE_BARREL_READY_SUPPORT = {-0.15510f, 14.98225f, 1.72292f, -0.54253f, 17.83385f, 2.80930f};
+    static final float[] DOUBLE_BARREL_AIM_SUPPORT = {-4.31099f, 14.11018f, -1.74710f, -6.53413f, 16.21739f, -2.02875f};
+    static final float[] REVOLVER_READY_SUPPORT = {0.68792f, 9.39196f, -0.34354f, 0.09931f, 9.75474f, -1.06997f};
+    static final float[] REVOLVER_AIM_SUPPORT = {0.45451f, 9.64562f, 0.47209f, 0.24093f, 10.25354f, -0.29642f};
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
             "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},

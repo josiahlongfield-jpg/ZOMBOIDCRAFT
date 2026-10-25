@@ -112,7 +112,9 @@ public class RifleItem extends Item {
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (type.tube) {
-            tooltip.accept(Component.literal("Shells: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
+            String what = type.rounds();        // a revolver holds rounds, the shotguns shells
+            tooltip.accept(Component.literal(Character.toUpperCase(what.charAt(0)) + what.substring(1) + ": " + gun.rounds()
+                    + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.accept(gun.mag()
                     ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
@@ -120,6 +122,10 @@ public class RifleItem extends Item {
         }
         if (gun.jammed()) {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
+        }
+        Component finish = GunFinish.line(stack);
+        if (finish != null) {
+            tooltip.accept(finish);
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
         for (Attachments.Slot part : Attachments.slots(stack)) {
@@ -134,7 +140,9 @@ public class RifleItem extends Item {
         if (Attachments.firstFilled(stack) != null) {
             tooltip.accept(Component.literal("Right-click with an empty hand to take a part off").withStyle(ChatFormatting.DARK_GRAY));
         }
-        tooltip.accept(Component.literal(type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
+        tooltip.accept(Component.literal(type == GunType.REVOLVER ? "Right-click: aim   Left-click: fire   R: swing out and load (fire to stop)"
+                : type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
+                : type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
         if (type.bolt) {
             tooltip.accept(Component.literal("Bolt action: the bolt is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
