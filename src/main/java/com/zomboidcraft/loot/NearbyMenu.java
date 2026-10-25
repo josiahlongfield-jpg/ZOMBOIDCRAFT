@@ -163,9 +163,15 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
         return player.inventoryMenu instanceof Carry.Bags bags ? bags.zomboidcraft$bags() : new BagContainer[0];
     }
 
-    void opened(Container container) {
+    private net.minecraft.core.BlockPos usedAt;
+    private String usedSound;
+
+    /** The container the player used to get here: its lid comes up, and it sounds again when they're done. */
+    void opened(Container container, net.minecraft.core.BlockPos pos, String sound) {
         container.startOpen(player);
         opened.add(container);
+        usedAt = pos;
+        usedSound = sound;
     }
 
     @Override
@@ -312,6 +318,9 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
         super.removed(player);
         for (Container container : opened) {
             container.stopOpen(player);
+        }
+        if (usedAt != null && player.level() instanceof net.minecraft.server.level.ServerLevel level) {
+            LootSounds.play(level, usedAt, usedSound, true);
         }
         // like closing the inventory: whatever's left on the 2x2 comes back to you
         result.clearContent();

@@ -227,6 +227,9 @@ public final class Nearby {
         Opening opening = new Opening(List.copyOf(sources), selected);
         boolean lidUp = used != null && !found.isEmpty() && found.get(0).getBlockPos().equals(used);
 
+        if (lidUp) {
+            LootSounds.play(player.level(), used, LootSounds.event(found.get(0).getBlockState().getBlock()), false);
+        }
         player.openMenu(new ExtendedMenuProvider<Opening>() {
             @Override
             public Opening getScreenOpeningData(ServerPlayer player) {
@@ -242,7 +245,7 @@ public final class Nearby {
             public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
                 NearbyMenu menu = new NearbyMenu(id, inventory, opening.sources(), containers, opening.selected());
                 if (lidUp) {
-                    menu.opened(containers.get(1));
+                    menu.opened(containers.get(1), used, LootSounds.event(found.get(0).getBlockState().getBlock()));
                 }
                 return menu;
             }

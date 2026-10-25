@@ -14,8 +14,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,8 +70,8 @@ public final class Fittings {
         if (level instanceof ServerLevel && level.getBlockEntity(pos) instanceof Contents
                 && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             // searched in the field kit, beside the floor and anything else in reach
+            // (it plays the fitting's own open and close sounds)
             com.zomboidcraft.loot.Nearby.open(serverPlayer, pos);
-            level.playSound(null, pos, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.4f, 0.9f + level.getRandom().nextFloat() * 0.2f);
         }
         return InteractionResult.SUCCESS;
     }
