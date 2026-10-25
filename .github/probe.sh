@@ -8,6 +8,22 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== bench1"
+classes 'gui/render/pip/|gui/render/state/pip/|SpecialGuiElement|gui/render/state/GuiItemRenderState|state/ItemClusterRenderState|state/ItemEntityRenderState|state/ItemDisplayEntityRenderState|state/DisplayEntityRenderState'
+for c in $(classes 'gui/render/pip/[A-Za-z]*.class|gui/render/state/pip/[A-Za-z]*.class|SpecialGuiElement' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
+sig net.minecraft.client.gui.GuiGraphicsExtractor 'submit|entity|Entity|pip|Picture|item\(|scissor|enableScissor|nextStratum|guiRenderState'
+sig net.minecraft.client.renderer.entity.state.ItemClusterRenderState 'public'
+sig net.minecraft.client.renderer.entity.ItemEntityRenderer 'public|static'
+sig net.minecraft.client.Minecraft 'getItemModelResolver|getEntityRenderDispatcher|gameRenderer|itemModelResolver'
+sig net.minecraft.client.renderer.MultiBufferSource 'public|static'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitItem|submitModel'
+classes 'client/renderer/feature/FeatureRenderDispatcher|client/renderer/SubmitNodeStorage|client/renderer/SubmitNodeCollection'
+sig net.minecraft.client.renderer.feature.FeatureRenderDispatcher 'public'
+sig net.minecraft.client.renderer.SubmitNodeStorage 'public'
+sig net.minecraft.client.renderer.GameRenderer 'getFeatureRenderDispatcher|getSubmitNodeStorage|featureRender|submitNode|getLighting|lighting'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'itemEntityTranslucentCull|translucent|entityTranslucent'
+exit 0
+
 echo "===== render2"
 echo "$MC_JARS" | tr ' ' '\n'
 classes 'client/(menu|screenhandler)/|gui/screens/MenuScreens'
