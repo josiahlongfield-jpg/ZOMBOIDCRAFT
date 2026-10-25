@@ -7,8 +7,10 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.InflaterInputStream;
@@ -27,11 +29,16 @@ public final class CarAssets {
     public record Mesh(int triangles, float[] pos, float[] uv, float[] normal) {
     }
 
-    public record Ready(Mesh mesh, Identifier texture) {
+    /** A boot lid, tailgate or back door: turns about the axis through pivot by up to angle radians. */
+    public record Lid(boolean yAxis, float px, float py, float pz, float angle, Mesh mesh) {
+    }
+
+    public record Ready(Mesh mesh, List<Lid> lids, Identifier texture) {
     }
 
     private static final class Variant {
         Mesh mesh;
+        List<Lid> lids;
         byte[] jpeg;
         Identifier texture;
     }
@@ -75,7 +82,7 @@ public final class CarAssets {
             v.texture = id;
             v.jpeg = null;
         }
-        return new Ready(v.mesh, v.texture);
+        return new Ready(v.mesh, v.lids, v.texture);
     }
 
     private static Map<String, Variant> read(String model) throws IOException {
@@ -87,7 +94,7 @@ public final class CarAssets {
         Map<String, Variant> out = new HashMap<>();
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 1) {
+            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 2) {
                 throw new IOException("not a car file");
             }
             int count = in.readInt();
@@ -95,34 +102,45 @@ public final class CarAssets {
                 String name = in.readUTF();
                 Variant v = new Variant();
                 v.jpeg = in.readNBytes(in.readInt());
-                int tris = in.readInt();
-                float[] pos = new float[tris * 9], uv = new float[tris * 6], normal = new float[tris * 3];
-                for (int t = 0; t < tris * 3; t++) {
-                    pos[t * 3] = in.readShort() / 1000f;
-                    pos[t * 3 + 1] = in.readShort() / 1000f;
-                    pos[t * 3 + 2] = in.readShort() / 1000f;
-                    uv[t * 2] = in.readUnsignedShort() / 65535f;
-                    uv[t * 2 + 1] = in.readUnsignedShort() / 65535f;
+                v.mesh = readMesh(in);
+                int lids = in.readInt();
+                v.lids = new ArrayList<>(lids);
+                for (int k = 0; k < lids; k++) {
+                    boolean yAxis = in.readByte() == 1;
+                    float px = in.readFloat(), py = in.readFloat(), pz = in.readFloat(), angle = in.readFloat();
+                    v.lids.add(new Lid(yAxis, px, py, pz, angle, readMesh(in)));
                 }
-                for (int t = 0; t < tris; t++) {
-                    int a = t * 9;
-                    float ux = pos[a + 3] - pos[a], uy = pos[a + 4] - pos[a + 1], uz = pos[a + 5] - pos[a + 2];
-                    float vx = pos[a + 6] - pos[a], vy = pos[a + 7] - pos[a + 1], vz = pos[a + 8] - pos[a + 2];
-                    float nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
-                    float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-                    if (len < 1e-9f) {
-                        len = 1;
-                        ny = 1;
-                    }
-                    normal[t * 3] = nx / len;
-                    normal[t * 3 + 1] = ny / len;
-                    normal[t * 3 + 2] = nz / len;
-                }
-                v.mesh = new Mesh(tris, pos, uv, normal);
                 out.put(name, v);
             }
         }
         return out;
+    }
+
+    private static Mesh readMesh(DataInputStream in) throws IOException {
+        int tris = in.readInt();
+        float[] pos = new float[tris * 9], uv = new float[tris * 6], normal = new float[tris * 3];
+        for (int t = 0; t < tris * 3; t++) {
+            pos[t * 3] = in.readShort() / 1000f;
+            pos[t * 3 + 1] = in.readShort() / 1000f;
+            pos[t * 3 + 2] = in.readShort() / 1000f;
+            uv[t * 2] = in.readUnsignedShort() / 65535f;
+            uv[t * 2 + 1] = in.readUnsignedShort() / 65535f;
+        }
+        for (int t = 0; t < tris; t++) {
+            int a = t * 9;
+            float ux = pos[a + 3] - pos[a], uy = pos[a + 4] - pos[a + 1], uz = pos[a + 5] - pos[a + 2];
+            float vx = pos[a + 6] - pos[a], vy = pos[a + 7] - pos[a + 1], vz = pos[a + 8] - pos[a + 2];
+            float nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+            float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+            if (len < 1e-9f) {
+                len = 1;
+                ny = 1;
+            }
+            normal[t * 3] = nx / len;
+            normal[t * 3 + 1] = ny / len;
+            normal[t * 3 + 2] = nz / len;
+        }
+        return new Mesh(tris, pos, uv, normal);
     }
 
     /** Textures ship as JPEG to keep the mod small; Minecraft only reads PNG, so Java decodes them. */
