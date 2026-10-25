@@ -9,6 +9,22 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== attach"
+sig net.minecraft.world.item.Item 'overrideOtherStackedOnMe|overrideStackedOnOther|appendHoverText|getName'
+sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|listMatches|hashStackList|hashItemAndComponents|isSameItemSameComponents|matches\(|copyWithCount|EMPTY'
+sig net.minecraft.world.inventory.ClickAction '.'
+sig net.minecraft.world.entity.SlotAccess '.'
+sig net.minecraft.world.inventory.Slot 'getItem|set\(|mayPlace|allowModification|safeInsert|safeTake'
+sig net.minecraft.world.item.component.CustomModelData '.'
+sig net.minecraft.world.item.component.ItemContainerContents 'equals|hashCode|CODEC|STREAM_CODEC'
+sig net.minecraft.network.codec.ByteBufCodecs 'map\(|STRING_UTF8|idMapper|list'
+sig net.minecraft.util.StringRepresentable 'fromEnum|EnumCodec|getSerializedName'
+sig net.minecraft.sounds.SoundEvents 'BUNDLE_INSERT|BUNDLE_REMOVE|ARMOR_EQUIP_GENERIC|CROSSBOW_LOADING_END|ITEM_PICKUP'
+sig net.minecraft.world.item.BundleItem 'override|playInsert|playRemove'
+classes 'renderer/item/CompositeModel|renderer/item/SelectItemModel|properties/select/CustomModelDataProperty|renderer/item/ConditionalItemModel|properties/conditional/HasComponent|properties/select/ComponentContents'
+sig net.minecraft.client.renderer.item.properties.select.CustomModelDataProperty '.'
+sig net.minecraft.client.renderer.item.CompositeModel '.'
+
 echo "===== combat3"
 sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'
 classes 'component/SwingAnimation|component/UseEffects|KeyMapping\$Category|keybinding/v1/KeyBindingHelper|state/HumanoidRenderState|state/ZombieRenderState|ai/goal/MeleeAttackGoal|ai/goal/ZombieAttackGoal'
