@@ -1,6 +1,6 @@
 """Cuts candidate recordings into short clips for the listen-and-pick page.
 
-    python3 tools/audio/slice_candidates.py RAW_DIR[,RAW_DIR...] OUT_DIR
+    python3 tools/audio/slice_candidates.py RAW_DIR[,RAW_DIR...] OUT_DIR [EVENT_PREFIX,...]
 
 Each RAW_DIR holds a manifest.json: the sounds-raw branch (Freesound) and the private Sonniss
 folder (fetch_sonniss.py). For each event in CANDIDATES it splits every listed recording
@@ -44,6 +44,19 @@ CANDIDATES = {
         "210826", "666317", "239923", "165872", "338059", "25279"]),
     "horde.angry": ("Horde coming for you: it swells as more of them chase", 4.0, 10.0, 2, [
         "516697", "669845"]),
+    # Looting and items: candidates come from EXTRA (Freesound loot_*/item_*, Sonniss s_*)
+    "loot.rummage": ("Searching shelves, racks and bins", 0.6, 3.0, 2, []),
+    "loot.drawer": ("Opening a drawer or filing cabinet", 0.3, 2.0, 2, []),
+    "loot.cupboard": ("Opening a cupboard, wardrobe or appliance door", 0.3, 2.0, 2, []),
+    "loot.fridge": ("Opening a fridge, cooler or freezer", 0.4, 2.5, 2, []),
+    "loot.register": ("Opening a cash register", 0.3, 2.0, 2, []),
+    "loot.box": ("Opening a cardboard box or crate", 0.3, 2.5, 2, []),
+    "loot.safe": ("Opening a safe", 0.4, 3.0, 2, []),
+    "item.eat": ("Eating", 0.4, 3.0, 2, []),
+    "item.drink": ("Drinking", 0.4, 3.0, 2, []),
+    "item.bandage": ("Bandaging: cloth and tape tearing", 0.3, 2.5, 2, []),
+    "item.hammer.nail": ("Hammering nails into a barricade", 0.2, 1.5, 2, []),
+    "item.bag": ("Opening a bag or backpack", 0.3, 2.0, 2, []),
 }
 
 MAX_CLIPS = 90   # per moment; the page builder trims each round further
@@ -59,6 +72,18 @@ EXTRA = {
     "door.bash_metal": [("door", r"metal|rusty|ronk|gate")],
     "horde.dormant": [("horde_dormant", r"."), ("crowd", r"murmur|moan|begging|unrest")],
     "horde.angry": [("horde_angry", r"."), ("crowd", r"approach|battle cry|agony scream|fighting|group scream|war unit")],
+    "loot.rummage": [("loot_rummage", r"."), ("s_rummage", r".")],
+    "loot.drawer": [("loot_drawer", r"."), ("s_drawer", r".")],
+    "loot.cupboard": [("s_door_small", r"."), ("loot_appliance", r"door|cupboard|cabinet|wardrobe|oven|washer|dryer|microwave")],
+    "loot.fridge": [("loot_fridge", r".")],
+    "loot.register": [("loot_register", r".")],
+    "loot.box": [("loot_box", r"."), ("s_box", r".")],
+    "loot.safe": [("loot_safe", r".")],
+    "item.eat": [("item_eat", r"."), ("s_eat", r".")],
+    "item.drink": [("item_drink", r"."), ("s_drink", r".")],
+    "item.bandage": [("item_bandage", r"."), ("s_tear", r"cloth|fabric|tape|rip|tear|bandage|shirt")],
+    "item.hammer.nail": [("item_hammer", r"."), ("s_hammer", r".")],
+    "item.bag": [("item_bag", r"."), ("s_zip", r".")],
 }
 
 
@@ -102,7 +127,10 @@ def main():
         for sid, info in json.loads((d / "manifest.json").read_text()).items():
             manifest[sid], base[sid] = info, d
     clips = {}
+    only = tuple(sys.argv[3].split(",")) if len(sys.argv) > 3 else ("",)
     for event, (label, lo, hi, per, ids) in CANDIDATES.items():
+        if not event.startswith(only):
+            continue
         ids = list(ids)
         listed = set(ids)
         for cat, rx in EXTRA.get(event, []):
