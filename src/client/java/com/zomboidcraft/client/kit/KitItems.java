@@ -132,7 +132,8 @@ final class KitItems {
         if (roll(stack) == null) return null;
         try {
             Object label = Class.forName("com.zomboidcraft.combat.rolls.Rolls").getMethod("placeLabel", ItemStack.class).invoke(null, stack);
-            return label instanceof String s && !s.isEmpty() ? s : null;
+            String s = label instanceof net.minecraft.network.chat.Component c ? c.getString() : label == null ? "" : label.toString();
+            return s.isEmpty() ? null : s;
         } catch (ReflectiveOperationException | IllegalArgumentException | LinkageError e) {
             return null;
         }
