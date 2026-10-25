@@ -673,10 +673,10 @@ RIFLE_FP = FirstPerson(hip_grip=(0.25, -0.30, -0.58), hip_turn=(2.0, 8.0, -3.0),
                        charge_turn=(20, 25, 0), charge_push=(-0.08, 0.10, -0.30))
 # the pistol held out in both hands, low and a little right; on the sights the slide's back is a hand's width off
 _dz = (PI.GRIP_BOT[0] - PI.GRIP_TOP[0]) / (PI.GRIP_BOT[1] - PI.GRIP_TOP[1])
-PISTOL_FP = FirstPerson(hip_grip=(0.17, -0.30, -0.50), hip_turn=(1.0, 5.0, -2.0), hip_scale=1.05,
-                        reload={'mag_out': (30, 0.05), 'mag_in': (30, 0.05), 'charge': (-16, 0.02)},
-                        irons=(0.0, 0.0, -6.0), irons_scale=1.0, handle_travel=PI.HANDLE_TRAVEL,
-                        charge_turn=(10, 18, 0), charge_push=(-0.04, 0.07, -0.14),
+PISTOL_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.25,
+                        reload={'mag_out': (25, -0.18), 'mag_in': (25, -0.18), 'charge': (-6, 0.02)},
+                        irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=PI.HANDLE_TRAVEL,
+                        charge_turn=(20, 20, -35), charge_push=(0.02, 0.02, -0.30),
                         locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz))
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of

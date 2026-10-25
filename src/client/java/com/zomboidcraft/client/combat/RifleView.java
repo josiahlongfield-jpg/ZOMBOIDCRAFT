@@ -554,8 +554,9 @@ public final class RifleView {
     private static Hand onHandle(Pose gun, float pull) {
         float[] h = rig.handle();
         Vector3f at = gun.point(new Vector3f(h[0], h[1], h[2] + pull));
-        // a pistol's slide is pinched from above; the rifle's handle is pulled from beside the receiver
-        return rig.supportGrip() ? new Hand(at, new Vector3f(-0.55f, -0.6f, 0.55f), new Vector3f(-0.3f, -1f, 0f))
+        // a pistol's slide is pinched from above, the forearm running down and left rather than at the eye (so it
+        // doesn't fill the screen); the rifle's handle is pulled from beside the receiver
+        return rig.supportGrip() ? new Hand(at, new Vector3f(-0.6f, -0.8f, 0f), new Vector3f(0f, -1f, 0f))
                 : new Hand(at, new Vector3f(-0.4f, -0.85f, 0.25f), new Vector3f(-1f, -0.4f, 0f));
     }
 
