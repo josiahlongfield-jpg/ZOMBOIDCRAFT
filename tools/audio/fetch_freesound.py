@@ -87,6 +87,10 @@ QUERIES = {
     "gun_shotgun": ["shotgun blast", "12 gauge shotgun shot", "pump shotgun firing", "shotgun gunshot outdoor"],
     "gun_shotgun_foley": ["shotgun pump rack", "shotgun shell loading", "pump action shotgun reload", "shotgun dry fire"],
     "gun_distant": ["distant gunshot", "gunshot far away", "shotgun distant", "gunfire echo distance"],
+    # guns, round 3: the Remington 700-style bolt-action hunting rifle
+    "gun_bolt": ["hunting rifle shot", "30-06 rifle shot", "308 rifle gunshot", "bolt action rifle shot", "deer rifle shot"],
+    "gun_bolt_foley": ["bolt action rifle cycling", "rifle bolt open close", "bolt action reload", "rifle magazine insert"],
+    "gun_bolt_distant": ["distant rifle shot", "rifle shot echo valley", "hunting gunshot far away"],
     # cars: old American saloons and trucks, worn rather than sporty
     "car_start": ["car engine start", "old car starting", "truck engine start", "car ignition start"],
     "car_idle": ["car engine idle loop", "old car idling", "v8 engine idle", "truck idle"],
