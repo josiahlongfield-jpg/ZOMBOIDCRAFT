@@ -189,7 +189,7 @@ public final class RailLights {
                 RifleView.aimDistance((float) held.eye().distanceTo(target));
             }
             if (laser) {
-                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam && glow);
+                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam && glow, glow);
             }
             if (light) {
                 light(level, player, held, target, quads, config, glow);
@@ -231,7 +231,7 @@ public final class RailLights {
     }
 
     private static void laser(ClientLevel level, AbstractClientPlayer player, Held held, boolean onSomething, Vec3 target,
-                              Quads quads, boolean beam) {
+                              Quads quads, boolean beam, boolean glow) {
         boolean pointed = held.onTarget() > 0.999f;
         Vec3 dir = blend(held.bore(), target.subtract(held.laser()).normalize(), held.onTarget());
         double reach = pointed ? held.laser().distanceTo(target) + 0.05 : RANGE;
@@ -253,7 +253,8 @@ public final class RailLights {
         if (dot) {
             Vec3 c = end.add(quads.cam.subtract(end).normalize().scale(0.03));
             double size = 0.03 + 0.0025 * c.distanceTo(quads.cam);
-            quads.facing(c, size, scaled(GREEN, 0.7f));
+            // with a shader pack the dot is drawn as a coloured surface, not added light: full strength keeps it bright
+            quads.facing(c, size, scaled(GREEN, glow ? 0.7f : 1f));
             quads.facing(c, size * 0.35, scaled(GREEN_CORE, 1f));
         }
     }

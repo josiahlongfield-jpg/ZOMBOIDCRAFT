@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -185,14 +186,25 @@ public final class Guns {
 
     // ------------------------------------------------------------------ light and laser
 
-    /** Switches the gun's light and laser on or off together, with a click. */
-    public static void toggleRail(ServerPlayer player) {
+    /** Switches the gun's light on or off, with a click. */
+    public static void toggleLight(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
-        if (!GunType.isGun(gun) || !Attachments.hasRailGear(gun)) {
-            return;
+        if (GunType.isGun(gun) && Attachments.hasLight(gun)) {
+            toggle(player, gun, GunState.RAIL_ON);
         }
-        boolean on = !Attachments.railOn(gun);
-        gun.set(GunState.RAIL_ON, on);
+    }
+
+    /** Switches the gun's laser on or off, with a click. */
+    public static void toggleLaser(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (GunType.isGun(gun) && Attachments.hasLaser(gun)) {
+            toggle(player, gun, GunState.LASER_ON);
+        }
+    }
+
+    private static void toggle(ServerPlayer player, ItemStack gun, DataComponentType<Boolean> switched) {
+        boolean on = !gun.getOrDefault(switched, false);
+        gun.set(switched, on);
         player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
                 SoundSource.PLAYERS, 0.25f, on ? 2.0f : 1.7f);
     }

@@ -38,9 +38,14 @@ public record GunState(boolean mag, int rounds, boolean jammed) {
             ZomboidCraft.id("mag_rounds"), DataComponentType.<Integer>builder()
                     .persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).ignoreSwapAnimation().build());
 
-    /** The gun's side-rail light or laser is switched on (the light key). */
+    /** The gun's side-rail light is switched on (the light key). */
     public static final DataComponentType<Boolean> RAIL_ON = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
             ZomboidCraft.id("rail_on"), DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
+
+    /** The gun's right-rail laser is switched on (the laser key). */
+    public static final DataComponentType<Boolean> LASER_ON = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("laser_on"), DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
 
     public GunState withRounds(int rounds) {
