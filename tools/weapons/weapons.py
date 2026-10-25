@@ -612,7 +612,9 @@ def assault_rifle():
         'optic': kit.Slot(fp(0, RF.RAIL, 2.6), 'top', ['red_dot', 'holo', 'scope_4x']),
         'muzzle': kit.Slot(fp(0, 0, RF.MUZZLE), 'axial', ['suppressor']),
         'underbarrel': kit.Slot(fp(0, -RF.RAIL, -5.2), 'bottom', ['foregrip']),
-        'side_rail': kit.Slot(fp(-RF.RAIL, 0, -7.6), 'left', ['light', 'laser']),
+        # the light on the left rail and the laser on the right, so both go on at once
+        'side_rail': kit.Slot(fp(-RF.RAIL, 0, -7.6), 'left', ['light']),
+        'right_rail': kit.Slot(fp(RF.RAIL, 0, -7.6), 'right', ['laser']),
         'stock': kit.Slot(fp(0, 0, RF.UPPER_LEN), 'axial', ['stock'], default='stock'),
         'magazine': kit.Slot(fp(0, -1.55, 0.40), 'axial', ['mag'], default='mag'),
     }
@@ -636,13 +638,15 @@ def pistol():
         'suppressor': kit.Part('suppressor', 'pistol_suppressor', 'Pistol Suppressor', 'muzzle', PI.suppressor, alook,
                                note='Much quieter shots'),
         'light': kit.Part('light', 'weapon_light', 'Weapon Light', 'side_rail', PI.light, alook, seed=AT_SEED['light']),
-        'laser': kit.Part('laser', 'laser_sight', 'Laser Sight', 'side_rail', PI.laser, alook, seed=AT_SEED['laser']),
+        'laser': kit.Part('laser', 'laser_sight', 'Laser Sight', 'right_rail', PI.laser, alook, seed=AT_SEED['laser']),
         'mag': kit.Part('mag', 'pistol_magazine', 'Pistol Magazine', 'magazine', PI.magazine, look),
     }
     fp = PI.frame_point
     slots = {
         'muzzle': kit.Slot(fp(0, 0, PI.MUZZLE), 'axial', ['suppressor']),
-        'side_rail': kit.Slot(fp(0, -(PI.RAIL_BASE + 0.23), sum(PI.RAIL_Z) / 2), 'bottom', ['light', 'laser']),
+        'side_rail': kit.Slot(fp(0, -(PI.RAIL_BASE + 0.23), sum(PI.RAIL_Z) / 2), 'bottom', ['light']),
+        # the laser clamped to the right of the frame, just clear of the slide, over the trigger guard's front
+        'right_rail': kit.Slot(fp(0.47, -0.86, 1.30), 'right', ['laser']),
         'magazine': kit.Slot(fp(0, PI.MAG_BASE, 6.48), 'axial', ['mag'], default='mag'),   # the well's mouth
     }
 
@@ -950,6 +954,7 @@ def main():
     kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
+    kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
     write_slot_java([rifle, pistol_gun, sg])
     write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
@@ -1151,11 +1156,16 @@ def mag_points(gun, shift):
     return (lo + hi) / 2, np.array([8.0, band.mean(), float(np.mean(zs))])
 
 
-def lens_point(gun, shift):
-    """The front of the laser on the side rail, where its beam starts."""
-    R, t = gun.mount('laser')
-    llo, lhi = kit.drawn('laser', gun.parts['laser'].build, R, t).bounds()
-    return np.array([(llo[0] + lhi[0]) / 2, (llo[1] + lhi[1]) / 2, llo[2]]) + shift
+def lens_point(gun, key, lens, shift):
+    """Where a rail part's beam starts (the laser's or the light's lens), from its own inches."""
+    R, t = gun.mount(key)
+    return R @ (IN * np.asarray(lens, float)) + t + shift
+
+
+def quiet_muzzle(gun):
+    """Where a suppressed shot's flash starts: the suppressor's end, or the muzzle on a gun that takes none."""
+    tip = kit.quiet_tip(gun)
+    return kit.flash_tip(gun) if tip is None else tip
 
 
 def rifle_points(gun, g):
@@ -1174,8 +1184,10 @@ def rifle_points(gun, g):
         'magHold': hold,
         'magCentre': centre,
         'handle': fp(-0.75, 0.67, RF.UPPER_LEN + 0.25) + shift,
-        'laser': lens_point(gun, shift),
+        'laser': lens_point(gun, 'laser', AT.LASER_LENS, shift),
+        'light': lens_point(gun, 'light', AT.LIGHT_LENS, shift),
         'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
     }
 
 
@@ -1198,8 +1210,10 @@ def pistol_points(gun, g):
         'magCentre': centre,
         # racking: fingers and thumb pinch the serrations at the back of the slide, from above
         'handle': fp(-0.30, PI.SLIDE_TOP + 0.30, PI.SLIDE_LEN - 0.55) + shift,
-        'laser': lens_point(gun, shift),
+        'laser': lens_point(gun, 'laser', PI.LASER_LENS, shift),
+        'light': lens_point(gun, 'light', PI.LIGHT_LENS, shift),
         'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
     }
 
 
@@ -1217,8 +1231,10 @@ def shotgun_points(gun, g):
         'magHold': port + np.array([0, -1.2, 0.8]),
         'magCentre': fp(*SG.LOOSE_SHELL) + shift,     # the loose shell's head, which it's rocked about
         'handle': support,
-        'laser': kit.flash_tip(gun) + shift,
+        'laser': kit.flash_tip(gun) + shift,      # no rail: nothing beams from it
+        'light': kit.flash_tip(gun) + shift,
         'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
     }
 
 
@@ -1251,6 +1267,7 @@ RIG_NOTES = {
     'sights': 'aiming: translation (pixels) and scale, by sight',
     'handleTravel': 'how far the handle or slide comes back (pixels)', 'chargeTurn': 'worked: turned about the grip (degrees)',
     'chargePush': 'worked: pushed (blocks)', 'magAxis': 'the way a magazine leaves the well',
+    'laser': "the laser's lens", 'light': "the light's lens", 'quietMuzzle': "a suppressor's end",
     'locksBack': 'locks back when empty', 'cycles': 'cycles with each shot', 'supportGrip': 'the off hand wraps the grip',
     'pump': 'a pump the off hand rides, loaded a shell at a time',
 }

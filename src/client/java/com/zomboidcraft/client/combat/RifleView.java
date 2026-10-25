@@ -47,7 +47,7 @@ public final class RifleView {
     private static final float END_TACTICAL = 25, END_CHARGE = 34;
     /** When the hand lets go of the handle (or slide), and when it's home. */
     private static final float RELEASE = 24.6f, HOME = 25.2f;
-    private static final float AIM_TICKS = 3.5f;
+    private static final float AIM_TICKS = 3.5f, POINT_TICKS = 4f;
     /** Where the off hand goes to fetch a new magazine: below the bottom of the screen, in the hand frame. */
     private static final Vector3f POUCH = new Vector3f(-0.55f, -0.50f, 0.10f);
 
@@ -62,20 +62,34 @@ public final class RifleView {
     private static float aim, aimO;
     /** How far onto the sights the gun was drawn last frame (0 to 1): the bob and sway ease with it. */
     private static float aimShown;
-    /** The laser's lens in the hand camera when the gun was last drawn, for the beam's start. */
-    private static Vector3f laserAt;
     /** A tube gun's loading: when it stopped, and when the pump was taken up after it (ages, or -1); shells in it. */
     private static float stopAt = -1, pumpFrom = -1;
     private static int shells;
+    /**
+     * How far the gun is turned to point its rail at what's under the crosshair (0 to 1, eased): at the hip with its
+     * light or laser on, so the beam runs along the barrel to the crosshair.
+     */
+    private static float point, pointO;
+    /** How far off what's under the crosshair is (blocks), from RailLights' look this frame. */
+    private static float aimDistance = 16;
+    /** The hand's lag behind a turning look this frame (degrees about x and y), as the hand renderer turns it. */
+    private static float swayX, swayY;
+    /** The gun's rail as last drawn (see rail()), and when (nanoseconds). */
+    private static Rail rail;
+    private static long railDrawn;
 
     private static final ItemStackRenderState LOOSE_MAG = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_HANDLE = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_FLASH = new ItemStackRenderState();
-    /** Each gun's loose pieces: its magazine (a tube gun's: a shell), its handle, slide or pump, its flash. */
+    private static final ItemStackRenderState LOOSE_QUIET_FLASH = new ItemStackRenderState();
+    /**
+     * Each gun's loose pieces: its magazine (a tube gun's: a shell), its handle, slide or pump, its flash, its smaller
+     * flash through a suppressor.
+     */
     private static final Map<GunType, ItemStack[]> LOOSE = new EnumMap<>(GunType.class);
 
     /** The last shot: its tick, then its first frame; whether it flashed, and whether it was the last round. */
-    private static final float FLASH_LIFE = 1.6f;
+    private static final float FLASH_LIFE = 1.6f, QUIET_FLASH_LIFE = 1.0f;
     private static int shotTick = -100;
     private static boolean shotWaiting, shotFlash, shotEmptied;
     private static float shotAt = -100, flashRoll, flashSize;
@@ -97,6 +111,7 @@ public final class RifleView {
             aim = aimO = 0;
             hadMag = false;
             shotEmptied = false;
+            point = pointO = 0;
         }
         if (now == null) {
             return;
@@ -114,6 +129,9 @@ public final class RifleView {
         aimO = aim;
         boolean aiming = step == 0 && player.isUsingItem() && GunType.isGun(player.getUseItem());
         aim = Mth.clamp(aim + (aiming ? 1f : -1f) / AIM_TICKS, 0f, 1f);
+        pointO = point;
+        boolean lit = Attachments.lightOn(gun) || Attachments.laserOn(gun);
+        point = Mth.clamp(point + (lit && step == 0 && !active ? 1f : -1f) / POINT_TICKS, 0f, 1f);
     }
 
     private static void tickMagazine(float raw, int step, int age) {
@@ -268,7 +286,7 @@ public final class RifleView {
             shown = sights(optic);
             if (shown == null) {
                 aimShown = 1;       // through the scope the game draws the scope picture instead of the gun
-                laserAt = null;
+                rail = null;
                 return true;
             }
         } else {
@@ -284,13 +302,18 @@ public final class RifleView {
             a = 0;
         }
         Pose want = animate ? rig.pump() ? tubePose(age) : reloadPose(t) : step >= 1 ? shown : hip(0, 0, 0);
+        float p = smooth(Mth.lerp(partial(age), pointO, point));
+        if (p > 0) {
+            want = pointed(want, p, Attachments.laserOn(gun) ? rig.laser() : rig.light());
+        }
         if (a > 0 && step == 0) {
             want = want.lerp(sights, a);
         }
         aimShown = step == 0 ? a : 0;
 
         pose.pushPose();
-        breathe(pose, age, aimShown, (float) config.guns.aimSway);
+        Quaternionf breath = breath(age, aimShown, (float) config.guns.aimSway);
+        breathe(pose, breath);
         // the gun: undo the model's pose, apply the wanted one
         pose.pushPose();
         want.apply(pose);
@@ -302,7 +325,10 @@ public final class RifleView {
         float pulled = pull(gun, t, animate, age);
         drawHandle(pose, out, light, player, want, pulled);
         drawFlash(pose, out, player, want, gun, age);
-        laserAt = want.point(rig.laser()).add(ARM[0], ARM[1], ARM[2]);
+        Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
+        rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
+                turn.transform(want.q().transform(new Vector3f(0, 0, -1))), Math.max(p, aimShown));
+        railDrawn = System.nanoTime();
         if (animate) {
             drawLoose(pose, out, light, player, want, t, step, age);
         }
@@ -319,17 +345,26 @@ public final class RifleView {
         return true;
     }
 
-    /** The slow drift of a held breath while aiming, so the sights are never quite dead still. */
-    private static void breathe(PoseStack pose, float age, float aimed, float sway) {
+    /** The slow drift of a held breath while aiming, so the sights are never quite dead still: a turn about the eye. */
+    private static Quaternionf breath(float age, float aimed, float sway) {
         float amount = aimed * sway;
         if (amount <= 0) {
-            return;
+            return new Quaternionf();
         }
         float pitch = Mth.sin(age * 0.071f) * 0.9f * amount, yaw = Mth.sin(age * 0.047f + 1.3f) * 0.6f * amount;
+        return new Quaternionf().rotationXYZ(pitch * Mth.DEG_TO_RAD, yaw * Mth.DEG_TO_RAD, 0);
+    }
+
+    private static void breathe(PoseStack pose, Quaternionf breath) {
         // turn about the eye: the hand frame sits at ARM from it
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
-        pose.rotate(new Quaternionf().rotationXYZ(pitch * Mth.DEG_TO_RAD, yaw * Mth.DEG_TO_RAD, 0));
+        pose.rotate(breath);
         pose.translate(ARM[0], ARM[1], ARM[2]);
+    }
+
+    /** An item-pixel point of the gun from the eye (x right, y up, z back), turned by the hand's sway and breath. */
+    private static Vector3f eye(Pose gun, Quaternionf turn, float[] px) {
+        return turn.transform(gun.point(px).add(ARM[0], ARM[1], ARM[2]));
     }
 
     /** The old magazine falling away, and the new one coming up and in; or a tube gun's shell. */
@@ -384,20 +419,23 @@ public final class RifleView {
 
     /**
      * A light muzzle flash for a moment after each shot, starting the frame the shot is heard: full size for half
-     * its life, then shrinking away, turned and sized a little differently each time.
+     * its life, then shrinking away, turned and sized a little differently each time. Through a suppressor it's a
+     * smaller, shorter one at the end of the can.
      */
     private static void drawFlash(PoseStack pose, SubmitNodeCollector out, LocalPlayer player, Pose gun, ItemStack stack,
                                   float age) {
         float since = age - shotAt;
-        if (!shotFlash || since < 0 || since >= FLASH_LIFE || Attachments.suppressed(stack)) {
+        boolean quiet = Attachments.suppressed(stack);
+        float life = quiet ? QUIET_FLASH_LIFE : FLASH_LIFE;
+        if (!shotFlash || since < 0 || since >= life) {
             return;
         }
-        float half = FLASH_LIFE / 2;
+        float half = life / 2;
         float size = flashSize * (since < half ? 1 : Mth.lerp((since - half) / half, 1f, 0.4f));
-        float[] m = rig.muzzle();
+        float[] m = quiet ? rig.quietMuzzle() : rig.muzzle();
         Matrix4f local = new Matrix4f().translation(m[0], m[1], m[2]).rotateZ(flashRoll).scale(size).translate(-m[0], -m[1], -m[2]);
         pose.pushPose();
-        drawPiece(pose, out, FULL_BRIGHT, player, gun, local, LOOSE_FLASH);
+        drawPiece(pose, out, FULL_BRIGHT, player, gun, local, quiet ? LOOSE_QUIET_FLASH : LOOSE_FLASH);
         pose.popPose();
     }
 
@@ -411,8 +449,9 @@ public final class RifleView {
                 g.magazine() == null ? piece(new ItemStack(g.ammo()), g.id() + "_loose_shell")
                         : piece(new ItemStack(g.magazine()), g.id() + "_loose_mag"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_charging_handle"),
-                piece(new ItemStack(g.item()), g.id() + "_loose_flash")});
-        ItemStack stack = state == LOOSE_MAG ? loose[0] : state == LOOSE_HANDLE ? loose[1] : loose[2];
+                piece(new ItemStack(g.item()), g.id() + "_loose_flash"),
+                piece(new ItemStack(g.item()), g.id() + "_loose_flash_quiet")});
+        ItemStack stack = state == LOOSE_MAG ? loose[0] : state == LOOSE_HANDLE ? loose[1] : state == LOOSE_FLASH ? loose[2] : loose[3];
         mc.getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.FIXED, player.level(), player, 0);
         gun.apply(pose);
         // item pixels to the model's own unit cube, the move, and back (the item render takes off half a block)
@@ -611,6 +650,24 @@ public final class RifleView {
         return rig.handleTravel() * (p < PUMP_BACK ? smooth(p / PUMP_BACK) : 1 - smooth((p - PUMP_BACK) / PUMP_FORWARD));
     }
 
+    /**
+     * The gun turned about the grip, p of the way, so the line from a rail lens along the barrel runs through what's
+     * under the crosshair (aimDistance ahead of the eye): near things turn the muzzle in further.
+     */
+    private static Pose pointed(Pose gun, float p, float[] lens) {
+        Vector3f target = new Vector3f(-ARM[0], -ARM[1], -Math.max(aimDistance, 1.5f) - ARM[2]);
+        Vector3f grip = gun.point(rig.grip());
+        Vector3f bore = gun.q().transform(new Vector3f(0, 0, -1));
+        Pose turned = gun;
+        for (int i = 0; i < 2; i++) {        // the lens moves a little as the gun turns: once more from there
+            Vector3f want = new Vector3f(target).sub(turned.point(lens));
+            Quaternionf fix = new Quaternionf().slerp(new Quaternionf().rotationTo(bore, want), p);
+            turned = new Pose(new Vector3f(gun.t()), fix.mul(gun.q()), gun.scale());
+            turned.t().add(new Vector3f(grip).sub(turned.point(rig.grip())));
+        }
+        return turned;
+    }
+
     /** The pose on the sights for an optic, or null when the gun isn't drawn (the scope). */
     private static Pose sights(String optic) {
         if (optic.equals("scope_4x")) {
@@ -779,11 +836,30 @@ public final class RifleView {
         return 1 - (1 - sway * sway) * aimShown;
     }
 
-    /** The laser's lens in the hand camera (x right, y up, z back), or null when the gun isn't drawn. */
-    public static Vector3f laserInCamera() {
+    /**
+     * Where the held gun's rail is, from the eye (x right, y up, z back, as the hands are drawn: at the hand
+     * camera's field of view): the laser's and the light's lenses, the way the barrel points, and how far the gun is
+     * pointed at what's under the crosshair (1 = it is, on the sights or pointed from the hip; 0 = busy). Null when
+     * the gun isn't drawn in first person.
+     */
+    public static Rail rail() {
         Minecraft mc = Minecraft.getInstance();
-        return mc.options.getCameraType().isFirstPerson() && mc.player != null
-                && GunType.isGun(mc.player.getMainHandItem()) ? laserAt : null;
+        return mc.options.getCameraType().isFirstPerson() && mc.player != null && GunType.isGun(mc.player.getMainHandItem())
+                && System.nanoTime() - railDrawn < 200_000_000L ? rail : null;
+    }
+
+    public record Rail(Vector3f laser, Vector3f light, Vector3f bore, float onTarget) {
+    }
+
+    /** How far off what's under the crosshair is this frame, so a pointed gun's rail lines up on it. */
+    public static void aimDistance(float blocks) {
+        aimDistance = blocks;
+    }
+
+    /** The hand's lag behind the look this frame (the hand renderer's own sums, after the steadier aim). */
+    public static void sway(float x, float y) {
+        swayX = x;
+        swayY = y;
     }
 
     // ------------------------------------------------------------------ helpers

@@ -265,11 +265,10 @@ public final class Guns {
 
     // ------------------------------------------------------------------ light and laser
 
-    /** Switches the light or laser on the side rail on or off, with a click. */
+    /** Switches the gun's light and laser on or off together, with a click. */
     public static void toggleRail(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
-        if (!GunType.isGun(gun) || !(Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "light")
-                || Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "laser"))) {
+        if (!GunType.isGun(gun) || !Attachments.hasRailGear(gun)) {
             return;
         }
         boolean on = !Attachments.railOn(gun);

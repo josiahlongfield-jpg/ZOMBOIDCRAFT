@@ -14,13 +14,15 @@ public final class GunSlotData {
                 Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
                 Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
                 Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip")),
-                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "laser_sight")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
                 Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")))),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
         Map.entry("pistol", Map.ofEntries(
                 Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
-                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "laser_sight")),
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("pistol_magazine")))),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("pistol_magazine")),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
         Map.entry("shotgun", Map.ofEntries(
 )));
 

@@ -78,7 +78,7 @@ public final class ModItems {
     public static final Item PISTOL_SUPPRESSOR = part("pistol_suppressor", Attachments.Slot.MUZZLE);
     public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
     public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
-    public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.SIDE_RAIL);
+    public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.RIGHT_RAIL);
     public static final Item RIFLE_STOCK = part("rifle_stock", Attachments.Slot.STOCK);
 
     private static Item part(String name, Attachments.Slot slot) {
