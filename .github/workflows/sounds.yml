@@ -20,10 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - ui_click,ui_cloth
-          - ui_buckle,ui_item
-          - ui_drop,ui_sting
-          - ui_page
+          - amb_rain,amb_roof
+          - amb_wind,amb_thunder
+          - amb_hail,amb_distant
+          - amb_creak,amb_drip
+          - amb_crow,amb_night
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
