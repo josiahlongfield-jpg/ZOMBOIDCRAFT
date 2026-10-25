@@ -27,7 +27,7 @@ public final class Cars {
     private static final ResourceKey<EntityType<?>> CAR_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("car"));
     public static final EntityType<CarProp> CAR = Registry.register(BuiltInRegistries.ENTITY_TYPE, CAR_KEY,
             EntityType.Builder.<CarProp>of(CarProp::new, MobCategory.MISC)
-                    .sized(2.0f, 1.5f).clientTrackingRange(10).updateInterval(200).fireImmune().noLootTable()
+                    .sized(2.0f, 1.5f).clientTrackingRange(10).updateInterval(3).fireImmune().noLootTable()
                     .build(CAR_KEY));
 
     private static final ResourceKey<Block> HULL_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("car_hull"));
@@ -154,28 +154,37 @@ public final class Cars {
         car.setLook(model, variant);
         car.snapTo(x, y, z, yaw, 0f);
         level.addFreshEntity(car);
-        CarModels.Model m = CarModels.get(model);
-        if (hull && m != null) {
-            // hull layers start at the first whole block above the ground, so take off the gap
-            int base = Mth.ceil(y - 0.05);
-            int lift = (int) Math.round((base - y) * 100);
-            for (int[] col : hullColumns(m, x, z, yaw)) {
-                int[] layers = layers(col, lift);
-                for (int i = 0; i < layers.length; i++) {
-                    if (layers[i] == 0) {
-                        continue;
-                    }
-                    BlockPos pos = new BlockPos(col[0], base + i, col[1]);
-                    if (level.getBlockState(pos).canBeReplaced()) {
-                        level.setBlock(pos, hull(layers[i]), 2);
-                    }
-                }
-            }
+        if (hull) {
+            layHull(level, car);
         }
         return car;
     }
 
-    /** Takes away the hull blocks under a car that's being removed. */
+    /** Lays the hull blocks under a car where it stands, wherever there's room for them. */
+    static void layHull(ServerLevel level, CarProp car) {
+        CarModels.Model m = CarModels.get(car.model());
+        if (m == null) {
+            return;
+        }
+        // hull layers start at the first whole block above the ground, so take off the gap
+        double y = car.getY();
+        int base = Mth.ceil(y - 0.05);
+        int lift = (int) Math.round((base - y) * 100);
+        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
+            int[] layers = layers(col, lift);
+            for (int i = 0; i < layers.length; i++) {
+                if (layers[i] == 0) {
+                    continue;
+                }
+                BlockPos pos = new BlockPos(col[0], base + i, col[1]);
+                if (level.getBlockState(pos).canBeReplaced()) {
+                    level.setBlock(pos, hull(layers[i]), 2);
+                }
+            }
+        }
+    }
+
+    /** Takes away the hull blocks under a car that's being removed or driven off. */
     static void clearHull(ServerLevel level, CarProp car) {
         CarModels.Model m = CarModels.get(car.model());
         if (m == null) {
