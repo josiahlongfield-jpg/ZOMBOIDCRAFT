@@ -45,8 +45,9 @@ final class WeaponHud {
             last = hand.copy();
             lastSlot = slot;
         }
-        if (player.swinging && !lastSwing) since = 0;
-        lastSwing = player.swinging;
+        boolean swinging = mc.options.keyAttack.isDown();
+        if (swinging && !lastSwing) since = 0;
+        lastSwing = swinging;
 
         boolean urgent = false;
         GunState state = null;
