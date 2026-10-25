@@ -71,7 +71,7 @@ def red_dot(m):
 
 def holo(m):
     """A holographic sight (EOTech EXPS3 style): a big window in a thin, shallow hood, the body with the
-    battery and buttons kept down below the window, and the 68 MOA ring (ticks at the four points) and dot
+    battery and buttons kept down below the window, and a fine ring (ticks at the four points) and dot
     floating in the front glass. From behind you see the window's bezels, the hood's ribs and screws, and
     the buttons and battery cap on the deck."""
     b = Inch(m)
@@ -113,13 +113,16 @@ def holo(m):
     b.box((xo, sill - 0.20, -0.30), (xo + 0.08, sill + 0.04, 0.05), 'steel')  # windage screw
     b.box((-0.08, top + 0.13, -0.25), (0.08, top + 0.17, 0.10), 'steel')      # elevation screw
     z0, z1 = W0 + 0.035, W0 + 0.05
-    b.ring(z0, z1, 0.17, 'dot', at=(0.0, H), steps=16, w=0.022, light=15, noshade=True)
-    t, L = 0.011, 0.045                                                       # the ring's four ticks
-    b.box((-t, H + 0.17 - L, z0), (t, H + 0.17, z1), 'dot', light=15, noshade=True)
-    b.box((-t, H - 0.17, z0), (t, H - 0.17 + L, z1), 'dot', light=15, noshade=True)
-    b.box((0.17 - L, H - t, z0), (0.17, H + t, z1), 'dot', light=15, noshade=True)
-    b.box((-0.17, H - t, z0), (-0.17 + L, H + t, z1), 'dot', light=15, noshade=True)
-    b.box((-0.018, H - 0.018, z0), (0.018, H + 0.018, z1), 'dot', light=15, noshade=True)
+    # a fine ring, and a dot the same size to the eye as the red dot's (it sits closer, so it's drawn smaller)
+    r = 0.14
+    b.ring(z0, z1, r, 'dot', at=(0.0, H), steps=20, w=0.012, light=15, noshade=True)
+    t, L = 0.006, 0.035                                                       # the ring's four ticks
+    b.box((-t, H + r - L, z0), (t, H + r, z1), 'dot', light=15, noshade=True)
+    b.box((-t, H - r, z0), (t, H - r + L, z1), 'dot', light=15, noshade=True)
+    b.box((r - L, H - t, z0), (r, H + t, z1), 'dot', light=15, noshade=True)
+    b.box((-r, H - t, z0), (-r + L, H + t, z1), 'dot', light=15, noshade=True)
+    d = 0.01 * (HOLO_EYE + W1 - z0) / (RED_DOT_EYE + 0.85 + 1.04)
+    b.box((-d, H - d, z0), (d, H + d, z1), 'dot', light=15, noshade=True)
 
 
 SCOPE_H = 1.50

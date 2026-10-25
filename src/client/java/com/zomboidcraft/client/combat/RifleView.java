@@ -41,6 +41,9 @@ public final class RifleView {
     private static final float AIM_TICKS = 3.5f;
     /** Where the off hand goes to fetch a new magazine: below the bottom of the screen, in the hand frame. */
     private static final Vector3f POUCH = new Vector3f(-0.55f, -0.50f, 0.10f);
+    /** How the gun is turned (degrees, about the grip) and moved (blocks) to work the charging handle. */
+    private static final float[] CHARGE_TURN = {20, 25, 0};
+    private static final Vector3f CHARGE_PUSH = new Vector3f(-0.08f, 0.10f, -0.30f);
 
     private static int lastStep;
     private static boolean hadMag;
@@ -325,7 +328,18 @@ public final class RifleView {
         float[] o = RELOAD_POSE.get("mag_out"), c = RELOAD_POSE.get("charge");
         // the magazine slapped home and the handle let go each jolt the muzzle up a little
         float kick = bump(t, MAG_IN, 2.5f) * 3f + (charge ? bump(t, 24.6f, 2.5f) * 2f : 0);
-        return hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick);
+        Pose gun = hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick);
+        if (chg <= 0) {
+            return gun;
+        }
+        // for the charging handle the gun comes up and out, muzzle high and to the left, so the hand on the back
+        // of the receiver doesn't hide the whole gun: turned about the grip, then pushed away
+        Vector3f grip = gun.point(GRIP);
+        Quaternionf q = new Quaternionf().rotationXYZ(CHARGE_TURN[0] * chg * Mth.DEG_TO_RAD,
+                CHARGE_TURN[1] * chg * Mth.DEG_TO_RAD, CHARGE_TURN[2] * chg * Mth.DEG_TO_RAD).mul(gun.q());
+        Pose turned = new Pose(new Vector3f(gun.t()), q, gun.scale());
+        turned.t().add(grip.sub(turned.point(GRIP))).add(new Vector3f(CHARGE_PUSH).mul(chg));
+        return turned;
     }
 
     /** The hip pose turned by a cant (and a muzzle kick) about the grip, and dropped: the same sums as the model's. */
@@ -410,7 +424,7 @@ public final class RifleView {
 
     private static Hand onHandle(Pose gun, float pull) {
         return new Hand(gun.point(new Vector3f(HANDLE[0], HANDLE[1], HANDLE[2] + pull)),
-                new Vector3f(-0.6f, -0.45f, 0.65f), new Vector3f(-1f, -0.4f, 0f));
+                new Vector3f(-0.4f, -0.85f, 0.25f), new Vector3f(-1f, -0.4f, 0f));
     }
 
     private static Hand pouch() {
