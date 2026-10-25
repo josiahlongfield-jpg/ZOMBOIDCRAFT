@@ -171,8 +171,8 @@ public final class RailLights {
             return;
         }
         ZcConfig.Guns config = ZcConfig.get().guns;
-        boolean glow = config.glowWithShaders || !shaderPackOn();
-        Quads quads = new Quads(cam.pos);
+        boolean shaders = shaderPackOn(), glow = config.glowWithShaders || !shaders;
+        Quads quads = new Quads(cam.pos, shaders);
         for (AbstractClientPlayer player : level.players()) {
             ItemStack gun = player.getMainHandItem();
             if (!GunType.isGun(gun) || player.isSpectator()) {
@@ -189,14 +189,16 @@ public final class RailLights {
                 RifleView.aimDistance((float) held.eye().distanceTo(target));
             }
             if (laser) {
-                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam && glow, glow);
+                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam);
             }
             if (light) {
                 light(level, player, held, target, quads, config, glow);
             }
         }
         if (quads.count > 0) {
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.eyes(GLOW), quads::emit);
+            // added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
+                    shaders ? RenderTypes.beaconBeam(GLOW, true) : RenderTypes.eyes(GLOW), quads::emit);
         }
     }
 
@@ -231,7 +233,7 @@ public final class RailLights {
     }
 
     private static void laser(ClientLevel level, AbstractClientPlayer player, Held held, boolean onSomething, Vec3 target,
-                              Quads quads, boolean beam, boolean glow) {
+                              Quads quads, boolean beam) {
         boolean pointed = held.onTarget() > 0.999f;
         Vec3 dir = blend(held.bore(), target.subtract(held.laser()).normalize(), held.onTarget());
         double reach = pointed ? held.laser().distanceTo(target) + 0.05 : RANGE;
@@ -248,14 +250,13 @@ public final class RailLights {
         }
         if (beam) {
             quads.ribbon(held.laser(), end, 14, (s, away) -> Math.max(0.0025, away * 0.0011),
-                    (s, away) -> scaled(GREEN, (float) (0.1 + 0.25 * Math.exp(-s / 4))));
+                    (s, away) -> quads.shade(GREEN, (float) (0.1 + 0.25 * Math.exp(-s / 4))));
         }
         if (dot) {
             Vec3 c = end.add(quads.cam.subtract(end).normalize().scale(0.03));
             double size = 0.03 + 0.0025 * c.distanceTo(quads.cam);
-            // with a shader pack the dot is drawn as a coloured surface, not added light: full strength keeps it bright
-            quads.facing(c, size, scaled(GREEN, glow ? 0.7f : 1f));
-            quads.facing(c, size * 0.35, scaled(GREEN_CORE, 1f));
+            quads.facing(c, size, quads.shade(GREEN, quads.blended ? 1f : 0.7f));
+            quads.facing(c, size * 0.35, quads.shade(GREEN_CORE, 1f));
         }
     }
 
@@ -288,7 +289,7 @@ public final class RailLights {
         if (config.lightBeam && dark > 0.01f) {
             double length = Math.min(reach, 14), spread = Math.tan(cone * 0.6);
             float strength = 0.09f * glow * dark;
-            quads.ribbon(from, from.add(axis.scale(length)), 10, (s, away) -> 0.035 + s * spread, (s, away) -> scaled(WHITE,
+            quads.ribbon(from, from.add(axis.scale(length)), 10, (s, away) -> 0.035 + s * spread, (s, away) -> quads.shade(WHITE,
                     (float) (strength * Math.min(1, s / 0.5) * Math.exp(-s / 6) * Math.min(1, (length - s) / 0.6 + 0.05))));
         }
     }
@@ -310,7 +311,7 @@ public final class RailLights {
         if (strength < 0.004f) {
             return;
         }
-        quads.flat(hit.getLocation().add(normal.scale(0.012)), normal, Math.max(0.15, distance * Math.tan(spread)), scaled(WHITE, strength));
+        quads.flat(hit.getLocation().add(normal.scale(0.012)), normal, Math.max(0.15, distance * Math.tan(spread)), quads.shade(WHITE, strength));
     }
 
     /**
@@ -396,12 +397,6 @@ public final class RailLights {
         return axis.scale(Math.cos(off)).add(u.scale(s * Math.cos(turn))).add(v.scale(s * Math.sin(turn))).normalize();
     }
 
-    /** A colour times a strength, packed (the glow is added to what's behind it, so dimmer is fainter). */
-    private static int scaled(float[] rgb, float strength) {
-        int r = Mth.clamp((int) (rgb[0] * strength * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * strength * 255), 0, 255),
-                b = Mth.clamp((int) (rgb[2] * strength * 255), 0, 255);
-        return 0xFF000000 | r << 16 | g << 8 | b;
-    }
 
     // ------------------------------------------------------------------ the glow's quads
 
@@ -417,12 +412,27 @@ public final class RailLights {
     private static final class Quads {
         private static final int STRIDE = 8;
         final Vec3 cam;
+        /** Blended over what's behind (a shader pack's beacon-beam look) instead of added to it. */
+        final boolean blended;
         private float[] corners = new float[64 * 4 * STRIDE];
         private int[] colours = new int[64 * 4];
         int count;
 
-        Quads(Vec3 cam) {
+        Quads(Vec3 cam, boolean blended) {
             this.cam = cam;
+            this.blended = blended;
+        }
+
+        /**
+         * A colour at a strength, packed: added light gets dimmer for fainter (a shader pack draws that dark, so
+         * blended quads keep the full colour and get more see-through instead).
+         */
+        int shade(float[] rgb, float strength) {
+            float k = blended ? 1 : strength;
+            int r = Mth.clamp((int) (rgb[0] * k * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * k * 255), 0, 255),
+                    b = Mth.clamp((int) (rgb[2] * k * 255), 0, 255);
+            int a = blended ? Mth.clamp((int) (strength * 255), 0, 255) : 255;
+            return a << 24 | r << 16 | g << 8 | b;
         }
 
         private void corner(Vec3 p, float u, float v, int colour, Vec3 normal) {
@@ -457,10 +467,27 @@ public final class RailLights {
         }
 
         private void square(Vec3 c, Vec3 a, Vec3 b, int colour, Vec3 normal) {
-            corner(c.subtract(a).subtract(b), 0, 0, colour, normal);
-            corner(c.subtract(a).add(b), 0, 1, colour, normal);
-            corner(c.add(a).add(b), 1, 1, colour, normal);
-            corner(c.add(a).subtract(b), 1, 0, colour, normal);
+            quad(c.subtract(a).subtract(b), c.subtract(a).add(b), c.add(a).add(b), c.add(a).subtract(b), 0, 0, 0, 1, 1, 1, 1, 0,
+                    colour, colour, normal);
+        }
+
+        /**
+         * Four corners (texture corners u, v for each) wound anticlockwise as seen from the normal's side, so the
+         * quad faces that way and isn't culled as a back face. The first two corners take colour a, the others b.
+         */
+        private void quad(Vec3 p0, Vec3 p1, Vec3 p2, Vec3 p3, float u0, float v0, float u1, float v1, float u2, float v2,
+                          float u3, float v3, int a, int b, Vec3 normal) {
+            if (p1.subtract(p0).cross(p2.subtract(p0)).dot(normal) >= 0) {
+                corner(p0, u0, v0, a, normal);
+                corner(p1, u1, v1, a, normal);
+                corner(p2, u2, v2, b, normal);
+                corner(p3, u3, v3, b, normal);
+            } else {
+                corner(p1, u1, v1, a, normal);
+                corner(p0, u0, v0, a, normal);
+                corner(p3, u3, v3, b, normal);
+                corner(p2, u2, v2, b, normal);
+            }
         }
 
         /**
@@ -488,10 +515,7 @@ public final class RailLights {
                 int c = colour.at(s, away);
                 if (lastL != null) {
                     Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
-                    corner(lastL, 0, 0.5f, lastC, n);
-                    corner(lastR, 1, 0.5f, lastC, n);
-                    corner(r, 1, 0.5f, c, n);
-                    corner(l, 0, 0.5f, c, n);
+                    quad(lastL, lastR, r, l, 0, 0.5f, 1, 0.5f, 1, 0.5f, 0, 0.5f, lastC, c, n);
                 }
                 lastL = l;
                 lastR = r;
