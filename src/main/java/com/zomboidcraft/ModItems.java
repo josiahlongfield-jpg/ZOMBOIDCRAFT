@@ -59,6 +59,9 @@ public final class ModItems {
     public static final Item PISTOL_AMMO = register("pistol_ammo", Item::new, new Item.Properties().stacksTo(60));
     public static final Item SHOTGUN = gun("shotgun", GunType.SHOTGUN, 1400);
     public static final Item SHOTGUN_SHELL = register("shotgun_shell", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item HUNTING_RIFLE = gun("hunting_rifle", GunType.HUNTING_RIFLE, 1800);
+    public static final Item HUNTING_RIFLE_MAGAZINE = magazine("hunting_rifle_magazine", GunType.HUNTING_RIFLE);
+    public static final Item HUNTING_RIFLE_AMMO = register("hunting_rifle_ammo", Item::new, new Item.Properties().stacksTo(40));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -122,14 +125,14 @@ public final class ModItems {
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 output.accept(gun);
                 if (type.magazine() == null) {
-                    output.accept(new ItemStack(type.ammo(), 25));
-                    continue;
+                    continue;   // its shells are already in the tab (a creative tab only takes single items)
                 }
                 ItemStack mag = new ItemStack(type.magazine());
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
                 output.accept(mag);
                 ItemStack kitted = gun.copy();
                 for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                        : type == GunType.HUNTING_RIFLE ? List.of(SCOPE_4X)
                         : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));
                 }
