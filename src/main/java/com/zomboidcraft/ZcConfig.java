@@ -371,6 +371,11 @@ public final class ZcConfig {
         public double lightGlow = 1.0;
         /** A gun light's beam shows faintly in the air. Client side. */
         public boolean lightBeam = true;
+        /**
+         * Draws the laser's beam and a gun light's pool and beam even with a shader pack on. Off by default: shader
+         * packs like Photon draw them as a dark smear, and light the world from the gun light themselves. Client side.
+         */
+        public boolean glowWithShaders = false;
     }
 
     public static ZcConfig get() {

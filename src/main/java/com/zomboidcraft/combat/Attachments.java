@@ -300,21 +300,20 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return (laserOn(gun) ? cfg.laserHipSpread : 1.0) * (stockless(gun) ? cfg.noStockSpread : 1.0);
     }
 
-    public static boolean railOn(ItemStack gun) {
-        return gun.getOrDefault(GunState.RAIL_ON, false);
-    }
-
     public static boolean lightOn(ItemStack gun) {
-        return railOn(gun) && has(gun, Slot.SIDE_RAIL, "light");
+        return gun.getOrDefault(GunState.RAIL_ON, false) && hasLight(gun);
     }
 
     public static boolean laserOn(ItemStack gun) {
-        return railOn(gun) && has(gun, Slot.RIGHT_RAIL, "laser");
+        return gun.getOrDefault(GunState.LASER_ON, false) && hasLaser(gun);
     }
 
-    /** Whether the gun has a light or a laser to switch on. */
-    public static boolean hasRailGear(ItemStack gun) {
-        return has(gun, Slot.SIDE_RAIL, "light") || has(gun, Slot.RIGHT_RAIL, "laser");
+    public static boolean hasLight(ItemStack gun) {
+        return has(gun, Slot.SIDE_RAIL, "light");
+    }
+
+    public static boolean hasLaser(ItemStack gun) {
+        return has(gun, Slot.RIGHT_RAIL, "laser");
     }
 
     /** Multiplies the kick: a foregrip tames it, no stock makes it worse. */
