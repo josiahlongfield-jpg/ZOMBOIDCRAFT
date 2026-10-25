@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -48,7 +49,7 @@ public final class CityBlocks {
 
     /** The table {@link CitySpecs} fills in; one call to {@link #s} per block. */
     abstract static class Specs {
-        static final int PLAIN = 0, FACING = 1, AXIS = 2, DOOR = 3;
+        static final int PLAIN = 0, FACING = 1, AXIS = 2, DOOR = 3, TRAPDOOR = 4;
         /** Has see-through pixels, so it mustn't hide its neighbours' faces. */
         static final int SEE_THROUGH = 1;
         /** Plants and decals: no collision, breaks at once, other blocks can replace it. */
@@ -60,7 +61,7 @@ public final class CityBlocks {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
             BlockBehaviour.Properties properties = BlockBehaviour.Properties.of().setId(key).sound(sound)
                     .strength(strength, Math.max(strength, 3f));
-            if (kind == DOOR) {
+            if (kind == DOOR || kind == TRAPDOOR) {
                 properties.noOcclusion();
             }
             if ((flags & SEE_THROUGH) != 0) {
@@ -81,6 +82,8 @@ public final class CityBlocks {
             Block block = switch (kind) {
                 // opened by hand like a wooden door; zombies bash them in (BashGoal)
                 case DOOR -> new DoorBlock(sound == SoundType.METAL ? BlockSetType.COPPER : BlockSetType.SPRUCE, properties);
+                // hatches: opened by hand, steel ones with copper's heavier sounds
+                case TRAPDOOR -> new TrapDoorBlock(sound == SoundType.METAL ? BlockSetType.COPPER : BlockSetType.SPRUCE, properties);
                 case FACING -> loot ? new Fittings.Facing(properties, shape, (flags & DECOR) != 0)
                         : new CityBlock.Facing(properties, shape, (flags & DECOR) != 0);
                 case AXIS -> new CityBlock.Axis(properties, shape);

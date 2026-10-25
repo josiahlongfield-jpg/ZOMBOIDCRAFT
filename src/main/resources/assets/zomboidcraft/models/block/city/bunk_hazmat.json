@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_hazmat": "zomboidcraft:block/city/bunk_hazmat",
+    "particle": "zomboidcraft:block/city/bunk_hazmat"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        14
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_hazmat"
+        },
+        "south": {
+          "texture": "#bunk_hazmat"
+        },
+        "east": {
+          "texture": "#bunk_hazmat"
+        },
+        "west": {
+          "texture": "#bunk_hazmat"
+        },
+        "up": {
+          "texture": "#bunk_hazmat",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_hazmat",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

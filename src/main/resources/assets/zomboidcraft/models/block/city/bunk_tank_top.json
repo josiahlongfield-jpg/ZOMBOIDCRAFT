@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_tank": "zomboidcraft:block/city/bunk_tank",
+    "bunk_tank_top": "zomboidcraft:block/city/bunk_tank_top",
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "particle": "zomboidcraft:block/city/bunk_tank"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tank"
+        },
+        "south": {
+          "texture": "#bunk_tank"
+        },
+        "east": {
+          "texture": "#bunk_tank"
+        },
+        "west": {
+          "texture": "#bunk_tank"
+        },
+        "up": {
+          "texture": "#bunk_tank_top"
+        },
+        "down": {
+          "texture": "#bunk_tank_top",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        7
+      ],
+      "to": [
+        9,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    }
+  ]
+}

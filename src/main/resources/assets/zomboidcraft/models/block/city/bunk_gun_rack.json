@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_gunrack_board": "zomboidcraft:block/city/bunk_gunrack_board",
+    "bunk_rifles": "zomboidcraft:block/city/bunk_rifles",
+    "particle": "zomboidcraft:block/city/bunk_gunrack_board"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        15
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "south": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "down": {
+          "texture": "#bunk_gunrack_board"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        14
+      ],
+      "to": [
+        16,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_rifles"
+        },
+        "south": {
+          "texture": "#bunk_rifles"
+        },
+        "east": {
+          "texture": "#bunk_rifles",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_rifles",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_rifles"
+        },
+        "down": {
+          "texture": "#bunk_rifles"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        13.5
+      ],
+      "to": [
+        16,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "south": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "east": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "down": {
+          "texture": "#bunk_gunrack_board"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        13.5
+      ],
+      "to": [
+        16,
+        9.8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "south": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "east": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_gunrack_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_gunrack_board"
+        },
+        "down": {
+          "texture": "#bunk_gunrack_board"
+        }
+      }
+    }
+  ]
+}
