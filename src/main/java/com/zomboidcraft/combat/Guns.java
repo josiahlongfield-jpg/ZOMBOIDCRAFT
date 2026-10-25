@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -180,6 +181,21 @@ public final class Guns {
         right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();
         Vec3 up = right.cross(look).normalize();
         return look.add(right.scale(Math.cos(a) * Math.tan(r))).add(up.scale(Math.sin(a) * Math.tan(r))).normalize();
+    }
+
+    // ------------------------------------------------------------------ light and laser
+
+    /** Switches the light or laser on the side rail on or off, with a click. */
+    public static void toggleRail(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (!gun.is(ModItems.ASSAULT_RIFLE) || !(Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "light")
+                || Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "laser"))) {
+            return;
+        }
+        boolean on = !Attachments.railOn(gun);
+        gun.set(GunState.RAIL_ON, on);
+        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
+                SoundSource.PLAYERS, 0.25f, on ? 2.0f : 1.7f);
     }
 
     // ------------------------------------------------------------------ reloading

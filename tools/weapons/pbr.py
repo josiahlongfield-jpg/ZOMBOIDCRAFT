@@ -16,42 +16,41 @@ TINTED_METAL = 255
 NONMETAL = 10           # about 4% reflectance, plastics, paint, rubber, glass
 
 # smoothness, reflectance byte, and optionally (lightness over which it's bare metal, metal, its smoothness).
-# Gun finishes are satin rather than matte, so a shader pack's sun and sky slide along them: hard anodising
-# (its oxide reflects a little more than paint), oiled phosphate on the steel, moulded polymer, and edges
-# and rail tops worn through to bright metal.
-ANODISED = 20
+# Gun finishes keep a soft sheen but stay black: any glossier and a shader pack's bright overcast sky turns
+# the whole rifle silver. Hard anodising, oiled phosphate on the steel, moulded polymer, and only the worn
+# edges and rail tops are bright metal. The surface relief (see normal) is what makes the detail read.
 MATERIALS = {
-    'anod': (0.66, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'rail': (0.64, ANODISED, (0.32, ALUMINIUM, 0.78)),
-    'guard': (0.64, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'park': (0.42, NONMETAL, (0.38, IRON, 0.66)),
-    'hider': (0.40, NONMETAL, (0.38, IRON, 0.64)),
-    'steel': (0.68, IRON, None),
-    'bright': (0.80, IRON, None),
-    'port': (0.46, NONMETAL, (0.38, IRON, 0.66)),
-    'poly': (0.46, NONMETAL, None),
-    'grip': (0.34, NONMETAL, None),
-    'gripper': (0.34, NONMETAL, None),
-    'scope': (0.66, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'knurl': (0.50, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'bezel': (0.64, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'cap': (0.40, NONMETAL, (0.38, IRON, 0.62)),
+    'anod': (0.50, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'rail': (0.48, NONMETAL, (0.34, ALUMINIUM, 0.68)),
+    'guard': (0.48, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'park': (0.34, NONMETAL, (0.40, IRON, 0.60)),
+    'hider': (0.32, NONMETAL, (0.40, IRON, 0.58)),
+    'steel': (0.62, IRON, None),
+    'bright': (0.74, IRON, None),
+    'port': (0.38, NONMETAL, (0.40, IRON, 0.60)),
+    'poly': (0.40, NONMETAL, None),
+    'grip': (0.30, NONMETAL, None),
+    'gripper': (0.30, NONMETAL, None),
+    'scope': (0.50, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'knurl': (0.42, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'bezel': (0.48, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'cap': (0.32, NONMETAL, (0.40, IRON, 0.56)),
     'lamp': (0.92, 18, None),
-    'lens_red': (0.92, 18, None),
-    'tan': (0.42, NONMETAL, None),
-    'mag': (0.42, NONMETAL, None),
-    'rubber': (0.16, 8, None),
+    'lens_green': (0.92, 18, None),
+    'tan': (0.36, NONMETAL, None),
+    'mag': (0.36, NONMETAL, None),
+    'rubber': (0.14, 8, None),
     'bore': (0.08, 6, None),
-    'housing': (0.54, NONMETAL, None),
-    'bezel_r': (0.58, ANODISED, (0.34, ALUMINIUM, 0.76)),
-    'mark': (0.50, NONMETAL, (0.40, ALUMINIUM, 0.78)),
-    'screw': (0.62, IRON, None),
-    'can': (0.36, NONMETAL, (0.40, IRON, 0.56)),
+    'housing': (0.46, NONMETAL, None),
+    'bezel_r': (0.46, NONMETAL, (0.36, ALUMINIUM, 0.66)),
+    'mark': (0.44, NONMETAL, (0.40, ALUMINIUM, 0.70)),
+    'screw': (0.58, IRON, None),
+    'can': (0.30, NONMETAL, (0.42, IRON, 0.52)),
     'lens': (0.96, 18, None),
     'glass': (0.96, 18, None),
     'dot': (0.5, NONMETAL, None),
     'flash': (0.0, NONMETAL, None),
-    'brass': (0.66, TINTED_METAL, None),
+    'brass': (0.62, TINTED_METAL, None),
 }
 # how much rain darkens a finish (LabPBR porosity, 0-64): stippled grips and phosphate soak a little
 POROSITY = {'grip': 18, 'gripper': 18, 'park': 10, 'hider': 10, 'cap': 10, 'can': 14, 'rubber': 6, 'tan': 6,

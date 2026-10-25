@@ -9,6 +9,23 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== fp"
+# who renders the first-person hand: any client renderer class with a method about hands, arms or the item in hand
+ALL=$(classes '^net/minecraft/client/(renderer/[A-Za-z]+|renderer/item/[A-Za-z]+|renderer/entity/player/[A-Za-z]+|player/[A-Za-z]+|[A-Z][A-Za-z]+)\.class$' | sed 's|\.class$||; s|/|.|g')
+echo "classes: $(echo $ALL | wc -w)"
+javap -cp "$CP" -p $ALL 2>/dev/null | awk '/^(public |final |abstract )*(class|interface|record|enum)|^[a-z ]*class /{c=$0; shown=0} tolower($0) ~ /hand|bob|sway|armwith|playerarm/ { if(!shown){print "-----", c; shown=1} print }' | head -300
+echo "--- GameRenderer members"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | head -150
+echo "--- GameRenderer invokes"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'invoke' | grep -iE 'hand|item|arm|bob' | sort -u | head -40
+echo "--- bobView"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -A60 'private void bobView(' | head -70
+echo "--- methods calling bobView"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | awk '/^  [a-z].*\(/{m=$0} /bobView:\(/{print m}' | sort -u
+echo "--- CameraEntityRenderState"
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraEntityRenderState 2>&1
+for c in $(classes 'AvatarRenderer\.class|FirstPerson|HandRender|HeldItem' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do sig "$c" '.'; done
+
 echo "===== hands"
 for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
   sig "$c" '.'

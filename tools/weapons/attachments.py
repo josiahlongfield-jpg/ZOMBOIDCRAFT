@@ -184,13 +184,13 @@ def light(m):
 
 
 def laser(m):
-    """A visible laser in a tan box (PEQ style)."""
+    """A visible green laser in a tan box (PEQ style)."""
     b = Inch(m)
     b.box((-0.47, 0.0, -0.85), (0.47, 0.30, 0.85), 'anod')
     jaws(b, -0.85, 0.85)
     b.box((-0.64, 0.30, -1.35), (0.64, 1.20, 1.25), 'tan')
     b.box((-0.60, 0.40, -1.42), (0.60, 1.10, -1.35), 'tan')
-    b.box((-0.45, 0.55, -1.45), (-0.12, 0.88, -1.42), 'lens_red')
+    b.box((-0.45, 0.55, -1.45), (-0.12, 0.88, -1.42), 'lens_green')
     b.box((0.12, 0.55, -1.45), (0.45, 0.88, -1.42), 'lens')
     b.box((-0.30, 0.50, 1.25), (0.30, 0.95, 1.36), 'rubber')
     for x0 in (-0.42, 0.16):
@@ -218,8 +218,8 @@ def look(wear=0.4):
         glint = (np.abs(f.X - f.Y * 0.6 - 0.1) % 0.6) < 0.05
         return np.where(glint[..., None], P.col('#9fd3e0'), c)
 
-    def lens_red(f):
-        return P.plain(f, '#5c1410', 0.2)
+    def lens_green(f):
+        return P.plain(f, '#1f5a22', 0.2)
 
     def lamp(f):
         a, b = f.across()
@@ -290,7 +290,7 @@ def look(wear=0.4):
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
-    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_red=lens_red, lamp=lamp, dot=dot, can=can,
+    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can,
              cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.45, spread=0.14),
              poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))

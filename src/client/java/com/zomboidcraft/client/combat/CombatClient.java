@@ -35,6 +35,7 @@ public final class CombatClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("zomboidcraft"));
     public static final KeyMapping RELOAD = new KeyMapping("key.zomboidcraft.reload", InputConstants.KEY_R, CATEGORY);
     public static final KeyMapping SHOVE = new KeyMapping("key.zomboidcraft.shove", InputConstants.KEY_V, CATEGORY);
+    public static final KeyMapping RAIL = new KeyMapping("key.zomboidcraft.rail", InputConstants.KEY_L, CATEGORY);
 
     private static long lastShot = -100;
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
@@ -44,6 +45,7 @@ public final class CombatClient {
     public static void register() {
         KeyMappingHelper.registerKeyMapping(RELOAD);
         KeyMappingHelper.registerKeyMapping(SHOVE);
+        KeyMappingHelper.registerKeyMapping(RAIL);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
             if (hand.is(ModItems.ASSAULT_RIFLE)) {
@@ -76,6 +78,11 @@ public final class CombatClient {
         }
         while (SHOVE.consumeClick()) {
             ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
+        }
+        while (RAIL.consumeClick()) {
+            if (player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RAIL));
+            }
         }
         Integer grabbed = player.getAttached(Grabs.GRABBED);
         if (grabbed != null && grabbed > 0) {

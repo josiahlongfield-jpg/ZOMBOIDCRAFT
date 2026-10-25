@@ -177,7 +177,7 @@ def paint(models, px=PX, eyes=()):
                     rgb = look[mat](f)
                     rgb = P.round_shade(f, rgb)
                     for fx in look.get('_after', []):
-                        if mat not in ('dot', 'flash', 'lens', 'lens_red', 'lamp'):
+                        if mat not in ('dot', 'flash', 'lens', 'lens_green', 'lamp'):
                             rgb = fx(f, rgb)
                     rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]

@@ -5,6 +5,7 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.combat.CombatClient;
 import com.zomboidcraft.client.combat.CombatHud;
 import com.zomboidcraft.client.combat.Crosshair;
+import com.zomboidcraft.client.combat.RailLights;
 import com.zomboidcraft.client.sound.SoundSliders;
 import com.zomboidcraft.client.zombie.HordeSounds;
 import com.zomboidcraft.client.zombie.WalkerAddonModel;
@@ -34,6 +35,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
         HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
+        RailLights.register();
         HordeSounds.register();
         SoundSliders.register();
         if (ZcConfig.get().look.customZombies) {
