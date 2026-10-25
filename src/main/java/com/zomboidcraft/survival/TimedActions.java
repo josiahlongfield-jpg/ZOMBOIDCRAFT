@@ -23,7 +23,8 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Zomboid's timed actions: bandaging, splinting, boarding up and the like take a few seconds, shown as a bar above
- * the belt. Walking off, swinging or being hit stops it, and nothing is used up until the bar fills.
+ * the belt. Walking off, swinging at something, shooting or being hit stops it (swings and shots cancel it where
+ * they happen), and nothing is used up until the bar fills.
  */
 public final class TimedActions {
     /** What the player's client draws: a label and how many ticks the bar takes. A new {@code id} restarts it. */
@@ -125,7 +126,6 @@ public final class TimedActions {
             double dx = at.x - r.from.x, dz = at.z - r.from.z;
             if (dx * dx + dz * dz > STRAY * STRAY) why = "You stop to move.";
             else if (player.hurtTime > r.hurt) why = "You're hit and stop.";
-            else if (player.getAttackAnim(1f) > 0 && r.left < r.total - 1) why = "You stop to swing.";
             r.hurt = player.hurtTime;
             if (why != null) {
                 it.remove();
