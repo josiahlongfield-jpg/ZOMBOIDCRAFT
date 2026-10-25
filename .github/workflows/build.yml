@@ -78,13 +78,22 @@ jobs:
           echo 'zc config' >&3
           echo 'zc weather severe_storm' >&3
           echo 'zc weather' >&3
+          # A shop shelf gets its loot table, and every shop table loads and rolls.
+          echo 'forceload add 0 0' >&3
+          echo 'setblock 0 100 0 zomboidcraft:store_shelf_grocery' >&3
+          echo 'data get block 0 100 0' >&3
+          for t in $(ls src/main/resources/data/zomboidcraft/loot_table/shop | sed 's/.json//'); do
+            echo "loot spawn 0 101 0 loot zomboidcraft:shop/$t" >&3
+          done
           sleep 10
           echo 'stop' >&3
           for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 3>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
-          grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings' server.log | head -60 || true
+          grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
+          grep -q 'zomboidcraft:shop/grocery' server.log
+          [ "$(grep -c 'Dropped' server.log)" -ge 10 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
           ! grep -E 'Mixin apply failed|InvalidMixin|Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception' server.log
 
