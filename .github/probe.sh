@@ -9,6 +9,17 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== crosshair"
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement '.'
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements 'CROSSHAIR'
+sig net.minecraft.client.gui.Gui 'Crosshair|crosshair'
+sig org.joml.Matrix3x2fStack 'push|pop'
+sig org.joml.Matrix3x2f 'translate\(float, float\)|scale\(float, float\)'
+sig net.minecraft.world.food.FoodProperties 'public'
+sig net.minecraft.world.item.component.Consumable 'public'
+sig net.minecraft.world.item.component.Consumables 'public'
+classes 'item/component/Consumable|consume_effects|ItemUseAnimation'
+
 echo "===== volume"
 classes 'client/sounds/SoundEngine|client/sounds/SoundManager|client/sounds/ChannelAccess|options/SoundOptionsScreen|options/OptionsSubScreen|components/AbstractSliderButton|screen/v1/ScreenEvents|screen/v1/Screens|client/OptionInstance|components/OptionsList'
 sig net.minecraft.client.sounds.SoundEngine '.'
