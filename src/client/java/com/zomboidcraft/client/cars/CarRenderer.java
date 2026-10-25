@@ -18,7 +18,8 @@ import net.minecraft.world.phys.AABB;
 /**
  * Draws a car's 3D model, each triangle sent as a quad with its last corner doubled: the body,
  * boot lids swung open while it's searched, wheels rolled and steered, then the glass see-through.
- * Cars further off are drawn from coarser copies of the mesh ({@link CarLod}).
+ * Cars further off are drawn from coarser copies of the mesh ({@link CarLod}), with solid
+ * windows past a point.
  */
 public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
     public CarRenderer(EntityRendererProvider.Context context) {
@@ -75,10 +76,16 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         for (int i = 0; i < wheels.length; i++) {
             wheels[i] = wheel(car.wheels().get(i), state.rolled, state.steer);
         }
+        boolean solidGlass = state.lod >= CarLod.SOLID_GLASS;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, (mesh, turn) -> draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1));
+            each(car, lids, wheels, (mesh, turn) -> {
+                draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1);
+                if (solidGlass) {
+                    draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, FAR_GLASS);
+                }
+            });
         });
-        if (!state.inside) {
+        if (!state.inside && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
                 each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
             });
@@ -88,6 +95,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     /** Glass keeps its colour from the texture but lets most of the light through. */
     private static final int GLASS = 0x80FFFFFF;
+    /** Far off, glass is drawn solid, darkened to look like the dim inside seen through it. */
+    private static final int FAR_GLASS = 0xFF5A6068;
 
     /** Moves a point (or, with normal set, a direction) of a moving part into place, in place. */
     private interface Turn {
