@@ -210,3 +210,16 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | weapon.shotgun.shot_distant | SPAS-12 - FIRING - Pump Action - Take 1 - 20m In Front - AB - MKH8020 (Pole Position - Franchi SPAS-12 Combat Shotgun) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
 | weapon.shotgun.pump | [Remington 870 12 gauge shotgun pump racking cha chock](https://freesound.org/people/TotallyPhilip/sounds/755495/) | TotallyPhilip | CC0 1.0 |
 | weapon.shotgun.shell_in | [shell load.ogg](https://freesound.org/people/CeebFrack/sounds/108793/) | CeebFrack | CC0 1.0 |
+
+## Hunting rifle sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_hunting_rifle_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.hunting_rifle.shot | [Sauer 404 close shot.wav](https://freesound.org/people/moosegravy/sounds/431834/) | moosegravy | CC0 1.0 |
+| weapon.hunting_rifle.shot_distant | [Distant Gunshot](https://freesound.org/people/Resaural/sounds/541164/) | Resaural | CC0 1.0 |
+| weapon.hunting_rifle.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
