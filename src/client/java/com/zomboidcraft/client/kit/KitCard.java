@@ -24,7 +24,7 @@ final class KitCard {
                 : KitItems.weapon(stack) ? KitItems.meleeStats(stack) : KitItems.clothingStats(stack);
         List<Attachments.Slot> sockets = KitItems.gun(stack) ? Attachments.slots(stack) : List.of();
         int tier = KitItems.tier(stack);
-        String finish = KitItems.gun(stack) ? GunFinish.line(stack).getString() : "";
+        String finish = KitItems.finish(stack);
 
         // height first, so the card can sit where it fits
         int h = 34 + 8;

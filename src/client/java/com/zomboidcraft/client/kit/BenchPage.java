@@ -228,7 +228,7 @@ final class BenchPage {
             row(g, font, "Found", place, KitDraw.TEXT, x, cy);
             cy += 10;
         }
-        String finish = KitItems.gun(weapon) ? GunFinish.line(weapon).getString() : "";
+        String finish = KitItems.finish(weapon);
         if (!finish.isEmpty()) {
             KitDraw.text(g, font, finish, x, cy, KitDraw.LINK, 0.85f);
             cy += 10;

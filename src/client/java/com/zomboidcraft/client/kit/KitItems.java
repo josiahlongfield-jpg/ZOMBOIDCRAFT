@@ -365,6 +365,13 @@ final class KitItems {
         return state.rounds() + " / " + RifleItem.capacity(gun);
     }
 
+    /** A gun's finish line ("Blued, walnut"), or empty for guns with one look. */
+    static String finish(ItemStack gun) {
+        if (!gun(gun)) return "";
+        var line = com.zomboidcraft.combat.GunFinish.line(gun);
+        return line == null ? "" : line.getString();
+    }
+
     static String fmt(float v) {
         return Math.abs(v - Math.round(v)) < 0.05f ? String.valueOf(Math.round(v)) : String.format(java.util.Locale.ROOT, "%.1f", v);
     }
