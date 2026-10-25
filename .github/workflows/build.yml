@@ -130,9 +130,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          gh release delete playtest-build --yes --cleanup-tag || true
+          # (the tag must not share the branch name, or git refs get ambiguous)
           gh release delete playtest --yes --cleanup-tag || true
           # one fixed name, so a new download replaces the old file instead of sitting beside it
           cp build/libs/zomboidcraft-*.jar zomboidcraft-playtest.jar
-          gh release create playtest zomboidcraft-playtest.jar \
+          gh release create playtest-build zomboidcraft-playtest.jar \
             --prerelease --title "Playtest build" --target "$GITHUB_SHA" \
             --notes "Everything in progress, merged together, from ${GITHUB_SHA::7}. Delete any other ZomboidCraft jar (zomboidcraft-0.5.x.jar) from your mods folder. Needs Fabric Loader and Fabric API. Replace any other ZomboidCraft jar with this one."
