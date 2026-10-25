@@ -321,7 +321,7 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
-        /** A short, soft flash at the muzzle with each shot (none through a suppressor). */
+        /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
         public double aimSway = 0.15;
@@ -329,6 +329,17 @@ public final class ZcConfig {
         public boolean reloadAnimation = true;
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
+        /**
+         * How bright (a light level, 1 to 15) the world is lit where a gun light lands up close, dimming with
+         * distance. Higher lights more of the rooms around it too. Client side.
+         */
+        public int lightLevel = 11;
+        /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
+        public double lightCone = 13;
+        /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
+        public double lightGlow = 1.0;
+        /** A gun light's beam shows faintly in the air. Client side. */
+        public boolean lightBeam = true;
     }
 
     public static ZcConfig get() {

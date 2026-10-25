@@ -103,8 +103,45 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/suppressor"
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
          }
         },
         {
@@ -212,13 +249,6 @@
          }
         },
         {
-         "when": "laser",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/laser"
-         }
-        },
-        {
          "when": "none",
          "model": {
           "type": "minecraft:empty"
@@ -251,6 +281,29 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
        }
       }
      ]
@@ -355,8 +408,45 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/suppressor"
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
          }
         },
         {
@@ -464,13 +554,6 @@
          }
         },
         {
-         "when": "laser",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/laser"
-         }
-        },
-        {
          "when": "none",
          "model": {
           "type": "minecraft:empty"
@@ -527,6 +610,29 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
        }
       }
      ]
@@ -631,8 +737,45 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/charge/suppressor"
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/charge/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/charge/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
          }
         },
         {
@@ -740,13 +883,6 @@
          }
         },
         {
-         "when": "laser",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/charge/laser"
-         }
-        },
-        {
          "when": "none",
          "model": {
           "type": "minecraft:empty"
@@ -803,6 +939,29 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/assault_rifle/charge/mag"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/charge/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
        }
       }
      ]
@@ -863,8 +1022,45 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/suppressor"
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
            }
           },
           {
@@ -972,13 +1168,6 @@
            }
           },
           {
-           "when": "laser",
-           "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/laser"
-           }
-          },
-          {
            "when": "none",
            "model": {
             "type": "minecraft:empty"
@@ -1036,6 +1225,29 @@
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag"
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
         }
        ]
       }
@@ -1086,8 +1298,45 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/suppressor"
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
            }
           },
           {
@@ -1195,13 +1444,6 @@
            }
           },
           {
-           "when": "laser",
-           "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/laser"
-           }
-          },
-          {
            "when": "none",
            "model": {
             "type": "minecraft:empty"
@@ -1259,6 +1501,29 @@
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag"
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
         }
        ]
       }
@@ -1309,8 +1574,45 @@
           {
            "when": "suppressor",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/suppressor"
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
            }
           },
           {
@@ -1418,13 +1720,6 @@
            }
           },
           {
-           "when": "laser",
-           "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/laser"
-           }
-          },
-          {
            "when": "none",
            "model": {
             "type": "minecraft:empty"
@@ -1481,6 +1776,29 @@
          "fallback": {
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
          }
         }
        ]
@@ -1584,8 +1902,45 @@
         {
          "when": "suppressor",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads/suppressor"
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/assault_rifle/ads/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/assault_rifle/ads/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
          }
         },
         {
@@ -1693,13 +2048,6 @@
          }
         },
         {
-         "when": "laser",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads/laser"
-         }
-        },
-        {
          "when": "none",
          "model": {
           "type": "minecraft:empty"
@@ -1756,6 +2104,29 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/assault_rifle/ads/mag"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
        }
       }
      ]
@@ -1858,8 +2229,45 @@
        {
         "when": "suppressor",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/hip/suppressor"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/assault_rifle/hip/suppressor"
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/assault_rifle/hip/muzzle_flash_quiet"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         ]
         }
        },
        {
@@ -1967,13 +2375,6 @@
         }
        },
        {
-        "when": "laser",
-        "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/hip/laser"
-        }
-       },
-       {
         "when": "none",
         "model": {
          "type": "minecraft:empty"
@@ -2030,6 +2431,29 @@
       "fallback": {
        "type": "minecraft:model",
        "model": "zomboidcraft:item/weapon/assault_rifle/hip/mag"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 7,
+      "cases": [
+       {
+        "when": "laser",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/assault_rifle/hip/laser"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
       }
      }
     ]

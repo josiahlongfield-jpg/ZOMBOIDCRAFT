@@ -17,11 +17,15 @@ import java.util.Map;
  * @param magAxis      the way a magazine slides out of the well
  * @param locksBack    the handle (slide) stays back on an empty gun
  * @param cycles       it runs back with every shot
+ * @param laser        the laser's lens, on the right rail: its beam runs parallel to the bore
+ * @param light        the light's lens, on the left rail
+ * @param quietMuzzle  where a suppressed shot's smaller flash starts: the end of the suppressor
  * @param supportGrip  the off hand wraps the grip (a pistol's), rather than cupping a handguard
  */
 record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, float[] charge,
               Map<String, float[]> sights, float handleTravel, float[] chargeTurn, float[] chargePush,
               float[] grip, float[] support, float[] foregrip, float[] magTop, float[] magHold, float[] magCentre,
-              float[] handle, float[] laser, float[] muzzle, float[] magAxis,
+              float[] handle, float[] laser, float[] light, float[] muzzle, float[] quietMuzzle,
+              float[] magAxis,
               boolean locksBack, boolean cycles, boolean supportGrip) {
 }

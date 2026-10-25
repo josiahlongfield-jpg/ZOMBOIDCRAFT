@@ -153,8 +153,14 @@ def light(m):
     b.rod(0.42, 0.58, 0.12, 'steel', axis=0, at=(0.14, 0.0))                 # clamp screw
 
 
+# where each beam leaves its part, in the part's own inches (drawn on a top rail, pointing to -z)
+LIGHT_LENS = (0.0, 0.68, -2.32)
+LASER_LENS = (0.0, 0.54, -1.03)
+
+
 def laser(m):
-    """The laser sight as it sits on a pistol: a small green laser module on the rail."""
+    """The laser sight as it sits on a pistol: a small green laser module clamped to the right of the frame,
+    over the trigger guard's front, so it leaves the rail underneath for the light."""
     b = Inch(m)
     b.box((-0.42, 0.0, -0.45), (0.42, 0.26, 0.45), 'anod')
     AT.jaws(b, -0.45, 0.45, half=0.42)

@@ -102,7 +102,7 @@ public final class CombatClient {
         ZcConfig.Guns config = ZcConfig.get().guns;
         GunType type = GunType.of(gun);
         ZcConfig.GunStats stats = type.stats();
-        if (now - lastShot < stats.fireDelayTicks) {
+        if (now >= lastShot && now - lastShot < stats.fireDelayTicks) {      // a newer world's clock can be behind the last one's
             return;
         }
         lastShot = now;
@@ -115,7 +115,7 @@ public final class CombatClient {
         boolean suppressed = Attachments.suppressed(gun);
         client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, false), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
-        RifleView.fired(player, !suppressed && config.muzzleFlash);
+        RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
