@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_cast_iron": "zomboidcraft:block/city/home_cast_iron",
+    "particle": "zomboidcraft:block/city/home_cast_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        8
+      ],
+      "to": [
+        9.5,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_cast_iron"
+        },
+        "south": {
+          "texture": "#home_cast_iron"
+        },
+        "east": {
+          "texture": "#home_cast_iron"
+        },
+        "west": {
+          "texture": "#home_cast_iron"
+        },
+        "up": {
+          "texture": "#home_cast_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_cast_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

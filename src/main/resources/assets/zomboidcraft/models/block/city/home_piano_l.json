@@ -1,0 +1,252 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_piano_keys": "zomboidcraft:block/city/home_piano_keys",
+    "home_piano_wood": "zomboidcraft:block/city/home_piano_wood",
+    "particle": "zomboidcraft:block/city/home_piano_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_piano_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_wood"
+        },
+        "down": {
+          "texture": "#home_piano_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        8.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_piano_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_wood",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_piano_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6.5,
+        4
+      ],
+      "to": [
+        16,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_keys"
+        },
+        "south": {
+          "texture": "#home_piano_keys"
+        },
+        "east": {
+          "texture": "#home_piano_keys",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_keys",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_keys"
+        },
+        "down": {
+          "texture": "#home_piano_keys"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8.5
+      ],
+      "to": [
+        16,
+        6.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood"
+        },
+        "east": {
+          "texture": "#home_piano_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_wood"
+        },
+        "down": {
+          "texture": "#home_piano_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        8.5
+      ],
+      "to": [
+        16,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood"
+        },
+        "east": {
+          "texture": "#home_piano_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_wood"
+        },
+        "down": {
+          "texture": "#home_piano_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        1,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood"
+        },
+        "east": {
+          "texture": "#home_piano_wood"
+        },
+        "west": {
+          "texture": "#home_piano_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_piano_wood"
+        },
+        "down": {
+          "texture": "#home_piano_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        7
+      ],
+      "to": [
+        16,
+        12,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_piano_wood"
+        },
+        "south": {
+          "texture": "#home_piano_wood"
+        },
+        "east": {
+          "texture": "#home_piano_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_piano_wood"
+        },
+        "up": {
+          "texture": "#home_piano_wood"
+        },
+        "down": {
+          "texture": "#home_piano_wood"
+        }
+      }
+    }
+  ]
+}

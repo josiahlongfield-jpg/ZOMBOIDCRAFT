@@ -88,7 +88,7 @@
       ],
       "to": [
         16,
-        13,
+        13.5,
         16
       ],
       "faces": {
@@ -118,12 +118,12 @@
     {
       "from": [
         2,
-        13,
+        13.5,
         9
       ],
       "to": [
         6,
-        15.5,
+        16,
         12
       ],
       "faces": {
@@ -140,7 +140,8 @@
           "texture": "#home_wood_dark"
         },
         "up": {
-          "texture": "#home_wood_dark"
+          "texture": "#home_wood_dark",
+          "cullface": "up"
         },
         "down": {
           "texture": "#home_wood_dark"
@@ -150,12 +151,12 @@
     {
       "from": [
         10,
-        13,
+        13.5,
         10
       ],
       "to": [
         11,
-        15,
+        15.5,
         11
       ],
       "faces": {
@@ -182,30 +183,53 @@
     {
       "from": [
         12,
-        13,
+        13.5,
         9.5
       ],
       "to": [
         13,
-        16,
+        16.5,
         10.5
       ],
       "faces": {
         "north": {
-          "texture": "#home_ceramic"
+          "texture": "#home_ceramic",
+          "uv": [
+            3,
+            0,
+            4,
+            3.0
+          ]
         },
         "south": {
-          "texture": "#home_ceramic"
+          "texture": "#home_ceramic",
+          "uv": [
+            12,
+            0,
+            13,
+            3.0
+          ]
         },
         "east": {
-          "texture": "#home_ceramic"
+          "texture": "#home_ceramic",
+          "uv": [
+            5.5,
+            0,
+            6.5,
+            3.0
+          ]
         },
         "west": {
-          "texture": "#home_ceramic"
+          "texture": "#home_ceramic",
+          "uv": [
+            9.5,
+            0,
+            10.5,
+            3.0
+          ]
         },
         "up": {
-          "texture": "#home_ceramic",
-          "cullface": "up"
+          "texture": "#home_ceramic"
         },
         "down": {
           "texture": "#home_ceramic"
