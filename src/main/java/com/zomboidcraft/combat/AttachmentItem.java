@@ -60,7 +60,7 @@ public class AttachmentItem extends Item {
         List<String> names = new ArrayList<>();
         GunSlotData.FITS.forEach((gun, slots) -> {
             if (slots.values().stream().anyMatch(parts -> parts.contains(id))) {
-                names.add(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(gun)).getName().getString().toLowerCase(Locale.ROOT));
+                names.add(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(gun)).getDefaultInstance().getHoverName().getString().toLowerCase(Locale.ROOT));
             }
         });
         names.sort(null);
