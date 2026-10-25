@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_sheet_blood": "zomboidcraft:block/city/home_sheet_blood",
+    "particle": "zomboidcraft:block/city/home_sheet_blood"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        1
+      ],
+      "to": [
+        13,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_sheet_blood"
+        },
+        "south": {
+          "texture": "#home_sheet_blood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_sheet_blood"
+        },
+        "west": {
+          "texture": "#home_sheet_blood"
+        },
+        "up": {
+          "texture": "#home_sheet_blood"
+        },
+        "down": {
+          "texture": "#home_sheet_blood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        2.5,
+        1
+      ],
+      "to": [
+        12.5,
+        4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_sheet_blood"
+        },
+        "south": {
+          "texture": "#home_sheet_blood"
+        },
+        "east": {
+          "texture": "#home_sheet_blood"
+        },
+        "west": {
+          "texture": "#home_sheet_blood"
+        },
+        "up": {
+          "texture": "#home_sheet_blood"
+        },
+        "down": {
+          "texture": "#home_sheet_blood"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        2.5,
+        10
+      ],
+      "to": [
+        10.5,
+        5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_sheet_blood"
+        },
+        "south": {
+          "texture": "#home_sheet_blood"
+        },
+        "east": {
+          "texture": "#home_sheet_blood"
+        },
+        "west": {
+          "texture": "#home_sheet_blood"
+        },
+        "up": {
+          "texture": "#home_sheet_blood"
+        },
+        "down": {
+          "texture": "#home_sheet_blood"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_blood_hand": "zomboidcraft:block/city/home_blood_hand",
+    "particle": "zomboidcraft:block/city/home_blood_hand"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_blood_hand",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_blood_hand"
+        },
+        "east": {
+          "texture": "#home_blood_hand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_blood_hand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_blood_hand",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_blood_hand",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

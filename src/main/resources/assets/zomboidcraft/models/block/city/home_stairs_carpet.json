@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_stairs_carpet": "zomboidcraft:block/city/home_stairs_carpet",
+    "particle": "zomboidcraft:block/city/home_stairs_carpet"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stairs_carpet"
+        },
+        "down": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_stairs_carpet"
+        },
+        "east": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stairs_carpet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_stairs_carpet"
+        }
+      }
+    }
+  ]
+}

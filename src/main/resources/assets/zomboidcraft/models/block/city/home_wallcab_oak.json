@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_oak": "zomboidcraft:block/city/home_oak",
+    "home_wcab_oak": "zomboidcraft:block/city/home_wcab_oak",
+    "particle": "zomboidcraft:block/city/home_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        9.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_oak"
+        },
+        "south": {
+          "texture": "#home_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wcab_oak"
+        },
+        "south": {
+          "texture": "#home_wcab_oak"
+        },
+        "east": {
+          "texture": "#home_wcab_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wcab_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wcab_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wcab_oak"
+        }
+      }
+    }
+  ]
+}

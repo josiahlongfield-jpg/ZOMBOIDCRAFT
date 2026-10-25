@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_stain_brown": "zomboidcraft:block/city/home_stain_brown",
+    "particle": "zomboidcraft:block/city/home_stain_brown"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stain_brown",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_stain_brown",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_stain_brown",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stain_brown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stain_brown"
+        },
+        "down": {
+          "texture": "#home_stain_brown",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

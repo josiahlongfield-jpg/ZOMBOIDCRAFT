@@ -79,11 +79,39 @@ def boxes(spec):
     return [b[:6] + [{f: b[6] for f in DIRS}] for b in spec["boxes"]]
 
 
+# the texture rectangle Minecraft picks for each face of a box (from, to in 16ths)
+AUTO_UV = {
+    "down": lambda f, t: [f[0], 16 - t[2], t[0], 16 - f[2]],
+    "up": lambda f, t: [f[0], f[2], t[0], t[2]],
+    "north": lambda f, t: [16 - t[0], 16 - t[1], 16 - f[0], 16 - f[1]],
+    "south": lambda f, t: [f[0], 16 - t[1], t[0], 16 - f[1]],
+    "west": lambda f, t: [f[2], 16 - t[1], t[2], 16 - f[1]],
+    "east": lambda f, t: [16 - t[2], 16 - t[1], 16 - f[2], 16 - f[1]],
+}
+
+
+def fit(a0, a1):
+    """Keeps one axis of a face's UVs on its sprite: a box poking out of the block (a stove's back
+    panel, a lamp's shade) would otherwise sample the neighbouring sprites in the atlas."""
+    span = a1 - a0
+    if span > 16:
+        return 0, 16
+    if a0 < 0:
+        return 0, span
+    if a1 > 16:
+        return 16 - span, 16
+    return a0, a1
+
+
 def element(b):
     x0, y0, z0, x1, y1, z1, tex = b
     faces = {}
     for f in DIRS:
         face = {"texture": "#" + tex[f]}
+        u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
+        if min(u0, v0) < 0 or max(u1, v1) > 16:
+            (u0, u1), (v0, v1) = fit(u0, u1), fit(v0, v1)
+            face["uv"] = [u0, v0, u1, v1]
         edge = {"north": z0 == 0, "south": z1 == 16, "west": x0 == 0, "east": x1 == 16,
                 "down": y0 == 0, "up": y1 == 16}[f]
         if edge:
@@ -174,6 +202,8 @@ def has_alpha(tex_dir, names):
 
 
 def sound(name, spec):
+    if "sound" in spec:
+        return spec["sound"]
     words = [name] + textures(spec)
     for keys, s in SOUNDS:
         if any(k in w for w in words for k in keys):
@@ -188,7 +218,7 @@ def java_line(name, spec, tex_dir):
         return f'        s("{name}", DOOR, {flag}, 0, SoundType.{s}, 3f);'
     model = spec.get("model", "cube")
     kind = {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
-    decor = model == "cross" or name in DECOR or name.startswith(DECOR_PREFIX)
+    decor = model == "cross" or spec.get("decor") or name in DECOR or name.startswith(DECOR_PREFIX)
     # partial shapes still hide what they cover (their shape is the occlusion shape); only
     # see-through pixels need the neighbours drawn behind them
     see_through = has_alpha(tex_dir, textures(spec))
@@ -282,8 +312,8 @@ def main():
     lang_path = ASSETS / "lang/en_us.json"
     lang = json.loads(lang_path.read_text())
     lang = {k: v for k, v in lang.items() if not (k.startswith(f"block.{NS}.") and k[len(f"block.{NS}."):] in old)}
-    for name in blocks:
-        lang[f"block.{NS}.{name}"] = title(name)
+    for name, spec in blocks.items():
+        lang[f"block.{NS}.{name}"] = spec.get("title") or title(name)
     lang[f"itemGroup.{NS}.city"] = "ZomboidCraft City"
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + "\n")
 

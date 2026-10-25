@@ -204,7 +204,7 @@ function wetten(mat, strength) {
 async function loadCity() {
   const index = await (await fetch(`${DIR}/mesh.json`)).json();
   const group = new THREE.Group();
-  group.scale.setScalar(1 / 16);
+  group.scale.setScalar(1 / (index.unit || 16));
   await Promise.all(index.textures.map(async (e) => {
     const buf = await (await fetch(`${DIR}/${e.tex}.bin`)).arrayBuffer();
     const V = e.verts, I = e.indices;

@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_note_bitten": "zomboidcraft:block/city/home_note_bitten",
+    "particle": "zomboidcraft:block/city/home_note_bitten"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        0
+      ],
+      "to": [
+        13,
+        14,
+        0.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_note_bitten",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_note_bitten"
+        },
+        "east": {
+          "texture": "#home_note_bitten"
+        },
+        "west": {
+          "texture": "#home_note_bitten"
+        },
+        "up": {
+          "texture": "#home_note_bitten"
+        },
+        "down": {
+          "texture": "#home_note_bitten"
+        }
+      }
+    }
+  ]
+}
