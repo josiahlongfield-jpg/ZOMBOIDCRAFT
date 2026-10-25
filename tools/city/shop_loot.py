@@ -102,6 +102,13 @@ TABLES = {
         ("torch", 3, 1, 4), ("bread", 3, 1, 2), ("potion", 3, 1, 1, WATER), ("bone", 2, 1, 3), ("leather", 2, 1, 2),
         (f"{ZC}:bandage", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn()), (f"{ZC}:shovel", 1, 1, 1, worn()),
         (f"{ZC}:golf_club", 1, 1, 1, worn()), ("-", 12, 1, 1)]),
+    "farm": ((1, 5), [
+        ("wheat_seeds", 8, 2, 12), ("beetroot_seeds", 4, 2, 8), ("pumpkin_seeds", 3, 1, 6), ("melon_seeds", 2, 1, 4),
+        ("potato", 5, 1, 6), ("carrot", 5, 1, 6), ("wheat", 4, 2, 8), ("egg", 3, 1, 6), ("apple", 3, 1, 4),
+        ("bone_meal", 4, 2, 8), ("bucket", 2, 1, 1), ("shears", 2, 1, 1, worn()), ("lead", 2, 1, 2), ("saddle", 1, 1, 1),
+        ("string", 4, 1, 6), ("leather", 3, 1, 3), ("iron_hoe", 1, 1, 1, worn()), ("stone_hoe", 2, 1, 1, worn()),
+        ("honey_bottle", 1, 1, 2), (f"{ZC}:nails", 3, 2, 10), (f"{ZC}:shovel", 1, 1, 1, worn()),
+        (f"{ZC}:pipe_wrench", 1, 1, 1, worn()), ("-", 10, 1, 1)]),
     "scraps": ((0, 2), [
         ("paper", 6, 1, 3), ("stick", 4, 1, 3), ("string", 3, 1, 2), ("bone", 2, 1, 2), ("glass_bottle", 3, 1, 1),
         ("rotten_flesh", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn(.5, .9)), ("-", 14, 1, 1)]),
@@ -114,6 +121,7 @@ RARE = {
     "pharmacy": [("totem_of_undying", 1)], "guns": [(f"{ZC}:assault_rifle", 2), (f"{ZC}:katana", 1)],
     "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1)],
     "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1)],
+    "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1)],
 }
 
 

@@ -27,7 +27,10 @@ final class Boards {
             Map.entry("barber", 4), Map.entry("drugstore", 5), Map.entry("cafe", 4), Map.entry("dime", 4),
             Map.entry("furniture", 5), Map.entry("autoparts", 4), Map.entry("townhall", 4), Map.entry("mill", 6),
             Map.entry("company", 5), Map.entry("elementary", 7), Map.entry("methodist", 6), Map.entry("stmary", 5),
-            Map.entry("generalstore", 5), Map.entry("antiques", 3), Map.entry("realty", 4), Map.entry("vfw", 4));
+            Map.entry("generalstore", 5), Map.entry("antiques", 3), Map.entry("realty", 4), Map.entry("vfw", 4),
+            Map.entry("hollowcreek", 6), Map.entry("dairy", 6), Map.entry("ranch", 4), Map.entry("orchard", 5),
+            Map.entry("apples", 5), Map.entry("produce", 5), Map.entry("eggs", 4), Map.entry("trespass", 4),
+            Map.entry("seedcorn", 5));
 
     /** A fascia centred over span blocks from x0, at height y on the front's z; false when it won't fit. */
     static boolean fascia(Placer p, SplittableRandom rng, String id, int x0, int y, int z, int span) {

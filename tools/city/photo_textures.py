@@ -622,14 +622,42 @@ EXTRA = {f.__name__: f for f in (grass_tuft, weeds_tall, ivy, bark, bark_top, le
 # ---------------------------------------------------------------- second batch of photo materials
 # Real damage, moss, rust and plants from photos replace the painted versions where one exists.
 
+def blobs(mask, f=4):
+    """Bounding slices of the separate shapes in a mask, without scipy: labelled on a mask
+    shrunk f times (so shapes closer than f texels count as one), then scaled back up."""
+    from collections import deque
+    h, w = mask.shape[0] // f, mask.shape[1] // f
+    small = mask[:h * f, :w * f].reshape(h, f, w, f).any(axis=(1, 3))
+    seen = np.zeros_like(small)
+    out = []
+    for y0, x0 in zip(*np.nonzero(small)):
+        if seen[y0, x0]:
+            continue
+        seen[y0, x0] = True
+        q = deque([(y0, x0)])
+        ya, yb, xa, xb = y0, y0, x0, x0
+        while q:
+            y, x = q.popleft()
+            ya, yb, xa, xb = min(ya, y), max(yb, y), min(xa, x), max(xb, x)
+            for ny, nx in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)):
+                if 0 <= ny < h and 0 <= nx < w and small[ny, nx] and not seen[ny, nx]:
+                    seen[ny, nx] = True
+                    q.append((ny, nx))
+        out.append((slice(ya * f, (yb + 1) * f), slice(xa * f, (xb + 1) * f)))
+    return out
+
+
 def sprites(material, scale):
     """Cut the separate leaves or blades out of an atlas: (rgba, alpha) arrays, scaled down."""
-    from scipy import ndimage
     col = np.asarray(load(material, "Color"), np.float32)
     alpha = np.asarray(load(material, "Opacity", "L"), np.float32)
-    labels, n = ndimage.label(alpha > 40)
+    try:
+        from scipy import ndimage
+        found = ndimage.find_objects(ndimage.label(alpha > 40)[0])
+    except ImportError:
+        found = blobs(alpha > 40)
     out = []
-    for sl in ndimage.find_objects(labels):
+    for sl in found:
         h, w = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
         if h < 24 or w < 8:
             continue

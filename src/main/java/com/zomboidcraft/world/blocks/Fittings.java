@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -65,6 +66,10 @@ public final class Fittings {
         if (entity instanceof Contents contents) {
             contents.setLootTable(ZcConfig.get().world.shopLoot ? table(table) : null, 0L);
             contents.setChanged();
+        } else if (entity instanceof RandomizableContainer container) {
+            // a vanilla barrel or chest the generator stocked: "minecraft:barrel[facing=up,loot=farm]"
+            container.setLootTable(ZcConfig.get().world.shopLoot ? table(table) : null, 0L);
+            entity.setChanged();
         }
     }
 

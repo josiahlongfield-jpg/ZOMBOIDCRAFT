@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bale_wrap": "zomboidcraft:block/city/bale_wrap",
+    "particle": "zomboidcraft:block/city/bale_wrap"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bale_wrap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bale_wrap",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bale_wrap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bale_wrap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bale_wrap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bale_wrap",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

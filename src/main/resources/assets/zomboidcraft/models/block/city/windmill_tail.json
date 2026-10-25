@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "corrugated_grey": "zomboidcraft:block/city/corrugated_grey",
+    "particle": "zomboidcraft:block/city/corrugated_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        2,
+        0
+      ],
+      "to": [
+        8.5,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#corrugated_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#corrugated_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#corrugated_grey"
+        },
+        "west": {
+          "texture": "#corrugated_grey"
+        },
+        "up": {
+          "texture": "#corrugated_grey"
+        },
+        "down": {
+          "texture": "#corrugated_grey"
+        }
+      }
+    }
+  ]
+}

@@ -243,7 +243,7 @@ public final class County {
         } else if (v < 0.85) {
             return fitOrShrink(PlaceType.FARM, "orchard", px, pz, 180, 170, h);
         }
-        return fitOrShrink(PlaceType.FARM, "homestead", px, pz, 110, 100, h);
+        return fit(PlaceType.FARM, "homestead", px, pz, 130, 120, h);  // any smaller and the crossroads leave no room for the yard
     }
 
     private Place military(int px, int pz, double v, long h) {

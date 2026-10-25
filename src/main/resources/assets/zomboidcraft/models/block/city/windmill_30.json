@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "windmill_30": "zomboidcraft:block/city/windmill_30",
+    "particle": "zomboidcraft:block/city/windmill_30"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#windmill_30"
+        },
+        "south": {
+          "texture": "#windmill_30"
+        },
+        "east": {
+          "texture": "#windmill_30",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#windmill_30",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#windmill_30",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#windmill_30",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
