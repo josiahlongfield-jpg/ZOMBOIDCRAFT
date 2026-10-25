@@ -1,0 +1,259 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/ext_trim_white"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        -1
+      ],
+      "to": [
+        2.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            2.5,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            2.5,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        -1
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            13.5,
+            0,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            13.5,
+            0,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13.5,
+        -1.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            2.5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            2.5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15.5,
+        -2
+      ],
+      "to": [
+        16,
+        16.5,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            1.0
+          ]
+        },
+        "south": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            1.0
+          ]
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            14,
+            0,
+            16,
+            1.0
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            2,
+            1.0
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

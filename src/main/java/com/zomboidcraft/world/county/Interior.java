@@ -91,6 +91,8 @@ final class Interior {
     private final List<List<Room>> rooms = new ArrayList<>();
     /** Windows, as {x, z, floor, side}: the exterior wall block and the side of the house it is on. */
     private final List<int[]> windows = new ArrayList<>();
+    /** Each fireplace or wood stove: x, z of its cell, floor, the wall side it backs onto, 1 for a stove. */
+    private final List<int[]> hearths = new ArrayList<>();
     private int[][][] winMask;
     private int doorX, backX = -1, garageZ = -1;
     /** The stairs: the first of their two columns (-1 for none) and the z of the bottom step. */
@@ -160,6 +162,11 @@ final class Interior {
 
     List<int[]> windows() {
         return windows;
+    }
+
+    /** After {@link #build()}: the hearths, for the chimneys outside. */
+    List<int[]> hearths() {
+        return hearths;
     }
 
     /** The rooms, floor by floor, as "floor kind x0,z0..x1,z1" lines (for previews). */
@@ -1608,12 +1615,9 @@ final class Interior {
      */
     private void hearth(int f, Room r, boolean stove) {
         String low = stove ? "home_wood_stove" : "home_fireplace", up = stove ? "home_stove_pipe" : "home_chimney";
-        int[] order = {0, 1, 2, 3};
-        for (int i = 3; i > 0; i--) {
-            int j = rng.nextInt(i + 1), t = order[i];
-            order[i] = order[j];
-            order[j] = t;
-        }
+        // the end walls first, where the chimney can go up the gable outside; the front last, behind the porch
+        boolean east = rng.nextBoolean();
+        int[] order = {east ? 1 : 3, east ? 3 : 1, 2, 0};
         for (int s : order) {
             List<int[]> run = run(f, r, s, false);
             int fs = (s + 2) & 3;
@@ -1631,6 +1635,7 @@ final class Interior {
                 }
                 if (putAll(f, new int[][] {{c[0], 1, c[1]}, {c[0], 2, c[1]}, {c[0], 3, c[1]}},
                         new String[] {low + face(fs), up + face(fs), up + face(fs)})) {
+                    hearths.add(new int[] {c[0], c[1], f, s, stove ? 1 : 0});
                     return;
                 }
             }

@@ -1,0 +1,216 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_green_cap": "zomboidcraft:block/city/ext_green_cap",
+    "ext_green_riser": "zomboidcraft:block/city/ext_green_riser",
+    "ext_green_tread": "zomboidcraft:block/city/ext_green_tread",
+    "ext_rake_e": "zomboidcraft:block/city/ext_rake_e",
+    "ext_rake_w": "zomboidcraft:block/city/ext_rake_w",
+    "ext_soffit": "zomboidcraft:block/city/ext_soffit",
+    "particle": "zomboidcraft:block/city/ext_soffit"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_green_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_green_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit"
+        },
+        "south": {
+          "texture": "#ext_green_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_green_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit"
+        },
+        "south": {
+          "texture": "#ext_green_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_green_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit"
+        },
+        "south": {
+          "texture": "#ext_green_riser",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_green_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        16,
+        0
+      ],
+      "to": [
+        16,
+        17.5,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_green_cap",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_green_cap",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ]
+        },
+        "east": {
+          "texture": "#ext_green_cap",
+          "uv": [
+            12.5,
+            0,
+            16,
+            1.5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_green_cap",
+          "uv": [
+            0,
+            0,
+            3.5,
+            1.5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_green_cap"
+        },
+        "down": {
+          "texture": "#ext_green_cap"
+        }
+      }
+    }
+  ]
+}

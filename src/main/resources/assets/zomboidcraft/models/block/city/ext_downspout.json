@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_gutter": "zomboidcraft:block/city/ext_gutter",
+    "particle": "zomboidcraft:block/city/ext_gutter"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        13
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_gutter",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        15.5
+      ],
+      "to": [
+        10,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter"
+        },
+        "down": {
+          "texture": "#ext_gutter"
+        }
+      }
+    }
+  ]
+}

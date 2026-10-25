@@ -227,8 +227,9 @@ class Palette:
                 faces = []
                 for b in spec["boxes"]:
                     box, tname = b[:6], b[6]
-                    t = self.tex(tname if isinstance(tname, str) else self.tex_for(spec["tex"], "side"))
                     for d in range(6):
+                        # one texture for the box, or a dict of faces (a roof step's shingled tread)
+                        t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
                         uv = fit_uv(uv)
                         # a face on the block's boundary hides behind a solid neighbour

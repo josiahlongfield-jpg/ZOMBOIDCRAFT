@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_post": "zomboidcraft:block/city/ext_post",
+    "particle": "zomboidcraft:block/city/ext_post"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post"
+        },
+        "south": {
+          "texture": "#ext_post"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post"
+        },
+        "down": {
+          "texture": "#ext_post",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        4
+      ],
+      "to": [
+        12,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post"
+        },
+        "south": {
+          "texture": "#ext_post"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post"
+        },
+        "down": {
+          "texture": "#ext_post"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post"
+        },
+        "south": {
+          "texture": "#ext_post"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_post"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        13,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_post",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_post"
+        }
+      }
+    }
+  ]
+}

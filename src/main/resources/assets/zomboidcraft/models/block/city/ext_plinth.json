@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_crown": "zomboidcraft:block/city/ext_crown",
+    "particle": "zomboidcraft:block/city/ext_crown"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_crown"
+        },
+        "south": {
+          "texture": "#ext_crown",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_crown",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_crown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_crown"
+        },
+        "down": {
+          "texture": "#ext_crown",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

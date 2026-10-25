@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_crown": "zomboidcraft:block/city/ext_crown",
+    "ext_flue_clay": "zomboidcraft:block/city/ext_flue_clay",
+    "ext_soot_top": "zomboidcraft:block/city/ext_soot_top",
+    "particle": "zomboidcraft:block/city/ext_crown"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_crown",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_crown",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_crown",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_crown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_crown"
+        },
+        "down": {
+          "texture": "#ext_crown",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        3,
+        4.5
+      ],
+      "to": [
+        11.5,
+        8,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_flue_clay"
+        },
+        "south": {
+          "texture": "#ext_flue_clay"
+        },
+        "east": {
+          "texture": "#ext_flue_clay"
+        },
+        "west": {
+          "texture": "#ext_flue_clay"
+        },
+        "up": {
+          "texture": "#ext_soot_top"
+        },
+        "down": {
+          "texture": "#ext_flue_clay"
+        }
+      }
+    }
+  ]
+}

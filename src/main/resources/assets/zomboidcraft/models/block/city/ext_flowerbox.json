@@ -1,0 +1,188 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_flowerbox": "zomboidcraft:block/city/ext_flowerbox",
+    "ext_mulch_dead": "zomboidcraft:block/city/ext_mulch_dead",
+    "home_foliage_dead": "zomboidcraft:block/city/home_foliage_dead",
+    "particle": "zomboidcraft:block/city/ext_flowerbox"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        9,
+        10
+      ],
+      "to": [
+        15.5,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_flowerbox"
+        },
+        "south": {
+          "texture": "#ext_flowerbox",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_flowerbox"
+        },
+        "west": {
+          "texture": "#ext_flowerbox"
+        },
+        "up": {
+          "texture": "#ext_flowerbox"
+        },
+        "down": {
+          "texture": "#ext_flowerbox"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13.5,
+        10.5
+      ],
+      "to": [
+        15,
+        14,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_mulch_dead"
+        },
+        "south": {
+          "texture": "#ext_mulch_dead"
+        },
+        "east": {
+          "texture": "#ext_mulch_dead"
+        },
+        "west": {
+          "texture": "#ext_mulch_dead"
+        },
+        "up": {
+          "texture": "#ext_mulch_dead"
+        },
+        "down": {
+          "texture": "#ext_mulch_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        12
+      ],
+      "to": [
+        7,
+        19,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            9,
+            0,
+            13,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            3,
+            0,
+            7,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            2,
+            0,
+            4,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            12,
+            0,
+            14,
+            5
+          ]
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        14,
+        11.5
+      ],
+      "to": [
+        13,
+        18,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            3,
+            0,
+            7,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            9,
+            0,
+            13,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            1.5,
+            0,
+            4.5,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#home_foliage_dead",
+          "uv": [
+            11.5,
+            0,
+            14.5,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#home_foliage_dead"
+        },
+        "down": {
+          "texture": "#home_foliage_dead"
+        }
+      }
+    }
+  ]
+}
