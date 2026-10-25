@@ -13,6 +13,13 @@ echo "## InventoryScreen.init / constructor bytecode"
 javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/void init()/,/^$/p' | head -60
 echo "## Minecraft: methods mentioning Screen"
 javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -i "screen"
+echo "## Window"
+javap -cp "$CP" -p com.mojang.blaze3d.platform.Window 2>&1 | grep -iE "scale|width|height"
+echo "## Options gui scale"
+javap -cp "$CP" -p net.minecraft.client.Options 2>&1 | grep -iE "guiScale|unicode"
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "resize|getWindow"
+echo "## Gui setScreen"
+javap -cp "$CP" -p net.minecraft.client.gui.Gui 2>&1 | grep -iE "screen"
 echo "## Minecraft: call sites creating InventoryScreen"
 javap -cp "$CP" -c -p net.minecraft.client.Minecraft 2>&1 | grep -n -B3 -A12 "class net/minecraft/client/gui/screens/inventory/InventoryScreen" | head -80
 exit 0

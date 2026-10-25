@@ -38,6 +38,7 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory) return vanilla;
+        if (player.hasInfiniteMaterials()) return vanilla; // creative keeps its own tabbed screen
         int gw = mc.getWindow().getGuiScaledWidth(), gh = mc.getWindow().getGuiScaledHeight();
         if (gw < W + 8 || gh < H + 8) return vanilla; // too small at this GUI scale; keep Minecraft's
         return new FieldKitScreen(player);
