@@ -3,6 +3,7 @@ package com.zomboidcraft.combat;
 import com.mojang.serialization.Codec;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.SurvivalStats;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
@@ -68,6 +69,8 @@ public final class Stamina {
     public static void onSwing(ServerPlayer player) {
         WeaponSpecs.WeaponSpec spec = Weapons.spec(player.getMainHandItem());
         double cost = spec != null ? spec.stamina() : 2.5;
+        // Blunt or Blade 5: practised swings cost a fifth less
+        if (spec != null && spec.skill() != null && Skills.level(player, spec.skill()) >= 5) cost *= 0.8;
         use(player, cost * ZcConfig.get().combat.swingCost);
     }
 

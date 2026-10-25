@@ -112,6 +112,11 @@ public final class Hud {
         WeaponHud.render(g, delta);
         SkillTape.render(g);
         GrabHud.render(g);
+        if (active()) {
+            ActionHud.render(g);
+            SensesHud.render(g);
+            QuickWheel.render(g, delta);
+        }
         if (peek && active()) {
             Font font = Minecraft.getInstance().font;
             Component c = KitArt.stencil("CHECKING YOUR KIT");

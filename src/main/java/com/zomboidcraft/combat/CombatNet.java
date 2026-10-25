@@ -30,6 +30,8 @@ public final class CombatNet {
         public static final int STRUGGLE = 2;
         public static final int RAIL = 3;
         public static final int LASER = 4;
+        /** The quick-use wheel let go over a belt slot: QUICK_USE + slot. */
+        public static final int QUICK_USE = 16;
         public static final Type<Action> TYPE = new Type<>(ZomboidCraft.id("action"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Action> CODEC =
                 StreamCodec.composite(ByteBufCodecs.VAR_INT, Action::action, Action::new);
@@ -45,11 +47,17 @@ public final class CombatNet {
         PayloadTypeRegistry.serverboundPlay().register(Action.TYPE, Action.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Fire.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
-            player.level().getServer().execute(() -> Guns.fire(player, payload.aiming()));
+            player.level().getServer().execute(() -> {
+                com.zomboidcraft.survival.TimedActions.cancel(player, "You stop to shoot.");
+                Guns.fire(player, payload.aiming());
+            });
         });
         ServerPlayNetworking.registerGlobalReceiver(Action.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
+                if (payload.action() == Action.RELOAD || payload.action() == Action.SHOVE) {
+                    com.zomboidcraft.survival.TimedActions.cancel(player, null);
+                }
                 switch (payload.action()) {
                     case Action.RELOAD -> Guns.reload(player);
                     case Action.SHOVE -> Shove.shove(player);
@@ -57,6 +65,10 @@ public final class CombatNet {
                     case Action.RAIL -> Guns.toggleLight(player);
                     case Action.LASER -> Guns.toggleLaser(player);
                     default -> {
+                        int slot = payload.action() - Action.QUICK_USE;
+                        if (slot >= 0 && slot < net.minecraft.world.entity.player.Inventory.getSelectionSize()) {
+                            com.zomboidcraft.survival.QuickUse.use(player, slot);
+                        }
                     }
                 }
             });

@@ -51,7 +51,7 @@ public final class CountyChunkGenerator extends ChunkGenerator {
         super(biomes);
     }
 
-    static CountyGen gen(long seed) {
+    public static CountyGen gen(long seed) {
         CountyGen g = GENS.get(seed);
         if (g == null) {
             if (GENS.size() > 3) {

@@ -27,6 +27,11 @@ public final class CountyGen {
         return county;
     }
 
+    /** The places' built blocks, shared with the paper maps so a place is only planned once. */
+    public PlaceCache cache() {
+        return cache;
+    }
+
     /** What the column-pass found, kept for the vegetation pass. */
     private static final class Column {
         int top;

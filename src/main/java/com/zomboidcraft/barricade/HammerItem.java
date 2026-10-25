@@ -6,6 +6,7 @@ import com.zomboidcraft.combat.MeleeWeaponItem;
 import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
+import com.zomboidcraft.survival.TimedActions;
 import com.zomboidcraft.zombie.Noise;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +30,7 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Right-click a window, door or barricade with planks and nails in your inventory to nail up a board.
- * Sneak + right-click a barricade to pry a board off.
+ * Sneak + right-click a barricade to pry a board off. Either takes a few seconds of standing still.
  */
 public class HammerItem extends MeleeWeaponItem {
     private static final int NAILS_PER_BOARD = 2;
@@ -40,29 +42,59 @@ public class HammerItem extends MeleeWeaponItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        // no swing either side: a swing would stop the hammering
         if (!(context.getLevel() instanceof ServerLevel level) || !(context.getPlayer() instanceof ServerPlayer player)) {
-            return InteractionResult.SUCCESS;
+            BlockState state = context.getLevel().getBlockState(context.getClickedPos());
+            boolean board = state.is(ModBlocks.BARRICADE)
+                    || context.getClickedFace().getAxis().isHorizontal() && (isWindow(state) || state.is(BlockTags.DOORS));
+            return board ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
         BlockPos clicked = context.getClickedPos();
-        BlockState state = level.getBlockState(clicked);
         Direction face = context.getClickedFace();
-
-        if (state.is(ModBlocks.BARRICADE)) {
-            return player.isShiftKeyDown() ? pryBoard(level, player, clicked, state) : addBoard(level, player, clicked, state, context);
-        }
-        if (face.getAxis().isVertical()) {
+        InteractionHand hand = context.getHand();
+        boolean prying = player.isShiftKeyDown();
+        if (!act(level, player, clicked, face, hand, prying, false)) {
             return InteractionResult.PASS;
         }
+        String key = "hammer:" + clicked.asLong() + ":" + prying;
+        if (TimedActions.doing(player, key)) return InteractionResult.CONSUME;
+        boolean pry = prying && level.getBlockState(clicked).is(ModBlocks.BARRICADE);
+        int carpentry = Skills.level(player, Skill.CARPENTRY);
+        int ticks = pry ? 30 : Math.max(30, 60 - 3 * carpentry);
+        level.playSound(null, clicked, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.5f, 1.1f);
+        TimedActions.start(player, key, pry ? "Prying off a board" : "Boarding up", ticks, p -> {
+            if (p.getItemInHand(hand).getItem() instanceof HammerItem) act(level, p, clicked, face, hand, prying, true);
+        });
+        return InteractionResult.CONSUME;
+    }
+
+    /**
+     * What a hammer click on this block does. With {@code commit} false it only checks that it can (materials
+     * included); with it true it does it.
+     */
+    private boolean act(ServerLevel level, ServerPlayer player, BlockPos clicked, Direction face, InteractionHand hand,
+                        boolean prying, boolean commit) {
+        BlockState state = level.getBlockState(clicked);
+        if (state.is(ModBlocks.BARRICADE)) {
+            if (prying) {
+                if (commit) pryBoard(level, player, clicked, state);
+                return true;
+            }
+            return addBoard(level, player, clicked, state, hand, commit);
+        }
+        if (face.getAxis().isVertical()) {
+            return false;
+        }
         if (isWindow(state)) {
-            return placeBarricade(level, player, clicked, face, context);
+            return placeBarricade(level, player, clicked, face, hand, commit);
         }
         if (state.is(BlockTags.DOORS)) {
             BlockPos inFront = clicked.relative(face);
             if (level.getBlockState(inFront).isAir()) {
-                return placeBarricade(level, player, inFront, face.getOpposite(), context);
+                return placeBarricade(level, player, inFront, face.getOpposite(), hand, commit);
             }
         }
-        return InteractionResult.PASS;
+        return false;
     }
 
     private static boolean isWindow(BlockState state) {
@@ -70,38 +102,41 @@ public class HammerItem extends MeleeWeaponItem {
                 || state.getBlock().getDescriptionId().contains("glass_pane");
     }
 
-    private InteractionResult placeBarricade(ServerLevel level, ServerPlayer player, BlockPos pos, Direction facing,
-                                             UseOnContext context) {
+    private boolean placeBarricade(ServerLevel level, ServerPlayer player, BlockPos pos, Direction facing,
+                                   InteractionHand hand, boolean commit) {
+        if (!level.getBlockState(pos).isAir() && !isWindow(level.getBlockState(pos))) return false;
+        if (!commit) return hasMaterials(player);
         if (!takeMaterials(player)) {
-            return InteractionResult.FAIL;
+            return false;
         }
         int strength = BarricadeBlock.strengthFor(Skills.level(player, Skill.CARPENTRY));
         level.setBlockAndUpdate(pos, ModBlocks.BARRICADE.defaultBlockState()
                 .setValue(BarricadeBlock.FACING, facing)
                 .setValue(BarricadeBlock.STRENGTH, strength));
-        hammered(level, player, pos, context);
-        return InteractionResult.SUCCESS;
+        hammered(level, player, pos, hand);
+        return true;
     }
 
-    private InteractionResult addBoard(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
-                                       UseOnContext context) {
+    private boolean addBoard(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
+                             InteractionHand hand, boolean commit) {
         int planks = state.getValue(BarricadeBlock.PLANKS);
         if (planks >= BarricadeBlock.MAX_PLANKS) {
             player.sendOverlayMessage(Component.literal("Can't fit any more boards.").withStyle(ChatFormatting.GRAY));
-            return InteractionResult.FAIL;
+            return false;
         }
+        if (!commit) return hasMaterials(player);
         if (!takeMaterials(player)) {
-            return InteractionResult.FAIL;
+            return false;
         }
         int strength = Math.max(state.getValue(BarricadeBlock.STRENGTH),
                 BarricadeBlock.strengthFor(Skills.level(player, Skill.CARPENTRY)));
         level.setBlockAndUpdate(pos, state.setValue(BarricadeBlock.PLANKS, planks + 1)
                 .setValue(BarricadeBlock.STRENGTH, strength));
-        hammered(level, player, pos, context);
-        return InteractionResult.SUCCESS;
+        hammered(level, player, pos, hand);
+        return true;
     }
 
-    private InteractionResult pryBoard(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state) {
+    private void pryBoard(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state) {
         int planks = state.getValue(BarricadeBlock.PLANKS);
         if (planks <= 1) {
             level.removeBlock(pos, false);
@@ -114,14 +149,32 @@ public class HammerItem extends MeleeWeaponItem {
         level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.9f, 0.8f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);
         Skills.addXp(player, Skill.CARPENTRY, 2);
-        return InteractionResult.SUCCESS;
     }
 
-    private void hammered(ServerLevel level, ServerPlayer player, BlockPos pos, UseOnContext context) {
+    private void hammered(ServerLevel level, ServerPlayer player, BlockPos pos, InteractionHand hand) {
         level.playSound(null, pos, ModSounds.HAMMER_NAIL, SoundSource.PLAYERS, 1f, 0.92f + level.getRandom().nextFloat() * 0.16f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE);
-        context.getItemInHand().hurtAndBreak(1, player, context.getHand());
+        player.getItemInHand(hand).hurtAndBreak(1, player, hand);
         Skills.addXp(player, Skill.CARPENTRY, 6);
+    }
+
+    /** Whether a plank and the nails are on you, saying so when they aren't. */
+    private static boolean hasMaterials(ServerPlayer player) {
+        if (player.hasInfiniteMaterials()) return true;
+        Inventory inventory = player.getInventory();
+        boolean plank = false;
+        int nails = 0;
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
+            plank |= stack.is(ItemTags.PLANKS);
+            if (stack.is(ModItems.NAILS)) nails += stack.getCount();
+        }
+        if (!plank || nails < NAILS_PER_BOARD) {
+            player.sendOverlayMessage(Component.literal("You need a plank and " + NAILS_PER_BOARD + " nails.")
+                    .withStyle(ChatFormatting.GRAY));
+            return false;
+        }
+        return true;
     }
 
     /** One plank and two nails, unless in creative. Higher carpentry sometimes saves the nails. */

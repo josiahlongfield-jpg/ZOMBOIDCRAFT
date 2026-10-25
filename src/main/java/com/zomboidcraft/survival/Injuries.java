@@ -2,6 +2,8 @@ package com.zomboidcraft.survival;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.Body.Part;
 import com.zomboidcraft.survival.Body.Region;
 import com.zomboidcraft.survival.Body.Wound;
@@ -102,13 +104,17 @@ public final class Injuries {
                 player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BLEEDING), 1f);
             }
         }
+        // First Aid: bound wounds heal 5% faster a level; from level 8 a splint sets a break a third faster
+        int firstAid = Skills.level(player, Skill.FIRST_AID);
         for (Region r : Region.values()) {
             Part p = body.part(r);
             if (p.fine()) continue;
             boolean bleeds = p.bleeding() && config.bleeding && random.nextFloat() >= config.clotChancePerSecond * p.wound().clot;
-            int woundLeft = p.wounded() ? Math.max(0, p.woundLeft() - (p.bandaged() ? 2 : 1)) : 0;
+            int bound = 2 + (random.nextFloat() < 0.1f * firstAid ? 1 : 0);
+            int woundLeft = p.wounded() ? Math.max(0, p.woundLeft() - (p.bandaged() ? bound : 1)) : 0;
             Wound wound = woundLeft == 0 ? Wound.NONE : p.wound();
-            int fractureLeft = p.fractured() ? Math.max(0, p.fractureLeft() - (p.splinted() ? 3 : 1)) : 0;
+            int set = firstAid >= 8 ? 4 : 3;
+            int fractureLeft = p.fractured() ? Math.max(0, p.fractureLeft() - (p.splinted() ? set : 1)) : 0;
             body = body.with(r, new Part(wound, woundLeft, bleeds && wound != Wound.NONE, p.bandaged() && wound != Wound.NONE,
                     fractureLeft, p.splinted() && fractureLeft > 0));
         }

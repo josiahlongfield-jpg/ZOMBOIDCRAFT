@@ -2,6 +2,9 @@ package com.zomboidcraft.combat;
 
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.GearStore;
+import com.zomboidcraft.survival.Body;
+import com.zomboidcraft.survival.Treatment;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,6 +31,9 @@ public final class Bench {
     /** Mend a weapon with what's in another carried slot: REPAIR + material slot * 256 + weapon slot. */
     public static final int REPAIR = 100_000_000;
 
+    /** See to a wound from the health page: TREAT + treatment * 8 + body part. */
+    public static final int TREAT = 200_000_000;
+
     /** Where the gear slots start in both menus: right after Minecraft's off hand. */
     static final int FIRST_GEAR = InventoryMenu.SHIELD_SLOT + 1;
 
@@ -43,6 +49,10 @@ public final class Bench {
         return REPAIR + materialSlot * 256 + weaponSlot;
     }
 
+    public static int treatButton(Treatment.Kind kind, Body.Region region) {
+        return TREAT + kind.ordinal() * 8 + region.ordinal();
+    }
+
     public static int fitButton(int partSlot, int gunSlot, Attachments.Slot socket) {
         return FIT + (partSlot * 256 + gunSlot) * 8 + socket.ordinal();
     }
@@ -53,6 +63,15 @@ public final class Bench {
      */
     public static boolean click(AbstractContainerMenu menu, Player player, int id, int carriedEnd) {
         var sockets = Attachments.Slot.values();
+        if (id >= TREAT) {
+            int n = id - TREAT;
+            if (n / 8 >= Treatment.Kind.values().length || n % 8 >= Body.Region.values().length) return false;
+            // the server runs it as a timed action; the client waits to hear how the body changed
+            if (player instanceof ServerPlayer serverPlayer) {
+                Treatment.start(serverPlayer, Treatment.Kind.values()[n / 8], Body.Region.values()[n % 8]);
+            }
+            return true;
+        }
         if (id >= REPAIR) {
             int n = id - REPAIR;
             int weapon = n % 256, material = n / 256;

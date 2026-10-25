@@ -29,7 +29,8 @@ import org.jetbrains.annotations.Nullable;
  * The kit screen: your survivor laid out like a looter shooter's character screen, over the player's own inventory
  * menu. It has its own key (I), beside the field kit on E, which stays the place for bag grids and looting. Q and E
  * flip its pages: Character (weapons, belt, clothing, carry gear and your figure), Supplies (everything you carry,
- * sorted) and the Bench (a weapon up close, with every part you carry that fits it, and its condition).
+ * sorted), the Bench (a weapon up close, with every part you carry that fits it, and its condition), Health (each body
+ * part and treating it), Skills (levels and what they really do) and the Map (where you've been, on M as well).
  * <p>
  * Nothing here is a vanilla slot on screen: every tile is drawn by hand, and clicks become the same slot clicks and
  * menu buttons a vanilla screen sends, so the server checks every move as usual.
@@ -40,9 +41,12 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
 
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("kit"));
     public static final KeyMapping OPEN = new KeyMapping("key.zomboidcraft.kit", InputConstants.KEY_I, CATEGORY);
+    /** Opens the kit screen straight on the map page. */
+    public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", false), SKILLS("Skills", false);
+        CHARACTER("Character", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", true), SKILLS("Skills", true),
+        MAP("Map", true);
 
         final String label;
         final boolean open;
@@ -60,6 +64,9 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     final CharacterPage character = new CharacterPage(this);
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
+    final HealthPage health = new HealthPage(this);
+    final SkillsPage skills = new SkillsPage(this);
+    final MapPage map = new MapPage(this);
 
     /** Something on screen that answers the mouse: a tile, a link, a tab. Rebuilt every frame. */
     record Hot(int x, int y, int w, int h, ItemStack card, @Nullable Runnable click, @Nullable Runnable alt, @Nullable String tip,
@@ -82,6 +89,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(OPEN);
+        KeyMappingHelper.registerKeyMapping(MAP_KEY);
         ClientTickEvents.END_CLIENT_TICK.register(KitScreen::tick);
     }
 
@@ -89,6 +97,14 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         while (OPEN.consumeClick()) {
             LocalPlayer player = mc.player;
             if (player != null && mc.gui.screen() == null) mc.gui.setScreen(new KitScreen(player));
+        }
+        while (MAP_KEY.consumeClick()) {
+            LocalPlayer player = mc.player;
+            if (player != null && mc.gui.screen() == null) {
+                KitScreen screen = new KitScreen(player);
+                screen.page = Page.MAP;
+                mc.gui.setScreen(screen);
+            }
         }
     }
 
@@ -248,6 +264,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         double mx = event.x(), my = event.y();
         boolean right = event.button() == 1;
+        if (fly == null && page == Page.MAP && map.pressed(mx, my, event.button())) return true;
         if (fly != null) {
             for (Hot h : flyHots) {
                 if (h.has(mx, my)) {
@@ -272,11 +289,13 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        if (page == Page.MAP) map.released(event.x(), event.y());
         return true;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (page == Page.MAP) map.dragged(event.x(), event.y());
         return true;
     }
 
@@ -284,6 +303,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     public boolean mouseScrolled(double mx, double my, double sx, double sy) {
         if (page == Page.SUPPLIES && supplies.scrolled(mx, my, sy)) return true;
         if (page == Page.BENCH && bench.scrolled(mx, my, sy)) return true;
+        if (page == Page.MAP && map.scrolled(mx, my, sy)) return true;
         return true;
     }
 
@@ -301,8 +321,12 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
             flip(-1);
             return true;
         }
-        if (OPEN.matches(event)) {
+        if (OPEN.matches(event) || MAP_KEY.matches(event) && page == Page.MAP) {
             onClose();
+            return true;
+        }
+        if (MAP_KEY.matches(event)) {
+            open(Page.MAP);
             return true;
         }
         if (event.key() == InputConstants.KEY_F && hover != null && hover.slot() >= 0 && KitItems.weapon(hover.card())) {
@@ -328,8 +352,9 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
             case CHARACTER -> character.draw(g, x, y, mouseX, mouseY);
             case SUPPLIES -> supplies.draw(g, x, y, mouseX, mouseY);
             case BENCH -> bench.draw(g, x, y, mouseX, mouseY);
-            default -> {
-            }
+            case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
+            case SKILLS -> skills.draw(g, x, y, mouseX, mouseY);
+            case MAP -> map.draw(g, x, y, mouseX, mouseY);
         }
     }
 

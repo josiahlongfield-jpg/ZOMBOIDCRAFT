@@ -151,7 +151,7 @@ public final class Guns {
         double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
                 * (1 - 0.05 * aimLevel);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
-            spread *= 1.6;
+            spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
         }
         Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))

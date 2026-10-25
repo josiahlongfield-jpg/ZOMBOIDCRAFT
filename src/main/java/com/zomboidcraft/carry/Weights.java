@@ -30,6 +30,8 @@ public final class Weights {
         mod("wood_glue", 0.2);
         mod("gun_oil", 0.15);
         mod("gun_parts", 0.25);
+        mod("street_map", 0.05);
+        mod("road_atlas", 0.3);
         mod("hammer", 0.7);
         mod("kitchen_knife", 0.3);
         mod("frying_pan", 1.2);

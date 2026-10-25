@@ -42,11 +42,14 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.barricade.Barricades.register();
         SurvivalEvents.register();
         com.zomboidcraft.survival.Injuries.register();
+        com.zomboidcraft.survival.TimedActions.register();
         ZombieEvents.register();
+        com.zomboidcraft.zombie.Noise.register();
         ZombieSpawner.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.combat.CombatNet.register();
+        com.zomboidcraft.world.map.MapNet.register();
         com.zomboidcraft.combat.Guns.register();
         com.zomboidcraft.combat.Downed.register();
         com.zomboidcraft.combat.Stamina.register();

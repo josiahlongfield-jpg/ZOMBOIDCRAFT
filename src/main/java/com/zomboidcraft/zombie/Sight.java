@@ -30,9 +30,14 @@ public final class Sight {
 
     /** How far this zombie could see this player right now. */
     public static double range(Mob zombie, Player player, ZcConfig.Senses config) {
-        double light = zombie.level().getMaxLocalRawBrightness(player.blockPosition()) / 15.0;
+        return range(player, config);
+    }
+
+    /** How far any zombie could see this player right now: what the HUD's sight meter shows. */
+    public static double range(Player player, ZcConfig.Senses config) {
+        double light = player.level().getMaxLocalRawBrightness(player.blockPosition()) / 15.0;
         double range = config.sightRange * (config.darkSight + (1 - config.darkSight) * light)
-                * WeatherDirector.sight(zombie.level());
+                * WeatherDirector.sight(player.level());
         if (player.isCrouching()) {
             range *= config.crouchSight;
         }
