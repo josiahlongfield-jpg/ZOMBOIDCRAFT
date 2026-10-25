@@ -523,9 +523,10 @@ public class CarProp extends Entity {
         if (speed > 0.12) {
             for (LivingEntity hit : struck(m)) {
                 float damage = (float) (speed * speed * 25 + speed * 5);
-                if (hit.hurtServer(server, damageSources().mobAttack(driver), damage)) {
+                DamageSource source = damageSources().mobAttack(driver);
+                if (hit.hurtServer(server, source, damage)) {
                     Vec3 away = hit.position().subtract(position());
-                    hit.knockback(Math.min(2.5, speed * 2.5), -away.x, -away.z);
+                    hit.knockback(Math.min(2.5, speed * 2.5), -away.x, -away.z, source, damage);
                     if (speed > 0.35) {
                         Downed.knockDown(hit);
                     }
