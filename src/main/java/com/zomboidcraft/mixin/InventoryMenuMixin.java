@@ -75,15 +75,15 @@ public abstract class InventoryMenuMixin implements Carry.Bags {
         ItemStack stack = slot.getItem();
         ItemStack before = stack.copy();
         if (fromKit) {
-            zomboidcraft$move(self, stack, InventoryMenu.INV_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
+            CarrySlots.move(self, stack, InventoryMenu.INV_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
         } else {
             BagSpec spec = BagItem.spec(stack);
             int gearSlot = spec == null ? -1 : GearStore.slotFor(spec.wear());
             if (gearSlot >= 0) {
-                zomboidcraft$move(self, stack, zomboidcraft$firstExtra + gearSlot, zomboidcraft$firstExtra + gearSlot + 1);
+                CarrySlots.move(self, stack, zomboidcraft$firstExtra + gearSlot, zomboidcraft$firstExtra + gearSlot + 1);
             }
             if (stack.getCount() == before.getCount()) {
-                zomboidcraft$move(self, stack, zomboidcraft$firstExtra + GearStore.SIZE, self.slots.size());
+                CarrySlots.move(self, stack, zomboidcraft$firstExtra + GearStore.SIZE, self.slots.size());
             }
             if (stack.getCount() == before.getCount()) {
                 return; // no bag took it: Minecraft's own pockets-and-belt shuffle
@@ -100,33 +100,5 @@ public abstract class InventoryMenuMixin implements Carry.Bags {
         }
         slot.onTake(player, stack);
         cir.setReturnValue(before);
-    }
-
-    /** Like Minecraft's moveItemStackTo, but every slot's own rules (locks, weight limits) apply to merges too. */
-    @Unique
-    private static void zomboidcraft$move(AbstractContainerMenu menu, ItemStack stack, int from, int to) {
-        for (int pass = 0; pass < 2 && !stack.isEmpty(); pass++) {
-            for (int i = from; i < to && !stack.isEmpty(); i++) {
-                Slot target = menu.slots.get(i);
-                ItemStack there = target.getItem();
-                if (!target.mayPlace(stack)) {
-                    continue;
-                }
-                int max = Math.min(target.getMaxStackSize(stack), stack.getMaxStackSize());
-                if (pass == 0 && !there.isEmpty() && ItemStack.isSameItemSameComponents(there, stack)) {
-                    int add = Math.min(stack.getCount(), max - there.getCount());
-                    if (add > 0) {
-                        there.grow(add);
-                        stack.shrink(add);
-                        target.setChanged();
-                    }
-                } else if (pass == 1 && there.isEmpty()) {
-                    int add = Math.min(stack.getCount(), max);
-                    if (add > 0) {
-                        target.setByPlayer(stack.split(add));
-                    }
-                }
-            }
-        }
     }
 }

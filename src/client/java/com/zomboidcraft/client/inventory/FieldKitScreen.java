@@ -7,6 +7,13 @@ import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.Wear;
 import com.zomboidcraft.carry.Weights;
+import com.zomboidcraft.loot.Nearby;
+import com.zomboidcraft.loot.NearbyMenu;
+import java.util.Optional;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -22,22 +29,23 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * The survival inventory as a field kit: Minecraft's own slots, clicks and hotbar, laid out as gear, carried and
- * nearby panels over the blurred world. Only slot positions change, so the server sees the usual inventory menu.
+ * nearby panels over the blurred world. It shows either the nearby menu (your things plus the floor and containers
+ * in reach, slot for slot like the inventory menu after that) or, on a server without the mod, the plain inventory.
  */
-public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
-    static final int W = 470;
+public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractContainerScreen<M> {
+    static final int W = 530;
     static final int H = 214;
     // panel rectangles, relative to leftPos/topPos
     static final int GEAR_X = 0, GEAR_W = 142;
     static final int CARRY_X = 150, CARRY_W = 186;
-    static final int NEAR_X = 344, NEAR_W = 126;
+    static final int NEAR_X = 344, NEAR_W = 186;
+    static final int CRAFT_Y = 140;
     static final int MIRROR_X = 36, MIRROR_Y = 30, MIRROR_W = 70, MIRROR_H = 140;
     static final int BELT_Y = 150;
     static final int BAG_Y = 48, POCKET_Y = 122, LOAD_Y = 178, TAB_W = 24;
@@ -45,17 +53,33 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
     private final Map<Slot, int[]> original = new HashMap<>();
     private final long opened = System.currentTimeMillis();
 
-    /** Decides whether the field kit takes over from the vanilla inventory it was about to open. */
+    public static void register() {
+        MenuScreens.<NearbyMenu, FieldKitScreen<NearbyMenu>>register(Nearby.MENU, FieldKitScreen::new);
+    }
+
+    /**
+     * Decides whether the field kit takes over from the vanilla inventory it was about to open. With the mod on the
+     * server it asks for the nearby menu and opens nothing itself (the server's menu brings the screen); otherwise
+     * it lays out the plain inventory.
+     */
     public static net.minecraft.client.gui.screens.Screen replace(InventoryScreen vanilla) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory) return vanilla;
         if (player.hasInfiniteMaterials()) return vanilla; // creative keeps its own tabbed screen
-        return new FieldKitScreen(player);
+        if (ClientPlayNetworking.canSend(Nearby.OpenKit.TYPE)) {
+            ClientPlayNetworking.send(new Nearby.OpenKit());
+            return null;
+        }
+        return new FieldKitScreen<>(player.inventoryMenu, player.getInventory(), Component.translatable("container.crafting"));
     }
 
-    public FieldKitScreen(Player player) {
-        super(player.inventoryMenu, player.getInventory(), Component.translatable("container.crafting"), W, H);
+    public FieldKitScreen(M menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, W, H);
+    }
+
+    private NearbyMenu near() {
+        return menu instanceof NearbyMenu near ? near : null;
     }
 
     @Override
@@ -182,11 +206,23 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
                 place(slot, CARRY_X + (CARRY_W - cols * 18) / 2 + (i % cols) * 18, BAG_Y + (i / cols) * 18);
             }
         }
-        // 2x2 crafting and its result on the right
+        // 2x2 crafting and its result on the right: under the loot, or on its own without it
+        NearbyMenu near = near();
+        int craftX = NEAR_X + (near != null ? 40 : 48);
+        int craftY = near != null ? CRAFT_Y : 46;
         for (int i = 0; i < 4; i++) {
-            place(InventoryMenu.CRAFT_SLOT_START + i, NEAR_X + 18 + (i % 2) * 18, 46 + (i / 2) * 18);
+            place(InventoryMenu.CRAFT_SLOT_START + i, craftX + (i % 2) * 18, craftY + (i / 2) * 18);
         }
-        place(InventoryMenu.RESULT_SLOT, NEAR_X + 88, 55);
+        place(InventoryMenu.RESULT_SLOT, craftX + 70, craftY + 9);
+        // the floor and containers in reach, nine across like a chest
+        if (near != null) {
+            for (Slot slot : menu.slots) {
+                if (slot instanceof NearbyMenu.NearbySlot loot) {
+                    int i = loot.getContainerSlot();
+                    place(slot, NEAR_X + 12 + (i % 9) * 18, BAG_Y + (i / 9) * 18);
+                }
+            }
+        }
     }
 
     @Override
@@ -196,15 +232,51 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
         layoutSlots();
     }
 
+    /** Where the "take all" tape was last drawn, for clicks. */
+    private int takeX, takeY, takeW;
+
+    private void tabSound() {
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1.2f, 0.5f));
+    }
+
+    /** The nearby tab under the mouse, or -1. */
+    private int nearTabAt(double mx, double my) {
+        NearbyMenu near = near();
+        if (near == null || my < topPos + 4 || my >= topPos + 26) return -1;
+        int tx = leftPos + NEAR_X + 10;
+        for (int k = 0; k < near.sources().size(); k++) {
+            if (mx >= tx && mx < tx + TAB_W) return k;
+            tx += TAB_W + 2;
+        }
+        return -1;
+    }
+
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        NearbyMenu near = near();
+        int k = nearTabAt(event.x(), event.y());
+        if (near != null && k >= 0) {
+            if (near.selected != k) {
+                near.selected = k;
+                minecraft.gameMode.handleInventoryButtonClick(menu.containerId, k);
+                layoutSlots();
+                tabSound();
+            }
+            return true;
+        }
+        if (near != null && takeW > 0 && event.x() >= takeX && event.x() < takeX + takeW && event.y() >= takeY
+                && event.y() < takeY + 13) {
+            minecraft.gameMode.handleInventoryButtonClick(menu.containerId, NearbyMenu.TAKE_ALL + near.selected);
+            tabSound();
+            return true;
+        }
         int tx = leftPos + CARRY_X + 10;
         for (Tab t : tabs()) {
             if (event.x() >= tx && event.x() < tx + TAB_W && event.y() >= topPos + 4 && event.y() < topPos + 26) {
                 if (tab != t) {
                     tab = t;
                     layoutSlots();
-                    minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1.2f, 0.5f));
+                    tabSound();
                 }
                 return true;
             }
@@ -236,21 +308,71 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
         gearPanel(g, x, y, mouseX, mouseY);
         carryPanel(g, x, y);
 
-        // nearby: crafting for now; loot shelves and the floor land here next
-        KitArt.panel(g, KitArt.Material.METAL, x + NEAR_X, y, NEAR_W, H);
-        KitArt.header(g, font, "Field craft", x + NEAR_X + 12, y + 12);
-        g.text(font, Component.literal("->"), x + NEAR_X + 64, y + 59, KitArt.INK_DIM, false);
+        nearPanel(g, x, y);
 
         // slot sockets under every visible slot, and a brass ring on the one in your hand
         for (Slot slot : menu.slots) {
             if (slot.isActive()) KitArt.slot(g, x + slot.x, y + slot.y);
         }
         int held = minecraft.player.getInventory().getSelectedSlot();
+        if (menu.slots.size() <= InventoryMenu.USE_ROW_SLOT_START + held) return;
         Slot hand = menu.slots.get(InventoryMenu.USE_ROW_SLOT_START + held);
         g.blitSprite(RenderPipelines.GUI_TEXTURED, KitArt.SLOT_SELECTED, x + hand.x - 3, y + hand.y - 3, 22, 22);
 
         // torch light follows the cursor
         g.blitSprite(RenderPipelines.GUI_TEXTURED, KitArt.TORCH, mouseX - 110, mouseY - 110, 220, 220);
+    }
+
+    /** The world side: the floor and containers in reach as tabs, and the 2x2 under them. */
+    private void nearPanel(GuiGraphicsExtractor g, int x, int y) {
+        KitArt.panel(g, KitArt.Material.METAL, x + NEAR_X, y, NEAR_W, H);
+        NearbyMenu near = near();
+        takeW = 0;
+        if (near == null) {
+            KitArt.header(g, font, "Field craft", x + NEAR_X + 12, y + 12);
+            g.text(font, Component.literal("->"), x + NEAR_X + 92, y + 59, KitArt.INK_DIM, false);
+            return;
+        }
+        List<Nearby.Source> sources = near.sources();
+        int tx = x + NEAR_X + 10;
+        for (int k = 0; k < sources.size(); k++) {
+            Nearby.Source source = sources.get(k);
+            g.blitSprite(RenderPipelines.GUI_TEXTURED, k == near.selected ? KitArt.TAB_SELECTED : KitArt.TAB, tx, y + 4, TAB_W, 22);
+            if (!source.icon().isEmpty()) {
+                g.item(source.icon(), tx + (TAB_W - 16) / 2, y + 7);
+            } else {
+                String mark = source.floor() ? "FL" : source.name().getString().substring(0, 1);
+                g.centeredText(font, KitArt.stencil(mark), tx + TAB_W / 2, y + 11, KitArt.STENCIL_INK);
+            }
+            tx += TAB_W + 2;
+        }
+        int k = Math.max(0, Math.min(near.selected, sources.size() - 1));
+        Nearby.Source source = sources.get(k);
+        int hy = y + 32;
+        double inside = 0;
+        boolean any = false;
+        for (int i = near.sourceStart(k); i < near.sourceEnd(k); i++) {
+            ItemStack stack = menu.slots.get(i).getItem();
+            inside += Weights.of(stack);
+            any |= !stack.isEmpty();
+        }
+        String name = source.name().getString();
+        if (font.width(name) > 96) name = font.plainSubstrByWidth(name, 90) + "..";
+        KitArt.header(g, font, name, x + NEAR_X + 12, hy);
+        if (any) {
+            takeW = KitArt.tape(g, font, "take all", x + NEAR_X + NEAR_W - 9, hy - 3, true, KitArt.MARKER_INK);
+            takeX = x + NEAR_X + NEAR_W - 9 - takeW;
+            takeY = hy - 3;
+            g.text(font, Component.literal(Weights.format(inside)), takeX - 6 - font.width(Weights.format(inside)), hy,
+                    0x88E6DCC0, false);
+        } else if (source.floor()) {
+            g.text(font, KitArt.marker("Nothing on the ground."), x + NEAR_X + 16, y + 108, KitArt.INK_DIM, false);
+            g.text(font, KitArt.marker("Put things here to set them down."), x + NEAR_X + 16, y + 120 - 2, KitArt.INK_DIM, false);
+        } else {
+            g.text(font, KitArt.marker("Empty."), x + NEAR_X + 16, y + 108, KitArt.INK_DIM, false);
+        }
+        g.text(font, KitArt.stencil("FIELD CRAFT"), x + NEAR_X + 14, y + CRAFT_Y - 11, 0xAAE6DCC0, false);
+        g.text(font, Component.literal("->"), x + NEAR_X + 85, y + CRAFT_Y + 13, KitArt.INK_DIM, false);
     }
 
     private void gearPanel(GuiGraphicsExtractor g, int x, int y, int mouseX, int mouseY) {
@@ -363,6 +485,12 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
 
     @Override
     protected void extractTooltip(GuiGraphicsExtractor g, int mouseX, int mouseY) {
+        int k = nearTabAt(mouseX, mouseY);
+        if (k >= 0 && menu.getCarried().isEmpty()) {
+            g.setTooltipForNextFrame(font, List.of(near().sources().get(k).name()), Optional.empty(), mouseX, mouseY,
+                    KitArt.TOOLTIP_STYLE);
+            return;
+        }
         if (hoveredSlot != null && hoveredSlot.hasItem() && menu.getCarried().isEmpty()) {
             ItemStack stack = hoveredSlot.getItem();
             g.setTooltipForNextFrame(font, getTooltipFromContainerItem(stack), stack.getTooltipImage(), mouseX, mouseY,

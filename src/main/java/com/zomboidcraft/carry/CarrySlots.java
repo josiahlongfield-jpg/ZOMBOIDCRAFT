@@ -5,6 +5,7 @@ import com.zomboidcraft.combat.RifleItem;
 import java.util.function.Predicate;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -95,6 +96,36 @@ public final class CarrySlots {
         @Override
         public boolean isActive() {
             return open() && shown(this, player);
+        }
+    }
+
+    /**
+     * Like Minecraft's moveItemStackTo over slots [from, to), but every slot's own rules (locks, weight limits) apply
+     * to merges too. Tops up matching stacks first, then fills empty slots.
+     */
+    public static void move(AbstractContainerMenu menu, ItemStack stack, int from, int to) {
+        for (int pass = 0; pass < 2 && !stack.isEmpty(); pass++) {
+            for (int i = from; i < to && !stack.isEmpty(); i++) {
+                Slot target = menu.slots.get(i);
+                ItemStack there = target.getItem();
+                if (!target.mayPlace(stack)) {
+                    continue;
+                }
+                int max = Math.min(target.getMaxStackSize(stack), stack.getMaxStackSize());
+                if (pass == 0 && !there.isEmpty() && ItemStack.isSameItemSameComponents(there, stack)) {
+                    int add = Math.min(stack.getCount(), max - there.getCount());
+                    if (add > 0) {
+                        there.grow(add);
+                        stack.shrink(add);
+                        target.setChanged();
+                    }
+                } else if (pass == 1 && there.isEmpty()) {
+                    int add = Math.min(stack.getCount(), max);
+                    if (add > 0) {
+                        target.setByPlayer(stack.split(add));
+                    }
+                }
+            }
         }
     }
 

@@ -24,6 +24,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         HudElementRegistry.addLast(ZomboidCraft.id("moodles"), MoodleHud::render);
         com.zomboidcraft.client.carry.CarryClient.register();
+        com.zomboidcraft.client.inventory.FieldKitScreen.register();
         SkillsHud.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
