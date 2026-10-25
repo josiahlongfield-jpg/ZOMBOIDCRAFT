@@ -20,7 +20,7 @@ import net.minecraft.util.Mth;
  * dragging steps on bent knees, arms hanging and swaying until it has a target, then reaching for it.
  *
  * It is built like a Zomboid character rather than a Minecraft one: arms and legs bend at the
- * elbow and knee, the hands are mittens with a thumb, limbs are slimmer, the head is a little
+ * elbow and knee, the hands are mittens, limbs are slimmer, the head is a little
  * smaller, and the face has a real brow, nose, cheekbones, jaw and ears. Every new block samples
  * the part of the player-layout skin it sits on, so the existing skins, gear and eye masks fit.
  *
@@ -42,8 +42,6 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
     protected final ModelPart leftForearm;
     protected final ModelPart rightShin;
     protected final ModelPart leftShin;
-    private final ModelPart rightThumb;
-    private final ModelPart leftThumb;
     /** Every box that is part of the body itself (skin-textured), as opposed to gear. */
     protected final List<ModelPart> bodyParts;
 
@@ -65,11 +63,9 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         leftForearm = leftArm.getChild("forearm");
         rightShin = rightLeg.getChild("shin");
         leftShin = leftLeg.getChild("shin");
-        rightThumb = rightForearm.getChild("hand").getChild("thumb");
-        leftThumb = leftForearm.getChild("hand").getChild("thumb");
         List<ModelPart> parts = new ArrayList<>(List.of(head, body, rightArm, leftArm, rightLeg, leftLeg,
                 rightForearm, leftForearm, rightForearm.getChild("hand"), leftForearm.getChild("hand"),
-                rightThumb, leftThumb, rightShin, leftShin));
+                rightShin, leftShin));
         for (String feature : FACE) {
             parts.add(head.getChild(feature));
         }
@@ -91,8 +87,8 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
                 .addBox(-3f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(-5f, 2f, 0f));
         PartDefinition leftArm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48)
                 .addBox(-1f, -2f, -2f, 4f, ELBOW, 4f), PartPose.offset(5f, 2f, 0f));
-        arm(rightArm, 40, 16, -1f, 1f);
-        arm(leftArm, 32, 48, 1f, -1f);
+        arm(rightArm, 40, 16, -1f);
+        arm(leftArm, 32, 48, 1f);
         // The stump of a torn-off forearm is the upper arm itself, with a bone sticking out.
         rightArm.addOrReplaceChild("stub", CubeListBuilder.create(), PartPose.ZERO);
         rightArm.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(56, 16)
@@ -120,21 +116,18 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
     }
 
     /**
-     * Forearm and mitten hand below the upper arm. {@code cx} is the limb's centre line and
-     * {@code in} the side facing the body, where the thumb goes. Texture rows: upper arm 0-5,
+     * Forearm and mitten hand below the upper arm. {@code cx} is the limb's centre line. Texture rows: upper arm 0-5,
      * forearm 5-9, hand 9-12 of the vanilla arm, so a painted sleeve, cuff and hand land where they did.
      */
-    private static void arm(PartDefinition arm, int u, int v, float cx, float in) {
+    private static void arm(PartDefinition arm, int u, int v, float cx) {
         int fv = v + (int) ELBOW;  // the front face starts one depth (4) below v
         PartDefinition fore = arm.addOrReplaceChild("forearm", CubeListBuilder.create().texOffs(u, fv)
                 .addBox(-2f, 0f, -2f, 4f, WRIST, 4f, new CubeDeformation(-0.2f, 0f, -0.2f)),
                 PartPose.offset(cx, ELBOW - 2f, 0f));
         float handLen = 12f - ELBOW - WRIST;
-        PartDefinition hand = fore.addOrReplaceChild("hand", CubeListBuilder.create().texOffs(u, fv + (int) WRIST)
+        fore.addOrReplaceChild("hand", CubeListBuilder.create().texOffs(u, fv + (int) WRIST)
                 .addBox(-2f, 0f, -2f, 4f, handLen, 4f, new CubeDeformation(0.3f, 0.1f, -0.55f)),
                 PartPose.offset(0f, WRIST, 0f));
-        hand.addOrReplaceChild("thumb", CubeListBuilder.create().texOffs(u, fv + (int) WRIST + 1)
-                .addBox(-0.6f, 0f, -0.6f, 1.2f, 2f, 1.2f), PartPose.offsetAndRotation(in * 2.1f, 0.3f, -0.9f, 0f, 0f, in * 0.3f));
     }
 
     /**
@@ -222,9 +215,6 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
         if (state.isAggressive) {
             rightForearm.xRot = -0.25f - 0.5f * (1f - grab) + Mth.sin(time * 0.17f + phase) * 0.12f;
             leftForearm.xRot = -0.35f - 0.5f * (1f - grab) + Mth.cos(time * 0.15f + phase) * 0.12f;
-            // thumbs spread while reaching, clamp shut on a grab
-            rightThumb.zRot = 0.3f - 0.5f + grab * 0.9f;
-            leftThumb.zRot = -0.3f + 0.5f - grab * 0.9f;
             rightArm.xRot -= grab * 0.35f;
             leftArm.xRot -= grab * 0.35f;
         } else {
