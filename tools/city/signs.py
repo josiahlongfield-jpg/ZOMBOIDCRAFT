@@ -86,6 +86,16 @@ FASCIA = [
     ("antiques", "painted", "ANTIQUES", (40, 54, 70), (230, 214, 160), 3, "serif"),
     ("realty", "box", "KNOX REALTY", (232, 230, 220), (30, 90, 60), 4, "sans"),
     ("vfw", "box", "VFW POST 1186", (32, 46, 90), (230, 224, 206), 4, "black"),
+    # the farms: the name on the barn or the gate, the stand by the road, the field signs
+    ("hollowcreek", "painted", "HOLLOW CREEK FARM", (120, 36, 30), (234, 226, 206), 6, "serif"),
+    ("dairy", "painted", "MAPLE RIDGE DAIRY", (232, 228, 216), (40, 64, 44), 6, "serif"),
+    ("ranch", "painted", "BAR K RANCH", (72, 52, 36), (232, 214, 170), 4, "serif"),
+    ("orchard", "painted", "MILLER ORCHARDS", (52, 80, 46), (236, 226, 190), 5, "serif"),
+    ("apples", "painted", "U-PICK APPLES", (150, 36, 30), (236, 226, 200), 5, "serif"),
+    ("produce", "painted", "FRESH PRODUCE", (52, 80, 46), (236, 226, 190), 5, "serif"),
+    ("eggs", "painted", "FARM EGGS", (232, 228, 216), (150, 40, 30), 4, "serif"),
+    ("trespass", "box", "NO TRESPASSING", (196, 42, 34), (236, 232, 222), 4, "black"),
+    ("seedcorn", "box", "KNOX HYBRID SEED", (238, 214, 60), (30, 70, 40), 5, "black"),
 ]
 # hanging neon, a letter per block: id, letters, tube colour
 BLADES = [
@@ -489,7 +499,8 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("sign_", "blade_", "neon_"))}
+    kept = {k: v for k, v in data["blocks"].items()
+            if not k.startswith(("sign_", "blade_", "neon_")) or k == "sign_post"}  # the bare post isn't a board
     kept.update(blocks())
     data["blocks"] = kept
     # one block per line, like the hand-written entries

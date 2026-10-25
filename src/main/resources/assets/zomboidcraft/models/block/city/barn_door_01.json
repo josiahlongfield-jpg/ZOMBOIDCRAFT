@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "barn_door_01": "zomboidcraft:block/city/barn_door_01",
+    "barn_red": "zomboidcraft:block/city/barn_red",
+    "particle": "zomboidcraft:block/city/barn_door_01"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#barn_door_01",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#barn_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#barn_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#barn_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#barn_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#barn_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

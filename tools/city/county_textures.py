@@ -171,6 +171,285 @@ def register(ns):
         t.grime(0.4)
         return t
 
+    # ---------------------------------------------------------------- farms
+
+    class Big:
+        """A canvas cols x rows blocks, drawn once and cut into a Tex per block."""
+
+        def __init__(self, seed, cols, rows, base, alpha=255.0):
+            self.rng = np.random.default_rng(seed)
+            self.cols, self.rows, self.seed = cols, rows, seed
+            W, H = cols * N, rows * N
+            self.c = np.zeros((H, W, 3), np.float32) + np.array(base, np.float32)
+            self.h = np.full((H, W), 0.75, np.float32)
+            self.smooth = np.full((H, W), 0.2, np.float32)
+            self.f0 = np.full((H, W), 10.0, np.float32)
+            self.poro = np.full((H, W), 40.0, np.float32)
+            self.emit = np.zeros((H, W), np.float32)
+            self.alpha = np.full((H, W), alpha, np.float32)
+
+        def tile(self, i, j):
+            t = P.Tex(self.seed + i * 7 + j, (0, 0, 0))
+            for k in ("c", "h", "smooth", "f0", "poro", "emit", "alpha"):
+                setattr(t, k, getattr(self, k)[j * N:(j + 1) * N, i * N:(i + 1) * N].copy())
+            return t
+
+    def cut(cols, rows, draw):
+        """Names a (col, row) tile of a Big drawn by draw() on first use."""
+        cache = {}
+
+        def tile(i, j):
+            def make():
+                if "big" not in cache:
+                    cache["big"] = draw()
+                return cache["big"].tile(i, j)
+            return make
+        return {(i, j): tile(i, j) for i in range(cols) for j in range(rows)}
+
+    def paint_line(b, x0, y0, x1, y1, width, col, h=0.95):
+        """A straight painted board or stroke from (x0, y0) to (x1, y1), width texels across."""
+        n = int(max(abs(x1 - x0), abs(y1 - y0))) + 1
+        r = width / 2
+        for k in range(n):
+            x = x0 + (x1 - x0) * k / max(n - 1, 1)
+            y = y0 + (y1 - y0) * k / max(n - 1, 1)
+            ya, yb = int(max(0, y - r)), int(min(b.c.shape[0], y + r + 1))
+            xa, xb = int(max(0, x - r)), int(min(b.c.shape[1], x + r + 1))
+            b.c[ya:yb, xa:xb] = col
+            b.h[ya:yb, xa:xb] = h
+            b.alpha[ya:yb, xa:xb] = 255
+
+    def barn_door(cols, rows, seed, panels):
+        """Red board doors in a white frame, a white X across each panel, rain-run and peeling."""
+        def draw():
+            b = Big(seed, cols, rows, (120, 44, 34))
+            for i in range(cols):
+                for j in range(rows):
+                    t = tone(ns.photo("distressed_painted_planks", span=1, offset=(0.1 + 0.27 * i, 0.15 + 0.2 * j), height=1.3),
+                             (122, 44, 34), 1.4)
+                    b.c[j * N:(j + 1) * N, i * N:(i + 1) * N] = t.c
+                    b.h[j * N:(j + 1) * N, i * N:(i + 1) * N] = t.h
+            W, H = cols * N, rows * N
+            white = (214, 208, 194)
+            fw = 9
+            for x0, y0, x1, y1 in ((0, 0, W, fw), (0, H - fw, W, H), (0, 0, fw, H), (W - fw, 0, W, H)):
+                b.c[y0:y1, x0:x1] = white
+                b.h[y0:y1, x0:x1] = 0.95
+            ph = H // panels
+            for k in range(panels):
+                y0, y1 = k * ph, (k + 1) * ph
+                if k:
+                    b.c[y0 - fw // 2:y0 + fw // 2 + 1] = white
+                    b.h[y0 - fw // 2:y0 + fw // 2 + 1] = 0.95
+                paint_line(b, fw, y0 + fw, W - fw, y1 - fw, 8, white)
+                paint_line(b, W - fw, y0 + fw, fw, y1 - fw, 8, white)
+            # the white has worn back to grey wood in places, dirt splashed up from the yard
+            worn = b.rng.random((H, W)) < 0.04
+            b.c[worn & (b.c[..., 0] > 180)] = (128, 120, 108)
+            y = np.arange(H)[:, None] / H
+            b.c *= (1 - 0.35 * np.clip((y - 0.8) * 5, 0, 1) * (0.6 + 0.4 * b.rng.random((H, W))))[..., None]
+            b.c *= (1 - 0.18 * b.rng.random((1, W)) ** 6 * np.clip(1 - y * 1.5, 0, 1))[..., None]
+            return b
+        return cut(cols, rows, draw)
+
+    def windmill_wheel(seed, k=5):
+        """A farm windmill's wheel: galvanized sails between two rims round a hub, a few torn off."""
+        def draw():
+            b = Big(seed, k, k, (168, 170, 166), alpha=0.0)
+            H = k * N
+            yy2, xx2 = np.mgrid[0:H, 0:H] + 0.5
+            cx = cy = H / 2
+            r = np.hypot(xx2 - cx, yy2 - cy)
+            ang = np.arctan2(yy2 - cy, xx2 - cx)
+            r1, r2 = H * 0.17, H * 0.48
+            sails = 18
+            missing = set(b.rng.choice(sails, 3, replace=False).tolist())
+            phase = (ang / (2 * np.pi) * sails) % 1.0
+            idx = np.floor((ang / (2 * np.pi) * sails) % sails).astype(int)
+            twist = (r - r1) / (r2 - r1)
+            sail = (r > r1) & (r < r2) & (np.abs(phase - 0.5 - 0.06 * twist) < 0.28)
+            keep = ~np.isin(idx, list(missing))
+            m = sail & keep
+            b.alpha[m] = 255
+            shade = 0.75 + 0.35 * phase
+            b.c[m] *= shade[m][..., None]
+            for rr, wdt in ((r2 - 2, 3.5), (r1 + (r2 - r1) * 0.45, 2.5), (r1, 3.0)):
+                ring = np.abs(r - rr) < wdt
+                b.c[ring] = (110, 110, 106)
+                b.alpha[ring] = 255
+                b.h[ring] = 0.95
+            hub = r < H * 0.07
+            b.c[hub] = (52, 52, 50)
+            b.alpha[hub] = 255
+            for a in np.linspace(0, 2 * np.pi, 6, endpoint=False):  # the arms out to the rim
+                for s2 in np.linspace(H * 0.05, r2, 160):
+                    x, y = int(cx + np.cos(a) * s2), int(cy + np.sin(a) * s2)
+                    b.c[y - 1:y + 2, x - 1:x + 2] = (92, 92, 88)
+                    b.alpha[y - 1:y + 2, x - 1:x + 2] = 255
+            rust = (b.rng.random((H, H)) < 0.05) & (b.alpha > 0)
+            b.c[rust] = (120, 74, 46)
+            b.smooth[:] = 0.45
+            b.f0[:] = 230
+            return b
+        return cut(k, k, draw)
+
+    def corn(upper, dry, seed):
+        """Field corn past harvest: stalks with long arching leaves, tassels gone to seed, ears in husk."""
+        def make():
+            t = ns.cutout(seed, (90, 110, 50))
+            if dry:
+                cols = [(150, 128, 82), (128, 104, 66), (170, 150, 102), (110, 92, 62)]
+            else:
+                cols = [(92, 116, 52), (110, 128, 60), (78, 100, 44), (134, 128, 70)]
+            stalks = [5, 16, 27, 38, 49, 59]
+            for k, x in enumerate(stalks):
+                x += t.rng.uniform(-3, 3)
+                lean = t.rng.uniform(-3, 3)
+                col = cols[k % len(cols)]
+                ns.blade(t, x, N, lean, col, 3)
+                # leaves off the stalk, arching out and drooping
+                for _ in range(5 if upper else 6):
+                    y0 = int(t.rng.uniform(2, 58))
+                    side = 1 if t.rng.random() < 0.5 else -1
+                    length = int(t.rng.uniform(14, 28))
+                    lc = cols[int(t.rng.integers(len(cols)))]
+                    for i in range(length):
+                        px = int(x + side * i)
+                        py = int(N - 1 - y0 - 8 * np.sin(i / length * np.pi * 0.8) + i * 0.25 * (1 if dry else 0.4))
+                        if 0 <= px < N and 0 <= py < N:
+                            t.c[py, px] = np.array(lc, np.float32) * (0.8 + 0.3 * i / length)
+                            t.alpha[py, px] = 255
+                            for dy in (1, 2) if i < length * 0.7 else (1,):
+                                if py + dy < N:
+                                    t.c[py + dy, px] = np.array(lc, np.float32) * (0.75 - 0.08 * dy)
+                                    t.alpha[py + dy, px] = 255
+                if upper:
+                    # the tassel: thin branches fanning from the top
+                    for _ in range(5):
+                        ns.blade(t, x + t.rng.uniform(-1, 1), int(t.rng.uniform(8, 14)), t.rng.uniform(-6, 6),
+                                 (176, 150, 96) if not dry else (120, 96, 64), 1, top=12)
+                else:
+                    # an ear in its husk, leaning off the stalk
+                    ey = int(t.rng.uniform(16, 34))
+                    ex = int(x + (4 if k % 2 else -6))
+                    husk = (176, 160, 104) if dry else (128, 138, 70)
+                    for i in range(10):
+                        yy3 = ey + i
+                        xa, xb = max(0, ex), min(N, ex + 3 + (1 if 2 < i < 8 else 0))
+                        t.c[yy3, xa:xb] = np.array(husk, np.float32) * (0.85 + 0.03 * i)
+                        t.alpha[yy3, xa:xb] = 255
+            t.smooth[:] = 0.12
+            t.poro[:] = 64
+            return t
+        return make
+
+    def silo_stave():
+        """Concrete stave silo: tongue-and-groove staves, steel hoops every few courses, rust run down from them."""
+        t = tone(ns.photo("concrete_block_wall_03", span=1, height=1.2), (170, 166, 154), 1.2)
+        for x in range(0, N, 16):
+            t.rect(x, 0, x + 1, N, col=None, h=0.45)
+            t.c[:, x] *= 0.72
+        for y in range(5, N, 21):
+            t.rect(0, y, N, y + 2, col=(74, 66, 58), h=1.0, smooth=0.35)
+            t.c[y + 2:y + 9] *= np.linspace(0.8, 1.0, 7)[:, None, None]
+            t.c[y + 2:y + 12, :, 0] *= 1.04
+        t.streaks(0.8, 0.7)
+        t.grime(0.3)
+        return t
+
+    def silo_blue():
+        """A glass-lined steel silo, deep blue panels bolted at the seams, chalky and rust-streaked."""
+        t = tone(ns.photo("PaintedMetal012", span=2, height=0.8), (40, 62, 92), 0.9)
+        for x in range(0, N, 32):
+            t.rect(x, 0, x + 2, N, col=(30, 46, 68), h=0.9)
+            for y in range(4, N, 8):
+                t.c[y, x + 3] = (150, 150, 150)
+        for y in (0, 32):
+            t.rect(0, y, N, y + 2, col=(30, 46, 68), h=0.9)
+        t.smooth[:] = 0.65
+        rust_spots(t, 93, 0.12)
+        t.streaks(0.7, 0.7)
+        return t
+
+    def bin_ribbed():
+        """A corrugated grain bin's wall: the ribs run round it, galvanized and dulled to grey."""
+        t = ns.photo("worn_corrugated_iron", span=1, sat=0.4, bright=0.95, height=1.6)
+        for k in ("c", "h", "smooth"):
+            a = getattr(t, k)
+            setattr(t, k, np.ascontiguousarray(np.swapaxes(a, 0, 1)))
+        for y in range(0, N, 32):
+            t.rect(0, y, N, y + 1, col=(80, 80, 78), h=0.95)
+            for x in range(2, N, 6):
+                t.c[y + 2, x] = (60, 60, 58)
+        t.streaks(0.6, 0.75)
+        return t
+
+    def bale_wrap():
+        """A round bale's white stretch wrap, dirty at the bottom, torn where something got at it."""
+        t = tone(ns.photo("Plastic010", span=1, height=0.6), (214, 214, 206), 0.9)
+        t.smooth[:] = 0.6
+        y = np.arange(N)[:, None] / N
+        t.c *= (1 - 0.3 * np.clip((y - 0.7) * 3, 0, 1))[..., None]
+        tear = (P.fbm(t.rng, ((4, 1.0), (8, 0.6))) > 0.55)
+        t.c[tear] = (170, 150, 80)
+        return t
+
+    def straw_floor():
+        t = tone(ns.photo("ThatchedRoof002B", span=1, height=1.0), (176, 150, 92), 1.1)
+        t.grime(0.25)
+        return t
+
+    def apples_on(t, seed, count, rotten=0.15, rmin=2.2, rmax=3.4):
+        """Paints apples onto a texture: round, a highlight up and left, a few gone brown."""
+        rng = np.random.default_rng(seed)
+        yy, xx = np.mgrid[0:N, 0:N]
+        reds = [(168, 30, 24), (188, 52, 30), (148, 26, 30), (196, 118, 40), (176, 70, 34)]
+        for _ in range(count):
+            x, y = rng.uniform(2, N - 2), rng.uniform(2, N - 2)
+            r = rng.uniform(rmin, rmax)
+            col = np.array((92, 60, 34) if rng.random() < rotten else reds[int(rng.integers(len(reds)))], np.float32)
+            d = np.hypot(xx - x, yy - y)
+            m = d <= r
+            shade = 0.75 + 0.55 * np.clip(1 - np.hypot(xx - x + r * 0.45, yy - y + r * 0.45) / r, 0, 1)
+            t.c[m] = col * shade[m][..., None]
+            t.alpha[m] = 255
+            t.h[m] = 0.7 + 0.3 * np.clip(1 - d[m] / r, 0, 1)
+            t.smooth[m] = 0.55
+            sx, sy = int(x), int(y - r)  # the stalk
+            if 0 <= sy < N and 0 <= sx < N:
+                t.c[sy, sx] = (60, 44, 26)
+                t.alpha[sy, sx] = 255
+        return t
+
+    def apple_leaves():
+        """An apple tree's leaves heavy with fruit nobody picked."""
+        return apples_on(ns.leaves_photo(), 341, 16)
+
+    def windfall():
+        """Windfalls rotting in the grass under the trees, a few leaves among them."""
+        t = ns.cutout(342, (120, 60, 30))
+        return apples_on(t, 343, 9, rotten=0.55, rmin=2.4, rmax=3.2)
+
+    def crate_apples():
+        """The top of a crate heaped with apples."""
+        t = P.Tex(344, (110, 40, 28))
+        t.alpha[:] = 255
+        return apples_on(t, 345, 70, rotten=0.1, rmin=3.0, rmax=4.0)
+
+    farm = {
+        "apple_leaves": apple_leaves, "windfall": windfall, "crate_apples": crate_apples,
+        "corn_lower": corn(False, False, 301), "corn_upper": corn(True, False, 302),
+        "corn_dry_lower": corn(False, True, 303), "corn_dry_upper": corn(True, True, 304),
+        "silo_stave": silo_stave, "silo_blue": silo_blue, "bin_ribbed": bin_ribbed,
+        "bale_wrap": bale_wrap, "straw_floor": straw_floor,
+    }
+    for (i, j), make in barn_door(2, 3, 310, 2).items():
+        farm[f"barn_door_{i}{j}"] = make
+    for (i, j), make in barn_door(2, 2, 320, 1).items():
+        farm[f"barn_loft_{i}{j}"] = make
+    for (i, j), make in windmill_wheel(330).items():
+        farm[f"windmill_{i}{j}"] = make
+
     photos = {f"siding_{k}": siding(v) for k, v in SIDING.items()}
     photos.update({
         "corrugated_grey": lambda: ns.rain_streaks(ns.photo("worn_corrugated_iron", span=2, sat=0.6, bright=0.85, height=1.5), 0.5),
@@ -220,4 +499,5 @@ def register(ns):
         "stop_sign": stop_sign,
         "stop_sign_back": stop_sign_back,
     })
+    extra.update(farm)
     ns.EXTRA.update(extra)

@@ -32,6 +32,8 @@ final class Kit {
         STREET(4, 2, 2, true, false),
         /** A private drive through big lots: curbed, wide grass verges, no sidewalk. */
         ESTATE(3.5, 3, 0, true, false),
+        /** A county road between the towns: two lanes, a dashed yellow centre, white edge lines, gravel shoulders. */
+        COUNTY(4.5, 0, 0, false, true),
         /** A country lane or a trailer park loop: asphalt, gravel shoulders, no curb. */
         LANE(3, 0, 0, false, false),
         /** A gravel drive. */
@@ -330,7 +332,7 @@ final class Kit {
                 double k = e;
                 if (k <= 1) {
                     use[i] = WALK;
-                    out.set(x, 0, z, s.curb ? "curb" : s == Style.LANE ? "minecraft:gravel" : grassOr("minecraft:coarse_dirt", 0.5));
+                    out.set(x, 0, z, s.curb ? "curb" : s == Style.LANE || s == Style.COUNTY ? "minecraft:gravel" : grassOr("minecraft:coarse_dirt", 0.5));
                 } else if (k <= 1 + s.verge) {
                     use[i] = VERGE;
                     out.set(x, 0, z, "minecraft:grass_block");
@@ -364,6 +366,9 @@ final class Kit {
             default -> {
                 if (single && s.lines && off < 0.5 && (s == Style.MAIN || Math.floorMod((int) along, 8) < 4)) {
                     return rng.nextDouble() < 0.9 ? "road_line_yellow[axis=" + axis + "]" : "asphalt_crack";
+                }
+                if (single && s == Style.COUNTY && off > s.half - 1 && rng.nextDouble() < 0.85) {
+                    return "road_line_white[axis=" + axis + "]";  // the edge line, worn away in places
                 }
                 String a = asphalt(s == Style.MAIN ? 0.2 : 0.3);
                 return a;

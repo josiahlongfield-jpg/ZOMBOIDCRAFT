@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "crate_apples": "zomboidcraft:block/city/crate_apples",
+    "crate_wood": "zomboidcraft:block/city/crate_wood",
+    "particle": "zomboidcraft:block/city/crate_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crate_wood"
+        },
+        "south": {
+          "texture": "#crate_wood"
+        },
+        "east": {
+          "texture": "#crate_wood"
+        },
+        "west": {
+          "texture": "#crate_wood"
+        },
+        "up": {
+          "texture": "#crate_wood"
+        },
+        "down": {
+          "texture": "#crate_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        14,
+        1.5
+      ],
+      "to": [
+        14.5,
+        14.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crate_apples"
+        },
+        "south": {
+          "texture": "#crate_apples"
+        },
+        "east": {
+          "texture": "#crate_apples"
+        },
+        "west": {
+          "texture": "#crate_apples"
+        },
+        "up": {
+          "texture": "#crate_apples"
+        },
+        "down": {
+          "texture": "#crate_apples"
+        }
+      }
+    }
+  ]
+}

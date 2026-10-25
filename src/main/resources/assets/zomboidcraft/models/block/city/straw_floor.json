@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "straw_floor": "zomboidcraft:block/city/straw_floor",
+    "particle": "zomboidcraft:block/city/straw_floor"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#straw_floor",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#straw_floor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#straw_floor",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#straw_floor",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#straw_floor"
+        },
+        "down": {
+          "texture": "#straw_floor",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
