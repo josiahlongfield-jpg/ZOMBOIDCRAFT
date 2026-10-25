@@ -50,8 +50,14 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
     static final int BELT_Y = 150;
     static final int BAG_Y = 48, POCKET_Y = 122, LOAD_Y = 178, TAB_W = 24;
 
+    private static final int AWAY = -2000;
+
     private final Map<Slot, int[]> original = new HashMap<>();
     private final long opened = System.currentTimeMillis();
+    /** The weapon bench takes the left of the kit; the carried panel moves right so parts can come from your bags. */
+    private boolean bench;
+    private int benchGun = -1;
+    private final WeaponBench benchView = new WeaponBench();
 
     public static void register() {
         MenuScreens.<NearbyMenu, FieldKitScreen<NearbyMenu>>register(Nearby.MENU, FieldKitScreen::new);
@@ -161,6 +167,17 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         return list;
     }
 
+    /** Where the carried panel sits: the middle, or the right while the bench is up. */
+    private int carryX() {
+        return bench ? NEAR_X : CARRY_X;
+    }
+
+    /** The gun the bench would show, or -1 when there is none or no bench (a server without the mod). */
+    private int gunSlot() {
+        NearbyMenu near = near();
+        return near == null ? -1 : WeaponBench.findGun(near, minecraft);
+    }
+
     private boolean shows(Slot slot) {
         if (slot instanceof CarrySlots.GearSlot) return true;
         if (slot instanceof CarrySlots.BagSlot bag) return tabFor(bag.bag.wear()) == tab;
@@ -170,23 +187,28 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
     private void layoutSlots() {
         List<Tab> tabs = tabs();
         if (!tabs.contains(tab)) tab = tabs.isEmpty() ? Tab.BACK : tabs.get(0);
+        benchGun = gunSlot();
+        if (benchGun < 0) bench = false;
+        int carryX = carryX();
+        // with the bench up, everything but your carried things steps out of the way
+        int away = bench ? AWAY : 0;
         // armour down the left of the character; gear and the off hand down the right
-        for (int i = 0; i < 4; i++) place(InventoryMenu.ARMOR_SLOT_START + i, GEAR_X + 13, MIRROR_Y + 4 + i * 30);
-        int gx = GEAR_X + GEAR_W - 29;
+        for (int i = 0; i < 4; i++) place(InventoryMenu.ARMOR_SLOT_START + i, away + GEAR_X + 13, MIRROR_Y + 4 + i * 30);
+        int gx = away + GEAR_X + GEAR_W - 29;
         place(InventoryMenu.SHIELD_SLOT, gx, MIRROR_Y + 4 + 4 * 28);
         // pockets in their own row, or on a tab of their own when there are many; locked ones on the loose tab
         int pockets = Carry.pockets();
         int pocketCols = Math.min(9, pockets);
-        int pocketX = CARRY_X + (CARRY_W - pocketCols * 18) / 2;
+        int pocketX = carryX + (CARRY_W - pocketCols * 18) / 2;
         int loose = 0;
         int pocket = 0;
         for (int i = InventoryMenu.INV_SLOT_START; i < InventoryMenu.INV_SLOT_END; i++) {
             Slot slot = menu.slots.get(i);
             if (Carry.locked(minecraft.player, slot.getContainerSlot())) {
-                place(slot, CARRY_X + 12 + (loose % 9) * 18, BAG_Y + (loose / 9) * 18);
+                place(slot, carryX + 12 + (loose % 9) * 18, BAG_Y + (loose / 9) * 18);
                 loose++;
             } else if (manyPockets()) {
-                place(slot, CARRY_X + 12 + (pocket % 9) * 18, BAG_Y + (pocket / 9) * 18);
+                place(slot, carryX + 12 + (pocket % 9) * 18, BAG_Y + (pocket / 9) * 18);
                 pocket++;
             } else {
                 place(slot, pocketX + pocket * 18, POCKET_Y);
@@ -194,7 +216,7 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
             }
         }
         // hotbar on the belt
-        for (int c = 0; c < 9; c++) place(InventoryMenu.USE_ROW_SLOT_START + c, CARRY_X + 13 + c * 18, BELT_Y + 22);
+        for (int c = 0; c < 9; c++) place(InventoryMenu.USE_ROW_SLOT_START + c, carryX + 13 + c * 18, BELT_Y + 22);
         // gear and bag slots
         for (Slot slot : menu.slots) {
             if (slot instanceof CarrySlots.GearSlot gear) {
@@ -203,12 +225,12 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
                 BagSpec spec = bag.bag.spec();
                 int cols = spec == null ? 6 : spec.columns();
                 int i = bag.getContainerSlot();
-                place(slot, CARRY_X + (CARRY_W - cols * 18) / 2 + (i % cols) * 18, BAG_Y + (i / cols) * 18);
+                place(slot, carryX + (CARRY_W - cols * 18) / 2 + (i % cols) * 18, BAG_Y + (i / cols) * 18);
             }
         }
         // 2x2 crafting and its result on the right: under the loot, or on its own without it
         NearbyMenu near = near();
-        int craftX = NEAR_X + (near != null ? 40 : 48);
+        int craftX = away + NEAR_X + (near != null ? 40 : 48);
         int craftY = near != null ? CRAFT_Y : 46;
         for (int i = 0; i < 4; i++) {
             place(InventoryMenu.CRAFT_SLOT_START + i, craftX + (i % 2) * 18, craftY + (i / 2) * 18);
@@ -219,7 +241,7 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
             for (Slot slot : menu.slots) {
                 if (slot instanceof NearbyMenu.NearbySlot loot) {
                     int i = loot.getContainerSlot();
-                    place(slot, NEAR_X + 12 + (i % 9) * 18, BAG_Y + (i / 9) * 18);
+                    place(slot, away + NEAR_X + 12 + (i % 9) * 18, BAG_Y + (i / 9) * 18);
                 }
             }
         }
@@ -242,7 +264,7 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
     /** The nearby tab under the mouse, or -1. */
     private int nearTabAt(double mx, double my) {
         NearbyMenu near = near();
-        if (near == null || my < topPos + 4 || my >= topPos + 26) return -1;
+        if (near == null || bench || my < topPos + 4 || my >= topPos + 26) return -1;
         int tx = leftPos + NEAR_X + 10;
         for (int k = 0; k < near.sources().size(); k++) {
             if (mx >= tx && mx < tx + TAB_W) return k;
@@ -251,10 +273,20 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         return -1;
     }
 
+    private void toggleBench() {
+        bench = !bench && benchGun >= 0;
+        layoutSlots();
+        tabSound();
+    }
+
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         NearbyMenu near = near();
-        int k = nearTabAt(event.x(), event.y());
+        if (bench && near != null && benchView.clicked(event.x(), event.y(), leftPos, topPos, minecraft, near, benchGun,
+                this::toggleBench)) {
+            return true;
+        }
+        int k = bench ? -1 : nearTabAt(event.x(), event.y());
         if (near != null && k >= 0) {
             if (near.selected != k) {
                 near.selected = k;
@@ -264,15 +296,16 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
             }
             return true;
         }
-        if (near != null && takeW > 0 && event.x() >= takeX && event.x() < takeX + takeW && event.y() >= takeY
+        if (!bench && near != null && takeW > 0 && event.x() >= takeX && event.x() < takeX + takeW && event.y() >= takeY
                 && event.y() < takeY + 13) {
             minecraft.gameMode.handleInventoryButtonClick(menu.containerId, NearbyMenu.TAKE_ALL + near.selected);
             tabSound();
             return true;
         }
-        int tx = leftPos + CARRY_X + 10;
+        int tx = leftPos + carryX() + 10;
+        boolean onTabs = event.y() >= topPos + 4 && event.y() < topPos + 26;
         for (Tab t : tabs()) {
-            if (event.x() >= tx && event.x() < tx + TAB_W && event.y() >= topPos + 4 && event.y() < topPos + 26) {
+            if (onTabs && event.x() >= tx && event.x() < tx + TAB_W) {
                 if (tab != t) {
                     tab = t;
                     layoutSlots();
@@ -282,7 +315,28 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
             }
             tx += TAB_W + 2;
         }
+        if (benchGun >= 0 && onTabs && event.x() >= benchTabX() && event.x() < benchTabX() + TAB_W) {
+            toggleBench();
+            return true;
+        }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    /** The bench tab sits at the far end of the carried tabs. */
+    private int benchTabX() {
+        return leftPos + carryX() + CARRY_W - 10 - TAB_W;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (bench && benchView.dragged(event.x(), event.y())) return true;
+        return super.mouseDragged(event, dx, dy);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (bench && benchView.released()) return true;
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -305,14 +359,19 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         rain(g);
         g.blitSprite(RenderPipelines.GUI_TEXTURED, KitArt.VIGNETTE, 0, 0, width, height);
         int x = leftPos, y = topPos;
-        gearPanel(g, x, y, mouseX, mouseY);
-        carryPanel(g, x, y);
-
-        nearPanel(g, x, y);
+        NearbyMenu near = near();
+        if (bench && near != null && benchGun >= 0) {
+            carryPanel(g, x + NEAR_X - CARRY_X, y);
+            benchView.draw(g, font, minecraft, near, benchGun, x, y, mouseX, mouseY);
+        } else {
+            gearPanel(g, x, y, mouseX, mouseY);
+            carryPanel(g, x, y);
+            nearPanel(g, x, y);
+        }
 
         // slot sockets under every visible slot, and a brass ring on the one in your hand
         for (Slot slot : menu.slots) {
-            if (slot.isActive()) KitArt.slot(g, x + slot.x, y + slot.y);
+            if (slot.isActive() && slot.x > AWAY / 2) KitArt.slot(g, x + slot.x, y + slot.y);
         }
         int held = minecraft.player.getInventory().getSelectedSlot();
         if (menu.slots.size() <= InventoryMenu.USE_ROW_SLOT_START + held) return;
@@ -425,6 +484,11 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
             }
             tx += TAB_W + 2;
         }
+        if (benchGun >= 0) {
+            int bx = x + CARRY_X + CARRY_W - 10 - TAB_W;
+            g.blitSprite(RenderPipelines.GUI_TEXTURED, bench ? KitArt.TAB_SELECTED : KitArt.TAB, bx, y + 4, TAB_W, 22);
+            g.item(menu.slots.get(benchGun).getItem(), bx + (TAB_W - 16) / 2, y + 7);
+        }
         int hy = y + 32;
         BagContainer bag = bagFor(tab);
         if (bag != null) {
@@ -489,6 +553,12 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
         if (k >= 0 && menu.getCarried().isEmpty()) {
             g.setTooltipForNextFrame(font, List.of(near().sources().get(k).name()), Optional.empty(), mouseX, mouseY,
                     KitArt.TOOLTIP_STYLE);
+            return;
+        }
+        if (benchGun >= 0 && mouseY >= topPos + 4 && mouseY < topPos + 26 && mouseX >= benchTabX()
+                && mouseX < benchTabX() + TAB_W && menu.getCarried().isEmpty()) {
+            g.setTooltipForNextFrame(font, List.of(Component.literal(bench ? "Back to the kit" : "Weapon bench")),
+                    Optional.empty(), mouseX, mouseY, KitArt.TOOLTIP_STYLE);
             return;
         }
         if (hoveredSlot != null && hoveredSlot.hasItem() && menu.getCarried().isEmpty()) {
