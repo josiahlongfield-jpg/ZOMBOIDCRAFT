@@ -126,7 +126,7 @@ public class RifleItem extends Item {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
         }
         Component finish = GunFinish.line(stack);
-        if (finish != null) {
+        if (!finish.getString().isEmpty()) {
             tooltip.accept(finish);
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
