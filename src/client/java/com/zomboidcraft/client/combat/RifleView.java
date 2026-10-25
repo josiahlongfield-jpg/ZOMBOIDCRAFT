@@ -225,7 +225,9 @@ public final class RifleView {
             return piecewise(t, new float[] {type.jamClear, type.charge, type.chargeDone}, new float[] {JAM_START, CHARGE, END_CHARGE});
         }
         if (charge) {
-            return piecewise(t, new float[] {0, type.magIn, type.charge, type.chargeDone}, new float[] {0, MAG_IN, CHARGE, END_CHARGE});
+            // a bolt is worked at its own pace (in step with its recording), so its end isn't squeezed to the rifle's
+            float end = rig.bolt() ? CHARGE + type.chargeDone - type.charge : END_CHARGE;
+            return piecewise(t, new float[] {0, type.magIn, type.charge, type.chargeDone}, new float[] {0, MAG_IN, CHARGE, end});
         }
         return piecewise(t, new float[] {0, type.magIn, type.tacticalDone}, new float[] {0, MAG_IN, END_TACTICAL});
     }
@@ -617,11 +619,13 @@ public final class RifleView {
 
     // ------------------------------------------------------------------ a bolt gun's bolt
 
-    // Working the bolt, in ticks: the shooting hand reaches the knob (BOLT_REACH), lifts it (BOLT_UP), runs it back
-    // (BOLT_BACK), pushes it home (BOLT_HOME), turns it down (BOLT_DOWN) and goes back to the stock (BOLT_DONE). The
-    // server's bolt sound starts with the lift: cycleAfterShot after a shot, or at the charge step of a reload.
-    private static final float BOLT_REACH = 3, BOLT_UP = 4.5f, BOLT_BACK = 6.5f, BOLT_HOME = 8.5f, BOLT_DOWN = 9.5f,
-            BOLT_DONE = 12.5f;
+    // Working the bolt, in ticks: the shooting hand reaches the knob (BOLT_REACH), lifts it (to BOLT_UP), runs it back
+    // (BOLT_PULL to BOLT_BACK), pushes it home (BOLT_PUSH to BOLT_HOME), turns it down (BOLT_TURN to BOLT_DOWN) and
+    // goes back to the stock (BOLT_DONE). The server's bolt sound starts with the lift (cycleAfterShot after a shot, or
+    // at the charge step of a reload), and each move lands on its noise in the recording: the lift's click at 40 ms,
+    // the slide back to the stop at 270, forward to the round chambering at 540, the lock-down click at 760.
+    private static final float BOLT_REACH = 3, BOLT_UP = 4.2f, BOLT_PULL = 6.4f, BOLT_BACK = 8.4f, BOLT_PUSH = 11.6f,
+            BOLT_HOME = 13.9f, BOLT_TURN = 16.8f, BOLT_DOWN = 18.2f, BOLT_DONE = 21f;
     /** When the hand sets off for the bolt in a reload onto an empty gun, in the animation's ticks. */
     private static final float BOLT_RELOAD = CHARGE - BOLT_REACH;
     /** On the sights, the gun comes off the cheek while the bolt is worked: turned (degrees) and pushed (blocks). */
@@ -643,8 +647,8 @@ public final class RifleView {
 
     /** The bolt u ticks into its working: turned up about the bore, then run back, home, and turned down. */
     private static Matrix4f boltLocal(float u) {
-        float lift = u < BOLT_HOME ? smooth01(u, BOLT_REACH, BOLT_UP) : 1 - smooth01(u, BOLT_HOME, BOLT_DOWN);
-        float back = u < BOLT_BACK ? smooth01(u, BOLT_UP, BOLT_BACK) : 1 - smooth01(u, BOLT_BACK, BOLT_HOME);
+        float lift = u < BOLT_HOME ? smooth01(u, BOLT_REACH, BOLT_UP) : 1 - smooth01(u, BOLT_TURN, BOLT_DOWN);
+        float back = u < BOLT_BACK ? smooth01(u, BOLT_PULL, BOLT_BACK) : 1 - smooth01(u, BOLT_PUSH, BOLT_HOME);
         float[] ax = rig.boltAxis();
         return new Matrix4f().translation(0, 0, back * rig.handleTravel())
                 .translate(ax[0], ax[1], ax[2]).rotateZ(lift * rig.boltLift() * Mth.DEG_TO_RAD).translate(-ax[0], -ax[1], -ax[2]);

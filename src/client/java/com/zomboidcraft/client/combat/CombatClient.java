@@ -114,7 +114,7 @@ public final class CombatClient {
         // each world keeps its own clock, so a last shot "after" now was fired in another world
         GunType type = GunType.of(gun);
         ZcConfig.GunStats stats = type.stats();
-        if (now >= lastShot && now - lastShot < stats.fireDelayTicks) {
+        if (now >= lastShot && now - lastShot < type.fireDelay()) {
             return;
         }
         lastShot = now;

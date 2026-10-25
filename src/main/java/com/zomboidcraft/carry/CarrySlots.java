@@ -75,7 +75,9 @@ public final class CarrySlots {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return open() && stack.getItem().canFitInsideContainerItems() && getMaxStackSize(stack) > 0;
+            BagSpec spec = bag.spec();
+            return open() && stack.getItem().canFitInsideContainerItems() && spec != null && spec.holds().test(stack)
+                    && getMaxStackSize(stack) > 0;
         }
 
         @Override

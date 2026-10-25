@@ -66,6 +66,7 @@ TABLES = {
         (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .7)), (f"{ZC}:shotgun_shell", 12, 4, 20),
         (f"{ZC}:hunting_rifle", 2, 1, 1, worn(.1, .6)), (f"{ZC}:hunting_rifle_magazine", 3, 1, 1),
         (f"{ZC}:hunting_rifle_magazine", 1, 1, 1, rounds(3)), (f"{ZC}:hunting_rifle_ammo", 8, 3, 15),
+        (f"{ZC}:rifle_case", 2, 1, 1), (f"{ZC}:pistol_case", 2, 1, 1), (f"{ZC}:ammo_can", 3, 1, 1),
         ("arrow", 6, 4, 16), ("bow", 2, 1, 1, worn(0, .4)),
         ("crossbow", 2, 1, 1, worn(0, .4)), ("iron_sword", 1, 1, 1, worn()), (f"{ZC}:machete", 2, 1, 1),
         (f"{ZC}:kitchen_knife", 2, 1, 1), ("leather_chestplate", 2, 1, 1, worn()), ("iron_helmet", 1, 1, 1, worn()),
@@ -79,6 +80,7 @@ TABLES = {
         (f"{ZC}:pistol", 1, 1, 1, worn(.2, .8)), (f"{ZC}:pistol_ammo", 2, 3, 15),
         (f"{ZC}:shotgun", 1, 1, 1, worn(.2, .8)), (f"{ZC}:shotgun_shell", 2, 2, 10),
         (f"{ZC}:hunting_rifle", 1, 1, 1, worn(.2, .8)), (f"{ZC}:hunting_rifle_ammo", 1, 2, 8),
+        (f"{ZC}:rifle_case", 1, 1, 1), (f"{ZC}:pistol_case", 1, 1, 1),
         ("golden_helmet", 1, 1, 1, worn()), ("book", 2, 1, 2), ("-", 8, 1, 1)]),
     "thrift": ((2, 6), [
         ("leather_helmet", 4, 1, 1, worn()), ("leather_chestplate", 4, 1, 1, worn()), ("leather_leggings", 4, 1, 1, worn()),
@@ -115,7 +117,7 @@ TABLES = {
         ("torch", 3, 1, 4), ("bread", 3, 1, 2), ("potion", 3, 1, 1, WATER), ("bone", 2, 1, 3), ("leather", 2, 1, 2),
         (f"{ZC}:bandage", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn()), (f"{ZC}:shovel", 1, 1, 1, worn()),
         (f"{ZC}:golf_club", 1, 1, 1, worn()), (f"{ZC}:duffel_bag", 1, 1, 1), (f"{ZC}:hiking_backpack", 1, 1, 1),
-        (f"{ZC}:shotgun_shell", 1, 2, 8), ("-", 12, 1, 1)]),
+        (f"{ZC}:shotgun_shell", 1, 2, 8), (f"{ZC}:ammo_can", 1, 1, 1), ("-", 12, 1, 1)]),
     "farm": ((1, 5), [
         ("wheat_seeds", 8, 2, 12), ("beetroot_seeds", 4, 2, 8), ("pumpkin_seeds", 3, 1, 6), ("melon_seeds", 2, 1, 4),
         ("potato", 5, 1, 6), ("carrot", 5, 1, 6), ("wheat", 4, 2, 8), ("egg", 3, 1, 6), ("apple", 3, 1, 4),
@@ -229,12 +231,12 @@ RARE = {
     "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1), (f"{ZC}:red_dot_sight", 1),
              (f"{ZC}:holo_sight", 1)],
     "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1), (f"{ZC}:military_rucksack", 1),
-                (f"{ZC}:shotgun", 1)],
+                (f"{ZC}:shotgun", 1), (f"{ZC}:rifle_case", 1), (f"{ZC}:pistol_case", 1)],
     "home_nightstand": [(f"{ZC}:pistol", 1)], "home_garage": [(f"{ZC}:fire_axe", 1), (f"{ZC}:machete", 1)],
     "home_wardrobe": [(f"{ZC}:hunting_rifle", 1), (f"{ZC}:military_rucksack", 1)], "home_toys": [(f"{ZC}:baseball_bat", 1)],
     "home_guns": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:scope_4x", 1)],
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2),
-             (f"{ZC}:hunting_rifle", 2)],
+             (f"{ZC}:hunting_rifle", 2), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
 }
 
 

@@ -65,6 +65,124 @@
        "fallback": {
         "type": "minecraft:empty"
        }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
       }
      ]
     }
@@ -129,6 +247,124 @@
        ],
        "fallback": {
         "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
        }
       },
       {
@@ -223,6 +459,124 @@
       {
        "type": "minecraft:select",
        "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/charge/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/charge/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/charge/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/charge/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
        "index": 5,
        "cases": [
         {
@@ -288,6 +642,124 @@
         {
          "type": "minecraft:select",
          "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
          "index": 5,
          "cases": [
           {
@@ -344,6 +816,124 @@
         {
          "type": "minecraft:select",
          "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
          "index": 5,
          "cases": [
           {
@@ -396,6 +986,124 @@
         {
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/scope_4x"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
         },
         {
          "type": "minecraft:select",
@@ -488,6 +1196,124 @@
       {
        "type": "minecraft:select",
        "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/ads/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/hunting_rifle/ads/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
        "index": 5,
        "cases": [
         {
@@ -570,6 +1396,124 @@
       ],
       "fallback": {
        "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 1,
+      "cases": [
+       {
+        "when": "suppressor",
+        "model": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/hunting_rifle/hip/suppressor"
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/hip/muzzle_flash_quiet"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         ]
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/hunting_rifle/hip/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:range_dispatch",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "entries": [
+        {
+         "threshold": 1,
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": [
+             "firstperson_righthand",
+             "firstperson_lefthand"
+            ],
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/hunting_rifle/hip/muzzle_flash"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
       }
      },
      {

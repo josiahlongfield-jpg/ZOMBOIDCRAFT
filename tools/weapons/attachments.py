@@ -279,6 +279,14 @@ def look(wear=0.4):
         burn = P.mix(P.col('#4a3a2c'), P.col('#3a3f4c'), f.noise(1.6, 212, 2))
         return P.mix(c, c * 0.5 + burn * 0.5, np.clip((heat - 0.45) * 2.5, 0, 0.7))
 
+    def can_mark(f):
+        # the maker's engraving on a can: a few lines of small print, pale on the burnt finish
+        c = can(f)
+        a, b = f.uv[..., 0], f.uv[..., 1]
+        rows = ((b * 26) % 1 < 0.5) & ((b * 26) % 4 < 1.5)
+        chars = (np.sin(a * 150 + np.floor(b * 26) * 2.1) + np.sin(a * 63 + np.floor(b * 26)) > 0.9)
+        return np.where((rows & chars)[..., None], P.mix(c, P.col('#9a9c9a'), 0.35), c)
+
     def cap(f):
         c = P.parkerised(f, '#252523')
         if abs(f.n[2]) > 0.5:
@@ -298,7 +306,7 @@ def look(wear=0.4):
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
-    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can,
+    d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can, can_mark=can_mark,
              cap=cap, gripper=gripper, bezel=bezel, park=lambda f: P.parkerised(f, '#2c2d2a'), steel=lambda f: P.steel(f, 0.21, tint='#7d8186', spread=0.08),
              poly=lambda f: P.polymer(f, '#1d1d20'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
