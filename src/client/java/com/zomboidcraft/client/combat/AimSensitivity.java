@@ -3,9 +3,9 @@ package com.zomboidcraft.client.combat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.GunType;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -61,7 +61,7 @@ public final class AimSensitivity {
     public static double factor() {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || !player.isUsingItem() || !player.getUseItem().is(ModItems.ASSAULT_RIFLE)
+        if (player == null || !player.isUsingItem() || !GunType.isGun(player.getUseItem())
                 || CombatClient.reloading(player.getUseItem())) {
             return 1;
         }

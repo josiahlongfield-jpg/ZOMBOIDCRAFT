@@ -1,6 +1,5 @@
 package com.zomboidcraft.combat;
 
-import com.zomboidcraft.ModItems;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -20,14 +19,21 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 /**
- * A rifle magazine. Like Zomboid, rounds go in one at a time: hold right-click with loose rounds
+ * A gun's magazine. Like Zomboid, rounds go in one at a time: hold right-click with loose rounds
  * in your inventory to load it; sneak and hold right-click to thumb the rounds back out.
  */
 public class MagazineItem extends Item {
     private static final int TICKS_PER_ROUND = 6;
+    private final GunType type;
 
-    public MagazineItem(Properties properties) {
+    public MagazineItem(GunType type, Properties properties) {
         super(properties);
+        this.type = type;
+    }
+
+    /** The gun this magazine feeds. */
+    public GunType type() {
+        return type;
     }
 
     public static int rounds(ItemStack stack) {
@@ -38,10 +44,10 @@ public class MagazineItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean unloading = player.isShiftKeyDown();
-        if (unloading ? rounds(stack) == 0 : rounds(stack) >= RifleItem.capacity() || countAmmo(player) == 0) {
+        if (unloading ? rounds(stack) == 0 : rounds(stack) >= type.capacity() || countAmmo(player) == 0) {
             if (!level.isClientSide()) {
                 player.sendOverlayMessage(Component.literal(unloading ? "The magazine is empty."
-                        : rounds(stack) >= RifleItem.capacity() ? "The magazine is full." : "You have no 5.56mm rounds.")
+                        : rounds(stack) >= type.capacity() ? "The magazine is full." : "You have no " + type.caliber() + " rounds.")
                         .withStyle(ChatFormatting.GRAY));
             }
             return InteractionResult.FAIL;
@@ -63,12 +69,12 @@ public class MagazineItem extends Item {
                 return;
             }
             stack.set(GunState.MAG_ROUNDS, rounds - 1);
-            ItemStack round = new ItemStack(ModItems.RIFLE_AMMO);
+            ItemStack round = new ItemStack(type.ammo());
             if (!player.getInventory().add(round)) {
                 player.spawnAtLocation((ServerLevel) level, round);
             }
         } else {
-            if (rounds >= RifleItem.capacity() || !takeAmmo(player, 1)) {
+            if (rounds >= type.capacity() || !takeAmmo(player, 1)) {
                 player.stopUsingItem();
                 return;
             }
@@ -100,7 +106,7 @@ public class MagazineItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13f * rounds(stack) / RifleItem.capacity());
+        return Math.round(13f * rounds(stack) / type.capacity());
     }
 
     @Override
@@ -111,32 +117,32 @@ public class MagazineItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
-        tooltip.accept(Component.literal("Rounds: " + rounds(stack) + "/" + RifleItem.capacity()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("Rounds: " + rounds(stack) + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("Hold right-click to load, sneak to unload").withStyle(ChatFormatting.DARK_GRAY));
     }
 
-    static int countAmmo(Player player) {
+    int countAmmo(Player player) {
         if (player.hasInfiniteMaterials()) {
             return Integer.MAX_VALUE;
         }
         int n = 0;
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).is(ModItems.RIFLE_AMMO)) {
+            if (inv.getItem(i).is(type.ammo())) {
                 n += inv.getItem(i).getCount();
             }
         }
         return n;
     }
 
-    static boolean takeAmmo(Player player, int amount) {
+    boolean takeAmmo(Player player, int amount) {
         if (player.hasInfiniteMaterials()) {
             return true;
         }
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize() && amount > 0; i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(ModItems.RIFLE_AMMO)) {
+            if (s.is(type.ammo())) {
                 int take = Math.min(amount, s.getCount());
                 s.shrink(take);
                 amount -= take;

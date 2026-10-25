@@ -14,8 +14,20 @@
        "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/body"
       },
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/charging_handle"
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/charging_handle"
+       }
       },
       {
        "type": "minecraft:select",
@@ -254,8 +266,20 @@
        "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/body"
       },
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/charging_handle"
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/charging_handle"
+       }
       },
       {
        "type": "minecraft:select",
@@ -803,8 +827,20 @@
          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/body"
         },
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/charging_handle"
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/charging_handle"
+         }
         },
         {
          "type": "minecraft:composite",
@@ -1014,8 +1050,20 @@
          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/body"
         },
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/charging_handle"
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/charging_handle"
+         }
         },
         {
          "type": "minecraft:composite",
@@ -1225,8 +1273,20 @@
          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/body"
         },
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/charging_handle"
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/charging_handle"
+         }
         },
         {
          "type": "minecraft:composite",
@@ -1435,8 +1495,20 @@
        "model": "zomboidcraft:item/weapon/assault_rifle/ads/body"
       },
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/ads/charging_handle"
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/assault_rifle/ads/charging_handle"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1697,8 +1769,20 @@
       "model": "zomboidcraft:item/weapon/assault_rifle/hip/body"
      },
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/assault_rifle/hip/charging_handle"
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/assault_rifle/hip/charging_handle"
+      }
      },
      {
       "type": "minecraft:select",

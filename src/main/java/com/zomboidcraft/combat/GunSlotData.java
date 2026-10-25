@@ -16,10 +16,15 @@ public final class GunSlotData {
                 Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip")),
                 Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "laser_sight")),
                 Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")))));
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")))),
+        Map.entry("pistol", Map.ofEntries(
+                Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "laser_sight")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("pistol_magazine")))));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
-        Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))));
+        Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
+        Map.entry("pistol", Map.ofEntries()));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),
@@ -30,7 +35,9 @@ public final class GunSlotData {
         Map.entry("weapon_light", "light"),
         Map.entry("laser_sight", "laser"),
         Map.entry("rifle_stock", "stock"),
-        Map.entry("rifle_magazine", "mag"));
+        Map.entry("rifle_magazine", "mag"),
+        Map.entry("pistol_suppressor", "suppressor"),
+        Map.entry("pistol_magazine", "mag"));
 
     private GunSlotData() {
     }

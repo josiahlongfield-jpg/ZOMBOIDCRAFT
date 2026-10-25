@@ -5,6 +5,7 @@ import com.zomboidcraft.combat.AttachmentItem;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
+import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
 import com.zomboidcraft.combat.RifleItem;
@@ -47,21 +48,32 @@ public final class ModItems {
     public static final Item FIRE_AXE = weapon("fire_axe", MeleeWeaponItem::new);
     public static final Item SLEDGEHAMMER = weapon("sledgehammer", MeleeWeaponItem::new);
 
-    // The assault rifle, the base for every gun to come, and what feeds it.
-    public static final Item ASSAULT_RIFLE = register("assault_rifle", RifleItem::new,
-            new Item.Properties().stacksTo(1).durability(1600).component(GunState.TYPE, GunState.EMPTY_MAG)
-                    // aiming slows you to a careful walk rather than vanilla's crawl
-                    .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.55f)));
-    public static final Item RIFLE_MAGAZINE = register("rifle_magazine", MagazineItem::new,
-            new Item.Properties().stacksTo(1).component(GunState.MAG_ROUNDS, 0)
-                    .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.6f)));
+    // The guns (see combat/GunType) and what feeds them.
+    public static final Item ASSAULT_RIFLE = gun("assault_rifle", GunType.ASSAULT_RIFLE, 1600);
+    public static final Item RIFLE_MAGAZINE = magazine("rifle_magazine", GunType.ASSAULT_RIFLE);
     public static final Item RIFLE_AMMO = register("rifle_ammo", Item::new, new Item.Properties().stacksTo(60));
+    public static final Item PISTOL = gun("pistol", GunType.PISTOL, 1200);
+    public static final Item PISTOL_MAGAZINE = magazine("pistol_magazine", GunType.PISTOL);
+    public static final Item PISTOL_AMMO = register("pistol_ammo", Item::new, new Item.Properties().stacksTo(60));
+
+    private static Item gun(String name, GunType type, int durability) {
+        return register(name, p -> new RifleItem(type, p),
+                new Item.Properties().stacksTo(1).durability(durability).component(GunState.TYPE, GunState.EMPTY_MAG)
+                        // aiming slows you to a careful walk rather than vanilla's crawl
+                        .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.55f)));
+    }
+
+    private static Item magazine(String name, GunType type) {
+        return register(name, p -> new MagazineItem(type, p), new Item.Properties().stacksTo(1)
+                .component(GunState.MAG_ROUNDS, 0).component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.6f)));
+    }
 
     // Gun parts: each names its slot; the key the gun's item model switches on comes from GunSlotData.
     public static final Item RED_DOT_SIGHT = part("red_dot_sight", Attachments.Slot.OPTIC);
     public static final Item HOLO_SIGHT = part("holo_sight", Attachments.Slot.OPTIC);
     public static final Item SCOPE_4X = part("scope_4x", Attachments.Slot.OPTIC);
     public static final Item RIFLE_SUPPRESSOR = part("rifle_suppressor", Attachments.Slot.MUZZLE);
+    public static final Item PISTOL_SUPPRESSOR = part("pistol_suppressor", Attachments.Slot.MUZZLE);
     public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
     public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
     public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.SIDE_RAIL);
@@ -99,19 +111,21 @@ public final class ModItems {
         ResourceKey<CreativeModeTab> combat = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("combat"));
         CreativeModeTabEvents.modifyOutputEvent(combat).register(output -> {
             ALL.forEach(output::accept);
-            // a loaded rifle and a full magazine, ready to try out
-            ItemStack rifle = new ItemStack(ASSAULT_RIFLE);
-            rifle.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(RifleItem.capacity()));
-            output.accept(rifle);
-            ItemStack mag = new ItemStack(RIFLE_MAGAZINE);
-            mag.set(GunState.MAG_ROUNDS, RifleItem.capacity());
-            output.accept(mag);
-            // and one with everything on it
-            ItemStack kitted = rifle.copy();
-            for (Item part : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
-                Attachments.mount(kitted, new ItemStack(part));
+            // a loaded rifle and pistol and a full magazine for each, ready to try out, and each with everything on it
+            for (GunType type : GunType.values()) {
+                ItemStack gun = new ItemStack(type.item());
+                gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
+                output.accept(gun);
+                ItemStack mag = new ItemStack(type.magazine());
+                mag.set(GunState.MAG_ROUNDS, type.capacity());
+                output.accept(mag);
+                ItemStack kitted = gun.copy();
+                for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                        : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
+                    Attachments.mount(kitted, new ItemStack(part));
+                }
+                output.accept(kitted);
             }
-            output.accept(kitted);
         });
     }
 

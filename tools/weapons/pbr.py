@@ -54,6 +54,17 @@ MATERIALS = {
     'dot': (0.5, NONMETAL, None),
     'flash': (0.0, NONMETAL, None),
     'brass': (0.62, TINTED_METAL, None),
+    # the pistol (pistol.py)
+    'slide': (0.40, NONMETAL, (0.36, NONMETAL, WORN)),
+    'serr': (0.36, NONMETAL, (0.36, NONMETAL, WORN)),
+    'frame': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
+    'grips': (0.26, NONMETAL, None),
+    'barrel': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'thread': (0.48, TINTED_METAL, None),
+    'spur': (0.44, TINTED_METAL, None),
+    'sight': (0.34, NONMETAL, None),
+    'magsteel': (0.44, TINTED_METAL, None),
+    'baseplate': (0.30, NONMETAL, None),
 }
 # how much rain darkens a finish (LabPBR porosity, 0-64): stippled grips and phosphate soak a little
 POROSITY = {'grip': 18, 'gripper': 18, 'park': 10, 'hider': 10, 'cap': 10, 'can': 14, 'rubber': 6, 'tan': 6,

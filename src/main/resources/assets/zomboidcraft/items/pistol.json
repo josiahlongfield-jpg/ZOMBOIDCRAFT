@@ -1,0 +1,798 @@
+{
+ "model": {
+  "type": "minecraft:range_dispatch",
+  "property": "minecraft:custom_model_data",
+  "index": 0,
+  "entries": [
+   {
+    "threshold": 1,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/mag_out/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/mag_out/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_out/suppressor"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/pistol/mag_out/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/pistol/mag_out/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_out/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_out/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "threshold": 2,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/mag_in/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/mag_in/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_in/suppressor"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/pistol/mag_in/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/pistol/mag_in/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_in/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_in/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/mag_in/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/mag_in/mag"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "threshold": 3,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/charge/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/charge/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/charge/suppressor"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/pistol/charge/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/pistol/charge/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/charge/light"
+         }
+        },
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/charge/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/pistol/charge/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/charge/mag"
+       }
+      }
+     ]
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:condition",
+   "property": "minecraft:using_item",
+   "on_true": {
+    "type": "minecraft:composite",
+    "models": [
+     {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/pistol/ads/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/ads/charging_handle"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 1,
+      "cases": [
+       {
+        "when": "suppressor",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/ads/suppressor"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/pistol/ads/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:range_dispatch",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "entries": [
+        {
+         "threshold": 1,
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": [
+             "firstperson_righthand",
+             "firstperson_lefthand"
+            ],
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/pistol/ads/muzzle_flash"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 3,
+      "cases": [
+       {
+        "when": "light",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/ads/light"
+        }
+       },
+       {
+        "when": "laser",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/ads/laser"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 5,
+      "cases": [
+       {
+        "when": "mag",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/ads/mag"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/ads/mag"
+      }
+     }
+    ]
+   },
+   "on_false": {
+    "type": "minecraft:composite",
+    "models": [
+     {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/pistol/hip/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/hip/charging_handle"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 1,
+      "cases": [
+       {
+        "when": "suppressor",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/hip/suppressor"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/pistol/hip/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:range_dispatch",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "entries": [
+        {
+         "threshold": 1,
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": [
+             "firstperson_righthand",
+             "firstperson_lefthand"
+            ],
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/pistol/hip/muzzle_flash"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 3,
+      "cases": [
+       {
+        "when": "light",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/hip/light"
+        }
+       },
+       {
+        "when": "laser",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/hip/laser"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:empty"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:custom_model_data",
+      "index": 5,
+      "cases": [
+       {
+        "when": "mag",
+        "model": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/pistol/hip/mag"
+        }
+       },
+       {
+        "when": "none",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/hip/mag"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

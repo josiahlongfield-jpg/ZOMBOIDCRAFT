@@ -32,6 +32,8 @@ public final class ZcConfig {
     public Weather weather = new Weather();
     public Combat combat = new Combat();
     public Guns guns = new Guns();
+    /** The M9-style pistol's own numbers (shared gun settings are in guns). */
+    public GunStats pistol = GunStats.pistol();
     public Carry carry = new Carry();
 
     public static class Carry {
@@ -258,8 +260,11 @@ public final class ZcConfig {
         public double crippleChance = 0.2;
     }
 
-    public static class Guns {
-        public boolean enabled = true;
+    /**
+     * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
+     * gun has a group of its own (pistol).
+     */
+    public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
         public double damage = 12.0;
         public double headshotMultiplier = 3.0;
@@ -275,10 +280,28 @@ public final class ZcConfig {
         public double range = 100.0;
         /** Ticks between shots (semi-automatic). */
         public int fireDelayTicks = 3;
+        /** Rounds in a magazine. */
+        public int magazineSize = 30;
+
+        static GunStats pistol() {
+            GunStats s = new GunStats();
+            s.damage = 7.0;
+            s.hipSpread = 2.5;
+            s.aimSpread = 0.7;
+            s.recoil = 0.9;
+            s.shotNoise = 60.0;
+            s.aimZoom = 0.88;
+            s.range = 60.0;
+            s.magazineSize = 15;
+            return s;
+        }
+    }
+
+    /** Settings every gun shares, and the assault rifle's own numbers. */
+    public static class Guns extends GunStats {
+        public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
-        /** Rounds in a rifle magazine. */
-        public int magazineSize = 30;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */

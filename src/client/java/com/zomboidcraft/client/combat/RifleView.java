@@ -1,14 +1,16 @@
 package com.zomboidcraft.client.combat;
 
-import static com.zomboidcraft.client.combat.RifleRigData.*;
+import static com.zomboidcraft.client.combat.GunRigs.ARM;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
+import com.zomboidcraft.combat.GunType;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -27,25 +29,31 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * The rifle in first person, posed by the mod on top of its item model: it eases up to the sights and back, cants
+ * Guns in first person, posed by the mod on top of their item models: a gun eases up to the sights and back, cants
  * and settles through a reload while the old magazine drops away, the off hand fetches a new one and seats it and
- * works the charging handle on an empty gun, and the player's own arms hold it (see {@link RifleArms}).
+ * works the charging handle (a pistol's slide) on an empty gun, and the player's own arms hold it (see
+ * {@link RifleArms}). A pistol's slide runs back with every shot and locks open on the last one. Each gun's
+ * numbers are its {@link GunRig}.
  *
  * The item model still picks a pose for each reload step, so third person and other views stay right. Here the
  * pose stack the game draws it with is corrected from the pose the model applies to the one the animation wants.
- * The steps come from the server (Guns), and the animation runs on these same timings between them.
+ * The steps come from the server (Guns), and the animation runs on the same timings between them.
  */
 public final class RifleView {
-    // reload timeline, in ticks (Guns uses the same numbers)
+    // The animation is timed on the assault rifle's reload, in ticks (its GunType has the same numbers); another
+    // gun's steps are stretched onto these (see anim).
     private static final float MAG_IN = 16, CHARGE = 22, JAM_START = 18;
     private static final float END_TACTICAL = 25, END_CHARGE = 34;
+    /** When the hand lets go of the handle (or slide), and when it's home. */
+    private static final float RELEASE = 24.6f, HOME = 25.2f;
     private static final float AIM_TICKS = 3.5f;
     /** Where the off hand goes to fetch a new magazine: below the bottom of the screen, in the hand frame. */
     private static final Vector3f POUCH = new Vector3f(-0.55f, -0.50f, 0.10f);
-    /** How the gun is turned (degrees, about the grip) and moved (blocks) to work the charging handle. */
-    private static final float[] CHARGE_TURN = {20, 25, 0};
-    private static final Vector3f CHARGE_PUSH = new Vector3f(-0.08f, 0.10f, -0.30f);
 
+    /** The gun in hand and its rig, as of the last tick or frame. */
+    private static GunType type = GunType.ASSAULT_RIFLE;
+    private static GunRig rig = GunRigs.ALL.get(GunType.ASSAULT_RIFLE.id());
+    private static GunType held;
     private static int lastStep;
     private static boolean hadMag;
     private static boolean active, charge, jam, oldMag;
@@ -59,13 +67,14 @@ public final class RifleView {
     private static final ItemStackRenderState LOOSE_MAG = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_HANDLE = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_FLASH = new ItemStackRenderState();
-    private static ItemStack looseMag, looseHandle, looseFlash;
+    /** Each gun's loose pieces: its magazine, its handle or slide, its flash. */
+    private static final Map<GunType, ItemStack[]> LOOSE = new EnumMap<>(GunType.class);
 
-    /** The muzzle flash: how long it shows (ticks), and the shot it's for (its tick, then its first frame). */
+    /** The last shot: its tick, then its first frame; whether it flashed, and whether it was the last round. */
     private static final float FLASH_LIFE = 1.6f;
-    private static int flashShot = -100;
-    private static boolean flashWaiting;
-    private static float flashAt = -100, flashRoll, flashSize;
+    private static int shotTick = -100;
+    private static boolean shotWaiting, shotFlash, shotEmptied;
+    private static float shotAt = -100, flashRoll, flashSize;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(RifleView::tick);
@@ -76,13 +85,19 @@ public final class RifleView {
     private static void tick(Minecraft mc) {
         LocalPlayer player = mc.player;
         ItemStack gun = player == null ? ItemStack.EMPTY : player.getMainHandItem();
-        if (!gun.is(ModItems.ASSAULT_RIFLE)) {
+        GunType now = GunType.of(gun);
+        if (now != held) {
+            held = now;
             active = false;
             lastStep = 0;
             aim = aimO = 0;
             hadMag = false;
+            shotEmptied = false;
+        }
+        if (now == null) {
             return;
         }
+        use(now);
         float raw = step(gun);
         int step = (int) raw;
         int age = player.tickCount;
@@ -92,31 +107,39 @@ public final class RifleView {
                 charge = raw > 1.25f;    // the server marks a reload onto an empty chamber with 1.5
                 jam = false;
                 oldMag = hadMag;
+                shotEmptied = false;
             } else if (step == 2) {
                 if (active) {
-                    resync(age, MAG_IN);
+                    resync(age, type.magIn);
                 } else {
-                    start(age, MAG_IN);
+                    start(age, type.magIn);
                     charge = jam = oldMag = false;
                 }
             } else if (step == 3) {
                 if (active && lastStep != 0) {
-                    resync(age, CHARGE);
+                    resync(age, type.charge);
                 } else {
-                    start(age, JAM_START);     // clearing a jam: just the charging handle
+                    start(age, type.jamClear);     // clearing a jam: just the charging handle
                     charge = jam = true;
                     oldMag = false;
                 }
             }
             lastStep = step;
         }
-        if (active && age - clockStart > (charge ? END_CHARGE : END_TACTICAL)) {
+        if (active && age - clockStart > (charge ? type.chargeDone : type.tacticalDone)) {
             active = false;
         }
         hadMag = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag();
         aimO = aim;
-        boolean aiming = step == 0 && player.isUsingItem() && player.getUseItem().is(ModItems.ASSAULT_RIFLE);
+        boolean aiming = step == 0 && player.isUsingItem() && GunType.isGun(player.getUseItem());
         aim = Mth.clamp(aim + (aiming ? 1f : -1f) / AIM_TICKS, 0f, 1f);
+    }
+
+    private static void use(GunType gun) {
+        if (gun != type) {
+            type = gun;
+            rig = GunRigs.ALL.get(gun.id());
+        }
     }
 
     private static void start(int age, float t) {
@@ -128,6 +151,25 @@ public final class RifleView {
         if (Math.abs(age - clockStart - t) > 1.5f) {
             clockStart = age - t;
         }
+    }
+
+    /** Ticks into this gun's reload to ticks into the animation: the same moves, stretched between its own steps. */
+    private static float anim(float t) {
+        if (jam) {
+            return piecewise(t, new float[] {type.jamClear, type.charge, type.chargeDone}, new float[] {JAM_START, CHARGE, END_CHARGE});
+        }
+        if (charge) {
+            return piecewise(t, new float[] {0, type.magIn, type.charge, type.chargeDone}, new float[] {0, MAG_IN, CHARGE, END_CHARGE});
+        }
+        return piecewise(t, new float[] {0, type.magIn, type.tacticalDone}, new float[] {0, MAG_IN, END_TACTICAL});
+    }
+
+    private static float piecewise(float t, float[] from, float[] to) {
+        int i = 1;
+        while (i < from.length - 1 && t > from[i]) {
+            i++;
+        }
+        return Mth.lerp((t - from[i - 1]) / (from[i] - from[i - 1]), to[i - 1], to[i]);
     }
 
     private static float step(ItemStack gun) {
@@ -144,35 +186,44 @@ public final class RifleView {
     // ------------------------------------------------------------------ drawing
 
     /**
-     * Draws the held rifle in place of the plain item render: the gun with its pose corrected, the loose reload
-     * pieces, the arms. Returns false (and draws nothing) when the game should draw it as usual.
+     * Draws the held gun in place of the plain item render: the gun with its pose corrected, its handle or slide,
+     * the loose reload pieces, the arms. Returns false (and draws nothing) when the game should draw it as usual.
      */
     public static boolean submit(ItemStackRenderState item, PoseStack pose, SubmitNodeCollector out, int light,
                                  PlayerRenderState state, ItemStack gun, Runnable drawGun) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || !gun.is(ModItems.ASSAULT_RIFLE) || player.getMainArm() != HumanoidArm.RIGHT
+        GunType gunType = GunType.of(gun);
+        if (player == null || gunType == null || player.getMainArm() != HumanoidArm.RIGHT
                 || state.avatarRenderState == null) {
             return false;
         }
+        use(gunType);
         ZcConfig config = ZcConfig.get();
         float age = state.avatarRenderState.ageInTicks;
         int step = (int) step(gun);
         boolean using = player.isUsingItem() && player.getUseItem() == gun;
         String optic = optic(gun);
+        if (shotWaiting) {
+            shotWaiting = false;
+            if (player.tickCount - shotTick <= 2) {
+                shotAt = age;
+                flashRoll = player.getRandom().nextFloat() * (float) (Math.PI * 2);
+                flashSize = 0.85f + player.getRandom().nextFloat() * 0.3f;
+            }
+        }
 
         // the pose the item model applies, which the correction starts from
         Pose shown;
         if (step >= 3) {
-            shown = hip(RELOAD_POSE.get("charge")[0], RELOAD_POSE.get("charge")[1], 0);
+            shown = hip(rig.charge()[0], rig.charge()[1], 0);
         } else if (step >= 1) {
-            shown = hip(RELOAD_POSE.get("mag_out")[0], RELOAD_POSE.get("mag_out")[1], 0);
+            shown = hip(rig.magOut()[0], rig.magOut()[1], 0);
         } else if (using) {
             shown = sights(optic);
             if (shown == null) {
                 aimShown = 1;       // through the scope the game draws the scope picture instead of the gun
                 laserAt = null;
-                flashWaiting = false;
                 return true;
             }
         } else {
@@ -180,7 +231,7 @@ public final class RifleView {
         }
 
         // the pose the animation wants
-        float t = active ? age - clockStart : -1;
+        float t = active ? anim(age - clockStart) : -1;
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
         Pose sights = sights(optic);
@@ -202,19 +253,19 @@ public final class RifleView {
         drawGun.run();
         pose.popPose();
 
+        // the model leaves the handle or slide to us in first person
+        drawHandle(pose, out, light, player, want, pull(gun, t, animate, age));
         drawFlash(pose, out, player, want, gun, age);
-        laserAt = want.point(LASER).add(ARM[0], ARM[1], ARM[2]);
+        laserAt = want.point(rig.laser()).add(ARM[0], ARM[1], ARM[2]);
         if (animate) {
             drawLoose(pose, out, light, player, want, t, step);
-        } else if (step == 3) {
-            drawHandle(pose, out, light, player, want, 0);    // the model leaves the handle to us in this step
         }
         if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             Hand left = animate ? leftHand(want, t, foregrip) : support(want, foregrip, a);
-            Hand right = new Hand(want.point(GRIP), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
+            Hand right = new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
-                    player.getOffhandItem().isEmpty() ? left : null, want.scale / HIP_SCALE * 0.6f);
+                    player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
         }
         pose.popPose();
         return true;
@@ -233,14 +284,15 @@ public final class RifleView {
         pose.translate(ARM[0], ARM[1], ARM[2]);
     }
 
-    /** The old magazine falling away, the new one coming up and in, and the charging handle being worked. */
+    /** The old magazine falling away, and the new one coming up and in. */
     private static void drawLoose(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
                                   float t, int step) {
         if (oldMag && t < 10) {
             // it slides out of the well, then falls clear of the screen, turning as it goes
             float slide = 4.5f * easeIn(t, 0.5f, 2.5f);
             float fall = Math.max(0, t - 2.5f);
-            Vector3f centre = gun.point(new Vector3f(MAG_CENTRE[0], MAG_CENTRE[1] - slide, MAG_CENTRE[2]));
+            float[] c = rig.magCentre(), axis = rig.magAxis();
+            Vector3f centre = gun.point(new Vector3f(c[0] + axis[0] * slide, c[1] + axis[1] * slide, c[2] + axis[2] * slide));
             pose.pushPose();
             pose.translate(0, -(0.03f * fall * fall + 0.04f * fall), 0);
             pose.translate(centre.x, centre.y, centre.z);
@@ -254,9 +306,6 @@ public final class RifleView {
             drawPiece(pose, out, light, player, gun, newMag(t), LOOSE_MAG);
             pose.popPose();
         }
-        if (step == 3) {
-            drawHandle(pose, out, light, player, gun, handlePull(t));
-        }
     }
 
     private static void drawHandle(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun, float pull) {
@@ -265,10 +314,15 @@ public final class RifleView {
         pose.popPose();
     }
 
-    /** The trigger was pulled (and the gun went off, unsuppressed): flash on the next frame drawn. */
-    public static void fired(LocalPlayer player) {
-        flashShot = player.tickCount;
-        flashWaiting = true;
+    /**
+     * The trigger was pulled and the gun went off: the slide runs back, and the flash (unless suppressed or off)
+     * shows from the next frame drawn.
+     */
+    public static void fired(LocalPlayer player, boolean flash) {
+        shotTick = player.tickCount;
+        shotWaiting = true;
+        shotFlash = flash;
+        shotEmptied = player.getMainHandItem().getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() <= 1;
     }
 
     /**
@@ -277,23 +331,14 @@ public final class RifleView {
      */
     private static void drawFlash(PoseStack pose, SubmitNodeCollector out, LocalPlayer player, Pose gun, ItemStack stack,
                                   float age) {
-        if (flashWaiting) {
-            flashWaiting = false;
-            if (player.tickCount - flashShot <= 2) {
-                flashAt = age;
-                flashRoll = player.getRandom().nextFloat() * (float) (Math.PI * 2);
-                flashSize = 0.85f + player.getRandom().nextFloat() * 0.3f;
-            }
-        }
-        float since = age - flashAt;
-        if (since < 0 || since >= FLASH_LIFE || Attachments.suppressed(stack)) {
+        float since = age - shotAt;
+        if (!shotFlash || since < 0 || since >= FLASH_LIFE || Attachments.suppressed(stack)) {
             return;
         }
         float half = FLASH_LIFE / 2;
         float size = flashSize * (since < half ? 1 : Mth.lerp((since - half) / half, 1f, 0.4f));
-        Matrix4f local = new Matrix4f().translation(MUZZLE[0], MUZZLE[1], MUZZLE[2])
-                .rotateZ(flashRoll).scale(size)
-                .translate(-MUZZLE[0], -MUZZLE[1], -MUZZLE[2]);
+        float[] m = rig.muzzle();
+        Matrix4f local = new Matrix4f().translation(m[0], m[1], m[2]).rotateZ(flashRoll).scale(size).translate(-m[0], -m[1], -m[2]);
         pose.pushPose();
         drawPiece(pose, out, FULL_BRIGHT, player, gun, local, LOOSE_FLASH);
         pose.popPose();
@@ -305,15 +350,11 @@ public final class RifleView {
     private static void drawPiece(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
                                   Matrix4f local, ItemStackRenderState state) {
         Minecraft mc = Minecraft.getInstance();
-        if (looseMag == null) {
-            looseMag = new ItemStack(ModItems.RIFLE_MAGAZINE);
-            looseMag.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_mag"));
-            looseHandle = new ItemStack(ModItems.ASSAULT_RIFLE);
-            looseHandle.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_charging_handle"));
-            looseFlash = new ItemStack(ModItems.ASSAULT_RIFLE);
-            looseFlash.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_flash"));
-        }
-        ItemStack stack = state == LOOSE_MAG ? looseMag : state == LOOSE_HANDLE ? looseHandle : looseFlash;
+        ItemStack[] loose = LOOSE.computeIfAbsent(type, g -> new ItemStack[] {
+                piece(new ItemStack(g.magazine()), g.id() + "_loose_mag"),
+                piece(new ItemStack(g.item()), g.id() + "_loose_charging_handle"),
+                piece(new ItemStack(g.item()), g.id() + "_loose_flash")});
+        ItemStack stack = state == LOOSE_MAG ? loose[0] : state == LOOSE_HANDLE ? loose[1] : loose[2];
         mc.getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.FIXED, player.level(), player, 0);
         gun.apply(pose);
         // item pixels to the model's own unit cube, the move, and back (the item render takes off half a block)
@@ -324,11 +365,17 @@ public final class RifleView {
         state.submit(pose, out, light, OverlayTexture.NO_OVERLAY, 0);
     }
 
-    /** A magazine moved along the well (negative is down out of it) and rocked forward about the well's mouth. */
+    private static ItemStack piece(ItemStack stack, String model) {
+        stack.set(DataComponents.ITEM_MODEL, ZomboidCraft.id(model));
+        return stack;
+    }
+
+    /** A magazine moved along the well (negative is out of it) and rocked forward about the well's mouth. */
     private static Matrix4f magLocal(float along, float rock) {
-        return new Matrix4f().translation(MAG_TOP[0], MAG_TOP[1] + along, MAG_TOP[2])
+        float[] top = rig.magTop(), axis = rig.magAxis();
+        return new Matrix4f().translation(top[0] - axis[0] * along, top[1] - axis[1] * along, top[2] - axis[2] * along)
                 .rotateX(rock * Mth.DEG_TO_RAD)
-                .translate(-MAG_TOP[0], -MAG_TOP[1], -MAG_TOP[2]);
+                .translate(-top[0], -top[1], -top[2]);
     }
 
     /** The new magazine: up from below the screen, slowing as it nears the well, rocked in and seated at MAG_IN. */
@@ -342,15 +389,43 @@ public final class RifleView {
         return magLocal(Mth.lerp(u, -3.5f, 0f), Mth.lerp(u, 7f, 0f));
     }
 
-    /** Item pixels the charging handle is back: drawn back, then let go so it snaps home. */
+    /** Item pixels the charging handle is back while it's worked: drawn back, then let go so it snaps home. */
     private static float handlePull(float t) {
         if (t < CHARGE) {
             return 0;
         }
-        if (t < 24.6f) {
-            return HANDLE_TRAVEL * smooth((t - CHARGE) / (24.6f - CHARGE));
+        if (t < RELEASE) {
+            return rig.handleTravel() * smooth((t - CHARGE) / (RELEASE - CHARGE));
         }
-        return HANDLE_TRAVEL * (1 - easeIn(t, 24.6f, 25.2f));
+        return rig.handleTravel() * (1 - easeIn(t, RELEASE, HOME));
+    }
+
+    /**
+     * Item pixels the handle (or slide) is back this frame: worked through a reload or a jam; on a pistol, locked
+     * open on an empty gun until the slide is racked, and run back by each shot.
+     */
+    private static float pull(ItemStack gun, float t, boolean animate, float age) {
+        float travel = rig.handleTravel();
+        if (animate && charge) {
+            if (jam || !rig.locksBack()) {
+                return handlePull(t);
+            }
+            // racked from where it's locked: back a touch further, then let go
+            return t < RELEASE ? travel * (1 + 0.08f * smooth01(t, CHARGE, RELEASE)) : travel * (1 - easeIn(t, RELEASE, HOME));
+        }
+        if (animate) {
+            return 0;
+        }
+        GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+        float since = age - shotAt;
+        boolean fresh = since >= 0 && since < 10;
+        if (rig.locksBack() && (g.rounds() == 0 && !g.jammed() || shotEmptied && fresh)) {
+            return travel * (fresh && since < 0.35f ? smooth(since / 0.35f) : 1);
+        }
+        if (rig.cycles() && since >= 0 && since < 1.2f) {
+            return travel * (since < 0.35f ? smooth(since / 0.35f) : 1 - smooth((since - 0.35f) / 0.85f));
+        }
+        return 0;
     }
 
     // ------------------------------------------------------------------ poses
@@ -372,41 +447,41 @@ public final class RifleView {
                 chg = 0;
             }
         }
-        float[] o = RELOAD_POSE.get("mag_out"), c = RELOAD_POSE.get("charge");
+        float[] o = rig.magOut(), c = rig.charge();
         // the magazine slapped home and the handle let go each jolt the muzzle up a little
-        float kick = bump(t, MAG_IN, 2.5f) * 3f + (charge ? bump(t, 24.6f, 2.5f) * 2f : 0);
+        float kick = bump(t, MAG_IN, 2.5f) * 3f + (charge ? bump(t, RELEASE, 2.5f) * 2f : 0);
         Pose gun = hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick);
         if (chg <= 0) {
             return gun;
         }
-        // for the charging handle the gun comes up and out, muzzle high and to the left, so the hand on the back
-        // of the receiver doesn't hide the whole gun: turned about the grip, then pushed away
-        Vector3f grip = gun.point(GRIP);
-        Quaternionf q = new Quaternionf().rotationXYZ(CHARGE_TURN[0] * chg * Mth.DEG_TO_RAD,
-                CHARGE_TURN[1] * chg * Mth.DEG_TO_RAD, CHARGE_TURN[2] * chg * Mth.DEG_TO_RAD).mul(gun.q());
+        // to work the handle the gun comes up and out, muzzle high and to the left, so the hand on the back of it
+        // doesn't hide the whole gun: turned about the grip, then pushed away
+        float[] turn = rig.chargeTurn(), push = rig.chargePush();
+        Vector3f grip = gun.point(rig.grip());
+        Quaternionf q = new Quaternionf().rotationXYZ(turn[0] * chg * Mth.DEG_TO_RAD, turn[1] * chg * Mth.DEG_TO_RAD,
+                turn[2] * chg * Mth.DEG_TO_RAD).mul(gun.q());
         Pose turned = new Pose(new Vector3f(gun.t()), q, gun.scale());
-        turned.t().add(grip.sub(turned.point(GRIP))).add(new Vector3f(CHARGE_PUSH).mul(chg));
+        turned.t().add(grip.sub(turned.point(rig.grip()))).add(new Vector3f(push[0], push[1], push[2]).mul(chg));
         return turned;
     }
 
     /** The hip pose turned by a cant (and a muzzle kick) about the grip, and dropped: the same sums as the model's. */
     private static Pose hip(float cant, float drop, float kick) {
-        Quaternionf q = new Quaternionf().rotationXYZ((HIP_TURN[0] + cant * 0.6f + kick) * Mth.DEG_TO_RAD,
-                (HIP_TURN[1] + cant * 0.3f) * Mth.DEG_TO_RAD, (HIP_TURN[2] - cant) * Mth.DEG_TO_RAD);
-        Vector3f grip = q.transform(new Vector3f(GRIP[0] - 8, GRIP[1] - 8, GRIP[2] - 8)).mul(HIP_SCALE / 16f);
-        Vector3f t = new Vector3f(HIP_GRIP[0] - ARM[0], HIP_GRIP[1] - drop - ARM[1], HIP_GRIP[2] - ARM[2]).sub(grip);
-        return new Pose(t, q, HIP_SCALE);
+        float[] turn = rig.hipTurn(), at = rig.hipGrip(), g = rig.grip();
+        Quaternionf q = new Quaternionf().rotationXYZ((turn[0] + cant * 0.6f + kick) * Mth.DEG_TO_RAD,
+                (turn[1] + cant * 0.3f) * Mth.DEG_TO_RAD, (turn[2] - cant) * Mth.DEG_TO_RAD);
+        Vector3f grip = q.transform(new Vector3f(g[0] - 8, g[1] - 8, g[2] - 8)).mul(rig.hipScale() / 16f);
+        Vector3f t = new Vector3f(at[0] - ARM[0], at[1] - drop - ARM[1], at[2] - ARM[2]).sub(grip);
+        return new Pose(t, q, rig.hipScale());
     }
 
     /** The pose on the sights for an optic, or null when the gun isn't drawn (the scope). */
     private static Pose sights(String optic) {
-        float[] d = switch (optic) {
-            case "red_dot" -> ADS_RED_DOT;
-            case "holo" -> ADS_HOLO;
-            case "scope_4x" -> null;
-            default -> ADS_IRONS;
-        };
-        return d == null ? null : new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf(), d[3]);
+        if (optic.equals("scope_4x")) {
+            return null;
+        }
+        float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));
+        return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf(), d[3]);
     }
 
     /** A display transform: translate (blocks), turn, uniform scale. */
@@ -453,25 +528,35 @@ public final class RifleView {
     private static final Vector3f LEFT_HIP = new Vector3f(-0.25f, -0.55f, 0.8f);
     private static final Vector3f LEFT_ADS = new Vector3f(-0.3f, -0.65f, 0.7f);
     private static final Vector3f LEFT_GRIP = new Vector3f(-0.3f, -0.7f, 0.65f);
+    /** The off hand wrapped round a pistol's grip: its forearm runs back and down to the left. */
+    private static final Vector3f LEFT_WRAP_HIP = new Vector3f(-0.5f, -0.55f, 0.65f);
+    private static final Vector3f LEFT_WRAP_ADS = new Vector3f(-0.4f, -0.5f, 0.75f);
     private static final Vector3f PALM_UP = new Vector3f(-0.2f, -1f, 0f);
     private static final Vector3f PALM_IN = new Vector3f(-1f, -0.2f, 0f);
 
-    /** The off hand on the handguard (palm up under it) or round the foregrip. */
+    /** The off hand on the handguard (palm up under it), round the foregrip, or round a pistol's grip. */
     private static Hand support(Pose gun, boolean foregrip, float aimed) {
-        if (foregrip) {
-            return new Hand(gun.point(FOREGRIP), LEFT_GRIP, PALM_IN);
+        if (rig.supportGrip()) {
+            return new Hand(gun.point(rig.support()), lerp(LEFT_WRAP_HIP, LEFT_WRAP_ADS, aimed), PALM_IN);
         }
-        return new Hand(gun.point(SUPPORT), lerp(LEFT_HIP, LEFT_ADS, aimed), PALM_UP);
+        if (foregrip) {
+            return new Hand(gun.point(rig.foregrip()), LEFT_GRIP, PALM_IN);
+        }
+        return new Hand(gun.point(rig.support()), lerp(LEFT_HIP, LEFT_ADS, aimed), PALM_UP);
     }
 
     private static Hand onMag(Pose gun, Matrix4f mag) {
-        Vector3f hold = mag.transformPosition(new Vector3f(MAG_HOLD[0], MAG_HOLD[1], MAG_HOLD[2]));
+        float[] h = rig.magHold();
+        Vector3f hold = mag.transformPosition(new Vector3f(h[0], h[1], h[2]));
         return new Hand(gun.point(hold), new Vector3f(-0.1f, -0.9f, 0.42f), new Vector3f(-0.5f, -1f, 0f));
     }
 
     private static Hand onHandle(Pose gun, float pull) {
-        return new Hand(gun.point(new Vector3f(HANDLE[0], HANDLE[1], HANDLE[2] + pull)),
-                new Vector3f(-0.4f, -0.85f, 0.25f), new Vector3f(-1f, -0.4f, 0f));
+        float[] h = rig.handle();
+        Vector3f at = gun.point(new Vector3f(h[0], h[1], h[2] + pull));
+        // a pistol's slide is pinched from above; the rifle's handle is pulled from beside the receiver
+        return rig.supportGrip() ? new Hand(at, new Vector3f(-0.55f, -0.6f, 0.55f), new Vector3f(-0.3f, -1f, 0f))
+                : new Hand(at, new Vector3f(-0.4f, -0.85f, 0.25f), new Vector3f(-1f, -0.4f, 0f));
     }
 
     private static Hand pouch() {
@@ -491,15 +576,20 @@ public final class RifleView {
         if (!charge) {
             return onMag(gun, seated).lerp(rest, smooth01(t, 17.5f, 23));
         }
+        // a slide locked open is taken hold of where it sits, all the way back; the hand follows pull()
+        boolean locked = rig.locksBack() && !jam;
+        float grab = locked ? rig.handleTravel() : 0;
         Hand from = jam ? rest : onMag(gun, seated);
         float reachStart = jam ? JAM_START : 17.5f;
         if (t < CHARGE) {
-            return from.lerp(onHandle(gun, 0), smooth01(t, reachStart, CHARGE));
+            return from.lerp(onHandle(gun, grab), smooth01(t, reachStart, CHARGE));
         }
-        if (t < 25.6f) {
-            return onHandle(gun, t < 24.6f ? handlePull(t) : HANDLE_TRAVEL);   // it lets go at full travel
+        float back = rig.handleTravel() * (locked ? 1.08f : 1f);
+        if (t < RELEASE + 1) {
+            // it lets go at full travel, and the hand stays there a moment
+            return onHandle(gun, t < RELEASE ? Mth.lerp(smooth01(t, CHARGE, RELEASE), grab, back) : back);
         }
-        return onHandle(gun, HANDLE_TRAVEL).lerp(rest, smooth01(t, 25.6f, 31));
+        return onHandle(gun, back).lerp(rest, smooth01(t, RELEASE + 1, 31));
     }
 
     // ------------------------------------------------------------------ what other code asks
@@ -514,7 +604,7 @@ public final class RifleView {
     public static Vector3f laserInCamera() {
         Minecraft mc = Minecraft.getInstance();
         return mc.options.getCameraType().isFirstPerson() && mc.player != null
-                && mc.player.getMainHandItem().is(ModItems.ASSAULT_RIFLE) ? laserAt : null;
+                && GunType.isGun(mc.player.getMainHandItem()) ? laserAt : null;
     }
 
     // ------------------------------------------------------------------ helpers

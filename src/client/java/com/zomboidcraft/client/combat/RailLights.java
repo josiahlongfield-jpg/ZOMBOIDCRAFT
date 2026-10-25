@@ -1,9 +1,9 @@
 package com.zomboidcraft.client.combat;
 
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.ModParticles;
+import com.zomboidcraft.combat.GunType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -61,7 +61,7 @@ public final class RailLights {
         Set<UUID> lit = new HashSet<>();
         for (AbstractClientPlayer player : level.players()) {
             ItemStack gun = player.getMainHandItem();
-            if (!gun.is(ModItems.ASSAULT_RIFLE) || player.isSpectator()) {
+            if (!GunType.isGun(gun) || player.isSpectator()) {
                 continue;
             }
             boolean light = Attachments.lightOn(gun), laser = Attachments.laserOn(gun);

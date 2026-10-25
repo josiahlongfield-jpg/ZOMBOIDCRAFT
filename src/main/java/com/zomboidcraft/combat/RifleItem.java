@@ -18,17 +18,31 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 /**
- * The assault rifle. Hold right-click to aim down the sights, left-click to fire, R to reload.
- * Firing and reloading run on the server (see {@link Guns}); this class is the item's own side:
- * aiming is "using" the item, which the item model turns into the sight picture.
+ * A gun (the assault rifle, the pistol: see {@link GunType}). Hold right-click to aim down the sights,
+ * left-click to fire, R to reload. Firing and reloading run on the server (see {@link Guns}); this class is
+ * the item's own side: aiming is "using" the item, which the item model turns into the sight picture.
  */
 public class RifleItem extends Item {
-    public RifleItem(Properties properties) {
+    private final GunType type;
+
+    public RifleItem(GunType type, Properties properties) {
         super(properties);
+        this.type = type;
     }
 
+    public GunType type() {
+        return type;
+    }
+
+    /** Rounds in an assault rifle magazine. */
     public static int capacity() {
-        return Math.max(1, ZcConfig.get().guns.magazineSize);
+        return GunType.ASSAULT_RIFLE.capacity();
+    }
+
+    /** Rounds in a magazine for this gun. */
+    public static int capacity(ItemStack gun) {
+        GunType type = GunType.of(gun);
+        return (type == null ? GunType.ASSAULT_RIFLE : type).capacity();
     }
 
     @Override
@@ -73,7 +87,7 @@ public class RifleItem extends Item {
                 return false;
             }
             carried.set(Attachments.unmount(self, filled));
-            player.playSound(ModSounds.RIFLE_MAG_OUT, 0.6f, 1.3f);
+            player.playSound(type.magOut(), 0.6f, 1.3f);
             return true;
         }
         if (!Attachments.canMount(self, other)) {
@@ -89,7 +103,7 @@ public class RifleItem extends Item {
         if (old != null && !old.isEmpty()) {
             carried.set(old);
         }
-        player.playSound(ModSounds.RIFLE_MAG_IN, 0.6f, 1.3f);
+        player.playSound(type.magIn(), 0.6f, 1.3f);
         return true;
     }
 
@@ -98,7 +112,7 @@ public class RifleItem extends Item {
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         tooltip.accept(gun.mag()
-                ? Component.literal("Magazine: " + gun.rounds() + "/" + capacity()).withStyle(ChatFormatting.GRAY)
+                ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
                 : Component.literal("No magazine").withStyle(ChatFormatting.DARK_RED));
         if (gun.jammed()) {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
