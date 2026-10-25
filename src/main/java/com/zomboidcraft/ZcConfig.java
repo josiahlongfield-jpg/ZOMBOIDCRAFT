@@ -32,6 +32,8 @@ public final class ZcConfig {
     public Weather weather = new Weather();
     public Combat combat = new Combat();
     public Guns guns = new Guns();
+    /** The M9-style pistol's own numbers (shared gun settings are in guns). */
+    public GunStats pistol = GunStats.pistol();
     public Carry carry = new Carry();
 
     public static class Carry {
@@ -258,8 +260,11 @@ public final class ZcConfig {
         public double crippleChance = 0.2;
     }
 
-    public static class Guns {
-        public boolean enabled = true;
+    /**
+     * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
+     * gun has a group of its own (pistol).
+     */
+    public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
         public double damage = 12.0;
         public double headshotMultiplier = 3.0;
@@ -275,10 +280,28 @@ public final class ZcConfig {
         public double range = 100.0;
         /** Ticks between shots (semi-automatic). */
         public int fireDelayTicks = 3;
+        /** Rounds in a magazine. */
+        public int magazineSize = 30;
+
+        static GunStats pistol() {
+            GunStats s = new GunStats();
+            s.damage = 7.0;
+            s.hipSpread = 2.5;
+            s.aimSpread = 0.7;
+            s.recoil = 0.9;
+            s.shotNoise = 60.0;
+            s.aimZoom = 0.88;
+            s.range = 60.0;
+            s.magazineSize = 15;
+            return s;
+        }
+    }
+
+    /** Settings every gun shares, and the assault rifle's own numbers. */
+    public static class Guns extends GunStats {
+        public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
-        /** Rounds in a rifle magazine. */
-        public int magazineSize = 30;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */
@@ -298,7 +321,7 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
-        /** A short, soft flash at the muzzle with each shot (none through a suppressor). */
+        /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
         public double aimSway = 0.15;
@@ -306,6 +329,17 @@ public final class ZcConfig {
         public boolean reloadAnimation = true;
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
+        /**
+         * How bright (a light level, 1 to 15) the world is lit where a gun light lands up close, dimming with
+         * distance. Higher lights more of the rooms around it too. Client side.
+         */
+        public int lightLevel = 11;
+        /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
+        public double lightCone = 13;
+        /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
+        public double lightGlow = 1.0;
+        /** A gun light's beam shows faintly in the air. Client side. */
+        public boolean lightBeam = true;
     }
 
     public static ZcConfig get() {

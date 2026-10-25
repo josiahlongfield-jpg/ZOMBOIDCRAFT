@@ -1,7 +1,6 @@
 package com.zomboidcraft.client.combat;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
@@ -13,6 +12,7 @@ import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.combat.Weapons;
 import com.zomboidcraft.combat.WeaponSpecs;
+import com.zomboidcraft.combat.GunType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 
 /**
- * The player's side of combat: R reloads, V shoves, left-click fires the rifle (with its kick
+ * The player's side of combat: R reloads, V shoves, left-click fires a gun (with its kick
  * and its bang heard at once, before the server answers), jump struggles out of a grab, and an
  * empty endurance bar stops you sprinting.
  */
@@ -48,11 +48,11 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(RAIL);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
-            if (hand.is(ModItems.ASSAULT_RIFLE)) {
+            if (GunType.isGun(hand)) {
                 if (clicks > 0 && ZcConfig.get().guns.enabled) {
                     pullTrigger(client, player, hand);
                 }
-                return true;    // the rifle never punches or digs
+                return true;    // a gun never punches or digs
             }
             if (clicks > 0 && hand.getItem() instanceof MeleeWeaponItem && player.getAttackStrengthScale(0f) > 0.9f) {
                 WeaponSpecs.WeaponSpec spec = Weapons.spec(hand);
@@ -72,7 +72,7 @@ public final class CombatClient {
             return;
         }
         while (RELOAD.consumeClick()) {
-            if (player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+            if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RELOAD));
             }
         }
@@ -80,7 +80,7 @@ public final class CombatClient {
             ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
         }
         while (RAIL.consumeClick()) {
-            if (player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+            if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RAIL));
             }
         }
@@ -101,24 +101,23 @@ public final class CombatClient {
         long now = client.level.getGameTime();
         ZcConfig.Guns config = ZcConfig.get().guns;
         // each world keeps its own clock, so a last shot "after" now was fired in another world
-        if (now >= lastShot && now - lastShot < config.fireDelayTicks) {
+        GunType type = GunType.of(gun);
+        ZcConfig.GunStats stats = type.stats();
+        if (now >= lastShot && now - lastShot < stats.fireDelayTicks) {
             return;
         }
         lastShot = now;
-        boolean aiming = player.isUsingItem() && player.getUseItem().is(ModItems.ASSAULT_RIFLE);
+        boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
         ClientPlayNetworking.send(new CombatNet.Fire(aiming));
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (!g.mag() || g.rounds() <= 0 || g.jammed() || reloading(gun)) {
             return;     // the server answers with the dry click
         }
         boolean suppressed = Attachments.suppressed(gun);
-        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(),
-                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED : ModSounds.RIFLE_SHOT, SoundSource.PLAYERS,
+        client.level.playLocalSound(player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, false), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f, false);
-        if (!suppressed && config.muzzleFlash) {
-            RifleView.fired(player);
-        }
-        float kick = (aiming ? 1.1f : 2.0f) * (float) (config.recoil * Attachments.recoilFactor(gun));
+        RifleView.fired(player, config.muzzleFlash);
+        float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);

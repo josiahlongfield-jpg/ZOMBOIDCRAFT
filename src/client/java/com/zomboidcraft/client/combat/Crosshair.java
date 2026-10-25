@@ -1,7 +1,7 @@
 package com.zomboidcraft.client.combat;
 
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.GunType;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,7 +20,7 @@ public final class Crosshair {
             ZcConfig.Look look = ZcConfig.get().look;
             LocalPlayer player = minecraft.player;
             if (look.hideCrosshairWhenAiming && player != null && player.isUsingItem()
-                    && player.getUseItem().is(ModItems.ASSAULT_RIFLE) && !CombatClient.reloading(player.getUseItem())) {
+                    && GunType.isGun(player.getUseItem()) && !CombatClient.reloading(player.getUseItem())) {
                 return;
             }
             float gui = (float) minecraft.getWindow().getGuiScale();

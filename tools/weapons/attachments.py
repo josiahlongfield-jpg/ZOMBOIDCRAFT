@@ -186,6 +186,11 @@ def light(m):
     b.rod(1.90, 2.45, 0.47, 'rubber', axis=2, at=(0.0, 1.05))
 
 
+# where each beam leaves its part, in the part's own inches (drawn on a top rail, pointing to -z)
+LIGHT_LENS = (0.0, 1.05, -3.62)
+LASER_LENS = (-0.285, 0.715, -1.45)
+
+
 def laser(m):
     """A visible green laser in a tan box (PEQ style)."""
     b = Inch(m)
@@ -315,7 +320,7 @@ ALL = [
         note='Much quieter shots'),
     Att('foregrip', 'foregrip', 'Vertical Foregrip', 'underbarrel', foregrip, LOOK, note='Less recoil'),
     Att('light', 'weapon_light', 'Weapon Light', 'side_rail', light, LOOK, note='Lights the way ahead'),
-    Att('laser', 'laser_sight', 'Laser Sight', 'side_rail', laser, LOOK, note='Tighter shots from the hip'),
+    Att('laser', 'laser_sight', 'Laser Sight', 'right_rail', laser, LOOK, note='Tighter shots from the hip'),
 ]
 BY_KEY = {a.key: a for a in ALL}
 

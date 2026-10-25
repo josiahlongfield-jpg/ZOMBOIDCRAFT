@@ -98,6 +98,59 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:pistol",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.1,
+                "max": 0.7
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pistol_magazine",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pistol_magazine",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "zomboidcraft:mag_rounds": 8
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pistol_ammo",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 30
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pistol_suppressor",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:arrow",
           "weight": 6,
           "functions": [

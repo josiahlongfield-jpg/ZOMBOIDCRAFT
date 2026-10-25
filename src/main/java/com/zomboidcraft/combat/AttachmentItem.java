@@ -72,10 +72,11 @@ public class AttachmentItem extends Item {
             case OPTIC -> "Optic";
             case MUZZLE -> "Muzzle";
             case UNDERBARREL -> "Underbarrel";
-            case SIDE_RAIL -> "Side rail";
+            case SIDE_RAIL -> "Light rail";
             case STOCK -> "Stock";
             case MAGAZINE -> "Magazine";
             case BIPOD -> "Bipod";
+            case RIGHT_RAIL -> "Right rail";
         };
     }
 }

@@ -34,6 +34,7 @@ import poses as Q  # noqa: E402
 import kit  # noqa: E402
 import pbr  # noqa: E402
 import rifle as RF  # noqa: E402
+import pistol as PI  # noqa: E402
 import attachments as AT  # noqa: E402
 from inch import IN  # noqa: E402
 
@@ -42,7 +43,7 @@ ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
 JAVA = ROOT / 'src/main/java/com/zomboidcraft/combat/WeaponSpecs.java'
 SLOT_JAVA = ROOT / 'src/main/java/com/zomboidcraft/combat/GunSlotData.java'
 POSE_JAVA = ROOT / 'src/client/java/com/zomboidcraft/client/combat/HoldPoseData.java'
-RIG_JAVA = ROOT / 'src/client/java/com/zomboidcraft/client/combat/RifleRigData.java'
+RIG_JAVA = ROOT / 'src/client/java/com/zomboidcraft/client/combat/GunRigs.java'
 NS = 'zomboidcraft'
 
 # Held size relative to vanilla's sword sprite. At 0.7 one model unit is about 3.2 cm.
@@ -422,6 +423,7 @@ MELEE_PBR = {
     'fire_axe': dict(wood='varnish', head='painted', steel='steel'),
     'sledgehammer': dict(rubber='rubber', glass='fibreglass', forged='steel', strike='steel', steel='steel'),
     'rifle_ammo': dict(carton='card'),
+    'pistol_ammo': dict(carton='card'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
 
@@ -540,6 +542,25 @@ def rifle_holds():
     return out
 
 
+# the off hand wraps the shooting hand round the grip's left side; the slide, muzzle and grip's foot stay clear
+PISTOL_SUPPORT = [tuple(PI.frame_point(-0.95, -3.7, 6.45)), tuple(PI.frame_point(-0.95, -1.9, 5.95))]
+PISTOL_HAND = (-1.0, 0.5, 0.0)
+PISTOL_CLEAR = [tuple(PI.frame_point(*p)) for p in ((0, 0.6, 8.0), (0, 0, -0.5), (0, -4.4, 6.6), (0, 0.6, 3.0))]
+
+
+def pistol_holds():
+    """Low ready (both hands on it in front of the chest, muzzle down) and aiming (arms out straight, the
+    sights up at the eyes)."""
+    out = {}
+    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+                        ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
+        h = Q.Hold(R, S3, PI.HAND, PISTOL_SUPPORT, hand_off=PISTOL_HAND)
+        G = Q.solve_grip(h, G0, [], PISTOL_CLEAR)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
 def melee_holds():
     """Two-handed ready (held across the body, head up past the right shoulder, both hands low in front)
     and the swing's wind-up and follow-through: the gun arm sweeps round from the right, up and back, to
@@ -568,7 +589,9 @@ def assault_rifle():
         'optic': kit.Slot(fp(0, RF.RAIL, 2.6), 'top', ['red_dot', 'holo', 'scope_4x']),
         'muzzle': kit.Slot(fp(0, 0, RF.MUZZLE), 'axial', ['suppressor']),
         'underbarrel': kit.Slot(fp(0, -RF.RAIL, -5.2), 'bottom', ['foregrip']),
-        'side_rail': kit.Slot(fp(-RF.RAIL, 0, -7.6), 'left', ['light', 'laser']),
+        # the light on the left rail and the laser on the right, so both go on at once
+        'side_rail': kit.Slot(fp(-RF.RAIL, 0, -7.6), 'left', ['light']),
+        'right_rail': kit.Slot(fp(RF.RAIL, 0, -7.6), 'right', ['laser']),
         'stock': kit.Slot(fp(0, 0, RF.UPPER_LEN), 'axial', ['stock'], default='stock'),
         'magazine': kit.Slot(fp(0, -1.55, 0.40), 'axial', ['mag'], default='mag'),
     }
@@ -583,6 +606,37 @@ def assault_rifle():
                    aperture=fp(0, RF.SIGHT, 6.21), flash=flash, handle=RF.charging_handle)
 
 
+def pistol():
+    """The M9-style pistol: fixed sights, a threaded barrel for its suppressor, a rail under the dust cover
+    for the light or laser (drawn compact on a pistol), and its 15-round magazine."""
+    look = PI.look()
+    alook = AT.LOOK
+    parts = {
+        'suppressor': kit.Part('suppressor', 'pistol_suppressor', 'Pistol Suppressor', 'muzzle', PI.suppressor, alook,
+                               note='Much quieter shots'),
+        'light': kit.Part('light', 'weapon_light', 'Weapon Light', 'side_rail', PI.light, alook, seed=AT_SEED['light']),
+        'laser': kit.Part('laser', 'laser_sight', 'Laser Sight', 'right_rail', PI.laser, alook, seed=AT_SEED['laser']),
+        'mag': kit.Part('mag', 'pistol_magazine', 'Pistol Magazine', 'magazine', PI.magazine, look),
+    }
+    fp = PI.frame_point
+    slots = {
+        'muzzle': kit.Slot(fp(0, 0, PI.MUZZLE), 'axial', ['suppressor']),
+        'side_rail': kit.Slot(fp(0, -(PI.RAIL_BASE + 0.23), sum(PI.RAIL_Z) / 2), 'bottom', ['light']),
+        # the laser clamped to the right of the frame, just clear of the slide, over the trigger guard's front
+        'right_rail': kit.Slot(fp(0.47, -0.86, 1.30), 'right', ['laser']),
+        'magazine': kit.Slot(fp(0, PI.MAG_BASE, 6.48), 'axial', ['mag'], default='mag'),   # the well's mouth
+    }
+
+    def flash(m, muzzle):
+        PI.flash(m, PI.CAP_TIP)
+
+    return kit.Gun('pistol', 'M9 Pistol', PI.body, look, PI.HAND, slots, parts,
+                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7)
+
+
+AT_SEED = {a.key: kit.Part(a.key, a.item, a.title, a.slot, a.build, a.look).seed for a in AT.ALL}
+
+
 def rifle_frame():
     """Muzzle direction mapped onto a held sword sprite (third person), and the grip point that keeps it
     in the hand: P maps rifle axes to sprite axes; the grip goes where the sprite's grip goes."""
@@ -594,45 +648,71 @@ def rifle_frame():
     return Pm, g
 
 
-RELOAD_POSE = {'mag_out': (28, 0.06), 'mag_in': (28, 0.06), 'charge': (-14, 0.03)}
-# where the sight sits in front of the eye when aiming, in pixels: far enough that the rear sight doesn't fill
-# the view. Through the scope the gun isn't drawn at all: the game draws the scope picture over the screen.
-ADS_TARGET = {None: np.array([0.0, 0.0, -4.2])}
+class FirstPerson:
+    """How a gun sits in first person, for its item model and the first-person rig (RifleView):
+    hip: where the grip sits in the hand camera (blocks), the gun's turn (degrees: muzzle up, muzzle in toward
+      the crosshair, roll) and its scale;
+    reload: the reload steps' (cant degrees, drop blocks), applied to the hip pose;
+    irons: where the sight point sits in front of the eye when aiming the irons (pixels) and the scale;
+    charge: how first person turns (degrees, about the grip) and moves (blocks) the gun to work its handle;
+    locks_back: the handle (a pistol's slide) stays back on an empty gun; cycles: it runs back with every shot;
+    support_grip: the off hand wraps a grip (a pistol's) rather than cupping a handguard;
+    mag_axis: the way a magazine slides out of the well, in item pixels."""
+
+    def __init__(self, hip_grip, hip_turn, hip_scale, reload, irons, irons_scale, handle_travel, charge_turn,
+                 charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0)):
+        self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
+        self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
+        self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
+        self.locks_back, self.cycles, self.support_grip = locks_back, cycles, support_grip
+        a = np.asarray(mag_axis, float)
+        self.mag_axis = a / np.linalg.norm(a)
+
+
+# the rifle at the hip shows its upper receiver and magazine, the front sight a little under the crosshair; on
+# the irons the rear sight sits far enough from the eye not to fill the view
+RIFLE_FP = FirstPerson(hip_grip=(0.25, -0.30, -0.58), hip_turn=(2.0, 8.0, -3.0), hip_scale=0.85,
+                       reload={'mag_out': (28, 0.06), 'mag_in': (28, 0.06), 'charge': (-14, 0.03)},
+                       irons=(0.0, 0.0, -4.2), irons_scale=0.72, handle_travel=RF.HANDLE_TRAVEL,
+                       charge_turn=(20, 25, 0), charge_push=(-0.08, 0.10, -0.30))
+# the pistol held out in both hands, low and a little right; on the sights the slide's back is a hand's width off
+_dz = (PI.GRIP_BOT[0] - PI.GRIP_TOP[0]) / (PI.GRIP_BOT[1] - PI.GRIP_TOP[1])
+PISTOL_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.25,
+                        reload={'mag_out': (25, -0.18), 'mag_in': (25, -0.18), 'charge': (-6, 0.02)},
+                        irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=PI.HANDLE_TRAVEL,
+                        charge_turn=(20, 20, -35), charge_push=(0.02, 0.02, -0.30),
+                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz))
+
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
 # the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
-# face's distance plus the eye relief the sight was shaped for), and the scale they're drawn at.
+# face's distance plus the eye relief the sight was shaped for), and the scale they're drawn at. Through the
+# scope the gun isn't drawn at all: the game draws the scope picture over the screen.
 ADS_EYE = {'red_dot': 0.85 + AT.RED_DOT_EYE, 'holo': 0.20 + AT.HOLO_EYE}
 ADS_SCALE = 1.2
 HIDDEN_WHEN_AIMING = ('scope_4x',)
-# At the hip: where the pistol grip sits in the hand camera (blocks), the gun's turn (degrees: muzzle up, muzzle
-# in toward the crosshair, roll) and its scale, so the upper receiver and magazine show and the front sight
-# stops a little under the crosshair.
-HIP_GRIP = (0.25, -0.30, -0.58)
-HIP_TURN = (2.0, 8.0, -3.0)
-HIP_SCALE = 0.85
 
 
-def ads_eyes(gun):
+def ads_eyes(gun, fp):
     """Where the eye is when aiming through each sight, in the build frame (the sight point, then straight
     back toward the stock): the faces these see up close get finer textures."""
-    eyes = [gun.sight_point(None) + np.array([0, 0, -ADS_TARGET[None][2] / 0.72])]
+    eyes = [gun.sight_point(None) + np.array([0, 0, -fp.irons[2] / fp.irons_scale])]
     for optic, inches in ADS_EYE.items():
         if optic in gun.parts:
             eyes.append(gun.sight_point(optic) + np.array([0, 0, inches * IN]))
     return eyes
 
 
-def gun_displays(g, holds):
+def gun_displays(g, holds, fp):
     """Display transforms for each pose: third person from the holds, first person at the hip (canted for
     the reload steps) or with the sight on the eye line, and the inventory, ground and frame views."""
     def disp(state, fit, sight):
         ads = state.startswith('ads')
-        cant, drop = RELOAD_POSE.get(state, (0.0, 0.0))
+        cant, drop = fp.reload.get(state, (0.0, 0.0))
         d = {}
         h, G, arm = holds['aim' if ads else 'ready']
         d['thirdperson_righthand'] = Q.display_for(h, G, arm, g, S3)
         armv = np.array([0.56, -0.52, -0.72]) * 16
-        S = 0.72
+        S = fp.irons_scale
         optic = state[4:] or None
         if ads and optic in HIDDEN_WHEN_AIMING:
             d['firstperson_righthand'] = M.transform([0, 0, 0], [0, 0, 0], 0)
@@ -641,13 +721,14 @@ def gun_displays(g, holds):
             T = np.array([0.0, 0.0, -ADS_EYE[optic] * IN * Sa]) - armv - Sa * (np.asarray(sight) - C)
             d['firstperson_righthand'] = M.transform([0, 0, 0], T, Sa)
         elif ads:
-            T = ADS_TARGET[None] - armv - S * (np.asarray(sight) - C)
+            T = fp.irons - armv - S * (np.asarray(sight) - C)
             d['firstperson_righthand'] = M.transform([0, 0, 0], T, S)
         else:
-            R = M.R_xyz(HIP_TURN[0] + cant * 0.6, HIP_TURN[1] + cant * 0.3, HIP_TURN[2] - cant)
-            target = (np.array(HIP_GRIP) + [0, -drop, 0]) * 16
-            T = target - armv - HIP_SCALE * (R @ (g - C))
-            d['firstperson_righthand'] = M.transform(M.euler_xyz(R), T, HIP_SCALE)
+            ht = fp.hip_turn
+            R = M.R_xyz(ht[0] + cant * 0.6, ht[1] + cant * 0.3, ht[2] - cant)
+            target = (np.array(fp.hip_grip) + [0, -drop, 0]) * 16
+            T = target - armv - fp.hip_scale * (R @ (g - C))
+            d['firstperson_righthand'] = M.transform(M.euler_xyz(R), T, fp.hip_scale)
         Rg = M.R_xyz(12, 0, 0) @ M.R_xyz(0, -90 - 22, 0)
         s2, t2 = M.fit(fit, Rg, 15.6)
         d['gui'] = M.transform(M.euler_xyz(Rg), t2, s2)
@@ -666,8 +747,8 @@ def build_ammo_box(m):
     m.box([-2.65, 2.85, -1.45], [2.65, 3.1, 1.45], 'carton')
 
 
-def carton(f):
-    c = P.plain(f, '#4b5a37', 0.18)
+def carton(f, colour='#4b5a37'):
+    c = P.plain(f, colour, 0.18)
     stripe = np.abs(f.Y - 1.6) < 0.35
     c = np.where(stripe[..., None], P.plain(f, '#c9a33a', 0.1), c)
     if abs(f.n[2]) > 0.5:   # little cartridge icons on the front and back
@@ -782,34 +863,48 @@ def main():
         lang[f'item.{NS}.{spec.name}'] = spec.title
         summary.append(f'{spec.name}: {len(m.parts)} boxes, {T}px')
 
-    # the modular rifle and its parts
-    gun = assault_rifle()
+    # the modular guns and their parts
+    rifle = assault_rifle()
     _Pm, g = rifle_frame()
     holds = rifle_holds()
-    line, slot_data = kit.write_gun(gun, ASSETS, g - gun.hand, gun_displays(g, holds), lang, ads_eyes(gun))
+    line, _ = kit.write_gun(rifle, ASSETS, g - rifle.hand, gun_displays(g, holds, RIFLE_FP), lang, ads_eyes(rifle, RIFLE_FP))
     summary.append(line)
-    kit.write_part_items(list(gun.parts.values()), ASSETS, lambda m: small_display(m, (20, 60, 0)), lang)
+    pistol_gun = pistol()
+    gp = centred_grip(pistol_gun)
+    pistol_hold = pistol_holds()
+    line, _ = kit.write_gun(pistol_gun, ASSETS, gp - pistol_gun.hand, gun_displays(gp, pistol_hold, PISTOL_FP), lang,
+                            ads_eyes(pistol_gun, PISTOL_FP))
+    summary.append(line)
+    part_display = lambda m: small_display(m, (20, 60, 0))
+    kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
+    # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
+    own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
+    kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
+    kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([gun])
-    write_rig_java(gun, g, holds)
+    write_slot_java([rifle, pistol_gun])
+    write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
+                     (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp))])
 
-    box = M.Model('rifle_ammo')
-    build_ammo_box(box)
-    lo, hi = box.bounds()
-    box.shift(C - (lo + hi) / 2)
-    box.tidy()
-    lk = {'carton': carton}
-    uvs, T = write_texture(box, lk, 0.3, 558, 'rifle_ammo')
-    M.dump(M.model_json(box, uvs, f'{NS}:item/weapon/rifle_ammo', small_display(box)),
-           ASSETS / 'models/item/weapon/rifle_ammo.json')
-    item_def('rifle_ammo', ref('rifle_ammo'))
-    lang[f'item.{NS}.rifle_ammo'] = '5.56mm Rounds'
+    for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
+                                      ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559)):
+        box = M.Model(name)
+        build_ammo_box(box)
+        lo, hi = box.bounds()
+        box.shift(C - (lo + hi) / 2)
+        box.tidy()
+        lk = {'carton': lambda f, c=colour: carton(f, c)}
+        uvs, T = write_texture(box, lk, 0.3, seed, name)
+        M.dump(M.model_json(box, uvs, f'{NS}:item/weapon/{name}', small_display(box)),
+               ASSETS / f'models/item/weapon/{name}.json')
+        item_def(name, ref(name))
+        lang[f'item.{NS}.{name}'] = title
 
     merge_lang(lang)
     write_java()
-    pose_data = write_pose_java(holds, (mh, mG, mkeys))
+    pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold}, (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -912,16 +1007,17 @@ public final class GunSlotData {{
 ''')
 
 
-def write_pose_java(rifle, melee):
+def write_pose_java(guns, melee):
     """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame."""
     def f3(v):
         return ', '.join(f'{float(x):.5f}f' for x in v)
 
     data = {'arms': {}, 'support': {}, 'reach': Q.REACH}
-    for name in ('ready', 'aim'):
-        h, G, arm = rifle[name]
-        data['arms']['rifle_' + name] = [float(x) for x in arm]
-        data['support']['rifle_' + name] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
+    for gun, holds in guns.items():
+        for name in ('ready', 'aim'):
+            h, G, arm = holds[name]
+            data['arms'][f'{gun}_{name}'] = [float(x) for x in arm]
+            data['support'][f'{gun}_{name}'] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
     mh, mG, keys = melee
     for k, arm in keys.items():
         data['arms']['melee_' + k] = [float(x) for x in arm]
@@ -929,10 +1025,11 @@ def write_pose_java(rifle, melee):
         data['support'][name] = [float(x) for b in ((0, y0, 0), (0, y1, 0))
                                  for x in Q.arm_local(mh, mG, keys['ready'], b)]
     arms = '\n'.join(f'    static final float[] {k.upper()} = {{{f3(v)}}};' for k, v in data['arms'].items())
+    held = tuple(f'{gun}_' for gun in guns)
     rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
-                           for k, v in data['support'].items() if k.startswith('rifle_'))
+                           for k, v in data['support'].items() if k.startswith(held))
     melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
-                            if not k.startswith('rifle_'))
+                            if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
     POSE_JAVA.write_text(f'''package com.zomboidcraft.client.combat;
 
@@ -959,79 +1056,161 @@ final class HoldPoseData {{
     return data
 
 
-def write_rig_java(gun, g, holds):
-    """RifleRigData.java: what first person needs to pose the rifle itself (the hip pose's numbers, so a reload
-    can cant it smoothly, and each sight's aiming pose) and to put hands on it, in item model pixels."""
-    shift = g - gun.hand
-    fp = RF.frame_point
-    body = kit.drawn('body', gun.body)
-    fit = kit.shifted_model([body], shift)
-    disp = gun_displays(g, holds)
-    ads = {}
-    for optic in [None] + [k for k in gun.optics() if k not in HIDDEN_WHEN_AIMING]:
-        st = 'ads' if optic is None else f'ads_{optic}'
-        d = disp(st, fit, gun.sight_point(optic) + shift)['firstperson_righthand']
-        ads[optic or 'irons'] = (d['translation'], d['scale'][0])
-    mag_key = gun.slots['magazine'].default
-    R, t = gun.mount(mag_key)
-    mag = kit.drawn(mag_key, gun.parts[mag_key].build, R, t)
+def centred_grip(gun):
+    """Where a compact gun's grip goes in the item model so the whole gun sits round the model's centre."""
+    models = [kit.drawn('body', gun.body)]
+    if gun.handle:
+        models.append(kit.drawn('handle', gun.handle))
+    for s in gun.slots.values():
+        if s.default:
+            R, t = gun.mount(s.default)
+            models.append(kit.drawn(s.default, gun.parts[s.default].build, R, t))
+    fit = kit.shifted_model(models, np.zeros(3))
+    lo, hi = fit.bounds()
+    return C + gun.hand - (lo + hi) / 2
+
+
+def mag_points(gun, shift):
+    """The loose magazine's centre, and where the off hand holds a new one: low on its body (item pixels)."""
+    key = gun.slots['magazine'].default
+    R, t = gun.mount(key)
+    mag = kit.drawn(key, gun.parts[key].build, R, t)
     lo, hi = mag.bounds()
     lo, hi = lo + shift, hi + shift
-    # the hand grabs the magazine low on its body, where it curves forward
     band = lo[1] + (hi[1] - lo[1]) * np.array([0.25, 0.45])
     zs = [((p['lo'][2] + p['hi'][2]) / 2 + shift[2]) for p in mag.parts
           if p['lo'][1] + shift[1] < band[1] and p['hi'][1] + shift[1] > band[0]]
-    hold = np.array([8.0, band.mean(), float(np.mean(zs))])
-    las_R, las_t = gun.mount('laser')
-    laser = kit.drawn('laser', gun.parts['laser'].build, las_R, las_t)
-    llo, lhi = laser.bounds()
-    lens = np.array([(llo[0] + lhi[0]) / 2, (llo[1] + lhi[1]) / 2, llo[2]]) + shift
-    fg_R, fg_t = gun.mount('foregrip')
-    fgm = kit.drawn('foregrip', gun.parts['foregrip'].build, fg_R, fg_t)
-    flo, fhi = fgm.bounds()
+    return (lo + hi) / 2, np.array([8.0, band.mean(), float(np.mean(zs))])
+
+
+def lens_point(gun, key, lens, shift):
+    """Where a rail part's beam starts (the laser's or the light's lens), from its own inches."""
+    R, t = gun.mount(key)
+    return R @ (IN * np.asarray(lens, float)) + t + shift
+
+
+def quiet_muzzle(gun):
+    """Where a suppressed shot's flash starts: the suppressor's end, or the muzzle on a gun that takes none."""
+    tip = kit.quiet_tip(gun)
+    return kit.flash_tip(gun) if tip is None else tip
+
+
+def rifle_points(gun, g):
+    shift = g - gun.hand
+    fp = RF.frame_point
+    centre, hold = mag_points(gun, shift)
+    R, t = gun.mount('foregrip')
+    flo, fhi = kit.drawn('foregrip', gun.parts['foregrip'].build, R, t).bounds()
     flo, fhi = flo + shift, fhi + shift
-    points = {
-        'GRIP': g,
+    return {
+        'grip': g,
         # the off hand cups the handguard from below: its centre a little under the rail
-        'SUPPORT': fp(0, -RF.RAIL, -6.4) + shift + np.array([0, -0.8, 0]),
-        'FOREGRIP': np.array([8.0, flo[1] + (fhi[1] - flo[1]) * 0.45, (flo[2] + fhi[2]) / 2]),
-        'MAG_TOP': fp(0, -1.55, 0.40) + shift,
-        'MAG_HOLD': hold,
-        'MAG_CENTRE': (lo + hi) / 2,
-        'HANDLE': fp(-0.75, 0.67, RF.UPPER_LEN + 0.25) + shift,
-        'LASER': lens,
-        'MUZZLE': kit.flash_tip(gun) + shift,
+        'support': fp(0, -RF.RAIL, -6.4) + shift + np.array([0, -0.8, 0]),
+        'foregrip': np.array([8.0, flo[1] + (fhi[1] - flo[1]) * 0.45, (flo[2] + fhi[2]) / 2]),
+        'magTop': gun.slots['magazine'].at + shift,
+        'magHold': hold,
+        'magCentre': centre,
+        'handle': fp(-0.75, 0.67, RF.UPPER_LEN + 0.25) + shift,
+        'laser': lens_point(gun, 'laser', AT.LASER_LENS, shift),
+        'light': lens_point(gun, 'light', AT.LIGHT_LENS, shift),
+        'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
     }
 
-    def v3(v):
-        return ', '.join(f'{float(x):.4f}f' for x in v)
-    lines = [f'    static final float[] {k} = {{{v3(v)}}};' for k, v in points.items()]
-    ads_lines = [f'    static final float[] ADS_{k.upper()} = {{{v3(T)}, {float(sc):.4f}f}};' for k, (T, sc) in ads.items()]
-    poses = ', '.join(f'"{k}", new float[] {{{float(c):.3f}f, {float(d):.3f}f}}' for k, (c, d) in RELOAD_POSE.items())
+
+def pistol_points(gun, g):
+    shift = g - gun.hand
+    fp = PI.frame_point
+    centre, _ = mag_points(gun, shift)
+    key = gun.slots['magazine'].default
+    R, t = gun.mount(key)
+    mlo, mhi = kit.drawn(key, gun.parts[key].build, R, t).bounds()
+    # the palm under the base plate: it pushes the magazine up the grip and slaps it home
+    hold = np.array([8.0, mlo[1] + shift[1] - 0.6, (mlo[2] + mhi[2]) / 2 + shift[2] + 0.4])
+    support = fp(-1.0, -2.9, 5.7) + shift     # the off hand wrapped round the shooting hand's fingers
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': gun.slots['magazine'].at + shift,
+        'magHold': hold,
+        'magCentre': centre,
+        # racking: fingers and thumb pinch the serrations at the back of the slide, from above
+        'handle': fp(-0.30, PI.SLIDE_TOP + 0.30, PI.SLIDE_LEN - 0.55) + shift,
+        'laser': lens_point(gun, 'laser', PI.LASER_LENS, shift),
+        'light': lens_point(gun, 'light', PI.LIGHT_LENS, shift),
+        'muzzle': kit.flash_tip(gun) + shift,
+        'quietMuzzle': quiet_muzzle(gun) + shift,
+    }
+
+
+def rig_data(gun, g, holds, fp, points):
+    """One gun's first-person rig (GunRig's fields, in order): the hip pose's numbers, so a reload can cant it
+    smoothly, each sight's aiming pose, how its handle or slide is worked, the points the hands hold (item
+    model pixels) and how its action behaves."""
+    shift = g - gun.hand
+    fit = kit.shifted_model([kit.drawn('body', gun.body)], shift)
+    disp = gun_displays(g, holds, fp)
+    sights = {}
+    for optic in [None] + [k for k in gun.optics() if k not in HIDDEN_WHEN_AIMING]:
+        st = 'ads' if optic is None else f'ads_{optic}'
+        d = disp(st, fit, gun.sight_point(optic) + shift)['firstperson_righthand']
+        sights[optic or 'irons'] = [float(x) for x in d['translation']] + [float(d['scale'][0])]
+    vec = lambda v: [float(x) for x in v]
+    data = {'hipGrip': vec(fp.hip_grip), 'hipTurn': vec(fp.hip_turn), 'hipScale': float(fp.hip_scale),
+            'magOut': vec(fp.reload['mag_out']), 'charge': vec(fp.reload['charge']), 'sights': sights,
+            'handleTravel': float(fp.handle_travel * IN), 'chargeTurn': vec(fp.charge_turn),
+            'chargePush': vec(fp.charge_push)}
+    data.update({k: vec(v) for k, v in points.items()})
+    data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
+                 'supportGrip': fp.support_grip})
+    return data
+
+
+RIG_NOTES = {
+    'hipGrip': 'hip: the grip in the hand camera (blocks)', 'hipTurn': 'hip: muzzle up, muzzle in, roll (degrees)',
+    'hipScale': 'hip scale', 'magOut': 'magazine steps: cant (degrees), drop (blocks)', 'charge': 'charging step: cant, drop',
+    'sights': 'aiming: translation (pixels) and scale, by sight',
+    'handleTravel': 'how far the handle or slide comes back (pixels)', 'chargeTurn': 'worked: turned about the grip (degrees)',
+    'chargePush': 'worked: pushed (blocks)', 'magAxis': 'the way a magazine leaves the well',
+    'laser': "the laser's lens", 'light': "the light's lens", 'quietMuzzle': "a suppressor's end",
+    'locksBack': 'locks back when empty', 'cycles': 'cycles with each shot', 'supportGrip': 'the off hand wraps the grip',
+}
+
+
+def write_rigs_java(rigs):
+    """GunRigs.java: each gun's rig_data, for first person."""
+    def java(v):
+        if isinstance(v, bool):
+            return str(v).lower()
+        if isinstance(v, float):
+            return f'{v:.4f}f'
+        if isinstance(v, dict):
+            return 'Map.of(' + ', '.join(f'"{k}", {java(x)}' for k, x in v.items()) + ')'
+        return 'new float[] {' + ', '.join(f'{float(x):.4f}f' for x in v) + '}'
+
+    blocks = []
+    for gun, g, holds, fp, points in rigs:
+        data = rig_data(gun, g, holds, fp, points)
+        lines = ',\n'.join(f'                    {java(v)} /* {RIG_NOTES.get(k, k)} */' for k, v in data.items())
+        blocks.append(f'            Map.entry("{gun.name}", new GunRig(\n{lines}))')
     RIG_JAVA.write_text(f'''package com.zomboidcraft.client.combat;
 
 import java.util.Map;
 
 /**
- * The rifle's first-person rig. Generated by tools/weapons/weapons.py: the item model's first-person poses are
- * made from these same numbers, so edit them there. Points are in item model pixels, before the display
- * transform; the hip pose is the grip's place in the hand camera (blocks), the gun's turn (degrees: muzzle up,
- * muzzle in, roll) and scale; each sight's aiming pose is a translation (pixels) and a scale.
+ * Each gun's first-person rig (see {{@link GunRig}}). Generated by tools/weapons/weapons.py: the item models'
+ * first-person poses are made from these same numbers, so edit them there. Points are in item model pixels,
+ * before the display transform.
  */
-final class RifleRigData {{
+final class GunRigs {{
+    /** Vanilla's arm offset, which the hand camera's numbers leave out. */
     static final float[] ARM = {{0.56f, -0.52f, -0.72f}};
-    static final float[] HIP_GRIP = {{{v3(HIP_GRIP)}}};
-    static final float[] HIP_TURN = {{{v3(HIP_TURN)}}};
-    static final float HIP_SCALE = {HIP_SCALE}f;
-    /** Reload steps the item model shows: (cant degrees, drop blocks), applied to the hip pose. */
-    static final Map<String, float[]> RELOAD_POSE = Map.of({poses});
-{chr(10).join(ads_lines)}
-    /** Inches to item pixels, and how far the charging handle comes back. */
-    static final float INCH = {IN}f;
-    static final float HANDLE_TRAVEL = {RF.HANDLE_TRAVEL * IN:.4f}f;
-{chr(10).join(lines)}
 
-    private RifleRigData() {{
+    static final Map<String, GunRig> ALL = Map.ofEntries(
+{',\n'.join(blocks)});
+
+    private GunRigs() {{
     }}
 }}
 ''')
@@ -1050,9 +1229,13 @@ def write_preview(out):
     (out / 'roster.json').write_text(json.dumps({
         'melee': [{'name': s.name, 'title': s.title, 'damage': s.damage, 'speed': s.speed, 'reach': s.reach,
                    'durability': s.durability, 'two_handed': s.two_handed} for s, _b, _m in WEAPONS],
-        'rifle': sorted(str(p.relative_to(ASSETS / 'models/item/weapon').with_suffix(''))
-                        for p in (ASSETS / 'models/item/weapon/assault_rifle').rglob('*.json')),
-        'other': ['rifle_magazine', 'rifle_ammo'], 'all': names}, indent=1))
+        'rifle': gun_models('assault_rifle'), 'pistol': gun_models('pistol'),
+        'other': ['rifle_magazine', 'rifle_ammo', 'pistol_ammo'], 'all': names}, indent=1))
+
+
+def gun_models(name):
+    return sorted(str(p.relative_to(ASSETS / 'models/item/weapon').with_suffix(''))
+                  for p in (ASSETS / f'models/item/weapon/{name}').rglob('*.json'))
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ package com.zomboidcraft.client.combat;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
 import com.zomboidcraft.combat.WeaponSpecs;
@@ -53,15 +54,16 @@ public final class HoldPoses {
         float[] support;
         float mirror = left ? -1f : 1f;
         float headX = model.head.xRot, headY = model.head.yRot * mirror;
-        if (stack.getItem() instanceof RifleItem) {
+        if (stack.getItem() instanceof RifleItem item) {
             boolean aiming = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
+            boolean pistol = item.type() == GunType.PISTOL;
             if (aiming) {
-                // the shouldered rifle follows the eyes
-                gun = rot(headX, headY, 0).mul(rot(HoldPoseData.RIFLE_AIM));
-                support = HoldPoseData.RIFLE_AIM_SUPPORT;
+                // the shouldered rifle, or the pistol out at arm's length, follows the eyes
+                gun = rot(headX, headY, 0).mul(rot(pistol ? HoldPoseData.PISTOL_AIM : HoldPoseData.RIFLE_AIM));
+                support = pistol ? HoldPoseData.PISTOL_AIM_SUPPORT : HoldPoseData.RIFLE_AIM_SUPPORT;
             } else {
-                gun = rot(bob(state), 0, 0).mul(rot(HoldPoseData.RIFLE_READY));
-                support = HoldPoseData.RIFLE_READY_SUPPORT;
+                gun = rot(bob(state), 0, 0).mul(rot(pistol ? HoldPoseData.PISTOL_READY : HoldPoseData.RIFLE_READY));
+                support = pistol ? HoldPoseData.PISTOL_READY_SUPPORT : HoldPoseData.RIFLE_READY_SUPPORT;
             }
         } else {
             WeaponSpecs.WeaponSpec spec = Weapons.spec(stack);

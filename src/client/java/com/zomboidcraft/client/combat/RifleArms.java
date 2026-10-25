@@ -27,8 +27,8 @@ import org.joml.Vector3f;
 final class RifleArms {
     /** The hand-camera's half field of view (the game draws hands at 70 degrees whatever the FOV setting). */
     private static final float TAN_HALF_FOV = (float) Math.tan(Math.toRadians(35));
-    /** The arm's length in model pixels from its grip point (1.5 pixels short of the end) to the shoulder end. */
-    private static final float GRIP_Y = 8.5f, REACH = 10.5f;
+    /** The arm's length in model pixels from its grip point to the shoulder end, and how far the fist goes past it. */
+    private static final float REACH = 10.5f, FIST = 1.5f, HAND_END = 10f;
 
     static void draw(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, AvatarRenderState state,
                      RifleView.Hand right, RifleView.Hand left, float width) {
@@ -79,7 +79,8 @@ final class RifleArms {
         pose.translate(at.x, at.y, at.z);
         pose.rotate(new Quaternionf().setFromNormalized(new Matrix3f(x, y, z)));
         pose.scale(width, stretch, width);
-        pose.translate(-centreX / 16f, -GRIP_Y / 16f, 0);
+        // the arm is stretched to reach off screen, but the fist past the grip point keeps its own size
+        pose.translate(-centreX / 16f, -(HAND_END - FIST * width / stretch) / 16f, 0);
         out.submitModelPart(arm, pose, RenderTypes.entityTranslucent(skin), light, OverlayTexture.NO_OVERLAY, null);
         pose.popPose();
     }

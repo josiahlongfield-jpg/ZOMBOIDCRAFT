@@ -15,6 +15,9 @@ public final class ModSounds {
     /** The same pair through a suppressor (Sonniss recordings), heard out to 40 blocks. */
     public static final SoundEvent RIFLE_SHOT_SUPPRESSED = register("weapon.rifle.shot_suppressed");
     public static final SoundEvent RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.rifle.shot_suppressed_distant", 40f);
+    /** The pistol's shots: sharper and a little quieter than the rifle's, heard out to 96 blocks. */
+    public static final SoundEvent PISTOL_SHOT = register("weapon.pistol.shot");
+    public static final SoundEvent PISTOL_SHOT_DISTANT = register("weapon.pistol.shot_distant", 96f);
     public static final SoundEvent PISTOL_SHOT_SUPPRESSED = register("weapon.pistol.shot_suppressed");
     public static final SoundEvent PISTOL_SHOT_SUPPRESSED_DISTANT = register("weapon.pistol.shot_suppressed_distant", 24f);
     public static final SoundEvent RIFLE_DRY = register("weapon.rifle.dry");
@@ -22,6 +25,11 @@ public final class ModSounds {
     public static final SoundEvent RIFLE_MAG_IN = register("weapon.rifle.mag_in");
     public static final SoundEvent RIFLE_BOLT = register("weapon.rifle.bolt");
     public static final SoundEvent RIFLE_LOAD_ROUND = register("weapon.rifle.load_round");
+    public static final SoundEvent PISTOL_DRY = register("weapon.pistol.dry");
+    public static final SoundEvent PISTOL_MAG_OUT = register("weapon.pistol.mag_out");
+    public static final SoundEvent PISTOL_MAG_IN = register("weapon.pistol.mag_in");
+    /** The slide racked to chamber a round or clear a jam. */
+    public static final SoundEvent PISTOL_SLIDE = register("weapon.pistol.slide");
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");

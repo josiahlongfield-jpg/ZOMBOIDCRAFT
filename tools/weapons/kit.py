@@ -23,7 +23,7 @@ import paint as P
 import pbr
 
 NS = 'zomboidcraft'
-SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod']    # Attachments.Slot order
+SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
 PX = 16
 
 # how a part drawn on a top rail turns to sit on each face (columns: where its x, y, z end up)
@@ -56,7 +56,7 @@ class Part:
 
 class Gun:
     def __init__(self, name, title, body, look, hand, slots, parts, irons=None, aperture=None, flash=None,
-                 seed=556, wear=0.4, handle=None):
+                 seed=556, wear=0.4, handle=None, flash_size=1.0):
         self.name, self.title, self.body, self.look = name, title, body, look
         self.hand = np.asarray(hand, float)     # centre of the shooting hand on the grip, build frame
         self.slots = slots                      # {slot name: Slot}
@@ -65,7 +65,8 @@ class Gun:
         self.aperture = aperture                # rear sight's peep, build frame
         self.flash = flash                      # fn(m, muzzle part key or None)
         self.seed, self.wear = seed, wear
-        self.handle = handle                    # fn(m): the charging handle, drawn apart so it can be worked
+        self.handle = handle                    # fn(m): the charging handle or slide, drawn apart so it can be worked
+        self.flash_size = flash_size
 
     def mount(self, key):
         part = self.parts[key]
@@ -297,6 +298,18 @@ def flash_tip(gun):
     return np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, hi[2]])
 
 
+def quiet_tip(gun):
+    """Where a suppressed shot's smaller flash starts: the front of the suppressor's end cap, on the bore line (item
+    pixels, before the shift). None for a gun that takes no suppressor."""
+    key = next((k for k in gun.slots['muzzle'].fits if 'suppressor' in k), None) if 'muzzle' in gun.slots else None
+    if key is None:
+        return None
+    R, t = gun.mount(key)
+    lo, _hi = drawn(key, gun.parts[key].build, R, t).bounds()
+    tip = flash_tip(gun)
+    return np.array([tip[0], tip[1], lo[2]])
+
+
 def flash_model(tip, length=2.4, half=0.75, star=1.1):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
     see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
@@ -314,6 +327,21 @@ def flash_model(tip, length=2.4, half=0.75, star=1.1):
                                   'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}})
     return {'gui_light': 'front', 'textures': {'0': FLASH_TEX, 'particle': FLASH_TEX},
             'elements': [tongue(45), tongue(-45), face]}
+
+
+def write_glow_texture(assets):
+    """The soft round glow the gun light and laser are drawn with (RailLights): white, bright in the middle and
+    fading smoothly to nothing at the rim, the same in its colour and its alpha so it reads right added or blended.
+    Its middle row is the profile across a beam."""
+    N = 64
+    yy, xx = np.mgrid[0:N, 0:N] + 0.5
+    r = np.hypot(xx - N / 2, yy - N / 2) / (N / 2)
+    g = np.clip(1 - r * r, 0, 1) ** 2.5
+    img = np.repeat(g[..., None], 4, axis=2)
+    path = assets / 'textures/effect/rail_glow.png'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    M.save_png(img, path)
+    path.with_name('rail_glow.png.mcmeta').write_text(json.dumps({'texture': {'blur': True, 'clamp': True}}, indent=1) + '\n')
 
 
 def write_flash_texture(assets):
@@ -384,8 +412,14 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                 'elements': elements(models[n], mi, uvs, shift)}, assets / f'models/item/{base}/{n}.json')
     if gun.flash:
-        M.dump(flash_model(flash_tip(gun) + shift), assets / f'models/item/{base}/muzzle_flash.json')
+        k = gun.flash_size
+        M.dump(flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k), assets / f'models/item/{base}/muzzle_flash.json')
         names_posed = names + ['muzzle_flash']
+        quiet = quiet_tip(gun)
+        if quiet is not None:
+            # a suppressor still shows a small, short flash at the end of its can
+            M.dump(flash_model(quiet + shift, 1.0 * k, 0.4 * k, 0.55 * k), assets / f'models/item/{base}/muzzle_flash_quiet.json')
+            names_posed.append('muzzle_flash_quiet')
     else:
         names_posed = names
 
@@ -410,10 +444,9 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         r = lambda n: ref(f'{base}/{st}/{n}')
         entries = [r('body')]
         if gun.handle:
-            # while it's being worked, first person draws the handle itself (sliding back and snapping home)
+            # first person draws the handle or slide itself: worked in a reload, run back by each shot, locked open
             entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
-                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': r('charging_handle')}
-                           if st == 'charge' else r('charging_handle'))
+                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': r('charging_handle')})
         for slot_name in SLOTS:
             s = gun.slots.get(slot_name)
             if not s:
@@ -428,8 +461,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                     cases['none'] = up
                     entries.append(select('optic', cases, up))
             elif slot_name == 'muzzle':
-                # a suppressor swallows the flash
-                cases = {k: r(k) if 'suppressor' in k else composite([r(k), flash_entry(r('muzzle_flash'))])
+                # a suppressor shrinks the flash to a small one at the end of its can
+                cases = {k: composite([r(k), flash_entry(r('muzzle_flash_quiet' if 'suppressor' in k else 'muzzle_flash'))])
                          for k in s.fits}
                 bare = flash_entry(r('muzzle_flash'))
                 cases['none'] = bare
@@ -457,7 +490,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     # the loose pieces first person draws during a reload, in the gun's own model space (no display of their own)
     loose = {'mag': gun.slots['magazine'].default if 'magazine' in gun.slots else None,
              'charging_handle': 'charging_handle' if gun.handle else None,
-             'flash': 'muzzle_flash' if gun.flash else None}
+             'flash': 'muzzle_flash' if gun.flash else None,
+             'flash_quiet': 'muzzle_flash_quiet' if gun.flash and quiet_tip(gun) is not None else None}
     for name, key in loose.items():
         if key:
             M.dump({'model': ref(f'{base}/{key}')}, assets / f'items/{gun.name}_loose_{name}.json')
@@ -493,22 +527,22 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     return f'{gun.name}: {sum(len(m.parts) for m in models.values())} boxes in {len(models)} parts, {T}px', slot_data
 
 
-def write_part_items(parts, assets, display, lang):
+def write_part_items(parts, assets, display, lang, file=lambda part: part.key):
     """Each attachment's own item model (how it looks in the inventory and dropped), painted in its own frame
-    with the same seeds as on the gun so it looks the same."""
+    with the same seeds as on the gun so it looks the same. file names its model and texture."""
     for part in parts:
         m = drawn(part.key, part.build, look=part.look, seed=part.seed)
         lo, hi = m.bounds()
         shift = np.array([8.0, 8.0, 8.0]) - (lo + hi) / 2
         patches = paint([m])
         img, uvs, T = pack(patches)
-        tex = f'item/weapon/part/{part.key}'
+        tex = f'item/weapon/part/{file(part)}'
         save_textures(img, assets / f'textures/{tex}.png')
         fit = shifted_model([m], shift)
         M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                 'elements': elements(m, 0, uvs, shift), 'display': display(fit)},
-               assets / f'models/item/weapon/part/{part.key}.json')
-        M.dump({'model': ref(f'weapon/part/{part.key}')}, assets / f'items/{part.item}.json')
+               assets / f'models/item/weapon/part/{file(part)}.json')
+        M.dump({'model': ref(f'weapon/part/{file(part)}')}, assets / f'items/{part.item}.json')
         lang[f'item.{NS}.{part.item}'] = part.title
 
 

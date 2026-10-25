@@ -1,7 +1,6 @@
 package com.zomboidcraft.combat;
 
 import com.mojang.serialization.Codec;
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import java.util.ArrayList;
@@ -39,7 +38,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public record Attachments(Map<Slot, ItemStack> mounted) {
     public enum Slot implements StringRepresentable {
-        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD;
+        // RIGHT_RAIL came later: it goes last so the model data's key order stays as it was
+        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL;
 
         public static final Codec<Slot> CODEC = StringRepresentable.fromEnum(Slot::values);
         public static final StreamCodec<io.netty.buffer.ByteBuf, Slot> STREAM_CODEC =
@@ -69,7 +69,12 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         EnumMap<Slot, ItemStack> copy = new EnumMap<>(Slot.class);
         mounted.forEach((slot, stack) -> {
             if (!stack.isEmpty() && slot != Slot.MAGAZINE) {
-                copy.put(slot, stack.copyWithCount(1));
+                // a part saved in another slot (the laser shared the side rail with the light before it had
+                // its own on the right) moves to its own
+                Slot own = stack.getItem() instanceof AttachmentItem item ? item.slot() : slot;
+                if (!copy.containsKey(own)) {
+                    copy.put(own, stack.copyWithCount(1));
+                }
             }
         });
         mounted = java.util.Collections.unmodifiableMap(copy);
@@ -185,7 +190,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             if (!g.mag()) {
                 return ItemStack.EMPTY;
             }
-            ItemStack mag = new ItemStack(ModItems.RIFLE_MAGAZINE);
+            ItemStack mag = new ItemStack(magazine(gun));
             mag.set(GunState.MAG_ROUNDS, g.rounds());
             return mag;
         }
@@ -195,10 +200,17 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** The model key of what's in a slot, or null if it's empty. */
     public static @Nullable String key(ItemStack gun, Slot slot) {
         if (slot == Slot.MAGAZINE) {
-            return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag() ? GunSlotData.MODEL_KEYS.get("rifle_magazine") : null;
+            return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag()
+                    ? GunSlotData.MODEL_KEYS.get(BuiltInRegistries.ITEM.getKey(magazine(gun)).getPath()) : null;
         }
         ItemStack stack = of(gun).mounted().get(slot);
         return stack != null && stack.getItem() instanceof AttachmentItem item ? item.modelKey() : null;
+    }
+
+    /** The magazine this gun takes. */
+    private static Item magazine(ItemStack gun) {
+        GunType type = GunType.of(gun);
+        return (type == null ? GunType.ASSAULT_RIFLE : type).magazine();
     }
 
     public static boolean has(ItemStack gun, Slot slot, String key) {
@@ -218,7 +230,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         if (slot == Slot.MAGAZINE) {
             ItemStack old = get(gun, Slot.MAGAZINE);
             GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-            gun.set(GunState.TYPE, new GunState(true, Math.min(MagazineItem.rounds(part), RifleItem.capacity()), g.jammed()));
+            gun.set(GunState.TYPE, new GunState(true, Math.min(MagazineItem.rounds(part), RifleItem.capacity(gun)), g.jammed()));
             refreshModel(gun);
             return old;
         }
@@ -297,7 +309,12 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean laserOn(ItemStack gun) {
-        return railOn(gun) && has(gun, Slot.SIDE_RAIL, "laser");
+        return railOn(gun) && has(gun, Slot.RIGHT_RAIL, "laser");
+    }
+
+    /** Whether the gun has a light or a laser to switch on. */
+    public static boolean hasRailGear(ItemStack gun) {
+        return has(gun, Slot.SIDE_RAIL, "light") || has(gun, Slot.RIGHT_RAIL, "laser");
     }
 
     /** Multiplies the kick: a foregrip tames it, no stock makes it worse. */

@@ -1,11 +1,11 @@
 package com.zomboidcraft.client.combat;
 
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.Grabs;
 import com.zomboidcraft.combat.RifleItem;
+import com.zomboidcraft.combat.GunType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -31,7 +31,7 @@ public final class CombatHud {
         }
         Font font = minecraft.font;
         ItemStack hand = player.getMainHandItem();
-        if (hand.is(ModItems.ASSAULT_RIFLE)) {
+        if (GunType.isGun(hand)) {
             ammo(graphics, font, hand);
         }
         Integer grabbed = player.getAttached(Grabs.GRABBED);
@@ -45,7 +45,7 @@ public final class CombatHud {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player == null || !minecraft.options.getCameraType().isFirstPerson() || !player.isUsingItem()
-                || !player.getUseItem().is(ModItems.ASSAULT_RIFLE) || !Attachments.scoped(player.getUseItem())
+                || !GunType.isGun(player.getUseItem()) || !Attachments.scoped(player.getUseItem())
                 || CombatClient.reloading(player.getUseItem())) {
             return;
         }
@@ -58,13 +58,14 @@ public final class CombatHud {
 
     private static void ammo(GuiGraphicsExtractor graphics, Font font, ItemStack gun) {
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-        String rounds = g.mag() ? g.rounds() + " / " + RifleItem.capacity() : "no mag";
+        int capacity = RifleItem.capacity(gun);
+        String rounds = g.mag() ? g.rounds() + " / " + capacity : "no mag";
         String status = g.jammed() ? "JAMMED - R" : CombatClient.reloading(gun) ? "reloading" : g.mag() && g.rounds() == 0 ? "empty - R" : "";
         int x = graphics.guiWidth() / 2 + 98;
         int y = graphics.guiHeight() - 20;
         int width = Math.max(font.width(rounds), font.width(status)) + 8;
         graphics.fill(x, y - (status.isEmpty() ? 0 : 10), x + width, y + 12, 0xA0101010);
-        int colour = !g.mag() || g.rounds() == 0 ? 0xFFD05030 : g.rounds() <= RifleItem.capacity() / 5 ? 0xFFE0B040 : 0xFFE8E8E8;
+        int colour = !g.mag() || g.rounds() == 0 ? 0xFFD05030 : g.rounds() <= capacity / 5 ? 0xFFE0B040 : 0xFFE8E8E8;
         graphics.text(font, rounds, x + 4, y + 2, colour);
         if (!status.isEmpty()) {
             graphics.text(font, status, x + 4, y - 8, g.jammed() ? 0xFFE03020 : 0xFFA0A0A0);
