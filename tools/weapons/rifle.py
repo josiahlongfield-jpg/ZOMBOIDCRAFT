@@ -196,7 +196,7 @@ def look(wear=0.4):
         return np.where(dots[..., None], c * 0.9, c)
 
     def steel(f):
-        return P.steel(f, 0.42, spread=0.14)
+        return P.steel(f, 0.24, tint='#7d8186', spread=0.08)     # blacked pins and controls
 
     def rubber(f):
         return P.rubber(f, '#121212', 0.12)
@@ -204,7 +204,7 @@ def look(wear=0.4):
     d = dict(anod=P.anodised, guard=guard, park=P.parkerised, steel=steel, poly=poly, grip=grip,
              rubber=rubber, port=port, hider=hider, mag=mag, flash=flash_paint)
     d['_after'] = [lambda f, c: P.grime(f, c, 0.35 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.5 * (0.3 + wear))]
+                   lambda f, c: P.scratches(f, c, 0.25 * (0.3 + wear))]
     return d
 
 

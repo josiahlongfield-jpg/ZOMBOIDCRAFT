@@ -15,37 +15,40 @@ IRON, GOLD, ALUMINIUM, CHROME, COPPER = 230, 231, 232, 233, 234
 TINTED_METAL = 255
 NONMETAL = 10           # about 4% reflectance, plastics, paint, rubber, glass
 
-# smoothness, reflectance byte, and optionally (lightness over which it's bare metal, metal, its smoothness).
-# Gun finishes keep a soft sheen but stay black: any glossier and a shader pack's bright overcast sky turns
-# the whole rifle silver. Hard anodising, oiled phosphate on the steel, moulded polymer, and only the worn
-# edges and rail tops are bright metal. The surface relief (see normal) is what makes the detail read.
+# smoothness, reflectance byte, and optionally (lightness over which the finish is worn, its reflectance, its
+# smoothness). A black gun stays black under a shader pack: the finishes are all non-metal with a soft sheen,
+# worn edges only a little shinier, and the few bare steel parts are metal tinted by their own dark colour.
+# Named metals (iron, aluminium) ignore the colour and shine silver whatever it is, and on thin edges the
+# texture's smaller copies blend their reflectance byte into the non-metal range as a near mirror: that is
+# what made the rifle look silver.
+WORN = 0.52
 MATERIALS = {
-    'anod': (0.50, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'rail': (0.48, NONMETAL, (0.34, ALUMINIUM, 0.68)),
-    'guard': (0.48, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'park': (0.34, NONMETAL, (0.40, IRON, 0.60)),
-    'hider': (0.32, NONMETAL, (0.40, IRON, 0.58)),
-    'steel': (0.62, IRON, None),
-    'bright': (0.74, IRON, None),
-    'port': (0.38, NONMETAL, (0.40, IRON, 0.60)),
-    'poly': (0.40, NONMETAL, None),
-    'grip': (0.30, NONMETAL, None),
-    'gripper': (0.30, NONMETAL, None),
-    'scope': (0.50, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'knurl': (0.42, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'bezel': (0.48, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'cap': (0.32, NONMETAL, (0.40, IRON, 0.56)),
+    'anod': (0.44, NONMETAL, (0.36, NONMETAL, WORN)),
+    'rail': (0.42, NONMETAL, (0.34, NONMETAL, WORN)),
+    'guard': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'park': (0.32, NONMETAL, (0.40, NONMETAL, 0.46)),
+    'hider': (0.30, NONMETAL, (0.40, NONMETAL, 0.46)),
+    'steel': (0.50, TINTED_METAL, None),
+    'bright': (0.58, TINTED_METAL, None),
+    'port': (0.36, NONMETAL, (0.40, NONMETAL, 0.46)),
+    'poly': (0.38, NONMETAL, None),
+    'grip': (0.28, NONMETAL, None),
+    'gripper': (0.28, NONMETAL, None),
+    'scope': (0.44, NONMETAL, (0.36, NONMETAL, WORN)),
+    'knurl': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
+    'bezel': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'cap': (0.30, NONMETAL, (0.40, NONMETAL, 0.44)),
     'lamp': (0.92, 18, None),
     'lens_green': (0.92, 18, None),
-    'tan': (0.36, NONMETAL, None),
-    'mag': (0.36, NONMETAL, None),
+    'tan': (0.34, NONMETAL, None),
+    'mag': (0.34, NONMETAL, None),
     'rubber': (0.14, 8, None),
     'bore': (0.08, 6, None),
-    'housing': (0.46, NONMETAL, None),
-    'bezel_r': (0.46, NONMETAL, (0.36, ALUMINIUM, 0.66)),
-    'mark': (0.44, NONMETAL, (0.40, ALUMINIUM, 0.70)),
-    'screw': (0.58, IRON, None),
-    'can': (0.30, NONMETAL, (0.42, IRON, 0.52)),
+    'housing': (0.42, NONMETAL, None),
+    'bezel_r': (0.42, NONMETAL, (0.36, NONMETAL, WORN)),
+    'mark': (0.40, NONMETAL, (0.40, NONMETAL, WORN)),
+    'screw': (0.50, TINTED_METAL, None),
+    'can': (0.28, NONMETAL, (0.42, NONMETAL, 0.42)),
     'lens': (0.96, 18, None),
     'glass': (0.96, 18, None),
     'dot': (0.5, NONMETAL, None),
@@ -69,10 +72,10 @@ def spec(mat, f, rgb):
     s = np.full((H, W), smooth) + (f.noise(3.0, 401, 2) - 0.5) * 0.08
     g = np.full((H, W), f0 / 255.0)
     if bare:
-        at, metal, msmooth = bare
+        at, f0_worn, msmooth = bare
         m = lum(rgb) > at
         s = np.where(m, msmooth, s)
-        g = np.where(m, metal / 255.0, g)
+        g = np.where(m, f0_worn / 255.0, g)
     out[..., 0] = np.clip(s, 0, 1)
     out[..., 1] = g
     out[..., 2] = np.where(g > 229 / 255.0, 0, POROSITY.get(mat, 0) / 255.0)
