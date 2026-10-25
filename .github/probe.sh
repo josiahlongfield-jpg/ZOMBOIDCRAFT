@@ -8,6 +8,16 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== world render events"
+classes 'fabric/api/client/rendering/v1/.*(World|Level)|fabric/api/client/rendering/v1/[A-Za-z]*Render[A-Za-z]*Events'
+for c in $(classes 'fabric/api/client/rendering/v1/.*(World|Level)[A-Za-z]*\.class' | grep -v 'impl' | sed 's/\.class$//; s#/#.#g'); do echo "----- $c"; javap -cp "$CP" -protected "$c" 2>&1 | head -60; done
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitCustomGeometry'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'lightning|translucent|lines|debug|beacon|Emissive|eyes|leash|textBackground'
+sig net.minecraft.client.Camera 'position|rotation|forward|getLookVector|yRot|xRot|partial'
+sig net.minecraft.client.renderer.LevelRenderer 'public'
+exit 0
+
+
 echo "===== bob"
 javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | sed -n '/void bobView(/,/^$/p' | grep -E "invoke|getfield|putfield|ldc|return"
 javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -nE "^  [a-z].*\(|bobView" | grep -B1 bobView
