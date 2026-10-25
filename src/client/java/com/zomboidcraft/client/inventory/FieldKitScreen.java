@@ -39,8 +39,6 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory) return vanilla;
         if (player.hasInfiniteMaterials()) return vanilla; // creative keeps its own tabbed screen
-        int gw = mc.getWindow().getGuiScaledWidth(), gh = mc.getWindow().getGuiScaledHeight();
-        if (gw < W + 8 || gh < H + 8) return vanilla; // too small at this GUI scale; keep Minecraft's
         return new FieldKitScreen(player);
     }
 
@@ -50,8 +48,30 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
 
     @Override
     protected void init() {
+        fitGuiScale();
         super.init();
         layoutSlots();
+    }
+
+    /**
+     * The kit is wider than Minecraft's inventory, so at a large GUI scale it would run off the screen. While it is
+     * open, drop to the biggest scale it fits at; {@link #removed()} puts the player's own scale back.
+     */
+    private void fitGuiScale() {
+        var window = minecraft.getWindow();
+        int scale = window.getGuiScale();
+        while (scale > 1 && (window.getWidth() / scale < W + 8 || window.getHeight() / scale < H + 8)) scale--;
+        if (scale == window.getGuiScale()) return;
+        window.setGuiScale(scale);
+        width = window.getGuiScaledWidth();
+        height = window.getGuiScaledHeight();
+    }
+
+    private void restoreGuiScale() {
+        var window = minecraft.getWindow();
+        var options = minecraft.options;
+        int wanted = window.calculateScale(options.guiScale().get(), options.forceUnicodeFont().get());
+        if (window.getGuiScale() != wanted) window.setGuiScale(wanted);
     }
 
     private void place(int index, int x, int y) {
@@ -87,6 +107,7 @@ public class FieldKitScreen extends AbstractContainerScreen<InventoryMenu> {
             ((SlotAccessor) slot).zomboidcraft$setX(xy[0]);
             ((SlotAccessor) slot).zomboidcraft$setY(xy[1]);
         });
+        restoreGuiScale();
         super.removed();
     }
 
