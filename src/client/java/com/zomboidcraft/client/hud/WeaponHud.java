@@ -28,7 +28,7 @@ final class WeaponHud {
     private static ItemStack last = ItemStack.EMPTY;
     private static int lastSlot = -1;
     private static float since = 99;
-    private static float lastSwing;
+    private static boolean lastSwing;
 
     static void render(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
@@ -45,9 +45,8 @@ final class WeaponHud {
             last = hand.copy();
             lastSlot = slot;
         }
-        float swing = player.getAttackAnim(delta.getGameTimeDeltaPartialTick(true));
-        if (swing > 0 && lastSwing == 0) since = 0;
-        lastSwing = swing;
+        if (player.swinging && !lastSwing) since = 0;
+        lastSwing = player.swinging;
 
         boolean urgent = false;
         GunState state = null;
