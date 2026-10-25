@@ -8,6 +8,12 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== bob"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | sed -n '/void bobView(/,/^$/p' | grep -E "invoke|getfield|putfield|ldc|return"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -nE "^  [a-z].*\(|bobView" | grep -B1 bobView
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraEntityRenderState 2>&1
+exit 0
+
 echo "===== muffle"
 classes 'blaze3d/audio/|client/sounds/SoundEngine|client/sounds/ChannelAccess|client/Camera.class'
 sig com.mojang.blaze3d.audio.Channel '.'

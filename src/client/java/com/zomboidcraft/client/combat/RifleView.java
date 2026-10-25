@@ -600,6 +600,15 @@ public final class RifleView {
         return 1 - (1 - Mth.clamp(sway, 0, 1)) * aimShown;
     }
 
+    /**
+     * How much of the walking bob's sideways and up-down shift to keep: on the sights almost none (aimSway squared),
+     * since a sight a few inches from the eye shifted by it points well off what it was on.
+     */
+    public static float bobShiftScale() {
+        float sway = Mth.clamp((float) ZcConfig.get().guns.aimSway, 0, 1);
+        return 1 - (1 - sway * sway) * aimShown;
+    }
+
     /** The laser's lens in the hand camera (x right, y up, z back), or null when the gun isn't drawn. */
     public static Vector3f laserInCamera() {
         Minecraft mc = Minecraft.getInstance();

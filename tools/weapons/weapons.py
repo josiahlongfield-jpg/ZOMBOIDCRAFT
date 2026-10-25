@@ -1130,40 +1130,54 @@ def pistol_points(gun, g):
     }
 
 
+def rig_data(gun, g, holds, fp, points):
+    """One gun's first-person rig (GunRig's fields, in order): the hip pose's numbers, so a reload can cant it
+    smoothly, each sight's aiming pose, how its handle or slide is worked, the points the hands hold (item
+    model pixels) and how its action behaves."""
+    shift = g - gun.hand
+    fit = kit.shifted_model([kit.drawn('body', gun.body)], shift)
+    disp = gun_displays(g, holds, fp)
+    sights = {}
+    for optic in [None] + [k for k in gun.optics() if k not in HIDDEN_WHEN_AIMING]:
+        st = 'ads' if optic is None else f'ads_{optic}'
+        d = disp(st, fit, gun.sight_point(optic) + shift)['firstperson_righthand']
+        sights[optic or 'irons'] = [float(x) for x in d['translation']] + [float(d['scale'][0])]
+    vec = lambda v: [float(x) for x in v]
+    data = {'hipGrip': vec(fp.hip_grip), 'hipTurn': vec(fp.hip_turn), 'hipScale': float(fp.hip_scale),
+            'magOut': vec(fp.reload['mag_out']), 'charge': vec(fp.reload['charge']), 'sights': sights,
+            'handleTravel': float(fp.handle_travel * IN), 'chargeTurn': vec(fp.charge_turn),
+            'chargePush': vec(fp.charge_push)}
+    data.update({k: vec(v) for k, v in points.items()})
+    data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
+                 'supportGrip': fp.support_grip})
+    return data
+
+
+RIG_NOTES = {
+    'hipGrip': 'hip: the grip in the hand camera (blocks)', 'hipTurn': 'hip: muzzle up, muzzle in, roll (degrees)',
+    'hipScale': 'hip scale', 'magOut': 'magazine steps: cant (degrees), drop (blocks)', 'charge': 'charging step: cant, drop',
+    'sights': 'aiming: translation (pixels) and scale, by sight',
+    'handleTravel': 'how far the handle or slide comes back (pixels)', 'chargeTurn': 'worked: turned about the grip (degrees)',
+    'chargePush': 'worked: pushed (blocks)', 'magAxis': 'the way a magazine leaves the well',
+    'locksBack': 'locks back when empty', 'cycles': 'cycles with each shot', 'supportGrip': 'the off hand wraps the grip',
+}
+
+
 def write_rigs_java(rigs):
-    """GunRigs.java: what first person needs to pose each gun itself (the hip pose's numbers, so a reload can
-    cant it smoothly, and each sight's aiming pose) and to put hands on it, in item model pixels."""
-    def v3(v):
+    """GunRigs.java: each gun's rig_data, for first person."""
+    def java(v):
+        if isinstance(v, bool):
+            return str(v).lower()
+        if isinstance(v, float):
+            return f'{v:.4f}f'
+        if isinstance(v, dict):
+            return 'Map.of(' + ', '.join(f'"{k}", {java(x)}' for k, x in v.items()) + ')'
         return 'new float[] {' + ', '.join(f'{float(x):.4f}f' for x in v) + '}'
 
     blocks = []
     for gun, g, holds, fp, points in rigs:
-        shift = g - gun.hand
-        fit = kit.shifted_model([kit.drawn('body', gun.body)], shift)
-        disp = gun_displays(g, holds, fp)
-        ads = {}
-        for optic in [None] + [k for k in gun.optics() if k not in HIDDEN_WHEN_AIMING]:
-            st = 'ads' if optic is None else f'ads_{optic}'
-            d = disp(st, fit, gun.sight_point(optic) + shift)['firstperson_righthand']
-            ads[optic or 'irons'] = v3(list(d['translation']) + [d['scale'][0]])
-        sights = ', '.join(f'"{k}", {v}' for k, v in ads.items())
-        args = [
-            (v3(fp.hip_grip), 'hip: the grip in the hand camera (blocks)'),
-            (v3(fp.hip_turn), 'hip: muzzle up, muzzle in, roll (degrees)'),
-            (f'{fp.hip_scale}f', 'hip scale'),
-            (v3(fp.reload['mag_out']), 'magazine steps: cant (degrees), drop (blocks)'),
-            (v3(fp.reload['charge']), 'charging step: cant, drop'),
-            (f'Map.of({sights})', 'aiming: translation (pixels) and scale, by sight'),
-            (f'{fp.handle_travel * IN:.4f}f', 'how far the handle or slide comes back (pixels)'),
-            (v3(fp.charge_turn), 'worked: turned about the grip (degrees)'),
-            (v3(fp.charge_push), 'worked: pushed (blocks)'),
-        ] + [(v3(v), k) for k, v in points.items()] + [
-            (v3(fp.mag_axis), 'the way a magazine leaves the well'),
-            (str(fp.locks_back).lower(), 'locks back when empty'),
-            (str(fp.cycles).lower(), 'cycles with each shot'),
-            (str(fp.support_grip).lower(), 'the off hand wraps the grip'),
-        ]
-        lines = ',\n'.join(f'            {a} /* {c} */' for a, c in args)
+        data = rig_data(gun, g, holds, fp, points)
+        lines = ',\n'.join(f'                    {java(v)} /* {RIG_NOTES.get(k, k)} */' for k, v in data.items())
         blocks.append(f'            Map.entry("{gun.name}", new GunRig(\n{lines}))')
     RIG_JAVA.write_text(f'''package com.zomboidcraft.client.combat;
 
