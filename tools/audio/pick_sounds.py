@@ -80,13 +80,12 @@ PINS = {
     "weapon.rifle.shot": [("421710", 0.0, 2.2)],
     "weapon.rifle.shot_distant": ["421710"],
     # Sonniss: Sako TRG 22 with its silencer at 1 m (single shots every 4 s), for the shooter and, filtered, for others
-    "weapon.rifle.shot_suppressed": [("sx1ff51e03", 4.05, 1.0), ("sx1ff51e03", 8.05, 1.0), ("sx1ff51e03", 12.05, 1.0),
-                                     ("sx1ff51e03", 16.05, 1.0)],
-    "weapon.rifle.shot_suppressed_distant": [("sx1ff51e03", 0.0, 1.6), ("sx1ff51e03", 20.05, 1.6), ("sx3a8d5464", 0.0, 1.6)],
-    # Sonniss: suppressed De Lisle carbine (.45 ACP, pistol calibre) at 1 m and 55 m, plus a silenced pistol shot
-    "weapon.pistol.shot_suppressed": [("sx9620050e", 4.0, 0.9), ("sx9620050e", 8.0, 0.9), ("sx9620050e", 12.0, 0.9),
-                                      ("sx3ef8efc1", 0.0, 0.9)],
-    "weapon.pistol.shot_suppressed_distant": [("sx7f6eeab9", 4.0, 1.2), ("sx7f6eeab9", 8.0, 1.2), ("sx7f6eeab9", 12.0, 1.2)],
+    # (Josiah kept one take of each, 2026-10-25)
+    "weapon.rifle.shot_suppressed": [("sx1ff51e03", 16.05, 1.0)],
+    "weapon.rifle.shot_suppressed_distant": [("sx1ff51e03", 0.0, 1.6)],
+    # Sonniss: suppressed De Lisle carbine (.45 ACP, pistol calibre) at 1 m and 55 m
+    "weapon.pistol.shot_suppressed": [("sx9620050e", 8.0, 0.9)],
+    "weapon.pistol.shot_suppressed_distant": [("sx7f6eeab9", 8.0, 1.2)],
     "weapon.rifle.dry": [("232867", 4.45, 0.4), ("232867", 7.5, 0.4)],
     # an M16 reloaded from empty, and a second rifle reload, each cut into its three actions
     "weapon.rifle.mag_out": [("725397", 0.15, 0.9), ("815879", 0.0, 0.5)],

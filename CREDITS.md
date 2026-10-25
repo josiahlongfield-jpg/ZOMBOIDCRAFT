@@ -8,9 +8,7 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 | weapon.rifle.shot_distant | [SemiAutoRifleShot.wav](https://freesound.org/people/SuperPhat/sounds/421710/) | SuperPhat | CC0 1.0 |
 | weapon.rifle.shot_suppressed | Sako_TRG_22_TRG_silencer_1m_right_MKH8040_1_clean_Single_shots_x_6 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.rifle.shot_suppressed_distant | Sako_TRG_22_TRG_silencer_1m_right_MKH8040_1_clean_Single_shots_x_6 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
-| weapon.rifle.shot_suppressed_distant | gun_silenced_sniper1_shot_01 (Gamemaster Audio - Silenced Gun Sounds) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | weapon.pistol.shot_suppressed | De_Lisle_Carbine_.45ACP_suppressed_1m_right_MKH8040_1_clean_Single_shots_x_14 (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
-| weapon.pistol.shot_suppressed | gun_pistol_shot_silenced_04 (Gamemaster Audio - Silenced Gun Sounds) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | weapon.pistol.shot_suppressed_distant | De_Lisle_Carbine_.45ACP_suppressed_55m_in_front_off_axis_clean_Single_shots_x_14.L (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.rifle.dry | [357 Magnum Ext 2 shots Empty Chamber Clicks.wav](https://freesound.org/people/klangfabrik/sounds/232867/) | klangfabrik | CC0 1.0 |
 | weapon.rifle.mag_out | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |

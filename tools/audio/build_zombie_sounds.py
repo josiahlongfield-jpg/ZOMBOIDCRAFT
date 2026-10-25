@@ -53,6 +53,9 @@ STEPS = [("221650", 5.11, 2.0), ("221650", 2.69, 1.94), ("669704", 15.85, 0.66),
 # ... as long as its not too overpowering"; the angry one the same way). (folder, sources, voices, seconds, peak dB, files)
 HORDES = [("horde/dormant", IDLE, 14, 16.0, -9.0, 4), ("horde/angry", CROWD_CHASE + SONNISS_AGGRESSIVE + ALERT + IDLE[:8], 18, 12.0, -5.0, 4)]
 
+# Of the built takes, the ones Josiah approved on the picker (1-based); the rest are dropped and renumbered.
+KEEP = {"horde/angry": [2, 4], "zombie/step": [1, 4, 5, 6, 10, 12]}
+
 # minecraft event -> (our folder, attenuation distance)
 VANILLA = {}
 for mob in ("zombie", "husk", "zombie_villager"):
@@ -185,6 +188,15 @@ def main():
         for part in parts:
             part.unlink()
         counts[folder] = files
+
+    for folder, keep in KEEP.items():
+        out = sounds / folder
+        for n in range(1, counts[folder] + 1):
+            if n not in keep:
+                (out / f"{n}.ogg").unlink()
+        for new, n in enumerate(keep, 1):
+            (out / f"{n}.ogg").rename(out / f"{new}.ogg")
+        counts[folder] = len(keep)
 
     def entries(folder, dist):
         return [{"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist} for n in range(1, counts[folder] + 1)]
