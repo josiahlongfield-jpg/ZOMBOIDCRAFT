@@ -57,7 +57,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         super.setupRotations(state, poseStack, bodyRot, scale);
         float lie = state.swimAmount;
         if (lie > 0f) {
-            poseStack.mulPose(Axis.XP.rotationDegrees(lie * (state.crawler ? -90f : 90f)));
+            poseStack.rotateDegrees(Axis.XP, lie * (state.crawler ? -90f : 90f));
             poseStack.translate(0f, -lie, lie * (state.crawler ? 0.3f : -0.3f));
         }
     }

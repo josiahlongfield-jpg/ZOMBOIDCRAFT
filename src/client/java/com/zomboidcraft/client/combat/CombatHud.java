@@ -16,7 +16,7 @@ public final class CombatHud {
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
-        if (player == null || player.isSpectator() || minecraft.options.hideGui) {
+        if (player == null || player.isSpectator()) {
             return;
         }
         Font font = minecraft.font;

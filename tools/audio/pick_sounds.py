@@ -1,0 +1,164 @@
+"""Picks the weapon sounds from the Freesound candidates and installs them in the mod.
+
+    python3 tools/audio/pick_sounds.py RAW_DIR [--list]
+
+RAW_DIR is the sounds-raw branch (fetch_freesound.py's output: <category>/<id>.ogg plus
+manifest.json). For each sound event it ranks the candidates by how well the title and tags
+match, how popular the recording is and whether its length suits the event, then trims the
+silence, mixes to mono (Minecraft only positions mono sounds), evens out the level and writes
+assets/zomboidcraft/sounds/<event>/<n>.ogg, sounds.json and CREDITS.md. --list only prints the
+ranking. PINS below overrides the ranking for an event with chosen Freesound ids.
+"""
+import json
+import math
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+ASSETS = ROOT / "src/main/resources/assets/zomboidcraft"
+
+# event: (categories, title must match, title must not match, variants, max seconds, peak dB, extra sounds.json fields)
+EVENTS = {
+    "weapon.rifle.shot": (["rifle_shot"], r"rifle|ar.?15|m4|m16|ak|gun ?shot|shot|556|5\.56|fire", r"shotgun|pistol|9mm|silenc|suppress|cap gun|toy|laser|reload|cock|empty|dry|burst|auto|machine",
+                          3, 2.2, -1.0, {"attenuation_distance": 128}),
+    "weapon.rifle.dry": (["dry_fire"], r"dry|empty|click|trigger", r"mouse|keyboard|pen|switch", 2, 0.5, -3.0, {}),
+    "weapon.rifle.mag_out": (["rifle_mag"], r"out|release|eject|remov|drop", r"in$|insert", 2, 1.0, -3.0, {}),
+    "weapon.rifle.mag_in": (["rifle_mag"], r"insert|in\b|load|seat|magazine", r"eject|release|out", 2, 1.0, -3.0, {}),
+    "weapon.rifle.bolt": (["rifle_bolt"], r"charg|bolt|cock|rack|slide|pull", r"door|lock|bike", 2, 1.2, -3.0, {}),
+    "weapon.rifle.load_round": (["dry_fire", "casing"], r"click|bullet|round|cartridge|casing|shell", r"", 3, 0.35, -6.0, {}),
+    "weapon.casing": (["casing"], r"casing|shell|brass|cartridge", r"sea|beach|egg", 3, 1.2, -6.0, {}),
+    "weapon.bullet.flesh": (["bullet_hit"], r"flesh|body|impact|hit|squish|meat", r"ricochet|metal|wood|glass", 3, 0.8, -2.0, {}),
+    "weapon.bullet.ricochet": (["bullet_hit"], r"ricochet|whiz|whizz|impact", r"flesh|body", 2, 1.5, -3.0, {"attenuation_distance": 32}),
+    "weapon.melee.swing": (["swing"], r"swing|whoosh|swoosh|swish", r"door|golf club hit|wind", 3, 0.7, -4.0, {}),
+    "weapon.melee.swing_heavy": (["swing"], r"swing|whoosh|swoosh|heavy|bat", r"door|wind", 2, 0.9, -3.0, {"pitch": 0.8}),
+    "weapon.melee.hit_blunt": (["hit_blunt"], r"bat|punch|hit|smash|body|thud|melon|whack", r"bell|metal|glass", 3, 0.8, -1.5, {}),
+    "weapon.melee.hit_blade": (["hit_blade"], r"stab|slash|chop|cut|flesh|knife|machete|sword", r"draw|unsheath|sharpen", 3, 0.8, -1.5, {}),
+    "weapon.melee.hit_pan": (["hit_metal"], r"pan|metal|pipe|clang|bang|crowbar", r"door|car", 2, 1.2, -2.0, {}),
+    "weapon.melee.stomp": (["stomp", "hit_blunt"], r"crush|splat|squish|smash|stomp|gore|skull|melon", r"", 2, 1.0, -1.5, {}),
+    "weapon.melee.shove": (["shove", "hit_blunt"], r"push|shove|body|fall|thud|punch|hit", r"door", 2, 0.8, -3.0, {}),
+}
+
+# Vanilla stand-ins, used for any event with no candidate (and alongside the grab).
+FALLBACK = {
+    "weapon.rifle.shot": [{"name": "minecraft:entity.generic.explode", "type": "event", "pitch": 1.9, "volume": 0.7}],
+    "weapon.rifle.dry": [{"name": "minecraft:block.lever.click", "type": "event", "pitch": 1.6, "volume": 0.6}],
+    "weapon.rifle.mag_out": [{"name": "minecraft:item.crossbow.loading_end", "type": "event", "pitch": 1.4}],
+    "weapon.rifle.mag_in": [{"name": "minecraft:item.crossbow.loading_middle", "type": "event", "pitch": 1.2}],
+    "weapon.rifle.bolt": [{"name": "minecraft:item.crossbow.loading_end", "type": "event", "pitch": 0.9}],
+    "weapon.rifle.load_round": [{"name": "minecraft:block.chain.place", "type": "event", "pitch": 1.8, "volume": 0.5}],
+    "weapon.casing": [{"name": "minecraft:block.chain.fall", "type": "event", "pitch": 1.9, "volume": 0.4}],
+    "weapon.bullet.flesh": [{"name": "minecraft:entity.player.hurt", "type": "event", "pitch": 0.7}],
+    "weapon.bullet.ricochet": [{"name": "minecraft:block.stone.hit", "type": "event", "pitch": 1.6}],
+    "weapon.melee.swing": [{"name": "minecraft:entity.player.attack.sweep", "type": "event", "volume": 0.5}],
+    "weapon.melee.swing_heavy": [{"name": "minecraft:entity.player.attack.sweep", "type": "event", "pitch": 0.7, "volume": 0.6}],
+    "weapon.melee.hit_blunt": [{"name": "minecraft:entity.player.attack.strong", "type": "event"}],
+    "weapon.melee.hit_blade": [{"name": "minecraft:entity.player.attack.crit", "type": "event"}],
+    "weapon.melee.hit_pan": [{"name": "minecraft:block.anvil.land", "type": "event", "pitch": 1.8, "volume": 0.4}],
+    "weapon.melee.stomp": [{"name": "minecraft:block.slime_block.fall", "type": "event", "pitch": 0.6}],
+    "weapon.melee.shove": [{"name": "minecraft:entity.player.attack.knockback", "type": "event"}],
+}
+
+# Hand-picked Freesound ids per event, once the ranking has been checked by ear.
+PINS = {}
+
+
+def duration(path):
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+                         capture_output=True, text=True).stdout.strip()
+    try:
+        return float(out)
+    except ValueError:
+        return 0.0
+
+
+def score(sid, info, cats, want, avoid, max_len, raw):
+    if info["category"] not in cats:
+        return None
+    text = (info["title"] + " " + " ".join(info.get("tags", []))).lower()
+    if avoid and re.search(avoid, info["title"].lower()):
+        return None
+    hits = len(re.findall(want, text)) if want else 0
+    if want and not hits:
+        return None
+    length = duration(raw / info["file"])
+    if length <= 0.05:
+        return None
+    downloads = int(re.sub(r"\D", "", info.get("downloads") or "0") or 0)
+    s = 2.0 * min(hits, 3) + math.log10(downloads + 10)
+    if length > max_len * 3:
+        s -= 3     # a long take: usable, but trimmed hard
+    if cats.index(info["category"]) > 0:
+        s -= 1.5
+    return s, length
+
+
+def process(src, dst, max_len, peak):
+    """Trim leading silence, mono, cut to length with a fade, then set the peak level."""
+    fade = min(0.15, max_len / 4)
+    chain = (f"silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.01,"
+             f"atrim=0:{max_len},afade=t=out:st={max(0.0, max_len - fade)}:d={fade}")
+    tmp = dst.with_suffix(".tmp.wav")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-ac", "1", "-ar", "44100", "-af", chain, str(tmp)],
+                   check=True)
+    vol = subprocess.run(["ffmpeg", "-i", str(tmp), "-af", "volumedetect", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    m = re.search(r"max_volume: (-?[\d.]+) dB", vol)
+    gain = peak - float(m.group(1)) if m else 0.0
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(tmp), "-af", f"volume={gain:.2f}dB",
+                    "-c:a", "libvorbis", "-q:a", "5", str(dst)], check=True)
+    tmp.unlink()
+
+
+def main():
+    raw = Path(sys.argv[1])
+    list_only = "--list" in sys.argv
+    manifest = json.loads((raw / "manifest.json").read_text())
+    sounds_json = {}
+    credits = []
+    used = set()
+    for event, (cats, want, avoid, variants, max_len, peak, extra) in EVENTS.items():
+        ranked = []
+        for sid, info in manifest.items():
+            r = score(sid, info, cats, want, avoid, max_len, raw)
+            if r:
+                ranked.append((r[0], sid, r[1]))
+        ranked.sort(reverse=True)
+        if event in PINS:
+            ranked = [(99, sid, duration(raw / manifest[sid]["file"])) for sid in PINS[event]]
+        print(f"\n{event}: {len(ranked)} candidates")
+        for s, sid, length in ranked[:8]:
+            print(f"  {s:5.2f}  {sid:>8}  {length:5.2f}s  {manifest[sid]['title'][:60]}")
+        if list_only:
+            continue
+        # don't reuse a recording across events unless there's nothing else
+        picks = [r for r in ranked if r[1] not in used][:variants] or ranked[:variants]
+        folder = ASSETS / "sounds" / event.replace(".", "/")
+        if folder.exists():
+            for old in folder.glob("*.ogg"):
+                old.unlink()
+        entries = []
+        for n, (s, sid, length) in enumerate(picks, 1):
+            folder.mkdir(parents=True, exist_ok=True)
+            process(raw / manifest[sid]["file"], folder / f"{n}.ogg", max_len, peak)
+            entries.append({"name": f"zomboidcraft:{event.replace('.', '/')}/{n}", **extra})
+            used.add(sid)
+            info = manifest[sid]
+            credits.append(f"| {event} | [{info['title']}]({info['page']}) | {info['user']} | CC0 1.0 |")
+        sounds_json[event] = {"sounds": entries or FALLBACK[event]}
+    if list_only:
+        return
+    sounds_json["zombie.grab"] = {"sounds": [
+        {"name": "minecraft:entity.zombie.ambient", "type": "event", "pitch": 0.8},
+        {"name": "minecraft:entity.zombie.attack_wooden_door", "type": "event", "pitch": 1.4, "volume": 0.5}]}
+    (ASSETS / "sounds.json").write_text(json.dumps(sounds_json, indent=2) + "\n")
+    (ROOT / "CREDITS.md").write_text(
+        "# Credits\n\nWeapon sounds are CC0 (public domain) recordings from [Freesound](https://freesound.org), "
+        "trimmed, mixed to mono and levelled by tools/audio/pick_sounds.py. Thank you to the recordists.\n\n"
+        "| Sound | Recording | By | Licence |\n|---|---|---|---|\n" + "\n".join(credits) + "\n")
+    print(f"\n{len(sounds_json)} sound events written")
+
+
+if __name__ == "__main__":
+    main()
