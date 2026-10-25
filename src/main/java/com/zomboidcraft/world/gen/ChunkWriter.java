@@ -110,7 +110,8 @@ final class ChunkWriter implements ChunkSink {
 
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
-        java.util.Set<String> names = java.util.Set.of(models.split(","));
+        // a builder may name a model twice to favour it; Set.of would throw on the repeat
+        java.util.Set<String> names = new java.util.HashSet<>(java.util.Arrays.asList(models.split(",")));
         spawn(x, y, z, yaw, m -> names.contains(m.id) || names.contains(m.kind), seed);
     }
 
