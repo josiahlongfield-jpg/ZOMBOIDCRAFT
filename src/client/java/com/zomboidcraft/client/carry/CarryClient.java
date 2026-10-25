@@ -5,12 +5,19 @@ import com.zomboidcraft.carry.BagItem;
 import com.zomboidcraft.carry.BagSpec;
 import com.zomboidcraft.carry.Weights;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-/** Weights on every tooltip, and what a bag holds on its own. */
+/** Weights on every tooltip, what a bag holds on its own, and worn bags drawn on players. */
 public final class CarryClient {
     public static void register() {
+        LivingEntityRenderLayerRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
+            if (renderer instanceof AvatarRenderer<?> avatar) {
+                helper.register(new WornGearLayer(avatar, context.getItemModelResolver()));
+            }
+        });
         ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
             if (!ZcConfig.get().carry.weight || stack.isEmpty()) {
                 return;

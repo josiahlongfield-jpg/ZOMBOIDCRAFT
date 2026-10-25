@@ -8,6 +8,74 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== render2"
+echo "$MC_JARS" | tr ' ' '\n'
+classes 'client/(menu|screenhandler)/|gui/screens/MenuScreens'
+for c in $(classes 'client/(menu|screenhandler)/' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+sig 'net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback$RegistrationHelper' '.'
+for j in $MC_JARS; do echo "-- $j"; javap -cp "$j" -p net.minecraft.client.gui.screens.MenuScreens 2>&1 | grep -E "register|ScreenConstructor"; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState' 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc" | head -12
+sig com.mojang.math.Axis 'YP|rotationDegrees'
+sig net.minecraft.client.renderer.texture.OverlayTexture 'NO_OVERLAY'
+sig net.minecraft.client.model.geom.ModelPart 'translateAndRotate'
+sig net.minecraft.client.gui.screens.inventory.AbstractContainerScreen 'protected|public'
+find ~/.gradle/caches -name '*.accesswidener' -o -name '*.classtweaker' 2>/dev/null | head
+for j in $FAPI_JARS; do unzip -p "$j" '*.accesswidener' '*.classtweaker' 2>/dev/null | grep -iE "MenuScreens|ScreenConstructor"; done | sort -u
+exit 0
+
+echo "===== render1"
+classes 'rendering/v1/.*(Layer|RenderState|Feature)|renderer/entity/player/|renderer/entity/state/(Avatar|Player|HumanoidRender|LivingEntityRender|EntityRender)|client/model/player/|model/(PlayerModel|HumanoidModel)|renderer/item/(ItemModelResolver|ItemStackRenderState)|layers/(ItemInHandLayer|CustomHeadLayer|CapeLayer|PlayerItemInHandLayer)|state/v1|renderstate'
+for c in $(classes 'rendering/v1/.*(LayerRegistration|RenderState)|renderstate|state/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+for c in $(classes 'renderer/entity/player/[A-Za-z]*Renderer.class|state/(AvatarRenderState|PlayerRenderState).class|model/player/PlayerModel.class|model/PlayerModel.class' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.HumanoidRenderState 'public'
+sig net.minecraft.client.model.HumanoidModel 'public'
+sig net.minecraft.client.renderer.item.ItemModelResolver 'public'
+sig net.minecraft.client.renderer.item.ItemStackRenderState 'public'
+sig net.minecraft.client.renderer.entity.layers.CustomHeadLayer '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.layers.CustomHeadLayer 2>&1 | sed -n '/void submit(/,/^$/p' | grep -E "invoke|ldc|getfield" | head -40
+sig net.minecraft.client.renderer.entity.EntityRendererProvider\$Context 'public'
+sig net.minecraft.world.item.ItemDisplayContext 'public static final'
+
+
+echo "===== nearby1"
+classes 'screenhandler/v1|menu/v1|world/inventory/(AbstractCraftingMenu|RecipeBookMenu|CraftingMenu|ResultSlot|ArmorSlot|TransientCraftingContainer|CraftingContainer|ResultContainer|ContainerData|MenuType|ChestMenu)|ContainerUser|ContainerOpenersCounter|entity/item/ItemEntity.class|block/entity/(ChestBlockEntity|BarrelBlockEntity|RandomizableContainerBlockEntity|BaseContainerBlockEntity)|RandomizableContainer.class'
+for c in $(classes 'screenhandler/v1|menu/v1' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" '.'; done
+sig net.minecraft.world.inventory.AbstractCraftingMenu '.'
+sig net.minecraft.world.inventory.RecipeBookMenu '.'
+sig net.minecraft.world.inventory.InventoryMenu '.'
+javap -cp "$CP" -p net.minecraft.world.inventory.InventoryMenu 2>&1
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/public net.minecraft.world.inventory.InventoryMenu(/,/^$/p' | grep -E "invoke|new|getstatic|bipush|iconst" | head -60
+javap -cp "$CP" -c -p net.minecraft.world.inventory.InventoryMenu 2>&1 | sed -n '/void slotsChanged/,/^$/p;/void removed/,/^$/p' | grep -E "invoke|getstatic|getfield" | head -30
+sig net.minecraft.world.inventory.CraftingMenu 'static|public'
+sig net.minecraft.world.inventory.ResultSlot 'public'
+sig net.minecraft.world.inventory.ArmorSlot '.'
+javap -cp "$CP" -p net.minecraft.world.inventory.ArmorSlot 2>&1 | head -5
+sig net.minecraft.world.inventory.TransientCraftingContainer 'public'
+sig net.minecraft.world.inventory.MenuType 'public'
+sig net.minecraft.world.Container 'startOpen|stopOpen|stillValid|getEntities|ContainerUser'
+sig net.minecraft.world.entity.ContainerUser '.'
+sig net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity 'public|protected'
+sig net.minecraft.world.RandomizableContainer 'public|default|static'
+sig net.minecraft.world.level.block.entity.BaseContainerBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.entity.ChestBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.entity.BarrelBlockEntity 'public|protected'
+sig net.minecraft.world.level.block.ChestBlock 'static|getContainer'
+sig net.minecraft.world.entity.item.ItemEntity 'public'
+sig net.minecraft.server.level.ServerPlayer 'openMenu|closeContainer|containerMenu|initMenu|doCloseContainer'
+sig net.minecraft.world.entity.player.Player 'containerMenu|inventoryMenu|closeContainer|canInteractWith|isWithinBlockInteractionRange|blockInteractionRange'
+sig net.minecraft.world.level.Level 'getEntitiesOfClass|getBlockEntity'
+sig net.minecraft.client.gui.screens.MenuScreens 'public|static'
+sig net.minecraft.core.BlockPos 'STREAM_CODEC'
+sig net.minecraft.network.chat.ComponentSerialization 'STREAM_CODEC'
+sig net.minecraft.network.codec.ByteBufCodecs 'list|collection|VAR_INT|STRING_UTF8'
+sig net.minecraft.world.item.ItemStack 'STREAM_CODEC'
+sig net.minecraft.world.inventory.AbstractContainerMenu 'public|protected'
+sig net.minecraft.world.inventory.Slot 'public'
+sig net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking 'canSend|send'
+grep -E "error:|warning: \[removal" build.log | head -20
+exit 0
+
 echo "===== carry1"
 classes 'client/item/v1/|attachment/v1/AttachmentRegistry|attachment/v1/AttachmentRegistry\$Builder|world/ContainerHelper|entity/v1/ServerPlayerEvents|entity/event/v1/ServerPlayerEvents|item/ItemStackTemplate'
 sig net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback '.'

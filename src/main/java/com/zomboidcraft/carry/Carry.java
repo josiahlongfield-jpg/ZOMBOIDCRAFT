@@ -11,6 +11,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,6 +20,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Carrying, Zomboid style: a few pockets, your hands and belt, and whatever bags you wear. Everything weighs
@@ -33,6 +37,14 @@ public final class Carry {
             ZomboidCraft.id("load"),
             builder -> builder.initializer(() -> 0f).syncWith(ByteBufCodecs.FLOAT, AttachmentSyncPredicate.targetOnly()));
 
+    /**
+     * What everyone can see you wearing (back, vest, waist, sling), synced to every client for drawing on the body.
+     * Plain copies of the items, so what's inside a bag stays with its owner.
+     */
+    public static final AttachmentType<List<ItemStack>> WORN = AttachmentRegistry.create(
+            ZomboidCraft.id("worn"),
+            builder -> builder.initializer(List::of).syncWith(ItemStack.OPTIONAL_LIST_STREAM_CODEC, AttachmentSyncPredicate.all()));
+
     private static final Identifier HEAVY = ZomboidCraft.id("heavy_load");
     private static int ticks;
 
@@ -45,6 +57,29 @@ public final class Carry {
 
     public static GearStore gear(Player player) {
         return player.getAttachedOrCreate(GEAR);
+    }
+
+    /**
+     * Puts a picked-up bag straight on when its place is free: back, vest or waist, or the off hand for a duffel.
+     * Empties the stack and returns true when it went on.
+     */
+    public static boolean wear(Player player, ItemStack stack) {
+        BagSpec spec = BagItem.spec(stack);
+        if (spec == null || player.level().isClientSide() || !ZcConfig.get().carry.autoWear || player.hasInfiniteMaterials()) {
+            return false;
+        }
+        Inventory inventory = player.getInventory();
+        int gearSlot = GearStore.slotFor(spec.wear());
+        if (gearSlot >= 0 && gear(player).get(gearSlot).isEmpty()) {
+            gear(player).items.set(gearSlot, stack.copyAndClear());
+        } else if (gearSlot < 0 && inventory.getItem(Inventory.SLOT_OFFHAND).isEmpty()) {
+            inventory.setItem(Inventory.SLOT_OFFHAND, stack.copyAndClear());
+        } else {
+            return false;
+        }
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
+                SoundSource.PLAYERS, 0.8f, 0.9f);
+        return true;
     }
 
     // ---------------------------------------------------------------- pockets
@@ -150,6 +185,7 @@ public final class Carry {
                     bag.flush();
                 }
             }
+            showWorn(player);
             if (ticks % 10 != 0) {
                 continue;
             }
@@ -171,6 +207,25 @@ public final class Carry {
                 Stamina.use(player, 0.15 * (tier - 1));
             }
         }
+    }
+
+    /** Updates what others see you wearing when it changes. */
+    private static void showWorn(ServerPlayer player) {
+        GearStore gear = gear(player);
+        List<ItemStack> shown = player.getAttachedOrElse(WORN, List.of());
+        boolean same = shown.size() == GearStore.SIZE;
+        for (int i = 0; same && i < GearStore.SIZE; i++) {
+            same = shown.get(i).getItem() == gear.get(i).getItem() && shown.get(i).isEmpty() == gear.get(i).isEmpty();
+        }
+        if (same) {
+            return;
+        }
+        List<ItemStack> now = new ArrayList<>();
+        for (int i = 0; i < GearStore.SIZE; i++) {
+            ItemStack stack = gear.get(i);
+            now.add(stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem()));
+        }
+        player.setAttached(WORN, List.copyOf(now));
     }
 
     private static void slow(ServerPlayer player, double amount) {

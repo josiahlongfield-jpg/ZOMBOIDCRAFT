@@ -13,7 +13,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Pickups skip the locked pockets and spill into worn bags; worn gear drops with everything else on death. */
+/**
+ * Pickups put bags straight on, skip the locked pockets and spill into worn bags; worn gear drops with everything
+ * else on death.
+ */
 @Mixin(Inventory.class)
 public abstract class InventoryMixin {
     @Shadow
@@ -32,6 +35,13 @@ public abstract class InventoryMixin {
     private void zomboidcraft$noLockedMerge(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (Carry.locked(player, cir.getReturnValue())) {
             cir.setReturnValue(-1);
+        }
+    }
+
+    @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$wearPickedUpBag(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (slot == -1 && Carry.wear(player, stack)) {
+            cir.setReturnValue(true);
         }
     }
 
