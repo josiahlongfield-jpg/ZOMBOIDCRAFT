@@ -1,6 +1,8 @@
 package com.zomboidcraft;
 
 import com.zomboidcraft.barricade.HammerItem;
+import com.zomboidcraft.combat.AttachmentItem;
+import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
@@ -53,6 +55,10 @@ public final class ModItems {
             new Item.Properties().stacksTo(1).component(GunState.MAG_ROUNDS, 0)
                     .component(DataComponents.USE_EFFECTS, new UseEffects(false, true, 0.6f)));
     public static final Item RIFLE_AMMO = register("rifle_ammo", Item::new, new Item.Properties().stacksTo(60));
+
+    // Attachments: each names its slot and the key the gun's item model switches on.
+    public static final Item RED_DOT_SIGHT = register("red_dot_sight",
+            p -> new AttachmentItem(Attachments.Slot.OPTIC, "red_dot", p), new Item.Properties().stacksTo(1));
 
     private static Item weapon(String name, Function<Item.Properties, Item> factory) {
         return register(name, factory, MeleeWeaponItem.properties(Weapons.byName(name)));

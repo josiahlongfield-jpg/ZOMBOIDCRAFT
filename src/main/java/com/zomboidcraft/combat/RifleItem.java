@@ -6,8 +6,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -54,6 +56,41 @@ public class RifleItem extends Item {
         return false;
     }
 
+    /**
+     * Stand-in for the weapon screen: right-click the rifle with an attachment to mount it (whatever
+     * held that slot comes back on the cursor), or with an empty cursor to take the optic off.
+     */
+    @Override
+    public boolean overrideOtherStackedOnMe(ItemStack self, ItemStack other, net.minecraft.world.inventory.Slot slot,
+                                            ClickAction action, Player player, SlotAccess carried) {
+        if (action != ClickAction.SECONDARY || !slot.allowModification(player)) {
+            return false;
+        }
+        if (other.isEmpty()) {
+            Attachments.Slot filled = Attachments.firstFilled(self);
+            if (filled == null) {
+                return false;
+            }
+            carried.set(Attachments.unmount(self, filled));
+            player.playSound(ModSounds.RIFLE_MAG_OUT, 0.6f, 1.3f);
+            return true;
+        }
+        if (!Attachments.canMount(self, other)) {
+            return false;
+        }
+        ItemStack old = Attachments.mount(self, other);
+        other.shrink(1);
+        if (old != null && !old.isEmpty()) {
+            if (other.isEmpty()) {
+                carried.set(old);
+            } else if (!player.getInventory().add(old)) {
+                player.drop(old, false);
+            }
+        }
+        player.playSound(ModSounds.RIFLE_MAG_IN, 0.6f, 1.3f);
+        return true;
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
@@ -65,6 +102,12 @@ public class RifleItem extends Item {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
         }
         tooltip.accept(MeleeWeaponItem.condition(stack));
+        Attachments.of(stack).mounted().forEach((slot, att) -> tooltip.accept(
+                Component.literal(AttachmentItem.slotName(slot) + ": ").withStyle(ChatFormatting.GRAY)
+                        .append(att.getHoverName().copy().withStyle(ChatFormatting.WHITE))));
+        if (!Attachments.of(stack).isEmpty()) {
+            tooltip.accept(Component.literal("Right-click with an empty hand to take it off").withStyle(ChatFormatting.DARK_GRAY));
+        }
         tooltip.accept(Component.literal("Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
     }
 }

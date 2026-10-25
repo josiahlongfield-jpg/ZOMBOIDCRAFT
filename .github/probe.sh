@@ -9,6 +9,15 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== pose"
+classes 'model/.*HumanoidModel|model/.*PlayerModel|model/.*AnimationUtils|entity/player/.*Renderer|entity/.*AvatarRenderer|state/AvatarRenderState|state/PlayerRenderState|state/HumanoidRenderState|state/ArmedEntityRenderState|state/LivingEntityRenderState|layers/ItemInHandLayer|layers/PlayerItemInHandLayer|rendering/v1/RenderStateDataKey|rendering/v1/FabricRenderState|rendering/v1/.*RenderState'
+for c in net.minecraft.client.model.HumanoidModel net.minecraft.client.model.HumanoidModel\$ArmPose net.minecraft.client.model.player.PlayerModel net.minecraft.client.model.PlayerModel net.minecraft.client.model.AnimationUtils net.minecraft.client.model.geom.ModelPart; do sig "$c" '.'; done
+for c in net.minecraft.client.renderer.entity.player.AvatarRenderer net.minecraft.client.renderer.entity.player.PlayerRenderer net.minecraft.client.renderer.entity.HumanoidMobRenderer net.minecraft.client.renderer.entity.state.AvatarRenderState net.minecraft.client.renderer.entity.state.PlayerRenderState net.minecraft.client.renderer.entity.state.HumanoidRenderState net.minecraft.client.renderer.entity.state.ArmedEntityRenderState net.minecraft.client.renderer.entity.layers.ItemInHandLayer net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer; do sig "$c" '.'; done
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public|protected'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'public|protected'
+sig net.minecraft.world.entity.LivingEntity 'isUsingItem|getUseItem|getTicksUsingItem|getUsedItemHand|getMainArm|swinging|attackAnim'
+for j in $FAPI_JARS; do unzip -Z1 "$j" | grep -E 'rendering/v1/.*(RenderState|ArmPose|Avatar|Humanoid)' | sed "s|^|$j: |"; done | head -40
+
 echo "===== attach"
 sig net.minecraft.world.item.Item 'overrideOtherStackedOnMe|overrideStackedOnOther|appendHoverText|getName'
 sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|listMatches|hashStackList|hashItemAndComponents|isSameItemSameComponents|matches\(|copyWithCount|EMPTY'

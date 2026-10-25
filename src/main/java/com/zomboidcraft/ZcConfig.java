@@ -226,6 +226,10 @@ public final class ZcConfig {
         public boolean jams = true;
         /** Rounds in a rifle magazine. */
         public int magazineSize = 30;
+        /** Attachments (red dot sights so far) can be mounted on guns. */
+        public boolean attachments = true;
+        /** Multiplies aimed spread with a red dot mounted. */
+        public double redDotAimSpread = 0.6;
     }
 
     public static ZcConfig get() {

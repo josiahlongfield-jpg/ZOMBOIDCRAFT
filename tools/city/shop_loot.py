@@ -58,7 +58,7 @@ TABLES = {
         ("oak_trapdoor", 1, 1, 2), ("-", 6, 1, 1)]),
     "guns": ((2, 5), [
         (f"{ZC}:rifle_ammo", 12, 5, 30), (f"{ZC}:rifle_magazine", 5, 1, 1), (f"{ZC}:rifle_magazine", 2, 1, 1, rounds(12)),
-        (f"{ZC}:assault_rifle", 2, 1, 1, worn(.1, .7)), ("arrow", 6, 4, 16), ("bow", 2, 1, 1, worn(0, .4)),
+        (f"{ZC}:assault_rifle", 2, 1, 1, worn(.1, .7)), (f"{ZC}:red_dot_sight", 2, 1, 1), ("arrow", 6, 4, 16), ("bow", 2, 1, 1, worn(0, .4)),
         ("crossbow", 2, 1, 1, worn(0, .4)), ("iron_sword", 1, 1, 1, worn()), (f"{ZC}:machete", 2, 1, 1),
         (f"{ZC}:kitchen_knife", 2, 1, 1), ("leather_chestplate", 2, 1, 1, worn()), ("iron_helmet", 1, 1, 1, worn()),
         ("shield", 1, 1, 1, worn()), ("gunpowder", 3, 1, 4), ("string", 3, 1, 4), ("-", 8, 1, 1)]),
@@ -111,8 +111,8 @@ TABLES = {
 RARE = {
     "grocery": [(f"{ZC}:kitchen_knife", 1), (f"{ZC}:frying_pan", 1)],
     "hardware": [(f"{ZC}:machete", 1), (f"{ZC}:baseball_bat", 1), (f"{ZC}:fire_axe", 1)],
-    "pharmacy": [("totem_of_undying", 1)], "guns": [(f"{ZC}:assault_rifle", 2), (f"{ZC}:katana", 1)],
-    "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1)],
+    "pharmacy": [("totem_of_undying", 1)], "guns": [(f"{ZC}:assault_rifle", 2), (f"{ZC}:red_dot_sight", 2), (f"{ZC}:katana", 1)],
+    "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1), (f"{ZC}:red_dot_sight", 1)],
     "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1)],
 }
 

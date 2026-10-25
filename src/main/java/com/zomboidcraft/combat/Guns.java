@@ -7,7 +7,6 @@ import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.Noise;
 import com.zomboidcraft.zombie.ZombieTypes;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -40,7 +39,8 @@ import net.minecraft.world.phys.Vec3;
  * in, charging handle) that also drives the reload item models.
  *
  * The rifle's custom model data carries two numbers for its item model: [0] the reload step
- * (1 magazine out, 2 magazine going in, 3 charging handle) and [1] the muzzle flash.
+ * (1 magazine out, 2 magazine going in, 3 charging handle) and [1] the muzzle flash, plus the
+ * attachment keys {@link Attachments} writes.
  */
 public final class Guns {
     private static final int MAG_OUT_AT = 0;
@@ -112,7 +112,7 @@ public final class Guns {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
         int aimLevel = Skills.level(player, Skill.AIMING);
-        double spread = (aiming ? config.aimSpread : config.hipSpread) * (1 - 0.05 * aimLevel);
+        double spread = (aiming ? config.aimSpread * Attachments.aimSpreadFactor(gun) : config.hipSpread) * (1 - 0.05 * aimLevel);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= 1.6;
         }
@@ -284,16 +284,11 @@ public final class Guns {
         Skills.addXp(player, Skill.AIMING, 1);
     }
 
-    /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data. */
+    /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data, keeping its attachments. */
     private static void setModelData(ItemStack gun, int step, int flash) {
         CustomModelData old = gun.get(DataComponents.CUSTOM_MODEL_DATA);
         float oldStep = old != null && !old.floats().isEmpty() ? old.floats().get(0) : 0;
-        float s = step < 0 ? oldStep : step;
-        if (s == 0 && flash == 0) {
-            gun.remove(DataComponents.CUSTOM_MODEL_DATA);
-            return;
-        }
-        gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(s, (float) flash), List.of(), List.of(), List.of()));
+        Attachments.writeModelData(gun, step < 0 ? oldStep : step, flash);
     }
 
     private static ServerLevel level(ServerPlayer player) {
