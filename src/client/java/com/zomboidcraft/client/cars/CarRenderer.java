@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -33,7 +34,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         super.extractRenderState(car, state, partialTick);
         state.model = car.model();
         state.variant = car.variant();
-        state.yaw = car.getYRot();
+        // turned smoothly between ticks, or a car you're steering judders against your smooth view
+        state.yaw = car.getYRot(partialTick);
+        // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
+        Minecraft mc = Minecraft.getInstance();
+        state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
@@ -69,9 +74,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, (mesh, turn) -> draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1));
         });
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
-        });
+        if (!state.inside) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
+                each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
+            });
+        }
         poseStack.popPose();
     }
 
