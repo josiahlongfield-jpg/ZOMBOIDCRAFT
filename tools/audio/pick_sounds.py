@@ -40,7 +40,7 @@ EVENTS = {
     "weapon.rifle.bolt": (["rifle_bolt"], r"charg|bolt|cock|rack|slide|pull", r"door|lock|bike", 2, 1.2, -3.0, {}),
     "weapon.rifle.load_round": (["load_round", "dry_fire", "casing"], r"click|bullet|round|cartridge|casing|shell", r"", 3, 0.35, -6.0, {}),
     "weapon.casing": (["casing"], r"casing|shell|brass|cartridge", r"sea|beach|egg", 3, 1.2, -6.0, {}),
-    "weapon.bullet.flesh": (["flesh_impact", "bullet_hit"], r"flesh|body|impact|hit|squish|meat", r"ricochet|metal|wood|glass", 3, 0.8, -2.0, {}),
+    "weapon.bullet.flesh": (["flesh_impact", "bullet_hit"], r"flesh|body|impact|hit|squish|meat", r"ricochet|metal|wood|glass", 3, 0.8, -2.0, {"attenuation_distance": 64}),
     "weapon.bullet.ricochet": (["bullet_hit"], r"ricochet|whiz|whizz|impact", r"flesh|body", 2, 1.5, -3.0, {"attenuation_distance": 32}),
     "weapon.melee.swing": (["swing"], r"swing|whoosh|swoosh|swish", r"door|golf club hit|wind", 3, 0.7, -4.0, {}),
     "weapon.melee.swing_heavy": (["swing"], r"swing|whoosh|swoosh|heavy|bat", r"door|wind", 2, 0.9, -3.0, {"pitch": 0.8}),
