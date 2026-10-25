@@ -30,6 +30,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.ModSounds.register();
+        com.zomboidcraft.combat.ModParticles.register();
         ModItems.register();
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();

@@ -5,7 +5,11 @@
   "client": [
     "AbstractClientPlayerMixin",
     "PlayerModelMixin",
-    "SoundEngineMixin"
+    "SoundEngineMixin",
+    "FirstPersonHandsRendererMixin",
+    "FirstPersonHandsAndItemsMixin",
+    "GameRendererMixin",
+    "EntityTurnMixin"
   ],
   "injectors": {
     "defaultRequire": 0
