@@ -6,7 +6,8 @@ name: Fetch sounds
 on:
   workflow_dispatch:
   push:
-    branches: [sounds-fetch]
+    branches: [sounds-fetch, claude/project-thread-wh9qba]
+    paths: [tools/audio/fetch_freesound.py, .github/workflows/sounds.yml]
 
 permissions:
   contents: write
@@ -19,12 +20,14 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - dry_fire,casing
-          - rifle_bolt,load_round
-          - bullet_hit,flesh_impact
-          - swing,shove
-          - hit_blunt,stomp
-          - hit_blade,hit_metal
+          - zombie_idle
+          - zombie_alert,zombie_chase
+          - zombie_attack,zombie_hurt
+          - zombie_death,zombie_step
+          - door_bash,door_bash_metal
+          - door_break,horde
+          - human_dread
+          - human_scream
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

@@ -26,6 +26,9 @@ ASSETS = ROOT / "src/main/resources/assets/zomboidcraft"
 EVENTS = {
     "weapon.rifle.shot": (["rifle_shot"], r"rifle|ar.?15|m4|m16|ak|gun ?shot|shot|556|5\.56|fire", r"shotgun|pistol|9mm|silenc|suppress|cap gun|toy|laser|reload|cock|empty|dry|burst|auto|machine",
                           3, 2.2, -1.0, {"attenuation_distance": 128}),
+    # someone else's shot, heard from down the street
+    "weapon.rifle.shot_distant": (["rifle_shot", "rifle_distant"], r"distant|far|echo|shot", r"shotgun|pistol|toy|reload",
+                                  2, 3.0, -1.0, {"attenuation_distance": 128}),
     "weapon.rifle.dry": (["dry_fire"], r"dry|empty|click|trigger", r"mouse|keyboard|pen|switch", 2, 0.5, -3.0, {}),
     "weapon.rifle.mag_out": (["rifle_mag"], r"out|release|eject|remov|drop", r"in$|insert", 2, 1.0, -3.0, {}),
     "weapon.rifle.mag_in": (["rifle_mag"], r"insert|in\b|load|seat|magazine", r"eject|release|out", 2, 1.0, -3.0, {}),
@@ -46,6 +49,7 @@ EVENTS = {
 # Vanilla stand-ins, used for any event with no candidate (and alongside the grab).
 FALLBACK = {
     "weapon.rifle.shot": [{"name": "minecraft:entity.generic.explode", "type": "event", "pitch": 1.9, "volume": 0.7}],
+    "weapon.rifle.shot_distant": [{"name": "minecraft:entity.generic.explode", "type": "event", "pitch": 1.6, "volume": 0.5}],
     "weapon.rifle.dry": [{"name": "minecraft:block.lever.click", "type": "event", "pitch": 1.6, "volume": 0.6}],
     "weapon.rifle.mag_out": [{"name": "minecraft:item.crossbow.loading_end", "type": "event", "pitch": 1.4}],
     "weapon.rifle.mag_in": [{"name": "minecraft:item.crossbow.loading_middle", "type": "event", "pitch": 1.2}],
@@ -67,7 +71,9 @@ FALLBACK = {
 # (id, start seconds, length) to cut one action out of a longer take, such as a full reload.
 # Cut points come from the transients in each take (loudness over 10 ms windows).
 PINS = {
-    "weapon.rifle.shot": ["427596", "737569", "421710"],
+    # Josiah: take 1 is the shooter's own shot, take 3 the shot heard when someone else fires
+    "weapon.rifle.shot": ["427596"],
+    "weapon.rifle.shot_distant": ["421710"],
     "weapon.rifle.dry": [("232867", 4.45, 0.4), ("232867", 7.5, 0.4)],
     # an M16 reloaded from empty, and a second rifle reload, each cut into its three actions
     "weapon.rifle.mag_out": [("725397", 0.15, 0.9), ("815879", 0.0, 0.5)],
