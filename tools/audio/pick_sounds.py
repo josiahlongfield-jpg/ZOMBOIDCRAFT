@@ -1,8 +1,8 @@
 """Picks the weapon sounds from the Freesound candidates and installs them in the mod.
 
-    python3 tools/audio/pick_sounds.py RAW_DIR [--list] [--bank DIR]
+    python3 tools/audio/pick_sounds.py RAW_DIR[,RAW_DIR...] [--list] [--bank DIR]
 
-RAW_DIR is the sounds-raw branch (fetch_freesound.py's output: <category>/<id>.ogg plus
+RAW_DIR is the sounds-raw branch, optionally followed by the private Sonniss folder (fetch_sonniss.py) (fetch_freesound.py's output: <category>/<id>.ogg plus
 manifest.json). For each sound event it ranks the candidates by how well the title and tags
 match, how popular the recording is and whether its length suits the event, then trims the
 silence, mixes to mono (Minecraft only positions mono sounds), evens out the level and writes
@@ -29,6 +29,11 @@ EVENTS = {
     # someone else's shot, heard from down the street
     "weapon.rifle.shot_distant": (["rifle_shot", "rifle_distant"], r"distant|far|echo|shot", r"shotgun|pistol|toy|reload",
                                   2, 3.0, -1.0, {"attenuation_distance": 128}),
+    # suppressed shots: hand-picked Sonniss takes (see PINS), so no ranking terms
+    "weapon.rifle.shot_suppressed": (["suppressed"], r"", r"", 4, 1.0, -2.0, {"attenuation_distance": 40}),
+    "weapon.rifle.shot_suppressed_distant": (["suppressed"], r"", r"", 3, 1.6, -3.0, {"attenuation_distance": 40}),
+    "weapon.pistol.shot_suppressed": (["suppressed"], r"", r"", 4, 0.9, -2.0, {"attenuation_distance": 24}),
+    "weapon.pistol.shot_suppressed_distant": (["suppressed"], r"", r"", 3, 1.2, -3.0, {"attenuation_distance": 24}),
     "weapon.rifle.dry": (["dry_fire"], r"dry|empty|click|trigger", r"mouse|keyboard|pen|switch", 2, 0.5, -3.0, {}),
     "weapon.rifle.mag_out": (["rifle_mag"], r"out|release|eject|remov|drop", r"in$|insert", 2, 1.0, -3.0, {}),
     "weapon.rifle.mag_in": (["rifle_mag"], r"insert|in\b|load|seat|magazine", r"eject|release|out", 2, 1.0, -3.0, {}),
@@ -74,6 +79,14 @@ PINS = {
     # Josiah: take 3 for both the shooter's own shot and the shot heard from far off, a bit louder
     "weapon.rifle.shot": [("421710", 0.0, 2.2)],
     "weapon.rifle.shot_distant": ["421710"],
+    # Sonniss: Sako TRG 22 with its silencer at 1 m (single shots every 4 s), for the shooter and, filtered, for others
+    "weapon.rifle.shot_suppressed": [("sx1ff51e03", 4.05, 1.0), ("sx1ff51e03", 8.05, 1.0), ("sx1ff51e03", 12.05, 1.0),
+                                     ("sx1ff51e03", 16.05, 1.0)],
+    "weapon.rifle.shot_suppressed_distant": [("sx1ff51e03", 0.0, 1.6), ("sx1ff51e03", 20.05, 1.6), ("sx3a8d5464", 0.0, 1.6)],
+    # Sonniss: suppressed De Lisle carbine (.45 ACP, pistol calibre) at 1 m and 55 m, plus a silenced pistol shot
+    "weapon.pistol.shot_suppressed": [("sx9620050e", 4.0, 0.9), ("sx9620050e", 8.0, 0.9), ("sx9620050e", 12.0, 0.9),
+                                      ("sx3ef8efc1", 0.0, 0.9)],
+    "weapon.pistol.shot_suppressed_distant": [("sx7f6eeab9", 4.0, 1.2), ("sx7f6eeab9", 8.0, 1.2), ("sx7f6eeab9", 12.0, 1.2)],
     "weapon.rifle.dry": [("232867", 4.45, 0.4), ("232867", 7.5, 0.4)],
     # an M16 reloaded from empty, and a second rifle reload, each cut into its three actions
     "weapon.rifle.mag_out": [("725397", 0.15, 0.9), ("815879", 0.0, 0.5)],
@@ -92,6 +105,9 @@ PINS = {
     "weapon.melee.shove": ["582294", ("573691", 0.25, 0.7)],
 }
 
+
+# Extra colouring for an event: the distant suppressed rifle is the close take heard from down the street
+COLOR = {"weapon.rifle.shot_suppressed_distant": "lowpass=f=2200,aecho=0.8:0.6:90|210:0.35|0.2"}
 
 # Extra loudness in dB for an event, pushed through a limiter so the peak stays put.
 BOOST = {"weapon.rifle.shot": 3.0, "weapon.rifle.shot_distant": 3.0}
@@ -115,7 +131,7 @@ def score(sid, info, cats, want, avoid, max_len, raw):
     hits = len(re.findall(want, text)) if want else 0
     if want and not hits:
         return None
-    length = duration(raw / info["file"])
+    length = duration(raw[sid] / info["file"])
     if length <= 0.05:
         return None
     downloads = int(re.sub(r"\D", "", info.get("downloads") or "0") or 0)
@@ -127,13 +143,13 @@ def score(sid, info, cats, want, avoid, max_len, raw):
     return s, length
 
 
-def process(src, dst, max_len, peak, start=0.0, length=None, boost=0.0):
+def process(src, dst, max_len, peak, start=0.0, length=None, boost=0.0, color=""):
     """Trim leading silence, mono, cut to length with a fade, then set the peak level."""
     max_len = min(max_len, length or max_len)
     fade = min(0.15, max_len / 4)
     chain = (f"atrim=start={start},asetpts=PTS-STARTPTS,"
              f"silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.01,"
-             f"atrim=0:{max_len},afade=t=out:st={max(0.0, max_len - fade)}:d={fade}")
+             f"atrim=0:{max_len},{color + ',' if color else ''}afade=t=out:st={max(0.0, max_len - fade)}:d={fade}")
     tmp = dst.with_suffix(".tmp.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-ac", "1", "-ar", "44100", "-af", chain, str(tmp)],
                    check=True)
@@ -150,9 +166,11 @@ def process(src, dst, max_len, peak, start=0.0, length=None, boost=0.0):
 
 
 def main():
-    raw = Path(sys.argv[1])
     list_only = "--list" in sys.argv
-    manifest = json.loads((raw / "manifest.json").read_text())
+    manifest, raw = {}, {}
+    for d in sys.argv[1].split(","):
+        for sid, info in json.loads((Path(d) / "manifest.json").read_text()).items():
+            manifest[sid], raw[sid] = info, Path(d)
     sounds_json = {}
     credits = []
     bank = {}
@@ -168,7 +186,7 @@ def main():
         if event in PINS:
             pins = [p + (0.0, None)[len(p) - 1:] if isinstance(p, tuple) else (p, 0.0, None) for p in PINS[event]]
             cuts = {f"{sid}@{t}": (t, n) for sid, t, n in pins}
-            ranked = [(99, f"{sid}@{t}", duration(raw / manifest[sid]["file"])) for sid, t, n in pins]
+            ranked = [(99, f"{sid}@{t}", duration(raw[sid] / manifest[sid]["file"])) for sid, t, n in pins]
         print(f"\n{event}: {len(ranked)} candidates")
         for s, key, length in ranked[:8]:
             print(f"  {s:5.2f}  {key:>8}  {length:5.2f}s  {manifest[key.split('@')[0]]['title'][:60]}")
@@ -187,14 +205,15 @@ def main():
         for n, (s, key, length) in enumerate(picks, 1):
             sid = key.split("@")[0]
             folder.mkdir(parents=True, exist_ok=True)
-            process(raw / manifest[sid]["file"], folder / f"{n}.ogg", max_len, peak, *cuts.get(key, (0.0, None)),
-                    boost=BOOST.get(event, 0.0))
+            process(raw[sid] / manifest[sid]["file"], folder / f"{n}.ogg", max_len, peak, *cuts.get(key, (0.0, None)),
+                    boost=BOOST.get(event, 0.0), color=COLOR.get(event, ""))
             entries.append({"name": f"zomboidcraft:{event.replace('.', '/')}/{n}", **extra})
             used.update({key, sid})
             info = manifest[sid]
             user = unquote(info["user"])
             title = info["title"].removesuffix(f" by {user}")
-            row = f"| {event} | [{title}]({info['page']}) | {user} | CC0 1.0 |"
+            row = (f"| {event} | {title} ({info['pack']}) | {info['bundle']} | Sonniss royalty-free |" if "bundle" in info
+                   else f"| {event} | [{title}]({info['page']}) | {user} | CC0 1.0 |")
             if row not in credits:
                 credits.append(row)
             bank.setdefault(event, {"sounds": [], "pitch": extra.get("pitch", 1)})["sounds"].append(
@@ -202,17 +221,19 @@ def main():
         sounds_json[event] = {"sounds": entries or FALLBACK[event]}
     if list_only:
         return
-    sounds_json["zombie.grab"] = {"sounds": [
+    # zombie.grab is now a real bite from build_zombie_sounds.py; keep this stand-in only until that has run
+    sounds_json.setdefault("zombie.grab", {"sounds": [
         {"name": "minecraft:entity.zombie.ambient", "type": "event", "pitch": 0.8},
-        {"name": "minecraft:entity.zombie.attack_wooden_door", "type": "event", "pitch": 1.4, "volume": 0.5}]}
+        {"name": "minecraft:entity.zombie.attack_wooden_door", "type": "event", "pitch": 1.4, "volume": 0.5}]})
     # keep other tools' events (zombies, doors) and credit sections
     old = json.loads((ASSETS / "sounds.json").read_text()) if (ASSETS / "sounds.json").exists() else {}
-    sounds_json = {**{k: v for k, v in old.items() if not k.startswith("weapon.")}, **sounds_json}
+    sounds_json = {**sounds_json, **{k: v for k, v in old.items() if not k.startswith("weapon.")}}
     (ASSETS / "sounds.json").write_text(json.dumps(sounds_json, indent=2) + "\n")
     old_credits = (ROOT / "CREDITS.md").read_text() if (ROOT / "CREDITS.md").exists() else ""
     rest = old_credits[old_credits.index("\n## "):] if "\n## " in old_credits else ""
     (ROOT / "CREDITS.md").write_text(
-        "# Credits\n\nWeapon sounds are CC0 (public domain) recordings from [Freesound](https://freesound.org), "
+        "# Credits\n\nWeapon sounds are CC0 (public domain) recordings from [Freesound](https://freesound.org) and "
+        "royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, "
         "trimmed, mixed to mono and levelled by tools/audio/pick_sounds.py. Thank you to the recordists.\n\n"
         "| Sound | Recording | By | Licence |\n|---|---|---|---|\n" + "\n".join(credits) + "\n" + rest)
     if "--bank" in sys.argv:
