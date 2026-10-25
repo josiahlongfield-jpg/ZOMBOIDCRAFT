@@ -9,6 +9,13 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== attack"
+sig net.minecraft.world.entity.LivingEntity 'ttack|wing'
+sig net.minecraft.client.renderer.entity.state.HumanoidRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.ArmedEntityRenderState 'public'
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'public'
+exit 0
+
 echo "===== drive2"
 sig net.minecraft.world.entity.LinearInterpolationHandler 'public|protected'
 sig net.minecraft.world.entity.SteppedInterpolationHandler 'public|protected'
