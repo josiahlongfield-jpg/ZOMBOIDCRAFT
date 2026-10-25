@@ -57,6 +57,14 @@ CANDIDATES = {
     "item.bandage": ("Bandaging: cloth and tape tearing", 0.3, 2.5, 2, []),
     "item.hammer.nail": ("Hammering nails into a barricade", 0.2, 1.5, 2, []),
     "item.bag": ("Opening a bag or backpack", 0.3, 2.0, 2, []),
+    # UI: quiet physical foley, no menu bleeps
+    "ui.click": ("Pressing a button or switching a setting", 0.05, 0.6, 2, []),
+    "ui.tab": ("Switching bag tabs and opening the inventory: cloth and straps", 0.2, 1.2, 2, []),
+    "ui.wear": ("Putting on or taking off a bag or vest: buckles and velcro", 0.2, 1.5, 2, []),
+    "ui.item_move": ("Moving an item between bags", 0.1, 0.8, 2, []),
+    "ui.drop": ("Dropping an item on the floor", 0.1, 1.0, 2, []),
+    "ui.moodle": ("A bad moodle appears: thirst, exhaustion, panic", 0.4, 3.0, 2, []),
+    "ui.skill": ("A skill levels up", 0.3, 2.0, 2, []),
 }
 
 MAX_CLIPS = 90   # per moment; the page builder trims each round further
@@ -84,6 +92,13 @@ EXTRA = {
     "item.bandage": [("item_bandage", r"."), ("s_tear", r"cloth|fabric|tape|rip|tear|bandage|shirt")],
     "item.hammer.nail": [("item_hammer", r"."), ("s_hammer", r".")],
     "item.bag": [("item_bag", r"."), ("s_zip", r".")],
+    "ui.click": [("ui_click", r"."), ("s_ui_click", r".")],
+    "ui.tab": [("ui_cloth", r"."), ("s_ui_cloth", r".")],
+    "ui.wear": [("ui_buckle", r"."), ("s_ui_buckle", r".")],
+    "ui.item_move": [("ui_item", r"."), ("s_ui_item", r".")],
+    "ui.drop": [("ui_drop", r"."), ("s_ui_drop", r".")],
+    "ui.moodle": [("ui_sting", r"."), ("s_ui_sting", r".")],
+    "ui.skill": [("ui_page", r"."), ("s_ui_page", r".")],
 }
 
 

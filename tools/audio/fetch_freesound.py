@@ -58,6 +58,14 @@ QUERIES = {
     "item_bandage": ["bandage wrap", "cloth tear", "tape rip", "fabric rip"],
     "item_hammer": ["hammer nail wood", "hammering nails", "nail into wood"],
     "item_bag": ["backpack zipper", "bag zip", "picking up items foley"],
+    # UI: physical, quiet foley rather than menu bleeps
+    "ui_click": ["light switch click", "small plastic click", "pen click", "latch click"],
+    "ui_cloth": ["cloth rustle short", "jacket rustle", "backpack rustle", "fabric movement foley"],
+    "ui_buckle": ["buckle clip", "velcro strap", "backpack strap"],
+    "ui_item": ["pick up object foley", "put down object table", "small item handling"],
+    "ui_drop": ["drop item floor", "bag drop floor", "object drop wood floor"],
+    "ui_sting": ["heartbeat single", "low tension hit", "horror stinger dark"],
+    "ui_page": ["page turn", "pencil writing", "notebook paper"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }

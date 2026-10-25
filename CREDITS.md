@@ -129,3 +129,17 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | item.hammer.nail | [hammer pounding on wood.wav](https://freesound.org/people/Ryujin95/sounds/394891/) | Ryujin95 | CC0 1.0 |
 | item.bag | Zipper_SmallBag_01_04 (SoundBits - Open & Close) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | item.bag | [Open Bag Sound](https://freesound.org/people/Rickplayer/sounds/531499/) | Rickplayer | CC0 1.0 |
+
+## Interface sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_ui_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| ui.click | [Switch Flip #1](https://freesound.org/people/IanStarGem/sounds/278205/) | IanStarGem | CC0 1.0 |
+| ui.tab | [Light Switch ON / OFF](https://freesound.org/people/FillSoko/sounds/257958/) | FillSoko | CC0 1.0 |
+| ui.tab | [Light Switch Turn Off Sound](https://freesound.org/people/ChrisTutorials/sounds/440499/) | ChrisTutorials | CC0 1.0 |
+| ui.wear | [buckle clipping.wav](https://freesound.org/people/korry999/sounds/649853/) | korry999 | CC0 1.0 |
+| ui.wear | [holster.wav](https://freesound.org/people/isbeorn/sounds/350461/) | isbeorn | CC0 1.0 |
+| ui.item_move | Lock01_outdoor_opening_lite03 (Alexander Ahura - Locks & Keys) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| ui.moodle | [Single Heartbeat Clean HQ_BeatSmith.wav](https://freesound.org/people/Lunardrive/sounds/22440/) | Lunardrive | CC0 1.0 |
