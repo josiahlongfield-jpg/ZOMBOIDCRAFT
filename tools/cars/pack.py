@@ -13,8 +13,11 @@ and one collision/placement index for the server,
 
 A .zcar is zlib-deflated, then XORed with an xorshift32 stream seeded from the model id, so
 the files in the jar aren't usable models on their own. Deflated payload, big-endian:
-    "ZCAR" int version, int variants, then per variant:
-    UTF name, int jpegLength, jpeg bytes (the texture), int triangles, triangles*3 * (short x,y,z in mm, char u,v)
+    "ZCAR" int version (2), int variants, then per variant:
+    UTF name, int jpegLength, jpeg bytes (the texture), mesh (the fixed body),
+    int lids, then per lid (a boot lid, tailgate or back door that opens when the car is searched):
+        byte axis (0 x, 1 y), float pivot x,y,z (m), float angle (radians, fully open), mesh
+where a mesh is int triangles, triangles*3 * (short x,y,z in mm, char u,v).
 """
 import argparse, glob, io, json, os, struct, sys, zlib
 from multiprocessing import Pool
@@ -45,6 +48,14 @@ MODELS = {
 }
 
 CELL = 0.25  # collision height grid, metres
+
+# what opens when the car is searched: 'car' finds back doors or cuts a lid, 'truck' a roll-up door
+BOOTS = {'city_bus': None, 'school_bus': None, 'garbage_truck': None, 'garbage_truck_rear': None,
+         'fire_truck': None, 'tow_truck': None, 'box_truck': 'truck', 'moving_truck': 'truck'}
+# what's lying in the boot, matching the loot tables (CarProp.lootTable)
+THEMES = {'swat_van': 'swat', 'ambulance': 'ambulance', 'ambulance_van': 'ambulance', 'police_sedan': 'police',
+          'police_suv': 'police', 'van': 'work', 'step_van': 'work', 'pickup': 'work', 'tow_truck': 'work',
+          'box_truck': 'cargo', 'moving_truck': 'cargo'}
 
 
 def java_hash(s):
@@ -84,28 +95,40 @@ def build(path):
     stem = os.path.basename(path)[:-4]
     mid, kind, weight = MODELS[stem]
     car = wreck.prepare(path)
-    variants = [wreck.build_variant(car, v, java_hash(mid) % 100000 * 10 + i) for i, v in enumerate(VARIANTS)]
-    base = variants[0][0]
+    variants = [wreck.build_variant(car, v, java_hash(mid) % 100000 * 10 + i, BOOTS.get(mid, 'car'), THEMES.get(mid, 'trunk'))
+                for i, v in enumerate(VARIANTS)]
+    base = variants[0]['tris']
     lo, hi = base.reshape(-1, 3).min(0), base.reshape(-1, 3).max(0)
     centre = np.array([(lo[0] + hi[0]) / 2, 0, (lo[2] + hi[2]) / 2])
-    buf = io.BytesIO()
-    buf.write(b'ZCAR'); buf.write(struct.pack('>ii', 1, len(VARIANTS)))
-    for name, (P, uv, colour, _) in zip(VARIANTS, variants):
-        jpg = io.BytesIO(); colour.save(jpg, 'JPEG', quality=90, subsampling=0); jpg = jpg.getvalue()
-        nb = name.encode()
-        buf.write(struct.pack('>H', len(nb))); buf.write(nb)
-        buf.write(struct.pack('>i', len(jpg))); buf.write(jpg)
+
+    def mesh(P, uv):
         Q = np.round((P - centre) * 1000).astype('>i2').reshape(-1, 3)
         U = np.round(np.clip(uv, 0, 1) * 65535).astype('>u2').reshape(-1, 2)
         buf.write(struct.pack('>i', len(P)))
         buf.write(np.concatenate([Q.view('>u2'), U], 1).astype('>u2').tobytes())
+
+    buf = io.BytesIO()
+    buf.write(b'ZCAR'); buf.write(struct.pack('>ii', 2, len(VARIANTS)))
+    for name, b in zip(VARIANTS, variants):
+        jpg = io.BytesIO(); b['colour'].save(jpg, 'JPEG', quality=90, subsampling=0); jpg = jpg.getvalue()
+        nb = name.encode()
+        buf.write(struct.pack('>H', len(nb))); buf.write(nb)
+        buf.write(struct.pack('>i', len(jpg))); buf.write(jpg)
+        fixed = b['lid'] < 0
+        mesh(b['tris'][fixed], b['uv'][fixed])
+        buf.write(struct.pack('>i', len(b['lids'])))
+        for k, (pivot, axis, a) in enumerate(b['lids']):
+            m = b['lid'] == k
+            buf.write(struct.pack('>b4f', 0 if axis == 'x' else 1, *(np.asarray(pivot, float) - centre), a))
+            mesh(b['tris'][m], b['uv'][m])
+    lids = ', '.join(str(len(b['lids'])) for b in variants)
     blob = scramble(zlib.compress(buf.getvalue(), 9), mid)
     out = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars', mid + '.zcar')
     with open(out, 'wb') as f:
         f.write(blob)
     glo, nx, nz, grid = heights(base - centre)
     size = hi - lo
-    print(f'{mid:20s} {len(blob) // 1024:5d} KB  {size[0]:.1f} x {size[1]:.1f} x {size[2]:.1f} m  atlas {car.atlas}', flush=True)
+    print(f'{mid:20s} {len(blob) // 1024:5d} KB  {size[0]:.1f} x {size[1]:.1f} x {size[2]:.1f} m  atlas {car.atlas}  lids {lids}', flush=True)
     return {'id': mid, 'kind': kind, 'weight': weight, 'size': [round(float(x), 3) for x in size],
             'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
             'heights': [int(round(h * 100)) for h in grid.ravel()]}
