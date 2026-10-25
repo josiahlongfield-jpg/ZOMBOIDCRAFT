@@ -8,6 +8,23 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== muffle"
+classes 'blaze3d/audio/|client/sounds/SoundEngine|client/sounds/ChannelAccess|client/Camera.class'
+sig com.mojang.blaze3d.audio.Channel '.'
+javap -cp "$CP" -p com.mojang.blaze3d.audio.Channel 2>&1 | grep -E "int |source"
+sig com.mojang.blaze3d.audio.Library 'public|protected|private'
+javap -cp "$CP" -p com.mojang.blaze3d.audio.Library 2>&1 | grep -E "long |device|context"
+javap -cp "$CP" -p net.minecraft.client.sounds.SoundEngine 2>&1 | grep -E "Map|tick|play|listener|Listener|Library|library|calculateVolume|instanceToChannel|channelAccess"
+javap -cp "$CP" -p 'net.minecraft.client.sounds.ChannelAccess$ChannelHandle' 2>&1
+javap -cp "$CP" -c -p net.minecraft.client.sounds.SoundEngine 2>&1 | sed -n '/void play(/,/^$/p;/lambda\$play/,/^$/p' | grep -E "invoke" | head -40
+LWJGL=$(find ~/.gradle/caches/modules-2 -name 'lwjgl-openal-*.jar' ! -name '*sources*' ! -name '*natives*' | head -1)
+echo "lwjgl openal: $LWJGL"
+unzip -Z1 "$LWJGL" | grep -E "EXTEfx|ALC10|EXTEfx" | head
+javap -cp "$LWJGL" org.lwjgl.openal.EXTEfx 2>&1 | grep -E "alGenFilters|alFilteri|alFilterf|AL_FILTER_LOWPASS|AL_LOWPASS_GAIN|AL_DIRECT_FILTER|alDeleteFilters|AL_FILTER_TYPE" | head -20
+sig net.minecraft.client.Camera 'position|getPosition|Vec3'
+sig net.minecraft.world.level.block.state.BlockBehaviour\$BlockStateBase 'canOcclude|isSolidRender|isAir|blocksMotion|getCollisionShape|isOpaque'
+exit 0
+
 echo "===== bench2"
 javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.ItemEntityRenderState 2>&1
 javap -cp "$CP" -c -p net.minecraft.world.entity.item.ItemEntity 2>&1 | sed -n '/public static float getSpin(float, float)/,/^$/p'
