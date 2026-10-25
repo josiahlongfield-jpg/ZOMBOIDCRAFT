@@ -13,6 +13,7 @@ For the weapon screen there's a ghost model per slot (the slot's stand-in part, 
 glass texture), and gun_slots/<gun>.json saying where each slot's mount point is and what fits it.
 """
 import json
+import math
 import zlib
 
 import numpy as np
@@ -119,8 +120,39 @@ def drawn(name, build, R=np.eye(3), t=(0, 0, 0), look=None, seed=0, wear=0.4):
 
 # ---------------------------------------------------------------- painting
 
-def paint(models, px=PX):
-    """Paints every visible face of every model into one set of patches: colour, LabPBR specular and normal."""
+TEXEL = 4.0             # screen pixels (at 1080p) a texel may cover when seen from an aiming eye
+DENSITIES = (16, 24, 32, 48, 64, 96, 128)
+
+
+def face_density(p, name, eyes, base):
+    """Texture pixels per unit a face needs. Aiming puts the eye right behind the sight, so the faces it sees
+    up close would show texels the size of fingernails at the bench's density: those get enough pixels that
+    a texel covers about TEXEL screen pixels from the nearest eye that sees the face. eyes: build-frame points
+    (each looking toward -z with the game's 70 degree hand view); everything else keeps `base`."""
+    ax, sgn = M.FACES[name][:2]
+    lo, hi = p['lo'], p['hi']
+    n = np.zeros(3)
+    n[ax] = sgn
+    centre = (lo + hi) / 2
+    centre[ax] = hi[ax] if sgn > 0 else lo[ax]
+    want = base
+    for eye in eyes:
+        near = np.clip(eye, lo, hi)
+        near[ax] = centre[ax]
+        d_near, d_mid = eye - near, eye - centre
+        if d_mid @ n <= 0 or d_near[2] <= 0.05:
+            continue                                    # facing away, or behind the eye
+        if abs(d_near[1]) > 0.9 * d_near[2] or abs(d_near[0]) > 1.5 * d_near[2]:
+            continue                                    # outside the view
+        dist = math.sqrt(np.linalg.norm(d_near) * np.linalg.norm(d_mid))
+        need = 771.0 / max(dist, 0.3) / TEXEL         # 771 screen px per radian at 1080p, 70 degrees
+        want = max(want, next((dd for dd in DENSITIES if dd >= need), DENSITIES[-1]))
+    return want
+
+
+def paint(models, px=PX, eyes=()):
+    """Paints every visible face of every model into one set of patches: colour, LabPBR specular and normal.
+    Faces seen up close from an aiming eye get more pixels (see face_density)."""
     old, M.PX = M.PX, px
     patches = []
     try:
@@ -133,6 +165,7 @@ def paint(models, px=PX):
                 for name, (ax, sgn, ua, ud, va, vd) in M.FACES.items():
                     if name in p.get('skip', ()):
                         continue
+                    M.PX = face_density(p, name, eyes, px) if eyes else px
                     pos, n, edge, uv = M.face_grid(p, name)
                     pos_l = (pos - t) @ R
                     n_l = R.T @ n
@@ -148,7 +181,7 @@ def paint(models, px=PX):
                             rgb = fx(f, rgb)
                     rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
-                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb), n=pbr.normal(f, rgb, lu, lv, px))))
+                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb), n=pbr.normal(f, rgb, lu, lv, M.PX))))
     finally:
         M.PX = old
     return patches
@@ -251,7 +284,7 @@ def flash_entry(model):
             'entries': [{'threshold': 1, 'model': model}], 'fallback': EMPTY}
 
 
-def write_gun(gun, assets, shift, displays, lang):
+def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
     Returns a summary line and the data the preview page reads."""
     look, seed, wear = gun.look, gun.seed, gun.wear
@@ -273,7 +306,7 @@ def write_gun(gun, assets, shift, displays, lang):
         models[name] = drawn(name, lambda m, mk=mk: gun.flash(m, mk), look=look, seed=seed + 2, wear=wear)
 
     names = list(models)
-    patches = paint([models[n] for n in names])
+    patches = paint([models[n] for n in names], eyes=eyes)
     img, uvs, T = pack(patches)
     tex = f'item/weapon/{gun.name}'
     save_textures(img, assets / f'textures/{tex}.png')

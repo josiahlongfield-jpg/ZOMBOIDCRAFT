@@ -527,6 +527,16 @@ ADS_SCALE = 1.2
 HIDDEN_WHEN_AIMING = ('scope_4x',)
 
 
+def ads_eyes(gun):
+    """Where the eye is when aiming through each sight, in the build frame (the sight point, then straight
+    back toward the stock): the faces these see up close get finer textures."""
+    eyes = [gun.sight_point(None) + np.array([0, 0, -ADS_TARGET[None][2] / 0.72])]
+    for optic, inches in ADS_EYE.items():
+        if optic in gun.parts:
+            eyes.append(gun.sight_point(optic) + np.array([0, 0, inches * IN]))
+    return eyes
+
+
 def gun_displays(g, holds):
     """Display transforms for each pose: third person from the holds, first person at the hip (canted for
     the reload steps) or with the sight on the eye line, and the inventory, ground and frame views."""
@@ -655,7 +665,7 @@ def main():
     gun = assault_rifle()
     _Pm, g = rifle_frame()
     holds = rifle_holds()
-    line, slot_data = kit.write_gun(gun, ASSETS, g - gun.hand, gun_displays(g, holds), lang)
+    line, slot_data = kit.write_gun(gun, ASSETS, g - gun.hand, gun_displays(g, holds), lang, ads_eyes(gun))
     summary.append(line)
     kit.write_part_items(list(gun.parts.values()), ASSETS, lambda m: small_display(m, (20, 60, 0)), lang)
     kit.write_ghost_texture(ASSETS)
