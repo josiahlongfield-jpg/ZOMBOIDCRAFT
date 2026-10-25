@@ -8,23 +8,11 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== solid"
-body() { javap -c -p -cp "$CP" "$1" 2>/dev/null | awk -v pat="$2" '/^  [a-z].*\(/{show = ($0 ~ pat)} show'; }
-body 'net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase' 'calculateSolid|blocksMotion|initCache|boolean isSolid'
-body 'net.minecraft.world.level.levelgen.Heightmap$Types' 'lambda|static \{'
-body 'net.minecraft.world.level.block.Blocks' 'rebuildCache|static \{'
-mkdir -p /tmp/mc && for j in $MC_JARS; do unzip -q -o "$j" -d /tmp/mc; done
-echo "--- classes calling rebuildCache / initCache"
-grep -rl --include=*.class -e rebuildCache -e initCache /tmp/mc | head -40
-for j in $FAPI_JARS; do unzip -Z1 "$j" | grep -q '\.jar$' && { mkdir -p /tmp/fj; unzip -q -o "$j" -d /tmp/fj; }; done
-find /tmp/fj -name '*.jar' 2>/dev/null | while read k; do mkdir -p /tmp/fx; unzip -q -o "$k" -d /tmp/fx 2>/dev/null; done
-for j in $FAPI_JARS; do unzip -q -o "$j" -d /tmp/fx 2>/dev/null; done
-echo "--- fabric api classes mentioning rebuildCache / initCache / BLOCK_STATE_REGISTRY"
-grep -rl --include=*.class -e rebuildCache -e initCache -e BLOCK_STATE_REGISTRY /tmp/fx | head -20
-for c in $(grep -rl --include=*.class -e rebuildCache /tmp/mc | head -12); do
-  cls=${c#/tmp/mc/}; cls=${cls%.class}; cls=${cls//\//.}
-  echo "--- $cls"; javap -c -p -cp /tmp/mc "$cls" 2>/dev/null | grep -B30 rebuildCache | grep -E '^  [a-z].*\(|rebuildCache' | tail -6
-done
+echo "===== heightmap tags"
+for j in $MC_JARS; do unzip -Z1 "$j" | grep -i "heightmap" | head; done | sort -u
+for j in $MC_JARS; do for f in $(unzip -Z1 "$j" | grep -i "tags/block/.*heightmap.*json"); do echo "--- $f"; unzip -p "$j" "$f" | head -c 3000; echo; done; done
+javap -c -p -cp "$CP" net.minecraft.tags.BlockTags 2>/dev/null | grep -B3 -A3 "BLOCKS_MOTION_IN_HEIGHTMAP" | grep -E "ldc|BLOCKS_MOTION" | head
+javap -c -p -cp "$CP" net.minecraft.world.level.levelgen.Heightmap 2>/dev/null | grep -n "isOpaque" | head
 exit 0
 
 echo "===== worldgen"
