@@ -326,7 +326,7 @@ public final class Rolls {
         LootTableEvents.MODIFY_DROPS.register((table, context, drops) -> {
             String path = table.unwrapKey().map(key -> key.identifier().getPath()).orElse("");
             String place = place(path);
-            Vec3 at = context.getOptionalParameter(LootContextParams.ORIGIN);
+            Vec3 at = context.getOptional(LootContextParams.ORIGIN);
             boolean dense = at != null && drops.stream().anyMatch(s -> Rarity.of(s) != null) && dense(context.getLevel(), at);
             for (ItemStack drop : drops) {
                 roll(drop, place, dense, context.getRandom());

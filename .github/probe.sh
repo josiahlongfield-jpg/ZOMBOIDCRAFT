@@ -7,13 +7,6 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== rolls"
-sig net.minecraft.world.level.storage.loot.LootContext 'public'
-sig net.minecraft.util.context.ContextMap 'public'
-sig net.minecraft.world.item.Item 'components|getName|getDescriptionId'
-sig net.minecraft.world.item.ItemStack 'Prototype|getItemName|getHoverName|getStyledHoverName'
-exit 0
-
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
