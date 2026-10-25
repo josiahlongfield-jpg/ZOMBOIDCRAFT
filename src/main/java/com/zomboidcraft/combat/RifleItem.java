@@ -78,14 +78,15 @@ public class RifleItem extends Item {
         if (!Attachments.canMount(self, other)) {
             return false;
         }
+        // a swap hands back what was on the gun, which needs the cursor free
+        Attachments.Slot into = ((AttachmentItem) other.getItem()).slot();
+        if (other.getCount() > 1 && !Attachments.get(self, into).isEmpty()) {
+            return false;
+        }
         ItemStack old = Attachments.mount(self, other);
         other.shrink(1);
         if (old != null && !old.isEmpty()) {
-            if (other.isEmpty()) {
-                carried.set(old);
-            } else {
-                player.getInventory().placeItemBackInInventory(old);
-            }
+            carried.set(old);
         }
         player.playSound(ModSounds.RIFLE_MAG_IN, 0.6f, 1.3f);
         return true;
