@@ -164,15 +164,15 @@ def magazine(m):
 def look(wear=0.4):
     """The rifle's materials."""
     def guard(f):
-        return P.anodised(f, '#26292d')
+        return P.anodised(f, '#1b1d20')
 
     def port(f):
-        c = P.parkerised(f, '#3c3e38')
+        c = P.parkerised(f, '#2a2b28')
         rib = (f.Z % 0.6) < 0.08
         return np.where(rib[..., None], c * 0.75, c)
 
     def hider(f):
-        c = P.parkerised(f)
+        c = P.parkerised(f, '#2c2d2a')
         if abs(f.n[2]) > 0.5:
             r = np.hypot(f.X, f.Y - BORE_Y)
             return np.where((r < 0.16)[..., None], c * 0.12, c)
@@ -181,11 +181,11 @@ def look(wear=0.4):
         return np.where(slot[..., None], c * 0.18, c)
 
     def poly(f):
-        c = P.polymer(f, '#26262a')
+        c = P.polymer(f, '#1d1d20')
         return c
 
     def grip(f):
-        c = P.polymer(f, '#222226', 0.16)
+        c = P.polymer(f, '#19191c', 0.16)
         return c * (1 + 0.1 * (np.sin(f.Y * 30) > 0.5))[..., None]
 
     def mag(f):
@@ -196,12 +196,12 @@ def look(wear=0.4):
         return np.where(dots[..., None], c * 0.9, c)
 
     def steel(f):
-        return P.steel(f, 0.24, tint='#7d8186', spread=0.08)     # blacked pins and controls
+        return P.steel(f, 0.20, tint='#7d8186', spread=0.08)     # blacked pins and controls
 
     def rubber(f):
         return P.rubber(f, '#121212', 0.12)
 
-    d = dict(anod=P.anodised, guard=guard, park=P.parkerised, steel=steel, poly=poly, grip=grip,
+    d = dict(anod=lambda f: P.anodised(f, '#1e2023'), guard=guard, park=lambda f: P.parkerised(f, '#2c2d2a'), steel=steel, poly=poly, grip=grip,
              rubber=rubber, port=port, hider=hider, mag=mag, flash=flash_paint)
     d['_after'] = [lambda f, c: P.grime(f, c, 0.35 * (0.4 + wear)),
                    lambda f, c: P.scratches(f, c, 0.25 * (0.3 + wear))]

@@ -29,6 +29,7 @@ final class RifleRigData {
     static final float[] MAG_CENTRE = {8.0000f, 4.6914f, 11.1846f};
     static final float[] HANDLE = {7.3855f, 8.9155f, 16.3876f};
     static final float[] LASER = {6.6030f, 8.4238f, 2.9830f};
+    static final float[] MUZZLE = {8.0000f, 8.3665f, -1.9741f};
 
     private RifleRigData() {
     }

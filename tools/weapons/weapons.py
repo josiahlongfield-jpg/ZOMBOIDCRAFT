@@ -790,6 +790,7 @@ def main():
     summary.append(line)
     kit.write_part_items(list(gun.parts.values()), ASSETS, lambda m: small_display(m, (20, 60, 0)), lang)
     kit.write_ghost_texture(ASSETS)
+    kit.write_flash_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
     write_slot_java([gun])
     write_rig_java(gun, g, holds)
@@ -999,6 +1000,7 @@ def write_rig_java(gun, g, holds):
         'MAG_CENTRE': (lo + hi) / 2,
         'HANDLE': fp(-0.75, 0.67, RF.UPPER_LEN + 0.25) + shift,
         'LASER': lens,
+        'MUZZLE': kit.flash_tip(gun) + shift,
     }
 
     def v3(v):

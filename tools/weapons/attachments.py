@@ -205,13 +205,13 @@ def laser(m):
 
 def look(wear=0.4):
     def anod(f):
-        return P.anodised(f, '#25282c')
+        return P.anodised(f, '#1b1d20')
 
     def scope(f):
-        return P.anodised(f, '#1d1f22', '#7d8288')
+        return P.anodised(f, '#17181a', '#6d7278')
 
     def knurl(f):
-        c = P.anodised(f, '#222428')
+        c = P.anodised(f, '#1a1b1e')
         lines = (np.sin((f.X + f.Y + f.Z) * 40) > 0.3)
         return np.where(lines[..., None], c * 0.6, c)
 
@@ -238,7 +238,7 @@ def look(wear=0.4):
 
     def mark(f):
         # laser-engraved markings: pale grey flecks in lines, like small print
-        c = P.anodised(f, '#2a2d31', '#2a2d31')
+        c = P.anodised(f, '#1f2124', '#1f2124')
         a, b = f.uv[..., 0], f.uv[..., 1]
         rows = ((b * 34) % 1 < 0.5) & ((b * 34) % 3 < 2)
         chars = (np.sin(a * 170 + np.floor(b * 34) * 2.1) + np.sin(a * 71 + np.floor(b * 34)) > 0.7)
@@ -265,37 +265,37 @@ def look(wear=0.4):
 
     def housing(f):
         # round housings are many staves: no edge wear on each, just scuffs, so they read as one smooth tube
-        c = P.anodised(f, '#232629', '#232629')
+        c = P.anodised(f, '#1b1d1f', '#1b1d1f')
         return P.mix(c, c * 1.6, np.clip((f.noise(1.3, 37, 3) - 0.62) * 3, 0, 0.5))
 
     def can(f):
-        c = P.parkerised(f, '#34332f')
+        c = P.parkerised(f, '#282825')
         heat = f.noise(0.8, 211, 3)
         burn = P.mix(P.col('#4a3a2c'), P.col('#3a3f4c'), f.noise(1.6, 212, 2))
         return P.mix(c, c * 0.5 + burn * 0.5, np.clip((heat - 0.45) * 2.5, 0, 0.7))
 
     def cap(f):
-        c = P.parkerised(f, '#2f2f2c')
+        c = P.parkerised(f, '#252523')
         if abs(f.n[2]) > 0.5:
             a, b = f.across()
             return np.where((np.sqrt(a ** 2 + b ** 2) < 0.2)[..., None], c * 0.1, c)
         return c
 
     def gripper(f):
-        c = P.polymer(f, '#232326', 0.14)
+        c = P.polymer(f, '#1b1b1d', 0.14)
         ribs = np.sin(f.Y * 22) > 0.55
         return np.where(ribs[..., None], c * 0.75, c)
 
     def bezel(f):
-        c = P.anodised(f, '#25282c')
+        c = P.anodised(f, '#1b1d20')
         if abs(f.n[2]) > 0.5:
             return c
         crenel = (np.sin(np.arctan2(f.Y - f.box['lo'][1] - f.dims[1] / 2, f.X) * 8) > 0.4) & (f.Z < f.box['lo'][2] + 0.12)
         return np.where(crenel[..., None], c * 0.4, c)
 
     d = dict(anod=anod, bore=bore, housing=housing, bezel_r=bezel_r, mark=mark, screw=screw, scope=scope, knurl=knurl, lens=lens, lens_green=lens_green, lamp=lamp, dot=dot, can=can,
-             cap=cap, gripper=gripper, bezel=bezel, park=P.parkerised, steel=lambda f: P.steel(f, 0.26, tint='#7d8186', spread=0.08),
-             poly=lambda f: P.polymer(f, '#26262a'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
+             cap=cap, gripper=gripper, bezel=bezel, park=lambda f: P.parkerised(f, '#2c2d2a'), steel=lambda f: P.steel(f, 0.21, tint='#7d8186', spread=0.08),
+             poly=lambda f: P.polymer(f, '#1d1d20'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
     d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + wear)),
                    lambda f, c: P.scratches(f, c, 0.2 * (0.3 + wear))]

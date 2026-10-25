@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
 import java.util.List;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -57,7 +58,14 @@ public final class RifleView {
 
     private static final ItemStackRenderState LOOSE_MAG = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_HANDLE = new ItemStackRenderState();
-    private static ItemStack looseMag, looseHandle;
+    private static final ItemStackRenderState LOOSE_FLASH = new ItemStackRenderState();
+    private static ItemStack looseMag, looseHandle, looseFlash;
+
+    /** The muzzle flash: how long it shows (ticks), and the shot it's for (its tick, then its first frame). */
+    private static final float FLASH_LIFE = 1.6f;
+    private static int flashShot = -100;
+    private static boolean flashWaiting;
+    private static float flashAt = -100, flashRoll, flashSize;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(RifleView::tick);
@@ -164,6 +172,7 @@ public final class RifleView {
             if (shown == null) {
                 aimShown = 1;       // through the scope the game draws the scope picture instead of the gun
                 laserAt = null;
+                flashWaiting = false;
                 return true;
             }
         } else {
@@ -193,6 +202,7 @@ public final class RifleView {
         drawGun.run();
         pose.popPose();
 
+        drawFlash(pose, out, player, want, gun, age);
         laserAt = want.point(LASER).add(ARM[0], ARM[1], ARM[2]);
         if (animate) {
             drawLoose(pose, out, light, player, want, t, step);
@@ -236,12 +246,12 @@ public final class RifleView {
             pose.translate(centre.x, centre.y, centre.z);
             pose.rotate(new Quaternionf().rotationXYZ(-7f * fall * Mth.DEG_TO_RAD, 0, 4f * fall * Mth.DEG_TO_RAD));
             pose.translate(-centre.x, -centre.y, -centre.z);
-            drawPiece(pose, out, light, player, gun, magLocal(-slide, 0), true);
+            drawPiece(pose, out, light, player, gun, magLocal(-slide, 0), LOOSE_MAG);
             pose.popPose();
         }
         if (!jam && step < 2 && t >= 9) {
             pose.pushPose();
-            drawPiece(pose, out, light, player, gun, newMag(t), true);
+            drawPiece(pose, out, light, player, gun, newMag(t), LOOSE_MAG);
             pose.popPose();
         }
         if (step == 3) {
@@ -251,23 +261,60 @@ public final class RifleView {
 
     private static void drawHandle(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun, float pull) {
         pose.pushPose();
-        drawPiece(pose, out, light, player, gun, new Matrix4f().translation(0, 0, pull), false);
+        drawPiece(pose, out, light, player, gun, new Matrix4f().translation(0, 0, pull), LOOSE_HANDLE);
         pose.popPose();
     }
 
+    /** The trigger was pulled (and the gun went off, unsuppressed): flash on the next frame drawn. */
+    public static void fired(LocalPlayer player) {
+        flashShot = player.tickCount;
+        flashWaiting = true;
+    }
+
+    /**
+     * A light muzzle flash for a moment after each shot, starting the frame the shot is heard: full size for half
+     * its life, then shrinking away, turned and sized a little differently each time.
+     */
+    private static void drawFlash(PoseStack pose, SubmitNodeCollector out, LocalPlayer player, Pose gun, ItemStack stack,
+                                  float age) {
+        if (flashWaiting) {
+            flashWaiting = false;
+            if (player.tickCount - flashShot <= 2) {
+                flashAt = age;
+                flashRoll = player.getRandom().nextFloat() * (float) (Math.PI * 2);
+                flashSize = 0.85f + player.getRandom().nextFloat() * 0.3f;
+            }
+        }
+        float since = age - flashAt;
+        if (since < 0 || since >= FLASH_LIFE || Attachments.suppressed(stack)) {
+            return;
+        }
+        float half = FLASH_LIFE / 2;
+        float size = flashSize * (since < half ? 1 : Mth.lerp((since - half) / half, 1f, 0.4f));
+        Matrix4f local = new Matrix4f().translation(MUZZLE[0], MUZZLE[1], MUZZLE[2])
+                .rotateZ(flashRoll).scale(size)
+                .translate(-MUZZLE[0], -MUZZLE[1], -MUZZLE[2]);
+        pose.pushPose();
+        drawPiece(pose, out, FULL_BRIGHT, player, gun, local, LOOSE_FLASH);
+        pose.popPose();
+    }
+
+    private static final int FULL_BRIGHT = 0xF000F0;
+
     /** Draws a loose piece of the gun (drawn in the gun's own model space), moved by local (item pixels). */
     private static void drawPiece(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
-                                  Matrix4f local, boolean mag) {
+                                  Matrix4f local, ItemStackRenderState state) {
         Minecraft mc = Minecraft.getInstance();
         if (looseMag == null) {
             looseMag = new ItemStack(ModItems.RIFLE_MAGAZINE);
             looseMag.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_mag"));
             looseHandle = new ItemStack(ModItems.ASSAULT_RIFLE);
             looseHandle.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_charging_handle"));
+            looseFlash = new ItemStack(ModItems.ASSAULT_RIFLE);
+            looseFlash.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("assault_rifle_loose_flash"));
         }
-        ItemStackRenderState state = mag ? LOOSE_MAG : LOOSE_HANDLE;
-        mc.getItemModelResolver().updateForTopItem(state, mag ? looseMag : looseHandle, ItemDisplayContext.FIXED,
-                player.level(), player, 0);
+        ItemStack stack = state == LOOSE_MAG ? looseMag : state == LOOSE_HANDLE ? looseHandle : looseFlash;
+        mc.getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.FIXED, player.level(), player, 0);
         gun.apply(pose);
         // item pixels to the model's own unit cube, the move, and back (the item render takes off half a block)
         pose.translate(-0.5f, -0.5f, -0.5f);

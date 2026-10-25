@@ -280,8 +280,85 @@ def select(slot, cases, fallback):
 
 
 def flash_entry(model):
+    """The flash while the server has it lit, for everyone watching from outside. The shooter's own first person
+    draws its flash itself, the instant the trigger is pulled, so the model leaves it out there."""
+    seen = {'type': 'minecraft:select', 'property': 'minecraft:display_context',
+            'cases': [{'when': ['firstperson_righthand', 'firstperson_lefthand'], 'model': EMPTY}], 'fallback': model}
     return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 1,
-            'entries': [{'threshold': 1, 'model': model}], 'fallback': EMPTY}
+            'entries': [{'threshold': 1, 'model': seen}], 'fallback': EMPTY}
+
+
+FLASH_TEX = f'{NS}:item/weapon/muzzle_flash'
+
+
+def flash_tip(gun):
+    """Where the flash starts: the front of the bare muzzle on the bore line (item pixels, before the shift)."""
+    lo, hi = drawn('flash', lambda m: gun.flash(m, None)).bounds()
+    return np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, hi[2]])
+
+
+def flash_model(tip, length=2.4, half=0.75, star=1.1):
+    """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
+    see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
+    x, y, z = (round(float(v), 4) for v in tip)
+    lit = {'shade': False, 'light_emission': 15}
+
+    def tongue(angle):
+        return dict(lit, **{'from': [x, round(y - half, 4), round(z - length, 4)], 'to': [x, round(y + half, 4), z],
+                            'rotation': {'angle': angle, 'axis': 'z', 'origin': [x, y, z]},
+                            'faces': {'east': {'uv': [8, 0, 16, 16], 'texture': '#0'},
+                                      'west': {'uv': [16, 0, 8, 16], 'texture': '#0'}}})
+    zs = round(z - 0.2, 4)
+    face = dict(lit, **{'from': [round(x - star, 4), round(y - star, 4), zs], 'to': [round(x + star, 4), round(y + star, 4), zs],
+                        'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'},
+                                  'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}})
+    return {'gui_light': 'front', 'textures': {'0': FLASH_TEX, 'particle': FLASH_TEX},
+            'elements': [tongue(45), tongue(-45), face]}
+
+
+def write_flash_texture(assets):
+    """The flash's picture: left half a soft five-pointed star (the flash seen down the bore), right half a short
+    tongue of flame (seen from the side, the muzzle at its left). White-hot in the middle, through yellow to
+    orange, fading to nothing at the edges; its LabPBR map makes it glow under a shader pack."""
+    N = 64
+    yy, xx = np.mgrid[0:N, 0:N] + 0.5
+    rng = np.random.default_rng(7)
+    img = np.zeros((N, 2 * N, 4))
+
+    def colour(heat):
+        orange, yellow, white = P.col('#ff7a1c'), P.col('#ffd36a'), P.col('#fff7dc')
+        c = P.mix(orange, yellow, np.clip(heat / 0.5, 0, 1))
+        return P.mix(c, white, np.clip((heat - 0.55) / 0.35, 0, 1))
+
+    # the star
+    dx, dy = (xx - N / 2) / (N / 2), (yy - N / 2) / (N / 2)
+    r, a = np.hypot(dx, dy), np.arctan2(dy, dx)
+    spikes = np.zeros((N, N))
+    for k in range(5):
+        at = k * 2 * np.pi / 5 + rng.uniform(-0.25, 0.25)
+        reach = rng.uniform(0.7, 0.98)
+        d = np.angle(np.exp(1j * (a - at)))
+        spikes = np.maximum(spikes, np.exp(-(d / (0.16 * (1 - r) + 0.03)) ** 2) * np.clip(1 - r / reach, 0, 1))
+    heat = np.clip(np.exp(-(r / 0.3) ** 2) + spikes * 0.85, 0, 1)
+    img[:, :N, :3] = colour(heat)
+    img[:, :N, 3] = np.clip(heat * 1.15, 0, 0.9) * (r < 1)
+
+    # the tongue: u along the bore from the muzzle, v across it
+    u, v = xx / N, (yy - N / 2) / (N / 2)
+    width = (0.35 + 0.55 * np.exp(-((u - 0.3) / 0.28) ** 2)) * np.clip(1 - u, 0, 1) ** 0.5
+    flick = 1 + 0.12 * np.sin(u * 23 + 1.3) * np.sin(u * 7)
+    heat = np.clip(1 - np.abs(v) / np.maximum(width * flick, 1e-3), 0, 1) ** 1.3 * np.clip(1 - u, 0, 1) ** 0.8
+    heat = np.clip(heat + np.exp(-((u / 0.12) ** 2 + (v / 0.3) ** 2)) * 0.6, 0, 1)
+    img[:, N:, :3] = colour(heat)
+    img[:, N:, 3] = np.clip(heat * 1.2, 0, 0.88)
+
+    path = assets / 'textures/item/weapon/muzzle_flash.png'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    M.save_png(img, path)
+    spec = np.zeros_like(img)
+    spec[..., 1] = pbr.NONMETAL / 255.0
+    spec[..., 3] = np.where(img[..., 3] > 0.02, 254 / 255.0, 1.0)     # emissive wherever it shows
+    M.save_png(spec, path.with_name('muzzle_flash_s.png'))
 
 
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
@@ -297,11 +374,6 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         models[key] = drawn(key, part.build, R, t, part.look, part.seed, wear)
     if gun.handle:
         models['charging_handle'] = drawn('charging_handle', gun.handle, look=look, seed=seed + 3, wear=wear)
-    muzzles = [None] + (gun.slots['muzzle'].fits if 'muzzle' in gun.slots else [])
-    for mk in muzzles:
-        name = 'flash' if mk is None else f'flash_{mk}'
-        models[name] = drawn(name, lambda m, mk=mk: gun.flash(m, mk), look=look, seed=seed + 2, wear=wear)
-
     names = list(models)
     patches = paint([models[n] for n in names], eyes=eyes)
     img, uvs, T = pack(patches)
@@ -311,6 +383,11 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     for mi, n in enumerate(names):
         M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                 'elements': elements(models[n], mi, uvs, shift)}, assets / f'models/item/{base}/{n}.json')
+    if gun.flash:
+        M.dump(flash_model(flash_tip(gun) + shift), assets / f'models/item/{base}/muzzle_flash.json')
+        names_posed = names + ['muzzle_flash']
+    else:
+        names_posed = names
 
     # poses: the full gun (stock, magazine, the longest muzzle part) sets the size in the inventory
     fit_parts = [models['body']] + [models[k] for k in ('irons_up',) if k in models]
@@ -326,7 +403,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         optic = st[4:] if st.startswith('ads_') else None
         disp = displays(st, fit, gun.sight_point(optic) + shift)
         shown[st] = disp
-        for n in names:
+        for n in names_posed:
             M.dump({'parent': f'{NS}:item/{base}/{n}', 'display': disp}, assets / f'models/item/{base}/{st}/{n}.json')
 
     def pose(st):
@@ -351,8 +428,10 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                     cases['none'] = up
                     entries.append(select('optic', cases, up))
             elif slot_name == 'muzzle':
-                cases = {k: composite([r(k), flash_entry(r(f'flash_{k}'))]) for k in s.fits}
-                bare = flash_entry(r('flash'))
+                # a suppressor swallows the flash
+                cases = {k: r(k) if 'suppressor' in k else composite([r(k), flash_entry(r('muzzle_flash'))])
+                         for k in s.fits}
+                bare = flash_entry(r('muzzle_flash'))
                 cases['none'] = bare
                 entries.append(select('muzzle', cases, bare))
             elif slot_name == 'magazine':
@@ -377,7 +456,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     lang[f'item.{NS}.{gun.name}'] = gun.title
     # the loose pieces first person draws during a reload, in the gun's own model space (no display of their own)
     loose = {'mag': gun.slots['magazine'].default if 'magazine' in gun.slots else None,
-             'charging_handle': 'charging_handle' if gun.handle else None}
+             'charging_handle': 'charging_handle' if gun.handle else None,
+             'flash': 'muzzle_flash' if gun.flash else None}
     for name, key in loose.items():
         if key:
             M.dump({'model': ref(f'{base}/{key}')}, assets / f'items/{gun.name}_loose_{name}.json')
