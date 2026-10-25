@@ -56,6 +56,8 @@ public final class CityBlocks {
         static final int DECOR = 2;
         /** Opens like a chest with loot rolled from a table (see {@link Fittings}). */
         static final int LOOT = 4;
+        /** A lamp on a dying circuit: its light comes and goes (see {@link Flicker}). */
+        static final int FLICKER = 8;
 
         protected void s(String name, int kind, int flags, int light, SoundType sound, float strength, double... boxes) {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
@@ -70,7 +72,11 @@ public final class CityBlocks {
             if ((flags & DECOR) != 0) {
                 properties.noCollision().replaceable();
             }
-            if (light > 0) {
+            boolean flicker = (flags & FLICKER) != 0;
+            if (flicker) {
+                properties.randomTicks().lightLevel(state -> state.getValue(Flicker.LIT) ? light : 0)
+                        .emissiveRendering(state -> state.getValue(Flicker.LIT));
+            } else if (light > 0) {
                 // lit windows and lamps draw at full brightness, so they read as light sources at night
                 properties.lightLevel(state -> light).emissiveRendering(state -> true);
             }
@@ -79,7 +85,11 @@ public final class CityBlocks {
                 shape = Shapes.or(shape, Block.box(boxes[i], boxes[i + 1], boxes[i + 2], boxes[i + 3], boxes[i + 4], boxes[i + 5]));
             }
             boolean loot = (flags & LOOT) != 0;
-            Block block = switch (kind) {
+            Block block = flicker ? switch (kind) {
+                case FACING -> new Flicker.Facing(properties, shape);
+                case AXIS -> new Flicker.Axis(properties, shape);
+                default -> new Flicker.Plain(properties, shape);
+            } : switch (kind) {
                 // opened by hand like a wooden door; zombies bash them in (BashGoal)
                 case DOOR -> new DoorBlock(sound == SoundType.METAL ? BlockSetType.COPPER : BlockSetType.SPRUCE, properties);
                 // hatches: opened by hand, steel ones with copper's heavier sounds

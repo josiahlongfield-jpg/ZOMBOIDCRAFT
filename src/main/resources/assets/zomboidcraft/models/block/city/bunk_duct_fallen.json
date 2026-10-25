@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grit": {
+      "sprite": "zomboidcraft:block/city/bunk_grit",
+      "force_translucent": true
+    },
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "particle": "zomboidcraft:block/city/ext_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        0
+      ],
+      "to": [
+        13,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        1
+      ],
+      "to": [
+        12,
+        6.2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grit"
+        },
+        "south": {
+          "texture": "#bunk_grit"
+        },
+        "east": {
+          "texture": "#bunk_grit"
+        },
+        "west": {
+          "texture": "#bunk_grit"
+        },
+        "up": {
+          "texture": "#bunk_grit"
+        },
+        "down": {
+          "texture": "#bunk_grit"
+        }
+      }
+    }
+  ]
+}

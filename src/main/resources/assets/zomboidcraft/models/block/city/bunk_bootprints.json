@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_bootprints": {
+      "sprite": "zomboidcraft:block/city/bunk_bootprints",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/bunk_bootprints"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_bootprints",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_bootprints",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_bootprints",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_bootprints",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_bootprints"
+        },
+        "down": {
+          "texture": "#bunk_bootprints",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

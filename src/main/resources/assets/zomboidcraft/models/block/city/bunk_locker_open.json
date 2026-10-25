@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "bunk_locker_open": "zomboidcraft:block/city/bunk_locker_open",
+    "particle": "zomboidcraft:block/city/bunk_locker_open"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_locker_open"
+        },
+        "south": {
+          "texture": "#bunk_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_grey",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

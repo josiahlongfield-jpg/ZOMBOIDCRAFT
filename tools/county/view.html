@@ -5,6 +5,10 @@
 // County preview without dependencies: draws tools/city/mesh.py output with plain WebGL2 under the
 // mod's overcast daylight (sky light from above, a weak sun with soft shadows, haze).
 //   view.html?mesh=DIR&cam=x,y,z,lookx,looky,lookz[,fov]&w=1440&h=1080[&fog=0.006][&sun=0.35]
+// &dark=1 shows a place underground or at night as the player sees it: next to no ambient light,
+// the lamps that are on and a torch held at the eye (&torch=0 for none). Meshes with baked block
+// light (mesh.json "baked") are lit by it, Minecraft style, so walls stop light as in the game;
+// older meshes fall back to the nearest lamps as point lights.
 const P = new URLSearchParams(location.search);
 const W = +(P.get('w') || 1440), H = +(P.get('h') || 1080);
 const DIR = P.get('mesh') || 'mesh';
@@ -12,7 +16,10 @@ const cam = (P.get('cam') || '0,40,60,0,20,0,60').split(',').map(Number);
 const FOV = cam[6] || 60;
 const FOG = +(P.get('fog') || 0.0045);
 const SUN = +(P.get('sun') || 0.55);
-const SKY = [0.50, 0.53, 0.56], HAZE = [0.47, 0.50, 0.52];
+const DARK = P.get('dark') === '1';
+const AMB = +(P.get('amb') || 0.04), TORCH = DARK && P.get('torch') !== '0';
+const SKY = DARK ? [0.01, 0.01, 0.012] : [0.50, 0.53, 0.56], HAZE = DARK ? [0.004, 0.004, 0.005] : [0.47, 0.50, 0.52];
+const NL = 24;
 
 const cv = document.createElement('canvas');
 cv.width = W; cv.height = H;
@@ -61,17 +68,19 @@ function program(vs, fs) {
 const MAIN = program(`
   in vec3 pos; in vec3 nrm; in vec2 uv; in vec4 ao;
   uniform mat4 view, proj, sunMat; uniform float unit;
-  out vec3 vW; out vec3 vN; out vec2 vUV; out float vAO; out vec4 vSun;
+  out vec3 vW; out vec3 vN; out vec2 vUV; out float vAO; out vec3 vBL; out vec4 vSun;
   void main() {
     vec3 w = pos / unit;
     // face UVs count up from the bottom; images load top row first
-    vW = w; vN = nrm; vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; vAO = ao.r;
+    vW = w; vN = nrm; vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; vAO = ao.r; vBL = ao.gba;
     vSun = sunMat * vec4(w + nrm * 0.06, 1.0);
     gl_Position = proj * view * vec4(w, 1.0);
   }`, `
-  in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec4 vSun;
-  uniform sampler2D tex; uniform highp sampler2DShadow shadow;
-  uniform vec3 eye, sunDir, sky, haze; uniform float fogD, sunI, cutout;
+  in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec3 vBL; in vec4 vSun;
+  uniform sampler2D tex; uniform highp sampler2DShadow shadow; uniform sampler2D emis;
+  uniform vec3 eye, sunDir, sky, haze; uniform float fogD, sunI, cutout, glow;
+  uniform int dark; uniform int baked; uniform float amb; uniform vec3 tPos, tDir; uniform int torch;
+  uniform vec4 lPos[24]; uniform vec3 lCol[24]; uniform int nl;
   out vec4 col;
   void main() {
     vec4 t = texture(tex, vUV);
@@ -90,6 +99,28 @@ const MAIN = program(`
     float sunL = max(dot(n, sunDir), 0.0) * lit * sunI;
     vec3 light = vec3(0.80, 0.84, 0.88) * skyL * (0.55 + 0.45 * vAO) + vec3(1.0, 0.96, 0.88) * sunL * (0.6 + 0.4 * vAO);
     vec3 c = alb * light * 1.15;
+    if (dark == 1) {
+      // underground: a trace of ambient, the lamps that are on, the torch in your hand
+      vec3 L = vec3(amb) * (0.6 + 0.4 * vAO);
+      if (baked == 1) {
+        // Minecraft's light curve: level 15 full, falling away fast towards the dark
+        vec3 b = vBL / (4.0 - 3.0 * vBL) * (0.7 + 0.3 * vAO) * 2.2;
+        L += vec3(1.0, 0.86, 0.66) * b.x + vec3(1.0, 0.10, 0.05) * b.y + vec3(0.30, 1.0, 0.35) * b.z;
+      }
+      for (int i = 0; i < 24; i++) {
+        if (i >= nl) break;
+        vec3 v = lPos[i].xyz - vW; float dl = length(v); float r = lPos[i].w;
+        float a = 1.0 / (1.0 + 0.6 * dl * dl) * smoothstep(r, r * 0.4, dl);
+        L += lCol[i] * a * (0.25 + 0.75 * max(dot(n, v / max(dl, 0.001)), 0.0)) * 6.0;
+      }
+      if (torch == 1) {
+        vec3 v = tPos - vW; float dt = length(v); vec3 l = v / max(dt, 0.001);
+        float cone = smoothstep(0.80, 0.96, dot(-l, tDir));
+        L += vec3(1.0, 0.93, 0.80) * cone * max(dot(n, l), 0.0) * 9.0 / (1.0 + 0.09 * dt * dt);
+      }
+      c = alb * L + pow(texture(emis, vUV).rgb, vec3(2.2)) * glow * 2.5;
+      c = c / (1.0 + c * 0.6);
+    }
     float d = length(vW - eye);
     float f = 1.0 - exp(-pow(d * fogD, 2.0));
     c = mix(c, pow(haze, vec3(2.2)), f);
@@ -141,7 +172,8 @@ function loadTex(url) {
     const ib = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(buf, V * 18, I), gl.STATIC_DRAW);
-    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0 };
+    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0,
+             emis: e.emissive ? await loadTex(`${DIR}/${e.tex}_e.png`) : null };
   }));
 
   const eye = cam.slice(0, 3), at = cam.slice(3, 6);
@@ -207,12 +239,35 @@ function loadTex(url) {
   gl.uniform3fv(u('eye'), eye); gl.uniform3fv(u('sunDir'), sunDir);
   gl.uniform3fv(u('sky'), SKY); gl.uniform3fv(u('haze'), HAZE);
   gl.uniform1f(u('fogD'), FOG); gl.uniform1f(u('sunI'), SUN);
-  gl.uniform1i(u('tex'), 0); gl.uniform1i(u('shadow'), 1);
+  gl.uniform1i(u('tex'), 0); gl.uniform1i(u('shadow'), 1); gl.uniform1i(u('emis'), 2);
+  gl.uniform1i(u('dark'), DARK ? 1 : 0); gl.uniform1f(u('amb'), AMB); gl.uniform1i(u('torch'), TORCH ? 1 : 0);
+  // the torch: held low and to the right, pointing where you look
+  const right = norm(cross(fwd, [0, 1, 0]));
+  gl.uniform3fv(u('tPos'), [eye[0] + right[0] * 0.3, eye[1] - 0.3, eye[2] + right[2] * 0.3]);
+  gl.uniform3fv(u('tDir'), fwd);
+  // the nearest lamps that are on
+  const lamps = (index.lights || []).map(([x, y, z, name]) => [x + 0.5, y + 0.5, z + 0.5, name])
+    .sort((a, b) => Math.hypot(a[0] - eye[0], a[1] - eye[1], a[2] - eye[2]) - Math.hypot(b[0] - eye[0], b[1] - eye[1], b[2] - eye[2]))
+    .slice(0, NL);
+  const lp = new Float32Array(NL * 4), lc = new Float32Array(NL * 3);
+  lamps.forEach(([x, y, z, name], i) => {
+    const red = name.includes('red'), stick = name.includes('glowstick');
+    lp.set([x, y, z, red ? 7 : stick ? 5 : 11], i * 4);
+    lc.set(red ? [1.0, 0.10, 0.06] : stick ? [0.25, 1.0, 0.4] : [1.0, 0.82, 0.55], i * 3);
+  });
+  gl.uniform4fv(u('lPos'), lp); gl.uniform3fv(u('lCol'), lc); gl.uniform1i(u('nl'), index.baked ? 0 : lamps.length);
+  gl.uniform1i(u('baked'), index.baked ? 1 : 0);
+  const black = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, black);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, depthTex);
   gl.activeTexture(gl.TEXTURE0);
   for (const p of parts) {
     if (!p.tex) continue;
+    gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, p.emis || black);
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, p.tex);
+    gl.uniform1f(u('glow'), p.emis ? 1.0 : 0.0);
     gl.uniform1f(u('cutout'), p.cutout);
     gl.bindVertexArray(p.vao);
     gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);

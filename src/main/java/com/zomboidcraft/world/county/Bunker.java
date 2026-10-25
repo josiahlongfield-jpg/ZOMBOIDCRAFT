@@ -27,8 +27,13 @@ public final class Bunker {
     /** Who built it; each kind dresses the same core its own way. */
     public enum Kind { TOWER, SHIP, SHELTER, FOREST }
 
-    /** SEALED: nobody has been in since. LOOTED: a second copy of the map led someone here first. */
-    public enum State { SEALED, LOOTED }
+    /**
+     * SEALED: nobody has been in since. LOOTED: a second copy of the map led someone here first.
+     * BREACHED: the blast door was forced and the dead poured in; the lights hang off their cables
+     * and stutter on a dying circuit, and there is blood, but every room is still what it was and
+     * still worth searching.
+     */
+    public enum State { SEALED, LOOTED, BREACHED }
 
     enum Use { DECON, CORRIDOR, BUNKS, MESS, WASH, MED, COMMS, PLANT, PANTRY, SERVER, COMMAND, EXEC, STORAGE, ARMOURY }
 
@@ -58,6 +63,9 @@ public final class Bunker {
     private double damp;
     private boolean ship;
     private Room decon, corridor, storage, armoury;
+    /** How far gone the place is (0 clean .. 1 rotten), and the noise that spreads the wear in patches. */
+    private double wear;
+    private Noise grime;
 
     public Bunker(Placer p, SplittableRandom rng, Kind kind, State state) {
         this.p = p;
@@ -65,6 +73,13 @@ public final class Bunker {
         this.kind = kind;
         this.state = state;
         plan();
+        grime = new Noise(rng.nextLong());
+        wear = switch (kind) {
+            case TOWER -> 0.3;
+            case SHIP -> 0.45;
+            case SHELTER -> 0.5;
+            case FOREST -> 0.65;
+        } + (state == State.LOOTED ? 0.1 : state == State.BREACHED ? 0.2 : 0);
     }
 
     /** {x0, z0, x1, z1}: the outside of the walls, in the bunker's frame. */
@@ -93,7 +108,16 @@ public final class Bunker {
         for (Room r : rooms) {
             dress(r);
         }
-        if (state == State.LOOTED) {
+        for (Room r : rooms) {
+            weather(r);
+            if (state == State.BREACHED) {
+                breach(r);
+            }
+        }
+        if (state == State.BREACHED) {
+            forced();
+        }
+        if (state != State.SEALED) {
             for (Room r : rooms) {
                 r.scatter("paper", 1 + rng.nextInt(3));
                 if (rng.nextDouble() < 0.3) {
@@ -311,9 +335,13 @@ public final class Bunker {
         for (int x = r.x0; x <= r.x1; x++) {
             for (int z = r.z0; z <= r.z1; z++) {
                 carved[x - bx0][z - bz0] = true;
-                p.set(x, 0, z, r.ground);
+                p.set(x, 0, z, r.ground.equals("bunk_floor") ? floorAt(x, z) : r.ground);
                 for (int y = 1; y < TOP; y++) {
                     p.set(x, y, z, "air");
+                }
+                if (!ship) {
+                    double g = patch(x, 3, z);
+                    p.set(x, TOP, z, g > 0.72 ? "bunk_ceiling_b" : g > 0.5 ? "bunk_ceiling" : "bunk_concrete");
                 }
             }
         }
@@ -328,15 +356,43 @@ public final class Bunker {
                         continue;
                     }
                     for (int y = 1; y < TOP; y++) {
-                        String m = y == 1 ? r.lower : r.upper;
-                        if (rng.nextDouble() < damp) {
-                            m = wet(m, y);
-                        }
-                        p.set(x, y, z, m);
+                        p.set(x, y, z, finish(y == 1 ? r.lower : r.upper, x, y, z));
                     }
                 }
             }
         }
+    }
+
+    /** 0..1, in patches a few blocks across, pushed up by how far gone the place is. */
+    private double patch(int x, int y, int z) {
+        return grime.fbm(x, z + y * 9.0, 5, 2) * 0.5 + 0.5 + (wear - 0.45) + (rng.nextDouble() - 0.5) * 0.2;
+    }
+
+    /** A wall finish worn the way the patch it falls in has worn: scuffed, stained, peeling, rotten. */
+    private String finish(String m, int x, int y, int z) {
+        double g = patch(x, y, z);
+        if (rng.nextDouble() < damp) {
+            return wet(m, y);
+        }
+        return switch (m) {
+            case "bunk_paint" -> y == 3 && g > 0.62 && rng.nextDouble() < 0.5 ? "bunk_paint_leak"
+                    : g > 0.82 ? "bunk_paint_grime" : g > 0.7 ? (rng.nextBoolean() ? "bunk_paint_stain" : "bunk_paint_flake")
+                    : g > 0.48 ? "bunk_paint_b" : m;
+            case "bunk_dado" -> g > 0.78 ? (damp > 0.12 ? "bunk_dado_rot" : "bunk_dado_scuff") : g > 0.62 ? "bunk_dado_scuff"
+                    : g > 0.45 ? "bunk_dado_b" : m;
+            case "bunk_concrete" -> g > 0.78 ? (rng.nextBoolean() ? "bunk_concrete_crack" : "bunk_concrete_damp")
+                    : g > 0.5 ? "bunk_concrete_b" : m;
+            case "bunk_tile" -> g > 0.55 ? "bunk_tile_dirty" : m;
+            case "bunk_plate" -> g > 0.7 ? "bunk_plate_rust" : g > 0.45 ? "bunk_plate_b" : m;
+            case "ship_wall_grey", "ship_wall_white" -> g > 0.5 ? m + "_b" : m;
+            default -> m;
+        };
+    }
+
+    private String floorAt(int x, int z) {
+        double g = patch(x, 0, z);
+        return g > 0.85 ? (rng.nextDouble() < 0.3 ? "bunk_floor_stain" : "bunk_floor_crack") : g > 0.66 ? "bunk_floor_dirty"
+                : g > 0.45 ? "bunk_floor_b" : "bunk_floor";
     }
 
     /** The damp version of a wall finish, where there is one. */
@@ -450,8 +506,9 @@ public final class Bunker {
                 r.decor(hx, z, (sw + 2) & 3, 2, "bunk_hazmat_top");
             }
         }
-        r.decor(-1 < r.x0 ? r.x0 : -1, r.z0, 0, 3, "bunk_lamp_red");
-        r.decor(2 > r.x1 ? r.x1 : 2, r.z0, 0, 3, "bunk_lamp_red");
+        // the emergency lamps by the blast door, some still glowing on their batteries
+        r.decor(-1 < r.x0 ? r.x0 : -1, r.z0, 0, 3, rng.nextDouble() < 0.6 ? "bunk_lamp_red_lit" : "bunk_lamp_red");
+        r.decor(2 > r.x1 ? r.x1 : 2, r.z0, 0, 3, rng.nextDouble() < 0.4 ? "bunk_lamp_red_lit" : "bunk_lamp_red");
         r.decor(rng.nextBoolean() ? 0 : 1, r.z1, 2, 3, "bunk_st_decon");
         r.wallDecor(2, "bunk_radmeter");
         r.wallDecor(2, "bunk_phone");
@@ -840,6 +897,213 @@ public final class Bunker {
         };
     }
 
+    // ------------------------------------------------------------------ wear and tear
+
+    /**
+     * The months since it was sealed: water through the ceiling and down the walls into puddles,
+     * cobwebs in the corners, grit along the skirting, chairs pushed back and lockers left open,
+     * and what the people down here left behind: the days counted on a wall, a warning painted on
+     * another, a trail of glow sticks when the lights went.
+     */
+    private void weather(Room r) {
+        int area = r.w() * r.d();
+        int leaks = (int) Math.round(area * wear * 0.025 + rng.nextDouble());
+        for (int i = 0; i < leaks; i++) {
+            int[] c = r.wallSpot(3);
+            if (c == null) {
+                break;
+            }
+            r.decor(c[0], c[1], c[2], 3, "bunk_leak");
+            if (rng.nextBoolean()) {
+                r.decor(c[0], c[1], c[2], 2, "bunk_leak");
+            }
+            if (rng.nextDouble() < 0.6) {
+                r.floor(c[0], c[1], "bunk_puddle");
+            }
+        }
+        for (int[] k : new int[][] {{r.x0, r.z0, 0}, {r.x1, r.z0, 1}, {r.x1, r.z1, 2}, {r.x0, r.z1, 3}}) {
+            if (rng.nextDouble() < wear * 0.9) {
+                r.decor(k[0], k[1], rng.nextBoolean() ? k[2] : (k[2] + 3) & 3, 3, "bunk_cobweb");
+            }
+        }
+        for (int x = r.x0; x <= r.x1; x++) {
+            for (int z = r.z0; z <= r.z1; z++) {
+                boolean edge = x == r.x0 || x == r.x1 || z == r.z0 || z == r.z1;
+                if (rng.nextDouble() < (edge ? 0.3 : 0.06) * wear) {
+                    r.floor(x, z, "bunk_grit");
+                }
+            }
+        }
+        knockAbout(r, state == State.SEALED ? 0.06 : 0.25, state == State.SEALED ? 0.12 : 0.4);
+        switch (r.use) {
+            case BUNKS -> {
+                if (rng.nextDouble() < 0.5) {
+                    wallMark(r, 2, "bunk_tally");
+                }
+            }
+            case MESS -> {
+                int[] c = r.wallSpot(3);
+                if (c != null && rng.nextDouble() < 0.4) {
+                    r.decor(c[0], c[1], c[2], 3, "bunk_soot");
+                    r.decor(c[0], c[1], c[2], 2, "bunk_soot");
+                }
+            }
+            case WASH -> {
+                if (rng.nextDouble() < 0.35) {
+                    wallMark(r, 2, "bunk_scrawl_c");
+                }
+            }
+            case CORRIDOR -> corridorWear(r);
+            default -> { }
+        }
+    }
+
+    /** A decal painted flat on a free stretch of wall at row y. */
+    private void wallMark(Room r, int y, String block) {
+        int[] c = r.wallSpot(y);
+        if (c != null) {
+            r.decor(c[0], c[1], c[2], y, block);
+        }
+    }
+
+    /** Chairs pushed back and knocked over, lockers burst open (still with whatever is in them). */
+    private void knockAbout(Room r, double chairs, double lockers) {
+        for (int x = r.x0; x <= r.x1; x++) {
+            for (int z = r.z0; z <= r.z1; z++) {
+                if ("bunk_chair".equals(r.what[x - r.x0][z - r.z0])) {
+                    double d = rng.nextDouble();
+                    if (d < chairs) {
+                        p.set(x, 1, z, "bunk_chair_down" + face(rng.nextInt(4)));
+                    } else if (d < chairs + 0.25) {
+                        p.set(x, 1, z, "bunk_chair" + face(rng.nextInt(4)));
+                    }
+                }
+                String b = p.get(x, 1, z);
+                if (b != null && b.startsWith("bunk_locker[") && rng.nextDouble() < lockers) {
+                    p.set(x, 1, z, "bunk_locker_open" + b.substring("bunk_locker".length()));
+                }
+            }
+        }
+    }
+
+    /** Boot prints up and down the corridor, red emergency lamps on their last batteries, a
+     *  warning painted by the sick bay door, and the glow sticks someone dropped to mark the way. */
+    private void corridorWear(Room r) {
+        int mid = r.x0 + r.w() / 2;
+        for (int z = r.z0; z <= r.z1; z++) {
+            if (rng.nextDouble() < 0.3 * wear) {
+                r.floor(mid + (rng.nextBoolean() ? 0 : -1), z, "bunk_bootprints" + face(rng.nextBoolean() ? 0 : 2));
+            }
+        }
+        boolean west = rng.nextBoolean();
+        for (int z = r.z0 + 4 + rng.nextInt(4); z <= r.z1; z += 10 + rng.nextInt(5)) {
+            boolean lit = rng.nextDouble() < (state == State.SEALED ? 0.5 : 0.25);
+            r.decor(west ? r.x0 : r.x1, z, west ? 3 : 1, 3, lit ? "bunk_lamp_red_lit" : "bunk_lamp_red");
+        }
+        for (Room o : rooms) {
+            if (o.use == Use.MED && o.door != null && rng.nextDouble() < 0.4) {
+                int s = o.door[2], wx = o.door[0] - STEP[s][0], wz = o.door[1] - STEP[s][1];
+                int[] sv = side((s + 2) & 3);
+                r.decor(wx + sv[0], wz + sv[1], s, 2, "bunk_scrawl_b");
+            }
+        }
+        if (state != State.BREACHED && rng.nextDouble() < 0.7) {
+            int n = 3 + rng.nextInt(5);
+            for (int i = 0; i < n; i++) {
+                int z = r.z0 + (int) ((i + rng.nextDouble()) * r.d() / n);
+                boolean lit = rng.nextDouble() < (state == State.SEALED ? 0.6 : 0.25);
+                r.floor(r.x0 + rng.nextInt(r.w()), Math.min(r.z1, z), lit ? "bunk_glowstick" : "bunk_glowstick_dead");
+            }
+        }
+    }
+
+    /**
+     * The dead got in. The strip lights hang off their cables or lie smashed on the floor, and the
+     * ones still up stutter on a dying circuit; cables and duct have come down; there's blood
+     * dragged across the floors and smeared on the walls, bullet holes and casings where someone
+     * fought. The furniture is knocked about but all still there, and still worth searching.
+     */
+    private void breach(Room r) {
+        for (int[] l : r.lamps) {
+            int x = l[0], z = l[1];
+            String ax = l[2] == 1 ? "x" : "z", lit = rng.nextBoolean() ? "true" : "false";
+            double d = rng.nextDouble();
+            if (l[3] == 0) {
+                if (d < 0.3) {
+                    p.set(x, 3, z, "bunk_tube_dangle[axis=" + ax + ",lit=" + lit + "]");
+                } else if (d < 0.45) {
+                    p.set(x, 3, z, "air");
+                    r.floor(x, z, "bunk_tube_fallen[axis=" + ax + "]");
+                } else if (d < 0.75) {
+                    p.set(x, 3, z, "bunk_tube_flicker[axis=" + ax + ",lit=" + lit + "]");
+                }
+            } else if (d < 0.4) {
+                p.set(x, 3, z, "bunk_lamp_dangle[lit=" + lit + "]");
+            } else if (d < 0.55) {
+                p.set(x, 3, z, "air");
+                r.floor(x, z, "glass_shards");
+            }
+        }
+        for (int i = rng.nextInt(3); i > 0; i--) {
+            int x = r.x0 + rng.nextInt(r.w()), z = r.z0 + rng.nextInt(r.d());
+            r.ceiling(x, z, "bunk_cable_loose");
+        }
+        if (r.use == Use.CORRIDOR) {
+            int downs = 1 + rng.nextInt(2);
+            for (int z = r.z0 + 2; z <= r.z1 && downs > 0; z++) {
+                for (int x : new int[] {r.x0, r.x1}) {
+                    String b = p.get(x, 3, z);
+                    if (downs > 0 && b != null && b.startsWith("bunk_duct[") && rng.nextDouble() < 0.08
+                            && r.floor(x, z, "bunk_duct_fallen[axis=z]")) {
+                        p.set(x, 3, z, "air");
+                        downs--;
+                    }
+                }
+            }
+        }
+        // blood: pooled, dragged, a hand print on the wall
+        int[] c = r.clearFloor();
+        if (c != null && rng.nextDouble() < 0.7) {
+            r.floor(c[0], c[1], rng.nextBoolean() ? "home_blood_pool" : "blood_splat");
+        }
+        if (rng.nextDouble() < 0.5 && (c = r.clearFloor()) != null) {
+            int fs = rng.nextInt(4);
+            for (int i = 0, x = c[0], z = c[1]; i < 2 + rng.nextInt(3); i++, x += STEP[fs][0], z += STEP[fs][1]) {
+                if (!r.floor(x, z, "home_blood_drag" + face(fs))) {
+                    break;
+                }
+            }
+        }
+        if (rng.nextDouble() < 0.45) {
+            int[] w = r.wallSpot(2);
+            if (w != null && !r.used[w[0] - r.x0][2][w[1] - r.z0]) {
+                p.set(w[0], 2, w[1], "home_blood_hand" + face(w[2]));
+                r.used[w[0] - r.x0][2][w[1] - r.z0] = true;
+            }
+        }
+        if (rng.nextDouble() < (r.use == Use.CORRIDOR || r.use == Use.STORAGE ? 0.8 : 0.3)) {
+            int[] w = r.wallSpot(2);
+            if (w != null) {
+                r.decor(w[0], w[1], w[2], 2, "bunk_bullets");
+                r.floor(w[0], w[1], "bunk_casings");
+            }
+        }
+        r.scatter("debris_chunk", rng.nextInt(3));
+        r.scatter("glass_shards", rng.nextInt(2));
+        r.scatter("paper", 1 + rng.nextInt(3));
+        knockAbout(r, 0.5, 0.6);
+    }
+
+    /** The blast door forced: one leaf torn out of its frame, scorched round the cut. */
+    private void forced() {
+        for (int y = 1; y <= 3; y++) {
+            p.set(0, y, 0, "air");
+        }
+        decon.floor(decon.x0, decon.z0, "debris_chunk" + face(rng.nextInt(4)));
+        decon.floor(0, decon.z0, "bunk_scorch" + face(0));
+        decon.floor(0, decon.z0 + 2, "home_blood_drag" + face(2));
+    }
+
     /** Strip lights under the ceiling of a long room, a hanging lamp in a small one; all dead. */
     private void lights(Room r) {
         if (r.use == Use.STORAGE || r.use == Use.ARMOURY) {
@@ -884,6 +1148,8 @@ public final class Bunker {
         final String[][] what;
         final int[][] facing;
         final List<int[]> ways = new ArrayList<>();
+        /** The light fittings hung so far: {x, z, 1 if along x, 0 strip light or 1 caged lamp}. */
+        final List<int[]> lamps = new ArrayList<>();
         String lower = "bunk_dado", upper = "bunk_paint", ground = "bunk_floor";
         /** The wall side (0..3) the corridor is behind, for a room off it; -1 otherwise. */
         int toCorridor = -1;
@@ -1001,7 +1267,44 @@ public final class Bunker {
             }
             p.set(x, 3, z, block);
             used[x - x0][3][z - z0] = true;
+            if (block.startsWith("bunk_tube") || block.startsWith("bunk_lamp_hang")) {
+                lamps.add(new int[] {x, z, block.contains("axis=x") ? 1 : 0, block.startsWith("bunk_tube") ? 0 : 1});
+            }
             return true;
+        }
+
+        /** Something lying on the floor of (x, z), if nothing stands there. */
+        boolean floor(int x, int z, String block) {
+            if (!in(x, z) || at(x, z) == TAKEN || used[x - x0][1][z - z0]) {
+                return false;
+            }
+            p.set(x, 1, z, block);
+            used[x - x0][1][z - z0] = true;
+            return true;
+        }
+
+        /** A free stretch of wall at row y: {x, z, side}, or null. */
+        int[] wallSpot(int y) {
+            List<int[]> spots = new ArrayList<>();
+            for (int s = 0; s < 4; s++) {
+                for (int[] c : along(s)) {
+                    if (!used[c[0] - x0][y][c[1] - z0] && solid(c[0], c[1], s, y) && (y > 1 || at(c[0], c[1]) == FREE)) {
+                        spots.add(new int[] {c[0], c[1], s});
+                    }
+                }
+            }
+            return spots.isEmpty() ? null : spots.get(rng.nextInt(spots.size()));
+        }
+
+        /** A random cell whose floor is clear: {x, z}, or null. */
+        int[] clearFloor() {
+            for (int tries = 0; tries < 20; tries++) {
+                int x = x0 + rng.nextInt(w()), z = z0 + rng.nextInt(d());
+                if (at(x, z) != TAKEN && !used[x - x0][1][z - z0]) {
+                    return new int[] {x, z};
+                }
+            }
+            return null;
         }
 
         /**
@@ -1346,7 +1649,8 @@ public final class Bunker {
         private void put(int x, int z, int fs, String[] stack) {
             for (int i = 0; i < stack.length; i++) {
                 String b = faced(stack[i], fs);
-                if (state == State.LOOTED && LOOT.contains(base(stack[i])) && rng.nextDouble() < 0.6) {
+                if (state != State.SEALED && LOOT.contains(base(stack[i]))
+                        && rng.nextDouble() < (state == State.LOOTED ? 0.6 : 0.45)) {
                     b = withLoot(b, "scraps");
                 }
                 p.set(x, 1 + i, z, b);

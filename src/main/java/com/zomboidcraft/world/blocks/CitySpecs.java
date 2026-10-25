@@ -13,6 +13,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part5();
         part6();
         part7();
+        part8();
     }
 
     private void part0() {
@@ -1399,6 +1400,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bunk_st_exit_r", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
         s("bunk_st_shelter_l", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
         s("bunk_st_shelter_r", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_st_b1", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_st_b2", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_st_b3", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_st_clearance", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
         s("bunk_shelter_a", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 1, 15.5, 16, 15, 16);
         s("bunk_shelter_b", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 1, 15.5, 16, 15, 16);
         s("bunk_keyswitch", FACING, DECOR, 0, SoundType.METAL, 0f, 5, 4, 15.5, 11, 12, 16);
@@ -1466,6 +1471,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bunk_map_table", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 11, 0, 16, 12, 16, 1, 0, 1, 3, 11, 3, 13, 0, 1, 15, 11, 3, 1, 0, 13, 3, 11, 15, 13, 0, 13, 15, 11, 15);
         s("bunk_map_wall", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 2, 15.6, 16, 15, 16);
         s("bunk_chair", FACING, 0, 0, SoundType.METAL, 2f, 3, 7, 3, 13, 8, 13, 3, 8, 12, 13, 16, 13, 3, 0, 3, 4, 7, 4, 12, 0, 3, 13, 7, 4, 3, 0, 12, 4, 16, 13, 12, 0, 12, 13, 16, 13);
+        s("bunk_chair_down", FACING, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 1, 13, 3, 1, 12, 13, 10, 13, 3, 9, 4, 4, 10, 12, 12, 9, 4, 13, 10, 12, 3, 0, 2, 4, 1, 3, 12, 0, 2, 13, 1, 3);
         s("bunk_medbed_head", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 1, 3, 6, 2, 13, 0, 1, 14, 6, 2, 2, 0, 14, 3, 6, 15, 13, 0, 14, 14, 6, 15, 2, 5, 0, 14, 6, 16, 2.5, 6, 0, 13.5, 8, 16, 2, 0, 15, 14, 12, 16, 4, 8, 11, 12, 9.5, 15);
         s("bunk_medbed_foot", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 1, 3, 6, 2, 13, 0, 1, 14, 6, 2, 2, 0, 14, 3, 6, 15, 13, 0, 14, 14, 6, 15, 2, 5, 0, 14, 6, 16, 2.5, 6, 0, 13.5, 8, 16, 2, 0, 0, 14, 9, 1, 3, 8, 2, 13, 8.6, 9);
         s("bunk_medcab", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
@@ -1517,6 +1523,51 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ship_lifebuoy", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 1, 2, 15.4, 15, 16, 16);
         s("ship_engine_lo", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 16, 15);
         s("ship_engine_hi", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 2, 16, 8, 14, 1.5, 8, 3, 7.5, 13, 13, 8.5, 8, 3, 14.5, 13, 13, 0, 9, 13.5, 16, 12, 16, 0, 6, 1.4, 16, 7, 2);
+        s("bunk_paint_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_paint_leak", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_paint_grime", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_paint_stain", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_dado_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_dado_scuff", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_dado_rot", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_concrete_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_concrete_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_ceiling", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_ceiling_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_floor_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_floor_dirty", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_floor_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_floor_stain", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+    }
+
+    private void part8() {
+        s("bunk_tile_dirty", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_plate_b", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("ship_wall_grey_b", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("ship_wall_white_b", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("bunk_locker_open", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 16, 16);
+        loot("bunk_locker_open", "home_wardrobe");
+        s("bunk_leak", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_tally", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_scrawl_a", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_scrawl_b", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_scrawl_c", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_bullets", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_soot", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("bunk_cobweb", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 6, 15.7, 16, 16, 15.8, 0, 15.8, 6, 16, 15.9, 16);
+        s("bunk_scorch", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 0, 16, 0.25, 16);
+        s("bunk_puddle", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 0, 16, 0.2, 16);
+        s("bunk_grit", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 0, 16, 0.2, 16);
+        s("bunk_bootprints", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 0, 16, 0.2, 16);
+        s("bunk_glowstick", FACING, DECOR, 6, SoundType.WOOL, 0f, 4, 0, 6, 11, 1, 7, 6, 0, 9, 7, 1, 14);
+        s("bunk_glowstick_dead", FACING, DECOR, 0, SoundType.WOOL, 0f, 4, 0, 6, 11, 1, 7, 6, 0, 9, 7, 1, 14);
+        s("garage_ramp_half", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8, 16);
+        s("bunk_tube_flicker", AXIS, DECOR | FLICKER, 9, SoundType.METAL, 0f, 4, 14, 0, 12, 16, 16, 4.5, 13.5, 0.5, 11.5, 14, 15.5);
+        s("bunk_tube_dangle", AXIS, DECOR | FLICKER, 7, SoundType.METAL, 0f, 4, 13.5, 0, 12, 15.5, 4, 4.5, 13, 0, 11.5, 13.5, 4, 4, 10, 4, 12, 12, 8, 4.5, 9.5, 4, 11.5, 10, 8, 4, 6.5, 8, 12, 8.5, 12, 4.5, 6, 8, 11.5, 6.5, 12, 4, 3, 12, 12, 5, 16, 4.5, 2.5, 12, 11.5, 3, 16, 4, 15, 0, 12, 16, 1.5, 7.6, 5, 14.6, 8.4, 16, 15.4);
+        s("bunk_lamp_dangle", PLAIN, SEE_THROUGH | DECOR | FLICKER, 8, SoundType.METAL, 0f, 7.6, -2, 7.6, 8.4, 16, 8.4, 5.5, -3, 5.5, 10.5, -2, 10.5, 6, -7, 6, 10, -3, 10, 5.5, -7.5, 5.5, 10.5, -3, 10.5);
+        s("bunk_tube_fallen", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 4, 0, 0.5, 12, 2, 15.5, 5, 2, 2, 11, 2.4, 9, 0, 0, 0, 16, 0.2, 16);
+        s("bunk_cable_loose", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7, 2, 7.5, 7.6, 16, 8.1, 8.4, 6, 8, 9, 16, 8.6, 7.6, 2, 7.5, 9, 2.6, 8.1, 6, 11, 6.5, 6.6, 16, 7.1);
+        s("bunk_duct_fallen", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 3, 0, 0, 13, 6, 16, 4, 6, 1, 12, 6.2, 15);
         s("bunk_server", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 16, 15);
         s("bunk_server_top", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 14, 15);
     }

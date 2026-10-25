@@ -31,7 +31,7 @@ HERE = Path(__file__).parent
 NS = None  # photo_textures, handed over by register()
 SANS = F.SANS
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
-PREFIXES = ("bunk_", "ship_", "container_in", "container_floor", "container_welded")
+PREFIXES = ("bunk_", "ship_", "container_in", "container_floor", "container_welded", "garage_ramp")
 
 OLIVE = (82, 88, 62)
 GREY = (112, 118, 114)
@@ -263,7 +263,7 @@ def floor(seed, line=False, drain=False):
             F.area(t, k, 23, k + 1, 41, (20, 20, 18), dh=-0.3)
         F.edges(t, 22, 22, 42, 42, 1)
     if t.rng.random() < 0.5:
-        F.stain(t, t.rng.uniform(0, N), t.rng.uniform(0, N), 10, (60, 54, 44), 0.4)
+        patches(t, 0.3, (60, 54, 44), 0.15, 0.4)
     return F.wear(t, 0.3, 10)
 
 
@@ -777,6 +777,18 @@ def locker(seed, top):
     if not top and t.rng.random() < 0.5:
         F.area(t, 8, 26, 20, 38, mul=0.7, dh=-0.2)  # a dent
     return F.wear(t, 0.3, 10)
+
+
+def locker_open(seed):
+    """The locker with one door wrenched off: an empty shelf, a coat hanger, a sock."""
+    t = locker(seed, False)
+    F.area(t, 2, 2, 31, N - 2, (34, 34, 32), h=0.2)
+    F.area(t, 2, 18, 31, 20, (96, 100, 98), h=0.5)
+    F.area(t, 2, 20, 31, 21, (20, 20, 18))
+    F.area(t, 14, 4, 16, 9, (150, 150, 146), h=0.4)
+    F.area(t, 8, 9, 22, 10, (150, 150, 146), h=0.4)
+    F.area(t, 6, 52, 14, 56, (120, 110, 96), h=0.3)
+    return t
 
 
 def range_front(seed):
@@ -1470,6 +1482,398 @@ def tins(seed):
     return t
 
 
+# ---------------------------------------------------------------- weathering
+# Second and third versions of every wall, floor and ceiling finish, each one worn its own way,
+# so no two stretches of wall repeat; the bunker picks between them with noise. Then the decals
+# and leavings of the people who sat it out down here.
+
+def runs(t, n, col=(74, 60, 42), amount=0.5, length=(24, 64), width=(1.5, 4.5), top=0, wet=0.5, tide=True):
+    """Water and rust running down a wall from the ceiling or a pipe: widest where it starts,
+    wandering and thinning as it goes, a darker tide line along its edges; fresh runs shine."""
+    rng = t.rng
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    m = np.zeros((N, N), np.float32)
+    for _ in range(n):
+        x0 = rng.uniform(0, N)
+        ln = rng.uniform(*length)
+        w0 = rng.uniform(*width)
+        wob = P.tnoise(rng, 4)[:, 0] * 2.5
+        y = yy - top
+        f = np.clip(1 - y / ln, 0, 1)
+        cx = x0 + wob[yy.astype(int)]
+        d = np.abs((xx - cx + N / 2) % N - N / 2)
+        w = w0 * (0.35 + 0.65 * f)
+        m = np.maximum(m, np.clip((w - d) / 1.2, 0, 1) * (y >= 0) * f ** 0.6)
+    t.mix(m * amount, col, 1.0)
+    if tide:
+        edge = np.clip(m * (1 - m) * 4, 0, 1)
+        t.mix(edge * amount * 0.6, tuple(c * 0.6 for c in col), 1.0)
+    if wet:
+        t.smooth = np.maximum(t.smooth, m * wet)
+    return m
+
+
+def patch_mask(rng, lo, hi, octaves=((2, 1.0), (4, 0.7), (8, 0.35), (16, 0.15))):
+    """A soft patch mask that tiles: noise over lo fading in to full at hi. Round blobs repeat
+    block after block down a wall and read as a row of spots; these join up into one surface."""
+    m = np.clip((P.fbm(rng, octaves) - lo) / (hi - lo), 0, 1)
+    return m * m * (3 - 2 * m)
+
+
+def patches(t, amount, col, lo=0.05, hi=0.35, tide=0.0, wet=0.0, octaves=((2, 1.0), (4, 0.7), (8, 0.35), (16, 0.15))):
+    """Stains, damp or dirt in tileable patches, with an optional darker tide line round them."""
+    m = patch_mask(t.rng, lo, hi, octaves)
+    t.mix(m * amount, col, 1.0)
+    if tide:
+        edge = np.clip(m * (1 - m) * 4, 0, 1) ** 2
+        t.mix(edge * tide, tuple(c * 0.6 for c in col), 1.0)
+    if wet:
+        t.smooth = np.maximum(t.smooth, m * wet)
+    return m
+
+
+def rising(t, amount, col=(46, 42, 34), start=36):
+    """Dirt and damp creeping up from the floor: heaviest at the foot, in tongues."""
+    y = np.clip((np.arange(N) - start) / (N - start), 0, 1)[:, None]
+    g = np.clip(y * 1.3 + P.fbm(t.rng, ((4, 1.0), (8, 0.6), (16, 0.3))) * 0.5 - 0.25, 0, 1) * amount
+    t.mix(g, col, 1.0)
+    t.smooth -= g * 0.1
+
+
+def smudges(t, n, col=(52, 46, 38), amount=0.35):
+    """Grubby hand marks and shoulder rubs at the height people lean on a wall."""
+    band = np.clip(1 - np.abs(np.arange(N) - 30) / 18, 0, 1)[:, None]
+    m = patch_mask(t.rng, 0.0, 0.3, ((4, 1.0), (8, 0.8), (16, 0.5)))
+    t.mix(m * band * amount * min(1.0, 0.4 + n * 0.1), col, 1.0)
+
+
+def bloom(t, n, amount=0.7):
+    """Efflorescence: white salt crust where water has dried out of the concrete."""
+    m = patch_mask(t.rng, 0.36 - 0.04 * n, 0.5, ((4, 1.0), (8, 0.6), (16, 0.3)))
+    spots = (t.rng.random((N, N)) < 0.3) * m
+    t.mix(spots * amount, (214, 212, 202), 1.0)
+    t.h += spots * 0.03
+
+
+def worn_paint(seed, kind):
+    """The cream upper wall gone bad in one of its ways."""
+    t = paint(seed, flake=kind == "grime")
+    if kind == "b":
+        t.grime(0.22, (64, 58, 46))
+        runs(t, 2, amount=0.22, wet=0.2)
+        smudges(t, 3)
+    elif kind == "leak":  # the top row: water through the ceiling
+        runs(t, int(t.rng.integers(2, 5)), (96, 72, 44), 0.55, (34, 70), (2, 5.5))
+        runs(t, 2, (60, 54, 44), 0.35, (10, 24), (3, 8), wet=0.3)
+        m = patch_mask(t.rng, 0.0, 0.3) * np.clip(1.2 - np.arange(N) / 24, 0, 1)[:, None]
+        t.mix(m * 0.4, (120, 92, 56), 1.0)
+        t.mix(np.clip(m * (1 - m) * 4, 0, 1) ** 2 * 0.35, (72, 52, 30), 1.0)
+    elif kind == "grime":
+        t.grime(0.45, (54, 48, 40))
+        smudges(t, 6, amount=0.45)
+        rising(t, 0.35, start=30)
+    elif kind == "stain":
+        patches(t, 0.28, (128, 98, 60), 0.05, 0.35, tide=0.18, octaves=((4, 1.0), (8, 0.6), (16, 0.3)))
+        smudges(t, 2)
+    return t
+
+
+def worn_dado(seed, kind):
+    t = dado(seed, damp=kind == "rot")
+    rng = t.rng
+    if kind == "b":
+        rising(t, 0.3)
+        for _ in range(8):
+            x, y = rng.uniform(0, N), rng.uniform(30, 62)
+            F.area(t, x, y, x + rng.uniform(4, 14), y + 1, mul=0.65)
+    elif kind == "scuff":  # trolleys, boots and crates dragged past for months
+        for _ in range(16):
+            x, y = rng.uniform(0, N), rng.uniform(20, 62)
+            F.area(t, x, y, x + rng.uniform(6, 20), y + rng.choice((1, 1, 2)), mul=rng.uniform(0.55, 0.8))
+        chips(t, 0.16, (132, 130, 122))
+        t.crack(2, 0.2)
+        rising(t, 0.25)
+    elif kind == "rot":
+        rising(t, 0.5, (34, 40, 28), start=20)
+        runs(t, 2, (70, 60, 40), 0.4, (20, 50))
+    return t
+
+
+def worn_concrete(seed, kind):
+    t = concrete(seed)
+    if kind == "b":
+        bloom(t, 2)
+        runs(t, 2, amount=0.3, wet=0.2)
+        rising(t, 0.25)
+    elif kind == "crack":
+        t.crack(3, 0.35, (26, 24, 22))
+        runs(t, 2, (62, 56, 46), 0.45, (20, 50))
+        bloom(t, 1, 0.5)
+    return t
+
+
+def ceiling(seed, kind):
+    """The underside of the slab: water rings, soot over the lamps, rust from the bars."""
+    t = concrete(seed)
+    rng = t.rng
+    if kind == "a":
+        patches(t, 0.32, (112, 92, 62), 0.05, 0.35, tide=0.2, octaves=((4, 1.0), (8, 0.6), (16, 0.3)))
+    else:
+        patches(t, 0.45, (36, 34, 30), 0.0, 0.35)
+        t.crack(2, 0.3)
+        rust_runs(t, 3, 0.4)
+    t.grime(0.25, (50, 46, 40))
+    return t
+
+
+def worn_floor(seed, kind):
+    t = floor(seed)
+    rng = t.rng
+    if kind == "b":
+        t.grime(0.3, (66, 60, 50))
+        patches(t, 0.15, (150, 146, 134), 0.1, 0.4)  # scrubbed paler where it was mopped
+    elif kind == "dirty":  # grit and dried mud tracked in
+        t.speckle(0.06, (54, 48, 40), 0.6, -0.02)
+        t.speckle(0.03, (150, 144, 132), 0.5, 0.03)
+        t.grime(0.35, (70, 60, 46))
+        patches(t, 0.3, (64, 52, 40), 0.0, 0.35, octaves=((2, 1.0), (4, 0.8), (16, 0.5), (32, 0.3)))
+    elif kind == "crack":
+        t.crack(3, 0.35, (24, 22, 20))
+        patches(t, 0.3, (70, 66, 58), 0.05, 0.35, wet=0.5)
+    elif kind == "stain":  # something leaked here long ago: oil, or worse
+        patches(t, 0.4, (40, 30, 24), 0.0, 0.4, wet=0.4, octaves=((4, 1.0), (8, 0.6), (16, 0.3)))
+    return t
+
+
+def worn_tile(seed):
+    t = tile(seed)
+    rng = t.rng
+    for gy in range(0, N, 16):
+        for gx in range(0, N, 16):
+            if rng.random() < 0.18:  # tile gone, the adhesive combed into the concrete behind
+                F.area(t, gx + 1, gy + 1, gx + 16, gy + 16, (112, 106, 94), h=0.45, smooth=0.05)
+                for k in range(gy + 3, gy + 16, 3):
+                    F.area(t, gx + 2, k, gx + 15, k + 1, mul=0.8)
+    t.grime(0.4, (80, 72, 56))
+    runs(t, 3, (110, 88, 52), 0.4, (24, 64))
+    rising(t, 0.3, (70, 64, 50))
+    return t
+
+
+def worn_plate(seed):
+    t = plate(seed)
+    rust_runs(t, 12, 0.45)
+    t.grime(0.3, (60, 46, 34))
+    rising(t, 0.3, (70, 50, 34))
+    return t
+
+
+def worn_ship(seed, rgb):
+    t = ship_wall(seed, rgb)
+    rust_runs(t, 10, 0.5)
+    runs(t, 3, RUST, 0.45, (30, 64), (1.5, 3.5), wet=0.1)
+    rising(t, 0.3, (70, 50, 36))
+    return t
+
+
+# decals: cut-outs laid flat on a wall or a floor
+
+def leak_decal(seed):
+    """A fresh run of water down the wall from a weeping joint above, glistening."""
+    t = clear(seed)
+    t.c[:] = (58, 52, 44)
+    m = runs(t, int(t.rng.integers(2, 4)), (58, 52, 44), 1.0, (40, 64), (2.5, 5), wet=0.0, tide=False)
+    t.alpha = np.clip(m * 200, 0, 200)
+    t.smooth[:] = 0.85
+    return t
+
+
+def tally(seed):
+    """The days counted in marker on the wall, five-bar gates in rows, a few words above."""
+    t = clear(seed)
+    t.c[:] = (24, 22, 26)
+    rng = t.rng
+    m = np.zeros((N, N), np.float32)
+    days = int(rng.integers(19, 47))
+    x, y = 6, 26
+    for d in range(days):
+        k = d % 5
+        if k < 4:
+            x0 = x + k * 3 + rng.uniform(-0.4, 0.4)
+            m[int(y):int(y + 9), int(x0):int(x0) + 1] = 1
+        else:
+            for i in range(14):
+                m[int(y + 8 - i * 0.6), int(x - 1 + i)] = 1
+            x += 16
+            if x > N - 14:
+                x, y = 6, y + 12
+    words = F.text_mask("NO WORD", F.SCRAWL, 10, 56, 18, angle=-3, jitter=0.4, seed=seed)
+    m[4:22, 4:60] = np.maximum(m[4:22, 4:60], words)
+    solid(t, m, (24, 22, 26), vary=0.1)
+    return t
+
+
+def scrawl(seed, text, col=(132, 18, 14), size=14):
+    """A message painted fast with a brush or a finger, running where it was too wet."""
+    t = clear(seed)
+    t.c[:] = col
+    m = F.text_mask(text, F.SCRAWL, size, N - 4, N - 10, angle=-5, jitter=0.6, seed=seed)
+    full = np.zeros((N, N), np.float32)
+    full[2:N - 8, 2:N - 2] = m
+    solid(t, full, col, vary=0.15)
+    rng = t.rng
+    ys, xs = np.nonzero(full > 0.5)
+    for _ in range(7):  # drips from the bottoms of the strokes
+        if len(xs):
+            i = rng.integers(len(xs))
+            F.drips(t, xs[i], xs[i] + 1, ys[i], 1, (3, 10), col)
+            t.alpha[ys[i]:min(N, ys[i] + 10), xs[i]] = np.maximum(t.alpha[ys[i]:min(N, ys[i] + 10), xs[i]],
+                                                                (t.c[ys[i]:min(N, ys[i] + 10), xs[i], 0] == col[0]) * 255)
+    t.smooth[:] = 0.25
+    return t
+
+
+def bullet_holes(seed):
+    """A burst into the wall: holes with the plaster spalled off round them, scorched."""
+    t = clear(seed)
+    rng = t.rng
+    t.c[:] = (40, 38, 34)
+    cx, cy = rng.uniform(20, 44), rng.uniform(20, 44)
+    for _ in range(int(rng.integers(5, 10))):
+        x, y = cx + rng.normal(0, 9), cy + rng.normal(0, 7)
+        F.disc(t, x, y, rng.uniform(3.5, 5.5), (150, 146, 136), alpha=255, h=0.6)
+        F.disc(t, x, y, 2.4, ring=1.0, mul=0.7)
+        F.disc(t, x, y, 1.8, (16, 14, 12), alpha=255, h=0.1)
+    return t
+
+
+def soot_plume(seed):
+    """Soot rising up the wall from a fire or a row of candles, blackest where the flames were."""
+    t = clear(seed)
+    t.c[:] = (22, 20, 18)
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    w = 6 + (N - yy) * 0.35
+    m = np.clip(1 - np.abs(xx - 32) / w, 0, 1) * np.clip(yy / N + 0.2, 0, 1)
+    m *= np.clip(0.6 + P.fbm(t.rng, ((4, 1.0), (8, 0.6), (16, 0.3))) * 0.6, 0, 1)
+    t.alpha = np.clip(m * 230, 0, 230)
+    return t
+
+
+def cobweb(seed):
+    """Threads strung out from a corner, grey with dust, a few broken and hanging."""
+    t = clear(seed)
+    t.c[:] = (176, 172, 164)
+    rng = t.rng
+    img = Image.new("L", (N * 4, N * 4), 0)
+    from PIL import ImageDraw
+    d = ImageDraw.Draw(img)
+    ox, oy = rng.uniform(0, N) * 4, 0
+    spokes = sorted(rng.uniform(0.15, np.pi - 0.15, 9))
+    for a in spokes:
+        d.line([(ox, oy), (ox + np.cos(a) * 300, oy + np.sin(a) * 300)], fill=200, width=2)
+    for r in np.arange(20, 260, rng.uniform(18, 28)):
+        pts = [(ox + np.cos(a) * r * rng.uniform(0.9, 1.1), oy + np.sin(a) * r * rng.uniform(0.9, 1.1)) for a in spokes]
+        for p0, p1 in zip(pts, pts[1:]):
+            if rng.random() < 0.85:
+                d.line([p0, p1], fill=170, width=2)
+    m = np.asarray(img.resize((N, N), Image.BOX), np.float32) / 255
+    fade = np.clip(1.4 - np.hypot(*np.mgrid[0:N, 0:N] - np.array([[[oy / 4]], [[ox / 4]]])) / 48, 0, 1)
+    t.alpha = np.clip(m * 2.2 * fade * 255, 0, 230)
+    return t
+
+
+def puddle(seed):
+    """Standing water under a leak: the floor gone dark and mirror smooth, the edge soaking away."""
+    t = clear(seed)
+    rng = t.rng
+    yy, xx = np.mgrid[0:N, 0:N]
+    d = np.hypot((xx - 32) / 1.15, yy - 32) / 27 + P.fbm(rng, ((4, 1.0), (8, 0.6), (16, 0.3))) * 0.55
+    m = np.clip((1 - d) * 2.5, 0, 1)
+    t.c[:] = (40, 42, 42)
+    t.alpha = m * 120
+    t.smooth[:] = 0.97
+    t.f0[:] = 30
+    return t
+
+
+def scorch(seed):
+    """Soot fanned across the floor from the blast door where it was cut: black at the seam, brown
+    and streaky further in, fading out before the block's edge so it never shows a seam."""
+    t = clear(seed)
+    rng = t.rng
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    ang = np.arctan2(yy + 6, xx - 32)
+    rays = 0.85 + 0.15 * np.sin(ang * 11 + P.fbm(rng, ((4, 1.0), (8, 0.5))) * 8)
+    d = np.hypot(xx - 32, (yy + 6) * 0.8) / 58 + P.fbm(rng, ((4, 1.0), (8, 0.7), (16, 0.4))) * 0.3
+    m = np.clip((1 - d) * 1.8, 0, 1) * rays
+    m *= np.clip(np.minimum(np.minimum(xx, N - 1 - xx), N - 1 - yy) / 6, 0, 1)
+    heart = np.clip(m * 1.5 - 0.5, 0, 1)
+    t.c[:] = (64, 54, 44)
+    t.mix(heart, (20, 18, 16), 1.0)
+    t.alpha = np.clip(m * 215, 0, 215)
+    t.smooth[:] = 0.1
+    return t
+
+
+def server_side(seed, top=False):
+    """The flanks and lid of a server cabinet: powder-coated steel, vent perforations, a dusty top."""
+    t = F.plain(seed, (40, 42, 46), 0.05, 0.35)
+    t.f0[:] = 110
+    rng = t.rng
+    if top:
+        for y in range(10, 54, 4):
+            for x in range(10, 54, 4):
+                F.area(t, x, y, x + 2, y + 2, (14, 14, 16), dh=-0.2)
+        t.grime(0.5, (92, 88, 80))
+    else:
+        F.area(t, 2, 0, 3, N, (24, 24, 26), dh=-0.2)
+        F.area(t, 61, 0, 62, N, (24, 24, 26), dh=-0.2)
+        for y0 in (6, 42):
+            for y in range(y0, y0 + 16, 3):
+                for x in range(10, 54, 3):
+                    F.area(t, x, y, x + 1, y + 1, (12, 12, 14), dh=-0.2)
+        F.area(t, 40, 28, 52, 34, (196, 194, 184))  # the asset tag
+        F.area(t, 41, 30, 51, 31, (60, 60, 60))
+        runs(t, 2, (90, 86, 78), 0.2, (10, 30))
+    return F.wear(t, 0.2, 8)
+
+
+def grit(seed):
+    """Grit, crumbs of concrete and dust swept nowhere: the floor nobody has cleaned in months."""
+    t = clear(seed)
+    rng = t.rng
+    dust = np.clip(P.fbm(rng, ((4, 1.0), (8, 0.6), (16, 0.4))) * 1.4 + 0.1, 0, 1)
+    t.c[:] = (118, 112, 100)
+    t.alpha = dust * 120
+    for _ in range(int(rng.integers(18, 34))):
+        x, y = rng.uniform(2, N - 2, 2)
+        r = rng.uniform(0.6, 2.2)
+        col = (150, 146, 136) if rng.random() < 0.6 else (70, 64, 56)
+        F.disc(t, x, y, r, col, alpha=255, h=0.9)
+    return t
+
+
+def bootprints(seed):
+    """Muddy prints walking through, along the block, left and right."""
+    t = clear(seed)
+    rng = t.rng
+    t.c[:] = (60, 50, 40)
+    for i in range(4):
+        x, y = 26 + (i % 2) * 12 + rng.uniform(-1, 1), 4 + i * 16
+        sole = F.blob_mask(rng, x, y + 3, 4, rough=0.3, wrap=False)
+        heel = F.blob_mask(rng, x, y + 10, 3, rough=0.3, wrap=False)
+        m = np.maximum(sole, heel) * (P.fbm(rng, ((16, 1.0), (32, 0.5))) > -0.3)
+        t.alpha = np.maximum(t.alpha, np.clip(m * 2, 0, 1) * 200)
+    return t
+
+
+def glowstick(seed, lit=True):
+    t = F.plain(seed, (90, 230, 120) if lit else (110, 140, 112), 0.03, 0.8)
+    if lit:
+        light(t, np.ones((N, N)), 1.0)
+    return t
+
+
 def textures():
     T = {
         "bunk_concrete": lambda: concrete(6000), "bunk_concrete_damp": lambda: concrete(6001, True),
@@ -1559,6 +1963,33 @@ def textures():
     T["bunk_st_exit_r"] = lambda: stencil_sign(6223, "EXIT", WHITE_PAINT, 20, arrow=1)
     T["bunk_st_shelter_r"] = lambda: stencil_sign(6224, "SHELTER", AMBER, 18, arrow=1)
     T["bunk_st_shelter_l"] = lambda: stencil_sign(6225, "SHELTER", AMBER, 18, arrow=-1)
+    for i in range(1, 4):
+        T[f"bunk_st_b{i}"] = (lambda k: lambda: stencil_sign(6225 + k, f"B{k}", AMBER, 30))(i)
+    T["bunk_st_clearance"] = lambda: stencil_sign(6229, "CLEARANCE|6'8\"", WHITE_PAINT, 14)
+    worn = {
+        "bunk_paint_b": lambda: worn_paint(6300, "b"), "bunk_paint_leak": lambda: worn_paint(6301, "leak"),
+        "bunk_paint_grime": lambda: worn_paint(6302, "grime"), "bunk_paint_stain": lambda: worn_paint(6303, "stain"),
+        "bunk_dado_b": lambda: worn_dado(6304, "b"), "bunk_dado_scuff": lambda: worn_dado(6305, "scuff"),
+        "bunk_dado_rot": lambda: worn_dado(6306, "rot"),
+        "bunk_concrete_b": lambda: worn_concrete(6307, "b"), "bunk_concrete_crack": lambda: worn_concrete(6308, "crack"),
+        "bunk_ceiling": lambda: ceiling(6309, "a"), "bunk_ceiling_b": lambda: ceiling(6310, "b"),
+        "bunk_floor_b": lambda: worn_floor(6311, "b"), "bunk_floor_dirty": lambda: worn_floor(6312, "dirty"),
+        "bunk_floor_crack": lambda: worn_floor(6313, "crack"), "bunk_floor_stain": lambda: worn_floor(6314, "stain"),
+        "bunk_tile_dirty": lambda: worn_tile(6315), "bunk_plate_b": lambda: worn_plate(6316),
+        "ship_wall_grey_b": lambda: worn_ship(6317, (96, 104, 104)),
+        "ship_wall_white_b": lambda: worn_ship(6318, (206, 204, 194)),
+        "bunk_leak": lambda: leak_decal(6320), "bunk_tally": lambda: tally(6321),
+        "bunk_scrawl_a": lambda: scrawl(6322, "DO NOT|OPEN"),
+        "bunk_scrawl_b": lambda: scrawl(6323, "SICK BAY|KEEP SHUT", size=11),
+        "bunk_scrawl_c": lambda: scrawl(6324, "WATER|BAD", (30, 28, 30)),
+        "bunk_bullets": lambda: bullet_holes(6325), "bunk_soot": lambda: soot_plume(6326),
+        "bunk_cobweb": lambda: cobweb(6327), "bunk_puddle": lambda: puddle(6328), "bunk_grit": lambda: grit(6329),
+        "bunk_bootprints": lambda: bootprints(6330), "bunk_glowstick": lambda: glowstick(6331),
+        "bunk_glowstick_dead": lambda: glowstick(6332, False), "bunk_locker_open": lambda: locker_open(6333),
+        "bunk_scorch": lambda: scorch(6334), "bunk_server_side": lambda: server_side(6335),
+        "bunk_server_lid": lambda: server_side(6336, True),
+    }
+    T.update(worn)
     return T
 
 
@@ -1618,7 +2049,7 @@ def blocks():
 
     # signs, stencilled straight onto the wall, and the shelter plates
     for k in ("decon", "bunks", "mess", "medical", "comms", "generator", "stores", "water", "b4", "level", "armoury",
-              "nosmoking", "exit_l", "exit_r", "shelter_l", "shelter_r"):
+              "nosmoking", "exit_l", "exit_r", "shelter_l", "shelter_r", "b1", "b2", "b3", "clearance"):
         add(f"bunk_st_{k}", [[0, 0, 15.75, 16, 16, 16, f"bunk_st_{k}"]], "Stencil", "STONE", decor=True)
     for k in ("a", "b"):
         add(f"bunk_shelter_{k}", [[0, 1, 15.5, 16, 15, 16, f"bunk_shelter_{k}"]], "Fallout Shelter Sign", "METAL",
@@ -1773,6 +2204,9 @@ def blocks():
                        [3, 0, 3, 4, 7, 4, "bunk_grey"], [12, 0, 3, 13, 7, 4, "bunk_grey"],
                        [3, 0, 12, 4, 16, 13, "bunk_grey"], [12, 0, 12, 13, 16, 13, "bunk_grey"]],
         "Folding Chair", "METAL")
+    add("bunk_chair_down", [[3, 0, 3, 13, 1, 13, "bunk_grey"], [3, 1, 12, 13, 10, 13, "bunk_grey"],
+                            [3, 9, 4, 4, 10, 12, "bunk_grey"], [12, 9, 4, 13, 10, 12, "bunk_grey"],
+                            [3, 0, 2, 4, 1, 3, "bunk_grey"], [12, 0, 2, 13, 1, 3, "bunk_grey"]], "Folding Chair", "METAL")
 
     def med_bed(head):
         b = [[2, 0, 1, 3, 6, 2, "bunk_white_steel"], [13, 0, 1, 14, 6, 2, "bunk_white_steel"],
@@ -1897,11 +2331,75 @@ def blocks():
                            [0, 9, 13.5, 16, 12, 16, "bunk_rust_pipe"],
                            [0, 6, 1.4, 16, 7, 2, "home_copper"]], "Ship's Engine", "METAL")
 
+    # wear and tear: second and third versions of each finish, and what was left on them
+    for k in ("b", "leak", "grime", "stain"):
+        cube(f"bunk_paint_{k}", {"side": f"bunk_paint_{k}", "up": "bunk_concrete", "down": "bunk_concrete"}, "Painted Wall")
+    for k in ("b", "scuff", "rot"):
+        cube(f"bunk_dado_{k}", {"side": f"bunk_dado_{k}", "up": "bunk_concrete", "down": "bunk_concrete"}, "Painted Wall")
+    cube("bunk_concrete_b", "bunk_concrete_b", "Poured Concrete")
+    cube("bunk_concrete_crack", "bunk_concrete_crack", "Cracked Concrete")
+    cube("bunk_ceiling", {"down": "bunk_ceiling", "side": "bunk_concrete", "up": "bunk_concrete"}, "Poured Concrete")
+    cube("bunk_ceiling_b", {"down": "bunk_ceiling_b", "side": "bunk_concrete", "up": "bunk_concrete"}, "Poured Concrete")
+    for k in ("b", "dirty", "crack", "stain"):
+        cube(f"bunk_floor_{k}", {"up": f"bunk_floor_{k}", "side": "bunk_concrete", "down": "bunk_concrete"}, "Shelter Floor")
+    cube("bunk_tile_dirty", "bunk_tile_dirty", "Tiled Wall")
+    cube("bunk_plate_b", "bunk_plate_b", "Steel Plate", "METAL")
+    cube("ship_wall_grey_b", "ship_wall_grey_b", "Bulkhead", "METAL")
+    cube("ship_wall_white_b", "ship_wall_white_b", "Bulkhead", "METAL")
+    add("bunk_locker_open", [[1, 0, 3, 15, 16, 16, {"north": "bunk_locker_open", "side": "bunk_grey", "up": "bunk_grey",
+                                                    "down": "bunk_grey"}]], "Wall Locker", "METAL", loot="home_wardrobe")
+    for k in ("leak", "tally", "scrawl_a", "scrawl_b", "scrawl_c", "bullets", "soot"):
+        out[f"bunk_{k}"] = {"model": "boxes", "boxes": [[0, 0, 15.8, 16, 16, 16, f"bunk_{k}"]], "title": "Wall",
+                            "sound": "STONE", "rotate": "facing", "decor": True, "render": "cutout"}
+    out["bunk_cobweb"] = {"model": "boxes", "boxes": [[0, 6, 15.7, 16, 16, 15.8, "bunk_cobweb"],
+                                                      [0, 15.8, 6, 16, 15.9, 16, "bunk_cobweb"]],
+                          "title": "Cobweb", "sound": "WOOL", "rotate": "facing", "decor": True, "render": "cutout"}
+    out["bunk_scorch"] = {"model": "boxes", "boxes": [[0, 0, 0, 16, 0.25, 16, "bunk_scorch"]], "title": "Scorch Mark",
+                          "sound": "STONE", "rotate": "facing", "decor": True, "render": "translucent"}
+    for k in ("puddle", "grit", "bootprints"):
+        out[f"bunk_{k}"] = {"model": "boxes", "boxes": [[0, 0, 0, 16, 0.2, 16, f"bunk_{k}"]], "title": "Floor",
+                            "sound": "STONE", "rotate": "facing" if k == "bootprints" else None, "decor": True,
+                            "render": "translucent" if k == "puddle" else "cutout"}
+        if k != "bootprints":
+            del out[f"bunk_{k}"]["rotate"]
+    for lit in (True, False):
+        g = "bunk_glowstick" if lit else "bunk_glowstick_dead"
+        add(g, [[4, 0, 6, 11, 1, 7, g], [6, 0, 9, 7, 1, 14, g]], "Glow Stick", "WOOL", decor=True, light=6 if lit else 0)
+    out["garage_ramp_half"] = {"tex": "floor_concrete", "height": 8, "title": "Ramp", "sound": "STONE"}
+
+    # a broken-into bunker's lights: still on a dying circuit, hanging off their cables, or down
+    def flicker(name, swap, light):
+        out[name]["flicker"] = {"light": light, "on": swap}
+        out[name].pop("light", None)
+
+    tube_on = {"bunk_tube_off": "bunk_tube_on"}
+    add("bunk_tube_flicker", [[4, 14, 0, 12, 16, 16, "bunk_fitting"], [4.5, 13.5, 0.5, 11.5, 14, 15.5, "bunk_tube_off"]],
+        "Strip Light", "METAL", rotate="axis", decor=True)
+    flicker("bunk_tube_flicker", tube_on, 9)
+    steps = []
+    for i, (y0, z0) in enumerate(((13.5, 0), (10, 4), (6.5, 8), (3, 12))):
+        steps += [[4, y0, z0, 12, y0 + 2, z0 + 4, "bunk_fitting"], [4.5, y0 - 0.5, z0, 11.5, y0, z0 + 4, "bunk_tube_off"]]
+    steps += [[4, 15, 0, 12, 16, 1.5, "bunk_grey"], [7.6, 5, 14.6, 8.4, 16, 15.4, "bunk_cables"]]
+    add("bunk_tube_dangle", steps, "Hanging Strip Light", "METAL", rotate="axis", decor=True)
+    flicker("bunk_tube_dangle", tube_on, 7)
+    add("bunk_lamp_dangle", [[7.6, -2, 7.6, 8.4, 16, 8.4, "bunk_cables"], [5.5, -3, 5.5, 10.5, -2, 10.5, "bunk_grey"],
+                             [6, -7, 6, 10, -3, 10, "bunk_glass_off"], [5.5, -7.5, 5.5, 10.5, -3, 10.5, "bunk_cage_wire"]],
+        "Hanging Lamp", "METAL", rotate=None, decor=True)
+    flicker("bunk_lamp_dangle", {"bunk_glass_off": "bunk_glass_on"}, 8)
+    add("bunk_tube_fallen", [[4, 0, 0.5, 12, 2, 15.5, "bunk_fitting"], [5, 2, 2, 11, 2.4, 9, "bunk_tube_off"],
+                             [0, 0, 0, 16, 0.2, 16, "glass_shards"]], "Fallen Strip Light", "METAL", rotate="axis",
+        decor=True)
+    add("bunk_cable_loose", [[7, 2, 7.5, 7.6, 16, 8.1, "bunk_cables"], [8.4, 6, 8, 9, 16, 8.6, "bunk_cables"],
+                             [7.6, 2, 7.5, 9, 2.6, 8.1, "bunk_cables"], [6, 11, 6.5, 6.6, 16, 7.1, "bunk_cables"]],
+        "Loose Cables", "METAL", rotate=None, decor=True)
+    add("bunk_duct_fallen", [[3, 0, 0, 13, 6, 16, "ext_galv"], [4, 6, 1, 12, 6.2, 15, "bunk_grit"]], "Fallen Duct",
+        "METAL", rotate="axis")
+
     # the tower shelter's server hall
-    add("bunk_server", [[1, 0, 1, 15, 16, 15, {"north": "bunk_server", "side": "home_plastic_black", "up": "home_plastic_black",
-                                               "down": "home_plastic_black"}]], "Server Rack", "METAL")
-    add("bunk_server_top", [[1, 0, 1, 15, 14, 15, {"north": "bunk_server_top", "side": "home_plastic_black",
-                                                   "up": "home_plastic_black", "down": "home_plastic_black"}]],
+    add("bunk_server", [[1, 0, 1, 15, 16, 15, {"north": "bunk_server", "side": "bunk_server_side", "up": "bunk_server_lid",
+                                               "down": "bunk_server_lid"}]], "Server Rack", "METAL")
+    add("bunk_server_top", [[1, 0, 1, 15, 14, 15, {"north": "bunk_server_top", "side": "bunk_server_side",
+                                                   "up": "bunk_server_lid", "down": "bunk_server_lid"}]],
         "Server Rack", "METAL")
     return out
 
