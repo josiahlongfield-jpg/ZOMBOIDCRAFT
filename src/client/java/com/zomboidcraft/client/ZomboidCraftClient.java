@@ -52,6 +52,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         // a car you drive moves on your side, from your movement keys
         com.zomboidcraft.world.cars.CarProp.clientInput = player -> player instanceof net.minecraft.client.player.LocalPlayer local
                 ? local.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
+        com.zomboidcraft.client.sound.Ambience.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

@@ -77,6 +77,10 @@ QUERIES = {
     "amb_drip": ["water dripping interior", "leaking roof drip", "pipe drip"],
     "amb_crow": ["crow caw", "crows calling distant", "ravens"],
     "amb_night": ["crickets night", "night ambience insects", "owl hoot"],
+    # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
+    "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
+    "amb_alarm": ["car alarm", "house alarm ringing", "burglar alarm bell", "alarm bell ringing outside"],
+    "amb_animal": ["dog howling distant", "coyote howl", "fox scream night", "dogs barking in the distance"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
 }

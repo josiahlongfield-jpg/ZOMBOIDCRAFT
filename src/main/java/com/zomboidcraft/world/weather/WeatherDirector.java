@@ -271,10 +271,7 @@ public final class WeatherDirector {
             hail(level, player, outside, config);
         }
         if (current.wind() > 0.55f) {
-            if (outside && RNG.nextInt(4) == 0) {
-                level.playSound(null, player.blockPosition(), SoundEvents.ELYTRA_FLYING, SoundSource.WEATHER,
-                        0.12f + 0.25f * current.wind(), 0.45f + RNG.nextFloat() * 0.25f);
-            }
+            // the wind itself is the client's ambience bed (client/sound/Ambience), which rises with current.wind()
             // something loose bangs in the wind around the block, and the dead come to look
             if (RNG.nextInt(25) == 0) {
                 BlockPos bang = player.blockPosition().offset(RNG.nextInt(41) - 20, RNG.nextInt(9) - 2, RNG.nextInt(41) - 20);
