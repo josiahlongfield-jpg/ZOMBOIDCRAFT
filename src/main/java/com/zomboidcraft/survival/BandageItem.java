@@ -1,10 +1,10 @@
 package com.zomboidcraft.survival;
 
+import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,7 +34,7 @@ public class BandageItem extends Item {
             Skills.addXp(serverPlayer, Skill.FIRST_AID, 10);
             player.getItemInHand(hand).consume(1, player);
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.WOOL_PLACE, SoundSource.PLAYERS, 1f, 0.8f);
+                    ModSounds.BANDAGE, SoundSource.PLAYERS, 1f, 0.95f + level.getRandom().nextFloat() * 0.1f);
         }
         return InteractionResult.SUCCESS;
     }

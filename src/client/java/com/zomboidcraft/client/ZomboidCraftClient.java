@@ -4,6 +4,8 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.combat.CombatClient;
 import com.zomboidcraft.client.combat.CombatHud;
+import com.zomboidcraft.client.combat.Crosshair;
+import com.zomboidcraft.client.sound.SoundSliders;
 import com.zomboidcraft.client.zombie.HordeSounds;
 import com.zomboidcraft.client.zombie.WalkerAddonModel;
 import com.zomboidcraft.client.zombie.WalkerModel;
@@ -32,9 +34,11 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.addLast(ZomboidCraft.id("skills"), SkillsHud::render);
         HudElementRegistry.addLast(ZomboidCraft.id("combat"), CombatHud::render);
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
+        HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
+        SoundSliders.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

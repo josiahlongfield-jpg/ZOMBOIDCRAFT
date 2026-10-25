@@ -426,13 +426,13 @@ MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held we
 
 
 # ================================================================== display transforms
-
+# First person: the hand low on the right and the weapon upright, leaning a little outward, its head (and a blade's
 
 # First person: the hand low on the right and the weapon leaning in toward the crosshair, its head (and a blade's
 # edge) turned to the target. Worked in the hand camera's space: blocks, looking down -z, a 70 degree tall view.
 FP_ARM = np.array([0.56, -0.52, -0.72])   # vanilla's arm offset, taken back out of the translation
-FP_GRIP = (0.47, -0.82, 0.75)             # where the hand sits: screen x and y (-1..1 on a 16:9 screen), depth
-FP_SHAFT = (-0.36, 0.84, -0.40)           # the handle's direction: up toward the crosshair and away
+FP_GRIP = (0.40, -0.82, 0.75)             # where the hand sits: screen x and y (-1..1 on a 16:9 screen), depth
+FP_SHAFT = (0.30, 0.86, -0.41)            # the handle's direction: up, leaning a little outward, and away
 FP_HEAD = (-0.70, 0.0, -0.70)             # the way the head faces
 FP_TIP = 0.36                             # long weapons are scaled so their far end reaches this screen height
 FP_SCALE = (0.52, 0.92)                   # model scale range, a little over life size up to twice it for short ones
