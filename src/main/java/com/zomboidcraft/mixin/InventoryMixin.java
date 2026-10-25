@@ -45,10 +45,13 @@ public abstract class InventoryMixin {
     @Inject(method = "dropAll", at = @At("TAIL"))
     private void zomboidcraft$dropGear(CallbackInfo ci) {
         Carry.gear(player).takeAll(stack -> {
-            ItemEntity dropped = ((PlayerInvoker) player).zomboidcraft$createItemStackToDrop(stack, true, false);
-            if (dropped != null) {
-                player.level().addFreshEntity(dropped);
-            }
+            // scattered round where you fell, like the rest of your things
+            ItemEntity dropped = new ItemEntity(player.level(), player.getX(), player.getEyeY() - 0.3, player.getZ(), stack);
+            dropped.setPickUpDelay(40);
+            float speed = player.getRandom().nextFloat() * 0.5f;
+            float angle = player.getRandom().nextFloat() * (float) (Math.PI * 2);
+            dropped.setDeltaMovement(-Math.sin(angle) * speed, 0.2, Math.cos(angle) * speed);
+            player.level().addFreshEntity(dropped);
         });
     }
 }
