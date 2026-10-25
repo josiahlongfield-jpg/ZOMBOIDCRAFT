@@ -29,6 +29,13 @@ final class Interior {
     private static final String[] DIRS = {"north", "east", "south", "west"};
     /** One block toward each direction (north, east, south, west). */
     private static final int[][] STEP = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+    /** Bedside-table-like pieces: never a second one past a bed's nightstand. */
+    private static final Set<String> TABLES = Set.of("home_nightstand", "home_dresser", "home_desk", "home_desk_pc",
+            "home_toy_chest");
+    /** Pieces with doors or drawers in front: the cell before them is kept clear of other furniture. */
+    private static final Set<String> FRONTED = Set.of("home_fridge", "home_stove", "home_wardrobe", "home_bookcase",
+            "home_gun_cabinet", "home_dresser", "home_fireplace", "home_wood_stove", "home_tool_chest", "home_freezer",
+            "home_vanity", "home_toilet", "home_tv", "home_tv_smashed", "home_piano_l", "home_piano_r", "home_garage_shelf");
     /** Pieces without a facing. */
     private static final Set<String> PLAIN = Set.of("home_table", "home_floor_lamp", "home_trash_can", "home_laundry",
             "home_boxes", "home_water_heater", "home_water_heater_top", "home_rug_red", "home_rug_blue", "home_candles",
@@ -99,6 +106,10 @@ final class Interior {
     private boolean[][] path;
     /** What stands in each cell and row on the floor being furnished (the block's name, no state). */
     private String[][][] what;
+    /** Cells in front of a fridge, a wardrobe or the like, kept clear so its doors can open. */
+    private boolean[][] keep;
+    /** Cells along the wall just past a bed's nightstands, where no second bedside table may stand. */
+    private boolean[][] noTable;
 
     Interior(Placer p, SplittableRandom rng, House.Style style, House.Condition cond, int x0, int x1, int z0, int z1,
              int floors, boolean lined, boolean garageEast, double lit) {
@@ -840,6 +851,8 @@ final class Interior {
         occ = new byte[nx][nz][H];
         path = new boolean[nx][nz];
         what = new String[nx][nz][H];
+        keep = new boolean[nx][nz];
+        noTable = new boolean[nx][nz];
         List<Room> list = rooms.get(f);
         for (Room r : list) {
             keepClear(f, r);
@@ -934,6 +947,10 @@ final class Interior {
         String fin = finish;
         String[] seq;
         int n = run.size();
+        int fs = (s + 2) & 3;
+        int lWall = -1;
+        List<int[]> lRun = List.of();
+        boolean fridgeInL = false;
         if (n >= 3) {
             seq = new String[n];
             Arrays.fill(seq, "counter");
@@ -957,10 +974,13 @@ final class Interior {
             if (stove >= 0 && stove < n && seq[stove].equals("counter")) {
                 seq[stove] = "stove";
             } else {
-                for (int i = 0; i < n; i++) {
-                    if (seq[i].equals("counter") && Math.abs(i - sink) >= 2) {
-                        seq[i] = "stove";
-                        break;
+                // the ends may turn a corner: keep the stove off them if it can be
+                for (int pass = 0; pass < 2 && !Arrays.asList(seq).contains("stove"); pass++) {
+                    for (int i = pass == 0 ? 1 : 0; i < (pass == 0 ? n - 1 : n); i++) {
+                        if (seq[i].equals("counter") && Math.abs(i - sink) >= 2) {
+                            seq[i] = "stove";
+                            break;
+                        }
                     }
                 }
             }
@@ -969,7 +989,44 @@ final class Interior {
                     seq[i] = "drawers";
                 }
             }
-            int fs = (s + 2) & 3;
+            // round the corner at one end, more cupboards; at the fridge's end the fridge moves to
+            // the far end of them and a cupboard takes the corner, so nothing stands in front of its door
+            if (r.w() >= 4 && r.d() >= 4) {
+                int[] ends = {fr, n - 1 - fr};
+                for (int e : ends) {
+                    String at = seq[e];
+                    if (!(at.equals("counter") || at.equals("drawers") || at.equals("fridge"))) {
+                        continue;
+                    }
+                    int[] sv = side(fs);
+                    int s2 = wallToward(e == 0 ? -sv[0] : sv[0], e == 0 ? -sv[1] : sv[1]);
+                    int[] corner = run.get(e);
+                    if (!wallBehind(f, corner[0], corner[1], s2)) {
+                        continue;  // the run stops short of the corner (a door)
+                    }
+                    List<int[]> l = lCells(f, r, corner, s, s2, r.kind.equals("kitchen") ? 4 : 2);
+                    boolean fridge = at.equals("fridge");
+                    if (fridge) {
+                        int last = l.size() - 1;
+                        while (last >= 0 && window(f, l.get(last), s2)) {
+                            last--;
+                        }
+                        if (last < 0) {
+                            continue;
+                        }
+                        l = new ArrayList<>(l.subList(0, last + 1));
+                    } else if (l.size() < 2) {
+                        continue;
+                    }
+                    if (fridge) {
+                        seq[e] = "counter";
+                        fridgeInL = true;
+                    }
+                    lWall = s2;
+                    lRun = l;
+                    break;
+                }
+            }
             List<String> small = new ArrayList<>(List.of("home_microwave", "home_toaster", "home_coffee_maker", "home_dishes"));
             for (int i = 0; i < n; i++) {
                 int[] c = run.get(i);
@@ -997,8 +1054,8 @@ final class Interior {
                 }
             }
         }
-        if (n >= 3 && r.w() >= 4 && r.d() >= 4) {
-            kitchenL(f, r, s);
+        if (lWall >= 0 && !kitchenL(f, lRun, lWall, fridgeInL) && fridgeInL) {
+            tall(f, r, "home_fridge", "home_fridge_top");  // the corner run was cut short: the fridge stands elsewhere
         }
         table(f, r, 2, 4);
         corner(f, r, "home_trash_can");
@@ -1006,46 +1063,55 @@ final class Interior {
         radiator(f, r);
     }
 
-    /** More cupboards round the corner from the main run, wall cabinets over them. */
-    private void kitchenL(int f, Room r, int s) {
-        for (int s2 : rng.nextBoolean() ? new int[] {(s + 1) & 3, (s + 3) & 3} : new int[] {(s + 3) & 3, (s + 1) & 3}) {
-            List<int[]> run = run(f, r, s2, false);
-            if (run.size() < 2) {
-                continue;
+    /**
+     * Cells along wall s2 going out from the corner cell of the run on wall s, side by side and free,
+     * at most len of them.
+     */
+    private List<int[]> lCells(int f, Room r, int[] corner, int s, int s2, int len) {
+        List<int[]> out = new ArrayList<>();
+        int[] in = STEP[(s + 2) & 3];
+        for (int k = 1; k <= len; k++) {
+            int x = corner[0] + in[0] * k, z = corner[1] + in[1] * k;
+            if (!freeFloor(f, r, x, z) || !wallBehind(f, x, z, s2) || keep[x - x0][z - z0]) {
+                break;
             }
-            int fs = (s2 + 2) & 3;
-            int len = Math.min(run.size(), r.kind.equals("kitchen") ? 4 : 2);
-            // start at the end by the main run, round the corner from it
-            boolean fromEnd = toWall(r, run.get(run.size() - 1), s) < toWall(r, run.get(0), s);
-            int placed = 0;
-            for (int k = 0; k < len; k++) {
-                int[] c = run.get(fromEnd ? run.size() - 1 - k : k);
-                if (k > 0 && !adjacent(run, fromEnd ? run.size() - 1 - k : k - 1, 1)) {
-                    break;
-                }
-                String block = (k % 2 == 0 ? "home_counter_" : "home_drawers_") + finish;
-                if (!put(f, c[0], 1, c[1], block + face(fs))) {
-                    break;
-                }
-                placed++;
-                if (!window(f, c, s2) && occ[c[0] - x0][c[1] - z0][3] == 0) {
-                    put(f, c[0], 3, c[1], "home_wallcab_" + finish + face(fs));
-                }
-            }
-            if (placed > 0) {
-                return;
-            }
+            out.add(new int[] {x, z});
         }
+        return out;
     }
 
-    /** How many cells a cell of the room stands out from its wall on side s. */
-    private static int toWall(Room r, int[] c, int s) {
-        return switch (s) {
-            case 0 -> c[1] - r.b0;
-            case 1 -> r.a1 - c[0];
-            case 2 -> r.b1 - c[1];
-            default -> c[0] - r.a0;
-        };
+    /** The side whose wall lies in direction (dx, dz) from a cell. */
+    private static int wallToward(int dx, int dz) {
+        for (int k = 0; k < 4; k++) {
+            if (STEP[k][0] == dx && STEP[k][1] == dz) {
+                return k;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * More cupboards round the corner from the main run along wall s2, wall cabinets over them, and
+     * with fridge the fridge at their far end. False if the fridge was meant to go in but didn't.
+     */
+    private boolean kitchenL(int f, List<int[]> l, int s2, boolean fridge) {
+        int fs = (s2 + 2) & 3;
+        for (int k = 0; k < l.size(); k++) {
+            int[] c = l.get(k);
+            boolean last = k == l.size() - 1;
+            if (fridge && last) {
+                if (!putAll(f, new int[][] {{c[0], 1, c[1]}, {c[0], 2, c[1]}},
+                        new String[] {"home_fridge" + face(fs), "home_fridge_top" + face(fs)})) {
+                    return false;
+                }
+            } else if (!put(f, c[0], 1, c[1], (k % 2 == 0 ? "home_counter_" : "home_drawers_") + finish + face(fs))) {
+                return !fridge;
+            }
+            if (!window(f, c, s2) && occ[c[0] - x0][c[1] - z0][3] == 0) {
+                put(f, c[0], 3, c[1], "home_wallcab_" + finish + face(fs));
+            }
+        }
+        return true;
     }
 
     private void living(int f, Room r) {
@@ -1118,10 +1184,16 @@ final class Interior {
         table(f, r, r.w() >= 6 && r.d() >= 5 ? 4 : 2, 6);
         int s = longestWall(f, r);
         List<int[]> run = run(f, r, s, false);
-        if (!run.isEmpty()) {
-            int[] c = run.get(run.size() / 2);
-            put(f, c[0], 1, c[1], "home_dresser" + face((s + 2) & 3));
-            hang(f, c[0], c[1], s, 2, pick("home_picture_lake", "home_mirror", "home_picture_family"));
+        for (int k = 0; k < run.size(); k++) {
+            int i = run.size() / 2 + (k % 2 == 0 ? k / 2 : -(k + 1) / 2);
+            if (i < 0 || i >= run.size()) {
+                continue;
+            }
+            int[] c = run.get(i);
+            if (frontFree(c, (s + 2) & 3) && put(f, c[0], 1, c[1], "home_dresser" + face((s + 2) & 3))) {
+                hang(f, c[0], c[1], s, 2, pick("home_picture_lake", "home_mirror", "home_picture_family"));
+                break;
+            }
         }
         pair(f, r, "home_bookcase", "home_bookcase_top");
         radiator(f, r);
@@ -1135,7 +1207,7 @@ final class Interior {
             int fs = (s + 2) & 3;
             put(f, c[0], 1, c[1], "home_desk_pc" + face(fs));
             int[] ft = STEP[fs];
-            if (freeFloor(f, r, c[0] + ft[0], c[1] + ft[1])) {
+            if (clear(f, r, c[0] + ft[0], c[1] + ft[1])) {
                 put(f, c[0] + ft[0], 1, c[1] + ft[1], "office_chair" + face(fs));
             }
         }
@@ -1159,13 +1231,13 @@ final class Interior {
         }
         int s = farWall(f, r);
         bed(f, r, s, quilt, master && r.w() >= 4 && r.d() >= 4 ? 2 : 1, false,
-                kid ? "home_picture_stitch" : pick("home_picture_lake", "home_picture_family"), master, kid ? "blue" : rug);
+                kid ? "home_picture_stitch" : pick("home_picture_lake", "home_picture_family"), kid ? "blue" : rug);
         if (kid) {
             against(f, r, "home_toy_chest");
             int[] desk = against(f, r, "home_desk");
             if (desk != null) {
                 int[] ft2 = STEP[desk[2]];
-                if (freeFloor(f, r, desk[0] + ft2[0], desk[1] + ft2[1])) {
+                if (clear(f, r, desk[0] + ft2[0], desk[1] + ft2[1])) {
                     put(f, desk[0] + ft2[0], 1, desk[1] + ft2[1], "home_chair" + face((desk[2] + 2) & 3));
                 }
             }
@@ -1185,11 +1257,10 @@ final class Interior {
 
     /**
      * A bed with its head against wall s, as near the middle of the wall as it fits with room to
-     * walk round its foot, then a nightstand either side, a picture over it and a rug at its foot.
+     * walk round its foot, then a nightstand each open side, a picture over it and a rug at its foot.
      * With any, the other walls are tried if s has no room. False if no bed went in.
      */
-    private boolean bed(int f, Room r, int s0, String quilt, int width, boolean any, String picture, boolean both,
-                        String rugColour) {
+    private boolean bed(int f, Room r, int s0, String quilt, int width, boolean any, String picture, String rugColour) {
         for (int k0 = 0; k0 < (any ? 4 : 1); k0++) {
             int s = (s0 + k0) & 3;
             int fs = (s + 2) & 3;
@@ -1229,18 +1300,25 @@ final class Interior {
             }
             int[] c = run.get(placed);
             hang(f, c[0], c[1], s, 2, picture);
-            if (placed > 0) {
-                int[] e = run.get(placed - 1);
-                put(f, e[0], 1, e[1], "home_nightstand" + face(fs));
-            }
-            if (placed + width < run.size() && (both || rng.nextBoolean())) {
-                int[] e = run.get(placed + width);
-                put(f, e[0], 1, e[1], "home_nightstand" + face(fs));
+            // one nightstand on each side the bed is open, right by the head (none on a side
+            // against a wall), and no second bedside table beyond it
+            int[] sv = side(fs);
+            int[] last = run.get(placed + width - 1);
+            for (int[] e : new int[][] {{c[0] - sv[0], c[1] - sv[1], -1}, {last[0] + sv[0], last[1] + sv[1], 1}}) {
+                if (freeFloor(f, r, e[0], e[1]) && wallBehind(f, e[0], e[1], s)) {
+                    put(f, e[0], 1, e[1], "home_nightstand" + face(fs));
+                }
+                int bx = e[0] + sv[0] * e[2], bz = e[1] + sv[1] * e[2];
+                if (inside(bx, bz)) {
+                    noTable[bx - x0][bz - z0] = true;
+                }
+                if (inside(e[0], e[1]) && occ[e[0] - x0][e[1] - z0][1] == 0) {
+                    noTable[e[0] - x0][e[1] - z0] = true;  // the side left bare stays bare of tables too
+                }
             }
             // a rug at the foot
             int rx = c[0] + ft[0] * 2, rz = c[1] + ft[1] * 2;
             if (freeFloor(f, r, rx, rz) || path[rx - x0][rz - z0] && inRoom(f, r, rx, rz)) {
-                int[] sv = side(fs);
                 for (int j = -1; j <= width; j++) {
                     int x = rx + sv[0] * j, z = rz + sv[1] * j;
                     if (inRoom(f, r, x, z) && occ[x - x0][z - z0][1] == 0) {
@@ -1297,7 +1375,7 @@ final class Interior {
         }
         int s = farWall(f, r);
         bed(f, r, s, pick("quilt", "blue", "rose"), r.w() >= 6 && r.d() >= 6 ? 2 : 1, true,
-                pick("home_picture_lake", "home_picture_family"), false, rug);
+                pick("home_picture_lake", "home_picture_family"), rug);
         living(f, r);
         tall(f, r, "home_wardrobe", "home_wardrobe_top");
     }
@@ -1384,7 +1462,7 @@ final class Interior {
             if (!inRoom(f, r, x, z) || cellAt(f, x, z) != ROOM) {
                 continue;
             }
-            if (!rack && freeFloor(f, r, x, z) && wallBehind(f, x, z, 0) && rng.nextDouble() < 0.6) {
+            if (!rack && clear(f, r, x, z) && wallBehind(f, x, z, 0) && rng.nextDouble() < 0.6) {
                 rack = put(f, x, 1, z, "home_coat_rack" + face(2));
             } else if (!shoes && occ[x - x0][z - z0][1] == 0 && rng.nextDouble() < 0.7) {
                 shoes = put(f, x, 1, z, "home_shoes" + face(2));
@@ -1499,7 +1577,7 @@ final class Interior {
                 in = at != null;
                 if (in && piece.equals("home_desk")) {
                     int[] ft = STEP[at[2]];
-                    if (freeFloor(f, r, at[0] + ft[0], at[1] + ft[1])) {
+                    if (clear(f, r, at[0] + ft[0], at[1] + ft[1])) {
                         put(f, at[0] + ft[0], 1, at[1] + ft[1], "home_chair" + face((at[2] + 2) & 3));
                     }
                 }
@@ -1548,7 +1626,7 @@ final class Interior {
                 int[] c = run.get(i);
                 byte out = cellAt(f, c[0] + STEP[s][0], c[1] + STEP[s][1]);
                 if ((out != LINING && out != OUT) || window(f, c, s) || occ[c[0] - x0][c[1] - z0][2] != 0
-                        || occ[c[0] - x0][c[1] - z0][3] != 0) {
+                        || occ[c[0] - x0][c[1] - z0][3] != 0 || !frontFree(c, fs)) {
                     continue;
                 }
                 if (putAll(f, new int[][] {{c[0], 1, c[1]}, {c[0], 2, c[1]}, {c[0], 3, c[1]}},
@@ -1568,7 +1646,8 @@ final class Interior {
             int fs = (s + 2) & 3;
             for (int i = 0; i + 1 < run.size(); i++) {
                 int[] a = run.get(i), b = run.get(i + 1);
-                if (!adjacent(run, i, 1) || window(f, a, s) || window(f, b, s)) {
+                if (!adjacent(run, i, 1) || window(f, a, s) || window(f, b, s)
+                        || !clear(f, r, a[0] + STEP[fs][0], a[1] + STEP[fs][1])) {
                     continue;
                 }
                 if (putAll(f, new int[][] {{a[0], 1, a[1]}, {b[0], 1, b[1]}},
@@ -1775,7 +1854,7 @@ final class Interior {
                 x = s == 3 ? r.a0 : r.a1;
                 z = sv[1] > 0 ? r.b0 + i : r.b1 - i;
             }
-            if (any || freeFloor(f, r, x, z) && wallBehind(f, x, z, s)) {
+            if (any || freeFloor(f, r, x, z) && wallBehind(f, x, z, s) && !keep[x - x0][z - z0]) {
                 out.add(new int[] {x, z});
             }
         }
@@ -1823,7 +1902,7 @@ final class Interior {
             }
             int[] c = run.get(rng.nextInt(run.size()));
             int fs = (s + 2) & 3;
-            if (name.equals("-") || put(f, c[0], 1, c[1], name + face(fs))) {
+            if (name.equals("-") || frontFree(c, fs) && put(f, c[0], 1, c[1], name + face(fs))) {
                 return new int[] {c[0], c[1], fs};
             }
         }
@@ -1837,7 +1916,7 @@ final class Interior {
             int s = (s0 + k) & 3;
             for (int[] c : run(f, r, s, false)) {
                 int fs = (s + 2) & 3;
-                if (!window(f, c, s) && occ[c[0] - x0][c[1] - z0][2] == 0
+                if (!window(f, c, s) && occ[c[0] - x0][c[1] - z0][2] == 0 && frontFree(c, fs)
                         && putAll(f, new int[][] {{c[0], 1, c[1]}, {c[0], 2, c[1]}}, new String[] {low + face(fs), top + face(fs)})) {
                     return;
                 }
@@ -1854,7 +1933,7 @@ final class Interior {
             for (int i = 0; i + 1 < run.size(); i++) {
                 int[] a = run.get(i), b = run.get(i + 1);
                 int fs = (s + 2) & 3;
-                if (adjacent(run, i, 1) && !window(f, a, s) && !window(f, b, s)
+                if (adjacent(run, i, 1) && !window(f, a, s) && !window(f, b, s) && frontFree(a, fs) && frontFree(b, fs)
                         && putAll(f, new int[][] {{a[0], 1, a[1]}, {a[0], 2, a[1]}, {b[0], 1, b[1]}, {b[0], 2, b[1]}},
                         new String[] {low + face(fs), top + face(fs), low + face(fs), top + face(fs)})) {
                     return;
@@ -1869,7 +1948,7 @@ final class Interior {
         int k0 = rng.nextInt(4);
         for (int k = 0; k < 4; k++) {
             int[] c = cs[(k0 + k) & 3];
-            if (freeFloor(f, r, c[0], c[1]) && put(f, c[0], 1, c[1], name + face(rng.nextInt(4)))) {
+            if (freeFloor(f, r, c[0], c[1]) && !keep[c[0] - x0][c[1] - z0] && put(f, c[0], 1, c[1], name + face(rng.nextInt(4)))) {
                 return;
             }
         }
@@ -1896,7 +1975,8 @@ final class Interior {
                     for (int j = -1; j <= td && ok; j++) {
                         int cx = x + i, cz = z + j;
                         boolean core = i >= 0 && i < tw && j >= 0 && j < td;
-                        if (core ? !freeFloor(f, r, cx, cz) : !inRoom(f, r, cx, cz) || occ[cx - x0][cz - z0][1] != 0) {
+                        if (core ? !freeFloor(f, r, cx, cz) || keep[cx - x0][cz - z0]
+                                : !inRoom(f, r, cx, cz) || occ[cx - x0][cz - z0][1] != 0 || keep[cx - x0][cz - z0]) {
                             ok = false;
                         }
                     }
@@ -2046,6 +2126,12 @@ final class Interior {
         boolean blocks1 = false;
         for (int i = 0; i < at.length; i++) {
             int[] c = at[i];
+            if (inside(c[0], c[2]) && c[1] == 1 && noTable[c[0] - x0][c[2] - z0] && TABLES.contains(base(blocks[i]))) {
+                return false;
+            }
+        }
+        for (int i = 0; i < at.length; i++) {
+            int[] c = at[i];
             if (!inside(c[0], c[2])) {
                 continue;
             }
@@ -2077,8 +2163,31 @@ final class Interior {
             if (inside(c[0], c[2]) && c[1] < H) {
                 what[c[0] - x0][c[2] - z0][c[1]] = open > 0 ? block.substring(0, open) : block;
             }
+            int fi = block.indexOf("facing=");
+            if (c[1] == 1 && fi > 0 && FRONTED.contains(fronted(base(block)))) {
+                int d = List.of(DIRS).indexOf(block.substring(fi + 7).replaceAll("[,\\]].*", ""));
+                if (d >= 0 && inside(c[0] + STEP[d][0], c[2] + STEP[d][1])) {
+                    keep[c[0] + STEP[d][0] - x0][c[2] + STEP[d][1] - z0] = true;
+                }
+            }
         }
         return true;
+    }
+
+    private static String base(String block) {
+        int open = block.indexOf('[');
+        return open > 0 ? block.substring(0, open) : block;
+    }
+
+    /** A fitted piece's family name: home_dishwasher_oak and the like count as their kind. */
+    private static String fronted(String b) {
+        return b.startsWith("home_dishwasher") ? "home_stove" : b;
+    }
+
+    /** Whether the cell in front of a piece at c facing fs is clear of anything you can't step over. */
+    private boolean frontFree(int[] c, int fs) {
+        int fx = c[0] + STEP[fs][0], fz = c[1] + STEP[fs][1];
+        return !inside(fx, fz) || occ[fx - x0][fz - z0][1] != 1;
     }
 
     /** Whether a piece stands in the way: rugs, litter, bodies and the like can be walked over. */
@@ -2093,6 +2202,11 @@ final class Interior {
 
     private boolean freeFloor(int f, Room r, int x, int z) {
         return inRoom(f, r, x, z) && cellAt(f, x, z) == ROOM && occ[x - x0][z - z0][1] == 0 && !path[x - x0][z - z0];
+    }
+
+    /** Free floor that isn't in front of a fridge, a wardrobe or the like. */
+    private boolean clear(int f, Room r, int x, int z) {
+        return freeFloor(f, r, x, z) && !keep[x - x0][z - z0];
     }
 
     private boolean inRoom(int f, Room r, int x, int z) {
