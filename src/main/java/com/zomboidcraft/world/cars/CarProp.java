@@ -197,6 +197,7 @@ public class CarProp extends Entity {
     @Override
     public void remove(RemovalReason reason) {
         if (reason.shouldDestroy() && level() instanceof ServerLevel server) {
+            ZomboidCraft.LOGGER.info("Car {} removed ({})", model(), reason);
             Cars.clearHull(server, this);
         }
         super.remove(reason);
