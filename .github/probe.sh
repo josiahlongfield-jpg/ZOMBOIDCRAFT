@@ -65,6 +65,11 @@ exit 0
 
 
 
+echo "===== sound"
+sig net.minecraft.client.resources.sounds.AbstractSoundInstance '.'
+sig net.minecraft.client.resources.sounds.SoundInstance '.'
+sig net.minecraft.client.resources.sounds.Sound 'public'
+
 echo "===== scope"
 classes 'RenderPipelines|gui/Gui\.class|hud/VanillaHudElements|hud/HudElementRegistry'
 sig net.minecraft.client.renderer.RenderPipelines 'GUI'

@@ -111,6 +111,7 @@ public final class HordeSounds {
     private static final class Take extends AbstractTickableSoundInstance {
         private final Bed bed;
         private int age;
+        private boolean picked;
 
         Take(Bed bed) {
             super(bed.event, SoundSource.HOSTILE, SoundInstance.createUnseededRandom());
@@ -127,14 +128,15 @@ public final class HordeSounds {
             z = at.z;
         }
 
-        /** Picks a take other than the one the bed played last. */
+        /** The first time the take is looked up, picks one other than the one the bed played last. */
         @Override
-        public WeighedSoundEvents resolve(SoundManager manager) {
-            WeighedSoundEvents events = super.resolve(manager);
-            for (int i = 0; i < 8 && sound != null && sound.getLocation().equals(bed.lastTake); i++) {
-                events = super.resolve(manager);
-            }
-            if (sound != null) {
+        public WeighedSoundEvents getOrResolve(SoundManager manager) {
+            WeighedSoundEvents events = super.getOrResolve(manager);
+            if (!picked && events != null && sound != null) {
+                picked = true;
+                for (int i = 0; i < 8 && sound.getLocation().equals(bed.lastTake); i++) {
+                    sound = events.getSound(random);
+                }
                 bed.lastTake = sound.getLocation();
             }
             return events;
