@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -58,9 +59,12 @@ public final class ZombieSpawner {
         int centerZ = player.getBlockZ() + (int) (Math.sin(angle) * distance);
 
         for (int i = 0; i < count; i++) {
-            int x = centerX + random.nextInt(7) - 3;
-            int z = centerZ + random.nextInt(7) - 3;
-            BlockPos pos = findSpot(level, x, z, player.getBlockY());
+            BlockPos pos = null;
+            for (int tries = 0; tries < 4 && pos == null; tries++) {
+                int x = centerX + random.nextInt(7 + tries * 4) - 3 - tries * 2;
+                int z = centerZ + random.nextInt(7 + tries * 4) - 3 - tries * 2;
+                pos = findSpot(level, x, z, player.getBlockY());
+            }
             if (pos != null) {
                 Zombie zombie = EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
                 if (zombie != null && random.nextInt(4) == 0) {
@@ -98,8 +102,27 @@ public final class ZombieSpawner {
         boolean standable = level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)
                 || (!floor.isEmpty() && floor.max(Direction.Axis.Y) >= 0.5);
         return standable
+                && !level.getBlockState(below).is(BlockTags.LEAVES)
                 && level.getBlockState(pos).getCollisionShape(level, pos).isEmpty()
-                && level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty();
+                && level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty()
+                && !perched(level, pos);
+    }
+
+    /**
+     * True for a spot out under the sky that stands on something hollow: a roof, a treetop, the
+     * top of a water tower. Indoors (anything over it) and solid ground outdoors are fine.
+     */
+    private static boolean perched(ServerLevel level, BlockPos pos) {
+        if (pos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ())) {
+            return false;  // under a roof or a floor: inside a building
+        }
+        for (int k = 2; k <= 6; k++) {
+            BlockPos at = pos.below(k);
+            if (level.getBlockState(at).getCollisionShape(level, at).isEmpty()) {
+                return true;  // air under the block it would stand on
+            }
+        }
+        return false;
     }
 
     private ZombieSpawner() {
