@@ -11,8 +11,8 @@ import net.minecraft.util.Mth;
 
 /**
  * Health, the whole body at once: a small figure of you in the bottom-left corner (the inventory mirror's), lit red
- * from below as you get hurt, with a word for how you are. It turns its head where you look, at half strength, and
- * keeps out of sight while you're fine. Low health and fresh hurts also put blood at the screen's edge.
+ * from below as you get hurt, with a word for how you are. It turns its head where you look, at half strength. It
+ * stays on screen, or with that setting off keeps out of sight while you're fine. Low health and fresh hurts also put blood at the screen's edge.
  */
 final class BodyHud {
     private static final int W = 50, H = 84, LEFT = 8, BOTTOM = 14;
@@ -60,7 +60,7 @@ final class BodyHud {
             sinceChange = 0;
         }
         lastHealth = health;
-        float a = fade.update(Hud.peek || sinceChange < SHOW || wounds > 0 || f < .5f);
+        float a = fade.update(HudSettings.figureAlways || Hud.peek || sinceChange < SHOW || wounds > 0 || f < .5f);
         if (a <= 0) return;
 
         // tucks away down and to the left

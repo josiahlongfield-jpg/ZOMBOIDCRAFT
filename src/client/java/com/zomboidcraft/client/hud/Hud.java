@@ -47,6 +47,7 @@ public final class Hud {
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(PEEK);
+        HudSettings.register();
         // Minecraft's own pieces step aside while the field kit is up, and come back in creative or with it off
         HudElementRegistry.replaceElement(VanillaHudElements.HOTBAR, vanilla -> (g, delta) -> {
             if (active()) BeltHud.render(g, delta);
