@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_emergency_0": "zomboidcraft:block/city/sign_emergency_0",
+    "particle": "zomboidcraft:block/city/sign_emergency_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_emergency_0",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_emergency_0"
+        },
+        "east": {
+          "texture": "#sign_emergency_0",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_emergency_0",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_emergency_0",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_emergency_0",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
