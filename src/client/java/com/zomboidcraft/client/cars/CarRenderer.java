@@ -41,6 +41,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.yaw = car.getYRot(partialTick);
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
+        state.smashed = car.smashed();
         state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         Entity eye = mc.getCameraEntity();
         state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye));
@@ -76,7 +77,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         for (int i = 0; i < wheels.length; i++) {
             wheels[i] = wheel(car.wheels().get(i), state.rolled, state.steer);
         }
-        boolean solidGlass = state.lod >= CarLod.SOLID_GLASS;
+        boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, (mesh, turn) -> {
                 draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1);
@@ -85,7 +86,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 }
             });
         });
-        if (!state.inside && !solidGlass) {
+        if (!state.inside && !state.smashed && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
                 each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
             });
