@@ -50,12 +50,15 @@ import org.joml.Vector3f;
  * The laser runs from its lens on the right rail to a green dot on whatever is under the crosshair, with the gun on
  * the sights or pointed from the hip (RifleView turns it so its barrel lines up); while the gun is busy, in a
  * reload, it goes wherever the barrel does. The light throws a cone from its lens on the left rail: a soft pool
- * where it lands and a faint beam in the air, both in the dark only. It also lights the world there with a light
- * block put only into this computer's copy of the world, kept dim (guns.lightLevel) so it doesn't flood the rooms
- * around: the server's world never changes.
+ * where it lands and a faint beam in the air, both in the dark only. It also lights the world with light blocks put
+ * only into this computer's copy of the world, spaced down the beam: brightest just ahead of the gun
+ * (guns.lightLevel), fading as the beam widens, so the floor and walls round it light up whether or not it lands on
+ * anything. The server's world never changes.
  */
 public final class RailLights {
     private static final double RANGE = 32, LIGHT_RANGE = 24;
+    /** The light blocks down a beam: the first this far ahead of the lens, at least this far apart, a level dimmer every LIGHT_FADE blocks. */
+    private static final double FIRST_LIGHT = 1.5, LIGHT_GAP = 3, LIGHT_FADE = 3;
     private static final Identifier GLOW = ZomboidCraft.id("textures/effect/rail_glow.png");
     private static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -64,8 +67,9 @@ public final class RailLights {
     /** From outside, where the laser and the light sit from a player's eye (x right, y up, z back). */
     private static final Vector3f LASER_OUTSIDE = new Vector3f(0.20f, -0.24f, -0.55f), LIGHT_OUTSIDE = new Vector3f(0.10f, -0.30f, -0.55f);
 
-    private static final Map<UUID, BlockPos> LIT = new HashMap<>();
-    /** Where each player's light landed in the last frame drawn, for the light block. */
+    /** The light blocks each player's gun light has put in, and how bright each is. */
+    private static final Map<UUID, Map<BlockPos, Integer>> LIT = new HashMap<>();
+    /** Where each player's light went in the last frame drawn, for the light blocks. */
     private static final Map<UUID, Land> LANDS = new HashMap<>();
     /** Iris's own "is a shader pack on" call, looked up once (none without Iris). */
     private static boolean irisAsked;
@@ -73,8 +77,8 @@ public final class RailLights {
     private static Method shaderPackInUse;
     private static ClientLevel litIn;
 
-    /** Where a light landed (null for nothing in reach), the way its beam came, and how far it went. */
-    private record Land(Vec3 at, Vec3 dir, double distance) {
+    /** Where a light came from, where it landed (null for nothing in reach), the way it went, and how far. */
+    private record Land(Vec3 from, Vec3 at, Vec3 dir, double distance) {
     }
 
     /**
@@ -110,48 +114,57 @@ public final class RailLights {
                 continue;
             }
             lit.add(player.getUUID());
-            moveLight(level, player.getUUID(), land, brightest);
+            moveLights(level, player.getUUID(), land, brightest, Mth.clamp(ZcConfig.get().guns.lightSources, 1, 8));
         }
         LIT.entrySet().removeIf(e -> {
             if (lit.contains(e.getKey())) {
                 return false;
             }
-            clear(level, e.getValue());     // switched off, put away, or gone
+            e.getValue().keySet().forEach(pos -> clear(level, pos));      // switched off, put away, or gone
             return true;
         });
     }
 
-    private static void moveLight(ClientLevel level, UUID id, Land land, int brightest) {
-        BlockPos pos = null;
-        if (land.at() != null) {
-            // in the air just short of where it lands, back along the beam: always on the gun's side of the surface
-            for (double back = 0.5; back < 3 && pos == null; back += 1) {
-                BlockPos p = BlockPos.containing(land.at().subtract(land.dir().scale(back)));
+    /**
+     * Puts one player's light blocks where the beam is now: spaced down it from just ahead of the gun, brightest
+     * there and fading a level every few blocks as it widens, the last just short of whatever it lands on.
+     */
+    private static void moveLights(ClientLevel level, UUID id, Land land, int brightest, int sources) {
+        Map<BlockPos, Integer> had = LIT.getOrDefault(id, Map.of()), want = new HashMap<>();
+        double end = land.at() != null ? land.distance() - 0.5 : land.distance();
+        int count = Math.min(sources, 1 + (int) (Math.max(0, end - FIRST_LIGHT) / LIGHT_GAP));
+        for (int i = 0; i < count; i++) {
+            double s = count == 1 ? Math.min(end, FIRST_LIGHT) : FIRST_LIGHT + (end - FIRST_LIGHT) * i / (count - 1);
+            int brightness = Mth.clamp(brightest - (int) (Math.max(0, s - FIRST_LIGHT) / LIGHT_FADE), Math.min(2, brightest), 15);
+            // in the air on the gun's side of anything in the way: back along the beam a little if it's taken
+            for (double back = 0; back < 2 && s - back > 0.2; back += 0.5) {
+                BlockPos p = BlockPos.containing(land.from().add(land.dir().scale(s - back)));
                 BlockState here = level.getBlockState(p);
-                if (here.isAir() || here.is(Blocks.LIGHT) && p.equals(LIT.get(id))) {
-                    pos = p;
+                if (here.isAir() || here.is(Blocks.LIGHT) && had.containsKey(p)) {
+                    want.merge(p, brightness, Math::max);
+                    break;
                 }
             }
         }
-        // brightest up close, dimming as the beam spreads out
-        int brightness = pos == null ? 0 : Mth.clamp(brightest - (int) (land.distance() / 5), Math.min(3, brightest), 15);
-        BlockPos old = LIT.get(id);
-        if (old != null && !old.equals(pos)) {
-            clear(level, old);
-            LIT.remove(id);
-        }
-        if (pos == null) {
-            return;
-        }
-        BlockState here = level.getBlockState(pos);
-        if (here.is(Blocks.LIGHT)) {
-            if (here.getValue(LightBlock.LEVEL) != brightness && pos.equals(LIT.get(id))) {
-                level.setBlock(pos, here.setValue(LightBlock.LEVEL, brightness), FLAGS);
+        for (BlockPos old : had.keySet()) {
+            if (!want.containsKey(old)) {
+                clear(level, old);
             }
-        } else if (here.isAir()) {
-            level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, brightness), FLAGS);
-            LIT.put(id, pos);
         }
+        Map<BlockPos, Integer> placed = new HashMap<>();
+        want.forEach((pos, brightness) -> {
+            BlockState here = level.getBlockState(pos);
+            if (here.is(Blocks.LIGHT) && had.containsKey(pos)) {
+                if (!brightness.equals(had.get(pos))) {
+                    level.setBlock(pos, here.setValue(LightBlock.LEVEL, brightness), FLAGS);
+                }
+                placed.put(pos, brightness);
+            } else if (here.isAir()) {
+                level.setBlock(pos, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, brightness), FLAGS);
+                placed.put(pos, brightness);
+            }
+        });
+        LIT.put(id, placed);
     }
 
     private static void clear(ClientLevel level, BlockPos pos) {
@@ -171,8 +184,8 @@ public final class RailLights {
             return;
         }
         ZcConfig.Guns config = ZcConfig.get().guns;
-        boolean glow = config.glowWithShaders || !shaderPackOn();
-        Quads quads = new Quads(cam.pos);
+        boolean shaders = shaderPackOn(), glow = config.glowWithShaders || !shaders;
+        Quads quads = new Quads(cam.pos, shaders);
         for (AbstractClientPlayer player : level.players()) {
             ItemStack gun = player.getMainHandItem();
             if (!GunType.isGun(gun) || player.isSpectator()) {
@@ -189,14 +202,16 @@ public final class RailLights {
                 RifleView.aimDistance((float) held.eye().distanceTo(target));
             }
             if (laser) {
-                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam && glow, glow);
+                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam);
             }
             if (light) {
                 light(level, player, held, target, quads, config, glow);
             }
         }
         if (quads.count > 0) {
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.eyes(GLOW), quads::emit);
+            // added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
+                    shaders ? RenderTypes.beaconBeam(GLOW, true) : RenderTypes.eyes(GLOW), quads::emit);
         }
     }
 
@@ -231,7 +246,7 @@ public final class RailLights {
     }
 
     private static void laser(ClientLevel level, AbstractClientPlayer player, Held held, boolean onSomething, Vec3 target,
-                              Quads quads, boolean beam, boolean glow) {
+                              Quads quads, boolean beam) {
         boolean pointed = held.onTarget() > 0.999f;
         Vec3 dir = blend(held.bore(), target.subtract(held.laser()).normalize(), held.onTarget());
         double reach = pointed ? held.laser().distanceTo(target) + 0.05 : RANGE;
@@ -248,14 +263,13 @@ public final class RailLights {
         }
         if (beam) {
             quads.ribbon(held.laser(), end, 14, (s, away) -> Math.max(0.0025, away * 0.0011),
-                    (s, away) -> scaled(GREEN, (float) (0.1 + 0.25 * Math.exp(-s / 4))));
+                    (s, away) -> quads.shade(GREEN, (float) (0.1 + 0.25 * Math.exp(-s / 4))));
         }
         if (dot) {
             Vec3 c = end.add(quads.cam.subtract(end).normalize().scale(0.03));
             double size = 0.03 + 0.0025 * c.distanceTo(quads.cam);
-            // with a shader pack the dot is drawn as a coloured surface, not added light: full strength keeps it bright
-            quads.facing(c, size, scaled(GREEN, glow ? 0.7f : 1f));
-            quads.facing(c, size * 0.35, scaled(GREEN_CORE, 1f));
+            quads.facing(c, size, quads.shade(GREEN, quads.blended ? 1f : 0.7f));
+            quads.facing(c, size * 0.35, quads.shade(GREEN_CORE, 1f));
         }
     }
 
@@ -267,7 +281,7 @@ public final class RailLights {
                 ClipContext.Fluid.NONE, player));
         boolean lands = centre.getType() != HitResult.Type.MISS;
         double reach = lands ? centre.getLocation().distanceTo(from) : LIGHT_RANGE;
-        LANDS.put(player.getUUID(), new Land(lands ? centre.getLocation() : null, axis, reach));
+        LANDS.put(player.getUUID(), new Land(from, lands ? centre.getLocation() : null, axis, reach));
 
         float glow = (float) config.lightGlow;
         if (glow <= 0 || !drawn) {
@@ -288,7 +302,7 @@ public final class RailLights {
         if (config.lightBeam && dark > 0.01f) {
             double length = Math.min(reach, 14), spread = Math.tan(cone * 0.6);
             float strength = 0.09f * glow * dark;
-            quads.ribbon(from, from.add(axis.scale(length)), 10, (s, away) -> 0.035 + s * spread, (s, away) -> scaled(WHITE,
+            quads.ribbon(from, from.add(axis.scale(length)), 10, (s, away) -> 0.035 + s * spread, (s, away) -> quads.shade(WHITE,
                     (float) (strength * Math.min(1, s / 0.5) * Math.exp(-s / 6) * Math.min(1, (length - s) / 0.6 + 0.05))));
         }
     }
@@ -310,7 +324,7 @@ public final class RailLights {
         if (strength < 0.004f) {
             return;
         }
-        quads.flat(hit.getLocation().add(normal.scale(0.012)), normal, Math.max(0.15, distance * Math.tan(spread)), scaled(WHITE, strength));
+        quads.flat(hit.getLocation().add(normal.scale(0.012)), normal, Math.max(0.15, distance * Math.tan(spread)), quads.shade(WHITE, strength));
     }
 
     /**
@@ -396,12 +410,6 @@ public final class RailLights {
         return axis.scale(Math.cos(off)).add(u.scale(s * Math.cos(turn))).add(v.scale(s * Math.sin(turn))).normalize();
     }
 
-    /** A colour times a strength, packed (the glow is added to what's behind it, so dimmer is fainter). */
-    private static int scaled(float[] rgb, float strength) {
-        int r = Mth.clamp((int) (rgb[0] * strength * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * strength * 255), 0, 255),
-                b = Mth.clamp((int) (rgb[2] * strength * 255), 0, 255);
-        return 0xFF000000 | r << 16 | g << 8 | b;
-    }
 
     // ------------------------------------------------------------------ the glow's quads
 
@@ -417,12 +425,27 @@ public final class RailLights {
     private static final class Quads {
         private static final int STRIDE = 8;
         final Vec3 cam;
+        /** Blended over what's behind (a shader pack's beacon-beam look) instead of added to it. */
+        final boolean blended;
         private float[] corners = new float[64 * 4 * STRIDE];
         private int[] colours = new int[64 * 4];
         int count;
 
-        Quads(Vec3 cam) {
+        Quads(Vec3 cam, boolean blended) {
             this.cam = cam;
+            this.blended = blended;
+        }
+
+        /**
+         * A colour at a strength, packed: added light gets dimmer for fainter (a shader pack draws that dark, so
+         * blended quads keep the full colour and get more see-through instead).
+         */
+        int shade(float[] rgb, float strength) {
+            float k = blended ? 1 : strength;
+            int r = Mth.clamp((int) (rgb[0] * k * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * k * 255), 0, 255),
+                    b = Mth.clamp((int) (rgb[2] * k * 255), 0, 255);
+            int a = blended ? Mth.clamp((int) (strength * 255), 0, 255) : 255;
+            return a << 24 | r << 16 | g << 8 | b;
         }
 
         private void corner(Vec3 p, float u, float v, int colour, Vec3 normal) {
@@ -457,10 +480,27 @@ public final class RailLights {
         }
 
         private void square(Vec3 c, Vec3 a, Vec3 b, int colour, Vec3 normal) {
-            corner(c.subtract(a).subtract(b), 0, 0, colour, normal);
-            corner(c.subtract(a).add(b), 0, 1, colour, normal);
-            corner(c.add(a).add(b), 1, 1, colour, normal);
-            corner(c.add(a).subtract(b), 1, 0, colour, normal);
+            quad(c.subtract(a).subtract(b), c.subtract(a).add(b), c.add(a).add(b), c.add(a).subtract(b), 0, 0, 0, 1, 1, 1, 1, 0,
+                    colour, colour, normal);
+        }
+
+        /**
+         * Four corners (texture corners u, v for each) wound anticlockwise as seen from the normal's side, so the
+         * quad faces that way and isn't culled as a back face. The first two corners take colour a, the others b.
+         */
+        private void quad(Vec3 p0, Vec3 p1, Vec3 p2, Vec3 p3, float u0, float v0, float u1, float v1, float u2, float v2,
+                          float u3, float v3, int a, int b, Vec3 normal) {
+            if (p1.subtract(p0).cross(p2.subtract(p0)).dot(normal) >= 0) {
+                corner(p0, u0, v0, a, normal);
+                corner(p1, u1, v1, a, normal);
+                corner(p2, u2, v2, b, normal);
+                corner(p3, u3, v3, b, normal);
+            } else {
+                corner(p1, u1, v1, a, normal);
+                corner(p0, u0, v0, a, normal);
+                corner(p3, u3, v3, b, normal);
+                corner(p2, u2, v2, b, normal);
+            }
         }
 
         /**
@@ -488,10 +528,7 @@ public final class RailLights {
                 int c = colour.at(s, away);
                 if (lastL != null) {
                     Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
-                    corner(lastL, 0, 0.5f, lastC, n);
-                    corner(lastR, 1, 0.5f, lastC, n);
-                    corner(r, 1, 0.5f, c, n);
-                    corner(l, 0, 0.5f, c, n);
+                    quad(lastL, lastR, r, l, 0, 0.5f, 1, 0.5f, 1, 0.5f, 0, 0.5f, lastC, c, n);
                 }
                 lastL = l;
                 lastR = r;

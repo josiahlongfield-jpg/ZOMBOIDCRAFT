@@ -363,10 +363,15 @@ public final class ZcConfig {
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
         /**
-         * How bright (a light level, 1 to 15) the world is lit where a gun light lands up close, dimming with
-         * distance. Higher lights more of the rooms around it too. Client side.
+         * How bright (a light level, 1 to 15) a gun light lights the world just ahead of it, fading a level every
+         * three blocks down the beam. Higher lights more of the rooms around it too. Client side.
          */
         public int lightLevel = 11;
+        /**
+         * How many hidden lights a gun light spreads down its beam (1 to 8). More light the floor and walls further
+         * along it, but cost frames when you turn. Client side.
+         */
+        public int lightSources = 5;
         /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
         public double lightCone = 13;
         /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
@@ -374,8 +379,8 @@ public final class ZcConfig {
         /** A gun light's beam shows faintly in the air. Client side. */
         public boolean lightBeam = true;
         /**
-         * Draws the laser's beam and a gun light's pool and beam even with a shader pack on. Off by default: shader
-         * packs like Photon draw them as a dark smear, and light the world from the gun light themselves. Client side.
+         * Draws a gun light's pool and beam even with a shader pack on. Off by default: shader packs like Photon light
+         * the world from the gun light themselves. Client side.
          */
         public boolean glowWithShaders = false;
     }
