@@ -2,6 +2,7 @@ package com.zomboidcraft;
 
 import com.zomboidcraft.barricade.HammerItem;
 import com.zomboidcraft.combat.AttachmentItem;
+import com.zomboidcraft.combat.CaseItem;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
@@ -99,6 +100,15 @@ public final class ModItems {
     public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
     public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
     public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
+
+    // Gun cases and an ammo can: carried in the off hand, packed when found (combat/CaseItem).
+    public static final Item RIFLE_CASE = gunCase("rifle_case", CaseItem.Kind.RIFLE, com.zomboidcraft.carry.BagSpec.RIFLE_CASE);
+    public static final Item PISTOL_CASE = gunCase("pistol_case", CaseItem.Kind.PISTOL, com.zomboidcraft.carry.BagSpec.PISTOL_CASE);
+    public static final Item AMMO_CAN = gunCase("ammo_can", CaseItem.Kind.AMMO, com.zomboidcraft.carry.BagSpec.AMMO_CAN);
+
+    private static Item gunCase(String name, CaseItem.Kind kind, com.zomboidcraft.carry.BagSpec spec) {
+        return register(name, properties -> new CaseItem(kind, spec, properties), new Item.Properties());
+    }
 
     private static Item bag(String name, com.zomboidcraft.carry.BagSpec spec) {
         return register(name, properties -> new com.zomboidcraft.carry.BagItem(spec, properties), new Item.Properties());

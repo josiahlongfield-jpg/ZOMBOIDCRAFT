@@ -2,6 +2,7 @@ package com.zomboidcraft.carry;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.CaseItem;
 import com.zomboidcraft.combat.Stamina;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
@@ -113,8 +114,8 @@ public final class Carry {
         int before = stack.getCount();
         for (BagContainer bag : menu.zomboidcraft$bags()) {
             BagSpec spec = bag.spec();
-            if (spec == null) {
-                continue;
+            if (spec == null || !spec.holds().test(stack)) {
+                continue;       // nothing worn here, or a case or can that won't take it
             }
             // top up matching stacks, then fill empty slots
             for (int pass = 0; pass < 2 && !stack.isEmpty(); pass++) {
@@ -191,6 +192,13 @@ public final class Carry {
             showWorn(player);
             if (ticks % 10 != 0) {
                 continue;
+            }
+            // a gun case or ammo can found shut is filled the first time someone has it
+            Inventory inventory = player.getInventory();
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                if (CaseItem.unpack(inventory.getItem(i), player.getRandom())) {
+                    inventory.setChanged();
+                }
             }
             boolean on = ZcConfig.get().carry.weight && !player.isCreative() && !player.isSpectator();
             float ratio = on ? Math.round(load(player) / capacity() * 100f) / 100f : 0f;
