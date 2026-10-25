@@ -44,6 +44,22 @@ FASCIA = [
     ("thrift", "painted", "SECOND CHANCE THRIFT", (82, 58, 98), (230, 210, 118), 6, "serif"),
     ("riverside", "channel", "RIVERSIDE LIQUOR", None, (176, 44, 34), 5, "black"),
     ("kessler", "channel", "KESSLER HARDWARE", None, (214, 208, 190), 5, "sans"),
+    # out in the county: the quarantine, roadside stops, farms, the school, the port
+    ("quarantine", "box", "QUARANTINE ZONE", (214, 180, 40), (24, 24, 22), 5, "black"),
+    ("restricted", "box", "RESTRICTED AREA - KEEP OUT", (178, 36, 32), (236, 232, 220), 7, "black"),
+    ("armydepot", "box", "US ARMY SUPPLY DEPOT", (58, 68, 46), (230, 226, 210), 6, "black"),
+    ("motel", "painted", "SLEEPY PINES MOTEL", (40, 70, 58), (230, 214, 160), 5, "serif"),
+    ("fuel", "box", "GAS - FOOD - BAIT", (196, 42, 34), (236, 232, 222), 5, "black"),
+    ("route9", "painted", "ROUTE 9 DINER", (150, 40, 36), (236, 222, 180), 4, "serif"),
+    ("feed", "painted", "KNOX FEED & SEED", (38, 72, 44), (228, 214, 170), 5, "serif"),
+    ("school", "channel", "KNOX COUNTY HIGH SCHOOL", None, (210, 206, 190), 7, "sans"),
+    ("church", "painted", "FIRST BAPTIST CHURCH", (226, 222, 208), (40, 42, 60), 5, "serif"),
+    ("terminal", "channel", "LOUISVILLE MARINE TERMINAL", None, (190, 196, 200), 7, "sans"),
+    ("bait", "painted", "BAIT & TACKLE", (56, 88, 108), (236, 228, 200), 4, "serif"),
+    ("grain", "painted", "RIVERBEND GRAIN CO.", (120, 36, 30), (234, 226, 206), 5, "serif"),
+    ("storage", "box", "COUNTY SELF STORAGE", (226, 186, 52), (30, 30, 28), 5, "black"),
+    ("shadyacres", "painted", "SHADY ACRES MOBILE HOMES", (64, 88, 52), (232, 224, 190), 6, "serif"),
+    ("sheriff", "box", "COUNTY SHERIFF", (30, 40, 70), (230, 226, 210), 4, "black"),
 ]
 # hanging neon, a letter per block: id, letters, tube colour
 BLADES = [
@@ -51,6 +67,8 @@ BLADES = [
     ("bar", "BAR", (70, 150, 255)),
     ("pawn", "PAWN", (255, 176, 60)),
     ("diner", "DINER", (255, 90, 190)),
+    ("motel", "MOTEL", (255, 70, 60)),
+    ("eat", "EAT", (255, 170, 60)),
 ]
 OPEN_TUBE, OPEN_RIM = (255, 60, 50), (60, 130, 255)
 

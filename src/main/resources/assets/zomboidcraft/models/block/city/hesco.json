@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dirt_withered": "zomboidcraft:block/city/dirt_withered",
+    "hesco": "zomboidcraft:block/city/hesco",
+    "particle": "zomboidcraft:block/city/hesco"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hesco",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hesco",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hesco",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hesco",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dirt_withered",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dirt_withered",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

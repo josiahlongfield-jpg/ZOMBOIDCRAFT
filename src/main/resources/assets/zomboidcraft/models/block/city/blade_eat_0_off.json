@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_eat_0_off": "zomboidcraft:block/city/blade_eat_0_off",
+    "particle": "zomboidcraft:block/city/blade_eat_0_off"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_eat_0_off",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_eat_0_off",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_eat_0_off"
+        },
+        "west": {
+          "texture": "#blade_eat_0_off"
+        },
+        "up": {
+          "texture": "#blade_eat_0_off",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_eat_0_off",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

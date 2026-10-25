@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "plate_skull": "zomboidcraft:block/city/plate_skull",
+    "particle": "zomboidcraft:block/city/plate_skull"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        15
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#plate_skull"
+        },
+        "south": {
+          "texture": "#plate_skull",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#plate_skull"
+        },
+        "west": {
+          "texture": "#plate_skull"
+        },
+        "up": {
+          "texture": "#plate_skull"
+        },
+        "down": {
+          "texture": "#plate_skull"
+        }
+      }
+    }
+  ]
+}
