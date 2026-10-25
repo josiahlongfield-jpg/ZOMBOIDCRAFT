@@ -19,7 +19,8 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[2]
 RES = ROOT / "src/main/resources/assets"
 
-# sound folder: (peak dB, picks); picks Josiah kept on the Dead Air Sound Picker, rounds 1 and 2, 2026-10-25
+# sound folder: (peak dB, picks); voices sit about 6 dB under the first build (Josiah: "the zombies are incredibly
+# loud"); picks Josiah kept on the Dead Air Sound Picker, rounds 1 and 2, 2026-10-25
 SONNISS_AGGRESSIVE = [("sxa617436b", 1.63, 1.52), ("sxa617436b", 4.1, 1.78), ("sx62e67533", 6.63, 1.25),
                       ("sx01e323ba", 4.8, 1.59), ("sx01e323ba", 3.1, 1.41), ("sxed9a54c5", 0.0, 3.56)]
 IDLE = [("612699", 1.34, 4.0), ("612699", 9.34, 3.89), ("612699", 5.34, 4.0), ("788055", 0.98, 1.06),
@@ -31,11 +32,11 @@ IDLE = [("612699", 1.34, 4.0), ("612699", 9.34, 3.89), ("612699", 5.34, 4.0), ("
 CROWD_CHASE = [("483592", 9.95, 2.5), ("483592", 4.95, 2.5), ("483592", 0.0, 2.5), ("125405", 5.23, 2.5)]
 ALERT = [("435651", 0.0, 2.36), ("496080", 3.83, 2.37), ("496080", 0.0, 2.5)]
 PICKS = {
-    "zombie/idle": (-4.0, IDLE),
-    "zombie/alert": (-1.0, ALERT),
-    "zombie/chase": (-2.0, SONNISS_AGGRESSIVE),
-    "zombie/bite": (-1.5, [("155973", 12.72, 0.74), ("155973", 10.66, 1.65)]),
-    "zombie/hurt": (-2.0, [("633193", 0.43, 1.45), ("633193", 2.35, 1.47), ("633193", 4.82, 1.5)]),
+    "zombie/idle": (-10.0, IDLE),
+    "zombie/alert": (-5.0, ALERT),
+    "zombie/chase": (-7.0, SONNISS_AGGRESSIVE),
+    "zombie/bite": (-4.0, [("155973", 12.72, 0.74), ("155973", 10.66, 1.65)]),
+    "zombie/hurt": (-6.0, [("633193", 0.43, 1.45), ("633193", 2.35, 1.47), ("633193", 4.82, 1.5)]),
     "door/bash": (-1.0, [("211450", 12.7, 1.5), ("211450", 0.0, 1.5), ("211450", 9.7, 1.32)]),
     "door/bash_metal": (-1.0, [("268126", 14.93, 0.92), ("268126", 4.48, 0.88), ("sxfc23509d", 6.46, 1.47),
                                 ("sxc350cd86", 0.0, 0.96)]),
@@ -51,7 +52,7 @@ STEPS = [("221650", 5.11, 2.0), ("221650", 2.69, 1.94), ("669704", 15.85, 0.66),
 
 # Hordes are built from the zombies' own voices (Josiah: "a large bunch of the idle noises with different levels
 # ... as long as its not too overpowering"; the angry one the same way). (folder, sources, voices, seconds, peak dB, files)
-HORDES = [("horde/dormant", IDLE, 14, 16.0, -9.0, 4), ("horde/angry", CROWD_CHASE + SONNISS_AGGRESSIVE + ALERT + IDLE[:8], 18, 12.0, -5.0, 4)]
+HORDES = [("horde/dormant", IDLE, 14, 16.0, -14.0, 4), ("horde/angry", CROWD_CHASE + SONNISS_AGGRESSIVE + ALERT + IDLE[:8], 18, 12.0, -10.0, 4)]
 
 # Of the built takes, the ones Josiah approved on the picker (1-based); the rest are dropped and renumbered.
 KEEP = {"horde/angry": [2, 4], "zombie/step": [1, 4, 5, 6, 10, 12]}
@@ -130,7 +131,7 @@ def main():
         ff("-i", str(voice), "-i", str(body), "-filter_complex",
            f"[1]adelay={ms}[b];[0][b]amix=inputs=2:duration=longest:normalize=0", str(mix))
         body.unlink()
-        level(mix, out / f"{n}.ogg", -2.0)
+        level(mix, out / f"{n}.ogg", -6.0)
         used.setdefault(fall[0], set()).add("zombie/death")
     voice.unlink()
     counts["zombie/death"] = len(DEATH_FALLS)
@@ -151,7 +152,7 @@ def main():
             n += 1
             one = out / f"{n}.wav"
             cut(raw, manifest, (pick[0], pick[1] + start, min(length, pick[2] - start)), one)
-            level(one, out / f"{n}.ogg", -6.0)
+            level(one, out / f"{n}.ogg", -10.0)
         take.unlink()
         used.setdefault(pick[0], set()).add("zombie/step")
     counts["zombie/step"] = n
