@@ -5,6 +5,7 @@
 Same inputs as build_zombie_sounds.py. Replaces the stand-ins the weapons thread pointed the
 weapon.hunting_rifle.* events at with their own files under assets/zomboidcraft/sounds/weapon/hunting_rifle/.
 """
+import json
 import subprocess
 
 from build_loot_sounds import build
@@ -22,8 +23,21 @@ PICKS = {
     "weapon.hunting_rifle.bolt": ("weapon/hunting_rifle/bolt", -6.0, 16, [("sx376250fd", 0.40, 0.85)]),
 }
 
+
+
+def suppressed():
+    """Josiah: the suppressed hunting rifle uses the assault rifle's suppressor sound, as it is."""
+    path = RES / "zomboidcraft/sounds.json"
+    ours = json.loads(path.read_text())
+    for tail in ("", "_distant"):
+        ours["weapon.hunting_rifle.shot_suppressed" + tail] = {"sounds": [
+            {"name": "zomboidcraft:weapon/rifle/shot_suppressed" + tail + "/1", "attenuation_distance": 48}]}
+    path.write_text(json.dumps(ours, indent=2) + "\n")
+
+
 if __name__ == "__main__":
     build(PICKS, "Hunting rifle sounds", "build_hunting_rifle_sounds.py")
+    suppressed()
     # a .308 should hit harder than the AR: push the close shot 4 dB into a limiter
     shot = RES / "zomboidcraft/sounds/weapon/hunting_rifle/shot/1.ogg"
     tmp = shot.with_suffix(".tmp.ogg")
