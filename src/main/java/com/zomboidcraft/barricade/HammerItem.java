@@ -2,6 +2,7 @@ package com.zomboidcraft.barricade;
 
 import com.zomboidcraft.ModBlocks;
 import com.zomboidcraft.ModItems;
+import com.zomboidcraft.combat.MeleeWeaponItem;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.zombie.Noise;
@@ -29,7 +30,7 @@ import net.minecraft.world.phys.Vec3;
  * Right-click a window, door or barricade with planks and nails in your inventory to nail up a board.
  * Sneak + right-click a barricade to pry a board off.
  */
-public class HammerItem extends Item {
+public class HammerItem extends MeleeWeaponItem {
     private static final int NAILS_PER_BOARD = 2;
     private static final double HAMMER_NOISE = 16;
 

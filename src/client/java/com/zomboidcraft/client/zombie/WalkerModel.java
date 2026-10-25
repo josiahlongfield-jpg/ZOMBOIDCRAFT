@@ -120,5 +120,35 @@ public class WalkerModel extends HumanoidModel<WalkerRenderState> {
             rightArm.zRot = 0.08f + Mth.sin(time * 0.06f + phase) * 0.03f;
             leftArm.zRot = -0.08f - Mth.sin(time * 0.05f + phase) * 0.03f;
         }
+        if (state.swimAmount > 0f) {
+            lying(state, state.swimAmount, time + phase * 40f, walk, speed);
+        }
+    }
+
+    /** On the ground. The renderer tips the body; this poses the limbs, blended in by {@code lie}. */
+    private void lying(WalkerRenderState state, float lie, float time, float walk, float speed) {
+        if (state.crawler) {
+            // dragging itself along on its arms, head raised, legs trailing
+            float reach = Mth.sin(walk * 0.6662f) * 0.55f * Math.max(speed, 0.15f);
+            rightArm.xRot = Mth.lerp(lie, rightArm.xRot, -2.7f + reach);
+            leftArm.xRot = Mth.lerp(lie, leftArm.xRot, -2.7f - reach);
+            rightArm.zRot = Mth.lerp(lie, rightArm.zRot, 0.25f);
+            leftArm.zRot = Mth.lerp(lie, leftArm.zRot, -0.25f);
+            head.xRot = Mth.lerp(lie, head.xRot, -1.05f);
+            rightLeg.xRot = Mth.lerp(lie, rightLeg.xRot, 0.08f + Mth.sin(time * 0.05f) * 0.05f);
+            leftLeg.xRot = Mth.lerp(lie, leftLeg.xRot, -0.04f);
+        } else {
+            // flat on its back, clawing at the air
+            rightArm.xRot = Mth.lerp(lie, rightArm.xRot, -1.35f + Mth.sin(time * 0.17f) * 0.3f);
+            leftArm.xRot = Mth.lerp(lie, leftArm.xRot, -1.2f + Mth.cos(time * 0.15f) * 0.3f);
+            rightArm.zRot = Mth.lerp(lie, rightArm.zRot, 0.15f);
+            leftArm.zRot = Mth.lerp(lie, leftArm.zRot, -0.15f);
+            head.xRot = Mth.lerp(lie, head.xRot, -0.25f);
+            rightLeg.xRot = Mth.lerp(lie, rightLeg.xRot, -0.3f + Mth.sin(time * 0.11f) * 0.15f);
+            leftLeg.xRot = Mth.lerp(lie, leftLeg.xRot, 0.05f);
+        }
+        rightArm.yRot = Mth.lerp(lie, rightArm.yRot, 0f);
+        leftArm.yRot = Mth.lerp(lie, leftArm.yRot, 0f);
+        body.zRot = Mth.lerp(lie, body.zRot, 0f);
     }
 }

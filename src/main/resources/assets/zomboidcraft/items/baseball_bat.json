@@ -1,6 +1,19 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "zomboidcraft:item/baseball_bat"
+ "model": {
+  "type": "minecraft:range_dispatch",
+  "property": "minecraft:damage",
+  "entries": [
+   {
+    "threshold": 0.5,
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/baseball_bat_worn"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/weapon/baseball_bat"
   }
+ }
 }

@@ -63,6 +63,7 @@ public final class ZombieEvents {
             // plan paths through shut doors, so they walk up to them and bash them in
             zombie.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
         }
+        com.zomboidcraft.combat.Downed.onLoad(zombie);
         AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             double amount = ZombieTypes.isSprinter(zombie) ? config.sprinterSpeed : config.shamblerSpeed;

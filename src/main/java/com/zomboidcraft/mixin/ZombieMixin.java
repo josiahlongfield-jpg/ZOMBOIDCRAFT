@@ -1,11 +1,14 @@
 package com.zomboidcraft.mixin;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.zombie.BashGoal;
 import com.zomboidcraft.zombie.InvestigateNoiseGoal;
 import com.zomboidcraft.zombie.NoiseListener;
 import com.zomboidcraft.zombie.ZombieSightGoal;
 import com.zomboidcraft.zombie.ZombieTypes;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Zombie.class)
 public abstract class ZombieMixin implements NoiseListener {
@@ -33,6 +37,14 @@ public abstract class ZombieMixin implements NoiseListener {
             targets.removeAllGoals(goal -> goal instanceof NearestAttackableTargetGoal<?> nearest
                     && ((NearestAttackableTargetGoalAccessor) nearest).zomboidcraft$targetType() == Player.class);
             targets.addGoal(2, new ZombieSightGoal(self));
+        }
+    }
+
+    /** Lying or crawling walkers have a low hitbox: you look down to hit them. */
+    @Inject(method = "getDefaultDimensions", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$lieLow(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        if (pose == Pose.SWIMMING && ZombieTypes.isWalkerType(((Zombie) (Object) this).getType())) {
+            cir.setReturnValue(Downed.LOW);
         }
     }
 

@@ -30,6 +30,8 @@ public final class ZcConfig {
     public Look look = new Look();
     public World world = new World();
     public Weather weather = new Weather();
+    public Combat combat = new Combat();
+    public Guns guns = new Guns();
 
     public static class Zombies {
         /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
@@ -154,6 +156,76 @@ public final class ZcConfig {
         public double missingLimbChance = 0.15;
         /** Pitch of zombie groans; lower sounds less like Minecraft. */
         public double voicePitch = 0.8;
+    }
+
+    public static class Combat {
+        /** Multiplies every melee weapon's damage (needs a restart). */
+        public double meleeDamage = 1.0;
+        /** Weapons lose condition with each hit and break (needs a restart). */
+        public boolean weaponWear = true;
+        /** Swinging, shoving and sprinting tire you; tired swings are slower and weaker. */
+        public boolean stamina = true;
+        /** How fast endurance comes back (1 = about 12 seconds from empty). */
+        public double staminaRegen = 1.0;
+        /** Multiplies the endurance each swing costs. */
+        public double swingCost = 1.0;
+        /** Hits can put zombies on the ground. */
+        public boolean knockdowns = true;
+        /** Multiplies each weapon's knockdown chance. */
+        public double knockdownChance = 1.0;
+        /** How long a knocked-down zombie stays down, in seconds. */
+        public double downedSeconds = 3.5;
+        /** Looking down and attacking a zombie on the ground stomps or strikes it hard. */
+        public boolean groundAttacks = true;
+        /** Damage of a bare-footed stomp. */
+        public double stompDamage = 7.0;
+        /** Multiplies weapon damage against zombies on the ground. */
+        public double groundAttackMultiplier = 1.8;
+        /** Push zombies away with the shove key (V). */
+        public boolean shove = true;
+        public double shoveRange = 2.3;
+        /** Chance a shove knocks a zombie down (doubled from behind). */
+        public double shoveKnockdownChance = 0.3;
+        /** Endurance a shove costs, out of 100. */
+        public double shoveCost = 7.0;
+        /** Zombies that reach you can grab hold; shove or mash jump to break free. */
+        public boolean grabs = true;
+        /** Chance a second that a zombie next to you grabs you. */
+        public double grabChance = 0.2;
+        /** Jump presses it takes to struggle free. */
+        public int struggleTaps = 6;
+        /** Zombies close in with a sudden lunge now and then. */
+        public boolean lunges = true;
+        public double lungeChance = 0.06;
+        /** Some zombies crawl: spawned that way, or left that way by a heavy blow or a shot to the legs. */
+        public boolean crawlers = true;
+        /** Share of zombies that spawn crawling. */
+        public double crawlerSpawnChance = 0.05;
+        /** Chance a knockdown from a heavy weapon or gunshot leaves a zombie crawling. */
+        public double crippleChance = 0.2;
+    }
+
+    public static class Guns {
+        public boolean enabled = true;
+        /** Damage per bullet (zombies have 20 health). */
+        public double damage = 12.0;
+        public double headshotMultiplier = 3.0;
+        /** Bullet spread in degrees from the hip and when aiming. */
+        public double hipSpread = 3.0;
+        public double aimSpread = 0.4;
+        /** Multiplies how far the muzzle kicks up. */
+        public double recoil = 1.0;
+        /** How far a shot is heard by zombies, in blocks. */
+        public double shotNoise = 90.0;
+        /** Field of view while aiming, as a share of normal. */
+        public double aimZoom = 0.78;
+        public double range = 100.0;
+        /** Ticks between shots (semi-automatic). */
+        public int fireDelayTicks = 3;
+        /** Worn guns sometimes jam; clear them with the reload key. */
+        public boolean jams = true;
+        /** Rounds in a rifle magazine. */
+        public int magazineSize = 30;
     }
 
     public static ZcConfig get() {

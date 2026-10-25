@@ -3,6 +3,9 @@ package com.zomboidcraft.client.zombie;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import com.zomboidcraft.combat.Downed;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.Identifier;
@@ -42,6 +45,21 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 ? ZomboidCraft.id("textures/entity/walker_eyes_hd/" + hd)
                 : ZomboidCraft.id("textures/entity/walker_eyes/" + name + ".png");
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
+        state.crawler = Downed.isCrawler(zombie);
+    }
+
+    /**
+     * Knocked down or crawling (the swimming pose): tip the body over as the pose blends in,
+     * face down and head first for a crawler, flat on its back for one knocked off its feet.
+     */
+    @Override
+    protected void setupRotations(WalkerRenderState state, PoseStack poseStack, float bodyRot, float scale) {
+        super.setupRotations(state, poseStack, bodyRot, scale);
+        float lie = state.swimAmount;
+        if (lie > 0f) {
+            poseStack.mulPose(Axis.XP.rotationDegrees(lie * (state.crawler ? -90f : 90f)));
+            poseStack.translate(0f, -lie, lie * (state.crawler ? 0.3f : -0.3f));
+        }
     }
 
     @Override

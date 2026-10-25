@@ -6,7 +6,8 @@ public enum Skill {
     BLUNT("Blunt"),
     BLADE("Blade"),
     SPRINTING("Sprinting"),
-    SNEAKING("Sneaking");
+    SNEAKING("Sneaking"),
+    AIMING("Aiming");
 
     public static final int MAX_LEVEL = 10;
 

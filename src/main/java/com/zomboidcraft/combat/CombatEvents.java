@@ -1,0 +1,111 @@
+package com.zomboidcraft.combat;
+
+import com.zomboidcraft.ModItems;
+import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.skills.Skills;
+import com.zomboidcraft.zombie.ZombieTypes;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+
+/**
+ * Melee hits on the walking dead: the right impact sound for the weapon, the endurance each
+ * swing costs, the chance a blow puts the zombie on the ground (heavy weapons can cripple it),
+ * and the extra damage of a blow or a stomp on a zombie already down.
+ */
+public final class CombatEvents {
+    public static void register() {
+        AttackEntityCallback.EVENT.register((player, level, hand, target, hit) -> {
+            if (player instanceof ServerPlayer serverPlayer && ZombieTypes.isWalker(target)) {
+                Stamina.onSwing(serverPlayer);
+            }
+            return InteractionResult.PASS;
+        });
+        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
+            if (!blocked && damage > 0 && ZombieTypes.isWalker(entity) && meleeBy(source) instanceof ServerPlayer player) {
+                onMeleeHit(player, entity);
+            }
+        });
+    }
+
+    /** The player behind a hand-to-hand blow, or null for anything else (gunshots included). */
+    private static ServerPlayer meleeBy(DamageSource source) {
+        if (source.getDirectEntity() instanceof ServerPlayer player && source.getEntity() == player
+                && !player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+            return player;
+        }
+        return null;
+    }
+
+    /**
+     * Damage for a blow on a zombie on the ground: a stomp barehanded, a heavier hit with a weapon.
+     * Called from the damage mixin before skills and armour.
+     */
+    public static float groundAttack(LivingEntity target, DamageSource source, float amount) {
+        ZcConfig.Combat config = ZcConfig.get().combat;
+        ServerPlayer player = meleeBy(source);
+        if (player == null || !config.groundAttacks || !Downed.isLow(target)) {
+            return amount;
+        }
+        Downed.keepDown(target, 8);
+        if (player.getMainHandItem().isEmpty()) {
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.STOMP, SoundSource.PLAYERS,
+                    1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
+            return (float) Math.max(amount, config.stompDamage);
+        }
+        return amount * (float) config.groundAttackMultiplier;
+    }
+
+    private static void onMeleeHit(ServerPlayer player, LivingEntity target) {
+        ZcConfig.Combat config = ZcConfig.get().combat;
+        ItemStack weapon = player.getMainHandItem();
+        WeaponSpecs.WeaponSpec spec = Weapons.spec(weapon);
+        SoundEvent impact = spec == null ? null : switch (spec.sound()) {
+            case BLADE -> ModSounds.HIT_BLADE;
+            case PAN -> ModSounds.HIT_PAN;
+            case BLUNT -> ModSounds.HIT_BLUNT;
+        };
+        if (impact != null) {
+            target.level().playSound(null, target.getX(), target.getEyeY() - 0.3, target.getZ(), impact, SoundSource.PLAYERS,
+                    1f, 0.88f + player.getRandom().nextFloat() * 0.24f);
+        }
+        if (!target.isAlive() || Downed.isLow(target)) {
+            return;
+        }
+        float chance = spec != null ? spec.knockdown() : 0.05f;
+        // a blow from behind, or with a run-up, takes them off their feet more often
+        Vec3 facing = Vec3.directionFromRotation(0, target.getYRot());
+        Vec3 swing = target.position().subtract(player.position()).multiply(1, 0, 1);
+        if (swing.lengthSqr() > 1e-6 && facing.dot(swing.normalize()) > 0.4) {
+            chance *= 1.6f;
+        }
+        if (player.isSprinting()) {
+            chance *= 1.3f;
+        }
+        if (spec != null) {
+            chance *= 1 + 0.04f * Skills.level(player, spec.skill());
+        }
+        chance *= (float) config.knockdownChance * Stamina.vigour(player);
+        if (player.getRandom().nextFloat() < chance) {
+            Downed.knockDown(target);
+            boolean heavy = spec != null && (spec.kind() == WeaponSpecs.Kind.HEAVY_BLUNT || spec.kind() == WeaponSpecs.Kind.AXE);
+            if (heavy) {
+                Downed.crippleChance(target, 1.0);
+            }
+        } else {
+            // the hit still rocks it back for a moment
+            boolean blade = spec != null && spec.sound() == WeaponSpecs.Sound.BLADE;
+            Downed.stagger(target, blade ? 4 : 8);
+        }
+    }
+
+    private CombatEvents() {
+    }
+}

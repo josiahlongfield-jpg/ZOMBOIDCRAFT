@@ -27,6 +27,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
+        com.zomboidcraft.combat.GunState.register();
+        com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();
         Loot.register();
         com.zomboidcraft.barricade.Barricades.register();
@@ -34,6 +36,12 @@ public class ZomboidCraft implements ModInitializer {
         ZombieEvents.register();
         ZombieSpawner.register();
         ZcCommand.register();
+        com.zomboidcraft.combat.CombatNet.register();
+        com.zomboidcraft.combat.Guns.register();
+        com.zomboidcraft.combat.Downed.register();
+        com.zomboidcraft.combat.Stamina.register();
+        com.zomboidcraft.combat.Grabs.register();
+        com.zomboidcraft.combat.CombatEvents.register();
         CityPlacer.register();
         com.zomboidcraft.world.MobFilter.register();
         com.zomboidcraft.world.weather.WeatherDirector.register();

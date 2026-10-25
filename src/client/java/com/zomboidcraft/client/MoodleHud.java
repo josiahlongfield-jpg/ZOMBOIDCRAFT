@@ -1,5 +1,7 @@
 package com.zomboidcraft.client;
 
+import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.survival.SurvivalStats;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,12 @@ public final class MoodleHud {
             return;
         }
         List<Moodle> moodles = moodles(SurvivalStats.get(player));
+        if (ZcConfig.get().combat.stamina) {
+            float endurance = player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL);
+            if (endurance < 10) moodles.add(new Moodle("Gasping for air", SEVERE));
+            else if (endurance < 30) moodles.add(new Moodle("Out of breath", BAD));
+            else if (endurance < 60) moodles.add(new Moodle("Winded", MILD));
+        }
         Font font = minecraft.font;
         int right = graphics.guiWidth() - 4;
         int y = 4;

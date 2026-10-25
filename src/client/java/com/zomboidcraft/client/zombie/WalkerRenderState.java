@@ -15,4 +15,6 @@ public class WalkerRenderState extends ZombieRenderState {
     public String outfit = "civilian";
     /** 0 none, 1 right forearm, 2 left forearm, 3 right arm, 4 left arm. */
     public int missingLimb;
+    /** Crawls for good: lies face down. A zombie knocked over without this lies on its back. */
+    public boolean crawler;
 }
