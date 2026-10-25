@@ -32,6 +32,10 @@ public final class ZcConfig {
     public Weather weather = new Weather();
     public Combat combat = new Combat();
     public Guns guns = new Guns();
+    /** The M9-style pistol's own numbers (shared gun settings are in guns). */
+    public GunStats pistol = GunStats.pistol();
+    /** The pump shotgun's own numbers, with its pellets. */
+    public ShotgunStats shotgun = new ShotgunStats();
     public Carry carry = new Carry();
 
     public static class Carry {
@@ -201,6 +205,8 @@ public final class ZcConfig {
         public double voicePitch = 0.8;
         /** The field-kit inventory screen; off brings back Minecraft's. Client side. */
         public boolean fieldKitInventory = true;
+        /** The field-kit HUD: belt, moodle plates, your figure for health, a wristwatch; off brings back Minecraft's. Client side. */
+        public boolean fieldKitHud = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
@@ -258,8 +264,11 @@ public final class ZcConfig {
         public double crippleChance = 0.2;
     }
 
-    public static class Guns {
-        public boolean enabled = true;
+    /**
+     * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
+     * gun has a group of its own (pistol, shotgun).
+     */
+    public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
         public double damage = 12.0;
         public double headshotMultiplier = 3.0;
@@ -275,10 +284,57 @@ public final class ZcConfig {
         public double range = 100.0;
         /** Ticks between shots (semi-automatic). */
         public int fireDelayTicks = 3;
+        /** Rounds in a magazine. */
+        public int magazineSize = 30;
+
+        static GunStats pistol() {
+            GunStats s = new GunStats();
+            s.damage = 7.0;
+            s.hipSpread = 2.5;
+            s.aimSpread = 0.7;
+            s.recoil = 0.9;
+            s.shotNoise = 60.0;
+            s.aimZoom = 0.88;
+            s.range = 60.0;
+            s.magazineSize = 15;
+            return s;
+        }
+    }
+
+    /**
+     * The pump shotgun's numbers: each shot is a spread of buckshot pellets, deadly close up and weak far off. Its
+     * damage is per pellet, its magazine size is the shells it holds (four in the tube and one chambered), and its
+     * time between shots covers working the pump.
+     */
+    public static class ShotgunStats extends GunStats {
+        /** Pellets in each shell (00 buckshot has eight or nine). */
+        public int pellets = 8;
+        /** How far the pellets spread from where the shot goes, in degrees. */
+        public double pelletSpread = 2.5;
+        /** Pellets hit full strength out to this many blocks, then weaken to a quarter at the gun's range. */
+        public double falloffStart = 10.0;
+        /** How hard a close hit shoves a zombie back. */
+        public double knockback = 0.45;
+
+        ShotgunStats() {
+            damage = 3.5;
+            headshotMultiplier = 2.5;
+            hipSpread = 2.0;
+            aimSpread = 0.6;
+            recoil = 2.2;
+            shotNoise = 120.0;
+            aimZoom = 0.85;
+            range = 40.0;
+            fireDelayTicks = 15;
+            magazineSize = 5;
+        }
+    }
+
+    /** Settings every gun shares, and the assault rifle's own numbers. */
+    public static class Guns extends GunStats {
+        public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
-        /** Rounds in a rifle magazine. */
-        public int magazineSize = 30;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */
@@ -298,7 +354,7 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
-        /** A short, soft flash at the muzzle with each shot (none through a suppressor). */
+        /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
         public double aimSway = 0.15;
@@ -306,6 +362,27 @@ public final class ZcConfig {
         public boolean reloadAnimation = true;
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
+        /**
+         * How bright (a light level, 1 to 15) a gun light lights the world just ahead of it, fading a level every
+         * three blocks down the beam. Higher lights more of the rooms around it too. Client side.
+         */
+        public int lightLevel = 11;
+        /**
+         * How many hidden lights a gun light spreads down its beam (1 to 8). More light the floor and walls further
+         * along it, but cost frames when you turn. Client side.
+         */
+        public int lightSources = 5;
+        /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
+        public double lightCone = 13;
+        /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
+        public double lightGlow = 1.0;
+        /** A gun light's beam shows faintly in the air. Client side. */
+        public boolean lightBeam = true;
+        /**
+         * Draws a gun light's pool and beam even with a shader pack on. Off by default: shader packs like Photon light
+         * the world from the gun light themselves. Client side.
+         */
+        public boolean glowWithShaders = false;
     }
 
     public static ZcConfig get() {

@@ -20,5 +20,7 @@ public abstract class FirstPersonHandsAndItemsMixin {
             state.xBob = state.viewXRot - (state.viewXRot - state.xBob) * keep;
             state.yBob = state.viewYRot - (state.viewYRot - state.yBob) * keep;
         }
+        // the hand renderer turns the hands by a tenth of these: the gun's rail lights follow it
+        RifleView.sway((state.viewXRot - state.xBob) * 0.1f, (state.viewYRot - state.yBob) * 0.1f);
     }
 }

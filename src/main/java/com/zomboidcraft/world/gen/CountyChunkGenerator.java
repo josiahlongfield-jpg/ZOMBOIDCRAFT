@@ -85,7 +85,13 @@ public final class CountyChunkGenerator extends ChunkGenerator {
             StructureManager structures, BiomeManager biomes, WorldGenRegion region, Set<Holder<Biome>> possible) {
         CountyGen g = gen(random.seed());
         ChunkWriter writer = new ChunkWriter(chunk, region);
-        g.generate(chunk.getPos().x(), chunk.getPos().z(), writer);
+        try {
+            g.generate(chunk.getPos().x(), chunk.getPos().z(), writer);
+        } catch (RuntimeException e) {
+            // a bug in one place's builder leaves a hole in that chunk; thrown from here, it can
+            // leave the chunk unfinished and the server thread waiting on it until the watchdog
+            ZomboidCraft.LOGGER.error("Exception generating county chunk {}", chunk.getPos(), e);
+        }
         writer.finish();
         return CompletableFuture.completedFuture(chunk);
     }

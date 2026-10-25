@@ -11,11 +11,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The interact key on a car: get in, search the boot, or (pressed inside one) get out. A key of
- * its own rather than right-click, which aims a gun.
+ * The interact key on a car: get in, search the boot, or (pressed inside one) get out; and the
+ * horn. A key of its own rather than right-click, which aims a gun.
  */
 public final class CarNet {
-    /** Use car (its entity id) at a point relative to it; id -1 means get out of the one you're in. */
+    /** Stand-ins for a car id: get out of the car you're in, or sound its horn. */
+    public static final int GET_OUT = -1, HORN = -2;
+
+    /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
         public static final Type<Use> TYPE = new Type<>(ZomboidCraft.id("use_car"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Use> CODEC = StreamCodec.composite(
@@ -34,8 +37,12 @@ public final class CarNet {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
                 if (payload.car() < 0) {
-                    if (player.getVehicle() instanceof CarProp) {
-                        player.stopRiding();
+                    if (player.getVehicle() instanceof CarProp car) {
+                        if (payload.car() == HORN) {
+                            car.honk(player);
+                        } else {
+                            player.stopRiding();
+                        }
                     }
                     return;
                 }

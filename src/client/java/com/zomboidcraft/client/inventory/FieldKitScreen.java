@@ -463,7 +463,7 @@ public class FieldKitScreen<M extends AbstractContainerMenu> extends AbstractCon
     private void gearPanel(GuiGraphicsExtractor g, int x, int y, int mouseX, int mouseY) {
         KitArt.panel(g, KitArt.Material.CANVAS, x + GEAR_X, y, GEAR_W, H);
         KitArt.header(g, font, "Survivor", x + GEAR_X + 12, y + 12);
-        KitArt.tape(g, font, "Day " + (minecraft.level == null ? 1 : minecraft.level.getGameTime() / 24000 + 1),
+        KitArt.tape(g, font, "Day " + (minecraft.level == null ? 1 : Math.floorDiv(minecraft.level.getDefaultClockTime(), 24000L) + 1),
                 x + GEAR_X + GEAR_W - 9, y + 9, true, KitArt.MARKER_INK);
         g.blitSprite(RenderPipelines.GUI_TEXTURED, KitArt.MIRROR, x + MIRROR_X, y + MIRROR_Y, MIRROR_W, MIRROR_H);
         InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + MIRROR_X + 2, y + MIRROR_Y + 4,

@@ -319,6 +319,21 @@
           ]
         },
         {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:shotgun_shell",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 8
+              }
+            }
+          ]
+        },
+        {
           "type": "minecraft:empty",
           "weight": 10
         }
@@ -347,6 +362,11 @@
           "type": "minecraft:item",
           "name": "minecraft:golden_apple",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:shotgun",
+          "weight": 2
         }
       ]
     }

@@ -198,7 +198,7 @@ final class WeaponBench {
         String optic = Attachments.key(gun, Attachments.Slot.OPTIC) == null ? "Iron sights"
                 : Attachments.get(gun, Attachments.Slot.OPTIC).getHoverName().getString();
         GunState state = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-        String mag = state.mag() ? state.rounds() + " / " + RifleItem.capacity() + " rds" : "none";
+        String mag = state.mag() ? state.rounds() + " / " + RifleItem.capacity(gun) + " rds" : "none";
         row(g, font, x, y + 11, "Sight", optic, 0);
         row(g, font, x, y + 21, "Magazine", mag, state.mag() ? 0 : -1);
         row(g, font, x, y + 31, "Noise", Attachments.suppressed(gun) ? "Suppressed" : "Loud", Attachments.suppressed(gun) ? 1 : 0);

@@ -52,6 +52,12 @@ public final class Weights {
         mod("weapon_light", 0.2);
         mod("laser_sight", 0.15);
         mod("rifle_stock", 0.6);
+        mod("pistol", 0.95);
+        mod("pistol_magazine", 0.25);
+        mod("pistol_ammo", 0.008);
+        mod("pistol_suppressor", 0.3);
+        mod("shotgun", 3.4);
+        mod("shotgun_shell", 0.04);
         vanilla("stick", 0.1);
         vanilla("arrow", 0.03);
         vanilla("bow", 0.8);

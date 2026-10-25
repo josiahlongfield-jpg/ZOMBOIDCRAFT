@@ -754,6 +754,23 @@ final class Kit {
         }
     }
 
+    /** Takes off the tops of tall plants whose lower half something was built over. */
+    void tidyPlants() {
+        for (int x = 0; x < w; x++) {
+            for (int z = 0; z < d; z++) {
+                for (int y = 2; y <= 4; y++) {
+                    String b = out.get(x, y, z);
+                    if (b != null && b.endsWith("[half=upper]")) {
+                        String below = out.get(x, y - 1, z);
+                        if (below == null || !below.equals(b.replace("[half=upper]", "[half=lower]"))) {
+                            out.set(x, y, z, "air");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /** Lawn gone to seed inside a lot, in the lot's own frame; only where nothing is built. */
     static void lawn(Placer p, SplittableRandom rng, int x0, int z0, int x1, int z1, double wild) {
         for (int x = x0; x <= x1; x++) {

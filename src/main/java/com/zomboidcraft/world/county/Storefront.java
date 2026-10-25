@@ -30,7 +30,7 @@ final class Storefront {
         ANTIQUES("antiques", Shops.Type.PAWN), AUTOPARTS("autoparts", Shops.Type.HARDWARE),
         GENERAL("generalstore", Shops.Type.GROCERY), FEED("feed", Shops.Type.HARDWARE), COMPANY("company", Shops.Type.GROCERY),
         BANK("bank", null), BARBER("barber", null), TAVERN("tavern", null), REALTY("realty", null), VFW("vfw", null),
-        HOTEL("hotel", null), VACANT(null, null);
+        HOTEL("hotel", null), FUEL("fuel", Shops.Type.GROCERY), BAIT("bait", Shops.Type.HARDWARE), VACANT(null, null);
 
         final String sign;
         final Shops.Type fit;

@@ -29,6 +29,7 @@ public final class CombatNet {
         public static final int SHOVE = 1;
         public static final int STRUGGLE = 2;
         public static final int RAIL = 3;
+        public static final int LASER = 4;
         public static final Type<Action> TYPE = new Type<>(ZomboidCraft.id("action"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Action> CODEC =
                 StreamCodec.composite(ByteBufCodecs.VAR_INT, Action::action, Action::new);
@@ -53,7 +54,8 @@ public final class CombatNet {
                     case Action.RELOAD -> Guns.reload(player);
                     case Action.SHOVE -> Shove.shove(player);
                     case Action.STRUGGLE -> Grabs.struggle(player);
-                    case Action.RAIL -> Guns.toggleRail(player);
+                    case Action.RAIL -> Guns.toggleLight(player);
+                    case Action.LASER -> Guns.toggleLaser(player);
                     default -> {
                     }
                 }

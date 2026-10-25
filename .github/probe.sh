@@ -7,6 +7,49 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== hud"
+sig net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements '.'
+classes 'world/clock/|[Cc]lock[A-Za-z]*\.class|level/storage/LevelData|TimeOfDay' | head -40
+sig net.minecraft.client.multiplayer.ClientLevel '[Tt]ime|[Dd]ay|[Cc]lock|Brightness|isRaining|Thunder'
+sig net.minecraft.world.level.Level '[Tt]ime|[Dd]ay[^a-z]|[Cc]lock|isRaining|Brightness|getRainLevel'
+sig net.minecraft.world.level.LevelReader 'Brightness|getRawBrightness'
+sig net.minecraft.client.gui.screens.inventory.InventoryScreen 'static'
+sig net.minecraft.client.gui.GuiGraphicsExtractor 'public'
+javap -cp "$CP" -p net.minecraft.client.gui.Gui 2>&1 | grep -E "tool|Tool|highlight|Hotbar|hotbar|Effects|effect|public|protected"
+sig net.minecraft.world.effect.MobEffect 'public'
+sig net.minecraft.world.effect.MobEffectInstance 'public'
+sig net.minecraft.world.effect.MobEffects 'public static'
+sig net.minecraft.world.entity.Entity 'Air|InWater|Rain|getXRot|getYRot|getYHeadRot|tickCount'
+javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -E "yBodyRot|yHeadRot|getActiveEffects|hurtTime|getHealth|getMaxHealth|getAbsorption|getArmorValue"
+sig net.minecraft.world.entity.player.Player 'getFoodData|isHurt|getAbsorption'
+sig net.minecraft.world.food.FoodData 'public'
+sig net.minecraft.world.entity.player.Inventory 'Selected|selected'
+sig net.minecraft.util.ARGB 'public static'
+sig net.minecraft.util.Mth 'clamp|lerp|wrapDegrees'
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/public static void extractEntityInInventoryFollowsMouse(/,/^$/p' | grep -E "invoke|ldc|fmul|fadd|putfield|getfield"
+exit 0
+
+echo "===== level render events 2"
+for c in 'LevelRenderEvents$CollectSubmits' 'LevelRenderEvents$AfterTranslucentFeatures' 'LevelRenderEvents$EndMain' 'LevelRenderEvents$AfterSolidFeatures' 'LevelExtractionEvents$EndExtraction'; do
+  javap -cp "$CP" -p "net.fabricmc.fabric.api.client.rendering.v1.level.$c" 2>&1
+done
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.LevelRenderState 2>&1 | head -40
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.OrderedSubmitNodeCollector 2>&1 | grep -E "Custom|interface"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer' 2>&1
+classes 'fabric/impl/client/rendering/.*(Level|level)|fabric/mixin/client/rendering/.*Level'
+for c in $(classes 'fabric/mixin/client/rendering/LevelRendererMixin.class|fabric/mixin/client/rendering/.*LevelRenderer.*\.class' | sed 's/\.class$//; s#/#.#g'); do
+  echo "----- $c"; javap -cp "$CP" -c -p "$c" 2>&1 | grep -E "invoke|Method|getstatic|private|public" | head -80
+done
+javap -cp "$CP" -c -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -nE "submitBlockOutline|private void submit|PoseStack|translate\(DDD|camera" | head -40
+exit 0
+
+
+echo "===== bob"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | sed -n '/void bobView(/,/^$/p' | grep -E "invoke|getfield|putfield|ldc|return"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -nE "^  [a-z].*\(|bobView" | grep -B1 bobView
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraEntityRenderState 2>&1
+exit 0
 
 echo "===== muffle"
 classes 'blaze3d/audio/|client/sounds/SoundEngine|client/sounds/ChannelAccess|client/Camera.class'

@@ -1,6 +1,5 @@
 package com.zomboidcraft.combat;
 
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -37,29 +38,34 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Server side of the guns: hitscan shots with spread, headshots, the bang that brings every
  * zombie for blocks around, jams on worn guns, and the reload sequence (magazine out, magazine
- * in, charging handle) that also drives the reload item models.
+ * in, charging handle or slide) that also drives the reload item models. Each gun's numbers and
+ * timings come from its {@link GunType}.
  *
- * The rifle's custom model data carries two numbers for its item model: [0] the reload step
+ * A gun's custom model data carries two numbers for its item model: [0] the reload step
  * (1 magazine out, 2 magazine in, 3 charging handle; 1.5 is magazine out on an empty gun, so first
  * person knows the handle will be worked) and [1] the muzzle flash, plus the attachment keys
  * {@link Attachments} writes. First person animates between the steps (RifleView), on these timings.
+ *
+ * A tube gun (the pump shotgun) loads instead: step 1 while shells go in one at a time (1.5 onto an empty
+ * chamber), until it's full, the shells run out or the trigger is pulled; then step 3 while the pump is worked
+ * to chamber one, if it was empty. Each shot is a spread of pellets, and the pump is worked after it.
  */
 public final class Guns {
-    private static final int MAG_OUT_AT = 0;
-    private static final int MAG_IN_AT = 16;
-    private static final int CHARGE_AT = 22;
-    /** A reload onto a round still chambered skips the charging handle and ends sooner. */
-    private static final int TACTICAL_DONE = 25;
-    private static final int RELOAD_DONE = 34;
-    /** Clearing a jam starts here, so the hand has time to reach the handle before it's worked at CHARGE_AT. */
-    private static final int JAM_CLEAR_AT = 18;
     private static final int FLASH_TICKS = 2;
 
     private static final class State {
         long lastShot = -100;
         int reloadTick = -1;
+        /** The gun being reloaded: putting it away (or swapping to another kind) stops the reload. */
+        GunType reloading;
         boolean needsCharge;
         int flashLeft;
+        /** A tube gun's loading: stopped (full, out of shells or the trigger pulled) at stopTick, on this stack. */
+        boolean loadStopped;
+        int stopTick;
+        ItemStack loading = ItemStack.EMPTY;
+        /** When the pump is worked after a shot (game time), or -1. */
+        long pumpAt = -1;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -77,19 +83,33 @@ public final class Guns {
     public static void fire(ServerPlayer player, boolean aiming) {
         ZcConfig.Guns config = ZcConfig.get().guns;
         ItemStack gun = player.getMainHandItem();
-        if (!config.enabled || !gun.is(ModItems.ASSAULT_RIFLE) || player.isSpectator()) {
+        GunType type = GunType.of(gun);
+        if (!config.enabled || type == null || player.isSpectator()) {
             return;
         }
+        ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
-        if (st.reloadTick >= 0 || now - st.lastShot < config.fireDelayTicks) {
+        if (now - st.lastShot < stats.fireDelayTicks) {
             return;
+        }
+        if (st.reloadTick >= 0) {
+            if (!type.tube || st.reloading != type || st.loadStopped) {
+                return;
+            }
+            // the trigger stops the loading: with a shell chambered it goes off at once, onto an empty chamber
+            // the pump is worked first
+            if (st.needsCharge) {
+                stopLoading(st);
+                return;
+            }
+            endReload(gun, st);
         }
         st.lastShot = now;
         ServerLevel level = (ServerLevel) player.level();
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (g.jammed() || !g.mag() || g.rounds() <= 0) {
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_DRY, SoundSource.PLAYERS, 0.8f, 1f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 1f);
             if (g.jammed()) {
                 player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             }
@@ -97,9 +117,9 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        if (config.jams && player.getRandom().nextFloat() < 0.08f * wear * wear) {
+        if (config.jams && !type.tube && player.getRandom().nextFloat() < 0.08f * wear * wear) {
             gun.set(GunState.TYPE, g.withJam(true));
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RIFLE_DRY, SoundSource.PLAYERS, 0.8f, 0.8f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             return;
         }
@@ -111,22 +131,25 @@ public final class Guns {
         // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(),
-                suppressed ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_DISTANT, SoundSource.PLAYERS,
+        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
-        level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
-                0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
-        Noise.emit(level, player.position(), config.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
+        if (type.tube) {
+            st.pumpAt = now + type.pumpAfterShot;       // the empty hull comes out when it's pumped
+        } else {
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
+                    0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+        }
+        Noise.emit(level, player.position(), stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
 
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
         int aimLevel = Skills.level(player, Skill.AIMING);
-        double spread = (aiming ? config.aimSpread * Attachments.aimSpreadFactor(gun) : config.hipSpread * Attachments.hipSpreadFactor(gun))
+        double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
                 * (1 - 0.05 * aimLevel);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= 1.6;
         }
-        Vec3 dir = jitter(look, spread, player);
+        Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
         if (config.muzzleSmoke) {
@@ -136,42 +159,95 @@ public final class Guns {
             }
         }
 
-        Vec3 end = eye.add(dir.scale(config.range));
-        BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-        Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, stop, new AABB(eye, stop).inflate(1.0),
-                e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
-                eye.distanceToSqr(stop));
-        if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-            hitEntity(level, player, target, eye, dir);
-            Skills.addXp(player, Skill.AIMING, 2);
-        } else if (block.getType() != HitResult.Type.MISS) {
-            BlockState bs = level.getBlockState(block.getBlockPos());
-            Vec3 p = block.getLocation();
-            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, 8, 0.05, 0.05, 0.05, 0.15);
-            level.sendParticles(ParticleTypes.SMOKE, p.x, p.y, p.z, 2, 0.02, 0.02, 0.02, 0.01);
-            level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.7f,
-                    0.9f + player.getRandom().nextFloat() * 0.3f);
-            if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
-                level.destroyBlock(block.getBlockPos(), false, player);
+        // each pellet (one bullet, or a shotgun's buckshot) flies on its own; the hits on each target add up into
+        // one blow, since a target only takes the first of several hits in the same moment
+        int pellets = type.pellets();
+        double pelletSpread = stats instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+        Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
+        boolean ricochet = false;
+        for (int i = 0; i < pellets; i++) {
+            Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
+            Vec3 end = eye.add(dir.scale(stats.range));
+            BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+            Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
+            EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, stop, new AABB(eye, stop).inflate(1.0),
+                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
+                    eye.distanceToSqr(stop));
+            if (hit != null && hit.getEntity() instanceof LivingEntity target) {
+                hits.computeIfAbsent(target, t -> new Hit(dir)).add(pellet(target, eye, dir, stats));
+            } else if (block.getType() != HitResult.Type.MISS) {
+                BlockState bs = level.getBlockState(block.getBlockPos());
+                Vec3 p = block.getLocation();
+                level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, pellets > 1 ? 3 : 8,
+                        0.05, 0.05, 0.05, 0.15);
+                level.sendParticles(ParticleTypes.SMOKE, p.x, p.y, p.z, pellets > 1 ? 1 : 2, 0.02, 0.02, 0.02, 0.01);
+                if (!ricochet) {
+                    ricochet = true;
+                    level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.7f,
+                            0.9f + player.getRandom().nextFloat() * 0.3f);
+                }
+                if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
+                    level.destroyBlock(block.getBlockPos(), false, player);
+                }
             }
+        }
+        hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
+        if (!hits.isEmpty()) {
+            Skills.addXp(player, Skill.AIMING, 2);
         }
     }
 
-    private static void hitEntity(ServerLevel level, ServerPlayer player, LivingEntity target, Vec3 eye, Vec3 dir) {
-        ZcConfig.Guns config = ZcConfig.get().guns;
-        Vec3 at = target.getBoundingBox().inflate(0.1).clip(eye, eye.add(dir.scale(config.range))).orElse(target.position());
+    /** What the pellets that struck one target add up to. */
+    private static final class Hit {
+        final Vec3 dir;
+        float damage;
+        int count;
+        boolean head, legs;
+        Vec3 at;
+
+        Hit(Vec3 dir) {
+            this.dir = dir;
+        }
+
+        Hit add(Pellet p) {
+            damage += p.damage();
+            count++;
+            head |= p.head();
+            legs |= p.legs();
+            at = at == null || p.head() ? p.at() : at;
+            return this;
+        }
+    }
+
+    private record Pellet(float damage, boolean head, boolean legs, Vec3 at) {
+    }
+
+    /** One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot). */
+    private static Pellet pellet(LivingEntity target, Vec3 eye, Vec3 dir, ZcConfig.GunStats stats) {
+        Vec3 at = target.getBoundingBox().inflate(0.1).clip(eye, eye.add(dir.scale(stats.range))).orElse(target.position());
         boolean downed = Downed.isLow(target);
         double headY = target.getEyeY() - 0.28;
         boolean head = !downed && at.y >= headY;
         boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
-        float damage = (float) (config.damage * (head ? config.headshotMultiplier : legs ? 0.7 : 1));
-        target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), damage);
-        Shove.push(target, dir.multiply(1, 0, 1).normalize(), 0.12);
+        float damage = (float) (stats.damage * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
+        if (stats instanceof ZcConfig.ShotgunStats sg) {
+            double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
+            damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));
+        }
+        return new Pellet(damage, head, legs, at);
+    }
+
+    private static void hitEntity(ServerLevel level, ServerPlayer player, LivingEntity target, Hit hit, int pellets,
+                                  ZcConfig.GunStats stats) {
+        Vec3 at = hit.at;
+        target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), hit.damage);
+        // buckshot up close knocks a zombie back hard; a single bullet barely moves it
+        double push = stats instanceof ZcConfig.ShotgunStats sg ? sg.knockback * Math.min(1, 1.5 * hit.count / pellets) : 0.12;
+        Shove.push(target, hit.dir.multiply(1, 0, 1).normalize(), push);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
-                at.x, at.y, at.z, head ? 22 : 12, 0.12, 0.12, 0.12, 0.2);
+                at.x, at.y, at.z, (hit.head ? 22 : 12) + 2 * (hit.count - 1), 0.12, 0.12, 0.12, 0.2);
         level.playSound(null, at.x, at.y, at.z, ModSounds.BULLET_FLESH, SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
-        if (ZombieTypes.isWalker(target) && target.isAlive() && legs) {
+        if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
             Downed.crippleChance(target, 0.5);
         }
     }
@@ -190,15 +266,25 @@ public final class Guns {
 
     // ------------------------------------------------------------------ light and laser
 
-    /** Switches the light or laser on the side rail on or off, with a click. */
-    public static void toggleRail(ServerPlayer player) {
+    /** Switches the gun's light on or off, with a click. */
+    public static void toggleLight(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
-        if (!gun.is(ModItems.ASSAULT_RIFLE) || !(Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "light")
-                || Attachments.has(gun, Attachments.Slot.SIDE_RAIL, "laser"))) {
-            return;
+        if (GunType.isGun(gun) && Attachments.hasLight(gun)) {
+            toggle(player, gun, GunState.RAIL_ON);
         }
-        boolean on = !Attachments.railOn(gun);
-        gun.set(GunState.RAIL_ON, on);
+    }
+
+    /** Switches the gun's laser on or off, with a click. */
+    public static void toggleLaser(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (GunType.isGun(gun) && Attachments.hasLaser(gun)) {
+            toggle(player, gun, GunState.LASER_ON);
+        }
+    }
+
+    private static void toggle(ServerPlayer player, ItemStack gun, DataComponentType<Boolean> switched) {
+        boolean on = !gun.getOrDefault(switched, false);
+        gun.set(switched, on);
         player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
                 SoundSource.PLAYERS, 0.25f, on ? 2.0f : 1.7f);
     }
@@ -207,7 +293,8 @@ public final class Guns {
 
     public static void reload(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
-        if (!gun.is(ModItems.ASSAULT_RIFLE)) {
+        GunType type = GunType.of(gun);
+        if (type == null) {
             return;
         }
         State st = state(player);
@@ -215,16 +302,21 @@ public final class Guns {
             return;
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+        if (type.tube) {
+            startLoading(player, gun, type, st, g);
+            return;
+        }
         if (g.jammed()) {
             // clear the jam: work the charging handle, losing the stuck round
             gun.set(GunState.TYPE, new GunState(g.mag(), Math.max(0, g.rounds() - 1), false));
             player.stopUsingItem();
-            st.reloadTick = JAM_CLEAR_AT;
+            st.reloadTick = type.jamClear;
+            st.reloading = type;
             st.needsCharge = true;
             setModelData(gun, 3, 0);
             return;
         }
-        int best = bestMagazine(player);
+        int best = bestMagazine(player, type);
         if (best < 0 && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(Component.literal(g.mag() && g.rounds() > 0 ? "No fuller magazine to swap in."
                     : "No loaded magazines. Load one: hold right-click with it.").withStyle(ChatFormatting.GRAY));
@@ -235,11 +327,12 @@ public final class Guns {
             return;
         }
         player.stopUsingItem();
-        st.reloadTick = MAG_OUT_AT;
+        st.reloadTick = 0;
+        st.reloading = type;
         st.needsCharge = !g.mag() || g.rounds() == 0;
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
-            ItemStack old = new ItemStack(ModItems.RIFLE_MAGAZINE);
+            ItemStack old = new ItemStack(type.magazine());
             old.set(GunState.MAG_ROUNDS, g.rounds());
             if (!player.getInventory().add(old)) {
                 player.spawnAtLocation(level(player), old);
@@ -247,15 +340,99 @@ public final class Guns {
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
-        sound(player, ModSounds.RIFLE_MAG_OUT);
+        sound(player, type.magOut());
     }
 
-    private static int bestMagazine(ServerPlayer player) {
+    /** A tube gun: raised to the loading port, then shells go in one by one (see tickLoading). */
+    private static void startLoading(ServerPlayer player, ItemStack gun, GunType type, State st, GunState g) {
+        if (g.rounds() >= type.capacity()) {
+            player.sendOverlayMessage(Component.literal("It's full.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        if (countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+            player.sendOverlayMessage(Component.literal("You have no " + type.caliber() + " shells.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        player.stopUsingItem();
+        st.reloadTick = 0;
+        st.reloading = type;
+        st.needsCharge = g.rounds() == 0;
+        st.loadStopped = false;
+        st.loading = gun;
+        setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
+    }
+
+    private static void tickLoading(ServerPlayer player, ItemStack gun, GunType type, State st) {
+        st.reloadTick++;
+        if (!st.loadStopped) {
+            int t = st.reloadTick - type.raise;
+            if (t > 0 && t % type.perShell == 0) {
+                if (takeAmmo(player, type) || player.hasInfiniteMaterials()) {
+                    GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+                    gun.set(GunState.TYPE, g.withRounds(g.rounds() + 1));
+                    sound(player, type.magIn());
+                }
+                if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity()
+                        || countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+                    stopLoading(st);
+                }
+            }
+            return;
+        }
+        int since = st.reloadTick - st.stopTick;
+        if (!st.needsCharge) {
+            endReload(gun, st);
+        } else if (since == 1) {
+            setModelData(gun, 3, 0);
+        } else if (since == 1 + type.pump / 2) {
+            sound(player, type.charged());
+        } else if (since >= 1 + type.pump) {
+            endReload(gun, st);
+            Skills.addXp(player, Skill.AIMING, 1);
+        }
+    }
+
+    private static void stopLoading(State st) {
+        st.loadStopped = true;
+        st.stopTick = st.reloadTick;
+    }
+
+    private static void endReload(ItemStack gun, State st) {
+        setModelData(gun, 0, 0);
+        st.reloadTick = -1;
+        st.loading = ItemStack.EMPTY;
+    }
+
+    /** Loose rounds or shells of this gun's kind in the inventory. */
+    private static int countAmmo(ServerPlayer player, GunType type) {
+        Inventory inv = player.getInventory();
+        int n = 0;
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            if (inv.getItem(i).is(type.ammo())) {
+                n += inv.getItem(i).getCount();
+            }
+        }
+        return n;
+    }
+
+    private static boolean takeAmmo(ServerPlayer player, GunType type) {
+        Inventory inv = player.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack s = inv.getItem(i);
+            if (s.is(type.ammo())) {
+                s.shrink(1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int bestMagazine(ServerPlayer player, GunType type) {
         Inventory inv = player.getInventory();
         int best = -1, most = 0;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(ModItems.RIFLE_MAGAZINE) && MagazineItem.rounds(s) > most) {
+            if (s.is(type.magazine()) && MagazineItem.rounds(s) > most) {
                 most = MagazineItem.rounds(s);
                 best = i;
             }
@@ -270,40 +447,58 @@ public final class Guns {
                 continue;
             }
             ItemStack gun = player.getMainHandItem();
-            if (st.flashLeft > 0 && --st.flashLeft == 0 && gun.is(ModItems.ASSAULT_RIFLE)) {
+            if (st.flashLeft > 0 && --st.flashLeft == 0 && GunType.isGun(gun)) {
                 setModelData(gun, -1, 0);
+            }
+            if (st.pumpAt >= 0 && player.level().getGameTime() >= st.pumpAt) {
+                st.pumpAt = -1;
+                GunType held = GunType.of(gun);
+                if (held != null && held.tube) {
+                    sound(player, held.charged());
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
+                            SoundSource.PLAYERS, 0.35f, 0.6f + player.getRandom().nextFloat() * 0.15f);
+                }
             }
             if (st.reloadTick < 0) {
                 continue;
             }
-            if (!gun.is(ModItems.ASSAULT_RIFLE)) {
-                st.reloadTick = -1;     // put away mid-reload: the magazine stays out
+            GunType type = st.reloading;
+            if (GunType.of(gun) != type) {
+                // put away mid-reload: the magazine stays out; a tube gun just stops loading
+                if (type.tube && GunType.of(st.loading) == type) {
+                    endReload(st.loading, st);
+                }
+                st.reloadTick = -1;
+                continue;
+            }
+            if (type.tube) {
+                tickLoading(player, gun, type, st);
                 continue;
             }
             st.reloadTick++;
-            if (st.reloadTick == MAG_IN_AT) {
-                insertMagazine(player, gun);
+            if (st.reloadTick == type.magIn) {
+                insertMagazine(player, gun, type);
                 setModelData(gun, 2, 0);
-                sound(player, ModSounds.RIFLE_MAG_IN);
-            } else if (st.reloadTick == CHARGE_AT && st.needsCharge) {
+                sound(player, type.magIn());
+            } else if (st.reloadTick == type.charge && st.needsCharge) {
                 setModelData(gun, 3, 0);
-                sound(player, ModSounds.RIFLE_BOLT);
-            } else if (st.reloadTick >= (st.needsCharge ? RELOAD_DONE : TACTICAL_DONE)) {
+                sound(player, type.charged());
+            } else if (st.reloadTick >= (st.needsCharge ? type.chargeDone : type.tacticalDone)) {
                 setModelData(gun, 0, 0);
                 st.reloadTick = -1;
             }
         }
     }
 
-    private static void insertMagazine(ServerPlayer player, ItemStack gun) {
-        int best = bestMagazine(player);
+    private static void insertMagazine(ServerPlayer player, ItemStack gun, GunType type) {
+        int best = bestMagazine(player, type);
         int rounds;
         if (best >= 0) {
             ItemStack mag = player.getInventory().getItem(best);
             rounds = MagazineItem.rounds(mag);
             mag.shrink(1);
         } else if (player.hasInfiniteMaterials()) {
-            rounds = RifleItem.capacity();
+            rounds = type.capacity();
         } else {
             return;
         }

@@ -29,10 +29,10 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
+        com.zomboidcraft.world.cars.CarSounds.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.ModSounds.register();
-        com.zomboidcraft.combat.ModParticles.register();
         ModItems.register();
         com.zomboidcraft.carry.Carry.register();
         com.zomboidcraft.loot.Nearby.register();

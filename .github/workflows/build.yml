@@ -120,7 +120,7 @@ jobs:
           java -cp build/county ListPlaces 12345 6000 | tee places.txt
           printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
           grep level- run/server.properties
-          trap 'echo "----- county server.log tail"; tail -n 80 county.log' EXIT
+          trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
           rm -f console2 && mkfifo console2
           ./gradlew runServer --args=nogui < console2 > county.log 2>&1 &
           pid=$!
@@ -138,6 +138,7 @@ jobs:
           # generate chunks in the middle of the nearest place of each kind and variant
           while read -r type variant cx cz rest; do
             echo "forceload add $((cx - 20)) $((cz - 20)) $((cx + 20)) $((cz + 20))" >&4
+            sleep 2
           done < places.txt
           echo 'forceload add -100 -100 100 100' >&4
           sleep 90
