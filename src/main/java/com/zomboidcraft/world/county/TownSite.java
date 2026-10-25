@@ -524,7 +524,7 @@ final class TownSite extends Site {
         homesOn.add(cross2s);
         homesOn.add(west);
         homesOn.add(east);
-        houses(homesOn, town, 13, 17, 24);
+        houses(homesOn, town, 16, 21, 28);
 
         // dressing the street the way it was left
         townLamps(main, 14, 0.25);
@@ -741,7 +741,7 @@ final class TownSite extends Site {
                 0.2, 0.45, 0.06, 0.7, false, false);
         List<Kit.Lane> homesOn = new ArrayList<>(ringRoad);
         homesOn.addAll(List.of(inN, inS, inW, inE));
-        houses(homesOn, town, 14, 18, 26);
+        houses(homesOn, town, 17, 22, 30);
         int wrecks = 3 + rng.nextInt(3);
         for (int i = 0; i < wrecks; i++) {
             Kit.Lane l = sides[rng.nextInt(4)];
@@ -928,10 +928,10 @@ final class TownSite extends Site {
         weights[House.Style.BUNGALOW.ordinal()] += 0.1;
         weights[House.Style.TRAILER.ordinal()] = 0.05;
         Homes.Mix rows = new Homes.Mix(weights, 4, 0.2, 0.05, 0.1, 0.3, 0.3, 0.05, 0.85, false, false);
-        houses(village, rows, 10, 12, 21);
+        houses(village, rows, 13, 16, 26);
         Homes.Mix older = new Homes.Mix(Homes.Mix.weights(0.1, 0.3, 0.3, 0.2, 0, 0, 0.1, 0), 6, 0.3, 0.2, 0.2, 0.3, 0.4,
                 0.06, 0.8, false, false);
-        houses(List.of(cross), older, 14, 18, 26);
+        houses(List.of(cross), older, 17, 22, 30);
         townLamps(main, 16, 0.2);
         furniture(main, 4, main.length() - 4);
         kit.abandonedCars(main, 3);

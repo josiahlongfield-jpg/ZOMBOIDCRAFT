@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_note_stadium": "zomboidcraft:block/city/home_note_stadium",
+    "particle": "zomboidcraft:block/city/home_note_stadium"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        0
+      ],
+      "to": [
+        13,
+        14,
+        0.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_note_stadium",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_note_stadium"
+        },
+        "east": {
+          "texture": "#home_note_stadium"
+        },
+        "west": {
+          "texture": "#home_note_stadium"
+        },
+        "up": {
+          "texture": "#home_note_stadium"
+        },
+        "down": {
+          "texture": "#home_note_stadium"
+        }
+      }
+    }
+  ]
+}

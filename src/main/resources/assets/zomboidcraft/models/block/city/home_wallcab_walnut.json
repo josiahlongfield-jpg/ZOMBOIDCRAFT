@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_walnut": "zomboidcraft:block/city/home_walnut",
+    "home_wcab_walnut": "zomboidcraft:block/city/home_wcab_walnut",
+    "particle": "zomboidcraft:block/city/home_walnut"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        9.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_walnut"
+        },
+        "south": {
+          "texture": "#home_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_walnut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_walnut"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wcab_walnut"
+        },
+        "south": {
+          "texture": "#home_wcab_walnut"
+        },
+        "east": {
+          "texture": "#home_wcab_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wcab_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wcab_walnut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wcab_walnut"
+        }
+      }
+    }
+  ]
+}

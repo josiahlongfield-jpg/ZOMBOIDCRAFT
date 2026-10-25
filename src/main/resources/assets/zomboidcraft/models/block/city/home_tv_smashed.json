@@ -1,0 +1,245 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_tv_case": "zomboidcraft:block/city/home_tv_case",
+    "home_tv_smashed": "zomboidcraft:block/city/home_tv_smashed",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "particle": "zomboidcraft:block/city/home_wood_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark"
+        },
+        "west": {
+          "texture": "#home_wood_dark"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#home_wood_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        4
+      ],
+      "to": [
+        14,
+        17,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_tv_case",
+          "uv": [
+            2,
+            0,
+            14,
+            11
+          ]
+        },
+        "south": {
+          "texture": "#home_tv_case",
+          "uv": [
+            2,
+            0,
+            14,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#home_tv_case",
+          "uv": [
+            1,
+            0,
+            12,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#home_tv_case",
+          "uv": [
+            4,
+            0,
+            15,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#home_tv_case"
+        },
+        "down": {
+          "texture": "#home_tv_case"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        7.5,
+        3.5
+      ],
+      "to": [
+        13,
+        15.5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_tv_smashed"
+        },
+        "south": {
+          "texture": "#home_tv_smashed"
+        },
+        "east": {
+          "texture": "#home_tv_smashed"
+        },
+        "west": {
+          "texture": "#home_tv_smashed"
+        },
+        "up": {
+          "texture": "#home_tv_smashed"
+        },
+        "down": {
+          "texture": "#home_tv_smashed"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        17,
+        9
+      ],
+      "to": [
+        6,
+        23,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "uv": [
+            10,
+            0,
+            10.5,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "uv": [
+            5.5,
+            0,
+            6,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "uv": [
+            6.5,
+            0,
+            7,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "uv": [
+            9,
+            0,
+            9.5,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        17,
+        9
+      ],
+      "to": [
+        10.5,
+        22,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "uv": [
+            5.5,
+            0,
+            6,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "uv": [
+            10,
+            0,
+            10.5,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "uv": [
+            6.5,
+            0,
+            7,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "uv": [
+            9,
+            0,
+            9.5,
+            5
+          ]
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

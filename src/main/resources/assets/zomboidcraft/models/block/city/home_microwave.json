@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_almond": "zomboidcraft:block/city/home_almond",
+    "home_microwave": "zomboidcraft:block/city/home_microwave",
+    "particle": "zomboidcraft:block/city/home_almond"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        5
+      ],
+      "to": [
+        14,
+        6,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_almond"
+        },
+        "south": {
+          "texture": "#home_almond"
+        },
+        "east": {
+          "texture": "#home_almond"
+        },
+        "west": {
+          "texture": "#home_almond"
+        },
+        "up": {
+          "texture": "#home_almond"
+        },
+        "down": {
+          "texture": "#home_almond",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        4.5
+      ],
+      "to": [
+        14,
+        6,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_microwave"
+        },
+        "south": {
+          "texture": "#home_microwave"
+        },
+        "east": {
+          "texture": "#home_microwave"
+        },
+        "west": {
+          "texture": "#home_microwave"
+        },
+        "up": {
+          "texture": "#home_microwave"
+        },
+        "down": {
+          "texture": "#home_microwave",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

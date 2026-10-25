@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_rug_blue": "zomboidcraft:block/city/home_rug_blue",
+    "particle": "zomboidcraft:block/city/home_rug_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rug_blue",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_rug_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_rug_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_rug_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_rug_blue"
+        },
+        "down": {
+          "texture": "#home_rug_blue",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

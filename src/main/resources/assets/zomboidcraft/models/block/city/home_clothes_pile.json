@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_clothes": "zomboidcraft:block/city/home_clothes",
+    "particle": "zomboidcraft:block/city/home_clothes"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_clothes"
+        },
+        "south": {
+          "texture": "#home_clothes"
+        },
+        "east": {
+          "texture": "#home_clothes"
+        },
+        "west": {
+          "texture": "#home_clothes"
+        },
+        "up": {
+          "texture": "#home_clothes"
+        },
+        "down": {
+          "texture": "#home_clothes",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        4
+      ],
+      "to": [
+        10,
+        3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_clothes"
+        },
+        "south": {
+          "texture": "#home_clothes"
+        },
+        "east": {
+          "texture": "#home_clothes"
+        },
+        "west": {
+          "texture": "#home_clothes"
+        },
+        "up": {
+          "texture": "#home_clothes"
+        },
+        "down": {
+          "texture": "#home_clothes"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        10
+      ],
+      "to": [
+        15,
+        1.2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_clothes"
+        },
+        "south": {
+          "texture": "#home_clothes"
+        },
+        "east": {
+          "texture": "#home_clothes"
+        },
+        "west": {
+          "texture": "#home_clothes"
+        },
+        "up": {
+          "texture": "#home_clothes"
+        },
+        "down": {
+          "texture": "#home_clothes",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

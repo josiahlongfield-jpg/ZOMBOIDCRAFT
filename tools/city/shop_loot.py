@@ -129,6 +129,97 @@ TABLES = {
         ("rotten_flesh", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn(.5, .9)), ("-", 14, 1, 1)]),
 }
 
+# Houses, per container, after Zomboid's room-and-container lists: a kitchen drawer holds cutlery,
+# matches and a torch, the bathroom cabinet pills, the garage tools, a bedside drawer now and
+# then a pistol. Many come up empty; food in the fridge has mostly gone off.
+CLOTHES = [("leather_helmet", 2, 1, 1, worn()), ("leather_chestplate", 3, 1, 1, worn()),
+           ("leather_leggings", 3, 1, 1, worn()), ("leather_boots", 3, 1, 1, worn())]
+TABLES.update({
+    "home_cupboard": ((1, 4), [
+        ("bowl", 6, 1, 4), ("glass_bottle", 5, 1, 3), ("potion", 4, 1, 2, WATER), ("sugar", 3, 1, 2), ("bread", 3, 1, 2),
+        ("cookie", 3, 1, 6), ("dried_kelp", 4, 2, 8), ("baked_potato", 2, 1, 3), ("honey_bottle", 2, 1, 1),
+        ("bucket", 1, 1, 1), (f"{ZC}:frying_pan", 2, 1, 1), (f"{ZC}:kitchen_knife", 1, 1, 1), ("-", 12, 1, 1)]),
+    "home_drawer": ((1, 3), [
+        (f"{ZC}:kitchen_knife", 6, 1, 1), ("paper", 6, 1, 4), ("string", 4, 1, 4), ("candle", 3, 1, 3),
+        ("flint_and_steel", 2, 1, 1), ("torch", 3, 1, 3), ("shears", 2, 1, 1), ("gold_nugget", 2, 1, 4),
+        (f"{ZC}:nails", 3, 2, 8), (f"{ZC}:bandage", 2, 1, 1), ("name_tag", 1, 1, 1), ("-", 12, 1, 1)]),
+    "home_sink": ((0, 3), [
+        ("bucket", 3, 1, 1), ("glass_bottle", 5, 1, 3), ("potion", 2, 1, 1, WATER), ("sponge", 2, 1, 1),
+        ("string", 2, 1, 3), ("paper", 3, 1, 3), (f"{ZC}:pipe_wrench", 2, 1, 1, worn()), (f"{ZC}:lead_pipe", 1, 1, 1, worn()),
+        ("-", 10, 1, 1)]),
+    "home_pantry": ((1, 5), [
+        ("bread", 6, 1, 3), ("cookie", 5, 2, 8), ("sugar", 4, 1, 3), ("dried_kelp", 6, 2, 10), ("honey_bottle", 3, 1, 2),
+        ("pumpkin_pie", 2, 1, 1), ("sweet_berries", 3, 2, 6), ("wheat", 3, 1, 4), ("cocoa_beans", 3, 1, 4),
+        ("bowl", 3, 1, 3), ("glass_bottle", 3, 1, 2), ("potion", 4, 1, 2, WATER), ("-", 12, 1, 1)]),
+    "home_oven": ((0, 2), [
+        ("baked_potato", 3, 1, 3), ("cooked_chicken", 2, 1, 1), ("bread", 2, 1, 1), ("pumpkin_pie", 2, 1, 1),
+        (f"{ZC}:frying_pan", 4, 1, 1), ("bowl", 2, 1, 2), ("rotten_flesh", 3, 1, 2), ("-", 14, 1, 1)]),
+    "home_fridge": ((1, 5), [
+        ("milk_bucket", 3, 1, 1), ("egg", 4, 1, 6), ("apple", 4, 1, 4), ("carrot", 3, 1, 4), ("cooked_beef", 2, 1, 2),
+        ("cooked_porkchop", 2, 1, 2), ("beef", 2, 1, 3), ("chicken", 2, 1, 2), ("melon_slice", 3, 1, 4),
+        ("potion", 5, 1, 3, WATER), ("rotten_flesh", 8, 1, 4), ("-", 8, 1, 1)]),
+    "home_freezer": ((1, 4), [
+        ("beef", 4, 1, 4), ("porkchop", 4, 1, 4), ("chicken", 4, 1, 3), ("cod", 3, 1, 3), ("salmon", 3, 1, 3),
+        ("ice", 2, 1, 4), ("rotten_flesh", 5, 1, 4), ("-", 8, 1, 1)]),
+    "home_trash": ((0, 3), [
+        ("paper", 6, 1, 4), ("rotten_flesh", 6, 1, 3), ("bone", 4, 1, 3), ("glass_bottle", 4, 1, 2), ("bowl", 2, 1, 1),
+        ("string", 2, 1, 2), ("stick", 2, 1, 2), ("-", 14, 1, 1)]),
+    "home_books": ((1, 4), [
+        ("book", 12, 1, 3), ("writable_book", 3, 1, 1), ("paper", 4, 1, 4), ("map", 2, 1, 1), ("compass", 1, 1, 1),
+        ("clock", 1, 1, 1), ("-", 8, 1, 1)]),
+    "home_nightstand": ((0, 3), [
+        ("book", 5, 1, 1), ("paper", 3, 1, 3), ("candle", 3, 1, 2), ("torch", 3, 1, 2), ("clock", 1, 1, 1),
+        (f"{ZC}:digital_watch", 3, 1, 1), (f"{ZC}:bandage", 2, 1, 2), ("potion", 2, 1, 1, potion("healing")),
+        ("glass_bottle", 2, 1, 1), ("gold_nugget", 2, 1, 4), (f"{ZC}:pistol", 1, 1, 1, worn(.1, .6)),
+        (f"{ZC}:pistol_ammo", 2, 3, 12), ("-", 10, 1, 1)]),
+    "home_dresser": ((1, 4), CLOTHES + [
+        ("white_wool", 3, 1, 3), ("gray_wool", 2, 1, 2), ("blue_wool", 2, 1, 2), ("string", 3, 1, 4),
+        (f"{ZC}:digital_watch", 2, 1, 1), ("gold_nugget", 2, 1, 5), ("emerald", 1, 1, 1), (f"{ZC}:fanny_pack", 1, 1, 1),
+        ("-", 8, 1, 1)]),
+    "home_wardrobe": ((1, 4), CLOTHES + [
+        ("white_wool", 3, 1, 3), ("black_wool", 2, 1, 2), (f"{ZC}:school_backpack", 2, 1, 1), (f"{ZC}:hiking_backpack", 1, 1, 1),
+        (f"{ZC}:duffel_bag", 2, 1, 1), (f"{ZC}:baseball_bat", 1, 1, 1, worn(0, .5)), (f"{ZC}:golf_club", 1, 1, 1, worn(0, .5)),
+        (f"{ZC}:shotgun", 1, 1, 1, worn(.2, .7)), (f"{ZC}:shotgun_shell", 1, 2, 8), ("-", 8, 1, 1)]),
+    "home_desk": ((1, 4), [
+        ("paper", 10, 1, 8), ("book", 4, 1, 2), ("writable_book", 3, 1, 1), ("ink_sac", 3, 1, 2), ("map", 2, 1, 1),
+        ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1), ("clock", 1, 1, 1), ("gold_nugget", 1, 1, 3),
+        ("-", 10, 1, 1)]),
+    "home_toys": ((1, 4), [
+        ("book", 4, 1, 2), ("paper", 4, 1, 4), ("string", 3, 1, 3), ("white_wool", 3, 1, 2), ("cookie", 2, 1, 4),
+        ("music_disc_cat", 1, 1, 1), ("music_disc_13", 1, 1, 1), ("name_tag", 1, 1, 1), ("red_dye", 2, 1, 3),
+        ("blue_dye", 2, 1, 3), ("slime_ball", 2, 1, 2), ("snowball", 2, 2, 6), (f"{ZC}:school_backpack", 2, 1, 1),
+        (f"{ZC}:baseball_bat", 1, 1, 1, worn(0, .4)), (f"{ZC}:hockey_stick", 1, 1, 1, worn(0, .4)), ("-", 8, 1, 1)]),
+    "home_laundry": ((1, 3), CLOTHES + [
+        ("white_wool", 6, 1, 3), ("light_gray_wool", 4, 1, 3), ("string", 4, 1, 3), ("-", 8, 1, 1)]),
+    "home_bathroom": ((1, 3), [
+        ("paper", 8, 1, 6), (f"{ZC}:bandage", 4, 1, 2), ("potion", 3, 1, 1, WATER), ("glass_bottle", 4, 1, 2),
+        ("shears", 2, 1, 1), ("white_wool", 3, 1, 2), ("honey_bottle", 1, 1, 1), ("sponge", 1, 1, 1), ("-", 10, 1, 1)]),
+    "home_medicine": ((1, 3), [
+        (f"{ZC}:bandage", 10, 1, 3), (f"{ZC}:splint", 3, 1, 1), ("potion", 4, 1, 1, potion("healing")),
+        ("potion", 2, 1, 1, potion("regeneration")), ("glass_bottle", 4, 1, 2), ("honey_bottle", 2, 1, 1),
+        ("paper", 2, 1, 2), ("-", 8, 1, 1)]),
+    "home_garage": ((1, 5), [
+        (f"{ZC}:nails", 10, 4, 16), (f"{ZC}:hammer", 3, 1, 1), (f"{ZC}:crowbar", 2, 1, 1), (f"{ZC}:pipe_wrench", 3, 1, 1, worn()),
+        (f"{ZC}:lead_pipe", 2, 1, 1, worn()), (f"{ZC}:shovel", 2, 1, 1, worn()), (f"{ZC}:sledgehammer", 1, 1, 1, worn(0, .5)),
+        ("string", 4, 1, 6), ("iron_nugget", 4, 2, 9), ("oak_planks", 4, 2, 8), ("stick", 3, 2, 6), ("bucket", 2, 1, 1),
+        ("torch", 3, 1, 4), ("flint_and_steel", 2, 1, 1), ("shears", 1, 1, 1), ("lantern", 1, 1, 1), ("ladder", 1, 1, 3),
+        ("coal", 2, 1, 4), ("-", 10, 1, 1)]),
+    "home_tools": ((1, 4), [
+        (f"{ZC}:nails", 8, 4, 16), (f"{ZC}:hammer", 4, 1, 1), (f"{ZC}:pipe_wrench", 4, 1, 1), (f"{ZC}:crowbar", 3, 1, 1),
+        ("iron_nugget", 5, 2, 9), ("shears", 2, 1, 1), ("flint_and_steel", 2, 1, 1), ("string", 2, 1, 4),
+        (f"{ZC}:lead_pipe", 1, 1, 1), ("-", 8, 1, 1)]),
+    "home_boxes": ((1, 4), CLOTHES + [
+        ("book", 3, 1, 3), ("paper", 4, 1, 6), ("string", 3, 1, 4), ("white_wool", 2, 1, 2), ("painting", 1, 1, 1),
+        ("flower_pot", 1, 1, 1), ("item_frame", 1, 1, 1), ("candle", 2, 1, 3), ("torch", 1, 1, 2),
+        (f"{ZC}:golf_club", 1, 1, 1, worn()), (f"{ZC}:hockey_stick", 1, 1, 1, worn()), (f"{ZC}:baseball_bat", 1, 1, 1, worn()),
+        (f"{ZC}:duffel_bag", 1, 1, 1), ("music_disc_stal", 1, 1, 1), ("-", 12, 1, 1)]),
+    "home_guns": ((1, 4), [
+        (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun_shell", 10, 4, 16), (f"{ZC}:hunting_rifle", 3, 1, 1, worn(.1, .6)),
+        (f"{ZC}:hunting_rifle_ammo", 8, 3, 12), (f"{ZC}:hunting_rifle_magazine", 2, 1, 1), (f"{ZC}:pistol", 2, 1, 1, worn(.1, .6)),
+        (f"{ZC}:pistol_ammo", 8, 4, 16), (f"{ZC}:pistol_magazine", 3, 1, 1), (f"{ZC}:rifle_ammo", 2, 4, 12),
+        ("arrow", 3, 4, 12), ("bow", 1, 1, 1, worn(0, .5)), ("-", 6, 1, 1)]),
+})
+
 # a rare find on top of the shelf's own stock
 RARE = {
     "grocery": [(f"{ZC}:kitchen_knife", 1), (f"{ZC}:frying_pan", 1)],
@@ -139,6 +230,9 @@ RARE = {
              (f"{ZC}:holo_sight", 1)],
     "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1), (f"{ZC}:military_rucksack", 1),
                 (f"{ZC}:shotgun", 1)],
+    "home_nightstand": [(f"{ZC}:pistol", 1)], "home_garage": [(f"{ZC}:fire_axe", 1), (f"{ZC}:machete", 1)],
+    "home_wardrobe": [(f"{ZC}:hunting_rifle", 1), (f"{ZC}:military_rucksack", 1)], "home_toys": [(f"{ZC}:baseball_bat", 1)],
+    "home_guns": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:scope_4x", 1)],
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2),
              (f"{ZC}:hunting_rifle", 2)],
 }

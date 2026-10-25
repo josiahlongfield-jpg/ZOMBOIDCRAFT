@@ -1,0 +1,239 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_copper": "zomboidcraft:block/city/home_copper",
+    "home_heater_top": "zomboidcraft:block/city/home_heater_top",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "particle": "zomboidcraft:block/city/home_heater_top"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_heater_top"
+        },
+        "south": {
+          "texture": "#home_heater_top"
+        },
+        "east": {
+          "texture": "#home_heater_top"
+        },
+        "west": {
+          "texture": "#home_heater_top"
+        },
+        "up": {
+          "texture": "#home_heater_top"
+        },
+        "down": {
+          "texture": "#home_heater_top",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        1,
+        4
+      ],
+      "to": [
+        14,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_heater_top"
+        },
+        "south": {
+          "texture": "#home_heater_top"
+        },
+        "east": {
+          "texture": "#home_heater_top"
+        },
+        "west": {
+          "texture": "#home_heater_top"
+        },
+        "up": {
+          "texture": "#home_heater_top"
+        },
+        "down": {
+          "texture": "#home_heater_top"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        1,
+        2
+      ],
+      "to": [
+        12,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_heater_top"
+        },
+        "south": {
+          "texture": "#home_heater_top"
+        },
+        "east": {
+          "texture": "#home_heater_top"
+        },
+        "west": {
+          "texture": "#home_heater_top"
+        },
+        "up": {
+          "texture": "#home_heater_top"
+        },
+        "down": {
+          "texture": "#home_heater_top"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        10,
+        3.5
+      ],
+      "to": [
+        12.5,
+        11,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_heater_top"
+        },
+        "south": {
+          "texture": "#home_heater_top"
+        },
+        "east": {
+          "texture": "#home_heater_top"
+        },
+        "west": {
+          "texture": "#home_heater_top"
+        },
+        "up": {
+          "texture": "#home_heater_top"
+        },
+        "down": {
+          "texture": "#home_heater_top"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        7
+      ],
+      "to": [
+        6,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_copper"
+        },
+        "south": {
+          "texture": "#home_copper"
+        },
+        "east": {
+          "texture": "#home_copper"
+        },
+        "west": {
+          "texture": "#home_copper"
+        },
+        "up": {
+          "texture": "#home_copper",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        11,
+        7
+      ],
+      "to": [
+        11,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_copper"
+        },
+        "south": {
+          "texture": "#home_copper"
+        },
+        "east": {
+          "texture": "#home_copper"
+        },
+        "west": {
+          "texture": "#home_copper"
+        },
+        "up": {
+          "texture": "#home_copper",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_copper"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        11,
+        6.5
+      ],
+      "to": [
+        9.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel"
+        }
+      }
+    }
+  ]
+}

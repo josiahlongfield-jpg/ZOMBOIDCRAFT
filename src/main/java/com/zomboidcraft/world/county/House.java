@@ -9,7 +9,8 @@ import java.util.SplittableRandom;
  * stock: one-storey ranches with a garage, two-storey colonials, bungalows with a deep porch,
  * farmhouses with a wrap-around porch and tin roof, cabins and mobile homes. Each is weathered
  * to a condition (shut up, looted, boarded up by survivors, burnt out, or falling in), and
- * furnished room by room with searchable cupboards.
+ * laid out and furnished inside by {@link Interior}: a hall, stairs, rooms with their doors,
+ * wallpaper and searchable cupboards.
  */
 public final class House {
     public enum Style { RANCH, COLONIAL, BUNGALOW, FARMHOUSE, CABIN, TRAILER, SHOTGUN, MANSION }
@@ -29,8 +30,7 @@ public final class House {
             "minecraft:waxed_oxidized_cut_copper"};
     private static final String[] FLOORS = {"minecraft:oak_planks", "minecraft:spruce_planks", "minecraft:dark_oak_planks",
             "floor_boards"};
-    private static final String[] BEDS = {"red", "blue", "white", "gray", "brown", "green", "light_blue", "yellow"};
-    private static final String[] CARPETS = {"brown", "gray", "red", "blue", "green", "light_gray", "cyan"};
+    private static final String[] SIDES = {"north", "east", "south", "west"};
 
     public static final int STOREY = 4;
 
@@ -48,6 +48,8 @@ public final class House {
     private final String shutterWood;
     /** Share of windows still lit, for the few houses with a generator running. */
     private double lit;
+    /** The rooms, stairs and furniture; null for a house burnt out to its shell. */
+    private Interior interior;
 
     public House(Placer p, SplittableRandom rng, Style style, Condition cond, Palette pal, int w, int d, int floors) {
         this.p = p;
@@ -84,6 +86,11 @@ public final class House {
 
     public int garageX1() {
         return garageX1;
+    }
+
+    /** After {@link #build()}: the rooms in the house's frame, one per line (for previews). */
+    public String describe() {
+        return interior == null ? "" : interior.describe();
     }
 
     /** A random palette suited to the style. */
@@ -161,6 +168,7 @@ public final class House {
             case SHOTGUN, CABIN -> 3;
             default -> 0;
         };
+        porch = Math.min(porch, Math.max(0, d - 11));  // a shallow lot loses the porch before the rooms
         x0 = 0;
         x1 = w - 1;
         z0 = porch;
@@ -171,15 +179,17 @@ public final class House {
             x1 = garageX0 - 1;
         }
         int height = floors * STOREY;
+        if (cond != Condition.BURNT) {
+            interior = new Interior(p, rng, style, cond, x0, x1, z0, z1, floors, style != Style.CABIN, garageX0 >= 0, lit);
+            interior.plan();
+        }
         shell(x0, x1, z0, z1, height);
         if (garageX0 >= 0) {
             garage();
         }
         windowsAndDoors(height);
-        if (cond != Condition.BURNT) {
-            for (int f = 0; f < floors; f++) {
-                rooms(f);
-            }
+        if (interior != null) {
+            interior.build();
         }
         if (style == Style.TRAILER) {
             flatRoof(height);
@@ -240,18 +250,67 @@ public final class House {
                 p.set(x, y, z0, open && y < 3 ? "air" : "garage_door[facing=north]");
             }
         }
-        // shelves of junk, a workbench, maybe a car
-        for (int z = z0 + 2; z < z1; z += 2) {
-            p.set(garageX1 - 1, 1, z, "minecraft:barrel[facing=up,loot=" + (rng.nextBoolean() ? "hardware" : "storage") + "]");
+        // a workbench under a pegboard along the back, shelves and the freezer down the side,
+        // boxes nobody unpacked; the middle left clear for the car
+        int gx0 = garageX0, gx1 = garageX1 - 1, gz0 = z0 + 1, gz1 = z1 - 1;
+        int into = interior != null ? interior.garageZ() : -1;
+        for (int x = gx0; x <= gx1; x++) {
+            for (int z = gz0; z <= gz1; z++) {
+                p.set(x, h, z, "home_floor_oak");
+            }
         }
-        p.set(garageX0 + 1, 1, z1 - 1, "minecraft:crafting_table");
+        java.util.function.BiPredicate<Integer, Integer> clear = (x, z) -> x <= gx0 + 1 && Math.abs(z - into) <= 0;
+        String[] back = {"home_workbench", "home_workbench", "home_tool_chest"};
+        for (int i = 0; i < back.length && gx0 + 1 + i < gx1; i++) {
+            int x = gx0 + 1 + i;
+            if (!clear.test(x, gz1)) {
+                p.set(x, 1, gz1, back[i] + "[facing=north]");
+                if (i < 2) {
+                    p.set(x, 2, gz1, "store_pegboard[facing=south]");
+                }
+            }
+        }
+        p.set(gx1, 1, gz1, "home_boxes");
+        p.set(gx1, 2, gz1, "home_boxes");
+        String[] side = {"home_garage_shelf", "home_garage_shelf", "home_freezer",
+                rng.nextDouble() < (style == Style.RANCH ? 0.2 : 0.1) ? "home_gun_cabinet" : "home_water_heater"};
+        for (int i = 0; i < side.length && gz1 - 1 - i > gz0 + 1; i++) {
+            int z = gz1 - 1 - i;
+            String b = side[i];
+            boolean tall = b.equals("home_gun_cabinet") || b.equals("home_water_heater");
+            p.set(gx1, 1, z, b + (b.equals("home_water_heater") ? "" : "[facing=west]"));
+            if (tall) {
+                p.set(gx1, 2, z, b + "_top" + (b.equals("home_water_heater") ? "" : "[facing=west]"));
+            }
+        }
+        if (rng.nextDouble() < 0.6) {
+            p.set(gx0 + 1, 1, gz0 + 1, "home_mower[facing=" + SIDES[rng.nextInt(4)] + "]");
+        }
+        p.set((gx0 + gx1) / 2, 1, (gz0 + gz1) / 2 + 1, "home_stain_dark");
+        p.set((gx0 + gx1) / 2, 3, (gz0 + gz1) / 2, "ceiling_light_off");
         if (rng.nextDouble() < 0.35) {
-            p.set(garageX0 + 2, 1, z0 + 4, "store_paint_cans");
+            p.set(gx0 + 2, 1, gz0 + 3, "store_paint_cans");
         }
     }
 
     /** Window openings with sills and shutters, and the doors. */
     private void windowsAndDoors(int height) {
+        if (interior != null) {
+            // centred on the rooms behind them
+            doorX = interior.doorX();
+            for (int[] w : interior.windows()) {
+                window(w[0], w[2] * STOREY + 2, w[1], SIDES[w[3]], w[3] == 0 || w[3] == 2 ? "x" : "z");
+            }
+            door(doorX, z0, "south");
+            if (interior.backX() >= 0) {
+                door(interior.backX(), z1, "north");
+            }
+            if (interior.garageZ() >= 0) {
+                door(x1, interior.garageZ(), "west");
+            }
+            porchLamp();
+            return;
+        }
         doorX = style == Style.SHOTGUN ? x0 + 2 : (x0 + x1) / 2 + (rng.nextBoolean() ? 0 : -1);
         for (int f = 0; f < floors; f++) {
             int y = f * STOREY + 2;
@@ -276,11 +335,14 @@ public final class House {
             }
         }
         door(doorX, z0, "south");
-        // the porch lamp beside the door
-        boolean on = lit > 0 && rng.nextDouble() < 0.8;
-        p.set(doorX + 1, 3, z0 - 1, on ? "wall_lantern" : "wall_lantern_off");
+        porchLamp();
         // a back door to the yard
         door((x0 + x1) / 2 + 2 <= x1 - 1 ? (x0 + x1) / 2 + 2 : (x0 + x1) / 2, z1, "north");
+    }
+
+    private void porchLamp() {
+        boolean on = lit > 0 && rng.nextDouble() < 0.8;
+        p.set(doorX + 1, 3, z0 - 1, on ? "wall_lantern" : "wall_lantern_off");
     }
 
     private void window(int x, int y, int z, String out, String axis) {
@@ -325,7 +387,7 @@ public final class House {
     private void door(int x, int z, String facing) {
         String wood = rng.nextBoolean() ? "minecraft:spruce_door" : rng.nextBoolean() ? "minecraft:dark_oak_door" : "minecraft:oak_door";
         double r = rng.nextDouble();
-        if (cond == Condition.BOARDED && r < 0.7) {
+        if (cond == Condition.BOARDED && r < 0.7 && !facing.equals("west")) {
             p.set(x, 1, z, "minecraft:spruce_planks");
             p.set(x, 2, z, "boarded_window[axis=" + (facing.equals("north") || facing.equals("south") ? "x" : "z") + "]");
             return;
@@ -459,161 +521,6 @@ public final class House {
         for (int y = 0; y <= top; y++) {
             p.set(x, y, z, y == top ? "minecraft:brick_wall" : "minecraft:bricks");
         }
-    }
-
-    // ------------------------------------------------------------------ rooms
-
-    /** Splits a floor into rooms with drywall partitions and furnishes them. */
-    private void rooms(int f) {
-        int y = f * STOREY + 1;
-        int ix0 = x0 + 1, ix1 = x1 - 1, iz0 = z0 + 1, iz1 = z1 - 1;
-        if (ix1 - ix0 < 3 || iz1 - iz0 < 3) {
-            return;
-        }
-        int midZ = (iz0 + iz1) / 2 + (rng.nextBoolean() ? 0 : 1);
-        int midX = (ix0 + ix1) / 2;
-        boolean big = ix1 - ix0 >= 8 && iz1 - iz0 >= 6 && style != Style.TRAILER;
-        if (big) {
-            for (int x = ix0; x <= ix1; x++) {
-                partition(x, y, midZ);
-            }
-            for (int z = midZ + 1; z <= iz1; z++) {
-                partition(midX, y, z);
-            }
-            gap(midX - 1, y, midZ, true);
-            gap(midX + 2, y, midZ, true);
-            gap(midX, y, midZ + 2, false);
-        }
-        String[] kinds = f == 0 ? new String[] {"living", "kitchen", "bath"} : new String[] {"bed", "bed", "bath"};
-        if (!big) {
-            furnish(f == 0 ? "living" : "bed", ix0, iz0, ix1, iz1, y);
-            if (f == 0) {
-                furnish("kitchen", ix0, (iz0 + iz1) / 2 + 1, ix1, iz1, y);
-            }
-            return;
-        }
-        furnish(kinds[0], ix0, iz0, ix1, midZ - 1, y);
-        furnish(kinds[1], ix0, midZ + 1, midX - 1, iz1, y);
-        furnish(kinds[2], midX + 1, midZ + 1, ix1, iz1, y);
-        if (f == 0 && floors > 1) {
-            stairsUp(ix1, iz0 + 1, y);
-        }
-    }
-
-    private void partition(int x, int y, int z) {
-        for (int h = 0; h < 3; h++) {
-            String wall = rng.nextDouble() < 0.15 ? "wallpaper_rotten" : rng.nextDouble() < 0.1 ? "drywall_peel" : "drywall";
-            p.set(x, y + h, z, wall);
-        }
-    }
-
-    private void gap(int x, int y, int z, boolean alongX) {
-        p.set(x, y, z, "air");
-        p.set(x, y + 1, z, "air");
-    }
-
-    /** A straight flight up the side wall to the next floor. */
-    private void stairsUp(int x, int z, int y) {
-        for (int i = 0; i < STOREY; i++) {
-            p.set(x, y + i, z + i, "minecraft:spruce_stairs[facing=south]");
-            p.set(x, y + STOREY - 1, z + i, "air");
-            for (int h = y + i + 1; h < y + STOREY; h++) {
-                p.set(x, h, z + i, "air");
-            }
-        }
-    }
-
-    private String loot(String block, String table) {
-        int open = block.indexOf('[');
-        return open < 0 ? block + "[loot=" + table + "]" : block.substring(0, block.length() - 1) + ",loot=" + table + "]";
-    }
-
-    private void furnish(String kind, int a0, int b0, int a1, int b1, int y) {
-        if (a1 - a0 < 1 || b1 - b0 < 1) {
-            return;
-        }
-        boolean messy = cond == Condition.LOOTED || cond == Condition.RUIN;
-        switch (kind) {
-            case "kitchen" -> {
-                // counters and cupboards along the back wall, a stove, a fridge, a table
-                for (int x = a0; x <= a1; x++) {
-                    String block = x == a0 ? "store_cooler[facing=north]" : x == a0 + 2 ? "store_oven[facing=north]"
-                            : loot("minecraft:barrel[facing=up]", "kitchen");
-                    p.set(x, y, b1, block);
-                    if (x == a0) {
-                        p.set(x, y + 1, b1, "store_cooler_top[facing=north]");
-                    } else if (rng.nextDouble() < 0.5) {
-                        p.set(x, y + 2, b1, loot("minecraft:barrel[facing=north]", "kitchen"));
-                    }
-                }
-                if (b1 - b0 >= 3 && a1 - a0 >= 3) {
-                    p.set((a0 + a1) / 2, y, b0 + 1, "store_table");
-                    p.set((a0 + a1) / 2 - 1, y, b0 + 1, messy && rng.nextBoolean() ? "air" : "store_chair[facing=east]");
-                    p.set((a0 + a1) / 2 + 1, y, b0 + 1, "store_chair[facing=west]");
-                }
-                floor(a0, b0, a1, b1, y - 1, rng.nextBoolean() ? "floor_lino" : "floor_checker");
-            }
-            case "living" -> {
-                String carpet = "minecraft:" + CARPETS[rng.nextInt(CARPETS.length)] + "_carpet";
-                for (int x = a0 + 1; x < a1; x++) {
-                    for (int z = b0 + 1; z < b1; z++) {
-                        if (rng.nextDouble() < 0.85) {
-                            p.set(x, y, z, carpet);
-                        }
-                    }
-                }
-                // a sofa facing the television, a bookcase, a lamp
-                for (int x = a0 + 1; x <= Math.min(a1 - 1, a0 + 3); x++) {
-                    p.set(x, y, b1, "minecraft:dark_oak_stairs[facing=south]");
-                }
-                p.set(a0 + 2, y, b0, "minecraft:black_terracotta");
-                p.set(a1, y, b0, "minecraft:bookshelf");
-                p.set(a1, y + 1, b0, rng.nextBoolean() ? "minecraft:bookshelf" : "minecraft:flower_pot");
-                if (rng.nextDouble() < 0.4) {
-                    p.set(a1, y, b1, loot("minecraft:chest[facing=west]", rng.nextDouble() < 0.15 ? "guns" : "storage"));
-                }
-            }
-            case "bed" -> {
-                String colour = BEDS[rng.nextInt(BEDS.length)];
-                int bx = a0 + 1;
-                p.set(bx, y, b0, "minecraft:" + colour + "_bed[facing=north,part=head]");
-                p.set(bx, y, b0 + 1, "minecraft:" + colour + "_bed[facing=north,part=foot]");
-                p.set(bx + 1, y, b0, loot("minecraft:barrel[facing=up]", "clothes"));
-                p.set(a1, y, b0, loot("minecraft:barrel[facing=up]", "clothes"));
-                p.set(a1, y + 1, b0, loot("minecraft:barrel[facing=west]", "clothes"));
-                if (rng.nextBoolean()) {
-                    p.set(a1, y, b1, "minecraft:" + CARPETS[rng.nextInt(CARPETS.length)] + "_carpet");
-                }
-            }
-            case "bath" -> {
-                p.set(a0, y, b1, "minecraft:cauldron");
-                p.set(a1, y, b1, "minecraft:white_glazed_terracotta");
-                p.set(a1, y + 1, b1, loot("minecraft:barrel[facing=north]", "pharmacy"));
-                floor(a0, b0, a1, b1, y - 1, "floor_checker");
-            }
-            default -> {
-            }
-        }
-        if (messy) {
-            for (int i = 0; i < 3; i++) {
-                int x = a0 + rng.nextInt(a1 - a0 + 1), z = b0 + rng.nextInt(b1 - b0 + 1);
-                if (p.get(x, y, z) == null) {
-                    p.set(x, y, z, pickOne("paper", "glass_shards", "cardboard_box[facing=north]", "trash_bag[facing=east]", "blood_splat"));
-                }
-            }
-        }
-    }
-
-    private void floor(int a0, int b0, int a1, int b1, int y, String block) {
-        for (int x = a0; x <= a1; x++) {
-            for (int z = b0; z <= b1; z++) {
-                p.set(x, y, z, block);
-            }
-        }
-    }
-
-    private String pickOne(String... options) {
-        return options[rng.nextInt(options.length)];
     }
 
     // ------------------------------------------------------------------ weathering

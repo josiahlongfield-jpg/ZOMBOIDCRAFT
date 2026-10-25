@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_curtains_gold": "zomboidcraft:block/city/home_curtains_gold",
+    "particle": "zomboidcraft:block/city/home_curtains_gold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_curtains_gold"
+        },
+        "south": {
+          "texture": "#home_curtains_gold"
+        },
+        "east": {
+          "texture": "#home_curtains_gold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_curtains_gold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_curtains_gold",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_curtains_gold",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
