@@ -30,6 +30,12 @@ public final class ModSounds {
     public static final SoundEvent PISTOL_MAG_IN = register("weapon.pistol.mag_in");
     /** The slide racked to chamber a round or clear a jam. */
     public static final SoundEvent PISTOL_SLIDE = register("weapon.pistol.slide");
+    /** The pump shotgun: a deep, heavy boom heard out to 160 blocks, the pump worked, a shell pushed into the tube. */
+    public static final SoundEvent SHOTGUN_SHOT = register("weapon.shotgun.shot");
+    public static final SoundEvent SHOTGUN_SHOT_DISTANT = register("weapon.shotgun.shot_distant", 160f);
+    public static final SoundEvent SHOTGUN_DRY = register("weapon.shotgun.dry");
+    public static final SoundEvent SHOTGUN_PUMP = register("weapon.shotgun.pump");
+    public static final SoundEvent SHOTGUN_SHELL_IN = register("weapon.shotgun.shell_in");
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh");
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");

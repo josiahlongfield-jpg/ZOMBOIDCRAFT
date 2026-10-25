@@ -634,5 +634,65 @@
         "attenuation_distance": 8
       }
     ]
+  },
+  "weapon.shotgun.shot": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/shot/1",
+        "attenuation_distance": 160,
+        "pitch": 0.72,
+        "volume": 1.0
+      }
+    ]
+  },
+  "weapon.shotgun.shot_distant": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/shot_distant/1",
+        "attenuation_distance": 160,
+        "pitch": 0.72,
+        "volume": 1.0
+      }
+    ]
+  },
+  "weapon.shotgun.dry": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/dry/1",
+        "pitch": 0.9
+      },
+      {
+        "name": "zomboidcraft:weapon/rifle/dry/2",
+        "pitch": 0.9
+      }
+    ]
+  },
+  "weapon.shotgun.pump": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/bolt/1",
+        "pitch": 0.8
+      },
+      {
+        "name": "zomboidcraft:weapon/rifle/bolt/2",
+        "pitch": 0.8
+      }
+    ]
+  },
+  "weapon.shotgun.shell_in": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/rifle/load_round/1",
+        "pitch": 0.8
+      },
+      {
+        "name": "zomboidcraft:weapon/rifle/load_round/2",
+        "pitch": 0.8
+      },
+      {
+        "name": "zomboidcraft:weapon/rifle/load_round/3",
+        "pitch": 0.8
+      }
+    ]
   }
 }

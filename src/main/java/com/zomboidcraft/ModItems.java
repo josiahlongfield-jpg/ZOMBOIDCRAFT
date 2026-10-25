@@ -55,6 +55,8 @@ public final class ModItems {
     public static final Item PISTOL = gun("pistol", GunType.PISTOL, 1200);
     public static final Item PISTOL_MAGAZINE = magazine("pistol_magazine", GunType.PISTOL);
     public static final Item PISTOL_AMMO = register("pistol_ammo", Item::new, new Item.Properties().stacksTo(60));
+    public static final Item SHOTGUN = gun("shotgun", GunType.SHOTGUN, 1400);
+    public static final Item SHOTGUN_SHELL = register("shotgun_shell", Item::new, new Item.Properties().stacksTo(50));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -111,11 +113,16 @@ public final class ModItems {
         ResourceKey<CreativeModeTab> combat = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("combat"));
         CreativeModeTabEvents.modifyOutputEvent(combat).register(output -> {
             ALL.forEach(output::accept);
-            // a loaded rifle and pistol and a full magazine for each, ready to try out, and each with everything on it
+            // each gun loaded and ready to try out, a full magazine for it (a box of shells for the shotgun), and each
+            // with everything on it
             for (GunType type : GunType.values()) {
                 ItemStack gun = new ItemStack(type.item());
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 output.accept(gun);
+                if (type.magazine() == null) {
+                    output.accept(new ItemStack(type.ammo(), 25));
+                    continue;
+                }
                 ItemStack mag = new ItemStack(type.magazine());
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
                 output.accept(mag);

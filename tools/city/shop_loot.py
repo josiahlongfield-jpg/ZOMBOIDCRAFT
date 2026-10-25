@@ -63,6 +63,7 @@ TABLES = {
         (f"{ZC}:weapon_light", 2, 1, 1), (f"{ZC}:laser_sight", 1, 1, 1), (f"{ZC}:rifle_stock", 1, 1, 1),
         (f"{ZC}:pistol", 3, 1, 1, worn(.1, .7)), (f"{ZC}:pistol_magazine", 5, 1, 1), (f"{ZC}:pistol_magazine", 2, 1, 1, rounds(8)),
         (f"{ZC}:pistol_ammo", 12, 5, 30), (f"{ZC}:pistol_suppressor", 1, 1, 1),
+        (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .7)), (f"{ZC}:shotgun_shell", 12, 4, 20),
         ("arrow", 6, 4, 16), ("bow", 2, 1, 1, worn(0, .4)),
         ("crossbow", 2, 1, 1, worn(0, .4)), ("iron_sword", 1, 1, 1, worn()), (f"{ZC}:machete", 2, 1, 1),
         (f"{ZC}:kitchen_knife", 2, 1, 1), ("leather_chestplate", 2, 1, 1, worn()), ("iron_helmet", 1, 1, 1, worn()),
@@ -74,6 +75,7 @@ TABLES = {
         ("amethyst_shard", 3, 1, 4), ("lead", 2, 1, 1), (f"{ZC}:baseball_bat", 2, 1, 1), (f"{ZC}:katana", 1, 1, 1),
         (f"{ZC}:golf_club", 2, 1, 1, worn(0, .5)), (f"{ZC}:hockey_stick", 1, 1, 1, worn(0, .5)), (f"{ZC}:rifle_ammo", 1, 3, 12), ("iron_sword", 1, 1, 1, worn()),
         (f"{ZC}:pistol", 1, 1, 1, worn(.2, .8)), (f"{ZC}:pistol_ammo", 2, 3, 15),
+        (f"{ZC}:shotgun", 1, 1, 1, worn(.2, .8)), (f"{ZC}:shotgun_shell", 2, 2, 10),
         ("golden_helmet", 1, 1, 1, worn()), ("book", 2, 1, 2), ("-", 8, 1, 1)]),
     "thrift": ((2, 6), [
         ("leather_helmet", 4, 1, 1, worn()), ("leather_chestplate", 4, 1, 1, worn()), ("leather_leggings", 4, 1, 1, worn()),
@@ -109,7 +111,8 @@ TABLES = {
         (f"{ZC}:nails", 6, 2, 10), ("oak_planks", 5, 2, 8), ("stick", 4, 2, 6), ("string", 4, 1, 4), ("paper", 4, 1, 4),
         ("torch", 3, 1, 4), ("bread", 3, 1, 2), ("potion", 3, 1, 1, WATER), ("bone", 2, 1, 3), ("leather", 2, 1, 2),
         (f"{ZC}:bandage", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn()), (f"{ZC}:shovel", 1, 1, 1, worn()),
-        (f"{ZC}:golf_club", 1, 1, 1, worn()), (f"{ZC}:duffel_bag", 1, 1, 1), (f"{ZC}:hiking_backpack", 1, 1, 1), ("-", 12, 1, 1)]),
+        (f"{ZC}:golf_club", 1, 1, 1, worn()), (f"{ZC}:duffel_bag", 1, 1, 1), (f"{ZC}:hiking_backpack", 1, 1, 1),
+        (f"{ZC}:shotgun_shell", 1, 2, 8), ("-", 12, 1, 1)]),
     "scraps": ((0, 2), [
         ("paper", 6, 1, 3), ("stick", 4, 1, 3), ("string", 3, 1, 2), ("bone", 2, 1, 2), ("glass_bottle", 3, 1, 1),
         ("rotten_flesh", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn(.5, .9)), ("-", 14, 1, 1)]),
@@ -123,7 +126,8 @@ RARE = {
              (f"{ZC}:rifle_suppressor", 1), (f"{ZC}:katana", 1)],
     "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1), (f"{ZC}:red_dot_sight", 1),
              (f"{ZC}:holo_sight", 1)],
-    "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1), (f"{ZC}:military_rucksack", 1)],
+    "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1), (f"{ZC}:military_rucksack", 1),
+                (f"{ZC}:shotgun", 1)],
 }
 
 

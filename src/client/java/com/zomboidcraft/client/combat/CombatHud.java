@@ -60,7 +60,9 @@ public final class CombatHud {
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         int capacity = RifleItem.capacity(gun);
         String rounds = g.mag() ? g.rounds() + " / " + capacity : "no mag";
-        String status = g.jammed() ? "JAMMED - R" : CombatClient.reloading(gun) ? "reloading" : g.mag() && g.rounds() == 0 ? "empty - R" : "";
+        boolean tube = GunType.of(gun) != null && GunType.of(gun).tube;
+        String status = g.jammed() ? "JAMMED - R" : CombatClient.reloading(gun) ? (tube ? "loading" : "reloading")
+                : g.mag() && g.rounds() == 0 ? "empty - R" : "";
         int x = graphics.guiWidth() / 2 + 98;
         int y = graphics.guiHeight() - 20;
         int width = Math.max(font.width(rounds), font.width(status)) + 8;

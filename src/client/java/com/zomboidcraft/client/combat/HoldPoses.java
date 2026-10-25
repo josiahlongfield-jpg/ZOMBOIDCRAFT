@@ -56,14 +56,29 @@ public final class HoldPoses {
         float headX = model.head.xRot, headY = model.head.yRot * mirror;
         if (stack.getItem() instanceof RifleItem item) {
             boolean aiming = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
-            boolean pistol = item.type() == GunType.PISTOL;
             if (aiming) {
-                // the shouldered rifle, or the pistol out at arm's length, follows the eyes
-                gun = rot(headX, headY, 0).mul(rot(pistol ? HoldPoseData.PISTOL_AIM : HoldPoseData.RIFLE_AIM));
-                support = pistol ? HoldPoseData.PISTOL_AIM_SUPPORT : HoldPoseData.RIFLE_AIM_SUPPORT;
+                // the shouldered long gun, or the pistol out at arm's length, follows the eyes
+                gun = rot(headX, headY, 0).mul(rot(switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_AIM;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_AIM;
+                    default -> HoldPoseData.RIFLE_AIM;
+                }));
+                support = switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_AIM_SUPPORT;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_AIM_SUPPORT;
+                    default -> HoldPoseData.RIFLE_AIM_SUPPORT;
+                };
             } else {
-                gun = rot(bob(state), 0, 0).mul(rot(pistol ? HoldPoseData.PISTOL_READY : HoldPoseData.RIFLE_READY));
-                support = pistol ? HoldPoseData.PISTOL_READY_SUPPORT : HoldPoseData.RIFLE_READY_SUPPORT;
+                gun = rot(bob(state), 0, 0).mul(rot(switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_READY;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
+                    default -> HoldPoseData.RIFLE_READY;
+                }));
+                support = switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_READY_SUPPORT;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_READY_SUPPORT;
+                    default -> HoldPoseData.RIFLE_READY_SUPPORT;
+                };
             }
         } else {
             WeaponSpecs.WeaponSpec spec = Weapons.spec(stack);

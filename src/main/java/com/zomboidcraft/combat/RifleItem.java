@@ -18,7 +18,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 /**
- * A gun (the assault rifle, the pistol: see {@link GunType}). Hold right-click to aim down the sights,
+ * A gun (the assault rifle, the pistol, the pump shotgun: see {@link GunType}). Hold right-click to aim down the sights,
  * left-click to fire, R to reload. Firing and reloading run on the server (see {@link Guns}); this class is
  * the item's own side: aiming is "using" the item, which the item model turns into the sight picture.
  */
@@ -111,9 +111,13 @@ public class RifleItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         GunState gun = stack.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-        tooltip.accept(gun.mag()
-                ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
-                : Component.literal("No magazine").withStyle(ChatFormatting.DARK_RED));
+        if (type.tube) {
+            tooltip.accept(Component.literal("Shells: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltip.accept(gun.mag()
+                    ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
+                    : Component.literal("No magazine").withStyle(ChatFormatting.DARK_RED));
+        }
         if (gun.jammed()) {
             tooltip.accept(Component.literal("Jammed: press R to clear").withStyle(ChatFormatting.RED));
         }
@@ -130,6 +134,7 @@ public class RifleItem extends Item {
         if (Attachments.firstFilled(stack) != null) {
             tooltip.accept(Component.literal("Right-click with an empty hand to take a part off").withStyle(ChatFormatting.DARK_GRAY));
         }
-        tooltip.accept(Component.literal("Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.accept(Component.literal(type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
+                : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
     }
 }

@@ -181,8 +181,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     public static ItemStack get(ItemStack gun, Slot slot) {
         if (slot == Slot.MAGAZINE) {
             GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-            if (!g.mag()) {
-                return ItemStack.EMPTY;
+            if (!g.mag() || magazine(gun) == null) {
+                return ItemStack.EMPTY;     // out, or a tube gun's shells, which live in the gun
             }
             ItemStack mag = new ItemStack(magazine(gun));
             mag.set(GunState.MAG_ROUNDS, g.rounds());
@@ -194,15 +194,15 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** The model key of what's in a slot, or null if it's empty. */
     public static @Nullable String key(ItemStack gun, Slot slot) {
         if (slot == Slot.MAGAZINE) {
-            return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag()
+            return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag() && magazine(gun) != null
                     ? GunSlotData.MODEL_KEYS.get(BuiltInRegistries.ITEM.getKey(magazine(gun)).getPath()) : null;
         }
         ItemStack stack = of(gun).mounted().get(slot);
         return stack != null && stack.getItem() instanceof AttachmentItem item ? item.modelKey() : null;
     }
 
-    /** The magazine this gun takes. */
-    private static Item magazine(ItemStack gun) {
+    /** The magazine this gun takes, or null for a tube gun. */
+    private static @Nullable Item magazine(ItemStack gun) {
         GunType type = GunType.of(gun);
         return (type == null ? GunType.ASSAULT_RIFLE : type).magazine();
     }

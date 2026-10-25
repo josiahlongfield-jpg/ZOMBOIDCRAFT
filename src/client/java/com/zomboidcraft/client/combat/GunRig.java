@@ -18,10 +18,12 @@ import java.util.Map;
  * @param locksBack    the handle (slide) stays back on an empty gun
  * @param cycles       it runs back with every shot
  * @param supportGrip  the off hand wraps the grip (a pistol's), rather than cupping a handguard
+ * @param pump         the off hand rides a pump (the handle) and works it, and shells go in one at a time through
+ *                     the port (magTop), each rocked about its head (magCentre)
  */
 record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, float[] charge,
               Map<String, float[]> sights, float handleTravel, float[] chargeTurn, float[] chargePush,
               float[] grip, float[] support, float[] foregrip, float[] magTop, float[] magHold, float[] magCentre,
               float[] handle, float[] laser, float[] muzzle, float[] magAxis,
-              boolean locksBack, boolean cycles, boolean supportGrip) {
+              boolean locksBack, boolean cycles, boolean supportGrip, boolean pump) {
 }

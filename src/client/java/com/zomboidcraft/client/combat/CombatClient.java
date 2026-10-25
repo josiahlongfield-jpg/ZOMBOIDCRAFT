@@ -109,7 +109,9 @@ public final class CombatClient {
         boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
         ClientPlayNetworking.send(new CombatNet.Fire(aiming));
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-        if (!g.mag() || g.rounds() <= 0 || g.jammed() || reloading(gun)) {
+        // a tube gun being loaded goes off at once when there's a shell chambered (step 1; 1.5 is onto an empty one)
+        boolean busy = reloading(gun) && !(type.tube && step(gun) == 1f);
+        if (!g.mag() || g.rounds() <= 0 || g.jammed() || busy) {
             return;     // the server answers with the dry click
         }
         boolean suppressed = Attachments.suppressed(gun);
@@ -141,8 +143,12 @@ public final class CombatClient {
 
     /** Mid-reload, the server puts the reload step in the gun's model data. */
     public static boolean reloading(ItemStack gun) {
+        return step(gun) > 0;
+    }
+
+    private static float step(ItemStack gun) {
         CustomModelData data = gun.get(DataComponents.CUSTOM_MODEL_DATA);
-        return data != null && !data.floats().isEmpty() && data.floats().get(0) > 0;
+        return data == null || data.floats().isEmpty() ? 0 : data.floats().get(0);
     }
 
     private CombatClient() {

@@ -65,9 +65,26 @@ MATERIALS = {
     'sight': (0.34, NONMETAL, None),
     'magsteel': (0.44, TINTED_METAL, None),
     'baseplate': (0.30, NONMETAL, None),
+    # the shotgun (shotgun.py)
+    'rcvr': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
+    'groove': (0.30, NONMETAL, None),
+    'lifter': (0.44, TINTED_METAL, None),
+    'tube': (0.40, NONMETAL, (0.36, NONMETAL, WORN)),
+    'magcap': (0.36, NONMETAL, (0.36, NONMETAL, WORN)),
+    'trigplate': (0.38, NONMETAL, (0.36, NONMETAL, WORN)),
+    'stock': (0.28, NONMETAL, None),
+    'forend': (0.28, NONMETAL, None),
+    'ribs': (0.26, NONMETAL, None),
+    'pad': (0.14, 8, None),
+    'spacer': (0.20, NONMETAL, None),
+    'bolt': (0.52, TINTED_METAL, None),
+    'bead': (0.62, TINTED_METAL, None),
+    'head': (0.62, TINTED_METAL, None),
+    'hull': (0.34, NONMETAL, None),
+    'crimp': (0.30, NONMETAL, None),
 }
 # how much rain darkens a finish (LabPBR porosity, 0-64): stippled grips and phosphate soak a little
-POROSITY = {'grip': 18, 'gripper': 18, 'park': 10, 'hider': 10, 'cap': 10, 'can': 14, 'rubber': 6, 'tan': 6,
+POROSITY = {'stock': 6, 'forend': 6, 'ribs': 8, 'pad': 6, 'hull': 4, 'grip': 18, 'gripper': 18, 'park': 10, 'hider': 10, 'cap': 10, 'can': 14, 'rubber': 6, 'tan': 6,
             'mag': 6, 'poly': 4}
 EMISSIVE = {'dot': 254, 'flash': 254, 'reticle': 254}
 

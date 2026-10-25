@@ -34,7 +34,8 @@ final class GunRigs {
                     new float[] {0.0000f, -1.0000f, 0.0000f} /* the way a magazine leaves the well */,
                     false /* locks back when empty */,
                     false /* cycles with each shot */,
-                    false /* the off hand wraps the grip */)),
+                    false /* the off hand wraps the grip */,
+                    false /* a pump the off hand rides, loaded a shell at a time */)),
             Map.entry("pistol", new GunRig(
                     new float[] {0.2100f, -0.3200f, -0.5200f} /* hip: the grip in the hand camera (blocks) */,
                     new float[] {2.0000f, 6.0000f, -3.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
@@ -57,7 +58,32 @@ final class GunRigs {
                     new float[] {0.0000f, -0.9639f, 0.2661f} /* the way a magazine leaves the well */,
                     true /* locks back when empty */,
                     true /* cycles with each shot */,
-                    true /* the off hand wraps the grip */)));
+                    true /* the off hand wraps the grip */,
+                    false /* a pump the off hand rides, loaded a shell at a time */)),
+            Map.entry("shotgun", new GunRig(
+                    new float[] {0.2500f, -0.3000f, -0.5800f} /* hip: the grip in the hand camera (blocks) */,
+                    new float[] {2.0000f, 8.0000f, -3.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
+                    0.8000f /* hip scale */,
+                    new float[] {32.0000f, -0.1000f} /* magazine steps: cant (degrees), drop (blocks) */,
+                    new float[] {-6.0000f, 0.0000f} /* charging step: cant, drop */,
+                    Map.of("irons", new float[] {-8.9600f, 7.9140f, 3.3750f, 0.7000f}) /* aiming: translation (pixels) and scale, by sight */,
+                    2.9497f /* how far the handle or slide comes back (pixels) */,
+                    new float[] {4.0000f, 6.0000f, 0.0000f} /* worked: turned about the grip (degrees) */,
+                    new float[] {0.0000f, 0.0200f, -0.0400f} /* worked: pushed (blocks) */,
+                    new float[] {8.0000f, 5.9084f, 15.8059f} /* grip */,
+                    new float[] {8.0000f, 5.5345f, 3.2902f} /* support */,
+                    new float[] {8.0000f, 5.5345f, 3.2902f} /* foregrip */,
+                    new float[] {8.0000f, 6.7933f, 9.4968f} /* magTop */,
+                    new float[] {8.0000f, 5.5933f, 10.2968f} /* magHold */,
+                    new float[] {8.0000f, 6.4246f, 10.4801f} /* magCentre */,
+                    new float[] {8.0000f, 5.5345f, 3.2902f} /* handle */,
+                    new float[] {8.0000f, 8.1207f, -7.1361f} /* laser */,
+                    new float[] {8.0000f, 8.1207f, -7.1361f} /* muzzle */,
+                    new float[] {0.0000f, -1.0000f, 0.0000f} /* the way a magazine leaves the well */,
+                    false /* locks back when empty */,
+                    true /* cycles with each shot */,
+                    false /* the off hand wraps the grip */,
+                    true /* a pump the off hand rides, loaded a shell at a time */)));
 
     private GunRigs() {
     }
