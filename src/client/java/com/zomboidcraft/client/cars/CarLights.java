@@ -48,12 +48,12 @@ public final class CarLights {
     static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     /** Only cars this near light the world, and only so many of them. */
-    private static final double NEAR = 48;
+    private static final double NEAR = 64;
     private static final int MOST_CARS = 6;
-    private static final double REACH = 26;
+    private static final double REACH = 40;
     /** Light blocks down the beam: how far ahead, and how bright each is. */
-    private static final double[] LIGHT_AT = {1.5, 4.5, 8, 12, 16, 20};
-    private static final int[] LIGHT_LEVEL = {13, 14, 13, 11, 9, 7};
+    private static final double[] LIGHT_AT = {1.5, 4, 7, 10.5, 14, 18, 22.5, 27, 32, 37};
+    private static final int[] LIGHT_LEVEL = {14, 15, 15, 15, 14, 14, 13, 12, 11, 10};
     /** Headlights point a little down at the road. */
     private static final double DIP = Math.toRadians(2.5);
     private static final float[] WARM = {1f, 0.93f, 0.78f};
@@ -224,16 +224,16 @@ public final class CarLights {
         Vec3 side = dir.cross(new Vec3(0, 1, 0)).normalize(), up = side.cross(dir).normalize();
         BlockHitResult centre = clip(level, car, lens, dir);
         double reach = centre.getType() == HitResult.Type.MISS ? REACH : centre.getLocation().distanceTo(lens);
-        double length = Math.min(reach, 16);
-        float strength = 0.07f * dark;
+        double length = Math.min(reach, 28);
+        float strength = 0.1f * dark;
         quads.ribbon(lens, lens.add(dir.scale(length)), 10, s -> 0.06 + s * 0.16, s -> quads.shade(WARM,
-                (float) (strength * Math.min(1, s / 0.4) * Math.exp(-s / 7) * Math.min(1, (length - s) / 0.8 + 0.05))));
+                (float) (strength * Math.min(1, s / 0.4) * Math.exp(-s / 12) * Math.min(1, (length - s) / 0.8 + 0.05))));
         // the pools: rays fanned out across the cone, a soft disc where each lands
         for (int i = -2; i <= 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                double yawOff = Math.toRadians(i * 6), down = Math.toRadians(1 + j * 3.5);
+            for (int j = 0; j < 4; j++) {
+                double yawOff = Math.toRadians(i * 6), down = Math.toRadians(j == 0 ? -1.2 : -2.5 + j * 3.5);
                 Vec3 ray = dir.add(side.scale(Math.tan(yawOff))).add(up.scale(-Math.tan(down))).normalize();
-                splash(level, car, lens, ray, (j == 0 ? 0.55f : 1f) * (1 - Math.abs(i) * 0.18f), dark, quads);
+                splash(level, car, lens, ray, (j < 2 ? 0.7f : 1f) * (1 - Math.abs(i) * 0.18f), dark, quads);
             }
         }
     }
@@ -246,11 +246,11 @@ public final class CarLights {
         Direction face = hit.getDirection();
         Vec3 normal = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
         double distance = hit.getLocation().distanceTo(from);
-        float strength = (float) (0.09 * weight * dark / (1 + (distance / 12) * (distance / 12)));
+        float strength = (float) (0.14 * weight * dark / (1 + (distance / 22) * (distance / 22)));
         if (strength < 0.004f) {
             return;
         }
-        quads.flat(hit.getLocation().add(normal.scale(0.015)), normal, Mth.clamp(distance * 0.16, 0.4, 3.5), quads.shade(WARM, strength));
+        quads.flat(hit.getLocation().add(normal.scale(0.015)), normal, Mth.clamp(distance * 0.16, 0.4, 5), quads.shade(WARM, strength));
     }
 
     private static BlockHitResult clip(ClientLevel level, CarProp car, Vec3 from, Vec3 dir) {
