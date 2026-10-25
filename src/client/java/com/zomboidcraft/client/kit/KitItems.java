@@ -126,9 +126,16 @@ final class KitItems {
         return call(roll(stack), "flaws") instanceof Integer n ? n : 0;
     }
 
-    /** Where a weapon was found, when its roll remembers. */
+    /** Where a weapon was found, in words, when its roll remembers. */
     static @Nullable String place(ItemStack stack) {
-        return call(roll(stack), "place") instanceof String s && !s.isEmpty() ? s : null;
+        look();
+        if (roll(stack) == null) return null;
+        try {
+            Object label = Class.forName("com.zomboidcraft.combat.rolls.Rolls").getMethod("placeLabel", ItemStack.class).invoke(null, stack);
+            return label instanceof String s && !s.isEmpty() ? s : null;
+        } catch (ReflectiveOperationException | IllegalArgumentException | LinkageError e) {
+            return null;
+        }
     }
 
     /** A weapon's rolled stats as label and 0-100, or empty when it has no roll. */
