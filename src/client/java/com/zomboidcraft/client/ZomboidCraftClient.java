@@ -49,6 +49,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         SoundSliders.register();
+        com.zomboidcraft.client.sound.Ambience.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

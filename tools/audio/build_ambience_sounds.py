@@ -7,11 +7,14 @@ night insects and the indoor ones) are cut long, kept stereo and crossfaded end 
 without a seam; they play around the listener, not from a point. One-shots (thunder, creaks, crows, distant
 city sounds) are mono so they can be placed in the world and muffled through walls.
 """
+import json
 import subprocess
+import sys
 
 import numpy as np
 
 from build_loot_sounds import build
+from build_zombie_sounds import RES, merge_vanilla
 
 RATE = 44100
 LOOP = 24.0    # seconds per bed
@@ -63,5 +66,31 @@ def loop_bed(event, raw, manifest, pick, dst):
     return True
 
 
+def stream_beds():
+    """The 24 s stereo beds stream from disk instead of sitting decoded in memory."""
+    path = RES / "zomboidcraft/sounds.json"
+    ours = json.loads(path.read_text())
+    for event in BEDS:
+        for sound in ours[event]["sounds"]:
+            sound["stream"] = True
+    path.write_text(json.dumps(ours, indent=2) + "\n")
+
+
+def vanilla_overrides():
+    """Thunder from our takes, and the game's own rain loops silenced: the Ambience director plays our beds,
+    and works out indoors itself rather than trusting the heightmap."""
+    folder, _, dist, picks = PICKS["amb.thunder"]
+    merge_vanilla({
+        "entity.lightning_bolt.thunder": {"replace": True, "subtitle": "subtitles.entity.lightning_bolt.thunder",
+                                          "sounds": [{"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist}
+                                                     for n in range(1, len(picks) + 1)]},
+        "weather.rain": {"replace": True, "sounds": []},
+        "weather.rain.above": {"replace": True, "sounds": []},
+    })
+
+
 if __name__ == "__main__":
-    build(PICKS, "World ambience", "build_ambience_sounds.py", loop_bed)
+    if sys.argv[1:] != ["--vanilla-only"]:
+        build(PICKS, "World ambience", "build_ambience_sounds.py", loop_bed)
+    stream_beds()
+    vanilla_overrides()
