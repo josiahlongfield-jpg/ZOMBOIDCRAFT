@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_ac_fins": "zomboidcraft:block/city/ext_ac_fins",
+    "ext_ac_grille": "zomboidcraft:block/city/ext_ac_grille",
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "particle": "zomboidcraft:block/city/ext_ac_fins"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_ac_fins"
+        },
+        "south": {
+          "texture": "#ext_ac_fins"
+        },
+        "east": {
+          "texture": "#ext_ac_fins"
+        },
+        "west": {
+          "texture": "#ext_ac_fins"
+        },
+        "up": {
+          "texture": "#ext_ac_grille"
+        },
+        "down": {
+          "texture": "#ext_ac_fins",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        13,
+        0.5
+      ],
+      "to": [
+        15.5,
+        14,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    }
+  ]
+}

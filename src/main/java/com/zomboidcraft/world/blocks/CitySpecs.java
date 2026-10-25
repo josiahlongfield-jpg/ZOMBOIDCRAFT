@@ -10,6 +10,8 @@ final class CitySpecs extends CityBlocks.Specs {
         part2();
         part3();
         part4();
+        part5();
+        part6();
     }
 
     private void part0() {
@@ -249,6 +251,9 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("store_shelf_pharmacy", "pharmacy");
         s("store_shelf_liquor", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 14, 0, 0, 2, 1, 16, 14, 15, 0, 2, 16, 16, 14);
         loot("store_shelf_liquor", "liquor");
+    }
+
+    private void part1() {
         s("store_shelf_hardware", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 14, 0, 0, 2, 1, 16, 14, 15, 0, 2, 16, 16, 14);
         loot("store_shelf_hardware", "hardware");
         s("store_shelf_thrift", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 14, 0, 0, 2, 1, 16, 14, 15, 0, 2, 16, 16, 14);
@@ -285,9 +290,6 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("store_clothes_rack", "clothes");
         s("store_table", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 12, 0, 16, 13, 16, 7, 0, 7, 9, 12, 9, 4, 0, 4, 12, 0.5, 12);
         s("store_stool", PLAIN, 0, 0, SoundType.METAL, 2f, 4, 10, 4, 12, 12, 12, 7.5, 0, 7.5, 8.5, 10, 8.5, 5, 0, 5, 11, 0.5, 11);
-    }
-
-    private void part1() {
         s("store_booth", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 3, 16, 7, 13, 0, 0, 13, 16, 16, 16);
         s("store_paint_cans", PLAIN, LOOT, 0, SoundType.STONE, 2f, 1, 0, 1, 8, 7, 8, 9, 0, 2, 15, 7, 8, 3, 0, 9, 10, 7, 15, 4, 7, 3, 11, 14, 10);
         loot("store_paint_cans", "hardware");
@@ -507,6 +509,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("sign_joes_4", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_luckypawn_0", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_luckypawn_1", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
+    }
+
+    private void part2() {
         s("sign_luckypawn_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_luckypawn_3", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_luckypawn_4", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
@@ -549,9 +554,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("sign_armydepot_4", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_armydepot_5", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_motel_0", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
-    }
-
-    private void part2() {
         s("sign_motel_1", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_motel_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_motel_3", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
@@ -768,6 +770,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("sign_eggs_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_eggs_3", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_trespass_0", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
+    }
+
+    private void part3() {
         s("sign_trespass_1", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_trespass_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_trespass_3", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
@@ -802,9 +807,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("sign_subway_1", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_subway_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_central_0", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
-    }
-
-    private void part3() {
         s("sign_central_1", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_central_2", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
         s("sign_central_3", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 2);
@@ -969,6 +971,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_coffee_table", FACING, 0, 0, SoundType.WOOD, 1f, 1, 6, 2, 15, 7.5, 14, 2, 1.5, 3, 14, 2.5, 13, 1.5, 0, 2.5, 3, 6, 4, 13, 0, 2.5, 14.5, 6, 4, 1.5, 0, 12, 3, 6, 13.5, 13, 0, 12, 14.5, 6, 13.5);
         s("home_tv", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 6, 14, 2, 6, 4, 14, 17, 15, 3, 7.5, 3.5, 13, 15.5, 4, 5.5, 17, 9, 6, 23, 9.5, 10, 17, 9, 10.5, 22, 9.5);
         s("home_tv_smashed", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 6, 14, 2, 6, 4, 14, 17, 15, 3, 7.5, 3.5, 13, 15.5, 4, 5.5, 17, 9, 6, 23, 9.5, 10, 17, 9, 10.5, 22, 9.5);
+    }
+
+    private void part4() {
         s("home_bookcase", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 16, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("home_bookcase", "home_books");
         s("home_bookcase_top", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 16, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 3, 16, 16, 16);
@@ -1093,9 +1098,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_bin_bags", PLAIN, LOOT, 0, SoundType.WOOL, 1f, 1, 0, 2, 9, 7, 10, 7, 0, 6, 15, 6, 14, 4, 6, 4, 10, 10, 9, 4.5, 7, 9, 6, 9, 10.5);
         loot("home_bin_bags", "home_trash");
         s("home_floor_carpet_beige", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 16);
-    }
-
-    private void part4() {
         s("home_floor_carpet_blue", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 16);
         s("home_floor_carpet_brown", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 16);
         s("home_floor_carpet_green", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 16);
@@ -1113,6 +1115,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_wall_damask_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_cream", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_cream_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+    }
+
+    private void part5() {
         s("home_wall_sage", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_sage_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_blue", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -1131,5 +1136,209 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_stairs_oak", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 8, 16, 0, 8, 0, 16, 16, 8);
         s("home_stairs_carpet", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 8, 16, 0, 8, 0, 16, 16, 8);
         s("home_banister", AXIS, 0, 0, SoundType.WOOD, 1f, 7, 14, 0, 9, 15.5, 16, 7.25, 0, 0, 8.75, 1, 16, 7.5, 1, 1.5, 8.5, 14, 2.5, 7.5, 1, 5.5, 8.5, 14, 6.5, 7.5, 1, 9.5, 8.5, 14, 10.5, 7.5, 1, 13.5, 8.5, 14, 14.5);
+        s("ext_roof_charcoal", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_charcoal_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_charcoal_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_charcoal_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_charcoal_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_charcoal_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_charcoal_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_charcoal", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_charcoal_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_grey", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_grey_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_grey_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_grey_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_grey_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_grey_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_grey_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_grey", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_grey_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_brown", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_brown_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_brown_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_brown_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_brown_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_brown_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_brown_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_brown", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_brown_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_green", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_green_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_green_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_green_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_green_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_green_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_green_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_green", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_green_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_red", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_red_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_red_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_red_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_red_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_red_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_red_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_red", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_red_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_slate", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_slate_moss", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_slate_patch", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_slate_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_slate_eave_bare", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_slate_ridge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_slate_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_slate", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_slate_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_tin_red", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_red_moss", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_red_patch", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_red_eave", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_tin_red_eave_bare", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_tin_red_ridge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_tin_red_crest", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_tin_red", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_tin_red_edge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_tin_green", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_green_moss", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_green_patch", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_green_eave", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_tin_green_eave_bare", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_tin_green_ridge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_tin_green_crest", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_tin_green", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_tin_green_edge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_tin_galv", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_galv_moss", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_galv_patch", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_roof_tin_galv_eave", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 16);
+        s("ext_roof_tin_galv_eave_bare", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5);
+        s("ext_roof_tin_galv_ridge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 4, 0, 0, 4, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 8, 3.5, 16, 9.5, 12.5);
+        s("ext_roof_tin_galv_crest", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16, 0, 16, 0, 16, 16, 3.5);
+        s("ext_porch_roof_tin_galv", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16);
+        s("ext_porch_roof_tin_galv_edge", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 4, 16, 0, 1, 0, 16, 4, 0);
+        s("ext_roof_tarp", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 16);
+        s("ext_apex", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("ext_roof_under", FACING, 0, 0, SoundType.WOOD, 1f, 0, 12, 4, 16, 16, 8, 0, 8, 8, 16, 16, 12, 0, 4, 12, 16, 16, 16);
+        s("ext_gutter_hanging", FACING, 0, 0, SoundType.METAL, 2f, 6, 0, 12, 9, 16, 16, 5, 15, 12, 10, 16, 16);
+        s("ext_downspout", FACING, 0, 0, SoundType.METAL, 2f, 6.5, 0, 13, 9.5, 16, 16, 6, 8, 15.5, 10, 9, 16);
+        s("ext_downspout_top", FACING, 0, 0, SoundType.METAL, 2f, 6.5, 0, 13, 9.5, 6, 16, 6.5, 4, 9, 9.5, 10, 13.5, 6.5, 8, 5, 9.5, 14, 9.5, 6.5, 12, 1, 9.5, 16, 5.5);
+        s("ext_downspout_shoe", FACING, 0, 0, SoundType.METAL, 2f, 6.5, 3, 13, 9.5, 16, 16, 6.5, 0.5, 8, 9.5, 3.5, 16, 5, 0, 2, 11, 0.6, 12);
+        s("ext_win_white_six_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_white_six_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_white_six_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_white_six_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_white_six_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_white_six_broken_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_white_six_empty_lo", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16);
+        s("ext_win_white_six_empty_hi", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0);
+        s("ext_win_white_six_boarded_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55, 0.5, 3, 0, 15.5, 6.5, 0, 1.5, 9.5, 0, 14.5, 13, 0);
+        s("ext_win_white_six_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
+        s("ext_win_white_one_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_white_one_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+    }
+
+    private void part6() {
+        s("ext_win_white_one_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_white_one_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_white_one_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_white_one_broken_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_white_one_empty_lo", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16);
+        s("ext_win_white_one_empty_hi", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0);
+        s("ext_win_white_one_boarded_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 0.5, 3, 0, 15.5, 6.5, 0, 1.5, 9.5, 0, 14.5, 13, 0);
+        s("ext_win_white_one_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
+        s("ext_win_brown_six_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_brown_six_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_brown_six_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_brown_six_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_brown_six_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+        s("ext_win_brown_six_broken_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
+        s("ext_win_brown_six_empty_lo", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16);
+        s("ext_win_brown_six_empty_hi", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0);
+        s("ext_win_brown_six_boarded_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55, 0.5, 3, 0, 15.5, 6.5, 0, 1.5, 9.5, 0, 14.5, 13, 0);
+        s("ext_win_brown_six_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
+        s("ext_win_brown_one_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_brown_one_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_brown_one_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_brown_one_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_brown_one_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_brown_one_broken_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_brown_one_empty_lo", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16);
+        s("ext_win_brown_one_empty_hi", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0);
+        s("ext_win_brown_one_boarded_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 0.5, 3, 0, 15.5, 6.5, 0, 1.5, 9.5, 0, 14.5, 13, 0);
+        s("ext_win_brown_one_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
+        s("ext_win_alu_one_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_alu_one_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_alu_one_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_alu_one_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_alu_one_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
+        s("ext_win_alu_one_broken_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
+        s("ext_win_alu_one_empty_lo", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16);
+        s("ext_win_alu_one_empty_hi", FACING, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0);
+        s("ext_win_alu_one_boarded_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 0.5, 3, 0, 15.5, 6.5, 0, 1.5, 9.5, 0, 14.5, 13, 0);
+        s("ext_win_alu_one_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
+        s("ext_shutter_black_lo", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 0, 14.5, 12.5, 1.5, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_black_hi", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 14.5, 14.5, 12.5, 16, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_green_lo", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 0, 14.5, 12.5, 1.5, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_green_hi", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 14.5, 14.5, 12.5, 16, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_maroon_lo", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 0, 14.5, 12.5, 1.5, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_maroon_hi", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 14.5, 14.5, 12.5, 16, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_blue_lo", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 0, 14.5, 12.5, 1.5, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_shutter_blue_hi", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 14.5, 3.5, 16, 16, 12.5, 0, 14.5, 14, 16, 16, 3.5, 0, 15, 12.5, 16, 15.8, 3.5, 14.5, 14.5, 12.5, 16, 16, 3.5, 7.5, 14.6, 12.5, 8.5, 16);
+        s("ext_door_red", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_door_green", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_door_navy", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_door_white", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_door_black", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_door_oak", DOOR, SEE_THROUGH, 0, SoundType.WOOD, 3f);
+        s("ext_post_base", PLAIN, 0, 0, SoundType.WOOD, 1f, 4, 0, 4, 12, 3, 12, 5, 3, 5, 11, 16, 11);
+        s("ext_post", PLAIN, 0, 0, SoundType.WOOD, 1f, 5, 0, 5, 11, 16, 11, 4.5, 7, 4.5, 11.5, 8, 11.5);
+        s("ext_post_cap", AXIS, 0, 0, SoundType.WOOD, 1f, 5, 0, 5, 11, 12, 11, 4, 12, 4, 12, 14, 12, 3, 14, 3, 13, 16, 13, 6.5, 13, 0, 9.5, 16, 16);
+        s("ext_beam", AXIS, 0, 0, SoundType.WOOD, 1f, 6, 12, 0, 10, 16, 16);
+        s("ext_rail", AXIS, 0, 0, SoundType.WOOD, 1f, 6.5, 13, 0, 9.5, 15, 16, 7, 1.5, 0, 9, 3, 16, 7.25, 3, 1, 8.75, 13, 2.5, 7.25, 3, 5, 8.75, 13, 6.5, 7.25, 3, 9, 8.75, 13, 10.5, 7.25, 3, 13, 8.75, 13, 14.5);
+        s("ext_rail_broken", AXIS, 0, 0, SoundType.WOOD, 1f, 7, 1.5, 0, 9, 3, 16, 7.25, 3, 1, 8.75, 13, 2.5, 6.5, 13, 0, 9.5, 15, 6, 7.25, 3, 9, 8.75, 8, 10.5);
+        s("ext_porch_boards", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("ext_porch_light", PLAIN, 0, 0, SoundType.METAL, 2f, 5, 13, 5, 11, 16, 11, 5.5, 9, 5.5, 10.5, 13, 10.5);
+        s("ext_porch_light_lit", PLAIN, 0, 11, SoundType.METAL, 2f, 5, 13, 5, 11, 16, 11, 5.5, 9, 5.5, 10.5, 13, 10.5);
+        s("ext_rocker", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 1, 3, 1.5, 15, 13, 0, 1, 14, 1.5, 15, 2, 1.5, 3, 3, 7, 4, 13, 1.5, 3, 14, 7, 4, 2, 1.5, 12, 3, 7, 13, 13, 1.5, 12, 14, 7, 13, 2, 7, 3, 14, 8, 13, 2, 8, 12, 14, 16, 13.5, 2, 10, 3, 3, 11, 13, 13, 10, 3, 14, 11, 13);
+        s("ext_swing_l", FACING, 0, 0, SoundType.WOOD, 1f, 0, 5, 2, 16, 6, 13, 0, 6, 12, 16, 13, 13.5, 0.5, 6, 2, 1.5, 10, 13, 2, 6, 7, 3, 16, 8);
+        s("ext_swing_r", FACING, 0, 0, SoundType.WOOD, 1f, 0, 5, 2, 16, 6, 13, 0, 6, 12, 16, 13, 13.5, 14.5, 6, 2, 15.5, 10, 13, 13, 6, 7, 14, 16, 8);
+        s("ext_swing_chain", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 7, 3, 16, 8, 13, 0, 7, 14, 16, 8);
+        s("ext_cooler", FACING, LOOT, 0, SoundType.WOOL, 1f, 3, 0, 4, 13, 7, 12, 3, 7, 4, 13, 8, 12, 6, 8, 7.5, 10, 9, 8.5);
+        loot("ext_cooler", "home_fridge");
+        s("ext_sconce", FACING, 0, 0, SoundType.METAL, 2f, 6, 4, 14, 10, 12, 16, 5.5, 3, 9, 10.5, 11, 14, 5, 11, 8.5, 11, 12.5, 14.5, 5, 2, 8.5, 11, 3, 14.5);
+        s("ext_sconce_lit", FACING, 0, 12, SoundType.METAL, 2f, 6, 4, 14, 10, 12, 16, 5.5, 3, 9, 10.5, 11, 14, 5, 11, 8.5, 11, 12.5, 14.5, 5, 2, 8.5, 11, 3, 14.5);
+        s("ext_number_0", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_number_1", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_number_2", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_number_3", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_number_4", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_number_5", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+        s("ext_notice", FACING, DECOR, 0, SoundType.WOOL, 0f, 4, 2, 15.7, 12, 13, 16);
+        s("ext_meter", FACING, 0, 0, SoundType.METAL, 2f, 5, 4, 13, 11, 12, 16, 6, 5, 11, 10, 11, 13, 7, 0, 14, 9, 4, 16);
+        s("ext_flowerbox", FACING, 0, 0, SoundType.WOOD, 1f, 0.5, 9, 10, 15.5, 14, 16, 1, 13.5, 10.5, 15, 14, 15.5, 3, 14, 12, 7, 16, 14, 9, 14, 11.5, 13, 16, 14.5);
+        s("ext_gable_vent", FACING, 0, 0, SoundType.WOOD, 1f, 2, 2, 15, 14, 14, 16, 1.5, 1.5, 14.5, 14.5, 2.5, 16, 1.5, 13.5, 14.5, 14.5, 14.5, 16, 1.5, 2.5, 14.5, 2.5, 13.5, 16, 13.5, 2.5, 14.5, 14.5, 13.5, 16);
+        s("ext_frieze", FACING, 0, 0, SoundType.WOOD, 1f, 0, 11, 14, 16, 16, 16, 0, 10, 14.5, 16, 11, 16);
+        s("ext_plinth", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 13, 16, 6, 16);
+        s("ext_plinth_vent", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 13, 4, 6, 16, 12, 0, 13, 16, 6, 16, 4, 0, 13, 12, 1.5, 16, 4, 4.5, 13, 12, 6, 16, 4, 1.5, 14.5, 12, 4.5, 15);
+        s("ext_awning", FACING, 0, 0, SoundType.METAL, 2f, 0, 12, 6, 16, 13, 16, 0, 9, 5.5, 16, 12, 6.5, 1, 9, 6, 2, 12, 16, 14, 9, 6, 15, 12, 16);
+        s("ext_hood", FACING, 0, 0, SoundType.WOOD, 1f, 0, 10, 9, 16, 12, 16, 0, 12, 10, 16, 13, 16, 1, 4, 13, 3, 10, 16, 13, 4, 13, 15, 10, 16);
+        s("ext_crown", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 3, 16, 4.5, 3, 4.5, 11.5, 8, 11.5);
+        s("ext_flue", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 16, 10.5);
+        s("ext_flue_low", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 16, 10.5, 4.5, 0, 4.5, 11.5, 0, 11.5);
+        s("ext_flue_cap", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 8, 10.5, 7, 8, 7, 9, 10, 9, 3.5, 10, 3.5, 12.5, 11, 12.5, 5, 11, 5, 11, 12, 11);
+        s("ext_mast", PLAIN, 0, 0, SoundType.METAL, 2f, 7.25, 0, 7.25, 8.75, 16, 8.75);
+        s("ext_mast_foot", PLAIN, 0, 0, SoundType.METAL, 2f, 7.25, 0, 7.25, 8.75, 16, 8.75, 5, 0, 5, 11, 0, 11, 7.5, 0, 4, 8.5, 0, 12);
+        s("ext_aerial", FACING, 0, 0, SoundType.METAL, 2f, 7.25, 0, 7.25, 8.75, 12, 8.75, 7.5, 10, 0, 8.5, 11, 16, 4, 10.2, 0, 12, 10.8, 0, 2.75, 10.2, 0, 13.25, 10.8, 0, 1.5, 10.2, 4, 14.5, 10.8, 4.6, 1.75, 10.2, 9, 14.25, 10.8, 9.6, 3, 10.2, 14, 13, 10.8, 14.6, 4.25, 10.2, 16, 11.75, 10.8, 16);
+        s("ext_ac", PLAIN, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 13, 15, 0.5, 13, 0.5, 15.5, 14, 15.5);
+        s("ext_trash_can", PLAIN, LOOT, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 13, 13, 2.5, 13, 2.5, 13.5, 14, 13.5, 7, 14, 6, 9, 15, 10);
+        loot("ext_trash_can", "home_trash");
+        s("ext_trash_can_tipped", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 3, 13, 10, 13, 13, 0, 4, 16, 1, 12);
+        loot("ext_trash_can_tipped", "home_trash");
+        s("ext_trash_lid", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 0, 2, 13, 1, 13);
+        s("ext_doormat", FACING, DECOR, 0, SoundType.WOOL, 0f, 1, 0, 3, 15, 0.4, 13);
+        s("ext_doormat_blood", FACING, DECOR, 0, SoundType.WOOL, 0f, 1, 0, 3, 15, 0.4, 13);
+        s("ext_hose", FACING, 0, 0, SoundType.WOOL, 1f, 3, 0, 11, 13, 10, 15, 5, 2, 15, 11, 8, 16);
+        s("ext_shrub_dead", PLAIN, DECOR, 0, SoundType.GRASS, 0f, 2, 0, 2, 14, 9, 14, 4, 9, 4, 12, 12, 12);
     }
 }

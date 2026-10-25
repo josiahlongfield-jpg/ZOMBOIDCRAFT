@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_fascia": "zomboidcraft:block/city/ext_fascia",
+    "ext_gutter": "zomboidcraft:block/city/ext_gutter",
+    "ext_gutter_top": "zomboidcraft:block/city/ext_gutter_top",
+    "ext_porch_ceiling": "zomboidcraft:block/city/ext_porch_ceiling",
+    "ext_slate_tread": "zomboidcraft:block/city/ext_slate_tread",
+    "particle": "zomboidcraft:block/city/ext_fascia"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_fascia",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_fascia",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_slate_tread"
+        },
+        "down": {
+          "texture": "#ext_porch_ceiling",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        -2.5
+      ],
+      "to": [
+        16,
+        4,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter"
+        },
+        "east": {
+          "texture": "#ext_gutter",
+          "uv": [
+            13.5,
+            12,
+            16,
+            15
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_gutter",
+          "uv": [
+            0,
+            12,
+            2.5,
+            15
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_gutter_top",
+          "uv": [
+            0,
+            0,
+            16,
+            2.5
+          ]
+        },
+        "down": {
+          "texture": "#ext_gutter",
+          "uv": [
+            0,
+            13.5,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

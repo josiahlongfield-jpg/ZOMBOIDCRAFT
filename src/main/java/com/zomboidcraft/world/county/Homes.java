@@ -171,8 +171,9 @@ final class Homes {
         if (dx0 >= 0 && rng.nextDouble() < 0.6) {
             int bx = dx1 + 1 < lw - 1 && dx1 + 1 != doorX ? dx1 + 1 : dx0 - 1;
             if (bx >= 0 && bx < lw) {
-                p.setIfAir(bx, 1, 1, rng.nextDouble() < 0.2 ? "trash_bag[facing=north]" : "minecraft:cauldron");
-                p.setIfAir(bx, 1, 2, rng.nextDouble() < 0.5 ? "trash_bag[facing=east]" : "minecraft:cauldron");
+                p.setIfAir(bx, 1, 1, rng.nextDouble() < 0.2 ? "trash_bag[facing=north]" : "ext_trash_can");
+                double r = rng.nextDouble();
+                p.setIfAir(bx, 1, 2, r < 0.4 ? "trash_bag[facing=east]" : r < 0.6 ? "ext_trash_can_tipped[facing=north]" : "ext_trash_can");
             }
         }
 
@@ -272,9 +273,10 @@ final class Homes {
         if (rng.nextDouble() < 0.6) {
             int x = rng.nextBoolean() ? sx - 1 : sx + hw;
             int z = sb + hd - 3;
-            if (x >= 0 && x < lw && p.get(x, 1, z) == null) {
+            String there = x >= 0 && x < lw ? p.get(x, 1, z) : "out";
+            if (there == null || there.startsWith("ext_plinth")) {
                 p.set(x, 0, z, "floor_concrete");
-                p.set(x, 1, z, "hvac");
+                p.set(x, 1, z, "ext_ac");
             }
         }
         if (rng.nextDouble() < 0.25) {
@@ -294,8 +296,7 @@ final class Homes {
                 if (rng.nextDouble() < 0.4) {
                     // a suitcase and a mattress dragged onto the lawn
                     p.setIfAir(doorX + 2, 1, sb - 2, "cardboard_box[facing=east]");
-                    p.setIfAir(doorX - 2, 1, sb - 3, "minecraft:white_bed[facing=east,part=foot]");
-                    p.setIfAir(doorX - 1, 1, sb - 3, "minecraft:white_bed[facing=east,part=head]");
+                    p.setIfAir(doorX - 2, 1, sb - 3, "home_mattress_floor[facing=" + (rng.nextBoolean() ? "east" : "north") + "]");
                 }
             }
             case BOARDED -> {

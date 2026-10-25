@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_post": "zomboidcraft:block/city/ext_post",
+    "particle": "zomboidcraft:block/city/ext_post"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post"
+        },
+        "south": {
+          "texture": "#ext_post"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post"
+        },
+        "down": {
+          "texture": "#ext_post",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_post"
+        },
+        "south": {
+          "texture": "#ext_post"
+        },
+        "east": {
+          "texture": "#ext_post"
+        },
+        "west": {
+          "texture": "#ext_post"
+        },
+        "up": {
+          "texture": "#ext_post",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_post"
+        }
+      }
+    }
+  ]
+}

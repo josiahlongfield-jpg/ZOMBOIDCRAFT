@@ -1057,6 +1057,8 @@ import county_textures  # noqa: E402
 county_textures.register(sys.modules[__name__])
 import furniture  # noqa: E402
 furniture.register(sys.modules[__name__])
+import exterior  # noqa: E402
+exterior.register(sys.modules[__name__])
 
 
 def build(name):

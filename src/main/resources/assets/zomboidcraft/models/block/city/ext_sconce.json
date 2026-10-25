@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "ext_glass_dark": "zomboidcraft:block/city/ext_glass_dark",
+    "particle": "zomboidcraft:block/city/ext_black_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        4,
+        14
+      ],
+      "to": [
+        10,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        3,
+        9
+      ],
+      "to": [
+        10.5,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_glass_dark"
+        },
+        "south": {
+          "texture": "#ext_glass_dark"
+        },
+        "east": {
+          "texture": "#ext_glass_dark"
+        },
+        "west": {
+          "texture": "#ext_glass_dark"
+        },
+        "up": {
+          "texture": "#ext_glass_dark"
+        },
+        "down": {
+          "texture": "#ext_glass_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        8.5
+      ],
+      "to": [
+        11,
+        12.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        8.5
+      ],
+      "to": [
+        11,
+        3,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    }
+  ]
+}

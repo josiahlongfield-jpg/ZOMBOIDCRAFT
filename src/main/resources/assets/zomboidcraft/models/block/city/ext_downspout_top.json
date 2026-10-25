@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_gutter": "zomboidcraft:block/city/ext_gutter",
+    "particle": "zomboidcraft:block/city/ext_gutter"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        13
+      ],
+      "to": [
+        9.5,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter"
+        },
+        "down": {
+          "texture": "#ext_gutter",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        4,
+        9
+      ],
+      "to": [
+        9.5,
+        10,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter"
+        },
+        "down": {
+          "texture": "#ext_gutter"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        8,
+        5
+      ],
+      "to": [
+        9.5,
+        14,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter"
+        },
+        "down": {
+          "texture": "#ext_gutter"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        12,
+        1
+      ],
+      "to": [
+        9.5,
+        16,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter"
+        },
+        "east": {
+          "texture": "#ext_gutter"
+        },
+        "west": {
+          "texture": "#ext_gutter"
+        },
+        "up": {
+          "texture": "#ext_gutter",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_gutter"
+        }
+      }
+    }
+  ]
+}

@@ -52,7 +52,7 @@ SOUNDS = [  # first keyword in the block's name or textures wins
 
 def textures(spec):
     if "boxes" in spec:
-        return [b[6] for b in spec["boxes"]]
+        return [t for b in spec["boxes"] for t in ([b[6]] if isinstance(b[6], str) else b[6].values())]
     t = spec["tex"]
     return [t] if isinstance(t, str) else list(t.values())
 
@@ -76,7 +76,9 @@ def boxes(spec):
         return [[0, 0, 0, 16, h, 16, {f: face_tex(spec, f) for f in DIRS}]]
     if model == "slab":
         return [[0, 0, 0, 16, 8, 16, {f: spec["tex"] for f in DIRS}]]
-    return [b[:6] + [{f: b[6] for f in DIRS}] for b in spec["boxes"]]
+    # a box's texture is one name for every face, or a dict of faces like a cube's tex
+    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}]
+            for b in spec["boxes"]]
 
 
 # the texture rectangle Minecraft picks for each face of a box (from, to in 16ths)
@@ -233,6 +235,9 @@ def java_line(name, spec, tex_dir):
         shape = [2, 0, 2, 14, 13, 14]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
+        if name.startswith("ext_"):
+            # gutters, sills and aerials reach out of the block; their collision stays in it
+            shape = [min(16, max(0, v)) for v in shape]
     s = sound(name, spec)
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
     nums = ", ".join(f"{v:g}" for v in shape)
@@ -317,8 +322,16 @@ def main():
     lang[f"itemGroup.{NS}.city"] = "ZomboidCraft City"
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + "\n")
 
-    # a method's bytecode is capped at 64 KB, so the blocks go in parts of a few hundred
-    parts = [lines[i:i + 250] for i in range(0, len(lines), 250)]
+    # a method's bytecode is capped at 64 KB, so the blocks go in parts: each call costs about
+    # 40 bytes and each of its box numbers about 9 more; a part stops well short of the cap
+    parts, size = [[]], 0
+    for line in lines:
+        cost = 40 + 9 * line.count(",")
+        if parts[-1] and size + cost > 36000:
+            parts.append([])
+            size = 0
+        parts[-1].append(line)
+        size += cost
     calls = "".join(f"        part{i}();\n" for i in range(len(parts)))
     bodies = "".join(f"\n    private void part{i}() {{\n" + "\n".join(p) + "\n    }\n" for i, p in enumerate(parts))
     JAVA.write_text(f"""package com.zomboidcraft.world.blocks;
