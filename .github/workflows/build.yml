@@ -147,6 +147,8 @@ jobs:
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
           grep -E 'county|blocks (north|south|east|west)|ERROR|Exception' county.log | head -80 || true
+          grep 'Unknown vanilla block' county.log | sort -u | head -40 || true
+          ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log

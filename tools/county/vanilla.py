@@ -183,6 +183,12 @@ CUBE = {
     "snow_block": painted((236, 240, 244), 0.03),
     "glass": None,
     "sponge": painted((190, 180, 70)),
+    "packed_mud": ph("Ground071", (140, 108, 80), span=2),
+    "polished_blackstone": painted((48, 44, 50), 0.06),
+    "prismarine_bricks": ph("stone_brick_wall_001", (80, 130, 120)),
+    "smooth_quartz": painted((226, 222, 214), 0.03),
+    "quartz_block": painted((226, 222, 214), 0.04),
+    "chiseled_stone_bricks": ph("stone_brick_wall_001", (128, 128, 124)),
 }
 WOODS = list(PLANK)
 for w in WOODS:
@@ -293,6 +299,19 @@ def spec(base):
                 return {"door": True, "tex": {"top": made(f"mc_{base}_top", lambda: make(True)),
                                               "bottom": made(f"mc_{base}_bottom", lambda: make(False))}}
             return {"model": model, "tex": t}
+    if base.endswith("_terracotta") and not base.endswith("glazed_terracotta") and base[:-11] in COLOURS:
+        rgb = tuple(np.array(COLOURS[base[:-11]]) * 0.75 + np.array((150, 100, 80)) * 0.25)
+        return {"model": "cube", "tex": made("mc_" + base, painted(rgb, 0.08))}
+    if base.endswith("_concrete") and base[:-9] in COLOURS:
+        return {"model": "cube", "tex": made("mc_" + base, painted(COLOURS[base[:-9]], 0.04))}
+    if base in ("iron_chain", "lightning_rod", "end_rod"):
+        t = made("mc_" + base, painted((64, 64, 68) if base == "iron_chain" else (170, 110, 80), 0.1))
+        return {"model": "boxes", "tex": t, "boxes": [[7, 0, 7, 9, 16, 9, t]]}
+    if base == "lily_pad":
+        return {"model": "flat", "height": 1, "tex": made("mc_lily_pad", painted((60, 96, 40), 0.15))}
+    if base == "campfire":
+        t = made("mc_campfire", painted((60, 46, 34), 0.2))
+        return {"model": "boxes", "tex": t, "boxes": [[1, 0, 3, 15, 4, 7, t], [1, 0, 9, 15, 4, 13, t], [3, 3, 1, 7, 7, 15, t], [9, 3, 1, 13, 7, 15, t]]}
     if base == "iron_bars":
         return {"model": "pane", "tex": made("mc_iron_bars", painted((70, 72, 74), 0.1))}
     if base.endswith("glass_pane"):

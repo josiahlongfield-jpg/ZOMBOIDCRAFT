@@ -54,6 +54,31 @@ public final class Placer {
         sink.set(ox + wx, oy + y, oz + wz, rotate(block, rot));
     }
 
+    /**
+     * A car centred on local (x, z) (block coordinates, so x + 0.5 is a block's middle), turned
+     * to a local yaw (180 faces the front, north); see {@link BlockSink#car}.
+     */
+    public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
+        double lx = x - 0.5, lz = z - 0.5, wx, wz;
+        switch (rot) {
+            case 0 -> { wx = lx; wz = lz; }
+            case 1 -> { wx = -lz; wz = lx; }
+            case 2 -> { wx = -lx; wz = -lz; }
+            default -> { wx = lz; wz = -lx; }
+        }
+        sink.car(ox + wx + 0.5, oy + y, oz + wz + 0.5, yaw + 90 * rot, minLength, maxLength, seed);
+    }
+
+    /** The place (sink) coordinates of a local block, as {x, z}. */
+    public int[] world(int x, int z) {
+        return switch (rot) {
+            case 0 -> new int[] {ox + x, oz + z};
+            case 1 -> new int[] {ox - z, oz + x};
+            case 2 -> new int[] {ox - x, oz - z};
+            default -> new int[] {ox + z, oz - x};
+        };
+    }
+
     /** The block at a local position, or null for air (or when the sink can't tell). */
     public String get(int x, int y, int z) {
         int wx, wz;

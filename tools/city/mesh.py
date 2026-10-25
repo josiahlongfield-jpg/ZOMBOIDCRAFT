@@ -131,15 +131,14 @@ def connect(names, vox, blocks):
         solid = m in ("cube", "log") and spec.get("height", 16) == 16 and not parse(name)[0].endswith(("_leaves", "water")) \
             and not parse(name)[0].startswith(("window", "glass"))
         kind.append("solid" if solid else m)
-    kind = np.array(kind)
     names = list(names)
-    for i in range(len(kind)):
+    for i in range(len(names)):
         if kind[i] not in CONNECTS:
             continue
         ys, zs, xs = np.nonzero(vox == i)
         if not len(ys):
             continue
-        ok = np.isin(kind, CONNECTS[kind[i]] + ("solid",))
+        ok = np.isin(np.array(kind), CONNECTS[kind[i]] + ("solid",))
         bits = np.zeros(len(ys), int)
         for b, (dx, dz) in enumerate(((0, -1), (1, 0), (0, 1), (-1, 0))):
             nx, nz = np.clip(xs + dx, 0, vox.shape[2] - 1), np.clip(zs + dz, 0, vox.shape[1] - 1)
@@ -150,6 +149,7 @@ def connect(names, vox, blocks):
             for b, side in enumerate(FACING):
                 p[side] = "true" if v >> b & 1 else "false"
             names.append(base + "[" + ",".join(f"{k}={x}" for k, x in p.items()) + "]")
+            kind.append(kind[i])
             m = bits == v
             vox[ys[m], zs[m], xs[m]] = len(names) - 1
     return names
