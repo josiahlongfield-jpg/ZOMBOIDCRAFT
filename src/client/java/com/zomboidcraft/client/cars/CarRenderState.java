@@ -8,4 +8,7 @@ public class CarRenderState extends EntityRenderState {
     public float yaw;
     /** How far the boot is open, eased, 0 to 1. */
     public float open;
+    /** How far the wheels have rolled (metres), and the front wheels' steer (radians, left +). */
+    public double rolled;
+    public float steer;
 }

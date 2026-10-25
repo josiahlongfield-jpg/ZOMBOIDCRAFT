@@ -13,11 +13,13 @@ and one collision/placement index for the server,
 
 A .zcar is zlib-deflated, then XORed with an xorshift32 stream seeded from the model id, so
 the files in the jar aren't usable models on their own. Deflated payload, big-endian:
-    "ZCAR" int version (2), int variants, then per variant:
+    "ZCAR" int version (3), int variants, then per variant:
     UTF name, int jpegLength, jpeg bytes (the texture), mesh (the fixed body),
     int lids, then per lid (a boot lid, tailgate or back door that opens when the car is searched):
         byte axis (0 x, 1 y), float pivot x,y,z (m), float angle (radians, fully open), mesh
-where a mesh is int triangles, triangles*3 * (short x,y,z in mm, char u,v).
+    int wheels, then per wheel: float centre x,y,z (m), float radius (m), byte steers, mesh
+where a mesh is int opaque triangles, int glass triangles (drawn see-through, after the opaque
+ones), then all of them * 3 * (short x,y,z in mm, char u,v).
 """
 import argparse, glob, io, json, os, struct, sys, zlib
 from multiprocessing import Pool
@@ -101,37 +103,44 @@ def build(path):
     lo, hi = base.reshape(-1, 3).min(0), base.reshape(-1, 3).max(0)
     centre = np.array([(lo[0] + hi[0]) / 2, 0, (lo[2] + hi[2]) / 2])
 
-    def mesh(P, uv):
-        Q = np.round((P - centre) * 1000).astype('>i2').reshape(-1, 3)
-        U = np.round(np.clip(uv, 0, 1) * 65535).astype('>u2').reshape(-1, 2)
-        buf.write(struct.pack('>i', len(P)))
+    def mesh(b, m):
+        order = np.concatenate([np.where(m & ~b['glass'])[0], np.where(m & b['glass'])[0]])
+        Q = np.round((b['tris'][order] - centre) * 1000).astype('>i2').reshape(-1, 3)
+        U = np.round(np.clip(b['uv'][order], 0, 1) * 65535).astype('>u2').reshape(-1, 2)
+        buf.write(struct.pack('>ii', int((m & ~b['glass']).sum()), int((m & b['glass']).sum())))
         buf.write(np.concatenate([Q.view('>u2'), U], 1).astype('>u2').tobytes())
 
     buf = io.BytesIO()
-    buf.write(b'ZCAR'); buf.write(struct.pack('>ii', 2, len(VARIANTS)))
+    buf.write(b'ZCAR'); buf.write(struct.pack('>ii', 3, len(VARIANTS)))
     for name, b in zip(VARIANTS, variants):
         jpg = io.BytesIO(); b['colour'].save(jpg, 'JPEG', quality=90, subsampling=0); jpg = jpg.getvalue()
         nb = name.encode()
         buf.write(struct.pack('>H', len(nb))); buf.write(nb)
         buf.write(struct.pack('>i', len(jpg))); buf.write(jpg)
-        fixed = b['lid'] < 0
-        mesh(b['tris'][fixed], b['uv'][fixed])
+        mesh(b, (b['lid'] < 0) & (b['wheel'] < 0))
         buf.write(struct.pack('>i', len(b['lids'])))
         for k, (pivot, axis, a) in enumerate(b['lids']):
-            m = b['lid'] == k
             buf.write(struct.pack('>b4f', 0 if axis == 'x' else 1, *(np.asarray(pivot, float) - centre), a))
-            mesh(b['tris'][m], b['uv'][m])
+            mesh(b, b['lid'] == k)
+        buf.write(struct.pack('>i', len(b['wheels'])))
+        for k, (c, r, steers) in enumerate(b['wheels']):
+            buf.write(struct.pack('>4fb', *(np.asarray(c, float) - centre), r, 1 if steers else 0))
+            mesh(b, (b['wheel'] == k) & (b['lid'] < 0))
     lids = ', '.join(str(len(b['lids'])) for b in variants)
     blob = scramble(zlib.compress(buf.getvalue(), 9), mid)
     out = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars', mid + '.zcar')
     with open(out, 'wb') as f:
         f.write(blob)
     glo, nx, nz, grid = heights(base - centre)
+    axles = sorted({round(float(c[2]), 1) for c, _, _ in variants[0]['wheels']})
+    wheelbase = axles[-1] - axles[0] if len(axles) > 1 else 0.6 * (hi[2] - lo[2])
     size = hi - lo
     print(f'{mid:20s} {len(blob) // 1024:5d} KB  {size[0]:.1f} x {size[1]:.1f} x {size[2]:.1f} m  atlas {car.atlas}  lids {lids}', flush=True)
     return {'id': mid, 'kind': kind, 'weight': weight, 'size': [round(float(x), 3) for x in size],
             'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
-            'heights': [int(round(h * 100)) for h in grid.ravel()]}
+            'heights': [int(round(h * 100)) for h in grid.ravel()],
+            'seats': [[round(float(v), 3) for v in seat - centre] for seat in wreck.seats(car)],
+            'wheelbase': round(float(wheelbase), 3)}
 
 
 def main():
