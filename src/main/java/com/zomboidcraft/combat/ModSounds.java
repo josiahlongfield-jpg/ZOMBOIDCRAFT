@@ -16,7 +16,7 @@ public final class ModSounds {
     public static final SoundEvent RIFLE_SHOT_SUPPRESSED = register("weapon.rifle.shot_suppressed");
     public static final SoundEvent RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.rifle.shot_suppressed_distant", 40f);
     public static final SoundEvent PISTOL_SHOT_SUPPRESSED = register("weapon.pistol.shot_suppressed");
-    public static final SoundEvent PISTOL_SHOT_SUPPRESSED_DISTANT = register("weapon.pistol.shot_suppressed_distant", 24f);
+    public static final SoundEvent PISTOL_SHOT_SUPPRESSED_DISTANT = register("weapon.pistol.shot_suppressed_distant", 40f);
     public static final SoundEvent RIFLE_DRY = register("weapon.rifle.dry");
     public static final SoundEvent RIFLE_MAG_OUT = register("weapon.rifle.mag_out");
     public static final SoundEvent RIFLE_MAG_IN = register("weapon.rifle.mag_in");
