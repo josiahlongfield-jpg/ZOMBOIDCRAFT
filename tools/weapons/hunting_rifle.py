@@ -325,6 +325,23 @@ def look(wear=0.4):
     return d
 
 
+def suppressor(m):
+    """The rifle suppressor as it goes on this gun: a direct-thread .30 calibre can (an Omega 36M sort, 1.6" across,
+    7.2" long, as long as the item model's limits allow) screwed onto the threaded muzzle in place of the AR's ratchet
+    collar. Its own inches, mount at the crown, the can running on to -z."""
+    b = Inch(m)
+    b.rod(-0.30, 0.06, 0.40, 'steel', axis=2)                # the thread mount, seated against the crown
+    b.rod(-0.48, -0.30, 0.70, 'cap', axis=2)                 # the rear cap, stepped down to the mount
+    b.rod(-0.78, -0.48, 0.80, 'cap', axis=2)
+    b.rod(-0.86, -0.78, 0.76, 'park', axis=2)                # the seam where the tube screws into the rear cap
+    b.rod(-2.60, -0.86, 0.78, 'can', axis=2)
+    b.rod(-4.40, -2.60, 0.78, 'can_mark', axis=2)            # the maker's engraving
+    b.rod(-6.65, -4.40, 0.78, 'can', axis=2)
+    b.rod(-6.73, -6.65, 0.76, 'park', axis=2)                # and into the front cap
+    b.rod(-7.03, -6.73, 0.79, 'cap', axis=2)
+    b.rod(-7.15, -7.03, 0.68, 'cap', axis=2)                 # its chamfered face, the bore hole in it
+
+
 def flash(m, z_tip, r=1.0):
     """Muzzle flash: crossed glowing planes and a core just past the muzzle (inches from the receiver front)."""
     b = Inch(m, (0.0, BORE_Y, Z0))

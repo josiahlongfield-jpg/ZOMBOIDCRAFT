@@ -1,0 +1,129 @@
+{
+ "gui_light": "front",
+ "textures": {
+  "0": "zomboidcraft:item/weapon/muzzle_flash",
+  "particle": "zomboidcraft:item/weapon/muzzle_flash"
+ },
+ "elements": [
+  {
+   "shade": false,
+   "light_emission": 15,
+   "from": [
+    8.0,
+    7.5378,
+    -16.9712
+   ],
+   "to": [
+    8.0,
+    8.4578,
+    -15.8212
+   ],
+   "rotation": {
+    "angle": 45,
+    "axis": "z",
+    "origin": [
+     8.0,
+     7.9978,
+     -15.8212
+    ]
+   },
+   "faces": {
+    "east": {
+     "uv": [
+      8,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "west": {
+     "uv": [
+      16,
+      0,
+      8,
+      16
+     ],
+     "texture": "#0"
+    }
+   }
+  },
+  {
+   "shade": false,
+   "light_emission": 15,
+   "from": [
+    8.0,
+    7.5378,
+    -16.9712
+   ],
+   "to": [
+    8.0,
+    8.4578,
+    -15.8212
+   ],
+   "rotation": {
+    "angle": -45,
+    "axis": "z",
+    "origin": [
+     8.0,
+     7.9978,
+     -15.8212
+    ]
+   },
+   "faces": {
+    "east": {
+     "uv": [
+      8,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "west": {
+     "uv": [
+      16,
+      0,
+      8,
+      16
+     ],
+     "texture": "#0"
+    }
+   }
+  },
+  {
+   "shade": false,
+   "light_emission": 15,
+   "from": [
+    7.3675,
+    7.3653,
+    -16.0212
+   ],
+   "to": [
+    8.6325,
+    8.6303,
+    -16.0212
+   ],
+   "faces": {
+    "north": {
+     "uv": [
+      0,
+      0,
+      8,
+      16
+     ],
+     "texture": "#0"
+    },
+    "south": {
+     "uv": [
+      0,
+      0,
+      8,
+      16
+     ],
+     "texture": "#0"
+    }
+   }
+  }
+ ]
+}

@@ -17,7 +17,8 @@ public enum GunType {
     ASSAULT_RIFLE("assault_rifle", "5.56mm", 16, 22, 25, 34, 18),
     PISTOL("pistol", "9mm", 12, 16, 18, 24, 12),
     SHOTGUN("shotgun", "12 gauge", 6, 10, 8, 4),
-    HUNTING_RIFLE("hunting_rifle", ".308", 16, 22, 25, 34, 18, 13, 8);
+    // its bolt is worked at the pace of its recording (lift, back, home, down over 16 ticks), so an empty reload runs long
+    HUNTING_RIFLE("hunting_rifle", ".308", 16, 22, 25, 41, 18, 16, 7);
 
     private final String id;
     private final String caliber;
@@ -32,9 +33,12 @@ public enum GunType {
     public final int raise, perShell;
     /**
      * Worked by hand after each shot (a pump, or a bolt): how long it takes, and how long after a shot it's heard (a
-     * pump as it's worked; a bolt as it's lifted, the empty case coming out as it's run back). 0 for a self-loader.
+     * pump as it's worked; a bolt as it's lifted, the empty case coming out as it's run back, CASE_OUT later). 0 for a
+     * self-loader.
      */
     public final int cycle, cycleAfterShot;
+    /** Ticks from a bolt's lift to the empty case hitting the ground as it's run back (in step with its recording). */
+    public static final int CASE_OUT = 6;
     /** The handle is a bolt the shooting hand works: after each shot, and to chamber a round after a fresh magazine. */
     public final boolean bolt;
 
@@ -74,6 +78,11 @@ public enum GunType {
     /** Worked by hand after each shot (a pump or a bolt), rather than cycled by the shot itself. */
     public boolean manual() {
         return cycle > 0;
+    }
+
+    /** Ticks between shots: the setting, but never before a pump or bolt has been worked. */
+    public int fireDelay() {
+        return Math.max(stats().fireDelayTicks, cycleAfterShot + cycle);
     }
 
     /** The gun's item id within the mod, which its item models and first-person rig go by. */
@@ -143,7 +152,8 @@ public enum GunType {
             case PISTOL -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
                     : distant ? ModSounds.PISTOL_SHOT_DISTANT : ModSounds.PISTOL_SHOT;
             case SHOTGUN -> distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
-            case HUNTING_RIFLE -> distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
+            case HUNTING_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
         };
     }
 

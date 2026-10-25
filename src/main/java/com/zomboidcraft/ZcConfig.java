@@ -318,7 +318,7 @@ public final class ZcConfig {
             s.shotNoise = 140.0;
             s.aimZoom = 0.80;
             s.range = 200.0;
-            s.fireDelayTicks = 20;
+            s.fireDelayTicks = 25;     // never less than the bolt takes to work (GunType.fireDelay)
             s.magazineSize = 5;
             return s;
         }

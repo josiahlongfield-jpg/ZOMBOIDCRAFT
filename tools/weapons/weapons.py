@@ -692,16 +692,20 @@ def shotgun():
 
 
 def hunting_rifle():
-    """The 700-style bolt action: open sights out on the barrel, a picatinny base over the receiver for an optic, its
-    detachable 5-round magazine, and the bolt (its handle) worked by hand after every shot."""
+    """The 700-style bolt action: open sights out on the barrel, a picatinny base over the receiver for an optic, a
+    threaded muzzle for the rifle suppressor (drawn as a direct-thread .30 can), its detachable 5-round magazine, and
+    the bolt (its handle) worked by hand after every shot."""
     look = HR.look()
     optics = ['red_dot', 'holo', 'scope_4x']
     parts = {a.key: kit.Part(a.key, a.item, a.title, a.slot, a.build, a.look, a.sight, a.note) for a in AT.ALL
              if a.key in optics}
+    parts['suppressor'] = kit.Part('suppressor', 'rifle_suppressor', 'Rifle Suppressor', 'muzzle', HR.suppressor,
+                                   AT.LOOK, note='Much quieter shots')
     parts['mag'] = kit.Part('mag', 'hunting_rifle_magazine', 'Hunting Rifle Magazine', 'magazine', HR.magazine, look)
     fp = HR.frame_point
     slots = {
         'optic': kit.Slot(fp(0, HR.RAIL_TOP, 3.0), 'top', optics),
+        'muzzle': kit.Slot(fp(0, 0, HR.MUZZLE), 'axial', ['suppressor']),
         'magazine': kit.Slot(fp(0, HR.WELL_Y, HR.MAG_Z[0]), 'axial', ['mag'], default='mag'),   # the well's mouth
     }
 

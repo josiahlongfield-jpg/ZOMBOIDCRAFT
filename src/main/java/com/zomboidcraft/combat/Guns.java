@@ -65,8 +65,8 @@ public final class Guns {
         boolean loadStopped;
         int stopTick;
         ItemStack loading = ItemStack.EMPTY;
-        /** When the pump or bolt is worked after a shot (game time), or -1. */
-        long cycleAt = -1;
+        /** When the pump or bolt is worked after a shot (game time), or -1; when its empty case lands. */
+        long cycleAt = -1, caseAt = -1;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -91,7 +91,7 @@ public final class Guns {
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
-        if (now - st.lastShot < stats.fireDelayTicks) {
+        if (now - st.lastShot < type.fireDelay()) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -299,7 +299,7 @@ public final class Guns {
             return;
         }
         State st = state(player);
-        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.stats().fireDelayTicks) {
+        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay()) {
             return;     // already reloading, or the bolt is still being worked after a shot
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -456,6 +456,14 @@ public final class Guns {
                 GunType held = GunType.of(gun);
                 if (held != null && held.manual()) {
                     sound(player, held.charged());
+                    // a pump throws its hull out as it's worked; a bolt's case comes out at the end of the back stroke
+                    st.caseAt = player.level().getGameTime() + (held.bolt ? GunType.CASE_OUT : 0);
+                }
+            }
+            if (st.caseAt >= 0 && player.level().getGameTime() >= st.caseAt) {
+                st.caseAt = -1;
+                GunType held = GunType.of(gun);
+                if (held != null && held.manual()) {
                     // a shotgun hull lands with a dull plastic bounce, a rifle case with a ring
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
                             SoundSource.PLAYERS, held.tube ? 0.35f : 0.4f,

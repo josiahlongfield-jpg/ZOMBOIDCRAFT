@@ -42,6 +42,9 @@ public final class ModSounds {
      */
     public static final SoundEvent HUNTING_RIFLE_SHOT = register("weapon.hunting_rifle.shot");
     public static final SoundEvent HUNTING_RIFLE_SHOT_DISTANT = register("weapon.hunting_rifle.shot_distant", 176f);
+    /** Through a suppressor: a .308 is still a heavy thump, heard out to 48 blocks. */
+    public static final SoundEvent HUNTING_RIFLE_SHOT_SUPPRESSED = register("weapon.hunting_rifle.shot_suppressed");
+    public static final SoundEvent HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.hunting_rifle.shot_suppressed_distant", 48f);
     public static final SoundEvent HUNTING_RIFLE_DRY = register("weapon.hunting_rifle.dry");
     public static final SoundEvent HUNTING_RIFLE_MAG_OUT = register("weapon.hunting_rifle.mag_out");
     public static final SoundEvent HUNTING_RIFLE_MAG_IN = register("weapon.hunting_rifle.mag_in");

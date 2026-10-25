@@ -131,7 +131,7 @@ final class GunRigs {
                     new float[] {8.0000f, 7.9978f, -9.9629f} /* the laser's lens */,
                     new float[] {8.0000f, 7.9978f, -9.9629f} /* the light's lens */,
                     new float[] {8.0000f, 7.9978f, -9.9629f} /* muzzle */,
-                    new float[] {8.0000f, 7.9978f, -9.9629f} /* a suppressor's end */,
+                    new float[] {8.0000f, 7.9978f, -15.8212f} /* a suppressor's end */,
                     new float[] {8.0000f, 7.9978f, 12.4875f} /* a point on the bore the bolt turns about */,
                     new float[] {0.0000f, -1.0000f, 0.0000f} /* the way a magazine leaves the well */,
                     false /* locks back when empty */,
