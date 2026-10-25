@@ -6,6 +6,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunType;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +67,10 @@ public final class RailLights {
     private static final Map<UUID, BlockPos> LIT = new HashMap<>();
     /** Where each player's light landed in the last frame drawn, for the light block. */
     private static final Map<UUID, Land> LANDS = new HashMap<>();
+    /** Iris's own "is a shader pack on" call, looked up once (none without Iris). */
+    private static boolean irisAsked;
+    private static Object iris;
+    private static Method shaderPackInUse;
     private static ClientLevel litIn;
 
     /** Where a light landed (null for nothing in reach), the way its beam came, and how far it went. */
@@ -166,6 +171,7 @@ public final class RailLights {
             return;
         }
         ZcConfig.Guns config = ZcConfig.get().guns;
+        boolean glow = config.glowWithShaders || !shaderPackOn();
         Quads quads = new Quads(cam.pos);
         for (AbstractClientPlayer player : level.players()) {
             ItemStack gun = player.getMainHandItem();
@@ -183,10 +189,10 @@ public final class RailLights {
                 RifleView.aimDistance((float) held.eye().distanceTo(target));
             }
             if (laser) {
-                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam);
+                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam && glow);
             }
             if (light) {
-                light(level, player, held, target, quads, config);
+                light(level, player, held, target, quads, config, glow);
             }
         }
         if (quads.count > 0) {
@@ -252,7 +258,8 @@ public final class RailLights {
         }
     }
 
-    private static void light(ClientLevel level, AbstractClientPlayer player, Held held, Vec3 target, Quads quads, ZcConfig.Guns config) {
+    private static void light(ClientLevel level, AbstractClientPlayer player, Held held, Vec3 target, Quads quads, ZcConfig.Guns config,
+                              boolean drawn) {
         Vec3 from = held.light();
         Vec3 axis = blend(held.bore(), target.subtract(from).normalize(), held.onTarget());
         BlockHitResult centre = level.clip(new ClipContext(from, from.add(axis.scale(LIGHT_RANGE)), ClipContext.Block.COLLIDER,
@@ -262,7 +269,7 @@ public final class RailLights {
         LANDS.put(player.getUUID(), new Land(lands ? centre.getLocation() : null, axis, reach));
 
         float glow = (float) config.lightGlow;
-        if (glow <= 0) {
+        if (glow <= 0 || !drawn) {
             return;
         }
         double cone = Math.toRadians(Mth.clamp(config.lightCone, 2, 45));
@@ -303,6 +310,28 @@ public final class RailLights {
             return;
         }
         quads.flat(hit.getLocation().add(normal.scale(0.012)), normal, Math.max(0.15, distance * Math.tan(spread)), scaled(WHITE, strength));
+    }
+
+    /**
+     * Whether a shader pack is drawing the world (asked of Iris, when it is installed). The glow is added light, but
+     * shader packs draw it as a surface coloured by its strength, so a faint glow comes out as a dark smear.
+     */
+    private static boolean shaderPackOn() {
+        if (!irisAsked) {
+            irisAsked = true;
+            try {
+                Class<?> api = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+                iris = api.getMethod("getInstance").invoke(null);
+                shaderPackInUse = api.getMethod("isShaderPackInUse");
+            } catch (ReflectiveOperationException | LinkageError e) {
+                shaderPackInUse = null;
+            }
+        }
+        try {
+            return shaderPackInUse != null && (boolean) shaderPackInUse.invoke(iris);
+        } catch (ReflectiveOperationException e) {
+            return false;
+        }
     }
 
     /** How dark it is somewhere, from 0 (daylight: a gun light shows nothing) to 1 (night, or deep indoors). */
