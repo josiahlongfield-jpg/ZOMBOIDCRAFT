@@ -9,28 +9,27 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
-echo "===== fp2"
-FP=net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer
-javap -cp "$CP" -p $FP 2>&1
-javap -cp "$CP" -c -p $FP 2>&1 | awk '/public void submitHandsWithItems\(/,/^$/' | grep -vE '^ *[0-9]+: (aload|iload|fload|astore|istore|fstore|dup|pop|iconst|fconst)' | head -150
-echo "--- submitArmWithItem"
-javap -cp "$CP" -c -p $FP 2>&1 | awk '/private void submitArmWithItem\(/,/^$/' | grep -E 'invoke|getfield|getstatic|ldc|instanceof|checkcast|tableswitch|lookupswitch|if|goto' | head -220
-echo "--- renderPlayerArm"
-javap -cp "$CP" -c -p $FP 2>&1 | awk '/private void renderPlayerArm\(/,/^$/' | grep -E 'invoke|getfield|getstatic|ldc' | head -80
-echo "--- extractRenderState"
-javap -cp "$CP" -c -p net.minecraft.client.player.FirstPersonHandsAndItems 2>&1 | awk '/public void extractRenderState\(/,/^$/' | grep -E 'invoke|getfield|putfield|getstatic|ldc' | head -80
-echo "--- PlayerRenderState"
-javap -cp "$CP" -p net.minecraft.client.renderer.state.level.PlayerRenderState 2>&1
-sig net.minecraft.client.renderer.item.ItemStackRenderState 'public'
-sig net.minecraft.client.renderer.item.ItemModelResolver 'public'
-echo "--- particles"
-for c in $(classes 'client/particle/(SingleQuadParticle|Particle|ParticleProvider|GlowParticle|DustParticleBase|DustParticle|TextureSheetParticle|ParticleRenderType|SpriteSet|SimpleAnimatedParticle)\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'public|protected'; done
-sig 'net.minecraft.client.particle.SingleQuadParticle$Layer' 'public'
-sig 'net.minecraft.client.particle.GlowParticle$GlowSquidProvider' '.'
-javap -cp "$CP" -c -p net.minecraft.client.particle.GlowParticle 2>&1 | grep -A12 'getLightColor\|GlowParticle(' | head -40
-for c in $(classes 'fabric.*[Pp]article.*(Registry|Types)[^$]*\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'public'; done
-sig net.minecraft.core.particles.SimpleParticleType 'public|protected'
-sig net.minecraft.client.particle.ParticleEngine 'public.*(add|createParticle|register)'
+echo "===== fp3"
+sig net.minecraft.world.entity.Entity 'void turn\('
+javap -cp "$CP" -c -p net.minecraft.client.MouseHandler 2>&1 | awk '/private void turnPlayer\(|public void turnPlayer\(|void handleAccumulatedMovement\(/,/^$/' | grep -E 'invoke|getfield|ldc|Method' | head -60
+for c in $(classes 'screens/options/(Mouse|Controls|Sound)[A-Za-z]*Screen\.class' | sed 's|\.class$||; s|/|.|g'); do sig "$c" 'class|protected|public'; done
+sig com.mojang.blaze3d.vertex.PoseStack 'public'
+sig net.minecraft.world.entity.player.Player 'isModelPartShown'
+sig net.minecraft.world.entity.player.PlayerModelPart 'public static final'
+sig net.minecraft.client.renderer.entity.state.EntityRenderState 'isInvisible|ageInTicks'
+sig net.minecraft.client.renderer.entity.state.AvatarRenderState 'Sleeve|skin|isInvisible'
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer 'getModel'
+sig net.minecraft.client.model.HumanoidModel 'rightArm|leftArm'
+sig net.minecraft.client.model.player.PlayerModel 'Sleeve|slim|public'
+sig net.minecraft.client.model.geom.ModelPart 'getChild|hasChild|children'
+sig net.minecraft.world.item.ItemStack 'public static final|public net.minecraft.world.item.ItemStack\('
+sig net.minecraft.core.component.DataComponents 'ITEM_MODEL'
+sig net.minecraft.client.Minecraft 'getItemModelResolver|getEntityRenderDispatcher|getWindow|getDeltaTracker|particleEngine'
+sig net.minecraft.client.particle.ParticleEngine 'createParticle|add\('
+sig 'net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry$PendingParticleProvider' '.'
+sig net.fabricmc.fabric.api.client.particle.v1.FabricSpriteProvider '.'
+sig net.minecraft.client.Options 'sensitivity|fov\(|getCameraType'
+sig net.minecraft.client.renderer.LightTexture 'FULL'
 
 echo "===== hands"
 for c in $(classes 'ItemInHand|HandRenderer|[Bb]ob[A-Z.]|ViewBob|HandRenderState' | grep -v '\$' | sed 's|\.class$||; s|/|.|g'); do
