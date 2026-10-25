@@ -4,6 +4,7 @@ import com.zomboidcraft.ModItems;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -62,8 +63,9 @@ public class MagazineItem extends Item {
                 return;
             }
             stack.set(GunState.MAG_ROUNDS, rounds - 1);
-            if (!player.getInventory().add(new ItemStack(ModItems.RIFLE_AMMO))) {
-                player.drop(new ItemStack(ModItems.RIFLE_AMMO), false);
+            ItemStack round = new ItemStack(ModItems.RIFLE_AMMO);
+            if (!player.getInventory().add(round)) {
+                player.spawnAtLocation((ServerLevel) level, round);
             }
         } else {
             if (rounds >= RifleItem.capacity() || !takeAmmo(player, 1)) {

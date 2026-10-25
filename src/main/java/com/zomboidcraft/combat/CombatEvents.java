@@ -1,8 +1,8 @@
 package com.zomboidcraft.combat;
 
-import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Skills;
+import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.ZombieTypes;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -38,7 +38,7 @@ public final class CombatEvents {
     /** The player behind a hand-to-hand blow, or null for anything else (gunshots included). */
     private static ServerPlayer meleeBy(DamageSource source) {
         if (source.getDirectEntity() instanceof ServerPlayer player && source.getEntity() == player
-                && !player.getMainHandItem().is(ModItems.ASSAULT_RIFLE)) {
+                && !source.is(ModDamageTypes.BULLET)) {
             return player;
         }
         return null;

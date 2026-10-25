@@ -4,6 +4,7 @@ import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
+import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.Noise;
 import com.zomboidcraft.zombie.ZombieTypes;
 import java.util.List;
@@ -151,8 +152,7 @@ public final class Guns {
         boolean head = !downed && at.y >= headY;
         boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
         float damage = (float) (config.damage * (head ? config.headshotMultiplier : legs ? 0.7 : 1));
-        target.invulnerableTime = 0;
-        target.hurtServer(level, level.damageSources().playerAttack(player), damage);
+        target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), damage);
         Shove.push(target, dir.multiply(1, 0, 1).normalize(), 0.12);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
                 at.x, at.y, at.z, head ? 22 : 12, 0.12, 0.12, 0.12, 0.2);
@@ -214,7 +214,7 @@ public final class Guns {
             ItemStack old = new ItemStack(ModItems.RIFLE_MAGAZINE);
             old.set(GunState.MAG_ROUNDS, g.rounds());
             if (!player.getInventory().add(old)) {
-                player.drop(old, false);
+                player.spawnAtLocation(level(player), old);
             }
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
@@ -294,6 +294,10 @@ public final class Guns {
             return;
         }
         gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(s, (float) flash), List.of(), List.of(), List.of()));
+    }
+
+    private static ServerLevel level(ServerPlayer player) {
+        return (ServerLevel) player.level();
     }
 
     private static void sound(ServerPlayer player, net.minecraft.sounds.SoundEvent sound) {

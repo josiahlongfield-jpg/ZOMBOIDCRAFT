@@ -89,6 +89,21 @@
           ]
         },
         {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:lead_pipe",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.5,
+                "max": 0.9
+              }
+            }
+          ]
+        },
+        {
           "type": "minecraft:empty",
           "weight": 14
         }

@@ -10,7 +10,7 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 echo "===== combat3"
-classes 'keymapping|keybinding|KeyMapping'
+sig net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper '.'
 classes 'component/SwingAnimation|component/UseEffects|KeyMapping\$Category|keybinding/v1/KeyBindingHelper|state/HumanoidRenderState|state/ZombieRenderState|ai/goal/MeleeAttackGoal|ai/goal/ZombieAttackGoal'
 sig net.minecraft.world.item.component.SwingAnimation '.'
 sig net.minecraft.world.item.component.UseEffects '.'

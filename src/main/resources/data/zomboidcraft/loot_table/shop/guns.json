@@ -10,8 +10,56 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
+          "name": "zomboidcraft:rifle_ammo",
           "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 30
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rifle_magazine",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rifle_magazine",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_components",
+              "components": {
+                "zomboidcraft:mag_rounds": 12
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:assault_rifle",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.1,
+                "max": 0.7
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:arrow",
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -26,7 +74,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:bow",
-          "weight": 4,
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -41,7 +89,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:crossbow",
-          "weight": 3,
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -49,21 +97,6 @@
                 "type": "minecraft:uniform",
                 "min": 0,
                 "max": 0.4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:spectral_arrow",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 6
               }
             }
           ]
@@ -185,7 +218,12 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:trident",
+          "name": "zomboidcraft:assault_rifle",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:katana",
           "weight": 1
         }
       ]

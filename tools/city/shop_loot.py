@@ -17,6 +17,11 @@ ZC = "zomboidcraft"
 WATER = {"function": "minecraft:set_potion", "id": "minecraft:water"}
 
 
+def rounds(n):
+    """A rifle magazine with n rounds already loaded."""
+    return {"function": "minecraft:set_components", "components": {f"{ZC}:mag_rounds": n}}
+
+
 def worn(lo=0.25, hi=0.85):
     return {"function": "minecraft:set_damage", "damage": {"type": "minecraft:uniform", "min": lo, "max": hi}}
 
@@ -45,27 +50,32 @@ TABLES = {
         ("potion", 12, 1, 3, WATER), ("honey_bottle", 6, 1, 2), ("milk_bucket", 3, 1, 1), ("melon_slice", 4, 1, 4),
         ("potion", 2, 1, 1, potion("swiftness")), ("glass_bottle", 4, 1, 2), ("-", 8, 1, 1)]),
     "hardware": ((2, 6), [
-        (f"{ZC}:nails", 12, 4, 16), (f"{ZC}:hammer", 4, 1, 1), (f"{ZC}:crowbar", 2, 1, 1), ("iron_axe", 2, 1, 1, worn(0, .3)),
-        ("iron_shovel", 2, 1, 1), ("iron_pickaxe", 1, 1, 1), ("shears", 2, 1, 1), ("flint_and_steel", 2, 1, 1),
+        (f"{ZC}:nails", 12, 4, 16), (f"{ZC}:hammer", 4, 1, 1), (f"{ZC}:crowbar", 2, 1, 1), ("iron_axe", 1, 1, 1, worn(0, .3)),
+        (f"{ZC}:pipe_wrench", 2, 1, 1), (f"{ZC}:lead_pipe", 1, 1, 1), (f"{ZC}:shovel", 2, 1, 1),
+        (f"{ZC}:sledgehammer", 1, 1, 1, worn(0, .5)), (f"{ZC}:fire_axe", 1, 1, 1, worn(0, .5)), ("iron_pickaxe", 1, 1, 1), ("shears", 2, 1, 1), ("flint_and_steel", 2, 1, 1),
         ("string", 4, 2, 6), ("iron_nugget", 4, 2, 9), ("torch", 4, 2, 8), ("lantern", 2, 1, 1),
         ("oak_planks", 5, 4, 12), ("stick", 4, 2, 8), ("bucket", 2, 1, 1), ("ladder", 2, 1, 4), ("iron_bars", 2, 1, 4),
         ("oak_trapdoor", 1, 1, 2), ("-", 6, 1, 1)]),
     "guns": ((2, 5), [
-        ("arrow", 12, 4, 16), ("bow", 4, 1, 1, worn(0, .4)), ("crossbow", 3, 1, 1, worn(0, .4)),
-        ("spectral_arrow", 3, 2, 6), ("iron_sword", 1, 1, 1, worn()), (f"{ZC}:machete", 2, 1, 1),
+        (f"{ZC}:rifle_ammo", 12, 5, 30), (f"{ZC}:rifle_magazine", 5, 1, 1), (f"{ZC}:rifle_magazine", 2, 1, 1, rounds(12)),
+        (f"{ZC}:assault_rifle", 2, 1, 1, worn(.1, .7)), ("arrow", 6, 4, 16), ("bow", 2, 1, 1, worn(0, .4)),
+        ("crossbow", 2, 1, 1, worn(0, .4)), ("iron_sword", 1, 1, 1, worn()), (f"{ZC}:machete", 2, 1, 1),
         (f"{ZC}:kitchen_knife", 2, 1, 1), ("leather_chestplate", 2, 1, 1, worn()), ("iron_helmet", 1, 1, 1, worn()),
         ("shield", 1, 1, 1, worn()), ("gunpowder", 3, 1, 4), ("string", 3, 1, 4), ("-", 8, 1, 1)]),
     "pawn": ((2, 5), [
         ("gold_nugget", 8, 2, 9), ("gold_ingot", 3, 1, 2), ("emerald", 4, 1, 3), ("diamond", 1, 1, 1),
         ("clock", 3, 1, 1), ("compass", 3, 1, 1), ("spyglass", 2, 1, 1), ("goat_horn", 1, 1, 1),
         ("music_disc_13", 1, 1, 1), ("music_disc_cat", 1, 1, 1), ("music_disc_stal", 1, 1, 1), ("name_tag", 2, 1, 1),
-        ("amethyst_shard", 3, 1, 4), ("lead", 2, 1, 1), (f"{ZC}:baseball_bat", 2, 1, 1), ("iron_sword", 1, 1, 1, worn()),
+        ("amethyst_shard", 3, 1, 4), ("lead", 2, 1, 1), (f"{ZC}:baseball_bat", 2, 1, 1), (f"{ZC}:katana", 1, 1, 1),
+        (f"{ZC}:golf_club", 2, 1, 1, worn(0, .5)), (f"{ZC}:hockey_stick", 1, 1, 1, worn(0, .5)), (f"{ZC}:rifle_ammo", 1, 3, 12), ("iron_sword", 1, 1, 1, worn()),
         ("golden_helmet", 1, 1, 1, worn()), ("book", 2, 1, 2), ("-", 8, 1, 1)]),
     "thrift": ((2, 6), [
         ("leather_helmet", 4, 1, 1, worn()), ("leather_chestplate", 4, 1, 1, worn()), ("leather_leggings", 4, 1, 1, worn()),
         ("leather_boots", 4, 1, 1, worn()), ("leather", 4, 1, 3), ("white_wool", 3, 1, 3), ("gray_wool", 3, 1, 3),
         ("brown_wool", 3, 1, 3), ("red_carpet", 2, 1, 2), ("string", 4, 1, 5), ("book", 4, 1, 3), ("painting", 2, 1, 1),
-        ("item_frame", 2, 1, 1), ("flower_pot", 2, 1, 1), ("bowl", 2, 1, 3), ("clock", 1, 1, 1), ("-", 8, 1, 1)]),
+        ("item_frame", 2, 1, 1), ("flower_pot", 2, 1, 1), ("bowl", 2, 1, 3), ("clock", 1, 1, 1),
+        (f"{ZC}:golf_club", 2, 1, 1, worn()), (f"{ZC}:hockey_stick", 2, 1, 1, worn()), (f"{ZC}:baseball_bat", 1, 1, 1, worn()),
+        (f"{ZC}:frying_pan", 1, 1, 1, worn()), ("-", 8, 1, 1)]),
     "clothes": ((1, 4), [
         ("leather_helmet", 3, 1, 1, worn()), ("leather_chestplate", 3, 1, 1, worn()), ("leather_leggings", 3, 1, 1, worn()),
         ("leather_boots", 3, 1, 1, worn()), ("white_wool", 4, 1, 3), ("light_gray_wool", 3, 1, 3), ("blue_wool", 2, 1, 2),
@@ -74,7 +84,7 @@ TABLES = {
         ("bread", 8, 1, 3), ("cooked_beef", 4, 1, 3), ("cooked_porkchop", 4, 1, 3), ("cooked_chicken", 4, 1, 3),
         ("baked_potato", 5, 1, 4), ("mushroom_stew", 3, 1, 1), ("beetroot_soup", 2, 1, 1), ("pumpkin_pie", 3, 1, 2),
         ("cake", 1, 1, 1), ("cookie", 4, 2, 8), ("sugar", 3, 1, 3), ("egg", 3, 1, 4), ("milk_bucket", 2, 1, 1),
-        ("bowl", 4, 1, 4), (f"{ZC}:kitchen_knife", 3, 1, 1), ("coal", 3, 1, 4), ("potion", 4, 1, 2, WATER), ("-", 8, 1, 1)]),
+        ("bowl", 4, 1, 4), (f"{ZC}:kitchen_knife", 3, 1, 1), (f"{ZC}:frying_pan", 3, 1, 1), ("coal", 3, 1, 4), ("potion", 4, 1, 2, WATER), ("-", 8, 1, 1)]),
     "till": ((1, 3), [
         ("gold_nugget", 10, 1, 6), ("emerald", 3, 1, 2), ("paper", 8, 1, 6), ("iron_nugget", 4, 1, 4), ("name_tag", 1, 1, 1),
         ("-", 10, 1, 1)]),
@@ -90,17 +100,20 @@ TABLES = {
     "storage": ((1, 4), [
         (f"{ZC}:nails", 6, 2, 10), ("oak_planks", 5, 2, 8), ("stick", 4, 2, 6), ("string", 4, 1, 4), ("paper", 4, 1, 4),
         ("torch", 3, 1, 4), ("bread", 3, 1, 2), ("potion", 3, 1, 1, WATER), ("bone", 2, 1, 3), ("leather", 2, 1, 2),
-        (f"{ZC}:bandage", 2, 1, 2), ("-", 12, 1, 1)]),
+        (f"{ZC}:bandage", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn()), (f"{ZC}:shovel", 1, 1, 1, worn()),
+        (f"{ZC}:golf_club", 1, 1, 1, worn()), ("-", 12, 1, 1)]),
     "scraps": ((0, 2), [
         ("paper", 6, 1, 3), ("stick", 4, 1, 3), ("string", 3, 1, 2), ("bone", 2, 1, 2), ("glass_bottle", 3, 1, 1),
-        ("rotten_flesh", 2, 1, 2), ("-", 14, 1, 1)]),
+        ("rotten_flesh", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn(.5, .9)), ("-", 14, 1, 1)]),
 }
 
 # a rare find on top of the shelf's own stock
 RARE = {
-    "grocery": [(f"{ZC}:kitchen_knife", 1)], "hardware": [(f"{ZC}:machete", 1), (f"{ZC}:baseball_bat", 1)],
-    "pharmacy": [("totem_of_undying", 1)], "guns": [("trident", 1)], "pawn": [("diamond", 2), ("golden_apple", 1)],
-    "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1)],
+    "grocery": [(f"{ZC}:kitchen_knife", 1), (f"{ZC}:frying_pan", 1)],
+    "hardware": [(f"{ZC}:machete", 1), (f"{ZC}:baseball_bat", 1), (f"{ZC}:fire_axe", 1)],
+    "pharmacy": [("totem_of_undying", 1)], "guns": [(f"{ZC}:assault_rifle", 2), (f"{ZC}:katana", 1)],
+    "pawn": [("diamond", 2), ("golden_apple", 1), (f"{ZC}:assault_rifle", 1)],
+    "storage": [(f"{ZC}:crowbar", 1), (f"{ZC}:hammer", 1), (f"{ZC}:sledgehammer", 1)],
 }
 
 
