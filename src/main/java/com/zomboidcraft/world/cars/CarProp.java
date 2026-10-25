@@ -28,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LinearInterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Input;
@@ -62,6 +63,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Boolean> OPEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The engine is running: it drives, and clients play its loop. */
     private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** The windows are smashed in: clients leave the glass out, and zombies can reach whoever's inside. */
+    private static final EntityDataAccessor<Boolean> SMASHED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -85,6 +88,8 @@ public class CarProp extends Entity {
     private Entity lastDriver;
     private int catchAt = -1, doorShutAt = -1, hornFreeAt;
     private double lastSpeed, speedBefore;
+    /** How much more bashing the windows take before they give, in zombie damage. -1 until first set. */
+    private float windows = -1;
 
     /** Called on the client every tick a car's engine runs, to keep its sound going; the client sets this. */
     public static java.util.function.Consumer<CarProp> engineSound = car -> { };
@@ -121,12 +126,15 @@ public class CarProp extends Entity {
         builder.define(VARIANT, "usable");
         builder.define(OPEN, false);
         builder.define(ENGINE, false);
+        builder.define(SMASHED, false);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         setLook(input.getStringOr("model", "sedan"), input.getStringOr("variant", "usable"));
         searched = input.getIntOr("searched", 0) != 0;
+        windows = input.getFloatOr("windows", windowsWhole());
+        entityData.set(SMASHED, windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
         for (int i = 0; i < items.size(); i++) {
@@ -139,6 +147,7 @@ public class CarProp extends Entity {
         output.putString("model", model());
         output.putString("variant", variant());
         output.putInt("searched", searched ? 1 : 0);
+        output.putFloat("windows", windows);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
             items.set(i, boot.getItem(i));
@@ -235,6 +244,76 @@ public class CarProp extends Entity {
 
     public boolean engineOn() {
         return entityData.get(ENGINE);
+    }
+
+    public boolean smashed() {
+        return entityData.get(SMASHED);
+    }
+
+    /** How much bashing a car's windows take: a good car about six zombie blows, a wreck's already half gone. */
+    private float windowsWhole() {
+        return switch (variant()) {
+            case "usable" -> 24f;
+            case "abandoned" -> 18f;
+            case "wrecked" -> 8f;
+            default -> 0f;
+        };
+    }
+
+    /** Whether someone sits safe behind a car's glass: in a car whose windows are still in. */
+    public static boolean shielded(Entity entity) {
+        return entity.getVehicle() instanceof CarProp car && !car.smashed();
+    }
+
+    /**
+     * A mob's blow at someone inside lands on the glass instead, like a zombie on a door, until the
+     * windows give; after that blows get through. Returns whether the blow reaches the rider.
+     */
+    public boolean blowAtRider(Entity attacker, float amount) {
+        if (!(level() instanceof ServerLevel server) || smashed()) {
+            return true;
+        }
+        if (windows < 0) {
+            windows = windowsWhole();
+        }
+        windows -= amount;
+        if (windows > 0) {
+            server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_HIT, SoundSource.HOSTILE,
+                    1f, 0.7f + random.nextFloat() * 0.2f);
+            return false;
+        }
+        entityData.set(SMASHED, true);
+        server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_BREAK, SoundSource.HOSTILE,
+                1.2f, 0.8f + random.nextFloat() * 0.2f);
+        Noise.emit(server, position(), 16);
+        for (Entity rider : getPassengers()) {
+            if (rider instanceof Player player) {
+                player.sendOverlayMessage(Component.literal("They've smashed the windows in!"));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Nothing living but the riders gets inside an occupied car's outline: a mob that steps over
+     * the edge is put back outside it, at the nearest side, so zombies crowd round and bash the
+     * glass rather than climbing in. (A parked car's hull blocks do the same job.)
+     */
+    private void keepOut(CarModels.Model m) {
+        double hw = m.size[0] / 2, hl = m.size[2] / 2;
+        for (Mob mob : level().getEntitiesOfClass(Mob.class, getBoundingBox().inflate(hl), e -> !e.isPassenger() && e.isAlive())) {
+            Vec3 at = local(mob.position().subtract(position()));
+            double r = mob.getBbWidth() / 2 + 0.02;
+            double inX = hw + r - Math.abs(at.x), inZ = hl + r - Math.abs(at.z);
+            if (inX <= 0 || inZ <= 0 || at.y > m.size[1] || at.y + mob.getBbHeight() < 0) {
+                continue;
+            }
+            Vec3 out = inX < inZ ? new Vec3(Math.copySign(hw + r, at.x == 0 ? 1 : at.x), at.y, at.z)
+                    : new Vec3(at.x, at.y, Math.copySign(hl + r, at.z == 0 ? 1 : at.z));
+            Vec3 move = world(out.x, out.y, out.z).add(position()).subtract(mob.position());
+            mob.move(MoverType.SELF, new Vec3(move.x, 0, move.z));
+            mob.setDeltaMovement(mob.getDeltaMovement().multiply(0.2, 1, 0.2));
+        }
     }
 
     /**
@@ -460,6 +539,10 @@ public class CarProp extends Entity {
             Vec3 moved = lastPos == null ? Vec3.ZERO : position().subtract(lastPos);
             lastPos = position();
             engine(server, getControllingPassenger());
+            CarModels.Model model = CarModels.get(model());
+            if (isVehicle() && model != null) {
+                keepOut(model);
+            }
             if (getControllingPassenger() instanceof Player driver) {
                 driven(server, driver, moved);
             }
