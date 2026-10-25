@@ -32,6 +32,18 @@ public final class ZcConfig {
     public Weather weather = new Weather();
     public Combat combat = new Combat();
     public Guns guns = new Guns();
+    public Carry carry = new Carry();
+
+    public static class Carry {
+        /** Only a few main-inventory slots are pockets; bags carry the rest. Creative ignores it. */
+        public boolean pocketsOnly = true;
+        /** Pocket slots, on top of the 9 belt-and-hands slots. */
+        public int pocketSlots = 4;
+        /** Things have weight, and carrying too much slows and tires you. */
+        public boolean weight = true;
+        /** Kilograms you carry before Heavy Load sets in. */
+        public double capacity = 8;
+    }
 
     public static class Zombies {
         /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */

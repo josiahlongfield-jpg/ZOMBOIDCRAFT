@@ -33,6 +33,13 @@ public final class MoodleHud {
             else if (endurance < 30) moodles.add(new Moodle("Out of breath", BAD));
             else if (endurance < 60) moodles.add(new Moodle("Winded", MILD));
         }
+        if (ZcConfig.get().carry.weight) {
+            int tier = com.zomboidcraft.carry.Carry.tier(player.getAttachedOrElse(com.zomboidcraft.carry.Carry.LOAD, 0f));
+            if (tier == 4) moodles.add(new Moodle("Crushed by your load", SEVERE));
+            else if (tier == 3) moodles.add(new Moodle("Overloaded", SEVERE));
+            else if (tier == 2) moodles.add(new Moodle("Very heavy load", BAD));
+            else if (tier == 1) moodles.add(new Moodle("Heavy load", MILD));
+        }
         Font font = minecraft.font;
         int right = graphics.guiWidth() - 4;
         int y = 4;
