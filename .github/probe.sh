@@ -8,13 +8,19 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== world render events"
-classes 'fabric/api/client/rendering/v1/.*(World|Level)|fabric/api/client/rendering/v1/[A-Za-z]*Render[A-Za-z]*Events'
-for c in $(classes 'fabric/api/client/rendering/v1/.*(World|Level)[A-Za-z]*\.class' | grep -v 'impl' | sed 's/\.class$//; s#/#.#g'); do echo "----- $c"; javap -cp "$CP" -protected "$c" 2>&1 | head -60; done
-sig net.minecraft.client.renderer.SubmitNodeCollector 'submitCustomGeometry'
-sig net.minecraft.client.renderer.rendertype.RenderTypes 'lightning|translucent|lines|debug|beacon|Emissive|eyes|leash|textBackground'
-sig net.minecraft.client.Camera 'position|rotation|forward|getLookVector|yRot|xRot|partial'
-sig net.minecraft.client.renderer.LevelRenderer 'public'
+echo "===== level render events 2"
+for c in 'LevelRenderEvents$CollectSubmits' 'LevelRenderEvents$AfterTranslucentFeatures' 'LevelRenderEvents$EndMain' 'LevelRenderEvents$AfterSolidFeatures' 'LevelExtractionEvents$EndExtraction'; do
+  javap -cp "$CP" -p "net.fabricmc.fabric.api.client.rendering.v1.level.$c" 2>&1
+done
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.LevelRenderState 2>&1 | head -40
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.OrderedSubmitNodeCollector 2>&1 | grep -E "Custom|interface"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer' 2>&1
+classes 'fabric/impl/client/rendering/.*(Level|level)|fabric/mixin/client/rendering/.*Level'
+for c in $(classes 'fabric/mixin/client/rendering/LevelRendererMixin.class|fabric/mixin/client/rendering/.*LevelRenderer.*\.class' | sed 's/\.class$//; s#/#.#g'); do
+  echo "----- $c"; javap -cp "$CP" -c -p "$c" 2>&1 | grep -E "invoke|Method|getstatic|private|public" | head -80
+done
+javap -cp "$CP" -c -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -nE "submitBlockOutline|private void submit|PoseStack|translate\(DDD|camera" | head -40
 exit 0
 
 
