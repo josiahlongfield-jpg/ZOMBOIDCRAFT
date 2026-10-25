@@ -53,10 +53,10 @@ public final class CarClient {
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
             }
         }
-        if (car != null && client.screen == null && (car != hinted || player.tickCount % 20 == 0)) {
+        if (car != null && (car != hinted || player.tickCount % 20 == 0)) {
             boolean boot = player.isShiftKeyDown() || car.atBoot(hit.getLocation().subtract(car.position()));
-            client.gui.setOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage())
-                    .append(boot ? "] Search" : "] Get in"), false);
+            player.sendOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage())
+                    .append(boot ? "] Search" : "] Get in"));
         }
         hinted = car;
     }
