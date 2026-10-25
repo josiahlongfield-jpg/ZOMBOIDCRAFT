@@ -25,6 +25,10 @@ public final class CarModels {
         public float cell, x0, z0;
         public int nx, nz;
         public int[] heights;
+        /** Eye positions of the seats in model space, the driver's first (left, +x). */
+        public float[][] seats;
+        /** Front axle to back axle, metres: how tight the car turns. */
+        public float wheelbase;
 
         public float length() {
             return size[2];

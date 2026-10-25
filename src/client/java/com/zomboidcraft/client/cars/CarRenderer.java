@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -13,7 +14,10 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.AABB;
 
-/** Draws a car prop's 3D model, each triangle sent as a quad with its last corner doubled. */
+/**
+ * Draws a car's 3D model, each triangle sent as a quad with its last corner doubled: the body,
+ * boot lids swung open while it's searched, wheels rolled and steered, then the glass see-through.
+ */
 public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
     public CarRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -30,9 +34,15 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         super.extractRenderState(car, state, partialTick);
         state.model = car.model();
         state.variant = car.variant();
-        state.yaw = car.getYRot();
+        // turned smoothly between ticks, or a car you're steering judders against your smooth view
+        state.yaw = car.getYRot(partialTick);
+        // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
+        Minecraft mc = Minecraft.getInstance();
+        state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
+        state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
+        state.steer = car.steerO + (car.steer - car.steerO) * partialTick;
     }
 
     /** The whole car, not the entity's small box, decides whether it's on screen. */
@@ -53,37 +63,98 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         int light = state.lightCoords;
         poseStack.pushPose();
         poseStack.rotateDegrees(Axis.YP, -state.yaw);
-        float open = state.open;
+        Turn[] lids = new Turn[car.lids().size()];
+        for (int i = 0; i < lids.length; i++) {
+            lids[i] = lid(car.lids().get(i), state.open);
+        }
+        Turn[] wheels = new Turn[car.wheels().size()];
+        for (int i = 0; i < wheels.length; i++) {
+            wheels[i] = wheel(car.wheels().get(i), state.rolled, state.steer);
+        }
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            draw(car.mesh(), null, 0, pose, out, light);
-            for (CarAssets.Lid lid : car.lids()) {
-                draw(lid.mesh(), lid, lid.angle() * open, pose, out, light);
-            }
+            each(car, lids, wheels, (mesh, turn) -> draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1));
         });
+        if (!state.inside) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
+                each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS));
+            });
+        }
         poseStack.popPose();
     }
 
-    /** A mesh's triangles as quads (last corner doubled), a lid's turned about its hinge by angle radians. */
-    private static void draw(CarAssets.Mesh mesh, CarAssets.Lid lid, float angle, PoseStack.Pose pose, VertexConsumer out, int light) {
+    /** Glass keeps its colour from the texture but lets most of the light through. */
+    private static final int GLASS = 0x80FFFFFF;
+
+    /** Moves a point (or, with normal set, a direction) of a moving part into place, in place. */
+    private interface Turn {
+        void apply(float[] v, boolean normal);
+    }
+
+    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, java.util.function.BiConsumer<CarAssets.Mesh, Turn> part) {
+        part.accept(car.mesh(), null);
+        for (int i = 0; i < lids.length; i++) {
+            part.accept(car.lids().get(i).mesh(), lids[i]);
+        }
+        for (int i = 0; i < wheels.length; i++) {
+            part.accept(car.wheels().get(i).mesh(), wheels[i]);
+        }
+    }
+
+    /** A lid turned about its hinge by open (0 to 1) of its full swing. */
+    private static Turn lid(CarAssets.Lid lid, float open) {
+        float a = lid.angle() * open;
+        if (a == 0) {
+            return null;
+        }
+        float cos = (float) Math.cos(a), sin = (float) Math.sin(a);
+        return (v, normal) -> {
+            if (normal) {
+                rotate(v, lid.yAxis(), cos, sin);
+                return;
+            }
+            v[0] -= lid.px(); v[1] -= lid.py(); v[2] -= lid.pz();
+            rotate(v, lid.yAxis(), cos, sin);
+            v[0] += lid.px(); v[1] += lid.py(); v[2] += lid.pz();
+        };
+    }
+
+    /** A wheel rolled on by rolled metres and, if it's a front wheel, steered by steer radians (left +). */
+    private static Turn wheel(CarAssets.Wheel w, double rolled, float steer) {
+        double spin = (rolled / Math.max(0.1f, w.radius())) % (Math.PI * 2);
+        float sc = (float) Math.cos(spin), ss = (float) Math.sin(spin);
+        float s = w.steers() ? steer : 0;
+        float tc = (float) Math.cos(s), ts = (float) Math.sin(s);
+        return (v, normal) -> {
+            if (!normal) {
+                v[0] -= w.cx(); v[1] -= w.cy(); v[2] -= w.cz();
+            }
+            rotate(v, false, sc, ss);
+            if (s != 0) {
+                rotate(v, true, tc, ts);
+            }
+            if (!normal) {
+                v[0] += w.cx(); v[1] += w.cy(); v[2] += w.cz();
+            }
+        };
+    }
+
+    /** Triangles from to end of a mesh as quads (last corner doubled), moved by turn if it has one. */
+    private static void draw(CarAssets.Mesh mesh, int from, int end, Turn turn, PoseStack.Pose pose, VertexConsumer out, int light, int colour) {
         float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();
-        float cos = (float) Math.cos(angle), sin = (float) Math.sin(angle);
-        boolean turn = lid != null && angle != 0;
         float[] v = new float[3], m = new float[3];
-        for (int t = 0; t < mesh.triangles(); t++) {
+        for (int t = from; t < end; t++) {
             m[0] = n[t * 3]; m[1] = n[t * 3 + 1]; m[2] = n[t * 3 + 2];
-            if (turn) {
-                rotate(m, lid.yAxis(), cos, sin);
+            if (turn != null) {
+                turn.apply(m, true);
             }
             for (int c = 0; c < 4; c++) {
                 int i = t * 3 + Math.min(c, 2);
                 v[0] = p[i * 3]; v[1] = p[i * 3 + 1]; v[2] = p[i * 3 + 2];
-                if (turn) {
-                    v[0] -= lid.px(); v[1] -= lid.py(); v[2] -= lid.pz();
-                    rotate(v, lid.yAxis(), cos, sin);
-                    v[0] += lid.px(); v[1] += lid.py(); v[2] += lid.pz();
+                if (turn != null) {
+                    turn.apply(v, false);
                 }
                 out.addVertex(pose, v[0], v[1], v[2])
-                        .setColor(-1)
+                        .setColor(colour)
                         .setUv(uv[i * 2], uv[i * 2 + 1])
                         .setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(light)

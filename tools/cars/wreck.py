@@ -697,12 +697,72 @@ def contents(room, theme, rng, full):
     return out
 
 
+# ---------------------------------------------------------------- wheels and seats
+
+def wheel_groups(car, P, keep):
+    """
+    Each road wheel (tyre, rim and hub together) as its own group so the game can spin and steer
+    it: a wheel index per triangle (-1 for none) and [(centre, radius, steers)] per wheel. Wheels
+    are told apart by side and by gaps along the car; the front-most axle steers.
+    """
+    on = np.isin(car.pid, car.wheels) & keep
+    wheel = np.full(len(P), -1)
+    specs = []
+    c = P.mean(1)
+    idx = np.where(on)[0]
+    if not len(idx):
+        return wheel, specs
+    groups = []
+    for side in (1, -1):
+        mine = idx[np.sign(c[idx, 0] + 1e-6) == side]
+        if not len(mine):
+            continue
+        mine = mine[np.argsort(c[mine, 2])]
+        start = 0
+        for k in range(1, len(mine) + 1):
+            if k == len(mine) or c[mine[k], 2] - c[mine[k - 1], 2] > 0.35:
+                groups.append(mine[start:k])
+                start = k
+    front = max(c[g, 2].mean() for g in groups)
+    for g in groups:
+        lo, hi = bbox(P[g])
+        wheel[g] = len(specs)
+        specs.append(((lo + hi) / 2, (hi[1] - lo[1]) / 2, c[g, 2].mean() > front - 0.4))
+    return wheel, specs
+
+
+def seats(car):
+    """
+    Where people sit, as eye positions (driver first, on the left, +x): beside each side door, at
+    the bottom of its window plus a bit. Buses and the like without a front-left door get a guess.
+    """
+    side = [i for i, p in enumerate(car.parts) if p['cls'] == 'door' and p['kind'] == 'side']
+    out = []
+    for i in side:
+        p = car.parts[i]
+        glass = [j for j, d in car.door_of.items() if d == i and j != i]
+        sill = min(bbox(car.P[car.pid == j])[0][1] for j in glass) if glass else p['hi'][1]
+        cx, cz = (p['lo'][0] + p['hi'][0]) / 2, (p['lo'][2] + p['hi'][2]) / 2
+        out.append(np.array([cx * 0.45, sill + 0.2, cz - 0.25 * (p['hi'][2] - p['lo'][2])]))
+    if not out or min(s[1] for s in out) < 0.45 * car.hi[1]:
+        # a bus: its doors are glass to the floor, so seat the driver behind the windscreen
+        eye, front = 0.62 * car.hi[1], car.hi[2] - 1.2
+        return [np.array([0.3 * (car.hi[0] - car.lo[0]), eye, front])] + \
+            [np.array([0.5 * (-1) ** k, eye, front - 1.5 - k]) for k in range(3)]
+    out.sort(key=lambda s: (-s[2] // 0.5, -s[0]))  # front row first, left before right
+    front = [s for s in out if s[2] > out[0][2] - 0.5]
+    if not any(s[0] > 0 for s in front):  # no driver's door (some vans): mirror the passenger's
+        out.insert(0, out[0] * [-1, 1, 1])
+    return out[:4]
+
+
 # ---------------------------------------------------------------- output
 
 def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
     """
     The damaged car as a dict: tris (n,3,3) and uv (n,3,2, 0-1), lid (n, -1 for the fixed body) and
-    lids [(pivot, axis, angle)] for the parts that open, plus the colour and specular images.
+    lids [(pivot, axis, angle)] for the parts that open, wheel (n, -1 for none) and wheels
+    [(centre, radius, steers)], glass (n, see-through from inside), plus the colour and specular images.
     """
     rng = np.random.default_rng(seed)
     v = VARIANTS[vname]
@@ -713,7 +773,8 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
     img = np.zeros((H, W, 3), np.float32); img[car.tex['ok']] = c
     spec = np.zeros((H, W, 4), np.float32); spec[car.tex['ok']] = np.stack([sm, f0, np.zeros_like(sm), np.zeros_like(sm)], -1)
     uv = car.uvpx[keep] / np.array([W, H])
-    tris, lid = P[keep], lid[keep]
+    wheel, wheels = wheel_groups(car, P, keep)
+    tris, lid, wheel, glass = P[keep], lid[keep], wheel[keep], (car.cls == 'glass')[keep]
     full = 0.0 if v['burnt'] else {'usable': 0.8}.get(vname, 0.55)
     stuff = [piece for room in spaces for piece in contents(room, theme, rng, full)]
     if stuff:
@@ -728,9 +789,12 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
         uv = np.concatenate([uv, np.array([[spot[col]] * 3 for ts, col in stuff for _ in ts])])
         tris = np.concatenate([tris, add])
         lid = np.concatenate([lid, np.full(len(add), -1)])
+        wheel = np.concatenate([wheel, np.full(len(add), -1)])
+        glass = np.concatenate([glass, np.zeros(len(add), bool)])
     colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
     specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
-    return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'colour': colour, 'specular': specular}
+    return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'wheel': wheel, 'wheels': wheels, 'glass': glass,
+            'colour': colour, 'specular': specular}
 
 
 def make_variant(car, vname, seed, out_dir, opened=0.0):

@@ -9,6 +9,20 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== drive2"
+sig net.minecraft.world.entity.LinearInterpolationHandler 'public|protected'
+sig net.minecraft.world.entity.SteppedInterpolationHandler 'public|protected'
+sig net.minecraft.world.entity.AbstractInterpolationHandler 'public|protected'
+sig net.minecraft.world.entity.Entity 'createInterpolationHandler|interact|noCollision|isLocalPlayer|addPassenger|yRotO|getYRot|setYHeadRot|deltaRotation|onPassengerTurned|clampRotation'
+sig net.minecraft.world.entity.player.Player 'isLocalPlayer|displayClientMessage|sendOverlayMessage|getVehicleAttachmentPoint|wantsToStopRiding'
+sig net.minecraft.world.level.CollisionGetter 'noCollision|collidesWithSuffocatingBlock|getBlockCollisions'
+sig net.minecraft.world.entity.vehicle.DismountHelper 'public'
+classes 'DismountHelper'
+sig net.minecraft.server.network.ServerGamePacketListenerImpl 'Vehicle|vehicle'
+sig net.minecraft.world.entity.EntityType 'updateInterval|trackDeltas'
+sig 'net.minecraft.world.entity.EntityType$Builder' 'updateInterval|trackDeltas|passengerAttachments'
+exit 0
+
 echo "===== cars"
 sig net.minecraft.world.entity.Entity 'abstract|defineSynchedData|readAdditionalSaveData|addAdditionalSaveData|hurtServer|isPickable|canBeCollidedWith|isPushable|shouldRenderAtSqrDistance|public Entity\(|setNoGravity|setInvulnerable|noPhysics|blocksBuilding|getBoundingBoxForCulling|moveTo|snapTo|setYRot|absSnapTo|setPos\(|void tick\(|onRemoval|remove\(|isAttackable|skipAttackInteraction'
 sig 'net.minecraft.world.entity.EntityType$Builder' '.'
