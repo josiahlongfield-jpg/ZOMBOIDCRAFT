@@ -50,7 +50,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         CarAssets.Mesh mesh = car.mesh();
         int light = state.lightCoords;
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+        poseStack.rotateDegrees(Axis.YP, -state.yaw);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();
             for (int t = 0; t < mesh.triangles(); t++) {

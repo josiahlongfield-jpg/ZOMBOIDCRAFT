@@ -114,7 +114,7 @@ public class CarProp extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (!(level() instanceof ServerLevel server)) {
             return InteractionResult.SUCCESS;
         }

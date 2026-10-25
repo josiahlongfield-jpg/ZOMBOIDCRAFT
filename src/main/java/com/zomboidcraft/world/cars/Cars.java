@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 
 /** The car prop entity and its hull block, and how a car is laid into the world. */
 public final class Cars {
@@ -31,7 +30,7 @@ public final class Cars {
 
     private static final ResourceKey<Block> HULL_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("car_hull"));
     public static final Block HULL = Registry.register(BuiltInRegistries.BLOCK, HULL_KEY, new CarHull(BlockBehaviour.Properties.of()
-            .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles().pushReaction(PushReaction.BLOCK)
+            .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles()
             .isSuffocating((state, level, pos) -> false).setId(HULL_KEY)));
 
     public static void register() {
