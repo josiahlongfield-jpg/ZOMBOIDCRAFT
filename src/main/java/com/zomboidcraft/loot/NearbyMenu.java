@@ -296,6 +296,12 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
         }
     }
 
+    /** Double-click gathering skips the craft result and tabs that aren't open. */
+    @Override
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+        return slot.container != result && (!(slot instanceof NearbySlot loot) || loot.source == selected);
+    }
+
     @Override
     public boolean stillValid(Player player) {
         return player.isAlive();
