@@ -8,6 +8,19 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== bench2"
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.ItemEntityRenderState 2>&1
+javap -cp "$CP" -c -p net.minecraft.world.entity.item.ItemEntity 2>&1 | sed -n '/public static float getSpin(float, float)/,/^$/p'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.ItemEntityRenderer 2>&1 | sed -n '/public void submit(net.minecraft.client.renderer.entity.state.ItemEntityRenderState/,/^$/p' | grep -E "invoke|ldc|getfield|fload|fmul|fadd|fdiv|fneg"
+javap -cp "$CP" -c -p net.minecraft.client.gui.render.pip.GuiEntityRenderer 2>&1 | sed -n '/protected void renderToTexture(net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState/,/^$/p;/protected float getTranslateY/,/^$/p' | grep -E "invoke|ldc|getfield|fload|fmul|fadd|fdiv|iload|i2f|freturn"
+javap -cp "$CP" -c -p net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | sed -n '/public void prepare(/,/^$/p' | grep -E "invoke|ldc|getfield|fmul|i2f|iload|fload"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.item.ItemStackRenderState 2>&1 | sed -n '/public net.minecraft.world.phys.AABB getModelBoundingBox()/,/^$/p;/public void visitExtents(/,/^$/p' | grep -E "invoke|ldc|getfield"
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.item.ItemStackRenderState$LayerRenderState' 2>&1 | sed -n '/void visitExtents(/,/^$/p;/void applyTransform(/,/^$/p' | grep -E "invoke|ldc|getfield"
+javap -cp "$CP" -p net.minecraft.client.renderer.state.gui.pip.GuiEntityRenderState 2>&1 | head -20
+javap -cp "$CP" -c -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | sed -n '/public void entity(/,/^$/p' | grep -E "invoke|new"
+javap -cp "$CP" -c -p net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | sed -n '/public static void extractEntityInInventory(/,/^$/p' | grep -E "invoke|ldc|getstatic"
+exit 0
+
 echo "===== bench1"
 classes 'gui/render/pip/|gui/render/state/pip/|SpecialGuiElement|gui/render/state/GuiItemRenderState|state/ItemClusterRenderState|state/ItemEntityRenderState|state/ItemDisplayEntityRenderState|state/DisplayEntityRenderState'
 for c in $(classes 'gui/render/pip/[A-Za-z]*.class|gui/render/state/pip/[A-Za-z]*.class|SpecialGuiElement' | grep -v '\$' | sed 's/\.class$//; s#/#.#g'); do sig "$c" 'public|protected'; done
