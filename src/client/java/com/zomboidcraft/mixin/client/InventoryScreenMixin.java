@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(InventoryScreen.class)
 public abstract class InventoryScreenMixin {
-    @Inject(method = "extractRenderState", at = @At("RETURN"), require = 1)
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+            at = @At("RETURN"), require = 1)
     private static void zomboidcraft$noteFigure(LivingEntity entity, CallbackInfoReturnable<EntityRenderState> cir) {
         InjuryGlowLayer.noted(cir.getReturnValue());
     }
