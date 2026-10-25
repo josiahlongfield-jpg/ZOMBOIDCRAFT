@@ -5,8 +5,8 @@
 Each weapon is built from boxes in a local frame: the hand's grip at the origin, the weapon
 running up +y, things that stick out sideways (axe blades, hammer claws, club heads) along +x
 and thickness along z. The generator then moves it into item-model space and works out the
-display transforms so the hand holds the grip in every view. Two textures per melee weapon:
-fresh, and battered and bloodied for when its condition drops below half.
+display transforms so the hand holds the grip in every view. Two textures per melee weapon, each
+with LabPBR _s and _n maps: fresh, and battered and bloodied for when its condition drops below half.
 
 The guns are modular (kit.py): a bare body plus parts in slots, drawn from real measurements
 (rifle.py, attachments.py), with LabPBR material maps and a ghost model per slot for the weapon
@@ -32,6 +32,7 @@ import model as M  # noqa: E402
 import paint as P  # noqa: E402
 import poses as Q  # noqa: E402
 import kit  # noqa: E402
+import pbr  # noqa: E402
 import rifle as RF  # noqa: E402
 import attachments as AT  # noqa: E402
 from inch import IN  # noqa: E402
@@ -56,13 +57,19 @@ VANILLA = {  # handheld.json
 # ================================================================== looks
 
 
+def tagged(tag, fx):
+    """Names a finishing pass, so the LabPBR maps know where grime, scratches and blood landed."""
+    fx.tag = tag
+    return fx
+
+
 def look(wear, reach, blood=0.0, grime=0.5, scratch=1.0, **mats):
     d = dict(mats)
     brand = d.pop('_brand', None)
     d['_after'] = ([brand] if brand else []) + [
-        lambda f, c: P.grime(f, c, grime * (0.4 + wear)),
-        lambda f, c: P.scratches(f, c, scratch * (0.3 + wear)),
-        lambda f, c: P.blood(f, c, blood * wear, reach),
+        tagged('grime', lambda f, c: P.grime(f, c, grime * (0.4 + wear))),
+        tagged('scratch', lambda f, c: P.scratches(f, c, scratch * (0.3 + wear))),
+        tagged('blood', lambda f, c: P.blood(f, c, blood * wear, reach)),
     ]
     return d
 
@@ -396,6 +403,28 @@ WEAPONS = [
 ]
 
 
+# What each melee material is made of, for its LabPBR maps (the kinds are in pbr.py).
+MELEE_PBR = {
+    'kitchen_knife': dict(handle='polymer', steel='steel', rivet='steel', blade='blade'),
+    'hammer': dict(wood='varnish', forged='steel', strike='steel'),
+    'frying_pan': dict(iron='cast_iron', base='cast_iron'),
+    'crowbar': dict(paint='painted', bare='steel'),
+    'pipe_wrench': dict(red='painted', jaw='steel', knurl='steel'),
+    'lead_pipe': dict(pipe='galvanised', duct='duct', fitting='cast_iron'),
+    'golf_club': dict(grip='rubber', chrome='chrome', steel='steel', head='steel'),
+    'hockey_stick': dict(tape_white='cloth_tape', tape_black='cloth_tape', shaft='lacquer'),
+    'baseball_bat': dict(wood='lacquer', tape='grip_tape'),
+    'spiked_bat': dict(wood='varnish', tape='grip_tape', nail='steel'),
+    'shovel': dict(cap='polymer', wood='varnish', blade='painted'),
+    'machete': dict(handle='polymer', rivet='steel', blade='blade'),
+    'katana': dict(iron='cast_iron', wrap='cord', tsuba='cast_iron', brass='brass', blade='blade'),
+    'fire_axe': dict(wood='varnish', head='painted', steel='steel'),
+    'sledgehammer': dict(rubber='rubber', glass='fibreglass', forged='steel', strike='steel', steel='steel'),
+    'rifle_ammo': dict(carton='card'),
+}
+MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
+
+
 # ================================================================== display transforms
 
 
@@ -615,12 +644,48 @@ def small_display(m, gui_rot=(25, -35, 0)):
 # ================================================================== writing
 
 
+def paint_melee(m, lk, wear, seed, kinds):
+    """Paints every visible face like model.paint_model, plus its LabPBR _s and _n patches. Each finishing pass
+    is first run on flat grey (with the same random draws) to see where it lands."""
+    rng = np.random.default_rng(seed)
+    patches = []
+    off = m.offset
+    old, M.PX = M.PX, MELEE_PX
+    try:
+        for i, p in enumerate(m.parts):
+            local = dict(p, lo=p['lo'] - off, hi=p['hi'] - off)
+            for name, (ax, sgn, ua, ud, va, vd) in M.FACES.items():
+                if name in p.get('skip', ()):
+                    continue
+                pos, n, edge, uv = M.face_grid(local, name)
+                f = P.Face(pos, n, edge, local, rng, wear, seed + i, uv)
+                base = P.round_shade(f, lk[p['mat']](f))
+                rgb, marks = base, {}
+                for fx in lk.get('_after', []):
+                    tag = getattr(fx, 'tag', None)
+                    if tag:
+                        state = rng.bit_generator.state
+                        grey = np.full(rgb.shape, 0.5)
+                        moved = np.linalg.norm(fx(f, grey) - grey, axis=-1)
+                        rng.bit_generator.state = state
+                        if tag == 'grime':
+                            marks[tag] = np.clip(moved / (0.5 * np.linalg.norm(1 - P.col('#4a4136') * 1.4)), 0, 1)
+                        else:
+                            marks[tag] = moved > 0.02
+                    rgb = fx(f, rgb)
+                rgb = np.clip(rgb, 0, 1)
+                lu, lv = local['hi'][ua] - local['lo'][ua], local['hi'][va] - local['lo'][va]
+                sp, nm = pbr.melee_layers(kinds[p['mat']], f, base, rgb, wear, marks, lu, lv, M.PX)
+                patches.append((i, name, dict(rgb=rgb, s=sp, n=nm)))
+    finally:
+        M.PX = old
+    return patches
+
+
 def write_texture(m, lk, wear, seed, name):
-    patches = M.paint_model(m, lk, wear, seed)
-    img, uvs, T = M.pack(patches)
-    path = ASSETS / f'textures/item/weapon/{name}.png'
-    path.parent.mkdir(parents=True, exist_ok=True)
-    M.save_png(img, path)
+    patches = paint_melee(m, lk, wear, seed, MELEE_PBR[m.name])
+    img, uvs, T = kit.pack(patches)
+    kit.save_textures(img, ASSETS / f'textures/item/weapon/{name}.png')
     return uvs, T
 
 
