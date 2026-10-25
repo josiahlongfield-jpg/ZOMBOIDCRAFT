@@ -39,30 +39,45 @@ public final class Cars {
         // Loading the class registers the entity and the block.
     }
 
-    /** A hull block as tall as the given number of sixteenths, 1 to 16. */
-    public static BlockState hull(int sixteenths) {
-        return HULL.defaultBlockState().setValue(CarHull.HEIGHT, Mth.clamp(sixteenths, 1, 16));
+    /** A hull block from a code packing its four quarter heights (0-4 each) in base 5, north-west first. */
+    public static BlockState hull(int code) {
+        BlockState state = HULL.defaultBlockState();
+        for (int q = 0; q < 4; q++) {
+            state = state.setValue(CarHull.QUARTERS.get(q), CarHull.level(code, q));
+        }
+        return state;
     }
 
     /**
      * The columns under a car standing at (x, z) and turned to yaw (Minecraft's: 0 faces south):
-     * {block x, block z, body height in centimetres} for every column it covers.
+     * {block x, block z, then the body height in centimetres over each quarter of the block,
+     * north-west, north-east, south-west, south-east} for every column it covers. A quarter counts
+     * the car's height over at least two of its four sample points, so the hull stays inside the
+     * body's outline rather than spilling past its corners.
      */
     public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw) {
         List<int[]> out = new ArrayList<>();
         double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
         double reach = Math.hypot(model.size[0], model.size[2]) / 2 + 0.5;
+        float[] samples = new float[4];
         for (int bx = Mth.floor(x - reach); bx <= Mth.floor(x + reach); bx++) {
             for (int bz = Mth.floor(z - reach); bz <= Mth.floor(z + reach); bz++) {
-                float top = 0;
-                for (int i = 0; i < 4; i++) {
-                    for (int k = 0; k < 4; k++) {
-                        double dx = bx + 0.125 + i * 0.25 - x, dz = bz + 0.125 + k * 0.25 - z;
-                        top = Math.max(top, model.heightAt(dx * cos - dz * sin, dx * sin + dz * cos));
+                int[] col = {bx, bz, 0, 0, 0, 0};
+                boolean any = false;
+                for (int q = 0; q < 4; q++) {
+                    for (int s = 0; s < 4; s++) {
+                        double dx = bx + (q & 1) * 0.5 + 0.125 + (s & 1) * 0.25 - x;
+                        double dz = bz + (q >> 1) * 0.5 + 0.125 + (s >> 1) * 0.25 - z;
+                        samples[s] = model.heightAt(dx * cos - dz * sin, dx * sin + dz * cos);
+                    }
+                    java.util.Arrays.sort(samples);
+                    if (samples[2] > 0.15f) {
+                        col[2 + q] = Math.round(samples[2] * 100);
+                        any = true;
                     }
                 }
-                if (top > 0.15f) {
-                    out.add(new int[] {bx, bz, Math.round(top * 100)});
+                if (any) {
+                    out.add(col);
                 }
             }
         }
@@ -85,12 +100,24 @@ public final class Cars {
         return y;
     }
 
-    /** One column's hull blocks from the ground up: sixteenths for each layer, 16 for full ones. */
-    public static int[] layers(int centimetres) {
-        int n = (centimetres + 99) / 100;
+    /**
+     * One column's hull blocks from the ground up, as hull() codes: each quarter's height above
+     * the block's floor, less lift centimetres (the gap between the ground and the first block).
+     */
+    public static int[] layers(int[] column, int lift) {
+        int top = 0;
+        for (int q = 0; q < 4; q++) {
+            top = Math.max(top, column[2 + q] - lift);
+        }
+        int n = Math.max(0, (top + 99) / 100);
         int[] out = new int[n];
         for (int i = 0; i < n; i++) {
-            out[i] = Mth.clamp((int) Math.ceil(Math.min(100, centimetres - i * 100) * 16 / 100.0), 1, 16);
+            int code = 0;
+            for (int q = 3; q >= 0; q--) {
+                int cm = Mth.clamp(column[2 + q] - lift - i * 100, 0, 100);
+                code = code * 5 + (cm + 12) / 25;
+            }
+            out[i] = code;
         }
         return out;
     }
@@ -133,8 +160,11 @@ public final class Cars {
             int base = Mth.ceil(y - 0.05);
             int lift = (int) Math.round((base - y) * 100);
             for (int[] col : hullColumns(m, x, z, yaw)) {
-                int[] layers = layers(col[2] - lift);
+                int[] layers = layers(col, lift);
                 for (int i = 0; i < layers.length; i++) {
+                    if (layers[i] == 0) {
+                        continue;
+                    }
                     BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                     if (level.getBlockState(pos).canBeReplaced()) {
                         level.setBlock(pos, hull(layers[i]), 2);
@@ -153,7 +183,7 @@ public final class Cars {
         }
         int base = Mth.floor(car.getY() + 0.01);
         for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
-            for (int i = 0; i < layers(col[2]).length; i++) {
+            for (int i = 0; i <= 5; i++) {
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                 if (level.getBlockState(pos).is(HULL)) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
