@@ -38,6 +38,9 @@ public final class Carry {
 
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(Carry::tick);
+        // load the patched classes now, so a mixin that no longer fits fails the server smoke test, not a player
+        ZomboidCraft.LOGGER.debug("Carry hooks into {}, {} and {}", net.minecraft.world.inventory.InventoryMenu.class,
+                Inventory.class, Slot.class);
     }
 
     public static GearStore gear(Player player) {
