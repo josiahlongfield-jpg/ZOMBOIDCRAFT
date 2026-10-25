@@ -1,0 +1,250 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_fascia": "zomboidcraft:block/city/ext_fascia",
+    "ext_gutter": "zomboidcraft:block/city/ext_gutter",
+    "ext_gutter_top": "zomboidcraft:block/city/ext_gutter_top",
+    "ext_rake_e": "zomboidcraft:block/city/ext_rake_e",
+    "ext_rake_w": "zomboidcraft:block/city/ext_rake_w",
+    "ext_red_riser": "zomboidcraft:block/city/ext_red_riser",
+    "ext_red_tread": "zomboidcraft:block/city/ext_red_tread",
+    "ext_soffit": "zomboidcraft:block/city/ext_soffit",
+    "particle": "zomboidcraft:block/city/ext_soffit"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_soffit"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_rake_e",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_rake_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_fascia"
+        },
+        "south": {
+          "texture": "#ext_fascia"
+        },
+        "east": {
+          "texture": "#ext_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3.5,
+        12
+      ],
+      "to": [
+        16,
+        4.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_red_riser"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_red_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#ext_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        14
+      ],
+      "to": [
+        16,
+        4,
+        17.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_gutter"
+        },
+        "south": {
+          "texture": "#ext_gutter"
+        },
+        "east": {
+          "texture": "#ext_gutter",
+          "uv": [
+            0,
+            12,
+            3.5,
+            15
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_gutter",
+          "uv": [
+            12.5,
+            12,
+            16,
+            15
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_gutter_top",
+          "uv": [
+            0,
+            12.5,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ext_gutter",
+          "uv": [
+            0,
+            0,
+            16,
+            3.5
+          ]
+        }
+      }
+    }
+  ]
+}

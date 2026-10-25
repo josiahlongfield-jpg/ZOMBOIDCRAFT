@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_curtains_rose": "zomboidcraft:block/city/home_curtains_rose",
+    "particle": "zomboidcraft:block/city/home_curtains_rose"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_curtains_rose"
+        },
+        "south": {
+          "texture": "#home_curtains_rose"
+        },
+        "east": {
+          "texture": "#home_curtains_rose",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_curtains_rose",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_curtains_rose",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_curtains_rose",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

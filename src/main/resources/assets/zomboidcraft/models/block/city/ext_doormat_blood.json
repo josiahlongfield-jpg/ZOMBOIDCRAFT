@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_doormat_blood": "zomboidcraft:block/city/ext_doormat_blood",
+    "particle": "zomboidcraft:block/city/ext_doormat_blood"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        0.4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_doormat_blood"
+        },
+        "south": {
+          "texture": "#ext_doormat_blood"
+        },
+        "east": {
+          "texture": "#ext_doormat_blood"
+        },
+        "west": {
+          "texture": "#ext_doormat_blood"
+        },
+        "up": {
+          "texture": "#ext_doormat_blood"
+        },
+        "down": {
+          "texture": "#ext_doormat_blood",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -52,7 +52,7 @@ SOUNDS = [  # first keyword in the block's name or textures wins
 
 def textures(spec):
     if "boxes" in spec:
-        return [b[6] for b in spec["boxes"]]
+        return [t for b in spec["boxes"] for t in ([b[6]] if isinstance(b[6], str) else b[6].values())]
     t = spec["tex"]
     return [t] if isinstance(t, str) else list(t.values())
 
@@ -76,7 +76,33 @@ def boxes(spec):
         return [[0, 0, 0, 16, h, 16, {f: face_tex(spec, f) for f in DIRS}]]
     if model == "slab":
         return [[0, 0, 0, 16, 8, 16, {f: spec["tex"] for f in DIRS}]]
-    return [b[:6] + [{f: b[6] for f in DIRS}] for b in spec["boxes"]]
+    # a box's texture is one name for every face, or a dict of faces like a cube's tex
+    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}]
+            for b in spec["boxes"]]
+
+
+# the texture rectangle Minecraft picks for each face of a box (from, to in 16ths)
+AUTO_UV = {
+    "down": lambda f, t: [f[0], 16 - t[2], t[0], 16 - f[2]],
+    "up": lambda f, t: [f[0], f[2], t[0], t[2]],
+    "north": lambda f, t: [16 - t[0], 16 - t[1], 16 - f[0], 16 - f[1]],
+    "south": lambda f, t: [f[0], 16 - t[1], t[0], 16 - f[1]],
+    "west": lambda f, t: [f[2], 16 - t[1], t[2], 16 - f[1]],
+    "east": lambda f, t: [16 - t[2], 16 - t[1], 16 - f[2], 16 - f[1]],
+}
+
+
+def fit(a0, a1):
+    """Keeps one axis of a face's UVs on its sprite: a box poking out of the block (a stove's back
+    panel, a lamp's shade) would otherwise sample the neighbouring sprites in the atlas."""
+    span = a1 - a0
+    if span > 16:
+        return 0, 16
+    if a0 < 0:
+        return 0, span
+    if a1 > 16:
+        return 16 - span, 16
+    return a0, a1
 
 
 def element(b):
@@ -84,6 +110,10 @@ def element(b):
     faces = {}
     for f in DIRS:
         face = {"texture": "#" + tex[f]}
+        u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
+        if min(u0, v0) < 0 or max(u1, v1) > 16:
+            (u0, u1), (v0, v1) = fit(u0, u1), fit(v0, v1)
+            face["uv"] = [u0, v0, u1, v1]
         edge = {"north": z0 == 0, "south": z1 == 16, "west": x0 == 0, "east": x1 == 16,
                 "down": y0 == 0, "up": y1 == 16}[f]
         if edge:
@@ -174,6 +204,8 @@ def has_alpha(tex_dir, names):
 
 
 def sound(name, spec):
+    if "sound" in spec:
+        return spec["sound"]
     words = [name] + textures(spec)
     for keys, s in SOUNDS:
         if any(k in w for w in words for k in keys):
@@ -188,7 +220,7 @@ def java_line(name, spec, tex_dir):
         return f'        s("{name}", DOOR, {flag}, 0, SoundType.{s}, 3f);'
     model = spec.get("model", "cube")
     kind = {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
-    decor = model == "cross" or name in DECOR or name.startswith(DECOR_PREFIX)
+    decor = model == "cross" or spec.get("decor") or name in DECOR or name.startswith(DECOR_PREFIX)
     # partial shapes still hide what they cover (their shape is the occlusion shape); only
     # see-through pixels need the neighbours drawn behind them
     see_through = has_alpha(tex_dir, textures(spec))
@@ -203,6 +235,9 @@ def java_line(name, spec, tex_dir):
         shape = [2, 0, 2, 14, 13, 14]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
+        if name.startswith("ext_"):
+            # gutters, sills and aerials reach out of the block; their collision stays in it
+            shape = [min(16, max(0, v)) for v in shape]
     s = sound(name, spec)
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
     nums = ", ".join(f"{v:g}" for v in shape)
@@ -282,11 +317,23 @@ def main():
     lang_path = ASSETS / "lang/en_us.json"
     lang = json.loads(lang_path.read_text())
     lang = {k: v for k, v in lang.items() if not (k.startswith(f"block.{NS}.") and k[len(f"block.{NS}."):] in old)}
-    for name in blocks:
-        lang[f"block.{NS}.{name}"] = title(name)
+    for name, spec in blocks.items():
+        lang[f"block.{NS}.{name}"] = spec.get("title") or title(name)
     lang[f"itemGroup.{NS}.city"] = "ZomboidCraft City"
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + "\n")
 
+    # a method's bytecode is capped at 64 KB, so the blocks go in parts: each call costs about
+    # 40 bytes and each of its box numbers about 9 more; a part stops well short of the cap
+    parts, size = [[]], 0
+    for line in lines:
+        cost = 40 + 9 * line.count(",")
+        if parts[-1] and size + cost > 36000:
+            parts.append([])
+            size = 0
+        parts[-1].append(line)
+        size += cost
+    calls = "".join(f"        part{i}();\n" for i in range(len(parts)))
+    bodies = "".join(f"\n    private void part{i}() {{\n" + "\n".join(p) + "\n    }\n" for i, p in enumerate(parts))
     JAVA.write_text(f"""package com.zomboidcraft.world.blocks;
 
 import net.minecraft.world.level.block.SoundType;
@@ -294,9 +341,8 @@ import net.minecraft.world.level.block.SoundType;
 /** Generated by tools/city/gen_blocks.py from tools/city/blocks.json; don't edit by hand. */
 final class CitySpecs extends CityBlocks.Specs {{
     CitySpecs() {{
-{chr(10).join(lines)}
-    }}
-}}
+{calls}    }}
+{bodies}}}
 """)
     import heightmap_tags
     print(f"{len(blocks)} blocks, {len(used)} textures, {heightmap_tags.write()} stop rain")

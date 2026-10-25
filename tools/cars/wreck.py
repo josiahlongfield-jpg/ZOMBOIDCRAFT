@@ -775,6 +775,7 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
     uv = car.uvpx[keep] / np.array([W, H])
     wheel, wheels = wheel_groups(car, P, keep)
     tris, lid, wheel, glass = P[keep], lid[keep], wheel[keep], (car.cls == 'glass')[keep]
+    origin = np.where(keep)[0]  # each kept triangle's index in the source model
     full = 0.0 if v['burnt'] else {'usable': 0.8}.get(vname, 0.55)
     stuff = [piece for room in spaces for piece in contents(room, theme, rng, full)]
     if stuff:
@@ -791,10 +792,11 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
         lid = np.concatenate([lid, np.full(len(add), -1)])
         wheel = np.concatenate([wheel, np.full(len(add), -1)])
         glass = np.concatenate([glass, np.zeros(len(add), bool)])
+        origin = np.concatenate([origin, np.full(len(add), -1)])
     colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
     specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
     return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'wheel': wheel, 'wheels': wheels, 'glass': glass,
-            'colour': colour, 'specular': specular}
+            'origin': origin, 'colour': colour, 'specular': specular}
 
 
 def make_variant(car, vname, seed, out_dir, opened=0.0):

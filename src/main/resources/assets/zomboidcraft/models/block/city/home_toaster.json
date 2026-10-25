@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "home_toaster": "zomboidcraft:block/city/home_toaster",
+    "particle": "zomboidcraft:block/city/home_toaster"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        7
+      ],
+      "to": [
+        12,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_toaster"
+        },
+        "south": {
+          "texture": "#home_toaster"
+        },
+        "east": {
+          "texture": "#home_toaster"
+        },
+        "west": {
+          "texture": "#home_toaster"
+        },
+        "up": {
+          "texture": "#home_toaster"
+        },
+        "down": {
+          "texture": "#home_toaster",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        2,
+        9
+      ],
+      "to": [
+        12.5,
+        3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

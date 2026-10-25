@@ -194,3 +194,32 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | car.crash | [Clank Car Crash Collision](https://freesound.org/people/qubodup/sounds/151624/) | qubodup | CC0 1.0 |
 | car.door.open | [Car Door open and close 3.wav](https://freesound.org/people/NachtmahrTV/sounds/556690/) | NachtmahrTV | CC0 1.0 |
 | car.door.close | [Car_Door-open-close.aif](https://freesound.org/people/nmscher/sounds/86232/) | nmscher | CC0 1.0 |
+
+## Pistol and shotgun sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_gun2_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.pistol.shot, weapon.pistol.shot_distant | [9mm pistol shot](https://freesound.org/people/michorvath/sounds/427592/) | michorvath | CC0 1.0 |
+| weapon.pistol.dry, weapon.shotgun.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.pistol.mag_out | [Magazine Insert](https://freesound.org/people/brianhanson2nd/sounds/171209/) | brianhanson2nd | CC0 1.0 |
+| weapon.pistol.mag_in | [Handgun / Pistol Removing Mag and Inserting Mag Foley](https://freesound.org/people/e9118586020/sounds/456195/) | e9118586020 | CC0 1.0 |
+| weapon.pistol.slide | [1911 Reload](https://freesound.org/people/nioczkus/sounds/396331/) | nioczkus | CC0 1.0 |
+| weapon.shotgun.shot | [shotgun shoot](https://freesound.org/people/MrGungus/sounds/773873/) | MrGungus | CC0 1.0 |
+| weapon.shotgun.shot_distant | SPAS-12 - FIRING - Pump Action - Take 1 - 20m In Front - AB - MKH8020 (Pole Position - Franchi SPAS-12 Combat Shotgun) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.shotgun.pump | [Remington 870 12 gauge shotgun pump racking cha chock](https://freesound.org/people/TotallyPhilip/sounds/755495/) | TotallyPhilip | CC0 1.0 |
+| weapon.shotgun.shell_in | [shell load.ogg](https://freesound.org/people/CeebFrack/sounds/108793/) | CeebFrack | CC0 1.0 |
+
+## Hunting rifle sounds
+
+CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_hunting_rifle_sounds.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.hunting_rifle.shot | [Sauer 404 close shot.wav](https://freesound.org/people/moosegravy/sounds/431834/) | moosegravy | CC0 1.0 |
+| weapon.hunting_rifle.shot_distant | [Distant Gunshot](https://freesound.org/people/Resaural/sounds/541164/) | Resaural | CC0 1.0 |
+| weapon.hunting_rifle.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |

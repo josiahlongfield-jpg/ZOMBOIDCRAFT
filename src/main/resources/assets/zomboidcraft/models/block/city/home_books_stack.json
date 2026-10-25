@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_book_spines": "zomboidcraft:block/city/home_book_spines",
+    "particle": "zomboidcraft:block/city/home_book_spines"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines"
+        },
+        "south": {
+          "texture": "#home_book_spines"
+        },
+        "east": {
+          "texture": "#home_book_spines"
+        },
+        "west": {
+          "texture": "#home_book_spines"
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2,
+        3.5
+      ],
+      "to": [
+        12.5,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines"
+        },
+        "south": {
+          "texture": "#home_book_spines"
+        },
+        "east": {
+          "texture": "#home_book_spines"
+        },
+        "west": {
+          "texture": "#home_book_spines"
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        4,
+        5
+      ],
+      "to": [
+        12,
+        5.5,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines"
+        },
+        "south": {
+          "texture": "#home_book_spines"
+        },
+        "east": {
+          "texture": "#home_book_spines"
+        },
+        "west": {
+          "texture": "#home_book_spines"
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        0.5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_book_spines"
+        },
+        "south": {
+          "texture": "#home_book_spines"
+        },
+        "east": {
+          "texture": "#home_book_spines"
+        },
+        "west": {
+          "texture": "#home_book_spines"
+        },
+        "up": {
+          "texture": "#home_book_spines"
+        },
+        "down": {
+          "texture": "#home_book_spines",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

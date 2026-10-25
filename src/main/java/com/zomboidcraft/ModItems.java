@@ -2,6 +2,7 @@ package com.zomboidcraft;
 
 import com.zomboidcraft.barricade.HammerItem;
 import com.zomboidcraft.combat.AttachmentItem;
+import com.zomboidcraft.combat.CaseItem;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunSlotData;
 import com.zomboidcraft.combat.GunState;
@@ -60,6 +61,9 @@ public final class ModItems {
     public static final Item PISTOL_AMMO = register("pistol_ammo", Item::new, new Item.Properties().stacksTo(60));
     public static final Item SHOTGUN = gun("shotgun", GunType.SHOTGUN, 1400);
     public static final Item SHOTGUN_SHELL = register("shotgun_shell", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item HUNTING_RIFLE = gun("hunting_rifle", GunType.HUNTING_RIFLE, 1800);
+    public static final Item HUNTING_RIFLE_MAGAZINE = magazine("hunting_rifle_magazine", GunType.HUNTING_RIFLE);
+    public static final Item HUNTING_RIFLE_AMMO = register("hunting_rifle_ammo", Item::new, new Item.Properties().stacksTo(40));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -97,6 +101,15 @@ public final class ModItems {
     public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
     public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
 
+    // Gun cases and an ammo can: carried in the off hand, packed when found (combat/CaseItem).
+    public static final Item RIFLE_CASE = gunCase("rifle_case", CaseItem.Kind.RIFLE, com.zomboidcraft.carry.BagSpec.RIFLE_CASE);
+    public static final Item PISTOL_CASE = gunCase("pistol_case", CaseItem.Kind.PISTOL, com.zomboidcraft.carry.BagSpec.PISTOL_CASE);
+    public static final Item AMMO_CAN = gunCase("ammo_can", CaseItem.Kind.AMMO, com.zomboidcraft.carry.BagSpec.AMMO_CAN);
+
+    private static Item gunCase(String name, CaseItem.Kind kind, com.zomboidcraft.carry.BagSpec spec) {
+        return register(name, properties -> new CaseItem(kind, spec, properties), new Item.Properties());
+    }
+
     private static Item bag(String name, com.zomboidcraft.carry.BagSpec spec) {
         return register(name, properties -> new com.zomboidcraft.carry.BagItem(spec, properties), new Item.Properties());
     }
@@ -123,14 +136,14 @@ public final class ModItems {
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 output.accept(gun);
                 if (type.magazine() == null) {
-                    output.accept(new ItemStack(type.ammo(), 25));
-                    continue;
+                    continue;   // its shells are already in the tab (a creative tab only takes single items)
                 }
                 ItemStack mag = new ItemStack(type.magazine());
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
                 output.accept(mag);
                 ItemStack kitted = gun.copy();
                 for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                        : type == GunType.HUNTING_RIFLE ? List.of(SCOPE_4X, RIFLE_SUPPRESSOR)
                         : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));
                 }

@@ -1,0 +1,122 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "particle": "zomboidcraft:block/city/ext_alu"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        -12,
+        5.5
+      ],
+      "to": [
+        10.5,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu",
+          "uv": [
+            5.5,
+            0,
+            10.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "uv": [
+            5.5,
+            0,
+            10.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            5.5,
+            0,
+            10.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            5.5,
+            0,
+            10.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        -12,
+        4.5
+      ],
+      "to": [
+        11.5,
+        -11,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    }
+  ]
+}

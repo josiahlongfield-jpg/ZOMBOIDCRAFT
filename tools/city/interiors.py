@@ -829,6 +829,8 @@ def main():
     kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("store_", "floor_checker", "floor_lino", "floor_boards"))}
     kept.update(blocks())
     for name, spec in kept.items():
+        if name.startswith("home_"):  # the house kit sets its own (tools/city/furniture.py)
+            continue
         spec.pop("loot", None)
         if name in LOOT:
             spec["loot"] = LOOT[name]

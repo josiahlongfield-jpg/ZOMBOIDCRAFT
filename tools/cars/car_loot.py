@@ -37,7 +37,7 @@ TABLES = {
         (f"{ZC}:pistol", 2, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun", 3, 1, 1, worn(.1, .6)), (f"{ZC}:shotgun_shell", 6, 4, 12),
         ("iron_chestplate", 2, 1, 1, worn(.2, .7)), ("iron_helmet", 2, 1, 1, worn(.2, .7)), (f"{ZC}:bandage", 5, 1, 3),
         ("shield", 2, 1, 1, worn()), ("lead", 2, 1, 1), ("paper", 4, 1, 3), ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1),
-        ("potion", 3, 1, 1, WATER), ("-", 6, 1, 1)]),
+        ("potion", 3, 1, 1, WATER), (f"{ZC}:pistol_case", 1, 1, 1), (f"{ZC}:ammo_can", 1, 1, 1), ("-", 6, 1, 1)]),
     # the back of a SWAT van: rare, and the best gear on the street
     "swat": ((3, 6), [
         (f"{ZC}:assault_rifle", 3, 1, 1, worn(0, .4)), (f"{ZC}:rifle_magazine", 6, 1, 2, rounds(30)),
@@ -46,7 +46,7 @@ TABLES = {
         ("iron_chestplate", 4, 1, 1, worn(0, .4)), ("iron_helmet", 4, 1, 1, worn(0, .4)),
         ("iron_leggings", 3, 1, 1, worn(0, .4)), ("iron_boots", 3, 1, 1, worn(0, .4)), ("shield", 3, 1, 1),
         (f"{ZC}:bandage", 4, 1, 3), ("potion", 2, 1, 1, potion("healing")), (f"{ZC}:crowbar", 2, 1, 1),
-        (f"{ZC}:sledgehammer", 1, 1, 1), ("spyglass", 1, 1, 1)]),
+        (f"{ZC}:sledgehammer", 1, 1, 1), ("spyglass", 1, 1, 1), (f"{ZC}:rifle_case", 2, 1, 1), (f"{ZC}:ammo_can", 3, 1, 1)]),
     # the back of an ambulance: medicine, rare and plenty of it
     "ambulance": ((3, 7), [
         (f"{ZC}:bandage", 14, 2, 6), (f"{ZC}:splint", 5, 1, 2), ("potion", 5, 1, 2, potion("healing")), ("potion", 3, 1, 1, potion("regeneration")),
@@ -66,7 +66,8 @@ TABLES = {
 
 # a rare find on top
 RARE = {
-    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:machete", 1), (f"{ZC}:katana", 1)],
+    "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:hunting_rifle", 1),
+              (f"{ZC}:machete", 1), (f"{ZC}:katana", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:pistol_case", 2), (f"{ZC}:ammo_can", 1)],
     "police": [(f"{ZC}:assault_rifle", 2)],
     "swat": [("totem_of_undying", 1), ("diamond_chestplate", 1)],
     "ambulance": [("totem_of_undying", 1), ("enchanted_golden_apple", 1)],

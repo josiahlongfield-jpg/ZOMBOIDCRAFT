@@ -1,0 +1,178 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_enamel": "zomboidcraft:block/city/home_enamel",
+    "home_stove_front": "zomboidcraft:block/city/home_stove_front",
+    "home_stove_panel": "zomboidcraft:block/city/home_stove_panel",
+    "home_stove_top": "zomboidcraft:block/city/home_stove_top",
+    "particle": "zomboidcraft:block/city/home_enamel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_enamel"
+        },
+        "south": {
+          "texture": "#home_enamel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_enamel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_enamel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_enamel"
+        },
+        "down": {
+          "texture": "#home_enamel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0.5
+      ],
+      "to": [
+        16,
+        14,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stove_front"
+        },
+        "south": {
+          "texture": "#home_stove_front"
+        },
+        "east": {
+          "texture": "#home_stove_front",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stove_front",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stove_front"
+        },
+        "down": {
+          "texture": "#home_stove_front",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stove_top",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_stove_top",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_stove_top",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stove_top",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stove_top"
+        },
+        "down": {
+          "texture": "#home_stove_top"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        14.5
+      ],
+      "to": [
+        16,
+        19,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_stove_panel",
+          "uv": [
+            0,
+            0,
+            16,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#home_stove_panel",
+          "uv": [
+            0,
+            0,
+            16,
+            4
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_stove_panel",
+          "uv": [
+            0,
+            0,
+            1.5,
+            4
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_stove_panel",
+          "uv": [
+            14.5,
+            0,
+            16,
+            4
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_stove_panel"
+        },
+        "down": {
+          "texture": "#home_stove_panel"
+        }
+      }
+    }
+  ]
+}

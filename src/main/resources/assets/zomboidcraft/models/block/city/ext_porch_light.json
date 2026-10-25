@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "ext_glass_dark": "zomboidcraft:block/city/ext_glass_dark",
+    "particle": "zomboidcraft:block/city/ext_black_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        13,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        5.5
+      ],
+      "to": [
+        10.5,
+        13,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_glass_dark"
+        },
+        "south": {
+          "texture": "#ext_glass_dark"
+        },
+        "east": {
+          "texture": "#ext_glass_dark"
+        },
+        "west": {
+          "texture": "#ext_glass_dark"
+        },
+        "up": {
+          "texture": "#ext_glass_dark"
+        },
+        "down": {
+          "texture": "#ext_glass_dark"
+        }
+      }
+    }
+  ]
+}

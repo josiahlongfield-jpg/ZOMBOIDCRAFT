@@ -36,7 +36,32 @@ public final class ZcConfig {
     public GunStats pistol = GunStats.pistol();
     /** The pump shotgun's own numbers, with its pellets. */
     public ShotgunStats shotgun = new ShotgunStats();
+    /** The bolt-action hunting rifle's own numbers. */
+    public GunStats huntingRifle = GunStats.huntingRifle();
     public Carry carry = new Carry();
+    /** What a gun case or an ammo can has in it when it's found shut. */
+    public Cases cases = new Cases();
+
+    public static class Cases {
+        /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
+        public boolean packed = true;
+        /** How often a rifle case holds each long gun, against the others. */
+        public int assaultRifleWeight = 4;
+        public int huntingRifleWeight = 4;
+        public int shotgunWeight = 3;
+        /** Most of a packed gun's durability that's already worn off, as a fraction. */
+        public double maxWear = 0.17;
+        /** Chance someone left a part on: a 4x scope on the hunting rifle, a red dot on the rifle, a light on the pistol. */
+        public double scopeChance = 0.4;
+        public double redDotChance = 0.2;
+        public double lightChance = 0.15;
+        /** Most magazines packed with a long gun (a pistol case has one). */
+        public int maxMagazines = 2;
+        /** Chance each packed magazine is full; otherwise it holds anything from none to full. */
+        public double fullMagazineChance = 0.5;
+        /** Chance an ammo can holds a second calibre. */
+        public double secondCalibreChance = 0.35;
+    }
 
     public static class Carry {
         /** Only a few main-inventory slots are pockets; bags carry the rest. Creative ignores it. */
@@ -268,7 +293,7 @@ public final class ZcConfig {
 
     /**
      * One gun's own numbers. The assault rifle's sit in guns, beside the settings every gun shares; every other
-     * gun has a group of its own (pistol, shotgun).
+     * gun has a group of its own (pistol, shotgun, huntingRifle).
      */
     public static class GunStats {
         /** Damage per bullet (zombies have 20 health). */
@@ -299,6 +324,25 @@ public final class ZcConfig {
             s.aimZoom = 0.88;
             s.range = 60.0;
             s.magazineSize = 15;
+            return s;
+        }
+
+        /**
+         * The .308 bolt action: one hard-hitting, accurate round, a heavy kick, heard a long way off; its time between
+         * shots covers working the bolt (lifted, back, home and down, then the hand back on the stock).
+         */
+        static GunStats huntingRifle() {
+            GunStats s = new GunStats();
+            s.damage = 30.0;
+            s.headshotMultiplier = 3.0;
+            s.hipSpread = 3.5;
+            s.aimSpread = 0.12;
+            s.recoil = 2.6;
+            s.shotNoise = 140.0;
+            s.aimZoom = 0.80;
+            s.range = 200.0;
+            s.fireDelayTicks = 25;     // never less than the bolt takes to work (GunType.fireDelay)
+            s.magazineSize = 5;
             return s;
         }
     }

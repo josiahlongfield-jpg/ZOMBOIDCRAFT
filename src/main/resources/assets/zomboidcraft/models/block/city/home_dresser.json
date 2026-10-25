@@ -1,0 +1,240 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_ceramic": "zomboidcraft:block/city/home_ceramic",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_dresser": "zomboidcraft:block/city/home_dresser",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "particle": "zomboidcraft:block/city/home_wood_walnut"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1.5
+      ],
+      "to": [
+        16,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_dresser"
+        },
+        "south": {
+          "texture": "#home_dresser"
+        },
+        "east": {
+          "texture": "#home_dresser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_dresser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_dresser"
+        },
+        "down": {
+          "texture": "#home_dresser",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        1
+      ],
+      "to": [
+        16,
+        13.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_walnut"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_walnut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13.5,
+        9
+      ],
+      "to": [
+        6,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark"
+        },
+        "west": {
+          "texture": "#home_wood_dark"
+        },
+        "up": {
+          "texture": "#home_wood_dark",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        13.5,
+        10
+      ],
+      "to": [
+        11,
+        15.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        13.5,
+        9.5
+      ],
+      "to": [
+        13,
+        16.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_ceramic",
+          "uv": [
+            3,
+            0,
+            4,
+            3.0
+          ]
+        },
+        "south": {
+          "texture": "#home_ceramic",
+          "uv": [
+            12,
+            0,
+            13,
+            3.0
+          ]
+        },
+        "east": {
+          "texture": "#home_ceramic",
+          "uv": [
+            5.5,
+            0,
+            6.5,
+            3.0
+          ]
+        },
+        "west": {
+          "texture": "#home_ceramic",
+          "uv": [
+            9.5,
+            0,
+            10.5,
+            3.0
+          ]
+        },
+        "up": {
+          "texture": "#home_ceramic"
+        },
+        "down": {
+          "texture": "#home_ceramic"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_picture_lake": "zomboidcraft:block/city/home_picture_lake",
+    "particle": "zomboidcraft:block/city/home_picture_lake"
+  },
+  "elements": [
+    {
+      "from": [
+        1.25,
+        4.25,
+        0
+      ],
+      "to": [
+        14.75,
+        13.75,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_picture_lake",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_picture_lake"
+        },
+        "east": {
+          "texture": "#home_picture_lake"
+        },
+        "west": {
+          "texture": "#home_picture_lake"
+        },
+        "up": {
+          "texture": "#home_picture_lake"
+        },
+        "down": {
+          "texture": "#home_picture_lake"
+        }
+      }
+    }
+  ]
+}

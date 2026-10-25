@@ -36,6 +36,19 @@ public final class ModSounds {
     public static final SoundEvent SHOTGUN_DRY = register("weapon.shotgun.dry");
     public static final SoundEvent SHOTGUN_PUMP = register("weapon.shotgun.pump");
     public static final SoundEvent SHOTGUN_SHELL_IN = register("weapon.shotgun.shell_in");
+    /**
+     * The hunting rifle: a .308's hard crack heard out to 176 blocks, and its bolt worked through, lift to lock (about
+     * a third of a second).
+     */
+    public static final SoundEvent HUNTING_RIFLE_SHOT = register("weapon.hunting_rifle.shot");
+    public static final SoundEvent HUNTING_RIFLE_SHOT_DISTANT = register("weapon.hunting_rifle.shot_distant", 176f);
+    /** Through a suppressor: a .308 is still a heavy thump, heard out to 48 blocks. */
+    public static final SoundEvent HUNTING_RIFLE_SHOT_SUPPRESSED = register("weapon.hunting_rifle.shot_suppressed");
+    public static final SoundEvent HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.hunting_rifle.shot_suppressed_distant", 48f);
+    public static final SoundEvent HUNTING_RIFLE_DRY = register("weapon.hunting_rifle.dry");
+    public static final SoundEvent HUNTING_RIFLE_MAG_OUT = register("weapon.hunting_rifle.mag_out");
+    public static final SoundEvent HUNTING_RIFLE_MAG_IN = register("weapon.hunting_rifle.mag_in");
+    public static final SoundEvent HUNTING_RIFLE_BOLT = register("weapon.hunting_rifle.bolt");
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");

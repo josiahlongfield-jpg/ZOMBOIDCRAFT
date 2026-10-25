@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_duvet_blue": "zomboidcraft:block/city/home_duvet_blue",
+    "home_mattress_stained": "zomboidcraft:block/city/home_mattress_stained",
+    "particle": "zomboidcraft:block/city/home_mattress_stained"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_mattress_stained",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_mattress_stained",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_mattress_stained"
+        },
+        "west": {
+          "texture": "#home_mattress_stained"
+        },
+        "up": {
+          "texture": "#home_mattress_stained"
+        },
+        "down": {
+          "texture": "#home_mattress_stained",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2.5,
+        5
+      ],
+      "to": [
+        14,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_duvet_blue"
+        },
+        "south": {
+          "texture": "#home_duvet_blue"
+        },
+        "east": {
+          "texture": "#home_duvet_blue"
+        },
+        "west": {
+          "texture": "#home_duvet_blue"
+        },
+        "up": {
+          "texture": "#home_duvet_blue"
+        },
+        "down": {
+          "texture": "#home_duvet_blue"
+        }
+      }
+    }
+  ]
+}

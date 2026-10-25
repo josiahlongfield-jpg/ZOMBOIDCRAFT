@@ -34,7 +34,9 @@ import org.joml.Vector3f;
  * works the charging handle (a pistol's slide) on an empty gun, and the player's own arms hold it (see
  * {@link RifleArms}). A pistol's slide runs back with every shot and locks open on the last one. A pump shotgun
  * is canted over to load, and the off hand pushes its shells into the loading port one at a time, then rides the
- * pump to work it after each shot. Each gun's numbers are its {@link GunRig}.
+ * pump to work it after each shot. A bolt gun's shooting hand leaves the stock after each shot to work the bolt (lift,
+ * back, home, down) and goes back to it, and does the same after a fresh magazine on an empty gun. Each gun's numbers
+ * are its {@link GunRig}.
  *
  * The item model still picks a pose for each reload step, so third person and other views stay right. Here the
  * pose stack the game draws it with is corrected from the pose the model applies to the one the animation wants.
@@ -111,6 +113,7 @@ public final class RifleView {
             aim = aimO = 0;
             hadMag = false;
             shotEmptied = false;
+            shotAt = -100;          // a shot from the last gun mustn't work this one's bolt or pump
             point = pointO = 0;
         }
         if (now == null) {
@@ -222,7 +225,9 @@ public final class RifleView {
             return piecewise(t, new float[] {type.jamClear, type.charge, type.chargeDone}, new float[] {JAM_START, CHARGE, END_CHARGE});
         }
         if (charge) {
-            return piecewise(t, new float[] {0, type.magIn, type.charge, type.chargeDone}, new float[] {0, MAG_IN, CHARGE, END_CHARGE});
+            // a bolt is worked at its own pace (in step with its recording), so its end isn't squeezed to the rifle's
+            float end = rig.bolt() ? CHARGE + type.chargeDone - type.charge : END_CHARGE;
+            return piecewise(t, new float[] {0, type.magIn, type.charge, type.chargeDone}, new float[] {0, MAG_IN, CHARGE, end});
         }
         return piecewise(t, new float[] {0, type.magIn, type.tacticalDone}, new float[] {0, MAG_IN, END_TACTICAL});
     }
@@ -302,12 +307,23 @@ public final class RifleView {
             a = 0;
         }
         Pose want = animate ? rig.pump() ? tubePose(age) : reloadPose(t) : step >= 1 ? shown : hip(0, 0, 0);
+        // a bolt worked after a shot: the gun rolled port up and turned in a little while the hand is on it
+        float bolt = rig.bolt() ? boltTime(t, animate, age) : -1;
+        float work = bolt >= 0 && !animate && step == 0 ? boltWork(bolt) : 0;
+        if (work > 0) {
+            float[] c = rig.charge();
+            want = worked(hip(c[0] * work, c[1] * work, bump(bolt, BOLT_HOME, 2.5f) * 1.2f), work);
+        }
         float p = smooth(Mth.lerp(partial(age), pointO, point));
         if (p > 0) {
             want = pointed(want, p, Attachments.laserOn(gun) ? rig.laser() : rig.light());
         }
         if (a > 0 && step == 0) {
             want = want.lerp(sights, a);
+            if (work > 0) {
+                // on the sights it comes off the cheek a little, so the bolt clears the eye
+                want = turned(want, BOLT_ADS_TURN, BOLT_ADS_PUSH, work * a);
+            }
         }
         aimShown = step == 0 ? a : 0;
 
@@ -326,7 +342,7 @@ public final class RifleView {
 
         // the model leaves the handle, slide or pump to us in first person
         float pulled = pull(gun, t, animate, age);
-        drawHandle(pose, out, light, player, want, pulled);
+        drawHandle(pose, out, light, player, want, bolt >= 0 ? boltLocal(bolt) : new Matrix4f().translation(0, 0, pulled));
         drawFlash(pose, out, player, want, gun, age);
         Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
         rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
@@ -342,6 +358,9 @@ public final class RifleView {
                     : rig.pump() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
             Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
                     : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
+            if (bolt >= 0) {
+                right = boltHand(want, bolt, right);
+            }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
         }
@@ -404,9 +423,10 @@ public final class RifleView {
         }
     }
 
-    private static void drawHandle(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun, float pull) {
+    private static void drawHandle(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,
+                                   Matrix4f local) {
         pose.pushPose();
-        drawPiece(pose, out, light, player, gun, new Matrix4f().translation(0, 0, pull), LOOSE_HANDLE);
+        drawPiece(pose, out, light, player, gun, local, LOOSE_HANDLE);
         pose.popPose();
     }
 
@@ -506,9 +526,12 @@ public final class RifleView {
      * open on an empty gun until the slide is racked, and run back by each shot.
      */
     private static float pull(ItemStack gun, float t, boolean animate, float age) {
+        if (rig.bolt()) {
+            return 0;       // a bolt turns as well as runs back: see boltLocal
+        }
         if (rig.pump()) {
             // worked after each shot, and to chamber a shell after loading onto an empty gun
-            float shot = pumpStroke(age - shotAt - (type.pumpAfterShot - 0.5f));
+            float shot = pumpStroke(age - shotAt - (type.cycleAfterShot - 0.5f));
             return animate && pumpFrom >= 0 ? Math.max(shot, pumpStroke(age - pumpFrom - PUMP_START)) : shot;
         }
         float travel = rig.handleTravel();
@@ -544,7 +567,10 @@ public final class RifleView {
             chg = smooth01(t, JAM_START, CHARGE) * (1 - smooth01(t, 26, 33));
         } else {
             float in = smooth01(t, 0, 5);
-            if (charge) {
+            if (charge && rig.bolt()) {
+                out = in * (1 - smooth01(t, 17, CHARGE));
+                chg = boltWork(t - BOLT_RELOAD);
+            } else if (charge) {
                 float over = smooth01(t, 17, CHARGE);
                 out = in * (1 - over);
                 chg = over * (1 - smooth01(t, 26, 33));
@@ -555,7 +581,8 @@ public final class RifleView {
         }
         float[] o = rig.magOut(), c = rig.charge();
         // the magazine slapped home and the handle let go each jolt the muzzle up a little
-        float kick = bump(t, MAG_IN, 2.5f) * 3f + (charge ? bump(t, RELEASE, 2.5f) * 2f : 0);
+        float kick = bump(t, MAG_IN, 2.5f) * 3f
+                + (!charge ? 0 : rig.bolt() ? bump(t - BOLT_RELOAD, BOLT_HOME, 2.5f) * 1.2f : bump(t, RELEASE, 2.5f) * 2f);
         return worked(hip(o[0] * out + c[0] * chg, o[1] * out + c[1] * chg, kick), chg);
     }
 
@@ -588,6 +615,53 @@ public final class RifleView {
         Vector3f grip = q.transform(new Vector3f(g[0] - 8, g[1] - 8, g[2] - 8)).mul(rig.hipScale() / 16f);
         Vector3f t = new Vector3f(at[0] - ARM[0], at[1] - drop - ARM[1], at[2] - ARM[2]).sub(grip);
         return new Pose(t, q, rig.hipScale());
+    }
+
+    // ------------------------------------------------------------------ a bolt gun's bolt
+
+    // Working the bolt, in ticks: the shooting hand reaches the knob (BOLT_REACH), lifts it (to BOLT_UP), runs it back
+    // (BOLT_PULL to BOLT_BACK), pushes it home (BOLT_PUSH to BOLT_HOME), turns it down (BOLT_TURN to BOLT_DOWN) and
+    // goes back to the stock (BOLT_DONE). The server's bolt sound starts with the lift (cycleAfterShot after a shot, or
+    // at the charge step of a reload), and each move lands on its noise in the recording: the lift's click at 40 ms,
+    // the slide back to the stop at 270, forward to the round chambering at 540, the lock-down click at 760.
+    private static final float BOLT_REACH = 3, BOLT_UP = 4.2f, BOLT_PULL = 6.4f, BOLT_BACK = 8.4f, BOLT_PUSH = 11.6f,
+            BOLT_HOME = 13.9f, BOLT_TURN = 16.8f, BOLT_DOWN = 18.2f, BOLT_DONE = 21f;
+    /** When the hand sets off for the bolt in a reload onto an empty gun, in the animation's ticks. */
+    private static final float BOLT_RELOAD = CHARGE - BOLT_REACH;
+    /** On the sights, the gun comes off the cheek while the bolt is worked: turned (degrees) and pushed (blocks). */
+    private static final float[] BOLT_ADS_TURN = {6f, 4f, -10f}, BOLT_ADS_PUSH = {0.04f, -0.16f, -0.32f};
+    /** The hand on the knob: its forearm out and back to the right, the palm toward the gun. */
+    private static final Vector3f BOLT_ELBOW = new Vector3f(0.75f, -0.45f, 0.5f);
+    private static final Vector3f BOLT_PALM = new Vector3f(-1f, -0.3f, 0f);
+
+    /** Ticks into working the bolt, or -1 when it isn't being worked: after a fresh magazine on an empty gun, or a shot. */
+    private static float boltTime(float t, boolean animate, float age) {
+        float u = animate ? charge ? t - BOLT_RELOAD : -1 : age - shotAt - (type.cycleAfterShot - BOLT_REACH);
+        return u >= 0 && u < BOLT_DONE ? u : -1;
+    }
+
+    /** How far the gun is turned for the bolt (0 to 1): while the hand is on it. */
+    private static float boltWork(float u) {
+        return u < 0 ? 0 : smooth01(u, 0, BOLT_REACH) * (1 - smooth01(u, BOLT_DOWN, BOLT_DONE));
+    }
+
+    /** The bolt u ticks into its working: turned up about the bore, then run back, home, and turned down. */
+    private static Matrix4f boltLocal(float u) {
+        float lift = u < BOLT_HOME ? smooth01(u, BOLT_REACH, BOLT_UP) : 1 - smooth01(u, BOLT_TURN, BOLT_DOWN);
+        float back = u < BOLT_BACK ? smooth01(u, BOLT_PULL, BOLT_BACK) : 1 - smooth01(u, BOLT_PUSH, BOLT_HOME);
+        float[] ax = rig.boltAxis();
+        return new Matrix4f().translation(0, 0, back * rig.handleTravel())
+                .translate(ax[0], ax[1], ax[2]).rotateZ(lift * rig.boltLift() * Mth.DEG_TO_RAD).translate(-ax[0], -ax[1], -ax[2]);
+    }
+
+    /** The shooting hand: off the stock to the knob, with it through the bolt's working, and back. */
+    private static Hand boltHand(Pose gun, float u, Hand stock) {
+        float[] h = rig.handle();
+        Hand knob = new Hand(gun.point(boltLocal(u).transformPosition(new Vector3f(h[0], h[1], h[2]))), BOLT_ELBOW, BOLT_PALM);
+        if (u < BOLT_REACH) {
+            return stock.lerp(knob, smooth01(u, 0, BOLT_REACH));
+        }
+        return u < BOLT_DOWN ? knob : knob.lerp(stock, smooth01(u, BOLT_DOWN, BOLT_DONE));
     }
 
     // ------------------------------------------------------------------ a tube gun's loading and pump
@@ -813,8 +887,8 @@ public final class RifleView {
         if (!jam && t < 17.5f) {
             return onMag(gun, seated);                          // bringing it up and pushing it home
         }
-        if (!charge) {
-            return onMag(gun, seated).lerp(rest, smooth01(t, 17.5f, 23));
+        if (!charge || rig.bolt()) {
+            return onMag(gun, seated).lerp(rest, smooth01(t, 17.5f, 23));     // a bolt is the shooting hand's
         }
         // a slide locked open is taken hold of where it sits, all the way back; the hand follows pull()
         boolean locked = rig.locksBack() && !jam;

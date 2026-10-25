@@ -12,7 +12,7 @@ dump); besides cube/boxes/cross/slab they may use the vanilla shapes stairs, fen
 pane, trapdoor, log and flat.
 
 Output: OUT_DIR/mesh.json plus one <texture>.bin per texture holding, per vertex, int16 x,y,z in
-1/16 block, int8 normal (padded to 4), int16 u,v in texels and uint8 AO (padded to 4), then
+1/unit block (mesh.json's unit: 64 when the scene fits, so thin decals keep their depth, else 16), int8 normal (padded to 4), int16 u,v in texels and uint8 AO (padded to 4), then
 uint32 triangle indices.
 """
 import argparse
@@ -51,6 +51,21 @@ def face_quad(box, d):
         c = [(x1, y0, z0), (x0, y0, z0), (x0, y1, z0), (x1, y1, z0)]
         uv = [(16 - x, y) for x, y, _ in c]
     return np.array(c, float), np.array(uv, float)
+
+
+def fit_uv(uv):
+    """Keeps a model face's UVs on its texture, as gen_blocks.fit does for the game: a box
+    poking out of its block shows the nearest 16x16 of the texture."""
+    uv = uv.copy()
+    for a in (0, 1):
+        lo, hi = uv[:, a].min(), uv[:, a].max()
+        if hi - lo > 16:
+            uv[:, a] = (uv[:, a] - lo) * 16 / (hi - lo)
+        elif lo < 0:
+            uv[:, a] -= lo
+        elif hi > 16:
+            uv[:, a] -= hi - 16
+    return uv
 
 
 def rotate_pts(p, rot):
@@ -212,9 +227,11 @@ class Palette:
                 faces = []
                 for b in spec["boxes"]:
                     box, tname = b[:6], b[6]
-                    t = self.tex(tname if isinstance(tname, str) else self.tex_for(spec["tex"], "side"))
                     for d in range(6):
+                        # one texture for the box, or a dict of faces (a roof step's shingled tread)
+                        t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
+                        uv = fit_uv(uv)
                         # a face on the block's boundary hides behind a solid neighbour
                         edge = box[[3, 0, 4, 1, 5, 2][d]] == (16 if d % 2 == 0 else 0)
                         faces.append((rotate_pts(c, rot), uv, rotate_dir(d, rot), t, edge))
@@ -276,6 +293,8 @@ class Out:
 
     def write(self, out_dir, names, alpha):
         index = []
+        reach = max((np.abs(p[0]).max() for parts in self.parts for p in parts), default=0)
+        self.unit = 64 if reach * 4 < 32000 else 16
         for t, parts in enumerate(self.parts):
             if not parts:
                 continue
@@ -284,7 +303,7 @@ class Out:
             uv = np.concatenate([p[2] for p in parts]).reshape(-1, 2)
             ao = np.concatenate([p[3] for p in parts]).reshape(-1)
             nq = len(c) // 4
-            pos = np.round(c).astype("<i2")
+            pos = np.round(c * (self.unit / 16)).astype("<i2")
             nrm = np.zeros((len(n), 4), "i1")
             nrm[:, :3] = n * 127
             uvs = np.round(uv).astype("<i2")
@@ -496,7 +515,7 @@ def main():
         keep = near_col[zs, xs]
         for x, y, z in zip(xs[keep], ys[keep], zs[keep]):
             lights.append([int(x + ox), int(y), int(z + oz), base])
-    json.dump({"textures": index, "lamps": meta.get("lamps", []), "lights": lights}, open(a.out_dir / "mesh.json", "w"))
+    json.dump({"unit": out.unit, "textures": index, "lamps": meta.get("lamps", []), "lights": lights}, open(a.out_dir / "mesh.json", "w"))
 
 
 if __name__ == "__main__":

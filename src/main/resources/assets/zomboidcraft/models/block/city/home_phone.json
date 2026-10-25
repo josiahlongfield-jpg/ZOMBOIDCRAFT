@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_phone": "zomboidcraft:block/city/home_phone",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/home_phone"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        7,
+        0
+      ],
+      "to": [
+        10,
+        12,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_phone",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_phone"
+        },
+        "east": {
+          "texture": "#home_phone"
+        },
+        "west": {
+          "texture": "#home_phone"
+        },
+        "up": {
+          "texture": "#home_phone"
+        },
+        "down": {
+          "texture": "#home_phone"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        8,
+        1.5
+      ],
+      "to": [
+        9.5,
+        11.5,
+        2.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_phone"
+        },
+        "south": {
+          "texture": "#home_phone"
+        },
+        "east": {
+          "texture": "#home_phone"
+        },
+        "west": {
+          "texture": "#home_phone"
+        },
+        "up": {
+          "texture": "#home_phone"
+        },
+        "down": {
+          "texture": "#home_phone"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        2,
+        0.8
+      ],
+      "to": [
+        8.5,
+        8,
+        1.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber"
+        }
+      }
+    }
+  ]
+}

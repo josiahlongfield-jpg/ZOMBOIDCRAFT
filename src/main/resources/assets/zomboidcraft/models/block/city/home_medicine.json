@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_medicine": "zomboidcraft:block/city/home_medicine",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "particle": "zomboidcraft:block/city/home_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        13
+      ],
+      "to": [
+        13,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        12.5
+      ],
+      "to": [
+        13,
+        14,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_medicine"
+        },
+        "south": {
+          "texture": "#home_medicine"
+        },
+        "east": {
+          "texture": "#home_medicine"
+        },
+        "west": {
+          "texture": "#home_medicine"
+        },
+        "up": {
+          "texture": "#home_medicine"
+        },
+        "down": {
+          "texture": "#home_medicine"
+        }
+      }
+    }
+  ]
+}

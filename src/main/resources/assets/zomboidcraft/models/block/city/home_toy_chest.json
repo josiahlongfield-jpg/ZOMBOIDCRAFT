@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_toy_chest": "zomboidcraft:block/city/home_toy_chest",
+    "particle": "zomboidcraft:block/city/home_toy_chest"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_toy_chest"
+        },
+        "south": {
+          "texture": "#home_toy_chest"
+        },
+        "east": {
+          "texture": "#home_toy_chest"
+        },
+        "west": {
+          "texture": "#home_toy_chest"
+        },
+        "up": {
+          "texture": "#home_toy_chest"
+        },
+        "down": {
+          "texture": "#home_toy_chest",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        9,
+        2.5
+      ],
+      "to": [
+        15.5,
+        10,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_toy_chest"
+        },
+        "south": {
+          "texture": "#home_toy_chest"
+        },
+        "east": {
+          "texture": "#home_toy_chest"
+        },
+        "west": {
+          "texture": "#home_toy_chest"
+        },
+        "up": {
+          "texture": "#home_toy_chest"
+        },
+        "down": {
+          "texture": "#home_toy_chest"
+        }
+      }
+    }
+  ]
+}

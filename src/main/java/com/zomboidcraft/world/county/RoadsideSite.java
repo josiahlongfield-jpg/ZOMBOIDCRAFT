@@ -1084,7 +1084,7 @@ final class RoadsideSite extends Site {
         Homes homes = new Homes(kit);
         Homes.Mix mix = new Homes.Mix(Homes.Mix.weights(0, 0, 0, 0, 0.1, 0.9, 0, 0), 2, 0.05, 0.05, 0.1, 0.3,
                 0.45, 0.12, 0.9, false, false);
-        for (Kit.Lot lot : kit.lotsAlong(spur, 15, 18, 19, 1, 9, spur.length() + 4, 0)) {
+        for (Kit.Lot lot : kit.lotsAlong(spur, 21, 24, 19, 1, 9, spur.length() + 4, 0)) {
             homes.home(lot, mix);
         }
         // the sign and the mailboxes at the mouth of the drive, junk and a dumpster at the loop

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cellar_furnace": "zomboidcraft:block/city/cellar_furnace",
+    "home_heater": "zomboidcraft:block/city/home_heater",
+    "particle": "zomboidcraft:block/city/cellar_furnace"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cellar_furnace"
+        },
+        "south": {
+          "texture": "#home_heater"
+        },
+        "east": {
+          "texture": "#home_heater"
+        },
+        "west": {
+          "texture": "#home_heater"
+        },
+        "up": {
+          "texture": "#home_heater",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_heater",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

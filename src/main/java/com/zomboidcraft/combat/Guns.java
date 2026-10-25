@@ -49,6 +49,7 @@ import net.minecraft.world.phys.Vec3;
  * A tube gun (the pump shotgun) loads instead: step 1 while shells go in one at a time (1.5 onto an empty
  * chamber), until it's full, the shells run out or the trigger is pulled; then step 3 while the pump is worked
  * to chamber one, if it was empty. Each shot is a spread of pellets, and the pump is worked after it.
+ * A bolt gun (the hunting rifle) reloads like a magazine gun, its bolt worked at step 3, and after each shot.
  */
 public final class Guns {
     private static final int FLASH_TICKS = 2;
@@ -64,8 +65,8 @@ public final class Guns {
         boolean loadStopped;
         int stopTick;
         ItemStack loading = ItemStack.EMPTY;
-        /** When the pump is worked after a shot (game time), or -1. */
-        long pumpAt = -1;
+        /** When the pump or bolt is worked after a shot (game time), or -1; when its empty case lands. */
+        long cycleAt = -1, caseAt = -1;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -90,7 +91,7 @@ public final class Guns {
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
-        if (now - st.lastShot < stats.fireDelayTicks) {
+        if (now - st.lastShot < type.fireDelay()) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -117,7 +118,7 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        if (config.jams && !type.tube && player.getRandom().nextFloat() < 0.08f * wear * wear) {
+        if (config.jams && !type.manual() && player.getRandom().nextFloat() < 0.08f * wear * wear) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
@@ -133,8 +134,8 @@ public final class Guns {
         boolean suppressed = Attachments.suppressed(gun);
         level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
-        if (type.tube) {
-            st.pumpAt = now + type.pumpAfterShot;       // the empty hull comes out when it's pumped
+        if (type.manual()) {
+            st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
         } else {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
@@ -298,8 +299,8 @@ public final class Guns {
             return;
         }
         State st = state(player);
-        if (st.reloadTick >= 0) {
-            return;
+        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay()) {
+            return;     // already reloading, or the bolt is still being worked after a shot
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (type.tube) {
@@ -384,9 +385,9 @@ public final class Guns {
             endReload(gun, st);
         } else if (since == 1) {
             setModelData(gun, 3, 0);
-        } else if (since == 1 + type.pump / 2) {
+        } else if (since == 1 + type.cycle / 2) {
             sound(player, type.charged());
-        } else if (since >= 1 + type.pump) {
+        } else if (since >= 1 + type.cycle) {
             endReload(gun, st);
             Skills.addXp(player, Skill.AIMING, 1);
         }
@@ -450,13 +451,23 @@ public final class Guns {
             if (st.flashLeft > 0 && --st.flashLeft == 0 && GunType.isGun(gun)) {
                 setModelData(gun, -1, 0);
             }
-            if (st.pumpAt >= 0 && player.level().getGameTime() >= st.pumpAt) {
-                st.pumpAt = -1;
+            if (st.cycleAt >= 0 && player.level().getGameTime() >= st.cycleAt) {
+                st.cycleAt = -1;
                 GunType held = GunType.of(gun);
-                if (held != null && held.tube) {
+                if (held != null && held.manual()) {
                     sound(player, held.charged());
+                    // a pump throws its hull out as it's worked; a bolt's case comes out at the end of the back stroke
+                    st.caseAt = player.level().getGameTime() + (held.bolt ? GunType.CASE_OUT : 0);
+                }
+            }
+            if (st.caseAt >= 0 && player.level().getGameTime() >= st.caseAt) {
+                st.caseAt = -1;
+                GunType held = GunType.of(gun);
+                if (held != null && held.manual()) {
+                    // a shotgun hull lands with a dull plastic bounce, a rifle case with a ring
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
-                            SoundSource.PLAYERS, 0.35f, 0.6f + player.getRandom().nextFloat() * 0.15f);
+                            SoundSource.PLAYERS, held.tube ? 0.35f : 0.4f,
+                            (held.tube ? 0.6f : 0.85f) + player.getRandom().nextFloat() * 0.15f);
                 }
             }
             if (st.reloadTick < 0) {

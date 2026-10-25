@@ -1,0 +1,362 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "particle": "zomboidcraft:block/city/ext_alu"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        0,
+        7.25
+      ],
+      "to": [
+        8.75,
+        12,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        10,
+        -8
+      ],
+      "to": [
+        8.5,
+        11,
+        24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            5,
+            16,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            5,
+            16,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.5,
+            0,
+            8.5,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.5,
+            0,
+            8.5,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.0,
+        10.2,
+        -6
+      ],
+      "to": [
+        12.0,
+        10.8,
+        -5.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            15.399999999999999,
+            5.199999999999999,
+            16,
+            5.800000000000001
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            5.199999999999999,
+            0.5999999999999996,
+            5.800000000000001
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.0,
+            0,
+            12.0,
+            0.5999999999999996
+          ]
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.0,
+            15.399999999999999,
+            12.0,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2.75,
+        10.2,
+        -1
+      ],
+      "to": [
+        13.25,
+        10.8,
+        -0.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            15.399999999999999,
+            5.199999999999999,
+            16,
+            5.800000000000001
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            5.199999999999999,
+            0.6,
+            5.800000000000001
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "uv": [
+            2.75,
+            0,
+            13.25,
+            0.6
+          ]
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "uv": [
+            2.75,
+            15.399999999999999,
+            13.25,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        10.2,
+        4
+      ],
+      "to": [
+        14.5,
+        10.8,
+        4.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        1.75,
+        10.2,
+        9
+      ],
+      "to": [
+        14.25,
+        10.8,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        3.0,
+        10.2,
+        14
+      ],
+      "to": [
+        13.0,
+        10.8,
+        14.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        4.25,
+        10.2,
+        19
+      ],
+      "to": [
+        11.75,
+        10.8,
+        19.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            5.199999999999999,
+            0.6000000000000014,
+            5.800000000000001
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            15.399999999999999,
+            5.199999999999999,
+            16,
+            5.800000000000001
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.25,
+            15.399999999999999,
+            11.75,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "uv": [
+            4.25,
+            0,
+            11.75,
+            0.6000000000000014
+          ]
+        }
+      }
+    }
+  ]
+}
