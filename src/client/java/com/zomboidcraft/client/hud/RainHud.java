@@ -27,7 +27,7 @@ final class RainHud {
     private static final Identifier STREAK = Hud.id("rain_streak");
     private static final int MAX = 48;
     /** A bead this big (gui pixels across) is heavy enough to run. */
-    private static final float HEAVY = 7.5f;
+    private static final float HEAVY = 11f;
 
     private static final class Drop {
         float x, y, size, alpha = 0, life, dry, runSpeed, trailTop, trailAlpha;
@@ -102,8 +102,8 @@ final class RainHud {
                 d.y += d.runSpeed * dt;
                 d.x += (random.nextFloat() - 0.5f) * 6 * dt;
                 // a running drop leaves itself behind on the way down
-                d.size = Math.max(3.5f, d.size - dt * 0.9f);
-                if (d.size <= 3.5f) {
+                d.size = Math.max(5f, d.size - dt * 1.2f);
+                if (d.size <= 5f) {
                     d.running = false;
                     d.trailAlpha = Math.min(d.trailAlpha, 0.8f);
                 }
@@ -132,11 +132,11 @@ final class RainHud {
             if (edge > 0.45f && random.nextFloat() < edge * edge) break;
         }
         float px = x * w, py = y * h;
-        float size = 2.5f + random.nextFloat() * random.nextFloat() * 6f;
+        float size = 4f + random.nextFloat() * random.nextFloat() * 9f;
         for (Drop d : drops) {
             float r = (d.size + size) * 0.45f;
             if (!d.running && Math.abs(d.x - px) < r && Math.abs(d.y - py) < r) {
-                d.size = Math.min(14, Mth.sqrt(d.size * d.size + size * size));
+                d.size = Math.min(20, Mth.sqrt(d.size * d.size + size * size));
                 d.life = Math.max(d.life, 8);
                 return;
             }
