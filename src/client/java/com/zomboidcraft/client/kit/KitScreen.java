@@ -351,18 +351,21 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
                 return true;
             }
         }
+        if (page == Page.BENCH && !right) bench.pressed(mx, my);
         return true;
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         if (page == Page.MAP) map.released(event.x(), event.y());
+        if (page == Page.BENCH) bench.released();
         return true;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         if (page == Page.MAP) map.dragged(event.x(), event.y());
+        if (page == Page.BENCH) bench.dragged(event.x(), event.y());
         return true;
     }
 

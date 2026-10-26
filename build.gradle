@@ -44,3 +44,16 @@ java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
+
+// In-game UI test (./gradlew runClientGameTest -Puitest): opens the kit screen in a real client and clicks it.
+if (project.hasProperty('uitest')) {
+    fabricApi {
+        configureTests {
+            createSourceSet = true
+            modId = 'zomboidcraft-uitest'
+            enableGameTests = false
+            enableClientGameTests = true
+            eula = true
+        }
+    }
+}

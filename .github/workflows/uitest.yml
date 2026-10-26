@@ -1,0 +1,43 @@
+name: UI test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  uitest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v5
+      - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri mesa-vulkan-drivers > /dev/null
+      - name: Compile
+        run: ./gradlew compileJava -Puitest > build.log 2>&1 || true
+      - name: API probe
+        run: |
+          FAPI=$(find ~/.gradle/caches/modules-2 -path '*client-gametest*' -name '*.jar' ! -name '*sources*' | head -1)
+          MC=$(find ~/.gradle/caches/fabric-loom -name 'minecraft-*.jar' | tr '\n' ':')
+          echo "$FAPI"
+          for c in $(unzip -Z1 "$FAPI" | grep -E 'api/client/gametest/v1/.*\.class$' | sed 's/\.class$//; s#/#.#g'); do javap -cp "$FAPI:$MC" "$c"; done 2>&1 | head -300
+          javap -cp "$MC" -c -p net.minecraft.client.MouseHandler 2>&1 | sed -n '/void onButton(/,/^$/p' | grep -E "invoke|if|iconst|getfield" | head -80
+          javap -cp "$MC" -p net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo 2>&1
+          javap -cp "$MC" com.mojang.blaze3d.platform.Window 2>&1 | grep -E "Width|Height|Scale"
+      - name: Run client test
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCUI|error:|ERROR|Exception|FAIL|BUILD" | head -200
+      - name: Show failures
+        if: failure()
+        run: grep -E "error:|warning:" -A3 build.log test.log | head -80 || true; tail -60 test.log || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-screens
+          path: |
+            build/run/clientGameTest/screenshots
+            run/screenshots
+            **/clientGameTest/screenshots
+          if-no-files-found: warn
