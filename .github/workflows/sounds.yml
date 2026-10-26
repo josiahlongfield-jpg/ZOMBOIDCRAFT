@@ -20,10 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - amb_music_drone
-          - amb_music_dark
-          - amb_music_texture
-          - amb_music_tension
+          - amb_alarm_car
+          - amb_alarm_bell
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

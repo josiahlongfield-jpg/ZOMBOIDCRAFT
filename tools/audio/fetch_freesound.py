@@ -88,6 +88,11 @@ QUERIES = {
     "amb_night": ["crickets night", "night ambience insects", "owl hoot"],
     # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
+    # the weather's storm-tripped alarms: a looping car alarm and an electric burglar bell
+    "amb_alarm_car": ["car alarm", "car alarm loop", "car alarm siren", "car alarm whoop", "car alarm going off",
+                      "vehicle alarm", "car alarm distant", "car alarm street"],
+    "amb_alarm_bell": ["burglar alarm bell", "alarm bell ringing", "electric bell ringing", "fire alarm bell",
+                       "school bell ringing", "shop alarm bell", "security alarm bell", "bell alarm loop"],
     "amb_alarm": ["car alarm", "house alarm ringing", "burglar alarm bell", "alarm bell ringing outside"],
     "amb_animal": ["dog howling distant", "coyote howl", "fox scream night", "dogs barking in the distance"],
     # guns, round 2: the M9 pistol and the 870 pump shotgun
