@@ -11,12 +11,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The interact key on a car: get in, search the boot, or (pressed inside one) get out; and the
- * horn. A key of its own rather than right-click, which aims a gun.
+ * The interact key on a car: get in, search the boot, or (pressed inside one) get out; the seat
+ * picked by its door handle, or a seat moved to from inside; and the horn, the ignition and the
+ * headlights. Keys of their own rather than right-click, which aims a gun.
  */
 public final class CarNet {
-    /** Stand-ins for a car id: get out of the car you're in, or sound its horn. */
-    public static final int GET_OUT = -1, HORN = -2;
+    /** Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights. */
+    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4;
 
     /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
@@ -31,17 +32,57 @@ public final class CarNet {
         }
     }
 
+    /**
+     * Into seat of car (its entity id) by that seat's door, from outside; or, from inside it, over
+     * into that seat.
+     */
+    public record Seat(int car, int seat) implements CustomPacketPayload {
+        /** Not a seat: open the glovebox, from a front seat. */
+        public static final int GLOVEBOX = -1;
+        public static final Type<Seat> TYPE = new Type<>(ZomboidCraft.id("car_seat"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Seat> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Seat::car, ByteBufCodecs.VAR_INT, Seat::seat, Seat::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public static void register() {
+        PayloadTypeRegistry.serverboundPlay().register(Seat.TYPE, Seat.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(Seat.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> {
+                if (!(player.level().getEntity(payload.car()) instanceof CarProp car) || player.isSpectator()) {
+                    return;
+                }
+                if (player.getVehicle() == car) {
+                    if (payload.seat() == Seat.GLOVEBOX) {
+                        car.openGlovebox(player);
+                    } else {
+                        car.switchSeat(player, payload.seat());
+                    }
+                } else if (player.getVehicle() == null && car.seatEye(payload.seat()).distanceToSqr(player.getEyePosition()) < 4 * 4) {
+                    car.getIn(player, payload.seat());
+                }
+            });
+        });
+        // a driver on the move has a hand on the wheel: no swinging anything (handguns aside)
+        net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) ->
+                CarProp.mayUse(player, player.getMainHandItem()) ? net.minecraft.world.InteractionResult.PASS
+                        : net.minecraft.world.InteractionResult.FAIL);
         PayloadTypeRegistry.serverboundPlay().register(Use.TYPE, Use.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Use.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
                 if (payload.car() < 0) {
                     if (player.getVehicle() instanceof CarProp car) {
-                        if (payload.car() == HORN) {
-                            car.honk(player);
-                        } else {
-                            player.stopRiding();
+                        switch (payload.car()) {
+                            case HORN -> car.honk(player);
+                            case ENGINE -> car.toggleEngine(player);
+                            case LIGHTS -> car.toggleLights(player);
+                            default -> player.stopRiding();
                         }
                     }
                     return;

@@ -44,6 +44,8 @@ public final class CityPlacer implements BlockSink {
     private final ArrayDeque<long[]> queue = new ArrayDeque<>();
     /** Cars waiting to be spawned, by the section they stand in (it's loaded once we place it). */
     private final Map<Long, List<Parked>> cars = new HashMap<>();
+    /** Keeps the city's cars from being placed inside each other. */
+    private final com.zomboidcraft.world.county.CarSpacing spacing = new com.zomboidcraft.world.county.CarSpacing();
     private final ServerLevel level;
     private final BlockPos origin;
     private final MinecraftServer server;
@@ -114,7 +116,7 @@ public final class CityPlacer implements BlockSink {
         }
         SplittableRandom rng = new SplittableRandom(seed);
         CarModels.Model model = CarModels.pick(rng, m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength);
-        if (model == null) {
+        if (model == null || !spacing.claim(model.id, x, y, z, yaw)) {
             return;
         }
         for (int[] col : Cars.hullColumns(model, x, z, yaw)) {

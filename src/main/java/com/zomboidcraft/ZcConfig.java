@@ -388,6 +388,17 @@ public final class ZcConfig {
         public double carBurnt = 0.07;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
+        /**
+         * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
+         * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
+         */
+        public double carKeyIgnition = 0.1;
+        public double carKeyGlovebox = 0.3;
+        public double carKeyZombie = 0.35;
+        public double carKeyDrop = 0.3;
+        /** Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again. */
+        public double hotwireSeconds = 8;
+        public double hotwireFail = 0.25;
     }
 
     public static class Weather {

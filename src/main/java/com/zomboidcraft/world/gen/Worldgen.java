@@ -9,6 +9,7 @@ public final class Worldgen {
     public static void register() {
         Registry.register(BuiltInRegistries.CHUNK_GENERATOR, ZomboidCraft.id("county"), CountyChunkGenerator.CODEC);
         Registry.register(BuiltInRegistries.BIOME_SOURCE, ZomboidCraft.id("county"), CountyBiomeSource.CODEC);
+        com.zomboidcraft.world.county.CarSpacing.bodies = ChunkWriter.BODIES;
     }
 
     private Worldgen() {
