@@ -38,12 +38,16 @@ public final class GunFinish {
             new Finish("service", 0, f -> f.revolverService),
             new Finish("nickel", 1, f -> f.revolverNickel),
             new Finish("engraved", 2, f -> f.revolverEngraved));
+    private static final List<Finish> MAGNUM = List.of(
+            new Finish("blued", 0, f -> f.magnumBlued),
+            new Finish("nickel", 1, f -> f.magnumNickel));
 
     /** The finishes a gun comes in, the plainest first; none for a gun that has only the one look. */
     public static List<Finish> of(GunType type) {
         return switch (type) {
             case DOUBLE_BARREL -> DOUBLE_BARREL;
             case REVOLVER -> REVOLVER;
+            case MAGNUM -> MAGNUM;
             default -> List.of();
         };
     }

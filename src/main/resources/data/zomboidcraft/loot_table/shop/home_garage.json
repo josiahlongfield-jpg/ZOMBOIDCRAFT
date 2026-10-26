@@ -224,6 +224,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:aa_battery",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:duct_tape",
           "weight": 4,
           "functions": [
@@ -246,21 +261,6 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:gun_oil",
           "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:aa_battery",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
         },
         {
           "type": "minecraft:item",

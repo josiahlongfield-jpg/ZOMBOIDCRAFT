@@ -22,6 +22,14 @@ final class HoldPoseData {
     static final float[] DOUBLE_BARREL_AIM = {-1.46413f, -0.80792f, 0.00000f};
     static final float[] REVOLVER_READY = {-0.95547f, -0.68836f, 0.00000f};
     static final float[] REVOLVER_AIM = {-1.90860f, -0.59020f, 0.00000f};
+    static final float[] RIMFIRE_READY = {-1.14423f, -0.54529f, 0.00000f};
+    static final float[] RIMFIRE_AIM = {-1.47425f, -1.10595f, 0.00000f};
+    static final float[] SMG_READY = {-1.13944f, -0.79560f, 0.00000f};
+    static final float[] SMG_AIM = {-1.40958f, -0.77837f, 0.00000f};
+    static final float[] SAWN_OFF_READY = {-2.34291f, -0.81530f, 0.00000f};
+    static final float[] SAWN_OFF_AIM = {-1.56476f, -1.30579f, 0.00000f};
+    static final float[] MAGNUM_READY = {-0.94026f, -0.69647f, 0.00000f};
+    static final float[] MAGNUM_AIM = {-1.82763f, -0.57608f, 0.00000f};
     static final float[] MELEE_READY = {-1.09171f, -0.72489f, 0.00000f};
     static final float[] MELEE_WINDUP = {-1.36313f, 0.36953f, 0.36347f};
     static final float[] MELEE_STRIKE = {1.50327f, -1.31919f, -2.38106f};
@@ -37,6 +45,14 @@ final class HoldPoseData {
     static final float[] DOUBLE_BARREL_AIM_SUPPORT = {-4.31099f, 14.11018f, -1.74710f, -6.53413f, 16.21739f, -2.02875f};
     static final float[] REVOLVER_READY_SUPPORT = {0.68792f, 9.39196f, -0.34354f, 0.09931f, 9.75474f, -1.06997f};
     static final float[] REVOLVER_AIM_SUPPORT = {0.45451f, 9.64562f, 0.47209f, 0.24093f, 10.25354f, -0.29642f};
+    static final float[] RIMFIRE_READY_SUPPORT = {1.05377f, 13.15444f, 0.83089f, 1.22035f, 16.17216f, 1.33996f};
+    static final float[] RIMFIRE_AIM_SUPPORT = {-5.24325f, 12.79567f, -1.26420f, -7.98248f, 14.15762f, -1.45207f};
+    static final float[] SMG_READY_SUPPORT = {-0.26101f, 14.82469f, 0.37310f, -0.56281f, 16.77284f, 0.74292f};
+    static final float[] SMG_AIM_SUPPORT = {-3.80320f, 13.83979f, -1.91105f, -5.21150f, 15.24950f, -2.14031f};
+    static final float[] SAWN_OFF_READY_SUPPORT = {-2.92376f, 8.68021f, 4.89819f, -4.53549f, 8.27813f, 7.48714f};
+    static final float[] SAWN_OFF_AIM_SUPPORT = {-6.07415f, 11.61307f, -0.05502f, -9.04231f, 12.41826f, -0.11560f};
+    static final float[] MAGNUM_READY_SUPPORT = {0.85020f, 9.39359f, -0.27752f, 0.14882f, 9.80402f, -1.13779f};
+    static final float[] MAGNUM_AIM_SUPPORT = {0.57481f, 9.62750f, 0.56873f, 0.32811f, 10.27255f, -0.39227f};
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
             "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},

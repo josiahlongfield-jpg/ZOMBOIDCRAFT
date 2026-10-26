@@ -53,10 +53,11 @@ public class CaseItem extends BagItem {
         if (cfg.packed) {
             List<ItemStack> load = switch (item.kind) {
                 case RIFLE -> gunCase(random, cfg, pick(random, new GunType[] {GunType.ASSAULT_RIFLE,
-                        GunType.HUNTING_RIFLE, GunType.SHOTGUN, GunType.DOUBLE_BARREL}, new int[] {cfg.assaultRifleWeight,
-                        cfg.huntingRifleWeight, cfg.shotgunWeight, cfg.doubleBarrelWeight}));
-                case PISTOL -> gunCase(random, cfg, pick(random, new GunType[] {GunType.PISTOL, GunType.REVOLVER},
-                        new int[] {cfg.pistolWeight, cfg.revolverWeight}));
+                        GunType.HUNTING_RIFLE, GunType.SHOTGUN, GunType.DOUBLE_BARREL, GunType.RIMFIRE, GunType.SMG,
+                        GunType.SAWN_OFF}, new int[] {cfg.assaultRifleWeight, cfg.huntingRifleWeight, cfg.shotgunWeight,
+                        cfg.doubleBarrelWeight, cfg.rimfireWeight, cfg.smgWeight, cfg.sawnOffWeight}));
+                case PISTOL -> gunCase(random, cfg, pick(random, new GunType[] {GunType.PISTOL, GunType.REVOLVER,
+                        GunType.MAGNUM}, new int[] {cfg.pistolWeight, cfg.revolverWeight, cfg.magnumWeight}));
                 case AMMO -> ammoCan(random, cfg);
             };
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(load));
@@ -102,8 +103,9 @@ public class CaseItem extends BagItem {
 
     /** Boxes of one or two kinds of rounds, three or four stacks of them. */
     private static List<ItemStack> ammoCan(RandomSource random, ZcConfig.Cases cfg) {
-        GunType[] kinds = {GunType.ASSAULT_RIFLE, GunType.PISTOL, GunType.SHOTGUN, GunType.HUNTING_RIFLE, GunType.REVOLVER};
-        int[] weights = {4, 4, 3, 3, 2};
+        GunType[] kinds = {GunType.ASSAULT_RIFLE, GunType.PISTOL, GunType.SHOTGUN, GunType.HUNTING_RIFLE, GunType.REVOLVER,
+                GunType.RIMFIRE, GunType.MAGNUM};
+        int[] weights = {4, 4, 3, 3, 2, 4, 1};
         GunType first = pick(random, kinds, weights), second = random.nextDouble() < cfg.secondCalibreChance ? pick(random, kinds, weights) : first;
         List<ItemStack> load = new ArrayList<>();
         int stacks = 3 + random.nextInt(2);

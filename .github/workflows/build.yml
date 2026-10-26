@@ -15,6 +15,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Playtest builds take turns: two publishes at once delete each other's tag, which hides the jar.
+    concurrency:
+      group: ${{ github.ref == 'refs/heads/playtest' && 'playtest-publish' || format('build-{0}', github.run_id) }}
+      cancel-in-progress: false
     env:
       MC_VERSION: ${{ github.event.inputs.minecraft_version || '26.3' }}
     steps:
@@ -177,6 +181,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete playtest-build --yes --cleanup-tag || true
+          # a release that lost its tag lingers as a hidden draft: clear those too
+          gh api "repos/$GITHUB_REPOSITORY/releases" --jq '.[] | select(.draft and .name == "Playtest build") | .id' \
+            | xargs -r -I{} gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/{}"
           # (the tag must not share the branch name, or git refs get ambiguous)
           gh release delete playtest --yes --cleanup-tag || true
           # one fixed name, so a new download replaces the old file instead of sitting beside it
@@ -184,3 +191,6 @@ jobs:
           gh release create playtest-build zomboidcraft-playtest.jar \
             --prerelease --title "Playtest build" --target "$GITHUB_SHA" \
             --notes "Everything in progress, merged together, from ${GITHUB_SHA::7}. Delete any other ZomboidCraft jar (zomboidcraft-0.5.x.jar) from your mods folder. Needs Fabric Loader and Fabric API. Replace any other ZomboidCraft jar with this one."
+          # the link Josiah uses must answer, or this build is not done
+          sleep 10
+          curl -sfIL -o /dev/null "https://github.com/$GITHUB_REPOSITORY/releases/download/playtest-build/zomboidcraft-playtest.jar"
