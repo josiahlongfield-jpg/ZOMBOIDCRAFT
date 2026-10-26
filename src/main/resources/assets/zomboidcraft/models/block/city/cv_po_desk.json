@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "cv_wainscot": "zomboidcraft:block/city/cv_wainscot",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        10,
+        1
+      ],
+      "to": [
+        15.5,
+        11.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_wainscot"
+        },
+        "south": {
+          "texture": "#cv_wainscot"
+        },
+        "east": {
+          "texture": "#cv_wainscot"
+        },
+        "west": {
+          "texture": "#cv_wainscot"
+        },
+        "up": {
+          "texture": "#cv_wainscot"
+        },
+        "down": {
+          "texture": "#cv_wainscot"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        11.5,
+        12
+      ],
+      "to": [
+        15.5,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    }
+  ]
+}

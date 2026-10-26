@@ -64,6 +64,11 @@ final class TownSite extends Site {
         hosts.add(new Host(pl, new int[] {1, 4, hw - 2, hd - 2}, 3, 0));
     }
 
+    /** A post office as a shelter host: the shelter's stair comes up in its workroom. */
+    private void postHost(Placer pl, int w, int d) {
+        hosts.add(new Host(pl, PostOffice.host(w, d), PostOffice.Z0, PostOffice.F));
+    }
+
     /**
      * About one town in three dug a fallout shelter under its courthouse, town hall or post
      * office; the yellow-and-black plate on the front wall still says so. Rolls its own dice, so
@@ -402,8 +407,8 @@ final class TownSite extends Site {
         // the post office on its corner, the volunteer fire house down the lane from it
         Kit.Lot post = civicLot(we, sWe + ((qPost & 1) == 0 ? -17 : 17), qPost >= 2 ? 1 : -1, 16, 22);
         if (post != null) {
-            new Civic(post.placer(out), rng).hall(16, 20, "postoffice", false);
-            hall(post.placer(out), 16, 20);
+            new PostOffice(post.placer(out), rng).build(16, 20);
+            postHost(post.placer(out), 16, 20);
             yard(post, 0.8);
         }
         Kit.Lot fire = civicLot(ns, sNs + (qPost < 2 ? -36 : 36), (qPost & 1) == 0 ? 1 : -1, 14, 22);
@@ -523,8 +528,8 @@ final class TownSite extends Site {
         }
         Kit.Lot post = civicLot(main, sCross - clear - 9, -1, 17, depth);
         if (post != null) {
-            new Civic(post.placer(out), rng).hall(17, depth - 2, "postoffice", false);
-            hall(post.placer(out), 17, depth - 2);
+            new PostOffice(post.placer(out), rng).build(17, depth - 2);
+            postHost(post.placer(out), 17, depth - 2);
         }
         shops(main, 2, sCross - clear, 0, depth, 3, wanted);
         shops(main, sCross + clear, main.length() - 4, 0, depth, 2, wanted);
@@ -944,8 +949,8 @@ final class TownSite extends Site {
                 Storefront.Trade.TAVERN, Storefront.Trade.BARBER, Storefront.Trade.DIME, Storefront.Trade.PAWN));
         Kit.Lot post = civicLot(main, sCross + clear + 9, 1, 16, depth);
         if (post != null) {
-            new Civic(post.placer(out), rng).hall(16, depth - 2, "postoffice", false);
-            hall(post.placer(out), 16, depth - 2);
+            new PostOffice(post.placer(out), rng).build(16, depth - 2);
+            postHost(post.placer(out), 16, depth - 2);
         }
         shops(main, Math.max(4, sCross - 110), sCross - clear, 1, depth, 2, wanted);
         shops(main, sCross + clear, Math.min(main.length() - 4, sCross + 90), 1, depth, 2, wanted);

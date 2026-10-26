@@ -135,6 +135,10 @@ TABLES = {
         ("writable_book", 3, 1, 1), ("map", 3, 1, 1), ("name_tag", 2, 1, 1), ("clock", 2, 1, 1), ("compass", 1, 1, 1),
         (f"{ZC}:digital_watch", 3, 1, 1), ("amethyst_shard", 2, 1, 3), (f"{ZC}:revolver", 1, 1, 1, worn(.1, .6)),
         (f"{ZC}:revolver_ammo", 1, 3, 12), (f"{ZC}:pistol_case", 1, 1, 1), ("-", 14, 1, 1)]),
+    "mail": ((1, 4), [
+        ("paper", 14, 2, 12), ("writable_book", 2, 1, 1), ("book", 2, 1, 1), ("map", 3, 1, 1), ("string", 4, 1, 4),
+        ("name_tag", 2, 1, 1), ("clock", 1, 1, 1), ("compass", 1, 1, 1), (f"{ZC}:digital_watch", 2, 1, 1),
+        (f"{ZC}:bandage", 2, 1, 2), ("-", 12, 1, 1)]),
     "scraps": ((0, 2), [
         ("paper", 6, 1, 3), ("stick", 4, 1, 3), ("string", 3, 1, 2), ("bone", 2, 1, 2), ("glass_bottle", 3, 1, 1),
         ("rotten_flesh", 2, 1, 2), (f"{ZC}:lead_pipe", 1, 1, 1, worn(.5, .9)), ("-", 14, 1, 1)]),
@@ -279,6 +283,7 @@ RARE = {
                       (f"{ZC}:scope_4x", 2), (f"{ZC}:katana", 1), (f"{ZC}:revolver", 1)],
     "basement_supplies": [(f"{ZC}:military_rucksack", 1), (f"{ZC}:shotgun", 1)],
     "bank": [("golden_apple", 1), ("diamond", 2), (f"{ZC}:holo_sight", 1)],
+    "mail": [(f"{ZC}:holo_sight", 1), (f"{ZC}:scope_4x", 1), (f"{ZC}:pistol_case", 1)],
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2), (f"{ZC}:double_barrel", 3),
              (f"{ZC}:hunting_rifle", 2), (f"{ZC}:revolver", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
 }

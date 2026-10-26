@@ -166349,6 +166349,485 @@
    "loot": "home_books",
    "rotate": "facing"
   },
+  "cv_mailbox": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.5,
+     0,
+     3.5,
+     4.5,
+     3,
+     5.5,
+     "cv_iron"
+    ],
+    [
+     2.5,
+     0,
+     11.5,
+     4.5,
+     3,
+     13.5,
+     "cv_iron"
+    ],
+    [
+     11.5,
+     0,
+     3.5,
+     13.5,
+     3,
+     5.5,
+     "cv_iron"
+    ],
+    [
+     11.5,
+     0,
+     11.5,
+     13.5,
+     3,
+     13.5,
+     "cv_iron"
+    ],
+    [
+     2,
+     3,
+     3,
+     14,
+     13,
+     14,
+     {
+      "north": "cv_mailbox",
+      "side": "cv_mailbox_side",
+      "up": "cv_mailbox_side",
+      "down": "cv_mailbox_side",
+      "south": "cv_mailbox_side"
+     }
+    ],
+    [
+     2.5,
+     13,
+     3.5,
+     13.5,
+     14.5,
+     13.5,
+     "cv_mailbox_side"
+    ],
+    [
+     3.5,
+     14.5,
+     4.5,
+     12.5,
+     15.6,
+     12.5,
+     "cv_mailbox_side"
+    ],
+    [
+     3,
+     10,
+     2.4,
+     13,
+     11,
+     3,
+     "cv_iron"
+    ]
+   ],
+   "title": "Mailbox",
+   "sound": "METAL",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_mailbox_tipped": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     1,
+     14,
+     11,
+     13,
+     {
+      "up": "cv_mailbox",
+      "north": "cv_mailbox_side",
+      "side": "cv_mailbox_side",
+      "down": "cv_mailbox_side",
+      "south": "cv_mailbox_side"
+     }
+    ],
+    [
+     2.5,
+     0,
+     13,
+     13.5,
+     10,
+     14.5,
+     "cv_mailbox_side"
+    ],
+    [
+     2.5,
+     1,
+     13,
+     4.5,
+     3,
+     16,
+     "cv_iron"
+    ],
+    [
+     2.5,
+     8,
+     13,
+     4.5,
+     10,
+     16,
+     "cv_iron"
+    ],
+    [
+     11.5,
+     1,
+     13,
+     13.5,
+     3,
+     16,
+     "cv_iron"
+    ],
+    [
+     11.5,
+     8,
+     13,
+     13.5,
+     10,
+     16,
+     "cv_iron"
+    ]
+   ],
+   "title": "Mailbox",
+   "sound": "METAL",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_po_boxes": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16,
+     {
+      "north": "cv_po_boxes",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak",
+      "south": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Post Office Boxes",
+   "sound": "METAL",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_po_boxes_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16,
+     {
+      "north": "cv_po_boxes_b",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak",
+      "south": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Post Office Boxes",
+   "sound": "METAL",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_sorting_case": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     3,
+     16,
+     7,
+     16,
+     "cv_oak"
+    ],
+    [
+     0,
+     7,
+     0,
+     16,
+     8,
+     8,
+     "cv_oak"
+    ],
+    [
+     0,
+     8,
+     6,
+     16,
+     16,
+     16,
+     {
+      "north": "cv_sorting",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Sorting Case",
+   "sound": "WOOD",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_po_counter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "cv_panel_oak",
+      "side": "cv_oak",
+      "south": "cv_oak"
+     }
+    ],
+    [
+     0,
+     14,
+     0,
+     16,
+     16,
+     16,
+     "cv_wainscot"
+    ]
+   ],
+   "title": "Post Office Counter",
+   "sound": "WOOD",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_po_grille": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7.5,
+     16,
+     16,
+     8.5,
+     "cv_po_grille"
+    ]
+   ],
+   "title": "Counter Grille",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "cv_po_desk": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     10,
+     10,
+     "cv_oak"
+    ],
+    [
+     4,
+     0,
+     4,
+     12,
+     1,
+     12,
+     "cv_oak"
+    ],
+    [
+     0.5,
+     10,
+     1,
+     15.5,
+     11.5,
+     15,
+     "cv_wainscot"
+    ],
+    [
+     0.5,
+     11.5,
+     12,
+     15.5,
+     13,
+     15,
+     "cv_oak"
+    ]
+   ],
+   "title": "Writing Desk",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "cv_mail_hamper": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     2.5,
+     14,
+     2.5,
+     "cv_iron"
+    ],
+    [
+     1,
+     0,
+     13.5,
+     2.5,
+     14,
+     15.0,
+     "cv_iron"
+    ],
+    [
+     13.5,
+     0,
+     1,
+     15.0,
+     14,
+     2.5,
+     "cv_iron"
+    ],
+    [
+     13.5,
+     0,
+     13.5,
+     15.0,
+     14,
+     15.0,
+     "cv_iron"
+    ],
+    [
+     1.5,
+     2,
+     1.5,
+     14.5,
+     13,
+     14.5,
+     {
+      "side": "cv_canvas",
+      "up": "cv_mailheap",
+      "down": "cv_canvas"
+     }
+    ],
+    [
+     1,
+     13,
+     1,
+     15,
+     14,
+     2.5,
+     "cv_iron"
+    ],
+    [
+     1,
+     13,
+     13.5,
+     15,
+     14,
+     15,
+     "cv_iron"
+    ]
+   ],
+   "title": "Mail Hamper",
+   "sound": "WOOL",
+   "loot": "mail",
+   "rotate": "facing"
+  },
+  "cv_mail_sack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3.5,
+     13,
+     6,
+     12.5,
+     {
+      "north": "cv_canvas_mail",
+      "side": "cv_canvas",
+      "up": "cv_canvas",
+      "down": "cv_canvas"
+     }
+    ],
+    [
+     5,
+     6,
+     5.5,
+     11,
+     8,
+     10.5,
+     "cv_canvas"
+    ],
+    [
+     7,
+     8,
+     7,
+     9,
+     9.5,
+     9,
+     "cv_canvas"
+    ]
+   ],
+   "title": "Mail Sack",
+   "sound": "WOOL",
+   "loot": "mail",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cv_wanted": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.5,
+     2,
+     15,
+     15.5,
+     14,
+     16,
+     {
+      "north": "cv_wanted",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Notice Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
   "cv_iron_fence": {
    "model": "boxes",
    "boxes": [
@@ -167147,6 +167626,230 @@
    "title": "Frieze",
    "sound": "STONE",
    "rotate": "facing"
+  },
+  "cv_pofrieze_10_0": {
+   "tex": {
+    "north": "cv_pofrieze_10_0",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_1": {
+   "tex": {
+    "north": "cv_pofrieze_10_1",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_2": {
+   "tex": {
+    "north": "cv_pofrieze_10_2",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_3": {
+   "tex": {
+    "north": "cv_pofrieze_10_3",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_4": {
+   "tex": {
+    "north": "cv_pofrieze_10_4",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_5": {
+   "tex": {
+    "north": "cv_pofrieze_10_5",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_6": {
+   "tex": {
+    "north": "cv_pofrieze_10_6",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_7": {
+   "tex": {
+    "north": "cv_pofrieze_10_7",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_8": {
+   "tex": {
+    "north": "cv_pofrieze_10_8",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_pofrieze_10_9": {
+   "tex": {
+    "north": "cv_pofrieze_10_9",
+    "side": "stone_trim",
+    "up": "stone_trim",
+    "down": "stone_trim"
+   },
+   "title": "Frieze",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "cv_poletters_6_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_0"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cv_poletters_6_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_1"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cv_poletters_6_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_2"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cv_poletters_6_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_3"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cv_poletters_6_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_4"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cv_poletters_6_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     "cv_poletters_6_5"
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
   }
  }
 }

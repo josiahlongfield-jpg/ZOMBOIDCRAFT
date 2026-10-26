@@ -559,18 +559,154 @@ def grille(seed):
     return t
 
 
-def book_drop(seed, front):
-    """The book return by the path: a steel box in faded blue, the flap and slot near the top, BOOK
-    RETURN stencilled under it; dents and rust coming through the paint. The side is the bare paint."""
-    t = F.wear(F.plain(seed, (52, 82, 126), 0.06, 0.4), 0.35, 1)
+def book_drop(seed, front, rgb=(52, 82, 126), text="BOOK|RETURN"):
+    """The book return by the path (or the mail collection box on the corner): a steel box in faded
+    blue, the flap and slot near the top, the stencil under it; dents and rust coming through the
+    paint. The side is the bare paint."""
+    t = F.wear(F.plain(seed, rgb, 0.06, 0.4), 0.35, 1)
     if front:
         area(t, 10, 10, 54, 20, mul=1.12, dh=0.2)                     # the flap
         area(t, 12, 16, 52, 19, (16, 16, 18), h=0.1)                  # the slot under its lip
         area(t, 28, 11, 36, 13, (170, 170, 164), smooth=0.6, f0=200)  # the pull
-        m = text_mask("BOOK|RETURN", SANS, fit("BOOK|RETURN", SANS, 9, 44), 44, 22, seed=seed)
+        m = text_mask(text, SANS, fit(text, SANS, 9, 44), 44, 22, seed=seed)
         paste(t, (m > 0.4).astype(np.float32), 10, 28, (222, 220, 210), 0.9)
     t.grime(0.3)
     return t
+
+
+def po_boxes(seed, looted):
+    """A wall of post office boxes: little bronze doors five high and four across, each with its
+    glass, its dial and its number plate; in a looted one, doors torn open on empty pigeonholes."""
+    t = F.plain(seed, (146, 108, 58), 0.06, 0.6)
+    t.f0[:] = 200
+    rng = t.rng
+    for j in range(5):
+        for i in range(4):
+            x0, y0 = 2 + i * 15, 3 + j * 12
+            x1, y1 = x0 + 13, y0 + 10
+            if looted and rng.random() < 0.4:
+                area(t, x0, y0, x1, y1, (14, 12, 10), h=0.05)
+                if rng.random() < 0.5:
+                    area(t, x0 + 2, y1 - 3, x1 - 2, y1 - 1, (214, 208, 190), h=0.2)
+                continue
+            area(t, x0, y0, x1, y1, mul=1.14, dh=0.2)
+            edges(t, x0, y0, x1, y1)
+            glass = (205, 200, 184) if rng.random() < 0.3 else (24, 28, 32)
+            area(t, x0 + 2, y0 + 2, x0 + 7, y0 + 6, glass, smooth=0.9, f0=220)
+            area(t, x0 + 9, y0 + 2, x0 + 12, y0 + 5, (214, 192, 120), smooth=0.8, f0=240, dh=0.3)
+            area(t, x0 + 2, y0 + 7, x0 + 7, y0 + 9, (52, 38, 22))
+            area(t, x0 + 3, y0 + 7, x0 + 6, y0 + 8, (190, 170, 120))
+    t.grime(0.25)
+    return t
+
+
+def sorting_case(seed):
+    """A carrier's sorting case: oak pigeonholes six across and six high, mail standing in most."""
+    t = F.wear(F.wood(seed, "oak"), 0.2, 1)
+    rng = t.rng
+    for j in range(6):
+        for i in range(6):
+            x0, y0 = 2 + i * 10, 2 + j * 10
+            area(t, x0, y0, x0 + 8, y0 + 8, (24, 19, 14), h=0.05)
+            if rng.random() < 0.6:
+                hh = int(rng.integers(3, 7))
+                col = (226, 220, 204) if rng.random() < 0.75 else (196, 166, 112)
+                area(t, x0 + 1, y0 + 8 - hh, x0 + 7, y0 + 8, col, h=0.4)
+                area(t, x0 + 1, y0 + 8 - hh, x0 + 7, y0 + 9 - hh, mul=0.8)
+    return t
+
+
+def canvas(seed, stencil=None):
+    """Mail sack canvas: grey-tan duck, a weave and grime; stencilled U.S. MAIL on the sack's front."""
+    t = F.wear(F.plain(seed, (148, 138, 110), 0.08, 0.15), 0.3, 0)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.94 + 0.06 * ((xx + yy) % 2))[..., None]
+    if stencil:
+        m = text_mask(stencil, SANS, fit(stencil, SANS, 10, 50), 50, 30, seed=seed)
+        paste(t, (m > 0.4).astype(np.float32), 7, 18, (40, 52, 88), 0.85)
+    return t
+
+
+def mail_heap(seed):
+    """Loose mail seen from above: envelopes white, cream and manila, every which way."""
+    t = F.plain(seed, (30, 26, 22), 0.05, 0.2)
+    rng = t.rng
+    for _ in range(46):
+        x, y = int(rng.integers(-6, N)), int(rng.integers(-4, N))
+        w, h = (int(rng.integers(10, 18)), int(rng.integers(6, 10)))
+        if rng.random() < 0.5:
+            w, h = h, w
+        col = [(228, 224, 210), (216, 206, 180), (194, 160, 104), (204, 214, 226)][int(rng.integers(0, 4))]
+        area(t, x, y, x + w, y + h, col, h=0.3 + rng.random() * 0.5)
+        area(t, x, y + h - 1, x + w, y + h, mul=0.75)
+    return t
+
+
+def wanted(seed):
+    """The lobby's notice board: cork, the WANTED sheets, rates, a lost-dog poster, all curling."""
+    t = F.plain(seed, (172, 124, 78), 0.1, 0.2)
+    rng = t.rng
+    area(t, 0, 0, N, 3, (92, 66, 40))
+    area(t, 0, N - 3, N, N, (92, 66, 40))
+    sheets = [(5, 6, 26, 32, "WANTED"), (33, 5, 58, 28, None), (6, 36, 28, 60, None), (34, 32, 60, 58, "WANTED")]
+    for x0, y0, x1, y1, text in sheets:
+        area(t, x0, y0, x1, y1, (222, 216, 196) if rng.random() < 0.7 else (232, 222, 150), h=0.4)
+        area(t, x0, y1 - 1, x1, y1, mul=0.7)
+        if text:
+            m = text_mask(text, SANS, 5, x1 - x0 - 2, 7, seed=seed)
+            paste(t, (m > 0.4).astype(np.float32), x0 + 1, y0 + 2, (30, 26, 24), 0.9)
+            area(t, x0 + 6, y0 + 10, x1 - 6, y1 - 6, (90, 84, 76))     # the face
+        else:
+            for k in range(y0 + 3, y1 - 3, 3):
+                area(t, x0 + 3, k, x1 - 3 - int(rng.integers(0, 6)), k + 1, (90, 86, 80))
+        area(t, (x0 + x1) // 2, y0 + 1, (x0 + x1) // 2 + 2, y0 + 3, (190, 40, 30), dh=0.3)   # the pin
+    t.grime(0.2)
+    return t
+
+
+def po_grille(seed):
+    """The brass grille over the counter: bars on rails, a round-headed wicket cut through the middle."""
+    t = F.plain(seed, (170, 134, 70), 0.05, 0.7)
+    t.f0[:] = 230
+    t.alpha[:] = 0
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    for x in range(1, N, 6):
+        area(t, x, 0, x + 2, N, alpha=255)
+    for y0, y1 in ((0, 3), (12, 14), (N - 3, N)):
+        area(t, 0, y0, N, y1, alpha=255)
+    r = np.hypot(xx - 32, yy - 34)
+    t.alpha[((np.abs(xx - 32) < 11) & (yy >= 34) & (yy < N - 3)) | ((r < 11) & (yy < 34) & (yy > 14))] = 0
+    t.alpha[(np.abs(r - 11.5) < 1.3) & (yy < 34) & (yy > 14)] = 255
+    t.alpha[(np.abs(np.abs(xx - 32) - 11.5) < 1.3) & (yy >= 34)] = 255
+    return t
+
+
+def letters_tiles():
+    """Aluminium letters screwed to the brick of a sixties post office, two lines across six blocks (cv_poletters)."""
+    T, B = {}, {}
+    w, text = 6, "UNITED STATES|POST OFFICE"
+
+    def build():
+        return text_mask(text, SANS, 20, N * w - 40, 52, seed=77, spacing=1.2)
+
+    for i in range(w):
+        def tile(i=i):
+            t = F.plain(9220 + i, (196, 198, 196), 0.04, 0.75)
+            t.f0[:] = 220
+            full = np.zeros((N, N * w), np.float32)
+            m = build()
+            h, ww = m.shape
+            full[6:6 + h, 20:20 + ww] = m
+            part = full[:, i * N:(i + 1) * N]
+            t.alpha[:] = np.where(part > 0.45, 255, 0)
+            t.h[:] = np.where(part > 0.45, 0.9, 0)
+            t.c[part > 0.45] *= (0.85 + 0.3 * t.rng.random(int((part > 0.45).sum())))[..., None]
+            return t
+        name = f"cv_poletters_{w}_{i}"
+        T[name] = tile
+        B[name] = {"model": "boxes", "boxes": [[0, 0, 15.4, 16, 16, 16, name]], "title": "Lettering", "sound": "METAL",
+                   "rotate": "facing", "decor": True, "render": "cutout"}
+    return T, B
 
 
 def skylight(seed):
@@ -651,6 +787,16 @@ def textures():
     T["cv_skylight"] = lambda: skylight(9209)
     T["cv_bookdrop"] = lambda: book_drop(9210, True)
     T["cv_bookdrop_side"] = lambda: book_drop(9211, False)
+    T["cv_mailbox"] = lambda: book_drop(9212, True, (34, 58, 116), "U.S.|MAIL")
+    T["cv_mailbox_side"] = lambda: book_drop(9213, False, (34, 58, 116))
+    T["cv_po_boxes"] = lambda: po_boxes(9214, False)
+    T["cv_po_boxes_b"] = lambda: po_boxes(9215, True)
+    T["cv_sorting"] = lambda: sorting_case(9216)
+    T["cv_canvas"] = lambda: canvas(9217)
+    T["cv_canvas_mail"] = lambda: canvas(9218, "U.S.|MAIL")
+    T["cv_mailheap"] = lambda: mail_heap(9219)
+    T["cv_wanted"] = lambda: wanted(9226)
+    T["cv_po_grille"] = lambda: po_grille(9227)
     return T
 
 
@@ -659,6 +805,7 @@ def register(ns):
     NS = ns
     ns.EXTRA.update(textures())
     ns.EXTRA.update(frieze_tiles()[0])
+    ns.EXTRA.update(letters_tiles()[0])
 
 
 # ---------------------------------------------------------------- the blocks
@@ -887,6 +1034,37 @@ def blocks():
         + [[x, z, 13, x + 2, z + 2, 16, "cv_iron"] for x in (2.5, 11.5) for z in (1, 8)],
         "Book Return", "METAL", loot="home_books")
 
+    # ---- the post office: the box wall, the counter and its grille, the lobby desk and notice board,
+    # the sorting cases, hampers and sacks of the workroom, the blue box on the corner
+    for name, tex in (("cv_mailbox", "cv_mailbox"),):
+        side = tex + "_side"
+        face = {"north": tex, "side": side, "up": side, "down": side, "south": side}
+        add(name, legs + [[2, 3, 3, 14, 13, 14, face], [2.5, 13, 3.5, 13.5, 14.5, 13.5, side], [3.5, 14.5, 4.5, 12.5, 15.6, 12.5, side],
+                          [3, 10, 2.4, 13, 11, 3, "cv_iron"]], "Mailbox", "METAL", loot="mail")
+        add(name + "_tipped", [[2, 0, 1, 14, 11, 13, {"up": tex, "north": side, "side": side, "down": side, "south": side}],
+                               [2.5, 0, 13, 13.5, 10, 14.5, side]]
+            + [[x, z, 13, x + 2, z + 2, 16, "cv_iron"] for x in (2.5, 11.5) for z in (1, 8)], "Mailbox", "METAL", loot="mail")
+    for name, tex in (("cv_po_boxes", "cv_po_boxes"), ("cv_po_boxes_b", "cv_po_boxes_b")):
+        add(name, [[0, 0, 1, 16, 16, 16, {"north": tex, "side": "cv_oak", "up": "cv_oak", "down": "cv_oak", "south": "cv_oak"}]],
+            "Post Office Boxes", "METAL", loot="mail")
+    add("cv_sorting_case", [[0, 0, 3, 16, 7, 16, "cv_oak"], [0, 7, 0, 16, 8, 8, "cv_oak"],
+                            [0, 8, 6, 16, 16, 16, {"north": "cv_sorting", "side": "cv_oak", "up": "cv_oak", "down": "cv_oak"}]],
+        "Sorting Case", "WOOD", loot="mail")
+    add("cv_po_counter", [[0, 0, 1, 16, 14, 16, {"north": "cv_panel_oak", "side": "cv_oak", "south": "cv_oak"}],
+                          [0, 14, 0, 16, 16, 16, "cv_wainscot"]], "Post Office Counter", "WOOD", loot="mail")
+    add("cv_po_grille", [[0, 0, 7.5, 16, 16, 8.5, "cv_po_grille"]], "Counter Grille", "METAL", render="cutout")
+    add("cv_po_desk", [[6, 0, 6, 10, 10, 10, "cv_oak"], [4, 0, 4, 12, 1, 12, "cv_oak"], [0.5, 10, 1, 15.5, 11.5, 15, "cv_wainscot"],
+                       [0.5, 11.5, 12, 15.5, 13, 15, "cv_oak"]], "Writing Desk", "WOOD")
+    post = [[x, 0, z, x + 1.5, 14, z + 1.5, "cv_iron"] for x in (1, 13.5) for z in (1, 13.5)]
+    add("cv_mail_hamper", post + [[1.5, 2, 1.5, 14.5, 13, 14.5, {"side": "cv_canvas", "up": "cv_mailheap", "down": "cv_canvas"}],
+                                  [1, 13, 1, 15, 14, 2.5, "cv_iron"], [1, 13, 13.5, 15, 14, 15, "cv_iron"]],
+        "Mail Hamper", "WOOL", loot="mail")
+    add("cv_mail_sack", [[3, 0, 3.5, 13, 6, 12.5, {"north": "cv_canvas_mail", "side": "cv_canvas", "up": "cv_canvas", "down": "cv_canvas"}],
+                         [5, 6, 5.5, 11, 8, 10.5, "cv_canvas"], [7, 8, 7, 9, 9.5, 9, "cv_canvas"]],
+        "Mail Sack", "WOOL", decor=True, loot="mail")
+    add("cv_wanted", [[0.5, 2, 15, 15.5, 14, 16, {"north": "cv_wanted", "side": "cv_oak", "up": "cv_oak", "down": "cv_oak"}]],
+        "Notice Board", "WOOD", decor=True)
+
     # ---- outside: the lawn's railings, the globe lamps by the steps
     add("cv_iron_fence", [[0, 0, 7.5, 16, 16, 8.5, "cv_iron_fence"]], "Iron Railings", "METAL", rotate="axis", render="cutout")
     add("cv_iron_post", [[6, 0, 6, 10, 15, 10, "cv_iron"], [5.5, 0, 5.5, 10.5, 2, 10.5, "cv_iron"], [6.5, 15, 6.5, 9.5, 17, 9.5, "cv_iron"]],
@@ -906,7 +1084,7 @@ def frieze_tiles():
     14); the library's PVBLIC LIBRARY across eight (cv_lfrieze)."""
     T, B = {}, {}
     for prefix, w, text in [("cv_frieze", w, f"{COUNTY} COUNTY COURTHOUSE" if w >= 11 else "COUNTY COURTHOUSE")
-                            for w in (8, 10, 12, 14)] + [("cv_lfrieze", 8, LIBRARY)]:
+                            for w in (8, 10, 12, 14)] + [("cv_lfrieze", 8, LIBRARY), ("cv_pofrieze", 10, "UNITED STATES POST OFFICE")]:
 
         def build(w=w, text=text):
             S = N * w
@@ -942,6 +1120,7 @@ def main():
     kept = {k: v for k, v in data["blocks"].items() if not k.startswith("cv_")}
     made = blocks()
     made.update(frieze_tiles()[1])
+    made.update(letters_tiles()[1])
     kept.update(made)
     data["blocks"] = kept
     path.write_text(json.dumps(data, indent=1) + "\n")
