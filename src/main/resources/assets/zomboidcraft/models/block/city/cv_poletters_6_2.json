@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_poletters_6_2": "zomboidcraft:block/city/cv_poletters_6_2",
+    "particle": "zomboidcraft:block/city/cv_poletters_6_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_poletters_6_2"
+        },
+        "south": {
+          "texture": "#cv_poletters_6_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_poletters_6_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_poletters_6_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_poletters_6_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_poletters_6_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

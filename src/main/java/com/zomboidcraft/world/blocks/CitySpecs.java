@@ -2911,6 +2911,25 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("cv_book_drop", "home_books");
         s("cv_book_drop_tipped", FACING, LOOT, 0, SoundType.METAL, 2f, 2, 0, 1, 14, 11, 13, 2.5, 0, 13, 13.5, 10, 14.5, 2.5, 1, 13, 4.5, 3, 16, 2.5, 8, 13, 4.5, 10, 16, 11.5, 1, 13, 13.5, 3, 16, 11.5, 8, 13, 13.5, 10, 16);
         loot("cv_book_drop_tipped", "home_books");
+        s("cv_mailbox", FACING, LOOT, 0, SoundType.METAL, 2f, 2.5, 0, 3.5, 4.5, 3, 5.5, 2.5, 0, 11.5, 4.5, 3, 13.5, 11.5, 0, 3.5, 13.5, 3, 5.5, 11.5, 0, 11.5, 13.5, 3, 13.5, 2, 3, 3, 14, 13, 14, 2.5, 13, 3.5, 13.5, 14.5, 13.5, 3.5, 14.5, 4.5, 12.5, 15.6, 12.5, 3, 10, 2.4, 13, 11, 3);
+        loot("cv_mailbox", "mail");
+        s("cv_mailbox_tipped", FACING, LOOT, 0, SoundType.METAL, 2f, 2, 0, 1, 14, 11, 13, 2.5, 0, 13, 13.5, 10, 14.5, 2.5, 1, 13, 4.5, 3, 16, 2.5, 8, 13, 4.5, 10, 16, 11.5, 1, 13, 13.5, 3, 16, 11.5, 8, 13, 13.5, 10, 16);
+        loot("cv_mailbox_tipped", "mail");
+        s("cv_po_boxes", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 16, 16);
+        loot("cv_po_boxes", "mail");
+        s("cv_po_boxes_b", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 16, 16);
+        loot("cv_po_boxes_b", "mail");
+        s("cv_sorting_case", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 3, 16, 7, 16, 0, 7, 0, 16, 8, 8, 0, 8, 6, 16, 16, 16);
+        loot("cv_sorting_case", "mail");
+        s("cv_po_counter", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 1, 16, 14, 16, 0, 14, 0, 16, 16, 16);
+        loot("cv_po_counter", "mail");
+        s("cv_po_grille", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 7.5, 16, 16, 8.5);
+        s("cv_po_desk", FACING, 0, 0, SoundType.WOOD, 1f, 6, 0, 6, 10, 10, 10, 4, 0, 4, 12, 1, 12, 0.5, 10, 1, 15.5, 11.5, 15, 0.5, 11.5, 12, 15.5, 13, 15);
+        s("cv_mail_hamper", FACING, LOOT, 0, SoundType.WOOL, 1f, 1, 0, 1, 2.5, 14, 2.5, 1, 0, 13.5, 2.5, 14, 15, 13.5, 0, 1, 15, 14, 2.5, 13.5, 0, 13.5, 15, 14, 15, 1.5, 2, 1.5, 14.5, 13, 14.5, 1, 13, 1, 15, 14, 2.5, 1, 13, 13.5, 15, 14, 15);
+        loot("cv_mail_hamper", "mail");
+        s("cv_mail_sack", FACING, DECOR | LOOT, 0, SoundType.WOOL, 0f, 3, 0, 3.5, 13, 6, 12.5, 5, 6, 5.5, 11, 8, 10.5, 7, 8, 7, 9, 9.5, 9);
+        loot("cv_mail_sack", "mail");
+        s("cv_wanted", FACING, DECOR, 0, SoundType.WOOD, 0f, 0.5, 2, 15, 15.5, 14, 16);
         s("cv_iron_fence", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 7.5, 16, 16, 8.5);
         s("cv_iron_post", PLAIN, 0, 0, SoundType.METAL, 2f, 6, 0, 6, 10, 15, 10, 5.5, 0, 5.5, 10.5, 2, 10.5, 6.5, 15, 6.5, 9.5, 17, 9.5);
         s("cv_lamp_post", PLAIN, 0, 0, SoundType.METAL, 2f, 4.5, 0, 4.5, 11.5, 3, 11.5, 5.5, 3, 5.5, 10.5, 5, 10.5, 6.5, 5, 6.5, 9.5, 16, 9.5);
@@ -2968,5 +2987,21 @@ final class CitySpecs extends CityBlocks.Specs {
         s("cv_lfrieze_8_5", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cv_lfrieze_8_6", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cv_lfrieze_8_7", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_0", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_1", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_2", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_3", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_4", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_5", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_6", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_7", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_8", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_pofrieze_10_9", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cv_poletters_6_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
+        s("cv_poletters_6_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
+        s("cv_poletters_6_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
+        s("cv_poletters_6_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
+        s("cv_poletters_6_4", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
+        s("cv_poletters_6_5", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.4, 16, 16, 16);
     }
 }
