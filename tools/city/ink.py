@@ -25,7 +25,7 @@ from PIL import Image
 
 HERE = Path(__file__).parent
 DIRS = ["down", "up", "north", "south", "west", "east"]
-P = 4                 # atlas pixels per 1/16 block: the city textures' 64 per block
+P = 8                 # atlas pixels per 1/16 block, twice the city textures, so the one-pixel outline is fine
 GUTTER = 4           # edge pixels repeated round each face, so mipmaps don't blend in its neighbours
 MAPS = ("", "_n", "_s", "_nrm_gl")
 EMPTY = {"": (0, 0, 0, 0), "_n": (128, 128, 255, 255), "_s": (0, 0, 0, 255), "_nrm_gl": (128, 128, 255, 255)}
@@ -194,7 +194,7 @@ def ink(c, n, face, w, h, rng, box, rim, lift=0):
     else:
         y = box[4] - (np.arange(h) + 0.5) / h * (box[4] - box[1]) + lift
         rgb = rgb * (0.88 + 0.12 * np.clip(y / 32, 0, 1))[:, None, None]
-    if min(w, h) < 3:
+    if min(w, h) < 0.75 * P:
         rgb *= 0.8   # a sliver of an edge: just a touch darker
     else:
         near = np.zeros((h, w), bool)
@@ -202,7 +202,7 @@ def ink(c, n, face, w, h, rng, box, rim, lift=0):
         near[:-1] |= rim[1:]
         near[:, 1:] |= rim[:, :-1]
         near[:, :-1] |= rim[:, 1:]
-        chips = near & ~rim & (rng.random((h, w)) < (0.18 if min(w, h) >= 8 else 0))  # none on thin rails
+        chips = near & ~rim & (rng.random((h, w)) < (0.18 if min(w, h) >= 2 * P else 0))  # none on thin rails
         rgb[chips] = rgb[chips] + (255 - rgb[chips]) * 0.25
         rgb[rim] = rgb[rim] * 0.4 + 5
         if face != "down":
@@ -309,13 +309,16 @@ def ink_block(name, spec, source, out_dir, atlas_name, joined=frozenset()):
 
 
 def main():
+    global P
     ap = argparse.ArgumentParser()
     ap.add_argument("tex_dir", type=Path)
     ap.add_argument("out_dir", type=Path)
     ap.add_argument("specs_out", type=Path)
     ap.add_argument("--prefix", default="ink__")
+    ap.add_argument("--px", type=int, default=P, help="atlas pixels per 1/16 block (the outline is one)")
     ap.add_argument("names", nargs="+")
     a = ap.parse_args()
+    P = a.px
     blocks = json.load(open(HERE / "blocks.json"))["blocks"]
     source = Source(a.tex_dir)
     out = {}
