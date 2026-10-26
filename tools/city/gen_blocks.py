@@ -39,6 +39,7 @@ DECOR = {"store_spill", "vines", "paper", "glass_shards", "blood_splat", "scorch
 SOUNDS = [  # first keyword in the block's name or textures wins
     (("window", "glass", "cabin"), "GLASS"),
     (("grass", "weeds", "vines", "ivy", "leaves", "leaf", "moss_carpet", "corn", "straw", "bale"), "GRASS"),
+    (("tree_",), "WOOD"),
     (("crate", "boards", "boarded", "wood", "desk", "tree_log", "cardboard", "paper", "siding", "barn"), "WOOD"),
     (("carpet", "office_floor", "cubicle", "sandbag", "trash_bag", "tarp", "camo", "hesco"), "WOOL"),
     (("dirt", "burnt_ground", "rubble"), "GRAVEL"),
@@ -267,6 +268,35 @@ def blockstate(name, spec):
     return {"variants": {"": {"model": model}}}
 
 
+BRANCH_TURNS = [("north", {}), ("south", {"y": 180}), ("east", {"y": 90}), ("west", {"y": 270}),
+                ("up", {"x": 270}), ("down", {"x": 90})]
+
+
+def branch_models(name, spec, tex_dir):
+    """A tree limb: its post (the spec's one box) and one arm reaching from it to the north face,
+    which the blockstate turns toward each neighbour the limb joins."""
+    core = spec["boxes"][0]
+    a, b, tex = core[0], core[3], core[6]
+    arm = dict(spec, boxes=[[a, a, 0, b, b, a, tex]])
+    return {name: model_json(name, spec, tex_dir), f"{name}_arm": model_json(name, arm, tex_dir)}
+
+
+def branch_blockstate(name):
+    parts = [{"apply": {"model": f"{NS}:block/city/{name}"}}]
+    for side, turn in BRANCH_TURNS:
+        parts.append({"when": {side: "true"}, "apply": dict({"model": f"{NS}:block/city/{name}_arm"}, **turn)})
+    return {"multipart": parts}
+
+
+def loot_json(name, spec):
+    """What a block drops: itself, unless the spec names another item (a tree's bark gives logs)
+    or nothing ("")."""
+    item = spec.get("drops", f"{NS}:{name}")
+    pools = [] if item == "" else [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": item}],
+                                   "conditions": [{"condition": "minecraft:survives_explosion"}]}]
+    return {"type": "minecraft:block", "pools": pools, "random_sequence": f"{NS}:blocks/{name}"}
+
+
 def has_alpha(tex_dir, names):
     return any((np.array(Image.open(tex_dir / f"{t}.png").convert("RGBA"))[..., 3] < 250).any() for t in names)
 
@@ -290,7 +320,7 @@ def java_line(name, spec, tex_dir):
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
         return f'        s("{name}", DOOR, {flag}, 0, SoundType.{s}, 3f);'
     model = spec.get("model", "cube")
-    kind = {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
+    kind = "BRANCH" if "branch" in spec else {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
     decor = model == "cross" or spec.get("decor") or name in DECOR or name.startswith(DECOR_PREFIX)
     # partial shapes still hide what they cover (their shape is the occlusion shape); only
     # see-through pixels need the neighbours drawn behind them
@@ -383,6 +413,15 @@ def main():
             used.update(textures(spec))
             lines.append(java_line(name, spec, tex_dir))
             continue
+        if "branch" in spec:
+            for model, obj in branch_models(name, spec, tex_dir).items():
+                write_json(ASSETS / f"models/block/city/{model}.json", obj)
+            write_json(ASSETS / f"blockstates/{name}.json", branch_blockstate(name))
+            write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
+            write_json(DATA / f"loot_table/blocks/{name}.json", loot_json(name, spec))
+            used.update(textures(spec))
+            lines.append(java_line(name, spec, tex_dir))
+            continue
         write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec, tex_dir))
         if "flicker" in spec:
             write_json(ASSETS / f"models/block/city/{name}_on.json", model_json(name, lit_spec(spec), tex_dir))
@@ -391,11 +430,7 @@ def main():
         else:
             write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
-        write_json(DATA / f"loot_table/blocks/{name}.json", {
-            "type": "minecraft:block",
-            "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}"}],
-                       "conditions": [{"condition": "minecraft:survives_explosion"}]}],
-            "random_sequence": f"{NS}:blocks/{name}"})
+        write_json(DATA / f"loot_table/blocks/{name}.json", loot_json(name, spec))
         used.update(textures(spec))
         lines.append(java_line(name, spec, tex_dir))
 

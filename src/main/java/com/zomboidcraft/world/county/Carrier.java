@@ -74,6 +74,10 @@ final class Carrier {
     private static final int TRUNK_Z = 15;
     /** The island's stair, from the gallery deck to its top. */
     private static final int ISLAND_STAIR = 138, ISLAND_STAIR_Z = 25;
+    /** The wardroom: two frames of the gallery deck's middle band, from WARD_X0 to WARD_X0 + 2 FRAME. */
+    private static final int WARD_X0 = 216;
+    /** The captain's cabin: the frame from CAPTAIN_X0, starboard on the gallery deck, aft of flight deck control. */
+    private static final int CAPTAIN_X0 = 168;
     /** The ship's frames: bulkheads every FRAME from FRAME0. */
     private static final int FRAME0 = 12, FRAME = 12;
     private static final String[] NAMES = {"GRAYHAVEN", "SENTINEL", "ALLEGIANCE", "STEADFAST", "VIGILANT", "LODESTAR"};
@@ -89,7 +93,7 @@ final class Carrier {
 
     /** What a compartment is fitted out as. */
     private enum Room { BERTHING, MESS, GALLEY, SICKBAY, BRIG, ARMORY, MAGAZINE, STORES, WORKSHOP, OFFICE, READY, CONTROL,
-        STATEROOM, ARREST, CATAPULT, TRUNK }
+        STATEROOM, ARREST, CATAPULT, TRUNK, WARDROOM, CAPTAIN, HEAD }
 
     private interface Picker {
         Room pick(int xa, int xb, int za, int zb);
@@ -940,13 +944,17 @@ final class Carrier {
 
     /** Fits out a compartment from xa to xb and za to zb on floor y, its door in the bulkhead at row doorZ. */
     private void fit(Room r, int xa, int xb, int za, int zb, int y, int doorZ) {
+        if (r == Room.WARDROOM) {
+            return;
+        }
         boolean port = doorZ > zb;
         int near = port ? zb : za, far = port ? za : zb, in = port ? -1 : 1;
         String toNear = port ? "south" : "north", toFar = port ? "north" : "south";
         int dx = (xa + xb) / 2;
         String floor = switch (r) {
             case MESS -> chance() < 0.7 ? "navy_tile_grey" : "navy_tile_blue";
-            case GALLEY, BRIG -> "navy_tile_grey";
+            case GALLEY, BRIG, HEAD -> "navy_tile_grey";
+            case CAPTAIN -> "fit_carpet";
             case SICKBAY -> "navy_tile_green";
             case BERTHING, STATEROOM, OFFICE, READY, CONTROL -> any("navy_tile_blue", "floor_lino");
             default -> null;
@@ -979,12 +987,15 @@ final class Carrier {
             case READY -> "navy_st_ready";
             case CONTROL -> "navy_st_control";
             case ARREST, CATAPULT -> "navy_st_machinery";
+            case HEAD -> "fit_st_head";
             default -> null;
         };
         if (sign != null) {
             in(dx - 1, y + 2, doorZ - in, sign + "[facing=" + toNear + "]");
         }
         int lo2 = Math.min(near, far) + (port ? 0 : 1), hi2 = Math.max(near, far) - (port ? 1 : 0);
+        // the officers' rooms have drop ceilings of their own, not the bare overheads
+        boolean dropped = r == Room.CAPTAIN;
         switch (r) {
             case BERTHING -> {
                 // racks three high back to back in rows across the compartment, two long with a tall locker
@@ -1194,7 +1205,11 @@ final class Carrier {
                 }
                 litter(xa, xb, za, zb, y, "debris_chunk[facing=north]", 0.04);
             }
-            case OFFICE, STATEROOM -> {
+            case STATEROOM, OFFICE -> {
+                if (r == Room.STATEROOM && staterooms(xa, xb, near, far, y, in)) {
+                    dropped = true;
+                    break;
+                }
                 for (int x = xa + 1; x < xb; x += 3) {
                     for (int z = far; Math.abs(z - near) > 1; z -= in * 3) {
                         if (r == Room.STATEROOM && z == far) {
@@ -1259,13 +1274,530 @@ final class Carrier {
                 in(xb, y + 1, near + in, "ship_console[facing=west]");
                 in(xa, y + 1, near + in, "bunk_switchboard[facing=east]");
             }
+            case CAPTAIN -> captain(xa, xb, near, far, y, in);
+            case HEAD -> head(xa, xb, near, far, y, in);
             default -> {
             }
         }
-        if (r != Room.TRUNK) {
+        if (r != Room.TRUNK && !dropped) {
             overheads(r, xa, xb, near, far, y, toNear, toFar, dx, r == Room.SICKBAY);
             dressing(xa, xb, Math.min(za, zb), Math.max(za, zb), y, (int) ((xb - xa) * (hi2 - lo2 + 1) * (0.015 + hit * 0.03)));
         }
+    }
+
+    // ------------------------------------------------------------------ officers' country (from the wardroom, stateroom and head photos)
+
+    /** A troffer in a drop ceiling, its tube along axis: on the main supply mostly dead or failing, on the emergency one mostly lit. */
+    private String troffer(String axis, boolean lit) {
+        double r = chance();
+        String t = lit ? (r < 0.75 ? "fit_troffer_on" : r < 0.95 ? "fit_troffer_flicker" : "fit_troffer")
+                : r < 0.1 ? "fit_troffer_on" : r < 0.32 ? "fit_troffer_flicker" : "fit_troffer";
+        return t + "[axis=" + axis + "]";
+    }
+
+    /** A lamp's lit (name_on) or dead (name) block, lit with the chance given. */
+    private String lamp(String name, double on) {
+        return chance() < on ? name + "_on" : name;
+    }
+
+    /** Lines a steel bulkhead (the cells at x, z from y + 1 to y + 3) with the joiner laminate, its face looking f. */
+    private void line(int x, int z, int y, String f, String lower, String upper) {
+        for (int dy = 1; dy <= 3; dy++) {
+            if ("navy_wall".equals(p.get(x, y + dy, z))) {
+                p.set(x, y + dy, z, (dy == 1 ? lower : upper) + "[facing=" + f + "]");
+            }
+        }
+    }
+
+    private void line(int x, int z, int y, String f) {
+        line(x, z, y, f, "fit_lining", "fit_lining");
+    }
+
+    /**
+     * A drop ceiling in the top of the y + 3 cells from x0 to x1 and z0 to z1 wherever no light took
+     * the place first: a tile out here and there (the pipes showing over it), down on the floor below.
+     */
+    private void ceiling(int x0, int x1, int z0, int z1, int y) {
+        for (int x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+            for (int z = Math.min(z0, z1); z <= Math.max(z0, z1); z++) {
+                if (!free(x, y + 3, z)) {
+                    continue;
+                }
+                if (chance() < 0.025 + hit * 0.05) {
+                    String f = any("north", "east", "south", "west");
+                    p.set(x, y + 3, z, "fit_ceiling_open[facing=" + f + "]");
+                    p.setIfAir(x, y + 1, z, "fit_ceiling_fallen[facing=" + f + "]");
+                } else {
+                    p.set(x, y + 3, z, "fit_ceiling");
+                }
+            }
+        }
+    }
+
+    /** True if every cell from xa to xb over rows z0 to z0 + in * rows (not past far) is inside her, floor to deckhead. */
+    private boolean fits(int xa, int xb, int z0, int in, int rows, int far, int y) {
+        if ((z0 + in * rows - far) * in > 0) {
+            return false;
+        }
+        for (int j = 0; j <= rows; j++) {
+            for (int x = xa; x <= xb; x++) {
+                for (int dy = 1; dy <= 3; dy++) {
+                    if (!inside(x, y + dy, z0 + in * j)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * A compartment of officers' staterooms (as in the stateroom photos): a narrow passage of joiner
+     * bulkheads in from its door, the staterooms off it either side behind their own doors, and at
+     * its end a linen locker where the hull leaves room. Two officers share a stateroom (two-tier
+     * berth, two desks); now and then a whole compartment is singles for department heads. False if
+     * the compartment is too shallow for even one pair.
+     */
+    private boolean staterooms(int xa, int xb, int near, int far, int y, int in) {
+        int dx = (xa + xb) / 2;
+        if (xb - xa != 10) {
+            return false;
+        }
+        boolean single = chance() < 0.3;
+        int stride = single ? 5 : 4;
+        int n = 0;
+        while (fits(xa, xb, near + in * n * stride, in, stride - 1, far, y)) {
+            n++;
+        }
+        if (n == 0) {
+            return false;
+        }
+        String fwd = in > 0 ? "south" : "north", back = in > 0 ? "north" : "south";
+        int last = near + in * (n * stride - 1);
+        for (int z = near; (z - last) * in <= 0; z += in) {
+            for (int x = xa; x <= xb; x++) {
+                p.set(x, y, z, x == dx ? "navy_tile_blue" : "fit_carpet");
+            }
+            for (int dy = 1; dy <= 3; dy++) {
+                p.set(dx - 1, y + dy, z, "fit_joiner");
+                p.set(dx + 1, y + dy, z, "fit_joiner");
+            }
+        }
+        for (int k = 0; k < n; k++) {
+            int zp = near + in * (k * stride + stride - 1);
+            for (int x = xa; x <= xb; x++) {
+                for (int dy = 1; dy <= 3; dy++) {
+                    if (x != dx || k == n - 1) {
+                        p.set(x, y + dy, zp, "fit_joiner");
+                    }
+                }
+            }
+            for (int s : new int[] {-1, 1}) {
+                cabin(dx, s, near + in * k * stride, in, single, y);
+            }
+        }
+        // the passage: night lights in its ceiling, the odd downlight, a lantern at the door
+        for (int z = near; (z - last) * in < 0; z += in) {
+            int m = Math.abs(z - near);
+            if (m % 4 == 1) {
+                p.set(dx, y + 3, z, red());
+            } else if (m % 4 == 3) {
+                p.set(dx, y + 3, z, lamp("fit_downlight", 0.1));
+            }
+        }
+        ceiling(dx, dx, near, last - in, y);
+        in(dx, y + 2, near + in, lantern("east"));
+        // behind the last partition, if the hull leaves room: the linen locker
+        int zl = last + in;
+        if ((zl - far) * in <= 0 && inside(dx, y + 1, zl) && inside(dx, y + 2, zl)) {
+            Doors.abandoned(p, rng, dx, y + 1, last, "fit_door_cabin", fwd, Doors.hinge(rng));
+            for (int z = zl; (z - far) * in <= 0 && inside(dx, y + 1, z); z += in) {
+                for (int x = xa; x <= xb; x++) {
+                    if ((x == xa || x == xb || Math.abs(x - dx) == 3) && chance() < 0.85) {
+                        in(x, y + 1, z, any("bunk_rack_boxes", "bunk_rack_crates", "bunk_rack_boxes") + "[facing=" + (x < dx ? "east" : "west") + "]");
+                    }
+                }
+                if (Math.abs(z - zl) % 3 == 1) {
+                    in(dx, y + 3, z, lamp("fit_globe_down", 0.1));
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * One stateroom on side s (-1 to the west of the passage at dx, 1 to the east), its rows from z0
+     * on away from the door (in): the door off the passage in the middle row; the berth along the
+     * frame, its head against the partition (two tiers for two officers, one for a department
+     * head); the fold-down desks under their shelves against the same partition, chairs at them;
+     * the little sink and its mirror cabinet by the door; wardrobes against the next partition; a
+     * laundry bag, a painting; carpet, laminate over the steel, a drop ceiling with one troffer.
+     */
+    private void cabin(int dx, int s, int z0, int in, boolean single, int y) {
+        String into = s > 0 ? "east" : "west", out = s > 0 ? "west" : "east";
+        String fwd = in > 0 ? "south" : "north", back = in > 0 ? "north" : "south";
+        int rows = single ? 4 : 3;
+        int[] xs = {dx + 2 * s, dx + 3 * s, dx + 4 * s, dx + 5 * s};
+        int[] zs = new int[rows];
+        for (int j = 0; j < rows; j++) {
+            zs[j] = z0 + in * j;
+        }
+        Doors.abandoned(p, rng, dx + s, y + 1, zs[1], "fit_door_cabin", into, Doors.hinge(rng));
+        for (int j = 0; j < rows; j++) {
+            line(xs[3] + s, zs[j], y, out);
+        }
+        for (int x : xs) {
+            line(x, z0 - in, y, fwd);
+        }
+        // the berth
+        p.set(xs[3], y + 1, zs[0], lamp("fit_berth_lo_head", 0.12) + "[facing=" + fwd + "]");
+        p.set(xs[3], y + 1, zs[1], "fit_berth_lo_foot[facing=" + fwd + "]");
+        if (single) {
+            p.set(xs[3], y + 2, zs[1], "fit_painting_" + any("a", "b", "c") + "[facing=" + out + "]");
+        } else {
+            p.set(xs[3], y + 2, zs[0], lamp("fit_berth_hi_head", 0.12) + "[facing=" + fwd + "]");
+            p.set(xs[3], y + 2, zs[1], "fit_berth_hi_foot[facing=" + fwd + "]");
+        }
+        // the desks, their shelves, their chairs
+        for (int i = 1; i <= (single ? 1 : 2); i++) {
+            p.set(xs[i], y + 1, zs[0], "fit_secretary[facing=" + fwd + "]");
+            double r = chance();
+            p.set(xs[i], y + 2, zs[0], (r < 0.08 ? "fit_shelves_on" : r < 0.22 ? "fit_shelves_flicker" : "fit_shelves") + "[facing=" + fwd + "]");
+            if (chance() < 0.85) {
+                p.set(xs[i], y + 1, zs[1], (chance() < 0.25 ? "office_chair_fallen" : "office_chair") + "[facing=" + back + "]");
+            }
+        }
+        // the sink and its mirror by the door
+        p.set(xs[0], y + 1, zs[0], "fit_sink_cabin[facing=" + fwd + "]");
+        p.set(xs[0], y + 2, zs[0], lamp("fit_medcab", 0.08) + "[facing=" + fwd + "]");
+        // the wardrobes, and in a single the armchair and a lamp
+        int jw = rows - 1;
+        for (int i = single ? 3 : 2; i <= 3; i++) {
+            p.set(xs[i], y + 1, zs[jw], "fit_wardrobe_lo[facing=" + back + "]");
+            p.set(xs[i], y + 2, zs[jw], "fit_wardrobe_hi[facing=" + back + "]");
+        }
+        if (single) {
+            p.set(xs[2], y + 1, zs[jw], "home_armchair_blue[facing=" + back + "]");
+            p.set(xs[1], y + 1, zs[jw], "home_floor_lamp");
+            p.set(xs[0], y + 1, zs[jw], chance() < 0.6 ? "fit_laundry_bag" : "home_clothes_pile");
+        } else {
+            p.set(xs[0], y + 1, zs[jw], chance() < 0.6 ? "fit_laundry_bag" : "home_clothes_pile");
+        }
+        p.set(xs[0], y + 2, zs[jw], "fit_painting_" + any("a", "b", "c") + "[facing=" + back + "]");
+        if (chance() < 0.5) {
+            p.set(xs[1], y + 2, zs[jw], "bunk_clock[facing=" + back + "]");
+        }
+        // the ceiling and its one light, the floor's litter
+        p.set(xs[1], y + 3, zs[1], troffer("x", false));
+        ceiling(xs[0], xs[3], zs[0], zs[jw], y);
+        for (int j = 0; j < rows; j++) {
+            for (int x : xs) {
+                if (chance() < 0.05 + hit * 0.05) {
+                    p.setIfAir(x, y + 1, zs[j], any("paper", "paper", "glass_shards", "blood_splat", "home_shoes"));
+                }
+            }
+        }
+    }
+
+    /**
+     * The captain's in-port cabin (as in the cabin photo: framed ships on light walls, a chess set mid
+     * game, a lamp, a screen): the day cabin in from the door with its conference table and chairs,
+     * the sofa and coffee table, the chess table, the desk and bookcase; through a joiner bulkhead
+     * the sleeping cabin, a proper bed, the wardrobe and dresser; behind that the captain's own head.
+     */
+    private void captain(int xa, int xb, int near, int far, int y, int in) {
+        int dx = (xa + xb) / 2;
+        String fwd = in > 0 ? "south" : "north", back = in > 0 ? "north" : "south";
+        boolean lit = chance() < 0.45;
+        int depth = Math.abs(far - near) + 1;
+        int d1 = near + in * Math.min(9, depth - 1);
+        int wall1 = d1 + in, s1 = wall1 + in * 6, wall2 = s1 + in;
+        boolean sleep = (s1 - far) * in <= 0 && inside(dx, y + 1, s1);
+        boolean ownHead = sleep && (wall2 + in * 2 - far) * in <= 0 && inside(xb - 1, y + 1, wall2 + in * 2);
+        int end = ownHead ? far : sleep ? s1 : d1;
+        for (int z = near; (z - end) * in <= 0; z += in) {
+            line(xa - 1, z, y, "east");
+            line(xb + 1, z, y, "west");
+        }
+        for (int x = xa; x <= xb; x++) {
+            line(x, near - in, y, fwd);
+        }
+        // the day cabin, the rug under its conference table first
+        int t0 = near + in * 3;
+        rug(dx - 2, t0 - in * 2, dx + 2, t0 + in * 3, y);
+        for (int x = dx - 1; x <= dx + 1; x++) {
+            for (int k = 0; k < 2; k++) {
+                in(x, y + 1, t0 + in * k, "home_table");
+            }
+            in(x, y + 1, t0 - in, "office_chair[facing=" + fwd + "]");
+            in(x, y + 1, t0 + in * 2, "office_chair[facing=" + back + "]");
+        }
+        in(dx - 2, y + 1, t0, "office_chair[facing=east]");
+        in(dx + 2, y + 1, t0 + in, chance() < 0.3 ? "office_chair_fallen[facing=west]" : "office_chair[facing=west]");
+        in(dx, y + 2, t0, "home_lamp_table_low");
+        // the sofa against the frame, the coffee table, an armchair
+        int sz = near + in * 6;
+        in(xa, y + 1, sz, "home_sofa_blue_l[facing=east]");
+        in(xa, y + 1, sz + in, "home_sofa_blue_m[facing=east]");
+        in(xa, y + 1, sz + 2 * in, "home_sofa_blue_r[facing=east]");
+        in(xa + 1, y + 1, sz + in, "home_coffee_table[facing=east]");
+        in(xa + 2, y + 1, sz + 2 * in, "home_armchair_blue[facing=west]");
+        in(xa, y + 2, sz + in, "fit_painting_" + any("a", "b", "c") + "[facing=east]");
+        in(xa, y + 1, near + in, "home_floor_lamp");
+        in(xa, y + 1, near + in * 2, "home_tv[facing=east]");
+        in(xa, y + 2, near + in * 3, "fit_painting_" + any("a", "b", "c") + "[facing=east]");
+        // the chess table, a game left mid-way
+        int cx = xb - 2, cz = near + in * 7;
+        in(cx, y + 1, cz, "fit_chess[facing=" + fwd + "]");
+        in(cx, y + 1, cz - in, "office_chair[facing=" + fwd + "]");
+        in(cx, y + 1, cz + in, "office_chair[facing=" + back + "]");
+        // the desk, its chair, the bookcases
+        in(xb, y + 1, near + in, "home_desk_pc[facing=west]");
+        in(xb - 1, y + 1, near + in, "office_chair[facing=east]");
+        for (int k = 3; k <= 4; k++) {
+            in(xb, y + 1, near + in * k, "home_bookcase[facing=west]");
+            in(xb, y + 2, near + in * k, "home_bookcase_top[facing=west]");
+        }
+        in(xb, y + 2, near + in * 6, "fit_painting_" + any("a", "b", "c") + "[facing=west]");
+        in(xb, y + 1, d1, "home_plant");
+        in(dx + 1, y + 2, near, lantern(fwd));
+        // the day cabin's lights: downlights round a troffer over the table
+        in(dx, y + 3, t0, troffer("x", lit));
+        for (int x : new int[] {xa + 1, dx, xb - 1}) {
+            for (int z : new int[] {near + in, near + in * 6, d1 - in}) {
+                if (free(x, y + 3, z)) {
+                    p.set(x, y + 3, z, lamp("fit_downlight", lit ? 0.7 : 0.08));
+                }
+            }
+        }
+        ceiling(xa, xb, near, d1, y);
+        if (!sleep) {
+            in(dx, y + 2, d1, "fit_crest[facing=" + back + "]");
+            return;
+        }
+        // the sleeping cabin through the joiner bulkhead
+        for (int x = xa; x <= xb; x++) {
+            for (int dy = 1; dy <= 3; dy++) {
+                p.set(x, y + dy, wall1, "fit_joiner");
+            }
+        }
+        Doors.abandoned(p, rng, dx, y + 1, wall1, "fit_door_cabin", fwd, Doors.hinge(rng));
+        in(dx + 2, y + 2, d1, "fit_crest[facing=" + back + "]");
+        int bz = s1;
+        in(xa + 2, y + 1, bz, "home_bed_blue_head[facing=" + back + "]");
+        in(xa + 2, y + 1, bz - in, "home_bed_blue_foot[facing=" + back + "]");
+        in(xa + 1, y + 1, bz, "home_nightstand[facing=" + back + "]");
+        in(xa + 3, y + 1, bz, "home_nightstand[facing=" + back + "]");
+        in(xa + 2, y + 2, bz, "fit_painting_" + any("a", "b", "c") + "[facing=" + back + "]");
+        in(xa, y + 1, wall1 + in, "home_dresser[facing=east]");
+        for (int k = 1; k <= 2; k++) {
+            in(xb, y + 1, wall1 + in * k, "fit_wardrobe_lo[facing=west]");
+            in(xb, y + 2, wall1 + in * k, "fit_wardrobe_hi[facing=west]");
+        }
+        in(xb - 1, y + 1, bz, chance() < 0.5 ? "fit_laundry_bag" : "home_clothes_pile");
+        in(xa + 2, y + 3, bz - in * 3, troffer("x", lit));
+        in(xa + 1, y + 3, bz - in, lamp("fit_downlight", lit ? 0.6 : 0.06));
+        ceiling(xa, xb, wall1 + in, s1, y);
+        if (!ownHead) {
+            return;
+        }
+        // the captain's head
+        for (int x = xa; x <= xb; x++) {
+            for (int dy = 1; dy <= 3; dy++) {
+                p.set(x, y + dy, wall2, "fit_joiner");
+            }
+        }
+        Doors.abandoned(p, rng, xb - 1, y + 1, wall2, "fit_door_cabin", fwd, Doors.hinge(rng));
+        for (int z = wall2 + in; (z - far) * in <= 0; z += in) {
+            for (int x = xa; x <= xb; x++) {
+                if (inside(x, y + 1, z)) {
+                    p.set(x, y, z, "navy_tile_grey");
+                }
+            }
+        }
+        int hz = wall2 + in * 2;
+        in(xb, y + 1, hz, "fit_toilet_steel[facing=west]");
+        in(xb - 3, y + 1, wall2 + in, "fit_sink_cabin[facing=" + fwd + "]");
+        in(xb - 3, y + 2, wall2 + in, lamp("fit_medcab", lit ? 0.5 : 0.05) + "[facing=" + fwd + "]");
+        in(xb - 5, y + 1, hz, "bunk_shower[facing=" + fwd + "]");
+        in(xb - 2, y + 3, hz, tube("x", lit));
+    }
+
+    /** A rug on floor y from (x0, z0) to (x1, z1), edged and cornered as Trades.rug lays them. */
+    private void rug(int x0, int z0, int x1, int z1, int y) {
+        String c = chance() < 0.6 ? "blue" : "red";
+        int za = Math.min(z0, z1), zb = Math.max(z0, z1);
+        for (int x = x0; x <= x1; x++) {
+            for (int z = za; z <= zb; z++) {
+                boolean w = x == x0, e = x == x1, n = z == za, s = z == zb;
+                String f = (w || e) && (n || s) ? "home_rug_" + c + "_corner[facing=" + (n ? (w ? "north" : "east") : e ? "south" : "west") + "]"
+                        : n ? "home_rug_" + c + "_edge[facing=north]" : s ? "home_rug_" + c + "_edge[facing=south]"
+                        : w ? "home_rug_" + c + "_edge[facing=west]" : e ? "home_rug_" + c + "_edge[facing=east]" : "home_rug_" + c;
+                in(x, y + 1, z, f);
+            }
+        }
+    }
+
+    /**
+     * The officers' head (as in the head photo): a row of stalls in orange laminate on stainless
+     * posts along the far bulkhead, their doors in a row; the black counter with its stainless
+     * bowls and the long mirror down one side, the showers down the other.
+     */
+    private void head(int xa, int xb, int near, int far, int y, int in) {
+        String fwd = in > 0 ? "south" : "north", back = in > 0 ? "north" : "south";
+        int dx = (xa + xb) / 2;
+        // with the stalls facing back their panels fall to the east when back is north, to the west when south
+        boolean east = back.equals("north");
+        int n = 5;
+        for (int k = 0; k < n; k++) {
+            int x = east ? xa + k : xb - k;
+            if (!inside(x, y + 1, far) || !inside(x, y + 1, far - in)) {
+                continue;
+            }
+            p.set(x, y + 1, far, "fit_toilet_stall[facing=" + back + "]");
+            p.set(x, y + 2, far, "fit_stall_top[facing=" + back + "]");
+            Doors.abandoned(p, rng, x, y + 1, far - in, "fit_door_stall", fwd, Doors.hinge(rng));
+        }
+        int sx = east ? xb : xa;
+        String sf = east ? "west" : "east";
+        for (int z = near + in; (z - (far - in * 2)) * in <= 0; z += in) {
+            in(sx, y + 1, z, "fit_vanity_black[facing=" + sf + "]");
+            in(sx, y + 2, z, "fit_mirror_long[facing=" + sf + "]");
+        }
+        int wx = east ? xa : xb;
+        String wf = east ? "east" : "west";
+        for (int z = near + in; (z - (far - in * 3)) * in <= 0; z += in * 2) {
+            in(wx, y + 1, z, "bunk_shower[facing=" + wf + "]");
+            in(wx + (east ? 1 : -1), y + 1, z, "home_shower_curtain[facing=" + wf + "]");
+        }
+        in(dx, y + 1, (near + far) / 2, chance() < 0.5 ? "home_trash_can" : "home_bin_bags");
+        litter(xa, xb, Math.min(near, far), Math.max(near, far), y, "paper", 0.05);
+        litter(xa, xb, Math.min(near, far), Math.max(near, far), y, "bunk_puddle", 0.04);
+    }
+
+    /**
+     * The wardroom on the gallery deck (as in the wardroom photos): two frames thrown into one long
+     * room, cherry pillars where the frame stood, cream tiles, cream walls over a cherry wainscot,
+     * paintings of ships between brass sconces, round tables under white cloths, the chairs in their
+     * star-pattern covers, the serving line and its cooler aft, the screens and the mess's plaque
+     * forward. When it all went wrong it was the battle dressing station: tables cleared for the
+     * wounded, litters and body bags between them, blood; so it was put on the emergency supply and
+     * most of its lights still burn.
+     */
+    private void wardroom() {
+        int y = GALLERY, x0 = WARD_X0 + 1, x1 = WARD_X0 + 2 * FRAME - 1, z0 = -22, z1 = -3, mid = WARD_X0 + FRAME;
+        for (int z = z0; z <= z1; z++) {
+            for (int dy = 1; dy <= 3; dy++) {
+                p.set(mid, y + dy, z, z == -17 || z == -8 ? "fit_pillar" : "air");
+            }
+        }
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                p.set(x, y, z, "fit_tile_cream");
+                for (int dy = 1; dy <= 3; dy++) {
+                    if (x != mid) {
+                        p.set(x, y + dy, z, "air");
+                    }
+                }
+            }
+            line(x, z0 - 1, y, "south", "fit_lining_wainscot", "fit_lining_cream");
+            line(x, z1 + 1, y, "north", "fit_lining_wainscot", "fit_lining_cream");
+        }
+        for (int z = z0; z <= z1; z++) {
+            line(x0 - 1, z, y, "east", "fit_lining_wainscot", "fit_lining_cream");
+            line(x1 + 1, z, y, "west", "fit_lining_wainscot", "fit_lining_cream");
+        }
+        // the doors off the passage, an escape sign by each
+        for (int dxr : new int[] {x0 + 3, x1 - 3}) {
+            Doors.abandoned(p, rng, dxr, y + 1, z1 + 1, "ship_door", "north", Doors.hinge(rng));
+            p.set(dxr, y + 1, z1 + 2, "air");
+            p.set(dxr, y + 2, z1 + 2, "air");
+            p.set(dxr + 1, y + 2, z1, "fit_exit[facing=north]");
+        }
+        p.set(x0 + 5, y + 2, z1, "fit_st_wardroom[facing=north]");
+        // the serving line along the after bulkhead, the cooler, the coffee
+        for (int z = z0 + 2; z <= z0 + 9; z++) {
+            p.set(x0, y + 1, z, "fit_serving[facing=east]");
+        }
+        p.set(x0, y + 1, z0 + 10, "store_cooler[facing=east]");
+        p.set(x0, y + 2, z0 + 10, "store_cooler_top[facing=east]");
+        p.set(x0, y + 1, z0 + 11, "store_cooler[facing=east]");
+        p.set(x0, y + 2, z0 + 11, "store_cooler_top[facing=east]");
+        for (int z = z0 + 12; z <= z0 + 14; z++) {
+            p.set(x0, y + 1, z, "fit_counter_steel[facing=east]");
+            p.set(x0, y + 2, z, z == z0 + 13 ? "fit_urn[facing=east]" : "home_dishes");
+        }
+        // the round tables and their chairs, a third of them used for the wounded
+        String[] round = {"north", "east", "south", "west"};
+        for (int tx = x0 + 4; tx <= x1 - 2; tx += 4) {
+            for (int tz = z0 + 3; tz <= z1 - 4; tz += 4) {
+                boolean used = chance() < 0.35 + hit * 0.2;
+                p.set(tx, y + 1, tz, (used ? "fit_round_table_mess" : "fit_round_table") + "[facing=" + any(round) + "]");
+                int[][] seats = {{0, -1, 2}, {1, 0, 3}, {0, 1, 0}, {-1, 0, 1}};
+                for (int[] c : seats) {
+                    double r = chance();
+                    if (r < (used ? 0.35 : 0.1)) {
+                        continue;
+                    }
+                    String chair = r < (used ? 0.6 : 0.2) ? "fit_chair_ward_tipped[facing=" + any(round) + "]"
+                            : "fit_chair_ward[facing=" + round[c[2]] + "]";
+                    p.set(tx + c[0], y + 1, tz + c[1], chair);
+                }
+            }
+        }
+        // the wounded's litters and the dead's bags in the aisles, drips, blood
+        for (int i = 0; i < 4 + rng.nextInt(4); i++) {
+            int x = x0 + 3 + rng.nextInt(x1 - x0 - 4), z = z0 + 1 + 4 * rng.nextInt(5);
+            if (z > z1 || !free(x, y + 1, z) || !free(x + 1, y + 1, z)) {
+                continue;
+            }
+            if (chance() < 0.5) {
+                p.set(x, y + 1, z, "bunk_medbed_head[facing=east]");
+                p.set(x + 1, y + 1, z, "bunk_medbed_foot[facing=east]");
+                p.setIfAir(x, y + 1, z + (z > z0 ? -1 : 1), "bunk_iv_stand");
+            } else {
+                p.set(x, y + 1, z, "bunk_bodybag_head[facing=east]");
+                p.set(x + 1, y + 1, z, "bunk_bodybag[facing=east]");
+            }
+            p.setIfAir(x + 2, y + 1, z, chance() < 0.5 ? "home_blood_pool" : "home_blood_drag[facing=" + any(round) + "]");
+        }
+        litter(x0, x1, z0, z1, y, "blood_splat", 0.03 + hit * 0.03);
+        litter(x0, x1, z0, z1, y, "paper", 0.03);
+        // paintings between sconces along both long walls; the screens and the plaque forward; palms in the corners
+        for (int x = x0 + 2; x <= x1 - 2; x += 5) {
+            for (int[] w : new int[][] {{z0, 0}, {z1, 1}}) {
+                if (w[1] == 1 && (Math.abs(x - (x0 + 3)) <= 1 || Math.abs(x - (x1 - 3)) <= 1 || Math.abs(x - (x0 + 5)) <= 1)) {
+                    continue;
+                }
+                String f = w[1] == 0 ? "south" : "north";
+                p.set(x, y + 2, w[0], "fit_painting_" + any("a", "b", "c") + "[facing=" + f + "]");
+                for (int sx : new int[] {x - 1, x + 1}) {
+                    if (sx != mid) {
+                        p.set(sx, y + 2, w[0], lamp("fit_sconce", 0.85) + "[facing=" + f + "]");
+                    }
+                }
+            }
+        }
+        p.set(x1, y + 2, (z0 + z1) / 2, "fit_crest[facing=west]");
+        p.set(x1, y + 2, z0 + 4, "navy_screen[facing=west]");
+        p.set(x1, y + 2, z1 - 4, "navy_screen[facing=west]");
+        for (int[] c : new int[][] {{x1, z0}, {x1, z1}, {x0 + 1, z1}}) {
+            p.setIfAir(c[0], y + 1, c[1], chance() < 0.7 ? "home_plant" : "home_plant_dead");
+        }
+        // the ceiling: rows of troffers, downlights between, on the emergency supply
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                if (x == mid) {
+                    continue;
+                }
+                if ((x - x0) % 4 == 2 && (z - z0) % 4 == 1) {
+                    p.set(x, y + 3, z, troffer("x", true));
+                } else if ((x - x0) % 4 == 0 && (z - z0) % 4 == 3) {
+                    p.set(x, y + 3, z, lamp("fit_downlight", 0.6));
+                }
+            }
+        }
+        ceiling(x0, x1, z0, z1, y);
     }
 
     /** Scatters one thing over a compartment's floor. */
@@ -1300,12 +1832,19 @@ final class Carrier {
             if (stbd && x >= IX0 && x <= IX1 + 8) {
                 return Room.CONTROL;
             }
+            if (za >= -22 && zb <= -3 && xa > WARD_X0 && xb < WARD_X0 + 2 * FRAME) {
+                return Room.WARDROOM;
+            }
+            if (stbd && xa == CAPTAIN_X0 + 1) {
+                return Room.CAPTAIN;
+            }
             double r = chance();
-            if (x > 96 && x < 236 && r < 0.4) {
+            if (x > 96 && x < 236 && r < 0.35) {
                 return Room.READY;
             }
-            return r < 0.55 ? Room.STATEROOM : r < 0.75 ? Room.OFFICE : r < 0.88 ? Room.STORES : Room.WORKSHOP;
+            return r < 0.55 ? Room.STATEROOM : r < 0.63 ? Room.HEAD : r < 0.76 ? Room.OFFICE : r < 0.88 ? Room.STORES : Room.WORKSHOP;
         });
+        wardroom();
         // doors out onto the catwalks along both sides
         for (int x = FRAME0 + FRAME / 2; x < 312; x += FRAME * 2) {
             for (int s : new int[] {-1, 1}) {

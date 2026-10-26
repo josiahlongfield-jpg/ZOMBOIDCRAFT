@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_brass": "zomboidcraft:block/city/fit_brass",
+    "fit_paint_a": "zomboidcraft:block/city/fit_paint_a",
+    "particle": "zomboidcraft:block/city/fit_paint_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        2.5,
+        15
+      ],
+      "to": [
+        15.5,
+        13.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_paint_a"
+        },
+        "south": {
+          "texture": "#fit_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_brass"
+        },
+        "west": {
+          "texture": "#fit_brass"
+        },
+        "up": {
+          "texture": "#fit_brass"
+        },
+        "down": {
+          "texture": "#fit_brass"
+        }
+      }
+    }
+  ]
+}

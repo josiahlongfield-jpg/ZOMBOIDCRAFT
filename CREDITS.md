@@ -271,3 +271,13 @@ Ambient beds picked by Josiah Longfield, made to loop seamlessly by tools/audio/
 | music.bed | [Low Rumble - loopable ambiance](https://freesound.org/people/lennartgreen/sounds/638914/) | lennartgreen | CC0 1.0 |
 | music.night | Eerie Night Ambience (Apple Hill Studios - Horror Background Ambiences) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
 | music.chase, music.chase_end | bass_bed_heavy_001 (3maze - DRONEA) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| weapon.hunting_rifle.shot | [Sauer 404 close shot.wav](https://freesound.org/people/moosegravy/sounds/431834/) | moosegravy | CC0 1.0 |
+| weapon.hunting_rifle.shot_distant | [Distant Gunshot](https://freesound.org/people/Resaural/sounds/541164/) | Resaural | CC0 1.0 |
+| weapon.hunting_rifle.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
+| weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+
+## Trees
+
+The county's trees are voxelised from the Ultimate Trees Pack (Deezl, bought on CGTrader under its Royalty Free licence) by tools/nature/trees.py: oak, maple, beech, birch, elm, spruce, fir, juniper, willow and dead trees, each at three sizes. The bark and leaf textures are repainted from the pack's own, cut down to 64 pixels and graded to the world's palette. The pack's original models and textures are not part of this repository or the mod jar.

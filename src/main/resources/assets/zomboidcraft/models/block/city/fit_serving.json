@@ -1,0 +1,388 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_glass_off": "zomboidcraft:block/city/bunk_glass_off",
+    "fit_pans": "zomboidcraft:block/city/fit_pans",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "fit_steam_front": "zomboidcraft:block/city/fit_steam_front",
+    "particle": "zomboidcraft:block/city/fit_steam_front"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_steam_front"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_pans"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11.5,
+        -1
+      ],
+      "to": [
+        16,
+        12.3,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            13,
+            3.6999999999999993,
+            16,
+            4.5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            3.6999999999999993,
+            3,
+            4.5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ]
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10.5,
+        -1
+      ],
+      "to": [
+        16,
+        11.5,
+        -0.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            15.399999999999999,
+            4.5,
+            16,
+            5.5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            4.5,
+            0.6,
+            5.5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6
+          ]
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            15.399999999999999,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13,
+        8
+      ],
+      "to": [
+        1.6,
+        20,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "uv": [
+            14.4,
+            0,
+            15,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "uv": [
+            1,
+            0,
+            1.6,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            7.4,
+            0,
+            8,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            8,
+            0,
+            8.6,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        14.4,
+        13,
+        8
+      ],
+      "to": [
+        15,
+        20,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "uv": [
+            1,
+            0,
+            1.5999999999999996,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "uv": [
+            14.4,
+            0,
+            15,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            7.4,
+            0,
+            8,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            8,
+            0,
+            8.6,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        19.4,
+        4
+      ],
+      "to": [
+        15.5,
+        19.8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            0.5,
+            0,
+            15.5,
+            0.40000000000000213
+          ]
+        },
+        "south": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            0.5,
+            0,
+            15.5,
+            0.40000000000000213
+          ]
+        },
+        "east": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            7,
+            0,
+            12,
+            0.40000000000000213
+          ]
+        },
+        "west": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            4,
+            0,
+            9,
+            0.40000000000000213
+          ]
+        },
+        "up": {
+          "texture": "#bunk_glass_off"
+        },
+        "down": {
+          "texture": "#bunk_glass_off"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        15,
+        4
+      ],
+      "to": [
+        15.5,
+        19.4,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            0.5,
+            0,
+            15.5,
+            4.399999999999999
+          ]
+        },
+        "south": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            0.5,
+            0,
+            15.5,
+            4.399999999999999
+          ]
+        },
+        "east": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            11.6,
+            0,
+            12,
+            4.399999999999999
+          ]
+        },
+        "west": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            4,
+            0,
+            4.4,
+            4.399999999999999
+          ]
+        },
+        "up": {
+          "texture": "#bunk_glass_off"
+        },
+        "down": {
+          "texture": "#bunk_glass_off"
+        }
+      }
+    }
+  ]
+}

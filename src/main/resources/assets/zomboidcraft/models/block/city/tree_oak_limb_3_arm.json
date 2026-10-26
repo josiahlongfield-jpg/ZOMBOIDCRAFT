@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "particle": "zomboidcraft:block/city/tree_oak_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        6.5,
+        0
+      ],
+      "to": [
+        9.5,
+        9.5,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    }
+  ]
+}

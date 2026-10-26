@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_mesh_bag": "zomboidcraft:block/city/fit_mesh_bag",
+    "particle": "zomboidcraft:block/city/fit_mesh_bag"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        7,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_mesh_bag"
+        },
+        "south": {
+          "texture": "#fit_mesh_bag"
+        },
+        "east": {
+          "texture": "#fit_mesh_bag"
+        },
+        "west": {
+          "texture": "#fit_mesh_bag"
+        },
+        "up": {
+          "texture": "#fit_mesh_bag"
+        },
+        "down": {
+          "texture": "#fit_mesh_bag",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        7,
+        5
+      ],
+      "to": [
+        11,
+        8.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_mesh_bag"
+        },
+        "south": {
+          "texture": "#fit_mesh_bag"
+        },
+        "east": {
+          "texture": "#fit_mesh_bag"
+        },
+        "west": {
+          "texture": "#fit_mesh_bag"
+        },
+        "up": {
+          "texture": "#fit_mesh_bag"
+        },
+        "down": {
+          "texture": "#fit_mesh_bag"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        8.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        10,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_mesh_bag"
+        },
+        "south": {
+          "texture": "#fit_mesh_bag"
+        },
+        "east": {
+          "texture": "#fit_mesh_bag"
+        },
+        "west": {
+          "texture": "#fit_mesh_bag"
+        },
+        "up": {
+          "texture": "#fit_mesh_bag"
+        },
+        "down": {
+          "texture": "#fit_mesh_bag"
+        }
+      }
+    }
+  ]
+}

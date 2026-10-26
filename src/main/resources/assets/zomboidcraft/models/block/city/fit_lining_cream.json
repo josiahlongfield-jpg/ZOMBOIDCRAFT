@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_wall_cream": "zomboidcraft:block/city/fit_wall_cream",
+    "navy_wall": "zomboidcraft:block/city/navy_wall",
+    "particle": "zomboidcraft:block/city/fit_wall_cream"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_wall_cream",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_wall",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_wall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_wall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_wall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_wall",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

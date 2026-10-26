@@ -230,6 +230,14 @@ class Palette:
             elif spec.get("rotate") == "axis":
                 rot = 1 if props.get("axis", "z") == "x" else 0
             model = spec.get("model", "cube")
+            if "branch" in spec:
+                # a tree limb: its post plus an arm into each neighbour it joins
+                core = spec["boxes"][0]
+                a, b, tex = core[0], core[3], core[6]
+                arms = {"north": [a, a, 0, b, b, a], "south": [a, a, b, b, b, 16], "east": [b, a, a, 16, b, b],
+                        "west": [0, a, a, a, b, b], "up": [a, b, a, b, 16, b], "down": [a, 0, a, b, a, b]}
+                spec = {"boxes": [core] + [box + [tex] for side, box in arms.items() if props.get(side) == "true"]}
+                rot = 0
             self.pane[i] = base.startswith(("window", "boarded_window", "shutter"))
             if model == "slab" and props.get("type") == "double":
                 model = "cube"

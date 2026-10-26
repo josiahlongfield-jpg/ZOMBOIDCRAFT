@@ -12,8 +12,8 @@ import java.util.SplittableRandom;
  */
 public final class CountyGen {
     /** Trees stand on a jittered grid this many blocks apart, so a chunk can find its neighbours'. */
-    private static final int TREE_GRID = 5;
-    private static final int TREE_REACH = 6;
+    private static final int TREE_GRID = 7;
+    private static final int TREE_REACH = Trees.REACH;
 
     private final County county;
     private final PlaceCache cache;
