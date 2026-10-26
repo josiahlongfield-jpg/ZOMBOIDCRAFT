@@ -7,6 +7,15 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== kit buttons"
+javap -cp "$CP" -c -p net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket 2>&1 | grep -E "VAR_INT|BYTE|INT|readByte|writeByte|readVarInt|writeVarInt|getstatic|record|public"
+javap -cp "$CP" -c -p net.minecraft.server.network.ServerGamePacketListenerImpl 2>&1 | sed -n '/public void handleContainerButtonClick(/,/return$/p' | grep -E "invoke|if|getfield" | head -30
+sig net.minecraft.client.Minecraft 'hasShiftDown|hasControlDown|hasAltDown'
+sig net.minecraft.client.input.MouseButtonEvent '.'
+sig net.minecraft.client.input.InputWithModifiers '.'
+sig com.mojang.blaze3d.platform.InputConstants 'isKeyDown'
+exit 0
+
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
