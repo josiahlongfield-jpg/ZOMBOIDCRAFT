@@ -23,7 +23,7 @@ public class KitUiTest implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext ctx) {
         try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
-            sp.getClientLevel().waitForChunksRender();
+            sp.getConnection().waitForChunksRender();
             for (String c : List.of("gamemode survival @a", "give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight",
                     "give @a zomboidcraft:foregrip", "give @a zomboidcraft:pistol", "give @a zomboidcraft:bandage 3",
                     "give @a minecraft:bread 5", "zc injure left_arm cut")) {
@@ -61,8 +61,8 @@ public class KitUiTest implements FabricClientGameTest {
             // right click on the first tab should not switch
             if (!tabs.isEmpty()) {
                 click(ctx, tabs.get(0)[0], tabs.get(0)[1], 1);
-                LOG.info("ZCUI right click on tab 0 -> page {}",
-                        ctx.computeOnClient(mc -> mc.gui.screen() instanceof KitScreen<?> k ? k.page.name() : "?"));
+                String after = ctx.computeOnClient(mc -> mc.gui.screen() instanceof KitScreen<?> k ? k.page.name() : "?");
+                LOG.info("ZCUI right click on tab 0 -> page {}", after);
             }
 
             // the pack page: left click a tile with something in it picks it up, again puts it down
