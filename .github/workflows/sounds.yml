@@ -20,8 +20,13 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - amb_alarm_car
-          - amb_alarm_bell
+          - air_jet_start
+          - air_jet_idle,air_jet_roar
+          - air_jet_afterburner,air_jet_distant
+          - air_heli_rotor,air_heli_start
+          - air_heli_distant,air_wind
+          - air_warning,air_ground
+          - air_crash
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
