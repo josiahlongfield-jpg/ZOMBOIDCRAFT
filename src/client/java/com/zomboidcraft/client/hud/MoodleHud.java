@@ -137,7 +137,7 @@ public final class MoodleHud {
             Plate before = plates.get(moodle.key());
             int was = before == null ? 0 : before.level;
             // a moodle hovering on a line (breath while sprinting) beats at most every ten seconds
-            if (moodle.level() >= 2 && moodle.level() != GOOD && moodle.level() > (was == GOOD ? 0 : was)
+            if (harms(moodle) && moodle.level() >= 2 && moodle.level() != GOOD && moodle.level() > (was == GOOD ? 0 : was)
                     && time - beatAt.getOrDefault(moodle.key(), 0L) > 10_000) {
                 beatAt.put(moodle.key(), time);
                 worse = true;
@@ -147,6 +147,20 @@ public final class MoodleHud {
             UiSounds.play(UiSounds.MOODLE);
             if (Hud.active()) BodyHud.beat();
         }
+    }
+
+    /**
+     * Whether a moodle means you're being hurt, which is all the heartbeat and the red flush are for: wounds, bleeding,
+     * infection, poison, drowning, starving or dying of thirst, and a load heavy enough to crush you. Being wet, tired,
+     * winded or merely hungry never beats.
+     */
+    private static boolean harms(Moodle m) {
+        return switch (m.key()) {
+            case "bleeding", "injury", "ill" -> true;
+            case "air", "hunger", "thirst" -> m.level() == 3;
+            case "load" -> m.label().startsWith("Crushed");
+            default -> m.key().startsWith("effect:") && m.icon().equals("skull");
+        };
     }
 
     private static List<Moodle> moodles(LocalPlayer player) {
