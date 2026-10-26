@@ -27,15 +27,28 @@ jobs:
           javap -cp "$MC" -c -p net.minecraft.client.MouseHandler 2>&1 | sed -n '/void onButton(/,/^$/p' | grep -E "invoke|if|iconst|getfield" | head -80
           javap -cp "$MC" -p net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo 2>&1
           javap -cp "$MC" com.mojang.blaze3d.platform.Window 2>&1 | grep -E "Width|Height|Scale"
+      # The software Vulkan device tops out at 16384px textures, which the gun skins overflow: shrink them here only.
+      - name: Shrink textures for the software renderer
+        run: |
+          pip install -q pillow
+          python3 - <<'PY'
+          import os
+          from PIL import Image
+          root = 'src/main/resources/assets/zomboidcraft/textures'
+          for d, _, fs in os.walk(root):
+              for f in fs:
+                  p = os.path.join(d, f)
+                  if f.endswith(('_n.png', '_s.png')):
+                      os.remove(p); continue
+                  if f.endswith('.png'):
+                      im = Image.open(p)
+                      if im.width > 256 and im.width == im.height:
+                          im.resize((256, 256), Image.LANCZOS).save(p)
+          PY
       - name: Run client test
         run: |
           set -o pipefail
-          sudo Xorg :99 -noreset -logfile /tmp/xorg.log -config $PWD/.github/ci/xorg-dummy.conf &
-          sleep 3
-          export DISPLAY=:99
-          glxinfo -B 2>&1 | head -20 || true
-          javap -cp "$(find ~/.gradle/caches/fabric-loom -name 'minecraft-*.jar' | tr '\n' ':')" -c -p net.minecraft.client.Minecraft 2>&1 | sed -n '/boolean handleGlobalKeyPress(/,/^$/p' | grep -E "invoke|getfield|ireturn" | head -40
-          ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCUI|error:|ERROR|Exception|FAIL|BUILD|Caused|Backend|Graphics" | head -200
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCUI|error:|ERROR|Exception|FAIL|BUILD|Caused|Graphics Device:" | head -200
       - name: Show failures
         if: failure()
         run: grep -E "error:|warning:" -A3 build.log test.log | head -80 || true; tail -60 test.log || true
