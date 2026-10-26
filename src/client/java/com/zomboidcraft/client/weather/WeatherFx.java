@@ -33,7 +33,7 @@ import java.util.List;
 public final class WeatherFx {
     private static final RandomSource RANDOM = RandomSource.create();
     /** Puffs kept round you in full fog: enough to wall off the street, few enough to stay cheap. */
-    private static final int MIST_MAX = 170;
+    private static final int MIST_MAX = 130;
     /** A puff's mean lifetime in ticks (MistParticle), to turn a head count into a spawn rate. */
     private static final float MIST_LIFE = 370;
     private static float mistDue, debrisDue;
@@ -212,7 +212,7 @@ public final class WeatherFx {
         float drift = 0.008f + 0.05f * w.wind();
         for (; mistDue >= 1; mistDue--) {
             double angle = RANDOM.nextDouble() * Mth.TWO_PI;
-            double r = 3 + Math.sqrt(RANDOM.nextDouble()) * 30;
+            double r = 6 + Math.sqrt(RANDOM.nextDouble()) * 34;
             double x = player.getX() + Math.cos(angle) * r, z = player.getZ() + Math.sin(angle) * r;
             int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
             if (Math.abs(top - player.getY()) > 10) {
@@ -220,7 +220,7 @@ public final class WeatherFx {
             }
             // ground mist hugs the street; a fog bank stands taller
             double y = top + 0.2 + RANDOM.nextDouble() * (1.2 + 5 * w.fog());
-            float strength = (0.05f + 0.22f * w.fog() + 0.05f * night) * (0.6f + 0.4f * RANDOM.nextFloat());
+            float strength = (0.03f + 0.13f * w.fog() + 0.03f * night) * (0.6f + 0.4f * RANDOM.nextFloat());
             double speed = drift * (0.6 + 0.8 * RANDOM.nextDouble());
             level.addParticle(WeatherParticles.MIST, x, y, z, windX * speed, strength, windZ * speed);
         }
