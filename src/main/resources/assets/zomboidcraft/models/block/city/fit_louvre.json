@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_louvre": "zomboidcraft:block/city/fit_louvre",
+    "particle": "zomboidcraft:block/city/fit_louvre"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_louvre"
+        },
+        "south": {
+          "texture": "#fit_louvre",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_louvre",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_louvre",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_louvre",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_louvre",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

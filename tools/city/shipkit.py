@@ -508,6 +508,29 @@ def drawers(seed):
     return F.wear(t, 0.2, 3)
 
 
+
+def louvre(seed):
+    """A vent's louvre panel in the hull: a haze grey frame, the slats in shadow, rust in the bottom corners."""
+    t = F.plain(seed, (118, 124, 128), 0.04, 0.4)
+    for y in range(8, 56, 6):
+        F.area(t, 6, y, 58, y + 3, (34, 36, 38), dh=-0.2)
+        F.area(t, 6, y + 3, 58, y + 4, mul=1.2, dh=0.1)
+    F.area(t, 0, 0, N, 4, mul=0.8, dh=0.1)
+    F.area(t, 0, 60, N, N, mul=0.8, dh=0.1)
+    B.rust_runs(t, 3, 0.4, 50)
+    return F.wear(t, 0.2, 2)
+
+
+def hatch(seed):
+    """A watertight door in her side: the raised frame, six dogs round it, the frame number stencilled over it."""
+    t = F.plain(seed, (118, 124, 128), 0.04, 0.4)
+    F.area(t, 6, 4, 58, 62, mul=0.86, dh=-0.05)
+    F.area(t, 8, 6, 56, 60, mul=1.08, dh=0.1)
+    for x, y in ((6, 14), (6, 32), (6, 50), (56, 14), (56, 32), (56, 50)):
+        F.area(t, x - 2, y - 1, x + 2, y + 2, (70, 72, 72), dh=0.3)
+    B.rust_runs(t, 2, 0.35, 40)
+    return F.wear(t, 0.25, 2)
+
 SIGNS = {
     "fire": ("FIRE STATION", (176, 34, 28)), "repair": ("REPAIR|LOCKER", (176, 34, 28)),
     "escape": ("ESCAPE|TRUNK", (226, 222, 210)), "hearing": ("HEARING|PROTECTION|REQUIRED", (218, 178, 38)),
@@ -545,6 +568,7 @@ def textures():
         "fit_wheel_red": lambda: wheel_tex(8105, RED), "fit_bronze": lambda: bronze(8106), "fit_plate": lambda: plate(8107),
         "fit_burner": lambda: burner(8108), "fit_console": lambda: console_face(8109), "fit_console_top": lambda: console_top(8110),
         "fit_screen_on": lambda: screen(8111, True), "fit_screen_off": lambda: screen(8112, False),
+        "fit_louvre": lambda: louvre(8116), "fit_hatch": lambda: hatch(8117),
         "fit_chart": lambda: chart(8113), "fit_drawers": lambda: drawers(8114), "fit_leather": lambda: vinyl(8115, (64, 44, 32)),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
@@ -815,6 +839,21 @@ def blocks():
                                                "down": "bunk_grey"}], [2, 9, 2, 14, 10, 4, "fit_bronze"]],
         "Boiler Front", decor=False)
     out["fit_deckplate"] = {"tex": "fit_plate", "title": "Deck Plate", "sound": "METAL"}
+
+    # ---- outside: the bulbs round her number, the signal searchlights, the bridge's visor, the scuppers
+    lamp("fit_numlight", [[2.5, 6.5, 14.5, 5.5, 9.5, 16, "fit_grey"], [3, 7, 13, 5, 9, 14.5, G],
+                          [10.5, 6.5, 14.5, 13.5, 9.5, 16, "fit_grey"], [11, 7, 13, 13, 9, 14.5, G]],
+         "Number Light", "facing", 6, G, "bunk_glass_on", "bunk_glass_off", 6)
+    lamp("fit_searchlight", [[6, 0, 6, 10, 6, 10, "fit_grey"], [3, 6, 5, 13, 8, 11, "fit_grey"],
+                             [3.5, 7, 3, 12.5, 15, 13, "fit_grey"], [4, 7.5, 2.6, 12, 14.5, 3, G],
+                             [7.5, 15, 6, 8.5, 16, 10, "fit_grey"]],
+         "Signal Searchlight", "facing", 15, G, "fit_lens_on", "fit_lens_off")
+    add("fit_visor", [[0, 13, 4, 16, 14, 16, "navy_hull"], [1, 10, 12, 2, 13, 16, "navy_hull"],
+                      [14, 10, 12, 15, 13, 16, "navy_hull"]], "Window Visor")
+    add("fit_scupper", [[6, 6, 11, 10, 10, 16, "fit_grey"], [6.5, 6.5, 10.9, 9.5, 9.5, 11, "home_rubber"]], "Scupper")
+
+    add("fit_louvre", [[0, 0, 15.5, 16, 16, 16, "fit_louvre"]], "Vent Louvre")
+    add("fit_hatch", [[1, 0, 15, 15, 16, 16, "fit_hatch"]], "Side Door")
 
     add("fit_line", [[0, 0, 0, 16, 0.25, 16, "fit_line"]], "Deck Line", rotate="axis")
 

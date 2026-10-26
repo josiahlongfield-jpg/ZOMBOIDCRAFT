@@ -2009,6 +2009,15 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_riser", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 0, 9, 13, 16, 16, 2, 14, 8, 14, 16, 16, 2, 0, 8, 14, 2, 16);
         s("fit_burner", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 4, 16, 16, 16, 2, 9, 2, 14, 10, 4);
         s("fit_deckplate", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("fit_numlight_on", FACING, DECOR, 6, SoundType.METAL, 0f, 2.5, 6.5, 14.5, 5.5, 9.5, 16, 3, 7, 13, 5, 9, 14.5, 10.5, 6.5, 14.5, 13.5, 9.5, 16, 11, 7, 13, 13, 9, 14.5);
+        s("fit_numlight", FACING, DECOR, 0, SoundType.METAL, 0f, 2.5, 6.5, 14.5, 5.5, 9.5, 16, 3, 7, 13, 5, 9, 14.5, 10.5, 6.5, 14.5, 13.5, 9.5, 16, 11, 7, 13, 13, 9, 14.5);
+        s("fit_numlight_flicker", FACING, DECOR | FLICKER, 6, SoundType.METAL, 0f, 2.5, 6.5, 14.5, 5.5, 9.5, 16, 3, 7, 13, 5, 9, 14.5, 10.5, 6.5, 14.5, 13.5, 9.5, 16, 11, 7, 13, 13, 9, 14.5);
+        s("fit_searchlight_on", FACING, DECOR, 15, SoundType.METAL, 0f, 6, 0, 6, 10, 6, 10, 3, 6, 5, 13, 8, 11, 3.5, 7, 3, 12.5, 15, 13, 4, 7.5, 2.6, 12, 14.5, 3, 7.5, 15, 6, 8.5, 16, 10);
+        s("fit_searchlight", FACING, DECOR, 0, SoundType.METAL, 0f, 6, 0, 6, 10, 6, 10, 3, 6, 5, 13, 8, 11, 3.5, 7, 3, 12.5, 15, 13, 4, 7.5, 2.6, 12, 14.5, 3, 7.5, 15, 6, 8.5, 16, 10);
+        s("fit_visor", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 13, 4, 16, 14, 16, 1, 10, 12, 2, 13, 16, 14, 10, 12, 15, 13, 16);
+        s("fit_scupper", FACING, DECOR, 0, SoundType.METAL, 0f, 6, 6, 11, 10, 10, 16, 6.5, 6.5, 10.9, 9.5, 9.5, 11);
+        s("fit_louvre", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.5, 16, 16, 16);
+        s("fit_hatch", FACING, DECOR, 0, SoundType.METAL, 0f, 1, 0, 15, 15, 16, 16);
         s("fit_line", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 0.25, 16);
         s("fit_st_fire", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_repair", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
