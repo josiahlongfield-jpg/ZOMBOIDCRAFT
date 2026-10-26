@@ -5,6 +5,9 @@ on:
   push:
     branches: [gunlook]
 
+permissions:
+  contents: write
+
 jobs:
   gunlook:
     runs-on: ubuntu-latest
@@ -48,7 +51,9 @@ jobs:
           os.makedirs(f'{RUN}/config', exist_ok=True)
           open(f'{RUN}/config/iris.properties', 'w').write('enableShaders=false\nshaderPack=photon.zip\n')
           PY
-          ls -la build/run/clientGameTest/mods build/run/clientGameTest/shaderpacks
+          # the test client's game folder is one of these: give both the mods, the pack and its settings
+          mkdir -p run && cp -r build/run/clientGameTest/mods build/run/clientGameTest/shaderpacks build/run/clientGameTest/config run/
+          ls -la build/run/clientGameTest/mods run/mods
       - name: Run client test
         run: |
           set -o pipefail
@@ -56,6 +61,18 @@ jobs:
       - name: Show failures
         if: failure()
         run: tail -120 test.log || true
+      # artifacts can't be fetched from the cloud session, so the shots and logs go up on their own branch
+      - name: Publish shots
+        if: always()
+        run: |
+          echo "--- where things landed"; find . -path ./.git -prune -o \( -name latest.log -o -name '*.png' -path '*screenshots*' \) -print | head -40
+          mkdir -p /tmp/shots
+          find . -path ./.git -prune -o -name '*.png' -path '*screenshots*' -print -exec cp {} /tmp/shots/ \;
+          cp test.log /tmp/shots/ 2>/dev/null || true
+          for f in $(find . -path ./.git -prune -o -name latest.log -print); do cp "$f" "/tmp/shots/$(echo $f | tr '/' '_')"; done
+          cd /tmp/shots && git init -q && git checkout -q -b gunlook-shots && git add -A
+          git -c user.name=ci -c user.email=ci@example.invalid commit -qm "Gun look shots from ${GITHUB_SHA}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gunlook-shots
       - uses: actions/upload-artifact@v4
         if: always()
         with:

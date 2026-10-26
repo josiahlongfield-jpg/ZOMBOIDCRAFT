@@ -34,6 +34,9 @@ public class GunLookTest implements FabricClientGameTest {
             ctx.getInput().resizeWindow(1280, 720);
             BlockPos at = ctx.computeOnClient(mc -> mc.player.blockPosition());
             LOG.info("ZCLOOK standing at {}", at);
+            LOG.info("ZCLOOK game folder {}, iris {}, sodium {}", net.fabricmc.loader.api.FabricLoader.getInstance().getGameDir(),
+                    net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris"),
+                    net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("sodium"));
             for (String c : new String[] {"difficulty peaceful", "gamemode survival @a", "time set midnight", "weather clear"}) {
                 sp.getServer().runCommand(c);
             }
