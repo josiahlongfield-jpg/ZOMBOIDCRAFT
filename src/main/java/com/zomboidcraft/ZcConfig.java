@@ -287,6 +287,12 @@ public final class ZcConfig {
         public double stormFrequency = 1.0;
         /** Thick fog now and then, as its own weather or rolling in over the rain. */
         public boolean fog = true;
+        /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
+        public boolean mist = true;
+        /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
+        public double mistAmount = 1.0;
+        /** Paper, leaves and plastic blown down the street when the wind picks up. Client side. */
+        public boolean windDebris = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
