@@ -101,9 +101,9 @@ def body(m):
     b.box((-0.20, -2.16, GUARD_FRONT), (0.20, -RAIL_BASE, GUARD_FRONT + 0.20), frame)   # guard: squared front
     b.box((-0.20, -2.20, GUARD_FRONT - 0.10), (0.20, -1.98, GUARD_FRONT + 0.20), frame)  # its hooked toe
     b.box((-0.20, -2.30, GUARD_FRONT), (0.20, -2.13, 4.85), frame)           # the bow under the trigger, into the grip
-    b.seg((3.42, -1.04), (3.52, -1.52), 0.22, 0.24, steel, over=0.03)         # trigger
-    b.seg((3.52, -1.52), (3.78, -1.90), 0.20, 0.24, steel, over=0.03)
-    b.box((fw, -0.74, 3.62), (fw + 0.025, -0.62, 6.30), steel)               # trigger bar, right
+    b.seg((3.80, -1.04), (3.80, -1.50), 0.22, 0.24, steel, over=0.03)         # trigger: back in the guard,
+    b.seg((3.80, -1.50), (3.65, -1.86), 0.20, 0.24, steel, over=0.03)         # its tip curving forward
+    b.box((fw, -0.74, 3.75), (fw + 0.025, -0.62, 6.30), steel)               # trigger bar, right
     # the grip: aluminium straps, wrap-round panels a touch narrower front to back
     b.seg(GRIP_TOP, GRIP_BOT, GRIP_W, 0.92, frame, over=0.05)
     top, down, back, length = grip_axes()
@@ -124,7 +124,7 @@ def body(m):
     b.box((-0.53, -0.92, 3.74), (-fw, -0.62, 4.12), steel)                   # and its thumb pad
     b.box((-0.50, -0.82, 2.58), (-fw, -0.62, 3.02), steel)                   # takedown lever
     b.rod(fw, fw + 0.05, 0.10, steel, axis=0, at=(-0.72, 2.80))              # its button, right
-    for z, y in ((3.55, -0.86), (7.20, -0.82), (6.50, -0.78)):              # trigger, hammer, sear pins
+    for z, y in ((3.80, -0.86), (7.20, -0.82), (6.50, -0.78)):              # trigger, hammer, sear pins
         b.rod(-fw - 0.02, fw + 0.02, 0.05, steel, axis=0, at=(y, z))
     lz, ly = foot - down * 0.14 + back * 0.80                                # lanyard loop, left, at the heel
     b.box((-0.56, ly - 0.10, lz - 0.10), (-0.46, ly + 0.10, lz + 0.10), steel)

@@ -31,7 +31,7 @@ ACT_BOT = -1.42         # the action's belly
 ACT_W = 0.98            # half the action's width at the breech
 STANDING_TOP = 0.66     # the top of the standing breech, a touch over the rib
 TANG_TOP = 0.42
-TRIGGERS = (1.85, 2.60)  # front (right barrel) and back (left barrel)
+TRIGGERS = (2.85, 3.60)  # front (right barrel) and back (left barrel), in the back half of the guard
 FOREND = (-11.0, -2.98)  # the splinter forend's tip and back
 STOCK_START = 2.90      # where the walnut meets the action
 STOCK_END = 16.30       # the butt plate's back face (42.3" overall)
@@ -111,9 +111,10 @@ def body(m):
     # ---- the trigger plate, the guard and its tang under the grip, the two triggers
     b.box((-0.45, ACT_BOT - 0.12, -0.20), (0.45, ACT_BOT, 4.70), rc)
     _guard(b)
-    for z, drop in zip(TRIGGERS, (0.70, 0.62)):
-        b.seg((z, ACT_BOT - 0.12), (z + 0.12, ACT_BOT - 0.12 - drop * 0.7), 0.17, 0.20, 'trigger', over=0.03)
-        b.seg((z + 0.12, ACT_BOT - 0.12 - drop * 0.7), (z + 0.32, ACT_BOT - 0.12 - drop), 0.15, 0.20, 'trigger', over=0.03)
+    for z, drop in zip(TRIGGERS, (0.70, 0.62)):                             # straight down, the tips curving forward
+        knee = ACT_BOT - 0.12 - drop * 0.55
+        b.seg((z, ACT_BOT - 0.12), (z, knee), 0.17, 0.20, 'trigger', over=0.03)
+        b.seg((z, knee), (z - drop * 0.45 * 0.4142, ACT_BOT - 0.12 - drop), 0.15, 0.20, 'trigger', over=0.03)
     _stock(b)
 
 
