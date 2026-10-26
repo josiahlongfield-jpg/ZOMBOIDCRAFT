@@ -27,6 +27,9 @@ jobs:
           javap -cp "$MC" -c -p net.minecraft.client.MouseHandler 2>&1 | sed -n '/void onButton(/,/^$/p' | head -150
           javap -cp "$MC" -c -p net.minecraft.client.gui.screens.Screen 2>&1 | sed -n '/isInputCaptured()/,/^$/p' | head -20
           javap -cp "$MC" -p net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo 2>&1
+          SCR=$(find ~/.gradle/caches/modules-2 -path '*fabric-screen-api-v1*' -name '*.jar' ! -name '*sources*' | head -1)
+          for c in $(unzip -Z1 "$SCR" | grep -E 'ScreenMouseEvents.*\.class$' | sed 's/\.class$//; s#/#.#g'); do javap -cp "$SCR:$MC" "$c"; done 2>&1 | head -60
+          javap -cp "$MC" -c -p net.minecraft.client.gui.components.AbstractButton 2>&1 | grep -E "public|protected|invoke" | head -40
           javap -cp "$MC" com.mojang.blaze3d.platform.Window 2>&1 | grep -E "Width|Height|Scale"
       # The software Vulkan device tops out at 16384px textures, which the gun skins overflow: shrink them here only.
       - name: Shrink textures for the software renderer

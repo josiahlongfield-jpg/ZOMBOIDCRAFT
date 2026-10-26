@@ -9,7 +9,11 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,9 +130,26 @@ public class KitUiTest implements FabricClientGameTest {
             LOG.info("ZCUI no Options button found");
             return;
         }
+        ctx.runOnClient(mc -> {
+            Screen s = mc.gui.screen();
+            ScreenMouseEvents.allowMouseClick(s).register((screen, event) -> {
+                LOG.info("ZCUI   pause screen got a click: button {} at {},{}", event.button(), event.x(), event.y());
+                return true;
+            });
+            ScreenMouseEvents.allowMouseRelease(s).register((screen, event) -> {
+                LOG.info("ZCUI   pause screen got a release: button {}", event.button());
+                return true;
+            });
+        });
         click(ctx, options[0], options[1], 0);
         ctx.waitTicks(10);
         log(ctx, "after clicking Options " + when);
+        if (ctx.computeOnClient(mc -> mc.gui.screen() instanceof PauseScreen)) {
+            boolean took = ctx.computeOnClient(mc -> mc.gui.screen().mouseClicked(
+                    new MouseButtonEvent(options[0] + 0.5, options[1] + 0.5, new MouseButtonInfo(0, 0)), false));
+            ctx.waitTicks(5);
+            log(ctx, "after calling mouseClicked directly (" + took + ") " + when);
+        }
         ctx.takeScreenshot("options-" + when.replace(' ', '-'));
         // back out to the game
         for (int i = 0; i < 3; i++) {

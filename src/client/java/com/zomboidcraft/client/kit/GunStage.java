@@ -124,7 +124,7 @@ final class GunStage {
         turn.transform(middle);
         Vector3f shift = middle.negate();
         float longest = (float) Math.max(box.getXsize(), Math.max(box.getYsize(), box.getZsize()));
-        float scale = Math.min((w - 24) / longest, h / longest * 2.2f) * 0.92f;
+        float scale = Math.min((w - 24) / longest, h / longest * 2.2f) * 0.78f;
         g.entity(state, scale, shift, view, null, x0, y0, x0 + w, y0 + h);
         float cx = x0 + w / 2f, cy = y0 + h / 2f;
 
