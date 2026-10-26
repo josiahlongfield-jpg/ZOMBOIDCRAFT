@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_red": "zomboidcraft:block/city/fs_red",
+    "particle": "zomboidcraft:block/city/fs_red"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        2,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red"
+        },
+        "down": {
+          "texture": "#fs_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

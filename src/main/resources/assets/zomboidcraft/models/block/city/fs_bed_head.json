@@ -1,0 +1,245 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "fs_blanket": "zomboidcraft:block/city/fs_blanket",
+    "home_mattress": "zomboidcraft:block/city/home_mattress",
+    "home_pillow": "zomboidcraft:block/city/home_pillow",
+    "particle": "zomboidcraft:block/city/cv_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        1.5,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.5,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        8,
+        15
+      ],
+      "to": [
+        14.5,
+        10.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        3,
+        0
+      ],
+      "to": [
+        15.5,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        0
+      ],
+      "to": [
+        15,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_mattress",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_mattress"
+        },
+        "east": {
+          "texture": "#home_mattress"
+        },
+        "west": {
+          "texture": "#home_mattress"
+        },
+        "up": {
+          "texture": "#home_mattress"
+        },
+        "down": {
+          "texture": "#home_mattress"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        7,
+        9.5
+      ],
+      "to": [
+        13,
+        9,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_pillow"
+        },
+        "south": {
+          "texture": "#home_pillow"
+        },
+        "east": {
+          "texture": "#home_pillow"
+        },
+        "west": {
+          "texture": "#home_pillow"
+        },
+        "up": {
+          "texture": "#home_pillow"
+        },
+        "down": {
+          "texture": "#home_pillow"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        7,
+        0
+      ],
+      "to": [
+        15,
+        7.6,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_blanket",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fs_blanket"
+        },
+        "east": {
+          "texture": "#fs_blanket"
+        },
+        "west": {
+          "texture": "#fs_blanket"
+        },
+        "up": {
+          "texture": "#fs_blanket"
+        },
+        "down": {
+          "texture": "#fs_blanket"
+        }
+      }
+    }
+  ]
+}

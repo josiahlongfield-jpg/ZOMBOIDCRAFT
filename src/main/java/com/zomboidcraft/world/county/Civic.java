@@ -163,62 +163,8 @@ final class Civic {
     /** The bank on its corner (see {@link Bank}): w wide, d deep, the portico and steps in its first four rows. */
     void bank(int w, int d) { new Bank(p, rng).build(w, d); }
 
-    /** The fire station: a brick front of red bay doors, a hose tower, an engine still in its bay. */
-    void fireStation(int w, int d) {
-        int bays = Math.max(2, Math.min(3, (w - 4) / 5));
-        int storey = 5, floors = 2;
-        String wall = pick("brick_red", "brick_red", "brick_dark", "brick_buff");
-        b.shell(0, 0, w - 1, d - 1, floors, storey, wall, "floor_concrete", "floor_boards");
-        int bayW = 4;
-        int x = 2;
-        for (int i = 0; i < bays; i++) {
-            boolean open = rng.nextDouble() < 0.5;
-            for (int bx = x; bx < x + bayW; bx++) {
-                for (int y = 1; y <= 4; y++) {
-                    p.set(bx, y, 0, open && y < 4 ? "air" : "garage_door_red[facing=north]");
-                }
-            }
-            if (i == 0 || rng.nextDouble() < 0.4) {
-                p.vehicle(x + bayW / 2.0, 1, d / 2.0, 0, i == 0 ? "fire_truck" : "fire_truck,ambulance,ambulance_van", rng.nextLong());
-            }
-            x += bayW + 1;
-        }
-        b.door(w - 2, 1, 0, "fire_door", "north");
-        p.set(w - 2, 3, -1, ShopLights.lamp(rng, 0.2));
-        b.windowRow(2, w - 3, 3, 0, storey + 2, "north", 2, "sill");
-        Boards.fascia(p, rng, "firedept", 1, storey, -1, w - 2);
-        b.flat(0, 0, w - 1, d - 1, floors * storey, wall, 2, "stone_trim");
-        // the hose tower at the back corner, its louvres open
-        int tx = w - 4, tz = d - 4, tTop = floors * storey + 8;
-        b.walls(tx, tz, tx + 3, tz + 3, 1, tTop, wall);
-        for (int y = tTop - 2; y < tTop; y++) {
-            p.set(tx + 1, y, tz, "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]");
-            p.set(tx + 2, y, tz, "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]");
-        }
-        b.hip(tx, tx + 3, tz, tz + 3, tTop + 1, "minecraft:deepslate_tile", 0);
-        // the apparatus floor: lockers, hoses, boots; the brass pole down from the dorm
-        for (int z = 2; z < d - 2; z += 2) {
-            p.set(w - 2, 1, z, "minecraft:barrel[facing=west,loot=hardware]");
-        }
-        p.set(1, 1, d - 2, "store_shelf_hardware[facing=east]");
-        p.set(w / 2, 1, d - 3, "minecraft:iron_chain[axis=y]");
-        for (int y = 1; y <= storey; y++) {
-            p.set(w / 2, y, d - 3, "minecraft:iron_chain[axis=y]");
-        }
-        b.stair(1, d - 2, 1, storey, "north", "minecraft:spruce");
-        for (int i = 0; i < 4; i++) {
-            p.set(2 + i * 2, storey + 1, d - 3, "minecraft:white_bed[facing=south,part=head]");
-            p.set(2 + i * 2, storey + 1, d - 4, "minecraft:white_bed[facing=south,part=foot]");
-        }
-        b.lights(0, 0, w - 1, d - 1, storey - 1, 0.04);
-        b.lights(0, 0, w - 1, d - 1, storey * 2 - 1, 0.02);
-        // the apron out front
-        for (int ax = 0; ax < w; ax++) {
-            for (int z = -6; z < 0; z++) {
-                p.set(ax, 0, z, rng.nextDouble() < 0.15 ? "sidewalk_cracked" : "floor_concrete");
-            }
-        }
-    }
+    /** The fire station (see {@link FireStation}): w wide, d deep, its apron in the first six rows. */
+    void fireStation(int w, int d) { new FireStation(p, rng).build(w, d); }
 
     /** The sheriff's office and county jail: front desk, cells, a gun rack, cruisers out front. */
     void sheriff(int w, int d) {

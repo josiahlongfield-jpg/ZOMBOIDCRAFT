@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_callbox": "zomboidcraft:block/city/fs_callbox",
+    "fs_red": "zomboidcraft:block/city/fs_red",
+    "fs_red_glass_lit": "zomboidcraft:block/city/fs_red_glass_lit",
+    "particle": "zomboidcraft:block/city/fs_callbox"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_callbox"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red"
+        },
+        "down": {
+          "texture": "#fs_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        12,
+        6.5
+      ],
+      "to": [
+        9.5,
+        15,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red_glass_lit"
+        },
+        "south": {
+          "texture": "#fs_red_glass_lit"
+        },
+        "east": {
+          "texture": "#fs_red_glass_lit"
+        },
+        "west": {
+          "texture": "#fs_red_glass_lit"
+        },
+        "up": {
+          "texture": "#fs_red_glass_lit"
+        },
+        "down": {
+          "texture": "#fs_red_glass_lit"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        15,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_red"
+        }
+      }
+    }
+  ]
+}
