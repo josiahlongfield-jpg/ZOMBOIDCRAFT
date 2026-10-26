@@ -25,4 +25,9 @@ public class CarRenderState extends EntityRenderState {
     /** Seconds since the aircraft's cockpit lights came on (someone sat in it), -1 while off; how dark it is round it. */
     public float cockpit = -1;
     public float cockpitDark;
+    /** An aircraft: turned by its attitude about a point pivot metres up, rotors at rotor radians. */
+    public boolean air;
+    public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
+    public float pivot;
+    public double rotor;
 }

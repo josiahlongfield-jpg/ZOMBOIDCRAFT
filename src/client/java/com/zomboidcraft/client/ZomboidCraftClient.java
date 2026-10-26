@@ -52,6 +52,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         SoundSliders.register();
         com.zomboidcraft.client.cars.CarClient.register();
+        com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();

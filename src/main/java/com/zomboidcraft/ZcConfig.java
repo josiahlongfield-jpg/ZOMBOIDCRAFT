@@ -388,6 +388,10 @@ public final class ZcConfig {
         public double carBurnt = 0.07;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
+        /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
+        public double jetTopSpeed = 300;
+        /** The helicopter's top speed in km/h. */
+        public double heliTopSpeed = 250;
     }
 
     public static class Weather {

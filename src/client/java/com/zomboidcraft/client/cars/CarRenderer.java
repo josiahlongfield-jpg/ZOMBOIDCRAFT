@@ -56,6 +56,13 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.cockpit = CockpitGlow.powered(car, state.model, state.variant);
         state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
         state.shaders = (state.lights || state.cockpit >= 0) && CarLights.shaderPackOn();
+        state.air = car.aircraft();
+        if (state.air) {
+            com.zomboidcraft.world.cars.Flight f = car.flight();
+            f.qO.slerp(f.q, partialTick, state.attitude);
+            state.pivot = car.pivot();
+            state.rotor = car.rotorO + (car.rotor - car.rotorO) * partialTick;
+        }
     }
 
     /** The whole car, not the entity's small box, decides whether it's on screen. */
@@ -75,7 +82,13 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
         int light = state.lightCoords;
         poseStack.pushPose();
-        poseStack.rotateDegrees(Axis.YP, -state.yaw);
+        if (state.air) {
+            poseStack.translate(0, state.pivot, 0);
+            poseStack.mulPose(state.attitude);
+            poseStack.translate(0, -state.pivot, 0);
+        } else {
+            poseStack.rotateDegrees(Axis.YP, -state.yaw);
+        }
         Turn[] lids = new Turn[car.lids().size()];
         for (int i = 0; i < lids.length; i++) {
             lids[i] = lid(car.lids().get(i), state.open);
@@ -83,6 +96,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         Turn[] wheels = new Turn[car.wheels().size()];
         for (int i = 0; i < wheels.length; i++) {
             wheels[i] = wheel(car.wheels().get(i), state.rolled, state.steer);
+        }
+        Turn[] rotors = new Turn[car.rotors().size()];
+        for (int i = 0; i < rotors.length; i++) {
+            // the tail rotor turns about five times for each turn of the main one
+            rotors[i] = spin(car.rotors().get(i), i == 0 ? state.rotor : state.rotor * 4.9);
         }
         boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
         CarAssets.Ready full = !state.lights ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
@@ -95,7 +113,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         float[] cabin = glow;
         java.util.BitSet panel = lamps != null && state.lod == 0 ? lamps.panel() : null;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, (mesh, turn) -> {
+            each(car, lids, wheels, rotors, (mesh, turn) -> {
                 if (mesh == car.mesh() && panel != null && !panel.isEmpty()) {
                     // the backlit dials and displays at full brightness, the rest as usual
                     int t = 0;
@@ -116,7 +134,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         });
         if (!state.inside && !state.smashed && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-                each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
+                each(car, lids, wheels, rotors, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
             });
         }
         if (cockpit != null) {
@@ -267,8 +285,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         void apply(float[] v, boolean normal);
     }
 
-    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, java.util.function.BiConsumer<CarAssets.Mesh, Turn> part) {
+    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, Turn[] rotors,
+                             java.util.function.BiConsumer<CarAssets.Mesh, Turn> part) {
         part.accept(car.mesh(), null);
+        for (int i = 0; i < rotors.length; i++) {
+            part.accept(car.rotors().get(i).mesh(), rotors[i]);
+        }
         for (int i = 0; i < lids.length; i++) {
             part.accept(car.lids().get(i).mesh(), lids[i]);
         }
@@ -292,6 +314,26 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             v[0] -= lid.px(); v[1] -= lid.py(); v[2] -= lid.pz();
             rotate(v, lid.yAxis(), cos, sin);
             v[0] += lid.px(); v[1] += lid.py(); v[2] += lid.pz();
+        };
+    }
+
+    /** A rotor turned by angle radians about its axis (Rodrigues' rotation). */
+    private static Turn spin(CarAssets.Rotor r, double angle) {
+        float c = (float) Math.cos(angle), sn = (float) Math.sin(angle);
+        float kx = r.ax(), ky = r.ay(), kz = r.az();
+        return (v, normal) -> {
+            if (!normal) {
+                v[0] -= r.px(); v[1] -= r.py(); v[2] -= r.pz();
+            }
+            float dot = kx * v[0] + ky * v[1] + kz * v[2];
+            float cx = ky * v[2] - kz * v[1], cy = kz * v[0] - kx * v[2], cz = kx * v[1] - ky * v[0];
+            float x = v[0] * c + cx * sn + kx * dot * (1 - c);
+            float y = v[1] * c + cy * sn + ky * dot * (1 - c);
+            float z = v[2] * c + cz * sn + kz * dot * (1 - c);
+            v[0] = x; v[1] = y; v[2] = z;
+            if (!normal) {
+                v[0] += r.px(); v[1] += r.py(); v[2] += r.pz();
+            }
         };
     }
 

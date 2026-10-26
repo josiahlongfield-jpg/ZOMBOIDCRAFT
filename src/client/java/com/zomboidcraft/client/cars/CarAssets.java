@@ -40,13 +40,21 @@ public final class CarAssets {
     public record Wheel(float cx, float cy, float cz, float radius, boolean steers, Mesh mesh) {
     }
 
-    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, Identifier texture) {
+    /**
+     * A helicopter rotor: spins about the axis (ax, ay, az) through pivot. The bought models have
+     * their rotors modelled in with the airframe, so they're cut out of it when it loads ({@link #rotors}).
+     */
+    public record Rotor(float ax, float ay, float az, float px, float py, float pz, Mesh mesh) {
+    }
+
+    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, List<Rotor> rotors, Identifier texture) {
     }
 
     private static final class Variant {
         Mesh mesh;
         List<Lid> lids;
         List<Wheel> wheels;
+        List<Rotor> rotors = List.of();
         byte[] jpeg;
         Identifier texture;
         /** The car at each level of detail, simplified the first time it's needed. */
@@ -107,7 +115,11 @@ public final class CarAssets {
             for (Wheel w : v.wheels) {
                 wheels.add(new Wheel(w.cx(), w.cy(), w.cz(), w.radius(), w.steers(), CarLod.simplify(w.mesh(), level)));
             }
-            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, v.texture);
+            List<Rotor> rotors = new ArrayList<>(v.rotors.size());
+            for (Rotor r : v.rotors) {
+                rotors.add(new Rotor(r.ax(), r.ay(), r.az(), r.px(), r.py(), r.pz(), CarLod.simplify(r.mesh(), level)));
+            }
+            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, rotors, v.texture);
             v.levels[level] = ready;
         }
         return ready;
@@ -145,10 +157,76 @@ public final class CarAssets {
                     boolean steers = in.readByte() == 1;
                     v.wheels.add(new Wheel(cx, cy, cz, r, steers, readMesh(in)));
                 }
+                if ("usable".equals(name) || "abandoned".equals(name)) {
+                    rotors(model, v);
+                }
                 out.put(name, v);
             }
         }
         return out;
+    }
+
+    /**
+     * Cuts a helicopter's rotors out of its airframe so they can spin: the main rotor is whatever lies
+     * within half a metre of its (forward-tilted) disc and inside its blades' reach, the tail rotor
+     * whatever is out on its side of the fin. Measured on the bought AH-64D (tools/cars/zcar.py).
+     */
+    private static void rotors(String model, Variant v) {
+        if (!"heli_hornbill".equals(model)) {
+            return;
+        }
+        float nx = 0, ny = 1, nz = 0.0887f, len = (float) Math.sqrt(ny * ny + nz * nz);
+        ny /= len;
+        nz /= len;
+        float hx = 0, hy = 3.97f, hz = 1.77f;
+        Mesh m = v.mesh;
+        java.util.BitSet main = new java.util.BitSet(), tail = new java.util.BitSet();
+        for (int t = 0; t < m.opaque(); t++) {
+            float cx = 0, cy = 0, cz = 0;
+            for (int c = 0; c < 3; c++) {
+                cx += m.pos()[t * 9 + c * 3] / 3;
+                cy += m.pos()[t * 9 + c * 3 + 1] / 3;
+                cz += m.pos()[t * 9 + c * 3 + 2] / 3;
+            }
+            float dx = cx - hx, dy = cy - hy, dz = cz - hz;
+            float d = dx * nx + dy * ny + dz * nz;
+            float rx = dx - d * nx, ry = dy - d * ny, rz = dz - d * nz;
+            if (d > -0.42f && d < 0.45f && rx * rx + ry * ry + rz * rz < 7.4f * 7.4f && cz > -6) {
+                main.set(t);
+            } else if (cz < -6 && cx > 0.6f && cy > 2.8f) {
+                tail.set(t);
+            }
+        }
+        java.util.BitSet moving = (java.util.BitSet) main.clone();
+        moving.or(tail);
+        v.rotors = List.of(new Rotor(nx, ny, nz, hx, hy, hz, subset(m, main, false)),
+                new Rotor(1, 0, 0, 0.646f, 3.835f, -7.429f, subset(m, tail, false)));
+        v.mesh = subset(m, moving, true);
+    }
+
+    /** The triangles of a mesh that are (or, with without set, aren't) in take, solid ones still first. */
+    private static Mesh subset(Mesh m, java.util.BitSet take, boolean without) {
+        int n = 0, opaque = 0;
+        for (int t = 0; t < m.triangles(); t++) {
+            if (take.get(t) != without) {
+                n++;
+                if (t < m.opaque()) {
+                    opaque++;
+                }
+            }
+        }
+        float[] pos = new float[n * 9], uv = new float[n * 6], normal = new float[n * 3];
+        int k = 0;
+        for (int t = 0; t < m.triangles(); t++) {
+            if (take.get(t) == without) {
+                continue;
+            }
+            System.arraycopy(m.pos(), t * 9, pos, k * 9, 9);
+            System.arraycopy(m.uv(), t * 6, uv, k * 6, 6);
+            System.arraycopy(m.normal(), t * 3, normal, k * 3, 3);
+            k++;
+        }
+        return new Mesh(n, opaque, pos, uv, normal);
     }
 
     private static Mesh readMesh(DataInputStream in) throws IOException {
