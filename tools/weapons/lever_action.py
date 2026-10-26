@@ -162,10 +162,11 @@ def body(m):
     ring = [(4.55 + 0.42 * np.sin(np.radians(a)), -0.62 + 0.42 * np.cos(np.radians(a))) for a in range(0, 361, 45)]
     for p0, p1 in zip(ring[:-1], ring[1:]):
         b.seg(p0, p1, 0.07, 0.07, 'ring', x=-RCVR_HALF - 0.08, over=0.02)
-    # ---- the hammer, cocked: its body down in the receiver's back, the checkered spur up and back
-    b.box((-0.16, RCVR_TOP - 0.40, k - 0.65), (0.16, RCVR_TOP + 0.10, k - 0.05), 'hammer')
-    b.seg((k - 0.25, RCVR_TOP), (k + 0.30, RCVR_TOP + 0.55), 0.24, 0.30, 'hammer', over=0.05)
-    b.seg((k + 0.26, RCVR_TOP + 0.55), (k + 0.62, RCVR_TOP + 0.55), 0.18, 0.36, 'spur', over=0.06)
+    # ---- the hammer, cocked: its body down in the receiver's back, the checkered spur laid back over the tang and
+    # kept under the line of sight (the eye looks over it to the buckhorn's notch)
+    b.box((-0.16, RCVR_TOP - 0.40, k - 0.65), (0.16, RCVR_TOP - 0.04, k - 0.05), 'hammer')
+    b.seg((k - 0.25, RCVR_TOP - 0.24), (k + 0.25, RCVR_TOP - 0.04), 0.16, 0.30, 'hammer', over=0.05)
+    b.seg((k + 0.22, RCVR_TOP - 0.04), (k + 0.58, RCVR_TOP - 0.04), 0.12, 0.36, 'spur', over=0.06)
     # ---- the tangs over and under the wrist, the trigger in the front of the loop
     b.box((-0.24, 0.50, k - 0.05), (0.24, 0.62, TANG_END), rc)
     b.box((-0.26, -1.48, k - 0.05), (0.26, -1.34, TANG_END + 0.4), rc)

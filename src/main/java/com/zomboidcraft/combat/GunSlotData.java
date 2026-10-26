@@ -34,8 +34,10 @@ public final class GunSlotData {
         Map.entry("revolver", Map.ofEntries(
 )),
         Map.entry("rimfire", Map.ofEntries(
+                Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("rimfire_magazine")))),
         Map.entry("smg", Map.ofEntries(
+                Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("smg_magazine")))),
         Map.entry("sawn_off", Map.ofEntries(
 )),
