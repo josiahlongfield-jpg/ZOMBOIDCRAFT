@@ -4,8 +4,9 @@ package com.zomboidcraft.world.county;
  * Swaps the vanilla grass, ferns and dry grass the builders ask for for the ground cover cut from
  * Josiah's grass pack (tools/nature/groundcover.py): a dozen grass clumps, green and gone to straw,
  * plumed grass and reeds two blocks high, seedlings, and clover, weeds and fallen twigs lying on the
- * ground. The city's painted tufts and weeds go the same way. The pick hangs on the spot, so a
- * tall plant's two halves always match.
+ * ground. The city's painted tufts and weeds go the same way, and furniture from the prop packs
+ * stands in for the built-in pieces ({@link PropSwaps}). The pick hangs on the spot, so a tall
+ * plant's two halves, or a fridge and its top, always match.
  */
 final class Cover implements ChunkSink {
     private static final int GRASS = 12, DRY = 6, TALL = 3, SPRIGS = 3, FLAT = 3;
@@ -25,7 +26,25 @@ final class Cover implements ChunkSink {
 
     @Override
     public void set(int x, int y, int z, String block) {
-        out.set(x, y, z, block.startsWith("minecraft:") ? swap(x, z, block) : weeds(x, z, block));
+        out.set(x, y, z, block.startsWith("minecraft:") ? swap(x, z, block) : prop(x, z, weeds(x, z, block)));
+    }
+
+    /**
+     * Furniture and fittings from the prop packs (tools/props/props.py) standing in for the built-in
+     * blocks: the built-in block stays one choice among them. Its state (facing, loot) carries over.
+     */
+    private String prop(int x, int z, String block) {
+        int open = block.indexOf('[');
+        String[] alts = PropSwaps.TABLE.get(open < 0 ? block : block.substring(0, open));
+        if (alts == null) {
+            return block;
+        }
+        long h = Noise.hash(seed ^ alts[0].hashCode() * 0x9E3779B97F4A7C15L, x, z);
+        int pick = (int) Long.remainderUnsigned(h, alts.length);
+        if (pick == 0) {
+            return block;
+        }
+        return alts[pick].equals("air") ? "air" : alts[pick] + (open < 0 ? "" : block.substring(open));
     }
 
     /** The city's own painted tufts and weeds give way to the pack's too. */

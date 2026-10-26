@@ -285,3 +285,7 @@ The county's trees are voxelised from the Ultimate Trees Pack (Deezl, bought on 
 ## Ground cover
 
 The grass clumps, plumed grass, reeds, seedlings, clover, weeds and fallen twigs are cut from the Grass Groundcover Pack 01 (bought on CGTrader under its Royalty Free licence) by tools/nature/groundcover.py, scaled down to 64 pixels and graded to the world's palette. The pack's original files are not part of this repository or the mod jar.
+
+## Furniture and fittings
+
+tools/props/props.py turns 3D models into chunky blocks, repainted and worn for ZomboidCraft. The sources are the Kitchen 90's furniture pack, the Grocery Props Kit and the Vintage Office Cabinets Collection (bought by Josiah under their Royalty Free licences), and CC0 models from [Poly Haven](https://polyhaven.com) (public domain; thank you to the Poly Haven artists). The original model and texture files are not part of this repository or the mod jar.
