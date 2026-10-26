@@ -59,10 +59,50 @@ PICKS = {
                                                           ("silenced", "bullet_impact_body_flesh_04")]),
     # Josiah: "a subtle swinging sound for melee weapons"
     "weapon.melee.swing": ("weapon/melee/swing", -14.0, [("silenced", "whoosh_swish_small_harsh_01")]),
+    # Round 16, wave-one guns (Josiah kept the stand-ins for weapon.sawn_off.close and weapon.lever_action.dry)
+    "weapon.rimfire.shot": ("weapon/rimfire/shot", -1.0, [("gun", "gun_semi_auto_rifle_shot_06")]),
+    "weapon.rimfire.shot_suppressed": ("weapon/rimfire/shot_suppressed", -2.0, [("silenced", "gun_silenced_pistol1_shot_02")]),
+    "weapon.rimfire.dry": ("weapon/rimfire/dry", -8.0, [("gun", "gun_semi_auto_rifle_dry_fire_04")]),
+    "weapon.rimfire.mag_out": ("weapon/rimfire/mag_out", -8.0, [("gun", "gun_semi_auto_rifle_magazine_unload_02")]),
+    "weapon.rimfire.mag_in": ("weapon/rimfire/mag_in", -8.0, [("gun", "gun_semi_auto_rifle_magazine_load_05")]),
+    "weapon.rimfire.cock": ("weapon/rimfire/cock", -6.0, [("gun", "gun_rifle_cock_03")]),
+    "weapon.smg.shot": ("weapon/smg/shot", -1.0, [("gun", "gun_submachine_auto_shot_05")]),
+    "weapon.smg.shot_suppressed": ("weapon/smg/shot_suppressed", -2.0, [("silenced", "gun_semi_auto_shot_silenced1_0_last_tail")]),
+    "weapon.smg.dry": ("weapon/smg/dry", -8.0, [("gun", "gun_submachine_auto_dry_fire_01")]),
+    "weapon.smg.mag_out": ("weapon/smg/mag_out", -8.0, [("gun", "gun_submachine_auto_magazine_unload_03")]),
+    "weapon.smg.mag_in": ("weapon/smg/mag_in", -8.0, [("gun", "gun_submachine_auto_magazine_load_01")]),
+    "weapon.smg.cock": ("weapon/smg/cock", -6.0, [("gun", "gun_submachine_auto_cock_03")]),
+    "weapon.sawn_off.shot": ("weapon/sawn_off/shot", -0.3, [("gun", "gun_shotgun_shot_04")]),
+    "weapon.sawn_off.dry": ("weapon/sawn_off/dry", -8.0, [("gun", "gun_revolver_pistol_dry_fire_03")]),
+    "weapon.sawn_off.open": ("weapon/sawn_off/open", -8.0, [("gun", "gun_pistol_general_handling_05")]),
+    "weapon.sawn_off.shell_in": ("weapon/sawn_off/shell_in", -8.0, [("gun", "gun_shotgun_load_bullet_08")]),
+    "weapon.magnum.shot": ("weapon/magnum/shot", -0.3, [("gun", "gun_revolver_pistol_shot_03")]),
+    "weapon.magnum.dry": ("weapon/magnum/dry", -8.0, [("gun", "gun_revolver_pistol_dry_fire_04")]),
+    "weapon.magnum.cock": ("weapon/magnum/cock", -8.0, [("gun", "gun_revolver_pistol_cock_03")]),
+    "weapon.magnum.open": ("weapon/magnum/open", -8.0, [("gun", "gun_revolver_pistol_cylinder_open_02")]),
+    "weapon.magnum.eject": ("weapon/magnum/eject", -8.0, [("silenced", s) for s in (
+        "bullet_shell_bounce_general_06", "bullet_shell_bounce_metal1_01", "bullet_shell_bounce_general_05",
+        "bullet_shell_bounce_general_01", "bullet_shell_bounce_metal1_02", "bullet_shell_bounce_general_02")]),
+    "weapon.magnum.round_in": ("weapon/magnum/round_in", -8.0, [("gun", "gun_pistol_load_bullet_04")]),
+    "weapon.magnum.close": ("weapon/magnum/close", -8.0, [("gun", "gun_revolver_pistol_cylinder_close_01")]),
+    "weapon.lever_action.shot": ("weapon/lever_action/shot", -0.3, [("gun", "gun_rifle_sniper_shot_04")]),
+    "weapon.lever_action.lever": ("weapon/lever_action/lever", -6.0, [("gun", "gun_rifle_cock_01")]),
+    "weapon.lever_action.round_in": ("weapon/lever_action/round_in", -8.0, [("gun", "gun_rifle_load_bullet_05")]),
+    "weapon.crossbow.shot": ("weapon/crossbow/shot", -3.0, [("silenced", "bow_crossbow_arrow_shoot_type1_04")]),
+    "weapon.crossbow.cock": ("weapon/crossbow/cock", -8.0, [("silenced", "bow_crossbow_arrow_draw_stretch1_01")]),
+    "weapon.crossbow.hit": ("weapon/crossbow/hit", -2.0, [("silenced", "bullet_impact_body_flesh_04")]),
 }
+# Heavier or harsher than the take on its own: played lower (pitch < 1) and, for the sawn-off, with a touch of drive
+EXTRA = {"weapon.magnum.shot": {"pitch": 0.88}, "weapon.sawn_off.shot": {"pitch": 0.94}}
+DRIVE = {"weapon.sawn_off.shot": "acrusher=level_in=1.6:level_out=0.7:bits=10:mix=0.25:mode=log,"}
+# Far-off shots made from the near one: muffled, echoing off buildings, quieter
+DISTANT = {"weapon.rimfire.shot_distant": "weapon.rimfire.shot", "weapon.smg.shot_distant": "weapon.smg.shot",
+           "weapon.sawn_off.shot_distant": "weapon.sawn_off.shot", "weapon.magnum.shot_distant": "weapon.magnum.shot",
+           "weapon.lever_action.shot_distant": "weapon.lever_action.shot"}
+DISTANT_AF = "lowpass=f=1100,aecho=0.8:0.6:140|330|610:0.4|0.28|0.16,apad=pad_dur=0.8"
 
 # Josiah: reloads on every gun "need to be a little louder"
-RELOADS = ("mag_out", "mag_in", "load_round", "slide", "pump", "shell_in", "bolt", "cock", "open", "round_in", "close")
+RELOADS = ("mag_out", "mag_in", "load_round", "slide", "pump", "shell_in", "bolt", "cock", "open", "round_in", "close", "eject", "lever")
 LOUDER = 4.0
 
 
@@ -86,16 +126,30 @@ def main():
             f.unlink()
         for n, (pack, stem) in enumerate(picks, 1):
             tmp = out / f"{n}.wav"
-            ff("-i", str(files[(pack, stem)]), "-ac", "1", "-ar", "44100", str(tmp))
+            ff("-i", str(files[(pack, stem)]), "-af", DRIVE.get(event, "") + "anull", "-ac", "1", "-ar", "44100", str(tmp))
             level(tmp, out / f"{n}.ogg", peak)
             used.setdefault((pack, stem), set()).add(event)
-        ours[event] = {"sounds": [{"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist}
+        ours[event] = {"sounds": [dict({"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist}, **EXTRA.get(event, {}))
                                  for n in range(1, len(picks) + 1)]}
+    for event, near in DISTANT.items():
+        folder, _, picks = PICKS[near]
+        out = RES / "zomboidcraft/sounds" / (folder + "_distant")
+        out.mkdir(parents=True, exist_ok=True)
+        for f in out.glob("*.ogg"):
+            f.unlink()
+        pack, stem = picks[0]
+        tmp = out / "1.wav"
+        ff("-i", str(files[(pack, stem)]), "-af", DRIVE.get(near, "") + DISTANT_AF, "-ac", "1", "-ar", "44100", str(tmp))
+        level(tmp, out / "1.ogg", -4.0)
+        used.setdefault((pack, stem), set()).add(event)
+        old = ours.get(event, {}).get("sounds", [{}])
+        dist = old[0].get("attenuation_distance", 128) if isinstance(old[0], dict) else 128
+        ours[event] = {"sounds": [dict({"name": f"zomboidcraft:{folder}_distant/1", "attenuation_distance": dist}, **EXTRA.get(near, {}))]}
     ours_path.write_text(json.dumps(ours, indent=2) + "\n")
 
     credits = ROOT / "CREDITS.md"
     lines = [l for l in credits.read_text().split("\n")
-             if not any(l.startswith(f"| {e} |") for e in PICKS)]
+             if not any(l.startswith(f"| {e} |") for e in list(PICKS) + list(DISTANT))]
     text = re.sub(r"\n## Gamemaster gun sounds\n.*?(?=\n## |\Z)", "", "\n".join(lines), flags=re.S).rstrip("\n")
     rows = [f"| {', '.join(sorted(ev))} | {stem} ({PACKS[pack]}) | Gamemaster Audio | Licensed by Josiah Longfield |"
             for (pack, stem), ev in sorted(used.items(), key=lambda kv: sorted(kv[1])[0])]
