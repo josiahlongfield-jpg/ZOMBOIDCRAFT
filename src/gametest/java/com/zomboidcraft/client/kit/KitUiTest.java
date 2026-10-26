@@ -30,11 +30,13 @@ public class KitUiTest implements FabricClientGameTest {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);
+            ctx.getInput().resizeWindow(1999, 1089);
             ctx.runOnClient(mc -> {
-                mc.options.guiScale().set(4);
+                mc.options.guiScale().set(0);
                 mc.resizeGui();
             });
             ctx.waitTicks(5);
+            pauseOptions(ctx, "before the kit");
             log(ctx, "before E");
             ctx.getInput().pressKey(InputConstants.KEY_E);
             ctx.waitTicks(10);
@@ -101,28 +103,40 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.getInput().pressKey(InputConstants.KEY_E);
             ctx.waitTicks(5);
             log(ctx, "after closing");
+            pauseOptions(ctx, "after the kit");
+        }
+    }
+
+    /** Esc, then a real left click on the pause menu's Options button: does a vanilla button answer? */
+    private static void pauseOptions(ClientGameTestContext ctx, String when) {
+        ctx.getInput().pressKey(InputConstants.KEY_ESCAPE);
+        ctx.waitTicks(10);
+        log(ctx, "pause " + when);
+        int[] options = ctx.computeOnClient(mc -> {
+            Screen s = mc.gui.screen();
+            if (s == null) return null;
+            for (var child : s.children()) {
+                if (child instanceof AbstractWidget w && w.getMessage().getString().startsWith("Options")) {
+                    return new int[]{w.getX() + w.getWidth() / 2, w.getY() + w.getHeight() / 2};
+                }
+            }
+            return null;
+        });
+        if (options == null) {
+            LOG.info("ZCUI no Options button found");
+            return;
+        }
+        click(ctx, options[0], options[1], 0);
+        ctx.waitTicks(10);
+        log(ctx, "after clicking Options " + when);
+        ctx.takeScreenshot("options-" + when.replace(' ', '-'));
+        // back out to the game
+        for (int i = 0; i < 3; i++) {
+            if (ctx.computeOnClient(mc -> mc.gui.screen() == null)) break;
             ctx.getInput().pressKey(InputConstants.KEY_ESCAPE);
             ctx.waitTicks(5);
-            log(ctx, "after Esc");
-            ctx.takeScreenshot("pause");
-            int[] options = ctx.computeOnClient(mc -> {
-                Screen s = mc.gui.screen();
-                if (s == null) return null;
-                for (var child : s.children()) {
-                    if (child instanceof AbstractWidget w && w.getMessage().getString().startsWith("Options")) {
-                        return new int[]{w.getX() + w.getWidth() / 2, w.getY() + w.getHeight() / 2};
-                    }
-                }
-                return null;
-            });
-            if (options != null) {
-                click(ctx, options[0], options[1], 0);
-                log(ctx, "after clicking Options");
-                ctx.takeScreenshot("options");
-            } else {
-                LOG.info("ZCUI no Options button found");
-            }
         }
+        log(ctx, "back in game " + when);
     }
 
     @SuppressWarnings("unchecked")

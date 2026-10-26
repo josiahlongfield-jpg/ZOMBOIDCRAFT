@@ -24,7 +24,8 @@ jobs:
           MC=$(find ~/.gradle/caches/fabric-loom -name 'minecraft-*.jar' | tr '\n' ':')
           echo "$FAPI"
           for c in $(unzip -Z1 "$FAPI" | grep -E 'api/client/gametest/v1/.*\.class$' | sed 's/\.class$//; s#/#.#g'); do javap -cp "$FAPI:$MC" "$c"; done 2>&1 | head -300
-          javap -cp "$MC" -c -p net.minecraft.client.MouseHandler 2>&1 | sed -n '/void onButton(/,/^$/p' | grep -E "invoke|if|iconst|getfield" | head -80
+          javap -cp "$MC" -c -p net.minecraft.client.MouseHandler 2>&1 | sed -n '/void onButton(/,/^$/p' | head -150
+          javap -cp "$MC" -c -p net.minecraft.client.gui.screens.Screen 2>&1 | sed -n '/isInputCaptured()/,/^$/p' | head -20
           javap -cp "$MC" -p net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo 2>&1
           javap -cp "$MC" com.mojang.blaze3d.platform.Window 2>&1 | grep -E "Width|Height|Scale"
       # The software Vulkan device tops out at 16384px textures, which the gun skins overflow: shrink them here only.
