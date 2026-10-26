@@ -67,8 +67,9 @@ def body(m):
     b.box((-0.58, -1.38, 3.12), (-0.45, -1.18, 3.60), steel)                 # and its paddle
     b.box((-0.18, -2.42, 3.05), (0.18, -2.26, 5.45), anod)                   # trigger guard
     b.box((-0.18, -2.42, 5.20), (0.18, -1.55, 5.45), anod)
-    b.seg((4.02, -1.55), (4.30, -2.15), 0.13, 0.20, steel)                    # trigger
-    b.box((-0.10, -2.22, 4.18), (0.10, -2.08, 4.42), steel)
+    # trigger: in the back of the guard, straight down from the receiver, its tip curving forward
+    b.seg((4.55, -1.55), (4.55, -1.92), 0.13, 0.20, steel, over=0.03)
+    b.seg((4.55, -1.92), (4.43, -2.18), 0.12, 0.20, steel, over=0.03)
     b.box((-0.55, -1.22, 5.05), (-0.45, -1.02, 5.85), steel)                 # safety selector, left
     b.rod(5.30, 5.62, 0.10, steel, axis=2, at=(0.48, -1.12))                 # and its stub on the right
     for z, y in ((0.20, -0.80), (6.65, -0.25)):                              # pivot and takedown pins

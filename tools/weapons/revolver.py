@@ -123,8 +123,8 @@ def body(m):
     b.seg((2.30, 0.49), (2.84, 0.49), 0.18, 0.34, 'hammer', over=0.0)
     b.seg((2.84, 0.49), (3.20, 0.34), 0.18, 0.34, 'hammer', over=0.04)
     b.box((-0.42, 0.25, 2.40), (0.42, 0.40, 3.0), fr)                     # the frame round the hammer, under its spur
-    b.seg((1.12, FRAME_BOT), (1.16, -1.76), 0.17, 0.34, 'trigger', over=0.04)
-    b.seg((1.16, -1.76), (1.34, -2.04), 0.16, 0.34, 'trigger', over=0.04)
+    b.seg((1.65, FRAME_BOT), (1.65, -1.78), 0.17, 0.34, 'trigger', over=0.04)    # back in the guard,
+    b.seg((1.65, -1.78), (1.53, -2.04), 0.16, 0.34, 'trigger', over=0.04)        # its tip curving forward
     for p0, p1 in zip(GUARD[:-1], GUARD[1:]):
         b.seg(p0, p1, 0.15, 0.30, fr, over=0.05)
     _grip_frame(b)
