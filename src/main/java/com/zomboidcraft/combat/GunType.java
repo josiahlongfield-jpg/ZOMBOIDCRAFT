@@ -257,7 +257,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_DRY;
             case MAGNUM -> ModSounds.MAGNUM_DRY;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
-            case CROSSBOW -> ModSounds.PISTOL_DRY;          // the trigger of an uncocked bow, just a click
+            case CROSSBOW -> ModSounds.CROSSBOW_DRY;        // the trigger of an uncocked bow, just a click
         };
     }
 
@@ -291,7 +291,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_SHELL_IN;
             case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
-            case CROSSBOW -> ModSounds.RIFLE_LOAD_ROUND;     // the bolt slid back into the latch
+            case CROSSBOW -> ModSounds.CROSSBOW_LOAD;        // the bolt slid back into the latch
         };
     }
 

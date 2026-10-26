@@ -219,8 +219,8 @@ public final class Guns {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
                 level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, 4, 0.03, 0.03, 0.03, 0.08);
-                level.playSound(null, p.x, p.y, p.z, ModSounds.CROSSBOW_HIT, SoundSource.PLAYERS, 0.8f,
-                        1.1f + player.getRandom().nextFloat() * 0.2f);
+                level.playSound(null, p.x, p.y, p.z, ModSounds.CROSSBOW_HIT_BLOCK, SoundSource.PLAYERS, 0.8f,
+                        0.9f + player.getRandom().nextFloat() * 0.2f);
                 boltAt = p.subtract(dir.scale(0.3));
                 if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
                     level.destroyBlock(block.getBlockPos(), false, player);
