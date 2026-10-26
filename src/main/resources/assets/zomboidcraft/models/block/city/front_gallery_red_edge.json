@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_soffit": "zomboidcraft:block/city/ext_soffit",
+    "front_fascia_red": "zomboidcraft:block/city/front_fascia_red",
+    "front_iron": "zomboidcraft:block/city/front_iron",
+    "front_tin_red": "zomboidcraft:block/city/front_tin_red",
+    "particle": "zomboidcraft:block/city/front_tin_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        9,
+        8
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_tin_red"
+        },
+        "south": {
+          "texture": "#front_tin_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#front_tin_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_tin_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_tin_red"
+        },
+        "down": {
+          "texture": "#ext_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_tin_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#front_tin_red"
+        },
+        "east": {
+          "texture": "#front_tin_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_tin_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_tin_red"
+        },
+        "down": {
+          "texture": "#ext_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        6
+      ],
+      "to": [
+        16,
+        8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7.5,
+        -0.5
+      ],
+      "to": [
+        16,
+        8.5,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_fascia_red"
+        },
+        "south": {
+          "texture": "#front_fascia_red"
+        },
+        "east": {
+          "texture": "#front_fascia_red",
+          "uv": [
+            15.5,
+            7.5,
+            16,
+            8.5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_fascia_red",
+          "uv": [
+            0,
+            7.5,
+            0.5,
+            8.5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_fascia_red",
+          "uv": [
+            0,
+            0,
+            16,
+            0.5
+          ]
+        },
+        "down": {
+          "texture": "#front_fascia_red",
+          "uv": [
+            0,
+            15.5,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

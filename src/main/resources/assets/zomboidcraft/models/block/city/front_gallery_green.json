@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_soffit": "zomboidcraft:block/city/ext_soffit",
+    "front_iron": "zomboidcraft:block/city/front_iron",
+    "front_tin_green": "zomboidcraft:block/city/front_tin_green",
+    "particle": "zomboidcraft:block/city/front_tin_green"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        11,
+        8
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_tin_green"
+        },
+        "south": {
+          "texture": "#front_tin_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#front_tin_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_tin_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_tin_green"
+        },
+        "down": {
+          "texture": "#ext_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        0
+      ],
+      "to": [
+        16,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_tin_green",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#front_tin_green"
+        },
+        "east": {
+          "texture": "#front_tin_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_tin_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_tin_green"
+        },
+        "down": {
+          "texture": "#ext_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        14
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#front_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#front_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    }
+  ]
+}

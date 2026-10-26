@@ -10,10 +10,10 @@ import java.util.SplittableRandom;
  * come out amber, so wherever a colour should spill (a neon blade, a window) a froglight throws it.
  */
 public final class ShopLights {
-    /** A lamp block: dead (an unlit white box) with chance dead, otherwise mostly purple. */
+    /** A lamp block: dead (a light box gone dark, its glass yellowed) with chance dead, otherwise mostly purple. */
     public static String lamp(SplittableRandom rng, double dead) {
         if (rng.nextDouble() < dead) {
-            return "minecraft:smooth_quartz";
+            return "front_lampbox_dead";
         }
         double r = rng.nextDouble();
         return r < 0.72 ? "minecraft:pearlescent_froglight" : r < 0.86 ? "minecraft:verdant_froglight" : "minecraft:ochre_froglight";
