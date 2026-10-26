@@ -515,19 +515,13 @@ public final class RifleView {
         ItemStack stack = state == LOOSE_MAG ? loose[0] : state == LOOSE_HANDLE ? loose[1] : state == LOOSE_FLASH ? loose[2]
                 : state == LOOSE_CASE ? loose[4] : loose[3];
         if (state == LOOSE_HANDLE) {
-            // the handle wears the gun's finish and wear, which its model picks by the gun's model data and damage
-            ItemStack held = player.getMainHandItem();
-            CustomModelData data = held.get(DataComponents.CUSTOM_MODEL_DATA);
+            // the handle wears the gun's finish, which its model picks by the gun's model data
+            CustomModelData data = player.getMainHandItem().get(DataComponents.CUSTOM_MODEL_DATA);
             if (data != null) {
                 stack.set(DataComponents.CUSTOM_MODEL_DATA, data);
             } else {
                 stack.remove(DataComponents.CUSTOM_MODEL_DATA);
             }
-            Integer max = held.get(DataComponents.MAX_DAMAGE);
-            if (max != null) {
-                stack.set(DataComponents.MAX_DAMAGE, max);
-            }
-            stack.set(DataComponents.DAMAGE, held.getDamageValue());
         }
         mc.getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.FIXED, player.level(), player, 0);
         gun.apply(pose);

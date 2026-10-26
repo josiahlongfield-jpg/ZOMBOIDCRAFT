@@ -18,7 +18,7 @@ REACH = 0.4             # how far in from an edge the edge effects can reach; jo
 DEPTH = 0.03            # how far past an edge (and under the face) to look for the next box of the part
 STEP = 0.08             # steps down to the next box of the part up to this deep are joints too (a shaped stock's slices)
 # materials painted as part of another one's surface (engraving on a can, a housing's markings)
-FAMILY = {'mark': 'anod', 'can_mark': 'can', 'bezel_r': 'housing'}
+FAMILY = {'mark': 'anod', 'can_mark': 'can', 'bezel_r': 'housing', 'gcheck': 'stock'}
 # lit or see-through things: no outline, no chips
 PLAIN = {'dot', 'flash', 'lens', 'lens_green', 'lamp', 'reticle', 'glass', 'bore'}
 INK_MIN = 4            # texels a face needs across before it gets an outline
