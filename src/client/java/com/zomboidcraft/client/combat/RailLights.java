@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -49,11 +50,15 @@ import org.joml.Vector3f;
  *
  * The laser runs from its lens on the right rail to a green dot on whatever is under the crosshair, with the gun on
  * the sights or pointed from the hip (RifleView turns it so its barrel lines up); while the gun is busy, in a
- * reload, it goes wherever the barrel does. The light throws a cone from its lens on the left rail: a soft pool
- * where it lands and a faint beam in the air, both in the dark only. It also lights the world with light blocks put
- * only into this computer's copy of the world, spaced down the beam: brightest just ahead of the gun
- * (guns.lightLevel), fading as the beam widens, so the floor and walls round it light up whether or not it lands on
- * anything. The server's world never changes.
+ * reload, it goes wherever the barrel does. The light shines straight out of its lens on the left rail, the way the
+ * barrel points, never bent toward what's under the crosshair: a soft pool where it lands and a faint beam in the
+ * air, both in the dark only. It also lights the world with light blocks put only into this computer's copy of the
+ * world, spaced down the beam: brightest just ahead of the gun (guns.lightLevel), fading as the beam widens, so the
+ * floor and walls round it light up whether or not it lands on anything. The server's world never changes.
+ *
+ * Shader packs draw glow as solid emissive surfaces and throw away the faint parts (Photon drops anything under half
+ * strength), so with one on the laser's dot is drawn solid and bigger, and its beam is dust: specks lit along it,
+ * fresh each frame, which the pack's frame blending smooths into a faint beam.
  */
 public final class RailLights {
     private static final double RANGE = 32, LIGHT_RANGE = 24;
@@ -64,6 +69,9 @@ public final class RailLights {
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     /** The laser's colours, and the light's (a cool white LED). */
     private static final float[] GREEN = {0.25f, 1f, 0.32f}, GREEN_CORE = {0.8f, 1f, 0.8f}, WHITE = {1f, 0.96f, 0.88f};
+    /** Specks of dust lit along a laser's beam per block, with a shader pack on (guns.laserBeamStrength scales it). */
+    private static final double DUST_PER_BLOCK = 4;
+    private static final Random DUST = new Random();
     /** From outside, where the laser and the light sit from a player's eye (x right, y up, z back). */
     private static final Vector3f LASER_OUTSIDE = new Vector3f(0.20f, -0.24f, -0.55f), LIGHT_OUTSIDE = new Vector3f(0.10f, -0.30f, -0.55f);
 
@@ -138,9 +146,8 @@ public final class RailLights {
             int brightness = Mth.clamp(brightest - (int) (Math.max(0, s - FIRST_LIGHT) / LIGHT_FADE), Math.min(2, brightest), 15);
             // in the air on the gun's side of anything in the way: back along the beam a little if it's taken
             for (double back = 0; back < 2 && s - back > 0.2; back += 0.5) {
-                BlockPos p = BlockPos.containing(land.from().add(land.dir().scale(s - back)));
-                BlockState here = level.getBlockState(p);
-                if (here.isAir() || here.is(Blocks.LIGHT) && had.containsKey(p)) {
+                BlockPos p = free(level, BlockPos.containing(land.from().add(land.dir().scale(s - back))), had);
+                if (p != null) {
                     want.merge(p, brightness, Math::max);
                     break;
                 }
@@ -165,6 +172,25 @@ public final class RailLights {
             }
         });
         LIT.put(id, placed);
+    }
+
+    /**
+     * Where a light block can go for a point on the beam: the block itself if it's air (or one of this light's), or,
+     * when it's grass, a flower or anything else you walk through, the first free block just above it, so tall grass
+     * round the beam doesn't push the light back along it. Null when something solid is in the way.
+     */
+    private static BlockPos free(ClientLevel level, BlockPos p, Map<BlockPos, Integer> had) {
+        for (int up = 0; up < 3; up++) {
+            BlockPos q = p.above(up);
+            BlockState here = level.getBlockState(q);
+            if (here.isAir() || here.is(Blocks.LIGHT) && had.containsKey(q)) {
+                return q;
+            }
+            if (!here.getCollisionShape(level, q).isEmpty()) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static void clear(ClientLevel level, BlockPos pos) {
@@ -202,16 +228,17 @@ public final class RailLights {
                 RifleView.aimDistance((float) held.eye().distanceTo(target));
             }
             if (laser) {
-                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config.laserBeam);
+                laser(level, player, held, aim.getType() != HitResult.Type.MISS, target, quads, config);
             }
             if (light) {
-                light(level, player, held, target, quads, config, glow);
+                light(level, player, held, quads, config, glow);
             }
         }
         if (quads.count > 0) {
-            // added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow
+            // added light normally; with a shader pack, drawn the way a beacon beam's solid core is, which the packs
+            // make glow
             context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
-                    shaders ? RenderTypes.beaconBeam(GLOW, true) : RenderTypes.eyes(GLOW), quads::emit);
+                    shaders ? RenderTypes.beaconBeam(GLOW, false) : RenderTypes.eyes(GLOW), quads::emit);
         }
     }
 
@@ -246,7 +273,7 @@ public final class RailLights {
     }
 
     private static void laser(ClientLevel level, AbstractClientPlayer player, Held held, boolean onSomething, Vec3 target,
-                              Quads quads, boolean beam) {
+                              Quads quads, ZcConfig.Guns config) {
         boolean pointed = held.onTarget() > 0.999f;
         Vec3 dir = blend(held.bore(), target.subtract(held.laser()).normalize(), held.onTarget());
         double reach = pointed ? held.laser().distanceTo(target) + 0.05 : RANGE;
@@ -261,22 +288,57 @@ public final class RailLights {
             end = held.laser().add(dir.scale(RANGE));
             dot = false;
         }
-        if (beam) {
-            quads.ribbon(held.laser(), end, 14, (s, away) -> Math.max(0.0025, away * 0.0011),
-                    (s, away) -> quads.shade(GREEN, (float) (0.1 + 0.25 * Math.exp(-s / 4))));
+        float beam = (float) Math.max(0, config.laserBeamStrength);
+        if (config.laserBeam && beam > 0) {
+            if (quads.blended) {
+                dust(held.laser(), end, beam, quads);
+            } else {
+                quads.ribbon(held.laser(), end, 14, (s, away) -> Math.max(0.0025, away * 0.0011),
+                        (s, away) -> quads.shade(GREEN, (float) Math.min(1, beam * (0.1 + 0.25 * Math.exp(-s / 4)))));
+            }
         }
         if (dot) {
-            Vec3 c = end.add(quads.cam.subtract(end).normalize().scale(0.03));
-            double size = 0.03 + 0.0025 * c.distanceTo(quads.cam);
-            quads.facing(c, size, quads.shade(GREEN, quads.blended ? 1f : 0.7f));
-            quads.facing(c, size * 0.35, quads.shade(GREEN_CORE, 1f));
+            Vec3 toCam = quads.cam.subtract(end).normalize();
+            Vec3 c = end.add(toCam.scale(0.03));
+            double away = c.distanceTo(quads.cam), scale = Math.max(0.1, config.laserDotSize);
+            if (quads.blended) {
+                // a pack draws only the solid middle of the glow (half its size across): a dot a few pixels wide
+                double size = (0.024 + 0.009 * away) * scale;
+                quads.facing(c, size, quads.shade(GREEN, 1f));
+                quads.facing(c.add(toCam.scale(0.01)), size * 0.45, quads.shade(GREEN_CORE, 1f));
+            } else {
+                double size = (0.03 + 0.0025 * away) * scale;
+                quads.facing(c, size, quads.shade(GREEN, 0.7f));
+                quads.facing(c, size * 0.35, quads.shade(GREEN_CORE, 1f));
+            }
         }
     }
 
-    private static void light(ClientLevel level, AbstractClientPlayer player, Held held, Vec3 target, Quads quads, ZcConfig.Guns config,
+    /**
+     * A laser's beam with a shader pack on: specks of dust lit along it, new ones each frame, thickest near the lens
+     * and thinning out toward the dot. Each is a pixel or so wide; the pack blends frames, so together they read as
+     * a faint beam that glints.
+     */
+    private static void dust(Vec3 from, Vec3 to, float strength, Quads quads) {
+        Vec3 line = to.subtract(from);
+        double length = line.length();
+        if (length < 0.1) {
+            return;
+        }
+        Vec3 dir = line.scale(1 / length);
+        int specks = (int) Math.min(600, strength * DUST_PER_BLOCK * length);
+        int colour = quads.shade(GREEN, 1f);
+        for (int i = 0; i < specks; i++) {
+            Vec3 p = from.add(dir.scale(length * Math.pow(DUST.nextDouble(), 1.7)));
+            quads.speck(p, Math.max(0.0015, p.distanceTo(quads.cam) * 0.0009), colour);
+        }
+    }
+
+    private static void light(ClientLevel level, AbstractClientPlayer player, Held held, Quads quads, ZcConfig.Guns config,
                               boolean drawn) {
-        Vec3 from = held.light();
-        Vec3 axis = blend(held.bore(), target.subtract(from).normalize(), held.onTarget());
+        // straight out the way the barrel points (from the hip RifleView turns the gun so this meets the middle of
+        // the view guns.lightZero blocks ahead), so it doesn't jump onto whatever passes under the crosshair
+        Vec3 from = held.light(), axis = held.bore();
         BlockHitResult centre = level.clip(new ClipContext(from, from.add(axis.scale(LIGHT_RANGE)), ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE, player));
         boolean lands = centre.getType() != HitResult.Type.MISS;
@@ -470,6 +532,14 @@ public final class RailLights {
             Vec3 toCam = cam.subtract(c).normalize();
             Vec3 right = perpendicular(toCam), up = toCam.cross(right);
             square(c, right.scale(half), up.scale(half), colour, toCam);
+        }
+
+        /** A tiny square facing the camera, solid all over (the glow's middle only). */
+        void speck(Vec3 c, double half, int colour) {
+            Vec3 toCam = cam.subtract(c).normalize();
+            Vec3 a = perpendicular(toCam).scale(half), b = toCam.cross(perpendicular(toCam)).scale(half);
+            quad(c.subtract(a).subtract(b), c.subtract(a).add(b), c.add(a).add(b), c.add(a).subtract(b),
+                    0.4f, 0.4f, 0.4f, 0.6f, 0.6f, 0.6f, 0.6f, 0.4f, colour, colour, toCam);
         }
 
         /** A disc lying on a surface. */

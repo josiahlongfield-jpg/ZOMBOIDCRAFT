@@ -37,7 +37,13 @@ import rifle as RF  # noqa: E402
 import pistol as PI  # noqa: E402
 import shotgun as SG  # noqa: E402
 import hunting_rifle as HR  # noqa: E402
+import rimfire as RM  # noqa: E402
+import smg as SM  # noqa: E402
 import double_barrel as DB  # noqa: E402
+import sawn_off as SO  # noqa: E402
+import crossbow as XB  # noqa: E402
+import lever_action as LA  # noqa: E402
+import magnum as MG  # noqa: E402
 import revolver as RV  # noqa: E402
 import attachments as AT  # noqa: E402
 from inch import IN  # noqa: E402
@@ -789,6 +795,91 @@ def revolver():
                   aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
                   finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
     gun.gap_flash = fp(0, 0, RV.CYL_FRONT)      # the side flash out of the barrel-cylinder gap
+    return gun
+
+
+def rimfire():
+    """The .22 rifle: open sights (a folding leaf and a gold bead), no rails or threads, its flush 10-round rotary
+    magazine, and the little charging handle (its handle) pulled back after a fresh magazine on an empty gun."""
+    look = RM.look()
+    fp = RM.frame_point
+    parts = {'mag': kit.Part('mag', 'rimfire_magazine', '.22 Rifle Magazine', 'magazine', RM.magazine, look)}
+    slots = {'magazine': kit.Slot(fp(0, RM.WELL_Y, RM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
+
+    def flash(m, muzzle):
+        RM.flash(m, RM.MUZZLE)
+
+    return kit.Gun('rimfire', '.22 Rifle', RM.body, look, RM.HAND, slots, parts,
+                   aperture=fp(0, RM.SIGHT, RM.REAR_SIGHT), flash=flash, handle=RM.handle, seed=931, flash_size=0.6)
+
+
+def smg():
+    """The submachine gun: a drum rear sight and hooded post, no rails, its curved 30-round magazine, and the cocking
+    handle (its handle) up on the left of the tube, pulled back and slapped home after a fresh magazine on an empty
+    gun."""
+    look = SM.look()
+    fp = SM.frame_point
+    parts = {'mag': kit.Part('mag', 'smg_magazine', 'SMG Magazine', 'magazine', SM.magazine, look)}
+    slots = {'magazine': kit.Slot(fp(0, SM.WELL_Y, SM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
+
+    def flash(m, muzzle):
+        SM.flash(m, SM.MUZZLE)
+
+    return kit.Gun('smg', 'Submachine Gun', SM.body, look, SM.HAND, slots, parts,
+                   aperture=fp(0, SM.SIGHT, SM.REAR_SIGHT), flash=flash, handle=SM.handle, seed=933, flash_size=0.85)
+
+
+def sawn_off():
+    """The sawn-off: the double cut down, a bead put back on the short rib, its barrels and forend (its handle)
+    swinging down about the hinge to load two shells by hand, as on the double."""
+    fp = SO.frame_point
+
+    def flash(m, muzzle):
+        SO.flash(m, SO.MUZZLE)
+
+    return kit.Gun('sawn_off', 'Sawn-Off Shotgun', SO.body, SO.look(), SO.HAND, {}, {},
+                   aperture=fp(0, SO.SIGHT, SO.SIGHT_Z), flash=flash, handle=SO.barrels, seed=935, flash_size=1.5,
+                   opened=('x', -22.5, SO.HINGE_POINT))
+
+
+def crossbow():
+    """The crossbow: fibre irons with a short rail between them for an optic, and its bolt (its magazine part, one at
+    a time) laid on the rail under the retention spring. No flash: it's silent but for the string."""
+    look = XB.look()
+    fp = XB.frame_point
+    parts = {'bolt': kit.Part('bolt', 'crossbow_bolt', 'Crossbow Bolt', 'magazine', XB.bolt, look)}
+    slots = {'magazine': kit.Slot(fp(0, 0, 0), 'axial', ['bolt'], default='bolt')}
+    return kit.Gun('crossbow', 'Crossbow', XB.body, look, XB.HAND, slots, parts,
+                   aperture=fp(0, XB.SIGHT, XB.REAR_SIGHT), seed=937)
+
+
+def lever_action():
+    """The lever-action carbine: a semi-buckhorn and a hooded bead, no rails or threads, loaded a round at a time through
+    the gate; its lever (its handle) swung down and back up after each shot. It comes in LA.FINISHES."""
+    fp = LA.frame_point
+
+    def flash(m, muzzle):
+        LA.flash(m, LA.MUZZLE)
+
+    finishes = {k: (v[0], LA.look(k)) for k, v in LA.FINISHES.items()}
+    return kit.Gun('lever_action', 'Lever-Action Carbine', LA.body, finishes['field'][1], LA.HAND, {}, {},
+                   aperture=fp(0, LA.SIGHT, LA.REAR_SIGHT), flash=flash, handle=LA.lever, seed=939, flash_size=1.1,
+                   finishes=finishes)
+
+
+def magnum():
+    """The magnum revolver: target sights on a ribbed barrel, no rails or threads; its cylinder, crane and ejector rod
+    (its handle) swing out to load six rounds by hand, as on the service revolver. It comes in MG.FINISHES."""
+    fp = MG.frame_point
+
+    def flash(m, muzzle):
+        MG.flash(m, MG.MUZZLE, 1.25)
+
+    finishes = {k: (v[0], MG.look(k)) for k, v in MG.FINISHES.items()}
+    gun = kit.Gun('magnum', 'Magnum Revolver', MG.body, finishes['blued'][1], MG.HAND, {}, {},
+                  aperture=fp(0, MG.SIGHT, MG.REAR_SIGHT), flash=flash, handle=MG.cylinder, seed=941, flash_size=1.15,
+                  finishes=finishes, opened=('shift', 0.0, MG.U * np.array([-1.25, -0.35, 0.0])))
+    gun.gap_flash = fp(0, 0, MG.CYL_FRONT)
     return gun
 
 

@@ -614,6 +614,15 @@ public final class ZcConfig {
         public boolean reloadAnimation = true;
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
+        /** How strongly the laser's beam shows (with a shader pack: how much dust it lights). Client side. */
+        public double laserBeamStrength = 1.0;
+        /** How big the laser's dot is: 1 = a few pixels across at any range. Client side. */
+        public double laserDotSize = 1.0;
+        /**
+         * From the hip with only the light on, how far ahead (blocks) the gun is turned to point its light at the
+         * middle of the view. The light then shines straight down the barrel. Client side.
+         */
+        public double lightZero = 12;
         /**
          * How bright (a light level, 1 to 15) a gun light lights the world just ahead of it, fading a level every
          * three blocks down the beam. Higher lights more of the rooms around it too. Client side.
