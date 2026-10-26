@@ -7,29 +7,29 @@
   "elements": [
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        0
       ],
       "to": [
-        16,
+        9,
         1.5,
-        9
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#navy_cable"
+          "texture": "#navy_cable",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#navy_cable"
+          "texture": "#navy_cable",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#navy_cable",
-          "cullface": "east"
+          "texture": "#navy_cable"
         },
         "west": {
-          "texture": "#navy_cable",
-          "cullface": "west"
+          "texture": "#navy_cable"
         },
         "up": {
           "texture": "#navy_cable"

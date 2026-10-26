@@ -8,29 +8,29 @@
   "elements": [
     {
       "from": [
-        0,
         1,
-        1
+        1,
+        0
       ],
       "to": [
-        16,
         15,
-        15
+        15,
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#navy_turbine"
+          "texture": "#navy_turbine",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#navy_turbine"
+          "texture": "#navy_turbine",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#navy_turbine",
-          "cullface": "east"
+          "texture": "#navy_turbine"
         },
         "west": {
-          "texture": "#navy_turbine",
-          "cullface": "west"
+          "texture": "#navy_turbine"
         },
         "up": {
           "texture": "#navy_turbine"
@@ -42,29 +42,29 @@
     },
     {
       "from": [
+        3,
         0,
-        0,
-        3
+        0
       ],
       "to": [
-        16,
+        13,
         1,
-        13
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#navy_gun"
+          "texture": "#navy_gun",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#navy_gun"
+          "texture": "#navy_gun",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#navy_gun",
-          "cullface": "east"
+          "texture": "#navy_gun"
         },
         "west": {
-          "texture": "#navy_gun",
-          "cullface": "west"
+          "texture": "#navy_gun"
         },
         "up": {
           "texture": "#navy_gun"

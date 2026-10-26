@@ -548,8 +548,8 @@ def blocks():
          rotate="axis")
     add("navy_shuttle", [[5, 0, 2, 11, 3, 14, "navy_steel"], [6.5, 3, 4, 9.5, 6, 8, "navy_steel"],
                          [7, 0, 0, 9, 2, 2, "navy_gun"]], "Catapult Shuttle")
-    add("navy_wire", [[0, 0, 7, 16, 1.5, 9, "navy_cable"]], "Arresting Wire", rotate="axis", decor=True)
-    add("navy_wire_sheave", [[2, 0, 3, 14, 3, 13, "navy_steel"], [0, 1, 7, 16, 2.5, 9, "navy_cable"]],
+    add("navy_wire", [[7, 0, 0, 9, 1.5, 16, "navy_cable"]], "Arresting Wire", rotate="axis", decor=True)
+    add("navy_wire_sheave", [[3, 0, 2, 13, 3, 14, "navy_steel"], [7, 1, 0, 9, 2.5, 16, "navy_cable"]],
         "Wire Support", rotate="axis")
     cube("navy_jbd", {"north": "navy_jbd", "south": "navy_steel", "side": "navy_steel", "up": "navy_steel",
                       "down": "navy_steel"}, "Jet Blast Deflector", rotate="facing")
@@ -564,7 +564,7 @@ def blocks():
     # the island
     add("navy_array", [[0, 0, 14.5, 16, 16, 16, "navy_array"]], "Radar Array")
     cube("navy_lattice", "navy_lattice", "Lattice Mast")
-    add("navy_radar", [[0, 6, 6, 16, 14, 10, "navy_lattice"], [6, 0, 6, 10, 6, 10, "navy_steel"]],
+    add("navy_radar", [[6, 6, 0, 10, 14, 16, "navy_lattice"], [6, 0, 6, 10, 6, 10, "navy_steel"]],
         "Radar Antenna", rotate="axis")
     add("navy_dish", [[2, 2, 0, 14, 14, 3, {"north": "navy_dish", "side": "navy_radome", "up": "navy_radome",
                                              "down": "navy_radome", "south": "navy_steel"}],
@@ -644,16 +644,16 @@ def blocks():
     add("navy_rack_hi", rack + [[0, 0, 0, 16, 1, 16, "navy_alu"], [1, 1, 1, 15, 3, 15, "navy_mattress"],
                                 [0, 1, 0, 6, 12, 0.5, "navy_curtain_blue"], [2, 13, 12, 14, 15, 15, "navy_tube_on"]],
         "Berthing Rack", "METAL", loot="home_nightstand")
-    add("navy_mess_table", [[0, 10, 1, 16, 11, 15, "navy_formica"], [7, 0, 7, 9, 10, 9, "navy_alu"],
-                            [0, 5, -3, 16, 6, 0, "navy_formica"], [0, 5, 16, 16, 6, 19, "navy_formica"],
-                            [2, 0, -2, 3, 5, -1, "navy_alu"], [13, 0, 17, 14, 5, 18, "navy_alu"]],
+    add("navy_mess_table", [[1, 10, 0, 15, 11, 16, "navy_formica"], [7, 0, 7, 9, 10, 9, "navy_alu"],
+                            [-3, 5, 0, 0, 6, 16, "navy_formica"], [16, 5, 0, 19, 6, 16, "navy_formica"],
+                            [-2, 0, 2, -1, 5, 3, "navy_alu"], [17, 0, 13, 18, 5, 14, "navy_alu"]],
         "Mess Table", rotate="axis")
     add("navy_ready_seat", [[2, 0, 4, 14, 2, 12, "navy_alu"], [2, 4, 2, 14, 7, 13, "navy_leather"],
                             [2, 7, 11, 14, 16, 14, "navy_leather"], [7, 2, 6, 9, 4, 10, "navy_alu"],
                             [1, 6, 3, 2, 9, 12, "navy_alu"], [14, 6, 3, 15, 9, 12, "navy_alu"]], "Ready Room Seat")
     add("navy_screen", [[1, 3, 15, 15, 13, 16, "navy_screen"]], "Display", decor=True)
     add("navy_whiteboard", [[0, 2, 15.5, 16, 14, 16, "navy_whiteboard"]], "Status Board", decor=True)
-    add("navy_turbine", [[0, 1, 1, 16, 15, 15, "navy_turbine"], [0, 0, 3, 16, 1, 13, "navy_gun"]], "Turbine",
+    add("navy_turbine", [[1, 1, 0, 15, 15, 16, "navy_turbine"], [3, 0, 0, 13, 1, 16, "navy_gun"]], "Turbine",
         rotate="axis")
     add("navy_lamp_wall", [[5, 10, 13, 11, 14, 16, "navy_steel"], [6, 10.5, 12.5, 10, 13.5, 13, "navy_tube_on"]],
         "Bulkhead Light", light=11)

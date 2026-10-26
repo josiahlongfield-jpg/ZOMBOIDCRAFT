@@ -311,11 +311,17 @@ public final class County {
     private Place port(int px, int pz, double v, long h) {
         String variant;
         int width, land, basin;
-        if (v < 0.4) {
+        if (v < 0.3) {
             variant = "container";
             width = 340;
             land = 190;
             basin = 110;
+        } else if (v < 0.42) {
+            // the naval wharf: long enough for the carrier, the basin wide enough for her overhang
+            variant = "naval";
+            width = 430;
+            land = 170;
+            basin = 130;
         } else if (v < 0.7) {
             variant = "industrial";
             width = 280;

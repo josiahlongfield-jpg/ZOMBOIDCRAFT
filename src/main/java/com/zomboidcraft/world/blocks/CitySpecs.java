@@ -1828,8 +1828,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("navy_hazard", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("navy_catapult", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("navy_shuttle", FACING, 0, 0, SoundType.METAL, 2f, 5, 0, 2, 11, 3, 14, 6.5, 3, 4, 9.5, 6, 8, 7, 0, 0, 9, 2, 2);
-        s("navy_wire", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 0, 7, 16, 1.5, 9);
-        s("navy_wire_sheave", AXIS, 0, 0, SoundType.METAL, 2f, 2, 0, 3, 14, 3, 13, 0, 1, 7, 16, 2.5, 9);
+        s("navy_wire", AXIS, DECOR, 0, SoundType.METAL, 0f, 7, 0, 0, 9, 1.5, 16);
+        s("navy_wire_sheave", AXIS, 0, 0, SoundType.METAL, 2f, 3, 0, 2, 13, 3, 14, 7, 1, 0, 9, 2.5, 16);
         s("navy_jbd", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("navy_hangar_floor", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("navy_hangar_oil", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
@@ -1838,7 +1838,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("navy_padeye", PLAIN, DECOR, 0, SoundType.METAL, 0f, 5, 0, 5, 11, 0.5, 11);
         s("navy_array", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
         s("navy_lattice", PLAIN, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
-        s("navy_radar", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 6, 6, 16, 14, 10, 6, 0, 6, 10, 6, 10);
+        s("navy_radar", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 6, 6, 0, 10, 14, 16, 6, 0, 6, 10, 6, 10);
         s("navy_dish", FACING, 0, 0, SoundType.METAL, 2f, 2, 2, 0, 14, 14, 3, 6, 0, 3, 10, 6, 13, 7, 7, 3, 9, 9, 8);
         s("navy_ciws_base", PLAIN, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 16, 15, 0, 14, 0, 16, 16, 16);
         s("navy_ciws_body", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 3, 14, 10, 15, 13, 2, 5, 16, 9, 13, 3, 10, 4, 13, 16, 14, 5, 3, 0, 11, 9, 3);
@@ -1875,11 +1875,11 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("navy_rack_lo", "home_wardrobe");
         s("navy_rack_hi", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 0, 1, 16, 1, 15, 0, 0, 16, 16, 1, 0, 0, 15, 1, 16, 16, 15, 0, 15, 16, 16, 16, 0, 15.5, 0, 16, 16, 16, 0, 0, 0, 16, 1, 16, 1, 1, 1, 15, 3, 15, 0, 1, 0, 6, 12, 0.5, 2, 13, 12, 14, 15, 15);
         loot("navy_rack_hi", "home_nightstand");
-        s("navy_mess_table", AXIS, 0, 0, SoundType.METAL, 2f, 0, 10, 1, 16, 11, 15, 7, 0, 7, 9, 10, 9, 0, 5, -3, 16, 6, 0, 0, 5, 16, 16, 6, 19, 2, 0, -2, 3, 5, -1, 13, 0, 17, 14, 5, 18);
+        s("navy_mess_table", AXIS, 0, 0, SoundType.METAL, 2f, 1, 10, 0, 15, 11, 16, 7, 0, 7, 9, 10, 9, -3, 5, 0, 0, 6, 16, 16, 5, 0, 19, 6, 16, -2, 0, 2, -1, 5, 3, 17, 0, 13, 18, 5, 14);
         s("navy_ready_seat", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 4, 14, 2, 12, 2, 4, 2, 14, 7, 13, 2, 7, 11, 14, 16, 14, 7, 2, 6, 9, 4, 10, 1, 6, 3, 2, 9, 12, 14, 6, 3, 15, 9, 12);
         s("navy_screen", FACING, DECOR, 0, SoundType.METAL, 0f, 1, 3, 15, 15, 13, 16);
         s("navy_whiteboard", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 2, 15.5, 16, 14, 16);
-        s("navy_turbine", AXIS, 0, 0, SoundType.METAL, 2f, 0, 1, 1, 16, 15, 15, 0, 0, 3, 16, 1, 13);
+        s("navy_turbine", AXIS, 0, 0, SoundType.METAL, 2f, 1, 1, 0, 15, 15, 16, 3, 0, 0, 13, 1, 16);
         s("navy_lamp_wall", FACING, 0, 11, SoundType.METAL, 2f, 5, 10, 13, 11, 14, 16, 6, 10.5, 12.5, 10, 13.5, 13);
         s("navy_st_hangar1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("navy_st_hangar2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
