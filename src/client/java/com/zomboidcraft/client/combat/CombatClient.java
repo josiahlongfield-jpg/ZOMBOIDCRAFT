@@ -44,6 +44,7 @@ public final class CombatClient {
     public static final KeyMapping RAIL = new KeyMapping("key.zomboidcraft.rail", InputConstants.KEY_L, CATEGORY);
     public static final KeyMapping LASER = new KeyMapping("key.zomboidcraft.laser", InputConstants.KEY_J, CATEGORY);
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.zomboidcraft.fire_mode", InputConstants.KEY_X, CATEGORY);
+    public static final KeyMapping SHOULDER = new KeyMapping("key.zomboidcraft.shoulder", InputConstants.KEY_O, CATEGORY);
 
     private static long lastShot = -100;
     /**
@@ -63,6 +64,7 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(RAIL);
         KeyMappingHelper.registerKeyMapping(LASER);
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
+        KeyMappingHelper.registerKeyMapping(SHOULDER);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
             if (GunType.isGun(hand)) {
@@ -136,6 +138,9 @@ public final class CombatClient {
         if (player.isSprinting() && ZcConfig.get().combat.stamina && !player.isCreative()
                 && player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL) < 10) {
             player.setSprinting(false);
+        }
+        while (SHOULDER.consumeClick()) {
+            com.zomboidcraft.client.camera.ShoulderCam.swapShoulder();
         }
         // a broken leg with no splint won't take a sprint
         if (player.isSprinting() && !player.isCreative() && com.zomboidcraft.survival.Injuries.cantSprint(player)) {

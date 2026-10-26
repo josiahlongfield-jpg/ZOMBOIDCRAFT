@@ -477,6 +477,18 @@ public final class ZcConfig {
         public boolean weaponCards = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
+        /**
+         * Third person (F5) is played over the shoulder: the camera close behind you and to one side, a crosshair on
+         * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
+         */
+        public boolean shoulderCam = true;
+        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
+        public double shoulderBack = 1.9;
+        public double shoulderSide = 0.6;
+        public double shoulderUp = 0.15;
+        /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
+        public double shoulderAimBack = 1.05;
+        public double shoulderAimSide = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
