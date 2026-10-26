@@ -81,8 +81,12 @@ public final class RifleView {
      * light or laser on, so the beam runs along the barrel to the crosshair.
      */
     private static float point, pointO;
-    /** How far off what's under the crosshair is (blocks), from RailLights' look this frame. */
+    /**
+     * How far off what's under the crosshair is (blocks), from RailLights' look each frame, eased so the gun swings
+     * smoothly when something steps under the crosshair; and when it was last eased (nanoseconds).
+     */
     private static float aimDistance = 16;
+    private static long aimEased;
     /** The hand's lag behind a turning look this frame (degrees about x and y), as the hand renderer turns it. */
     private static float swayX, swayY;
     /** The gun's rail as last drawn (see rail()), and when (nanoseconds). */
@@ -338,7 +342,11 @@ public final class RifleView {
         }
         float p = smooth(Mth.lerp(partial(age), pointO, point));
         if (p > 0) {
-            want = pointed(want, p, Attachments.laserOn(gun) ? rig.laser() : rig.light());
+            // the laser meets what's under the crosshair; the light alone meets the middle of the view a set way
+            // ahead, so it doesn't swing as near and far things pass under the crosshair
+            boolean laser = Attachments.laserOn(gun);
+            want = pointed(want, p, laser ? rig.laser() : rig.light(),
+                    laser ? aimDistance : (float) Mth.clamp(config.guns.lightZero, 1.5, 64));
         }
         if (a > 0 && step == 0) {
             want = want.lerp(sights, a);
@@ -781,11 +789,11 @@ public final class RifleView {
     }
 
     /**
-     * The gun turned about the grip, p of the way, so the line from a rail lens along the barrel runs through what's
-     * under the crosshair (aimDistance ahead of the eye): near things turn the muzzle in further.
+     * The gun turned about the grip, p of the way, so the line from a rail lens along the barrel runs through the
+     * middle of the view a distance ahead of the eye: near things turn the muzzle in further.
      */
-    private static Pose pointed(Pose gun, float p, float[] lens) {
-        Vector3f target = new Vector3f(-ARM[0], -ARM[1], -Math.max(aimDistance, 1.5f) - ARM[2]);
+    private static Pose pointed(Pose gun, float p, float[] lens, float distance) {
+        Vector3f target = new Vector3f(-ARM[0], -ARM[1], -Math.max(distance, 1.5f) - ARM[2]);
         Vector3f grip = gun.point(rig.grip());
         Vector3f bore = gun.q().transform(new Vector3f(0, 0, -1));
         Pose turned = gun;
@@ -1283,7 +1291,12 @@ public final class RifleView {
 
     /** How far off what's under the crosshair is this frame, so a pointed gun's rail lines up on it. */
     public static void aimDistance(float blocks) {
-        aimDistance = blocks;
+        long now = System.nanoTime();
+        float k = 1 - (float) Math.exp(-Math.min(now - aimEased, 200_000_000L) / 1e9 / 0.08);
+        aimEased = now;
+        // eased in steps of the distance, not blocks: 2 to 20 swings as quickly as 20 to 200 would
+        float from = (float) Math.log(Math.max(aimDistance, 0.5f)), to = (float) Math.log(Math.max(blocks, 0.5f));
+        aimDistance = (float) Math.exp(from + (to - from) * k);
     }
 
     /** The hand's lag behind the look this frame (the hand renderer's own sums, after the steadier aim). */
