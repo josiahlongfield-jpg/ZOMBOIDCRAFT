@@ -38,6 +38,7 @@ public class ZomboidCraft implements ModInitializer {
         ModItems.register();
         com.zomboidcraft.carry.Carry.register();
         com.zomboidcraft.gear.Headgear.register();
+        com.zomboidcraft.gear.Radios.register();
         com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();

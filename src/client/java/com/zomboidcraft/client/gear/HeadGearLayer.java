@@ -22,9 +22,10 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Draws a player's helmet or head mount and the goggles on it, swinging the goggles up and down on their pivot when
- * they're flipped. (The headgear's item model draws nothing on a player's head for vanilla's own head layer; on
- * zombies and armour stands it draws the helmet with the goggles fixed where they are.)
+ * Draws a player's helmet or head mount, the comms headset on its rails and the goggles on it, swinging the goggles
+ * up and down on their pivot when they're flipped. (The headgear's item model draws nothing on a player's head for
+ * vanilla's own head layer; on zombies and armour stands it draws the helmet with the goggles and headset fixed where
+ * they are.)
  *
  * The models are built in head pixels from the middle of the head (tools/weapons/headgear.py): one item pixel is one
  * head pixel, so after vanilla's head transform for worn items the goggles turn about the mount's pivot block.
@@ -41,6 +42,7 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private final ItemModelResolver items;
     private final ItemStackRenderState headgear = new ItemStackRenderState();
     private final ItemStackRenderState goggles = new ItemStackRenderState();
+    private final ItemStackRenderState headset = new ItemStackRenderState();
 
     public HeadGearLayer(RenderLayerParent<AvatarRenderState, PlayerModel> parent, ItemModelResolver items) {
         super(parent);
@@ -64,6 +66,12 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.scale(-1f, -1f, 1f);
         items.updateForLiving(headgear, head, ItemDisplayContext.NONE, player);
         headgear.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        ItemStack comms = Headgear.headset(head);
+        if (comms != null) {
+            // clamped to the helmet's rails, so it doesn't swing with the goggles
+            items.updateForLiving(headset, comms, ItemDisplayContext.NONE, player);
+            headset.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        }
         Headgear.Mounted m = Headgear.mounted(head);
         if (m != null) {
             float up = flip(state.id, m.up());

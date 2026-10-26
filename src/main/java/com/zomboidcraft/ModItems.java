@@ -122,7 +122,7 @@ public final class ModItems {
     public static final Item AMMO_CAN = gunCase("ammo_can", CaseItem.Kind.AMMO, com.zomboidcraft.carry.BagSpec.AMMO_CAN);
 
     // Night vision: goggles clip onto a helmet or head mount and run on AA batteries (gear/Headgear).
-    public static final Item COMBAT_HELMET = register("combat_helmet", com.zomboidcraft.gear.HeadGearItem::new,
+    public static final Item COMBAT_HELMET = register("combat_helmet", p -> new com.zomboidcraft.gear.HeadGearItem(p, true),
             headgear().attributes(net.minecraft.world.item.component.ItemAttributeModifiers.builder()
                     .add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR,
                             new net.minecraft.world.entity.ai.attributes.AttributeModifier(ZomboidCraft.id("helmet_armor"), 2,
@@ -135,6 +135,12 @@ public final class ModItems {
     public static final Item NVG_WHITE = goggles(com.zomboidcraft.gear.NightVisionItem.Generation.WHITE);
     public static final Item AA_BATTERY = register("aa_battery", com.zomboidcraft.gear.BatteryItem::new, new Item.Properties().stacksTo(16));
 
+    // Radios that carry players' voices through the voice chat mod, and a headset for the helmet's rails (gear/Radios).
+    public static final Item TOY_RADIO = radio(com.zomboidcraft.gear.RadioItem.Type.TOY);
+    public static final Item TWO_WAY_RADIO = radio(com.zomboidcraft.gear.RadioItem.Type.TWO_WAY);
+    public static final Item MILITARY_RADIO = radio(com.zomboidcraft.gear.RadioItem.Type.MILITARY);
+    public static final Item COMMS_HEADSET = register("comms_headset", com.zomboidcraft.gear.HeadsetItem::new, new Item.Properties().stacksTo(1));
+
     private static Item.Properties headgear() {
         return new Item.Properties().stacksTo(1).component(DataComponents.EQUIPPABLE,
                 net.minecraft.world.item.equipment.Equippable.builder(net.minecraft.world.entity.EquipmentSlot.HEAD)
@@ -144,6 +150,10 @@ public final class ModItems {
 
     private static Item goggles(com.zomboidcraft.gear.NightVisionItem.Generation generation) {
         return register(generation.key, p -> new com.zomboidcraft.gear.NightVisionItem(generation, p), new Item.Properties().stacksTo(1));
+    }
+
+    private static Item radio(com.zomboidcraft.gear.RadioItem.Type type) {
+        return register(type.key, p -> new com.zomboidcraft.gear.RadioItem(type, p), new Item.Properties().stacksTo(1));
     }
 
     private static Item gunCase(String name, CaseItem.Kind kind, com.zomboidcraft.carry.BagSpec spec) {
