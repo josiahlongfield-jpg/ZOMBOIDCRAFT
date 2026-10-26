@@ -199,6 +199,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** The model key of what's in a slot, or null if it's empty. */
     public static @Nullable String key(ItemStack gun, Slot slot) {
+        if (slot == Slot.MAGAZINE && GunType.of(gun) == GunType.CROSSBOW) {
+            // a crossbow's bolt shows on its rail while it's loaded
+            return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0 ? "bolt" : null;
+        }
         if (slot == Slot.MAGAZINE) {
             return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).mag() && magazine(gun) != null
                     ? GunSlotData.MODEL_KEYS.get(BuiltInRegistries.ITEM.getKey(magazine(gun)).getPath()) : null;

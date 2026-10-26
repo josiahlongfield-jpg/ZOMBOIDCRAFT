@@ -98,9 +98,10 @@ public final class RifleView {
     private static final ItemStackRenderState LOOSE_FLASH = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_QUIET_FLASH = new ItemStackRenderState();
     private static final ItemStackRenderState LOOSE_CASE = new ItemStackRenderState();
+    private static final ItemStackRenderState LOOSE_SLIDE = new ItemStackRenderState();
     /**
      * Each gun's loose pieces: its magazine (a tube gun's: a shell), its handle, slide or pump, its flash, its smaller
-     * flash through a suppressor, and a revolver's empty case.
+     * flash through a suppressor, a revolver's empty case, and a lever gun's bolt.
      */
     private static final Map<GunType, ItemStack[]> LOOSE = new EnumMap<>(GunType.class);
 
@@ -331,7 +332,7 @@ public final class RifleView {
         if (sights == null) {
             a = 0;
         }
-        Pose want = animate ? rig.opens() ? openPose(age) : rig.pump() ? tubePose(age) : reloadPose(t)
+        Pose want = animate ? rig.opens() ? openPose(age) : rig.pump() || rig.lever() || rig.crossbow() ? tubePose(age) : reloadPose(t)
                 : step >= 1 ? shown : hip(0, 0, 0);
         // a bolt worked after a shot: the gun rolled port up and turned in a little while the hand is on it
         float bolt = rig.bolt() ? boltTime(t, animate, age) : -1;
@@ -373,9 +374,17 @@ public final class RifleView {
 
         // the model leaves the handle, slide or pump to us in first person
         float pulled = pull(gun, t, animate, age);
+        float lever = rig.lever() ? leverAmount(animate, age) : 0;
         drawHandle(pose, out, light, player, want, bolt >= 0 ? boltLocal(bolt)
                 : rig.cylinder() ? openLocal(animate ? openAmount(age) : 0).mul(cylTurn(animate ? loadAngle(age) : restAngle(age)))
-                : rig.opens() ? openLocal(animate ? openAmount(age) : 0) : new Matrix4f().translation(0, 0, pulled));
+                : rig.opens() ? openLocal(animate ? openAmount(age) : 0) : rig.lever() ? openLocal(lever)
+                : rig.crossbow() ? stringLocal(cocked(gun, animate, age)) : new Matrix4f().translation(0, 0, pulled));
+        if (rig.lever()) {
+            // the bolt rides back over the hammer as the lever goes down
+            pose.pushPose();
+            drawPiece(pose, out, light, player, want, new Matrix4f().translation(0, 0, lever * rig.handleTravel()), LOOSE_SLIDE);
+            pose.popPose();
+        }
         drawFlash(pose, out, player, want, gun, age);
         Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
         rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
@@ -388,11 +397,16 @@ public final class RifleView {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             float pump = rig.pump() ? pulled : 0;
             Hand left = !animate ? support(want, foregrip, a, pump) : rig.opens() ? openHand(want, age)
-                    : rig.pump() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
+                    : rig.pump() || rig.lever() || rig.crossbow() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
             Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
                     : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
             if (bolt >= 0) {
                 right = boltHand(want, bolt, right);
+            }
+            if (lever > 0) {
+                // the fingers are through the loop: the hand goes down and forward with it
+                right = new Hand(want.point(openLocal(lever).transformPosition(new Vector3f(rig.grip()[0], rig.grip()[1],
+                        rig.grip()[2]))), right.elbow(), right.palm());
             }
             if (animate && rig.cylinder()) {
                 right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
@@ -433,11 +447,11 @@ public final class RifleView {
             drawChambers(pose, out, light, player, gun, age);
             return;
         }
-        if (rig.pump()) {
+        if (rig.pump() || rig.lever() || rig.crossbow()) {
             float u = stopAt < 0 ? shellTime(age) : -1;
             if (u >= FETCHED) {
                 pose.pushPose();
-                drawPiece(pose, out, light, player, gun, shellLocal(u, SHELL_FWD), LOOSE_MAG);
+                drawPiece(pose, out, light, player, gun, roundLocal(u, SHELL_FWD), LOOSE_MAG);
                 pose.popPose();
             }
             return;
@@ -493,7 +507,7 @@ public final class RifleView {
         float since = age - shotAt;
         boolean quiet = Attachments.suppressed(stack);
         float life = quiet ? QUIET_FLASH_LIFE : FLASH_LIFE;
-        if (!shotFlash || since < 0 || since >= life) {
+        if (!shotFlash || since < 0 || since >= life || rig.crossbow()) {      // a crossbow has no flash
             return;
         }
         float half = life / 2;
@@ -519,10 +533,11 @@ public final class RifleView {
                 piece(new ItemStack(g.item()), g.id() + "_loose_charging_handle"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_flash"),
                 piece(new ItemStack(g.item()), g.id() + "_loose_flash_quiet"),
-                piece(new ItemStack(g.ammo()), g.id() + "_loose_case")});
+                piece(new ItemStack(g.ammo()), g.id() + "_loose_case"),
+                piece(new ItemStack(g.item()), g.id() + "_loose_slide")});
         ItemStack stack = state == LOOSE_MAG ? loose[0] : state == LOOSE_HANDLE ? loose[1] : state == LOOSE_FLASH ? loose[2]
-                : state == LOOSE_CASE ? loose[4] : loose[3];
-        if (state == LOOSE_HANDLE) {
+                : state == LOOSE_CASE ? loose[4] : state == LOOSE_SLIDE ? loose[5] : loose[3];
+        if (state == LOOSE_HANDLE || state == LOOSE_SLIDE) {
             // the handle wears the gun's finish, which its model picks by the gun's model data
             CustomModelData data = player.getMainHandItem().get(DataComponents.CUSTOM_MODEL_DATA);
             if (data != null) {
@@ -581,8 +596,8 @@ public final class RifleView {
      * open on an empty gun until the slide is racked, and run back by each shot.
      */
     private static float pull(ItemStack gun, float t, boolean animate, float age) {
-        if (rig.bolt()) {
-            return 0;       // a bolt turns as well as runs back: see boltLocal
+        if (rig.bolt() || rig.lever()) {
+            return 0;       // a bolt turns as well as runs back (see boltLocal), a lever swings (see leverAmount)
         }
         if (rig.pump()) {
             // worked after each shot, and to chamber a shell after loading onto an empty gun
@@ -731,6 +746,19 @@ public final class RifleView {
     private static final float LOWER = 5, PUMP_START = 3, PUMP_DONE = 9.5f;
     /** The pump's stroke: smartly back, then forward to close. */
     private static final float PUMP_BACK = 1.5f, PUMP_FORWARD = 1.5f;
+    /** A lever's stroke: down, then up to lock (ticks). */
+    private static final float LEVER_DOWN = 2.0f, LEVER_UP = 2.2f;
+    /**
+     * A lever gun's round at the gate: how far its back is swung out (degrees), and how far it's tucked in toward the
+     * tube once it's through (item pixels).
+     */
+    private static final float GATE_YAW = 28f, GATE_TUCK = 0.2f;
+    /**
+     * A crossbow: ticks into the reload the hand takes the string (it's drawn back to the latch by the end of the
+     * raise); how long the string takes to fly forward with a shot; how flat it lies let go (its depth, of cocked);
+     * and how far ahead of the latch (item pixels) a bolt is laid on the rail before it's slid back.
+     */
+    private static final float COCK_FROM = 5f, STRING_FLY = 0.5f, STRING_SLACK = 0.04f, BOLT_AHEAD = 3.0f;
 
     /** Ticks into the current shell (0 to perShell), or -1 while the gun is still coming up for the first. */
     private static float shellTime(float age) {
@@ -740,7 +768,8 @@ public final class RifleView {
 
     /** How far over for loading the gun is (0 to 1): up as the loading starts, down when it stops. */
     private static float loadAmount(float age) {
-        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, type.raise - 1);
+        // a crossbow is tipped down quickly to be cocked, the rest are brought up over the whole raise
+        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, rig.crossbow() ? 5 : type.raise - 1);
         return stopAt < 0 ? up : up * (1 - smooth01(age - stopAt, 0, pumpFrom >= 0 ? PUMP_START : LOWER));
     }
 
@@ -778,6 +807,118 @@ public final class RifleView {
         float[] h = rig.magCentre();
         return new Matrix4f().translation(0, in - drop, -along)
                 .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /**
+     * A round u ticks into its go: a pump gun's up through the port under it (shellLocal); a lever gun's in
+     * through the gate on its right (gateLocal).
+     */
+    private static Matrix4f roundLocal(float u, float fwd) {
+        return rig.lever() ? gateLocal(u, fwd) : rig.crossbow() ? railLocal(u) : shellLocal(u, fwd);
+    }
+
+    /**
+     * A crossbow's bolt u ticks into its go: from below the screen up over the rail, nose up (about its nock, magCentre)
+     * and BOLT_AHEAD pixels ahead of the latch; laid down on the rail, then slid back until its nock clicks into the
+     * latch.
+     */
+    private static Matrix4f railLocal(float u) {
+        float drop, rock, ahead = BOLT_AHEAD;
+        if (u < UNDER) {
+            float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
+            float out = 1 - (1 - v) * (1 - v) * (1 - v);
+            drop = Mth.lerp(out, 24f, 1.5f);
+            rock = Mth.lerp(out, 25f, 6f);
+        } else {
+            float v = smooth01(u, UNDER, UP);
+            drop = 1.5f * (1 - v);
+            rock = 6f * (1 - v);
+            ahead = BOLT_AHEAD * (1 - smooth01(u, UP, type.perShell));
+        }
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(0, -drop, -ahead)
+                .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /**
+     * How far back a crossbow's string is (0 let go, 1 cocked): drawn back to the latch early in the reload, let fly
+     * by a shot, cocked while there's a bolt on.
+     */
+    private static float cocked(ItemStack gun, boolean animate, float age) {
+        if (animate) {
+            return smooth01(age - clockStart, COCK_FROM, type.raise - 1.5f);
+        }
+        float since = age - shotAt;
+        if (since >= 0 && since < STRING_FLY) {
+            return 1 - smooth(since / STRING_FLY);
+        }
+        return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0 ? 1 : 0;
+    }
+
+    /** The string k of the way cocked: drawn cocked, so let go it's flattened onto its slack line (the hinge's z). */
+    private static Matrix4f stringLocal(float k) {
+        float z = rig.hinge()[2];
+        return new Matrix4f().translation(0, 0, z).scale(1, 1, Mth.lerp(k, STRING_SLACK, 1f)).translate(0, 0, -z);
+    }
+
+    /** The off hand on the string's centre, palm down over it, the string k of the way cocked. */
+    private static Hand onString(Pose gun, float k) {
+        float[] h = rig.handle();
+        Vector3f at = gun.point(stringLocal(k).transformPosition(new Vector3f(h[0], h[1], h[2])));
+        return new Hand(at, new Vector3f(-0.25f, -0.75f, 0.55f), new Vector3f(0f, -1f, 0f));
+    }
+
+    /** The off hand cocking a crossbow: off the foregrip to the string, then drawing it back to the latch. */
+    private static Hand cockHand(Pose gun, float age) {
+        float s = age - clockStart;
+        if (s < COCK_FROM) {
+            return support(gun, false, 0, 0).lerp(onString(gun, 0), smooth01(s, 0, COCK_FROM));
+        }
+        return onString(gun, smooth01(s, COCK_FROM, type.raise - 1.5f));
+    }
+
+    /**
+     * A lever gun's round u ticks into its go: from below the screen up beside the gate, its back swung out and nose
+     * up (both about the nose, magCentre); then its nose put to the gate, and pushed forward through it, straightening
+     * and tucking in toward the tube as it goes (at most fwd pixels).
+     */
+    private static Matrix4f gateLocal(float u, float fwd) {
+        float drop, rock, yaw, along = 0;
+        if (u < UNDER) {
+            float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
+            float out = 1 - (1 - v) * (1 - v) * (1 - v);
+            drop = Mth.lerp(out, 24f, 1.2f);
+            rock = Mth.lerp(out, 30f, 10f);
+            yaw = Mth.lerp(out, 45f, GATE_YAW);
+        } else {
+            float v = smooth01(u, UNDER, UP);
+            drop = 1.2f * (1 - v);
+            rock = 10f * (1 - v);
+            along = Math.min(fwd, SHELL_FWD * smooth01(u, UP, type.perShell));
+            yaw = GATE_YAW * (1 - smooth01(u, UP, IN + 0.6f));
+        }
+        float tuck = GATE_TUCK * along / SHELL_FWD;
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(-tuck, -drop, -along)
+                .translate(h[0], h[1], h[2]).rotateY(yaw * Mth.DEG_TO_RAD).rotateX(rock * Mth.DEG_TO_RAD)
+                .translate(-h[0], -h[1], -h[2]);
+    }
+
+    /**
+     * How far down a lever gun's lever is (0 to 1): swung down and back up after each shot, and to chamber a round
+     * after loading onto an empty gun.
+     */
+    private static float leverAmount(boolean animate, float age) {
+        float shot = leverStroke(age - shotAt - (type.cycleAfterShot - 0.5f));
+        return animate && pumpFrom >= 0 ? Math.max(shot, leverStroke(age - pumpFrom - PUMP_START)) : shot;
+    }
+
+    /** How far down the lever is, p ticks into a stroke: smartly down, a beat, and back up to lock. */
+    private static float leverStroke(float p) {
+        if (p <= 0 || p >= LEVER_DOWN + LEVER_UP) {
+            return 0;
+        }
+        return p < LEVER_DOWN ? smooth(p / LEVER_DOWN) : 1 - smooth((p - LEVER_DOWN) / LEVER_UP);
     }
 
     /** Item pixels the pump is back, p ticks into a stroke. */
@@ -906,7 +1047,7 @@ public final class RifleView {
     /** The hand under a shell, its thumb behind the head, u ticks into the shell's go. */
     private static Hand onShell(Pose gun, float u) {
         float[] h = rig.magHold();
-        Vector3f hold = shellLocal(u, THUMB_FWD).transformPosition(new Vector3f(h[0], h[1], h[2]));
+        Vector3f hold = roundLocal(u, THUMB_FWD).transformPosition(new Vector3f(h[0], h[1], h[2]));
         return new Hand(gun.point(hold), new Vector3f(-0.1f, -0.9f, 0.42f), new Vector3f(-0.5f, -1f, 0f));
     }
 
@@ -914,12 +1055,16 @@ public final class RifleView {
     private static Hand loadHand(Pose gun, float age) {
         float u = shellTime(age);
         if (u < 0) {
-            return support(gun, false, 0, 0).lerp(pouch(), smooth01(age - clockStart, 0, type.raise));
+            return rig.crossbow() ? cockHand(gun, age)
+                    : support(gun, false, 0, 0).lerp(pouch(), smooth01(age - clockStart, 0, type.raise));
         }
         if (u >= FETCHED) {
             return onShell(gun, u);
         }
         boolean first = age - clockStart - type.raise < type.perShell;
+        if (first && rig.crossbow()) {
+            return onString(gun, 1).lerp(pouch(), smooth01(u, 0, FETCHED));     // off the cocked string for the bolt
+        }
         return first ? pouch() : onShell(gun, type.perShell).lerp(pouch(), smooth01(u, 0, FETCHED));
     }
 

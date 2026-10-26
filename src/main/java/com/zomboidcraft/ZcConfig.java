@@ -42,6 +42,18 @@ public final class ZcConfig {
     public ShotgunStats doubleBarrel = ShotgunStats.doubleBarrel();
     /** The .38 service revolver's own numbers. */
     public GunStats revolver = GunStats.revolver();
+    /** The .22 rifle's own numbers. */
+    public GunStats rimfire = GunStats.rimfire();
+    /** The submachine gun's own numbers (it has full auto). */
+    public GunStats smg = GunStats.smg();
+    /** The sawn-off's own numbers, with its pellets. */
+    public ShotgunStats sawnOff = ShotgunStats.sawnOff();
+    /** The .44 magnum revolver's own numbers. */
+    public GunStats magnum = GunStats.magnum();
+    /** The lever-action carbine's own numbers. */
+    public GunStats leverAction = GunStats.leverAction();
+    /** The crossbow's own numbers, and how often its bolts break. */
+    public CrossbowStats crossbow = new CrossbowStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -62,9 +74,15 @@ public final class ZcConfig {
         public int huntingRifleWeight = 4;
         public int shotgunWeight = 3;
         public int doubleBarrelWeight = 2;
-        /** How often a pistol case holds the revolver rather than the pistol, against it. */
+        public int rimfireWeight = 4;
+        public int smgWeight = 1;
+        public int sawnOffWeight = 2;
+        public int leverActionWeight = 3;
+        public int crossbowWeight = 1;
+        /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
         public int revolverWeight = 2;
+        public int magnumWeight = 1;
         /** Most of a packed gun's durability that's already worn off, as a fraction. */
         public double maxWear = 0.17;
         /** Chance someone left a part on: a 4x scope on the hunting rifle, a red dot on the rifle, a light on the pistol. */
@@ -200,6 +218,12 @@ public final class ZcConfig {
         public int revolverService = 70;
         public int revolverNickel = 25;
         public int revolverEngraved = 5;
+        /** The magnum: blued with rosewood target stocks, or nickel with exhibition walnut. */
+        public int magnumBlued = 75;
+        public int magnumNickel = 25;
+        /** The lever gun: blued with plain walnut, or colour case hardened with figured walnut. */
+        public int leverActionField = 75;
+        public int leverActionCaseHardened = 25;
     }
 
     public static class Carry {
@@ -539,6 +563,71 @@ public final class ZcConfig {
             s.magazineSize = 5;
             return s;
         }
+
+        /**
+         * The .30-30 lever gun: a deer round, short of the .308 in reach and punch but far quicker to work, six in the
+         * tube; a sharp kick and a loud bark.
+         */
+        static GunStats leverAction() {
+            GunStats s = new GunStats();
+            s.damage = 22.0;
+            s.headshotMultiplier = 3.0;
+            s.hipSpread = 3.2;
+            s.aimSpread = 0.3;
+            s.recoil = 1.9;
+            s.shotNoise = 130.0;
+            s.aimZoom = 0.84;
+            s.range = 140.0;
+            s.fireDelayTicks = 9;      // never less than the lever takes to work (GunType.fireDelay)
+            s.magazineSize = 6;
+            return s;
+        }
+
+        /** The .22: a light round that needs a good hit, a whisper of a kick, quiet, accurate, ten in its magazine. */
+        static GunStats rimfire() {
+            GunStats s = new GunStats();
+            s.damage = 7.0;
+            s.headshotMultiplier = 3.5;
+            s.hipSpread = 3.0;
+            s.aimSpread = 0.25;
+            s.recoil = 0.3;
+            s.shotNoise = 45.0;
+            s.aimZoom = 0.82;
+            s.range = 100.0;
+            s.magazineSize = 10;
+            return s;
+        }
+
+        /** The 9mm submachine gun: the pistol's round from a stocked gun, thirty of them, semi or full auto. */
+        static GunStats smg() {
+            GunStats s = new GunStats();
+            s.damage = 7.0;
+            s.hipSpread = 2.2;
+            s.aimSpread = 0.6;
+            s.recoil = 0.55;
+            s.shotNoise = 75.0;
+            s.aimZoom = 0.85;
+            s.range = 70.0;
+            s.magazineSize = 30;
+            s.selectFire = true;
+            s.autoRoundsPerMinute = 800.0;
+            return s;
+        }
+
+        /** The .44 magnum: a heavy, hard-kicking round that stops most things it hits, six of them, heard far off. */
+        static GunStats magnum() {
+            GunStats s = new GunStats();
+            s.damage = 18.0;
+            s.hipSpread = 3.0;
+            s.aimSpread = 0.45;
+            s.recoil = 2.4;
+            s.shotNoise = 125.0;
+            s.aimZoom = 0.86;
+            s.range = 80.0;
+            s.fireDelayTicks = 8;
+            s.magazineSize = 6;
+            return s;
+        }
     }
 
     /**
@@ -546,6 +635,28 @@ public final class ZcConfig {
      * damage is per pellet, its magazine size is the shells it holds (four in the tube and one chambered), and its
      * time between shots covers working the pump.
      */
+    /**
+     * The crossbow: one heavy bolt at a time, silent but for the string, slow to cock. Its bolts are found again
+     * where they land (in what they hit, under it), unless they break.
+     */
+    public static class CrossbowStats extends GunStats {
+        /** Chance a bolt breaks when it hits something, rather than being left to pick up. */
+        public double boltBreakChance = 0.2;
+
+        CrossbowStats() {
+            damage = 30.0;
+            headshotMultiplier = 3.0;
+            hipSpread = 3.0;
+            aimSpread = 0.2;
+            recoil = 0.4;
+            shotNoise = 8.0;
+            aimZoom = 0.85;
+            range = 60.0;
+            fireDelayTicks = 10;
+            magazineSize = 1;
+        }
+    }
+
     public static class ShotgunStats extends GunStats {
         /** Pellets in each shell (00 buckshot has eight or nine). */
         public int pellets = 8;
@@ -582,6 +693,28 @@ public final class ZcConfig {
             s.recoil = 2.5;
             s.shotNoise = 125.0;
             s.range = 45.0;
+            s.fireDelayTicks = 5;
+            s.magazineSize = 2;
+            return s;
+        }
+
+        /**
+         * The sawn-off: the double's two shells from barrels cut short, so the shot spreads wide and weakens fast; a
+         * brutal kick. Its damage is per pellet.
+         */
+        static ShotgunStats sawnOff() {
+            ShotgunStats s = new ShotgunStats();
+            s.damage = 3.8;
+            s.pellets = 9;
+            s.pelletSpread = 4.5;
+            s.falloffStart = 6.0;
+            s.knockback = 0.55;
+            s.hipSpread = 2.5;
+            s.aimSpread = 1.2;
+            s.recoil = 3.0;
+            s.shotNoise = 130.0;
+            s.aimZoom = 0.92;
+            s.range = 25.0;
             s.fireDelayTicks = 5;
             s.magazineSize = 2;
             return s;

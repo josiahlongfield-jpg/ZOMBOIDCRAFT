@@ -7,7 +7,8 @@ holding the magazine tube, a semi-buckhorn rear sight and a hooded bead front si
 inches from the bore's centre line (y) and the breech face (z, positive back toward the shooter).
 
 It's loaded a round at a time through the gate, and the lever is swung down and back up after each shot: the
-lever is the moving part, drawn apart (turning about LEVER_PIVOT) so first person can work it.
+lever is drawn apart (turning about LEVER_PIVOT) so first person can work it, and the bolt's top too, which rides
+back BOLT_TRAVEL as the lever goes down.
 
 It comes in finishes (see FINISHES): a plain blued one and a colour case hardened one with figured walnut.
 """
@@ -40,6 +41,11 @@ LOOP = (3.55, 7.85)     # the lever loop's front and back
 LOOP_BOT = -3.45
 LEVER_PIVOT = (-1.05, -0.95)   # (y, z): the lever swings down about the pin at the receiver's front
 LEVER_OPEN = 50.0       # degrees it swings down
+BOLT_TRAVEL = 2.60      # how far the bolt rides back with the lever down: clear of a 2.55" round
+GATE = (1.90, -0.69)    # (z, y): where a round's nose goes in at the gate, just inside its back edge
+# a loose round lined up at the gate (its base, which the round is built from): first person swings its back out
+# and pushes it forward through the gate, tucking it in toward the tube as it goes
+LOOSE_ROUND = (0.50, GATE[1], GATE[0] + 2.55)
 TANG_END = 8.10
 STOCK_END = 17.70       # the butt plate's back (37.7" overall)
 COMB_Y = RCVR_TOP - 1.75
@@ -137,10 +143,8 @@ def body(m):
     for s in (-1, 1):                                                   # the top's side rails, the bolt between
         x0, x1 = sorted((s * 0.28, s * RCVR_HALF))
         b.box((x0, RCVR_TOP - 0.18, f + 0.75), (x1, RCVR_TOP, k), rc)
-    b.box((-0.28, RCVR_TOP - 0.30, BOLT[0] - 0.4), (0.28, RCVR_TOP - 0.03, BOLT[1]), 'bolt')
-    b.box((-0.10, RCVR_TOP - 0.035, BOLT[0] + 0.6), (0.10, RCVR_TOP - 0.025, BOLT[1] - 0.6), 'slot')
+    b.box((-0.28, RCVR_TOP - 0.30, BOLT[0] - 0.4), (0.28, RCVR_TOP - 0.10, BOLT[1]), 'bolt')   # its body (see bolt())
     b.box((-0.28, RCVR_TOP - 0.18, f + 0.75), (0.28, RCVR_TOP - 0.10, BOLT[0] - 0.4), 'slot')   # the port ahead of it
-    b.rod(BOLT[1], BOLT[1] + 0.12, 0.07, 'steel', axis=2, at=(0.0, RCVR_TOP - 0.16))           # the firing pin
     # the bottom: round the tube's mouth at the front, the lever's slot along it
     b.rod(f - 0.06, f + 0.6, TUBE_R + 0.06, rc, axis=2, at=(0.0, TUBE_Y))
     # the loading gate on the right, a little proud, and its screw
@@ -236,6 +240,23 @@ def lever(m):
     for p0, p1 in zip(pts[:-1], pts[1:]):
         b.seg(p0, p1, 0.22, 0.34, 'lever', over=0.06)
     b.box((-0.17, -1.62, LOOP[1] - 0.25), (0.17, -1.48, LOOP[1] + 0.35), 'lever')        # its latch at the back
+
+
+def bolt(m):
+    """The bolt's top, seen between the receiver's rails, and the firing pin out of its back: what rides back
+    BOLT_TRAVEL over the hammer and the upper tang as the lever goes down."""
+    b = Inch(m, (0.0, BORE_Y, Z0))
+    b.box((-0.28, RCVR_TOP - 0.10, BOLT[0] - 0.4), (0.28, RCVR_TOP - 0.03, BOLT[1]), 'bolt')
+    b.box((-0.10, RCVR_TOP - 0.035, BOLT[0] + 0.6), (0.10, RCVR_TOP - 0.025, BOLT[1] - 0.6), 'slot')
+    b.rod(BOLT[1], BOLT[1] + 0.12, 0.07, 'steel', axis=2, at=(0.0, RCVR_TOP - 0.06))
+
+
+def round_look():
+    """A loose .30-30 round's paint."""
+    lk = look()
+    d = {k: lk[k] for k in ('case', 'jacket', 'lead')}
+    d['_spec'] = {'case': F.METAL_SPEC['gold'], 'jacket': F.METAL_SPEC['gold']}
+    return d
 
 
 def round_3030(m):
