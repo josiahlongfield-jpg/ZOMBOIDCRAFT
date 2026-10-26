@@ -163,18 +163,16 @@ public class KitUiTest implements FabricClientGameTest {
                     new MouseButtonEvent(options[0] + 0.5, options[1] + 0.5, new MouseButtonInfo(0, 0)), false));
             ctx.waitTicks(5);
             log(ctx, "after calling mouseClicked directly (" + took + ") " + when);
-            String info = ctx.computeOnClient(mc -> {
-                StringBuilder b = new StringBuilder();
-                for (var child : mc.gui.screen().children()) {
-                    if (child instanceof AbstractWidget w) {
-                        b.append("\n     ").append(w.getClass().getName()).append(" '").append(w.getMessage().getString()).append("' active=")
-                                .append(w.active).append(" visible=").append(w.visible).append(" at ").append(w.getX()).append(',').append(w.getY())
-                                .append(' ').append(w.getWidth()).append('x').append(w.getHeight());
-                    }
+            ctx.runOnClient(mc -> {
+                Screen scr = mc.gui.screen();
+                double x = options[0] + 0.5, y = options[1] + 0.5;
+                LOG.info("ZCUI child at the click: {} focused={} dragging={}", scr.getChildAt(x, y).orElse(null), scr.getFocused(), scr.isDragging());
+                for (var child : scr.children()) {
+                    String what = child instanceof AbstractWidget w ? w.getClass().getName() + " '" + w.getMessage().getString() + "' active=" + w.active
+                            + " visible=" + w.visible + " " + w.getX() + "," + w.getY() + " " + w.getWidth() + "x" + w.getHeight() : child.getClass().getName();
+                    LOG.info("ZCUI   child {} over={}", what, child.isMouseOver(x, y));
                 }
-                return b.toString();
             });
-            LOG.info("ZCUI pause widgets:{}", info);
             boolean helper = ctx.computeOnClient(mc -> {
                 for (var child : mc.gui.screen().children()) {
                     if (child instanceof net.minecraft.client.gui.components.AbstractButton w && w.getMessage().getString().startsWith("Options")) {
