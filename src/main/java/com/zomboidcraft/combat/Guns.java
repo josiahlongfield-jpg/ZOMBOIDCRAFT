@@ -26,6 +26,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -199,6 +200,8 @@ public final class Guns {
         boolean ricochet = false;
         boolean bow = type == GunType.CROSSBOW;
         Vec3 boltAt = null;     // where a crossbow's bolt ends up: under what it hit, or stuck where it struck
+        Zombie boltIn = null;   // or the zombie it went into, to stay standing in it
+        Vec3 boltDir = null;
         for (int i = 0; i < pellets; i++) {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
@@ -213,6 +216,8 @@ public final class Guns {
                 Dismember.pellet(target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
+                    boltIn = target instanceof Zombie hitZombie ? hitZombie : null;
+                    boltDir = dir;
                     level.playSound(null, target.getX(), target.getEyeY(), target.getZ(), ModSounds.CROSSBOW_HIT,
                             SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
                 }
@@ -243,13 +248,16 @@ public final class Guns {
                 }
             }
         }
-        hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
-        if (boltAt != null && stats instanceof ZcConfig.CrossbowStats cb && player.getRandom().nextDouble() >= cb.boltBreakChance) {
+        // the bolt stays in the zombie it hit (before the hit lands, so one it kills drops it with the body), or lies
+        // where it fell
+        if (boltAt != null && stats instanceof ZcConfig.CrossbowStats cb && player.getRandom().nextDouble() >= cb.boltBreakChance
+                && (boltIn == null || !StuckBolts.stick(boltIn, eye, boltDir))) {
             ItemEntity bolt = new ItemEntity(level, boltAt.x, boltAt.y, boltAt.z, new ItemStack(ModItems.CROSSBOW_BOLT));
             bolt.setDeltaMovement(Vec3.ZERO);
             bolt.setPickUpDelay(10);
             level.addFreshEntity(bolt);
         }
+        hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
         if (!hits.isEmpty()) {
             Skills.addXp(player, Skill.AIMING, 2);
         }
