@@ -5,6 +5,7 @@ import com.zomboidcraft.world.city.Decay;
 import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 
 /**
  * A county town, in four kinds:
@@ -31,6 +32,11 @@ final class TownSite extends Site {
     private Homes homes;
     /** Boxes {x0, z0, x1, z1} the Decay pass runs over: the commercial streets. */
     private final List<int[]> core = new ArrayList<>();
+    /** The public buildings a civil-defence shelter could be dug under. */
+    private final List<Host> hosts = new ArrayList<>();
+
+    /** A building's frame, the room inside its walls on the ground floor {x0, z0, x1, z1}, and its front wall's z. */
+    private record Host(Placer p, int[] interior, int front) {}
 
     TownSite(Place p, BlockSink out) {
         super(p, out);
@@ -50,6 +56,34 @@ final class TownSite extends Site {
             new Decay(out, rng.nextLong(), Math.max(0, c[0]), Math.min(w - 1, c[2]), Math.max(0, c[1]), Math.min(d - 1, c[3]), 30).run();
         }
         kit.roadWeeds(0.2);
+        shelter();
+    }
+
+    /** A town hall or post office (Civic.hall) as a shelter host: its walls at x 0..w - 1, z 3..d - 1. */
+    private void hall(Placer pl, int hw, int hd) {
+        hosts.add(new Host(pl, new int[] {1, 4, hw - 2, hd - 2}, 3));
+    }
+
+    /**
+     * About one town in three dug a fallout shelter under its courthouse, town hall or post
+     * office; the yellow-and-black plate on the front wall still says so. Rolls its own dice, so
+     * the town above comes out as it always did.
+     */
+    private void shelter() {
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, 0x5E17, 0x7E12));
+        if (hosts.isEmpty() || g.nextDouble() > (p.variant.equals("county_seat") ? 0.55 : 0.3)) {
+            return;
+        }
+        double r = g.nextDouble();
+        Bunker.State state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        int first = g.nextInt(hosts.size());
+        for (int i = 0; i < hosts.size(); i++) {
+            Host h = hosts.get((first + i) % hosts.size());
+            if (Shelter.dig(h.p(), g, state, h.interior(), 0, -18, new int[] {2, 2, w - 3, d - 3})) {
+                Shelter.plate(h.p(), h.interior()[0], h.interior()[2], h.front());
+                return;
+            }
+        }
     }
 
     private double jitter(double amount) {
@@ -369,6 +403,7 @@ final class TownSite extends Site {
         Kit.Lot post = civicLot(we, sWe + ((qPost & 1) == 0 ? -17 : 17), qPost >= 2 ? 1 : -1, 16, 22);
         if (post != null) {
             new Civic(post.placer(out), rng).hall(16, 20, "postoffice", false);
+            hall(post.placer(out), 16, 20);
             yard(post, 0.8);
         }
         Kit.Lot fire = civicLot(ns, sNs + (qPost < 2 ? -36 : 36), (qPost & 1) == 0 ? 1 : -1, 14, 22);
@@ -489,6 +524,7 @@ final class TownSite extends Site {
         Kit.Lot post = civicLot(main, sCross - clear - 9, -1, 17, depth);
         if (post != null) {
             new Civic(post.placer(out), rng).hall(17, depth - 2, "postoffice", false);
+            hall(post.placer(out), 17, depth - 2);
         }
         shops(main, 2, sCross - clear, 0, depth, 3, wanted);
         shops(main, sCross + clear, main.length() - 4, 0, depth, 2, wanted);
@@ -645,6 +681,7 @@ final class TownSite extends Site {
         int cw = Math.min(34, sq1x - sq0x - 14), cd = Math.min(30, sq1z - sq0z - 22);
         int hx = (int) cx - cw / 2, hz = (int) cz - cd / 2 + 2;
         new Civic(new Placer(out, hx, 0, hz - 4, 0), rng).courthouse(cw, cd + 4);
+        hosts.add(new Host(new Placer(out, hx, 0, hz - 4, 0), new int[] {1, 5, cw - 2, cd + 2}, 4));
         kit.claim(hx - 2, hz - 10, hx + cw + 1, hz + cd + 1, Kit.BUILT);
         Placer world = new Placer(out, 0, 0, 0, 0);
         new Landmarks(world, rng).memorial((int) cx + 10, sq1z - 6);
@@ -697,6 +734,7 @@ final class TownSite extends Site {
         Kit.Lot townHall = civicLot(sides[2], corner + ring * 0.5, outward[2], 20, depth);
         if (townHall != null) {
             new Civic(townHall.placer(out), rng).hall(20, depth - 2, "townhall", true);
+            hall(townHall.placer(out), 20, depth - 2);
         }
         Kit.Lot lib = civicLot(sides[3], corner + ring * 0.5, outward[3], 21, depth);
         if (lib != null) {
@@ -907,6 +945,7 @@ final class TownSite extends Site {
         Kit.Lot post = civicLot(main, sCross + clear + 9, 1, 16, depth);
         if (post != null) {
             new Civic(post.placer(out), rng).hall(16, depth - 2, "postoffice", false);
+            hall(post.placer(out), 16, depth - 2);
         }
         shops(main, Math.max(4, sCross - 110), sCross - clear, 1, depth, 2, wanted);
         shops(main, sCross + clear, Math.min(main.length() - 4, sCross + 90), 1, depth, 2, wanted);

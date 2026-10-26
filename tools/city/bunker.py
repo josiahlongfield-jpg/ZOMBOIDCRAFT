@@ -2274,7 +2274,8 @@ def blocks():
                 parts = [b + ["bunk_wheel"] for b in ring]
                 boxes += parts if half == "w" else mirror(parts)
             add(f"bunk_blast_{half}{row}", boxes, "Blast Door", "METAL")
-    out["bunk_hatch"] = {"trapdoor": "steel", "tex": "bunk_hatch", "title": "Hatch"}
+    # climbable, so the ladder up a shaft carries on through the open hatch and you step out on top
+    out["bunk_hatch"] = {"trapdoor": "steel", "tex": "bunk_hatch", "title": "Hatch", "climb": True}
     add("bunk_ladder", [[1, 0, 14, 2.5, 16, 16, "bunk_grey"], [13.5, 0, 14, 15, 16, 16, "bunk_grey"]]
         + [[2.5, y, 14.5, 13.5, y + 1, 15.5, "bunk_rust_pipe"] for y in (1, 5, 9, 13)], "Ladder", "METAL", climb=True)
     add("bunk_vent_stack", [[6, 0, 6, 10, 16, 10, "bunk_rust_pipe"]], "Vent Pipe", "METAL", rotate=None)
@@ -2283,6 +2284,19 @@ def blocks():
     add("bunk_cable_post", [[6, 0, 6, 10, 12, 10, {"north": "bunk_cable_post", "side": "bunk_cable_post",
                                                    "up": "bunk_concrete", "down": "bunk_concrete"}]],
         "Cable Marker", "STONE")
+
+    # the forest hatch's clearing: the trees the survivalist felled, cut up and stacked
+    bark = {"up": "bark_top", "down": "bark_top", "side": "bark"}
+    ends = {"north": "bark_top", "south": "bark_top", "side": "bark"}
+    add("bunk_stump", [[2.5, 0, 2.5, 13.5, 9, 13.5, bark], [1, 0, 5, 2.5, 3.5, 10, "bark"], [13.5, 0, 6, 15.5, 2.5, 11, "bark"],
+                       [5.5, 0, 0.5, 10.5, 3, 2.5, "bark"], [6, 0, 13.5, 11, 2, 15.5, "bark"],
+                       [4, 9, 4, 12, 9.5, 12, "bark_top"]], "Stump", "WOOD")
+    add("bunk_log", [[2, 0, 0, 14, 11, 16, ends], [5, 11, 0, 11, 12, 16, "bark"], [0.5, 0, 0, 2, 7, 16, "bark"],
+                     [14, 0, 0, 15.5, 7, 16, "bark"]], "Fallen Log", "WOOD", rotate="axis")
+    pile = [[0.5, 0, 0.5, 5.5, 5, 15.5], [5.5, 0, 1.5, 10.5, 5, 14.5], [10.5, 0, 0.5, 15.5, 5, 15],
+            [3, 5, 1, 8, 10, 15], [8, 5, 0.5, 13, 10, 15.5], [5.5, 10, 1.5, 10.5, 15, 14.5]]
+    add("bunk_logpile", [b + [ends] for b in pile], "Log Pile", "WOOD")
+    add("bunk_pole", [[6.5, 0, 6.5, 9.5, 16, 9.5, bark]], "Pole", "WOOD", rotate=None)
 
     # the bunk room: steel bunks two high, a footlocker at each foot, wall lockers
     def bunk(head, top):
@@ -2575,9 +2589,18 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(PREFIXES)}
     made = blocks()
-    kept.update(made)
+    # the kit keeps its place in the list (block ids are registered in this order); new pieces go
+    # after the last of the old ones
+    kept = {}
+    for k, v in data["blocks"].items():
+        if not k.startswith(PREFIXES):
+            kept[k] = v
+        elif k in made:
+            kept[k] = made[k]
+            if k == next(n for n in reversed(data["blocks"]) if n.startswith(PREFIXES)):
+                kept.update({n: m for n, m in made.items() if n not in data["blocks"]})
+    kept.update({n: m for n, m in made.items() if n not in kept})
     data["blocks"] = kept
     lines = ",\n".join(f"    {json.dumps(k)}: {json.dumps(v)}" for k, v in kept.items())
     rest = {k: v for k, v in data.items() if k != "blocks"}

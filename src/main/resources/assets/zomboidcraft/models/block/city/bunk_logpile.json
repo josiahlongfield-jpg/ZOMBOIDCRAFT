@@ -1,0 +1,205 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bark": "zomboidcraft:block/city/bark",
+    "bark_top": "zomboidcraft:block/city/bark_top",
+    "particle": "zomboidcraft:block/city/bark_top"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        0,
+        0.5
+      ],
+      "to": [
+        5.5,
+        5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0,
+        1.5
+      ],
+      "to": [
+        10.5,
+        5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        0,
+        0.5
+      ],
+      "to": [
+        15.5,
+        5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        1
+      ],
+      "to": [
+        8,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        5,
+        0.5
+      ],
+      "to": [
+        13,
+        10,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        10,
+        1.5
+      ],
+      "to": [
+        10.5,
+        15,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top"
+        },
+        "south": {
+          "texture": "#bark_top"
+        },
+        "east": {
+          "texture": "#bark"
+        },
+        "west": {
+          "texture": "#bark"
+        },
+        "up": {
+          "texture": "#bark"
+        },
+        "down": {
+          "texture": "#bark"
+        }
+      }
+    }
+  ]
+}

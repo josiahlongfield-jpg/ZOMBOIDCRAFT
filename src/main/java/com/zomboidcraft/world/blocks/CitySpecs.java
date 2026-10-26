@@ -1642,6 +1642,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("park_st_lifts", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
         s("park_st_authorised", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
         s("park_st_exit", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_stump", FACING, 0, 0, SoundType.WOOD, 1f, 2.5, 0, 2.5, 13.5, 9, 13.5, 1, 0, 5, 2.5, 3.5, 10, 13.5, 0, 6, 15.5, 2.5, 11, 5.5, 0, 0.5, 10.5, 3, 2.5, 6, 0, 13.5, 11, 2, 15.5, 4, 9, 4, 12, 9.5, 12);
+        s("bunk_log", AXIS, 0, 0, SoundType.WOOD, 1f, 2, 0, 0, 14, 11, 16, 5, 11, 0, 11, 12, 16, 0.5, 0, 0, 2, 7, 16, 14, 0, 0, 15.5, 7, 16);
+        s("bunk_logpile", FACING, 0, 0, SoundType.WOOD, 1f, 0.5, 0, 0.5, 5.5, 5, 15.5, 5.5, 0, 1.5, 10.5, 5, 14.5, 10.5, 0, 0.5, 15.5, 5, 15, 3, 5, 1, 8, 10, 15, 8, 5, 0.5, 13, 10, 15.5, 5.5, 10, 1.5, 10.5, 15, 14.5);
+        s("bunk_pole", PLAIN, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 6.5, 9.5, 16, 9.5);
         s("vessel_hull_black", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("vessel_hull_black_seam", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("vessel_hull_black_butt", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
@@ -1776,13 +1780,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("vessel_chain", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 7.5, 1, 0, 8.5, 9, 16, 4, 4.5, 0, 12, 5.5, 16);
         s("vessel_chain_v", PLAIN, SEE_THROUGH, 0, SoundType.METAL, 2f, 7.5, 0, 4, 8.5, 16, 12, 4, 0, 7.5, 12, 16, 8.5);
         s("vessel_rail", AXIS, 0, 0, SoundType.METAL, 2f, 7, 14, 0, 9, 15.5, 16, 7.25, 7, 0, 8.75, 8.5, 16, 7, 0, 7, 9, 14, 9);
+    }
+
+    private void part9() {
         s("vessel_rail_cross", PLAIN, 0, 0, SoundType.METAL, 2f, 7, 14, 0, 9, 15.5, 16, 7.25, 7, 0, 8.75, 8.5, 16, 7, 0, 7, 9, 14, 9, 0, 14, 7, 16, 15.5, 9, 0, 7, 7.25, 16, 8.5, 8.75);
         s("vessel_bollard", AXIS, 0, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 2, 13, 2.5, 2, 5.5, 7.5, 11, 10.5, 8.5, 2, 5.5, 13.5, 11, 10.5, 2, 11, 5, 8, 12.5, 11, 8, 11, 5, 14, 12.5, 11);
         s("vessel_fairlead", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 8, 15, 3, 16, 2, 3, 10, 5, 12, 14, 11, 3, 10, 14, 12, 14, 2, 3.5, 10.5, 14, 6.5, 13.5);
         s("vessel_winch", AXIS, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 2, 15, 2.5, 2, 1, 13.5, 13, 2.5, 2.5, 2, 13.5, 13.5, 13, 15, 3.5, 3, 2.5, 12.5, 12, 13.5);
-    }
-
-    private void part9() {
         s("vessel_windlass", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 3, 16, 3, 3, 0, 13, 13, 3, 3, 3, 13, 13, 13, 16, 4, 4, 3, 12, 12, 13, 6, 13, 6, 10, 16, 10);
         s("vessel_rope", AXIS, DECOR, 0, SoundType.WOOL, 0f, 7, 7, 0, 9, 9, 16);
         s("vessel_rope_v", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 7, 0, 7, 9, 16, 9);

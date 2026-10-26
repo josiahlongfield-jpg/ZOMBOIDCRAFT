@@ -2,11 +2,11 @@ package com.zomboidcraft.world.gen;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.zomboidcraft.world.county.Bunkers;
 import com.zomboidcraft.world.county.County;
 import com.zomboidcraft.world.county.CountyGen;
 import com.zomboidcraft.world.county.Place;
 import com.zomboidcraft.world.county.PlaceType;
-import com.zomboidcraft.world.county.Voxels;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -20,8 +20,9 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * /zc places [type]: the nearest towns, farms, ports and bases with their variants and where
- * they are. /zc goto type: teleports to the nearest one (for trying the world out). /zc bunker:
- * teleports to the hatch of the nearest bunker under a city tower, or with "door" to its blast door.
+ * they are. /zc goto type: teleports to the nearest one (for trying the world out). /zc bunker
+ * [tower|ship|shelter|forest] [door]: teleports to the way into the nearest bunker (of that kind),
+ * or with "door" to its blast door. /zc bunkermap: gives you a marked map.
  */
 public final class CountyCommand {
     public static void register() {
@@ -38,8 +39,14 @@ public final class CountyCommand {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(types(), b))
                                         .executes(ctx -> go(ctx, StringArgumentType.getString(ctx, "type")))))
                         .then(Commands.literal("bunker")
-                                .executes(ctx -> bunker(ctx, false))
-                                .then(Commands.literal("door").executes(ctx -> bunker(ctx, true))))));
+                                .executes(ctx -> bunker(ctx, null, false))
+                                .then(Commands.literal("door").executes(ctx -> bunker(ctx, null, true)))
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(Bunkers.KINDS, b))
+                                        .executes(ctx -> bunker(ctx, StringArgumentType.getString(ctx, "kind"), false))
+                                        .then(Commands.literal("door")
+                                                .executes(ctx -> bunker(ctx, StringArgumentType.getString(ctx, "kind"), true)))))
+                        .then(Commands.literal("bunkermap").executes(CountyCommand::bunkerMap))));
     }
 
     private static List<String> types() {
@@ -57,7 +64,9 @@ public final class CountyCommand {
 
     private static List<Place> nearest(County county, Vec3 at, String type, int radius) {
         int x = (int) at.x, z = (int) at.z;
-        return county.placesNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
+        List<Place> all = new java.util.ArrayList<>(county.placesNear(x - radius, z - radius, x + radius, z + radius, 0));
+        all.addAll(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0));
+        return all.stream()
                 .filter(p -> type == null || p.type.name().equalsIgnoreCase(type) || p.variant.equalsIgnoreCase(type))
                 .sorted(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - at.x, p.centreZ() - at.z)))
                 .toList();
@@ -97,56 +106,63 @@ public final class CountyCommand {
             return 0;
         }
         Place p = list.get(0);
+        if (p.type == PlaceType.HIDEOUT) {
+            // nothing is levelled round a hideout: stand by the hatch, the only ground it knows
+            src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + p.centreX() + ".5 " + (p.level + 2) + " " + (p.centreZ() + 3) + ".5");
+            src.sendSuccess(() -> Component.literal("By the hatch of " + p), false);
+            return 1;
+        }
         int[] gate = p.gate(2);
         src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + gate[0] + " " + (p.level + 3) + " " + (gate[1] + 6));
         src.sendSuccess(() -> Component.literal("At the south gate of " + p), false);
         return 1;
     }
 
-    /**
-     * The nearest downtowns and ports are built (or taken from the cache) and searched for the bunker
-     * marks, nearest first: a tower's under its garage, a ship's behind her engine room.
-     */
-    private static int bunker(CommandContext<CommandSourceStack> ctx, boolean door) {
+    /** Teleports to the way into the nearest bunker of a kind (null: any), or to its blast door. */
+    private static int bunker(CommandContext<CommandSourceStack> ctx, String kind, boolean door) {
         CommandSourceStack src = ctx.getSource();
         County county = county(src);
         if (county == null || src.getEntity() == null) {
             return 0;
         }
-        Vec3 from = src.getPosition();
-        List<Place> towns = nearest(county, from, PlaceType.DOWNTOWN.name(), 8000);
-        List<Place> ports = nearest(county, from, PlaceType.PORT.name(), 8000);
-        List<Place> search = new java.util.ArrayList<>(towns.subList(0, Math.min(3, towns.size())));
-        search.addAll(ports.subList(0, Math.min(3, ports.size())));
-        search.sort(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - from.x, p.centreZ() - from.z)));
-        CountyGen gen = CountyChunkGenerator.gen(src.getLevel().getSeed());
-        for (Place p : search) {
-            Voxels v = gen.voxels(p);
-            Voxels.Mark hatch = null, at = null;
-            for (Voxels.Mark m : v.marks) {
-                if (m.what().equals("bunker door")) {
-                    at = door ? m : at;
-                } else if (m.what().startsWith("bunker")) {
-                    hatch = m;
-                    at = door ? at : m;
-                }
-            }
-            if (hatch == null || at == null) {
-                continue;
-            }
-            Voxels.Mark go = at;
-            String state = hatch.what().substring("bunker ".length());
-            src.getServer().getCommands().performPrefixedCommand(src,
-                    "tp @s " + (p.x0 + go.x()) + ".5 " + (p.level + go.y()) + " " + (p.z0 + go.z()) + ".5");
-            boolean ship = p.type == PlaceType.PORT;
-            String where = door ? "at its blast door"
-                    : ship ? "at the false plate in the engine room's forward bulkhead" : "on the hatch in the electrical room";
-            src.sendSuccess(() -> Component.literal("The bunker " + (ship ? "in the ship at " : "under ") + p
-                    + " (" + state + "): " + where), false);
-            return 1;
+        if (kind != null && !Bunkers.KINDS.contains(kind)) {
+            src.sendFailure(Component.literal("Bunker kinds: " + String.join(", ", Bunkers.KINDS)));
+            return 0;
         }
-        src.sendFailure(Component.literal("No bunker in the nearest cities or ports."));
+        Vec3 from = src.getPosition();
+        CountyGen gen = CountyChunkGenerator.gen(src.getLevel().getSeed());
+        for (Place p : Bunkers.candidates(county, (int) from.x, (int) from.z, kind, 8000)) {
+            for (Bunkers.Found b : Bunkers.in(gen, p, kind)) {
+                int x = door ? b.doorX() : b.x(), y = door ? b.doorY() : b.y(), z = door ? b.doorZ() : b.z();
+                src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + x + ".5 " + y + " " + z + ".5");
+                String where = door ? "at its blast door" : switch (b.kind()) {
+                    case "ship" -> "at the false plate in the engine room's forward bulkhead";
+                    case "shelter" -> "at the top of the stairs down to the boiler room";
+                    case "forest" -> "on the hatch under the leaves";
+                    default -> "on the hatch in the electrical room";
+                };
+                String in = switch (b.kind()) {
+                    case "ship" -> "in the ship at ";
+                    case "forest" -> "in the woods at ";
+                    default -> "under ";
+                };
+                src.sendSuccess(() -> Component.literal("The " + b.kind() + " bunker " + in + p + " (" + b.state() + "): " + where), false);
+                return 1;
+            }
+        }
+        src.sendFailure(Component.literal(kind == null ? "No bunker near here." : "No " + kind + " bunker near here."));
         return 0;
+    }
+
+    /** A marked map for trying them out: it picks its bunker when it's first read. */
+    private static int bunkerMap(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        if (!(src.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)) {
+            return 0;
+        }
+        player.getInventory().add(new net.minecraft.world.item.ItemStack(com.zomboidcraft.ModItems.BUNKER_MAP));
+        src.sendSuccess(() -> Component.literal("A marked map. Read it to see where it leads."), false);
+        return 1;
     }
 
     private static String compass(double dx, double dz) {
