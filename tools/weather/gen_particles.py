@@ -43,6 +43,19 @@ def mist(seed, n=64):
     return Image.fromarray(rgba)
 
 
+def glint(seed, n=16):
+    """A raindrop caught in lamp light: a short bright streak, solid (shader packs drop faint pixels)."""
+    rng = random.Random(seed)
+    img = Image.new("RGBA", (n, n), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    x = n // 2 - 1 + rng.randint(0, 1)
+    top, bottom = rng.randint(0, 3), n - 1 - rng.randint(0, 3)
+    d.line([(x, top), (x, bottom)], fill=(255, 255, 255, 255))
+    d.point((x, bottom), fill=(255, 255, 255, 255))
+    d.line([(x + 1, top + 3), (x + 1, bottom - 2)], fill=(255, 255, 255, 140))
+    return img
+
+
 def scrap(kind, seed, n=16):
     """A bit of litter, 16px: newspaper, a dead leaf, a plastic bag shred, a receipt."""
     rng = random.Random(seed)
@@ -75,6 +88,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for i in range(4):
         mist(100 + i).save(OUT / f"mist_{i}.png")
+    for i in range(3):
+        glint(300 + i).save(OUT / f"glint_{i}.png")
     i = 0
     for kind in ("paper", "paper", "leaf", "leaf", "plastic", "receipt"):
         scrap(kind, 200 + i).save(OUT / f"debris_{i}.png")

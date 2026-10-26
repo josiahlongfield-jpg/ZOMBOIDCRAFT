@@ -391,6 +391,14 @@ public final class ZcConfig {
         public boolean skylineFires = true;
         /** A close strike makes the lamps and neon round you flicker, sometimes browning out for a few seconds. Client side. */
         public boolean stormSurges = true;
+        /** Rain sparkling in the colour of every lamp it falls past. Client side. */
+        public boolean wetGlints = true;
+        /** Now and then the dead grid twitches: streetlights, signs and windows round you stutter on for a while, then die. Client side. */
+        public boolean ghostPower = true;
+        /** Scales the wait between ghost power surges (2 to 6 minutes); 0.5 is twice as often. Client side. */
+        public double ghostPowerEvery = 1.0;
+        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. */
+        public boolean alarms = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */

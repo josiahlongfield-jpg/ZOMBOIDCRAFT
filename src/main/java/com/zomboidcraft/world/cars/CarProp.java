@@ -67,6 +67,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Boolean> SMASHED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** Which seat each rider has: four bits per rider in passenger order, the seat's index plus one. */
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
+    private static final EntityDataAccessor<Boolean> ALARM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -135,6 +137,7 @@ public class CarProp extends Entity {
         builder.define(ENGINE, false);
         builder.define(SMASHED, false);
         builder.define(SEATS, 0);
+        builder.define(ALARM, false);
     }
 
     @Override
@@ -402,6 +405,44 @@ public class CarProp extends Entity {
         doorShutAt = tickCount + 14;
     }
 
+    /** Server side: ticks left on the alarm. */
+    private int alarmLeft;
+
+    /**
+     * Sets the alarm off for a while, if the car still has one: a car that would still start
+     * (its battery not dead), nobody inside. Returns whether it went off.
+     */
+    public boolean tripAlarm(int ticks) {
+        if (!engineRuns() || isVehicle() || alarmLeft > 0) {
+            return false;
+        }
+        alarmLeft = ticks;
+        entityData.set(ALARM, true);
+        return true;
+    }
+
+    public boolean alarming() {
+        return entityData.get(ALARM);
+    }
+
+    /** The alarm's whoop: the horn in a steady beat, and every zombie in earshot comes. Getting in stops it. */
+    private void alarm(ServerLevel server) {
+        if (alarmLeft <= 0) {
+            return;
+        }
+        if (--alarmLeft == 0 || isVehicle()) {
+            alarmLeft = 0;
+            entityData.set(ALARM, false);
+            return;
+        }
+        if (alarmLeft % 16 == 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 2f, 1f);
+        }
+        if (alarmLeft % 40 == 0) {
+            Noise.emit(server, position(), 56);
+        }
+    }
+
     /** The driver leans on the horn: loud, and every zombie in earshot comes. */
     public void honk(Player driver) {
         if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
@@ -615,6 +656,7 @@ public class CarProp extends Entity {
             Vec3 moved = lastPos == null ? Vec3.ZERO : position().subtract(lastPos);
             lastPos = position();
             engine(server, getControllingPassenger());
+            alarm(server);
             CarModels.Model model = CarModels.get(model());
             if (isVehicle() && model != null) {
                 keepOut(model);
