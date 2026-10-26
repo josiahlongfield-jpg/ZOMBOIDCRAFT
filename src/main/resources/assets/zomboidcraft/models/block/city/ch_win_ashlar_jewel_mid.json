@@ -1,0 +1,124 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_frame_ashlar_mid": "zomboidcraft:block/city/ch_frame_ashlar_mid",
+    "ch_glass_jewel_mid": {
+      "sprite": "zomboidcraft:block/city/ch_glass_jewel_mid",
+      "force_translucent": true
+    },
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "particle": "zomboidcraft:block/city/ch_frame_ashlar_mid"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_mid",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_mid"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_mid"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_mid",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_glass_jewel_mid"
+        },
+        "south": {
+          "texture": "#ch_glass_jewel_mid"
+        },
+        "east": {
+          "texture": "#ch_glass_jewel_mid",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_glass_jewel_mid",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_glass_jewel_mid",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_glass_jewel_mid",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

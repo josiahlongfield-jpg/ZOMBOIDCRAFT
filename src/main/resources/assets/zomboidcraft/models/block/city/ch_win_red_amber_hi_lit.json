@@ -1,0 +1,124 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_frame_red_hi": "zomboidcraft:block/city/ch_frame_red_hi",
+    "ch_glass_amber_hi_lit": {
+      "sprite": "zomboidcraft:block/city/ch_glass_amber_hi_lit",
+      "force_translucent": true
+    },
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/ch_frame_red_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_red_hi",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_frame_red_hi"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_red_hi"
+        },
+        "south": {
+          "texture": "#ch_frame_red_hi",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_glass_amber_hi_lit"
+        },
+        "south": {
+          "texture": "#ch_glass_amber_hi_lit"
+        },
+        "east": {
+          "texture": "#ch_glass_amber_hi_lit",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_glass_amber_hi_lit",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_glass_amber_hi_lit",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_glass_amber_hi_lit",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

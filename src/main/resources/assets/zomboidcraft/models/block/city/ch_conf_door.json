@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_beam": "zomboidcraft:block/city/ch_beam",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "cv_panel_oak": "zomboidcraft:block/city/cv_panel_oak",
+    "particle": "zomboidcraft:block/city/cv_panel_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_panel_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        9,
+        1.5
+      ],
+      "to": [
+        10,
+        13,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_beam"
+        },
+        "south": {
+          "texture": "#ch_beam"
+        },
+        "east": {
+          "texture": "#ch_beam"
+        },
+        "west": {
+          "texture": "#ch_beam"
+        },
+        "up": {
+          "texture": "#ch_beam"
+        },
+        "down": {
+          "texture": "#ch_beam"
+        }
+      }
+    }
+  ]
+}

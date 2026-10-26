@@ -1,0 +1,206 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_gilt": "zomboidcraft:block/city/ch_gilt",
+    "ch_mantle_blue": "zomboidcraft:block/city/ch_mantle_blue",
+    "ch_plaster_white": "zomboidcraft:block/city/ch_plaster_white",
+    "ch_skin": "zomboidcraft:block/city/ch_skin",
+    "particle": "zomboidcraft:block/city/ch_mantle_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        5
+      ],
+      "to": [
+        11.5,
+        6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_mantle_blue"
+        },
+        "south": {
+          "texture": "#ch_mantle_blue"
+        },
+        "east": {
+          "texture": "#ch_mantle_blue"
+        },
+        "west": {
+          "texture": "#ch_mantle_blue"
+        },
+        "up": {
+          "texture": "#ch_mantle_blue"
+        },
+        "down": {
+          "texture": "#ch_mantle_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        4.5
+      ],
+      "to": [
+        11,
+        5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_plaster_white"
+        },
+        "south": {
+          "texture": "#ch_plaster_white"
+        },
+        "east": {
+          "texture": "#ch_plaster_white"
+        },
+        "west": {
+          "texture": "#ch_plaster_white"
+        },
+        "up": {
+          "texture": "#ch_plaster_white"
+        },
+        "down": {
+          "texture": "#ch_plaster_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        2,
+        3.5
+      ],
+      "to": [
+        9.5,
+        4,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_skin"
+        },
+        "south": {
+          "texture": "#ch_skin"
+        },
+        "east": {
+          "texture": "#ch_skin"
+        },
+        "west": {
+          "texture": "#ch_skin"
+        },
+        "up": {
+          "texture": "#ch_skin"
+        },
+        "down": {
+          "texture": "#ch_skin"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        6
+      ],
+      "to": [
+        10,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_skin"
+        },
+        "south": {
+          "texture": "#ch_skin"
+        },
+        "east": {
+          "texture": "#ch_skin"
+        },
+        "west": {
+          "texture": "#ch_skin"
+        },
+        "up": {
+          "texture": "#ch_skin"
+        },
+        "down": {
+          "texture": "#ch_skin"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        5.5
+      ],
+      "to": [
+        10.5,
+        12,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_mantle_blue"
+        },
+        "south": {
+          "texture": "#ch_mantle_blue"
+        },
+        "east": {
+          "texture": "#ch_mantle_blue"
+        },
+        "west": {
+          "texture": "#ch_mantle_blue"
+        },
+        "up": {
+          "texture": "#ch_mantle_blue"
+        },
+        "down": {
+          "texture": "#ch_mantle_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        6.5,
+        11
+      ],
+      "to": [
+        11.5,
+        13.5,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt"
+        },
+        "west": {
+          "texture": "#ch_gilt"
+        },
+        "up": {
+          "texture": "#ch_gilt"
+        },
+        "down": {
+          "texture": "#ch_gilt"
+        }
+      }
+    }
+  ]
+}

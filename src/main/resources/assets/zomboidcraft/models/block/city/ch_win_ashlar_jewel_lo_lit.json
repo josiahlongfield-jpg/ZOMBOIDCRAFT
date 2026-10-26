@@ -1,0 +1,214 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_frame_ashlar_lo": "zomboidcraft:block/city/ch_frame_ashlar_lo",
+    "ch_glass_jewel_lo_lit": {
+      "sprite": "zomboidcraft:block/city/ch_glass_jewel_lo_lit",
+      "force_translucent": true
+    },
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "particle": "zomboidcraft:block/city/ch_frame_ashlar_lo"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_lo",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_lo"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_lo"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_lo",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        -1.5
+      ],
+      "to": [
+        15.5,
+        2,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "uv": [
+            13.5,
+            14,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "uv": [
+            0,
+            14,
+            2.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "uv": [
+            0.5,
+            0,
+            15.5,
+            2.5
+          ]
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "uv": [
+            0.5,
+            13.5,
+            15.5,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_glass_jewel_lo_lit"
+        },
+        "south": {
+          "texture": "#ch_glass_jewel_lo_lit"
+        },
+        "east": {
+          "texture": "#ch_glass_jewel_lo_lit",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_glass_jewel_lo_lit",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_glass_jewel_lo_lit",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_glass_jewel_lo_lit",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

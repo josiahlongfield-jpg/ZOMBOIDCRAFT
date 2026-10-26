@@ -1,0 +1,121 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_frame_ashlar_hi_round": "zomboidcraft:block/city/ch_frame_ashlar_hi_round",
+    "ch_glass_louvre_hi_round": "zomboidcraft:block/city/ch_glass_louvre_hi_round",
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "particle": "zomboidcraft:block/city/ch_frame_ashlar_hi_round"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_hi_round",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_hi_round"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_ashlar_hi_round"
+        },
+        "south": {
+          "texture": "#ch_frame_ashlar_hi_round",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_glass_louvre_hi_round"
+        },
+        "south": {
+          "texture": "#ch_glass_louvre_hi_round"
+        },
+        "east": {
+          "texture": "#ch_glass_louvre_hi_round",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_glass_louvre_hi_round",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_glass_louvre_hi_round",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_glass_louvre_hi_round",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

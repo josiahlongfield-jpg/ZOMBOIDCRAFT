@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_ashlar": "zomboidcraft:block/city/ch_ashlar",
+    "ch_rose_ashlar_lit_7": {
+      "sprite": "zomboidcraft:block/city/ch_rose_ashlar_lit_7",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/ch_rose_ashlar_lit_7"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_rose_ashlar_lit_7",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_rose_ashlar_lit_7",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ch_ashlar",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_ashlar",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_ashlar",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_ashlar",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
