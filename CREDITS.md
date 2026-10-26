@@ -200,10 +200,12 @@ From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss
 |---|---|---|---|
 | weapon.bullet.flesh | bullet_impact_body_thump_08 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.bullet.flesh | bullet_impact_ice_06 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
-| weapon.bullet.flesh | bullet_impact_body_flesh_04 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.bullet.flesh, weapon.crossbow.hit | bullet_impact_body_flesh_04 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.casing | bullet_shell_bounce_concrete2_05 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.casing | bullet_shell_bounce_concrete1_05 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.casing | bullet_shell_bounce_concrete2_06 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.crossbow.cock | bow_crossbow_arrow_draw_stretch1_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.crossbow.shot | bow_crossbow_arrow_shoot_type1_04 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.double_barrel.dry, weapon.revolver.dry | gun_revolver_pistol_dry_fire_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.double_barrel.shell_in | gun_shotgun_load_bullet_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.double_barrel.shot | gun_shotgun_shot_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
@@ -213,6 +215,21 @@ From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss
 | weapon.hunting_rifle.mag_out | gun_rifle_magazine_unload_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.hunting_rifle.shot, weapon.rifle.shot | gun_rifle_shot_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.hunting_rifle.shot_suppressed | gun_silenced_AR_sniper_shot_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.lever_action.lever | gun_rifle_cock_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.lever_action.round_in | gun_rifle_load_bullet_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.lever_action.shot, weapon.lever_action.shot_distant | gun_rifle_sniper_shot_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.close, weapon.revolver.close | gun_revolver_pistol_cylinder_close_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.cock | gun_revolver_pistol_cock_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.dry | gun_revolver_pistol_dry_fire_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_general_06 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_metal1_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_general_05 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_general_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_metal1_02 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.eject | bullet_shell_bounce_general_02 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.open | gun_revolver_pistol_cylinder_open_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.round_in | gun_pistol_load_bullet_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.magnum.shot, weapon.magnum.shot_distant | gun_revolver_pistol_shot_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.melee.swing | whoosh_swish_small_harsh_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.pistol.dry | gun_pistol_dry_fire_06 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.pistol.mag_in | gun_pistol_insert_mag_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
@@ -220,7 +237,6 @@ From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss
 | weapon.pistol.shot | gun_pistol_shot_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.pistol.shot_suppressed | gun_pistol_shot_silenced_02 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.pistol.slide | gun_pistol_cock_07 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
-| weapon.revolver.close | gun_revolver_pistol_cylinder_close_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.revolver.cock | gun_revolver_pistol_cock_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.revolver.open | gun_revolver_pistol_cylinder_open_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.revolver.round_in | gun_revolver_pistol_load_bullet_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
@@ -229,7 +245,21 @@ From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss
 | weapon.rifle.load_round | gun_semi_auto_rifle_load_bullet_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.rifle.mag_in | gun_rifle_magazine_load_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.rifle.mag_out | gun_rifle_magazine_unload_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.cock | gun_rifle_cock_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.dry | gun_semi_auto_rifle_dry_fire_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.mag_in | gun_semi_auto_rifle_magazine_load_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.mag_out | gun_semi_auto_rifle_magazine_unload_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.shot, weapon.rimfire.shot_distant | gun_semi_auto_rifle_shot_06 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rimfire.shot_suppressed | gun_silenced_pistol1_shot_02 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.sawn_off.dry | gun_revolver_pistol_dry_fire_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.sawn_off.open | gun_pistol_general_handling_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.sawn_off.shell_in, weapon.shotgun.shell_in | gun_shotgun_load_bullet_08 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.sawn_off.shot, weapon.sawn_off.shot_distant, weapon.shotgun.shot | gun_shotgun_shot_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.shotgun.dry | gun_shotgun_dry_fire_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.shotgun.pump | gun_shotgun_cock_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
-| weapon.shotgun.shell_in | gun_shotgun_load_bullet_08 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
-| weapon.shotgun.shot | gun_shotgun_shot_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.cock | gun_submachine_auto_cock_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.dry | gun_submachine_auto_dry_fire_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.mag_in | gun_submachine_auto_magazine_load_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.mag_out | gun_submachine_auto_magazine_unload_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.shot, weapon.smg.shot_distant | gun_submachine_auto_shot_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.smg.shot_suppressed | gun_semi_auto_shot_silenced1_0_last_tail (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
