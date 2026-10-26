@@ -1,10 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "bunk_pipe_blue": "zomboidcraft:block/city/bunk_pipe_blue",
     "bunk_pipe_green": "zomboidcraft:block/city/bunk_pipe_green",
     "bunk_pipe_grey": "zomboidcraft:block/city/bunk_pipe_grey",
     "fit_beam": "zomboidcraft:block/city/fit_beam",
+    "fit_lagging": "zomboidcraft:block/city/fit_lagging",
     "particle": "zomboidcraft:block/city/fit_beam"
   },
   "elements": [
@@ -79,35 +79,35 @@
     },
     {
       "from": [
-        1,
-        12.5,
+        0.5,
+        11,
         0
       ],
       "to": [
-        4,
+        5,
         15.5,
         16
       ],
       "faces": {
         "north": {
-          "texture": "#bunk_pipe_blue",
+          "texture": "#fit_lagging",
           "cullface": "north"
         },
         "south": {
-          "texture": "#bunk_pipe_blue",
+          "texture": "#fit_lagging",
           "cullface": "south"
         },
         "east": {
-          "texture": "#bunk_pipe_blue"
+          "texture": "#fit_lagging"
         },
         "west": {
-          "texture": "#bunk_pipe_blue"
+          "texture": "#fit_lagging"
         },
         "up": {
-          "texture": "#bunk_pipe_blue"
+          "texture": "#fit_lagging"
         },
         "down": {
-          "texture": "#bunk_pipe_blue"
+          "texture": "#fit_lagging"
         }
       }
     },

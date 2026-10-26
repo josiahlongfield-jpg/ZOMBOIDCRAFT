@@ -1931,7 +1931,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_flood_on", FACING, DECOR, 15, SoundType.METAL, 0f, 7, 0, 13, 9, 9, 16, 3, 6, 5, 13, 14, 12, 4, 7, 4.5, 12, 13, 5, 2.5, 5.5, 4, 3, 14.5, 5, 13, 5.5, 4, 13.5, 14.5, 5);
         s("fit_flood", FACING, DECOR, 0, SoundType.METAL, 0f, 7, 0, 13, 9, 9, 16, 3, 6, 5, 13, 14, 12, 4, 7, 4.5, 12, 13, 5, 2.5, 5.5, 4, 3, 14.5, 5, 13, 5.5, 4, 13.5, 14.5, 5);
         s("fit_exit", FACING, DECOR, 3, SoundType.METAL, 0f, 2, 10, 15.4, 14, 14, 16);
-        s("fit_pipes_a", AXIS, DECOR, 0, SoundType.METAL, 0f, 1, 12.5, 0, 4, 15.5, 16, 5, 13, 0, 7.5, 15.5, 16, 9, 11.5, 0, 13.5, 16, 16, 0, 15.5, 7.5, 16, 16, 8.5);
+        s("fit_pipes_a", AXIS, DECOR, 0, SoundType.METAL, 0f, 0.5, 11, 0, 5, 15.5, 16, 5, 13, 0, 7.5, 15.5, 16, 9, 11.5, 0, 13.5, 16, 16, 0, 15.5, 7.5, 16, 16, 8.5);
         s("fit_pipes_b", AXIS, DECOR, 0, SoundType.METAL, 0f, 1.5, 11, 0, 6.5, 16, 16, 8, 13, 0, 10.5, 15.5, 16, 12, 13.5, 0, 14, 15.5, 16, 0, 15.5, 7.5, 16, 16, 8.5);
         s("fit_pipes_valve", AXIS, DECOR, 0, SoundType.METAL, 0f, 1.5, 11, 0, 6.5, 16, 16, 8, 13, 0, 10.5, 15.5, 16, 2.5, 10, 6, 5.5, 11, 10, 0, 6, 4, 8, 6.6, 12, 3.5, 6.6, 7.5, 4.5, 10, 8.5, 0, 15.5, 7.5, 16, 16, 8.5);
         s("fit_tray", AXIS, DECOR, 0, SoundType.METAL, 0f, 2, 14, 0, 14, 14.5, 16, 2, 14.5, 0, 2.5, 16, 16, 13.5, 14.5, 0, 14, 16, 16, 3, 14.5, 0, 13, 15.6, 16, 6, 13.2, 3, 7, 14, 16);
@@ -1940,7 +1940,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_sprinkler", AXIS, DECOR, 0, SoundType.METAL, 0f, 7, 14.5, 0, 9, 16, 16, 7.5, 13.5, 7.5, 8.5, 14.5, 8.5, 6.5, 13, 6.5, 9.5, 13.5, 9.5);
         s("fit_beam", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11);
         s("fit_girder", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 0, 3.5, 16, 1.5, 12.5, 0, 1.5, 7, 16, 14.5, 9, 0, 14.5, 3.5, 16, 16, 12.5, 3.75, 1.5, 6.5, 4.25, 14.5, 9.5, 11.75, 1.5, 6.5, 12.25, 14.5, 9.5);
-        s("fit_beam_pipes_a", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 1, 12.5, 0, 4, 15.5, 16, 5, 13, 0, 7.5, 15.5, 16, 9, 11.5, 0, 13.5, 16, 16);
+        s("fit_beam_pipes_a", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 0.5, 11, 0, 5, 15.5, 16, 5, 13, 0, 7.5, 15.5, 16, 9, 11.5, 0, 13.5, 16, 16);
         s("fit_beam_pipes", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 1.5, 11, 0, 6.5, 16, 16, 8, 13, 0, 10.5, 15.5, 16, 12, 13.5, 0, 14, 15.5, 16);
         s("fit_beam_tray", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 2, 14, 0, 14, 14.5, 16, 2, 14.5, 0, 2.5, 16, 16, 13.5, 14.5, 0, 14, 16, 16, 3, 14.5, 0, 13, 15.6, 16, 6, 13.2, 3, 7, 14, 16);
         s("fit_beam_duct", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 2, 11, 0, 14, 16, 16, 1.5, 10.5, 7, 14.5, 16, 8);
@@ -1970,6 +1970,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_tyres", PLAIN, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 4, 13, 3, 4.2, 3, 13, 8.2, 13, 3.5, 8.4, 3.5, 12.5, 12.4, 12.5, 6, 12.4, 6, 10, 12.6, 10);
         s("fit_droptank", AXIS, 0, 0, SoundType.METAL, 2f, 4, 4, 0, 12, 12, 16, 2, 0, 3, 14, 4.5, 5, 2, 0, 11, 14, 4.5, 13);
         s("fit_droptank_nose", AXIS, 0, 0, SoundType.METAL, 2f, 5, 5, 0, 11, 11, 6, 4, 4, 6, 12, 12, 16, 2, 0, 11, 14, 4.5, 13);
+        s("fit_line", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 0.25, 16);
         s("fit_st_fire", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_repair", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_escape", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
