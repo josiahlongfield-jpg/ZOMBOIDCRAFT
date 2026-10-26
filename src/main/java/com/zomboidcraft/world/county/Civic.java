@@ -380,59 +380,8 @@ final class Civic {
         flagpole(cx + 4, 0, 10);
     }
 
-    /** A Carnegie library: buff brick on a raised basement, a portico of two columns, shelves of books. */
-    void library(int w, int d) {
-        int z0 = 4, storey = 6;
-        String wall = pick("brick_buff", "brick_red", "minecraft:stone_bricks");
-        b.shell(0, z0, w - 1, d - 1, 1, storey, wall, "floor_boards", "floor_boards");
-        for (int x = 0; x < w; x++) {
-            p.set(x, 1, z0, "stone_trim");
-        }
-        b.windowRow(2, w - 3, 3, z0, 2, "north", 3, "sill");
-        b.windowRow(z0 + 2, d - 3, 3, 0, 2, "west", 3, "sill");
-        b.windowRow(z0 + 2, d - 3, 3, w - 1, 2, "east", 3, "sill");
-        int cx = w / 2;
-        for (int x = cx - 2; x <= cx + 1; x++) {
-            for (int z = z0 - 3; z < z0; z++) {
-                p.set(x, 1, z, "minecraft:smooth_stone");
-                p.set(x, storey + 1, z, "stone_trim");
-            }
-        }
-        for (int x : new int[] {cx - 2, cx + 1}) {
-            for (int y = 2; y <= storey; y++) {
-                p.set(x, y, z0 - 3, "minecraft:quartz_pillar[axis=y]");
-            }
-        }
-        for (int x = cx - 3; x <= cx + 2; x++) {
-            p.set(x, storey + 2, z0 - 3, x == cx - 3 ? "minecraft:stone_brick_stairs[facing=east]"
-                    : x == cx + 2 ? "minecraft:stone_brick_stairs[facing=west]" : "stone_trim");
-        }
-        p.set(cx - 1, storey + 3, z0 - 3, "minecraft:stone_brick_slab[type=bottom]");
-        p.set(cx, storey + 3, z0 - 3, "minecraft:stone_brick_slab[type=bottom]");
-        b.doors(cx - 1, 2, z0, "minecraft:spruce_door", "north");
-        for (int x = cx - 2; x <= cx + 1; x++) {
-            p.set(x, 1, z0 - 4, "minecraft:stone_brick_stairs[facing=south]");
-        }
-        Boards.fascia(p, rng, "library", 1, storey, z0 - 1, w - 2);
-        b.hip(0, w - 1, z0, d - 1, storey + 1, pick(ROOFS), 1);
-        // the stacks: shelves in rows, the issue desk, books all over the floor
-        for (int z = z0 + 4; z < d - 2; z += 3) {
-            for (int x = 2; x < w - 2; x++) {
-                if (Math.abs(x - cx) <= 1) {
-                    continue;
-                }
-                p.set(x, 2, z, "minecraft:bookshelf");
-                if (rng.nextDouble() < 0.8) {
-                    p.set(x, 3, z, "minecraft:bookshelf");
-                }
-            }
-        }
-        p.set(cx, 2, z0 + 2, "reception_desk[facing=north]");
-        for (int i = 0; i < w; i++) {
-            p.setIfAir(1 + rng.nextInt(w - 2), 2, z0 + 1 + rng.nextInt(d - z0 - 2), "paper");
-        }
-        b.lights(0, z0, w - 1, d - 1, storey - 1, 0.02);
-    }
+    /** The Carnegie library (see {@link Library}): w wide, d deep, the portico and steps in its first six rows. */
+    void library(int w, int d) { new Library(p, rng).build(w, d); }
 
     /** The bank on its corner: a stone front with two columns, the vault behind the tellers. */
     void bank(int w, int d) {
