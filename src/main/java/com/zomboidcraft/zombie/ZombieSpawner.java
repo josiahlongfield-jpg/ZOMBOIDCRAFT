@@ -1,9 +1,13 @@
 package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.world.county.Place;
+import com.zomboidcraft.world.county.PlaceType;
+import com.zomboidcraft.world.gen.CountyChunkGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -67,12 +71,58 @@ public final class ZombieSpawner {
             }
             if (pos != null) {
                 Zombie zombie = EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
+                String uniform = zombie == null ? null : uniform(level, pos, random);
+                if (uniform != null) {
+                    zombie.setAttached(ZombieLook.OUTFIT, uniform);
+                }
                 if (zombie != null && random.nextInt(4) == 0) {
                     // Some of the horde is already moving toward the player's area.
                     ((NoiseListener) zombie).zomboidcraft$hear(player.position());
                 }
             }
         }
+    }
+
+    /**
+     * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
+     * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
+     * patients. Null leaves the zombie to the general mix.
+     */
+    private static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
+        if (onShip(level, pos)) {
+            return random.nextInt(100) < 85 ? "soldier" : null;
+        }
+        if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) {
+            return null;
+        }
+        int roll = random.nextInt(100);
+        for (Place p : CountyChunkGenerator.gen(level.getSeed()).county().placesNear(pos.getX(), pos.getZ(), pos.getX(), pos.getZ(), 0)) {
+            if (p.type == PlaceType.PORT && p.variant.equals("naval")) {
+                return roll < 80 ? "soldier" : null;
+            }
+            if (p.type == PlaceType.MILITARY) {
+                if (p.variant.equals("quarantine")) {
+                    return roll < 40 ? "soldier" : roll < 70 ? "patient" : null;
+                }
+                return roll < 70 ? "soldier" : null;
+            }
+        }
+        return null;
+    }
+
+    /** Standing on the carrier: her decks and compartments are all navy blocks. */
+    private static boolean onShip(ServerLevel level, BlockPos pos) {
+        return standingOn(level, pos).startsWith("navy_");
+    }
+
+    /** Standing on the flight deck itself (its plating, markings, catapults and wires), not the island's roof. */
+    private static boolean onFlightDeck(ServerLevel level, BlockPos pos) {
+        String name = standingOn(level, pos);
+        return name.startsWith("navy_fl") || name.startsWith("navy_catapult") || name.startsWith("navy_cable");
+    }
+
+    private static String standingOn(ServerLevel level, BlockPos pos) {
+        return BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos.below()).getBlock()).getPath();
     }
 
     /**
@@ -115,6 +165,9 @@ public final class ZombieSpawner {
     private static boolean perched(ServerLevel level, BlockPos pos) {
         if (pos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ())) {
             return false;  // under a roof or a floor: inside a building
+        }
+        if (onFlightDeck(level, pos)) {
+            return false;  // the carrier's flight deck is a deck to walk, with the hangar under it
         }
         for (int k = 2; k <= 6; k++) {
             BlockPos at = pos.below(k);

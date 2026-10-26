@@ -469,6 +469,60 @@ def export_maps(tex_dir, out_dir, name):
     return True
 
 
+def vehicles(meta, pal, out, grow):
+    """The dump's cars as triangles (quads with a repeated corner), one texture per model and
+    state, its glass in a second one drawn screen-door see-through. Returns {texture: (image, glass)}."""
+    import sys
+    sys.path.insert(0, str(HERE.parent / "cars"))
+    import zcar
+    index = zcar.models()
+    cache, made = {}, {}
+    for e in meta.get("cars", []):
+        mid, state = zcar.pick(e, index)
+        if mid is None:
+            continue
+        if mid not in cache:
+            cache[mid] = zcar.read(mid)
+        v = cache[mid].get(state) or cache[mid]["usable"]
+        ox, oy, oz = meta.get("origin", [0, 0, 0])
+        W = zcar.place(v["T"], e[0] + ox, e[1] + oy, e[2] + oz, e[3]) * 16
+        for glass in (False, True):
+            sel = v["glass"] == glass
+            if not sel.any():
+                continue
+            name = f"car_{mid}_{state}" + ("_glass" if glass else "")
+            if name not in pal.tex_index:
+                pal.tex_index[name] = len(pal.tex_names)
+                pal.tex_names.append(name)
+                pal.tex_alpha[name] = glass
+                made[name] = (v["image"], glass)
+            T, uv = W[sel], v["UV"][sel]
+            n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
+            n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
+            corners = np.concatenate([T, T[:, 2:3]], 1)
+            uv = np.stack([uv[..., 0] * 16, (1 - uv[..., 1]) * 16], -1)
+            uv = np.concatenate([uv, uv[:, 2:3]], 1)
+            grow()
+            k = len(T)
+            out.add(np.full(k, pal.tex_index[name]), corners, n, uv, np.full((k, 4), 3))
+    print("vehicles", len(meta.get("cars", [])), "->", len(made), "textures")
+    return made
+
+
+def export_vehicle(out_dir, name, image, glass):
+    """A vehicle texture and flat PBR maps; glass gets a checker alpha (the preview only does cutout)."""
+    im = image.convert("RGBA")
+    if glass:
+        a = np.asarray(im).copy()
+        yy, xx = np.mgrid[0:a.shape[0], 0:a.shape[1]]
+        a[..., 3] = np.where((xx + yy) % 2 == 0, 255, 0)
+        im = Image.fromarray(a)
+    im.save(out_dir / f"{name}.png")
+    Image.new("RGB", im.size, (128, 128, 255)).save(out_dir / f"{name}_n.png")
+    Image.new("RGB", im.size, (255, 120, 0)).save(out_dir / f"{name}_orm.png")
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("dump")
@@ -478,6 +532,7 @@ def main():
     ap.add_argument("--radius", type=float, default=110)
     ap.add_argument("--extra", action="append", default=[])
     ap.add_argument("--flicker-on", action="store_true", help="catch every flickering lamp lit")
+    ap.add_argument("--cars", action="store_true", help="draw the dump's cars and jets from their .zcar models")
     a = ap.parse_args()
     meta = json.load(open(a.dump + ".json"))
     sx, H, sz = meta["size"]
@@ -623,11 +678,13 @@ def main():
             out.add(np.full(k, t), corners, np.repeat(NORMALS[d][None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3),
                     np.repeat(own[:, None, :], 4, 1))
             nfaces += k
+    car_tex = vehicles(meta, pal, out, grow) if a.cars else {}
     print("total quads", nfaces)
 
     a.out_dir.mkdir(parents=True, exist_ok=True)
     index = out.write(a.out_dir, pal.tex_names, pal.tex_alpha)
-    emissive = {name: export_maps(a.tex_dir, a.out_dir, name) for name in pal.tex_names}
+    emissive = {name: export_vehicle(a.out_dir, name, *car_tex[name]) if name in car_tex else export_maps(a.tex_dir, a.out_dir, name)
+                for name in pal.tex_names}
     for e in index:
         e["emissive"] = emissive[e["tex"]]
     # light-giving blocks near the cameras, so the preview can give the closest real lights

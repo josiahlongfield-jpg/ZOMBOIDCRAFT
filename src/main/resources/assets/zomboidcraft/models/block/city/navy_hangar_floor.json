@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_hangar_floor": "zomboidcraft:block/city/navy_hangar_floor",
+    "navy_hull": "zomboidcraft:block/city/navy_hull",
+    "navy_overhead": "zomboidcraft:block/city/navy_overhead",
+    "particle": "zomboidcraft:block/city/navy_hull"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_hull",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_hull",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_hull",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_hull",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_hangar_floor",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_overhead",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

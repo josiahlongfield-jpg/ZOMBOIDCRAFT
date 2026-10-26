@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_whiteboard": "zomboidcraft:block/city/navy_whiteboard",
+    "particle": "zomboidcraft:block/city/navy_whiteboard"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        15.5
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_whiteboard"
+        },
+        "south": {
+          "texture": "#navy_whiteboard",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_whiteboard",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_whiteboard",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_whiteboard"
+        },
+        "down": {
+          "texture": "#navy_whiteboard"
+        }
+      }
+    }
+  ]
+}

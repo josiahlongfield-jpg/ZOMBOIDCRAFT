@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_control": "zomboidcraft:block/city/navy_st_control",
+    "particle": "zomboidcraft:block/city/navy_st_control"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_control"
+        },
+        "south": {
+          "texture": "#navy_st_control",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_control",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_control",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_control",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_control",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

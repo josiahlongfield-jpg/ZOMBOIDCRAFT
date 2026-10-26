@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_radome": "zomboidcraft:block/city/navy_radome",
+    "particle": "zomboidcraft:block/city/navy_radome"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_radome"
+        },
+        "south": {
+          "texture": "#navy_radome"
+        },
+        "east": {
+          "texture": "#navy_radome"
+        },
+        "west": {
+          "texture": "#navy_radome"
+        },
+        "up": {
+          "texture": "#navy_radome"
+        },
+        "down": {
+          "texture": "#navy_radome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        8,
+        5
+      ],
+      "to": [
+        12,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_radome"
+        },
+        "south": {
+          "texture": "#navy_radome"
+        },
+        "east": {
+          "texture": "#navy_radome"
+        },
+        "west": {
+          "texture": "#navy_radome"
+        },
+        "up": {
+          "texture": "#navy_radome"
+        },
+        "down": {
+          "texture": "#navy_radome"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        6
+      ],
+      "to": [
+        11,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_radome"
+        },
+        "south": {
+          "texture": "#navy_radome"
+        },
+        "east": {
+          "texture": "#navy_radome"
+        },
+        "west": {
+          "texture": "#navy_radome"
+        },
+        "up": {
+          "texture": "#navy_radome"
+        },
+        "down": {
+          "texture": "#navy_radome"
+        }
+      }
+    }
+  ]
+}

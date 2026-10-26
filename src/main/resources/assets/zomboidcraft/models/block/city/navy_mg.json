@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_gun": "zomboidcraft:block/city/navy_gun",
+    "navy_od": "zomboidcraft:block/city/navy_od",
+    "particle": "zomboidcraft:block/city/navy_gun"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        3
+      ],
+      "to": [
+        10,
+        11,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        9,
+        0
+      ],
+      "to": [
+        8.8,
+        10.6,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        8,
+        1
+      ],
+      "to": [
+        13,
+        15,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_od"
+        },
+        "south": {
+          "texture": "#navy_od"
+        },
+        "east": {
+          "texture": "#navy_od"
+        },
+        "west": {
+          "texture": "#navy_od"
+        },
+        "up": {
+          "texture": "#navy_od"
+        },
+        "down": {
+          "texture": "#navy_od"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        8,
+        4
+      ],
+      "to": [
+        15,
+        11,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_od"
+        },
+        "south": {
+          "texture": "#navy_od"
+        },
+        "east": {
+          "texture": "#navy_od"
+        },
+        "west": {
+          "texture": "#navy_od"
+        },
+        "up": {
+          "texture": "#navy_od"
+        },
+        "down": {
+          "texture": "#navy_od"
+        }
+      }
+    }
+  ]
+}

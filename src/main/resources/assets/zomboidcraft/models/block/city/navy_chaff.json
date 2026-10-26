@@ -1,0 +1,235 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_gun": "zomboidcraft:block/city/navy_gun",
+    "navy_steel": "zomboidcraft:block/city/navy_steel",
+    "particle": "zomboidcraft:block/city/navy_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_steel"
+        },
+        "south": {
+          "texture": "#navy_steel"
+        },
+        "east": {
+          "texture": "#navy_steel"
+        },
+        "west": {
+          "texture": "#navy_steel"
+        },
+        "up": {
+          "texture": "#navy_steel"
+        },
+        "down": {
+          "texture": "#navy_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        3
+      ],
+      "to": [
+        6,
+        14,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        7
+      ],
+      "to": [
+        6,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        4,
+        3
+      ],
+      "to": [
+        10,
+        14,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        4,
+        7
+      ],
+      "to": [
+        10,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        4,
+        3
+      ],
+      "to": [
+        14,
+        14,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        4,
+        7
+      ],
+      "to": [
+        14,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    }
+  ]
+}

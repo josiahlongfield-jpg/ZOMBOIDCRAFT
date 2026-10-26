@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_magazine": "zomboidcraft:block/city/navy_st_magazine",
+    "particle": "zomboidcraft:block/city/navy_st_magazine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_magazine"
+        },
+        "south": {
+          "texture": "#navy_st_magazine",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_magazine",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_magazine",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_magazine",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_magazine",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

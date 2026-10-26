@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_cable": "zomboidcraft:block/city/navy_cable",
+    "navy_yellow": "zomboidcraft:block/city/navy_yellow",
+    "particle": "zomboidcraft:block/city/navy_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        5
+      ],
+      "to": [
+        6,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        5
+      ],
+      "to": [
+        15,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        1,
+        7.5
+      ],
+      "to": [
+        10,
+        2,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_cable"
+        },
+        "south": {
+          "texture": "#navy_cable"
+        },
+        "east": {
+          "texture": "#navy_cable"
+        },
+        "west": {
+          "texture": "#navy_cable"
+        },
+        "up": {
+          "texture": "#navy_cable"
+        },
+        "down": {
+          "texture": "#navy_cable"
+        }
+      }
+    }
+  ]
+}

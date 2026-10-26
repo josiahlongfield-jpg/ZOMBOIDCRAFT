@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_red": "zomboidcraft:block/city/navy_red",
+    "navy_tyre": "zomboidcraft:block/city/navy_tyre",
+    "particle": "zomboidcraft:block/city/navy_red"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        6
+      ],
+      "to": [
+        14,
+        2,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_red"
+        },
+        "south": {
+          "texture": "#navy_red"
+        },
+        "east": {
+          "texture": "#navy_red"
+        },
+        "west": {
+          "texture": "#navy_red"
+        },
+        "up": {
+          "texture": "#navy_red"
+        },
+        "down": {
+          "texture": "#navy_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        7
+      ],
+      "to": [
+        4,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_red"
+        },
+        "south": {
+          "texture": "#navy_red"
+        },
+        "east": {
+          "texture": "#navy_red"
+        },
+        "west": {
+          "texture": "#navy_red"
+        },
+        "up": {
+          "texture": "#navy_red"
+        },
+        "down": {
+          "texture": "#navy_red"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        2,
+        7
+      ],
+      "to": [
+        13,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_red"
+        },
+        "south": {
+          "texture": "#navy_red"
+        },
+        "east": {
+          "texture": "#navy_red"
+        },
+        "west": {
+          "texture": "#navy_red"
+        },
+        "up": {
+          "texture": "#navy_red"
+        },
+        "down": {
+          "texture": "#navy_red"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre"
+        }
+      }
+    }
+  ]
+}
