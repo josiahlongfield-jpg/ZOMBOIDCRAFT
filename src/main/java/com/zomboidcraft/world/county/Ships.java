@@ -7,11 +7,8 @@ import java.util.SplittableRandom;
  * The vessels left in a port, drawn through a {@link Placer} in their own frame: the bow toward
  * +x, the keel's line along z = 0 (the hull's cells from -beam/2 to beam/2 - 1), heights from the
  * quay's top (y = 0), so the water's top block is {@link #SEA} and the basin's bed {@link #BED}.
+ * The ocean-going ships are {@link BigShip}'s.
  * <ul>
- * <li>the container ship, high out of the water with nobody to load her: the stacks in their
- * bays, the white house aft with its bridge wings and funnel, the forecastle and foremast;</li>
- * <li>the bulk carrier with her hatch covers and deck cranes, the tanker with her pipes and
- * catwalk;</li>
  * <li>a harbour tug, a barge of coal or scrap;</li>
  * <li>the fishing boats: trawlers with their wheelhouses, gantries and nets, small sailboats, skiffs
  * and rowboats, and the ones that sank at their moorings.</li>
@@ -22,9 +19,6 @@ final class Ships {
     static final int SEA = -4;
     /** The basin's dredged bed. */
     static final int BED = -12;
-
-    private static final String[] BOXES = {"container_red", "container_blue", "container_green", "container_orange",
-            "container_white", "container_grey"};
 
     private final Placer p;
     private final SplittableRandom rng;
@@ -197,188 +191,7 @@ final class Ships {
         p.set(x, y + h, z, chance() < 0.5 + hit * 0.3 ? "minecraft:redstone_lamp" : "aviation_light");
     }
 
-    /** A shipping container 12 long along x and 3 x 3 from (x, y, z), its doors on the -x end. */
-    private void box(int x, int y, int z, String colour) {
-        for (int i = 0; i < 12; i++) {
-            for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < 3; j++) {
-                    p.set(x + i, y + j, z + k, i == 0 && k == 1 && j < 2 ? colour + "_door[facing=west]" : colour);
-                }
-            }
-        }
-    }
 
-    /** A gangway down off the deck at x on the +z side to the quay's top, a gap of gap blocks out. */
-    void gangway(int x, int z, int deckY) {
-        for (int k = 0; k <= deckY; k++) {
-            p.set(x, deckY - k, z + k, "steel_stairs[facing=north]");
-            p.set(x + 1, deckY - k + 1, z + k, "minecraft:iron_bars");
-        }
-    }
-
-    // ------------------------------------------------------------------ the big ships
-
-    /**
-     * A container ship len long and beam wide: the hull deep in the basin, the house and funnel
-     * aft, the bays of containers stacked two to six high (some unloaded down to the hatch
-     * covers), the forecastle and foremast; gone to rust, fire through the house on the worst.
-     * Returns the hull, for the gangway and the moorings.
-     */
-    Hull containerShip(int len, int beam) {
-        Hull h = new Hull(len, beam, BED + 1, 4, 0.16, 0.08);
-        String skin = any("hull_black", "hull_black", "hull_red", "minecraft:blue_terracotta", "minecraft:green_terracotta");
-        String bottom = skin.equals("hull_red") ? "hull_black" : "hull_red";
-        hull(h, skin, bottom, "deck_steel", -2, true);
-        int hb = beam / 2;
-        // the house aft, the bridge on top with its wings across the full beam
-        int sx0 = 4, sx1 = 15;
-        boolean burnt = chance() < hit * 0.5;
-        int roof = house(sx0, -hb + 2, sx1, hb - 3, h.deck() + 1, 6, burnt ? "concrete_dark_soot" : "minecraft:white_concrete",
-                burnt ? 0.7 : 0.1 + hit * 0.3);
-        for (int z = -hb; z < hb; z++) {
-            for (int x = sx1 - 3; x <= sx1; x++) {
-                if (!h.in(x, h.deck(), z) && Math.abs(z + 0.5) > hb) {
-                    continue;
-                }
-                p.set(x, roof - 3, z, "deck_steel");
-                p.set(x, roof, z, "deck_steel");
-                if (x == sx1 || z == -hb || z == hb - 1) {
-                    p.set(x, roof - 2, z, "minecraft:white_concrete");
-                    p.set(x, roof - 1, z, x == sx1 ? (chance() < 0.25 + hit * 0.3 ? "window_broken[axis=z]" : "window[axis=z]")
-                            : "minecraft:white_concrete");
-                } else {
-                    p.set(x, roof - 2, z, "air");
-                    p.set(x, roof - 1, z, "air");
-                }
-            }
-        }
-        mast(sx0 + 6, roof + 1, 0, 6);
-        p.set(sx0 + 5, roof + 4, 0, "minecraft:polished_blackstone_slab[type=bottom]");
-        p.set(sx0 + 7, roof + 4, 0, "minecraft:polished_blackstone_slab[type=bottom]");
-        funnel(sx0 + 1, -2, 4, 4, roof + 1, roof + 7, any("minecraft:red_concrete", "minecraft:blue_concrete", "minecraft:yellow_concrete",
-                "minecraft:orange_concrete"));
-        // lifeboats on their davits, one gone
-        for (int side : new int[] {-hb + 1, hb - 2}) {
-            if (chance() < 0.3 + hit * 0.3) {
-                continue;
-            }
-            for (int x = sx0 + 2; x < sx0 + 7; x++) {
-                p.set(x, h.deck() + 7, side, "minecraft:orange_concrete");
-                p.set(x, h.deck() + 8, side, x == sx0 + 2 || x == sx0 + 6 ? "minecraft:orange_concrete" : "minecraft:white_concrete");
-            }
-        }
-        // the cargo: bays of twelve, stacks three wide across the hold
-        int across = (beam - 2) / 3, z0 = -across * 3 / 2;
-        int bayEnd = h.bowStart() - 2;
-        for (int bx = sx1 + 3; bx + 12 <= bayEnd; bx += 13) {
-            boolean empty = chance() < 0.12 + hit * 0.2;
-            int tiers = 2 + rng.nextInt(4);
-            for (int c = 0; c < across; c++) {
-                int cz = z0 + c * 3;
-                if (empty) {
-                    for (int i = 0; i < 12; i++) {
-                        for (int k = 0; k < 3; k++) {
-                            p.set(bx + i, h.deck() + 1, cz + k, i == 0 || i == 11 ? "hazard_stripes" : "deck_steel");
-                        }
-                    }
-                    continue;
-                }
-                int t = tiers - (c == 0 || c == across - 1 ? rng.nextInt(2) : 0) - (chance() < 0.15 ? 1 : 0);
-                for (int j = 0; j < t; j++) {
-                    box(bx, h.deck() + 1 + j * 3, cz, BOXES[rng.nextInt(BOXES.length)]);
-                }
-            }
-            // the lashing bridge in the gap behind the bay
-            for (int z = z0; z < z0 + across * 3; z += 3) {
-                for (int y = h.deck() + 1; y <= h.deck() + 4; y++) {
-                    p.set(bx - 1, y, z, "truss_grey");
-                }
-            }
-        }
-        forecastle(h, h.bowStart() + 2, 2, skin, "deck_steel");
-        mast(len - 8, h.deck() + 3, -1, 9);
-        if (hit > 0.5) {
-            // boxes washed over the side, awash
-            for (int i = 0; i < 1 + rng.nextInt(3); i++) {
-                box(sx1 + 10 + rng.nextInt(Math.max(1, len - 50)), SEA - 2, -hb - 5 - rng.nextInt(8), BOXES[rng.nextInt(BOXES.length)]);
-            }
-        }
-        return h;
-    }
-
-    /**
-     * A bulk carrier or a tanker len long: the same hull and house aft; the bulker with hatch
-     * covers over her holds and cranes between them, the tanker with pipes down her deck and the
-     * catwalk over them.
-     */
-    Hull bulkShip(int len, int beam, boolean tanker) {
-        Hull h = new Hull(len, beam, BED + 1, 3, 0.14, 0.08);
-        String skin = tanker ? any("hull_red", "hull_black", "minecraft:gray_concrete") : any("hull_black", "minecraft:blue_terracotta", "hull_red");
-        hull(h, skin, skin.equals("hull_red") ? "hull_black" : "hull_red", tanker ? "minecraft:red_terracotta" : "deck_steel", -2, true);
-        int hb = beam / 2;
-        int sx0 = 3, sx1 = 13;
-        int roof = house(sx0, -hb + 2, sx1, hb - 3, h.deck() + 1, 5, "minecraft:white_concrete", 0.15 + hit * 0.35);
-        mast(sx0 + 5, roof + 1, 0, 5);
-        funnel(sx0 + 1, -2, 4, 4, roof + 1, roof + 6, any("minecraft:red_concrete", "minecraft:black_concrete", "minecraft:green_concrete"));
-        int end = h.bowStart() - 1;
-        if (tanker) {
-            for (int x = sx1 + 2; x < end; x++) {
-                for (int z = -3; z <= 2; z += 1) {
-                    if (z == -3 || z == 2 || z == 0) {
-                        p.set(x, h.deck() + 1, z, "minecraft:iron_bars");
-                    }
-                }
-                if (x % 6 == 0) {
-                    p.set(x, h.deck() + 1, -1, "steel_girder");
-                    p.set(x, h.deck() + 2, -1, "steel_girder");
-                }
-                p.set(x, h.deck() + 3, -1, "grate");
-            }
-            // the manifold amidships and its little crane
-            int mx = (sx1 + end) / 2;
-            for (int z = -hb + 2; z < hb - 2; z++) {
-                p.set(mx, h.deck() + 1, z, "minecraft:iron_bars");
-                p.set(mx + 2, h.deck() + 1, z, "minecraft:iron_bars");
-            }
-            for (int y = h.deck() + 1; y <= h.deck() + 7; y++) {
-                p.set(mx + 1, y, hb - 3, "steel_yellow");
-            }
-            for (int z = hb - 3; z >= hb - 10; z--) {
-                p.set(mx + 1, h.deck() + 7, z, "steel_yellow");
-            }
-        } else {
-            int bay = 0;
-            for (int bx = sx1 + 4; bx + 10 <= end; bx += 14, bay++) {
-                boolean open = chance() < 0.2 + hit * 0.2;
-                for (int i = 0; i < 10; i++) {
-                    for (int z = -hb + 3; z < hb - 3; z++) {
-                        boolean rim = i == 0 || i == 9 || z == -hb + 3 || z == hb - 4;
-                        p.set(bx + i, h.deck() + 1, z, rim ? "deck_steel" : open ? "air" : "deck_steel");
-                        p.set(bx + i, h.deck() + 2, z, rim ? "hazard_stripes" : open ? "air" : chance() < 0.1 ? "rust" : "deck_steel");
-                        if (open && !rim) {
-                            p.set(bx + i, h.deck(), z, "air");
-                            p.set(bx + i, h.deck() - 3, z, any("minecraft:coal_block", "minecraft:gravel", "minecraft:coarse_dirt"));
-                        }
-                    }
-                }
-                if (bay % 2 == 0) {
-                    // a deck crane between the holds, its jib down along the deck
-                    int cx = bx + 11;
-                    for (int y = h.deck() + 1; y <= h.deck() + 7; y++) {
-                        p.set(cx, y, 0, "steel_yellow");
-                        p.set(cx, y, -1, "steel_yellow");
-                    }
-                    p.set(cx, h.deck() + 8, 0, "window[axis=x]");
-                    for (int k = 1; k < 13; k++) {
-                        p.set(cx + k, h.deck() + 8 - k / 3, 0, "truss_yellow");
-                    }
-                }
-            }
-        }
-        forecastle(h, h.bowStart() + 2, 2, skin, "deck_steel");
-        mast(len - 7, h.deck() + 3, -1, 7);
-        return h;
-    }
 
     // ------------------------------------------------------------------ harbour craft
 

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_firebox": "zomboidcraft:block/city/vessel_firebox",
+    "vessel_valve": "zomboidcraft:block/city/vessel_valve",
+    "particle": "zomboidcraft:block/city/vessel_firebox"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        12
+      ],
+      "to": [
+        13,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_firebox"
+        },
+        "south": {
+          "texture": "#vessel_valve",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_valve"
+        },
+        "west": {
+          "texture": "#vessel_valve"
+        },
+        "up": {
+          "texture": "#vessel_valve"
+        },
+        "down": {
+          "texture": "#vessel_valve"
+        }
+      }
+    }
+  ]
+}

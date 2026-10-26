@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_mast": "zomboidcraft:block/city/vessel_mast",
+    "particle": "zomboidcraft:block/city/vessel_bollard"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        2
+      ],
+      "to": [
+        11,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        0
+      ],
+      "to": [
+        12,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    }
+  ]
+}

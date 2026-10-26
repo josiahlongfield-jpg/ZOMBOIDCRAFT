@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_plimsoll": "zomboidcraft:block/city/vessel_plimsoll",
+    "particle": "zomboidcraft:block/city/vessel_plimsoll"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_plimsoll"
+        },
+        "south": {
+          "texture": "#vessel_plimsoll",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_plimsoll",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_plimsoll",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_plimsoll",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_plimsoll",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

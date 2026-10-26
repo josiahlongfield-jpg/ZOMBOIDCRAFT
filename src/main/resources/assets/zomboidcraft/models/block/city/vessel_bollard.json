@@ -1,0 +1,170 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "particle": "zomboidcraft:block/city/vessel_bollard"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        2,
+        5.5
+      ],
+      "to": [
+        7.5,
+        11,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        2,
+        5.5
+      ],
+      "to": [
+        13.5,
+        11,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        11,
+        5
+      ],
+      "to": [
+        8,
+        12.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        11,
+        5
+      ],
+      "to": [
+        14,
+        12.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    }
+  ]
+}

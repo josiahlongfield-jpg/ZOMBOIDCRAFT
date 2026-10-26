@@ -103,16 +103,24 @@ public final class CountyCommand {
         return 1;
     }
 
-    /** The nearest downtowns are built (or taken from the cache) and searched for the bunker marks. */
+    /**
+     * The nearest downtowns and ports are built (or taken from the cache) and searched for the bunker
+     * marks, nearest first: a tower's under its garage, a ship's behind her engine room.
+     */
     private static int bunker(CommandContext<CommandSourceStack> ctx, boolean door) {
         CommandSourceStack src = ctx.getSource();
         County county = county(src);
         if (county == null || src.getEntity() == null) {
             return 0;
         }
-        List<Place> towns = nearest(county, src.getPosition(), PlaceType.DOWNTOWN.name(), 8000);
+        Vec3 from = src.getPosition();
+        List<Place> towns = nearest(county, from, PlaceType.DOWNTOWN.name(), 8000);
+        List<Place> ports = nearest(county, from, PlaceType.PORT.name(), 8000);
+        List<Place> search = new java.util.ArrayList<>(towns.subList(0, Math.min(3, towns.size())));
+        search.addAll(ports.subList(0, Math.min(3, ports.size())));
+        search.sort(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - from.x, p.centreZ() - from.z)));
         CountyGen gen = CountyChunkGenerator.gen(src.getLevel().getSeed());
-        for (Place p : towns.subList(0, Math.min(3, towns.size()))) {
+        for (Place p : search) {
             Voxels v = gen.voxels(p);
             Voxels.Mark hatch = null, at = null;
             for (Voxels.Mark m : v.marks) {
@@ -130,11 +138,14 @@ public final class CountyCommand {
             String state = hatch.what().substring("bunker ".length());
             src.getServer().getCommands().performPrefixedCommand(src,
                     "tp @s " + (p.x0 + go.x()) + ".5 " + (p.level + go.y()) + " " + (p.z0 + go.z()) + ".5");
-            src.sendSuccess(() -> Component.literal("The bunker under " + p + " (" + state + "): "
-                    + (door ? "at its blast door" : "on the hatch in the electrical room")), false);
+            boolean ship = p.type == PlaceType.PORT;
+            String where = door ? "at its blast door"
+                    : ship ? "at the false plate in the engine room's forward bulkhead" : "on the hatch in the electrical room";
+            src.sendSuccess(() -> Component.literal("The bunker " + (ship ? "in the ship at " : "under ") + p
+                    + " (" + state + "): " + where), false);
             return 1;
         }
-        src.sendFailure(Component.literal("No tower bunker in the nearest cities."));
+        src.sendFailure(Component.literal("No bunker in the nearest cities or ports."));
         return 0;
     }
 

@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_scupper": {
+      "sprite": "zomboidcraft:block/city/vessel_scupper",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/vessel_scupper"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_scupper"
+        },
+        "south": {
+          "texture": "#vessel_scupper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_scupper",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_scupper",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_scupper",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_scupper",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_anchor": "zomboidcraft:block/city/vessel_anchor",
+    "particle": "zomboidcraft:block/city/vessel_anchor"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        6,
+        12
+      ],
+      "to": [
+        10,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor"
+        },
+        "west": {
+          "texture": "#vessel_anchor"
+        },
+        "up": {
+          "texture": "#vessel_anchor",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_anchor"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        12
+      ],
+      "to": [
+        15,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor"
+        },
+        "west": {
+          "texture": "#vessel_anchor"
+        },
+        "up": {
+          "texture": "#vessel_anchor"
+        },
+        "down": {
+          "texture": "#vessel_anchor"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        4,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor"
+        },
+        "west": {
+          "texture": "#vessel_anchor",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_anchor"
+        },
+        "down": {
+          "texture": "#vessel_anchor",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_anchor"
+        },
+        "up": {
+          "texture": "#vessel_anchor"
+        },
+        "down": {
+          "texture": "#vessel_anchor",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        12
+      ],
+      "to": [
+        4,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor"
+        },
+        "west": {
+          "texture": "#vessel_anchor"
+        },
+        "up": {
+          "texture": "#vessel_anchor"
+        },
+        "down": {
+          "texture": "#vessel_anchor"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        7,
+        12
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_anchor"
+        },
+        "south": {
+          "texture": "#vessel_anchor",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_anchor"
+        },
+        "west": {
+          "texture": "#vessel_anchor"
+        },
+        "up": {
+          "texture": "#vessel_anchor"
+        },
+        "down": {
+          "texture": "#vessel_anchor"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ship_hold": "zomboidcraft:block/city/ship_hold",
+    "vessel_coaming_red": "zomboidcraft:block/city/vessel_coaming_red",
+    "vessel_deck_red": "zomboidcraft:block/city/vessel_deck_red",
+    "particle": "zomboidcraft:block/city/vessel_coaming_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_coaming_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_coaming_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_coaming_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_coaming_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_deck_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ship_hold",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
