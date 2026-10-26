@@ -1,5 +1,6 @@
 package com.zomboidcraft.client.hud;
 
+import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherView;
 import java.util.ArrayList;
@@ -20,7 +21,12 @@ import net.minecraft.world.phys.Vec3;
  * Rain on your face: out under open sky in the rain, beads of water gather round the edges of your sight (the middle
  * stays clear to aim), merge, and now and then one grows heavy enough to run down, leaving a wet trail. Heavier rain
  * and looking up bring more; a hat keeps most off; running and wind push them aside. Under a roof they dry off over
- * ten to twenty seconds. Drawn first, under the rest of the HUD.
+ * ten to twenty seconds. Drawn first, under the rest of the HUD, and only in first person.
+ *
+ * <p>"Out in the rain" is the same test the game's falling rain uses, made at your eyes: it's raining in this biome
+ * and nothing that stops rain is anywhere above your eye block (so a porch, an awning, a tree or a car roof keeps it
+ * off, and a window you look out of doesn't let it in). You have to stay out a moment before drops land, so ducking
+ * past a doorway or under a sign doesn't wet you.
  */
 final class RainHud {
     private static final Identifier[] BEADS = {Hud.id("raindrop_round"), Hud.id("raindrop_tall"), Hud.id("raindrop_wide")};
@@ -28,6 +34,8 @@ final class RainHud {
     private static final int MAX = 48;
     /** A bead this big (gui pixels across) is heavy enough to run. */
     private static final float HEAVY = 11f;
+    /** Seconds out in the rain before the first drop lands. */
+    private static final float SETTLE = 0.4f;
 
     private static final class Drop {
         float x, y, size, alpha = 0, life, dry, runSpeed, trailTop, trailAlpha;
@@ -38,29 +46,29 @@ final class RainHud {
     private static final List<Drop> drops = new ArrayList<>();
     private static final RandomSource random = RandomSource.create();
     private static float owed;
+    /** How long you've been out in the rain without a break. */
+    private static float out;
 
     static void render(GuiGraphicsExtractor g) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         ClientLevel level = mc.level;
         float strength = HudSettings.rainOnFace;
-        if (player == null || level == null || strength <= 0 || player.isSpectator()) {
+        if (player == null || level == null || strength <= 0 || player.isSpectator() || player.isUnderWater()
+                || !mc.options.getCameraType().isFirstPerson()) {
             drops.clear();
-            return;
-        }
-        if (player.isUnderWater()) {
-            drops.clear();
+            out = 0;
             return;
         }
         float dt = Hud.dt;
         int w = g.guiWidth(), h = g.guiHeight();
-        Vec3 eye = player.getEyePosition();
-        boolean exposed = level.isRainingAt(BlockPos.containing(eye.x, eye.y + 0.5, eye.z));
+        boolean exposed = exposed(player, level);
+        out = exposed ? out + dt : 0;
         Weather weather = WeatherView.client();
         float rain = Math.max(level.getRainLevel(1f), weather == null ? 0 : weather.rain());
 
         // new drops: more in heavy rain and looking up, far fewer under a hat
-        if (exposed && rain > 0.05f) {
+        if (out >= SETTLE && rain > 0.05f) {
             float look = Mth.clamp(1 - player.getXRot() / 60f, 0.3f, 2.6f);
             float hat = player.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? 1f : 0.3f;
             owed += dt * 5f * strength * rain * look * hat;
@@ -120,6 +128,13 @@ final class RainHud {
             }
             draw(g, d, strength);
         }
+    }
+
+    /** Whether rain is falling on your face right now (see the class note). */
+    private static boolean exposed(LocalPlayer player, ClientLevel level) {
+        if (player.getVehicle() instanceof CarProp) return false;
+        Vec3 eye = player.getEyePosition();
+        return level.isRainingAt(BlockPos.containing(eye));
     }
 
     /** One drop lands somewhere toward the edges, merging into a bead it touches. */
