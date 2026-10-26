@@ -11,10 +11,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class WeatherView {
     private static @Nullable Weather client;
+    /** A lightning flash lighting this client's world, 0 .. 1 (set by client/weather/WeatherFx). */
+    private static float flash;
 
     /** The weather this client is showing, or null when the server isn't running the mod's weather here. */
     public static @Nullable Weather client() {
         return client;
+    }
+
+    /** How bright a lightning flash is lighting the world right now on this client, 0 .. 1. */
+    public static float flash() {
+        return flash;
+    }
+
+    public static void setFlash(float value) {
+        flash = value;
     }
 
     /** Called each client tick with what the server last sent (null when nothing was sent). */

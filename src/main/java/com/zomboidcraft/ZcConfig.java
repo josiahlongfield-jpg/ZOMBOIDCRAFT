@@ -291,6 +291,8 @@ public final class ZcConfig {
         public boolean mist = true;
         /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
         public double mistAmount = 1.0;
+        /** Lightning flickering over the skyline in storms, the odd bolt between the towers, thunder after. Client side. */
+        public boolean stormFlashes = true;
         /** Paper, leaves and plastic blown down the street when the wind picks up. Client side. */
         public boolean windDebris = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */

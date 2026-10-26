@@ -258,13 +258,8 @@ public final class WeatherDirector {
     private static void effects(ServerLevel level, ServerPlayer player, ZcConfig.Weather config) {
         Vec3 pos = player.position();
         boolean outside = level.canSeeSky(BlockPos.containing(player.getEyePosition()));
-        // thunder rolling in the distance: before a storm and through it
-        if ((kind.isStorm() || warning > 0) && RNG.nextInt(kind.isDangerous() ? 6 : 12) == 0) {
-            double a = RNG.nextDouble() * Math.PI * 2;
-            level.playSound(null, pos.x + Math.cos(a) * 30, pos.y + 10, pos.z + Math.sin(a) * 30,
-                    SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 0.35f + RNG.nextFloat() * 0.4f,
-                    0.6f + RNG.nextFloat() * 0.3f);
-        }
+        // distant lightning and the thunder rolling after it, before a storm and through it, are
+        // each client's own (client/weather/WeatherFx), so the flash and its clap go together
         if (warning == 0 && kind.isDangerous() && config.lightningStrikes
                 && RNG.nextInt(kind == WeatherKind.SEVERE ? 10 : 22) == 0) {
             strike(level, pos);
