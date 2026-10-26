@@ -38,6 +38,8 @@ public final class Placer {
     private static @Nullable Build.Spot spot;
     private static @Nullable BlockPos wrongAt;
     private static int said;
+    /** Builds asked for since the game started (the UI test reads it). */
+    public static int asked;
 
     public static void register() {
         ClientTickEvents.START_CLIENT_TICK.register(Placer::tick);
@@ -101,6 +103,7 @@ public final class Placer {
         }
         if (place) {
             if (problem == null && spot != null && block != null) {
+                asked++;
                 ClientPlayNetworking.send(new Builder.Request(build.ordinal(), block.getBlockPos(), block.getDirection().get3DDataValue(),
                         player.getDirection().get3DDataValue()));
             } else if (problem != null) {
