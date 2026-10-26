@@ -61,7 +61,7 @@ public final class Gibs {
 
     private static final List<Gib> GIBS = new ArrayList<>();
     private static final Gore GORE = new Gore();
-    private static final Matrix4f M = new Matrix4f(), INV = new Matrix4f();
+    private static final Matrix4f M = new Matrix4f(), INV = new Matrix4f(), TURN = new Matrix4f();
     private static final Vector3f V = new Vector3f();
     private static final Quaternionf Q = new Quaternionf();
     private static ClientLevel level;
@@ -229,8 +229,7 @@ public final class Gibs {
             int lod = away < detail * detail ? 0 : 1;
             stack.pushPose();
             stack.translate((float) (g.x - c.x), (float) (g.y - sink - c.y), (float) (g.z - c.z));
-            stack.mulPose(g.rot);
-            stack.scale(g.scale, g.scale, g.scale);
+            stack.mulPose(TURN.rotation(g.rot).scale(g.scale));
             int overlay = OverlayTexture.NO_OVERLAY;
             context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(g.skin),
                     (pose, out) -> ZBodyLayer.emit(g.mesh, g.mats, pose, out, true, g.hidden, lod, false, light, overlay,
