@@ -123,7 +123,7 @@ public final class FlightClient {
     private static Flight.Controls controls(CarProp car) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.screen != null) {
+        if (player == null || mc.gui.screen() != null) {
             return Flight.Controls.NONE;
         }
         Input in = player.input.keyPresses;

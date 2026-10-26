@@ -33,7 +33,7 @@ final class AirSound {
         Minecraft mc = Minecraft.getInstance();
         if (car.touchedDown > 2) {
             mc.getSoundManager().play(new SimpleSoundInstance(AirSounds.TOUCHDOWN, SoundSource.NEUTRAL,
-                    Math.min(1.5f, car.touchedDown / 4), 0.9f + mc.level.random.nextFloat() * 0.2f, SoundInstance.createUnseededRandom(),
+                    Math.min(1.5f, car.touchedDown / 4), 0.9f + car.getRandom().nextFloat() * 0.2f, SoundInstance.createUnseededRandom(),
                     car.getX(), car.getY(), car.getZ()));
         }
         boolean pilot = FlightClient.aircraft(mc.player) == car;

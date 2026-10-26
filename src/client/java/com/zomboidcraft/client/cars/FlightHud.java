@@ -34,7 +34,7 @@ final class FlightHud {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         CarProp car = FlightClient.aircraft(player);
-        if (car == null || mc.options.hideGui) {
+        if (car == null) {
             return;
         }
         Flight f = car.flight();

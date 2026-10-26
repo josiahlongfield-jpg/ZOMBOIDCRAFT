@@ -84,7 +84,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         poseStack.pushPose();
         if (state.air) {
             poseStack.translate(0, state.pivot, 0);
-            poseStack.mulPose(state.attitude);
+            poseStack.mulPose(new org.joml.Matrix4f().rotation(state.attitude));
             poseStack.translate(0, -state.pivot, 0);
         } else {
             poseStack.rotateDegrees(Axis.YP, -state.yaw);
