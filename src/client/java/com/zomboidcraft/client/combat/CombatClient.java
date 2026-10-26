@@ -108,7 +108,7 @@ public final class CombatClient {
         }
         // full auto keeps firing while the trigger's held
         ItemStack hand = player.getMainHandItem();
-        if (!client.options.keyAttack.isDown() || client.screen != null) {
+        if (!client.options.keyAttack.isDown() || client.gui.screen() != null) {
             burstLeft = -1;
         } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
             pullTrigger(client, player, hand, true);
