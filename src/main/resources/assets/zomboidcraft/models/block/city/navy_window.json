@@ -2,7 +2,10 @@
   "parent": "minecraft:block/block",
   "textures": {
     "navy_hull": "zomboidcraft:block/city/navy_hull",
-    "navy_window": "zomboidcraft:block/city/navy_window",
+    "navy_window": {
+      "sprite": "zomboidcraft:block/city/navy_window",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/navy_window"
   },
   "elements": [

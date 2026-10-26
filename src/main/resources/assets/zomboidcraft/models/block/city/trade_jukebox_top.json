@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "trade_jukebox_top": "zomboidcraft:block/city/trade_jukebox_top",
+    "particle": "zomboidcraft:block/city/trade_jukebox_top"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_jukebox_top"
+        },
+        "south": {
+          "texture": "#home_wood_walnut"
+        },
+        "east": {
+          "texture": "#home_wood_walnut"
+        },
+        "west": {
+          "texture": "#home_wood_walnut"
+        },
+        "up": {
+          "texture": "#trade_jukebox_top"
+        },
+        "down": {
+          "texture": "#home_wood_walnut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        3
+      ],
+      "to": [
+        14,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_jukebox_top"
+        },
+        "south": {
+          "texture": "#home_wood_walnut"
+        },
+        "east": {
+          "texture": "#home_wood_walnut"
+        },
+        "west": {
+          "texture": "#home_wood_walnut"
+        },
+        "up": {
+          "texture": "#trade_jukebox_top"
+        },
+        "down": {
+          "texture": "#home_wood_walnut"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        3
+      ],
+      "to": [
+        12,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_jukebox_top"
+        },
+        "south": {
+          "texture": "#home_wood_walnut"
+        },
+        "east": {
+          "texture": "#home_wood_walnut"
+        },
+        "west": {
+          "texture": "#home_wood_walnut"
+        },
+        "up": {
+          "texture": "#trade_jukebox_top"
+        },
+        "down": {
+          "texture": "#home_wood_walnut"
+        }
+      }
+    }
+  ]
+}

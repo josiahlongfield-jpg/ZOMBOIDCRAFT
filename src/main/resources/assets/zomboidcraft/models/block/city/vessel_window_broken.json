@@ -2,7 +2,10 @@
   "parent": "minecraft:block/block",
   "textures": {
     "vessel_house": "zomboidcraft:block/city/vessel_house",
-    "vessel_window_broken": "zomboidcraft:block/city/vessel_window_broken",
+    "vessel_window_broken": {
+      "sprite": "zomboidcraft:block/city/vessel_window_broken",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/vessel_window_broken"
   },
   "elements": [

@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_honor_board": "zomboidcraft:block/city/trade_honor_board",
+    "particle": "zomboidcraft:block/city/trade_honor_board"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        0
+      ],
+      "to": [
+        14,
+        15,
+        0.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_honor_board",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_honor_board"
+        },
+        "east": {
+          "texture": "#trade_honor_board"
+        },
+        "west": {
+          "texture": "#trade_honor_board"
+        },
+        "up": {
+          "texture": "#trade_honor_board"
+        },
+        "down": {
+          "texture": "#trade_honor_board"
+        }
+      }
+    }
+  ]
+}

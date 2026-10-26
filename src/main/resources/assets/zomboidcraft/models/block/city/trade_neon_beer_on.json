@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_neon_beer_on": "zomboidcraft:block/city/trade_neon_beer_on",
+    "particle": "zomboidcraft:block/city/trade_neon_beer_on"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        3,
+        0.2
+      ],
+      "to": [
+        15,
+        13,
+        0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_neon_beer_on"
+        },
+        "south": {
+          "texture": "#trade_neon_beer_on"
+        },
+        "east": {
+          "texture": "#trade_neon_beer_on"
+        },
+        "west": {
+          "texture": "#trade_neon_beer_on"
+        },
+        "up": {
+          "texture": "#trade_neon_beer_on"
+        },
+        "down": {
+          "texture": "#trade_neon_beer_on"
+        }
+      }
+    }
+  ]
+}

@@ -22,4 +22,7 @@ public class CarRenderState extends EntityRenderState {
     /** How dark it is round the car, 0 (day) to 1 (night), and whether a shader pack draws the glow. */
     public float dark;
     public boolean shaders;
+    /** Seconds since the aircraft's cockpit lights came on (someone sat in it), -1 while off; how dark it is round it. */
+    public float cockpit = -1;
+    public float cockpitDark;
 }

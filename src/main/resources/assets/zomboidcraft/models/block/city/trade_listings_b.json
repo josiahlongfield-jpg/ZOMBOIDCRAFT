@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_oak": "zomboidcraft:block/city/home_wood_oak",
+    "trade_listings_b": "zomboidcraft:block/city/trade_listings_b",
+    "particle": "zomboidcraft:block/city/trade_listings_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        1,
+        0
+      ],
+      "to": [
+        15.5,
+        15,
+        0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_listings_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_listings_b"
+        },
+        "east": {
+          "texture": "#trade_listings_b"
+        },
+        "west": {
+          "texture": "#trade_listings_b"
+        },
+        "up": {
+          "texture": "#trade_listings_b"
+        },
+        "down": {
+          "texture": "#trade_listings_b"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0.5,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_oak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_wood_oak"
+        },
+        "east": {
+          "texture": "#home_wood_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_oak"
+        },
+        "down": {
+          "texture": "#home_wood_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        15.5,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_oak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_wood_oak"
+        },
+        "east": {
+          "texture": "#home_wood_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_oak"
+        },
+        "down": {
+          "texture": "#home_wood_oak"
+        }
+      }
+    }
+  ]
+}
