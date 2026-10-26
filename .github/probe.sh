@@ -7,6 +7,10 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== zbody"
+for c in net.minecraft.client.model.geom.builders.CubeListBuilder net.minecraft.client.model.geom.builders.CubeDefinition net.minecraft.client.model.geom.PartPose net.minecraft.client.model.geom.ModelPart net.minecraft.client.model.HumanoidModel net.minecraft.client.model.Model net.minecraft.client.model.EntityModel net.minecraft.client.model.ArmedModel net.minecraft.client.model.HeadedModel net.minecraft.client.model.geom.builders.LayerDefinition net.minecraft.client.model.geom.builders.PartDefinition net.minecraft.client.model.geom.builders.UVPair net.minecraft.client.renderer.entity.LivingEntityRenderer net.minecraft.client.renderer.entity.HumanoidMobRenderer net.minecraft.client.renderer.entity.state.ZombieRenderState net.minecraft.client.renderer.entity.state.HumanoidRenderState net.minecraft.client.renderer.entity.state.LivingEntityRenderState net.minecraft.client.renderer.entity.layers.RenderLayer; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -80; done
+exit 0
+
 echo "===== nvg4"
 for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
 javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head
