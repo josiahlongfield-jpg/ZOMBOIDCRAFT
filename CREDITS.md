@@ -261,3 +261,13 @@ From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss
 | weapon.smg.shot, weapon.smg.shot_distant | gun_submachine_auto_shot_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.smg.shot | gun_submachine_auto_shot_00_tail_only_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
 | weapon.smg.shot_suppressed | gun_semi_auto_shot_silenced1_0_last_tail (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+
+## Music
+
+Ambient beds picked by Josiah Longfield, made to loop seamlessly by tools/audio/build_music.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| music.bed | [Low Rumble - loopable ambiance](https://freesound.org/people/lennartgreen/sounds/638914/) | lennartgreen | CC0 1.0 |
+| music.night | Eerie Night Ambience (Apple Hill Studios - Horror Background Ambiences) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| music.chase, music.chase_end | bass_bed_heavy_001 (3maze - DRONEA) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
