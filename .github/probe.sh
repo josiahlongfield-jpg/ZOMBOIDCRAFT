@@ -7,16 +7,17 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== nvg3"
-javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer > /tmp/gr.txt 2>&1
-for m in 'public void render()' 'private void preparePostEffects(' 'private void applyPostEffects()' 'public java.util.List<net.minecraft.resources.Identifier> getRequestedPostEffects()' 'public void renderLevel()' 'public void checkEntityPostEffect(' 'public void toggleSpectatorPostEffect()'; do
-  echo "+++ $m"
-  awk -v m="$m" 'index($0, m) {on=1} on && /^$/ {on=0} on' /tmp/gr.txt | grep -E 'invoke|field|Field|ifeq|ifne|ifnull|ifnonnull|goto|return|^  [a-z]' | head -90
-done
-for f in assets/minecraft/shaders/post/blit.fsh assets/minecraft/shaders/post/bits.fsh; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
-javap -cp "$CP" -p net.minecraft.client.renderer.PostChainConfig 2>&1 | head -20
-javap -cp "$CP" -p 'net.minecraft.client.renderer.PostChainConfig$Pass' 2>&1 | head -20
-javap -cp "$CP" -p 'net.minecraft.client.renderer.UniformValue' 2>&1 | head -30
+echo "===== nvg4"
+for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostChain 2>&1 | grep -E 'ldc|TextureInput|getTexture|withPath|SNIPPET|withUniform|withSampler|BindGroup' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostPass 2>&1 | grep -E 'ldc|setUniform|bindDefault|Globals|getTexture|bindTexture|setTexture' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B3 -A25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+sig com.mojang.blaze3d.systems.RenderSystem 'bindDefault|Globals|globalSettings'
+sig net.minecraft.client.renderer.texture.DynamicTexture 'public'
+sig com.mojang.blaze3d.platform.NativeImage 'setPixel|getPixels|NativeImage\(|setPixelABGR|setPixelRGBA'
 exit 0
 
 echo "===== injuries"
