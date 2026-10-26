@@ -92,7 +92,7 @@ final class GunRigs {
                     false /* the rounds sit in a turning cylinder */)),
             Map.entry("shotgun", new GunRig(
                     new float[] {0.3000f, -0.4000f, -0.5500f} /* hip: the grip in the hand camera (blocks) */,
-                    new float[] {4.0000f, 20.0000f, -10.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
+                    new float[] {7.3270f, 8.3850f, -10.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
                     0.9000f /* hip scale */,
                     new float[] {32.0000f, -0.1000f} /* magazine steps: cant (degrees), drop (blocks) */,
                     new float[] {-6.0000f, 0.0000f} /* charging step: cant, drop */,
@@ -131,7 +131,7 @@ final class GunRigs {
                     false /* the rounds sit in a turning cylinder */)),
             Map.entry("hunting_rifle", new GunRig(
                     new float[] {0.3000f, -0.4000f, -0.5500f} /* hip: the grip in the hand camera (blocks) */,
-                    new float[] {4.0000f, 18.0000f, -8.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
+                    new float[] {7.4890f, 8.2470f, -8.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
                     0.9000f /* hip scale */,
                     new float[] {28.0000f, -0.0600f} /* magazine steps: cant (degrees), drop (blocks) */,
                     new float[] {-10.0000f, 0.0000f} /* charging step: cant, drop */,
@@ -170,7 +170,7 @@ final class GunRigs {
                     false /* the rounds sit in a turning cylinder */)),
             Map.entry("double_barrel", new GunRig(
                     new float[] {0.3000f, -0.4000f, -0.5500f} /* hip: the grip in the hand camera (blocks) */,
-                    new float[] {4.0000f, 20.0000f, -10.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
+                    new float[] {7.8870f, 8.7690f, -10.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
                     0.9000f /* hip scale */,
                     new float[] {14.0000f, -0.0400f} /* magazine steps: cant (degrees), drop (blocks) */,
                     new float[] {6.0000f, -0.0200f} /* charging step: cant, drop */,
@@ -209,7 +209,7 @@ final class GunRigs {
                     false /* the rounds sit in a turning cylinder */)),
             Map.entry("revolver", new GunRig(
                     new float[] {0.2100f, -0.3200f, -0.5200f} /* hip: the grip in the hand camera (blocks) */,
-                    new float[] {2.0000f, 6.0000f, -3.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
+                    new float[] {4.6990f, 5.6460f, -3.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
                     1.3500f /* hip scale */,
                     new float[] {-20.0000f, -0.0500f} /* magazine steps: cant (degrees), drop (blocks) */,
                     new float[] {-6.0000f, 0.0200f} /* charging step: cant, drop */,
