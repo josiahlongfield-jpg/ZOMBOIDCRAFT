@@ -738,8 +738,8 @@ final class TownSite extends Site {
         }
         Kit.Lot lib = civicLot(sides[3], corner + ring * 0.5, outward[3], 21, depth);
         if (lib != null) {
+            yard(lib, 0.5);   // first: the library digs its basement out of it
             new Civic(lib.placer(out), rng).library(21, Math.min(22, depth - 2));
-            yard(lib, 0.5);
         }
         // the churches face the square from two of its corners
         Kit.Lot stone = civicLot(sides[0], sides[0].length() - corner - mainClear - 13, outward[0], 23, depth);

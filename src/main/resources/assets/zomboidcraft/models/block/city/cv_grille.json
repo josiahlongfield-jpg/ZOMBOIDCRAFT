@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_grille": "zomboidcraft:block/city/cv_grille",
+    "particle": "zomboidcraft:block/city/cv_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_grille"
+        },
+        "south": {
+          "texture": "#cv_grille",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_grille",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_grille",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_grille",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_grille",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -47,10 +47,12 @@ STONE = "stone_trim"
 WHITE = "ext_trim_white"
 BRICK = {"red": "brick_red", "buff": "brick_buff", "stone": STONE}
 ROOF_KINDS = ("slate", "charcoal", "green", "red")
-PLAQUES = {"clerk": "COUNTY|CLERK", "circuit": "CIRCUIT|CLERK", "court": "COURT|ROOM", "judge": "JUDGE'S|CHAMBERS",
-           "records": "RECORDS", "pva": "PROPERTY|VALUATION", "treasurer": "TREASURER", "restroom": "REST|ROOMS",
+PLAQUES = {"clerk": "COUNTY|CLERK", "circuit": "CIRCUIT|CLERK", "court": "COURT|ROOM", "judge": "JUDGE",
+           "records": "REC-|ORDS", "pva": "ASSES-|SOR", "treasurer": "TREAS-|URER", "restroom": "REST|ROOMS",
            "sheriff": "SHERIFF", "library": "READING|ROOM", "postmaster": "POST|MASTER", "office": "OFFICE",
-           "jury": "JURY|ROOM"}
+           "jury": "JURY|ROOM", "silence": "SILENCE|PLEASE", "children": "CHILD-|REN", "reference": "REFER-|ENCE",
+           "librarian": "LIBRAR-|IAN", "periodicals": "PERIOD-|ICALS", "stacks": "STACKS", "lecture": "LECTURE|ROOM"}
+LIBRARY = "PVBLIC LIBRARY"
 
 
 # ---------------------------------------------------------------- textures
@@ -328,11 +330,22 @@ def directory(seed):
     return t
 
 
+def fit(text, font, size, w):
+    """The biggest size up to `size` at which every '|' line of text fits w texels across."""
+    from PIL import ImageFont
+    while size > 4:
+        f = ImageFont.truetype(font, size * 8)
+        if max(f.getlength(line) for line in text.split("|")) <= (w - 2) * 8:
+            break
+        size -= 1
+    return size
+
+
 def plaque(seed, text):
     """A door's plaque: white letters on black, a brass edge; drawn where the plate's face samples
     it (texels 12-52 across, 18-48 down)."""
     t = F.plain(seed, (24, 24, 26), 0.04, 0.5)
-    m = text_mask(text, SANS, 9, 36, 24, seed=seed)
+    m = text_mask(text, SANS, fit(text, SANS, 9, 36), 36, 24, seed=seed)
     paste(t, (m > 0.4).astype(np.float32), 14, 21, (230, 228, 220), 0.95, h=0.9)
     brass = dict(smooth=0.7, f0=230)
     area(t, 12, 18, 52, 20, (170, 140, 76), **brass)
@@ -487,6 +500,99 @@ def bench_cushion(seed, rgb):
     return t
 
 
+def catalog(seed):
+    """A card catalogue's front: oak, four columns of little drawers five high, each with its brass
+    pull and the white card in its holder; a few pulled out and gone (dark holes)."""
+    t = F.wear(F.wood(seed, "oak"), 0.15, 1)
+    rng = t.rng
+    for j in range(5):
+        for i in range(4):
+            x0, y0 = 4 + i * 14, 6 + j * 11
+            if rng.random() < 0.08:
+                area(t, x0, y0, x0 + 13, y0 + 10, (20, 16, 12), h=0.2)
+                continue
+            area(t, x0, y0, x0 + 13, y0 + 10, mul=1.08, dh=0.15)
+            area(t, x0, y0 + 9, x0 + 13, y0 + 10, mul=0.6)
+            area(t, x0 + 4, y0 + 2, x0 + 9, y0 + 4, (226, 220, 200), h=0.8)
+            area(t, x0 + 5, y0 + 6, x0 + 8, y0 + 7, (176, 146, 80), smooth=0.7, f0=230, h=1.0)
+    return t
+
+
+def bankers_shade(seed, lit):
+    """A banker's lamp's cased green glass: deep green, lighter where it bellies, lit from inside or dead."""
+    t = F.plain(seed, (34, 110, 62) if lit else (24, 70, 40), 0.05, 0.85)
+    yy = np.arange(N, dtype=np.float32)[:, None]
+    t.c *= (0.8 + 0.4 * np.sin(yy / N * np.pi))[..., None] * np.ones((1, N, 1), np.float32)
+    if lit:
+        t.emit[:] = 0.75
+    return t
+
+
+def world_globe(seed):
+    """A schoolroom globe: blue sea, tan and green land, faded and grimy."""
+    t = F.plain(seed, (70, 104, 150), 0.05, 0.6)
+    n = P.fbm(t.rng, ((4, 1.0), (8, 0.6), (16, 0.3)))
+    land = n > 0.55
+    t.c[land] = np.array((150, 140, 92), np.float32) * (0.85 + 0.3 * n[land, None])
+    t.c[land & (n > 0.66)] = (92, 120, 70)
+    for y in range(0, N, 12):
+        area(t, 0, y, N, y + 1, mul=0.85)
+    t.grime(0.4)
+    return t
+
+
+def grille(seed):
+    """The iron grille over a basement window: bars with S-scrolls between them, black paint going to rust."""
+    t = iron_fence(seed)
+    t.alpha[:] = 0
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    for x in range(4, N, 14):
+        area(t, x, 0, x + 3, N, alpha=255)
+    area(t, 0, 0, N, 3, alpha=255)
+    area(t, 0, N - 3, N, N, alpha=255)
+    for cx in range(11, N, 14):
+        for cy in (16, 46):
+            for s in (-1, 1):
+                r = np.hypot(xx - cx, yy - (cy + s * 6))
+                arc = (np.abs(r - 5) < 1.2) & ((xx - cx) * s > -1)
+                t.alpha[arc] = 255
+    return t
+
+
+def book_drop(seed, front):
+    """The book return by the path: a steel box in faded blue, the flap and slot near the top, BOOK
+    RETURN stencilled under it; dents and rust coming through the paint. The side is the bare paint."""
+    t = F.wear(F.plain(seed, (52, 82, 126), 0.06, 0.4), 0.35, 1)
+    if front:
+        area(t, 10, 10, 54, 20, mul=1.12, dh=0.2)                     # the flap
+        area(t, 12, 16, 52, 19, (16, 16, 18), h=0.1)                  # the slot under its lip
+        area(t, 28, 11, 36, 13, (170, 170, 164), smooth=0.6, f0=200)  # the pull
+        m = text_mask("BOOK|RETURN", SANS, fit("BOOK|RETURN", SANS, 9, 44), 44, 22, seed=seed)
+        paste(t, (m > 0.4).astype(np.float32), 10, 28, (222, 220, 210), 0.9)
+    t.grime(0.3)
+    return t
+
+
+def skylight(seed):
+    """The delivery hall's laylight: leaded panes in an iron grid, amber and green round a clear
+    middle, grimed and cracked."""
+    t = F.plain(seed, (190, 186, 160), 0.04, 0.85)
+    t.alpha[:] = 150
+    rng = t.rng
+    for j in range(4):
+        for i in range(4):
+            edge = i in (0, 3) or j in (0, 3)
+            col = ((196, 140, 50) if (i + j) % 2 else (70, 130, 80)) if edge else (200, 204, 190)
+            area(t, i * 16 + 1, j * 16 + 1, i * 16 + 15, j * 16 + 15, col, alpha=135 if edge else 110)
+            if rng.random() < 0.15:
+                area(t, i * 16 + 1, j * 16 + 1, i * 16 + 15, j * 16 + 15, alpha=0)  # a pane gone
+    for k in range(0, N, 16):
+        area(t, k, 0, k + 1, N, (30, 30, 30), alpha=255)
+        area(t, 0, k, N, k + 1, (30, 30, 30), alpha=255)
+    t.grime(0.4)
+    return t
+
+
 def textures():
     T = {}
     T["cv_chain"] = lambda: chain(9001)
@@ -534,6 +640,17 @@ def textures():
     T["cv_brass"] = lambda: F.plain(9095, (172, 140, 78), 0.06, 0.65)
     T["cv_iron"] = lambda: F.plain(9096, (34, 34, 34), 0.06, 0.4)
     T["cv_cellbar"] = lambda: F.wear(F.plain(9097, (118, 120, 112), 0.07, 0.45), 0.35, 1)
+    T["cv_books_a"] = lambda: F.books(9201)
+    T["cv_books_b"] = lambda: F.books(9202)
+    T["cv_steel_olive"] = lambda: F.wear(F.plain(9203, (104, 108, 92), 0.06, 0.45), 0.3, 1)
+    T["cv_catalog"] = lambda: catalog(9204)
+    T["cv_bankers"] = lambda: bankers_shade(9205, False)
+    T["cv_bankers_lit"] = lambda: bankers_shade(9206, True)
+    T["cv_world"] = lambda: world_globe(9207)
+    T["cv_grille"] = lambda: grille(9208)
+    T["cv_skylight"] = lambda: skylight(9209)
+    T["cv_bookdrop"] = lambda: book_drop(9210, True)
+    T["cv_bookdrop_side"] = lambda: book_drop(9211, False)
     return T
 
 
@@ -568,9 +685,11 @@ def round_post(y0, y1, r, tex, cx=8.0, cz=8.0):
 def blocks():
     out = {}
 
-    def add(name, boxes, title, sound, rotate="facing", decor=False, render=None, tex=None, light=None, **extra):
+    def add(name, boxes, title, sound, rotate="facing", decor=False, render=None, tex=None, light=None, loot=None, **extra):
         spec = {"model": "boxes", "boxes": boxes} if boxes else {"tex": tex}
         spec.update(title=title, sound=sound)
+        if loot:
+            spec["loot"] = loot
         if rotate:
             spec["rotate"] = rotate
         if decor:
@@ -730,6 +849,44 @@ def blocks():
     bars += [[0, 1, 7, 16, 2.5, 9, "cv_cellbar"], [0, 13.5, 7, 16, 15, 9, "cv_cellbar"]]
     add("cv_cell_bars", bars, "Cell Bars", "METAL", rotate="axis")
 
+    # ---- the library: steel stacks of books two faces deep, the card catalogue, the delivery desk,
+    # reading tables (one with its green banker's lamp), a globe on its stand, basement grilles, the laylight
+    steel = "cv_steel_olive"
+    books = {"north": "cv_books_a", "south": "cv_books_b", "side": steel, "up": steel, "down": steel}
+    stack = [[0, 0, 2, 1, 16, 14, steel], [15, 0, 2, 16, 16, 14, steel], [1, 0.5, 2.6, 15, 15.5, 13.4, books]]
+    stack += [[1, y, 2, 15, y + 0.75, 14, steel] for y in (5, 10)] + [[1, 0, 2, 15, 1, 14, steel], [0, 15, 1.5, 16, 16, 14.5, steel]]
+    add("cv_stack", stack, "Book Stack", "METAL", rotate="axis", loot="home_books")
+    add("cv_catalog", [[1, 0, 3, 15, 1, 15, "cv_oak"], [0.5, 1, 2, 15.5, 15, 16, {"north": "cv_catalog", "side": "cv_oak", "up": "cv_oak"}],
+                       [0, 15, 1.5, 16, 16, 16, "cv_oak"]], "Card Catalogue", "WOOD", loot="office")
+    add("cv_circ_desk", [[0, 0, 0, 16, 1, 15, "cv_oak"], [0, 1, 0.5, 16, 14, 4, {"north": "cv_panel_oak", "side": "cv_oak"}],
+                         [0, 14, -0.5, 16, 15.5, 9, "cv_oak"], [0, 9, 4, 16, 10, 14, "cv_oak"], [0, 1, 13, 16, 9, 14, "cv_oak"]],
+        "Delivery Desk", "WOOD", loot="office")
+    table = [[0, 12, 1, 16, 13.5, 15, "cv_oak"], [0, 10.5, 2.5, 16, 12, 13.5, "cv_oak"]]
+    table += [[x, 0, z, x + 1.5, 10.5, z + 1.5, "cv_oak"] for x in (1, 13.5) for z in (2.5, 12)]
+    add("cv_table", table, "Reading Table", "WOOD", rotate="axis")
+    for lit in ("", "_lit"):
+        lamp = [[6, 13.5, 5.5, 10, 14.2, 10.5, "cv_brass"], [7.5, 14.2, 7.5, 8.5, 18, 8.5, "cv_brass"],
+                [3, 18, 6.2, 13, 19.6, 9.8, f"cv_bankers{lit}"], [3.6, 19.6, 6.8, 12.4, 20.6, 9.2, f"cv_bankers{lit}"],
+                [2.8, 17.6, 6, 3.4, 19.8, 10, "cv_brass"], [12.6, 17.6, 6, 13.2, 19.8, 10, "cv_brass"]]
+        add(f"cv_table_lamp{lit}", table + lamp, "Reading Table", "WOOD", rotate="axis", **({"light": 7} if lit else {}))
+    add("cv_globe_stand", [[5, 0, 5, 11, 1, 11, "cv_oak"], [7.25, 1, 7.25, 8.75, 6, 8.75, "cv_oak"]]
+        + round_post(6, 14, 4.2, "cv_world") + [[4.4, 7, 4.4, 11.6, 13, 11.6, "cv_world"],
+                                                  [7.6, 5.5, 3, 8.4, 14.6, 3.8, "cv_brass"], [7.6, 5.5, 12.2, 8.4, 14.6, 13, "cv_brass"]],
+        "Globe", "WOOD", rotate=None)
+    add("cv_grille", [[0, 0, 15, 16, 16, 16, "cv_grille"]], "Window Grille", "METAL", decor=True, render="cutout")
+    add("cv_skylight", None, "Laylight", "GLASS", rotate=None, tex="cv_skylight", render="translucent")
+    side = "cv_bookdrop_side"
+    face = {"north": "cv_bookdrop", "side": side, "up": side, "down": side, "south": side}
+    legs = [[x, 0, z, x + 2, 3, z + 2, "cv_iron"] for x in (2.5, 11.5) for z in (3.5, 11.5)]
+    add("cv_book_drop", legs + [[2, 3, 3, 14, 13.5, 14, face], [2.5, 13.5, 3.5, 13.5, 15, 13.5, side],
+                                [3.5, 15, 4.5, 12.5, 15.8, 12.5, side], [3, 10, 2.4, 13, 11, 3, "cv_iron"]],
+        "Book Return", "METAL", loot="home_books")
+    # knocked over onto its back, the legs in the air
+    add("cv_book_drop_tipped", [[2, 0, 1, 14, 11, 13, {"up": "cv_bookdrop", "north": side, "side": side, "down": side, "south": side}],
+                                [2.5, 0, 13, 13.5, 10, 14.5, side]]
+        + [[x, z, 13, x + 2, z + 2, 16, "cv_iron"] for x in (2.5, 11.5) for z in (1, 8)],
+        "Book Return", "METAL", loot="home_books")
+
     # ---- outside: the lawn's railings, the globe lamps by the steps
     add("cv_iron_fence", [[0, 0, 7.5, 16, 16, 8.5, "cv_iron_fence"]], "Iron Railings", "METAL", rotate="axis", render="cutout")
     add("cv_iron_post", [[6, 0, 6, 10, 15, 10, "cv_iron"], [5.5, 0, 5.5, 10.5, 2, 10.5, "cv_iron"], [6.5, 15, 6.5, 9.5, 17, 9.5, "cv_iron"]],
@@ -745,10 +902,11 @@ def blocks():
 
 
 def frieze_tiles():
-    """The county's name cut in the frieze, one tile per block across the portico (even widths 8 to 14)."""
+    """The county's name cut in the frieze, one tile per block across the portico (even widths 8 to
+    14); the library's PVBLIC LIBRARY across eight (cv_lfrieze)."""
     T, B = {}, {}
-    for w in (8, 10, 12, 14):
-        text = f"{COUNTY} COUNTY COURTHOUSE" if w >= 11 else "COUNTY COURTHOUSE"
+    for prefix, w, text in [("cv_frieze", w, f"{COUNTY} COUNTY COURTHOUSE" if w >= 11 else "COUNTY COURTHOUSE")
+                            for w in (8, 10, 12, 14)] + [("cv_lfrieze", 8, LIBRARY)]:
 
         def build(w=w, text=text):
             S = N * w
@@ -771,7 +929,7 @@ def frieze_tiles():
                 area(t, 0, N - 3, N, N, mul=0.75, dh=-0.1)
                 t.streaks(0.6, 0.8)
                 return t
-            name = f"cv_frieze_{w}_{i}"
+            name = f"{prefix}_{w}_{i}"
             T[name] = tile
             B[name] = {"tex": {"north": name, "side": STONE, "up": STONE, "down": STONE}, "title": "Frieze", "sound": "STONE",
                        "rotate": "facing"}
