@@ -144,6 +144,14 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.getInput().pressKey(InputConstants.KEY_E);
             ctx.waitTicks(5);
             log(ctx, "after closing");
+            // closed on the bench, it must open on Character again
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(10);
+            String reopened = ctx.computeOnClient(mc -> mc.gui.screen() instanceof KitScreen<?> k ? k.page.name() : String.valueOf(mc.gui.screen()));
+            LOG.info("ZCUI reopened after closing on the bench -> page {}", reopened);
+            if (!"CHARACTER".equals(reopened)) throw new AssertionError("kit reopened on " + reopened + ", not CHARACTER");
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(5);
             buildTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
