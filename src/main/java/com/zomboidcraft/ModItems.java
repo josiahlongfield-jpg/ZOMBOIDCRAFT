@@ -121,6 +121,31 @@ public final class ModItems {
     public static final Item PISTOL_CASE = gunCase("pistol_case", CaseItem.Kind.PISTOL, com.zomboidcraft.carry.BagSpec.PISTOL_CASE);
     public static final Item AMMO_CAN = gunCase("ammo_can", CaseItem.Kind.AMMO, com.zomboidcraft.carry.BagSpec.AMMO_CAN);
 
+    // Night vision: goggles clip onto a helmet or head mount and run on AA batteries (gear/Headgear).
+    public static final Item COMBAT_HELMET = register("combat_helmet", com.zomboidcraft.gear.HeadGearItem::new,
+            headgear().attributes(net.minecraft.world.item.component.ItemAttributeModifiers.builder()
+                    .add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR,
+                            new net.minecraft.world.entity.ai.attributes.AttributeModifier(ZomboidCraft.id("helmet_armor"), 2,
+                                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE),
+                            net.minecraft.world.entity.EquipmentSlotGroup.HEAD)
+                    .build()));
+    public static final Item NVG_HEAD_MOUNT = register("nvg_head_mount", com.zomboidcraft.gear.HeadGearItem::new, headgear());
+    public static final Item NVG_GEN1 = goggles(com.zomboidcraft.gear.NightVisionItem.Generation.GEN1);
+    public static final Item NVG_GEN3 = goggles(com.zomboidcraft.gear.NightVisionItem.Generation.GEN3);
+    public static final Item NVG_WHITE = goggles(com.zomboidcraft.gear.NightVisionItem.Generation.WHITE);
+    public static final Item AA_BATTERY = register("aa_battery", com.zomboidcraft.gear.BatteryItem::new, new Item.Properties().stacksTo(16));
+
+    private static Item.Properties headgear() {
+        return new Item.Properties().stacksTo(1).component(DataComponents.EQUIPPABLE,
+                net.minecraft.world.item.equipment.Equippable.builder(net.minecraft.world.entity.EquipmentSlot.HEAD)
+                        .setEquipSound(net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GENERIC)
+                        .setDamageOnHurt(false).build());
+    }
+
+    private static Item goggles(com.zomboidcraft.gear.NightVisionItem.Generation generation) {
+        return register(generation.key, p -> new com.zomboidcraft.gear.NightVisionItem(generation, p), new Item.Properties().stacksTo(1));
+    }
+
     private static Item gunCase(String name, CaseItem.Kind kind, com.zomboidcraft.carry.BagSpec spec) {
         return register(name, properties -> new CaseItem(kind, spec, properties), new Item.Properties());
     }

@@ -254,6 +254,24 @@ TABLES.update({
         (f"{ZC}:hiking_backpack", 1, 1, 1), (f"{ZC}:crowbar", 1, 1, 1), ("-", 6, 1, 1)]),
 })
 
+# night vision (gear/Headgear): AA batteries wherever people kept them, goggles and mounts where people kept guns
+NIGHT_VISION = {
+    "guns": [(f"{ZC}:combat_helmet", 1, 1, 1), (f"{ZC}:nvg_head_mount", 2, 1, 1), (f"{ZC}:nvg_gen1", 2, 1, 1),
+             (f"{ZC}:aa_battery", 5, 2, 8)],
+    "pawn": [(f"{ZC}:nvg_gen1", 1, 1, 1), (f"{ZC}:aa_battery", 3, 1, 4)],
+    "hardware": [(f"{ZC}:aa_battery", 5, 2, 8)],
+    "grocery": [(f"{ZC}:aa_battery", 3, 1, 4)],
+    "home_drawer": [(f"{ZC}:aa_battery", 4, 1, 4)],
+    "home_garage": [(f"{ZC}:aa_battery", 3, 1, 4)],
+    "home_desk": [(f"{ZC}:aa_battery", 3, 1, 3)],
+    "home_guns": [(f"{ZC}:nvg_gen1", 2, 1, 1), (f"{ZC}:nvg_head_mount", 2, 1, 1), (f"{ZC}:aa_battery", 3, 2, 6)],
+    "basement_guns": [(f"{ZC}:nvg_gen1", 2, 1, 1), (f"{ZC}:combat_helmet", 2, 1, 1), (f"{ZC}:nvg_head_mount", 1, 1, 1),
+                      (f"{ZC}:aa_battery", 4, 2, 8)],
+    "basement_supplies": [(f"{ZC}:aa_battery", 5, 2, 10)],
+}
+for _name, _extra in NIGHT_VISION.items():
+    TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
+
 # a rare find on top of the shelf's own stock
 RARE = {
     "grocery": [(f"{ZC}:kitchen_knife", 1), (f"{ZC}:frying_pan", 1)],
@@ -276,6 +294,11 @@ RARE = {
     "farm": [(f"{ZC}:fire_axe", 2), (f"{ZC}:machete", 1), ("golden_apple", 1), (f"{ZC}:shotgun", 2), (f"{ZC}:double_barrel", 3),
              (f"{ZC}:hunting_rifle", 2), (f"{ZC}:revolver", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:ammo_can", 1)],
 }
+
+# the better tubes are rare finds
+for _name, _extra in {"guns": [(f"{ZC}:nvg_gen3", 2)], "pawn": [(f"{ZC}:nvg_gen3", 1)], "home_guns": [(f"{ZC}:nvg_gen3", 1)],
+                      "basement_guns": [(f"{ZC}:nvg_gen3", 2), (f"{ZC}:nvg_white", 1)]}.items():
+    RARE[_name] = RARE.get(_name, []) + _extra
 
 
 def entry(item, weight, lo, hi, *functions):
