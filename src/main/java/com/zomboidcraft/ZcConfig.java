@@ -734,6 +734,8 @@ public final class ZcConfig {
     public static class CrossbowStats extends GunStats {
         /** Chance a bolt breaks when it hits something, rather than being left to pick up. */
         public double boltBreakChance = 0.2;
+        /** Bolts a zombie can carry standing in it before more just fall at its feet. */
+        public int maxStuckBolts = 6;
 
         CrossbowStats() {
             damage = 30.0;

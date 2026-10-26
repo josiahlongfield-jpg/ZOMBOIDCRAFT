@@ -290,6 +290,7 @@ public final class Dismember {
         level.playSound(null, joint.x, joint.y, joint.z, ModSounds.BULLET_FLESH, SoundSource.HOSTILE, 1.2f,
                 0.55f + zombie.getRandom().nextFloat() * 0.1f);
         BLEEDING.add(new Bleed(zombie, part, level.getGameTime() + 120));
+        StuckBolts.shed(zombie, joint);     // any bolts in the limb fall out with it
         if (!zombie.isAlive()) {
             return;
         }
@@ -358,6 +359,20 @@ public final class Dismember {
      * Parts already gone don't stop it.
      */
     private static int part(Zombie zombie, Vec3 eye, Vec3 dir) {
+        Strike strike = strike(zombie, eye, dir);
+        return strike == null ? -1 : strike.part();
+    }
+
+    /**
+     * Where a shot went into the body: the part (head 0, torso 1 and 2, pelvis 3, then the arms and legs as in the
+     * tables), its capsule's ends and radius in the pose it was in, the point the shot went in at and the shot's
+     * heading, all in the zombie's own frame (x to its left, y up from its feet, z ahead) at scale 1.
+     */
+    public record Strike(int part, Vec3 a, Vec3 b, double radius, Vec3 at, Vec3 dir) {
+    }
+
+    /** The part a shot went into first and where (see {@link Strike}), or null if its line misses them all. */
+    public static Strike strike(Zombie zombie, Vec3 eye, Vec3 dir) {
         int cuts = cuts(zombie);
         boolean[] mirror = new boolean[1];
         float[] caps = pose(zombie, cuts, mirror);
@@ -368,24 +383,34 @@ public final class Dismember {
         double ox = eye.x - zombie.getX(), oy = eye.y - zombie.getY(), oz = eye.z - zombie.getZ();
         double px = (ox * lx + oz * lz) / scale, py = oy / scale, pz = (ox * fx + oz * fz) / scale;
         double dx = dir.x * lx + dir.z * lz, dy = dir.y, dz = dir.x * fx + dir.z * fz;
-        if (mirror[0]) {
-            px = -px;
-            dx = -dx;
-        }
-        int best = -1;
+        // a zombie hopping on its right leg is the left-leg table mirrored: look it up mirrored, answer unmirrored
+        double m = mirror[0] ? -1 : 1;
+        int best = -1, bestK = -1;
         double nearest = Double.MAX_VALUE;
         for (int k = 0; k < PARTS; k++) {
             int real = mirror[0] ? MIRROR[k] : k;
             if ((gone >> real & 1) != 0) {
                 continue;
             }
-            double t = enter(px, py, pz, dx, dy, dz, caps, k * 7);
+            double t = enter(px * m, py, pz, dx * m, dy, dz, caps, k * 7);
             if (t >= 0 && t < nearest) {
                 nearest = t;
                 best = real;
+                bestK = k;
             }
         }
-        return best;
+        if (best < 0) {
+            return null;
+        }
+        int o = bestK * 7;
+        return new Strike(best, new Vec3(caps[o] * m, caps[o + 1], caps[o + 2]),
+                new Vec3(caps[o + 3] * m, caps[o + 4], caps[o + 5]), caps[o + 6],
+                new Vec3(px + nearest * dx, py + nearest * dy, pz + nearest * dz), new Vec3(dx, dy, dz));
+    }
+
+    /** The part isn't there any more: shot off, or lost before it rose. */
+    public static boolean gone(Zombie zombie, int part) {
+        return (goneParts(zombie, cuts(zombie)) >> part & 1) != 0;
     }
 
     /** The parts not there to hit: shot off, lost before it rose, or (with no legs at all) both legs. */

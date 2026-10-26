@@ -36,6 +36,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         addLayer(new WalkerAddonLayer(this, new WalkerAddonModel(context.bakeLayer(WalkerAddonModel.LAYER))));
         addLayer(new WalkerEyesLayer(this));
         addLayer(new ZBodyLayer(this));
+        addLayer(new com.zomboidcraft.client.zombie.body.BoltsLayer(this));
     }
 
     private static final class OldBodyOnly extends RenderLayer<WalkerRenderState, WalkerModel> {
@@ -68,6 +69,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.missingLimb = ZombieLook.missingLimb(zombie);
         int limbs = Dismember.limbs(zombie);
         state.cuts = limbs & Dismember.CUTS;
+        state.bolts = zombie.getAttachedOrElse(com.zomboidcraft.combat.StuckBolts.BOLTS, java.util.List.of());
         ZcConfig.Look look = ZcConfig.get().look;
         String name = state.outfit + "_" + ZombieLook.skin(zombie);
         String hd = name + "_" + ZombieLook.damage(zombie) + ".png";
