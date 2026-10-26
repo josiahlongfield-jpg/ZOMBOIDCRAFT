@@ -67,6 +67,8 @@ public final class ZcConfig {
     public Radio radio = new Radio();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
+    /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
+    public Digging digging = new Digging();
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -329,6 +331,29 @@ public final class ZcConfig {
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
+    }
+
+    public static class Digging {
+        /** Off, every block breaks the vanilla way and there's no floor. */
+        public boolean rules = true;
+        /** How deep under the natural ground you can dig, in blocks. Built places (basements, bunkers) don't count. */
+        public int floorDepth = 8;
+        /** The level a wall needs: wood with Carpentry, brick and concrete with Masonry, steel with Metalworking. */
+        public int carpentryLevel = 2;
+        public int masonryLevel = 2;
+        public int metalworkingLevel = 2;
+        /** How far zombies hear each kind of wall coming down, in blocks. */
+        public double woodNoise = 16;
+        public double masonryNoise = 36;
+        public double metalNoise = 14;
+        /** Endurance a wall costs to knock through (a sprint uses about 1 a second). */
+        public double woodEndurance = 8;
+        public double masonryEndurance = 14;
+        public double metalEndurance = 5;
+        /** Seconds to break a wall at its needed level; every level more takes 12% off. */
+        public double woodSeconds = 3;
+        public double masonrySeconds = 5;
+        public double metalSeconds = 6;
     }
 
     public static class Progression {

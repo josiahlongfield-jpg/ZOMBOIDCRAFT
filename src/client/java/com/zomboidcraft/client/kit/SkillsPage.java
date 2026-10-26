@@ -1,5 +1,7 @@
 package com.zomboidcraft.client.kit;
 
+import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.building.DigRules;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
@@ -43,12 +45,17 @@ final class SkillsPage {
                     new Perk(0, "6% more back from every repair, each level"),
                     new Perk(10, "120%: better than the kit promises")),
                     l -> "Right now: repairs give back " + Math.round((0.6f + 0.06f * l) * 100) + "%."),
-            new Info(Skill.CARPENTRY, "Survival", "Board up windows and doors with a hammer, planks and nails.", List.of(
+            new Info(Skill.CARPENTRY, "Building", "Board up windows and doors, and strip wooden furniture with a hammer, crowbar or axe.", List.of(
                     new Perk(0, "5% chance to save the nails on every board, and quicker hammering"),
+                    new Perk(DigRules.Tier.WOOD.level(), "Knock through wooden walls and floors"),
                     new Perk(4, "Reinforced barricades take more hits"),
                     new Perk(8, "Heavy barricades")),
                     l -> "Right now: " + (l >= 8 ? "heavy" : l >= 4 ? "reinforced" : "plain") + " barricades, " + 5 * l
-                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board."),
+                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board" + wall(DigRules.Tier.WOOD, l)),
+            new Info(Skill.MASONRY, "Building", "Break up steps, kerbs and other stonework with a sledgehammer. It leaves rubble.", wallPerks(DigRules.Tier.MASONRY),
+                    l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
+            new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
+                    l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
             new Info(Skill.SPRINTING, "Agility", "Run. Long sprints teach the most.", List.of(
                     new Perk(0, "A tenth less tiring each level"),
                     new Perk(10, "Only 1.5 times as tiring as walking, down from 2.5")),
@@ -59,7 +66,8 @@ final class SkillsPage {
                     new Perk(10, "Seen 30% less far, footsteps 3 blocks quieter")),
                     l -> String.format(Locale.ROOT, "Right now: seen %d%% less far, footsteps %.1f blocks quieter.", 3 * l, 0.3 * l)));
 
-    private static final String[] GROUPS = {"Combat", "Survival", "Agility"};
+    private static final String[] GROUPS = {"Combat", "Building", "Survival", "Agility"};
+    private static final int ROW = 22, PITCH = 24;
 
     private final KitScreen<?> screen;
     private Skill selected = Skill.AIMING;
@@ -72,6 +80,23 @@ final class SkillsPage {
         return List.of(new Perk(0, "Hits 6% harder and 4% more likely to knock a zombie down"),
                 new Perk(5, "Practised swings cost a fifth less endurance"),
                 new Perk(10, "Hits 60% harder, knockdowns 40% more likely"));
+    }
+
+    private static List<Perk> wallPerks(DigRules.Tier tier) {
+        return List.of(new Perk(0, "Walls you can break come down 12% quicker"),
+                new Perk(tier.level(), "Knock through " + (tier == DigRules.Tier.METAL ? "steel walls and plating" : "brick, block and concrete walls")
+                        + " with " + tier.tools()));
+    }
+
+    /** What the skill does to walls, as the rest of a "Right now" sentence: starts with a comma. */
+    private static String wall(DigRules.Tier tier, int l) {
+        ZcConfig.Digging d = ZcConfig.get().digging;
+        int need = tier.level();
+        if (!d.rules) return ", and any wall breaks the old way.";
+        if (l < need) return ", too green to knock a wall through (level " + need + " with " + tier.tools() + ").";
+        double s = (tier == DigRules.Tier.WOOD ? d.woodSeconds : tier == DigRules.Tier.MASONRY ? d.masonrySeconds : d.metalSeconds)
+                / (1 + 0.12 * (l - need));
+        return String.format(Locale.ROOT, ", a wall comes down in %.1f s with %s.", s, tier.tools());
     }
 
     private static String meleeNow(int l) {
@@ -96,9 +121,9 @@ final class SkillsPage {
             for (Info info : SKILLS) {
                 if (!info.group().equals(group)) continue;
                 row(g, font, player, info, x + 37, ry, 262, mx, my);
-                ry += 29;
+                ry += PITCH;
             }
-            ry += 3;
+            ry += 1;
         }
         detail(g, font, player, info(selected), x + 323, y + 33, 256);
 
@@ -116,13 +141,13 @@ final class SkillsPage {
     private void row(GuiGraphicsExtractor g, Font font, LocalPlayer player, Info info, int x, int y, int w, int mx, int my) {
         Skill skill = info.skill();
         int xp = Skills.xp(player, skill), level = Skill.levelForXp(xp);
-        boolean on = skill == selected, over = screen.hovered(x, y, w, 27, mx, my);
-        if (on) g.fill(x, y, x + w, y + 27, 0x14E8E4DA);
-        KitDraw.frame(g, x, y, w, 27, on ? 0x80E8E4DA : over ? 0x59E8E4DA : 0x00000000);
-        KitDraw.caps(g, font, skill.displayName(), x + 5, y + 5, KitDraw.BRIGHT, 0.95f);
+        boolean on = skill == selected, over = screen.hovered(x, y, w, ROW, mx, my);
+        if (on) g.fill(x, y, x + w, y + ROW, 0x14E8E4DA);
+        KitDraw.frame(g, x, y, w, ROW, on ? 0x80E8E4DA : over ? 0x59E8E4DA : 0x00000000);
+        KitDraw.caps(g, font, skill.displayName(), x + 5, y + 4, KitDraw.BRIGHT, 0.95f);
         float part = part(xp, level);
         for (int i = 0; i < Skill.MAX_LEVEL; i++) {
-            int sx = x + 92 + i * 15, sy = y + 6;
+            int sx = x + 92 + i * 15, sy = y + 5;
             if (i < level) {
                 g.fill(sx, sy, sx + 13, sy + 5, KitDraw.TEXT);
             } else {
@@ -130,10 +155,10 @@ final class SkillsPage {
                 if (i == level && part > 0) g.fill(sx, sy, sx + Math.max(1, Math.round(13 * part)), sy + 5, 0xB3E8E4DA);
             }
         }
-        KitDraw.capsRight(g, font, String.valueOf(level), x + w - 6, y + 4, KitDraw.BRIGHT, 1.1f);
+        KitDraw.capsRight(g, font, String.valueOf(level), x + w - 6, y + 3, KitDraw.BRIGHT, 1.1f);
         String next = level >= Skill.MAX_LEVEL ? "Mastered" : (Skill.xpForLevel(level + 1) - xp) + " xp to level " + (level + 1);
-        KitDraw.text(g, font, next, x + 5, y + 17, KitDraw.DIM, 0.75f);
-        screen.hot(x, y, w, 27, () -> {
+        KitDraw.text(g, font, next, x + 5, y + 14, KitDraw.DIM, 0.75f);
+        screen.hot(x, y, w, ROW, () -> {
             if (selected != skill) UiSounds.play(UiSounds.CLICK);
             selected = skill;
         });

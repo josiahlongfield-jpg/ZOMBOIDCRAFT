@@ -7,7 +7,26 @@ import java.util.List;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import com.zomboidcraft.ModItems;
+import com.zomboidcraft.building.DigRules;
+import com.zomboidcraft.combat.Stamina;
+import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.Skills;
+import com.zomboidcraft.world.blocks.CityBlocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -42,9 +61,11 @@ public class KitUiTest implements FabricClientGameTest {
         }));
         try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
             sp.getConnection().waitForChunksRender();
+            LOG.info("ZCUI dig rules: {}", sp.getServer().computeOnServer(KitUiTest::digProbe));
             for (String c : List.of("gamemode survival @a", "give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight",
                     "give @a zomboidcraft:foregrip", "give @a zomboidcraft:pistol", "give @a zomboidcraft:bandage 3",
-                    "give @a minecraft:bread 5", "zc injure left_arm cut")) {
+                    "give @a minecraft:bread 5", "zc injure left_arm cut",
+                    "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble 6", "give @a zomboidcraft:scrap_metal 4")) {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);
@@ -123,6 +144,45 @@ public class KitUiTest implements FabricClientGameTest {
             log(ctx, "after closing");
             pauseOptions(ctx, "after the kit");
         }
+    }
+
+    /** Tries the digging rules on the server: a brick wall by hand, with a sledgehammer before and after Masonry 2, and stone under the floor. */
+    private static String digProbe(MinecraftServer server) {
+        StringBuilder out = new StringBuilder();
+        try {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            p.setGameMode(GameType.SURVIVAL);
+            ServerLevel level = (ServerLevel) p.level();
+            BlockPos at = p.blockPosition().offset(3, 1, 0);
+            BlockState brick = CityBlocks.resolve("brick_red_moss");
+            level.setBlockAndUpdate(at, brick);
+            out.append("brick=").append(brick).append(" tier=").append(DigRules.wallTier(brick, level, at));
+            out.append(" hand=").append(level.getBlockState(at).getDestroyProgress(p, level, at));
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.SLEDGEHAMMER));
+            out.append(" sledge@0=").append(level.getBlockState(at).getDestroyProgress(p, level, at));
+            Skills.addXp(p, Skill.MASONRY, 150);
+            out.append(" masonry=").append(Skills.level(p, Skill.MASONRY));
+            out.append(" sledge@2=").append(level.getBlockState(at).getDestroyProgress(p, level, at));
+            float stamina = Stamina.get(p);
+            boolean broke = p.gameMode.destroyBlock(at);
+            out.append(" knocked=").append(broke).append(" now=").append(level.getBlockState(at).getBlock())
+                    .append(" endurance ").append(stamina).append("->").append(Stamina.get(p))
+                    .append(" masonry xp=").append(Skills.xp(p, Skill.MASONRY))
+                    .append(" drops=").append(level.getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(2)).stream()
+                            .map(e -> e.getItem().toString()).toList());
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
+            int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.getX() + 2, at.getZ()) - 1;
+            BlockPos shallow = new BlockPos(at.getX() + 2, top - 3, at.getZ()), deep = new BlockPos(at.getX() + 2, top - 12, at.getZ());
+            level.setBlockAndUpdate(shallow, Blocks.STONE.defaultBlockState());
+            level.setBlockAndUpdate(deep, Blocks.STONE.defaultBlockState());
+            out.append(" | ground top=").append(top).append(" stone 3 down=").append(Blocks.STONE.defaultBlockState().getDestroyProgress(p, level, shallow))
+                    .append(" stone 12 down=").append(Blocks.STONE.defaultBlockState().getDestroyProgress(p, level, deep));
+            p.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        } catch (Throwable t) {
+            out.append(" FAILED ").append(t);
+            LOG.error("ZCUI dig probe failed", t);
+        }
+        return out.toString();
     }
 
     /** Esc, then a real left click on the pause menu's Options button: does a vanilla button answer? */

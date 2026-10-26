@@ -257,6 +257,21 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:two_way_radio",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:propane_torch",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.2,
+                "max": 0.9
+              }
+            }
+          ]
         }
       ]
     },
