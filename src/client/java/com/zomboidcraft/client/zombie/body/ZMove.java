@@ -10,13 +10,19 @@ package com.zomboidcraft.client.zombie.body;
  * shoulder or hip x below zero swings the limb forward, an elbow x below zero bends the forearm
  * forward, a knee x above zero bends the shin back, and spine, neck and head x above zero lean
  * forward. The hips use Y-X-Z Euler order standing and X-Y-Z lying down, like the preview.
+ *
+ * A zombie with a leg shot off hops on the one it has (limbs.js in the preview), stumbling onto its knee
+ * first; with both gone it falls on its face and crawls.
  */
 public final class ZMove {
     public static final int HIPS = 0, SPINE = 1, NECK = 2, HEAD = 3, SH_R = 4, EL_R = 5, WR_R = 6, SH_L = 7, EL_L = 8,
             WR_L = 9, HIP_R = 10, KN_R = 11, AN_R = 12, HIP_L = 13, KN_L = 14, AN_L = 15, BONES = 16;
-    /** Standing modes, knocked flat on its back, and the crawler's own (face down, also every legless zombie). */
+    /**
+     * Standing modes, knocked flat on its back, the crawler's own (face down, also every legless zombie), and
+     * hopping or standing on one leg.
+     */
     public static final int IDLE = 0, SHAMBLE = 1, ALERT = 2, CHASE = 3, ATTACK = 4, DOWN = 5, CRAWL_REST = 6,
-            CRAWL_SLOW = 7, CRAWL_FAST = 8, CRAWL_ALERT = 9, CRAWL_GRAB = 10, MODES = 11;
+            CRAWL_SLOW = 7, CRAWL_FAST = 8, CRAWL_ALERT = 9, CRAWL_GRAB = 10, HOP = 11, STAND1 = 12, MODES = 13;
 
     private static final float PI = (float) Math.PI;
     // body A sizes (STYLES.A in the preview)
@@ -52,6 +58,14 @@ public final class ZMove {
             rot[bone * 3 + 1] = y;
             rot[bone * 3 + 2] = z;
         }
+
+        public void copy(Pose p) {
+            System.arraycopy(p.rot, 0, rot, 0, rot.length);
+            hx = p.hx;
+            hy = p.hy;
+            hz = p.hz;
+            lying = p.lying;
+        }
     }
 
     /** What the animation needs to know about one zombie this frame. */
@@ -67,9 +81,55 @@ public final class ZMove {
         /** Seconds into the current attack. */
         public float attack;
         public boolean legless;
+        /** On one leg: the right one is the one gone (it hops on the left). */
+        public boolean goneRight;
+        /** On one leg: arms thrust ahead at what it is after, rather than out for balance. */
+        public boolean reach;
     }
 
     private final Pose tmp = new Pose();
+    private final Pose live = new Pose();
+    private final One one = new One();
+    /** The stumble's two holds for each missing leg: buckling toward the gone side, then down on its one knee. */
+    private static final Pose[] BUCKLE = {new Pose(), new Pose()}, KNEEL = {new Pose(), new Pose()};
+    /** What comes up fast in a fall: the arms to break it, and the head. */
+    private static final int[] FAST_BONES = {SH_R, EL_R, WR_R, SH_L, EL_L, WR_L, NECK, HEAD};
+
+    static {
+        for (int i = 0; i < 2; i++) {
+            One o = new One();
+            o.reset(i == 0);
+            o.a = -0.5f;
+            o.k = 1.2f;
+            o.ga = -0.8f;
+            o.gout = 0.35f;
+            o.shift = 0.9f;
+            o.z = 0.8f;
+            o.hx = 0.15f;
+            o.roll = 0.3f;
+            o.sx = 0.55f;
+            o.lean = -0.15f;
+            o.nx = -0.2f;
+            o.hd = -0.3f;
+            o.arms(-0.9f, 1.3f, -0.3f, 0.2f, -1.1f, 1.4f, -0.4f, 0.2f);
+            o.pose(BUCKLE[i]);
+            o.reset(i == 0);
+            o.a = -1.5f;
+            o.k = 2.0f;
+            o.ga = -0.4f;
+            o.gout = 0.25f;
+            o.shift = 0.6f;
+            o.z = 1.5f;
+            o.hx = 0.35f;
+            o.roll = 0.15f;
+            o.sx = 0.85f;
+            o.lean = 0.1f;
+            o.nx = -0.3f;
+            o.hd = -0.25f;
+            o.arms(-1.5f, 0.25f, -0.15f, 0.6f, -2.2f, 0.9f, -0.8f, 0.2f);
+            o.pose(KNEEL[i]);
+        }
+    }
 
     /** Blends every mode with a weight above zero into {@code out}. */
     public void pose(Pose out, float[] weights, Input in) {
@@ -155,6 +215,7 @@ public final class ZMove {
             case CRAWL_FAST -> crawl(p, Crawl.FAST, in.legless, in);
             case CRAWL_ALERT -> crawl(p, Crawl.ALERT, in.legless, in);
             case CRAWL_GRAB -> crawl(p, Crawl.GRAB, in.legless, in);
+            case HOP, STAND1 -> hop(p, mode == HOP, in);
             default -> crawl(p, Crawl.REST, in.legless, in);
         }
     }
@@ -312,6 +373,154 @@ public final class ZMove {
             float kR = pulling ? 0.25f + pullL * 0.7f : 0.2f, kL = pulling ? 0.25f + pullR * 0.7f : 0.35f;
             leg(p, true, -0.05f - (pulling ? pullL * 0.3f : 0f), kR, 0.6f, 0.12f, 0.1f);
             leg(p, false, -0.05f - (pulling ? pullR * 0.3f : 0f), kL, 0.6f, 0.12f, 0.1f);
+        }
+    }
+
+    /**
+     * A pose on one leg, set by hand: the standing leg (thigh a, knee k) with the hips planted over its foot and
+     * shifted so that foot is under the body, the stump of the other leg, the spine, neck and head, and both arms.
+     */
+    private static final class One {
+        boolean goneRight;
+        float a, k, toe, ga, gout, shift, z, hx, lift, roll, sx, lean, nx, hd;
+        final float[] armS = new float[4], armG = new float[4];
+
+        One reset(boolean goneRight) {
+            this.goneRight = goneRight;
+            a = k = toe = ga = z = hx = lift = roll = sx = lean = nx = hd = 0f;
+            gout = 0.2f;
+            shift = 1.3f;
+            return this;
+        }
+
+        /** The standing side's arm (shoulder x, out, elbow, wrist), then the gone side's. */
+        void arms(float s0, float s1, float s2, float s3, float g0, float g1, float g2, float g3) {
+            armS[0] = s0;
+            armS[1] = s1;
+            armS[2] = s2;
+            armS[3] = s3;
+            armG[0] = g0;
+            armG[1] = g1;
+            armG[2] = g2;
+            armG[3] = g3;
+        }
+
+        void pose(Pose p) {
+            boolean stR = !goneRight;
+            float ss = stR ? -1f : 1f, gs = -ss;
+            p.clear();
+            leg(p, stR, a, k, -(a + k + hx) + toe, -0.08f, 0f);
+            leg(p, goneRight, ga, 0.2f, 0f, gout, 0f);
+            p.hx = gs * shift;
+            p.hy = BASE - (THIGH + SHIN - drop(a + hx, k)) + lift;
+            p.hz = z;
+            p.set(HIPS, hx, 0f, -gs * roll);
+            p.set(SPINE, sx, 0f, ss * lean);
+            p.set(NECK, nx, 0f, 0f);
+            p.set(HEAD, hd, 0f, 0f);
+            arm(p, stR, armS[0], armS[1], 0.15f, armS[2], armS[3], 0f);
+            arm(p, goneRight, armG[0], armG[1], 0.15f, armG[2], armG[3], 0f);
+        }
+    }
+
+    /**
+     * On one leg: crouch, spring and land again, arms out for balance (or reaching for what it is after), the
+     * stump swinging; standing still it sways on its bent leg.
+     */
+    private void hop(Pose p, boolean moving, Input in) {
+        float t = in.t, crouch, air, land;
+        if (moving) {
+            float q = ((t + in.phase * 0.13f) / 0.78f) % 1f;
+            crouch = seg(q, 0f, 0.35f) * (1 - seg(q, 0.35f, 0.5f));
+            air = seg(q, 0.38f, 0.52f) * (1 - seg(q, 0.6f, 0.74f));
+            land = seg(q, 0.6f, 0.74f) * (1 - seg(q, 0.74f, 1f));
+        } else {
+            crouch = 0.3f + 0.08f * sin(t * 1.4f + in.phase);
+            air = 0f;
+            land = 0.15f + 0.15f * sin(t * 0.9f + in.phase);
+        }
+        float flail = sin(t * 9f) * land;
+        One o = one.reset(in.goneRight);
+        o.a = -0.25f - 0.45f * crouch - 0.2f * land + 0.12f * air;
+        o.k = 0.3f + 0.95f * crouch + 0.45f * land - 0.25f * air;
+        o.toe = 0.4f * air;
+        o.ga = -0.3f - 0.25f * air + 0.2f * crouch;
+        o.lift = 2f * air;
+        o.roll = 0.06f;
+        o.sx = 0.35f + 0.15f * crouch - 0.08f * air;
+        o.lean = 0.1f;
+        o.nx = -0.05f;
+        o.hd = 0.1f + 0.2f * land - 0.1f * air;
+        if (in.reach) {
+            o.arms(-1.6f - 0.2f * air, 0.2f, -0.2f, -0.1f, -1.5f - 0.2f * air, 0.3f, -0.25f, -0.1f);
+        } else {
+            o.arms(-0.35f - 0.3f * air, 0.7f + 0.3f * air + 0.15f * flail, -0.6f, 0.2f,
+                    -0.3f - 0.3f * air, 0.85f + 0.35f * air - 0.15f * flail, -0.5f, 0.2f);
+        }
+        o.pose(p);
+        p.rot[HEAD * 3 + 1] = clamp(in.look, -1.5f, 1.5f) * 0.4f;
+    }
+
+    private static float smooth(float x) {
+        return seg(x, 0f, 1f);
+    }
+
+    /** Straight-line blend of two poses; the hips turn in the order of whichever is nearer. */
+    public static void mix(Pose out, Pose a, Pose b, float s) {
+        for (int i = 0; i < out.rot.length; i++) {
+            out.rot[i] = a.rot[i] + (b.rot[i] - a.rot[i]) * s;
+        }
+        out.hx = a.hx + (b.hx - a.hx) * s;
+        out.hy = a.hy + (b.hy - a.hy) * s;
+        out.hz = a.hz + (b.hz - a.hz) * s;
+        out.lying = s < 0.5f ? a.lying : b.lying;
+    }
+
+    /**
+     * Just lost a leg, tau seconds ago: it lurches toward the missing side, buckles onto its one knee with a hand
+     * reaching for the ground, pushes itself back up and goes into its hop ({@code out} holds the hop on the way in).
+     */
+    public void stumble(Pose out, Pose from, float tau, boolean goneRight) {
+        int i = goneRight ? 0 : 1;
+        live.copy(out);
+        if (tau < 0.3f) {
+            mix(out, from, BUCKLE[i], smooth(tau / 0.3f));
+        } else if (tau < 0.8f) {
+            mix(out, BUCKLE[i], KNEEL[i], smooth((tau - 0.3f) / 0.5f));
+        } else {
+            mix(out, KNEEL[i], live, smooth((tau - 0.8f) / 0.9f));
+        }
+        if (tau > 0.3f) {
+            // blending the angles bends the leg on a curve, so set the hips back down onto the standing foot
+            int hip = goneRight ? HIP_L : HIP_R, knee = goneRight ? KN_L : KN_R;
+            out.hy = BASE - (THIGH + SHIN - drop(out.rot[hip * 3] + out.rot[HIPS * 3], out.rot[knee * 3]));
+        }
+    }
+
+    /**
+     * Just lost its last leg, tau seconds ago (under one): the hips drop like a dead weight as it pitches forward,
+     * the arms come up fast to break the fall, then it lands with a bounce ({@code out} holds the legless crawl).
+     */
+    public void fall(Pose out, Pose from, float tau) {
+        if (tau < 0.6f) {
+            live.copy(out);
+            float e = (tau / 0.6f) * (tau / 0.6f), fast = smooth(tau / 0.3f);
+            mix(out, from, live, e);
+            for (int b : FAST_BONES) {
+                for (int c = 0; c < 3; c++) {
+                    int j = b * 3 + c;
+                    out.rot[j] = from.rot[j] + (live.rot[j] - from.rot[j]) * fast;
+                }
+            }
+            out.hz = from.hz;
+            out.rot[HEAD * 3] -= 0.35f * fast * (1 - e);
+        } else {
+            float u = Math.min(1f, (tau - 0.6f) / 0.4f), bump = sin(PI * u) * (1 - u);
+            out.hy += 1.1f * bump;
+            out.rot[SPINE * 3] -= 0.2f * bump;
+            out.rot[EL_R * 3] -= 0.6f * bump;
+            out.rot[EL_L * 3] -= 0.6f * bump;
+            out.rot[HEAD * 3] += 0.25f * bump;
         }
     }
 }

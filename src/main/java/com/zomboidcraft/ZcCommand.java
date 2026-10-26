@@ -135,14 +135,17 @@ public final class ZcCommand {
         return 1;
     }
 
-    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless");
+    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless", "hopper");
 
-    /** Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling or with no legs. */
+    /**
+     * Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling, with no legs, or
+     * hopping on one (the other shot off at the knee).
+     */
     private static int zombie(CommandContext<CommandSourceStack> ctx, String outfit, String kind) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         if ((outfit != null && !ZombieLook.outfits().contains(outfit)) || !ZOMBIE_KINDS.contains(kind)) {
             ctx.getSource().sendFailure(Component.literal("Outfits: " + String.join(", ", ZombieLook.outfits())
-                    + "; then walker, crawler or legless"));
+                    + "; then walker, crawler, legless or hopper"));
             return 0;
         }
         double yaw = Math.toRadians(player.getYRot());
@@ -163,7 +166,16 @@ public final class ZcCommand {
                 zombie.setAttached(com.zomboidcraft.combat.Downed.LEGLESS, false);
                 com.zomboidcraft.combat.Downed.makeCrawler(zombie);
             }
-            default -> com.zomboidcraft.combat.Downed.makeWalker(zombie);
+            case "hopper" -> {
+                com.zomboidcraft.combat.Downed.makeWalker(zombie);
+                com.zomboidcraft.combat.Dismember.restore(zombie);
+                com.zomboidcraft.combat.Dismember.cut(zombie, zombie.getRandom().nextBoolean()
+                        ? com.zomboidcraft.combat.Dismember.KN_R : com.zomboidcraft.combat.Dismember.KN_L);
+            }
+            default -> {
+                com.zomboidcraft.combat.Downed.makeWalker(zombie);
+                com.zomboidcraft.combat.Dismember.restore(zombie);
+            }
         }
         String name = ZombieLook.outfit(zombie);
         ctx.getSource().sendSuccess(() -> Component.literal("Spawned a " + name + " zombie (" + kind + ")"), false);

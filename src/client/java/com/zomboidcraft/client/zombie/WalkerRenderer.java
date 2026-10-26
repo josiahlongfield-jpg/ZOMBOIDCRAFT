@@ -5,7 +5,9 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
+import com.zomboidcraft.client.zombie.body.Gibs;
 import com.zomboidcraft.client.zombie.body.ZBodyAnimator;
 import com.zomboidcraft.client.zombie.body.ZBodyLayer;
 import com.zomboidcraft.client.zombie.body.ZBodyMesh;
@@ -64,6 +66,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.isAggressive = zombie.isAggressive();
         state.outfit = ZombieLook.outfit(zombie);
         state.missingLimb = ZombieLook.missingLimb(zombie);
+        int limbs = Dismember.limbs(zombie);
+        state.cuts = limbs & Dismember.CUTS;
         ZcConfig.Look look = ZcConfig.get().look;
         String name = state.outfit + "_" + ZombieLook.skin(zombie);
         String hd = name + "_" + ZombieLook.damage(zombie) + ".png";
@@ -98,7 +102,14 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             facts.low = low;
             facts.crawler = state.crawler;
             facts.legless = state.legless;
-            animator.animate(zombie, facts, partialTick, state.zpose);
+            facts.cuts = state.cuts;
+            int newly = animator.animate(zombie, facts, partialTick, state.zpose);
+            if (newly != 0) {
+                // the limb flies off in the pose it was in the moment before
+                Gibs.spawn(state.zbody, state.zskin, state.zkit, ZBodyLayer.pose(state.zbody, animator.before, state.legless),
+                        newly, state.cuts & ~newly | ZBodyLayer.missingCuts(state.missingLimb), limbs,
+                        state.x, state.y, state.z, state.bodyRot, state.scale, state.variant);
+            }
         }
     }
 
