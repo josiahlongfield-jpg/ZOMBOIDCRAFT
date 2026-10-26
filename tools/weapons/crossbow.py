@@ -66,6 +66,7 @@ BOLT_R = 0.17
 VANES = (-5.0, -1.0)
 
 
+
 def frame_point(x, y, z):
     """A measured point (inches) in the build frame."""
     return np.array([IN * x, BORE_Y + IN * y, Z0 + IN * z])
@@ -112,6 +113,10 @@ def string_end(s):
     c = np.array([s * CAM[0], CAM[1]])
     # move the cam's centre along n to the string's line: the rim point is the centre less n times the radius
     return tuple(c - n * CAM_R), u
+
+
+# the string's line when it's let go: straight across between where it leaves the cams
+SLACK_Z = string_end(1)[0][1]
 
 
 def body(m):
@@ -195,7 +200,7 @@ def _riser(b):
 
 def _limbs(b):
     """The split limbs, 45 degrees back off the pockets, each pair's tips forked round a cam on its axle; the cables
-    across between the cams; the cocked string with its centre serving round the latch."""
+    across between the cams. (The string is drawn apart: see string().)"""
     for s in (-1, 1):
         root, tip = (s * ROOT[0], ROOT[1]), (s * CAM[0], CAM[1])
         for yy in (-1, 1):
@@ -213,6 +218,12 @@ def _limbs(b):
     # the cables, cam to cam, one high and one low, through the slide under the rail
     for yy, dz in ((0.34, -0.12), (-0.34, 0.12)):
         hseg(b, (-CAM[0], CAM[1] + dz), (CAM[0], CAM[1] + dz), 0.08, 0.08, 'string', y=yy, over=0.0)
+
+
+def string(m):
+    """The cocked string, cam to latch each side, its tan centre serving round the latch: drawn apart, so first person
+    can let it fly forward to the cams with a shot (flattened toward SLACK_Z) and draw it back to the latch to cock."""
+    b = Inch(m, (0.0, BORE_Y, Z0))
     for s in (-1, 1):
         end, u = string_end(s)
         serve = (s * 1.6 * math.sin(math.radians(STRING_ANGLE)), -1.6 * math.cos(math.radians(STRING_ANGLE)))

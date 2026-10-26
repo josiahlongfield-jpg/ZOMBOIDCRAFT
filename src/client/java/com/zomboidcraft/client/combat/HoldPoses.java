@@ -64,6 +64,12 @@ public final class HoldPoses {
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM;
                     case REVOLVER -> HoldPoseData.REVOLVER_AIM;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_AIM;
+                    case SMG -> HoldPoseData.SMG_AIM;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_AIM;
+                    case MAGNUM -> HoldPoseData.MAGNUM_AIM;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_AIM;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_AIM;
                     default -> HoldPoseData.RIFLE_AIM;
                 }));
                 support = switch (item.type()) {
@@ -72,6 +78,12 @@ public final class HoldPoses {
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM_SUPPORT;
                     case REVOLVER -> HoldPoseData.REVOLVER_AIM_SUPPORT;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_AIM_SUPPORT;
+                    case SMG -> HoldPoseData.SMG_AIM_SUPPORT;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_AIM_SUPPORT;
+                    case MAGNUM -> HoldPoseData.MAGNUM_AIM_SUPPORT;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_AIM_SUPPORT;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_AIM_SUPPORT;
                     default -> HoldPoseData.RIFLE_AIM_SUPPORT;
                 };
             } else {
@@ -81,6 +93,12 @@ public final class HoldPoses {
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY;
                     case REVOLVER -> HoldPoseData.REVOLVER_READY;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_READY;
+                    case SMG -> HoldPoseData.SMG_READY;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_READY;
+                    case MAGNUM -> HoldPoseData.MAGNUM_READY;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_READY;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_READY;
                     default -> HoldPoseData.RIFLE_READY;
                 }));
                 support = switch (item.type()) {
@@ -89,6 +107,12 @@ public final class HoldPoses {
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY_SUPPORT;
                     case REVOLVER -> HoldPoseData.REVOLVER_READY_SUPPORT;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_READY_SUPPORT;
+                    case SMG -> HoldPoseData.SMG_READY_SUPPORT;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_READY_SUPPORT;
+                    case MAGNUM -> HoldPoseData.MAGNUM_READY_SUPPORT;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_READY_SUPPORT;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_READY_SUPPORT;
                     default -> HoldPoseData.RIFLE_READY_SUPPORT;
                 };
             }

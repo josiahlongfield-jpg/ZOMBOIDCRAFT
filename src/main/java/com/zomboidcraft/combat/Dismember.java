@@ -249,9 +249,10 @@ public final class Dismember {
             return config.shotguns;
         }
         return switch (gun) {
-            case PISTOL, REVOLVER -> config.handguns;
+            case PISTOL, REVOLVER, MAGNUM, SMG, RIMFIRE -> config.handguns;
             case ASSAULT_RIFLE -> config.rifles;
-            case HUNTING_RIFLE -> config.huntingRifles;
+            case HUNTING_RIFLE, LEVER_ACTION -> config.huntingRifles;
+            case CROSSBOW -> config.crossbows;
             default -> config.otherGuns;
         };
     }
@@ -262,8 +263,8 @@ public final class Dismember {
             return 3;
         }
         return switch (gun) {
-            case HUNTING_RIFLE -> 2;
-            case ASSAULT_RIFLE -> 1;
+            case HUNTING_RIFLE, LEVER_ACTION -> 2;
+            case ASSAULT_RIFLE, MAGNUM -> 1;
             default -> 0;
         };
     }

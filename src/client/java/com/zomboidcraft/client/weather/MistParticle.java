@@ -14,6 +14,7 @@ import net.minecraft.util.Mth;
 final class MistParticle extends SingleQuadParticle {
     private final float peak;
     private final float spin;
+    private final float size;
 
     /** strength is the puff's opacity at its thickest. */
     MistParticle(ClientLevel level, double x, double y, double z, double dx, double dz, float strength, TextureAtlasSprite sprite) {
@@ -26,7 +27,8 @@ final class MistParticle extends SingleQuadParticle {
         friction = 1;
         lifetime = 260 + random.nextInt(220);
         // wide and faint: they only read as fog where several overlap, never one by one
-        quadSize = 5f + random.nextFloat() * 5f;
+        size = 5f + random.nextFloat() * 5f;
+        quadSize = 0;
         // kept near level so the flat smear lies along the ground instead of tumbling
         roll = oRoll = (random.nextFloat() - 0.5f) * 0.3f;
         spin = (random.nextFloat() - 0.5f) * 0.0006f;
@@ -48,11 +50,15 @@ final class MistParticle extends SingleQuadParticle {
         var player = Minecraft.getInstance().player;
         if (player != null) {
             double d = player.getEyePosition().distanceTo(new net.minecraft.world.phys.Vec3(x, y, z));
-            near = (float) Mth.clamp((d - quadSize * 0.6) / 6.0, 0, 1);
+            near = (float) Mth.clamp((d - size * 0.6) / 6.0, 0, 1);
         }
         // a lightning flash shows through the murk: what was hiding in it stands out for a moment
         float flash = com.zomboidcraft.world.weather.WeatherView.flash();
-        alpha = Mth.clamp(peak * fade * near * (1 - 0.65f * flash), 0, 1);
+        // a shader pack drops anything much fainter than a tenth, so the puff can't fade out by
+        // alpha alone (it would just blink off): it grows in and shrinks away, and only dims a little
+        float in = fade * near;
+        quadSize = size * (0.35f + 0.65f * in);
+        alpha = Mth.clamp(peak * (0.6f + 0.4f * in) * (1 - 0.5f * flash), 0, 1);
     }
 
     /**
