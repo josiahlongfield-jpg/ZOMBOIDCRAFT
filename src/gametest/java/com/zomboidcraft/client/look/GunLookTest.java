@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 public class GunLookTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCLOOK");
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
-    /** GLFW's right mouse button (LWJGL isn't on the test's compile path). */
-    private static final int RIGHT_BUTTON = 1;
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
@@ -48,8 +46,8 @@ public class GunLookTest implements FabricClientGameTest {
                 for (BlockPos p : BlockPos.betweenClosed(at.offset(-12, -1, -4), at.offset(12, -1, 24))) {
                     level.setBlock(p, Blocks.GRASS_BLOCK.defaultBlockState(), FLAGS);
                 }
-                // a patch of tall grass ahead, and a brick wall behind it
-                for (BlockPos p : BlockPos.betweenClosed(at.offset(-8, 0, 2), at.offset(8, 0, 9))) {
+                // a patch of tall grass off to the right (west of the lane), a clear lane ahead to a brick wall
+                for (BlockPos p : BlockPos.betweenClosed(at.offset(-9, 0, 1), at.offset(-2, 0, 10))) {
                     level.setBlock(p, Blocks.TALL_GRASS.defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER), FLAGS);
                     level.setBlock(p.above(), Blocks.TALL_GRASS.defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), FLAGS);
                 }
@@ -80,18 +78,20 @@ public class GunLookTest implements FabricClientGameTest {
         look(sp, at, 0, 4);
         ctx.waitTicks(30);
         ctx.takeScreenshot(name + "-hip");
-        ctx.getInput().holdMouse(RIGHT_BUTTON);
+        ctx.getInput().holdKey(options -> options.keyUse);
         ctx.waitTicks(20);
+        LOG.info("ZCLOOK aiming: {}", ctx.computeOnClient(mc -> mc.player.isUsingItem()));
         ctx.takeScreenshot(name + "-sights");
-        ctx.getInput().releaseMouse(RIGHT_BUTTON);
-        look(sp, at, 25, 3);
+        ctx.getInput().releaseKey(options -> options.keyUse);
+        // turned toward the grass, the laser landing in it
+        look(sp, at, 30, 8);
         ctx.waitTicks(20);
-        ctx.takeScreenshot(name + "-turned");
+        ctx.takeScreenshot(name + "-grass");
         laser(sp, false);
-        look(sp, at, 0, 22);
+        look(sp, at, 30, 18);
         ctx.waitTicks(30);
         ctx.takeScreenshot(name + "-light-grass");
-        look(sp, at, -10, 6);
+        look(sp, at, -8, 5);
         ctx.waitTicks(20);
         ctx.takeScreenshot(name + "-light-wall");
     }

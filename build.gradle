@@ -61,6 +61,7 @@ if (project.hasProperty('gunlook')) {
             enableGameTests = false
             enableClientGameTests = true
             eula = true
+            clearRunDirectory = false
         }
     }
 }
