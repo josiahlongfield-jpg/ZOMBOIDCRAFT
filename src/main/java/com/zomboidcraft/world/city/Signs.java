@@ -14,8 +14,6 @@ public final class Signs {
     private static final String[] FASCIA = {"medline", "stopnsave", "suds", "patriot", "cash", "joes",
             "luckypawn", "tonys", "thrift", "riverside", "kessler"};
     private static final int[] FASCIA_WIDTH = {5, 4, 5, 4, 4, 5, 5, 4, 6, 5, 5};
-    private static final String[] BLADES = {"hotel", "bar", "pawn", "diner"};
-    private static final int[] BLADE_LENGTH = {5, 3, 4, 5};
     /** The last few shop signs put up, so neighbours don't repeat. Only steers variety. */
     private static final int[] RECENT = {-1, -1, -1, -1, -1};
     private static int recentAt;
@@ -70,26 +68,53 @@ public final class Signs {
         return false;
     }
 
-    /** Which neon blade to hang: pass it to {@link #bladeLength} and {@link #blade}. */
-    public static int pickBlade(SplittableRandom rng) {
-        return rng.nextInt(BLADES.length);
+    /** The neon blade a shop hangs out, spelling what it sells; null for the ones that never had one. */
+    public static String bladeFor(Shops.Type shop) {
+        return switch (shop) {
+            case PHARMACY -> "drugs";
+            case LAUNDROMAT -> "wash";
+            case GUNS -> "guns";
+            case CASH -> "cash";
+            case DINER -> "diner";
+            case PAWN -> "pawn";
+            case PIZZA -> "pizza";
+            case LIQUOR -> "liquor";
+            default -> null;
+        };
     }
 
-    public static int bladeLength(int pick) {
-        return BLADE_LENGTH[pick];
+    /** How many letters (blocks) a blade has. */
+    public static int bladeLength(String blade) {
+        return switch (blade) {
+            case "bar", "eat" -> 3;
+            case "pawn", "cafe", "guns", "wash", "cash" -> 4;
+            case "liquor", "rialto" -> 6;
+            default -> 5;
+        };
     }
 
     /**
      * A neon blade hung off the front at x, a letter a block from the top down to bottom. Lit in
      * some places, with a letter or two flickered out; dead in the rest.
      */
-    public static void blade(Placer p, SplittableRandom rng, int pick, int x, int bottom, int z) {
+    public static void blade(Placer p, SplittableRandom rng, String blade, int x, int bottom, int z) {
         boolean lit = rng.nextDouble() < 0.45;
-        int n = BLADE_LENGTH[pick];
+        int n = bladeLength(blade);
         for (int i = 0; i < n; i++) {
             boolean on = lit && rng.nextDouble() > 0.15;
-            p.set(x, bottom + n - 1 - i, z, "blade_" + BLADES[pick] + "_" + i + (on ? "" : "_off") + "[facing=south]");
+            p.set(x, bottom + n - 1 - i, z, "blade_" + blade + "_" + i + (on ? "" : "_off") + "[facing=south]");
         }
+        if (lit) {
+            glow(p, blade, x, bottom - 1, z);
+        }
+    }
+
+    /**
+     * The lamp box under a lit blade, throwing its colour down the wall and across the wet
+     * street (the blade's own tubes would light amber under Photon).
+     */
+    public static void glow(Placer p, String blade, int x, int y, int z) {
+        p.setIfAir(x, y, z, ShopLights.bladeGlow(blade));
     }
 
     /** A neon OPEN sign hung just behind the glass, two blocks wide, its left end at x. */

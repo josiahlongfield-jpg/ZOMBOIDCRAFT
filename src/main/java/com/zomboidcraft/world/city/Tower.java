@@ -112,7 +112,11 @@ public final class Tower {
                     boolean frontBack = z == in || z == d - 1 - in;
                     int along = frontBack ? x - in : z - in;
                     int length = (frontBack ? w : d) - 2 * in;
-                    p.set(x, y, z, skin(y, k, slab, along, length));
+                    String skin = skin(y, k, slab, along, length);
+                    p.set(x, y, z, skin);
+                    if (y >= LOBBY && (y - LOBBY) % FLOOR == 2 && skin.startsWith("window")) {
+                        roomGlow(x, y, z, x == in ? 1 : x == w - 1 - in ? -1 : 0, z == in ? 1 : z == d - 1 - in ? -1 : 0);
+                    }
                 }
             }
             // the terrace where the tower steps in: roof and parapet on the lower part
@@ -150,6 +154,17 @@ public final class Tower {
         // lamp boxes under the canopy, throwing their colour onto the wet sidewalk
         p.set(mid - 2, 3, -2, ShopLights.lamp(rng, 0.15));
         p.set(mid + 1, 3, -2, ShopLights.lamp(rng, 0.15));
+    }
+
+    /**
+     * Now and then a room still glows: a purple lamp up under the ceiling just inside the glass,
+     * a few to a tower, dotted up the dark face.
+     */
+    private void roomGlow(int x, int y, int z, int dx, int dz) {
+        String lamp = ShopLights.window(ShopLights.spot(p, x, y, z), 0.0025);
+        if (lamp != null) {
+            p.setIfAir(x + dx, y + 1, z + dz, lamp);
+        }
     }
 
     private String wallMaterial() {

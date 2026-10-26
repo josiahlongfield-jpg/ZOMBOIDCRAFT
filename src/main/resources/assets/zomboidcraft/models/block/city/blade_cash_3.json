@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_cash_3": "zomboidcraft:block/city/blade_cash_3",
+    "particle": "zomboidcraft:block/city/blade_cash_3"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_cash_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_cash_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_cash_3"
+        },
+        "west": {
+          "texture": "#blade_cash_3"
+        },
+        "up": {
+          "texture": "#blade_cash_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_cash_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

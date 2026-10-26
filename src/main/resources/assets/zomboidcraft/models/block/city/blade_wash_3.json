@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_wash_3": "zomboidcraft:block/city/blade_wash_3",
+    "particle": "zomboidcraft:block/city/blade_wash_3"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_wash_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_wash_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_wash_3"
+        },
+        "west": {
+          "texture": "#blade_wash_3"
+        },
+        "up": {
+          "texture": "#blade_wash_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_wash_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
