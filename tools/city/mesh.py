@@ -477,6 +477,7 @@ def main():
     ap.add_argument("--near", action="append", default=[])
     ap.add_argument("--radius", type=float, default=110)
     ap.add_argument("--extra", action="append", default=[])
+    ap.add_argument("--flicker-on", action="store_true", help="catch every flickering lamp lit")
     a = ap.parse_args()
     meta = json.load(open(a.dump + ".json"))
     sx, H, sz = meta["size"]
@@ -486,6 +487,9 @@ def main():
     for extra in a.extra:
         blocks.update(json.load(open(extra))["blocks"])
     meta["palette"] = connect(meta["palette"], vox, blocks)
+    if a.flicker_on:
+        meta["palette"] = [n if "flicker" not in blocks.get(parse(n)[0], {}) or "lit=" in n
+                           else n[:-1] + ",lit=true]" if n.endswith("]") else n + "[lit=true]" for n in meta["palette"]]
     pal = Palette(meta["palette"], blocks, a.tex_dir)
 
     # near: within the radius of any camera; far: LOD (no interiors, windows solid)
@@ -635,7 +639,7 @@ def main():
         ys, zs, xs = np.nonzero(vox == i)
         keep = near_col[zs, xs]
         for x, y, z in zip(xs[keep], ys[keep], zs[keep]):
-            lights.append([int(x + ox), int(y), int(z + oz), base])
+            lights.append([int(x + ox), int(y), int(z + oz), base, int(emitted(name, blocks))])
     json.dump({"unit": out.unit, "textures": index, "lamps": meta.get("lamps", []), "lights": lights, "baked": True},
               open(a.out_dir / "mesh.json", "w"))
 
