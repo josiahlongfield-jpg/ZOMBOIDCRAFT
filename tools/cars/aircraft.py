@@ -158,6 +158,10 @@ class Aircraft:
         # a cockpit group that also holds the windscreen keeps it as glass
         cockpit = self.objects(spec.get('cockpit', ())) | np.isin(mn, list(spec.get('cockpit', ())))
         cls[cockpit & (cls != 'glass')] = 'interior'
+        # a cockpit modelled as part of the hull (tub, seat, panel) is whatever lies wholly in a box
+        for box in spec.get('tub', ()):
+            inside = ((P >= np.array(box[:3])) & (P <= np.array(box[3:]))).all(axis=(1, 2))
+            cls[inside & (cls == 'body')] = 'interior'
 
     def objects(self, names):
         on = self.part_names.astype(str)
@@ -192,10 +196,18 @@ def views_for(ac):
         for z in np.linspace(lo[2] + 1, hi[2] - 1, 6):
             for d in ((1, 0.6, 0), (-1, 0.6, 0), (0, 0.6, 1), (0, 0.6, -1), (0, 1, 0.01)):
                 out.append(dict(eye=[x, 0.35, z], at=[x + d[0], 0.35 + d[1], z + d[2]], fov=100, near=0.02))
+    # from each seat, the head moved about a little (and once more in close-up, so the smallest
+    # switch counts as seen), and from over the cockpit looking in: what none of these sees is
+    # buried inside other parts
     for e in ac.spec['eyes']:
-        e = np.array(e) + np.array([0, 0, 0])
-        for d in list(fibonacci(26)):
-            out.append(dict(eye=list(e), at=list(e + d), fov=100, near=0.02))
+        e = np.array(e, float)
+        for o in ((0, 0, 0), (0.12, 0, 0), (-0.12, 0, 0), (0, 0.08, 0.1), (0, -0.08, -0.05)):
+            for d in list(fibonacci(26)):
+                out.append(dict(eye=list(e + o), at=list(e + o + d), fov=100, near=0.02))
+        for d in list(fibonacci(90)):
+            out.append(dict(eye=list(e), at=list(e + d), fov=40, near=0.02))
+        for a in np.linspace(0, 2 * np.pi, 12, endpoint=False):
+            out.append(dict(eye=[e[0] + np.cos(a) * 1.1, e[1] + 1.0, e[2] + np.sin(a) * 1.3], at=list(e - [0, 0.5, 0]), fov=60))
     return out
 
 
@@ -253,19 +265,24 @@ SRC_CACHE = ['.']
 
 def reduce(ac, target):
     """Cuts a far too detailed model down to target triangles (Reduce.java), keeping the original
-    so its texture can be carried over texel by texel (source_colours)."""
+    so its texture can be carried over texel by texel (source_colours). The cockpit is left whole:
+    target counts only the rest."""
+    inner = ac.cls == 'interior'
+    cut = np.where(~inner)[0]
     with tempfile.TemporaryDirectory() as tmp:
         f = lambda n: os.path.join(tmp, n)
-        ac.P.astype('<f4').tofile(f('t.f32'))
-        (ac.mat * 8 + np.searchsorted(['body', 'glass', 'interior'], ac.cls.astype(str))).astype('<i4').tofile(f('g.i32'))
+        ac.P[cut].astype('<f4').tofile(f('t.f32'))
+        (ac.mat[cut] * 8 + np.searchsorted(['body', 'glass', 'interior'], ac.cls[cut].astype(str))).astype('<i4').tofile(f('g.i32'))
         java('decimate', f('t.f32'), f('g.i32'), target, f('o.f32'), f('s.i32'))
         P = np.fromfile(f('o.f32'), '<f4').astype(float).reshape(-1, 3, 3)
-        src = np.fromfile(f('s.i32'), '<i4')
+        src = cut[np.fromfile(f('s.i32'), '<i4')]
+    whole = np.where(inner)[0]
     ac.source = dict(P=ac.P, UV=ac.UV, mat=ac.mat, cls=ac.cls)
-    ac.P = P
-    ac.UV = np.full((len(P), 3, 2), np.nan)
+    ac.P = np.concatenate([P, ac.P[whole]])
+    ac.UV = np.concatenate([np.full((len(P), 3, 2), np.nan), ac.UV[whole]])
     for name in ('mat', 'obj', 'cls', 'part_names'):
-        setattr(ac, name, getattr(ac, name)[src])
+        setattr(ac, name, getattr(ac, name)[np.concatenate([src, whole])])
+    print(f'  cockpit kept whole: {len(whole)} triangles', flush=True)
 
 
 # ---------------------------------------------------------------- states
@@ -431,17 +448,21 @@ def folds(q, px=24):
 def make_atlas(ac):
     """Packs the source model's own uv islands (scaled to a common texel density, so each texel
     of the atlas has one spot on the airframe) plus flat charts for anything without uvs, as
-    densely as fits the atlas."""
+    densely as fits the atlas. The cockpit gets its own, finer density (spec cockpit_px, at least
+    the bought texture's own), so its panels and dials stay as sharp as they were bought."""
     P, UV = ac.P, ac.UV
+    W, H = atlas_size(ac)
+    inner = ac.cls == 'interior'
     part = ac.obj * 4 + np.searchsorted(['body', 'glass', 'interior'], ac.cls.astype(str))
     roots = islands(P, UV)
     # mirrored models lay both halves over the same uvs and join them at the centre line: split
-    # every island at x = 0, and give any part that still folds over itself flat charts instead
-    side = np.sign(np.round(P[:, :, 0].mean(1), 3))
+    # every island at x = 0 (and where the cockpit meets the hull), and give any part that still
+    # folds over itself flat charts instead
+    side = np.sign(np.round(P[:, :, 0].mean(1), 3)) + 3 * inner
     area3 = np.linalg.norm(np.cross(P[:, 1] - P[:, 0], P[:, 2] - P[:, 0]), axis=1) / 2
     groups, shapes, loose = [], [], list(np.where(roots < 0)[0])
     for r in np.unique(roots[roots >= 0]):
-        for sd in (-1, 0, 1):
+        for sd in (-1, 0, 1, 2, 3, 4):
             g = np.where((roots == r) & (side == sd))[0]
             if not len(g):
                 continue
@@ -458,11 +479,14 @@ def make_atlas(ac):
     for g in flat_charts(P, np.array(loose, int), part) if loose else []:
         groups.append(g)
         shapes.append(projected(P, g, 1.0))
+    fine = [inner[g[0]] for g in groups]
+    cpx = ac.spec.get('cockpit_px', 128)
     for px in (80, 72, 64, 56, 48, 44, 40, 36, 32, 28, 24):
         uvpx = np.zeros((len(P), 3, 2))
         rects = []
+        scale = [max(px, cpx) if f else px for f in fine]
         for i, (g, q) in enumerate(zip(groups, shapes)):
-            q = q * px
+            q = q * scale[i]
             lo = q.reshape(-1, 2).min(0)
             w, h = q.reshape(-1, 2).max(0) - lo
             turn = w < h
@@ -471,26 +495,29 @@ def make_atlas(ac):
         x = y = rowh = 0
         fits = True
         for i, lo, turn, w, h in rects:
-            if w > ATLAS_W:
+            if w > W:
                 fits = False
                 break
-            if x + w > ATLAS_W:
+            if x + w > W:
                 x, y, rowh = 0, y + rowh, 0
-            q = shapes[i] * px - lo
+            q = shapes[i] * scale[i] - lo
             if turn:
                 q = np.stack([q[..., 1], q[..., 0]], -1)
             uvpx[groups[i]] = q + np.array([x + 1, y + 1])
             x += w
             rowh = max(rowh, h)
-        if fits and y + rowh <= ATLAS_H:
-            print(f'  atlas at {px} px/m, {len(groups)} charts', flush=True)
+        if fits and y + rowh <= H:
+            print(f'  atlas {W}x{H} at {px} px/m, cockpit at {max(px, cpx)}, {len(groups)} charts', flush=True)
             return uvpx, px
     raise SystemExit('model too big for the atlas')
 
 
-def texels(P, uvpx):
+def atlas_size(ac):
+    return ac.spec.get('atlas', (ATLAS_W, ATLAS_H))
+
+
+def texels(P, uvpx, W, H):
     """Which triangle covers each atlas texel and where on it (barycentrics), padded 3 texels."""
-    W, H = ATLAS_W, ATLAS_H
     tri = np.full((H, W), -1, np.int32)
     bary = np.zeros((H, W, 3), np.float32)
     for t in range(len(P)):
@@ -666,18 +693,19 @@ def weather(p, n, col, cls, state, rng, soot_at):
         c = np.where((a < 0.32)[:, None], c * (1 - 0.8 * sstep(0.32, 0.2, a)[:, None]) + rustc * 0.8 * sstep(0.32, 0.2, a)[:, None], c)
         c[(b > 0.76) & (a > 0.55)] = (78, 76, 72)
         return c
-    amt = {'usable': 0.25, 'abandoned': 0.8, 'wrecked': 0.95}[state]
+    # under the canopy only a little dust settles: no rain streaks, the panels left legible
+    amt = np.where(inside, 0.3, 1.0) * {'usable': 0.25, 'abandoned': 0.8, 'wrecked': 0.95}[state]
     g = fbm(p * np.array([1.2, 2.5, 1.2]), seed + 10, 4)
     col = col * (1 - (sstep(0.45, 0.8, g) * 0.16 * amt)[:, None])
     side = np.abs(n[:, 1]) < 0.6
     st = np.where(side, fbm(p * np.array([9, 0.4, 9]), seed + 12, 4), fbm(p * np.array([9, 9, 0.35]), seed + 12, 4))
-    col = col * (1 - (sstep(0.55, 0.85, st) * 0.18 * amt)[:, None])
-    col = np.where(up[:, None], col * (1 - 0.06 * amt) + np.array([12, 12, 10]) * amt, col)
+    col = col * (1 - (sstep(0.55, 0.85, st) * 0.18 * amt * ~inside)[:, None])
+    col = np.where(up[:, None], col * (1 - 0.06 * amt[:, None]) + np.array([12, 12, 10]) * amt[:, None], col)
     # exhaust soot behind the engines
     for (sx, sy, sz, r) in soot_at:
         d = np.sqrt((p[:, 0] - sx) ** 2 + (p[:, 1] - sy) ** 2 + np.minimum(0, p[:, 2] - sz) ** 2 * 0.15)
         hot = np.exp(-np.maximum(0, d - r) / 0.9) * (p[:, 2] < sz + 1.5)
-        col = col * (1 - hot[:, None] * 0.35 * (0.5 + amt))
+        col = col * (1 - (hot * 0.35 * (0.5 + amt))[:, None])
     if state in ('abandoned', 'wrecked'):
         spot = (rng.random(len(p)) < 0.0035 * amt) & up & ~inside
         col[spot] = (214, 212, 204)
@@ -718,7 +746,7 @@ def paint(ac, state, s, rng):
     if state == 'wrecked':
         crack = voronoi_edge(p[glass] * 7.0, 51) < 0.05
         col[np.where(glass)[0][crack]] = (210, 214, 210)
-    img = np.full((ATLAS_H, ATLAS_W, 3), 120.0)
+    img = np.full(s['ok'].shape + (3,), 120.0)
     img[s['ok']] = col
     return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
 
@@ -751,9 +779,10 @@ def build(spec, src, out_dir=None):
     else:
         orient(ac, spec.get('drop_hidden', False))
     uvpx, px = make_atlas(ac)
-    tri, bary = texels(ac.P, uvpx)
+    W, H = atlas_size(ac)
+    tri, bary = texels(ac.P, uvpx, W, H)
     surf = surface(ac, tri, bary)
-    UV = uvpx / np.array([ATLAS_W, ATLAS_H])
+    UV = uvpx / np.array([W, H])
     variants = []
     for state in VARIANTS:
         rng = np.random.default_rng(java_hash(spec['id'] + state) & 0xFFFFF)
@@ -812,7 +841,7 @@ def tone_f22(c, p, n, cls, mat):
     dark, light = np.array([92, 97, 103], float), np.array([150, 155, 160], float)
     out = dark + (light - dark) * np.clip((lum - 0.25) / 0.7, 0, 1)[:, None] ** 1.1
     inside = cls == 'interior'
-    out[inside] = c[inside] * 0.8
+    out[inside] = c[inside]
     return out
 
 
@@ -827,7 +856,7 @@ def tone_su27(c, p, n, cls, mat):
     """The bought Su-27 is mostly painted with plain cyan stand-in materials, so its skin is
     repainted here: the three-tone blue-grey splinter of the real ones, a paler belly, panel lines
     at the fuselage stations, an off-white radome. Gear bays keep their green primer, toned down."""
-    out = c * 0.94
+    out = np.where((cls == 'interior')[:, None], c, c * 0.94)
     skin = np.isin(mat, SU27_SKIN) & (cls == 'body')
     light, mid, dark = np.array([152, 166, 180.0]), np.array([112, 136, 164.0]), np.array([118, 128, 140.0])
     belly = np.array([168, 178, 188.0])
@@ -862,8 +891,10 @@ SPECS = {
         mtl={'F22_Base': {'Kd': (0.6, 0.6, 0.6), 'd': 1.0, 'map': 'tex/F22_base.png'},
              'F22_Glass': {'Kd': (0.58, 0.33, 0.0), 'd': 0.24, 'map': None}},
         ao={'F22_Base': 'tex/F22_AO.png'},
-        cockpit=('Cockpit',), lost_when_wrecked=('Chassis01', 'Chassis02', 'Chassis03', 'Elevator_L'), sag=(1, -2.1),
-        wheelbase=5.95, eyes=[(0.0, 2.95, 4.55)],
+        cockpit=('Cockpit',), tub=[(-0.62, 1.9, 3.7, 0.62, 3.45, 6.8)], cockpit_px=160, atlas=(2048, 2048),
+        lost_when_wrecked=('Chassis01', 'Chassis02', 'Chassis03', 'Elevator_L'), sag=(1, -2.1),
+        # sat on the seat pan, head against the headrest, looking over the glareshield
+        wheelbase=5.95, eyes=[(0.0, 3.24, 5.2)],
         glass_colour=(104, 92, 62), tone=tone_f22,
         soot=[(0.6, 1.9, -7.4, 0.6), (-0.6, 1.9, -7.4, 0.6)],
         marks=dict(
@@ -883,10 +914,10 @@ SPECS = {
              'wheels_mat': {'Kd': (0.2, 0.2, 0.2), 'd': 1.0, 'map': 'tex/wheels_BaseColor.png'},
              'interior_material': {'Kd': (0.3, 0.3, 0.3), 'd': 1.0, 'map': 'tex/interior_BaseColor.png'}},
         scrub={'body_mat': [(56, 128, 98, 148), (250, 183, 292, 203)]},
-        cockpit=('interior.001',),
+        cockpit=('interior.001',), cockpit_px=128, atlas=(2048, 2048),
         # the tail wheel snapped off: the boom sinks onto the deck
         lost_when_wrecked=(lambda ac: ac.objects(('wheels',)) & (ac.P.mean(1)[:, 2] < -6.5),), sag=(-1, 3.0),
-        wheelbase=10.75, eyes=[(0.0, 2.8, 3.0), (0.0, 2.45, 4.3)],
+        wheelbase=10.75, eyes=[(0.0, 2.98, 3.0), (0.0, 2.6, 4.35)],
         tone=lambda c, p, n, cls, mat: c * 1.08,
         soot=[(1.1, 2.7, -1.8, 0.4), (-1.1, 2.7, -1.8, 0.4)],
         marks=dict(
@@ -898,10 +929,10 @@ SPECS = {
     ),
     'gyrfalcon': dict(
         id='jet_gyrfalcon', obj='su27/obj/OBJ FILE.obj', drop=('S_270', 'Metal_Rusted'), reduce_to=20000,
-        cockpit=('Group249',),
+        cockpit=('Group249',), cockpit_px=128, atlas=(2048, 2048),
         lost_when_wrecked=(lambda ac: ac.objects(('G_1_1',)) & (ac.P.mean(1)[:, 2] > 0),
                            lambda ac: (ac.P.mean(1)[:, 0] > 3.2) & (ac.P.mean(1)[:, 2] < -5.8) & (np.abs(ac.P.mean(1)[:, 1] - 2.25) < 0.45)),
-        sag=(1, -3.0), wheelbase=5.5, eyes=[(0.0, 3.58, 5.2)],
+        sag=(1, -3.0), wheelbase=5.5, eyes=[(0.0, 3.72, 5.25)],
         tone=tone_su27, glass_colour=(110, 122, 124),
         soot=[(1.1, 1.65, -9.0, 0.6), (-1.1, 1.65, -9.0, 0.6)],
         marks=dict(
