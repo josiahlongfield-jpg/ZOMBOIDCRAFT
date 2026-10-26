@@ -43,6 +43,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
         com.zomboidcraft.client.gear.NightVisionClient.register();
+        com.zomboidcraft.client.gear.RadioClient.register();
         RailLights.register();
         RifleView.register();
         AimSensitivity.register();

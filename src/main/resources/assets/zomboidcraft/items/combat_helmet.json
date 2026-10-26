@@ -95,6 +95,23 @@
         "fallback": {
          "type": "minecraft:empty"
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "comms_headset",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/headgear/comms_headset_worn"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
        }
       ]
      }
@@ -181,6 +198,23 @@
          "type": "minecraft:model",
          "model": "zomboidcraft:item/headgear/nvg_white_down"
         }
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:empty"
+     }
+    },
+    {
+     "type": "minecraft:select",
+     "property": "minecraft:custom_model_data",
+     "index": 2,
+     "cases": [
+      {
+       "when": "comms_headset",
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/headgear/comms_headset_worn"
        }
       }
      ],

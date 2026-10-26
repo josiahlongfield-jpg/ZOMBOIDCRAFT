@@ -38,8 +38,10 @@ import org.jetbrains.annotations.Nullable;
  * that's good for about half an hour ({@link #CHARGE} on the goggles, in seconds). Flipped down with charge left, the
  * wearer has night vision; the tube look itself is drawn on the client.
  *
- * The headgear's item model shows what's on it from its custom model data strings: the goggles' key, then "up" or
- * "down". Change a headgear stack through the helpers here so that stays right.
+ * A combat helmet's side rails also take a comms headset ({@link #HEADSET}), for the radios ({@link Radios}).
+ *
+ * The headgear's item model shows what's on it from its custom model data strings: the goggles' key (or "none"), "up"
+ * or "down", then the headset's key (or "none"). Change a headgear stack through the helpers here so that stays right.
  */
 public final class Headgear {
     /** Goggles clipped onto headgear, and whether they're flipped up. Absent when nothing's mounted. */
@@ -65,6 +67,30 @@ public final class Headgear {
             return ItemStack.hashItemAndComponents(goggles) * 31 + (up ? 1 : 0);
         }
     }
+
+    /** A headset clipped onto a helmet's rails. Absent when there's none. */
+    public record Rail(ItemStack headset) {
+        public static final Codec<Rail> CODEC = ItemStack.CODEC.xmap(Rail::new, Rail::headset);
+        public static final StreamCodec<RegistryFriendlyByteBuf, Rail> STREAM_CODEC = ItemStack.STREAM_CODEC.map(Rail::new, Rail::headset);
+
+        public Rail {
+            headset = headset.copyWithCount(1);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Rail other && ItemStack.matches(headset, other.headset);
+        }
+
+        @Override
+        public int hashCode() {
+            return ItemStack.hashItemAndComponents(headset);
+        }
+    }
+
+    public static final DataComponentType<Rail> HEADSET = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("headset"), DataComponentType.<Rail>builder()
+                    .persistent(Rail.CODEC).networkSynchronized(Rail.STREAM_CODEC).cacheEncoding().build());
 
     public static final DataComponentType<Mounted> GOGGLES = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
             ZomboidCraft.id("goggles"), DataComponentType.<Mounted>builder()
@@ -122,15 +148,43 @@ public final class Headgear {
         }
     }
 
-    /** What the item model draws: the goggles' key and how they sit, or nothing. */
+    /** Whether this headgear has side rails a headset clips onto. */
+    public static boolean hasRails(ItemStack headgear) {
+        return headgear.getItem() instanceof HeadGearItem item && item.rails();
+    }
+
+    /** The headset on headgear's rails, or null. */
+    public static @Nullable ItemStack headset(ItemStack headgear) {
+        Rail rail = headgear.getItem() instanceof HeadGearItem ? headgear.get(HEADSET) : null;
+        return rail == null ? null : rail.headset();
+    }
+
+    /** Clips a headset onto headgear's rails. Returns the one that was on them, or empty. */
+    public static ItemStack mountHeadset(ItemStack headgear, ItemStack headset) {
+        Rail old = headgear.get(HEADSET);
+        headgear.set(HEADSET, new Rail(headset));
+        refreshModel(headgear);
+        return old == null ? ItemStack.EMPTY : old.headset();
+    }
+
+    public static ItemStack unmountHeadset(ItemStack headgear) {
+        Rail old = headgear.remove(HEADSET);
+        refreshModel(headgear);
+        return old == null ? ItemStack.EMPTY : old.headset();
+    }
+
+    /** What the item model draws: the goggles' key and how they sit, and the headset's key, or nothing. */
     public static void refreshModel(ItemStack headgear) {
         Mounted m = headgear.get(GOGGLES);
-        if (m == null || !(m.goggles().getItem() instanceof NightVisionItem nv)) {
+        Rail rail = headgear.get(HEADSET);
+        String goggles = m != null && m.goggles().getItem() instanceof NightVisionItem nv ? nv.generation().key : "none";
+        String headset = rail == null ? "none" : BuiltInRegistries.ITEM.getKey(rail.headset().getItem()).getPath();
+        if (goggles.equals("none") && headset.equals("none")) {
             headgear.remove(DataComponents.CUSTOM_MODEL_DATA);
             return;
         }
         headgear.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(),
-                List.of(nv.generation().key, m.up() ? "up" : "down"), List.of()));
+                List.of(goggles, m == null || m.up() ? "up" : "down", headset), List.of()));
     }
 
     // ---- the battery ----
