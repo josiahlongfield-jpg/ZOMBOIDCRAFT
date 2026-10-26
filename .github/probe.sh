@@ -7,6 +7,45 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== nvg"
+sig net.minecraft.world.item.equipment.Equippable 'public'
+sig 'net.minecraft.world.item.equipment.Equippable$Builder' 'public'
+sig net.minecraft.sounds.SoundEvents 'EMPTY|INTENTIONALLY|ARMOR_EQUIP_GENERIC|ARMOR_EQUIP_TURTLE|BEACON_ACTIVATE|BEACON_DEACTIVATE'
+classes 'client/renderer/item/properties/select/[A-Za-z]*\.class' | head -40
+javap -cp "$CP" -p net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties 2>&1 | head -30
+javap -cp "$CP" -c -p net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties 2>&1 | grep -E 'ldc' | head -30
+sig net.minecraft.world.effect.MobEffectInstance 'MobEffectInstance\(|isAmbient|isVisible|showIcon|getDuration'
+sig net.minecraft.world.entity.LivingEntity 'onEquipItem|getItemBySlot|setItemSlot|removeEffect|addEffect|getEffect\('
+javap -cp "$CP" -c -p net.minecraft.world.entity.LivingEntity 2>&1 | sed -n '/public void onEquipItem(/,/^$/p' | grep -E 'invoke|getfield|ifeq|ifne' | head -30
+sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|isSameItemSameComponents|matches'
+sig net.minecraft.client.renderer.entity.layers.CustomHeadLayer 'public|static'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.layers.CustomHeadLayer 2>&1 | sed -n '/translateToHead(/,/return/p' | head -30
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'headItem|wornHead'
+sig com.mojang.blaze3d.pipeline.RenderPipeline 'static|builder|public'
+sig 'com.mojang.blaze3d.pipeline.RenderPipeline$Builder' 'public'
+sig 'com.mojang.blaze3d.pipeline.RenderPipeline$Snippet' 'public'
+sig net.minecraft.client.renderer.RenderPipelines 'SNIPPET|GUI|register|static .*List'
+sig com.mojang.blaze3d.pipeline.BlendFunction 'public|static'
+classes 'com/mojang/blaze3d/platform/(SourceFactor|DestFactor)'
+sig com.mojang.blaze3d.platform.SourceFactor 'public static'
+sig com.mojang.blaze3d.platform.DestFactor 'public static'
+sig com.mojang.blaze3d.systems.GpuDevice 'createTexture|createTextureView|createCommandEncoder|precompile|getMaxTextureSize'
+sig com.mojang.blaze3d.systems.CommandEncoder 'copy|clear'
+sig com.mojang.blaze3d.textures.GpuTexture 'public|USAGE'
+sig com.mojang.blaze3d.textures.TextureFormat 'public static'
+sig com.mojang.blaze3d.pipeline.RenderTarget 'public|width|height'
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.AbstractTexture 2>&1
+sig net.minecraft.client.renderer.texture.TextureManager 'register|getTexture|release'
+sig net.minecraft.client.gui.GuiGraphicsExtractor 'blit|fill|guiWidth|guiHeight|innerBlit|submitBlit'
+sig com.mojang.blaze3d.systems.RenderSystem 'getDevice|getSampler|samplerCache'
+classes 'com/mojang/blaze3d/textures/[A-Za-z]*\.class'
+sig net.minecraft.client.Minecraft 'getMainRenderTarget|getWindow|getTextureManager'
+sig com.mojang.blaze3d.platform.Window 'getWidth|getHeight|getGuiScaled'
+for j in $MC_JARS; do unzip -Z1 "$j" 2>/dev/null | grep -E 'shaders/core/(position_tex_color|blit_screen|gui)\.|shaders/include/(dynamictransforms|projection|globals)' ; done | sort -u
+for f in assets/minecraft/shaders/core/position_tex_color.vsh assets/minecraft/shaders/core/position_tex_color.fsh assets/minecraft/shaders/include/dynamictransforms.glsl assets/minecraft/shaders/include/projection.glsl assets/minecraft/shaders/include/globals.glsl; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B2 -A30 'GUI_TEXTURED:' | grep -E 'ldc|invoke|getstatic' | head -40
+exit 0
+
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
