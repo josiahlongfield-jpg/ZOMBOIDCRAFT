@@ -1,0 +1,19 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "none",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/headgear/nvg_gen3_down"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/headgear/nvg_gen3"
+  }
+ }
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_brig": "zomboidcraft:block/city/navy_st_brig",
+    "particle": "zomboidcraft:block/city/navy_st_brig"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_brig"
+        },
+        "south": {
+          "texture": "#navy_st_brig",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_brig",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_brig",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_brig",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_brig",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

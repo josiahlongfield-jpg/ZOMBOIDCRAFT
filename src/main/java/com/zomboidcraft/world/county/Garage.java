@@ -604,7 +604,7 @@ public final class Garage {
             b.build();
             p.set(hx, y, hz, "bunk_hatch[facing=north,half=top,open=false]");
             p.set(hx - 1, y + 2, hz, "bunk_keyswitch[facing=north]");
-            p.mark("bunker " + state.name().toLowerCase(java.util.Locale.ROOT), hx, y + 1, hz);
+            p.mark("bunker " + state.name().toLowerCase(java.util.Locale.ROOT) + " tower", hx, y + 1, hz);
             bp.mark("bunker door", 0, 1, -2);
             return bp;
         }

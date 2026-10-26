@@ -47,6 +47,10 @@ public final class ZcConfig {
     public Carry carry = new Carry();
     /** What a gun case or an ammo can has in it when it's found shut. */
     public Cases cases = new Cases();
+    /** Night vision goggles on headgear: their batteries and the look through them. */
+    public NightVision nightVision = new NightVision();
+    /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
+    public Radio radio = new Radio();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
 
@@ -73,6 +77,62 @@ public final class ZcConfig {
         public double fullMagazineChance = 0.5;
         /** Chance an ammo can holds a second calibre. */
         public double secondCalibreChance = 0.35;
+    }
+
+    public static class NightVision {
+        /** Goggles need an AA battery. Off, they never run down. */
+        public boolean batteries = true;
+        /** How long one AA battery runs the goggles, in minutes of use. */
+        public double batteryMinutes = 30;
+        /** Goggles found in the world have a part-used battery somewhere between these fractions of full. */
+        public double foundChargeMin = 0.2;
+        public double foundChargeMax = 0.8;
+        /** How often the battery used is written to the goggles, in seconds (lower saves more often). */
+        public int saveEverySeconds = 10;
+        /**
+         * Draws the view through the tube (green or white phosphor, grain, the round tube edge) as a screen effect.
+         * Off, a plain tint and the tube edge are drawn over the screen instead, for shader packs that hide the effect.
+         * Client side.
+         */
+        public boolean tubeEffect = true;
+        /** How much of the screen's height the tube fills, 0.5 to 1.2. Client side. */
+        public double tubeSize = 0.92;
+        /** How bright the view through the tube is, 0.2 to 2 (1 is the preview's look). Client side. */
+        public double brightness = 0.85;
+    }
+
+    public static class Radio {
+        /** How far each radio carries a voice, in blocks: the talking radio's reach is what counts. */
+        public double toyRange = 150;
+        public double twoWayRange = 1000;
+        public double militaryRange = 3000;
+        /** How many channels each radio tunes to. Channel numbers are shared between them. */
+        public int toyChannels = 3;
+        public int twoWayChannels = 22;
+        public int militaryChannels = 99;
+        /** How far into the reach (0 to 1) the voice starts to crackle and break up. */
+        public double crackleStart = 0.65;
+        /** The hiss under every radio voice, 0 to 0.1. */
+        public double hiss = 0.012;
+        /** How far a radio's speaker carries for other players, in blocks. */
+        public double speakerRange = 12;
+        /** How far zombies hear a radio's speaker, in blocks (0: they don't). */
+        public double speakerNoise = 10;
+        /** Talking needs the radio in a hand, unless you wear a comms headset. Off: any radio on you will do. */
+        public boolean holdToTalk = true;
+        /** Radios need an AA battery. Off, they never run down. */
+        public boolean batteries = true;
+        /** How long one AA battery runs a radio that's switched on, in minutes. */
+        public double batteryMinutes = 120;
+        /** How many times faster the battery drains while you talk. */
+        public double talkDrain = 3;
+        /** Radios found in the world have a part-used battery somewhere between these fractions of full. */
+        public double foundChargeMin = 0.2;
+        public double foundChargeMax = 0.8;
+        /** How often the battery used is written to the radios, in seconds. */
+        public int saveEverySeconds = 10;
+        /** How loud gunshots are through a comms headset, 0 to 1. Client side. */
+        public double headsetGunshotVolume = 0.45;
     }
 
     /**

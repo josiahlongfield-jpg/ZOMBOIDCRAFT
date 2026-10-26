@@ -115,7 +115,12 @@ public final class SoundVolumes {
 
     public static float factor(Identifier id) {
         Group group = groupOf(id);
-        return group == null ? 1f : (float) group.volume;
+        float factor = group == null ? 1f : (float) group.volume;
+        if (group == Group.GUNS && id.getPath().contains(".shot") && com.zomboidcraft.client.gear.RadioClient.wearingHeadset()) {
+            // a comms headset's hearing protection takes the crack out of gunfire
+            factor *= (float) Math.max(0, Math.min(1, com.zomboidcraft.ZcConfig.get().radio.headsetGunshotVolume));
+        }
+        return factor;
     }
 
     /** Sets a group's volume and re-applies volumes to the sounds already playing (the horde murmur loops). */

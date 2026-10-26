@@ -29,6 +29,11 @@ public final class CarModels {
         public float[][] seats;
         /** Front axle to back axle, metres: how tight the car turns. */
         public float wheelbase;
+        /**
+         * The body's underside over each cell in centimetres, or null: a jet's wings stand clear
+         * of the deck, so its hull leaves the room under them open to walk through.
+         */
+        public int[] floors;
 
         public float length() {
             return size[2];
@@ -41,6 +46,20 @@ public final class CarModels {
                 return 0;
             }
             return heights[iz * nx + ix] / 100f;
+        }
+
+        /** Lowest point of the body above (lx, lz) in metres, 0 off the car or where it meets the ground. */
+        public float floorAt(double lx, double lz) {
+            int ix = (int) Math.floor((lx - x0) / cell), iz = (int) Math.floor((lz - z0) / cell);
+            if (floors == null || ix < 0 || iz < 0 || ix >= nx || iz >= nz) {
+                return 0;
+            }
+            return floors[iz * nx + ix] / 100f;
+        }
+
+        /** The carrier's fighters: parked props you can sit in, never on the street, never driven. */
+        public boolean jet() {
+            return "jet".equals(kind);
         }
     }
 

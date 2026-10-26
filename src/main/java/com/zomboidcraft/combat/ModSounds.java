@@ -94,6 +94,17 @@ public final class ModSounds {
     /** Nailing a board up; heard a fair way off, like the noise zombies follow. */
     public static final SoundEvent HAMMER_NAIL = register("item.hammer.nail", 32f);
     public static final SoundEvent BANDAGE = register("item.bandage");
+    /**
+     * Radios (made in tools/audio/build_radio_sounds.py): the click and short hiss on everyone else's radio when someone
+     * keys up, the burst of static when they let go, the talk button's own click, the channel knob's click and beep,
+     * and switching one on and off.
+     */
+    public static final SoundEvent RADIO_KEY_UP = register("item.radio.key_up");
+    public static final SoundEvent RADIO_SQUELCH = register("item.radio.squelch");
+    public static final SoundEvent RADIO_PTT = register("item.radio.ptt");
+    public static final SoundEvent RADIO_CHANNEL = register("item.radio.channel");
+    public static final SoundEvent RADIO_POWER_ON = register("item.radio.power_on");
+    public static final SoundEvent RADIO_POWER_OFF = register("item.radio.power_off");
 
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);

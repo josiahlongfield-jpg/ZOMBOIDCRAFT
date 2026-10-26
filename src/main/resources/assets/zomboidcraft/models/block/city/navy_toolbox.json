@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_gun": "zomboidcraft:block/city/navy_gun",
+    "navy_toolbox": "zomboidcraft:block/city/navy_toolbox",
+    "particle": "zomboidcraft:block/city/navy_toolbox"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        7,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_toolbox"
+        },
+        "south": {
+          "texture": "#navy_toolbox"
+        },
+        "east": {
+          "texture": "#navy_toolbox"
+        },
+        "west": {
+          "texture": "#navy_toolbox"
+        },
+        "up": {
+          "texture": "#navy_toolbox"
+        },
+        "down": {
+          "texture": "#navy_toolbox",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        7,
+        7
+      ],
+      "to": [
+        11,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_gun"
+        },
+        "south": {
+          "texture": "#navy_gun"
+        },
+        "east": {
+          "texture": "#navy_gun"
+        },
+        "west": {
+          "texture": "#navy_gun"
+        },
+        "up": {
+          "texture": "#navy_gun"
+        },
+        "down": {
+          "texture": "#navy_gun"
+        }
+      }
+    }
+  ]
+}

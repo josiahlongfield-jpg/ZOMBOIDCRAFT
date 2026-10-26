@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.map;
 
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.world.county.Bunkers;
 import com.zomboidcraft.world.county.County;
 import com.zomboidcraft.world.county.CountyGen;
 import com.zomboidcraft.world.county.Place;
@@ -9,17 +10,22 @@ import com.zomboidcraft.world.county.Road;
 import com.zomboidcraft.world.county.Terrain;
 import com.zomboidcraft.world.county.Voxels;
 import com.zomboidcraft.world.gen.CountyChunkGenerator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.SplittableRandom;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Draws the maps you loot, from the county plan rather than the world, so they show streets and land you've never
- * been near: a town's street map at two blocks a cell, read from the town's own blocks, or a road atlas of the
- * county around you at sixteen. Drawing happens off the server thread and the result is posted to your client.
+ * been near: a town's street map at two blocks a cell, read from the town's own blocks, a road atlas of the
+ * county around you at sixteen, or a marked map with a red ring round a hidden bunker. Drawing happens off the server thread and the result is posted to your client.
  */
 public final class PaperMaps {
     public enum Kind {
@@ -128,6 +134,107 @@ public final class PaperMaps {
             }
         }
         return new MapNet.Reveal(title, x0, z0, step, n, n, cells);
+    }
+
+    /**
+     * A marked map: the land round a bunker at two blocks a cell, and the red ring someone drew round
+     * where it is, a little uneven and never quite centred on it.
+     */
+    private static MapNet.Reveal marked(CountyGen gen, int cx, int cz, int r) {
+        int half = r * 2 + 48;
+        MapNet.Reveal map = draw(gen, MARKED, cx - half, cz - half, 2, half, true);
+        int n = map.w();
+        double wobble = (cx * 31 + cz) % 7;
+        for (int j = 0; j < n; j++) {
+            for (int i = 0; i < n; i++) {
+                double x = map.x0() + (i + 0.5) * 2 - cx, z = map.z0() + (j + 0.5) * 2 - cz;
+                double ring = r + 2.5 * Math.sin(Math.atan2(z, x) * 3 + wobble);
+                if (Math.abs(Math.sqrt(x * x + z * z) - ring) <= 1.6) map.cells()[j * n + i] = MapPalette.MARK;
+            }
+        }
+        return map;
+    }
+
+    private static final String MARKED = "Marked map";
+
+    /** What a marked map's target says: where the bunker is and where the ring was drawn. */
+    private record Target(String kind, int x, int z, int ringX, int ringZ, int r) {
+        static Target parse(String s) {
+            String[] f = s.split(",");
+            return new Target(f[0], Integer.parseInt(f[2]), Integer.parseInt(f[3]), Integer.parseInt(f[4]),
+                    Integer.parseInt(f[5]), Integer.parseInt(f[6]));
+        }
+    }
+
+    /**
+     * Reads a marked map. The first time, it settles which bunker it leads to: one of those within a
+     * few thousand blocks, built and searched off the server thread, any of them as likely (a second map
+     * can lead to a bunker someone else has already been through). After that it always shows the same
+     * ring. False when this world has no county plan.
+     */
+    public static boolean readMarked(ServerPlayer player, ItemStack stack) {
+        ServerLevel level = (ServerLevel) player.level();
+        if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) return false;
+        CountyGen gen = CountyChunkGenerator.gen(level.getSeed());
+        int px = player.getBlockX(), pz = player.getBlockZ();
+        String known = stack.get(BunkerMapItem.TARGET);
+        long seed = level.getRandom().nextLong();
+        CompletableFuture.supplyAsync(() -> {
+            String target = known != null ? known : pick(gen, px, pz, new SplittableRandom(seed));
+            if (target == null) return null;
+            Target t = Target.parse(target);
+            return new Object[] {target, marked(gen, t.ringX(), t.ringZ(), t.r())};
+        }).whenComplete((found, error) -> level.getServer().execute(() -> {
+            if (error != null) {
+                ZomboidCraft.LOGGER.error("Couldn't draw a marked map", error);
+                return;
+            }
+            if (player.hasDisconnected()) return;
+            if (found == null) {
+                player.sendOverlayMessage(Component.literal("The ink has run. You can't make anything out.").withStyle(ChatFormatting.GRAY));
+                return;
+            }
+            String target = (String) found[0];
+            if (known == null) stack.set(BunkerMapItem.TARGET, target);
+            ServerPlayNetworking.send(player, (MapNet.Reveal) found[1]);
+            player.sendOverlayMessage(Component.literal("Somewhere is ringed in red. It's on your map now (M)."));
+            player.sendSystemMessage(Component.literal("Pencilled beside the ring: \"" + hint(Target.parse(target).kind()) + "\"")
+                    .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+        }));
+        return true;
+    }
+
+    private static String hint(String kind) {
+        return switch (kind) {
+            case "ship" -> "Engine room, forward bulkhead. One plate isn't welded.";
+            case "shelter" -> "Civil defence shelter. Down through the boiler room.";
+            case "forest" -> "Stumps, a vent pipe, a cable post. Look under the leaves.";
+            default -> "B4, electrical. Behind the cage, under the floor.";
+        };
+    }
+
+    /** Settles a new map's bunker: "kind,state,x,z,ringX,ringZ,radius", or null if none is near. */
+    private static String pick(CountyGen gen, int px, int pz, SplittableRandom rng) {
+        List<Place> places = new ArrayList<>(Bunkers.candidates(gen.county(), px, pz, null, 3000));
+        for (int i = places.size() - 1; i > 0; i--) {
+            int j = rng.nextInt(i + 1);
+            Place t = places.get(i);
+            places.set(i, places.get(j));
+            places.set(j, t);
+        }
+        // only building a place shows whether it has a bunker: give up after a few
+        for (Place p : places.subList(0, Math.min(8, places.size()))) {
+            List<Bunkers.Found> found = Bunkers.in(gen, p, null);
+            if (found.isEmpty()) continue;
+            Bunkers.Found b = found.get(rng.nextInt(found.size()));
+            // a ring about 80 blocks across in a town, 150 in the woods, the bunker somewhere inside it
+            int r = b.kind().equals("forest") ? 75 : 40;
+            double a = rng.nextDouble() * Math.PI * 2, off = rng.nextDouble() * 0.6 * r;
+            int ringX = b.x() + (int) Math.round(Math.cos(a) * off), ringZ = b.z() + (int) Math.round(Math.sin(a) * off);
+            return String.join(",", b.kind(), b.state(), Integer.toString(b.x()), Integer.toString(b.z()),
+                    Integer.toString(ringX), Integer.toString(ringZ), Integer.toString(r));
+        }
+        return null;
     }
 
     private static void stamp(byte[] cells, int n, int x0, int z0, int step, double x, double z, double r, byte c) {

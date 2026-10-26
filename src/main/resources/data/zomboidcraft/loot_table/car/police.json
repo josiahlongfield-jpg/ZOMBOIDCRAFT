@@ -278,6 +278,36 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:road_atlas",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:combat_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:aa_battery",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:two_way_radio",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:comms_headset",
+          "weight": 1
         }
       ]
     },
@@ -294,6 +324,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:assault_rifle",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:nvg_gen3",
+          "weight": 1
         }
       ]
     }

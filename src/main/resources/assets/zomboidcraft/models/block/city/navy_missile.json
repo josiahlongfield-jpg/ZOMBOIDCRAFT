@@ -1,0 +1,174 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_missile": "zomboidcraft:block/city/navy_missile",
+    "navy_steel": "zomboidcraft:block/city/navy_steel",
+    "particle": "zomboidcraft:block/city/navy_missile"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        4,
+        0
+      ],
+      "to": [
+        9.5,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_missile",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_missile",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_missile"
+        },
+        "west": {
+          "texture": "#navy_missile"
+        },
+        "up": {
+          "texture": "#navy_missile"
+        },
+        "down": {
+          "texture": "#navy_missile"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3.5,
+        12
+      ],
+      "to": [
+        12,
+        7.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_missile"
+        },
+        "south": {
+          "texture": "#navy_missile"
+        },
+        "east": {
+          "texture": "#navy_missile"
+        },
+        "west": {
+          "texture": "#navy_missile"
+        },
+        "up": {
+          "texture": "#navy_missile"
+        },
+        "down": {
+          "texture": "#navy_missile"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        1,
+        12
+      ],
+      "to": [
+        8.5,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_missile"
+        },
+        "south": {
+          "texture": "#navy_missile"
+        },
+        "east": {
+          "texture": "#navy_missile"
+        },
+        "west": {
+          "texture": "#navy_missile"
+        },
+        "up": {
+          "texture": "#navy_missile"
+        },
+        "down": {
+          "texture": "#navy_missile"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        3
+      ],
+      "to": [
+        11,
+        4,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_steel"
+        },
+        "south": {
+          "texture": "#navy_steel"
+        },
+        "east": {
+          "texture": "#navy_steel"
+        },
+        "west": {
+          "texture": "#navy_steel"
+        },
+        "up": {
+          "texture": "#navy_steel"
+        },
+        "down": {
+          "texture": "#navy_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        11,
+        4,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_steel"
+        },
+        "south": {
+          "texture": "#navy_steel"
+        },
+        "east": {
+          "texture": "#navy_steel"
+        },
+        "west": {
+          "texture": "#navy_steel"
+        },
+        "up": {
+          "texture": "#navy_steel"
+        },
+        "down": {
+          "texture": "#navy_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
