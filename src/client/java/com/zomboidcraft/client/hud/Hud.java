@@ -137,6 +137,8 @@ public final class Hud {
 
     /** Width of capitals drawn with {@link #caps}. */
     public static float capsWidth(Font font, String s, float spacing, float scale) {
+        // measured as drawn: caps() upper-cases first, and capitals run wider
+        s = s.toUpperCase();
         float w = 0;
         for (int i = 0; i < s.length(); i++) w += font.width(text(s.substring(i, i + 1))) + spacing;
         return (w - spacing) * scale;
