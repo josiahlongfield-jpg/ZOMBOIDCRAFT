@@ -163,6 +163,29 @@ public class KitUiTest implements FabricClientGameTest {
                     new MouseButtonEvent(options[0] + 0.5, options[1] + 0.5, new MouseButtonInfo(0, 0)), false));
             ctx.waitTicks(5);
             log(ctx, "after calling mouseClicked directly (" + took + ") " + when);
+            String info = ctx.computeOnClient(mc -> {
+                StringBuilder b = new StringBuilder();
+                for (var child : mc.gui.screen().children()) {
+                    if (child instanceof AbstractWidget w) {
+                        b.append("\n     ").append(w.getClass().getName()).append(" '").append(w.getMessage().getString()).append("' active=")
+                                .append(w.active).append(" visible=").append(w.visible).append(" at ").append(w.getX()).append(',').append(w.getY())
+                                .append(' ').append(w.getWidth()).append('x').append(w.getHeight());
+                    }
+                }
+                return b.toString();
+            });
+            LOG.info("ZCUI pause widgets:{}", info);
+            boolean helper = ctx.computeOnClient(mc -> {
+                for (var child : mc.gui.screen().children()) {
+                    if (child instanceof net.minecraft.client.gui.components.AbstractButton w && w.getMessage().getString().startsWith("Options")) {
+                        w.onPress(new MouseButtonInfo(0, 0));
+                        return true;
+                    }
+                }
+                return false;
+            });
+            ctx.waitTicks(5);
+            log(ctx, "after onPress directly (" + helper + ") " + when);
         }
         ctx.takeScreenshot("options-" + when.replace(' ', '-'));
         // back out to the game
