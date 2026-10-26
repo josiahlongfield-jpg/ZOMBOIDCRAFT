@@ -189,7 +189,7 @@ def look(wear=0.4):
         return c * (1 + 0.1 * (np.sin(f.Y * 30) > 0.5))[..., None]
 
     def mag(f):
-        c = P.polymer(f, '#9a845f', 0.07)
+        c = P.polymer(f, '#202124', 0.07)
         ribs = (np.sin(f.Y * 14) > 0.75) & (np.abs(f.n[0]) > 0.5) & (f.Y > -1.6) & (f.Y < -0.4)
         dots = (np.abs(f.n[0]) > 0.5) & (f.Y < -2.0) & (f.Y > -3.6) & ((np.sin(f.Y * 30) * np.sin(f.Z * 30)) > 0.6)
         c = np.where(ribs[..., None], c * 0.82, c)
@@ -203,8 +203,8 @@ def look(wear=0.4):
 
     d = dict(anod=lambda f: P.anodised(f, '#1e2023'), guard=guard, park=lambda f: P.parkerised(f, '#2c2d2a'), steel=steel, poly=poly, grip=grip,
              rubber=rubber, port=port, hider=hider, mag=mag, flash=flash_paint)
-    d['_after'] = [lambda f, c: P.grime(f, c, 0.35 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.25 * (0.3 + wear))]
+    d['_after'] = [lambda f, c: P.grime(f, c, 0.35 * (0.4 + f.wear)),
+                   lambda f, c: P.scratches(f, c, 0.25 * (0.3 + f.wear))]
     return d
 
 

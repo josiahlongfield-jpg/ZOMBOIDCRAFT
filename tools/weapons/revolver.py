@@ -363,6 +363,6 @@ def look(finish='service', wear=0.35):
                        'stock': wood_spec + (12,), 'gcheck': F.WOOD_SPEC['check' if checkered else 'gloss'] + (30,)})
     # the checkering, the engraving and the cylinder's marks get twice the texels
     d['_px'] = dict(gcheck=32, cyl=32, medal=32, **({'frame': 32, 'barrel': 32, 'guard': 32} if metal_kind == 'royal' else {}))
-    d['_after'] = [lambda f, c: P.grime(f, c, 0.22 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.18 * (0.3 + wear))]
+    d['_after'] = [lambda f, c: P.grime(f, c, 0.22 * (0.4 + f.wear)),
+                   lambda f, c: P.scratches(f, c, 0.18 * (0.3 + f.wear))]
     return d

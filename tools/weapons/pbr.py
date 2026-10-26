@@ -130,12 +130,13 @@ def round_tilt(f, k=0.7):
     return off * k * du, off * k * dv
 
 
-def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel=False, flat=(False, False)):
+def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel=False, flat=(False, False), cover=None):
     """Edge bevels (so blocky parts catch the light like machined edges), the lean of round bars, plus a
     little relief from the painted detail (and `height`, if given). lu, lv: the face's size in model units;
     px: texture pixels per unit. rel: relief from the detail's contrast against the face's own lightness, so
     checkering and serrations on a near-black finish stand out as much as on a light one. flat: no bevel on the
-    u (or v) edges, where the face carries straight on into the next slice of a part built from slices."""
+    u (or v) edges, where the face carries straight on into the next slice of a part built from slices. cover:
+    per pixel, no bevel along each edge (u start, u end, v start, v end) where the part carries on past it."""
     u, v = f.uv[..., 0], f.uv[..., 1]
     b = max(1.0 / px, min(bevel, 0.3 * min(lu, lv)))
 
@@ -143,8 +144,9 @@ def normal(f, rgb, lu, lv, px, bevel=0.09, bump=0.5, tilt=0.55, height=None, rel
         return tilt * np.clip(1 - d / b, 0, 1)
 
     ru, rv = round_tilt(f)
-    nx = (0 if flat[0] else -t(u) + t(lu - u)) + ru
-    ny = (0 if flat[1] else -t(v) + t(lv - v)) + rv
+    cu0, cu1, cv0, cv1 = cover if cover is not None else (False,) * 4
+    nx = (0 if flat[0] else -np.where(cu0, 0, t(u)) + np.where(cu1, 0, t(lu - u))) + ru
+    ny = (0 if flat[1] else -np.where(cv0, 0, t(v)) + np.where(cv1, 0, t(lv - v))) + rv
     L = lum(rgb)
     if rel:
         L = L * 0.35 / np.clip(L.mean(), 0.1, 0.35)

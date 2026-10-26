@@ -238,8 +238,8 @@ def look(wear=0.4):
              trigplate=trigplate, stock=stock, forend=forend_paint, ribs=ribs, pad=pad, spacer=spacer,
              steel=steel, bolt=bolt, screw=screw, bead=bead, bore=bore, head=head, hull=hull, crimp=crimp,
              flash=flash_paint)
-    d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.25 * (0.3 + wear))]
+    d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + f.wear)),
+                   lambda f, c: P.scratches(f, c, 0.25 * (0.3 + f.wear))]
     return d
 
 
