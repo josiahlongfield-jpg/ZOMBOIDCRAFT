@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_cross": "zomboidcraft:block/city/fs_cross",
+    "fs_red": "zomboidcraft:block/city/fs_red",
+    "particle": "zomboidcraft:block/city/fs_cross"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_cross"
+        },
+        "south": {
+          "texture": "#fs_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fs_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fs_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fs_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

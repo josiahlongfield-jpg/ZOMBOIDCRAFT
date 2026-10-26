@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_canvas_wet": "zomboidcraft:block/city/fs_canvas_wet",
+    "particle": "zomboidcraft:block/city/fs_canvas_wet"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        9
+      ],
+      "to": [
+        4,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_canvas_wet"
+        },
+        "south": {
+          "texture": "#fs_canvas_wet"
+        },
+        "east": {
+          "texture": "#fs_canvas_wet"
+        },
+        "west": {
+          "texture": "#fs_canvas_wet"
+        },
+        "up": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        7
+      ],
+      "to": [
+        8,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_canvas_wet"
+        },
+        "south": {
+          "texture": "#fs_canvas_wet"
+        },
+        "east": {
+          "texture": "#fs_canvas_wet"
+        },
+        "west": {
+          "texture": "#fs_canvas_wet"
+        },
+        "up": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        7
+      ],
+      "to": [
+        11,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_canvas_wet"
+        },
+        "south": {
+          "texture": "#fs_canvas_wet"
+        },
+        "east": {
+          "texture": "#fs_canvas_wet"
+        },
+        "west": {
+          "texture": "#fs_canvas_wet"
+        },
+        "up": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        8
+      ],
+      "to": [
+        15,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_canvas_wet"
+        },
+        "south": {
+          "texture": "#fs_canvas_wet"
+        },
+        "east": {
+          "texture": "#fs_canvas_wet"
+        },
+        "west": {
+          "texture": "#fs_canvas_wet"
+        },
+        "up": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fs_canvas_wet",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

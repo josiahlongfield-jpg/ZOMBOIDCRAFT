@@ -539,7 +539,8 @@ final class TownSite extends Site {
         // north, the elementary school and its buses to the south
         Kit.Lot fire = civicLot(cross, along(cross, gx, 17), -1, 18, 26);
         if (fire != null) {
-            new Civic(fire.placer(out), rng).fireStation(18, 24);
+            new Civic(fire.placer(out), rng).fireStation(18, 26);
+            kit.treeless.add(new int[] {fire.x0() - 7, fire.z0() - 7, fire.x0() + fire.sizeX() + 6, fire.z0() + fire.sizeZ() + 6});
         }
         Kit.Lot sheriff = civicLot(cross, along(cross, gx, 40), -1, 20, 30);
         if (sheriff != null) {
@@ -775,7 +776,8 @@ final class TownSite extends Site {
         }
         Kit.Lot fire = civicLot(inW, along(inW, cx - outer - pastRing, cz), rng.nextBoolean() ? 1 : -1, 19, 26);
         if (fire != null) {
-            new Civic(fire.placer(out), rng).fireStation(19, 24);
+            new Civic(fire.placer(out), rng).fireStation(19, 26);
+            kit.treeless.add(new int[] {fire.x0() - 7, fire.z0() - 7, fire.x0() + fire.sizeX() + 6, fire.z0() + fire.sizeZ() + 6});
         }
         // St. Mary's, the stone church, a block out on the road in from the north where the lots run deep
         int stoneSide = rng.nextBoolean() ? 1 : -1;

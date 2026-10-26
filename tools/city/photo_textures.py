@@ -1081,6 +1081,8 @@ import townhall  # noqa: E402
 townhall.register(sys.modules[__name__])
 import bank  # noqa: E402
 bank.register(sys.modules[__name__])
+import firestation  # noqa: E402
+firestation.register(sys.modules[__name__])
 import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 
