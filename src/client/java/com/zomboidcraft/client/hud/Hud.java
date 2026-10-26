@@ -99,6 +99,7 @@ public final class Hud {
         dt = lastFrame == 0 ? 0 : Math.min(0.1f, (now - lastFrame) / 1e9f);
         lastFrame = now;
         peek = PEEK.isDown();
+        RainHud.render(g);
         if (!active()) return;
         BodyHud.vignette(g, delta);
         BodyHud.render(g, delta);
