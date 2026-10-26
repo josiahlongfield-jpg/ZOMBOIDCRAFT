@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cobweb": {
+      "sprite": "zomboidcraft:block/city/bunk_cobweb",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/bunk_cobweb"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        15.7
+      ],
+      "to": [
+        16,
+        16,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cobweb"
+        },
+        "south": {
+          "texture": "#bunk_cobweb"
+        },
+        "east": {
+          "texture": "#bunk_cobweb",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_cobweb",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_cobweb",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cobweb"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15.8,
+        6
+      ],
+      "to": [
+        16,
+        15.9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cobweb"
+        },
+        "south": {
+          "texture": "#bunk_cobweb",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_cobweb",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_cobweb",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_cobweb"
+        },
+        "down": {
+          "texture": "#bunk_cobweb"
+        }
+      }
+    }
+  ]
+}

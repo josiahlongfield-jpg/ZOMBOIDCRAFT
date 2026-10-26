@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_puddle": {
+      "sprite": "zomboidcraft:block/city/bunk_puddle",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/bunk_puddle"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_puddle",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_puddle",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_puddle",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_puddle",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_puddle"
+        },
+        "down": {
+          "texture": "#bunk_puddle",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

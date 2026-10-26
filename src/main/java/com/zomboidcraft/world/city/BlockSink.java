@@ -30,4 +30,8 @@ public interface BlockSink {
     default void vehicle(double x, int y, double z, float yaw, String models, long seed) {
         car(x, y, z, yaw, 0, 99, seed);
     }
+
+    /** Notes a spot worth finding again (what: "bunker" for a bunker's hatch); the game ignores it. */
+    default void mark(String what, int x, int y, int z) {
+    }
 }

@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_glowstick": "zomboidcraft:block/city/bunk_glowstick",
+    "particle": "zomboidcraft:block/city/bunk_glowstick"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        6
+      ],
+      "to": [
+        11,
+        1,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glowstick"
+        },
+        "south": {
+          "texture": "#bunk_glowstick"
+        },
+        "east": {
+          "texture": "#bunk_glowstick"
+        },
+        "west": {
+          "texture": "#bunk_glowstick"
+        },
+        "up": {
+          "texture": "#bunk_glowstick"
+        },
+        "down": {
+          "texture": "#bunk_glowstick",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        9
+      ],
+      "to": [
+        7,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glowstick"
+        },
+        "south": {
+          "texture": "#bunk_glowstick"
+        },
+        "east": {
+          "texture": "#bunk_glowstick"
+        },
+        "west": {
+          "texture": "#bunk_glowstick"
+        },
+        "up": {
+          "texture": "#bunk_glowstick"
+        },
+        "down": {
+          "texture": "#bunk_glowstick",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

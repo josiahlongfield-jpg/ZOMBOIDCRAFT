@@ -76,8 +76,9 @@ def boxes(spec):
         return [[0, 0, 0, 16, h, 16, {f: face_tex(spec, f) for f in DIRS}]]
     if model == "slab":
         return [[0, 0, 0, 16, 8, 16, {f: spec["tex"] for f in DIRS}]]
-    # a box's texture is one name for every face, or a dict of faces like a cube's tex
-    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}]
+    # a box's texture is one name for every face, or a dict of faces like a cube's tex; an inked
+    # box (tools/city/ink.py) adds an eighth item, each face's own rectangle on its atlas
+    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}] + b[7:8]
             for b in spec["boxes"]]
 
 
@@ -106,12 +107,15 @@ def fit(a0, a1):
 
 
 def element(b):
-    x0, y0, z0, x1, y1, z1, tex = b
+    x0, y0, z0, x1, y1, z1, tex = b[:7]
+    uvs = b[7] if len(b) > 7 else None
     faces = {}
     for f in DIRS:
         face = {"texture": "#" + tex[f]}
         u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
-        if min(u0, v0) < 0 or max(u1, v1) > 16:
+        if uvs:
+            face["uv"] = uvs[f]
+        elif min(u0, v0) < 0 or max(u1, v1) > 16:
             (u0, u1), (v0, v1) = fit(u0, u1), fit(v0, v1)
             face["uv"] = [u0, v0, u1, v1]
         edge = {"north": z0 == 0, "south": z1 == 16, "west": x0 == 0, "east": x1 == 16,
@@ -222,6 +226,36 @@ def climbable(blocks):
     return len(names)
 
 
+def lit_spec(spec):
+    """A flickering lamp's lit model: its spec with the dark textures swapped for the lit ones."""
+    swap = spec["flicker"]["on"]
+    s = json.loads(json.dumps(spec))
+
+    def sw(t):
+        return swap.get(t, t) if isinstance(t, str) else {k: swap.get(v, v) for k, v in t.items()}
+
+    for b in s.get("boxes", []):
+        b[6] = sw(b[6])
+    if "tex" in s:
+        s["tex"] = sw(s["tex"])
+    return s
+
+
+def flicker_blockstate(name, spec):
+    """Variants for each turn, lit and dark."""
+    out = {}
+    rot = spec.get("rotate")
+    turns = ({f"facing={f}": y for f, y in FACING_Y.items()} if rot == "facing"
+             else {"axis=z": 0, "axis=x": 90} if rot == "axis" else {"": 0})
+    for key, y in turns.items():
+        for lit in (False, True):
+            v = {"model": f"{NS}:block/city/{name}{'_on' if lit else ''}"}
+            if y:
+                v["y"] = y
+            out[(key + "," if key else "") + f"lit={str(lit).lower()}"] = v
+    return {"variants": out}
+
+
 def blockstate(name, spec):
     model = f"{NS}:block/city/{name}"
     rot = spec.get("rotate")
@@ -268,6 +302,8 @@ def java_line(name, spec, tex_dir):
         flags.append("DECOR")
     if "loot" in spec:
         flags.append("LOOT")
+    if "flicker" in spec:
+        flags.append("FLICKER")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
     else:
@@ -279,7 +315,8 @@ def java_line(name, spec, tex_dir):
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
     nums = ", ".join(f"{v:g}" for v in shape)
     flag = " | ".join(flags) or "0"
-    line = f'        s("{name}", {kind}, {flag}, {spec.get("light", 0)}, SoundType.{s}, {strength:g}f, {nums});'
+    light = spec["flicker"]["light"] if "flicker" in spec else spec.get("light", 0)
+    line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f, {nums});'
     if "loot" in spec:
         line += f'\n        loot("{name}", "{spec["loot"]}");'
     return line
@@ -347,7 +384,12 @@ def main():
             lines.append(java_line(name, spec, tex_dir))
             continue
         write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec, tex_dir))
-        write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
+        if "flicker" in spec:
+            write_json(ASSETS / f"models/block/city/{name}_on.json", model_json(name, lit_spec(spec), tex_dir))
+            write_json(ASSETS / f"blockstates/{name}.json", flicker_blockstate(name, spec))
+            used.update(textures(lit_spec(spec)))
+        else:
+            write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
         write_json(DATA / f"loot_table/blocks/{name}.json", {
             "type": "minecraft:block",

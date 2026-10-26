@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_tally": "zomboidcraft:block/city/bunk_tally",
+    "particle": "zomboidcraft:block/city/bunk_tally"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tally"
+        },
+        "south": {
+          "texture": "#bunk_tally",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_tally",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bunk_tally",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_tally",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_tally",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

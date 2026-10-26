@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cables": "zomboidcraft:block/city/bunk_cables",
+    "particle": "zomboidcraft:block/city/bunk_cables"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        2,
+        7.5
+      ],
+      "to": [
+        7.6,
+        16,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables"
+        },
+        "south": {
+          "texture": "#bunk_cables"
+        },
+        "east": {
+          "texture": "#bunk_cables"
+        },
+        "west": {
+          "texture": "#bunk_cables"
+        },
+        "up": {
+          "texture": "#bunk_cables",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    },
+    {
+      "from": [
+        8.4,
+        6,
+        8
+      ],
+      "to": [
+        9,
+        16,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables"
+        },
+        "south": {
+          "texture": "#bunk_cables"
+        },
+        "east": {
+          "texture": "#bunk_cables"
+        },
+        "west": {
+          "texture": "#bunk_cables"
+        },
+        "up": {
+          "texture": "#bunk_cables",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        2,
+        7.5
+      ],
+      "to": [
+        9,
+        2.6,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables"
+        },
+        "south": {
+          "texture": "#bunk_cables"
+        },
+        "east": {
+          "texture": "#bunk_cables"
+        },
+        "west": {
+          "texture": "#bunk_cables"
+        },
+        "up": {
+          "texture": "#bunk_cables"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        6.5
+      ],
+      "to": [
+        6.6,
+        16,
+        7.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables"
+        },
+        "south": {
+          "texture": "#bunk_cables"
+        },
+        "east": {
+          "texture": "#bunk_cables"
+        },
+        "west": {
+          "texture": "#bunk_cables"
+        },
+        "up": {
+          "texture": "#bunk_cables",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    }
+  ]
+}
