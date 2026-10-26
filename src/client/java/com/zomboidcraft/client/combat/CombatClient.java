@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.minecraft.client.KeyMapping;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
@@ -45,8 +46,12 @@ public final class CombatClient {
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.zomboidcraft.fire_mode", InputConstants.KEY_X, CATEGORY);
 
     private static long lastShot = -100;
-    /** Full auto: when the next shot is due, and the rounds this hold of the trigger can still fire. */
-    private static double autoNext = -100;
+    /**
+     * Full auto: when the next shot is due on the wall clock (milliseconds), and the rounds this hold of the trigger
+     * can still fire. Checked every frame, not every tick, so the shots come evenly spaced at any rate (on ticks,
+     * 800 a minute came out a tick, then two, then one...).
+     */
+    private static double autoNextMs = -1e18;
     private static int burstLeft = -1;
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
     private static float kickPending;
@@ -75,6 +80,22 @@ public final class CombatClient {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
+        LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
+    }
+
+    /** Every frame: full auto keeps firing while the trigger's held, each shot as it falls due. */
+    private static void autoFire(Minecraft client) {
+        LocalPlayer player = client.player;
+        if (player == null || client.level == null) {
+            return;
+        }
+        ItemStack hand = player.getMainHandItem();
+        if (!client.options.keyAttack.isDown() || client.gui.screen() != null || client.isPaused()
+                || com.zomboidcraft.client.building.Placer.building() != null) {
+            burstLeft = -1;
+        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
+            pullTrigger(client, player, hand, true);
+        }
     }
 
     private static void tick(Minecraft client) {
@@ -106,14 +127,6 @@ public final class CombatClient {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }
-        // full auto keeps firing while the trigger's held
-        ItemStack hand = player.getMainHandItem();
-        if (!client.options.keyAttack.isDown() || client.gui.screen() != null
-                || com.zomboidcraft.client.building.Placer.building() != null) {
-            burstLeft = -1;
-        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
-            pullTrigger(client, player, hand, true);
-        }
         Integer grabbed = player.getAttached(Grabs.GRABBED);
         if (grabbed != null && grabbed > 0) {
             while (client.options.keyJump.consumeClick()) {
@@ -132,8 +145,8 @@ public final class CombatClient {
     }
 
     /**
-     * The trigger pulled (held: still held down on full auto). Full auto fires on its rate, a shot every tick and a
-     * half at 800 a minute, and stops when the rounds there were as the trigger went down are spent, without waiting
+     * The trigger pulled (held: still held down on full auto). Full auto fires on its rate, evenly spaced on the
+     * wall clock, and stops when the rounds there were as the trigger went down are spent, without waiting
      * on the server to say the magazine's empty.
      */
     private static void pullTrigger(Minecraft client, LocalPlayer player, ItemStack gun, boolean held) {
@@ -143,7 +156,8 @@ public final class CombatClient {
         GunType type = GunType.of(gun);
         ZcConfig.GunStats stats = type.stats();
         boolean auto = Guns.fullAuto(gun);
-        if (now >= lastShot && (auto ? now < autoNext - 0.5 : now - lastShot < type.fireDelay())) {
+        double ms = System.nanoTime() / 1e6;
+        if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay()) {
             return;
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -159,7 +173,10 @@ public final class CombatClient {
         }
         lastShot = now;
         if (auto) {
-            autoNext = Guns.nextAuto(autoNext, now, stats);
+            // a steady rate carries on from the shot that was due (so a late frame doesn't stretch the next gap), a
+            // fresh pull starts from now
+            double gap = 60000.0 / Math.max(60.0, stats.autoRpm);
+            autoNextMs = (ms - autoNextMs > gap ? ms : autoNextMs) + gap;
             burstLeft--;
         }
         boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
