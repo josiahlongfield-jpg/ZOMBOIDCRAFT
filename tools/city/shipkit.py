@@ -137,6 +137,33 @@ def flood_body(seed):
     return F.wear(t, 0.3, 3)
 
 
+def yellow(seed):
+    """Support gear's yellow enamel: smooth, chipped to grey at the edges, grimy low down."""
+    t = F.enamel(seed, YELLOW)
+    B.chips(t, 0.05, (96, 96, 92))
+    return F.wear(t, 0.3, 4)
+
+
+def gse(seed):
+    """Flight deck support gear's yellow: louvres down one side, NO STEP, oil and scuffs."""
+    t = F.enamel(seed, YELLOW)
+    B.chips(t, 0.05, (96, 96, 92))
+    for y in range(8, 30, 4):
+        F.area(t, 8, y, 30, y + 2, (60, 52, 20), dh=-0.15)
+    B.stencil(t, "NO STEP", (24, 24, 22), 10, 6, 38, 52, 14, chip=0.15, font=BOLD)
+    F.area(t, 0, 58, N, N, (70, 62, 40))
+    B.rust_runs(t, 4, 0.3, 50)
+    return F.wear(t, 0.4, 5)
+
+
+def bottle(seed):
+    """A wheeled fire bottle: red with a white band and its stencil."""
+    t = steel(seed, RED, 0.3)
+    F.area(t, 0, 8, N, 16, (226, 222, 210))
+    B.stencil(t, "HALON", (226, 222, 210), 10, 4, 28, 56, 16, chip=0.1, font=BOLD)
+    return F.wear(t, 0.3, 3)
+
+
 def label(seed, text, col=(226, 222, 210), ink=(24, 24, 22)):
     """An engraved plate screwed to the bulkhead."""
     t = B.clear(seed)
@@ -162,7 +189,7 @@ LABELS = ("2-96-0-L", "2-118-2-L", "2-150-1-Q", "3-44-0-L", "3-132-2-M", "3-176-
 
 def textures():
     T = {
-        "fit_yellow": lambda: steel(8000, YELLOW, 0.35),
+        "fit_yellow": lambda: yellow(8000),
         "fit_lens_on": lambda: lens(8001, (246, 236, 206), True), "fit_lens_off": lambda: lens(8002, (214, 208, 190), False),
         "fit_dome": lambda: dome(8003), "fit_exit": lambda: exit_sign(8004), "fit_hose": lambda: hose(8005),
         "fit_dc_locker": lambda: locker(8006, "REPAIR 2|DC LOCKER"), "fit_eebd": lambda: canister(8007),
@@ -171,6 +198,8 @@ def textures():
         "fit_red": lambda: steel(8013, RED, 0.4), "fit_frame": lambda: B.ship_wall(8014, (196, 198, 192), frames=False),
         "fit_beam": lambda: B.ship_wall(8015, (214, 214, 208), frames=False),
         "fit_dc_locker_b": lambda: locker(8016, "REPAIR 5|DC LOCKER"),
+        "fit_gse": lambda: gse(8017), "fit_bottle": lambda: bottle(8018),
+        "fit_tank": lambda: F.wear(F.enamel(8019, (176, 180, 178)), 0.25, 3),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
         T[f"fit_st_{k}"] = (lambda a, b, c: lambda: B.stencil_sign(a, b, c, 12))(8040 + i, text, col)
@@ -268,8 +297,13 @@ def blocks():
     # with fit_pipes_b's pipes passing through its web
     beam = [[0, 9, 7.25, 16, 16, 8.75, "fit_beam"], [0, 8.5, 5, 16, 9, 11, "fit_beam"]]
     add("fit_beam", beam, "Deck Beam", rotate="axis")
-    add("fit_beam_pipes", beam + [[1.5, 11, 0, 6.5, 16, 16, "bunk_pipe_red"], [8, 13, 0, 10.5, 15.5, 16, "bunk_pipe_blue"],
-                                  [12, 13.5, 0, 14, 15.5, 16, "bunk_pipe_grey"]], "Deck Beam", rotate="axis")
+    # the hangar's deep girder: an I-section a metre deep across the run it takes the axis of
+    add("fit_girder", [[0, 0, 3.5, 16, 1.5, 12.5, "fit_beam"], [0, 1.5, 7, 16, 14.5, 9, "fit_beam"],
+                       [0, 14.5, 3.5, 16, 16, 12.5, "fit_beam"]]
+        + [[x, 1.5, 6.5, x + 0.5, 14.5, 9.5, "fit_beam"] for x in (3.75, 11.75)], "Girder", rotate="axis")
+    for run in ("pipes_a", "pipes_b", "tray", "duct", "sprinkler"):
+        name = "fit_beam_pipes" if run == "pipes_b" else f"fit_beam_{run}"
+        add(name, beam + [b for b in out[f"fit_{run}"]["boxes"] if b[1] < 15.5 or b[0] > 0], "Deck Beam", rotate="axis")
 
     # ---- on the bulkheads
     add("fit_frame", [[6.5, 0, 14, 9.5, 16, 16, "fit_frame"], [5, 0, 13, 11, 16, 14, "fit_frame"]], "Frame")
@@ -297,6 +331,38 @@ def blocks():
         loot="home_tools")
     add("fit_eebd", [[2, 5, 12, 14, 6, 16, "fit_grey"]] +
         [[2.5 + i * 4, 6, 12.5, 5.5 + i * 4, 13, 15.5, "fit_eebd"] for i in range(3)], "Escape Breathing Sets")
+
+    # ---- hangar gear: the yellow support equipment, fire bottles, stands, tyres, drop tanks
+    wheels = lambda y=3.5: [[0.5, 0, 1.5, 2.5, y, 5, "navy_tyre"], [13.5, 0, 1.5, 15.5, y, 5, "navy_tyre"],
+                            [0.5, 0, 11, 2.5, y, 14.5, "navy_tyre"], [13.5, 0, 11, 15.5, y, 14.5, "navy_tyre"]]
+    add("fit_gse_power", [[1.5, 2, 1, 14.5, 12, 15, {"north": "fit_gse", "south": "fit_gse", "side": "fit_yellow",
+                                                       "up": "fit_yellow", "down": "fit_grey"}],
+                          [5, 12, 4, 11, 15, 12, "home_rubber"], [4.5, 12, 7.5, 11.5, 15.5, 8.5, "fit_grey"],
+                          [7, 2, -1, 9, 3, 1, "fit_grey"]] + wheels(), "Power Cart", decor=False)
+    add("fit_gse_air", [[1.5, 2, 1, 14.5, 9, 15, {"north": "fit_gse", "south": "fit_yellow", "side": "fit_gse",
+                                                     "up": "fit_yellow", "down": "fit_grey"}],
+                        [3, 9, 3, 13, 13, 13, "fit_yellow"], [6, 13, 6, 10, 14, 10, "fit_grey"],
+                        [7, 4, -1, 9, 6, 1, "home_rubber"]] + wheels(), "Start Cart", decor=False)
+    add("fit_firebottle", [[5, 2, 5, 11, 14, 11, "fit_bottle"], [6.5, 14, 6.5, 9.5, 15.5, 9.5, "fit_grey"],
+                           [3, 0, 6, 5, 4, 10, "navy_tyre"], [11, 0, 6, 13, 4, 10, "navy_tyre"],
+                           [4, 1.5, 7.5, 12, 2.5, 8.5, "fit_grey"], [5, 12, 11, 11, 13, 14, "fit_grey"],
+                           [4.5, 4, 11, 11.5, 9, 13, "home_rubber"]], "Fire Bottle", decor=False)
+    add("fit_stand", [[1, 0, 1, 15, 4, 16, "fit_yellow"], [1, 4, 6, 15, 8, 16, "fit_yellow"],
+                      [1, 8, 11, 15, 12, 16, "fit_yellow"], [1, 12, 0, 2, 20, 1, "fit_grey"], [14, 12, 0, 15, 20, 1, "fit_grey"],
+                      [1, 19, 0, 2, 20, 16, "fit_grey"], [14, 19, 0, 15, 20, 16, "fit_grey"]], "Work Stand", decor=False)
+    add("fit_towbar", [[7, 1, 0, 9, 2.5, 16, "fit_yellow"], [5, 0, 10, 7, 3, 14, "navy_tyre"], [9, 0, 10, 11, 3, 14, "navy_tyre"],
+                       [6, 0.5, 0, 10, 3, 1.5, "fit_grey"]], "Tow Bar")
+    add("fit_chain_rack", [[1, 12, 13, 15, 13, 16, "fit_grey"]]
+        + [[x, 2, 14.5, x + 1, 12, 15.5, "vessel_chain_h"] for x in (2.5, 5.5, 8.5, 11.5)], "Chain Rack")
+    add("fit_fod", [[4, 0, 4, 12, 10, 12, "fit_yellow"], [3.5, 10, 3.5, 12.5, 11, 12.5, "fit_grey"]], "FOD Can",
+        rotate=None, decor=False)
+    add("fit_tyres", [[3, 0, 3, 13, 4, 13, "navy_tyre"], [3, 4.2, 3, 13, 8.2, 13, "navy_tyre"],
+                      [3.5, 8.4, 3.5, 12.5, 12.4, 12.5, "navy_tyre"], [6, 12.4, 6, 10, 12.6, 10, "fit_grey"]], "Spare Tyres",
+        rotate=None, decor=False)
+    add("fit_droptank", [[4, 4, 0, 12, 12, 16, "fit_tank"], [2, 0, 3, 14, 4.5, 5, "fit_yellow"],
+                         [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
+    add("fit_droptank_nose", [[5, 5, 0, 11, 11, 6, "fit_tank"], [4, 4, 6, 12, 12, 16, "fit_tank"],
+                              [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
 
     for k in SIGNS:
         add(f"fit_st_{k}", [[0, 0, 15.75, 16, 16, 16, f"fit_st_{k}"]], "Stencil")

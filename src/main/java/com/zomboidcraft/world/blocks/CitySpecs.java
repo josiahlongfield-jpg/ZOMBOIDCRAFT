@@ -1939,12 +1939,20 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_duct_grille", AXIS, DECOR, 0, SoundType.METAL, 0f, 2, 11, 0, 14, 16, 16, 4, 10.9, 4, 12, 11, 12);
         s("fit_sprinkler", AXIS, DECOR, 0, SoundType.METAL, 0f, 7, 14.5, 0, 9, 16, 16, 7.5, 13.5, 7.5, 8.5, 14.5, 8.5, 6.5, 13, 6.5, 9.5, 13.5, 9.5);
         s("fit_beam", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11);
+        s("fit_girder", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 0, 3.5, 16, 1.5, 12.5, 0, 1.5, 7, 16, 14.5, 9, 0, 14.5, 3.5, 16, 16, 12.5, 3.75, 1.5, 6.5, 4.25, 14.5, 9.5, 11.75, 1.5, 6.5, 12.25, 14.5, 9.5);
+        s("fit_beam_pipes_a", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 1, 12.5, 0, 4, 15.5, 16, 5, 13, 0, 7.5, 15.5, 16, 9, 11.5, 0, 13.5, 16, 16);
         s("fit_beam_pipes", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 1.5, 11, 0, 6.5, 16, 16, 8, 13, 0, 10.5, 15.5, 16, 12, 13.5, 0, 14, 15.5, 16);
+        s("fit_beam_tray", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 2, 14, 0, 14, 14.5, 16, 2, 14.5, 0, 2.5, 16, 16, 13.5, 14.5, 0, 14, 16, 16, 3, 14.5, 0, 13, 15.6, 16, 6, 13.2, 3, 7, 14, 16);
+        s("fit_beam_duct", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 2, 11, 0, 14, 16, 16, 1.5, 10.5, 7, 14.5, 16, 8);
+        s("fit_beam_sprinkler", AXIS, DECOR, 0, SoundType.METAL, 0f, 0, 9, 7.25, 16, 16, 8.75, 0, 8.5, 5, 16, 9, 11, 7, 14.5, 0, 9, 16, 16, 7.5, 13.5, 7.5, 8.5, 14.5, 8.5, 6.5, 13, 6.5, 9.5, 13.5, 9.5);
         s("fit_frame", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 14, 9.5, 16, 16, 5, 0, 13, 11, 16, 14);
         s("fit_valve", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 13, 9.5, 16, 16, 4, 5, 11.5, 12, 13, 12, 7.5, 8.5, 12, 8.5, 9.5, 13, 6, 9, 12.5, 10, 9.5, 16);
         s("fit_pipe_drop", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 0, 13.5, 4.5, 16, 16, 6, 0, 14, 8, 16, 16, 1.5, 7, 13, 8.5, 8, 16);
         s("fit_jbox", FACING, DECOR, 0, SoundType.METAL, 0f, 4, 6, 14, 12, 12, 16, 7.5, 12, 14.5, 8.5, 16, 15.5, 7.5, 0, 14.5, 8.5, 6, 15.5);
         s("fit_speaker", FACING, DECOR, 0, SoundType.METAL, 0f, 4, 11, 13, 12, 15, 16, 7, 15, 14, 9, 16, 16);
+    }
+
+    private void part10() {
         s("fit_phone", FACING, DECOR, 0, SoundType.METAL, 0f, 4, 6, 13, 12, 13, 16, 7.5, 13, 14.5, 8.5, 16, 15.5);
         s("fit_firestation", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 9, 14, 14, 10, 16, 3, 3, 11, 13, 9, 15, 3.5, 9, 11.5, 12.5, 11, 14.5, 12.5, 1, 12, 14, 7, 13.5, 6, 12, 12, 10, 14, 16, 5, 14, 13, 11, 14.6, 15);
         s("fit_dc_locker", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
@@ -1952,14 +1960,21 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fit_dc_locker_b", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
         loot("fit_dc_locker_b", "home_tools");
         s("fit_eebd", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 5, 12, 14, 6, 16, 2.5, 6, 12.5, 5.5, 13, 15.5, 6.5, 6, 12.5, 9.5, 13, 15.5, 10.5, 6, 12.5, 13.5, 13, 15.5);
+        s("fit_gse_power", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 2, 1, 14.5, 12, 15, 5, 12, 4, 11, 15, 12, 4.5, 12, 7.5, 11.5, 15.5, 8.5, 7, 2, -1, 9, 3, 1, 0.5, 0, 1.5, 2.5, 3.5, 5, 13.5, 0, 1.5, 15.5, 3.5, 5, 0.5, 0, 11, 2.5, 3.5, 14.5, 13.5, 0, 11, 15.5, 3.5, 14.5);
+        s("fit_gse_air", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 2, 1, 14.5, 9, 15, 3, 9, 3, 13, 13, 13, 6, 13, 6, 10, 14, 10, 7, 4, -1, 9, 6, 1, 0.5, 0, 1.5, 2.5, 3.5, 5, 13.5, 0, 1.5, 15.5, 3.5, 5, 0.5, 0, 11, 2.5, 3.5, 14.5, 13.5, 0, 11, 15.5, 3.5, 14.5);
+        s("fit_firebottle", FACING, 0, 0, SoundType.METAL, 2f, 5, 2, 5, 11, 14, 11, 6.5, 14, 6.5, 9.5, 15.5, 9.5, 3, 0, 6, 5, 4, 10, 11, 0, 6, 13, 4, 10, 4, 1.5, 7.5, 12, 2.5, 8.5, 5, 12, 11, 11, 13, 14, 4.5, 4, 11, 11.5, 9, 13);
+        s("fit_stand", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 4, 16, 1, 4, 6, 15, 8, 16, 1, 8, 11, 15, 12, 16, 1, 12, 0, 2, 20, 1, 14, 12, 0, 15, 20, 1, 1, 19, 0, 2, 20, 16, 14, 19, 0, 15, 20, 16);
+        s("fit_towbar", FACING, DECOR, 0, SoundType.METAL, 0f, 7, 1, 0, 9, 2.5, 16, 5, 0, 10, 7, 3, 14, 9, 0, 10, 11, 3, 14, 6, 0.5, 0, 10, 3, 1.5);
+        s("fit_chain_rack", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 1, 12, 13, 15, 13, 16, 2.5, 2, 14.5, 3.5, 12, 15.5, 5.5, 2, 14.5, 6.5, 12, 15.5, 8.5, 2, 14.5, 9.5, 12, 15.5, 11.5, 2, 14.5, 12.5, 12, 15.5);
+        s("fit_fod", PLAIN, 0, 0, SoundType.METAL, 2f, 4, 0, 4, 12, 10, 12, 3.5, 10, 3.5, 12.5, 11, 12.5);
+        s("fit_tyres", PLAIN, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 4, 13, 3, 4.2, 3, 13, 8.2, 13, 3.5, 8.4, 3.5, 12.5, 12.4, 12.5, 6, 12.4, 6, 10, 12.6, 10);
+        s("fit_droptank", AXIS, 0, 0, SoundType.METAL, 2f, 4, 4, 0, 12, 12, 16, 2, 0, 3, 14, 4.5, 5, 2, 0, 11, 14, 4.5, 13);
+        s("fit_droptank_nose", AXIS, 0, 0, SoundType.METAL, 2f, 5, 5, 0, 11, 11, 6, 4, 4, 6, 12, 12, 16, 2, 0, 11, 14, 4.5, 13);
         s("fit_st_fire", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_repair", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_escape", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_hearing", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_nosmoking", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
-    }
-
-    private void part10() {
         s("fit_st_keepclosed", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_ammo", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
         s("fit_st_oxygen", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.75, 16, 16, 16);
