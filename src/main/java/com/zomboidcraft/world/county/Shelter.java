@@ -73,7 +73,7 @@ final class Shelter {
             Placer bp = host.turned(ax, depth, az, q);
             Bunker bunker = new Bunker(bp, new SplittableRandom(seed), Bunker.Kind.SHELTER, state);
             int[] box = bunker.bounds();
-            if (!inside(bp, Math.min(box[0], x0), z0, Math.max(box[2], x1), box[3], area)) {
+            if (!inside(bp, Math.min(box[0], x0), z0, Math.max(box[2], x1), box[3], area) || !clear(bp, box, rise)) {
                 continue;
             }
             Shelter s = new Shelter(bp, new SplittableRandom(seed ^ 0x5E17E2L), state, rise);
@@ -86,6 +86,32 @@ final class Shelter {
             return true;
         }
         return false;
+    }
+
+    /**
+     * True if nothing is built yet where the bunker, the landing and the long stair go: an old city's
+     * subway runs under its streets, and the shelter must not cut through it.
+     */
+    private static boolean clear(Placer bp, int[] box, int rise) {
+        for (int y = 0; y <= 5; y++) {
+            for (int x = box[0]; x <= box[2]; x++) {
+                for (int z = box[1]; z <= box[3]; z++) {
+                    if (bp.get(x, y, z) != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        for (int z = -6 - rise; z <= -1; z++) {
+            for (int x = -2; x <= 3; x++) {
+                for (int y = 0; y < rise + 4; y++) {  // up to just under the host's floor
+                    if (bp.get(x, y, z) != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
