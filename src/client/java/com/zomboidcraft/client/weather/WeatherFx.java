@@ -222,7 +222,7 @@ public final class WeatherFx {
             // most of it lies low, washing over the street; the more fog, the more of it stands tall
             boolean low = RANDOM.nextFloat() > w.fog();
             double y = top + 0.1 + RANDOM.nextDouble() * (low ? 0.9 : 1.5 + 6 * w.fog());
-            float strength = (low ? 0.22f + 0.08f * night : 0.14f + 0.40f * w.fog()) * (0.6f + 0.4f * RANDOM.nextFloat());
+            float strength = (low ? 0.20f + 0.06f * night : 0.18f + 0.25f * w.fog()) * (0.8f + 0.2f * RANDOM.nextFloat());
             double speed = drift * (0.6 + 0.8 * RANDOM.nextDouble());
             level.addParticle(WeatherParticles.MIST, x, y, z, windX * speed, strength, windZ * speed);
         }

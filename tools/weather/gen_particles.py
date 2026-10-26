@@ -19,18 +19,28 @@ def value_noise(rng, n, cells):
 
 
 def mist(seed, n=64):
-    """A wide, flat smear of haze: no rim, no core, so many of them overlapping read as one layer
-    of fog instead of a pile of round puffs."""
+    """A wide, flat, ragged wisp of haze.
+
+    Shader packs (Photon) throw away every pixel of a particle fainter than about a tenth, so a
+    soft fade to the rim can't be drawn: what's left is a hard disc, or nothing at all. So the
+    wisp has no faint pixels. Its body is solid (the particle's own alpha makes it see-through),
+    and toward the rim it breaks up into scattered specks that thin out, which the pack's frame
+    blending smears back into a soft edge.
+    """
     rng = np.random.default_rng(seed)
     y, x = np.mgrid[0:n, 0:n] / (n - 1) * 2 - 1
     r2 = x * x + (y * 2.4) ** 2  # flat: a bank lies along the ground
-    fall = np.exp(-2.6 * r2) * np.clip(1 - np.sqrt(r2), 0, 1) ** 0.6
+    fall = np.clip(1 - np.sqrt(r2), 0, 1)
     tex = 0.5 * value_noise(rng, n, 3) + 0.3 * value_noise(rng, n, 5) + 0.2 * value_noise(rng, n, 9)
-    a = np.clip(fall * (0.15 + 0.85 * tex) * 0.75, 0, 1)
+    m = fall * (0.4 + 1.2 * tex)  # ragged: the noise eats into the shape
+    solid, edge = 0.62, 0.18
+    speck = np.clip((m - edge) / (solid - edge), 0, 1)
+    keep = (m >= solid) | (rng.random((n, n)) < speck ** 1.5)
+    a = np.where(keep, 0.6 + 0.4 * np.clip(tex * 1.4 - 0.2, 0, 1), 0)
     rgba = np.zeros((n, n, 4), np.uint8)
     rgba[..., :3] = 235
     rgba[..., 3] = (a * 255).astype(np.uint8)
-    return Image.fromarray(rgba).filter(ImageFilter.GaussianBlur(2.5))
+    return Image.fromarray(rgba)
 
 
 def scrap(kind, seed, n=16):

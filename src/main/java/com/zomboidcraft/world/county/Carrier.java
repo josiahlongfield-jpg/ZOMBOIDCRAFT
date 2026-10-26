@@ -298,12 +298,20 @@ final class Carrier {
                     if (k == 1) {
                         p.set(x, y, z, y == FLIGHT ? "navy_flight" : skin(x, y, z));
                     } else if (k == 2) {
+                        boolean deck = y == GALLERY || y == DECKS[0] || y == DECKS[1] || y == DECKS[2];
+                        // below the waterline the plating's black and red would show inside: line it with the bulkheads' enamel
+                        boolean lined = y > TANK && y <= -2 && plated(x, y, z);
                         p.set(x, y, z, y <= TANK ? "vessel_tanktop" : y == HANGAR ? "navy_hangar_floor"
-                                : y == GALLERY || y == DECKS[0] || y == DECKS[1] || y == DECKS[2] ? "navy_deck_steel" : "air");
+                                : lined ? "navy_wall" : deck ? "navy_deck_steel" : "air");
                     }
                 }
             }
         }
+    }
+
+    /** True where (x, y, z) inside her lies against her plating. */
+    private boolean plated(int x, int y, int z) {
+        return kind(x + 1, y, z) == 1 || kind(x - 1, y, z) == 1 || kind(x, y, z + 1) == 1 || kind(x, y, z - 1) == 1;
     }
 
     /** The plate at a cell of her shell: red below the boot top, black at the waterline, haze grey above. */
@@ -793,6 +801,16 @@ final class Carrier {
         return t + "[axis=" + axis + "]";
     }
 
+    /**
+     * A console (or overhead console) facing f: on the emergency generator (lit) most displays still
+     * show; on the dead main supply nearly all are dark, a few flickering.
+     */
+    private String console(String name, String f, boolean lit) {
+        double r = chance();
+        String c = lit ? (r < 0.7 ? "_on" : r < 0.9 ? "_flicker" : "") : r < 0.06 ? "_on" : r < 0.3 ? "_flicker" : "";
+        return name + c + "[facing=" + f + "]";
+    }
+
     /** The red night lights: on the battery circuit, so most still glow. */
     private String red() {
         return chance() < 0.8 ? "fit_red_on" : "fit_red";
@@ -926,7 +944,7 @@ final class Carrier {
         String toNear = port ? "south" : "north", toFar = port ? "north" : "south";
         int dx = (xa + xb) / 2;
         String floor = switch (r) {
-            case MESS -> any("navy_tile_blue", "navy_tile_red");
+            case MESS -> chance() < 0.7 ? "navy_tile_grey" : "navy_tile_blue";
             case GALLEY, BRIG -> "navy_tile_grey";
             case SICKBAY -> "navy_tile_green";
             case BERTHING, STATEROOM, OFFICE, READY, CONTROL -> any("navy_tile_blue", "floor_lino");
@@ -968,43 +986,76 @@ final class Carrier {
         int lo2 = Math.min(near, far) + (port ? 0 : 1), hi2 = Math.max(near, far) - (port ? 1 : 0);
         switch (r) {
             case BERTHING -> {
+                // racks three high back to back in rows across the compartment, two long with a tall locker
+                // between each pair (as in the berthing photos), the aisles between the rows
+                int z0 = Math.min(near, far) + 1, z1 = Math.max(near, far) - 1;
                 for (int x = xa; x <= xb; x++) {
                     int k = (x - xa) % 3;
                     if (k == 0) {
                         continue;
                     }
                     String f = k == 1 ? "west" : "east";
-                    for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z++) {
+                    for (int z = z0; z <= z1; z++) {
+                        int q = (z - z0) % 3;
+                        boolean pair = q < 2 && (q == 1 || z + 1 <= z1);
+                        String end = (q == 0) == f.equals("east") ? "a" : "b";
                         if (inside(x, y + 1, z) && inside(x, y + 2, z)) {
-                            p.set(x, y + 1, z, "navy_rack_lo[facing=" + f + "]");
-                            p.set(x, y + 2, z, "navy_rack_hi[facing=" + f + "]");
+                            p.set(x, y + 1, z, (pair ? "fit_rack_lo_" + end : "fit_locker_lo") + "[facing=" + f + "]");
+                            p.set(x, y + 2, z, (pair ? "fit_rack_hi_" + end : "fit_locker_hi") + "[facing=" + f + "]");
                         }
                     }
-                    in(x, y + 1, far, "bunk_locker[facing=" + toNear + "]");
+                    if (inside(x, y + 2, far)) {
+                        in(x, y + 1, far, "fit_locker_lo[facing=" + toNear + "]");
+                        in(x, y + 2, far, "fit_locker_hi[facing=" + toNear + "]");
+                    }
                 }
                 litter(xa, xb, za, zb, y, "home_clothes_pile", 0.06);
             }
             case MESS -> {
+                // tables in rows with their fixed stools either side, the serving line down one end, screens
                 for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z++) {
                     if (Math.floorMod(z - far, 3) != 1) {
                         continue;
                     }
                     for (int x = xa + 1; x <= xb - 2; x++) {
-                        in(x, y + 1, z, "navy_mess_table[axis=x]");
+                        in(x, y + 1, z, "fit_mess_table[axis=x]");
+                        if (free(x, y + 1, z - 1)) {
+                            p.set(x, y + 1, z - 1, "fit_stools[facing=south]");
+                        }
+                        if (free(x, y + 1, z + 1)) {
+                            p.set(x, y + 1, z + 1, "fit_stools[facing=north]");
+                        }
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
                     if (z != near) {
-                        in(xb, y + 1, z, "bunk_counter[facing=west]");
+                        in(xb, y + 1, z, "fit_counter_steel[facing=west]");
+                        if (Math.floorMod(z, 3) == 0) {
+                            in(xb, y + 2, z, "fit_dispenser[facing=west]");
+                        }
                     }
+                }
+                for (int x = xa + 1; x < xb; x += 4) {
+                    in(x, y + 2, far, "navy_screen[facing=" + toNear + "]");
                 }
                 litter(xa, xb, za, zb, y, "paper", 0.05);
             }
             case GALLEY -> {
                 for (int x = xa; x <= xb; x++) {
-                    in(x, y + 1, far, (x % 3 == 0 ? "bunk_counter" : "bunk_range") + "[facing=" + toNear + "]");
-                    if (x > xa + 1 && x < xb - 1) {
-                        in(x, y + 1, far + in * 3, "bunk_counter[facing=" + toFar + "]");
+                    if (x % 3 == 0) {
+                        in(x, y + 1, far, "fit_counter_steel[facing=" + toNear + "]");
+                    } else {
+                        in(x, y + 1, far, "fit_oven[facing=" + toNear + "]");
+                        in(x, y + 2, far, "fit_oven[facing=" + toNear + "]");
+                    }
+                    // the islands: worktops, kettles and ovens back to back in rows down the galley
+                    for (int z = far - in * 3; (z - near) * in > 1; z -= in * 3) {
+                        if (x > xa + 1 && x < xb - 1) {
+                            in(x, y + 1, z, (x % 4 == 0 ? "fit_kettle" : x % 4 == 2 ? "fit_oven" : "fit_counter_steel") + "[facing=" + toFar + "]");
+                            if (x % 4 == 1) {
+                                in(x, y + 2, z, "fit_dispenser[facing=" + toFar + "]");
+                            }
+                        }
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
@@ -1020,15 +1071,27 @@ final class Carrier {
                         p.set(x, y + 1, far, "bunk_medbed_head[facing=" + toNear + "]");
                         p.set(x, y + 1, far - in, "bunk_medbed_foot[facing=" + toNear + "]");
                         in(x + 1, y + 1, far, "bunk_iv_stand");
+                        in(x, y + 2, far, "fit_cabinet[facing=" + toNear + "]");
+                        in(x + 1, y + 2, far, "fit_fan[facing=" + toNear + "]");
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
                     if (z != near && z != far) {
                         in(xa, y + 1, z, "bunk_medcab[facing=east]");
+                        in(xa, y + 2, z, "fit_cabinet[facing=east]");
                     }
                 }
+                // the treatment table under its lamp, the litters on the bulkhead
+                int mz = (near + far) / 2;
+                in(dx, y + 1, mz, "bunk_medbed_head[facing=east]");
+                in(dx + 1, y + 1, mz, "bunk_medbed_foot[facing=east]");
+                in(dx, y + 3, mz, "fit_surgical_on");
+                for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z += 3) {
+                    in(xb, y + 1, z, "fit_litter[facing=west]");
+                    in(xb, y + 2, z, "fit_litter[facing=west]");
+                }
                 in(xb, y + 1, near, "bunk_desk[facing=west]");
-                in(xb, y + 2, (near + far) / 2, "bunk_first_aid[facing=west]");
+                in(xb, y + 2, (near + far) / 2 + in, "bunk_first_aid[facing=west]");
                 litter(xa, xb, za, zb, y, "blood_splat", 0.08);
             }
             case BRIG -> {
@@ -1315,6 +1378,9 @@ final class Carrier {
                 bulkhead |= x == w;
             }
             for (int z = Z0; z < Z0 + NZ; z++) {
+                if (!bulkhead && kind(x, TANK, z) == 2) {
+                    p.set(x, TANK, z, "fit_deckplate");
+                }
                 for (int y = bottom; y <= top; y++) {
                     if (!inside(x, y, z)) {
                         continue;
@@ -1324,7 +1390,7 @@ final class Carrier {
                     } else if (y == walk) {
                         // the gratings: along both sides, across at each end
                         boolean side = Math.abs(z + 0.5) > 9 || x == x0 + 1 || x == x1 - 1;
-                        p.set(x, y, z, side ? "bunk_walkway" : "air");
+                        p.set(x, y, z, plated(x, y, z) ? "navy_wall" : side ? "bunk_walkway" : "air");
                     }
                 }
                 if (!bulkhead && inside(x, walk, z) && Math.abs(z + 0.5) > 9 && Math.abs(z + 0.5) < 11) {
@@ -1345,7 +1411,7 @@ final class Carrier {
                 for (int s : new int[] {-1, 1}) {
                     int e = edgeZ(x, top - 1, s);
                     if (e != Integer.MIN_VALUE) {
-                        in(x, top - 1, e - s, x % 24 == 8 ? "vessel_pipe_valve[axis=x]" : "vessel_pipe[axis=x]");
+                        in(x, top - 1, e - 2 * s, x % 24 == 8 ? "vessel_pipe_valve[axis=x]" : "vessel_pipe[axis=x]");
                     }
                 }
             }
@@ -1353,6 +1419,14 @@ final class Carrier {
         for (int i = 0; i + 1 < walls.length; i++) {
             int a = walls[i] + 1, b = walls[i + 1] - 1;
             boolean main = i % 2 == 0;
+            // overhead: the lagged steam line and the firemain over the plant, cable trays outboard, a deep beam every fourth frame
+            for (int x = a; x <= b; x++) {
+                boolean bm = (x - a) % 4 == 0;
+                for (int[] run : new int[][] {{-3, 0}, {2, 1}, {-7, 2}, {6, 2}}) {
+                    String r = run[1] == 0 ? "fit_pipes_a" : run[1] == 1 ? "fit_pipes_b" : "fit_tray";
+                    over(x, top, run[0], bm ? beam(r, "x") : r + "[axis=x]");
+                }
+            }
             if (main) {
                 // two turbines, the gearing between them and the shaft aft
                 for (int x = a + 3; x <= a + 12; x++) {
@@ -1376,10 +1450,20 @@ final class Carrier {
                     in(a + 6, bottom, z, "bunk_tank");
                     in(a + 6, bottom + 1, z, "bunk_tank_top");
                 }
-                // the control booth's consoles at the forward end
-                for (int z = -4; z <= 3; z++) {
-                    in(b, walk + 1, z, z == 0 ? "ship_telegraph[facing=west]" : "ship_console[facing=west]");
+                // the boiler fronts on the after bulkhead, cold, either side of the steam lines
+                for (int z = -7; z <= 6; z++) {
+                    if (z < -2 || z > 1) {
+                        in(a, bottom, z, "fit_burner[facing=east]");
+                        in(a, bottom + 1, z, "fit_burner[facing=east]");
+                    }
                 }
+                // the throttle board on the forward bulkhead: the wheels under two tiers of gauges
+                for (int z = -6; z <= 5; z++) {
+                    in(b, bottom, z, "fit_throttle[facing=west]");
+                    in(b, bottom + 1, z, "fit_gauges[facing=west]");
+                    in(b, bottom + 2, z, z % 4 == 0 ? "fit_phone[facing=west]" : z % 4 == 2 ? "fit_jbox[facing=west]" : "fit_gauges[facing=west]");
+                }
+                controlRoom(b, walk, top);
             } else {
                 for (int x = a + 2; x + 2 <= b; x += 5) {
                     for (int z : new int[] {-5, 4}) {
@@ -1396,8 +1480,73 @@ final class Carrier {
             for (int k = 0; k < walk - bottom; k++) {
                 in(a + 1 + k, walk - k, -9, "steel_stairs[facing=west]");
             }
+            // along her sides: the fuel manifolds in yellow over their gate valves, the lagged risers, the low pipe runs
+            for (int x = a + 2; x <= b - 2; x++) {
+                int m = (x - a) % 6;
+                for (int s : new int[] {-1, 1}) {
+                    int e = edgeZ(x, bottom + 1, s);
+                    if (e == Integer.MIN_VALUE) {
+                        continue;
+                    }
+                    int z = e - 2 * s;
+                    String f = s > 0 ? "north" : "south";
+                    if (m == 0) {
+                        over(x, bottom, z, "fit_valve_bronze[facing=" + f + "]");
+                        over(x, bottom + 1, z, "fit_fuel_valves[facing=" + f + "]");
+                        over(x, bottom + 2, z, "fit_fuel_valves[facing=" + f + "]");
+                    } else if (m == 3) {
+                        for (int y = bottom; y < walk; y++) {
+                            over(x, y, z, "fit_riser[facing=" + f + "]");
+                        }
+                    } else {
+                        over(x, bottom, z, "vessel_pipe[axis=x]");
+                    }
+                }
+            }
+            over(a, walk + 2, -10, lantern("east"));
+            over(b, walk + 2, 9, lantern("west"));
             dressing(a, b, -8, 7, bottom - 1, 6);
         }
+    }
+
+    /**
+     * The engine control room over the throttle board at b, on the emergency generator: glazed aft
+     * over the turbines, a door each side onto the gratings; the boards and the telegraph on the
+     * bulkhead, the console facing them, its chairs.
+     */
+    private void controlRoom(int b, int walk, int top) {
+        int c0 = b - 3;
+        for (int x = c0 - 1; x <= b; x++) {
+            for (int z = -9; z <= 8; z++) {
+                if (!inside(x, walk, z)) {
+                    continue;
+                }
+                p.set(x, walk, z, "fit_deckplate");
+                for (int y = walk + 1; y <= top; y++) {
+                    boolean wall = x == c0 - 1 || z == -9 || z == 8;
+                    p.set(x, y, z, !wall ? "air" : x == c0 - 1 && y == walk + 2 ? "navy_window[facing=west]" : "navy_wall");
+                }
+            }
+        }
+        Doors.abandoned(p, rng, b - 1, walk + 1, -9, "ship_door", "north", Doors.hinge(rng));
+        Doors.abandoned(p, rng, b - 1, walk + 1, 8, "ship_door", "south", Doors.hinge(rng));
+        for (int z = -8; z <= 7; z++) {
+            in(b, walk + 1, z, z == -1 ? "ship_telegraph[facing=west]" : "fit_throttle[facing=west]");
+            in(b, walk + 2, z, "fit_gauges[facing=west]");
+            if (z > -7 && z < 6) {
+                in(b - 2, walk + 1, z, console("fit_console", "west", true));
+                if (Math.floorMod(z, 4) == 1) {
+                    in(c0, walk + 1, z, "bunk_chair[facing=east]");
+                }
+            }
+            if (Math.floorMod(z, 4) == 2) {
+                in(b - 1, top, z, tube("x", true));
+                in(c0, top, z, tube("x", true));
+            }
+        }
+        in(c0, walk + 2, -8, lantern("east"));
+        in(c0, walk + 2, 7, "fit_phone[facing=east]");
+        in(b - 1, top, -1, red());
     }
 
     // ------------------------------------------------------------------ fore and aft at the hangar deck
@@ -2056,7 +2205,7 @@ final class Carrier {
         p.set(148, fy, 22, "bunk_chair[facing=east]");
         p.set(151, fy, 23, "bunk_chair_down[facing=west]");
         for (int x = 147; x <= 153; x++) {
-            p.set(x, fy, IZ1 - 1, "ship_console[facing=north]");
+            p.set(x, fy, IZ1 - 1, console("fit_console", "north", false));
             p.set(x, fy + 1, IZ1 - 1, x % 2 == 0 ? "navy_whiteboard[facing=north]" : "navy_screen[facing=north]");
         }
         p.set(146, fy + 1, 21, "navy_st_control[facing=east]");
@@ -2081,23 +2230,43 @@ final class Carrier {
             }
         }
         for (int z = IZ0 + 1; z < IZ1; z++) {
-            p.set(L3[2] - 1, L3[0] + 1, z, "ship_console[facing=west]");
+            p.set(L3[2] - 1, L3[0] + 1, z, console("fit_console", "west", false));
         }
         p.set(L3[2] - 3, L3[0] + 1, 24, "bunk_map_table");
         // the navigation bridge: consoles under the forward windows, the helm, the captain's chair, the chart table
         int[] G = levels[4];
         for (int z = G[3] + 1; z < G[4]; z++) {
-            p.set(G[2] - 1, G[0] + 1, z, z % 3 == 0 ? "bunk_chair[facing=east]" : "ship_console[facing=east]");
+            p.set(G[2] - 1, G[0] + 1, z, console("fit_console", "west", false));
+            if (z % 3 == 0) {
+                p.set(G[2] - 2, G[0] + 1, z, "bunk_chair[facing=east]");
+            }
         }
-        p.set(G[2] - 4, G[0] + 1, 24, "bunk_map_table");
+        p.set(G[2] - 5, G[0] + 1, 24, "fit_chart_table[facing=west]");
+        p.setIfAir(G[2] - 3, G[0] + 2, 22, tube("x", false));
+        p.setIfAir(G[2] - 3, G[0] + 2, 26, red());
         int[] B = levels[5];
         int by = B[0] + 1;
         for (int z = B[3] + 1; z < B[4]; z++) {
-            p.set(B[2] - 1, by, z, z == 23 || z == 24 ? "ship_telegraph[facing=east]" : "ship_console[facing=east]");
+            p.set(B[2] - 1, by, z, z == 23 || z == 24 ? "ship_telegraph[facing=west]" : console("fit_console", "west", false));
+            if (Math.floorMod(z, 3) == 1) {
+                p.set(B[2] - 1, by + 1, z, console("fit_overhead", "west", false));
+            }
         }
-        p.set(B[2] - 3, by, B[3] + 2, "navy_ready_seat[facing=east]");
-        p.set(B[2] - 6, by, 25, "bunk_map_table");
-        p.set(B[2] - 6, by, 26, "bunk_map_table");
+        // the captain's chair to starboard, the navigator's to port; the helm and lee helm behind the telegraphs
+        p.set(B[2] - 3, by, B[3] + 2, "fit_chair_high[facing=east]");
+        p.set(B[2] - 3, by, B[4] - 2, "fit_chair_high[facing=east]");
+        p.set(B[2] - 4, by, 23, console("fit_console", "east", false));
+        p.set(B[2] - 4, by, 24, console("fit_console", "east", false));
+        p.set(B[2] - 5, by, 23, "bunk_chair[facing=east]");
+        p.set(B[2] - 6, by, 25, "fit_chart_table[facing=west]");
+        p.set(B[2] - 6, by, 26, "fit_chart_table[facing=west]");
+        p.set(B[2] - 8, by, B[3] + 1, "fit_pelorus");
+        p.set(B[2] - 8, by, B[4] - 1, "fit_pelorus");
+        for (int x : new int[] {B[2] - 4, B[2] - 9}) {
+            p.setIfAir(x, by + 1, 22, tube("x", false));
+            p.setIfAir(x, by + 1, 26, tube("x", false));
+            p.setIfAir(x + 2, by + 1, 24, red());
+        }
         p.set(B[2] - 9, by + 1, B[4] - 1, "navy_screen[facing=north]");
         p.set(B[2] - 10, by + 1, B[4] - 1, "navy_screen[facing=north]");
         p.set(B[2] - 11, by + 1, 22, "navy_st_bridge[facing=east]");
@@ -2105,10 +2274,17 @@ final class Carrier {
         int[] F = levels[6];
         int fly = F[0] + 1;
         for (int x = F[1] + 2; x < F[2] - 1; x++) {
-            p.set(x, fly, F[3] + 1, "ship_console[facing=north]");
+            p.set(x, fly, F[3] + 1, console("fit_console", "south", false));
+            if (x % 3 == 0) {
+                p.set(x, fly + 1, F[3] + 1, console("fit_overhead", "south", false));
+            }
         }
-        p.set(F[1] + 5, fly, F[3] + 2, "navy_ready_seat[facing=north]");
-        p.set(F[1] + 9, fly, F[3] + 2, "navy_ready_seat[facing=north]");
+        // the air boss and the mini boss in their high chairs, looking down the deck
+        p.set(F[1] + 5, fly, F[3] + 2, "fit_chair_high[facing=north]");
+        p.set(F[1] + 9, fly, F[3] + 2, "fit_chair_high[facing=north]");
+        for (int x = F[1] + 3; x < F[2] - 1; x += 4) {
+            p.setIfAir(x, fly + 1, (F[3] + F[4]) / 2 + 1, x % 8 < 4 ? red() : tube("x", false));
+        }
         p.set(F[1] + 1, fly, 24, "ship_console[facing=west]");
         p.set(F[1] + 12, fly + 1, F[4] - 1, "navy_whiteboard[facing=north]");
         // the top: the arrays' cabinets

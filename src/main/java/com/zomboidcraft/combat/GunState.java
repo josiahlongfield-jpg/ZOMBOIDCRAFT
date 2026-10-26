@@ -48,6 +48,11 @@ public record GunState(boolean mag, int rounds, boolean jammed) {
             ZomboidCraft.id("laser_on"), DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
 
+    /** The gun is set to full auto (the fire mode key), on a gun that has the setting. */
+    public static final DataComponentType<Boolean> FULL_AUTO = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("full_auto"), DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
+
     public GunState withRounds(int rounds) {
         return new GunState(mag, rounds, jammed);
     }

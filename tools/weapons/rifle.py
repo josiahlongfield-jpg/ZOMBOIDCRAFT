@@ -117,14 +117,16 @@ def irons(m, up=True):
     b.box((-0.45, RAIL, 5.60), (0.45, RAIL + 0.24, 6.80), anod)
     b.rod(0.45, 0.68, 0.15, 'steel', axis=0, at=(RAIL + 0.36, 6.45))          # windage knob
     if up:
-        for x0, x1 in ((-0.45, -0.32), (0.32, 0.45)):
-            b.box((x0, RAIL + 0.24, 5.95), (x1, SIGHT + 0.12, 6.55), anod)
-        hole, t0, t1 = 0.10, 6.14, 6.28         # the large (0.2") aperture
-        b.box((-0.30, RAIL + 0.24, t0), (0.30, SIGHT - 0.20, t1), anod)
-        b.box((-0.30, SIGHT - 0.20, t0), (-hole, SIGHT + 0.25, t1), anod)
-        b.box((hole, SIGHT - 0.20, t0), (0.30, SIGHT + 0.25, t1), anod)
-        b.box((-hole, SIGHT - 0.20, t0), (hole, SIGHT - hole, t1), anod)
-        b.box((-hole, SIGHT + hole, t0), (hole, SIGHT + 0.25, t1), anod)
+        # a ghost ring: in game the eye sits much further back than a real cheek weld, so a real 0.2" peep
+        # shrinks to the size of the front sight; this hole is three times that with a thin ring round it
+        hole, ring, t0, t1 = 0.30, 0.07, 6.14, 6.28
+        edge = hole + ring
+        for x0, x1 in ((-edge - 0.14, -edge - 0.02), (edge + 0.02, edge + 0.14)):
+            b.box((x0, RAIL + 0.24, 5.95), (x1, SIGHT + 0.10, 6.55), anod)
+        b.box((-edge, RAIL + 0.24, t0), (edge, SIGHT - hole, t1), anod)
+        b.box((-edge, SIGHT - hole, t0), (-hole, SIGHT + edge, t1), anod)
+        b.box((hole, SIGHT - hole, t0), (edge, SIGHT + edge, t1), anod)
+        b.box((-hole, SIGHT + hole, t0), (hole, SIGHT + edge, t1), anod)
     else:
         b.box((-0.38, RAIL + 0.24, 5.70), (0.38, RAIL + 0.46, 6.80), anod)
 

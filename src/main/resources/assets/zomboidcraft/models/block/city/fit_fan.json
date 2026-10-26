@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cage_wire": "zomboidcraft:block/city/bunk_cage_wire",
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "particle": "zomboidcraft:block/city/fit_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        8,
+        13
+      ],
+      "to": [
+        9,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        7,
+        9
+      ],
+      "to": [
+        10,
+        11,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        7.5
+      ],
+      "to": [
+        13,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cage_wire"
+        },
+        "south": {
+          "texture": "#bunk_cage_wire"
+        },
+        "east": {
+          "texture": "#bunk_cage_wire"
+        },
+        "west": {
+          "texture": "#bunk_cage_wire"
+        },
+        "up": {
+          "texture": "#bunk_cage_wire"
+        },
+        "down": {
+          "texture": "#bunk_cage_wire"
+        }
+      }
+    }
+  ]
+}

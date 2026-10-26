@@ -920,13 +920,15 @@ class FirstPerson:
     opens, open_axis, open_angle: loaded by hand with the action open: the handle (a double's barrels, a revolver's
       cylinder on its crane) turns open_angle degrees about open_axis through the hinge point to show the chambers;
     cylinder, chamber_step: the rounds sit in a cylinder that turns chamber_step degrees for each one (about its
-      axis point); without one, the chambers sit side by side chamber_step item pixels apart along x."""
+      axis point); without one, the chambers sit side by side chamber_step item pixels apart along x;
+    hip_aim: the hip pose's muzzle-up and muzzle-in angles are worked out (see aim_hip) so the bore points at the
+      middle of the view this many blocks ahead; hip_turn's roll is kept."""
 
     def __init__(self, hip_grip, hip_turn, hip_scale, reload, irons, irons_scale, handle_travel, charge_turn,
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
                  wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
-                 cylinder=False, chamber_step=0.0):
+                 cylinder=False, chamber_step=0.0, hip_aim=None):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -940,6 +942,44 @@ class FirstPerson:
         self.bolt, self.bolt_lift = bolt, bolt_lift
         self.opens, self.open_axis, self.open_angle = opens, open_axis, open_angle
         self.cylinder, self.chamber_step = cylinder, chamber_step
+        self.hip_aim = hip_aim
+
+
+# From the hip a gun points at the crosshair (Josiah, 2026-10-26): its bore meets the middle of the view this many
+# blocks ahead. The rifle and pistol were set by eye and he's happy with them: theirs pass the middle about this close.
+HIP_AIM = 2.7
+
+
+def aim_hip(gun, g, fp):
+    """The hip pose's turn (muzzle up, muzzle in, roll) with the first two worked out so the bore line, from the
+    muzzle as first person holds it at the hip, runs through the middle of the view fp.hip_aim blocks ahead."""
+    muzzle = kit.flash_tip(gun) + (g - gun.hand)
+    goal = np.array([0.0, 0.0, -fp.hip_aim * 16])
+    roll = fp.hip_turn[2]
+
+    def miss(a):
+        R = M.R_xyz(a[0], a[1], roll)
+        p = np.array(fp.hip_grip) * 16 + fp.hip_scale * (R @ (muzzle - g))
+        d = R @ np.array([0.0, 0.0, -1.0])
+        w = goal - p
+        off = w - d * (w @ d)           # from the bore line square to the goal
+        return off[:2]
+
+    a = np.array(fp.hip_turn[:2], float)
+    for _ in range(30):                 # Newton's method on the two angles
+        f = miss(a)
+        if np.abs(f).max() < 1e-4:
+            break
+        J = np.column_stack([(miss(a + e) - f) / 1e-3 for e in (np.array([1e-3, 0]), np.array([0, 1e-3]))])
+        a = a - np.linalg.lstsq(J, f, rcond=None)[0]
+    return (round(float(a[0]), 3), round(float(a[1]), 3), roll)
+
+
+def aimed(gun, g, fp):
+    """Sets a first person's hip turn to point at the crosshair, where it asks to (see FirstPerson.hip_aim)."""
+    if fp.hip_aim is not None:
+        fp.hip_turn = aim_hip(gun, g, fp)
+    return fp
 
 
 # the rifle at the hip shows its upper receiver and magazine, the front sight a little under the crosshair; on
@@ -965,7 +1005,7 @@ SHOTGUN_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 20.0, -10
                          charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), cycles=True, pump=True,
                          load_turn=(-12, 0, -15), load_push=(-0.12, -0.02, 0.0),
                          bead=SG.frame_point(0, SG.BEAD_TOP, SG.BEAD_Z) - _SG_SIGHT, eye_rise=2.8 - SG.SIGHT,
-                         wrist_grip=True)
+                         wrist_grip=True, hip_aim=HIP_AIM)
 
 # the hunting rifle low at the hip like the shotgun; canted for the magazine like the rifle; rolled port up and
 # turned in a little while the bolt is worked; on the open sights the eye is over the comb, 20" behind the notch
@@ -974,7 +1014,7 @@ HUNTING_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 18.0, -8.
                          reload={'mag_out': (28, -0.06), 'mag_in': (28, -0.06), 'charge': (-10, 0.0)},
                          irons=(0.0, 0.0, -(HUNTING_EYE_Z - HR.REAR_SIGHT) * IN * 0.85), irons_scale=0.85,
                          handle_travel=HR.HANDLE_TRAVEL, charge_turn=(10, 22, -22), charge_push=(0.0, 0.03, -0.04),
-                         wrist_grip=True, bolt=True, bolt_lift=HR.BOLT_LIFT)
+                         wrist_grip=True, bolt=True, bolt_lift=HR.BOLT_LIFT, hip_aim=HIP_AIM)
 
 # the double low at the hip like the shotgun; to load, tipped muzzle down and brought up so the open breech faces the
 # eye, the barrels dropped about the hinge; on the bead the eye sits just over the rib, a cheek on the comb
@@ -986,7 +1026,7 @@ DOUBLE_FP = FirstPerson(hip_grip=(0.30, -0.40, -0.55), hip_turn=(4.0, 20.0, -10.
                         load_turn=(-6, -14, 4), load_push=(-0.12, -0.02, -0.20),
                         bead=DB.frame_point(0, DB.BEAD_TOP, DB.BEAD_Z) - _DB_SIGHT, eye_rise=0.9,
                         wrist_grip=True, opens=True, open_axis=(1.0, 0.0, 0.0), open_angle=-DB.OPEN,
-                        chamber_step=-DB.LOOSE_GAP * IN)
+                        chamber_step=-DB.LOOSE_GAP * IN, hip_aim=HIP_AIM)
 
 # the revolver held out like the pistol; to load, tipped muzzle down and rolled so the swung-out cylinder's back
 # faces the eye; its cylinder turns counter-clockwise from behind, a chamber (60 degrees) a shot
@@ -995,7 +1035,8 @@ REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.
                           irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=0.0,
                           charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
                           load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
-                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0)
+                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0,
+                          hip_aim=HIP_AIM)
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
 # the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
@@ -1233,23 +1274,27 @@ def main():
     sg = shotgun()
     _Pm, gs = rifle_frame()
     sg_hold = shotgun_holds()
+    aimed(sg, gs, SHOTGUN_FP)
     line, _ = kit.write_gun(sg, ASSETS, gs - sg.hand, gun_displays(gs, sg_hold, SHOTGUN_FP), lang, ads_eyes(sg, SHOTGUN_FP))
     summary.append(line)
     write_shells(gs - sg.hand, lang)
     hr = hunting_rifle()
     _Pm, gh = rifle_frame()
     hr_hold = hunting_holds()
+    aimed(hr, gh, HUNTING_FP)
     line, _ = kit.write_gun(hr, ASSETS, gh - hr.hand, gun_displays(gh, hr_hold, HUNTING_FP), lang, ads_eyes(hr, HUNTING_FP))
     summary.append(line)
     db = double_barrel()
     _Pm, gd = rifle_frame()
     db_hold = double_holds()
+    aimed(db, gd, DOUBLE_FP)
     line, _ = kit.write_gun(db, ASSETS, gd - db.hand, gun_displays(gd, db_hold, DOUBLE_FP), lang, ads_eyes(db, DOUBLE_FP))
     summary.append(line)
     write_loose_round('double_barrel', SG.shell, SG.look(), DB.frame_point(*DB.LOOSE_SHELL), gd - db.hand, 914)
     rv = revolver()
     gr = centred_grip(rv)
     rv_hold = revolver_holds()
+    aimed(rv, gr, REVOLVER_FP)
     line, _ = kit.write_gun(rv, ASSETS, gr - rv.hand, gun_displays(gr, rv_hold, REVOLVER_FP), lang, ads_eyes(rv, REVOLVER_FP))
     summary.append(line)
     home = RV.frame_point(*RV.LOOSE_ROUND)

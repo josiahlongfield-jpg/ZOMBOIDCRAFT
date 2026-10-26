@@ -61,6 +61,8 @@ public final class Guns {
 
     private static final class State {
         long lastShot = -100;
+        /** On full auto: when the next shot is due (game time, a fraction for rates between whole ticks). */
+        double autoNext = -100;
         int reloadTick = -1;
         /** The gun being reloaded: putting it away (or swapping to another kind) stops the reload. */
         GunType reloading;
@@ -96,7 +98,9 @@ public final class Guns {
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
-        if (now - st.lastShot < type.fireDelay()) {
+        boolean auto = fullAuto(gun);
+        // full auto takes a tick's slack for shots the network bunched up; its rate still holds on average
+        if (auto ? now < st.autoNext - 1.0 : now - st.lastShot < type.fireDelay()) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -112,6 +116,9 @@ public final class Guns {
             endReload(gun, st);
         }
         st.lastShot = now;
+        if (auto) {
+            st.autoNext = nextAuto(st.autoNext, now, stats);
+        }
         ServerLevel level = (ServerLevel) player.level();
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (g.jammed() || !g.mag() || g.rounds() <= 0) {
@@ -273,6 +280,35 @@ public final class Guns {
         right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();
         Vec3 up = right.cross(look).normalize();
         return look.add(right.scale(Math.cos(a) * Math.tan(r))).add(up.scale(Math.sin(a) * Math.tan(r))).normalize();
+    }
+
+    /** The gun has a full-auto setting and is set to it. */
+    public static boolean fullAuto(ItemStack gun) {
+        GunType type = GunType.of(gun);
+        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false);
+    }
+
+    /**
+     * When the next full-auto shot is due after one fired now: a steady rate carries on from the last one due, a fresh
+     * pull of the trigger starts from now.
+     */
+    public static double nextAuto(double due, long now, ZcConfig.GunStats stats) {
+        double gap = 1200.0 / Math.max(60.0, stats.autoRoundsPerMinute);
+        return (now - due > gap || now < due - 2 * gap ? now : due) + gap;
+    }
+
+    /** Switches a select-fire gun between semi and full auto, with the selector's click. */
+    public static void toggleFireMode(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        GunType type = GunType.of(gun);
+        if (type == null || !type.stats().selectFire) {
+            return;
+        }
+        boolean auto = !gun.getOrDefault(GunState.FULL_AUTO, false);
+        gun.set(GunState.FULL_AUTO, auto);
+        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
+                SoundSource.PLAYERS, 0.3f, auto ? 1.5f : 1.3f);
+        player.sendOverlayMessage(Component.literal(auto ? "Full auto" : "Semi-auto"));
     }
 
     // ------------------------------------------------------------------ light and laser
