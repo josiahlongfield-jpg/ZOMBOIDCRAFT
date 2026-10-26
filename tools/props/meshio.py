@@ -25,6 +25,7 @@ class Part:
     image: np.ndarray | None
     factor: tuple
     name: str
+    tex: str = ""  # the texture file's name, when the part came with one
 
 
 def _image(data):
@@ -272,18 +273,52 @@ def _model_matrix(model):
     return m
 
 
-def load_fbx(path, image=None, only=None):
+def _fbx_materials(objects, conns, texdir):
+    """{model id: [(material name, image or None, diffuse colour, texture name)]} in the models'
+    material order, each texture found by its file's name in texdir (any of .png, .jpg, .tga)."""
+    mats, texs, images = {}, {}, {}
+    for m in _find(objects, "Material"):
+        col = (0.8, 0.8, 0.8)
+        for p in (_find(m[2], "Properties70")[0][2] if _find(m[2], "Properties70") else []):
+            if p[0] == "P" and p[1][0] in (b"DiffuseColor", b"Diffuse") and len(p[1]) >= 7:
+                col = tuple(float(v) for v in p[1][4:7])
+        mats[m[1][0]] = [m[1][1].split(b"\x00")[0].decode(errors="ignore"), None, col, ""]
+    for t in _find(objects, "Texture"):
+        rf = _find(t[2], "RelativeFilename") or _find(t[2], "FileName")
+        texs[t[1][0]] = rf[0][1][0].decode(errors="ignore").replace("\\", "/") if rf else ""
+    by_model = {}
+    for c in conns:
+        a = c[1]
+        if a[1] in texs and a[2] in mats and texdir is not None and texs[a[1]]:
+            stem = Path(texs[a[1]]).stem
+            hit = next((f for ext in (".png", ".jpg", ".tga", ".PNG", ".JPG") for f in [Path(texdir) / (stem + ext)]
+                        if f.exists()), None)
+            if hit is not None:
+                if hit not in images:
+                    images[hit] = np.array(Image.open(hit).convert("RGBA"), np.float32)
+                mats[a[2]][1] = images[hit]
+                mats[a[2]][3] = hit.stem
+        elif a[1] in mats:
+            by_model.setdefault(a[2], []).append(a[1])
+    return {mid: [tuple(mats[i]) for i in ids] for mid, ids in by_model.items()}
+
+
+def load_fbx(path, image=None, only=None, materials=None):
     """Every Geometry in the file as one part each, placed by its models' transforms (the file's
     own units and up axis), textured with `image` (a path) since the packs keep their textures
-    beside the meshes, not inside them."""
+    beside the meshes, not inside them. With `materials` (the folder holding the textures), each
+    Geometry is split by its polygons' materials instead, each part textured by its material's
+    texture or coloured by its diffuse colour; the part's name is "<model>/<material>"."""
     nodes = _fbx_nodes(Path(path).read_bytes())
     objects = _find(nodes, "Objects")
     img = np.array(Image.open(image).convert("RGBA"), np.float32) if image else None
     models = {m[1][0]: m for m in (_find(objects[0][2], "Model") if objects else [])}
     parent = {}
-    for c in (_find(_find(nodes, "Connections")[0][2], "C") if _find(nodes, "Connections") else []):
+    conns = _find(_find(nodes, "Connections")[0][2], "C") if _find(nodes, "Connections") else []
+    for c in conns:
         if c[1][0] == b"OO":
             parent.setdefault(c[1][1], c[1][2])
+    matlist = _fbx_materials(objects[0][2], conns, materials) if materials is not None and objects else {}
 
     def world(oid):
         m = np.eye(4)
@@ -319,6 +354,9 @@ def load_fbx(path, image=None, only=None):
         tris, uvs, start = [], [], 0
         corner = 0
         poly = []
+        pmat, npoly = [], 0
+        me = _find(kids, "LayerElementMaterial")
+        mids = np.asarray(_find(me[0][2], "Materials")[0][1][0], np.int64) if me and _find(me[0][2], "Materials") else None
         for k, v in enumerate(idx):
             last = v < 0
             vi = ~v if last else v
@@ -333,7 +371,9 @@ def load_fbx(path, image=None, only=None):
                 for j in range(1, len(poly) - 1):
                     tris.append([V[poly[0][0]], V[poly[j][0]], V[poly[j + 1][0]]])
                     uvs.append([poly[0][1], poly[j][1], poly[j + 1][1]])
+                    pmat.append(0 if mids is None else int(mids[min(npoly, len(mids) - 1)]))
                 poly = []
+                npoly += 1
         if tris:
             m = world(parent.get(geo[1][0]))
             T = np.array(tris)
@@ -341,5 +381,15 @@ def load_fbx(path, image=None, only=None):
             if np.linalg.det(m[:3, :3]) < 0:
                 T = T[:, ::-1]
                 uvs = [u[::-1] for u in uvs]
+            model = parent.get(geo[1][0])
+            if model in matlist:
+                U, pm = np.array(uvs), np.array(pmat)
+                mname = models[model][1][1].split(b"\x00")[0].decode(errors="ignore")
+                for i, (mat, mimg, col, stem) in enumerate(matlist[model]):
+                    sel = pm == i
+                    if sel.any():
+                        parts.append(Part(T[sel], U[sel], mimg, (1, 1, 1, 1) if mimg is not None else (*col, 1),
+                                          f"{mname}/{mat}", stem))
+                continue
             parts.append(Part(T, np.array(uvs), img, (1, 1, 1, 1), name))
     return parts

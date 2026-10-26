@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/ext_trim_white"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_trim_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_trim_white"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        16
+      ],
+      "to": [
+        16,
+        8,
+        17
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            8,
+            1,
+            9
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            15,
+            8,
+            16,
+            9
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            15,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

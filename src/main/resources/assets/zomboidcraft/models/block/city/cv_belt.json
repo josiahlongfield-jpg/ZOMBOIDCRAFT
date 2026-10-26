@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "stone_trim_soot": "zomboidcraft:block/city/stone_trim_soot",
+    "particle": "zomboidcraft:block/city/stone_trim"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        5,
+        12
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        12.5
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim_soot"
+        },
+        "south": {
+          "texture": "#stone_trim_soot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim_soot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim_soot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim_soot"
+        },
+        "down": {
+          "texture": "#stone_trim_soot"
+        }
+      }
+    }
+  ]
+}

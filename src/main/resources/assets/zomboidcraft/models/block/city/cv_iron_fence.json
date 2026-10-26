@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_iron_fence": "zomboidcraft:block/city/cv_iron_fence",
+    "particle": "zomboidcraft:block/city/cv_iron_fence"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron_fence"
+        },
+        "south": {
+          "texture": "#cv_iron_fence"
+        },
+        "east": {
+          "texture": "#cv_iron_fence",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_iron_fence",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_iron_fence",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron_fence",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

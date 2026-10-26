@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "brick_red": "zomboidcraft:block/city/brick_red",
+    "cv_arch_red_r": {
+      "sprite": "zomboidcraft:block/city/cv_arch_red_r",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/cv_arch_red_r"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_arch_red_r",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_arch_red_r",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#brick_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#brick_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#brick_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#brick_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
