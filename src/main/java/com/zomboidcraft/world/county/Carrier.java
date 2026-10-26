@@ -362,11 +362,13 @@ final class Carrier {
                 }
             }
         }
-        // the deck: oil, pad eyes, the hazard line where the fire doors close
+        // the deck: oil, pad eyes, the hazard line where the fire doors close, the yellow safety lines along both sides
         for (int x = BAY0; x <= BAY1; x++) {
             for (int z = HZ0; z <= HZ1; z++) {
                 p.set(x, HANGAR, z, fireDoor(x) ? "navy_hazard[axis=z]" : chance() < 0.05 + hit * 0.06 ? "navy_hangar_oil" : "navy_hangar_floor");
-                if (!fireDoor(x) && x % 6 == 3 && Math.floorMod(z, 6) == 1) {
+                if (!fireDoor(x) && (z == HZ0 + 3 || z == HZ1 - 3)) {
+                    p.set(x, HANGAR + 1, z, "fit_line[axis=x]");
+                } else if (!fireDoor(x) && x % 6 == 3 && Math.floorMod(z, 6) == 1) {
                     p.set(x, HANGAR + 1, z, "navy_padeye");
                 }
             }
@@ -419,7 +421,9 @@ final class Carrier {
                 }
                 String run = z == HZ0 ? "fit_pipes_b" : z == HZ1 ? "fit_pipes_a" : z == HZ0 + 1 || z == HZ1 - 1 ? "fit_tray"
                         : z == -1 ? "fit_duct" : Math.floorMod(z, 5) == 0 ? "fit_sprinkler" : null;
-                if (x % 6 == 3 && Math.floorMod(z, 5) == 2 && z > HZ0 + 1 && z < HZ1 - 1) {
+                if (z == -11 || z == -6 || z == 4 || z == 9) {
+                    over(x, top, z, "fit_girder[axis=z]");   // the longitudinals, so the overhead is a grid like the photos
+                } else if (x % 6 == 3 && Math.floorMod(z, 5) == 2 && z > HZ0 + 1 && z < HZ1 - 1) {
                     double r = chance();
                     over(x, top, z, r < 0.06 ? "fit_highbay_on" : r < 0.26 ? "fit_highbay_flicker" : "fit_highbay");
                 } else if (run != null) {

@@ -164,6 +164,37 @@ def bottle(seed):
     return F.wear(t, 0.3, 3)
 
 
+def enamel_steel(seed, rgb):
+    """Frames and beams in the bulkheads' glossy off-white enamel, a weld line along them, a little rust."""
+    t = F.enamel(seed, rgb)
+    t.smooth[:] = 0.7
+    F.area(t, 0, 31, N, 33, mul=0.9, dh=0.05)
+    B.rust_runs(t, 2, 0.25)
+    return F.wear(t, 0.15, 3, specks=0.002)
+
+
+def deck_line(seed):
+    """A painted yellow line on the hangar deck, scuffed through to the non-skid by tyres and boots."""
+    t = B.clear(seed)
+    F.area(t, 26, 0, 38, N, (214, 172, 44), alpha=255)
+    t.alpha[:, 26:38] = 255
+    rng = t.rng
+    for _ in range(40):
+        x, y = rng.integers(26, 38), rng.integers(0, N)
+        t.alpha[y:y + rng.integers(1, 4), x:x + rng.integers(1, 3)] = 0
+    return t
+
+
+def lagging(seed):
+    """Lagged pipe: off-white canvas over the insulation, banded with colour, the seams stitched, grimy."""
+    t = F.plain(seed, (214, 210, 196), 0.05, 0.2)
+    for y in range(0, N, 8):
+        F.area(t, 0, y, N, y + 1, mul=0.86, dh=-0.1)
+    F.area(t, 0, 24, N, 30, (36, 92, 160))
+    F.area(t, 0, 30, N, 32, (230, 226, 210))
+    return F.wear(t, 0.35, 2)
+
+
 def label(seed, text, col=(226, 222, 210), ink=(24, 24, 22)):
     """An engraved plate screwed to the bulkhead."""
     t = B.clear(seed)
@@ -195,11 +226,12 @@ def textures():
         "fit_dc_locker": lambda: locker(8006, "REPAIR 2|DC LOCKER"), "fit_eebd": lambda: canister(8007),
         "fit_grille": lambda: grille(8008), "fit_phone": lambda: phone(8009), "fit_jbox": lambda: jbox(8010),
         "fit_flood": lambda: flood_body(8011), "fit_grey": lambda: steel(8012, GREY, 0.4),
-        "fit_red": lambda: steel(8013, RED, 0.4), "fit_frame": lambda: B.ship_wall(8014, (196, 198, 192), frames=False),
-        "fit_beam": lambda: B.ship_wall(8015, (214, 214, 208), frames=False),
+        "fit_red": lambda: steel(8013, RED, 0.4), "fit_frame": lambda: enamel_steel(8014, (210, 206, 192)),
+        "fit_beam": lambda: enamel_steel(8015, (220, 216, 204)),
         "fit_dc_locker_b": lambda: locker(8016, "REPAIR 5|DC LOCKER"),
         "fit_gse": lambda: gse(8017), "fit_bottle": lambda: bottle(8018),
         "fit_tank": lambda: F.wear(F.enamel(8019, (176, 180, 178)), 0.25, 3),
+        "fit_lagging": lambda: lagging(8020), "fit_line": lambda: deck_line(8022), "fit_sodium_on": lambda: lens(8021, (255, 170, 72), True),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
         T[f"fit_st_{k}"] = (lambda a, b, c: lambda: B.stencil_sign(a, b, c, 12))(8040 + i, text, col)
@@ -267,7 +299,7 @@ def blocks():
     lamp("fit_highbay", [[7.5, 10.5, 7.5, 8.5, 16, 8.5, "bunk_grey"], [6, 9.5, 6, 10, 10.5, 10, "fit_dome"],
                          [4.5, 8, 4.5, 11.5, 9.5, 11.5, "fit_dome"], [3, 6.5, 3, 13, 8, 13, "fit_dome"],
                          [4, 6, 4, 12, 6.5, 12, G]],
-         "Hangar Lamp", None, 15, G, "bunk_glass_on", "bunk_glass_off", 13)
+         "Hangar Lamp", None, 15, G, "fit_sodium_on", "bunk_glass_off", 13)
     lamp("fit_flood", [[7, 0, 13, 9, 9, 16, "fit_grey"], [3, 6, 5, 13, 14, 12, "fit_flood"],
                        [4, 7, 4.5, 12, 13, 5, G], [2.5, 5.5, 4, 3, 14.5, 5, "fit_grey"],
                        [13, 5.5, 4, 13.5, 14.5, 5, "fit_grey"]],
@@ -277,7 +309,7 @@ def blocks():
 
     # ---- the overheads
     hang = [[0, 15.5, 7.5, 16, 16, 8.5, "bunk_grey"]]
-    add("fit_pipes_a", [[1, 12.5, 0, 4, 15.5, 16, "bunk_pipe_blue"], [5, 13, 0, 7.5, 15.5, 16, "bunk_pipe_green"],
+    add("fit_pipes_a", [[0.5, 11, 0, 5, 15.5, 16, "fit_lagging"], [5, 13, 0, 7.5, 15.5, 16, "bunk_pipe_green"],
                         [9, 11.5, 0, 13.5, 16, 16, "bunk_pipe_grey"]] + hang, "Pipes", rotate="axis")
     add("fit_pipes_b", [[1.5, 11, 0, 6.5, 16, 16, "bunk_pipe_red"], [8, 13, 0, 10.5, 15.5, 16, "bunk_pipe_blue"],
                         [12, 13.5, 0, 14, 15.5, 16, "bunk_pipe_grey"]] + hang, "Firemain", rotate="axis")
@@ -363,6 +395,8 @@ def blocks():
                          [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
     add("fit_droptank_nose", [[5, 5, 0, 11, 11, 6, "fit_tank"], [4, 4, 6, 12, 12, 16, "fit_tank"],
                               [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
+
+    add("fit_line", [[0, 0, 0, 16, 0.25, 16, "fit_line"]], "Deck Line", rotate="axis")
 
     for k in SIGNS:
         add(f"fit_st_{k}", [[0, 0, 15.75, 16, 16, 16, f"fit_st_{k}"]], "Stencil")
