@@ -19,17 +19,18 @@ def value_noise(rng, n, cells):
 
 
 def mist(seed, n=64):
-    """A soft, uneven puff: fades to nothing at the rim so the quad's edge never shows."""
+    """A wide, flat smear of haze: no rim, no core, so many of them overlapping read as one layer
+    of fog instead of a pile of round puffs."""
     rng = np.random.default_rng(seed)
     y, x = np.mgrid[0:n, 0:n] / (n - 1) * 2 - 1
-    r = np.sqrt(x * x + (y * 1.15) ** 2)
-    fall = np.clip(1 - r, 0, 1) ** 1.8
-    tex = 0.55 * value_noise(rng, n, 3) + 0.3 * value_noise(rng, n, 6) + 0.15 * value_noise(rng, n, 12)
-    a = np.clip(fall * (0.35 + 0.9 * tex), 0, 1)
+    r2 = x * x + (y * 2.4) ** 2  # flat: a bank lies along the ground
+    fall = np.exp(-2.6 * r2) * np.clip(1 - np.sqrt(r2), 0, 1) ** 0.6
+    tex = 0.5 * value_noise(rng, n, 3) + 0.3 * value_noise(rng, n, 5) + 0.2 * value_noise(rng, n, 9)
+    a = np.clip(fall * (0.15 + 0.85 * tex) * 0.75, 0, 1)
     rgba = np.zeros((n, n, 4), np.uint8)
     rgba[..., :3] = 235
     rgba[..., 3] = (a * 255).astype(np.uint8)
-    return Image.fromarray(rgba).filter(ImageFilter.GaussianBlur(1))
+    return Image.fromarray(rgba).filter(ImageFilter.GaussianBlur(2.5))
 
 
 def scrap(kind, seed, n=16):

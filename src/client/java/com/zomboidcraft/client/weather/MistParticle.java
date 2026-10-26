@@ -25,12 +25,14 @@ final class MistParticle extends SingleQuadParticle {
         gravity = 0;
         friction = 1;
         lifetime = 260 + random.nextInt(220);
-        quadSize = 2.2f + random.nextFloat() * 3.2f;
-        roll = oRoll = random.nextFloat() * Mth.TWO_PI;
-        spin = (random.nextFloat() - 0.5f) * 0.004f;
+        // wide and faint: they only read as fog where several overlap, never one by one
+        quadSize = 5f + random.nextFloat() * 5f;
+        // kept near level so the flat smear lies along the ground instead of tumbling
+        roll = oRoll = (random.nextFloat() - 0.5f) * 0.3f;
+        spin = (random.nextFloat() - 0.5f) * 0.0006f;
         peak = strength;
         // the endless night's slate grey; lamps tint it through the light map
-        float shade = 0.62f + random.nextFloat() * 0.08f;
+        float shade = 0.46f + random.nextFloat() * 0.06f;
         setColor(shade, shade + 0.03f, shade + 0.08f);
         alpha = 0;
     }
@@ -46,7 +48,7 @@ final class MistParticle extends SingleQuadParticle {
         var player = Minecraft.getInstance().player;
         if (player != null) {
             double d = player.getEyePosition().distanceTo(new net.minecraft.world.phys.Vec3(x, y, z));
-            near = (float) Mth.clamp((d - quadSize * 0.4) / 3.0, 0, 1);
+            near = (float) Mth.clamp((d - quadSize * 0.6) / 6.0, 0, 1);
         }
         // a lightning flash shows through the murk: what was hiding in it stands out for a moment
         float flash = com.zomboidcraft.world.weather.WeatherView.flash();
