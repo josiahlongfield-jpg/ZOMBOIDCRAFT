@@ -493,7 +493,7 @@ final class Carrier {
             }
         }
         // the jets: two or three to a bay, noses toward the middle
-        int[][] spots = {{70, -6, 1}, {100, 7, 0}, {140, -7, 1}, {175, 6, 0}, {215, -6, 1}, {240, 7, 0}, {225, 6, 1}};
+        int[][] spots = {{72, -7, 1}, {100, 7, 0}, {146, -7, 1}, {172, 7, 0}, {220, -7, 1}, {245, 7, 0}};
         for (int[] s : spots) {
             if (chance() < 0.85) {
                 park(s[0], HANGAR + 1, s[1], s[2] == 1 ? 270 : 90 + (rng.nextInt(3) - 1) * 15);
@@ -525,14 +525,16 @@ final class Carrier {
     }
 
     /**
-     * A jet's spot: its middle at (x, y, z), the nose toward yaw (0 is +z, 90 is -x, 180 is -z,
-     * 270 is +x); chocks at its wheels and chains to the pad eyes.
+     * A jet at its spot: its middle at (x, y, z), the nose toward yaw (0 is +z, 90 is -x, 180 is
+     * -z, 270 is +x), one of the two fighters at full size (tools/cars/jets.py); chocks at its
+     * wheels and chains to the pad eyes.
      */
     private void park(double x, int y, double z, double yaw) {
         jets.add(new double[] {x + 0.5, y, z + 0.5, yaw});
+        p.vehicle(x + 0.5, y, z + 0.5, (float) yaw, rng.nextBoolean() ? "jet_corvid" : "jet_gyrfalcon", rng.nextLong());
         double a = Math.toRadians(yaw);
         double fx = -Math.sin(a), fz = Math.cos(a);
-        double[][] wheels = {{6, 0}, {-2, 1.8}, {-2, -1.8}};
+        double[][] wheels = {{4.6, 0}, {-2, 1.5}, {-2, -1.5}};
         for (double[] w : wheels) {
             int wx = (int) Math.floor(x + 0.5 + fx * w[0] - fz * w[1]), wz = (int) Math.floor(z + 0.5 + fz * w[0] + fx * w[1]);
             p.setIfAir(wx, y, wz, "navy_chocks[facing=" + (Math.abs(fx) > Math.abs(fz) ? "east" : "north") + "]");

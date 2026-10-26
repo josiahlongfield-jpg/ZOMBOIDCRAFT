@@ -187,7 +187,8 @@ public class CarProp extends Entity {
         if (!(level() instanceof ServerLevel server)) {
             return;
         }
-        if (!player.isSecondaryUseActive() && !atBoot(location)) {
+        CarModels.Model m = CarModels.get(model());
+        if (m != null && m.jet() || !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
             return;
         }
@@ -381,7 +382,7 @@ public class CarProp extends Entity {
                 catchAt = runs ? tickCount + 58 : -1;
                 player.sendOverlayMessage(Component.literal(runs
                         ? "W/S to drive, A/D to steer, space for the handbrake, H for the horn, sneak or interact to get out."
-                        : "It won't start."));
+                        : jet() ? "Dead batteries, no ground power. It won't start." : "It won't start."));
             }
         }
         if (catchAt >= 0 && tickCount >= catchAt) {
@@ -403,16 +404,21 @@ public class CarProp extends Entity {
 
     /** The driver leans on the horn: loud, and every zombie in earshot comes. */
     public void honk(Player driver) {
-        if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt) {
+        if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
             hornFreeAt = tickCount + 40;
             server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
             Noise.emit(server, position(), 48);
         }
     }
 
-    /** Wrecks and burnt-out shells don't run, whatever you do. */
+    /** Wrecks and burnt-out shells don't run, whatever you do; nor, for now, do the jets. */
     public boolean engineRuns() {
-        return "usable".equals(variant()) || "abandoned".equals(variant());
+        return !jet() && ("usable".equals(variant()) || "abandoned".equals(variant()));
+    }
+
+    private boolean jet() {
+        CarModels.Model m = CarModels.get(model());
+        return m != null && m.jet();
     }
 
     private double topSpeed() {

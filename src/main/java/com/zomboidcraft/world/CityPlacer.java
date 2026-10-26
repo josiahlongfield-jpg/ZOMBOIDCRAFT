@@ -113,7 +113,7 @@ public final class CityPlacer implements BlockSink {
             return;
         }
         SplittableRandom rng = new SplittableRandom(seed);
-        CarModels.Model model = CarModels.pick(rng, m -> m.length() >= minLength && m.length() <= maxLength);
+        CarModels.Model model = CarModels.pick(rng, m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength);
         if (model == null) {
             return;
         }

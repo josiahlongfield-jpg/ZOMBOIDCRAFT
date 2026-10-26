@@ -105,7 +105,7 @@ final class ChunkWriter implements ChunkSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        spawn(x, y, z, yaw, m -> m.length() >= minLength && m.length() <= maxLength, seed);
+        spawn(x, y, z, yaw, m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength, seed);
     }
 
     @Override
