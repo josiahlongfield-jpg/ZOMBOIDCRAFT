@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_quarterdeck": "zomboidcraft:block/city/navy_st_quarterdeck",
+    "particle": "zomboidcraft:block/city/navy_st_quarterdeck"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_quarterdeck"
+        },
+        "south": {
+          "texture": "#navy_st_quarterdeck",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_quarterdeck",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_quarterdeck",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_quarterdeck",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_quarterdeck",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

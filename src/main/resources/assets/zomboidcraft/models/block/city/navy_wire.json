@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_cable": "zomboidcraft:block/city/navy_cable",
+    "particle": "zomboidcraft:block/city/navy_cable"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        1.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_cable"
+        },
+        "south": {
+          "texture": "#navy_cable"
+        },
+        "east": {
+          "texture": "#navy_cable",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_cable",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_cable"
+        },
+        "down": {
+          "texture": "#navy_cable",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

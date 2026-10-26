@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_hull": "zomboidcraft:block/city/navy_hull",
+    "navy_window_broken": "zomboidcraft:block/city/navy_window_broken",
+    "particle": "zomboidcraft:block/city/navy_window_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_window_broken",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_window_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_hull",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_hull",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_hull",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_hull",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_chain_h": "zomboidcraft:block/city/vessel_chain_h",
+    "particle": "zomboidcraft:block/city/vessel_chain_h"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        0.6,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_chain_h"
+        },
+        "south": {
+          "texture": "#vessel_chain_h"
+        },
+        "east": {
+          "texture": "#vessel_chain_h",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_chain_h",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_chain_h"
+        },
+        "down": {
+          "texture": "#vessel_chain_h",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        0,
+        0
+      ],
+      "to": [
+        8.5,
+        0.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_chain_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_chain_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_chain_h"
+        },
+        "west": {
+          "texture": "#vessel_chain_h"
+        },
+        "up": {
+          "texture": "#vessel_chain_h"
+        },
+        "down": {
+          "texture": "#vessel_chain_h",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

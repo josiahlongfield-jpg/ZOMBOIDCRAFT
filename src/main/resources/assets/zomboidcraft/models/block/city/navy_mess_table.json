@@ -1,0 +1,307 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_alu": "zomboidcraft:block/city/navy_alu",
+    "navy_formica": "zomboidcraft:block/city/navy_formica",
+    "particle": "zomboidcraft:block/city/navy_formica"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        10,
+        1
+      ],
+      "to": [
+        16,
+        11,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_formica"
+        },
+        "south": {
+          "texture": "#navy_formica"
+        },
+        "east": {
+          "texture": "#navy_formica",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_formica",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_formica"
+        },
+        "down": {
+          "texture": "#navy_formica"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_alu"
+        },
+        "south": {
+          "texture": "#navy_alu"
+        },
+        "east": {
+          "texture": "#navy_alu"
+        },
+        "west": {
+          "texture": "#navy_alu"
+        },
+        "up": {
+          "texture": "#navy_alu"
+        },
+        "down": {
+          "texture": "#navy_alu",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        -3
+      ],
+      "to": [
+        16,
+        6,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_formica"
+        },
+        "south": {
+          "texture": "#navy_formica"
+        },
+        "east": {
+          "texture": "#navy_formica",
+          "uv": [
+            13,
+            10,
+            16,
+            11
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            10,
+            3,
+            11
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ]
+        },
+        "down": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        16
+      ],
+      "to": [
+        16,
+        6,
+        19
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_formica"
+        },
+        "south": {
+          "texture": "#navy_formica"
+        },
+        "east": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            10,
+            3,
+            11
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_formica",
+          "uv": [
+            13,
+            10,
+            16,
+            11
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#navy_formica",
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        -2
+      ],
+      "to": [
+        3,
+        5,
+        -1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_alu"
+        },
+        "south": {
+          "texture": "#navy_alu"
+        },
+        "east": {
+          "texture": "#navy_alu",
+          "uv": [
+            15,
+            11,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#navy_alu",
+          "uv": [
+            0,
+            11,
+            1,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#navy_alu",
+          "uv": [
+            2,
+            0,
+            3,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#navy_alu",
+          "uv": [
+            2,
+            15,
+            3,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        17
+      ],
+      "to": [
+        14,
+        5,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_alu"
+        },
+        "south": {
+          "texture": "#navy_alu"
+        },
+        "east": {
+          "texture": "#navy_alu",
+          "uv": [
+            0,
+            11,
+            1,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#navy_alu",
+          "uv": [
+            15,
+            11,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#navy_alu",
+          "uv": [
+            13,
+            15,
+            14,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#navy_alu",
+          "uv": [
+            13,
+            0,
+            14,
+            1
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
