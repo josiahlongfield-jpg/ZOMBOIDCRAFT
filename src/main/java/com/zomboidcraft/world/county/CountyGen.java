@@ -110,12 +110,29 @@ public final class CountyGen {
             }
         }
 
+        // hideouts are copied in like places, but the land round them is left as it lies
+        List<Place> hideouts = county.hideoutsNear(bx - TREE_REACH, bz - TREE_REACH, bx + 15 + TREE_REACH, bz + 15 + TREE_REACH, 0);
         for (Place p : places) {
             if (p.contains(bx, bz, 15) && p.x0 <= bx + 15 && p.z0 <= bz + 15) {
                 copyPlace(p, bx, bz, out);
             }
         }
-        vegetation(bx, bz, cols, places, out);
+        for (Place p : hideouts) {
+            if (p.contains(bx, bz, 15) && p.x0 <= bx + 15 && p.z0 <= bz + 15) {
+                copyPlace(p, bx, bz, out);
+            }
+        }
+        vegetation(bx, bz, cols, places, hideouts, out);
+    }
+
+    /** True within a hideout's clearing (reach blocks from its hatch). */
+    private static boolean cleared(List<Place> hideouts, int x, int z, double reach) {
+        for (Place p : hideouts) {
+            if (Math.hypot(x - p.centreX(), z - p.centreZ()) <= reach) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String surface(Column c, int x, int z, double natural, int top, SplittableRandom rng) {
@@ -231,7 +248,7 @@ public final class CountyGen {
     }
 
     /** Woods, scrub, weeds and leaf litter everywhere nothing was built. */
-    private void vegetation(int bx, int bz, Column[] cols, List<Place> places, ChunkSink out) {
+    private void vegetation(int bx, int bz, Column[] cols, List<Place> places, List<Place> hideouts, ChunkSink out) {
         Map<Long, String> canopy = new HashMap<>();
         Map<Long, Boolean> isWood = new HashMap<>();
         Trees.Canopy c = new Trees.Canopy() {
@@ -277,7 +294,7 @@ public final class CountyGen {
                 for (Road r : roads) {
                     r.nearest(x, z, hit);
                 }
-                if (blocked || (hit.road != null && hit.distance < hit.road.kind.half + 4)) {
+                if (blocked || cleared(hideouts, x, z, County.CLEARING + 2) || (hit.road != null && hit.distance < hit.road.kind.half + 4)) {
                     continue;
                 }
                 double gr = county.ground(x, z, places);
@@ -301,7 +318,7 @@ public final class CountyGen {
                 continue;
             }
             int x = bx + (i & 15), z = bz + (i >> 4);
-            if (canopy.containsKey(key(x, col.top + 1, z))) {
+            if (canopy.containsKey(key(x, col.top + 1, z)) || cleared(hideouts, x, z, County.CLEARING)) {
                 continue;
             }
             SplittableRandom rng = new SplittableRandom(Noise.hash(county.seed ^ 0x6A55L, x, z));

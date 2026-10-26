@@ -713,7 +713,7 @@ final class BigShip {
             p.set(engineEnd + 2, tank + 1, dz, state == Bunker.State.BREACHED ? "home_blood_drag[facing=east]" : "bunk_grit");
         }
         Doors.place(p, engineEnd, tank + 1, dz, "vessel_false_door", "east", "right", state != Bunker.State.SEALED && chance() < 0.7);
-        p.mark("bunker " + state.name().toLowerCase(java.util.Locale.ROOT), engineEnd - 1, tank + 1, dz);
+        p.mark("bunker " + state.name().toLowerCase(java.util.Locale.ROOT) + " ship", engineEnd - 1, tank + 1, dz);
         bp.mark("bunker door", 0, 1, -2);
         return new int[] {engineEnd + 1, bz0, bx1, bz1, tank + 4};
     }

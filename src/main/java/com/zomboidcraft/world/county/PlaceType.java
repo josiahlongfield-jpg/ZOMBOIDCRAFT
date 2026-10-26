@@ -15,5 +15,10 @@ public enum PlaceType {
     /** A fenced base or quarantine zone: walls, watchtowers, hangars, sandbags. */
     MILITARY,
     /** Something by the road: a gas station, motel, diner or church on its own. */
-    ROADSIDE
+    ROADSIDE,
+    /**
+     * Something hidden in the deep woods, far from every road: a survivalist's hatch over a
+     * bunker. Planned on a layer of its own ({@link County#hideout}), never levelled or linked.
+     */
+    HIDEOUT
 }

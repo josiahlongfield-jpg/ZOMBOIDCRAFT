@@ -16,7 +16,9 @@ public final class ListPlaces {
         long seed = args.length > 0 ? Long.parseLong(args[0]) : 12345L;
         int r = args.length > 1 ? Integer.parseInt(args[1]) : 6000;
         County county = new County(seed);
-        List<Place> all = county.placesNear(-r, -r, r, r, 0).stream()
+        List<Place> found = new java.util.ArrayList<>(county.placesNear(-r, -r, r, r, 0));
+        found.addAll(county.hideoutsNear(-r, -r, r, r, 0));
+        List<Place> all = found.stream()
                 .sorted(Comparator.comparingDouble(p -> Math.hypot(p.centreX(), p.centreZ()))).toList();
         java.util.Set<String> seen = new java.util.HashSet<>();
         for (Place p : all) {
