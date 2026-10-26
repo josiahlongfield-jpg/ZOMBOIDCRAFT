@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_emblem_star": "zomboidcraft:block/city/vessel_emblem_star",
+    "particle": "zomboidcraft:block/city/vessel_emblem_star"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_emblem_star"
+        },
+        "south": {
+          "texture": "#vessel_emblem_star",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_emblem_star",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_emblem_star",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_emblem_star",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_emblem_star",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

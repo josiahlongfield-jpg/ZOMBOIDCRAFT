@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_st_muster": "zomboidcraft:block/city/vessel_st_muster",
+    "particle": "zomboidcraft:block/city/vessel_st_muster"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_st_muster"
+        },
+        "south": {
+          "texture": "#vessel_st_muster",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_st_muster",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_st_muster",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_st_muster",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_st_muster",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -27,7 +27,7 @@ import java.util.Map;
  * The place's ground (its y = 0) is dump y = 12; a port's water is on its north side.
  */
 public final class SitePreview {
-    private static final int LEVEL = 12;
+    private static final int LEVEL = Integer.getInteger("level", 12);
 
     public static void main(String[] args) throws IOException {
         String out = args[0];

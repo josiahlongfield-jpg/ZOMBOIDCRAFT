@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_liferaft": "zomboidcraft:block/city/vessel_liferaft",
+    "vessel_rail": "zomboidcraft:block/city/vessel_rail",
+    "particle": "zomboidcraft:block/city/vessel_rail"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_rail"
+        },
+        "south": {
+          "texture": "#vessel_rail"
+        },
+        "east": {
+          "texture": "#vessel_rail"
+        },
+        "west": {
+          "texture": "#vessel_rail"
+        },
+        "up": {
+          "texture": "#vessel_rail"
+        },
+        "down": {
+          "texture": "#vessel_rail",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        1
+      ],
+      "to": [
+        14,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_liferaft"
+        },
+        "south": {
+          "texture": "#vessel_liferaft"
+        },
+        "east": {
+          "texture": "#vessel_liferaft"
+        },
+        "west": {
+          "texture": "#vessel_liferaft"
+        },
+        "up": {
+          "texture": "#vessel_liferaft"
+        },
+        "down": {
+          "texture": "#vessel_liferaft"
+        }
+      }
+    }
+  ]
+}

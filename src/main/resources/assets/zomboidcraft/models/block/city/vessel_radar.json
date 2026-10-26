@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_mast": "zomboidcraft:block/city/vessel_mast",
+    "particle": "zomboidcraft:block/city/vessel_bollard"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        0
+      ],
+      "to": [
+        10,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_mast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    }
+  ]
+}

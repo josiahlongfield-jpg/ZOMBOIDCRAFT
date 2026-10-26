@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_hawse": {
+      "sprite": "zomboidcraft:block/city/vessel_hawse",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/vessel_hawse"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_hawse"
+        },
+        "south": {
+          "texture": "#vessel_hawse",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_hawse",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_hawse",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_hawse",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_hawse",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

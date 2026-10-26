@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_gfrp": "zomboidcraft:block/city/vessel_gfrp",
+    "vessel_gfrp_window": "zomboidcraft:block/city/vessel_gfrp_window",
+    "particle": "zomboidcraft:block/city/vessel_gfrp_window"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_gfrp_window",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_gfrp",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_gfrp",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_gfrp",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_gfrp",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_gfrp",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -216,40 +216,43 @@ final class PortSite extends Site {
                 }
             }
         }
-        // the ship along the quay, a gap of two for the fenders
-        int beam = 24 + 2 * rng.nextInt(3);
-        int len = Math.min(lw - 30, 165 + rng.nextInt(60));
-        int sx = 12 + rng.nextInt(Math.max(1, lw - len - 24));
-        int zc = quay - 2 - beam / 2;
+        // the ship along the quay at her full size, a gap of two for the fenders; most carry a bunker deep aft
+        int beam = 40 + 2 * rng.nextInt(2), hbm = beam / 2;
+        int len = Math.min(lw - 40, 250 + rng.nextInt(40));
+        int sx = 14 + rng.nextInt(Math.max(1, lw - len - 28));
+        int zc = quay - 2 - hbm;
         boolean bowEast = chance() < 0.5;
-        Ships ship = new Ships(bowEast ? at(sx, zc, 0) : at(sx + len - 1, zc - 1, 2), rng, hit);
-        ship.containerShip(len, beam);
+        Bunker.State state = null;
+        if (chance() < 0.6) {
+            double r = chance();
+            state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        }
+        new BigShip(bowEast ? at(sx, zc, 0) : at(sx + len - 1, zc - 1, 2), rng, hit, bowEast ? hbm + 2 : -hbm - 3)
+                .container(len, beam, state);
         // a tug still made fast at her bow, a feeder ship riding at anchor out in the basin
         int bowX = bowEast ? sx + len + 3 : sx - 25;
         if (bowX > 2 && bowX + 22 < lw - 2) {
-            new Ships(at(bowX, quay - 4 - beam / 2 - rng.nextInt(4), 0), rng, hit).tug(20 + rng.nextInt(4));
+            new Ships(at(bowX, quay - 4 - hbm - rng.nextInt(4), 0), rng, hit).tug(20 + rng.nextInt(4));
         }
-        int outZ = zc - beam / 2 - 16 - 9;
-        if (outZ - 12 > 4 && lw > 200) {
-            int flen = 80 + rng.nextInt(30);
+        int fbeam = 26 + 2 * rng.nextInt(2);
+        int outZ = zc - hbm - 16 - fbeam / 2;
+        if (outZ - fbeam / 2 > 4 && lw > 200) {
+            int flen = Math.min(lw - 20, 140 + rng.nextInt(40));
             int fx = rng.nextInt(Math.max(1, lw - flen - 10)) + 5;
             boolean east = chance() < 0.5;
-            new Ships(east ? at(fx, outZ, 0) : at(fx + flen - 1, outZ - 1, 2), rng, hit).containerShip(flen, 18);
+            new BigShip(east ? at(fx, outZ, 0) : at(fx + flen - 1, outZ - 1, 2), rng, hit, 0).container(flen, fbeam, null);
         }
-        // the gangway down to the quay
-        int gx = sx + len / 2;
-        for (int k = 0; k <= 4; k++) {
-            f.set(gx, 4 - k, quay - 2 + k, "steel_stairs[facing=north]");
-            f.set(gx + 1, 5 - k, quay - 2 + k, "minecraft:iron_bars");
-        }
-        // the gantries along the rails: the ones over the ship were working her when it stopped
+        // the gantries along the rails: the ones over the ship were working her when it stopped, booms
+        // raised over her house (it stands higher than they reach)
         int n = Math.max(2, Math.min(5, lw / 75));
-        String crane = any("steel_red", "steel_red", "steel_red", "steel_yellow", "minecraft:light_blue_concrete");
+        String crane = any("steel_red", "steel_red", "steel_red", "steel_yellow");
+        int hx0 = bowEast ? sx - 4 : sx + len - 34, hx1 = hx0 + 38;
         for (int i = 0; i < n; i++) {
-            int cx = (int) ((i + 0.5) * lw / n) - 7 + rng.nextInt(9) - 4;
-            boolean over = cx > sx - 4 && cx + 14 < sx + len + 4;
-            hb(cx, railA, 0).gantry(14, gauge, 32 + rng.nextInt(8), !over && chance() < 0.6, crane);
-            kit.claim(Math.max(0, cx - 3), railA - 1, Math.min(lw - 1, cx + 17), railB + 2, Kit.BUILT);
+            int cx = (int) ((i + 0.5) * lw / n) - 9 + rng.nextInt(9) - 4;
+            boolean over = cx > sx - 4 && cx + 18 < sx + len + 4;
+            boolean house = cx + 18 > hx0 && cx < hx1;
+            hb(cx, railA, 0).gantry(18, gauge, beam + 10 + rng.nextInt(6), house || !over && chance() < 0.6, crane, 46);
+            kit.claim(Math.max(0, cx - 3), railA - 1, Math.min(lw - 1, cx + 21), railB + 2, Kit.BUILT);
         }
         // post lamps along the quay edge, sodium mostly, a few gone purple
         for (int x = 7; x < lw - 3; x += 16) {
@@ -289,7 +292,7 @@ final class PortSite extends Site {
         slab(0, yz0 - 2, lw - 1, ld - 2, chance() < 0.5);
         int cols = 3 + rng.nextInt(2);
         int bw = cols * 13 - 1, pitchX = bw + 12, pitchZ = 30;
-        String rtg = any("steel_yellow", "minecraft:white_concrete", "steel_red", "minecraft:light_blue_concrete");
+        String rtg = any("steel_yellow", "steel_yellow", "steel_red");
         for (int bz = yz0 + 2; bz + 22 <= yz1; bz += pitchZ) {
             for (int bx = 6; bx + bw + 6 <= lw; bx += pitchX) {
                 if (Math.abs(bx + bw / 2 - gateX) < bw / 2 + 10) {
@@ -461,11 +464,11 @@ final class PortSite extends Site {
         int apronEnd = mainZ - (int) main.reach() - 2;
         slab(0, quay + 1, lw - 1, apronEnd, false);
         boolean tanker = chance() < 0.45;
-        int beam = 18 + 2 * rng.nextInt(2);
-        int len = Math.min(lw - 60, 110 + rng.nextInt(40));
-        int sx = 8 + rng.nextInt(Math.max(1, lw - len - 70));
-        int zc = quay - 2 - beam / 2;
-        new Ships(at(sx, zc, 0), rng, hit).bulkShip(len, beam, tanker);
+        int beam = 32 + 2 * rng.nextInt(3), hbm = beam / 2;
+        int len = Math.min(lw - 60, 190 + rng.nextInt(40));
+        int sx = 10 + rng.nextInt(Math.max(1, lw - len - 70));
+        int zc = quay - 2 - hbm;
+        new BigShip(at(sx, zc, 0), rng, hit, hbm + 2).bulk(len, beam, tanker);
         // barges and the tug further along
         int bx = sx + len + 6;
         for (int i = 0; i < 2 && bx + 34 < lw - 4; i++) {

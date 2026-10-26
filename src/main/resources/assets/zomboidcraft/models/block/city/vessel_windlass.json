@@ -1,0 +1,179 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_valve": "zomboidcraft:block/city/vessel_valve",
+    "vessel_winch": "zomboidcraft:block/city/vessel_winch",
+    "particle": "zomboidcraft:block/city/vessel_winch"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_winch",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_winch",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_winch",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_winch",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_winch"
+        },
+        "down": {
+          "texture": "#vessel_winch",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        0
+      ],
+      "to": [
+        13,
+        13,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_winch",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_winch"
+        },
+        "east": {
+          "texture": "#vessel_winch"
+        },
+        "west": {
+          "texture": "#vessel_winch"
+        },
+        "up": {
+          "texture": "#vessel_winch"
+        },
+        "down": {
+          "texture": "#vessel_winch"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        13
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_winch"
+        },
+        "south": {
+          "texture": "#vessel_winch",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_winch"
+        },
+        "west": {
+          "texture": "#vessel_winch"
+        },
+        "up": {
+          "texture": "#vessel_winch"
+        },
+        "down": {
+          "texture": "#vessel_winch"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        3
+      ],
+      "to": [
+        12,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_valve"
+        },
+        "south": {
+          "texture": "#vessel_valve"
+        },
+        "east": {
+          "texture": "#vessel_valve"
+        },
+        "west": {
+          "texture": "#vessel_valve"
+        },
+        "up": {
+          "texture": "#vessel_valve",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_valve"
+        }
+      }
+    }
+  ]
+}

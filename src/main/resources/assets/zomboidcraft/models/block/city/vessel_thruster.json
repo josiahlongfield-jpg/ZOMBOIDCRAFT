@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_thruster": "zomboidcraft:block/city/vessel_thruster",
+    "particle": "zomboidcraft:block/city/vessel_thruster"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_thruster"
+        },
+        "south": {
+          "texture": "#vessel_thruster",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_thruster",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_thruster",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_thruster",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_thruster",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

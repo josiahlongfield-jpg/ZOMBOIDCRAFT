@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_funnel_soot": "zomboidcraft:block/city/vessel_funnel_soot",
+    "particle": "zomboidcraft:block/city/vessel_funnel_soot"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        7,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "south": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "east": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "west": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "up": {
+          "texture": "#vessel_funnel_soot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_funnel_soot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        9
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "south": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "east": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "west": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "up": {
+          "texture": "#vessel_funnel_soot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_funnel_soot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        2
+      ],
+      "to": [
+        13,
+        12,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "south": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "east": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "west": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "up": {
+          "texture": "#vessel_funnel_soot"
+        },
+        "down": {
+          "texture": "#vessel_funnel_soot",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

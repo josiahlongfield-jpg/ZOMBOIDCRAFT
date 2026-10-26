@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_mast": "zomboidcraft:block/city/vessel_mast",
+    "vessel_rope": "zomboidcraft:block/city/vessel_rope",
+    "particle": "zomboidcraft:block/city/vessel_mast"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        12
+      ],
+      "to": [
+        10,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast"
+        },
+        "south": {
+          "texture": "#vessel_mast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_mast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        0
+      ],
+      "to": [
+        10,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        4,
+        2
+      ],
+      "to": [
+        8.5,
+        12,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_rope"
+        },
+        "south": {
+          "texture": "#vessel_rope"
+        },
+        "east": {
+          "texture": "#vessel_rope"
+        },
+        "west": {
+          "texture": "#vessel_rope"
+        },
+        "up": {
+          "texture": "#vessel_rope"
+        },
+        "down": {
+          "texture": "#vessel_rope"
+        }
+      }
+    }
+  ]
+}

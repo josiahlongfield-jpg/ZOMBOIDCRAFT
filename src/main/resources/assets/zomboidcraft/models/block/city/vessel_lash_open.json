@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_yellow": "zomboidcraft:block/city/vessel_yellow",
+    "particle": "zomboidcraft:block/city/vessel_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        2,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_yellow"
+        },
+        "east": {
+          "texture": "#vessel_yellow"
+        },
+        "west": {
+          "texture": "#vessel_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_yellow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_yellow"
+        },
+        "east": {
+          "texture": "#vessel_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_yellow"
+        },
+        "up": {
+          "texture": "#vessel_yellow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow"
+        },
+        "south": {
+          "texture": "#vessel_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_yellow"
+        },
+        "west": {
+          "texture": "#vessel_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_yellow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow"
+        },
+        "south": {
+          "texture": "#vessel_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_yellow"
+        },
+        "up": {
+          "texture": "#vessel_yellow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        0
+      ],
+      "to": [
+        16,
+        8.5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_yellow"
+        },
+        "east": {
+          "texture": "#vessel_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_yellow"
+        },
+        "down": {
+          "texture": "#vessel_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        14
+      ],
+      "to": [
+        16,
+        8.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_yellow"
+        },
+        "south": {
+          "texture": "#vessel_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_yellow"
+        },
+        "down": {
+          "texture": "#vessel_yellow"
+        }
+      }
+    }
+  ]
+}

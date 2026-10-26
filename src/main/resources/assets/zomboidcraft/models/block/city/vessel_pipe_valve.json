@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_pipe": "zomboidcraft:block/city/vessel_pipe",
+    "vessel_valve": "zomboidcraft:block/city/vessel_valve",
+    "particle": "zomboidcraft:block/city/vessel_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        0
+      ],
+      "to": [
+        12,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_pipe",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_pipe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_pipe"
+        },
+        "west": {
+          "texture": "#vessel_pipe"
+        },
+        "up": {
+          "texture": "#vessel_pipe"
+        },
+        "down": {
+          "texture": "#vessel_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1,
+        6
+      ],
+      "to": [
+        13,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_pipe"
+        },
+        "south": {
+          "texture": "#vessel_pipe"
+        },
+        "east": {
+          "texture": "#vessel_pipe"
+        },
+        "west": {
+          "texture": "#vessel_pipe"
+        },
+        "up": {
+          "texture": "#vessel_pipe"
+        },
+        "down": {
+          "texture": "#vessel_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        11,
+        7
+      ],
+      "to": [
+        9,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        13,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_valve"
+        },
+        "south": {
+          "texture": "#vessel_valve"
+        },
+        "east": {
+          "texture": "#vessel_valve"
+        },
+        "west": {
+          "texture": "#vessel_valve"
+        },
+        "up": {
+          "texture": "#vessel_valve"
+        },
+        "down": {
+          "texture": "#vessel_valve"
+        }
+      }
+    }
+  ]
+}
