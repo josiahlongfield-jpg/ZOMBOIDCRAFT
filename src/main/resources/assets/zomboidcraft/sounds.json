@@ -98,30 +98,24 @@
   "weapon.rifle.dry": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/rifle/dry/1"
-      },
-      {
-        "name": "zomboidcraft:weapon/rifle/dry/2"
+        "name": "zomboidcraft:weapon/rifle/dry/1",
+        "attenuation_distance": 16
       }
     ]
   },
   "weapon.rifle.mag_out": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/rifle/mag_out/1"
-      },
-      {
-        "name": "zomboidcraft:weapon/rifle/mag_out/2"
+        "name": "zomboidcraft:weapon/rifle/mag_out/1",
+        "attenuation_distance": 16
       }
     ]
   },
   "weapon.rifle.mag_in": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/rifle/mag_in/1"
-      },
-      {
-        "name": "zomboidcraft:weapon/rifle/mag_in/2"
+        "name": "zomboidcraft:weapon/rifle/mag_in/1",
+        "attenuation_distance": 16
       }
     ]
   },
@@ -138,26 +132,24 @@
   "weapon.rifle.load_round": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/rifle/load_round/1"
-      },
-      {
-        "name": "zomboidcraft:weapon/rifle/load_round/2"
-      },
-      {
-        "name": "zomboidcraft:weapon/rifle/load_round/3"
+        "name": "zomboidcraft:weapon/rifle/load_round/1",
+        "attenuation_distance": 16
       }
     ]
   },
   "weapon.casing": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/casing/1"
+        "name": "zomboidcraft:weapon/casing/1",
+        "attenuation_distance": 16
       },
       {
-        "name": "zomboidcraft:weapon/casing/2"
+        "name": "zomboidcraft:weapon/casing/2",
+        "attenuation_distance": 16
       },
       {
-        "name": "zomboidcraft:weapon/casing/3"
+        "name": "zomboidcraft:weapon/casing/3",
+        "attenuation_distance": 16
       }
     ]
   },
@@ -192,13 +184,8 @@
   "weapon.melee.swing": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/melee/swing/1"
-      },
-      {
-        "name": "zomboidcraft:weapon/melee/swing/2"
-      },
-      {
-        "name": "zomboidcraft:weapon/melee/swing/3"
+        "name": "zomboidcraft:weapon/melee/swing/1",
+        "attenuation_distance": 16
       }
     ]
   },
@@ -859,8 +846,7 @@
     "sounds": [
       {
         "name": "zomboidcraft:weapon/shotgun/dry/1",
-        "attenuation_distance": 8,
-        "pitch": 0.8
+        "attenuation_distance": 8
       }
     ]
   },
@@ -931,7 +917,7 @@
   "weapon.hunting_rifle.shot_suppressed": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/rifle/shot_suppressed/1",
+        "name": "zomboidcraft:weapon/hunting_rifle/shot_suppressed/1",
         "attenuation_distance": 48
       }
     ]
@@ -947,9 +933,8 @@
   "weapon.double_barrel.shot": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/shotgun/shot/1",
-        "attenuation_distance": 128,
-        "pitch": 0.95
+        "name": "zomboidcraft:weapon/double_barrel/shot/1",
+        "attenuation_distance": 128
       }
     ]
   },
@@ -965,9 +950,8 @@
   "weapon.double_barrel.dry": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/hunting_rifle/dry/1",
-        "attenuation_distance": 8,
-        "pitch": 1.1
+        "name": "zomboidcraft:weapon/double_barrel/dry/1",
+        "attenuation_distance": 8
       }
     ]
   },
@@ -992,18 +976,16 @@
   "weapon.double_barrel.shell_in": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/shotgun/shell_in/1",
-        "attenuation_distance": 8,
-        "pitch": 1.05
+        "name": "zomboidcraft:weapon/double_barrel/shell_in/1",
+        "attenuation_distance": 8
       }
     ]
   },
   "weapon.revolver.shot": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/shot/1",
-        "attenuation_distance": 100,
-        "pitch": 0.9
+        "name": "zomboidcraft:weapon/revolver/shot/1",
+        "attenuation_distance": 100
       }
     ]
   },
@@ -1019,27 +1001,24 @@
   "weapon.revolver.dry": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/dry/1",
-        "attenuation_distance": 8,
-        "pitch": 0.85
+        "name": "zomboidcraft:weapon/revolver/dry/1",
+        "attenuation_distance": 8
       }
     ]
   },
   "weapon.revolver.cock": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/dry/1",
-        "attenuation_distance": 8,
-        "pitch": 0.7
+        "name": "zomboidcraft:weapon/revolver/cock/1",
+        "attenuation_distance": 8
       }
     ]
   },
   "weapon.revolver.open": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/mag_out/1",
-        "attenuation_distance": 8,
-        "pitch": 1.1
+        "name": "zomboidcraft:weapon/revolver/open/1",
+        "attenuation_distance": 8
       }
     ]
   },
@@ -1056,19 +1035,16 @@
   "weapon.revolver.round_in": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/mag_in/1",
-        "attenuation_distance": 8,
-        "pitch": 1.6,
-        "volume": 0.5
+        "name": "zomboidcraft:weapon/revolver/round_in/1",
+        "attenuation_distance": 8
       }
     ]
   },
   "weapon.revolver.close": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/pistol/mag_in/1",
-        "attenuation_distance": 8,
-        "pitch": 0.9
+        "name": "zomboidcraft:weapon/revolver/close/1",
+        "attenuation_distance": 8
       }
     ]
   },
