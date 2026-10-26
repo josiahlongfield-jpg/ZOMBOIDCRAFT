@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -27,13 +28,13 @@ import org.jetbrains.annotations.Nullable;
 final class BenchPage {
     enum Tab { PARTS, CONDITION }
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
     private int slot = -1;
     private Tab tab = Tab.PARTS;
     /** The part under the mouse, so the stats can show what fitting it would do. */
     private ItemStack trying = ItemStack.EMPTY;
 
-    BenchPage(KitScreen screen) {
+    BenchPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
@@ -52,7 +53,7 @@ final class BenchPage {
 
     void draw(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
         Font font = screen.mc().font;
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         List<Integer> weapons = weapons();
         if (!weapons.contains(slot)) {
             int held = InventoryMenu.USE_ROW_SLOT_START + screen.player().getInventory().getSelectedSlot();
@@ -149,7 +150,7 @@ final class BenchPage {
         } else if (tab == Tab.CONDITION) {
             hx += KitDraw.hint(g, font, "LMB", "Repair with it", hx, hy);
         }
-        KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
+        screen.pagesAndClose(g, font, hx, hy);
     }
 
     /** Each socket: what's fitted, then every part you carry that fits it. */
@@ -164,7 +165,7 @@ final class BenchPage {
             KitDraw.wrap(g, font, "Attachments are turned off in settings.", x, y + 12, 139, KitDraw.BAD);
             return;
         }
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         int block = Math.min(33, 270 / sockets.size());
         int tile = Math.min(20, block - 11);
         int cy = y + 11;
@@ -283,7 +284,7 @@ final class BenchPage {
             KitDraw.wrap(g, font, "Nothing to mend: it's in full condition.", x, cy, 139, KitDraw.FAINT);
             return;
         }
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         List<Integer> usable = new ArrayList<>();
         List<ItemStack> kinds = new ArrayList<>();
         for (int i : screen.carried()) {

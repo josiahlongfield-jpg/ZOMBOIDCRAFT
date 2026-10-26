@@ -45,6 +45,13 @@ public final class Downed {
                     .persistent(Codec.BOOL)
                     .syncWith(ByteBufCodecs.BOOL, AttachmentSyncPredicate.all()));
 
+    /** Whether this zombie has lost both legs. It always crawls; saved, and sent to clients so they draw the stumps. */
+    public static final AttachmentType<Boolean> LEGLESS = AttachmentRegistry.create(
+            ZomboidCraft.id("legless"),
+            builder -> builder
+                    .persistent(Codec.BOOL)
+                    .syncWith(ByteBufCodecs.BOOL, AttachmentSyncPredicate.all()));
+
     private static final Identifier CRAWL_SPEED = ZomboidCraft.id("crawl");
 
     /** Ticks left on the ground and ticks left staggered, per zombie. Server thread only. */
@@ -66,6 +73,10 @@ public final class Downed {
 
     public static boolean isCrawler(Entity entity) {
         return entity.getAttachedOrElse(CRAWLER, false);
+    }
+
+    public static boolean isLegless(Entity entity) {
+        return entity.getAttachedOrElse(LEGLESS, false);
     }
 
     /** Frozen in place: knocked flat or staggered. Checked by the AI mixin, on the server only. */
@@ -141,9 +152,32 @@ public final class Downed {
         }
     }
 
-    /** On load: some zombies are found crawling; crawlers lie down again (the pose isn't saved). */
+    /** Takes both legs: it crawls from now on, on its arms. */
+    public static void makeLegless(Zombie zombie) {
+        zombie.setAttached(LEGLESS, true);
+        makeCrawler(zombie);
+    }
+
+    /** Back on two legs for good (the test command's plain zombie). */
+    public static void makeWalker(Zombie zombie) {
+        zombie.setAttached(LEGLESS, false);
+        zombie.setAttached(CRAWLER, false);
+        AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.removeModifier(CRAWL_SPEED);
+        }
+        zombie.setPose(Pose.STANDING);
+    }
+
+    /** On load: some zombies are found crawling, a few with no legs; crawlers lie down again (the pose isn't saved). */
     public static void onLoad(Zombie zombie) {
         ZcConfig.Combat config = ZcConfig.get().combat;
+        if (!zombie.hasAttached(LEGLESS)) {
+            zombie.setAttached(LEGLESS, config.crawlers && zombie.getRandom().nextFloat() < config.leglessSpawnChance);
+            if (isLegless(zombie)) {
+                zombie.setAttached(CRAWLER, true);
+            }
+        }
         if (!zombie.hasAttached(CRAWLER)) {
             zombie.setAttached(CRAWLER, config.crawlers && zombie.getRandom().nextFloat() < config.crawlerSpawnChance);
         }

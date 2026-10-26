@@ -46,7 +46,7 @@ public final class WeatherDirector {
 
     private static final SplittableRandom RNG = new SplittableRandom();
     private static Weather current = Weather.CALM;
-    private static WeatherKind kind = WeatherKind.DRIZZLE;
+    private static WeatherKind kind = WeatherKind.RAIN;
     private static WeatherKind queued;
     private static int ticksLeft = 4 * 60 * SECOND;
     private static int warning;
@@ -178,7 +178,7 @@ public final class WeatherDirector {
         double total = 0;
         for (WeatherKind k : WeatherKind.values()) {
             double w = k.weight;
-            if (k != WeatherKind.DRIZZLE) {
+            if (k != WeatherKind.RAIN) {
                 w *= config.eventFrequency;
             }
             if (k.isStorm()) {
@@ -187,7 +187,7 @@ public final class WeatherDirector {
             if (k == WeatherKind.FOG) {
                 w = config.fog ? w * (0.6 + 2.4 * night) : 0;  // fog gathers at night and lingers into the morning
             }
-            if (k == kind && k != WeatherKind.DRIZZLE) {
+            if (k == kind && k != WeatherKind.RAIN) {
                 w *= 0.3;  // rarely the same thing twice running
             }
             weights[k.ordinal()] = w;
@@ -200,14 +200,16 @@ public final class WeatherDirector {
                 return k;
             }
         }
-        return WeatherKind.DRIZZLE;
+        return WeatherKind.RAIN;
     }
 
     /** Where the weather is heading: the current kind, or the build-up to a storm. */
     private static Weather target(Level level) {
         ZcConfig.Weather config = ZcConfig.get().weather;
         WeatherKind k = kind;
-        float rain = k.rain, thunder = k.thunder, fog = config.fog ? Math.max(k.fog, bank) : 0, wind = k.wind;
+        // the rain never eases below moderate, whatever else the weather is doing
+        float rain = Math.max(k.rain, (float) config.minRain), thunder = k.thunder, wind = k.wind;
+        float fog = config.fog ? Math.max(k.fog, Math.max(bank, rolling(config))) : 0;
         if (warning > 0 && queued != null) {
             // the calm before: wind rising, darker, rain thickening
             float t = 1 - warning / (float) WARNING_TICKS;
@@ -224,6 +226,21 @@ public final class WeatherDirector {
         }
         float hail = hailLeft > 0 ? 1 : 0;
         return new Weather(k.ordinal(), rain, thunder, fog, wind, windYaw, moon, hail);
+    }
+
+    /**
+     * Fog that comes and goes on its own over any weather: three slow waves of different lengths
+     * (roughly 7, 17 and 41 minutes), so some hours stay clear, some get a thin haze, and now and
+     * then they line up into a thick bank that rolls in and lifts again.
+     */
+    private static float rolling(ZcConfig.Weather config) {
+        if (config.rollingFog <= 0) {
+            return 0;
+        }
+        double t = ticks / 20.0 / 60.0;  // minutes
+        double wave = 0.45 * Math.sin(t * Mth.TWO_PI / 7 + 0.7) + 0.35 * Math.sin(t * Mth.TWO_PI / 17 + 2.1)
+                + 0.2 * Math.sin(t * Mth.TWO_PI / 41 + 4.4);
+        return (float) (Mth.clamp((wave + 0.15) * 0.95, 0, 0.9) * config.rollingFog);
     }
 
     /** Keeps vanilla raining (wet streets, fires put out) and thundering in storms. */

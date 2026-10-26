@@ -341,12 +341,16 @@ public final class ZcConfig {
         public double nightLight = 0.8;
         /** The moon breaks through gaps in the clouds now and then at night. */
         public boolean moonBreaks = true;
-        /** Scales how often rain, fog, wind and storms come; 0 keeps a steady drizzle. */
+        /** Scales how often downpours, fog, wind and storms come; 0 keeps a steady rain. */
         public double eventFrequency = 1.0;
         /** Scales how often storms come, and how many of them turn dangerous. */
         public double stormFrequency = 1.0;
         /** Thick fog now and then, as its own weather or rolling in over the rain. */
         public boolean fog = true;
+        /** The rain never eases below this (0..1); 0.55 is moderate rain, 1 a downpour. */
+        public double minRain = 0.55;
+        /** Fog rolling in and out on its own over any weather, from clear to a thick bank; 0 turns it off, 0.5 halves it. */
+        public double rollingFog = 1.0;
         /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
         public boolean mist = true;
         /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
@@ -376,6 +380,10 @@ public final class ZcConfig {
     public static class Look {
         /** Zomboid-style zombie model and outfits. Client side; needs a restart. */
         public boolean customZombies = true;
+        /** The new zombie bodies: Zomboid-shaped, in worn 3D clothes, with the new movements. Off draws the older model. Client side. */
+        public boolean newZombies = true;
+        /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
+        public double zombieDetailDistance = 16;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
         public boolean hdSkins = true;
         /** Raised 3D pieces on zombie outfits: caps, helmets, pouches, collars, hoods, a hanging jaw. */
@@ -447,6 +455,8 @@ public final class ZcConfig {
         public boolean crawlers = true;
         /** Share of zombies that spawn crawling. */
         public double crawlerSpawnChance = 0.05;
+        /** Share of zombies found with no legs, dragging themselves along on their arms. */
+        public double leglessSpawnChance = 0.03;
         /** Chance a knockdown from a heavy weapon or gunshot leaves a zombie crawling. */
         public double crippleChance = 0.2;
     }

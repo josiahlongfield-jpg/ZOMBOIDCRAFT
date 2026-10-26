@@ -14,6 +14,7 @@ import com.zomboidcraft.world.cars.Cars;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherDirector;
 import com.zomboidcraft.world.weather.WeatherKind;
+import com.zomboidcraft.zombie.ZombieLook;
 import java.util.function.UnaryOperator;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
@@ -45,6 +46,15 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("zombie")
+                                .executes(ctx -> zombie(ctx, null, "walker"))
+                                .then(Commands.argument("outfit", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(ZombieLook.outfits(), b))
+                                        .executes(ctx -> zombie(ctx, StringArgumentType.getString(ctx, "outfit"), "walker"))
+                                        .then(Commands.argument("kind", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(ZOMBIE_KINDS, b))
+                                                .executes(ctx -> zombie(ctx, StringArgumentType.getString(ctx, "outfit"),
+                                                        StringArgumentType.getString(ctx, "kind"))))))
                         .then(Commands.literal("weather")
                                 .executes(ZcCommand::weather)
                                 .then(Commands.argument("kind", StringArgumentType.word())
@@ -122,6 +132,41 @@ public final class ZcCommand {
         }
         ctx.getSource().sendSuccess(() -> Component.literal(
                 "Building the test city around you; it takes a minute or two. Best in a superflat world."), true);
+        return 1;
+    }
+
+    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless");
+
+    /** Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling or with no legs. */
+    private static int zombie(CommandContext<CommandSourceStack> ctx, String outfit, String kind) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        if ((outfit != null && !ZombieLook.outfits().contains(outfit)) || !ZOMBIE_KINDS.contains(kind)) {
+            ctx.getSource().sendFailure(Component.literal("Outfits: " + String.join(", ", ZombieLook.outfits())
+                    + "; then walker, crawler or legless"));
+            return 0;
+        }
+        double yaw = Math.toRadians(player.getYRot());
+        net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(
+                player.getX() - Math.sin(yaw) * 4, player.getY(), player.getZ() + Math.cos(yaw) * 4);
+        net.minecraft.world.entity.monster.zombie.Zombie zombie = net.minecraft.world.entity.EntityTypes.ZOMBIE.spawn(
+                (ServerLevel) player.level(), pos, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (zombie == null) {
+            ctx.getSource().sendFailure(Component.literal("No room for a zombie there"));
+            return 0;
+        }
+        if (outfit != null) {
+            zombie.setAttached(ZombieLook.OUTFIT, outfit);
+        }
+        switch (kind) {
+            case "legless" -> com.zomboidcraft.combat.Downed.makeLegless(zombie);
+            case "crawler" -> {
+                zombie.setAttached(com.zomboidcraft.combat.Downed.LEGLESS, false);
+                com.zomboidcraft.combat.Downed.makeCrawler(zombie);
+            }
+            default -> com.zomboidcraft.combat.Downed.makeWalker(zombie);
+        }
+        String name = ZombieLook.outfit(zombie);
+        ctx.getSource().sendSuccess(() -> Component.literal("Spawned a " + name + " zombie (" + kind + ")"), false);
         return 1;
     }
 
