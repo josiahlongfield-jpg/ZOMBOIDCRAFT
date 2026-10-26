@@ -483,6 +483,12 @@ public final class ZcConfig {
         public int fireDelayTicks = 3;
         /** Rounds in a magazine. */
         public int magazineSize = 30;
+        /** The gun has a full-auto setting, switched with the fire mode key. */
+        public boolean selectFire = false;
+        /** How fast it fires on full auto, in rounds a minute. */
+        public double autoRoundsPerMinute = 800.0;
+        /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
+        public double autoRecoil = 0.7;
 
         static GunStats pistol() {
             GunStats s = new GunStats();
@@ -584,6 +590,10 @@ public final class ZcConfig {
 
     /** Settings every gun shares, and the assault rifle's own numbers. */
     public static class Guns extends GunStats {
+        {
+            selectFire = true;      // the assault rifle has semi and full auto
+        }
+
         public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
@@ -624,13 +634,13 @@ public final class ZcConfig {
          */
         public double lightZero = 12;
         /**
-         * How bright (a light level, 1 to 15) a gun light lights the world just ahead of it, fading a level every
-         * three blocks down the beam. Higher lights more of the rooms around it too. Client side.
+         * How bright (a light level, 1 to 15) a gun light lights the space it's pointed at, a level less every eight
+         * blocks off. Higher lights a wider patch round it. Client side.
          */
         public int lightLevel = 11;
         /**
-         * How many hidden lights a gun light spreads down its beam (1 to 8). More light the floor and walls further
-         * along it, but cost frames when you turn. Client side.
+         * How many hidden lights a gun light uses (1 to 8): one where it lands and faint ones on the way there. More
+         * light the floor and walls between better, but cost frames when you turn. Client side.
          */
         public int lightSources = 5;
         /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */

@@ -53,8 +53,9 @@ import org.joml.Vector3f;
  * reload, it goes wherever the barrel does. The light shines straight out of its lens on the left rail, the way the
  * barrel points, never bent toward what's under the crosshair: a soft pool where it lands and a faint beam in the
  * air, both in the dark only. It also lights the world with light blocks put only into this computer's copy of the
- * world, spaced down the beam: brightest just ahead of the gun (guns.lightLevel), fading as the beam widens, so the
- * floor and walls round it light up whether or not it lands on anything. The server's world never changes.
+ * world: the brightest just short of where it lands (guns.lightLevel), so the space it's pointed at lights up, and a
+ * few faint ones on the way there, dimmest by the gun, so it doesn't light a bubble round you. The server's world
+ * never changes.
  *
  * Shader packs draw glow as solid emissive surfaces and throw away the faint parts (Photon drops anything under half
  * strength), so with one on the laser's dot is drawn solid and bigger, and its beam is dust: specks lit along it,
@@ -62,8 +63,12 @@ import org.joml.Vector3f;
  */
 public final class RailLights {
     private static final double RANGE = 32, LIGHT_RANGE = 24;
-    /** The light blocks down a beam: the first this far ahead of the lens, at least this far apart, a level dimmer every LIGHT_FADE blocks. */
-    private static final double FIRST_LIGHT = 1.5, LIGHT_GAP = 3, LIGHT_FADE = 3;
+    /** The light where it lands: a level dimmer every POOL_FADE blocks off, never under POOL_LEAST. */
+    private static final double POOL_FADE = 8;
+    private static final int POOL_LEAST = 5;
+    /** The faint lights on the way: none nearer the gun than TRAIL_START, TRAIL_BASE there, a level up every TRAIL_RISE blocks. */
+    private static final double TRAIL_START = 2.5, TRAIL_RISE = 4;
+    private static final int TRAIL_BASE = 2;
     private static final Identifier GLOW = ZomboidCraft.id("textures/effect/rail_glow.png");
     private static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -134,23 +139,23 @@ public final class RailLights {
     }
 
     /**
-     * Puts one player's light blocks where the beam is now: spaced down it from just ahead of the gun, brightest
-     * there and fading a level every few blocks as it widens, the last just short of whatever it lands on.
+     * Puts one player's light blocks where the light is going now: the brightest just short of what it lands on,
+     * fading a little the further off that is, and faint ones spaced back toward the gun, a level dimmer every few
+     * blocks nearer it, so what lights up is the space it's pointed at. Pointed at nothing in reach, the end of its
+     * reach gets a dim one.
      */
     private static void moveLights(ClientLevel level, UUID id, Land land, int brightest, int sources) {
         Map<BlockPos, Integer> had = LIT.getOrDefault(id, Map.of()), want = new HashMap<>();
         double end = land.at() != null ? land.distance() - 0.5 : land.distance();
-        int count = Math.min(sources, 1 + (int) (Math.max(0, end - FIRST_LIGHT) / LIGHT_GAP));
-        for (int i = 0; i < count; i++) {
-            double s = count == 1 ? Math.min(end, FIRST_LIGHT) : FIRST_LIGHT + (end - FIRST_LIGHT) * i / (count - 1);
-            int brightness = Mth.clamp(brightest - (int) (Math.max(0, s - FIRST_LIGHT) / LIGHT_FADE), Math.min(2, brightest), 15);
-            // in the air on the gun's side of anything in the way: back along the beam a little if it's taken
-            for (double back = 0; back < 2 && s - back > 0.2; back += 0.5) {
-                BlockPos p = free(level, BlockPos.containing(land.from().add(land.dir().scale(s - back))), had);
-                if (p != null) {
-                    want.merge(p, brightness, Math::max);
-                    break;
-                }
+        int pool = land.at() != null
+                ? Mth.clamp(brightest - (int) (land.distance() / POOL_FADE), Math.min(POOL_LEAST, brightest), 15)
+                : Math.max(1, brightest / 2);
+        lightAt(level, land, end, pool, had, want);
+        for (int i = 1; i < sources; i++) {
+            double s = end * i / sources;
+            int brightness = Math.min(pool - 1, TRAIL_BASE + (int) ((s - TRAIL_START) / TRAIL_RISE));
+            if (s >= TRAIL_START && brightness > 0) {
+                lightAt(level, land, s, brightness, had, want);
             }
         }
         for (BlockPos old : had.keySet()) {
@@ -172,6 +177,18 @@ public final class RailLights {
             }
         });
         LIT.put(id, placed);
+    }
+
+    /** A light block s blocks down the beam, in the air on the gun's side of anything in the way: back along it a little if that's taken. */
+    private static void lightAt(ClientLevel level, Land land, double s, int brightness, Map<BlockPos, Integer> had,
+                                Map<BlockPos, Integer> want) {
+        for (double back = 0; back < 2 && s - back > 0.2; back += 0.5) {
+            BlockPos p = free(level, BlockPos.containing(land.from().add(land.dir().scale(s - back))), had);
+            if (p != null) {
+                want.merge(p, brightness, Math::max);
+                return;
+            }
+        }
     }
 
     /**

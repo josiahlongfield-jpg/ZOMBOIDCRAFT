@@ -23,7 +23,7 @@ public final class CombatNet {
         }
     }
 
-    /** One of the action keys: reload, shove, a struggle tap, the light or laser switch. */
+    /** One of the action keys: reload, shove, a struggle tap, the light, laser or fire mode switch. */
     public record Action(int action) implements CustomPacketPayload {
         public static final int RELOAD = 0;
         public static final int SHOVE = 1;
@@ -35,6 +35,8 @@ public final class CombatNet {
         /** The radio's talk key pressed and let go. */
         public static final int RADIO_DOWN = 6;
         public static final int RADIO_UP = 7;
+        /** Switch the gun between semi and full auto. */
+        public static final int FIRE_MODE = 8;
         /** The quick-use wheel let go over a belt slot: QUICK_USE + slot. */
         public static final int QUICK_USE = 16;
         public static final Type<Action> TYPE = new Type<>(ZomboidCraft.id("action"));
@@ -69,6 +71,7 @@ public final class CombatNet {
                     case Action.STRUGGLE -> Grabs.struggle(player);
                     case Action.RAIL -> Guns.toggleLight(player);
                     case Action.LASER -> Guns.toggleLaser(player);
+                    case Action.FIRE_MODE -> Guns.toggleFireMode(player);
                     case Action.NVG -> com.zomboidcraft.gear.Headgear.flip(player);
                     case Action.RADIO_DOWN -> com.zomboidcraft.gear.Radios.key(player, true);
                     case Action.RADIO_UP -> com.zomboidcraft.gear.Radios.key(player, false);

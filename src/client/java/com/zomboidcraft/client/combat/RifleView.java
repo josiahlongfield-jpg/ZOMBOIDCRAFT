@@ -105,7 +105,7 @@ public final class RifleView {
     private static final Map<GunType, ItemStack[]> LOOSE = new EnumMap<>(GunType.class);
 
     /** The last shot: its tick, then its first frame; whether it flashed, and whether it was the last round. */
-    private static final float FLASH_LIFE = 1.6f, QUIET_FLASH_LIFE = 1.0f;
+    private static final float FLASH_LIFE = 1.6f, QUIET_FLASH_LIFE = 1.4f;
     private static int shotTick = -100;
     /** Which chamber the last shot was fired from (a double's right barrel is 0, its left 1). */
     private static int shotChamber;
@@ -486,7 +486,7 @@ public final class RifleView {
     /**
      * A light muzzle flash for a moment after each shot, starting the frame the shot is heard: full size for half
      * its life, then shrinking away, turned and sized a little differently each time. Through a suppressor it's a
-     * smaller, shorter one at the end of the can.
+     * smaller, slightly shorter one at the end of the can.
      */
     private static void drawFlash(PoseStack pose, SubmitNodeCollector out, LocalPlayer player, Pose gun, ItemStack stack,
                                   float age) {

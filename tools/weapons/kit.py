@@ -336,16 +336,33 @@ def flash_tip(gun):
     return np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, hi[2]])
 
 
-def quiet_tip(gun):
-    """Where a suppressed shot's smaller flash starts: the front of the suppressor's end cap, on the bore line (item
-    pixels, before the shift). None for a gun that takes no suppressor."""
+def _can(gun):
+    """The fitted suppressor's bounds (item pixels, before the shift), or None for a gun that takes none."""
     key = next((k for k in gun.slots['muzzle'].fits if 'suppressor' in k), None) if 'muzzle' in gun.slots else None
     if key is None:
         return None
     R, t = gun.mount(key)
-    lo, _hi = drawn(key, gun.parts[key].build, R, t).bounds()
+    return drawn(key, gun.parts[key].build, R, t).bounds()
+
+
+def quiet_tip(gun):
+    """Where a suppressed shot's smaller flash starts: the front of the suppressor's end cap, on the bore line (item
+    pixels, before the shift). None for a gun that takes no suppressor."""
+    can = _can(gun)
+    if can is None:
+        return None
     tip = flash_tip(gun)
-    return np.array([tip[0], tip[1], lo[2]])
+    return np.array([tip[0], tip[1], can[0][2]])
+
+
+def quiet_flash(gun, shift, room=False):
+    """A suppressed shot's flash at the end of the can: smaller than the bare muzzle's but still plain to see, and
+    always wider than the can it comes out of."""
+    lo, hi = _can(gun)
+    can = (hi[0] - lo[0]) / 2
+    k = gun.flash_size
+    return flash_model(quiet_tip(gun) + shift, max(1.8 * k, 3.0 * can), max(0.65 * k, 0.9 * can),
+                       max(0.95 * k, 1.6 * can), room=room)
 
 
 def star_flash(at, star):
@@ -356,11 +373,15 @@ def star_flash(at, star):
             'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'}, 'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}}
 
 
-def flash_model(tip, length=2.4, half=0.75, star=1.1):
+def flash_model(tip, length=2.4, half=0.75, star=1.1, room=False):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
     see-through at the edges and lit by themselves. Pixels; the bore runs toward -z. A flash that would reach past
-    the front of the model limits (a long rifle's suppressor ends near them) is cut off there: its star stays."""
+    the front of the model limits (a long rifle's suppressor ends near them) is cut off there: its star stays. With
+    room it's moved back inside them whole instead and its fixed display moves it out again (first person draws the
+    loose flash with the fixed display)."""
     x, y, z = (round(float(v), 4) for v in tip)
+    push = round(M.LIMIT[0] - (z - length), 4) if room and z - length < M.LIMIT[0] else 0.0
+    z = round(z + push, 4)
     lit = {'shade': False, 'light_emission': 15}
     front = max(z - length, M.LIMIT[0])
 
@@ -373,8 +394,11 @@ def flash_model(tip, length=2.4, half=0.75, star=1.1):
     face = dict(lit, **{'from': [round(x - star, 4), round(y - star, 4), zs], 'to': [round(x + star, 4), round(y + star, 4), zs],
                         'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'},
                                   'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}})
-    return {'gui_light': 'front', 'textures': {'0': FLASH_TEX, 'particle': FLASH_TEX},
-            'elements': [tongue(45), tongue(-45), face]}
+    model = {'gui_light': 'front', 'textures': {'0': FLASH_TEX, 'particle': FLASH_TEX},
+             'elements': [tongue(45), tongue(-45), face]}
+    if push:
+        model['display'] = {'fixed': {'translation': [0, 0, -push]}}
+    return model
 
 
 def write_glow_texture(assets):
@@ -520,18 +544,27 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         for k in skins:
             M.dump({'parent': f'{NS}:item/{base}/{n}', 'textures': {'0': texs[k], 'particle': texs[k]}},
                    assets / f'models/item/{base}/{k}/{n}.json')
+    loose_flash = {}        # first person's loose flash, where it needs room the posed one is cut short of
     if gun.flash:
         k = gun.flash_size
-        flash = flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k)
-        if gun.gap_flash is not None:
-            flash['elements'].append(star_flash(gun.gap_flash + shift, 0.9 * k))
-        M.dump(flash, assets / f'models/item/{base}/muzzle_flash.json')
-        names_posed = names + ['muzzle_flash']
-        quiet = quiet_tip(gun)
-        if quiet is not None:
-            # a suppressor still shows a small, short flash at the end of its can
-            M.dump(flash_model(quiet + shift, 1.0 * k, 0.4 * k, 0.55 * k), assets / f'models/item/{base}/muzzle_flash_quiet.json')
-            names_posed.append('muzzle_flash_quiet')
+
+        def full(room):
+            f = flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k, room=room)
+            if gun.gap_flash is not None:
+                f['elements'].append(star_flash(gun.gap_flash + shift, 0.9 * k))
+            return f
+
+        made = {'muzzle_flash': full}
+        if quiet_tip(gun) is not None:
+            # a suppressor still shows a flash at the end of its can
+            made['muzzle_flash_quiet'] = lambda room: quiet_flash(gun, shift, room)
+        for n, make in made.items():
+            M.dump(make(False), assets / f'models/item/{base}/{n}.json')
+            roomy = make(True)
+            if 'display' in roomy:
+                M.dump(roomy, assets / f'models/item/{base}/{n}_loose.json')
+                loose_flash[n] = f'{n}_loose'
+        names_posed = names + list(made)
     else:
         names_posed = names
 
@@ -626,7 +659,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         elif key in names:
             model = by_finish(fins, lambda f: ref(f'{base}/{key}' if f == base_fin else f'{base}/{f}/{key}'))
         else:
-            model = ref(f'{base}/{key}')      # the flash has no finish
+            model = ref(f'{base}/{loose_flash.get(key, key)}')      # the flash has no finish
         M.dump({'model': model}, assets / f'items/{gun.name}_loose_{name}.json')
 
     # ghosts and the weapon screen's slot data
