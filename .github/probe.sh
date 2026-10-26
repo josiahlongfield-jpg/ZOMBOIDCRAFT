@@ -7,17 +7,34 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== nvg4"
-for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
-javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head
-javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 2>&1 | grep -E 'ldc' | head
-javap -cp "$CP" -c -p net.minecraft.client.renderer.PostChain 2>&1 | grep -E 'ldc|TextureInput|getTexture|withPath|SNIPPET|withUniform|withSampler|BindGroup' | head -40
-javap -cp "$CP" -c -p net.minecraft.client.renderer.PostPass 2>&1 | grep -E 'ldc|setUniform|bindDefault|Globals|getTexture|bindTexture|setTexture' | head -40
-javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B3 -A25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
-javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
-sig com.mojang.blaze3d.systems.RenderSystem 'bindDefault|Globals|globalSettings'
-sig net.minecraft.client.renderer.texture.DynamicTexture 'public'
-sig com.mojang.blaze3d.platform.NativeImage 'setPixel|getPixels|NativeImage\(|setPixelABGR|setPixelRGBA'
+echo "===== voice"
+curl -s https://maven.maxhenkel.de/repository/public/de/maxhenkel/voicechat/voicechat-api/maven-metadata.xml | grep -oP '(?<=<(version|release|latest)>)[^<]+' | tail -6
+VC=$(find ~/.gradle/caches/modules-2 -path '*voicechat-api*' -name '*.jar' ! -name '*sources*' | head -1)
+echo "voicechat-api jar: $VC"
+for c in VoicechatPlugin VoicechatApi VoicechatServerApi VoicechatConnection ServerPlayer ServerLevel Entity Position Player VolumeCategory 'VolumeCategory$Builder' \
+         events.EventRegistration events.Event events.PacketEvent events.ServerEvent events.MicrophonePacketEvent events.VoicechatServerStartedEvent events.VoicechatServerStoppedEvent events.PlayerDisconnectedEvent \
+         packets.Packet packets.MicrophonePacket packets.SoundPacket 'packets.SoundPacket$Builder' packets.StaticSoundPacket 'packets.StaticSoundPacket$Builder' packets.EntitySoundPacket 'packets.EntitySoundPacket$Builder' \
+         packets.LocationalSoundPacket 'packets.LocationalSoundPacket$Builder' opus.OpusDecoder opus.OpusEncoder opus.OpusEncoderMode; do
+  javap -cp "$VC" "de.maxhenkel.voicechat.api.$c" 2>&1 | grep -v '^Compiled'
+done
+echo "===== svc mod"
+SVC_URL=$(curl -sfG https://api.modrinth.com/v2/project/simple-voice-chat/version --data-urlencode 'game_versions=["26.3"]' --data-urlencode 'loaders=["fabric"]' | jq -r '.[0].files[0].url')
+echo "svc: $SVC_URL"
+mkdir -p /tmp/svc && curl -sfL "$SVC_URL" -o /tmp/svc/svc.jar && unzip -q -o /tmp/svc/svc.jar -d /tmp/svc/x
+find /tmp/svc/x -name '*.class' | grep -iE 'ptt|keyevent|KeyHandler|MicThread|Activation' | head -20
+for f in $(find /tmp/svc/x -name '*.class' | grep -iE 'PTTKeyHandler|KeyEvents' | head -3); do
+  c=$(echo "$f" | sed 's#/tmp/svc/x/##; s#\.class$##; s#/#.#g'); echo "+++ $c"
+  javap -cp /tmp/svc/x -p "$c" 2>&1 | head -40
+  javap -cp /tmp/svc/x -c -p "$c" 2>&1 | grep -E 'ldc|bipush|sipush|getstatic.*InputConstants|isKeyDown|isDown|getstatic' | head -40
+done
+for f in $(find /tmp/svc/x -name 'MicThread.class' | head -1); do
+  c=$(echo "$f" | sed 's#/tmp/svc/x/##; s#\.class$##; s#/#.#g'); echo "+++ $c"
+  javap -cp /tmp/svc/x -c -p "$c" 2>&1 | grep -E 'Method|invoke.*(PTT|ptt|Down|Whisper|Activation)' | head -40
+done
+grep -o '"voicechat[^"]*"' /tmp/svc/x/fabric.mod.json | head; grep -E '"key\.|voicechat.*key' /tmp/svc/x/assets/voicechat/lang/en_us.json | head -20
+echo "===== keys"
+javap -cp "$CP" -p net.minecraft.client.KeyMapping 2>&1 | grep -iE 'map|static|setDown|isDown|key' | head -30
+sig com.mojang.blaze3d.platform.InputConstants 'isKeyDown|getKey|Type'
 exit 0
 
 echo "===== injuries"
