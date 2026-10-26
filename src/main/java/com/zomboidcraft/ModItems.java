@@ -217,6 +217,7 @@ public final class ModItems {
                 output.accept(mag);
                 ItemStack kitted = gun.copy();
                 for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                        : type == GunType.RIMFIRE || type == GunType.SMG ? List.of(PISTOL_SUPPRESSOR)
                         : type == GunType.HUNTING_RIFLE ? List.of(SCOPE_4X, RIFLE_SUPPRESSOR)
                         : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));

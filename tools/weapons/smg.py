@@ -304,6 +304,19 @@ def look(wear=0.4):
     return d
 
 
+def suppressor(m):
+    """A 9mm can as it goes on this gun: 1.4" across and 7" long, its collar clamped over the barrel's three lugs.
+    Its own inches, mount at the muzzle, the can running on to -z."""
+    b = Inch(m)
+    b.rod(-0.05, 1.40, 0.45, 'park', axis=2)                 # the lug collar, over the barrel's lugs
+    b.rod(-0.30, -0.05, 0.62, 'cap', axis=2)                 # the rear cap
+    b.rod(-0.38, -0.30, 0.66, 'park', axis=2)                # the seam into the tube
+    b.rod(-2.60, -0.38, 0.70, 'can', axis=2)
+    b.rod(-4.20, -2.60, 0.70, 'can_mark', axis=2)            # the maker's engraving
+    b.rod(-6.72, -4.20, 0.70, 'can', axis=2)
+    b.rod(-7.00, -6.72, 0.64, 'cap', axis=2)                 # its face, the bore hole in it
+
+
 def flash(m, z_tip, r=0.8):
     b = Inch(m, (0.0, BORE_Y, Z0))
     L = 1.8 * r

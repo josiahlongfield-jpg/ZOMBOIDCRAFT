@@ -321,6 +321,11 @@ public enum GunType {
         return this == REVOLVER ? ModSounds.REVOLVER_EJECT : this == MAGNUM ? ModSounds.MAGNUM_EJECT : null;
     }
 
+    /** The hammer thumbed back as it's brought up onto the sights, or null for a gun with no hammer to cock. */
+    public @Nullable SoundEvent hammer() {
+        return this == REVOLVER ? ModSounds.REVOLVER_COCK : this == MAGNUM ? ModSounds.MAGNUM_COCK : null;
+    }
+
     /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */
     public String rounds() {
         return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : this == CROSSBOW ? "bolts" : "rounds";

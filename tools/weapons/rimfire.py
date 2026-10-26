@@ -286,6 +286,20 @@ def look(wear=0.4):
     return d
 
 
+def suppressor(m):
+    """A .22 rimfire can as it goes on this gun: a slim 1" tube about 5.4" long (the sort shared with .22 pistols),
+    screwed onto the threaded crown. Its own inches, mount at the crown, the can running on to -z; it sits well under
+    the line of sight, ahead of the bead."""
+    b = Inch(m)
+    b.rod(-0.10, 0.22, 0.27, 'park', axis=2)                 # the thread mount, seated against the crown
+    b.rod(-0.32, -0.10, 0.46, 'cap', axis=2)                 # the rear cap
+    b.rod(-0.38, -0.32, 0.48, 'park', axis=2)                # the seam into the tube
+    b.rod(-2.00, -0.38, 0.50, 'can', axis=2)
+    b.rod(-3.20, -2.00, 0.50, 'can_mark', axis=2)            # the maker's engraving
+    b.rod(-5.12, -3.20, 0.50, 'can', axis=2)
+    b.rod(-5.40, -5.12, 0.45, 'cap', axis=2)                 # its face, the bore hole in it
+
+
 def flash(m, z_tip, r=0.55):
     """A small muzzle flash: a .22 barely flashes."""
     b = Inch(m, (0.0, BORE_Y, Z0))
