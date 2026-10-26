@@ -601,8 +601,11 @@ public final class ZcConfig {
         public int magazineSize = 30;
         /** The gun has a full-auto setting, switched with the fire mode key. */
         public boolean selectFire = false;
-        /** How fast it fires on full auto, in rounds a minute. */
-        public double autoRoundsPerMinute = 800.0;
+        /**
+         * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
+         * own: an SMG runs faster than an assault rifle.
+         */
+        public double autoRpm = 700.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -702,7 +705,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRoundsPerMinute = 800.0;
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 700
             return s;
         }
 
@@ -850,6 +853,14 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
+        public boolean bulletHoles = true;
+        public double bulletHoleSeconds = 90.0;
+        /** Blood sprays from a hit and splashes the wall or floor behind it; how long the splashes stay. Client side. */
+        public boolean bloodSplatter = true;
+        public double bloodSeconds = 120.0;
+        /** How many holes and splashes stay at once; the oldest go first. Client side. */
+        public int maxDecals = 300;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */

@@ -116,8 +116,9 @@ public final class Guns {
         State st = state(player);
         long now = player.level().getGameTime();
         boolean auto = fullAuto(gun);
-        // full auto takes a tick's slack for shots the network bunched up; its rate still holds on average
-        if (auto ? now < st.autoNext - 1.0 : now - st.lastShot < type.fireDelay()) {
+        // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
+        // tick; the rate still holds on average
+        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay()) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -235,9 +236,8 @@ public final class Guns {
             } else if (block.getType() != HitResult.Type.MISS) {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
-                level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, pellets > 1 ? 3 : 8,
-                        0.05, 0.05, 0.05, 0.15);
-                level.sendParticles(ParticleTypes.SMOKE, p.x, p.y, p.z, pellets > 1 ? 1 : 2, 0.02, 0.02, 0.02, 0.01);
+                // a hole, a puff of the block's dust and chips off it (drawn by each client)
+                Impacts.block(level, block, dir, bs, pellets > 1 ? 0.6f : (float) Math.min(1.6, 0.6 + stats.damage / 20));
                 if (!ricochet) {
                     ricochet = true;
                     level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.7f,
@@ -316,8 +316,9 @@ public final class Guns {
         // buckshot up close knocks a zombie back hard; a single bullet barely moves it
         double push = stats instanceof ZcConfig.ShotgunStats sg ? sg.knockback * Math.min(1, 1.5 * hit.count / pellets) : 0.12;
         Shove.push(target, hit.dir.multiply(1, 0, 1).normalize(), push);
-        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
-                at.x, at.y, at.z, (hit.head ? 22 : 12) + 2 * (hit.count - 1), 0.12, 0.12, 0.12, 0.2);
+        // blood out along the shot, and splashed on the wall and floor behind (drawn by each client)
+        float size = (float) Math.min(2.5, (0.6 + stats.damage / 20) * (1 + 0.15 * (hit.count - 1)) * (hit.head ? 1.3 : 1));
+        Impacts.flesh(level, target, at, hit.dir, size);
         level.playSound(null, at.x, at.y, at.z, ModSounds.BULLET_FLESH, SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
         if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
             Downed.crippleChance(target, 0.5);
@@ -347,7 +348,7 @@ public final class Guns {
      * pull of the trigger starts from now.
      */
     public static double nextAuto(double due, long now, ZcConfig.GunStats stats) {
-        double gap = 1200.0 / Math.max(60.0, stats.autoRoundsPerMinute);
+        double gap = 1200.0 / Math.max(60.0, stats.autoRpm);
         return (now - due > gap || now < due - 2 * gap ? now : due) + gap;
     }
 
