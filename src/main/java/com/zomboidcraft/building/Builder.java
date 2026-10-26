@@ -90,7 +90,7 @@ public final class Builder {
     private static SoundEvent startSound(Build build) {
         return switch (build) {
             case METAL_SHEET, WELD_SHEET -> SoundEvents.FIRECHARGE_USE;
-            case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN;
+            case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN.value();
             case BOARD -> SoundEvents.WOOD_HIT;
             default -> SoundEvents.ARMOR_EQUIP_LEATHER.value();
         };
@@ -131,7 +131,7 @@ public final class Builder {
         Vec3 at;
         if (build.where == Build.Where.MAKE) {
             ItemStack made = new ItemStack(ModItems.METAL_SHEET);
-            if (!player.getInventory().add(made)) player.drop(made, false);
+            if (!player.getInventory().add(made)) net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), made);
             at = player.position();
         } else {
             Build.Spot spot = build.spot(level, hit, face, looking);

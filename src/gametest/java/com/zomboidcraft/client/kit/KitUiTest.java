@@ -65,7 +65,9 @@ public class KitUiTest implements FabricClientGameTest {
             for (String c : List.of("gamemode survival @a", "give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight",
                     "give @a zomboidcraft:foregrip", "give @a zomboidcraft:pistol", "give @a zomboidcraft:bandage 3",
                     "give @a minecraft:bread 5", "zc injure left_arm cut",
-                    "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4")) {
+                    "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
+                    "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
+                    "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8")) {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);
@@ -142,8 +144,39 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.getInput().pressKey(InputConstants.KEY_E);
             ctx.waitTicks(5);
             log(ctx, "after closing");
+            buildTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
+    }
+
+    /** Places a sandbag wall through the placer the way a player does: look down in front, left click, wait out the bar. */
+    private static void buildTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        ctx.runOnClient(mc -> {
+            mc.player.setXRot(55f);
+            mc.player.setYRot(0f);
+            com.zomboidcraft.client.build.Placer.start(com.zomboidcraft.building.Build.SANDBAGS);
+        });
+        ctx.waitTicks(10);
+        String aim = ctx.computeOnClient(mc -> String.valueOf(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult b ? b.getBlockPos() + " " + b.getDirection() : mc.hitResult));
+        LOG.info("ZCUI placer: building {} looking at {}", ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.build.Placer.building())), aim);
+        ctx.takeScreenshot("build-ghost");
+        ctx.getInput().pressMouse(0);
+        ctx.waitTicks(10);
+        LOG.info("ZCUI placer: timed action {}", ctx.computeOnClient(mc -> String.valueOf(mc.player.getAttached(com.zomboidcraft.survival.TimedActions.TYPE))));
+        ctx.waitTicks(140);
+        String placed = sp.getServer().computeOnServer(server -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            BlockPos feet = p.blockPosition();
+            StringBuilder out = new StringBuilder();
+            for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-3, -1, -3), feet.offset(3, 1, 3))) {
+                if (p.level().getBlockState(pos).is(com.zomboidcraft.building.BuildBlocks.SANDBAGS)) out.append(pos.immutable()).append(' ');
+            }
+            return "sandbags at [" + out + "] masonry xp=" + Skills.xp(p, Skill.MASONRY) + " sandbags left="
+                    + com.zomboidcraft.building.Materials.count(p, s -> s.is(ModItems.EMPTY_SANDBAG));
+        });
+        LOG.info("ZCUI placer: {}", placed);
+        ctx.takeScreenshot("build-placed");
+        ctx.runOnClient(mc -> com.zomboidcraft.client.build.Placer.stop());
     }
 
     /** Tries the digging rules on the server: a brick wall by hand, with a sledgehammer before and after Masonry 2, and stone under the floor. */
