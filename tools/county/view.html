@@ -27,6 +27,8 @@ const SKY = DARK ? [0.01, 0.01, 0.012] : [0.50, 0.53, 0.56], HAZE = DARK ? [0.00
 const NL = 24;
 const PHOTON = P.get('photon') === '1', SS = PHOTON ? +(P.get('ss') || 2) : 1, NLP = 48;
 const HAND = P.get('hand') === '1', EV = +(P.get('ev') || 0);
+// Photon (Colored Lights on) colours a froglight's light by its block: lavender-pink, green, amber
+const FROG = {pearlescent_froglight: [0.95, 0.55, 1.0], verdant_froglight: [0.45, 1.0, 0.5], ochre_froglight: [1.0, 0.72, 0.32]};
 
 const cv = document.createElement('canvas');
 cv.width = W; cv.height = H;
@@ -422,9 +424,9 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     .slice(0, NLP);
   const lp = new Float32Array(NLP * 4), lc = new Float32Array(NLP * 3);
   lamps.forEach(([x, y, z, name, level], i) => {
-    const red = name.includes('red'), stick = name.includes('glowstick');
+    const red = name.includes('red'), stick = name.includes('glowstick'), frog = FROG[name.replace('minecraft:', '')];
     lp.set([x, y, z, level || (red ? 9 : stick ? 6 : 15)], i * 4);
-    lc.set(red ? [1.0, 0.10, 0.05] : stick ? [0.30, 1.0, 0.35] : warm, i * 3);
+    lc.set(frog || (red ? [1.0, 0.10, 0.05] : stick ? [0.30, 1.0, 0.35] : warm), i * 3);
   });
   gl.uniform4fv(u('lPos'), lp); gl.uniform3fv(u('lCol'), lc); gl.uniform1i(u('nl'), lamps.length);
   ['tex', 'shadow', 'emis', 'nmap', 'orm', 'skyShadow'].forEach((n, i) => gl.uniform1i(u(n), i));
@@ -614,9 +616,9 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     .slice(0, NL);
   const lp = new Float32Array(NL * 4), lc = new Float32Array(NL * 3);
   lamps.forEach(([x, y, z, name], i) => {
-    const red = name.includes('red'), stick = name.includes('glowstick');
+    const red = name.includes('red'), stick = name.includes('glowstick'), frog = FROG[name.replace('minecraft:', '')];
     lp.set([x, y, z, red ? 7 : stick ? 5 : 11], i * 4);
-    lc.set(red ? [1.0, 0.10, 0.06] : stick ? [0.25, 1.0, 0.4] : [1.0, 0.82, 0.55], i * 3);
+    lc.set(frog || (red ? [1.0, 0.10, 0.06] : stick ? [0.25, 1.0, 0.4] : [1.0, 0.82, 0.55]), i * 3);
   });
   gl.uniform4fv(u('lPos'), lp); gl.uniform3fv(u('lCol'), lc); gl.uniform1i(u('nl'), index.baked ? 0 : lamps.length);
   gl.uniform1i(u('baked'), index.baked ? 1 : 0);

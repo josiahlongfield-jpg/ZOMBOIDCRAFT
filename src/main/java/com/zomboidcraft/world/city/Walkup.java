@@ -47,6 +47,7 @@ public final class Walkup {
             interior(k * FLOOR);
         }
         roof(roofY);
+        glowingRooms();
         if (w >= 9 && floors >= 3) {
             fireEscape(roofY);
         }
@@ -56,15 +57,32 @@ public final class Walkup {
     }
 
     private void neonBlade(int roofY) {
-        // hung off the left-hand corner pier (as you face it), above the shop sign: the fire
-        // escape never reaches that corner, and next door's blade never hangs beside it
-        int pick = Signs.pickBlade(rng);
-        int n = Signs.bladeLength(pick);
+        // the shop's own word, hung off the left-hand corner pier (as you face it), above the
+        // shop sign: the fire escape never reaches that corner, and next door's blade never
+        // hangs beside it
+        String blade = Signs.bladeFor(shop);
+        if (blade == null) {
+            return;
+        }
+        int n = Signs.bladeLength(blade);
         int bottom = FLOOR + 1;
         if (bottom + n > roofY) {
             return;
         }
-        Signs.blade(p, rng, pick, w - 1, bottom, -1);
+        Signs.blade(p, rng, blade, w - 1, bottom, -1);
+    }
+
+    /** Now and then an upstairs room still has its lamp on: purple, up by the front window. */
+    private void glowingRooms() {
+        for (int k = 1; k < floors; k++) {
+            int y = k * FLOOR + 2;
+            for (int x = 1; x < w - 1; x++) {
+                String lamp = windowColumn(x, w) ? ShopLights.window(ShopLights.spot(p, x, y, 0), 0.02) : null;
+                if (lamp != null) {
+                    p.setIfAir(x, y + 1, 1, lamp);
+                }
+            }
+        }
     }
 
     private boolean windowColumn(int along, int length) {
