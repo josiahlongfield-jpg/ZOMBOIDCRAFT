@@ -66,9 +66,9 @@ public class AirDebris extends Entity {
             d.entityData.set(TURN, new Quaternionf(q));
             // flung out from the middle on top of the way the aircraft was going
             Vec3 out = new Vec3(off.x, Math.max(0.5, off.y + 1.5), off.z).normalize();
-            double kick = 0.25 + level.random.nextDouble() * 0.35;
+            double kick = 0.25 + car.getRandom().nextDouble() * 0.35;
             d.setDeltaMovement(vel.scale(0.7).add(out.scale(kick)));
-            d.tumble.set((level.random.nextFloat() - 0.5f) * 0.5f, (level.random.nextFloat() - 0.5f) * 0.4f, (level.random.nextFloat() - 0.5f) * 0.5f);
+            d.tumble.set((car.getRandom().nextFloat() - 0.5f) * 0.5f, (car.getRandom().nextFloat() - 0.5f) * 0.4f, (car.getRandom().nextFloat() - 0.5f) * 0.5f);
             d.snapTo(car.getX() + off.x, car.getY() + pivot + off.y, car.getZ() + off.z, 0, 0);
             level.addFreshEntity(d);
         }
@@ -152,7 +152,7 @@ public class AirDebris extends Entity {
 
     /** Flames while it burns, then a column of smoke that thins out. */
     private void smoke() {
-        var r = level().random;
+        var r = random;
         boolean flames = tickCount < BURN;
         if (tickCount > BURN * 2 && r.nextInt(4) != 0) {
             return;
