@@ -33,7 +33,7 @@ import java.util.List;
 public final class WeatherFx {
     private static final RandomSource RANDOM = RandomSource.create();
     /** Puffs kept round you in full fog: enough to wall off the street, few enough to stay cheap. */
-    private static final int MIST_MAX = 130;
+    private static final int MIST_MAX = 160;
     /** A puff's mean lifetime in ticks (MistParticle), to turn a head count into a spawn rate. */
     private static final float MIST_LIFE = 370;
     private static float mistDue, debrisDue;
@@ -222,7 +222,7 @@ public final class WeatherFx {
             // most of it lies low, washing over the street; the more fog, the more of it stands tall
             boolean low = RANDOM.nextFloat() > w.fog();
             double y = top + 0.1 + RANDOM.nextDouble() * (low ? 0.9 : 1.5 + 6 * w.fog());
-            float strength = (low ? 0.07f + 0.03f * night : 0.05f + 0.22f * w.fog()) * (0.6f + 0.4f * RANDOM.nextFloat());
+            float strength = (low ? 0.22f + 0.08f * night : 0.14f + 0.40f * w.fog()) * (0.6f + 0.4f * RANDOM.nextFloat());
             double speed = drift * (0.6 + 0.8 * RANDOM.nextDouble());
             level.addParticle(WeatherParticles.MIST, x, y, z, windX * speed, strength, windZ * speed);
         }

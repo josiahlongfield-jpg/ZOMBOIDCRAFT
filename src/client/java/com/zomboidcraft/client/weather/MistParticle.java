@@ -32,7 +32,7 @@ final class MistParticle extends SingleQuadParticle {
         spin = (random.nextFloat() - 0.5f) * 0.0006f;
         peak = strength;
         // the endless night's slate grey; lamps tint it through the light map
-        float shade = 0.46f + random.nextFloat() * 0.06f;
+        float shade = 0.60f + random.nextFloat() * 0.06f;
         setColor(shade, shade + 0.03f, shade + 0.08f);
         alpha = 0;
     }
@@ -53,6 +53,18 @@ final class MistParticle extends SingleQuadParticle {
         // a lightning flash shows through the murk: what was hiding in it stands out for a moment
         float flash = com.zomboidcraft.world.weather.WeatherView.flash();
         alpha = Mth.clamp(peak * fade * near * (1 - 0.65f * flash), 0, 1);
+    }
+
+    /**
+     * Mist catches what little light there is: on a dark street it would otherwise be a grey
+     * darker than the night behind it, and simply vanish. A floor of dim block light keeps it
+     * reading as pale haze; near a lamp the real light takes over.
+     */
+    @Override
+    protected int getLightCoords(float partialTick) {
+        int packed = super.getLightCoords(partialTick);
+        int block = (packed >> 4) & 0xF, sky = (packed >> 20) & 0xF;
+        return sky << 20 | Math.max(block, 8) << 4;
     }
 
     @Override
