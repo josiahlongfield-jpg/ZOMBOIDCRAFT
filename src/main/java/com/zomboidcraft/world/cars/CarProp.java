@@ -65,6 +65,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The windows are smashed in: clients leave the glass out, and zombies can reach whoever's inside. */
     private static final EntityDataAccessor<Boolean> SMASHED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** Which seat each rider has: four bits per rider in passenger order, the seat's index plus one. */
+    private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -93,6 +95,8 @@ public class CarProp extends Entity {
     private double lastSpeed, speedBefore;
     /** How much more bashing the windows take before they give, in zombie damage. -1 until first set. */
     private float windows = -1;
+    /** The seat the next rider to get in takes (server), or -1 for the nearest free one. */
+    private int nextSeat = -1;
 
     /** Called on the client every tick a car's engine runs, to keep its sound going; the client sets this. */
     public static java.util.function.Consumer<CarProp> engineSound = car -> { };
@@ -130,6 +134,7 @@ public class CarProp extends Entity {
         builder.define(OPEN, false);
         builder.define(ENGINE, false);
         builder.define(SMASHED, false);
+        builder.define(SEATS, 0);
     }
 
     @Override
@@ -242,7 +247,48 @@ public class CarProp extends Entity {
             }
             return;
         }
+        nextSeat = nearestFreeSeat(player);
         player.startRiding(this);
+    }
+
+    /** The seat a rider has (0 the driver's), or -1 if they aren't riding. */
+    public int seatOf(Entity rider) {
+        int i = getPassengers().indexOf(rider);
+        if (i < 0) {
+            return -1;
+        }
+        int s = i < 8 ? (entityData.get(SEATS) >> (4 * i) & 0xF) - 1 : -1;
+        return s >= 0 ? s : i;
+    }
+
+    /** The empty seat nearest to where someone stands: walk up to the driver's door to drive. */
+    public int nearestFreeSeat(Entity by) {
+        CarModels.Model m = CarModels.get(model());
+        int n = seats();
+        if (n == 0) {
+            return -1;
+        }
+        boolean[] taken = new boolean[n];
+        for (Entity rider : getPassengers()) {
+            int s = seatOf(rider);
+            if (s >= 0 && s < n) {
+                taken[s] = true;
+            }
+        }
+        Vec3 at = local(by.position().subtract(position()));
+        int best = -1;
+        double bestD = Double.MAX_VALUE;
+        for (int s = 0; s < n; s++) {
+            if (taken[s]) {
+                continue;
+            }
+            double dx = m.seats[s][0] - at.x, dz = m.seats[s][2] - at.z, d = dx * dx + dz * dz;
+            if (d < bestD) {
+                bestD = d;
+                best = s;
+            }
+        }
+        return best;
     }
 
     public boolean engineOn() {
@@ -383,16 +429,22 @@ public class CarProp extends Entity {
         return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant());
     }
 
+    /** Whoever sits at the wheel drives; a car with only passengers in it goes nowhere. */
     @Override
     public LivingEntity getControllingPassenger() {
-        return getFirstPassenger() instanceof Player player ? player : null;
+        for (Entity rider : getPassengers()) {
+            if (seatOf(rider) == 0 && rider instanceof Player player) {
+                return player;
+            }
+        }
+        return null;
     }
 
-    /** Each rider sits at their own seat: the driver at the wheel, then front passenger, then the back. */
+    /** Each rider sits in the seat they took getting in: the one nearest where they stood. */
     @Override
     protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scale) {
         CarModels.Model m = CarModels.get(model());
-        int i = getPassengers().indexOf(passenger);
+        int i = seatOf(passenger);
         if (m == null || m.seats == null || m.seats.length == 0 || i < 0) {
             return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
         }
@@ -430,6 +482,13 @@ public class CarProp extends Entity {
     protected void addPassenger(Entity passenger) {
         boolean first = getPassengers().isEmpty();
         super.addPassenger(passenger);
+        int i = getPassengers().indexOf(passenger);
+        if (!level().isClientSide() && i >= 0 && i < 8) {
+            int seat = nextSeat >= 0 ? nextSeat : nearestFreeSeat(passenger);
+            nextSeat = -1;
+            int packed = entityData.get(SEATS) & ~(0xF << (4 * i));
+            entityData.set(SEATS, packed | (Math.max(seat, 0) + 1) << (4 * i));
+        }
         if (first && level() instanceof ServerLevel server) {
             Cars.clearHull(server, this);
             parkPending = false;
@@ -447,6 +506,12 @@ public class CarProp extends Entity {
 
     @Override
     protected void removePassenger(Entity passenger) {
+        int i = getPassengers().indexOf(passenger);
+        if (!level().isClientSide() && i >= 0 && i < 8) {
+            // the riders after this one move up a place in the list, their seats with them
+            int packed = entityData.get(SEATS), low = packed & ((1 << (4 * i)) - 1);
+            entityData.set(SEATS, low | (i < 7 ? (packed >>> (4 * (i + 1))) << (4 * i) : 0));
+        }
         super.removePassenger(passenger);
         if (level() instanceof ServerLevel server && !isRemoved()) {
             door(server);
@@ -529,6 +594,8 @@ public class CarProp extends Entity {
             drive(level().isClientSide() ? clientInput.apply(driver) : Input.EMPTY);
         } else if (level().isClientSide()) {
             getInterpolation().interpolate();
+        } else if (isVehicle() && getControllingPassenger() == null) {
+            setDeltaMovement(Vec3.ZERO);  // passengers but nobody at the wheel
         }
         if (level() instanceof ServerLevel server) {
             if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {

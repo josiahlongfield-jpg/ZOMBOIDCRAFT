@@ -66,7 +66,7 @@ public final class CarClient {
         if (car != null && (car != hinted || player.tickCount % 20 == 0)) {
             boolean boot = player.isShiftKeyDown() || car.atBoot(hit.getLocation().subtract(car.position()));
             player.sendOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage())
-                    .append(boot ? "] Search" : "] Get in"));
+                    .append(boot ? "] Search" : car.nearestFreeSeat(player) == 0 ? "] Drive" : "] Get in"));
         }
         hinted = car;
     }
