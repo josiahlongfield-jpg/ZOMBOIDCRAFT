@@ -19,7 +19,7 @@ final class MapPage {
     private static final int VX = 37, VY = 33, VW = 376, VH = 287;
     private static final float MIN_ZOOM = 0.125f, MAX_ZOOM = 4f;
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
     private double cx, cz;
     private float zoom = 1f;
     private boolean follow = true;
@@ -29,7 +29,7 @@ final class MapPage {
     private boolean dragged;
     private int listScroll;
 
-    MapPage(KitScreen screen) {
+    MapPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
@@ -131,8 +131,7 @@ final class MapPage {
         hx += KitDraw.hint(g, font, "RMB", "Remove", hx, hy);
         hx += KitDraw.hint(g, font, "Drag", "Pan", hx, hy);
         hx += KitDraw.hint(g, font, "Wheel", "Zoom", hx, hy);
-        hx += KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
-        KitDraw.hint(g, font, "M", "Close", hx, hy);
+        screen.pagesAndClose(g, font, hx, hy);
     }
 
     private void view(GuiGraphicsExtractor g, Font font, LocalPlayer player, int vx, int vy, int mx, int my) {
