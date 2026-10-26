@@ -7,43 +7,24 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== nvg"
-sig net.minecraft.world.item.equipment.Equippable 'public'
-sig 'net.minecraft.world.item.equipment.Equippable$Builder' 'public'
-sig net.minecraft.sounds.SoundEvents 'EMPTY|INTENTIONALLY|ARMOR_EQUIP_GENERIC|ARMOR_EQUIP_TURTLE|BEACON_ACTIVATE|BEACON_DEACTIVATE'
-classes 'client/renderer/item/properties/select/[A-Za-z]*\.class' | head -40
-javap -cp "$CP" -p net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties 2>&1 | head -30
-javap -cp "$CP" -c -p net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties 2>&1 | grep -E 'ldc' | head -30
-sig net.minecraft.world.effect.MobEffectInstance 'MobEffectInstance\(|isAmbient|isVisible|showIcon|getDuration'
-sig net.minecraft.world.entity.LivingEntity 'onEquipItem|getItemBySlot|setItemSlot|removeEffect|addEffect|getEffect\('
-javap -cp "$CP" -c -p net.minecraft.world.entity.LivingEntity 2>&1 | sed -n '/public void onEquipItem(/,/^$/p' | grep -E 'invoke|getfield|ifeq|ifne' | head -30
-sig net.minecraft.world.item.ItemStack 'CODEC|STREAM_CODEC|isSameItemSameComponents|matches'
-sig net.minecraft.client.renderer.entity.layers.CustomHeadLayer 'public|static'
-javap -cp "$CP" -c -p net.minecraft.client.renderer.entity.layers.CustomHeadLayer 2>&1 | sed -n '/translateToHead(/,/return/p' | head -30
-sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState 'headItem|wornHead'
-sig com.mojang.blaze3d.pipeline.RenderPipeline 'static|builder|public'
-sig 'com.mojang.blaze3d.pipeline.RenderPipeline$Builder' 'public'
-sig 'com.mojang.blaze3d.pipeline.RenderPipeline$Snippet' 'public'
-sig net.minecraft.client.renderer.RenderPipelines 'SNIPPET|GUI|register|static .*List'
-sig com.mojang.blaze3d.pipeline.BlendFunction 'public|static'
-classes 'com/mojang/blaze3d/platform/(SourceFactor|DestFactor)'
-sig com.mojang.blaze3d.platform.SourceFactor 'public static'
-sig com.mojang.blaze3d.platform.DestFactor 'public static'
-sig com.mojang.blaze3d.systems.GpuDevice 'createTexture|createTextureView|createCommandEncoder|precompile|getMaxTextureSize'
-sig com.mojang.blaze3d.systems.CommandEncoder 'copy|clear'
-sig com.mojang.blaze3d.textures.GpuTexture 'public|USAGE'
-sig com.mojang.blaze3d.textures.TextureFormat 'public static'
-sig com.mojang.blaze3d.pipeline.RenderTarget 'public|width|height'
-javap -cp "$CP" -p net.minecraft.client.renderer.texture.AbstractTexture 2>&1
-sig net.minecraft.client.renderer.texture.TextureManager 'register|getTexture|release'
-sig net.minecraft.client.gui.GuiGraphicsExtractor 'blit|fill|guiWidth|guiHeight|innerBlit|submitBlit'
-sig com.mojang.blaze3d.systems.RenderSystem 'getDevice|getSampler|samplerCache'
-classes 'com/mojang/blaze3d/textures/[A-Za-z]*\.class'
-sig net.minecraft.client.Minecraft 'getMainRenderTarget|getWindow|getTextureManager'
-sig com.mojang.blaze3d.platform.Window 'getWidth|getHeight|getGuiScaled'
-for j in $MC_JARS; do unzip -Z1 "$j" 2>/dev/null | grep -E 'shaders/core/(position_tex_color|blit_screen|gui)\.|shaders/include/(dynamictransforms|projection|globals)' ; done | sort -u
-for f in assets/minecraft/shaders/core/position_tex_color.vsh assets/minecraft/shaders/core/position_tex_color.fsh assets/minecraft/shaders/include/dynamictransforms.glsl assets/minecraft/shaders/include/projection.glsl assets/minecraft/shaders/include/globals.glsl; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
-javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B2 -A30 'GUI_TEXTURED:' | grep -E 'ldc|invoke|getstatic' | head -40
+echo "===== nvg2"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE 'posteffect|postchain|effectActive|blur|resourcePool|public void render\(|renderLevel' | head -30
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'PostChain|postEffect|PostEffect|getPostChain|process|Method .*render|extract' | head -60
+sig net.minecraft.client.renderer.PostChain 'public'
+sig net.minecraft.client.renderer.ShaderManager 'getPostChain|public'
+sig net.minecraft.client.renderer.LevelTargetBundle 'static'
+for j in $MC_JARS; do unzip -Z1 "$j" 2>/dev/null | grep -E 'post_effect/|shaders/post/' ; done | sort -u | head -60
+for f in assets/minecraft/post_effect/invert.json assets/minecraft/post_effect/creeper.json assets/minecraft/post_effect/spider.json assets/minecraft/shaders/post/invert.fsh assets/minecraft/shaders/post/blit.vsh assets/minecraft/shaders/core/screenquad.vsh assets/minecraft/shaders/post/sobel.vsh assets/minecraft/shaders/post/color_convolve.fsh; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
+sig net.minecraft.client.model.HumanoidModel 'head|hat'
+sig 'net.minecraft.client.renderer.entity.layers.CustomHeadLayer$Transforms' 'public|static'
+sig net.minecraft.core.Registry 'wrapAsHolder'
+sig net.minecraft.world.item.Item ' use\(|inventoryTick|overrideOtherStackedOnMe|overrideStackedOnOther|isBarVisible|getBarWidth|getBarColor|appendHoverText'
+sig net.minecraft.world.effect.MobEffects 'NIGHT_VISION|DARKNESS|BLINDNESS'
+sig net.minecraft.client.Minecraft 'gameRenderer|getMainRenderTarget'
+sig net.minecraft.client.renderer.LevelRenderer 'public .*doEntityOutline|getTranslucentTarget'
+classes 'com/mojang/renderpearl/api/pipeline/[A-Za-z]*\.class'
+sig com.mojang.renderpearl.api.pipeline.RenderPipeline 'static|builder'
+sig 'com.mojang.renderpearl.api.pipeline.RenderPipeline$Builder' 'public'
 exit 0
 
 echo "===== injuries"
