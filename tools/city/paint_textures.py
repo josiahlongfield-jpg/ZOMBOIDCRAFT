@@ -137,6 +137,10 @@ class Tex:
         s[..., 0] = np.clip(self.smooth, 0, 1) * 255
         s[..., 1] = np.clip(self.f0, 0, 255)
         s[..., 2] = np.clip(self.poro, 0, 64)
+        sss = getattr(self, "sss", None)
+        if sss is not None:
+            # LabPBR keeps 65-255 of the blue channel for subsurface scattering: leaves and grass glow through
+            s[..., 2] = np.where(sss > 0, 65 + np.clip(sss, 0, 1) * 190, s[..., 2])
         s[..., 3] = np.where(self.emit > 0, np.clip(self.emit * 254, 1, 254), 255)
         return Image.fromarray(s.astype(np.uint8), "RGBA")
 

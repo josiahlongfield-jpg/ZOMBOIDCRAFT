@@ -281,3 +281,7 @@ Ambient beds picked by Josiah Longfield, made to loop seamlessly by tools/audio/
 ## Trees
 
 The county's trees are voxelised from the Ultimate Trees Pack (Deezl, bought on CGTrader under its Royalty Free licence) by tools/nature/trees.py: oak, maple, beech, birch, elm, spruce, fir, juniper, willow and dead trees, each at three sizes. The bark and leaf textures are repainted from the pack's own, cut down to 64 pixels and graded to the world's palette. The pack's original models and textures are not part of this repository or the mod jar.
+
+## Ground cover
+
+The grass clumps, plumed grass, reeds, seedlings, clover, weeds and fallen twigs are cut from the Grass Groundcover Pack 01 (bought on CGTrader under its Royalty Free licence) by tools/nature/groundcover.py, scaled down to 64 pixels and graded to the world's palette. The pack's original files are not part of this repository or the mod jar.
