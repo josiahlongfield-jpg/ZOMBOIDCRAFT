@@ -4,7 +4,7 @@
 
 Same inputs and outputs as build_loot_sounds.py, for the amb.* events (sounds/amb/...). Beds (rain, wind,
 night insects and the indoor ones) are cut long, kept stereo and crossfaded end into start so they loop
-without a seam; they play around the listener, not from a point. One-shots (thunder, creaks, crows, distant
+without a seam; they play around the listener, not from a point. One-shots (thunder, creaks, distant
 city sounds) are mono so they can be placed in the world and muffled through walls.
 """
 import json
@@ -30,17 +30,13 @@ PICKS = {
     "amb.drip": ("amb/drip", -18.0, 12, [("653415", 9.95, 10)]),
     "amb.wind": ("amb/wind", -12.0, 16, [("sxca96f59a", 0.0, 12), ("sx4c951936", 119.95, 12),
                                          ("sxca96f59a", 47.95, 12), ("sx59e37871", 11.95, 12)]),
-    "amb.night": ("amb/night", -18.0, 16, [("165526", 11.95, 12), ("sx86eb2437", 47.95, 12)]),
-    # Josiah: the owl looping in the night bed got repetitive, so it's single screeches from one fixed perch instead
-    "amb.owl": ("amb/owl", -9.0, 64, [("353173", 1.45, 1.3), ("353173", 7.6, 1.3), ("353173", 17.0, 1.3),
-                                       ("353173", 26.3, 1.3), ("353173", 29.3, 1.3)]),
+    # Josiah: no animals; the park loop had seagulls in it, so only the wind and far crickets are left
+    "amb.night": ("amb/night", -18.0, 16, [("165526", 11.95, 12)]),
     "amb.thunder": ("amb/thunder", -1.0, 160, [("sx606208ce", 0.75, 9), ("sx48c0e356", 0.0, 9), ("sx217ebc71", 0.33, 9),
                                                ("sx43ceea26", 0.0, 9), ("sx4344357d", 0.33, 9), ("sx9950ec6c", 37.87, 9),
                                                ("sxd77280eb", 0.6, 9), ("sx4344357d", 9.33, 9)]),
     "amb.creak": ("amb/creak", -10.0, 16, [("502505", 0.0, 4), ("sxe63ba7a0", 0.79, 4), ("sxfe8368b4", 0.0, 4),
                                            ("326460", 1.34, 4), ("334143", 18.42, 4)]),
-    "amb.crow": ("amb/crow", -10.0, 48, [("328846", 0.0, 4), ("sx66e42b03", 1.99, 4), ("sx559db0e0", 10.21, 4),
-                                         ("214869", 47.0, 4)]),
     "amb.distant": ("amb/distant", -6.0, 96, [("sxa6475097", 0.0, 3), ("sx682cc507", 0.47, 6), ("sx682cc507", 16.32, 4.1)]),
 }
 BEDS = {"amb.rain", "amb.roof", "amb.window", "amb.drip", "amb.wind", "amb.night"}
