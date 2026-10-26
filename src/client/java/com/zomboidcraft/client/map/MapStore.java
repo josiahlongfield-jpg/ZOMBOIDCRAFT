@@ -357,7 +357,7 @@ public final class MapStore {
                         Tile t = tile(Math.floorDiv(x, TILE), Math.floorDiv(z, TILE), true);
                         if (t == null) return;
                         int lx = Math.floorMod(x, TILE), lz = Math.floorMod(z, TILE);
-                        if ((t.image.getPixel(lx, lz) >>> 24) == SEEN) continue;
+                        if ((t.image.getPixel(lx, lz) >>> 24) == SEEN && cell != MapPalette.MARK) continue;
                         t.image.setPixel(lx, lz, ink);
                         t.upload = true;
                         t.save = true;

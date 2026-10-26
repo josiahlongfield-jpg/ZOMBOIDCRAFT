@@ -1,15 +1,23 @@
 package com.zomboidcraft;
 
+import com.zomboidcraft.world.county.Place;
+import com.zomboidcraft.world.county.PlaceType;
+import com.zomboidcraft.world.gen.CountyChunkGenerator;
+import com.zomboidcraft.zombie.ZombieLook;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
-/** Adds survival supplies to every chest and to zombie drops. */
+/** Adds survival supplies to every chest and to zombie drops, and the rare marked maps to soldiers and bases. */
 public final class Loot {
     public static void register() {
         LootTableEvents.MODIFY_DROPS.register((table, context, drops) -> {
@@ -20,8 +28,33 @@ public final class Loot {
             } else if (path.equals("entities/zombie") || path.equals("entities/husk")
                     || path.equals("entities/zombie_villager")) {
                 addZombieLoot(random, drops);
+                // the soldiers carry the marked maps that lead to the bunkers
+                Entity dead = context.getOptional(LootContextParams.THIS_ENTITY);
+                if (dead != null && "soldier".equals(dead.getAttached(ZombieLook.OUTFIT)) && random.nextFloat() < 0.015f) {
+                    drops.add(new ItemStack(ModItems.BUNKER_MAP));
+                }
+            } else if (path.startsWith("shop/") && random.nextFloat() < 0.03f) {
+                // and so do the lockers and crates of the bases and the naval wharf
+                Vec3 at = context.getOptional(LootContextParams.ORIGIN);
+                if (at != null && guarded(context.getLevel(), at)) {
+                    drops.add(new ItemStack(ModItems.BUNKER_MAP));
+                }
             }
         });
+    }
+
+    /** True inside a military base or quarantine zone, or the naval wharf with its carrier. */
+    private static boolean guarded(ServerLevel level, Vec3 at) {
+        if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) {
+            return false;
+        }
+        int x = (int) Math.floor(at.x), z = (int) Math.floor(at.z);
+        for (Place p : CountyChunkGenerator.gen(level.getSeed()).county().placesNear(x, z, x, z, 0)) {
+            if (p.type == PlaceType.MILITARY || p.type == PlaceType.PORT && p.variant.equals("naval")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void addChestLoot(RandomSource random, List<ItemStack> drops) {
