@@ -43,6 +43,16 @@ def frame_point(x, y, z):
 HAND = frame_point(0.0, -2.55, 6.05)        # middle of the shooting hand on the grip
 
 
+def grip_axes():
+    """The grip as it's drawn: a bar's lean snaps to 22.5 degrees (the real one's 15 can't be drawn), turned
+    about its middle. Its top edge's middle, the way down it, the way across it toward the back strap (z, y)."""
+    top, bot = np.array(GRIP_TOP), np.array(GRIP_BOT)
+    half = np.hypot(*(bot - top)) / 2 + 0.05
+    a = np.radians(22.5)
+    down, back = np.array([np.sin(a), -np.cos(a)]), np.array([np.cos(a), np.sin(a)])
+    return (top + bot) / 2 - down * half, down, back, 2 * half
+
+
 def slide(m):
     """The slide, drawn apart from the frame so first person can work it: it runs back with every shot, locks
     open on the last one and is racked to load. The sights ride on it."""
@@ -90,15 +100,22 @@ def body(m):
     b.box((-0.40, -1.00, 7.42), (0.40, -0.68, 8.08), frame)                  # tang under the hammer
     b.box((-0.20, -2.16, GUARD_FRONT), (0.20, -RAIL_BASE, GUARD_FRONT + 0.20), frame)   # guard: squared front
     b.box((-0.20, -2.20, GUARD_FRONT - 0.10), (0.20, -1.98, GUARD_FRONT + 0.20), frame)  # its hooked toe
-    b.box((-0.20, -2.30, GUARD_FRONT), (0.20, -2.13, 4.45), frame)           # and the bow under the trigger
+    b.box((-0.20, -2.30, GUARD_FRONT), (0.20, -2.13, 4.85), frame)           # the bow under the trigger, into the grip
     b.seg((3.42, -1.04), (3.52, -1.52), 0.22, 0.24, steel, over=0.03)         # trigger
     b.seg((3.52, -1.52), (3.78, -1.90), 0.20, 0.24, steel, over=0.03)
     b.box((fw, -0.74, 3.62), (fw + 0.025, -0.62, 6.30), steel)               # trigger bar, right
     # the grip: aluminium straps, wrap-round panels a touch narrower front to back
     b.seg(GRIP_TOP, GRIP_BOT, GRIP_W, 0.92, frame, over=0.05)
+    top, down, back, length = grip_axes()
+    # its top edge is square to the lean, so the front strap's top falls short of the frame: carry the front half
+    # on up into the frame, so the front strap runs straight up to meet it behind the trigger
+    front = top - back * GRIP_W / 4
+    b.seg(tuple(front - down * 0.65), tuple(front + down * 0.60), GRIP_W / 2, 2 * fw, frame, over=0.0)
     b.seg((GRIP_TOP[0] + 0.05, GRIP_TOP[1] - 0.35), (GRIP_BOT[0] - 0.02, GRIP_BOT[1] + 0.12), GRIP_W - 0.42, 1.30,
           'grips', over=0.0)
-    b.box((-0.47, MAG_BASE - 0.04, 5.30), (0.47, MAG_BASE + 0.10, 7.65), frame)   # the well's bevelled lip
+    foot = top + down * length                                                # the well's bevelled lip, square to the grip
+    b.seg(tuple(foot + down * 0.02 - back * (GRIP_W / 2 + 0.02)), tuple(foot + down * 0.02 + back * (GRIP_W / 2 + 0.02)),
+          0.16, 0.94, frame, over=0.0)
     for s in (-1, 1):                                                         # panel screws
         for z, y in ((5.95, -1.75), (6.75, -3.95)):
             b.rod(s * 0.62, s * 0.68, 0.08, 'screw', axis=0, at=(y, z))
@@ -109,7 +126,8 @@ def body(m):
     b.rod(fw, fw + 0.05, 0.10, steel, axis=0, at=(-0.72, 2.80))              # its button, right
     for z, y in ((3.55, -0.86), (7.20, -0.82), (6.50, -0.78)):              # trigger, hammer, sear pins
         b.rod(-fw - 0.02, fw + 0.02, 0.05, steel, axis=0, at=(y, z))
-    b.box((-0.62, -4.32, 7.22), (-0.52, -4.08, 7.42), steel)                 # lanyard loop
+    lz, ly = foot - down * 0.14 + back * 0.80                                # lanyard loop, left, at the heel
+    b.box((-0.56, ly - 0.10, lz - 0.10), (-0.46, ly + 0.10, lz + 0.10), steel)
     # ---- the hammer, down, its spur behind the slide
     b.box((-0.20, -0.70, SLIDE_LEN), (0.20, 0.20, SLIDE_LEN + 0.16), steel)
     b.seg((SLIDE_LEN + 0.10, 0.12), (SLIDE_LEN + 0.32, 0.42), 0.22, 0.34, 'spur', over=0.03)
