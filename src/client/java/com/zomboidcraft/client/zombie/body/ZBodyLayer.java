@@ -53,9 +53,9 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         double dist = state.distanceToCameraSq;
         int lod = dist < detail * detail ? 0 : dist < detail * detail * 6.25 ? 1 : 2;
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(state.zskin),
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
                 (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutNoCull(state.zkit),
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
                 (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
         if (state.zeyes != null) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(state.zeyes),

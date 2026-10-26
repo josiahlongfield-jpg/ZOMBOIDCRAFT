@@ -55,7 +55,7 @@ public final class ZBodyAnimator {
         tr.seen = now;
 
         // a swing starts the attack; another one late in the bite goes straight back into the lunge
-        float swing = zombie.getAttackAnim(partialTick);
+        float swing = zombie.getSwingAnimation(partialTick);
         if (tr.started && swing > 0f && (tr.swing == 0f || swing < tr.swing - 0.5f)) {
             float into = t - tr.attackStart;
             if (into >= ATTACK_TIME) {
