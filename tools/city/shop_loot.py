@@ -324,31 +324,35 @@ for _name, _extra in HAND_ADDED.items():
     TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
 RARE["pawn"] = RARE.get("pawn", []) + [(f"{ZC}:military_radio", 1)]
 
-# weapons wave one: the .22 wherever people shot small game, the lever gun where they hunted deer, the magnum where
-# handguns were sold or kept, the sawn-off where someone hid it, and the SMG a rare find (loot never depends on how
-# far it is from spawn)
+# weapons wave one: the .22 wherever people shot small game, the lever gun and the crossbow where they hunted deer,
+# the magnum where handguns were sold or kept, the sawn-off where someone hid it, and the SMG a rare find (loot never
+# depends on how far it is from spawn)
 WAVE_ONE = {
     "guns": [(f"{ZC}:rimfire", 4, 1, 1, worn(.1, .7)), (f"{ZC}:rimfire_magazine", 4, 1, 1),
              (f"{ZC}:rimfire_magazine", 2, 1, 1, rounds(10)), (f"{ZC}:rimfire_ammo", 12, 10, 50),
              (f"{ZC}:magnum", 1, 1, 1, worn(.1, .6)), (f"{ZC}:magnum_ammo", 5, 3, 18), (f"{ZC}:smg_magazine", 1, 1, 1),
-             (f"{ZC}:lever_action", 3, 1, 1, worn(.1, .6)), (f"{ZC}:lever_ammo", 8, 6, 30)],
+             (f"{ZC}:lever_action", 3, 1, 1, worn(.1, .6)), (f"{ZC}:lever_ammo", 8, 6, 30),
+             (f"{ZC}:crossbow", 1, 1, 1, worn(.05, .4)), (f"{ZC}:crossbow_bolt", 6, 2, 6)],
     "pawn": [(f"{ZC}:rimfire", 2, 1, 1, worn(.2, .8)), (f"{ZC}:rimfire_ammo", 2, 5, 25),
              (f"{ZC}:sawn_off", 1, 1, 1, worn(.3, .9)), (f"{ZC}:magnum", 1, 1, 1, worn(.2, .8)), (f"{ZC}:magnum_ammo", 1, 2, 8),
-             (f"{ZC}:lever_action", 1, 1, 1, worn(.2, .8)), (f"{ZC}:lever_ammo", 1, 3, 12)],
+             (f"{ZC}:lever_action", 1, 1, 1, worn(.2, .8)), (f"{ZC}:lever_ammo", 1, 3, 12),
+             (f"{ZC}:crossbow", 1, 1, 1, worn(.2, .8)), (f"{ZC}:crossbow_bolt", 1, 1, 4)],
     "home_guns": [(f"{ZC}:rimfire", 4, 1, 1, worn(.1, .6)), (f"{ZC}:rimfire_ammo", 8, 10, 40),
                   (f"{ZC}:rimfire_magazine", 2, 1, 1), (f"{ZC}:sawn_off", 1, 1, 1, worn(.2, .7)),
                   (f"{ZC}:lever_action", 2, 1, 1, worn(.1, .6)), (f"{ZC}:lever_ammo", 5, 6, 24)],
     "basement_guns": [(f"{ZC}:rimfire", 3, 1, 1, worn(.05, .5)), (f"{ZC}:rimfire_ammo", 8, 10, 50),
                       (f"{ZC}:sawn_off", 2, 1, 1, worn(.1, .6)), (f"{ZC}:magnum", 1, 1, 1, worn(.05, .5)),
                       (f"{ZC}:magnum_ammo", 3, 4, 18), (f"{ZC}:smg_magazine", 1, 1, 1, rounds(30)),
-                      (f"{ZC}:lever_action", 2, 1, 1, worn(.05, .5)), (f"{ZC}:lever_ammo", 4, 6, 30)],
+                      (f"{ZC}:lever_action", 2, 1, 1, worn(.05, .5)), (f"{ZC}:lever_ammo", 4, 6, 30),
+                      (f"{ZC}:crossbow", 1, 1, 1, worn(.05, .5)), (f"{ZC}:crossbow_bolt", 3, 2, 6)],
 }
 for _name, _extra in WAVE_ONE.items():
     TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
 for _name, _extra in {"guns": [(f"{ZC}:smg", 1), (f"{ZC}:magnum", 1)], "pawn": [(f"{ZC}:smg", 1)],
                       "basement_guns": [(f"{ZC}:smg", 2), (f"{ZC}:magnum", 1)], "home_wardrobe": [(f"{ZC}:rimfire", 1)],
-                      "storage": [(f"{ZC}:sawn_off", 1)], "home_nightstand": [(f"{ZC}:magnum", 1)],
-                      "farm": [(f"{ZC}:rimfire", 3), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 2)]}.items():
+                      "storage": [(f"{ZC}:sawn_off", 1), (f"{ZC}:crossbow", 1)], "home_nightstand": [(f"{ZC}:magnum", 1)],
+                      "home_garage": [(f"{ZC}:crossbow", 1)],
+                      "farm": [(f"{ZC}:rimfire", 3), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 2), (f"{ZC}:crossbow", 1)]}.items():
     RARE[_name] = RARE.get(_name, []) + _extra
 
 def entry(item, weight, lo, hi, *functions):

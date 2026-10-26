@@ -92,6 +92,8 @@ public final class ModItems {
     public static final Item MAGNUM_AMMO = register("magnum_ammo", Item::new, new Item.Properties().stacksTo(50));
     public static final Item LEVER_ACTION = gun("lever_action", GunType.LEVER_ACTION, 1700);
     public static final Item LEVER_AMMO = register("lever_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item CROSSBOW = gun("crossbow", GunType.CROSSBOW, 1400);
+    public static final Item CROSSBOW_BOLT = register("crossbow_bolt", Item::new, new Item.Properties().stacksTo(12));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),

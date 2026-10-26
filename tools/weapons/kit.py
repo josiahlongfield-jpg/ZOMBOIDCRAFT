@@ -79,6 +79,7 @@ class Gun:
         self.handle = handle                    # fn(m): the charging handle or slide, drawn apart so it can be worked
         self.flash_size = flash_size
         self.gap_flash = None                   # a second flash's point, build frame (a revolver's cylinder gap)
+        self.tip = None                         # a gun with no flash: where its shot leaves it, build frame
         # {key: (title, look)}: the finishes it comes in, the first the plainest (look is then the first's)
         self.finishes = finishes
         # (axis, degrees, origin): how the handle (a double's barrels, a revolver's cylinder) is turned to show it
@@ -332,7 +333,10 @@ FLASH_TEX = f'{NS}:item/weapon/muzzle_flash'
 
 
 def flash_tip(gun):
-    """Where the flash starts: the front of the bare muzzle on the bore line (item pixels, before the shift)."""
+    """Where the flash starts: the front of the bare muzzle on the bore line (item pixels, before the shift); for a
+    gun with no flash (the crossbow), its tip."""
+    if gun.flash is None:
+        return np.asarray(gun.tip, float)
     lo, hi = drawn('flash', lambda m: gun.flash(m, None)).bounds()
     return np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, hi[2]])
 

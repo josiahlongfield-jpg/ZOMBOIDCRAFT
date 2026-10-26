@@ -42,7 +42,9 @@ public final class GunSlotData {
         Map.entry("magnum", Map.ofEntries(
 )),
         Map.entry("lever_action", Map.ofEntries(
-)));
+)),
+        Map.entry("crossbow", Map.ofEntries(
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("crossbow_bolt")))));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
         Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
@@ -55,7 +57,8 @@ public final class GunSlotData {
         Map.entry("smg", Map.ofEntries()),
         Map.entry("sawn_off", Map.ofEntries()),
         Map.entry("magnum", Map.ofEntries()),
-        Map.entry("lever_action", Map.ofEntries()));
+        Map.entry("lever_action", Map.ofEntries()),
+        Map.entry("crossbow", Map.ofEntries()));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),
@@ -71,7 +74,8 @@ public final class GunSlotData {
         Map.entry("pistol_magazine", "mag"),
         Map.entry("hunting_rifle_magazine", "mag"),
         Map.entry("rimfire_magazine", "mag"),
-        Map.entry("smg_magazine", "mag"));
+        Map.entry("smg_magazine", "mag"),
+        Map.entry("crossbow_bolt", "bolt"));
 
     private GunSlotData() {
     }

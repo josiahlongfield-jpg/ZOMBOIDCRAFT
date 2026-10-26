@@ -332,7 +332,7 @@ public final class RifleView {
         if (sights == null) {
             a = 0;
         }
-        Pose want = animate ? rig.opens() ? openPose(age) : rig.pump() || rig.lever() ? tubePose(age) : reloadPose(t)
+        Pose want = animate ? rig.opens() ? openPose(age) : rig.pump() || rig.lever() || rig.crossbow() ? tubePose(age) : reloadPose(t)
                 : step >= 1 ? shown : hip(0, 0, 0);
         // a bolt worked after a shot: the gun rolled port up and turned in a little while the hand is on it
         float bolt = rig.bolt() ? boltTime(t, animate, age) : -1;
@@ -378,7 +378,7 @@ public final class RifleView {
         drawHandle(pose, out, light, player, want, bolt >= 0 ? boltLocal(bolt)
                 : rig.cylinder() ? openLocal(animate ? openAmount(age) : 0).mul(cylTurn(animate ? loadAngle(age) : restAngle(age)))
                 : rig.opens() ? openLocal(animate ? openAmount(age) : 0) : rig.lever() ? openLocal(lever)
-                : new Matrix4f().translation(0, 0, pulled));
+                : rig.crossbow() ? stringLocal(cocked(gun, animate, age)) : new Matrix4f().translation(0, 0, pulled));
         if (rig.lever()) {
             // the bolt rides back over the hammer as the lever goes down
             pose.pushPose();
@@ -397,7 +397,7 @@ public final class RifleView {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             float pump = rig.pump() ? pulled : 0;
             Hand left = !animate ? support(want, foregrip, a, pump) : rig.opens() ? openHand(want, age)
-                    : rig.pump() || rig.lever() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
+                    : rig.pump() || rig.lever() || rig.crossbow() ? tubeHand(want, age, pump) : leftHand(want, t, foregrip);
             Hand right = rig.wristGrip() ? new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_WRIST_ADS, a), lerp(RIGHT_HINT, RIGHT_WRIST_HINT, a))
                     : new Hand(want.point(rig.grip()), lerp(RIGHT_HIP, RIGHT_ADS, a), RIGHT_HINT);
             if (bolt >= 0) {
@@ -447,7 +447,7 @@ public final class RifleView {
             drawChambers(pose, out, light, player, gun, age);
             return;
         }
-        if (rig.pump() || rig.lever()) {
+        if (rig.pump() || rig.lever() || rig.crossbow()) {
             float u = stopAt < 0 ? shellTime(age) : -1;
             if (u >= FETCHED) {
                 pose.pushPose();
@@ -507,7 +507,7 @@ public final class RifleView {
         float since = age - shotAt;
         boolean quiet = Attachments.suppressed(stack);
         float life = quiet ? QUIET_FLASH_LIFE : FLASH_LIFE;
-        if (!shotFlash || since < 0 || since >= life) {
+        if (!shotFlash || since < 0 || since >= life || rig.crossbow()) {      // a crossbow has no flash
             return;
         }
         float half = life / 2;
@@ -753,6 +753,12 @@ public final class RifleView {
      * tube once it's through (item pixels).
      */
     private static final float GATE_YAW = 28f, GATE_TUCK = 0.2f;
+    /**
+     * A crossbow: ticks into the reload the hand takes the string (it's drawn back to the latch by the end of the
+     * raise); how long the string takes to fly forward with a shot; how flat it lies let go (its depth, of cocked);
+     * and how far ahead of the latch (item pixels) a bolt is laid on the rail before it's slid back.
+     */
+    private static final float COCK_FROM = 5f, STRING_FLY = 0.5f, STRING_SLACK = 0.04f, BOLT_AHEAD = 3.0f;
 
     /** Ticks into the current shell (0 to perShell), or -1 while the gun is still coming up for the first. */
     private static float shellTime(float age) {
@@ -762,7 +768,8 @@ public final class RifleView {
 
     /** How far over for loading the gun is (0 to 1): up as the loading starts, down when it stops. */
     private static float loadAmount(float age) {
-        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, type.raise - 1);
+        // a crossbow is tipped down quickly to be cocked, the rest are brought up over the whole raise
+        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, rig.crossbow() ? 5 : type.raise - 1);
         return stopAt < 0 ? up : up * (1 - smooth01(age - stopAt, 0, pumpFrom >= 0 ? PUMP_START : LOWER));
     }
 
@@ -807,7 +814,67 @@ public final class RifleView {
      * through the gate on its right (gateLocal).
      */
     private static Matrix4f roundLocal(float u, float fwd) {
-        return rig.lever() ? gateLocal(u, fwd) : shellLocal(u, fwd);
+        return rig.lever() ? gateLocal(u, fwd) : rig.crossbow() ? railLocal(u) : shellLocal(u, fwd);
+    }
+
+    /**
+     * A crossbow's bolt u ticks into its go: from below the screen up over the rail, nose up (about its nock, magCentre)
+     * and BOLT_AHEAD pixels ahead of the latch; laid down on the rail, then slid back until its nock clicks into the
+     * latch.
+     */
+    private static Matrix4f railLocal(float u) {
+        float drop, rock, ahead = BOLT_AHEAD;
+        if (u < UNDER) {
+            float v = Mth.clamp((u - FETCHED) / (UNDER - FETCHED), 0, 1);
+            float out = 1 - (1 - v) * (1 - v) * (1 - v);
+            drop = Mth.lerp(out, 24f, 1.5f);
+            rock = Mth.lerp(out, 25f, 6f);
+        } else {
+            float v = smooth01(u, UNDER, UP);
+            drop = 1.5f * (1 - v);
+            rock = 6f * (1 - v);
+            ahead = BOLT_AHEAD * (1 - smooth01(u, UP, type.perShell));
+        }
+        float[] h = rig.magCentre();
+        return new Matrix4f().translation(0, -drop, -ahead)
+                .translate(h[0], h[1], h[2]).rotateX(rock * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+    }
+
+    /**
+     * How far back a crossbow's string is (0 let go, 1 cocked): drawn back to the latch early in the reload, let fly
+     * by a shot, cocked while there's a bolt on.
+     */
+    private static float cocked(ItemStack gun, boolean animate, float age) {
+        if (animate) {
+            return smooth01(age - clockStart, COCK_FROM, type.raise - 1.5f);
+        }
+        float since = age - shotAt;
+        if (since >= 0 && since < STRING_FLY) {
+            return 1 - smooth(since / STRING_FLY);
+        }
+        return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0 ? 1 : 0;
+    }
+
+    /** The string k of the way cocked: drawn cocked, so let go it's flattened onto its slack line (the hinge's z). */
+    private static Matrix4f stringLocal(float k) {
+        float z = rig.hinge()[2];
+        return new Matrix4f().translation(0, 0, z).scale(1, 1, Mth.lerp(k, STRING_SLACK, 1f)).translate(0, 0, -z);
+    }
+
+    /** The off hand on the string's centre, palm down over it, the string k of the way cocked. */
+    private static Hand onString(Pose gun, float k) {
+        float[] h = rig.handle();
+        Vector3f at = gun.point(stringLocal(k).transformPosition(new Vector3f(h[0], h[1], h[2])));
+        return new Hand(at, new Vector3f(-0.25f, -0.75f, 0.55f), new Vector3f(0f, -1f, 0f));
+    }
+
+    /** The off hand cocking a crossbow: off the foregrip to the string, then drawing it back to the latch. */
+    private static Hand cockHand(Pose gun, float age) {
+        float s = age - clockStart;
+        if (s < COCK_FROM) {
+            return support(gun, false, 0, 0).lerp(onString(gun, 0), smooth01(s, 0, COCK_FROM));
+        }
+        return onString(gun, smooth01(s, COCK_FROM, type.raise - 1.5f));
     }
 
     /**
@@ -988,12 +1055,16 @@ public final class RifleView {
     private static Hand loadHand(Pose gun, float age) {
         float u = shellTime(age);
         if (u < 0) {
-            return support(gun, false, 0, 0).lerp(pouch(), smooth01(age - clockStart, 0, type.raise));
+            return rig.crossbow() ? cockHand(gun, age)
+                    : support(gun, false, 0, 0).lerp(pouch(), smooth01(age - clockStart, 0, type.raise));
         }
         if (u >= FETCHED) {
             return onShell(gun, u);
         }
         boolean first = age - clockStart - type.raise < type.perShell;
+        if (first && rig.crossbow()) {
+            return onString(gun, 1).lerp(pouch(), smooth01(u, 0, FETCHED));     // off the cocked string for the bolt
+        }
         return first ? pouch() : onShell(gun, type.perShell).lerp(pouch(), smooth01(u, 0, FETCHED));
     }
 

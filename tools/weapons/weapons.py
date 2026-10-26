@@ -715,6 +715,14 @@ LEVER_CLEAR = [tuple(LA.frame_point(*p)) for p in (
     (0, LA.stock_line(12.0)[0], 12.0), (0, _la_top, LA.STOCK_END - 0.1), (0, _la_bot, LA.STOCK_END - 0.1),
     (0, LA.RCVR_TOP + 0.55, LA.RCVR[1] + 0.6), (0, LA.LOOP_BOT, (LA.LOOP[0] + LA.LOOP[1]) / 2), (0, 0, LA.MUZZLE))]
 
+# the crossbow: the off hand on the foregrip under the rail, the pad in the shoulder; the grip's foot and the
+# stirrup stay clear
+CROSSBOW_SUPPORT = [tuple(XB.frame_point(0, -1.90, -6.0) + (0, -1.7, 0)), tuple(XB.frame_point(0, -1.90, -11.0) + (0, -1.7, 0))]
+CROSSBOW_BUTT = tuple(XB.frame_point(0, -1.30, XB.STOCK_END - 0.3))
+CROSSBOW_CLEAR = [tuple(XB.frame_point(*p)) for p in (
+    (0, 0.76, 12.0), (0, 0.66, XB.STOCK_END - 0.1), (0, -3.30, XB.STOCK_END - 0.1), (0, XB.SIGHT + 0.1, XB.REAR_SIGHT),
+    (0, XB.GRIP_FOOT[1], XB.GRIP_FOOT[0]), (0, 0, XB.RISER[0]), (0, -0.95, XB.RISER[0] - 3.6))]
+
 # the magnum: the revolver's two hands round its bigger grip
 MAGNUM_SUPPORT = [tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(2.7)))),
                   tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(0.9))))]
@@ -915,8 +923,10 @@ def crossbow():
     fp = XB.frame_point
     parts = {'bolt': kit.Part('bolt', 'crossbow_bolt', 'Crossbow Bolt', 'magazine', XB.bolt, look)}
     slots = {'magazine': kit.Slot(fp(0, 0, 0), 'axial', ['bolt'], default='bolt')}
-    return kit.Gun('crossbow', 'Crossbow', XB.body, look, XB.HAND, slots, parts,
-                   aperture=fp(0, XB.SIGHT, XB.REAR_SIGHT), seed=937)
+    gun = kit.Gun('crossbow', 'Crossbow', XB.body, look, XB.HAND, slots, parts,
+                  aperture=fp(0, XB.SIGHT, XB.REAR_SIGHT), seed=937, handle=XB.string)
+    gun.tip = fp(0, 0, -XB.BOLT_LEN)        # the bolt's point
+    return gun
 
 
 def lever_action():
@@ -991,13 +1001,16 @@ class FirstPerson:
       middle of the view this many blocks ahead; hip_turn's roll is kept;
     lever: a tube gun worked by a lever: the handle (the lever) turns open_angle degrees about open_axis through the
       hinge point, the shooting hand's fingers in its loop, and the slide (the bolt) rides back handle_travel with it;
-      its rounds go in through a gate on the right, swung in about their noses (magCentre)."""
+      its rounds go in through a gate on the right, swung in about their noses (magCentre);
+    crossbow: the handle is the string, drawn cocked: let go with a shot it lies flat across at the hinge point's z,
+      and it's drawn back to the latch to cock it as the reload starts; the bolt is laid on the rail ahead of the latch
+      and slid back into it (its nock is magCentre)."""
 
     def __init__(self, hip_grip, hip_turn, hip_scale, reload, irons, irons_scale, handle_travel, charge_turn,
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
                  wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
-                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False):
+                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False, crossbow=False):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -1013,6 +1026,7 @@ class FirstPerson:
         self.cylinder, self.chamber_step = cylinder, chamber_step
         self.hip_aim = hip_aim
         self.lever = lever
+        self.crossbow = crossbow
 
 
 # From the hip a gun points at the crosshair (Josiah, 2026-10-26): its bore meets the middle of the view this many
@@ -1145,6 +1159,15 @@ LEVER_FP = FirstPerson(hip_grip=(0.28, -0.36, -0.56), hip_turn=(4.0, 14.0, -6.0)
                        handle_travel=LA.BOLT_TRAVEL, charge_turn=(6, 4, 0), charge_push=(0.0, 0.02, -0.03),
                        load_turn=(-8, 10, 25), load_push=(-0.10, 0.06, 0.0), wrist_grip=True,
                        open_axis=(1.0, 0.0, 0.0), open_angle=LA.LEVER_OPEN, hip_aim=HIP_AIM, lever=True)
+
+# the crossbow held like the rifle, its pad in the shoulder; on the irons the eye is over the stock's cheek, 6"
+# behind the notch; to cock and load it, it's tipped muzzle down and brought in, the string drawn back to the latch
+# and a bolt laid on the rail
+CROSSBOW_FP = FirstPerson(hip_grip=(0.25, -0.30, -0.60), hip_turn=(2.0, 8.0, -3.0), hip_scale=0.80,
+                          reload={'mag_out': (8, -0.02), 'mag_in': (8, -0.02), 'charge': (0, 0.0)},
+                          irons=(0.0, 0.0, -6.0 * IN * 0.85), irons_scale=0.80, handle_travel=0.0,
+                          charge_turn=(0, 0, 0), charge_push=(0.0, 0.0, 0.0),
+                          load_turn=(-32, 6, 0), load_push=(-0.06, 0.10, 0.10), hip_aim=HIP_AIM, crossbow=True)
 
 # the magnum held out like the service revolver, a little smaller on screen for its size
 MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.20,
@@ -1453,18 +1476,25 @@ def main():
     line, _ = kit.write_gun(la, ASSETS, gl - la.hand, gun_displays(gl, la_hold, LEVER_FP), lang, ads_eyes(la, LEVER_FP))
     summary.append(line)
     write_loose_round('lever_action', LA.round_3030, LA.round_look(), LA.frame_point(*LA.LOOSE_ROUND), gl - la.hand, 944)
+    xb = crossbow()
+    _Pm, gx = rifle_frame()
+    xb_hold = long_holds(XB.HAND, CROSSBOW_SUPPORT, CROSSBOW_BUTT, CROSSBOW_CLEAR)
+    aimed(xb, gx, CROSSBOW_FP)
+    line, _ = kit.write_gun(xb, ASSETS, gx - xb.hand, gun_displays(gx, xb_hold, CROSSBOW_FP), lang, ads_eyes(xb, CROSSBOW_FP))
+    summary.append(line)
+    write_loose_round('crossbow', XB.bolt, XB.look(), XB.frame_point(0, 0, 0), gx - xb.hand, 945)
     part_display = lambda m: small_display(m, (20, 60, 0))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
     own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
     kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_part_items([hr.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
-    kit.write_part_items([rm.parts['mag'], sm.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
+    kit.write_part_items([rm.parts['mag'], sm.parts['mag'], xb.parts['bolt']], ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb])
     write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
                      (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
                      (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
@@ -1475,7 +1505,8 @@ def main():
                      (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
                      (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
                      (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
-                     (la, gl, la_hold, LEVER_FP, lever_points(la, gl))])
+                     (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
+                     (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))])
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
@@ -1500,7 +1531,7 @@ def main():
     write_java()
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
-                                 'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold},
+                                 'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
                                 (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
@@ -1943,6 +1974,24 @@ def lever_points(gun, g):
     }
 
 
+def crossbow_points(gun, g):
+    shift = g - gun.hand
+    fp = XB.frame_point
+    nock = fp(0, 0, 0) + shift
+    support = fp(0, -1.90, -8.5) + shift + np.array([0, -0.8, 0])     # the off hand round the foregrip
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': nock,
+        'magHold': nock + np.array([0.4, -1.1, 0.9]),                    # the thumb behind the nock
+        'magCentre': nock,                                               # the bolt's nock, which it's tipped about
+        'handle': fp(0, XB.STRING_Y, 0) + shift,                        # the string's centre, at the latch
+        **no_rail(gun, shift),
+        'hinge': fp(0, XB.STRING_Y, XB.SLACK_Z) + shift,                 # the string's line when it's let go
+    }
+
+
 def rig_data(gun, g, holds, fp, points):
     """One gun's first-person rig (GunRig's fields, in order): the hip pose's numbers, so a reload can cant it
     smoothly, each sight's aiming pose, how its handle or slide is worked, the points the hands hold (item
@@ -1972,7 +2021,7 @@ def rig_data(gun, g, holds, fp, points):
                  'supportGrip': fp.support_grip, 'pump': fp.pump, 'wristGrip': fp.wrist_grip, 'bolt': fp.bolt})
     data.update({'hinge': vec(hinge), 'openAxis': vec(fp.open_axis), 'openAngle': float(fp.open_angle),
                  'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder,
-                 'lever': fp.lever})
+                 'lever': fp.lever, 'crossbow': fp.crossbow})
     return data
 
 
@@ -1993,6 +2042,7 @@ RIG_NOTES = {
     'chamberStep': 'between chambers: pixels along x, or degrees round a cylinder',
     'opens': 'loaded by hand with the action open', 'cylinder': 'the rounds sit in a turning cylinder',
     'lever': 'worked by a lever, its bolt riding back with it',
+    'crossbow': 'a crossbow: its string let go and drawn back, a bolt laid on the rail',
 }
 
 

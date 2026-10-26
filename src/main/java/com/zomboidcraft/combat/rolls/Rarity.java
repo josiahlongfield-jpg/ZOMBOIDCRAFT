@@ -47,7 +47,7 @@ public enum Rarity {
     public static Rarity of(GunType type) {
         return switch (type) {
             case PISTOL, SHOTGUN, RIMFIRE, LEVER_ACTION -> COMMON;
-            case REVOLVER, DOUBLE_BARREL, HUNTING_RIFLE, SAWN_OFF -> SCARCE;
+            case REVOLVER, DOUBLE_BARREL, HUNTING_RIFLE, SAWN_OFF, CROSSBOW -> SCARCE;
             case ASSAULT_RIFLE, MAGNUM -> RARE;
             case SMG -> PRIZED;
         };

@@ -81,6 +81,8 @@ public final class Weights {
         mod("magnum_ammo", 0.022);
         mod("lever_action", 3.0);
         mod("lever_ammo", 0.025);
+        mod("crossbow", 3.2);
+        mod("crossbow_bolt", 0.031);
         vanilla("stick", 0.1);
         vanilla("arrow", 0.03);
         vanilla("bow", 0.8);

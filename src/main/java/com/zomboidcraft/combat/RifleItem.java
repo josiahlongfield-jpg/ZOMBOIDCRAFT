@@ -153,6 +153,7 @@ public class RifleItem extends Item {
         }
         tooltip.accept(Component.literal(type == GunType.REVOLVER || type == GunType.MAGNUM ? "Right-click: aim   Left-click: fire   R: swing out and load (fire to stop)"
                 : type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
+                : type == GunType.CROSSBOW ? "Right-click: aim   Left-click: shoot   R: cock it and lay a bolt on"
                 : type.tube ? "Right-click: aim   Left-click: fire   R: load " + type.rounds() + " (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
         if (type.bolt) {

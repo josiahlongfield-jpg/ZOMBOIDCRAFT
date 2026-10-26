@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -149,7 +150,7 @@ public final class Guns {
                 suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
-        } else if (!type.opens) {                       // a double keeps its empties till it's opened
+        } else if (!type.opens && type != GunType.CROSSBOW) {   // a double keeps its empties till it's opened
             level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
@@ -166,7 +167,7 @@ public final class Guns {
         Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
-        if (config.muzzleSmoke) {
+        if (config.muzzleSmoke && type != GunType.CROSSBOW) {
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
             if (!suppressed) {
                 level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0.0, 0.0, 0.0, 0.0);
@@ -180,6 +181,8 @@ public final class Guns {
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         boolean ricochet = false;
+        boolean bow = type == GunType.CROSSBOW;
+        Vec3 boltAt = null;     // where a crossbow's bolt ends up: under what it hit, or stuck where it struck
         for (int i = 0; i < pellets; i++) {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
@@ -190,6 +193,22 @@ public final class Guns {
                     eye.distanceToSqr(stop));
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(pellet(target, eye, dir, stats, power));
+                if (bow) {
+                    boltAt = target.position().add(0, 0.2, 0);
+                    level.playSound(null, target.getX(), target.getEyeY(), target.getZ(), ModSounds.CROSSBOW_HIT,
+                            SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
+                }
+            } else if (bow && block.getType() != HitResult.Type.MISS) {
+                // a bolt thuds in and stays, a little short of the face it struck
+                BlockState bs = level.getBlockState(block.getBlockPos());
+                Vec3 p = block.getLocation();
+                level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, 4, 0.03, 0.03, 0.03, 0.08);
+                level.playSound(null, p.x, p.y, p.z, ModSounds.CROSSBOW_HIT, SoundSource.PLAYERS, 0.8f,
+                        1.1f + player.getRandom().nextFloat() * 0.2f);
+                boltAt = p.subtract(dir.scale(0.3));
+                if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
+                    level.destroyBlock(block.getBlockPos(), false, player);
+                }
             } else if (block.getType() != HitResult.Type.MISS) {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
@@ -207,6 +226,12 @@ public final class Guns {
             }
         }
         hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
+        if (boltAt != null && stats instanceof ZcConfig.CrossbowStats cb && player.getRandom().nextDouble() >= cb.boltBreakChance) {
+            ItemEntity bolt = new ItemEntity(level, boltAt.x, boltAt.y, boltAt.z, new ItemStack(ModItems.CROSSBOW_BOLT));
+            bolt.setDeltaMovement(Vec3.ZERO);
+            bolt.setPickUpDelay(10);
+            level.addFreshEntity(bolt);
+        }
         if (!hits.isEmpty()) {
             Skills.addXp(player, Skill.AIMING, 2);
         }
@@ -416,6 +441,9 @@ public final class Guns {
 
     private static void tickLoading(ServerPlayer player, ItemStack gun, GunType type, State st) {
         st.reloadTick++;
+        if (type == GunType.CROSSBOW && st.reloadTick == type.raise - 2) {
+            sound(player, type.charged());      // the string clicks into the latch
+        }
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;
             if (t > 0 && t % type.perShell == 0) {

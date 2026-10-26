@@ -37,7 +37,9 @@ public enum GunType {
     MAGNUM("magnum", ".44 Magnum", 10, 10, 5, true),
     // rolled right side up, a round at a time thumbed in through the gate; the lever swung down and up after each shot
     // (heard as it goes down, the empty thrown up and out)
-    LEVER_ACTION("lever_action", ".30-30", 6, 11, 6, 3);
+    LEVER_ACTION("lever_action", ".30-30", 6, 11, 6, 3),
+    // tipped down and the string drawn back to the latch (the raise), then a bolt laid on the rail and slid back into it
+    CROSSBOW("crossbow", "crossbow", 30, 10, 0, 0);
 
     private final String id;
     private final String caliber;
@@ -152,6 +154,7 @@ public enum GunType {
             case SAWN_OFF -> ModItems.SAWN_OFF;
             case MAGNUM -> ModItems.MAGNUM;
             case LEVER_ACTION -> ModItems.LEVER_ACTION;
+            case CROSSBOW -> ModItems.CROSSBOW;
         };
     }
 
@@ -160,7 +163,7 @@ public enum GunType {
         return switch (this) {
             case ASSAULT_RIFLE -> ModItems.RIFLE_MAGAZINE;
             case PISTOL -> ModItems.PISTOL_MAGAZINE;
-            case SHOTGUN, DOUBLE_BARREL, REVOLVER, SAWN_OFF, MAGNUM, LEVER_ACTION -> null;
+            case SHOTGUN, DOUBLE_BARREL, REVOLVER, SAWN_OFF, MAGNUM, LEVER_ACTION, CROSSBOW -> null;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_MAGAZINE;
             case RIMFIRE -> ModItems.RIMFIRE_MAGAZINE;
             case SMG -> ModItems.SMG_MAGAZINE;
@@ -177,6 +180,7 @@ public enum GunType {
             case RIMFIRE -> ModItems.RIMFIRE_AMMO;
             case MAGNUM -> ModItems.MAGNUM_AMMO;
             case LEVER_ACTION -> ModItems.LEVER_AMMO;
+            case CROSSBOW -> ModItems.CROSSBOW_BOLT;
         };
     }
 
@@ -198,6 +202,7 @@ public enum GunType {
             case SAWN_OFF -> ZcConfig.get().sawnOff;
             case MAGNUM -> ZcConfig.get().magnum;
             case LEVER_ACTION -> ZcConfig.get().leverAction;
+            case CROSSBOW -> ZcConfig.get().crossbow;
         };
     }
 
@@ -227,6 +232,7 @@ public enum GunType {
             case SAWN_OFF -> distant ? ModSounds.SAWN_OFF_SHOT_DISTANT : ModSounds.SAWN_OFF_SHOT;
             case MAGNUM -> distant ? ModSounds.MAGNUM_SHOT_DISTANT : ModSounds.MAGNUM_SHOT;
             case LEVER_ACTION -> distant ? ModSounds.LEVER_ACTION_SHOT_DISTANT : ModSounds.LEVER_ACTION_SHOT;
+            case CROSSBOW -> ModSounds.CROSSBOW_SHOT;
         };
     }
 
@@ -243,6 +249,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_DRY;
             case MAGNUM -> ModSounds.MAGNUM_DRY;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
+            case CROSSBOW -> ModSounds.PISTOL_DRY;          // the trigger of an uncocked bow, just a click
         };
     }
 
@@ -257,6 +264,7 @@ public enum GunType {
             case SMG -> ModSounds.SMG_MAG_OUT;
             case SAWN_OFF -> ModSounds.SAWN_OFF_OPEN;
             case MAGNUM -> ModSounds.MAGNUM_OPEN;
+            case CROSSBOW -> ModSounds.CROSSBOW_COCK;
             default -> ModSounds.RIFLE_MAG_OUT;
         };
     }
@@ -275,6 +283,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_SHELL_IN;
             case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
+            case CROSSBOW -> ModSounds.RIFLE_LOAD_ROUND;     // the bolt slid back into the latch
         };
     }
 
@@ -295,6 +304,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_CLOSE;
             case MAGNUM -> ModSounds.MAGNUM_CLOSE;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_LEVER;
+            case CROSSBOW -> ModSounds.CROSSBOW_COCK;
         };
     }
 
@@ -305,7 +315,7 @@ public enum GunType {
 
     /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */
     public String rounds() {
-        return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : "rounds";
+        return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : this == CROSSBOW ? "bolts" : "rounds";
     }
 
     /** The gun a stack is, or null if it isn't one. */

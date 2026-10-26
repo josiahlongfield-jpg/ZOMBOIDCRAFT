@@ -52,6 +52,8 @@ public final class ZcConfig {
     public GunStats magnum = GunStats.magnum();
     /** The lever-action carbine's own numbers. */
     public GunStats leverAction = GunStats.leverAction();
+    /** The crossbow's own numbers, and how often its bolts break. */
+    public CrossbowStats crossbow = new CrossbowStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -76,6 +78,7 @@ public final class ZcConfig {
         public int smgWeight = 1;
         public int sawnOffWeight = 2;
         public int leverActionWeight = 3;
+        public int crossbowWeight = 1;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
         public int revolverWeight = 2;
@@ -632,6 +635,28 @@ public final class ZcConfig {
      * damage is per pellet, its magazine size is the shells it holds (four in the tube and one chambered), and its
      * time between shots covers working the pump.
      */
+    /**
+     * The crossbow: one heavy bolt at a time, silent but for the string, slow to cock. Its bolts are found again
+     * where they land (in what they hit, under it), unless they break.
+     */
+    public static class CrossbowStats extends GunStats {
+        /** Chance a bolt breaks when it hits something, rather than being left to pick up. */
+        public double boltBreakChance = 0.2;
+
+        CrossbowStats() {
+            damage = 30.0;
+            headshotMultiplier = 3.0;
+            hipSpread = 3.0;
+            aimSpread = 0.2;
+            recoil = 0.4;
+            shotNoise = 8.0;
+            aimZoom = 0.85;
+            range = 60.0;
+            fireDelayTicks = 10;
+            magazineSize = 1;
+        }
+    }
+
     public static class ShotgunStats extends GunStats {
         /** Pellets in each shell (00 buckshot has eight or nine). */
         public int pellets = 8;
