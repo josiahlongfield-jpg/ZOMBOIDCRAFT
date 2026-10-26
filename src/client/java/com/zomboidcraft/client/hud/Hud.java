@@ -87,10 +87,10 @@ public final class Hud {
         return player != null && player.getVehicle() != null;
     }
 
-    /** True while the field kit replaces Minecraft's HUD: on in settings, and playing survival or adventure. */
+    /** True while the field kit replaces Minecraft's HUD: on in settings, and not spectating (creative too, so testing looks like playing). */
     public static boolean active() {
         LocalPlayer player = Minecraft.getInstance().player;
-        return ZcConfig.get().look.fieldKitHud && player != null && !player.isCreative() && !player.isSpectator();
+        return ZcConfig.get().look.fieldKitHud && player != null && !player.isSpectator();
     }
 
     /** The blood at the screen's edge and your figure, drawn before the rest. */
@@ -109,7 +109,7 @@ public final class Hud {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator()) return;
         int top = WatchHud.render(g);
-        if (!player.isCreative()) MoodleHud.render(g, top);
+        MoodleHud.render(g, top);
         WeaponHud.render(g, delta);
         SkillTape.render(g);
         GrabHud.render(g);
