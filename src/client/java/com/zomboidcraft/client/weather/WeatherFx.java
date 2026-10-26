@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherParticles;
 import com.zomboidcraft.world.weather.WeatherView;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,7 @@ public final class WeatherFx {
     private static float mistDue, debrisDue;
     /** Ticks to the next flash; and a second flicker of the same stroke, when there is one. */
     private static int nextFlash = 200, flicker;
+    private static float flickerStrength;
     /** Client-only lightning gets ids below anything the server hands out. */
     private static int boltId = -100000;
     private static final List<Thunder> THUNDER = new ArrayList<>();
@@ -54,6 +56,17 @@ public final class WeatherFx {
         ParticleProviderRegistry.getInstance().register(WeatherParticles.DEBRIS, sprites ->
                 (type, level, x, y, z, dx, dy, dz, random) -> new DebrisParticle(level, x, y, z, dx, dz, sprites.get(random)));
         ClientTickEvents.END_CLIENT_TICK.register(WeatherFx::tick);
+        // every bolt that lands near you, the server's real strikes too, lights up the street
+        ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
+            if (entity instanceof LightningBolt && entity.getId() >= 0) {  // our own flashes set their own strength
+                flash(1);
+            }
+        });
+    }
+
+    /** Lights the world for a moment; strength 1 for a bolt close by, less for one far off in the clouds. */
+    private static void flash(float strength) {
+        WeatherView.setFlash(Math.max(WeatherView.flash(), strength));
     }
 
     private static void tick(Minecraft client) {
@@ -74,6 +87,8 @@ public final class WeatherFx {
             debris(level, player, w, windX, windZ);
         }
         clock++;
+        // a flash lasts a few ticks, dying away fast
+        WeatherView.setFlash(WeatherView.flash() < 0.02f ? 0 : WeatherView.flash() * 0.62f);
         if (c.stormFlashes) {
             storm(level, player, w);
         }
@@ -89,6 +104,7 @@ public final class WeatherFx {
     private static void storm(ClientLevel level, LocalPlayer player, Weather w) {
         if (flicker > 0 && --flicker == 0) {
             level.setSkyFlashTime(2);
+            flash(flickerStrength);
         }
         if (w.thunder() < 0.15f || --nextFlash > 0) {
             return;
@@ -108,11 +124,24 @@ public final class WeatherFx {
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
             strike.snapTo(x, y, z);
             level.addEntity(strike);
+            flash(1);
         } else {
+            // sheet lightning: the clouds light up and the street with them, less the further off it is.
+            // A bolt high up and far out of sight is spawned too, so shader packs that flash on
+            // lightning (Photon reads where the last bolt was) flash with it
             level.setSkyFlashTime(2);
+            float strength = (float) Mth.clamp(1.1 - distance / 1500, 0.35, 0.85);
+            flash(strength);
+            LightningBolt sheet = new LightningBolt(EntityTypes.LIGHTNING_BOLT, level);
+            sheet.setVisualOnly(true);
+            sheet.setSilent(true);
+            sheet.setId(boltId--);
+            sheet.snapTo(player.getX() + Math.cos(angle) * 160, player.getY() + 90, player.getZ() + Math.sin(angle) * 160);
+            level.addEntity(sheet);
         }
         if (RANDOM.nextFloat() < 0.5f) {
             flicker = 3 + RANDOM.nextInt(4);
+            flickerStrength = bolt ? 0.8f : 0.5f;
         }
         // heard from its direction, a few blocks out; near ones crack, far ones rumble low
         double ear = 24;
