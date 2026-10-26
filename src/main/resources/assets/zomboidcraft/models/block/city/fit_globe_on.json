@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cage_wire": "zomboidcraft:block/city/bunk_cage_wire",
+    "bunk_glass_on": "zomboidcraft:block/city/bunk_glass_on",
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "particle": "zomboidcraft:block/city/bunk_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        7,
+        15
+      ],
+      "to": [
+        10,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey"
+        },
+        "south": {
+          "texture": "#bunk_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        8,
+        11
+      ],
+      "to": [
+        9.5,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glass_on"
+        },
+        "south": {
+          "texture": "#bunk_glass_on"
+        },
+        "east": {
+          "texture": "#bunk_glass_on"
+        },
+        "west": {
+          "texture": "#bunk_glass_on"
+        },
+        "up": {
+          "texture": "#bunk_glass_on"
+        },
+        "down": {
+          "texture": "#bunk_glass_on"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        7.5,
+        10.5
+      ],
+      "to": [
+        10,
+        12.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cage_wire"
+        },
+        "south": {
+          "texture": "#bunk_cage_wire"
+        },
+        "east": {
+          "texture": "#bunk_cage_wire"
+        },
+        "west": {
+          "texture": "#bunk_cage_wire"
+        },
+        "up": {
+          "texture": "#bunk_cage_wire"
+        },
+        "down": {
+          "texture": "#bunk_cage_wire"
+        }
+      }
+    }
+  ]
+}

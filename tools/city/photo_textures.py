@@ -1067,6 +1067,8 @@ import vessel  # noqa: E402
 vessel.register(sys.modules[__name__])
 import navy  # noqa: E402
 navy.register(sys.modules[__name__])
+import shipkit  # noqa: E402
+shipkit.register(sys.modules[__name__])
 
 
 def build(name):

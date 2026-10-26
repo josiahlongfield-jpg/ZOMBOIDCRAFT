@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_st_aimd": "zomboidcraft:block/city/fit_st_aimd",
+    "particle": "zomboidcraft:block/city/fit_st_aimd"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_st_aimd"
+        },
+        "south": {
+          "texture": "#fit_st_aimd",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_st_aimd",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_st_aimd",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_st_aimd",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_st_aimd",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
