@@ -38,8 +38,9 @@ public enum GunType {
     // rolled right side up, a round at a time thumbed in through the gate; the lever swung down and up after each shot
     // (heard as it goes down, the empty thrown up and out)
     LEVER_ACTION("lever_action", ".30-30", 6, 11, 6, 3),
-    // tipped down and the string drawn back to the latch (the raise), then a bolt laid on the rail and slid back into it
-    CROSSBOW("crossbow", "crossbow", 30, 10, 0, 0);
+    // tipped down and the string drawn back to the latch (the raise, timed to the cock recording: see COCK_AT), then a
+    // bolt laid on the rail and slid back into it
+    CROSSBOW("crossbow", "crossbow", 40, 10, 0, 0);
 
     private final String id;
     private final String caliber;
@@ -60,6 +61,13 @@ public enum GunType {
     public final int cycle, cycleAfterShot;
     /** Ticks from a bolt's lift to the empty case hitting the ground as it's run back (in step with its recording). */
     public static final int CASE_OUT = 6;
+    /**
+     * A crossbow's draw, in step with its cock recording (one take, the whole draw): ticks into the reload the hand
+     * takes the string and the recording starts; then ticks into the recording the creak starts, the stretch is all
+     * but done, and the string seats in the latch (its loudest hit, 1.66 s in).
+     */
+    public static final int COCK_AT = 5;
+    public static final float COCK_CREAK = 2f, COCK_STRETCHED = 30f, COCK_SEAT = 33.2f;
     /** The handle is a bolt the shooting hand works: after each shot, and to chamber a round after a fresh magazine. */
     public final boolean bolt;
     /** Opens to load (broken open, or its cylinder swung out), and takes close ticks to shut again after. */
