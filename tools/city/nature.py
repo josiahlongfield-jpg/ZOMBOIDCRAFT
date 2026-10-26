@@ -1,5 +1,7 @@
-"""Textures for the county's trees and ground cover, made from asset packs Josiah bought by
-tools/nature/*.py and kept as 64px PNGs in tools/nature/tex (the packs never enter the repo).
+"""Textures for the county's trees and ground cover, and the downtown buildings' walls, shutters
+and shop windows, made from asset packs Josiah bought by tools/nature/*.py and
+tools/towers/towers.py and kept as 64px PNGs in tools/nature/tex and tools/towers/tex (the packs
+never enter the repo).
 
 photo_textures.py calls register() with itself, adding each to its EXTRA table: the colours and
 cut-out as drawn, a height map from their light and dark for the normal map (flat for leaves
@@ -11,6 +13,7 @@ import numpy as np
 from PIL import Image
 
 TEX = Path(__file__).resolve().parents[1] / "nature/tex"
+TOWERS = Path(__file__).resolve().parents[1] / "towers/tex"
 
 
 def register(ns):
@@ -31,8 +34,14 @@ def register(ns):
                 t.h = np.clip(0.45 + lum / 255 * 0.1, 0, 1) if "leaves" in path.stem else np.full_like(lum, 0.5)
                 if "twigs" not in path.stem and "dead" not in path.stem:
                     t.sss = np.where(t.alpha > 0, 0.55, 0).astype(np.float32)
+            if path.stem.startswith("pt_shop_") and path.stem != "pt_shop_back":
+                # a photo behind shop glass: flat, and the glass catches the street's lights
+                t.h = np.full_like(lum, 0.5)
+                t.smooth[:] = 0.78
+            elif path.stem.startswith(("pt_alu", "pt_metal", "pt_panel", "pt_duct", "pt_shutter", "pt_iron")):
+                t.smooth[:] = 0.3
             return t
         return make
 
-    for path in sorted(TEX.glob("*.png")):
+    for path in sorted(TEX.glob("*.png")) + sorted(TOWERS.glob("*.png")):
         ns.EXTRA[path.stem] = load(path)

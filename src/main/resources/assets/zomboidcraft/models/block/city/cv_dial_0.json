@@ -1,0 +1,70 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_dial_0": "zomboidcraft:block/city/cv_dial_0",
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "particle": "zomboidcraft:block/city/cv_dial_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_dial_0"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "uv": [
+            0,
+            0,
+            1.5,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "uv": [
+            14.5,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "uv": [
+            0,
+            14.5,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

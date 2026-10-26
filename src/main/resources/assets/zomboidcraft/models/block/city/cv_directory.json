@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_directory": "zomboidcraft:block/city/cv_directory",
+    "particle": "zomboidcraft:block/city/cv_directory"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        2,
+        14.5
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_directory"
+        },
+        "south": {
+          "texture": "#cv_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    }
+  ]
+}

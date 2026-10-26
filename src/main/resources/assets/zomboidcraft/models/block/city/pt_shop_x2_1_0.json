@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pt_shop_back": "zomboidcraft:block/city/pt_shop_back",
+    "pt_shop_x2_1_0": "zomboidcraft:block/city/pt_shop_x2_1_0",
+    "particle": "zomboidcraft:block/city/pt_shop_x2_1_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_shop_x2_1_0",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pt_shop_back",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pt_shop_back",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pt_shop_back",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pt_shop_back",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pt_shop_back",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1073,6 +1073,8 @@ import trades  # noqa: E402
 trades.register(sys.modules[__name__])
 import fronts  # noqa: E402
 fronts.register(sys.modules[__name__])
+import civic  # noqa: E402
+civic.register(sys.modules[__name__])
 import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 
