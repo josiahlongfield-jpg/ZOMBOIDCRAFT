@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_drop_cloth": "zomboidcraft:block/city/trade_drop_cloth",
+    "particle": "zomboidcraft:block/city/trade_drop_cloth"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_drop_cloth",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_drop_cloth",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#trade_drop_cloth",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#trade_drop_cloth",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#trade_drop_cloth"
+        },
+        "down": {
+          "texture": "#trade_drop_cloth",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

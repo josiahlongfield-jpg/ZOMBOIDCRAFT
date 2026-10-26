@@ -1,7 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "vessel_bridge_broken": "zomboidcraft:block/city/vessel_bridge_broken",
+    "vessel_bridge_broken": {
+      "sprite": "zomboidcraft:block/city/vessel_bridge_broken",
+      "force_translucent": true
+    },
     "vessel_house": "zomboidcraft:block/city/vessel_house",
     "particle": "zomboidcraft:block/city/vessel_bridge_broken"
   },

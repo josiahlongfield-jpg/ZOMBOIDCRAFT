@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_hair": "zomboidcraft:block/city/trade_hair",
+    "particle": "zomboidcraft:block/city/trade_hair"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_hair",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_hair",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#trade_hair",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#trade_hair",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#trade_hair"
+        },
+        "down": {
+          "texture": "#trade_hair",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

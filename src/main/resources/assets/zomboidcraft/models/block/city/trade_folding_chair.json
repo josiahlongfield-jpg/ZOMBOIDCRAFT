@@ -1,0 +1,373 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_folding_metal": "zomboidcraft:block/city/trade_folding_metal",
+    "particle": "zomboidcraft:block/city/trade_folding_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        2.5,
+        7,
+        2.5
+      ],
+      "to": [
+        13.5,
+        8,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        0,
+        2.5
+      ],
+      "to": [
+        4,
+        7,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        2.5
+      ],
+      "to": [
+        13.5,
+        7,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        0,
+        12
+      ],
+      "to": [
+        4,
+        7,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        12
+      ],
+      "to": [
+        13.5,
+        7,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        8,
+        12
+      ],
+      "to": [
+        4,
+        17,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            12,
+            0,
+            13.5,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            2.5,
+            0,
+            4,
+            9
+          ]
+        },
+        "east": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            2.5,
+            0,
+            4,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            12,
+            0,
+            13.5,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        8,
+        12
+      ],
+      "to": [
+        13.5,
+        17,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            2.5,
+            0,
+            4,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            12,
+            0,
+            13.5,
+            9
+          ]
+        },
+        "east": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            2.5,
+            0,
+            4,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            12,
+            0,
+            13.5,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        11,
+        12.5
+      ],
+      "to": [
+        12,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal"
+        },
+        "south": {
+          "texture": "#trade_folding_metal"
+        },
+        "east": {
+          "texture": "#trade_folding_metal"
+        },
+        "west": {
+          "texture": "#trade_folding_metal"
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        14,
+        12.5
+      ],
+      "to": [
+        12,
+        16.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            4,
+            0,
+            12,
+            2.5
+          ]
+        },
+        "south": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            4,
+            0,
+            12,
+            2.5
+          ]
+        },
+        "east": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            3,
+            0,
+            3.5,
+            2.5
+          ]
+        },
+        "west": {
+          "texture": "#trade_folding_metal",
+          "uv": [
+            12.5,
+            0,
+            13,
+            2.5
+          ]
+        },
+        "up": {
+          "texture": "#trade_folding_metal"
+        },
+        "down": {
+          "texture": "#trade_folding_metal"
+        }
+      }
+    }
+  ]
+}

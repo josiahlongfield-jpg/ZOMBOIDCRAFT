@@ -1,0 +1,201 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_almond": "zomboidcraft:block/city/home_almond",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "home_red_steel": "zomboidcraft:block/city/home_red_steel",
+    "trade_cooler_body": "zomboidcraft:block/city/trade_cooler_body",
+    "trade_cooler_bottle": {
+      "sprite": "zomboidcraft:block/city/trade_cooler_bottle",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/trade_cooler_body"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_cooler_body"
+        },
+        "south": {
+          "texture": "#home_almond"
+        },
+        "east": {
+          "texture": "#home_almond"
+        },
+        "west": {
+          "texture": "#home_almond"
+        },
+        "up": {
+          "texture": "#home_almond"
+        },
+        "down": {
+          "texture": "#home_almond",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        10.5,
+        4.5
+      ],
+      "to": [
+        11.5,
+        19,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_cooler_bottle",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            8.5
+          ]
+        },
+        "south": {
+          "texture": "#trade_cooler_bottle",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            8.5
+          ]
+        },
+        "east": {
+          "texture": "#trade_cooler_bottle",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            8.5
+          ]
+        },
+        "west": {
+          "texture": "#trade_cooler_bottle",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            8.5
+          ]
+        },
+        "up": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "down": {
+          "texture": "#trade_cooler_bottle"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        7
+      ],
+      "to": [
+        9,
+        10.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "south": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "east": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "west": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "up": {
+          "texture": "#trade_cooler_bottle"
+        },
+        "down": {
+          "texture": "#trade_cooler_bottle"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        7,
+        3.3
+      ],
+      "to": [
+        6.5,
+        8.3,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_red_steel"
+        },
+        "south": {
+          "texture": "#home_red_steel"
+        },
+        "east": {
+          "texture": "#home_red_steel"
+        },
+        "west": {
+          "texture": "#home_red_steel"
+        },
+        "up": {
+          "texture": "#home_red_steel"
+        },
+        "down": {
+          "texture": "#home_red_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        7,
+        3.3
+      ],
+      "to": [
+        10.5,
+        8.3,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

@@ -53,7 +53,9 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.braking = state.lights && car.braking > 0;
         state.reversing = state.lights && car.reversing > 0;
         state.dark = state.lights && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above()) : 0;
-        state.shaders = state.lights && CarLights.shaderPackOn();
+        state.cockpit = CockpitGlow.powered(car, state.model, state.variant);
+        state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
+        state.shaders = (state.lights || state.cockpit >= 0) && CarLights.shaderPackOn();
     }
 
     /** The whole car, not the entity's small box, decides whether it's on screen. */
@@ -86,6 +88,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         CarAssets.Ready full = !state.lights ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
         CarLamps.Lamps lamps = full == null ? null : CarLamps.get(state.model, state.variant, full);
         float[] glow = lamps != null && state.lod == 0 && state.dark > 0.05f ? cabinGlow(lamps, state.dark) : null;
+        CockpitGlow.Glow cockpit = state.cockpit >= 0 && state.lod <= 1 ? CockpitGlow.get(state.model) : null;
+        if (glow == null && cockpit != null && state.lod == 0) {
+            glow = CockpitGlow.cabin(cockpit, state.cockpit, state.cockpitDark);
+        }
+        float[] cabin = glow;
         java.util.BitSet panel = lamps != null && state.lod == 0 ? lamps.panel() : null;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, (mesh, turn) -> {
@@ -96,11 +103,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                         boolean lit = panel.get(t);
                         int next = lit ? panel.nextClearBit(t) : panel.nextSetBit(t);
                         int end = next < 0 ? mesh.opaque() : Math.min(next, mesh.opaque());
-                        draw(mesh, t, end, turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : glow);
+                        draw(mesh, t, end, turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : cabin);
                         t = end;
                     }
                 } else {
-                    draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1, mesh == car.mesh() ? glow : null);
+                    draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1, mesh == car.mesh() ? cabin : null);
                 }
                 if (solidGlass) {
                     draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, FAR_GLASS, null);
@@ -111,6 +118,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
                 each(car, lids, wheels, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
             });
+        }
+        if (cockpit != null) {
+            float age = state.cockpit, dark = state.cockpitDark;
+            boolean shaders = state.shaders;
+            collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, shaders),
+                    (pose, out) -> CockpitGlow.draw(cockpit, age, dark, shaders, pose, out));
         }
         if (lamps != null) {
             // the camera, in the car's own frame, for the glow round each lamp
