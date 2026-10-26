@@ -9,15 +9,22 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The weather you can see around you, made of particles so shader packs draw it too: mist banks
  * drifting with the wind when the fog is in, a low ground mist hanging in the streets at night,
- * and litter blowing along when the wind gets up.
+ * litter blowing along when the wind gets up, and storms flickering over the skyline with the
+ * thunder rolling in after.
  *
  * Particles are only kept near you, and spawned in the open (by the heightmap) near your own
  * height, so the street fills with mist but rooms and rooftops far above don't.
@@ -29,6 +36,17 @@ public final class WeatherFx {
     /** A puff's mean lifetime in ticks (MistParticle), to turn a head count into a spawn rate. */
     private static final float MIST_LIFE = 370;
     private static float mistDue, debrisDue;
+    /** Ticks to the next flash; and a second flicker of the same stroke, when there is one. */
+    private static int nextFlash = 200, flicker;
+    /** Client-only lightning gets ids below anything the server hands out. */
+    private static int boltId = -100000;
+    private static final List<Thunder> THUNDER = new ArrayList<>();
+
+    /** A clap on its way: sound is slower than light, so the far ones arrive seconds later. */
+    private record Thunder(int at, double x, double y, double z, float volume, float pitch) {
+    }
+
+    private static int clock;
 
     public static void register() {
         ParticleProviderRegistry.getInstance().register(WeatherParticles.MIST, sprites ->
@@ -55,6 +73,65 @@ public final class WeatherFx {
         if (c.windDebris && w.wind() > 0.3f) {
             debris(level, player, w, windX, windZ);
         }
+        clock++;
+        if (c.stormFlashes) {
+            storm(level, player, w);
+        }
+        thunder(level);
+    }
+
+    /**
+     * Lightning out over the city in any storm, and in the build-up to a bad one: mostly sheet
+     * lightning lighting the clouds, now and then a bolt you can see coming down between the
+     * towers (harmless, only drawn on your side; real strikes come from the server in the
+     * dangerous storms). Each flash brings its thunder a moment later.
+     */
+    private static void storm(ClientLevel level, LocalPlayer player, Weather w) {
+        if (flicker > 0 && --flicker == 0) {
+            level.setSkyFlashTime(2);
+        }
+        if (w.thunder() < 0.15f || --nextFlash > 0) {
+            return;
+        }
+        float t = w.thunder();
+        nextFlash = (int) ((80 + RANDOM.nextInt(320)) * (1.3f - t));
+        double angle = RANDOM.nextDouble() * Mth.TWO_PI;
+        boolean bolt = t > 0.4f && RANDOM.nextFloat() < 0.35f;
+        // a visible bolt has to fall inside the distance the game draws lightning at
+        double distance = bolt ? 34 + RANDOM.nextDouble() * 26 : 250 + RANDOM.nextDouble() * 1200;
+        double x = player.getX() + Math.cos(angle) * distance, z = player.getZ() + Math.sin(angle) * distance;
+        if (bolt) {
+            LightningBolt strike = new LightningBolt(EntityTypes.LIGHTNING_BOLT, level);
+            strike.setVisualOnly(true);
+            strike.setSilent(true);  // its thunder is ours, below
+            strike.setId(boltId--);
+            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
+            strike.snapTo(x, y, z);
+            level.addEntity(strike);
+        } else {
+            level.setSkyFlashTime(2);
+        }
+        if (RANDOM.nextFloat() < 0.5f) {
+            flicker = 3 + RANDOM.nextInt(4);
+        }
+        // heard from its direction, a few blocks out; near ones crack, far ones rumble low
+        double ear = 24;
+        float volume = bolt ? 1.4f + RANDOM.nextFloat() * 0.6f : 0.35f + 0.5f * t * RANDOM.nextFloat();
+        float pitch = bolt ? 0.8f + RANDOM.nextFloat() * 0.2f : 0.5f + RANDOM.nextFloat() * 0.25f;
+        int delay = (int) (distance / 17);  // sound covers about 17 blocks a tick
+        THUNDER.add(new Thunder(clock + delay, player.getX() + Math.cos(angle) * ear, player.getY() + 8,
+                player.getZ() + Math.sin(angle) * ear, volume, pitch));
+    }
+
+    private static void thunder(ClientLevel level) {
+        THUNDER.removeIf(clap -> {
+            if (clock < clap.at()) {
+                return false;
+            }
+            level.playLocalSound(clap.x(), clap.y(), clap.z(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER,
+                    clap.volume(), clap.pitch(), false);
+            return true;
+        });
     }
 
     private static void mist(ClientLevel level, LocalPlayer player, Weather w, float night, double windX, double windZ, float amount) {
