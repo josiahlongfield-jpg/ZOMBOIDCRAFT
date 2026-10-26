@@ -47,6 +47,8 @@ final class CityCivic {
     /** The old city's courthouse, once the square is built: its frame and the room inside its walls. */
     Placer courthouse;
     int[] courtInterior;
+    /** The floor of the courthouse's basement, where a shelter's stair comes up. */
+    int courtFloor;
 
     CityCivic(Kit kit, double hit) {
         this.kit = kit;
@@ -419,13 +421,14 @@ final class CityCivic {
             }
         }
         int cw = Math.min(34, x1 - x0 - 14), cd = Math.min(30, z1 - z0 - 20);
-        if (cw >= 16 && cd >= 12) {
+        if (cw >= 16 && cd >= 20) {
             int hx = cx - cw / 2, hz = cz - cd / 2 + 2;
             Placer hp = new Placer(out, hx, 0, hz - 4, 0);
             hp.fill(-1, 1, -1, cw, 8, cd + 4, "air");
             new Civic(hp, rng).courthouse(cw, cd + 4);
             courthouse = hp;
-            courtInterior = new int[] {1, 5, cw - 2, cd + 2};
+            courtInterior = Courthouse.cellar(cw, cd + 4);
+            courtFloor = Courthouse.BASE;
         }
         new Landmarks(world, rng).memorial(cx + 8, z1 - 5);
         for (int[] c : new int[][] {{x0 + 4, z0 + 4}, {x1 - 4, z0 + 4}, {x0 + 4, z1 - 4}, {x1 - 4, z1 - 4}}) {

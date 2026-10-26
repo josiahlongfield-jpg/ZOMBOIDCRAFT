@@ -36,7 +36,7 @@ final class TownSite extends Site {
     private final List<Host> hosts = new ArrayList<>();
 
     /** A building's frame, the room inside its walls on the ground floor {x0, z0, x1, z1}, and its front wall's z. */
-    private record Host(Placer p, int[] interior, int front) {}
+    private record Host(Placer p, int[] interior, int front, int floor) {}
 
     TownSite(Place p, BlockSink out) {
         super(p, out);
@@ -61,7 +61,7 @@ final class TownSite extends Site {
 
     /** A town hall or post office (Civic.hall) as a shelter host: its walls at x 0..w - 1, z 3..d - 1. */
     private void hall(Placer pl, int hw, int hd) {
-        hosts.add(new Host(pl, new int[] {1, 4, hw - 2, hd - 2}, 3));
+        hosts.add(new Host(pl, new int[] {1, 4, hw - 2, hd - 2}, 3, 0));
     }
 
     /**
@@ -79,7 +79,7 @@ final class TownSite extends Site {
         int first = g.nextInt(hosts.size());
         for (int i = 0; i < hosts.size(); i++) {
             Host h = hosts.get((first + i) % hosts.size());
-            if (Shelter.dig(h.p(), g, state, h.interior(), 0, -18, new int[] {2, 2, w - 3, d - 3})) {
+            if (Shelter.dig(h.p(), g, state, h.interior(), h.floor(), -18 + h.floor(), new int[] {2, 2, w - 3, d - 3})) {
                 Shelter.plate(h.p(), h.interior()[0], h.interior()[2], h.front());
                 return;
             }
@@ -681,7 +681,7 @@ final class TownSite extends Site {
         int cw = Math.min(34, sq1x - sq0x - 14), cd = Math.min(30, sq1z - sq0z - 22);
         int hx = (int) cx - cw / 2, hz = (int) cz - cd / 2 + 2;
         new Civic(new Placer(out, hx, 0, hz - 4, 0), rng).courthouse(cw, cd + 4);
-        hosts.add(new Host(new Placer(out, hx, 0, hz - 4, 0), new int[] {1, 5, cw - 2, cd + 2}, 4));
+        hosts.add(new Host(new Placer(out, hx, 0, hz - 4, 0), Courthouse.cellar(cw, cd + 4), 6, Courthouse.BASE));
         kit.claim(hx - 2, hz - 10, hx + cw + 1, hz + cd + 1, Kit.BUILT);
         Placer world = new Placer(out, 0, 0, 0, 0);
         new Landmarks(world, rng).memorial((int) cx + 10, sq1z - 6);

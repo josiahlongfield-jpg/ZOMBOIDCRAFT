@@ -1,0 +1,284 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_copper": "zomboidcraft:block/city/cv_copper",
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "particle": "zomboidcraft:block/city/cv_copper"
+  },
+  "elements": [
+    {
+      "from": [
+        12,
+        0,
+        12
+      ],
+      "to": [
+        20,
+        3,
+        20
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            13,
+            8,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cv_copper",
+          "uv": [
+            8,
+            13,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            13,
+            8,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cv_copper",
+          "uv": [
+            8,
+            13,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cv_copper",
+          "uv": [
+            8,
+            8,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cv_copper",
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        3,
+        13
+      ],
+      "to": [
+        19,
+        9,
+        19
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            7,
+            6,
+            13
+          ]
+        },
+        "south": {
+          "texture": "#cv_copper",
+          "uv": [
+            10,
+            7,
+            16,
+            13
+          ]
+        },
+        "east": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            7,
+            6,
+            13
+          ]
+        },
+        "west": {
+          "texture": "#cv_copper",
+          "uv": [
+            10,
+            7,
+            16,
+            13
+          ]
+        },
+        "up": {
+          "texture": "#cv_copper",
+          "uv": [
+            10,
+            10,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cv_copper",
+          "uv": [
+            10,
+            0,
+            16,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        9,
+        14
+      ],
+      "to": [
+        18,
+        11,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            5,
+            4,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#cv_copper",
+          "uv": [
+            12,
+            5,
+            16,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#cv_copper",
+          "uv": [
+            0,
+            5,
+            4,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#cv_copper",
+          "uv": [
+            12,
+            5,
+            16,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#cv_copper",
+          "uv": [
+            12,
+            12,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cv_copper",
+          "uv": [
+            12,
+            0,
+            16,
+            4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15.25,
+        11,
+        15.25
+      ],
+      "to": [
+        16.75,
+        16,
+        16.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron",
+          "uv": [
+            0,
+            0,
+            1.5,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "uv": [
+            14.5,
+            0,
+            16,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "uv": [
+            0,
+            0,
+            1.5,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "uv": [
+            14.5,
+            0,
+            16,
+            5
+          ]
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "uv": [
+            14.5,
+            14.5,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "uv": [
+            14.5,
+            0,
+            16,
+            1.5
+          ]
+        }
+      }
+    }
+  ]
+}

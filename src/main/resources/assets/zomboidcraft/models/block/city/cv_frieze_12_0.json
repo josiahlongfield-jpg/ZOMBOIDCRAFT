@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_frieze_12_0": "zomboidcraft:block/city/cv_frieze_12_0",
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "particle": "zomboidcraft:block/city/cv_frieze_12_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_frieze_12_0",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#stone_trim",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#stone_trim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#stone_trim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#stone_trim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

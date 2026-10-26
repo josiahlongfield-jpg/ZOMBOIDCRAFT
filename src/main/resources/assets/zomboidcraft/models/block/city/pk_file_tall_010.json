@@ -1,0 +1,230 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_file_tall_010": "zomboidcraft:block/city/pk_file_tall_010",
+    "particle": "zomboidcraft:block/city/pk_file_tall_010"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        5
+      ],
+      "to": [
+        13,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            5.375,
+            0.125,
+            10.375,
+            5.125
+          ]
+        },
+        "south": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            10.625,
+            0.125,
+            15.625,
+            5.125
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            5.875,
+            5.875,
+            11.375,
+            10.875
+          ]
+        },
+        "west": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.125,
+            5.875,
+            5.625,
+            10.875
+          ]
+        },
+        "up": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.125,
+            0.125,
+            5.125,
+            5.625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        5
+      ],
+      "to": [
+        13,
+        11,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            5.375,
+            11.125,
+            10.375,
+            11.625
+          ]
+        },
+        "south": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            10.625,
+            11.125,
+            15.625,
+            11.625
+          ]
+        },
+        "east": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.875,
+            11.875,
+            1.375,
+            12.375
+          ]
+        },
+        "west": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.125,
+            11.875,
+            0.625,
+            12.375
+          ]
+        },
+        "up": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.125,
+            11.125,
+            5.125,
+            11.625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        6
+      ],
+      "to": [
+        4,
+        11,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            1.625,
+            11.875,
+            2.125,
+            12.375
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            7.625,
+            11.875,
+            12.625,
+            12.375
+          ]
+        },
+        "west": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            2.375,
+            11.875,
+            7.375,
+            12.375
+          ]
+        },
+        "up": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            11.625,
+            5.875,
+            12.125,
+            10.875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        10,
+        6
+      ],
+      "to": [
+        13,
+        11,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            12.875,
+            11.875,
+            13.375,
+            12.375
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            5.375,
+            12.625,
+            10.375,
+            13.125
+          ]
+        },
+        "west": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            0.125,
+            12.625,
+            5.125,
+            13.125
+          ]
+        },
+        "up": {
+          "texture": "#pk_file_tall_010",
+          "uv": [
+            12.375,
+            5.875,
+            12.875,
+            10.875
+          ]
+        }
+      }
+    }
+  ]
+}
