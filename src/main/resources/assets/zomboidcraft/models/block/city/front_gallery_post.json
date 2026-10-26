@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "front_iron_fluted": "zomboidcraft:block/city/front_iron_fluted",
+    "particle": "zomboidcraft:block/city/front_iron_fluted"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron_fluted"
+        },
+        "south": {
+          "texture": "#front_iron_fluted"
+        },
+        "east": {
+          "texture": "#front_iron_fluted"
+        },
+        "west": {
+          "texture": "#front_iron_fluted"
+        },
+        "up": {
+          "texture": "#front_iron_fluted",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#front_iron_fluted",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.city;
 
+import com.zomboidcraft.world.county.Flats;
 import java.util.SplittableRandom;
 
 /**
@@ -25,6 +26,8 @@ public final class Walkup {
     private final int w, d, floors;
     private final boolean furnished;
     private final String wall;
+    /** Flats upstairs, reached by a stairwell across the back of the building. */
+    private boolean flats;
     /** What the ground-floor shop sells; its sign and fit-out follow it. */
     private final Shops.Type shop;
 
@@ -43,8 +46,13 @@ public final class Walkup {
         int roofY = floors * FLOOR;
         shell(roofY);
         shopfront();
-        for (int k = 0; k < floors; k++) {
+        flats = furnished && w >= 9 && d >= 14;
+        for (int k = 0; k < (flats ? 1 : floors); k++) {
             interior(k * FLOOR);
+        }
+        if (flats) {
+            // a stairwell up the back and a flat on every floor, furnished room by room
+            Flats.stairwell(p, rng, w, d, floors, FLOOR, 0.03);
         }
         roof(roofY);
         glowingRooms();
@@ -199,7 +207,7 @@ public final class Walkup {
         }
         if (y == 0) {
             // the shop is always fitted out (see Shops), stocked or not
-            new Shops(p, rng, shop, w, d).fitOut();
+            new Shops(p, rng, shop, w, d).backTo(flats ? w - 9 : w - 2).fitOut();
             return;
         }
         if (!furnished) {

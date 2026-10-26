@@ -1071,6 +1071,8 @@ import shipkit  # noqa: E402
 shipkit.register(sys.modules[__name__])
 import trades  # noqa: E402
 trades.register(sys.modules[__name__])
+import fronts  # noqa: E402
+fronts.register(sys.modules[__name__])
 
 
 def build(name):

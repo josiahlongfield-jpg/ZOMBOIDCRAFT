@@ -308,8 +308,8 @@ def java_line(name, spec, tex_dir):
         shape = [2, 0, 2, 14, 13, 14]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
-        if name.startswith("ext_"):
-            # gutters, sills and aerials reach out of the block; their collision stays in it
+        if name.startswith(("ext_", "front_")):
+            # gutters, sills, aerials and cornices reach out of the block; their collision stays in it
             shape = [min(16, max(0, v)) for v in shape]
     s = sound(name, spec)
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0

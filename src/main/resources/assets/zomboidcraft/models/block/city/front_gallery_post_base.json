@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "front_iron": "zomboidcraft:block/city/front_iron",
+    "front_iron_fluted": "zomboidcraft:block/city/front_iron_fluted",
+    "particle": "zomboidcraft:block/city/front_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron"
+        },
+        "west": {
+          "texture": "#front_iron"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        5
+      ],
+      "to": [
+        11,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron"
+        },
+        "west": {
+          "texture": "#front_iron"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron_fluted"
+        },
+        "south": {
+          "texture": "#front_iron_fluted"
+        },
+        "east": {
+          "texture": "#front_iron_fluted"
+        },
+        "west": {
+          "texture": "#front_iron_fluted"
+        },
+        "up": {
+          "texture": "#front_iron_fluted",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#front_iron_fluted"
+        }
+      }
+    }
+  ]
+}
