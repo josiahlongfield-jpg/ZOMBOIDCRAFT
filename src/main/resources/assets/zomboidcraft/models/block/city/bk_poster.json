@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_poster": "zomboidcraft:block/city/bk_poster",
+    "paper": "zomboidcraft:block/city/paper",
+    "particle": "zomboidcraft:block/city/bk_poster"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        1,
+        15.6
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_poster"
+        },
+        "south": {
+          "texture": "#paper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper"
+        },
+        "down": {
+          "texture": "#paper"
+        }
+      }
+    }
+  ]
+}

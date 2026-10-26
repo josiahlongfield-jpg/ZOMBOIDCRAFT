@@ -160,56 +160,8 @@ final class Civic {
     /** The Carnegie library (see {@link Library}): w wide, d deep, the portico and steps in its first six rows. */
     void library(int w, int d) { new Library(p, rng).build(w, d); }
 
-    /** The bank on its corner: a stone front with two columns, the vault behind the tellers. */
-    void bank(int w, int d) {
-        int storey = 7;
-        String wall = pick("minecraft:stone_bricks", "stone_trim", "brick_buff");
-        b.shell(0, 0, w - 1, d - 1, 1, storey, wall, "lobby_floor_white", "lobby_floor_white");
-        int cx = w / 2;
-        for (int x = 1; x < w - 1; x++) {
-            for (int y = 1; y < storey; y++) {
-                p.set(x, y, 0, x == cx || x == cx - 1 ? (y <= 2 ? "air" : b.glass("x")) : x == 1 || x == w - 2 ? b.wall(wall, y)
-                        : y >= 2 && y <= 5 ? b.glass("x") : b.wall(wall, y));
-            }
-        }
-        for (int x : new int[] {cx - 2, cx + 1}) {
-            for (int y = 1; y < storey; y++) {
-                p.set(x, y, -1, "minecraft:quartz_pillar[axis=y]");
-            }
-        }
-        for (int x = 0; x < w; x++) {
-            p.set(x, storey, -1, "stone_trim");
-            p.set(x, storey + 1, 0, b.wall(wall, storey + 1));
-        }
-        b.doors(cx - 1, 1, 0, "fire_door", "north");
-        Boards.fascia(p, rng, "bank", 1, storey + 1, -1, w - 2);
-        p.set(cx - 2, 3, -1, ShopLights.lamp(rng, 0.2));  // lamp boxes either side of the doors
-        p.set(cx + 1, 3, -1, ShopLights.lamp(rng, 0.2));
-        b.flat(0, 0, w - 1, d - 1, storey, wall, 2, "minecraft:stone_brick_slab[type=bottom]");
-        int counter = d / 2;
-        for (int x = 1; x < w - 1; x++) {
-            if (x == w - 2) {
-                b.door(x, 1, counter, "fire_door", "north");
-                continue;
-            }
-            p.set(x, 1, counter, "store_counter[facing=north]");
-            p.set(x, 2, counter, "store_teller_glass[axis=x]");
-            p.set(x, 3, counter, "store_teller_glass[axis=x]");
-        }
-        // the vault: steel walls, the door hanging open, the safe deposit boxes gutted
-        int vx0 = 1, vz0 = d - 5;
-        for (int x = vx0; x <= vx0 + 4; x++) {
-            for (int y = 1; y <= 3; y++) {
-                p.set(x, y, vz0, x == vx0 + 2 && y <= 2 ? "air" : "steel_girder");
-            }
-        }
-        p.set(vx0 + 1, 1, d - 2, "store_safe[facing=north]");
-        p.set(vx0 + 3, 1, d - 2, "store_safe[facing=north]");
-        p.set(vx0 + 1, 2, d - 2, "filing_cabinet[facing=north]");
-        p.set(w - 3, 1, counter + 3, "desk[facing=north]");
-        b.lights(0, 0, w - 1, d - 1, storey - 1, 0.03);
-        b.mess(1, 1, w - 2, d - 2, 1, 0.08);
-    }
+    /** The bank on its corner (see {@link Bank}): w wide, d deep, the portico and steps in its first four rows. */
+    void bank(int w, int d) { new Bank(p, rng).build(w, d); }
 
     /** The fire station: a brick front of red bay doors, a hose tower, an engine still in its bay. */
     void fireStation(int w, int d) {

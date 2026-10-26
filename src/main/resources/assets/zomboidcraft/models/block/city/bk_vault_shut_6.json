@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_vault_shut_6": "zomboidcraft:block/city/bk_vault_shut_6",
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "particle": "zomboidcraft:block/city/bk_vault_shut_6"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_vault_shut_6",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

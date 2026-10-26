@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_bronze": "zomboidcraft:block/city/bk_bronze",
+    "bk_clock_lit": "zomboidcraft:block/city/bk_clock_lit",
+    "particle": "zomboidcraft:block/city/bk_clock_lit"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        5
+      ],
+      "to": [
+        14,
+        14,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_clock_lit"
+        },
+        "south": {
+          "texture": "#bk_clock_lit"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        2,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_bronze"
+        },
+        "south": {
+          "texture": "#bk_bronze"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze"
+        },
+        "down": {
+          "texture": "#bk_bronze",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        14,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_bronze"
+        },
+        "south": {
+          "texture": "#bk_bronze"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    }
+  ]
+}

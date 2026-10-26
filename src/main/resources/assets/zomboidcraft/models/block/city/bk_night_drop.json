@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_bronze": "zomboidcraft:block/city/bk_bronze",
+    "bk_night_drop": "zomboidcraft:block/city/bk_night_drop",
+    "particle": "zomboidcraft:block/city/bk_night_drop"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        14
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_night_drop"
+        },
+        "south": {
+          "texture": "#bk_bronze",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    }
+  ]
+}
