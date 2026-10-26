@@ -27,7 +27,7 @@ public class BatteryItem extends Item {
         }
         if (!level.isClientSide()) {
             Headgear.swapBattery(head, player.getItemInHand(hand), player);
-            player.sendOverlayMessage(Component.literal("Fresh battery in.").withStyle(ChatFormatting.GRAY));
+            ((net.minecraft.server.level.ServerPlayer) player).sendOverlayMessage(Component.literal("Fresh battery in.").withStyle(ChatFormatting.GRAY));
         }
         return InteractionResult.SUCCESS;
     }

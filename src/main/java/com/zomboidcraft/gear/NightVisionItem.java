@@ -60,7 +60,7 @@ public class NightVisionItem extends Item {
         ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
         if (!(head.getItem() instanceof HeadGearItem)) {
             if (!level.isClientSide()) {
-                player.sendOverlayMessage(Component.literal("These clip onto a helmet or a head mount. Wear one first.")
+                ((net.minecraft.server.level.ServerPlayer) player).sendOverlayMessage(Component.literal("These clip onto a helmet or a head mount. Wear one first.")
                         .withStyle(ChatFormatting.GRAY));
             }
             return InteractionResult.FAIL;
@@ -69,7 +69,7 @@ public class NightVisionItem extends Item {
             ItemStack old = Headgear.mount(head, self);
             player.setItemInHand(hand, old);
             player.playSound(SoundEvents.ITEM_FRAME_ADD_ITEM, 0.6f, 1.2f);
-            player.sendOverlayMessage(Component.literal("Clipped on. Press N to flip them down.").withStyle(ChatFormatting.GRAY));
+            ((net.minecraft.server.level.ServerPlayer) player).sendOverlayMessage(Component.literal("Clipped on. Press N to flip them down.").withStyle(ChatFormatting.GRAY));
         }
         return InteractionResult.SUCCESS;
     }

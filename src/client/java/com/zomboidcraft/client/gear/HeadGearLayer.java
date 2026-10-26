@@ -69,7 +69,7 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             float up = flip(state.id, m.up());
             float eased = up * up * (3f - 2f * up);
             pose.translate(0f, PIVOT_Y, PIVOT_Z);
-            pose.mulPose(Axis.XP.rotationDegrees(UP * eased));
+            pose.rotateDegrees(Axis.XP, UP * eased);
             pose.translate(0f, -PIVOT_Y, -PIVOT_Z);
             items.updateForLiving(goggles, m.goggles(), ItemDisplayContext.NONE, player);
             goggles.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
