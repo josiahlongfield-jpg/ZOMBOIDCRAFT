@@ -59,11 +59,6 @@ final class TownSite extends Site {
         shelter();
     }
 
-    /** A town hall or post office (Civic.hall) as a shelter host: its walls at x 0..w - 1, z 3..d - 1. */
-    private void hall(Placer pl, int hw, int hd) {
-        hosts.add(new Host(pl, new int[] {1, 4, hw - 2, hd - 2}, 3, 0));
-    }
-
     /** A post office as a shelter host: the shelter's stair comes up in its workroom. */
     private void postHost(Placer pl, int w, int d) {
         hosts.add(new Host(pl, PostOffice.host(w, d), PostOffice.Z0, PostOffice.F));
@@ -743,8 +738,8 @@ final class TownSite extends Site {
         }
         Kit.Lot townHall = civicLot(sides[2], corner + ring * 0.5, outward[2], 20, depth);
         if (townHall != null) {
-            new Civic(townHall.placer(out), rng).hall(20, depth - 2, "townhall", true);
-            hall(townHall.placer(out), 20, depth - 2);
+            new Civic(townHall.placer(out), rng).townHall(20, depth - 2);
+            hosts.add(new Host(townHall.placer(out), TownHall.host(20, depth - 2), TownHall.Z0, TownHall.F1));
         }
         Kit.Lot lib = civicLot(sides[3], corner + ring * 0.5, outward[3], 21, depth);
         if (lib != null) {

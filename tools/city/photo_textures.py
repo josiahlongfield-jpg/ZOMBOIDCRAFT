@@ -1077,6 +1077,8 @@ import civic  # noqa: E402
 civic.register(sys.modules[__name__])
 import church  # noqa: E402
 church.register(sys.modules[__name__])
+import townhall  # noqa: E402
+townhall.register(sys.modules[__name__])
 import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 

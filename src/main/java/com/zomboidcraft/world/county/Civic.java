@@ -7,7 +7,7 @@ import java.util.SplittableRandom;
 /**
  * The public buildings of a county town, each drawn in its lot's frame (front along z = 0
  * facing the street): churches (a white clapboard chapel, a brick church with a corner tower, a
- * stone one with a spire), the courthouse with its portico and clock tower, a town hall, the
+ * stone one with a spire), the courthouse with its portico and clock tower, the town hall, the
  * post office, a Carnegie library, the bank, the fire station, the sheriff's office and jail,
  * schools, and the picture house.
  *
@@ -152,61 +152,9 @@ final class Civic {
 
     // ------------------------------------------------------------------ the smaller civic buildings
 
-    /** A town hall or post office: brick, a stone-dressed door under a small pediment, a cupola. */
-    void hall(int w, int d, String sign, boolean cupola) {
-        int floors = cupola ? 2 : 1, storey = 5;
-        String wall = pick("brick_red", "brick_buff", "brick_dark", "brick_orange");
-        int z0 = 3;
-        b.shell(0, z0, w - 1, d - 1, floors, storey, wall, "lobby_floor_white", "office_floor");
-        for (int k = 0; k < floors; k++) {
-            int y = k * storey + 2;
-            b.windowRow(2, w - 3, 3, z0, y, "north", 2, "sill");
-            b.windowRow(z0 + 2, d - 3, 3, 0, y, "west", 2, "sill");
-            b.windowRow(z0 + 2, d - 3, 3, w - 1, y, "east", 2, "sill");
-            b.windowRow(2, w - 3, 3, d - 1, y, "south", 2, null);
-        }
-        int cx = w / 2;
-        for (int y = 1; y <= 4; y++) {
-            for (int x = cx - 2; x <= cx + 1; x++) {
-                p.set(x, y, z0, x == cx - 2 || x == cx + 1 ? "stone_trim" : y <= 2 ? "air" : "stone_trim");
-            }
-        }
-        b.doors(cx - 1, 1, z0, "minecraft:dark_oak_door", "north");
-        p.set(cx - 2, 5, z0 - 1, "minecraft:stone_brick_stairs[facing=east]");
-        p.set(cx + 1, 5, z0 - 1, "minecraft:stone_brick_stairs[facing=west]");
-        p.set(cx - 1, 5, z0 - 1, "stone_trim");
-        p.set(cx, 5, z0 - 1, "stone_trim");
-        p.set(cx - 1, 6, z0 - 1, "minecraft:stone_brick_slab[type=bottom]");
-        p.set(cx, 6, z0 - 1, "minecraft:stone_brick_slab[type=bottom]");
-        if (sign != null) {
-            Boards.fascia(p, rng, sign, 1, floors * storey - 1, z0 - 1, w - 2);
-        }
-        steps(cx, 1, 1, "minecraft:stone_brick");
-        String roof = pick(ROOFS);
-        b.hip(0, w - 1, z0, d - 1, floors * storey + 1, roof, 1);
-        if (cupola) {
-            int cz = (z0 + d - 1) / 2;
-            int ry = floors * storey + Math.min(w, d - z0) / 2;
-            b.walls(cx - 1, cz - 1, cx + 1, cz + 1, ry - 2, ry + 2, "minecraft:pale_oak_planks");
-            p.set(cx, ry, cz - 1, "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]");
-            p.set(cx, ry, cz + 1, "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]");
-            p.set(cx, ry + 1, cz, "minecraft:bell[attachment=ceiling,facing=north]");
-            b.hip(cx - 1, cx + 1, cz - 1, cz + 1, ry + 3, "minecraft:waxed_oxidized_cut_copper", 0);
-        }
-        for (int x = 2; x < w - 2; x += 4) {
-            p.set(x, 1, d - 3, "desk[facing=north]");
-            p.set(x, 1, d - 4, "office_chair[facing=south]");
-            p.set(x + 1, 1, d - 2, "filing_cabinet[facing=north]");
-        }
-        p.set(cx, 1, z0 + 4, "reception_desk[facing=north]");
-        if (floors > 1) {
-            b.stair(w - 2, d - 2, 1, storey, "north", "minecraft:dark_oak");
-        }
-        for (int k = 0; k < floors; k++) {
-            b.lights(0, z0, w - 1, d - 1, k * storey + storey - 1, 0.03);
-            b.mess(1, z0 + 1, w - 2, d - 2, k * storey + 1, 0.05);
-        }
-        flagpole(cx + 4, 0, 10);
+    /** The town hall (see {@link TownHall}): w wide, d deep, its steps in the first four rows. */
+    void townHall(int w, int d) {
+        new TownHall(p, rng).build(w, d);
     }
 
     /** The Carnegie library (see {@link Library}): w wide, d deep, the portico and steps in its first six rows. */

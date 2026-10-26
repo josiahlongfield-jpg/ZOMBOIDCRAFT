@@ -3316,5 +3316,36 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ch_grave_cross", FACING, 0, 0, SoundType.STONE, 2f, 3, 0, 5, 13, 3, 11, 6.5, 3, 7, 9.5, 16, 10, 2.5, 10, 7, 13.5, 12.5, 10);
         s("ch_grave_mound", PLAIN, DECOR, 0, SoundType.GRAVEL, 0f, 1, 0, 1, 15, 3, 15, 3, 3, 3, 13, 4, 13);
         s("ch_grave_open", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 2, 0, 0, 14, 16, 16, 16, 0, 0, 2, 2, 16, 14, 14, 0, 2, 16, 16, 14, 2, 0, 2, 14, 4, 14, 3, 4, 4, 9, 5, 12, 9.5, 4, 3, 13, 6, 10);
+        s("th_frieze_8_0", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_1", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_2", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_3", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_4", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_5", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_6", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_frieze_8_7", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_datestone_0", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_datestone_1", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("th_floor_tin", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("th_bench", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 13, 3, 0, 13, 0, 16, 14.5, 11, 0, 0, 9, 16, 1, 11, 2, 14.5, 0.5, 14, 17, 2, 9, 14.5, 5, 11, 15.2, 7, 9.6, 15.2, 5.6, 10.4, 20, 6.4, 9.4, 19.5, 3.2, 10.6, 20.5, 6.4, 9.1, 19.2, 2.4, 10.9, 21, 3.4, 3, 14.5, 4.5, 8, 14.8, 9.5);
+        s("th_bench_plain", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 13, 3, 0, 13, 0, 16, 14.5, 11, 0, 0, 9, 16, 1, 11, 3, 14.5, 4.5, 8, 14.8, 9.5);
+        s("th_bench_end", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 13, 3, 0, 13, 0, 16, 14.5, 11, 0, 0, 9, 16, 1, 11, 2, 14.5, 0.5, 14, 17, 2, 9, 14.5, 5, 11, 15.2, 7, 9.6, 15.2, 5.6, 10.4, 20, 6.4, 9.4, 19.5, 3.2, 10.6, 20.5, 6.4, 9.1, 19.2, 2.4, 10.9, 21, 3.4, 0, 0, 0, 2, 14.5, 11);
+        s("th_bench_end_l", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 13, 3, 0, 13, 0, 16, 14.5, 11, 0, 0, 9, 16, 1, 11, 2, 14.5, 0.5, 14, 17, 2, 9, 14.5, 5, 11, 15.2, 7, 9.6, 15.2, 5.6, 10.4, 20, 6.4, 9.4, 19.5, 3.2, 10.6, 20.5, 6.4, 9.1, 19.2, 2.4, 10.9, 21, 3.4, 14, 0, 0, 16, 14.5, 11);
+        s("th_podium", FACING, 0, 0, SoundType.WOOD, 1f, 3, 0, 4, 13, 2, 12, 4, 2, 5, 12, 16, 11, 3, 16, 3, 13, 17.5, 12, 7.6, 17.5, 4, 8.4, 24, 4.8, 7.2, 23.5, 4.4, 8.8, 25, 7);
+        s("th_booth", FACING, SEE_THROUGH, 0, SoundType.WOOL, 1f, 0, 0, 0, 1, 16, 1, 15, 0, 0, 16, 16, 1, 0, 0, 15, 1, 16, 16, 15, 0, 15, 16, 16, 16, 0.2, 1, 1, 0.8, 16, 15, 15.2, 1, 1, 15.8, 16, 15, 1, 3, 0.2, 7, 16, 0.8, 1, 0, 15, 15, 16, 15.8, 1, 11, 10, 15, 12, 15, 4, 12, 11, 9, 12.2, 14);
+        s("th_booth_top", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 0, 1, 3, 1, 15, 0, 0, 16, 3, 1, 0, 0, 15, 1, 3, 16, 15, 0, 15, 16, 3, 16, 0, 2, 0, 16, 3, 1, 0, 2, 15, 16, 3, 16, 0, 2, 0, 1, 3, 16, 15, 2, 0, 16, 3, 16, 0.2, 0, 1, 0.8, 2, 15, 15.2, 0, 1, 15.8, 2, 15, 1, 0, 0.2, 7, 2, 0.8, 4, 3, 0, 12, 8, 0.6);
+        s("th_ballot_box", FACING, DECOR | LOOT, 0, SoundType.WOOD, 0f, 3, 0, 4, 13, 9, 12);
+        loot("th_ballot_box", "mail");
+        s("th_notice_0", FACING, DECOR, 0, SoundType.WOOD, 0f, 0.5, 1, 15, 15.5, 15, 16);
+        s("th_notice_1", FACING, DECOR, 0, SoundType.WOOD, 0f, 0.5, 1, 15, 15.5, 15, 16);
+        s("th_notice_2", FACING, DECOR, 0, SoundType.WOOD, 0f, 0.5, 1, 15, 15.5, 15, 16);
+        s("th_map_0", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 2, 15, 16, 14, 16);
+        s("th_map_1", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 2, 15, 16, 14, 16);
+        s("th_honor", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 2, 15.2, 14, 14, 16);
+        s("th_plaque_mayor", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 4, 15.4, 13, 11.5, 16);
+        s("th_plaque_council", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 4, 15.4, 13, 11.5, 16);
+        s("th_plaque_water", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 4, 15.4, 13, 11.5, 16);
+        s("th_plaque_tax", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 4, 15.4, 13, 11.5, 16);
+        s("th_plaque_clerk", FACING, DECOR, 0, SoundType.METAL, 0f, 3, 4, 15.4, 13, 11.5, 16);
     }
 }
