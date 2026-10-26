@@ -27,6 +27,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wreck
+import cabin
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 VARIANTS = ['usable', 'abandoned', 'wrecked', 'burnt']
@@ -140,7 +141,7 @@ def build(path):
             'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
             'heights': [int(round(h * 100)) for h in grid.ravel()],
             'seats': [[round(float(v), 3) for v in seat - centre] for seat in wreck.seats(car)],
-            'wheelbase': round(float(wheelbase), 3)}
+            'wheelbase': round(float(wheelbase), 3), **cabin.info(car, centre)}
 
 
 def main():

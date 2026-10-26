@@ -1,17 +1,12 @@
 package com.zomboidcraft.client.cars;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.camera.CameraRig;
 import com.zomboidcraft.client.hud.Hud;
-import com.zomboidcraft.world.cars.AirNet;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Flight;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Camera;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -31,10 +26,6 @@ import org.joml.Vector3f;
  * helicopter's nose follows the mouse sideways; the mouse up and down tilts your head.
  */
 public final class FlightClient {
-    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("aircraft"));
-    /** Starts and shuts down the engines (until the cars' engine key, which aircraft will share, lands). */
-    public static final KeyMapping ENGINE = new KeyMapping("key.zomboidcraft.air_engine", InputConstants.KEY_C, CATEGORY);
-
     /** Where the jet's pilot wants the nose (world space, unit length). */
     private static final Vector3f aim = new Vector3f(0, 0, 1);
     /** Where you look in the cockpit, relative to the airframe, degrees: right and up positive. */
@@ -44,7 +35,6 @@ public final class FlightClient {
     private static CarProp riding;
 
     public static void register() {
-        KeyMappingHelper.registerKeyMapping(ENGINE);
         CarProp.flightInput = FlightClient::controls;
         CarProp.pilotReport = state -> ClientPlayNetworking.send(state);
         CarProp.airSound = AirSound::keep;
@@ -161,17 +151,9 @@ public final class FlightClient {
         CarProp car = aircraft(player);
         riding = car;
         if (car == null) {
-            while (ENGINE.consumeClick()) {
-                // nothing to start
-            }
             return;
         }
         boolean pilot = pilot(player, car);
-        while (ENGINE.consumeClick()) {
-            if (pilot) {
-                ClientPlayNetworking.send(new AirNet.Control(AirNet.ENGINE));
-            }
-        }
         Flight f = car.flight();
         if (pilot && !freeLook() && f.kind == Flight.Kind.JET) {
             // looking round lets go of the view; it settles back on the nose

@@ -30,6 +30,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
+        com.zomboidcraft.world.cars.CarKeys.register();
         com.zomboidcraft.world.cars.CarSounds.register();
         com.zomboidcraft.world.cars.AirSounds.register();
         com.zomboidcraft.world.cars.AirReadiness.register();
@@ -58,6 +59,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.combat.CombatNet.register();
+        com.zomboidcraft.combat.Impacts.register();
         com.zomboidcraft.world.map.MapNet.register();
         com.zomboidcraft.combat.Guns.register();
         com.zomboidcraft.combat.Downed.register();

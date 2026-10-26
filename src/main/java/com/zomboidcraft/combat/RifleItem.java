@@ -55,6 +55,9 @@ public class RifleItem extends Item {
         if (hand != InteractionHand.MAIN_HAND) {
             return InteractionResult.PASS;
         }
+        if (!com.zomboidcraft.world.cars.CarProp.mayUse(player, player.getItemInHand(hand))) {
+            return InteractionResult.FAIL;  // a hand on the wheel: only a handgun comes up while driving
+        }
         player.startUsingItem(hand);
         if (player instanceof ServerPlayer server) {
             Guns.aim(server, player.getItemInHand(hand));

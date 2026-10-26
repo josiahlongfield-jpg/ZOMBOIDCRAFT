@@ -412,7 +412,8 @@ public final class RifleView {
                 right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
             }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
-                    player.getOffhandItem().isEmpty() ? left : null, want.scale / rig.hipScale() * 0.6f);
+                    player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
+                    want.scale / rig.hipScale() * 0.6f);
         }
         pose.popPose();
         return true;

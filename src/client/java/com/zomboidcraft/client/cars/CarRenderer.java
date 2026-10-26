@@ -50,12 +50,22 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
         state.steer = car.steerO + (car.steer - car.steerO) * partialTick;
         state.lights = CarLights.on(car);
-        state.braking = state.lights && car.braking > 0;
-        state.reversing = state.lights && car.reversing > 0;
-        state.dark = state.lights && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above()) : 0;
+        state.dash = car.engineOn() && !"burnt".equals(car.variant());
+        state.braking = state.dash && car.braking > 0;
+        state.reversing = state.dash && car.reversing > 0;
+        boolean lit = state.lights || state.dash;
+        state.dark = lit && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above()) : 0;
         state.cockpit = CockpitGlow.powered(car, state.model, state.variant);
         state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
-        state.shaders = (state.lights || state.cockpit >= 0) && CarLights.shaderPackOn();
+        state.shaders = (lit || state.cockpit >= 0) && CarLights.shaderPackOn();
+        CarClient.Target target = CarClient.target(car);
+        state.highlight = target == null ? null : target.at();
+        state.highlightSize = target == null ? 0 : target.size();
+        state.wheelTurn = CarHands.wheelTurn(car, partialTick);
+        CarModels.Model m = CarModels.get(car.model());
+        boolean driving = state.inside && car.seatOf(mc.player) == 0 && m != null && m.steering != null && m.seats != null;
+        state.arms = driving ? CarHands.onWheel(mc.player) : CarHands.NONE;
+        state.driverEye = driving ? m.seats[0] : null;
         state.air = car.aircraft();
         state.broken = state.air && car.broken();
         if (state.air) {
@@ -110,25 +120,27 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             rotors[i] = spin(car.rotors().get(i), i == 0 ? state.rotor : state.rotor * 4.9);
         }
         boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
-        CarAssets.Ready full = !state.lights ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
+        CarAssets.Ready full = !state.lights && !state.dash ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
         CarLamps.Lamps lamps = full == null ? null : CarLamps.get(state.model, state.variant, full);
-        float[] glow = lamps != null && state.lod == 0 && state.dark > 0.05f ? cabinGlow(lamps, state.dark) : null;
+        float[] glow = lamps != null && state.dash && state.lod == 0 && state.dark > 0.05f ? cabinGlow(lamps, state.dark) : null;
         CockpitGlow.Glow cockpit = state.cockpit >= 0 && state.lod <= 1 ? CockpitGlow.get(state.model) : null;
         if (glow == null && cockpit != null && state.lod == 0) {
             glow = CockpitGlow.cabin(cockpit, state.cockpit, state.cockpitDark);
         }
         float[] cabin = glow;
-        java.util.BitSet panel = lamps != null && state.lod == 0 ? lamps.panel() : null;
+        java.util.BitSet panel = lamps != null && state.dash && state.lod == 0 ? lamps.panel() : null;
+        CarModels.Model model = CarModels.get(state.model);
+        java.util.BitSet steering = state.lod == 0 ? CarSteering.of(car.mesh(), model) : null;
+        Turn steer = steering == null || state.wheelTurn == 0 ? null : steer(model.steering, state.wheelTurn);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, rotors, (mesh, turn) -> {
-                if (mesh == car.mesh() && panel != null && !panel.isEmpty()) {
-                    // the backlit dials and displays at full brightness, the rest as usual
+                if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null)) {
+                    // the backlit dials and displays at full brightness, the steering wheel turned, the rest as usual
                     int t = 0;
                     while (t < mesh.opaque()) {
-                        boolean lit = panel.get(t);
-                        int next = lit ? panel.nextClearBit(t) : panel.nextSetBit(t);
-                        int end = next < 0 ? mesh.opaque() : Math.min(next, mesh.opaque());
-                        draw(mesh, t, end, turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : cabin);
+                        boolean lit = panel != null && panel.get(t), wheel = steer != null && steering.get(t);
+                        int end = Math.min(change(panel, lit, t, mesh.opaque()), change(steer == null ? null : steering, wheel, t, mesh.opaque()));
+                        draw(mesh, t, end, wheel ? steer : turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : cabin);
                         t = end;
                     }
                 } else {
@@ -150,13 +162,22 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, shaders),
                     (pose, out) -> CockpitGlow.draw(cockpit, age, dark, shaders, pose, out));
         }
+        // the camera, in the car's own frame, for the glow round each lamp and the green highlight
+        double dx = camera.pos.x - state.x, dz = camera.pos.z - state.z, r = Math.toRadians(state.yaw);
+        float[] eye = {(float) (dx * Math.cos(r) + dz * Math.sin(r)), (float) (camera.pos.y - state.y),
+                (float) (-dx * Math.sin(r) + dz * Math.cos(r))};
         if (lamps != null) {
-            // the camera, in the car's own frame, for the glow round each lamp
-            double dx = camera.pos.x - state.x, dz = camera.pos.z - state.z, r = Math.toRadians(state.yaw);
-            float[] eye = {(float) (dx * Math.cos(r) + dz * Math.sin(r)), (float) (camera.pos.y - state.y),
-                    (float) (-dx * Math.sin(r) + dz * Math.cos(r))};
             collector.submitCustomGeometry(poseStack, CarLights.glowType(state.shaders),
                     (pose, out) -> lamps(state, lamps, full, lids, eye, pose, out));
+        }
+        if (state.highlight != null) {
+            float[] h = state.highlight;
+            float size = state.highlightSize;
+            boolean shaders = state.shaders;
+            collector.submitCustomGeometry(poseStack, CarLights.glowType(shaders), (pose, out) -> highlight(h, size, eye, shaders, pose, out));
+        }
+        if (state.arms != CarHands.NONE && state.driverEye != null && model != null && model.steering != null) {
+            CarArms.draw(poseStack, collector, light, state.driverEye, model.steering, state.wheelTurn, state.arms);
         }
         poseStack.popPose();
     }
@@ -175,10 +196,10 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             float[] rgb;
             float strength;
             switch (run.kind()) {
-                case CarLamps.HEAD -> { rgb = HEAD; strength = 0.9f * day; }
-                case CarLamps.TAIL -> { rgb = RED; strength = state.braking ? 1f : 0.45f * day; }
+                case CarLamps.HEAD -> { rgb = HEAD; strength = state.lights ? 0.9f * day : 0; }
+                case CarLamps.TAIL -> { rgb = RED; strength = state.braking ? 1f : state.lights ? 0.45f * day : 0; }
                 case CarLamps.REVERSE -> { rgb = WHITE; strength = state.reversing ? 0.9f : 0; }
-                default -> { rgb = DASH; strength = 0.75f * day; }
+                default -> { rgb = DASH; strength = state.dash ? 0.75f * day : 0; }
             }
             if (strength <= 0) {
                 continue;
@@ -194,8 +215,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             float[] rgb;
             float strength, size;
             switch (spot.kind()) {
-                case CarLamps.HEAD -> { rgb = HEAD; strength = 0.5f; size = 1.6f; }
-                case CarLamps.TAIL -> { rgb = RED; strength = state.braking ? 0.65f : 0.3f; size = state.braking ? 1.5f : 1.1f; }
+                case CarLamps.HEAD -> { rgb = HEAD; strength = state.lights ? 0.5f : 0; size = 1.6f; }
+                case CarLamps.TAIL -> { rgb = RED; strength = state.braking ? 0.65f : state.lights ? 0.3f : 0; size = state.braking ? 1.5f : 1.1f; }
                 case CarLamps.REVERSE -> { rgb = WHITE; strength = state.reversing ? 0.4f : 0; size = 1.2f; }
                 default -> { continue; }
             }
@@ -213,6 +234,39 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             halo(cx, cy, cz, tx, ty, tz, spot.size() * size, pose, out,
                     CarLights.shade(rgb, strength * state.dark * (float) Math.sqrt(facing), state.shaders));
         }
+    }
+
+    private static final float[] GREEN = {0.3f, 1f, 0.35f};
+
+    /** The interact key's target lit green: a bright core in a soft glow, facing the camera. */
+    private static void highlight(float[] h, float size, float[] eye, boolean shaders, PoseStack.Pose pose, VertexConsumer out) {
+        float tx = eye[0] - h[0], ty = eye[1] - h[1], tz = eye[2] - h[2];
+        float len = (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
+        if (len < 0.05f) {
+            return;
+        }
+        tx /= len;
+        ty /= len;
+        tz /= len;
+        // a little toward the camera, so it isn't lost in the door or seat it's on
+        float cx = h[0] + tx * 0.04f, cy = h[1] + ty * 0.04f, cz = h[2] + tz * 0.04f;
+        halo(cx, cy, cz, tx, ty, tz, size * 2.2f, pose, out, CarLights.shade(GREEN, 0.55f, shaders));
+        halo(cx, cy, cz, tx, ty, tz, size, pose, out, CarLights.shade(GREEN, 1f, shaders));
+    }
+
+    /** Where a run of triangles that are (or aren't) in a set ends, from t; to for no set. */
+    private static int change(java.util.BitSet set, boolean in, int t, int to) {
+        if (set == null) {
+            return to;
+        }
+        int next = in ? set.nextClearBit(t) : set.nextSetBit(t);
+        return next < 0 ? to : Math.min(next, to);
+    }
+
+    /** The steering wheel turned about its column by angle radians. */
+    private static Turn steer(float[] wheel, float angle) {
+        float cos = (float) Math.cos(angle), sin = (float) Math.sin(angle);
+        return (v, normal) -> CarSteering.turn(v, normal, wheel, cos, sin);
     }
 
     /** Triangles from to end redrawn a few millimetres proud of the car, in one flat glowing colour. */

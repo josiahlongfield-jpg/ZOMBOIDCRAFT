@@ -2,6 +2,7 @@ package com.zomboidcraft.client.cars;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarNet;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Cars;
@@ -20,21 +21,39 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The player's side of cars: the interact key (G unless rebound in Controls) gets in, searches
- * the boot from the back end, or gets out again; H sounds the horn; a hint shows while you look
- * at one; the driving keys are handed to the car you drive; running engines are heard; and
- * running cars' headlights light the road.
+ * The player's side of cars. The interact key (G unless rebound in Controls) gets in: standing right at
+ * a door and facing its handle lights the handle green and gets you into that door's seat; otherwise it's
+ * the nearest free seat, or the boot from the back end. Inside, it moves you to a free seat you look at
+ * (lit green), opens the glovebox from the front, or gets you out. At the wheel, C turns the key (or
+ * hotwires a car with none), the rail-light key works the headlights, and H sounds the horn. A hint shows
+ * what the key will do; the driving keys are handed to the car you drive; running engines are heard; and
+ * headlights light the road.
  */
 public final class CarClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("vehicles"));
     public static final KeyMapping INTERACT = new KeyMapping("key.zomboidcraft.interact", InputConstants.KEY_G, CATEGORY);
     public static final KeyMapping HORN = new KeyMapping("key.zomboidcraft.horn", InputConstants.KEY_H, CATEGORY);
+    public static final KeyMapping ENGINE = new KeyMapping("key.zomboidcraft.engine", InputConstants.KEY_C, CATEGORY);
 
-    private static CarProp hinted;
+    /** How squarely you have to face a door handle (degrees off), and how close you have to stand. */
+    private static final double DOOR_CONE = Math.cos(Math.toRadians(26)), DOOR_REACH = 2.1;
+    /** How squarely you have to look at a seat or the glovebox from inside. */
+    private static final double SEAT_CONE = Math.cos(Math.toRadians(13)), GLOVE_CONE = Math.cos(Math.toRadians(14));
+
+    /**
+     * What the interact key does to a car right now, lit green on it: a door's seat from outside, or from inside
+     * another seat or the glovebox. at is the point lit, in the car's model space; seat is -1 for the glovebox.
+     */
+    public record Target(CarProp car, int seat, float[] at, float size, String label) {
+    }
+
+    private static Target target;
+    private static Object hinted;
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(INTERACT);
         KeyMappingHelper.registerKeyMapping(HORN);
+        KeyMappingHelper.registerKeyMapping(ENGINE);
         CarProp.engineSound = CarEngineSound::keep;
         // a car you drive moves on your side, from your movement keys
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
@@ -42,16 +61,35 @@ public final class CarClient {
         CarLights.register();
     }
 
+    /** What's lit green on this car for the local player, or null. */
+    public static Target target(CarProp car) {
+        return target != null && target.car() == car ? target : null;
+    }
+
+    /** Whether the local player sits at the wheel of a car (the rail-light key works its headlights then). */
+    public static boolean driving(LocalPlayer player) {
+        return player.getVehicle() instanceof CarProp car && car.seatOf(player) == 0;
+    }
+
+    /** The headlights switched from the wheel (the rail-light key's other job). */
+    public static void headlights() {
+        ClientPlayNetworking.send(new CarNet.Use(CarNet.LIGHTS, 0, 0, 0));
+    }
+
     private static void tick(Minecraft client) {
         LocalPlayer player = client.player;
         if (player == null || client.level == null) {
+            target = null;
             return;
         }
-        boolean inCar = player.getVehicle() instanceof CarProp;
+        CarProp inside = player.getVehicle() instanceof CarProp c ? c : null;
+        target = client.gui.screen() != null ? null : inside != null ? insideTarget(player, inside) : doorTarget(client, player);
         HitResult hit = client.hitResult;
-        CarProp car = inCar ? null : lookedAt(client, hit);
+        CarProp car = inside != null || target != null ? null : lookedAt(client, hit);
         while (INTERACT.consumeClick()) {
-            if (inCar) {
+            if (target != null) {
+                ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
+            } else if (inside != null) {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
@@ -59,16 +97,116 @@ public final class CarClient {
             }
         }
         while (HORN.consumeClick()) {
-            if (inCar) {
+            if (inside != null) {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.HORN, 0, 0, 0));
             }
         }
-        if (car != null && (car != hinted || player.tickCount % 20 == 0)) {
-            boolean boot = player.isShiftKeyDown() || car.atBoot(hit.getLocation().subtract(car.position()));
-            player.sendOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage())
-                    .append(boot ? "] Search" : car.nearestFreeSeat(player) == 0 ? "] Drive" : "] Get in"));
+        while (ENGINE.consumeClick()) {
+            if (inside != null && inside.seatOf(player) == 0) {
+                ClientPlayNetworking.send(new CarNet.Use(CarNet.ENGINE, 0, 0, 0));
+            }
         }
-        hinted = car;
+        // a hand on the wheel: a long gun comes down off the shoulder once the car's moving
+        if (player.isUsingItem() && !CarProp.mayUse(player, player.getUseItem()) && client.gameMode != null) {
+            client.gameMode.releaseUsingItem(player);
+        }
+        hint(player, target != null ? target : car, hit);
+    }
+
+    /** The hint for what the interact key would do, refreshed every second while it's the same thing. */
+    private static void hint(LocalPlayer player, Object on, HitResult hit) {
+        if (on != null && (on != hinted && !on.equals(hinted) || player.tickCount % 20 == 0)) {
+            String what;
+            if (on instanceof Target t) {
+                what = t.label();
+            } else {
+                CarProp car = (CarProp) on;
+                boolean boot = player.isShiftKeyDown() || car.atBoot(hit.getLocation().subtract(car.position()));
+                what = boot ? "Search" : car.nearestFreeSeat(player) == 0 ? "Drive" : "Get in";
+            }
+            player.sendOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage()).append("] " + what));
+        }
+        hinted = on;
+    }
+
+    /**
+     * The door you're standing right at and facing the handle of, and the free seat it lets you into: only
+     * close up, on that side, level with that door, looking at it; running past a car lights nothing.
+     */
+    private static Target doorTarget(Minecraft client, LocalPlayer player) {
+        if (player.isSpectator()) {
+            return null;
+        }
+        Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
+        Target best = null;
+        double bestCos = DOOR_CONE;
+        for (CarProp car : client.level.getEntitiesOfClass(CarProp.class, player.getBoundingBox().inflate(5))) {
+            CarModels.Model m = CarModels.get(car.model());
+            if (m == null || m.handles == null || m.seats == null || "burnt".equals(car.variant())) {
+                continue;
+            }
+            Vec3 at = car.toLocal(player.position());
+            for (int s = 0; s < Math.min(m.handles.length, m.seats.length); s++) {
+                float[] h = m.handles[s];
+                if (h == null || car.seatTaken(s)) {
+                    continue;
+                }
+                // outside the car on the handle's side, within arm's reach of the door, level with it
+                double out = Math.signum(h[0]) * at.x - Math.abs(h[0]);
+                if (out < -0.15 || out > 1.3 || Math.abs(at.z - h[2]) > 1.1) {
+                    continue;
+                }
+                Vec3 to = car.toWorld(h).subtract(eye);
+                double d = to.length();
+                double cos = d < 1e-3 ? 1 : to.dot(look) / d;
+                if (d < DOOR_REACH && cos > bestCos) {
+                    bestCos = cos;
+                    best = new Target(car, s, h, 0.07f, seatName(m, s));
+                }
+            }
+        }
+        return best;
+    }
+
+    /** From inside: a free seat you look at to move over to, or the glovebox in front of a front seat. */
+    private static Target insideTarget(LocalPlayer player, CarProp car) {
+        CarModels.Model m = CarModels.get(car.model());
+        if (m == null || m.seats == null) {
+            return null;
+        }
+        Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
+        int mine = car.seatOf(player);
+        Target best = null;
+        double bestCos = SEAT_CONE;
+        for (int s = 0; s < m.seats.length; s++) {
+            if (s == mine || car.seatTaken(s)) {
+                continue;
+            }
+            // the middle of the seat's backrest, a little below where its occupant's head would be
+            float[] p = {m.seats[s][0], m.seats[s][1] - 0.3f, m.seats[s][2] - 0.1f};
+            Vec3 to = car.toWorld(p).subtract(eye);
+            double d = to.length(), cos = to.dot(look) / Math.max(1e-3, d);
+            if (d < 3.5 && cos > bestCos) {
+                bestCos = cos;
+                best = new Target(car, s, p, 0.16f, s == 0 ? "Take the wheel" : "Move to the " + seatName(m, s).toLowerCase());
+            }
+        }
+        if (m.glovebox != null && mine >= 0 && mine <= 1) {
+            Vec3 to = car.toWorld(m.glovebox).subtract(eye);
+            double d = to.length(), cos = to.dot(look) / Math.max(1e-3, d);
+            if (d < 1.6 && cos > Math.max(bestCos, GLOVE_CONE)) {
+                best = new Target(car, CarNet.Seat.GLOVEBOX, m.glovebox, 0.1f, "Glovebox");
+            }
+        }
+        return best;
+    }
+
+    /** "Drive", "Front seat" or "Back seat". */
+    private static String seatName(CarModels.Model m, int s) {
+        if (s == 0) {
+            return "Drive";
+        }
+        return m.seats[s][2] < m.seats[0][2] - 0.5f ? "Back seat" : "Front seat";
     }
 
     /** The car under the crosshair: picked itself, or one of its invisible hull blocks. */

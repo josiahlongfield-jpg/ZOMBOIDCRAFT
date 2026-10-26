@@ -394,6 +394,17 @@ public final class ZcConfig {
         public double heliTopSpeed = 250;
         /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
         public boolean aircraftService = true;
+        /**
+         * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
+         * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
+         */
+        public double carKeyIgnition = 0.1;
+        public double carKeyGlovebox = 0.3;
+        public double carKeyZombie = 0.35;
+        public double carKeyDrop = 0.3;
+        /** Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again. */
+        public double hotwireSeconds = 8;
+        public double hotwireFail = 0.25;
     }
 
     public static class Weather {
@@ -483,6 +494,18 @@ public final class ZcConfig {
         public boolean weaponCards = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
+        /**
+         * Third person (F5) is played over the shoulder: the camera close behind you and to one side, a crosshair on
+         * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
+         */
+        public boolean shoulderCam = true;
+        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
+        public double shoulderBack = 1.9;
+        public double shoulderSide = 0.6;
+        public double shoulderUp = 0.15;
+        /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
+        public double shoulderAimBack = 1.05;
+        public double shoulderAimSide = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -607,8 +630,11 @@ public final class ZcConfig {
         public int magazineSize = 30;
         /** The gun has a full-auto setting, switched with the fire mode key. */
         public boolean selectFire = false;
-        /** How fast it fires on full auto, in rounds a minute. */
-        public double autoRoundsPerMinute = 800.0;
+        /**
+         * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
+         * own: an SMG runs faster than an assault rifle.
+         */
+        public double autoRpm = 700.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -708,7 +734,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRoundsPerMinute = 800.0;
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 700
             return s;
         }
 
@@ -856,6 +882,14 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
+        public boolean bulletHoles = true;
+        public double bulletHoleSeconds = 90.0;
+        /** Blood sprays from a hit and splashes the wall or floor behind it; how long the splashes stay. Client side. */
+        public boolean bloodSplatter = true;
+        public double bloodSeconds = 120.0;
+        /** How many holes and splashes stay at once; the oldest go first. Client side. */
+        public int maxDecals = 300;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */

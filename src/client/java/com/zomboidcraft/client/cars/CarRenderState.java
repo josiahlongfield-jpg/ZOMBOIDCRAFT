@@ -17,8 +17,8 @@ public class CarRenderState extends EntityRenderState {
     public boolean smashed;
     /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
     public int lod;
-    /** The engine's running, so the lamps and the dash are lit; the brake or reversing lights too. */
-    public boolean lights, braking, reversing;
+    /** The headlights (and tail lights) are switched on; the engine's running, so the dash is lit; the brake or reversing lights. */
+    public boolean lights, dash, braking, reversing;
     /** How dark it is round the car, 0 (day) to 1 (night), and whether a shader pack draws the glow. */
     public float dark;
     public boolean shaders;
@@ -32,4 +32,12 @@ public class CarRenderState extends EntityRenderState {
     public double rotor;
     /** Torn apart in a crash: only the shell is drawn. */
     public boolean broken;
+    /** What's lit green for the local player's interact key (a door handle, a seat, the glovebox), in model space, and its size; or null. */
+    public float[] highlight;
+    public float highlightSize;
+    /** The steering wheel's turn (radians, anticlockwise as the driver sees it). */
+    public float wheelTurn;
+    /** The local player drives this car in first person: which of their hands to draw on the wheel ({@link CarHands}), and their seat. */
+    public int arms;
+    public float[] driverEye;
 }

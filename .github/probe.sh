@@ -7,14 +7,18 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== flight2"
-javap -cp "$CP" -c -p net.minecraft.client.Camera > cam.txt 2>&1
-for m in 'void setRotation' 'void alignWithEntity' 'Matrix4f getViewRotationMatrix' 'void move(' 'void update('; do echo "+++ $m"; awk -v m="$m" 'index($0,m){p=1} p{print} p&&/^$/{exit}' cam.txt | head -90; done
-javap -cp "$CP" -c -p net.minecraft.server.network.ServerGamePacketListenerImpl > sgp.txt 2>&1
-awk '/void handleMoveVehicle/{p=1} p{print} p&&/^$/{exit}' sgp.txt | grep -E 'ldc|dcmp|invoke|dconst|getstatic' | head -120
-javap -cp "$CP" -c -p net.minecraft.world.entity.player.Player | awk '/void rideTick/{p=1} p{print} p&&/^$/{exit}' | head -40
+echo "===== cars2"
+sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
+sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'
+sig net.minecraft.world.level.storage.ValueInput 'child|list|read'
+sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
+sig net.minecraft.world.entity.player.PlayerSkin '.'
+sig net.minecraft.world.level.storage.loot.LootTable 'getRandomItems|fill'
+sig net.minecraft.world.inventory.HopperMenu 'HopperMenu'
+sig net.minecraft.client.renderer.entity.player.AvatarRenderer 'getModel|public'
+sig net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer 'submit|render'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitModelPart'
 exit 0
-
 
 echo "===== atlases"
 ALL_JARS=$(find ~/.gradle/caches/fabric-loom -name '*.jar' 2>/dev/null)

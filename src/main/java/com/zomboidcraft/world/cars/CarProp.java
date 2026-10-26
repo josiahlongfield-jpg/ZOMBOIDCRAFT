@@ -81,6 +81,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Float> FUEL = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> BATTERY = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> CONDITION = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    /** The driver has the headlights switched on. */
+    private static final EntityDataAccessor<Boolean> LIGHTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -111,6 +113,19 @@ public class CarProp extends Entity {
     private float windows = -1;
     /** The seat the next rider to get in takes (server), or -1 for the nearest free one. */
     private int nextSeat = -1;
+    /** Where the key is ({@link CarKeys}), whether someone's hotwired it, and ticks left on a hotwiring and who's at it. */
+    private int keyWhere;
+    private boolean hotwired;
+    private int hotwireLeft = -1;
+    private Entity hotwirer;
+    /** The glovebox, filled the first time anyone opens it. */
+    private final SimpleContainer glovebox = new SimpleContainer(5) {
+        @Override
+        public boolean stillValid(Player player) {
+            return isAlive() && player.getVehicle() == CarProp.this;
+        }
+    };
+    private boolean gloveSearched;
 
     /** Called on the client every tick a car's engine runs, to keep its sound going; the client sets this. */
     public static java.util.function.Consumer<CarProp> engineSound = car -> { };
@@ -159,6 +174,7 @@ public class CarProp extends Entity {
         builder.define(FUEL, 1f);
         builder.define(BATTERY, true);
         builder.define(CONDITION, 100);
+        builder.define(LIGHTS, false);
     }
 
     @Override
@@ -176,6 +192,15 @@ public class CarProp extends Entity {
         ContainerHelper.loadAllItems(input, items);
         for (int i = 0; i < items.size(); i++) {
             boot.setItem(i, items.get(i));
+        }
+        keyWhere = input.getIntOr("key", CarKeys.UNROLLED);
+        hotwired = input.getIntOr("hotwired", 0) != 0;
+        entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
+        gloveSearched = input.getIntOr("glove_searched", 0) != 0;
+        NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(input.childOrEmpty("glovebox"), glove);
+        for (int i = 0; i < glove.size(); i++) {
+            glovebox.setItem(i, glove.get(i));
         }
     }
 
@@ -195,6 +220,15 @@ public class CarProp extends Entity {
             items.set(i, boot.getItem(i));
         }
         ContainerHelper.saveAllItems(output, items);
+        output.putInt("key", keyWhere);
+        output.putInt("hotwired", hotwired ? 1 : 0);
+        output.putInt("lights", lightsOn() ? 1 : 0);
+        output.putInt("glove_searched", gloveSearched ? 1 : 0);
+        NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
+        for (int i = 0; i < glove.size(); i++) {
+            glove.set(i, glovebox.getItem(i));
+        }
+        ContainerHelper.saveAllItems(output.child("glovebox"), glove);
     }
 
     /** The loot table for this car's boot, from what kind of vehicle it is. */
@@ -276,6 +310,11 @@ public class CarProp extends Entity {
     }
 
     private void getIn(Player player) {
+        getIn(player, -1);
+    }
+
+    /** Gets in to the seat given (by its door handle), or with -1 the free seat nearest where they stand. */
+    public void getIn(Player player, int seat) {
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
             return;
@@ -286,8 +325,75 @@ public class CarProp extends Entity {
             }
             return;
         }
-        nextSeat = nearestFreeSeat(player);
+        if (seat >= 0 && (seat >= seats() || seatTaken(seat))) {
+            player.sendOverlayMessage(Component.literal("Someone's in that seat."));
+            return;
+        }
+        nextSeat = seat >= 0 ? seat : nearestFreeSeat(player);
         player.startRiding(this);
+    }
+
+    /** Whether someone sits in seat s. */
+    public boolean seatTaken(int s) {
+        for (Entity rider : getPassengers()) {
+            if (seatOf(rider) == s) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** A rider climbs over into another free seat; whoever ends up at the wheel drives. */
+    public void switchSeat(Player rider, int seat) {
+        int i = getPassengers().indexOf(rider);
+        if (i < 0 || i >= 8 || seat < 0 || seat >= seats() || seatTaken(seat)) {
+            return;
+        }
+        int packed = entityData.get(SEATS) & ~(0xF << (4 * i));
+        entityData.set(SEATS, packed | (seat + 1) << (4 * i));
+        if (level() instanceof ServerLevel server) {
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.WOOL_STEP, SoundSource.PLAYERS, 0.6f, 0.8f);
+        }
+    }
+
+    /** A point in the world in the car's model space (metres, nose toward +z, the driver's side +x). */
+    public Vec3 toLocal(Vec3 at) {
+        return local(at.subtract(position()));
+    }
+
+    /** A point in model space (metres, nose toward +z, the driver's side +x) in the world. */
+    public Vec3 toWorld(float[] p) {
+        return position().add(world(p[0], p[1], p[2]));
+    }
+
+    /** Where a seat's occupant's eyes are, in the world. */
+    public Vec3 seatEye(int seat) {
+        CarModels.Model m = CarModels.get(model());
+        return m == null || m.seats == null || seat < 0 || seat >= m.seats.length ? position() : toWorld(m.seats[seat]);
+    }
+
+    /** How fast the car is going, blocks a tick: on the driver's computer from its own move, elsewhere from how far it went. */
+    public double movingSpeed() {
+        if (!level().isClientSide()) {
+            return lastSpeed;
+        }
+        return isLocalInstanceAuthoritative() ? getDeltaMovement().horizontalDistance()
+                : Math.hypot(getX() - xo, getZ() - zo);
+    }
+
+    /** The driver of a car on the move keeps a hand on the wheel: they can only use a handgun, and that one-handed. */
+    public static boolean handsOnWheel(Entity entity) {
+        return entity.getVehicle() instanceof CarProp car && car.seatOf(entity) == 0 && car.movingSpeed() > 0.04;
+    }
+
+    /** Whether someone in a car may fire, aim or swing what they hold: passengers anything, a moving driver only a handgun. */
+    public static boolean mayUse(Entity entity, ItemStack stack) {
+        if (!handsOnWheel(entity)) {
+            return true;
+        }
+        com.zomboidcraft.combat.GunType gun = com.zomboidcraft.combat.GunType.of(stack);
+        return gun == com.zomboidcraft.combat.GunType.PISTOL || gun == com.zomboidcraft.combat.GunType.REVOLVER
+                || gun == com.zomboidcraft.combat.GunType.MAGNUM;
     }
 
     /** The seat a rider has (0 the driver's), or -1 if they aren't riding. */
@@ -405,25 +511,26 @@ public class CarProp extends Entity {
     }
 
     /**
-     * The server's engine: a new driver turns the key (it catches about three seconds into the
-     * starter, or a wreck just cranks), and it stops when nobody's at the wheel.
+     * The server's engine. It never starts by itself: the driver turns the key ({@link #toggleEngine}) and it
+     * catches about three seconds into the starter. It runs on while anyone's inside, so whoever's at the
+     * wheel can stop it to keep quiet, and it dies when the last one gets out.
      */
     private void engine(ServerLevel server, Entity driver) {
         if (aircraft()) {
             airEngine(server, driver);
         } else if (driver != lastDriver) {
             lastDriver = driver;
-            if (driver == null) {
-                entityData.set(ENGINE, false);
-                catchAt = -1;
-            } else if (!engineOn() && driver instanceof Player player) {
-                boolean runs = engineRuns();
-                server.playSound(null, getX(), getY(), getZ(), runs ? CarSounds.START : CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
-                catchAt = runs ? tickCount + 58 : -1;
-                player.sendOverlayMessage(Component.literal(runs
-                        ? "W/S to drive, A/D to steer, space for the handbrake, H for the horn, sneak or interact to get out."
-                        : jet() ? "Dead batteries, no ground power. It won't start." : "It won't start."));
+            if (driver instanceof Player player && !engineOn() && catchAt < 0) {
+                player.sendOverlayMessage(Component.literal(jet() ? "Dead batteries, no ground power." : startHint(player)));
             }
+        }
+        if (!isVehicle() && (engineOn() || catchAt >= 0 || hotwireLeft >= 0)) {
+            entityData.set(ENGINE, false);
+            catchAt = -1;
+            hotwireLeft = -1;
+        }
+        if (hotwireLeft >= 0) {
+            hotwire(server, driver);
         }
         if (catchAt >= 0 && tickCount >= catchAt) {
             catchAt = -1;
@@ -435,6 +542,175 @@ public class CarProp extends Entity {
             server.playSound(null, getX(), getY(), getZ(), aircraft() ? AirSounds.CANOPY : CarSounds.DOOR_CLOSE, SoundSource.NEUTRAL, 1f,
                     0.95f + random.nextFloat() * 0.1f);
         }
+    }
+
+    /** What the driver's told on taking the wheel of a car that isn't running: how to start it, and whether they can. */
+    private String startHint(Player player) {
+        if (!engineRuns()) {
+            return "It's dead. It won't start.";
+        }
+        rollKey();
+        String how = keyWhere == CarKeys.IGNITION ? "The key's in the ignition: C to start it."
+                : CarKeys.carries(player, this) ? "You have the key: C to start it."
+                : hotwired ? "It's been hotwired: C to start it." : "No key: C to hotwire it.";
+        return how + " L headlights, W/S drive, A/D steer, space handbrake, H horn.";
+    }
+
+    /** Decides where the key is, the first time it matters. */
+    private void rollKey() {
+        if (keyWhere == CarKeys.UNROLLED) {
+            keyWhere = CarKeys.roll(new java.util.Random(getUUID().getMostSignificantBits()));
+        }
+    }
+
+    /** Whether the key went walking with one of the dead nearby (deciding where it is if nobody has yet). */
+    public boolean keyOnZombie() {
+        if (!engineRuns()) {
+            return false;
+        }
+        rollKey();
+        return keyWhere == CarKeys.ZOMBIE;
+    }
+
+    /** The key's been found (dropped by a zombie, or taken from the glovebox). */
+    void keyFound() {
+        keyWhere = CarKeys.TAKEN;
+    }
+
+    /**
+     * Whether this driver can start it: the key's in the ignition, they have it on them, or the car's been
+     * hotwired. Aircraft need no key. Whether it would run at all is {@link #engineRuns}.
+     */
+    public boolean canStart(Player player) {
+        if (jet()) {
+            return true;
+        }
+        rollKey();
+        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this);
+    }
+
+    public boolean lightsOn() {
+        return entityData.get(LIGHTS);
+    }
+
+    /**
+     * The ignition key (C), pressed at the wheel: starts the engine if they can (the starter, then it catches),
+     * stops it if it's running, and with no key sets about hotwiring it, which takes a while and may only spark.
+     */
+    public void toggleEngine(Player player) {
+        if (!(level() instanceof ServerLevel server) || getControllingPassenger() != player) {
+            return;
+        }
+        if (jet()) {
+            airEngine(player);
+            return;
+        }
+        if (engineOn() || catchAt >= 0) {
+            entityData.set(ENGINE, false);
+            catchAt = -1;
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.5f, 0.6f);
+            player.sendOverlayMessage(Component.literal("Engine off."));
+            return;
+        }
+        if (hotwireLeft >= 0) {
+            hotwireLeft = -1;
+            player.sendOverlayMessage(Component.literal("You leave the wires hanging."));
+            return;
+        }
+        if (!engineRuns()) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            player.sendOverlayMessage(Component.literal("It won't start."));
+            return;
+        }
+        if (!canStart(player)) {
+            hotwireLeft = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
+            hotwirer = player;
+            player.sendOverlayMessage(Component.literal("No key. You pull the panel off under the dash and find the wires..."));
+            return;
+        }
+        crank(server);
+    }
+
+    /** The aircraft's own start-up: no key, but fuel, power and an airworthy airframe ({@link #toggleAirEngine}). */
+    private void airEngine(Player player) {
+        toggleAirEngine(player);
+    }
+
+    /** The starter turns over and the engine catches about three seconds later. */
+    private void crank(ServerLevel server) {
+        server.playSound(null, getX(), getY(), getZ(), CarSounds.START, SoundSource.NEUTRAL, 1f, 1f);
+        catchAt = tickCount + 58;
+    }
+
+    /** A tick of hotwiring: the one at it has to stay at the wheel; at the end it starts, or only sparks. */
+    private void hotwire(ServerLevel server, Entity driver) {
+        if (driver != hotwirer || !(driver instanceof Player player)) {
+            hotwireLeft = -1;
+            return;
+        }
+        if (hotwireLeft % 20 == 0 && hotwireLeft > 0) {
+            int total = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
+            player.sendOverlayMessage(Component.literal("Hotwiring... " + Math.min(99, 100 - hotwireLeft * 100 / Math.max(1, total)) + "%"));
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.TRIPWIRE_CLICK_ON, SoundSource.NEUTRAL, 0.4f, 1.4f);
+        }
+        if (--hotwireLeft > 0) {
+            return;
+        }
+        hotwireLeft = -1;
+        if (random.nextDouble() < com.zomboidcraft.ZcConfig.get().world.hotwireFail) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            player.sendOverlayMessage(Component.literal("A spark, a cough, then nothing. C to try again."));
+            return;
+        }
+        hotwired = true;
+        player.sendOverlayMessage(Component.literal("The wires catch."));
+        crank(server);
+    }
+
+    /** The headlights (L), switched at the wheel; they run off the battery, so a dead car's stay dark. */
+    public void toggleLights(Player player) {
+        if (!(level() instanceof ServerLevel server) || getControllingPassenger() != player) {
+            return;
+        }
+        if (!engineRuns()) {
+            player.sendOverlayMessage(Component.literal("Nothing. The battery's dead."));
+            return;
+        }
+        entityData.set(LIGHTS, !lightsOn());
+        server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
+    }
+
+    /** Opens the glovebox for someone in a front seat, its key (if it's there) and odds and ends put in the first time. */
+    public void openGlovebox(Player player) {
+        if (!(level() instanceof ServerLevel server) || player.getVehicle() != this || seatOf(player) > 1) {
+            return;
+        }
+        if (!gloveSearched) {
+            gloveSearched = true;
+            rollKey();
+            if (keyWhere == CarKeys.GLOVEBOX && engineRuns()) {
+                glovebox.setItem(random.nextInt(glovebox.getContainerSize()), CarKeys.make(this));
+                keyFound();
+            }
+            if (!"burnt".equals(variant()) && com.zomboidcraft.ZcConfig.get().world.carLoot) {
+                ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, ZomboidCraft.id("car/glovebox"));
+                LootTable table = server.getServer().reloadableRegistries().getLootTable(key);
+                LootParams params = new LootParams.Builder(server).withParameter(LootContextParams.ORIGIN, position())
+                        .withLuck(player.getLuck()).withParameter(LootContextParams.THIS_ENTITY, player)
+                        .create(LootContextParamSets.CHEST);
+                for (ItemStack junk : table.getRandomItems(params, getUUID().getMostSignificantBits())) {
+                    for (int i = 0; i < glovebox.getContainerSize(); i++) {
+                        if (glovebox.getItem(i).isEmpty()) {
+                            glovebox.setItem(i, junk);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new net.minecraft.world.inventory.HopperMenu(id, inventory, glovebox),
+                Component.literal("Glovebox")));
+        server.playSound(null, getX(), getY(), getZ(), SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.NEUTRAL, 0.5f, 1.3f);
     }
 
     /** A door opens to let someone in or out, and swings shut behind them. */
@@ -491,7 +767,7 @@ public class CarProp extends Entity {
         }
     }
 
-    /** Wrecks and burnt-out shells don't run, whatever you do; nor, for now, do the jets. */
+    /** Wrecks and burnt-out shells don't run, whatever you do. */
     public boolean engineRuns() {
         return "usable".equals(variant()) || "abandoned".equals(variant());
     }

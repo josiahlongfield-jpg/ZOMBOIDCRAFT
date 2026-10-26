@@ -112,7 +112,7 @@ final class FlightHud {
         line(g, font, 10, y + 40, "FUEL " + Math.round(car.fuel() * 100) + "%");
         boolean flash = (player.tickCount / 5) % 2 == 0;
         if (!car.engineOn() && pilot && f.rpm < 0.05f) {
-            warn(g, font, cx, cy + 40, "ENGINE OFF - PRESS " + FlightClient.ENGINE.getTranslatedKeyMessage().getString(), DIM);
+            warn(g, font, cx, cy + 40, "ENGINE OFF - PRESS " + CarClient.ENGINE.getTranslatedKeyMessage().getString(), DIM);
         } else if (f.stalled && flash) {
             warn(g, font, cx, cy + 40, "STALL", RED);
         } else if (!f.grounded && f.vel.y < -12 && car.getY() - groundBelow(car) < 60 && flash) {
