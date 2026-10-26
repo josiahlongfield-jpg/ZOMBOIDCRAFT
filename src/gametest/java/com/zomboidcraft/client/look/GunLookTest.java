@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +24,8 @@ import org.slf4j.LoggerFactory;
 public class GunLookTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCLOOK");
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
+    /** GLFW's right mouse button (LWJGL isn't on the test's compile path). */
+    private static final int RIGHT_BUTTON = 1;
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
@@ -76,10 +77,10 @@ public class GunLookTest implements FabricClientGameTest {
         look(sp, at, 0, 4);
         ctx.waitTicks(30);
         ctx.takeScreenshot(name + "-hip");
-        ctx.getInput().holdMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+        ctx.getInput().holdMouse(RIGHT_BUTTON);
         ctx.waitTicks(20);
         ctx.takeScreenshot(name + "-sights");
-        ctx.getInput().releaseMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+        ctx.getInput().releaseMouse(RIGHT_BUTTON);
         look(sp, at, 25, 3);
         ctx.waitTicks(20);
         ctx.takeScreenshot(name + "-turned");
