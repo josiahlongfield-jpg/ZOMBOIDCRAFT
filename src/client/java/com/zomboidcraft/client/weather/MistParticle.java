@@ -48,7 +48,9 @@ final class MistParticle extends SingleQuadParticle {
             double d = player.getEyePosition().distanceTo(new net.minecraft.world.phys.Vec3(x, y, z));
             near = (float) Mth.clamp((d - quadSize * 0.4) / 3.0, 0, 1);
         }
-        alpha = Mth.clamp(peak * fade * near, 0, 1);
+        // a lightning flash shows through the murk: what was hiding in it stands out for a moment
+        float flash = com.zomboidcraft.world.weather.WeatherView.flash();
+        alpha = Mth.clamp(peak * fade * near * (1 - 0.65f * flash), 0, 1);
     }
 
     @Override

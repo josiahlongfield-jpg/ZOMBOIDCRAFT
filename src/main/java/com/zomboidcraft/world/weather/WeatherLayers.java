@@ -64,7 +64,9 @@ public final class WeatherLayers {
         // couple of dozen blocks away
         layer(builder, level, EnvironmentAttributes.FOG_START_DISTANCE, (v, w, night, c) ->
                 (float) Mth.lerp(w.fog(), haze(v, c, 0.15), 0));
-        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 22));
+        // a lightning flash throws the fog back for a moment: shapes down the street show up
+        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) ->
+                (float) Mth.lerp(flash(level), fogEnd(haze(v, c, 1), w, 22), Math.max(fogEnd(haze(v, c, 1), w, 22), 110)));
         layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 30));
         layer(builder, level, EnvironmentAttributes.CLOUD_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 30));
     }

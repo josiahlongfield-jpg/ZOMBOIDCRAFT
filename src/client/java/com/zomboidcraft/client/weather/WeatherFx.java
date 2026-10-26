@@ -49,19 +49,39 @@ public final class WeatherFx {
     }
 
     private static int clock;
+    private static ClientLevel lastLevel;
 
     public static void register() {
         ParticleProviderRegistry.getInstance().register(WeatherParticles.MIST, sprites ->
                 (type, level, x, y, z, dx, dy, dz, random) -> new MistParticle(level, x, y, z, dx, dz, (float) dy, sprites.get(random)));
         ParticleProviderRegistry.getInstance().register(WeatherParticles.DEBRIS, sprites ->
                 (type, level, x, y, z, dx, dy, dz, random) -> new DebrisParticle(level, x, y, z, dx, dz, sprites.get(random)));
+        ParticleProviderRegistry.getInstance().register(WeatherParticles.PLUME, sprites ->
+                (type, level, x, y, z, dx, dy, dz, random) -> new PlumeParticle(level, x, y, z, dx, dz, (float) dy, sprites.get(random)));
+        ParticleProviderRegistry.getInstance().register(WeatherParticles.EMBER, sprites ->
+                (type, level, x, y, z, dx, dy, dz, random) -> new EmberParticle(level, x, y, z, (float) dy, sprites.get(random)));
         ClientTickEvents.END_CLIENT_TICK.register(WeatherFx::tick);
         // every bolt that lands near you, the server's real strikes too, lights up the street
         ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (entity instanceof LightningBolt && entity.getId() >= 0) {  // our own flashes set their own strength
-                flash(1);
+                strike(level, entity.getX(), entity.getZ());
+                Skyline.struck(entity.getX(), entity.getZ());  // real strikes start real fires: let them smoulder
             }
         });
+    }
+
+    /**
+     * A bolt has come down at x, z: a full flash, the street lit round the strike, and if it's
+     * close the lamps round you stutter.
+     */
+    private static void strike(ClientLevel level, double x, double z) {
+        flash(1);
+        FlashLights.bolt(level, x, z);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && ZcConfig.get().weather.stormSurges
+                && Math.hypot(player.getX() - x, player.getZ() - z) < 64) {
+            StormLights.surge(level, player.blockPosition());
+        }
     }
 
     /** Lights the world for a moment; strength 1 for a bolt close by, less for one far off in the clouds. */
@@ -72,6 +92,19 @@ public final class WeatherFx {
     private static void tick(Minecraft client) {
         LocalPlayer player = client.player;
         ClientLevel level = client.level;
+        if (level != lastLevel) {
+            // a new world or dimension: what we swapped or lit belonged to the old one
+            StormLights.forget();
+            FlashLights.forget();
+            Water.forget();
+            Skyline.forget();
+            THUNDER.clear();
+            lastLevel = level;
+        }
+        if (level != null && !client.isPaused()) {
+            StormLights.tick(level);
+            FlashLights.tick(level);
+        }
         Weather w = WeatherView.client();
         if (player == null || level == null || w == null || client.isPaused() || level.dimension() != Level.OVERWORLD) {
             return;
@@ -85,6 +118,12 @@ public final class WeatherFx {
         }
         if (c.windDebris && w.wind() > 0.3f) {
             debris(level, player, w, windX, windZ);
+        }
+        if (c.drips) {
+            Water.tick(level, player, w);
+        }
+        if (c.skylineFires) {
+            Skyline.tick(level, player, w);
         }
         clock++;
         // a flash lasts a few ticks, dying away fast
@@ -105,6 +144,7 @@ public final class WeatherFx {
         if (flicker > 0 && --flicker == 0) {
             level.setSkyFlashTime(2);
             flash(flickerStrength);
+            FlashLights.sky(level, player.blockPosition(), flickerStrength * 0.8f);
         }
         if (w.thunder() < 0.15f || --nextFlash > 0) {
             return;
@@ -124,7 +164,7 @@ public final class WeatherFx {
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
             strike.snapTo(x, y, z);
             level.addEntity(strike);
-            flash(1);
+            strike(level, x, z);
         } else {
             // sheet lightning: the clouds light up and the street with them, less the further off it is.
             // A bolt high up and far out of sight is spawned too, so shader packs that flash on
@@ -132,6 +172,7 @@ public final class WeatherFx {
             level.setSkyFlashTime(2);
             float strength = (float) Mth.clamp(1.1 - distance / 1500, 0.35, 0.85);
             flash(strength);
+            FlashLights.sky(level, player.blockPosition(), strength);
             LightningBolt sheet = new LightningBolt(EntityTypes.LIGHTNING_BOLT, level);
             sheet.setVisualOnly(true);
             sheet.setSilent(true);
