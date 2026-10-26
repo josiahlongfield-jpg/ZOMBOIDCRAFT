@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "fit_yellow": "zomboidcraft:block/city/fit_yellow",
+    "navy_tyre": "zomboidcraft:block/city/navy_tyre",
+    "particle": "zomboidcraft:block/city/fit_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        1,
+        0
+      ],
+      "to": [
+        9,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_yellow"
+        },
+        "west": {
+          "texture": "#fit_yellow"
+        },
+        "up": {
+          "texture": "#fit_yellow"
+        },
+        "down": {
+          "texture": "#fit_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        7,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        10
+      ],
+      "to": [
+        11,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0.5,
+        0
+      ],
+      "to": [
+        10,
+        3,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_grey"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    }
+  ]
+}

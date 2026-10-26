@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "fit_beam": "zomboidcraft:block/city/fit_beam",
+    "particle": "zomboidcraft:block/city/fit_beam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        9,
+        7.25
+      ],
+      "to": [
+        16,
+        16,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beam"
+        },
+        "south": {
+          "texture": "#fit_beam"
+        },
+        "east": {
+          "texture": "#fit_beam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beam",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beam"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8.5,
+        5
+      ],
+      "to": [
+        16,
+        9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beam"
+        },
+        "south": {
+          "texture": "#fit_beam"
+        },
+        "east": {
+          "texture": "#fit_beam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beam"
+        },
+        "down": {
+          "texture": "#fit_beam"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        11,
+        0
+      ],
+      "to": [
+        14,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        10.5,
+        7
+      ],
+      "to": [
+        14.5,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    }
+  ]
+}

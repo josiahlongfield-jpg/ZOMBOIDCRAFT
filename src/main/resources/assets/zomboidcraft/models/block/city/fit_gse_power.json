@@ -1,0 +1,297 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "fit_gse": "zomboidcraft:block/city/fit_gse",
+    "fit_yellow": "zomboidcraft:block/city/fit_yellow",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "navy_tyre": "zomboidcraft:block/city/navy_tyre",
+    "particle": "zomboidcraft:block/city/fit_gse"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        2,
+        1
+      ],
+      "to": [
+        14.5,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_gse"
+        },
+        "south": {
+          "texture": "#fit_gse"
+        },
+        "east": {
+          "texture": "#fit_yellow"
+        },
+        "west": {
+          "texture": "#fit_yellow"
+        },
+        "up": {
+          "texture": "#fit_yellow"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        4
+      ],
+      "to": [
+        11,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        12,
+        7.5
+      ],
+      "to": [
+        11.5,
+        15.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        2,
+        -1
+      ],
+      "to": [
+        9,
+        3,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey"
+        },
+        "east": {
+          "texture": "#fit_grey",
+          "uv": [
+            14,
+            13,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#fit_grey",
+          "uv": [
+            0,
+            13,
+            2,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#fit_grey",
+          "uv": [
+            7,
+            0,
+            9,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#fit_grey",
+          "uv": [
+            7,
+            14,
+            9,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        1.5
+      ],
+      "to": [
+        2.5,
+        3.5,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        1.5
+      ],
+      "to": [
+        15.5,
+        3.5,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        11
+      ],
+      "to": [
+        2.5,
+        3.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        11
+      ],
+      "to": [
+        15.5,
+        3.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

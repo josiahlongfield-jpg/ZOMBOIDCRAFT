@@ -371,13 +371,6 @@ final class Carrier {
                 }
             }
         }
-        // the lamps: the emergency ones still lit
-        for (int x = BAY0 + 3; x < BAY1; x += 8) {
-            for (int z = HZ0 + 4; z <= HZ1 - 3; z += 8) {
-                double r = chance();
-                p.set(x, GALLERY - 1, z, r < 0.3 ? "navy_lamp[axis=x]" : r < 0.4 ? "bunk_tube_dangle[axis=x]" : "bunk_tube[axis=x]");
-            }
-        }
         // the openings to the elevators: rolled down, half up, or open where the platform's down
         for (int i = 0; i < LIFTS.length; i++) {
             int[] l = LIFTS[i];
@@ -404,6 +397,78 @@ final class Carrier {
         }
         hangarBooth(150);
         hangarGear();
+        hangarOverhead();
+        hangarWalls();
+    }
+
+    /**
+     * The hangar's overhead: a deep girder across it every sixth metre, sprinkler mains along it
+     * between them, a vent trunk down the middle, pipes and cable trays along both sides, and the
+     * dome lamps hung in rows between the girders: most dead with the power gone, some flickering.
+     */
+    private void hangarOverhead() {
+        int top = GALLERY - 1;
+        for (int x = BAY0; x <= BAY1; x++) {
+            if (fireDoor(x)) {
+                continue;
+            }
+            for (int z = HZ0; z <= HZ1; z++) {
+                if (x % 6 == 0) {
+                    over(x, top, z, "fit_girder[axis=x]");
+                    continue;
+                }
+                String run = z == HZ0 ? "fit_pipes_b" : z == HZ1 ? "fit_pipes_a" : z == HZ0 + 1 || z == HZ1 - 1 ? "fit_tray"
+                        : z == -1 ? "fit_duct" : Math.floorMod(z, 5) == 0 ? "fit_sprinkler" : null;
+                if (x % 6 == 3 && Math.floorMod(z, 5) == 2 && z > HZ0 + 1 && z < HZ1 - 1) {
+                    double r = chance();
+                    over(x, top, z, r < 0.06 ? "fit_highbay_on" : r < 0.26 ? "fit_highbay_flicker" : "fit_highbay");
+                } else if (run != null) {
+                    over(x, top, z, (run.equals("fit_duct") && x % 6 == 3 ? "fit_duct_grille" : run) + "[axis=x]");
+                }
+            }
+        }
+    }
+
+    /**
+     * The hangar's side walls: a web frame up them under each girder, and between, the fire stations,
+     * breathing sets, junction boxes, phones, speakers, chain racks, warning signs, the battle
+     * lanterns and floodlights. Only where the wall gear and the openings left room.
+     */
+    private void hangarWalls() {
+        for (int x = BAY0 + 1; x < BAY1; x++) {
+            if (fireDoor(x) || fireDoor(x - 1) || fireDoor(x + 1)) {
+                continue;
+            }
+            for (int s : new int[] {-1, 1}) {
+                if (opening(x, s) >= 0 || opening(x - 1, s) >= 0 || opening(x + 1, s) >= 0) {
+                    continue;
+                }
+                int z = s > 0 ? HZ1 : HZ0;
+                String f = s > 0 ? "north" : "south", on = "[facing=" + f + "]";
+                if (x % 6 == 0) {
+                    for (int y = HANGAR + 1; y < GALLERY - 1; y++) {
+                        over(x, y, z, "fit_frame" + on);
+                    }
+                    continue;
+                }
+                switch (x % 24) {
+                    case 12 -> {
+                        over(x, HANGAR + 1, z, "fit_firestation" + on);
+                        over(x, HANGAR + 2, z, "fit_st_fire" + on);
+                    }
+                    case 2 -> over(x, HANGAR + 2, z, "fit_eebd" + on);
+                    case 3, 15 -> over(x, HANGAR + 3, z, "fit_jbox" + on);
+                    case 9 -> over(x, GALLERY - 3, z, "fit_speaker" + on);
+                    case 21 -> over(x, HANGAR + 2, z, "fit_phone" + on);
+                    case 7 -> over(x, HANGAR + 3, z, lantern(f));
+                    case 17 -> over(x, HANGAR + 2, z, "fit_chain_rack" + on);
+                    case 19 -> over(x, HANGAR + 3, z, CAUTIONS[rng.nextInt(2)] + on);
+                    case 23 -> over(x, GALLERY - 3, z, (chance() < 0.3 ? "fit_flood_on" : "fit_flood") + on);
+                    default -> {
+                    }
+                }
+            }
+        }
     }
 
     /** The hangar deck control booth high on the port wall at x, glazed toward the bays, a ladder up to it. */
@@ -473,33 +538,73 @@ final class Carrier {
                 }
             }
         }
-        // spare engines on their stands, at the aft end and forward
-        for (int[] g : new int[][] {{BAY0 + 4, -10}, {BAY1 - 12, 8}}) {
-            for (int k = 0; k < 3; k++) {
-                if (chance() < 0.85) {
-                    for (int x = g[0]; x < g[0] + 4; x++) {
-                        p.set(x, HANGAR + 1, g[1] + k * 3, "navy_engine[axis=x]");
+        // the jets packed in: two staggered rows to a bay, noses toward the bay's ends, the support gear under their wings
+        int[][] spots = {{67, -7, 1}, {90, -7, 1}, {113, -7, 1}, {79, 6, 0}, {102, 6, 0},
+            {139, -7, 1}, {162, -7, 1}, {184, -7, 1}, {151, 6, 0}, {174, 6, 0},
+            {209, -7, 1}, {232, -7, 1}, {221, 6, 0}, {244, 6, 0}};
+        for (int[] s : spots) {
+            if (chance() < 0.9) {
+                park(s[0], HANGAR + 1, s[1], s[2] == 1 ? 270 : 90);
+                for (int side : new int[] {-1, 1}) {
+                    if (chance() < 0.7) {
+                        String g = any("fit_firebottle", "fit_gse_power", "fit_gse_air", "fit_tyres", "fit_fod", "navy_toolbox");
+                        p.setIfAir(s[0] - 3 + rng.nextInt(5), HANGAR + 1, s[1] + side * (4 + rng.nextInt(2)),
+                                g.equals("fit_tyres") || g.equals("fit_fod") ? g : g + "[facing=" + any("north", "east", "south", "west") + "]");
                     }
                 }
             }
         }
-        // bomb and missile carts staged forward, tractors left where they stopped
-        for (int i = 0; i < 6; i++) {
-            int x = BAY1 - 40 + rng.nextInt(26), z = HZ0 + 2 + rng.nextInt(6);
+        // along the walls, clear of the jets: drop tanks on their cradles, spare engines, parked tractors, carts, stands
+        for (int s : new int[] {-1, 1}) {
+            int z = s > 0 ? HZ1 - 1 : HZ0 + 1;
+            for (int x = BAY0 + 2; x < BAY1 - 6; ) {
+                boolean clear = true;
+                for (int dx = -1; dx <= 5; dx++) {
+                    clear &= !fireDoor(x + dx) && opening(x + dx, s) < 0 && !(s > 0 && trunkNear(x + dx))
+                            && !(s < 0 && x + dx >= 148 && x + dx <= 158);
+                }
+                if (!clear) {
+                    x++;
+                    continue;
+                }
+                double r = chance();
+                int len = 1;
+                if (r < 0.2) {
+                    p.setIfAir(x, HANGAR + 1, z, "fit_droptank_nose[axis=x]");
+                    p.setIfAir(x + 1, HANGAR + 1, z, "fit_droptank[axis=x]");
+                    p.setIfAir(x + 2, HANGAR + 1, z, "fit_droptank[axis=x]");
+                    len = 3;
+                } else if (r < 0.35) {
+                    for (int dx = 0; dx < 4; dx++) {
+                        p.setIfAir(x + dx, HANGAR + 1, z, "navy_engine[axis=x]");
+                    }
+                    len = 4;
+                } else if (r < 0.5) {
+                    p.setIfAir(x, HANGAR + 1, z, "navy_tractor_back[facing=east]");
+                    p.setIfAir(x + 1, HANGAR + 1, z, "navy_tractor_front[facing=east]");
+                    p.setIfAir(x + 2, HANGAR + 1, z, "fit_towbar[facing=east]");
+                    len = 3;
+                } else if (r < 0.65) {
+                    p.setIfAir(x, HANGAR + 1, z, any("fit_gse_power", "fit_gse_air") + "[facing=" + (s > 0 ? "north" : "south") + "]");
+                    p.setIfAir(x + 1, HANGAR + 1, z, "fit_firebottle[facing=" + (s > 0 ? "north" : "south") + "]");
+                    len = 2;
+                } else if (r < 0.75) {
+                    p.setIfAir(x, HANGAR + 1, z, "fit_stand[facing=" + (s > 0 ? "north" : "south") + "]");
+                    p.setIfAir(x + 1, HANGAR + 1, z, "fit_tyres");
+                    len = 2;
+                } else if (r < 0.85) {
+                    p.setIfAir(x, HANGAR + 1, z, x > BAY1 - 60 ? (chance() < 0.5 ? "navy_bomb[axis=x]" : "navy_missile[axis=x]") : "fit_fod");
+                }
+                x += len + 1 + rng.nextInt(3);
+            }
+        }
+        // the forward end of the forward bay is a staging area: bomb and missile carts, tractors
+        for (int i = 0; i < 10; i++) {
+            int x = 247 + rng.nextInt(13), z = HZ0 + 3 + rng.nextInt(12);
             p.setIfAir(x, HANGAR + 1, z, chance() < 0.5 ? "navy_bomb[axis=x]" : "navy_missile[axis=x]");
         }
-        for (int i = 0; i < 5; i++) {
-            int x = BAY0 + 8 + rng.nextInt(BAY1 - BAY0 - 16), z = HZ0 + 3 + rng.nextInt(HZ1 - HZ0 - 6);
-            if (!fireDoor(x) && !fireDoor(x + 1)) {
-                tractor(x, HANGAR + 1, z);
-            }
-        }
-        // the jets: two or three to a bay, noses toward the middle
-        int[][] spots = {{72, -7, 1}, {100, 7, 0}, {146, -7, 1}, {172, 7, 0}, {220, -7, 1}, {245, 7, 0}};
-        for (int[] s : spots) {
-            if (chance() < 0.85) {
-                park(s[0], HANGAR + 1, s[1], s[2] == 1 ? 270 : 90 + (rng.nextInt(3) - 1) * 15);
-            }
+        for (int i = 0; i < 2; i++) {
+            tractor(250 + rng.nextInt(8), HANGAR + 1, HZ0 + 4 + rng.nextInt(10));
         }
         dressing(BAY0, BAY1, HZ0, HZ1, HANGAR, 60);
     }
@@ -602,11 +707,6 @@ final class Carrier {
                         p.set(x, y, z, "navy_tile_grey");
                     }
                 }
-                if (x % 6 == 0) {
-                    double r = chance();
-                    in(x, y + 3, walls[i] + 1, r < 0.15 ? "bunk_tube_lit[axis=x]" : r < 0.25 ? "bunk_tube_flicker[axis=x]"
-                            : r < 0.3 ? "bunk_tube_dangle[axis=x]" : "bunk_tube[axis=x]");
-                }
             }
         }
         int bands = walls.length / 2 + 1;
@@ -655,12 +755,164 @@ final class Carrier {
                 fit(pick.pick(fa + 1, fb - 1, ca, cb), fa + 1, fb - 1, ca, cb, y, doorZ);
             }
         }
+        for (int i = 0; i + 1 < walls.length; i += 2) {
+            passage(y, x0, x1, walls[i] + 1, ((y + i) & 2) == 0 ? "fit_pipes_b" : "fit_pipes_a");
+        }
     }
 
-    private void tube(int x, int y, int z) {
+    // ------------------------------------------------------------------ the fit-out: overheads, lights, bulkhead fittings
+
+    /** True inside her where nothing has been put yet. */
+    private boolean free(int x, int y, int z) {
+        if (!inside(x, y, z)) {
+            return false;
+        }
+        String s = p.get(x, y, z);
+        return s == null || s.equals("air");
+    }
+
+    /** Sets a fitting inside her where nothing has been put yet, so the furniture and the doors keep their places. */
+    private void over(int x, int y, int z, String block) {
+        if (free(x, y, z)) {
+            p.set(x, y, z, block);
+        }
+    }
+
+    /**
+     * A strip light with the power failing (the main lights dead or flickering, a few still on, the
+     * odd one hanging by its wires); on the emergency generator (lit) most still burn.
+     */
+    private String tube(String axis, boolean lit) {
         double r = chance();
-        in(x, y, z, r < 0.12 ? "bunk_tube_lit[axis=x]" : r < 0.2 ? "bunk_tube_flicker[axis=x]" : r < 0.26 ? "bunk_tube_dangle[axis=x]"
-                : "bunk_tube[axis=x]");
+        String t = lit ? (r < 0.75 ? "fit_tube_on" : r < 0.95 ? "fit_tube_flicker" : "fit_tube")
+                : r < 0.08 ? "fit_tube_on" : r < 0.3 ? "fit_tube_flicker" : r < 0.4 ? "bunk_tube_dangle" : "fit_tube";
+        return t + "[axis=" + axis + "]";
+    }
+
+    /** The red night lights: on the battery circuit, so most still glow. */
+    private String red() {
+        return chance() < 0.8 ? "fit_red_on" : "fit_red";
+    }
+
+    /** A battery battle lantern on the bulkhead, facing f: most came on when the power failed. */
+    private String lantern(String f) {
+        return (chance() < 0.7 ? "fit_lantern_on" : "fit_lantern") + "[facing=" + f + "]";
+    }
+
+    /** The deep beam across a run (it takes the run's axis), with the run's fitting passing under it; run null for a bare beam. */
+    private static String beam(String run, String axis) {
+        String b = run == null ? "fit_beam" : run.equals("fit_pipes_b") ? "fit_beam_pipes" : "fit_beam_" + run.substring(4);
+        return b + "[axis=" + axis + "]";
+    }
+
+    private static final String[] CAUTIONS = {"fit_st_hearing", "fit_st_nosmoking", "fit_st_oxygen", "fit_st_escape", "fit_st_ammo"};
+
+    /**
+     * A passage on floor y from x0 to x1, its rows a (to port, against the wall at a - 1) and a + 1:
+     * the pipe run over row a and a cable tray over the other, a deep beam across both every third
+     * metre (in line with the frames), the strip lights and red night lights between the beams; on
+     * the bulkheads the battle lanterns either side of each watertight door, phones, junction boxes,
+     * speakers, valves, pipe drops, fire stations, breathing sets, placards, signs and the frames.
+     */
+    private void passage(int y, int x0, int x1, int a, String pipes) {
+        int b = a + 1;
+        for (int x = x0; x <= x1; x++) {
+            int m = x - x0;
+            if (m % 3 == 0) {
+                over(x, y + 3, a, beam(pipes, "x"));
+                over(x, y + 3, b, beam("fit_tray", "x"));
+            } else {
+                over(x, y + 3, a, (pipes.equals("fit_pipes_b") && m % 18 == 10 ? "fit_pipes_valve" : pipes) + "[axis=x]");
+                over(x, y + 3, b, m % 6 == 1 ? tube("x", false) : m % 12 == 8 ? red() : "fit_tray[axis=x]");
+            }
+            // row a hangs its fittings on the wall to port (facing south), row b on the wall to starboard
+            String fa = "south", fb = "north";
+            switch (m % 36) {
+                case 1, 35 -> over(x, y + 2, a, lantern(fa));
+                case 2 -> over(x, y + 2, b, "fit_st_keepclosed[facing=" + fb + "]");
+                case 4 -> over(x, y + 2, a, "fit_pl_" + rng.nextInt(16) + "[facing=" + fa + "]");
+                case 5, 22 -> over(x, y + 2, b, "fit_jbox[facing=" + fb + "]");
+                case 7 -> over(x, y + 1, a, "fit_valve[facing=" + fa + "]");
+                case 10 -> over(x, y + 2, a, "fit_phone[facing=" + fa + "]");
+                case 11 -> {
+                    over(x, y + 1, b, "fit_pipe_drop[facing=" + fb + "]");
+                    over(x, y + 2, b, "fit_pipe_drop[facing=" + fb + "]");
+                }
+                case 14 -> over(x, y + 2, b, "fit_eebd[facing=" + fb + "]");
+                case 16 -> over(x, y + 2, a, "fit_speaker[facing=" + fa + "]");
+                case 18 -> {
+                    over(x, y + 1, b, "fit_firestation[facing=" + fb + "]");
+                    over(x, y + 2, b, "fit_st_fire[facing=" + fb + "]");
+                }
+                case 20 -> over(x, y + 2, a, "fit_exit[facing=" + fa + "]");
+                case 25 -> {
+                    over(x, y + 1, a, "fit_pipe_drop[facing=" + fa + "]");
+                    over(x, y + 2, a, "fit_pipe_drop[facing=" + fa + "]");
+                }
+                case 28 -> over(x, y + 2, b, "fit_pl_" + rng.nextInt(16) + "[facing=" + fb + "]");
+                case 29 -> over(x, y + 2, a, CAUTIONS[rng.nextInt(CAUTIONS.length)] + "[facing=" + fa + "]");
+                case 31 -> over(x, y + 1, b, "fit_valve[facing=" + fb + "]");
+                default -> {
+                }
+            }
+            if (m % 3 == 0 && m % 36 != 0) {
+                for (int dy = 1; dy <= 2; dy++) {
+                    over(x, y + dy, a, "fit_frame[facing=" + fa + "]");
+                    over(x, y + dy, b, "fit_frame[facing=" + fb + "]");
+                }
+            }
+        }
+    }
+
+    /**
+     * A compartment's overhead and bulkheads: a pipe run along the far side, a cable tray along the
+     * near one, the lights down the middle (on the emergency generator where lit), a vent trunk where
+     * people live, beams across every fourth metre; on the far bulkhead junction boxes, speakers and
+     * pipe drops, a battle lantern by the door, a placard on each end bulkhead. Only where the
+     * fit-out left room.
+     */
+    private void overheads(Room r, int xa, int xb, int near, int far, int y, String toNear, String toFar, int dx, boolean lit) {
+        int in = far > near ? 1 : -1, mid = (near + far) / 2;
+        String pipes = chance() < 0.5 ? "fit_pipes_a" : "fit_pipes_b";
+        boolean duct = Math.abs(far - near) >= 4 && switch (r) {
+            case BERTHING, MESS, GALLEY, OFFICE, STATEROOM, READY, CONTROL, SICKBAY -> true;
+            default -> false;
+        };
+        int ductZ = mid + in;
+        for (int x = xa; x <= xb; x++) {
+            boolean beamX = (x - xa) % 4 == 0;
+            for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
+                String run = z == far ? (r == Room.MAGAZINE ? "fit_sprinkler" : pipes) : z == near ? "fit_tray"
+                        : duct && z == ductZ ? "fit_duct" : r == Room.MAGAZINE && z == mid ? "fit_sprinkler" : null;
+                if (beamX) {
+                    over(x, y + 3, z, beam(run, "x"));
+                } else if (z == mid && (x - xa) % 4 == 2 && r != Room.MAGAZINE) {
+                    over(x, y + 3, z, tube("x", lit));
+                } else if (z == near && (x - xa) % 8 == 5 && (r == Room.BERTHING || r == Room.STATEROOM || r == Room.MESS)) {
+                    over(x, y + 3, z, red());
+                } else if (run != null) {
+                    over(x, y + 3, z, (run.equals("fit_duct") && (x - xa) % 4 == 2 ? "fit_duct_grille" : run) + "[axis=x]");
+                }
+            }
+            switch ((x - xa) % 6) {
+                case 1 -> over(x, y + 2, far, "fit_jbox[facing=" + toNear + "]");
+                case 3 -> {
+                    over(x, y + 1, far, "fit_pipe_drop[facing=" + toNear + "]");
+                    over(x, y + 2, far, "fit_pipe_drop[facing=" + toNear + "]");
+                }
+                case 5 -> over(x, y + 2, far, (chance() < 0.5 ? "fit_speaker" : "fit_frame") + "[facing=" + toNear + "]");
+                default -> {
+                }
+            }
+        }
+        over(dx + 1, y + 2, near, lantern(toFar));
+        over(dx - 2, y + 2, near, chance() < 0.5 ? "fit_eebd[facing=" + toFar + "]" : "fit_phone[facing=" + toFar + "]");
+        over(xa, y + 2, mid, "fit_pl_" + rng.nextInt(16) + "[facing=east]");
+        over(xb, y + 2, mid - in, (chance() < 0.5 ? "fit_jbox" : "fit_speaker") + "[facing=west]");
+        if (r == Room.WORKSHOP || r == Room.STORES) {
+            over(xa, y + 1, near + in, "fit_dc_locker[facing=east]");
+            over(xa, y + 1, near + 2 * in, "fit_dc_locker_b[facing=east]");
+        }
     }
 
     /** Fits out a compartment from xa to xb and za to zb on floor y, its door in the bulkhead at row doorZ. */
@@ -688,8 +940,6 @@ final class Carrier {
         for (int x = xa + 2; x <= xb - 1; x += 4) {
             if (r == Room.MAGAZINE) {
                 in(x, y + 2, far, "bunk_lamp_red" + (chance() < 0.3 ? "_lit" : "") + "[facing=" + toNear + "]");
-            } else {
-                tube(x, y + 3, (za + zb) / 2);
             }
         }
         boolean steel = r == Room.ARMORY || r == Room.MAGAZINE;
@@ -945,6 +1195,7 @@ final class Carrier {
             }
         }
         if (r != Room.TRUNK) {
+            overheads(r, xa, xb, near, far, y, toNear, toFar, dx, r == Room.SICKBAY);
             dressing(xa, xb, Math.min(za, zb), Math.max(za, zb), y, (int) ((xb - xa) * (hi2 - lo2 + 1) * (0.015 + hit * 0.03)));
         }
     }
