@@ -319,6 +319,12 @@ public final class ZcConfig {
         public boolean stormFlashes = true;
         /** Paper, leaves and plastic blown down the street when the wind picks up. Client side. */
         public boolean windDebris = true;
+        /** Rain dripping off ledges and awnings, downpipes pouring, splashes underfoot, leaks under the roof. Client side. */
+        public boolean drips = true;
+        /** Fires and smoke columns burning far off on the skyline, and smoulder where lightning struck. Client side. */
+        public boolean skylineFires = true;
+        /** A close strike makes the lamps and neon round you flicker, sometimes browning out for a few seconds. Client side. */
+        public boolean stormSurges = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
