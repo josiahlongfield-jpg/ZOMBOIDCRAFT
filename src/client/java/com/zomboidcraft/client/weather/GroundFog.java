@@ -18,6 +18,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
@@ -55,15 +56,29 @@ final class GroundFog {
         for (int i = 0; i < SIDE; i++) {
             for (int j = 0; j < SIDE; j++) {
                 int x = originX + i * CELL, z = originZ + j * CELL;
-                int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
-                // roofs well over your head get none: the mist lies on the street round you
-                HEIGHT[i * SIDE + j] = top > feet + 6 ? Float.NaN : top;
+                // leaves don't count: the mist lies under the trees, not on them
+                int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+                // only on real ground: never over your head, and never on a roof, an awning or a car
+                // park deck (anything with open space under its top)
+                HEIGHT[i * SIDE + j] = top > feet + 6 || hollow(level, pos, x, top, z) ? Float.NaN : top;
                 pos.set(x, top, z);
                 int block = level.getBrightness(LightLayer.BLOCK, pos), sky = level.getBrightness(LightLayer.SKY, pos);
                 LIGHT[i * SIDE + j] = sky << 20 | Math.max(block, 5) << 4;
             }
         }
         ready = true;
+    }
+
+    /** Whether there's open space a little under the top at x, z: a roof or a deck, not the ground. */
+    private static boolean hollow(ClientLevel level, BlockPos.MutableBlockPos pos, int x, int top, int z) {
+        for (int y = top - 2; y >= top - 7; y--) {
+            pos.set(x, y, z);
+            BlockState state = level.getBlockState(pos);
+            if (state.getFluidState().isEmpty() && state.getCollisionShape(level, pos).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static void forget() {
@@ -87,8 +102,8 @@ final class GroundFog {
         double drift = 0.25 + 0.9 * w.wind();
         float flash = WeatherView.flash();
         // the low sheets always; more of them, higher up, as fog comes in
-        int layers = Mth.clamp(2 + Math.round(thick * 4), 2, 7);
-        float strength = (float) Math.min(1, 0.32 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        int layers = Mth.clamp(1 + Math.round(thick * 3), 2, 5);
+        float strength = (float) Math.min(1, 0.27 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),
                 (pose, out) -> {
                     for (int layer = 0; layer < layers; layer++) {
