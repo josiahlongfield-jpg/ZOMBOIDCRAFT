@@ -335,7 +335,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         if (fly != null) {
             for (Hot h : flyHots) {
                 if (h.has(mx, my)) {
-                    Runnable r = right ? h.alt() : h.click();
+                    Runnable r = right && h.alt() != null ? h.alt() : h.click();
                     if (r != null) r.run();
                     return true;
                 }
@@ -346,7 +346,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         for (int i = hots.size() - 1; i >= 0; i--) {
             Hot h = hots.get(i);
             if (h.has(mx, my)) {
-                Runnable r = right ? h.alt() : h.click();
+                Runnable r = right && h.alt() != null ? h.alt() : h.click();
                 if (r != null) r.run();
                 return true;
             }
