@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_beige": "zomboidcraft:block/city/fit_beige",
+    "fit_locker_door": "zomboidcraft:block/city/fit_locker_door",
+    "particle": "zomboidcraft:block/city/fit_locker_door"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_locker_door"
+        },
+        "south": {
+          "texture": "#fit_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_beige"
+        },
+        "west": {
+          "texture": "#fit_beige"
+        },
+        "up": {
+          "texture": "#fit_beige"
+        },
+        "down": {
+          "texture": "#fit_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        15,
+        1.5
+      ],
+      "to": [
+        15.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beige"
+        },
+        "south": {
+          "texture": "#fit_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_beige"
+        },
+        "west": {
+          "texture": "#fit_beige"
+        },
+        "up": {
+          "texture": "#fit_beige",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beige"
+        }
+      }
+    }
+  ]
+}
