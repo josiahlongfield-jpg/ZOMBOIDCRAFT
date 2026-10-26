@@ -7,6 +7,8 @@ import com.zomboidcraft.building.Build;
 import com.zomboidcraft.building.Builder;
 import java.util.List;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
@@ -37,12 +39,22 @@ public final class Placer {
     private static @Nullable Build building;
     private static @Nullable Build.Spot spot;
     private static @Nullable BlockPos wrongAt;
+    private static @Nullable BlockHitResult aimed;
+    private static @Nullable String problem;
     private static int said;
     /** Builds asked for since the game started (the UI test reads it). */
     public static int asked;
 
     public static void register() {
         ClientTickEvents.START_CLIENT_TICK.register(Placer::tick);
+        // a left click while placing builds instead of swinging, mining or shooting; ahead of the gun's own handler
+        Identifier first = ZomboidCraft.id("placer");
+        ClientPreAttackCallback.EVENT.addPhaseOrdering(first, Event.DEFAULT_PHASE);
+        ClientPreAttackCallback.EVENT.register(first, (client, player, clicks) -> {
+            if (building == null) return false;
+            if (clicks > 0) place(client);
+            return true;
+        });
         LevelRenderEvents.COLLECT_SUBMITS.register(Placer::draw);
     }
 
@@ -70,54 +82,60 @@ public final class Placer {
             return;
         }
         Build build = building;
-        spot = null;
-        wrongAt = null;
-        String problem = null;
-        HitResult hit = mc.hitResult;
-        BlockHitResult block = hit instanceof BlockHitResult b && hit.getType() == HitResult.Type.BLOCK
-                && player.getEyePosition().distanceToSqr(hit.getLocation()) <= Builder.REACH * Builder.REACH ? b : null;
-        if (block == null) {
-            problem = "Look at where it should go.";
-        } else {
-            Build.Spot s = build.spot(mc.level, block.getBlockPos(), block.getDirection(), player.getDirection());
-            if (s.ok()) {
-                spot = s;
-            } else {
-                problem = s.problem();
-                wrongAt = block.getBlockPos().relative(block.getDirection());
-            }
-        }
-        String missing = build.missing(player);
-        if (missing != null) problem = missing;
-
+        look(mc, player, build);
         boolean place = false;
         while (mc.options.keyAttack.consumeClick()) place = true;
         boolean cancel = false;
         while (mc.options.keyUse.consumeClick()) cancel = true;
-        // a held button mustn't mine or shoot behind the preview
-        mc.options.keyAttack.setDown(false);
-        mc.options.keyUse.setDown(false);
         if (cancel) {
             stop();
             return;
         }
-        if (place) {
-            if (problem == null && spot != null && block != null) {
-                asked++;
-                ClientPlayNetworking.send(new Builder.Request(build.ordinal(), block.getBlockPos(), block.getDirection().get3DDataValue(),
-                        player.getDirection().get3DDataValue()));
-            } else if (problem != null) {
-                player.sendOverlayMessage(Component.literal(problem).withStyle(ChatFormatting.GRAY));
-                said = 40;
-                return;
-            }
-        }
+        if (place) place(mc);
         if (said > 0) {
             said--;
             return;
         }
         String line = build.label + ":  LMB build  ·  RMB done" + (problem != null ? "  ·  " + problem : "");
         player.sendOverlayMessage(Component.literal(line).withStyle(problem == null ? ChatFormatting.WHITE : ChatFormatting.GRAY));
+    }
+
+    /** Where the build would go from what the player is looking at, and what's stopping it. */
+    private static void look(Minecraft mc, LocalPlayer player, Build build) {
+        spot = null;
+        wrongAt = null;
+        problem = null;
+        HitResult hit = mc.hitResult;
+        aimed = hit instanceof BlockHitResult b && hit.getType() == HitResult.Type.BLOCK
+                && player.getEyePosition().distanceToSqr(hit.getLocation()) <= Builder.REACH * Builder.REACH ? b : null;
+        if (aimed == null) {
+            problem = "Look at where it should go.";
+        } else {
+            Build.Spot s = build.spot(mc.level, aimed.getBlockPos(), aimed.getDirection(), player.getDirection());
+            if (s.ok()) {
+                spot = s;
+            } else {
+                problem = s.problem();
+                wrongAt = aimed.getBlockPos().relative(aimed.getDirection());
+            }
+        }
+        String missing = build.missing(player);
+        if (missing != null) problem = missing;
+    }
+
+    private static void place(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        Build build = building;
+        if (player == null || build == null || mc.level == null) return;
+        look(mc, player, build);
+        if (problem == null && spot != null && aimed != null) {
+            asked++;
+            ClientPlayNetworking.send(new Builder.Request(build.ordinal(), aimed.getBlockPos(), aimed.getDirection().get3DDataValue(),
+                    player.getDirection().get3DDataValue()));
+        } else if (problem != null) {
+            player.sendOverlayMessage(Component.literal(problem).withStyle(ChatFormatting.GRAY));
+            said = 40;
+        }
     }
 
     private static void draw(LevelRenderContext context) {
