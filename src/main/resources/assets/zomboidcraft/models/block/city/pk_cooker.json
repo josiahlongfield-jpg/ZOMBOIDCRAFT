@@ -1,0 +1,569 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_cooker": "zomboidcraft:block/city/pk_cooker",
+    "particle": "zomboidcraft:block/city/pk_cooker"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            8.3125,
+            0.0625,
+            12.3125,
+            2.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            0.0625,
+            3.9375,
+            4.0625,
+            6.4375
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            8.0625,
+            3.9375,
+            11.8125,
+            6.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.1875,
+            3.9375,
+            7.9375,
+            6.4375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.1875,
+            0.0625,
+            8.1875,
+            3.8125
+          ]
+        },
+        "down": {
+          "texture": "#pk_cooker",
+          "uv": [
+            0.0625,
+            0.0625,
+            4.0625,
+            3.8125
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        0
+      ],
+      "to": [
+        3,
+        4,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.1875,
+            6.5625,
+            13.4375,
+            6.8125
+          ],
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.9375,
+            6.5625,
+            14.1875,
+            6.8125
+          ]
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.5625,
+            6.5625,
+            13.8125,
+            6.8125
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.8125,
+            6.5625,
+            13.0625,
+            6.8125
+          ]
+        },
+        "down": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.4375,
+            6.5625,
+            12.6875,
+            6.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        0
+      ],
+      "to": [
+        15,
+        9,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            0.0625,
+            6.5625,
+            3.5625,
+            7.3125
+          ],
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.0625,
+            6.5625,
+            4.3125,
+            7.3125
+          ]
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            3.6875,
+            6.5625,
+            3.9375,
+            7.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            3.6875,
+            7.4375,
+            7.1875,
+            7.6875
+          ]
+        },
+        "down": {
+          "texture": "#pk_cooker",
+          "uv": [
+            0.0625,
+            7.4375,
+            3.5625,
+            7.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        14
+      ],
+      "to": [
+        1,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            11.9375,
+            3.9375,
+            12.1875,
+            5.1875
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.3125,
+            3.9375,
+            12.5625,
+            5.1875
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.3125,
+            3.9375,
+            13.8125,
+            5.1875
+          ]
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.6875,
+            3.9375,
+            13.1875,
+            5.1875
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            11.6875,
+            6.5625,
+            11.9375,
+            7.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        10,
+        14
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.9375,
+            3.9375,
+            14.1875,
+            5.1875
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            14.3125,
+            3.9375,
+            14.5625,
+            5.1875
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            15.3125,
+            3.9375,
+            15.8125,
+            5.1875
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            14.6875,
+            3.9375,
+            15.1875,
+            5.1875
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.0625,
+            6.5625,
+            12.3125,
+            7.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        10,
+        15
+      ],
+      "to": [
+        15,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.4375,
+            6.5625,
+            7.9375,
+            7.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            8.0625,
+            6.5625,
+            11.5625,
+            7.3125
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            7.3125,
+            7.4375,
+            10.8125,
+            7.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13,
+        15
+      ],
+      "to": [
+        6,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            12.3125,
+            7.4375,
+            13.5625,
+            7.6875
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            13.6875,
+            7.4375,
+            14.9375,
+            7.6875
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            15.0625,
+            7.4375,
+            15.3125,
+            7.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            10.9375,
+            7.4375,
+            12.1875,
+            7.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        13,
+        15
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            1.4375,
+            7.8125,
+            2.6875,
+            8.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            2.8125,
+            7.8125,
+            4.0625,
+            8.0625
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.1875,
+            7.8125,
+            4.4375,
+            8.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            0.0625,
+            7.8125,
+            1.3125,
+            8.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        14,
+        15
+      ],
+      "to": [
+        4,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            5.4375,
+            7.8125,
+            6.1875,
+            8.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            6.3125,
+            7.8125,
+            7.0625,
+            8.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_cooker",
+          "uv": [
+            7.1875,
+            7.8125,
+            7.4375,
+            8.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            4.5625,
+            7.8125,
+            5.3125,
+            8.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        14,
+        15
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cooker",
+          "uv": [
+            8.4375,
+            7.8125,
+            9.1875,
+            8.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_cooker",
+          "uv": [
+            9.3125,
+            7.8125,
+            10.0625,
+            8.0625
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#pk_cooker",
+          "uv": [
+            10.1875,
+            7.8125,
+            10.4375,
+            8.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_cooker",
+          "uv": [
+            7.5625,
+            7.8125,
+            8.3125,
+            8.0625
+          ]
+        }
+      }
+    }
+  ]
+}

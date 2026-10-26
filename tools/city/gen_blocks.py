@@ -112,6 +112,8 @@ def element(b):
     uvs = b[7] if len(b) > 7 else None
     faces = {}
     for f in DIRS:
+        if uvs is not None and f not in uvs:
+            continue  # a face the rest of the object covers (tools/props/props.py)
         face = {"texture": "#" + tex[f]}
         u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
         if uvs:
@@ -371,6 +373,9 @@ def title(name):
 def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
+    # the prop packs' atlases come whole from tools/props/props.py, their LabPBR maps with them
+    for p in (ROOT / "tools/props/tex").glob("*.png"):
+        shutil.copy(p, tex_dir / p.name)
     # start clean so renamed or dropped blocks don't linger (the old models name the old blocks)
     old = sorted({p.stem.split("_bottom_")[0].split("_top_")[0] for p in (ASSETS / "models/block/city").glob("*.json")})
     for d in (ASSETS / "models/block/city", ASSETS / "textures/block/city"):

@@ -1,0 +1,289 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_dishwasher": "zomboidcraft:block/city/pk_dishwasher",
+    "particle": "zomboidcraft:block/city/pk_dishwasher"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            8.3125,
+            0.0625,
+            12.3125,
+            3.8125
+          ]
+        },
+        "south": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.0625,
+            3.9375,
+            4.0625,
+            7.6875
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            8.0625,
+            3.9375,
+            11.8125,
+            7.6875
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            4.1875,
+            3.9375,
+            7.9375,
+            7.6875
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            4.1875,
+            0.0625,
+            8.1875,
+            3.8125
+          ]
+        },
+        "down": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.0625,
+            0.0625,
+            4.0625,
+            3.8125
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            11.9375,
+            7.8125,
+            15.9375,
+            8.0625
+          ],
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.4375,
+            8.9375,
+            0.6875,
+            9.1875
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.0625,
+            8.9375,
+            0.3125,
+            9.1875
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            7.8125,
+            7.8125,
+            11.8125,
+            8.0625
+          ]
+        },
+        "down": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            3.6875,
+            7.8125,
+            7.6875,
+            8.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        1,
+        15,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            11.9375,
+            3.9375,
+            12.1875,
+            6.9375
+          ],
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            12.6875,
+            3.9375,
+            12.9375,
+            6.9375
+          ]
+        },
+        "west": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            12.3125,
+            3.9375,
+            12.5625,
+            6.9375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.8125,
+            8.9375,
+            1.0625,
+            9.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            13.0625,
+            3.9375,
+            13.3125,
+            6.9375
+          ],
+          "cullface": "north"
+        },
+        "east": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            13.8125,
+            3.9375,
+            14.0625,
+            6.9375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            13.4375,
+            3.9375,
+            13.6875,
+            6.9375
+          ]
+        },
+        "up": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            1.1875,
+            8.9375,
+            1.4375,
+            9.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        11,
+        0
+      ],
+      "to": [
+        15,
+        15,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            0.0625,
+            7.8125,
+            3.5625,
+            8.8125
+          ],
+          "cullface": "north"
+        },
+        "up": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            5.1875,
+            8.9375,
+            8.6875,
+            9.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_dishwasher",
+          "uv": [
+            1.5625,
+            8.9375,
+            5.0625,
+            9.1875
+          ]
+        }
+      }
+    }
+  ]
+}

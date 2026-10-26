@@ -269,6 +269,8 @@ class Palette:
                 for b in spec["boxes"]:
                     box, tname = b[:6], b[6]
                     for d in range(6):
+                        if len(b) > 7 and DIRS[d] not in b[7]:
+                            continue  # a face the rest of the object covers (tools/props/props.py)
                         # one texture for the box, or a dict of faces (a roof step's shingled tread)
                         t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
