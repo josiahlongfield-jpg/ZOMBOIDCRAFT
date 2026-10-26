@@ -90,6 +90,14 @@ QUERIES = {
     # guns, round 3: the Remington 700-style bolt-action hunting rifle
     "gun_bolt": ["hunting rifle shot", "30-06 rifle shot", "308 rifle gunshot", "bolt action rifle shot", "deer rifle shot"],
     "gun_bolt_foley": ["bolt action rifle cycling", "rifle bolt open close", "bolt action reload", "rifle magazine insert"],
+    # guns, round 4: double-barrel 12 gauge side-by-side and a .38 Special revolver
+    "gun_dbl": ["double barrel shotgun shot", "side by side shotgun", "12 gauge shotgun blast", "coach gun shot",
+                "double barrel shotgun fire", "sawed off shotgun shot"],
+    "gun_dbl_foley": ["double barrel shotgun open", "break action shotgun", "shotgun breech open close",
+                      "shotgun shell insert", "double barrel reload", "break open shotgun eject"],
+    "gun_revolver": ["revolver shot", "38 special revolver", "revolver gunshot", "357 magnum shot", "revolver fire"],
+    "gun_revolver_foley": ["revolver cock hammer", "revolver cylinder open", "revolver cylinder spin", "revolver reload",
+                           "revolver dry fire", "revolver eject shells", "revolver cylinder close", "bullet drop into cylinder"],
     "gun_sup_sniper": ["suppressed sniper rifle", "silenced sniper shot", "suppressed rifle gunshot", "silencer rifle shot",
                        "suppressed 308", "subsonic rifle suppressed", "silenced rifle", "suppressed 50 cal",
                        "suppressed barrett", "suppressed 338 lapua", "heavy suppressed rifle", "suppressor big rifle"],
