@@ -125,6 +125,7 @@ public final class StandIns {
         put("floor_boards", "spruce_planks");
         for (String shelf : new String[] {"grocery", "pharmacy", "liquor", "hardware", "thrift", "pawn", "ammo", "empty"}) {
             put("store_shelf_" + shelf, "chiseled_bookshelf");
+            put("store_shelf_" + shelf + "_top", "chiseled_bookshelf");
         }
         put("store_cooler", "white_concrete");
         put("store_cooler_top", "glass");

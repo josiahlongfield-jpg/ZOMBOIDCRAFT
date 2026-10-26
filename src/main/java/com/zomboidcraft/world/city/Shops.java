@@ -298,7 +298,7 @@ public final class Shops {
         for (int x = left + 1; x <= right - 1; x++) {
             put(x, 1, back - 2, x == (left + right) / 2 ? "store_register[facing=south]" : "store_counter[facing=south]");
         }
-        aisles("store_shelf_pharmacy", 5, back - 4, right);
+        aisles("store_shelf_pharmacy", 5, back - 4, right - 1);
         for (int z = 3; z <= back - 4; z++) {
             stack(right, z, "store_shelf_pharmacy[facing=west]", 2);
         }
@@ -495,26 +495,43 @@ public final class Shops {
         aisles(shelf, z0, z1, maxX, left + 2);
     }
 
+    /**
+     * Double-sided gondolas: two bays back to back, stocked both ways, with a walk between pairs and
+     * one left free at maxX, so no bay faces a wall or the coolers; a shop too narrow for a pair gets
+     * one single-sided run.
+     */
     private void aisles(String shelf, int z0, int z1, int maxX, int firstX) {
-        for (int x = firstX; x <= maxX; x += 3) {
+        int x = firstX;
+        for (; x + 1 <= maxX - 1; x += 4) {
             for (int z = z0; z <= z1; z++) {
-                stack(x, z, shelf + "[facing=east]", 2);
+                stack(x, z, shelf + "[facing=west]", 2);
+                stack(x + 1, z, shelf + "[facing=east]", 2);
+            }
+        }
+        if (x == firstX && firstX <= maxX - 1) {
+            for (int z = z0; z <= z1; z++) {
+                stack(firstX, z, shelf + "[facing=east]", 2);
             }
         }
     }
 
-    /** One bay pulled over into the aisle beside it, its stock across the floor. */
+    /** One bay pulled over into the aisle it faces, its stock across the floor. */
     private void toppled(int z0, int z1) {
         if (rng.nextDouble() > 0.4 || z1 <= z0) {
             return;
         }
         int z = z0 + rng.nextInt(z1 - z0 + 1);
-        for (int x = left + 2; x <= right; x += 3) {
-            if (p.get(x, 1, z) != null && p.get(x, 1, z).startsWith("store_shelf") && air(x + 1, 1, z)) {
+        for (int x = left + 1; x < right; x++) {
+            String b = p.get(x, 1, z);
+            if (b == null || !b.startsWith("store_shelf")) {
+                continue;
+            }
+            int to = b.contains("facing=west") ? x - 1 : x + 1;
+            if (air(to, 1, z)) {
                 put(x, 1, z, "air");
                 put(x, 2, z, "air");
-                put(x + 1, 1, z, "store_shelf_fallen[facing=north]");
-                p.setIfAir(x + 1, 1, z + 1, "store_spill");
+                put(to, 1, z, "store_shelf_fallen[facing=north]");
+                p.setIfAir(to, 1, z + 1, "store_spill");
                 return;
             }
         }
@@ -602,8 +619,14 @@ public final class Shops {
 
     private void stack(int x, int z, String block, int high) {
         for (int y = 1; y <= high; y++) {
-            put(x, y, z, block);
+            put(x, y, z, y > 1 && block.startsWith("store_shelf_") ? top(block) : block);
         }
+    }
+
+    /** "store_shelf_grocery[facing=east]" becomes "store_shelf_grocery_top[facing=east]": a bay's upper block. */
+    static String top(String block) {
+        int open = block.indexOf('[');
+        return open < 0 ? block + "_top" : block.substring(0, open) + "_top" + block.substring(open);
     }
 
     private boolean air(int x, int y, int z) {

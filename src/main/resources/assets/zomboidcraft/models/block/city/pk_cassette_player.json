@@ -1,0 +1,196 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_cassette_player": "zomboidcraft:block/city/pk_cassette_player",
+    "particle": "zomboidcraft:block/city/pk_cassette_player"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        7
+      ],
+      "to": [
+        10,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            0.25,
+            0.25,
+            4.25,
+            7.25
+          ]
+        },
+        "south": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            4.75,
+            0.25,
+            8.75,
+            7.25
+          ]
+        },
+        "east": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            11.75,
+            0.25,
+            13.75,
+            7.25
+          ]
+        },
+        "west": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            9.25,
+            0.25,
+            11.25,
+            7.25
+          ]
+        },
+        "up": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            4.75,
+            7.75,
+            8.75,
+            9.75
+          ]
+        },
+        "down": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            0.25,
+            7.75,
+            4.25,
+            9.75
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        2,
+        8
+      ],
+      "to": [
+        11,
+        4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            9.25,
+            7.75,
+            10.25,
+            9.75
+          ]
+        },
+        "south": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            10.75,
+            7.75,
+            11.75,
+            9.75
+          ]
+        },
+        "east": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            12.25,
+            7.75,
+            13.25,
+            9.75
+          ]
+        },
+        "up": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            1.75,
+            10.25,
+            2.75,
+            11.25
+          ]
+        },
+        "down": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            0.25,
+            10.25,
+            1.25,
+            11.25
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        7,
+        7
+      ],
+      "to": [
+        7,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            3.25,
+            10.25,
+            4.25,
+            11.25
+          ]
+        },
+        "south": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            4.75,
+            10.25,
+            5.75,
+            11.25
+          ]
+        },
+        "east": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            8.75,
+            10.25,
+            10.75,
+            11.25
+          ]
+        },
+        "west": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            6.25,
+            10.25,
+            8.25,
+            11.25
+          ]
+        },
+        "up": {
+          "texture": "#pk_cassette_player",
+          "uv": [
+            13.75,
+            7.75,
+            14.75,
+            9.75
+          ]
+        }
+      }
+    }
+  ]
+}

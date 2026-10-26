@@ -31,7 +31,8 @@ final class Cover implements ChunkSink {
 
     /**
      * Furniture and fittings from the prop packs (tools/props/props.py) standing in for the built-in
-     * blocks: the built-in block stays one choice among them. Its state (facing, loot) carries over.
+     * blocks: the built-in block stays one choice among them (unless its group is marked "!"). Its
+     * state (facing, loot) carries over.
      */
     private String prop(int x, int z, String block) {
         int open = block.indexOf('[');
@@ -40,7 +41,8 @@ final class Cover implements ChunkSink {
             return block;
         }
         long h = Noise.hash(seed ^ alts[0].hashCode() * 0x9E3779B97F4A7C15L, x, z);
-        int pick = (int) Long.remainderUnsigned(h, alts.length);
+        boolean always = alts[0].charAt(0) == '!';   // the built-in block is not one of the choices
+        int pick = always ? 1 + (int) Long.remainderUnsigned(h, alts.length - 1) : (int) Long.remainderUnsigned(h, alts.length);
         if (pick == 0) {
             return block;
         }

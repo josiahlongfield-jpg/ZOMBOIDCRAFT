@@ -758,6 +758,9 @@ def blocks():
         # steel end panels hide the stock's edges; the stock shows front and back
         out[f"store_shelf_{k}"] = {"model": "boxes", "rotate": "facing", "boxes": [
             [1, 0, 2, 15, 16, 14, f"store_shelf_{k}"], [0, 0, 2, 1, 16, 14, steel], [15, 0, 2, 16, 16, 14, steel]]}
+        # the upper block of a two-high bay: the same look, its own name so the prop packs'
+        # two-block shelves (tools/props) can tell the halves apart
+        out[f"store_shelf_{k}_top"] = out[f"store_shelf_{k}"]
     out.update({
         "store_cooler": {"tex": {"north": "store_cooler", "side": "store_appliance"}, "rotate": "facing"},
         "store_cooler_top": {"tex": {"north": "store_cooler_top", "side": "store_appliance"}, "rotate": "facing"},
@@ -820,14 +823,23 @@ LOOT = {**{f"store_shelf_{k}": k for k in ("grocery", "pharmacy", "liquor", "har
         "store_dryer": "clothes", "store_clothes_rack": "clothes", "store_bin": "clothes", "store_oven": "kitchen",
         "store_grill": "kitchen", "store_coffee": "kitchen", "store_produce": "grocery", "store_lumber": "hardware",
         "store_paint_cans": "hardware", "crate": "storage", "cardboard_box": "storage", "filing_cabinet": "office"}
+LOOT.update({f"{k}_top": v for k, v in LOOT.items() if k.startswith("store_shelf_")})
 
 
 def main():
     path = HERE / "blocks.json"
     text = path.read_text()
     data = json.loads(text)
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("store_", "floor_checker", "floor_lino", "floor_boards"))}
-    kept.update(blocks())
+    shop = blocks()
+    kept = {}
+    for k, v in data["blocks"].items():   # shop entries are replaced where they stand
+        if not k.startswith(("store_", "floor_checker", "floor_lino", "floor_boards")):
+            kept[k] = v
+        elif k in shop:
+            kept[k] = shop[k]
+            if f"{k}_top" in shop:
+                kept[f"{k}_top"] = shop[f"{k}_top"]
+    kept.update({k: v for k, v in shop.items() if k not in kept})
     for name, spec in kept.items():
         if name.startswith("home_"):  # the house kit sets its own (tools/city/furniture.py)
             continue
@@ -835,10 +847,7 @@ def main():
         if name in LOOT:
             spec["loot"] = LOOT[name]
     data["blocks"] = kept
-    lines = ",\n".join(f"    {json.dumps(k)}: {json.dumps(v)}" for k, v in kept.items())
-    rest = {k: v for k, v in data.items() if k != "blocks"}
-    head = "".join(f'  {json.dumps(k)}: {json.dumps(v)},\n' for k, v in rest.items())
-    path.write_text("{\n" + head + '  "blocks": {\n' + lines + "\n  }\n}\n")
+    path.write_text(json.dumps(data, indent=1) + "\n")   # the layout the other kit tools write
     print(f"{len(blocks())} shop blocks in {path}")
 
 

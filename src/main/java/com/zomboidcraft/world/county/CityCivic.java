@@ -700,7 +700,7 @@ final class CityCivic {
         if (pharmacy) {
             for (int x = a0; x <= a1; x++) {
                 p.set(x, y + 1, wallZ, "store_shelf_pharmacy[facing=" + face + "]");
-                p.set(x, y + 2, wallZ, "store_shelf_pharmacy[facing=" + face + "]");
+                p.set(x, y + 2, wallZ, "store_shelf_pharmacy_top[facing=" + face + "]");
             }
             for (int z = Math.min(r0, r1) + 1; z < Math.max(r0, r1); z++) {
                 p.set(a0, y + 1, z, "store_shelf_pharmacy[facing=east]");

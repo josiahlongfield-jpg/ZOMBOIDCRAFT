@@ -363,7 +363,7 @@ def write_json(path, obj):
 
 def title(name):
     if name.startswith("store_shelf_"):  # the shelf's name heads its loot screen: "Grocery Shelf"
-        return name[len("store_shelf_"):].replace("_", " ").title() + " Shelf"
+        return name[len("store_shelf_"):].removesuffix("_top").replace("_", " ").title() + " Shelf"
     if name.startswith("store_"):
         name = name[len("store_"):]
     words = ["weathered" if w == "b" else w for w in name.split("_")]
