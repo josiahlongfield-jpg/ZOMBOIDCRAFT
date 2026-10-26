@@ -50,3 +50,17 @@ java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
+
+// In-game look test (./gradlew runClientGameTest -Pgunlook): screenshots guns, lights and lasers in a real client,
+// with and without a shader pack. Test only: this branch is never merged.
+if (project.hasProperty('gunlook')) {
+    fabricApi {
+        configureTests {
+            createSourceSet = true
+            modId = 'zomboidcraft-gunlook'
+            enableGameTests = false
+            enableClientGameTests = true
+            eula = true
+        }
+    }
+}

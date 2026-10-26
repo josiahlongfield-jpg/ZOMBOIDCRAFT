@@ -1,0 +1,67 @@
+name: Gun look
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [gunlook]
+
+jobs:
+  gunlook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v5
+      - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers > /dev/null
+      - name: Compile
+        run: ./gradlew compileJava -Pgunlook > build.log 2>&1 || (tail -60 build.log; exit 1)
+      # Sodium and Iris for 26.3 and the Photon shader pack, from Modrinth, into the test client's folder
+      - name: Fetch Sodium, Iris and Photon
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          RUN = 'build/run/clientGameTest'
+          UA = {'User-Agent': 'zomboidcraft-ci/1.0 (gun look test)'}
+          def get(url):
+              return json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA)))
+          def fetch(url, path):
+              os.makedirs(os.path.dirname(path), exist_ok=True)
+              with urllib.request.urlopen(urllib.request.Request(url, headers=UA)) as r, open(path, 'wb') as f:
+                  f.write(r.read())
+          q = '?game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D'
+          for slug in ('sodium', 'iris'):
+              vs = get(f'https://api.modrinth.com/v2/project/{slug}/version{q}')
+              if not vs:
+                  print(f'no {slug} for 26.3'); continue
+              v = vs[0]
+              f = next((x for x in v['files'] if x['primary']), v['files'][0])
+              print(slug, v['version_number'], f['filename'])
+              fetch(f['url'], f'{RUN}/mods/{f["filename"]}')
+          vs = get('https://api.modrinth.com/v2/project/photon-shader/version')
+          v = vs[0]
+          f = next((x for x in v['files'] if x['primary']), v['files'][0])
+          print('photon', v['version_number'], v['game_versions'][-4:], f['filename'])
+          fetch(f['url'], f'{RUN}/shaderpacks/photon.zip')
+          os.makedirs(f'{RUN}/config', exist_ok=True)
+          open(f'{RUN}/config/iris.properties', 'w').write('enableShaders=false\nshaderPack=photon.zip\n')
+          PY
+          ls -la build/run/clientGameTest/mods build/run/clientGameTest/shaderpacks
+      - name: Run client test
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Pgunlook 2>&1 | tee test.log | grep -E "ZCLOOK|error:|ERROR|Exception|FAIL|BUILD|Caused|Graphics Device:|Iris|Sodium|shader" | head -300
+      - name: Show failures
+        if: failure()
+        run: tail -120 test.log || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gun-look
+          path: |
+            build/run/clientGameTest/screenshots
+            build/run/clientGameTest/logs/latest.log
+            test.log
+          if-no-files-found: warn

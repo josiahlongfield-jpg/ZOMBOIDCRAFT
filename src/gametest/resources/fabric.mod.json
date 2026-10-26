@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "zomboidcraft-gunlook",
+  "version": "1",
+  "name": "ZomboidCraft gun look test",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": ["com.zomboidcraft.client.look.GunLookTest"]
+  },
+  "depends": {
+    "zomboidcraft": "*"
+  }
+}
