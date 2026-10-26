@@ -135,7 +135,8 @@ public final class Grabs {
     private static void holdTick(ServerPlayer player, Hold hold) {
         Zombie by = hold.by;
         if (!ZcConfig.get().combat.grabs || !player.isAlive() || player.isCreative() || player.isSpectator()
-                || !by.isAlive() || by.isRemoved() || Downed.isLow(by) || by.distanceToSqr(player) > 2.5 * 2.5) {
+                || !by.isAlive() || by.isRemoved() || Downed.isLow(by) || !Dismember.hasHands(by)
+                || by.distanceToSqr(player) > 2.5 * 2.5) {
             release(player);
             return;
         }
@@ -160,7 +161,7 @@ public final class Grabs {
                 continue;
             }
             double dist = zombie.distanceTo(player);
-            if (canGrab && dist < 1.4 && zombie.getRandom().nextFloat() < config.grabChance) {
+            if (canGrab && dist < 1.4 && Dismember.hasHands(zombie) && zombie.getRandom().nextFloat() < config.grabChance) {
                 grab(player, zombie);
                 return;
             }

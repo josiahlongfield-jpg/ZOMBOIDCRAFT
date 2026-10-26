@@ -1,5 +1,6 @@
 package com.zomboidcraft.client.zombie.body;
 
+import com.zomboidcraft.combat.Dismember;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
@@ -7,12 +8,18 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
  * Picks what each zombie is doing from what the game knows about it (moving, after someone,
  * swinging, on the ground, crawling) and blends from one movement into the next, so a zombie
  * turns, lurches into a chase or topples over instead of snapping between poses.
+ *
+ * It also watches for limbs coming off: losing a leg plays the stumble into a hop, losing the
+ * last one plays the fall into a crawl.
  */
 public final class ZBodyAnimator {
     /** How fast one movement hands over to the next (weight per second). */
     private static final float BLEND = 6f;
     /** Seconds a swing plays for: wind up, lunge, grab, bite, back off (as in the preview). */
     private static final float ATTACK_TIME = 2f;
+    /** How long the stumble and the fall play for, and how long a fallen zombie takes to settle into its crawl. */
+    private static final float STUMBLE_TIME = 1.7f, FALL_TIME = 1f, SETTLE_TIME = 1.6f;
+    private static final int STUMBLE = 1, FALL = 2;
 
     /** What one zombie was doing last frame. */
     private static final class Track {
@@ -24,6 +31,13 @@ public final class ZBodyAnimator {
         float swing;
         long seen;
         boolean started;
+        /** The pose drawn last frame, and the one it was in when a leg came off. */
+        final ZMove.Pose last = new ZMove.Pose();
+        final ZMove.Pose from = new ZMove.Pose();
+        /** Limbs gone as of last frame (-1 before the first). */
+        int cuts = -1;
+        int event;
+        float eventStart;
     }
 
     /** What the renderer reads off a zombie each frame. */
@@ -37,7 +51,12 @@ public final class ZBodyAnimator {
         public boolean low;
         public boolean crawler;
         public boolean legless;
+        /** Limbs shot off (Dismember's cut bits). */
+        public int cuts;
     }
+
+    /** The pose a zombie was in the frame before it last lost a limb: the limb flies off frozen in it. */
+    public final ZMove.Pose before = new ZMove.Pose();
 
     private final Int2ObjectOpenHashMap<Track> tracks = new Int2ObjectOpenHashMap<>();
     private final ZMove move = new ZMove();
@@ -45,8 +64,13 @@ public final class ZBodyAnimator {
     private final float[] target = new float[ZMove.MODES];
     private long frames;
 
-    /** Works out this frame's pose for one zombie into {@code out}. */
-    public void animate(Zombie zombie, Facts f, float partialTick, ZMove.Pose out) {
+    /**
+     * Works out this frame's pose for one zombie into {@code out}.
+     *
+     * @return the limbs that came off since last frame (cut bits), with the pose they came off in left in
+     *     {@link #before}
+     */
+    public int animate(Zombie zombie, Facts f, float partialTick, ZMove.Pose out) {
         long now = System.nanoTime();
         Track tr = tracks.computeIfAbsent(zombie.getId(), id -> new Track());
         float t = f.age / 20f;
@@ -68,16 +92,43 @@ public final class ZBodyAnimator {
         float attack = t - tr.attackStart;
         boolean attacking = attack < ATTACK_TIME;
 
+        // limbs coming off: a leg lost sets off the stumble, the last leg the fall
+        int newly = 0;
+        int legsGone = Dismember.legsGone(f.cuts);
+        boolean snap = false;
+        if (tr.cuts < 0) {
+            tr.cuts = f.cuts;
+        } else if (f.cuts != tr.cuts) {
+            newly = f.cuts & ~tr.cuts;
+            int legsBefore = Dismember.legsGone(tr.cuts);
+            before.copy(tr.last);
+            if (legsGone == 2 && legsBefore < 2) {
+                tr.event = FALL;
+            } else if (legsGone == 1 && legsBefore == 0) {
+                tr.event = STUMBLE;
+            } else {
+                tr.event = 0;
+            }
+            if (tr.event != 0) {
+                tr.from.copy(tr.last);
+                tr.eventStart = t;
+                snap = true;
+            }
+            tr.cuts = f.cuts;
+        }
+
         boolean moving = f.walkSpeed > 0.08f;
         boolean looking = Math.abs(f.headYaw) > 10f;
-        boolean legless = f.legless && f.low;
-        boolean crawler = (f.crawler || legless) && f.low;
+        boolean noLegs = (f.legless || legsGone == 2) && (f.low || tr.event == FALL);
+        boolean crawler = (f.crawler || noLegs) && (f.low || tr.event == FALL);
         int mode;
         if (crawler) {
             mode = attacking ? ZMove.CRAWL_GRAB : moving ? (f.aggressive ? ZMove.CRAWL_FAST : ZMove.CRAWL_SLOW)
                     : f.aggressive || looking ? ZMove.CRAWL_ALERT : ZMove.CRAWL_REST;
         } else if (f.low) {
             mode = ZMove.DOWN;
+        } else if (legsGone == 1) {
+            mode = moving && !attacking ? ZMove.HOP : ZMove.STAND1;
         } else if (attacking) {
             mode = ZMove.ATTACK;
         } else if (moving) {
@@ -87,7 +138,7 @@ public final class ZBodyAnimator {
         }
         java.util.Arrays.fill(target, 0f);
         target[mode] = 1f;
-        float k = tr.started ? Math.min(1f, dt * BLEND) : 1f;
+        float k = tr.started && !snap ? Math.min(1f, dt * BLEND) : 1f;
         float[] w = tr.weights;
         for (int m = 0; m < ZMove.MODES; m++) {
             w[m] += (target[m] - w[m]) * k;
@@ -107,11 +158,34 @@ public final class ZBodyAnimator {
         input.phase = (f.variant & 0xFFFF) / 65535f * (float) Math.PI * 2f;
         input.look = Math.clamp(-(float) Math.toRadians(f.headYaw) / 1.1f, -1.5f, 1.5f);
         input.attack = Math.max(0f, attack);
-        input.legless = legless;
+        input.legless = noLegs;
+        input.goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
+        input.reach = f.aggressive || attacking;
         move.pose(out, w, input);
+
+        float tau = t - tr.eventStart;
+        if (tr.event == STUMBLE && tau < STUMBLE_TIME && legsGone == 1 && !f.low) {
+            move.stumble(out, tr.from, tau, input.goneRight);
+        } else if (tr.event == FALL && tau < SETTLE_TIME && legsGone == 2) {
+            // it falls forward from where it stood, then drags itself back into a crawler's usual place
+            float off = tr.from.hz + 7f;
+            out.hz += tau < 0.6f ? off : off * (1 - smooth((tau - 0.6f) / (SETTLE_TIME - 0.6f)));
+            if (tau < FALL_TIME) {
+                move.fall(out, tr.from, tau);
+            }
+        } else {
+            tr.event = 0;
+        }
+        tr.last.copy(out);
 
         if (++frames % 1200 == 0) {
             tracks.values().removeIf(old -> now - old.seen > 10_000_000_000L);
         }
+        return newly;
+    }
+
+    private static float smooth(float x) {
+        x = Math.clamp(x, 0f, 1f);
+        return x * x * (3 - 2 * x);
     }
 }

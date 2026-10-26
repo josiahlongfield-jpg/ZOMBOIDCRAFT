@@ -192,7 +192,9 @@ public final class Guns {
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
                     eye.distanceToSqr(stop));
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                hits.computeIfAbsent(target, t -> new Hit(dir)).add(pellet(target, eye, dir, stats, power));
+                Pellet struck = pellet(target, eye, dir, stats, power);
+                hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
+                Dismember.pellet(target, eye, dir, struck.damage(), struck.head(), struck.legs(), type);
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
                     level.playSound(null, target.getX(), target.getEyeY(), target.getZ(), ModSounds.CROSSBOW_HIT,
