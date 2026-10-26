@@ -47,22 +47,26 @@ public final class CombatEvents {
     }
 
     /**
-     * Damage for a blow on a zombie on the ground: a stomp barehanded, a heavier hit with a weapon.
-     * Called from the damage mixin before skills and armour.
+     * Damage for a hand-to-hand blow: on a zombie, zombieMelee of it; on one on the ground, a stomp barehanded or a
+     * heavier hit with a weapon. Called from the damage mixin before skills and armour.
      */
-    public static float groundAttack(LivingEntity target, DamageSource source, float amount) {
+    public static float meleeDamage(LivingEntity target, DamageSource source, float amount) {
         ZcConfig.Combat config = ZcConfig.get().combat;
         ServerPlayer player = meleeBy(source);
-        if (player == null || !config.groundAttacks || !Downed.isLow(target)) {
+        if (player == null) {
             return amount;
+        }
+        float tough = ZombieTypes.isWalker(target) ? (float) config.zombieMelee : 1f;
+        if (!config.groundAttacks || !Downed.isLow(target)) {
+            return amount * tough;
         }
         Downed.keepDown(target, 8);
         if (player.getMainHandItem().isEmpty()) {
             target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.STOMP, SoundSource.PLAYERS,
                     1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
-            return (float) Math.max(amount, config.stompDamage);
+            return (float) Math.max(amount, config.stompDamage) * tough;
         }
-        return amount * (float) config.groundAttackMultiplier;
+        return amount * (float) config.groundAttackMultiplier * tough;
     }
 
     private static void onMeleeHit(ServerPlayer player, LivingEntity target) {

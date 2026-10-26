@@ -210,7 +210,7 @@ public final class Guns {
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
                 Pellet struck = pellet(target, eye, dir, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
-                Dismember.pellet(target, eye, dir, struck.damage(), struck.head(), struck.legs(), type);
+                Dismember.pellet(target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
                     level.playSound(null, target.getX(), target.getEyeY(), target.getZ(), ModSounds.CROSSBOW_HIT,
@@ -277,7 +277,8 @@ public final class Guns {
         }
     }
 
-    private record Pellet(float damage, boolean head, boolean legs, Vec3 at) {
+    /** damage is what it does to the target's health; tears what it does to the limb it struck (see Dismember). */
+    private record Pellet(float damage, float tears, boolean head, boolean legs, Vec3 at) {
     }
 
     /**
@@ -295,7 +296,9 @@ public final class Guns {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));
         }
-        return new Pellet(damage, head, legs, at);
+        // body hits on a zombie slow it, it takes the head to kill one; a limb still tears at the bullet's full force
+        float body = !head && !downed && ZombieTypes.isWalker(target) ? (float) ZcConfig.get().combat.zombieBodyShots : 1f;
+        return new Pellet(damage * body, damage, head, legs, at);
     }
 
     private static void hitEntity(ServerLevel level, ServerPlayer player, LivingEntity target, Hit hit, int pellets,
