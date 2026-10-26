@@ -147,7 +147,7 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        double jam = (Rolls.get(gun) != null ? ZcConfig.get().rolls.jamFloor : 0) + 0.08 * wear * wear;
+        double jam = config.jamNew + config.jamWorn * wear * wear;
         if (config.jams && type.canJam() && player.getRandom().nextDouble() < jam * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);

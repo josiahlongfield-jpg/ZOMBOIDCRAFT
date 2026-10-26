@@ -208,8 +208,6 @@ public final class ZcConfig {
         public double tier2FlawChance = 0.25;
         /** How much a flaw worsens the stat it hits (1.3 = 30% worse). */
         public double flawPenalty = 1.3;
-        /** Jam chance per shot of a rolled gun in new condition, before its roll (worn guns jam more on top). */
-        public double jamFloor = 0.003;
     }
 
     /** Weights: how often a found gun turns up in each of its finishes, against its others. */
@@ -802,6 +800,13 @@ public final class ZcConfig {
         public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
+        /**
+         * Jam chance per shot of a gun in new condition, and how much is added at no condition left (rising with the
+         * square of the wear), both before its reliability roll. 0.001 and 0.015: about 1 magazine in 30 jams on a
+         * new gun, 1 in 8 at half condition, 1 in 3 nearly worn out.
+         */
+        public double jamNew = 0.001;
+        public double jamWorn = 0.015;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */
