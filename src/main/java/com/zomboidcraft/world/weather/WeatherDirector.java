@@ -59,6 +59,7 @@ public final class WeatherDirector {
 
     public static void register() {
         Weather.register();
+        WeatherParticles.register();
         ServerTickEvents.END_SERVER_TICK.register(WeatherDirector::tick);
     }
 
