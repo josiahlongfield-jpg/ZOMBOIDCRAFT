@@ -148,14 +148,14 @@ def build_torch(m):
 
 
 SCRAPS = [
-    ('rubble', build_rubble, 0.6, 0.0, 9.0, dict(brick=brick, concrete=concrete, rebar=rebar, mortar=mortar)),
+    ('rubble_chunks', build_rubble, 0.6, 0.0, 9.0, dict(brick=brick, concrete=concrete, rebar=rebar, mortar=mortar)),
     ('scrap_metal', build_scrap, 0.7, 0.0, 9.0, dict(paint=sheet_paint('#5a6b4a'), galv=galv, rusty=rusty,
                                                       pipe=lambda f: P.rust(f, P.steel(f, 0.36, spread=0.1), 0.5))),
     ('propane_torch', build_torch, 0.3, 0.0, 10.0, dict(cylinder=cylinder, rim=lambda f: P.steel(f, 0.45, spread=0.1),
                                                         brass=P.brass, knob=knob, nozzle=nozzle, burnt=burnt)),
 ]
 
-NAMES = {'rubble': 'Rubble', 'scrap_metal': 'Scrap Metal', 'propane_torch': 'Propane Torch'}
+NAMES = {'rubble_chunks': 'Rubble', 'scrap_metal': 'Scrap Metal', 'propane_torch': 'Propane Torch'}
 
 
 def main():

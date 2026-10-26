@@ -65,7 +65,7 @@ public class KitUiTest implements FabricClientGameTest {
             for (String c : List.of("gamemode survival @a", "give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight",
                     "give @a zomboidcraft:foregrip", "give @a zomboidcraft:pistol", "give @a zomboidcraft:bandage 3",
                     "give @a minecraft:bread 5", "zc injure left_arm cut",
-                    "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble 6", "give @a zomboidcraft:scrap_metal 4")) {
+                    "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4")) {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);

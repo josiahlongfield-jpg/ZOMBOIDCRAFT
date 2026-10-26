@@ -50,7 +50,7 @@ public final class ModItems {
             new Item.Properties().stacksTo(1));
     /** A cheap digital wristwatch: while you have one on you, the HUD shows the time and the day. */
     // What a wall leaves when it's knocked through (building/DigRules), and the torch that cuts steel.
-    public static final Item RUBBLE = register("rubble", Item::new, new Item.Properties().stacksTo(32));
+    public static final Item RUBBLE = register("rubble_chunks", Item::new, new Item.Properties().stacksTo(32));
     public static final Item SCRAP_METAL = register("scrap_metal", Item::new, new Item.Properties().stacksTo(32));
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));
     public static final Item DIGITAL_WATCH = register("digital_watch", Item::new, new Item.Properties().stacksTo(1));
