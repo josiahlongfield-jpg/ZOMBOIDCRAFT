@@ -1570,5 +1570,30 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bunk_duct_fallen", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 3, 0, 0, 13, 6, 16, 4, 6, 1, 12, 6.2, 15);
         s("bunk_server", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 16, 15);
         s("bunk_server_top", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 14, 15);
+        s("park_floor", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_floor_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_floor_oil", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_floor_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_floor_grit", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_floor_tyre", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_line", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_line_yellow", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_arrow", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_lobby_dark", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_lobby_white", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_band_blue", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_band_green", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_band_orange", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_wall", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_wall_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_wall_soot", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_column", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("park_wheelstop", FACING, 0, 0, SoundType.STONE, 2f, 1, 0, 9, 15, 2.5, 13);
+        s("park_st_freight", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("park_st_noparking", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("park_st_stairs", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("park_st_lifts", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("park_st_authorised", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("park_st_exit", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
     }
 }

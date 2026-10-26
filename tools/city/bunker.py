@@ -31,7 +31,7 @@ HERE = Path(__file__).parent
 NS = None  # photo_textures, handed over by register()
 SANS = F.SANS
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
-PREFIXES = ("bunk_", "ship_", "container_in", "container_floor", "container_welded", "garage_ramp")
+PREFIXES = ("bunk_", "ship_", "container_in", "container_floor", "container_welded", "garage_ramp", "park_")
 
 OLIVE = (82, 88, 62)
 GREY = (112, 118, 114)
@@ -1874,6 +1874,134 @@ def glowstick(seed, lit=True):
     return t
 
 
+# ---------------------------------------------------------------- the tower's parking levels
+
+LEVEL_PAINT = {"blue": (44, 82, 138), "green": (50, 110, 70), "orange": (202, 114, 34)}
+HAZARD = (222, 176, 40)
+
+
+def park_floor(seed, kind="a"):
+    """Power-floated concrete under a tower: smoother and paler than the bunker's, scuffed grey by
+    tyres along the aisles, oil dripped where the cars stood, grit swept up against the kerbs."""
+    t = F.mat("Concrete034", (132, 130, 124), 0.5, span=2, seed=seed, smooth=0.26)
+    rng = t.rng
+    t.speckle(0.02, (96, 92, 86), 0.5, -0.01)
+    patches(t, 0.16, (100, 96, 90), 0.1, 0.4)
+    if kind == "tyre":  # two worn tracks running along x; the block turns them to the aisle
+        n = P.fbm(rng, ((4, 1.0), (8, 0.6), (32, 0.3)))
+        for y0 in (int(rng.integers(8, 16)), int(rng.integers(40, 48))):
+            band = np.clip(1 - np.abs(np.arange(N) - y0 - 4) / 6, 0, 1)[:, None]
+            t.mix(band * np.clip(0.45 + n * 0.4, 0, 1), (62, 60, 58), 1.0)
+        t.smooth = t.smooth * 0.8
+    elif kind == "oil":  # a car stood here for years and wept onto the floor
+        yy, xx = np.mgrid[0:N, 0:N]
+        cx, cy = 32 + rng.uniform(-6, 6), 32 + rng.uniform(-6, 6)
+        d = np.hypot(xx - cx, (yy - cy) * 1.3) / 22 + P.fbm(rng, ((4, 1.0), (8, 0.6), (16, 0.3))) * 0.35
+        m = np.clip(1.2 - d, 0, 1) ** 1.5
+        t.mix(m * 0.6, (38, 34, 30), 1.0)
+        t.mix(np.clip(m * 2 - 1.2, 0, 1) * 0.5, (20, 18, 18), 1.0)
+        t.smooth = np.maximum(t.smooth, m * 0.65)
+    elif kind == "crack":
+        t.crack(3, 0.35, (34, 32, 30))
+        patches(t, 0.25, (84, 80, 72), 0.05, 0.35, wet=0.3)
+    elif kind == "grit":
+        t.speckle(0.08, (70, 64, 56), 0.6, -0.02)
+        t.speckle(0.04, (170, 164, 150), 0.5, 0.03)
+        patches(t, 0.35, (88, 78, 64), 0.0, 0.35, octaves=((2, 1.0), (4, 0.8), (16, 0.5)))
+    return F.wear(t, 0.2, 6)
+
+
+def park_paint(t, mask, col, amount=0.9):
+    """Road paint on concrete: laid thick, worn through by tyres, chipped at its edges."""
+    worn = P.fbm(t.rng, ((8, 1.0), (16, 0.7), (32, 0.4))) > 0.55
+    m = mask & ~worn
+    t.c[m] = t.c[m] * (1 - amount) + np.array(col, np.float32) * amount
+    t.smooth[m] = 0.45
+    t.h[m] += 0.02
+    return m
+
+
+def park_line(seed, col=WHITE_PAINT):
+    t = park_floor(seed)
+    yy, xx = np.mgrid[0:N, 0:N]
+    park_paint(t, np.abs(xx - 31.5) < 3.5, col)
+    return t
+
+
+def park_arrow(seed):
+    """A painted arrow pointing north (up the texture): the way round the level."""
+    t = park_floor(seed, "tyre")
+    yy, xx = np.mgrid[0:N, 0:N]
+    shaft = (np.abs(xx - 31.5) < 4) & (yy > 26) & (yy < 60)
+    head = (yy >= 6) & (yy <= 28) & (np.abs(xx - 31.5) < (yy - 6) * 0.75)
+    park_paint(t, shaft | head, WHITE_PAINT)
+    return t
+
+
+def park_band(seed, rgb):
+    """The lowest row of a parking level's walls: the level's colour up to bumper height and a
+    white line over it, scraped by bumpers and blackened by tyres at the foot."""
+    t = F.mat("Concrete034", (150, 148, 140), 0.55, span=2, seed=seed, smooth=0.15)
+    rng = t.rng
+    F.area(t, 0, 22, N, N, rgb, smooth=0.35)
+    t.vary(0.05)
+    F.area(t, 0, 16, N, 20, WHITE_PAINT, smooth=0.4)
+    chips(t, 0.0, (140, 138, 130), cells=((16, 1.0), (32, 0.6)))
+    for _ in range(3):  # bumper scrapes along the paint
+        x, y = rng.uniform(0, N), rng.uniform(36, 50)
+        F.area(t, x, y, x + rng.uniform(5, 14), y + 1, (148, 146, 138), dh=-0.03)
+    rising(t, 0.5, (30, 28, 26), start=48)
+    return F.wear(t, 0.25, 6)
+
+
+def park_wall(seed, kind="a"):
+    """Precast wall panel over the band: smooth, grey, run with damp from the slab above."""
+    t = F.mat("Concrete034", (150, 148, 140), 0.55, span=2, seed=seed, smooth=0.15)
+    patches(t, 0.15, (118, 114, 106), 0.1, 0.4)
+    if kind == "b":
+        runs(t, 3, (86, 78, 64), 0.4, (20, 60), top=0, wet=0.3)
+    elif kind == "soot":  # exhaust blackening under the slab
+        F.area(t, 0, 0, N, 18, mul=0.75)
+        patches(t, 0.4, (40, 38, 36), 0.0, 0.35)
+    return F.wear(t, 0.2, 0)
+
+
+def park_column(seed):
+    """A column's foot: yellow and black chevrons to the height of a bumper, gouged by them."""
+    t = F.mat("Concrete034", (150, 148, 140), 0.55, span=2, seed=seed, smooth=0.15)
+    yy, xx = np.mgrid[0:N, 0:N]
+    stripe = ((xx + yy) // 10) % 2 == 0
+    band = yy >= 26
+    F.area(t, 0, 26, N, N, (24, 24, 24), smooth=0.35)
+    park_paint(t, band & stripe, HAZARD, 0.95)
+    for _ in range(4):
+        x, y = t.rng.uniform(0, N), t.rng.uniform(30, 56)
+        F.area(t, x, y, x + t.rng.uniform(4, 12), y + 1.5, (146, 144, 136), dh=-0.05)
+    rising(t, 0.4, (30, 28, 26), start=50)
+    return F.wear(t, 0.25, 8)
+
+
+def park_ceiling(seed):
+    """The slab's underside over a parking level: smooth soffit with the faint seams of the
+    formwork sheets, soot from exhausts, rings where water came through."""
+    t = F.mat("Concrete034", (138, 136, 130), 0.45, span=2, seed=seed, smooth=0.1)
+    F.area(t, 0, 0, N, 1, mul=0.86, dh=-0.05)
+    F.area(t, 0, 0, 1, N, mul=0.9, dh=-0.05)
+    t.vary(0.04)
+    patches(t, 0.12, (90, 86, 80), 0.1, 0.45, octaves=((2, 1.0), (4, 0.5)))
+    t.grime(0.12, (60, 56, 50))
+    return t
+
+
+def wheel_stop(seed):
+    """Precast wheel stop: concrete with two yellow bands, chipped by a thousand bumpers."""
+    t = F.mat("Concrete034", (156, 154, 146), 0.6, span=1, seed=seed, smooth=0.12)
+    yy, xx = np.mgrid[0:N, 0:N]
+    park_paint(t, (xx % 32) < 12, HAZARD, 0.9)
+    chips(t, 0.12, (150, 148, 140))
+    return F.wear(t, 0.35, 8)
+
+
 def textures():
     T = {
         "bunk_concrete": lambda: concrete(6000), "bunk_concrete_damp": lambda: concrete(6001, True),
@@ -1990,6 +2118,25 @@ def textures():
         "bunk_server_lid": lambda: server_side(6336, True),
     }
     T.update(worn)
+    park = {
+        "park_floor": lambda: park_floor(6400), "park_floor_b": lambda: park_floor(6401),
+        "park_floor_tyre": lambda: park_floor(6402, "tyre"), "park_floor_oil": lambda: park_floor(6403, "oil"),
+        "park_floor_crack": lambda: park_floor(6404, "crack"), "park_floor_grit": lambda: park_floor(6405, "grit"),
+        "park_line": lambda: park_line(6406), "park_line_yellow": lambda: park_line(6407, HAZARD),
+        "park_arrow": lambda: park_arrow(6408), "park_wall": lambda: park_wall(6409),
+        "park_wall_b": lambda: park_wall(6410, "b"), "park_wall_soot": lambda: park_wall(6411, "soot"),
+        "park_column": lambda: park_column(6412), "park_wheelstop": lambda: wheel_stop(6413),
+        "park_ceiling": lambda: park_ceiling(6414),
+        "park_st_freight": lambda: stencil_sign(6420, "FREIGHT|LIFT", WHITE_PAINT, 16),
+        "park_st_noparking": lambda: stencil_sign(6421, "NO|PARKING", HAZARD, 15),
+        "park_st_stairs": lambda: stencil_sign(6422, "STAIRS", WHITE_PAINT, 18, arrow=1),
+        "park_st_lifts": lambda: stencil_sign(6423, "LIFTS", WHITE_PAINT, 18, arrow=-1),
+        "park_st_authorised": lambda: stencil_sign(6424, "AUTHORISED|ONLY", STENCIL_RED, 13),
+        "park_st_exit": lambda: stencil_sign(6425, "WAY|OUT", WHITE_PAINT, 18),
+    }
+    for i, (k, rgb) in enumerate(LEVEL_PAINT.items()):
+        park[f"park_band_{k}"] = (lambda s, c: lambda: park_band(s, c))(6430 + i, rgb)
+    T.update(park)
     return T
 
 
@@ -2401,6 +2548,27 @@ def blocks():
     add("bunk_server_top", [[1, 0, 1, 15, 14, 15, {"north": "bunk_server_top", "side": "bunk_server_side",
                                                    "up": "bunk_server_lid", "down": "bunk_server_lid"}]],
         "Server Rack", "METAL")
+
+    # the tower's parking levels: floors whose undersides are the level below's ceiling
+    def slab(name, top, title, rotate=None):
+        cube(name, {"up": top, "side": "bunk_concrete", "down": "park_ceiling"}, title, rotate=rotate)
+
+    for k in ("", "_b", "_oil", "_crack", "_grit"):
+        slab(f"park_floor{k}", f"park_floor{k}", "Parking Floor")
+    slab("park_floor_tyre", "park_floor_tyre", "Parking Floor", "axis")
+    slab("park_line", "park_line", "Bay Line", "axis")
+    slab("park_line_yellow", "park_line_yellow", "Painted Line", "axis")
+    slab("park_arrow", "park_arrow", "Painted Arrow", "facing")
+    cube("park_lobby_dark", {"up": "marble_dark", "side": "concrete_dark", "down": "park_ceiling"}, "Lobby Floor")
+    cube("park_lobby_white", {"up": "marble_white", "side": "concrete_dark", "down": "park_ceiling"}, "Lobby Floor")
+    for k in LEVEL_PAINT:
+        cube(f"park_band_{k}", {"side": f"park_band_{k}", "up": "bunk_concrete", "down": "bunk_concrete"}, "Parking Wall")
+    for k in ("", "_b", "_soot"):
+        cube(f"park_wall{k}", {"side": f"park_wall{k}", "up": "bunk_concrete", "down": "park_ceiling"}, "Parking Wall")
+    cube("park_column", {"side": "park_column", "up": "bunk_concrete", "down": "bunk_concrete"}, "Column")
+    add("park_wheelstop", [[1, 0, 9, 15, 2.5, 13, "park_wheelstop"]], "Wheel Stop", "STONE")
+    for k in ("freight", "noparking", "stairs", "lifts", "authorised", "exit"):
+        add(f"park_st_{k}", [[0, 0, 15.75, 16, 16, 16, f"park_st_{k}"]], "Stencil", "STONE", decor=True)
     return out
 
 

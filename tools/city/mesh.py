@@ -210,6 +210,7 @@ class Palette:
         self.glass = np.zeros(n, bool)         # translucent cube: glass hides glass
         self.pane = np.zeros(n, bool)          # a window or shutter filling the wall (solid from afar)
         self.height = np.full(n, 16.0)
+        self.turn = np.zeros(n, np.int64)      # quarter turns of a cube's top and bottom (Minecraft's y rotation)
         self.face_tex = np.full((n, 6), -1, int)
         self.models = {}                       # id -> list of (corners, uvs, dir, tex, on_edge)
         self.tex_dir = tex_dir
@@ -248,6 +249,7 @@ class Palette:
                 continue
             if model == "cube":
                 self.cube[i] = True
+                self.turn[i] = rot
                 self.height[i] = spec.get("height", 16)
                 for d in range(6):
                     self.face_tex[i, rotate_dir(d, rot)] = self.tex(self.tex_for(spec["tex"], DIRS[d]))
@@ -548,20 +550,23 @@ def main():
         bl = light_for(light_pad, opaque_pad, ys, zs, xs, d)
         # merge runs along x (or z for faces looking along x): same texture, AO, light and height
         run_axis = xs if d not in (0, 1) else zs
+        turn = pal.turn[ids] if d in (2, 3) else np.zeros(len(ids), np.int64)
         key = (tex.astype(np.int64) << 20) | (ao[:, 0] << 18) | (ao[:, 1] << 16) | (ao[:, 2] << 14) | (ao[:, 3] << 12) | pal.height[ids].astype(np.int64)
+        key |= turn << 60
         lkey = (np.round(bl * 4).astype(np.int64).reshape(len(ys), 12) * (61 ** np.arange(12) % (1 << 40))).sum(1)
         other = (ys, zs) if d not in (0, 1) else (ys, xs)
         order = np.lexsort((run_axis, other[1], other[0]))
         ys, zs, xs, tex, ao, key, run_axis = ys[order], zs[order], xs[order], tex[order], ao[order], key[order], run_axis[order]
-        bl, lkey = bl[order], lkey[order]
+        bl, lkey, turn = bl[order], lkey[order], turn[order]
         o0, o1 = other[0][order], other[1][order]
         start = np.ones(len(ys), bool)
         if len(ys):
             start[1:] = ~((o0[1:] == o0[:-1]) & (o1[1:] == o1[:-1]) & (run_axis[1:] == run_axis[:-1] + 1) & (key[1:] == key[:-1]) & (lkey[1:] == lkey[:-1]))
+            start |= turn != 0  # a turned top is drawn on its own, its texture turned with it
         rid = np.cumsum(start) - 1
         length = np.bincount(rid)
         first = np.nonzero(start)[0]
-        ys, zs, xs, tex, ao, bl = ys[first], zs[first], xs[first], tex[first], ao[first], bl[first]
+        ys, zs, xs, tex, ao, bl, turn = ys[first], zs[first], xs[first], tex[first], ao[first], bl[first], turn[first]
         ids = vox[ys, zs, xs]
         h = pal.height[ids]
         nq = len(ys)
@@ -575,6 +580,14 @@ def main():
             c, uv = face_quad(box, d)
             corners[m] = origin[m][:, None, :] + c[None]
             uvs[m] = uv[None]
+        for t in (1, 2, 3):
+            m = turn == t
+            if m.any():
+                # Minecraft turns the model clockwise seen from above; the texture turns with it
+                u, v = uvs[m][..., 0] - 8, uvs[m][..., 1] - 8
+                for _ in range(t if d == 2 else 4 - t):
+                    u, v = -v, u
+                uvs[m] = np.stack([u + 8, v + 8], -1)
         normals = np.repeat(NORMALS[d][None], nq, 0)
         grow()
         out.add(tex, corners, normals, uvs, ao, bl)

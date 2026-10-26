@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "park_st_lifts": "zomboidcraft:block/city/park_st_lifts",
+    "particle": "zomboidcraft:block/city/park_st_lifts"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#park_st_lifts"
+        },
+        "south": {
+          "texture": "#park_st_lifts",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#park_st_lifts",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#park_st_lifts",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#park_st_lifts",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#park_st_lifts",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

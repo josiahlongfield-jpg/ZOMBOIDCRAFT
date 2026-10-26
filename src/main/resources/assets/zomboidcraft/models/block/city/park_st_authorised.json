@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "park_st_authorised": "zomboidcraft:block/city/park_st_authorised",
+    "particle": "zomboidcraft:block/city/park_st_authorised"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#park_st_authorised"
+        },
+        "south": {
+          "texture": "#park_st_authorised",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#park_st_authorised",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#park_st_authorised",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#park_st_authorised",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#park_st_authorised",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

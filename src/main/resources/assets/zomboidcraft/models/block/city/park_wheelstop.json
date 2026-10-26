@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "park_wheelstop": "zomboidcraft:block/city/park_wheelstop",
+    "particle": "zomboidcraft:block/city/park_wheelstop"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        9
+      ],
+      "to": [
+        15,
+        2.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#park_wheelstop"
+        },
+        "south": {
+          "texture": "#park_wheelstop"
+        },
+        "east": {
+          "texture": "#park_wheelstop"
+        },
+        "west": {
+          "texture": "#park_wheelstop"
+        },
+        "up": {
+          "texture": "#park_wheelstop"
+        },
+        "down": {
+          "texture": "#park_wheelstop",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

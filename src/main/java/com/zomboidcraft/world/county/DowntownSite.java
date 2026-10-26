@@ -9,6 +9,7 @@ import com.zomboidcraft.world.city.Walkup;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.SplittableRandom;
 
 /**
  * A city's downtown on a grid of avenues and cross streets, in three kinds:
@@ -68,6 +69,8 @@ final class DowntownSite extends Site {
     private final List<Kit.Lane> lanes = new ArrayList<>();
     /** Boxes {x0, z0, x1, z1, height} for the Decay pass: each building with a block of margin. */
     private final List<int[]> ruins = new ArrayList<>();
+    /** The parking levels under the big towers, one of which hides a bunker. */
+    private final List<Garage> garages = new ArrayList<>();
     private int pitch, minFloors, maxFloors, walkMin, walkMax, carBudget;
     private double glass;
     private double hit;
@@ -124,6 +127,7 @@ final class DowntownSite extends Site {
             fill(blocks.get(i), roles[i]);
         }
         subway();
+        hideout();
         if (variant("old_city") || variant("metro") && chance() < 0.5) {
             elevated();
         }
@@ -355,7 +359,9 @@ final class DowntownSite extends Site {
         tw = Math.max(20, tw);
         td = Math.max(16, td);
         Placer pl = lotOn(b, side, along, tw, td);
-        new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4)).build();
+        Tower t = new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4));
+        t.build();
+        garage(pl, t, tw, td, boxOn(b, side, along, tw, td));
         civic.chandeliers(pl, tw, td, Tower.LOBBY);
         ruin(boxOn(b, side, along, tw, td), Tower.height(floors) + 12);
     }
@@ -416,6 +422,44 @@ final class DowntownSite extends Site {
             frontage(b, side, a0, a1, depth);
         }
         backyard(b);
+    }
+
+    /**
+     * Parking levels under a tower with the room for them, clear of the subway under the main
+     * avenue. They roll their own dice, so the streets above come out as they always did.
+     */
+    private void garage(Placer pl, Tower t, int tw, int td, int[] box) {
+        int cz = p.gateZ();
+        if (!Garage.fits(tw, td) || box[3] >= cz - 16 && box[1] <= cz + 16) {
+            return;
+        }
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, box[0], box[1]));
+        Garage garage = new Garage(pl, g, tw, td, 2 + g.nextInt(2), t.coreX(), t.coreZ());
+        garage.build();
+        garages.add(garage);
+    }
+
+    /**
+     * One tower in the city hides a bunker under its lowest level, down a ladder from the
+     * electrical room; the other garages keep junk in that cage.
+     */
+    private void hideout() {
+        if (garages.isEmpty()) {
+            return;
+        }
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, 0x6B75, 0x6E6B));
+        double r = g.nextDouble();
+        Bunker.State state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        int first = g.nextInt(garages.size());
+        boolean done = false;
+        for (int i = 0; i < garages.size(); i++) {
+            Garage garage = garages.get((first + i) % garages.size());
+            if (done) {
+                garage.cageJunk();
+            } else {
+                done = garage.bunker(state, new int[] {2, 2, w - 3, d - 3}) != null;
+            }
+        }
     }
 
     /** Towers on the front street, walk-ups round the back. */
@@ -489,7 +533,9 @@ final class DowntownSite extends Site {
             forecourt(boxOn(b, front, 0, len, set), front);
             Placer pl = lotOnSet(b, front, (len - tw) / 2, tw, td, set);
             int floors = Math.min(maxFloors, floors(b.t) + 6);
-            new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4)).build();
+            Tower t = new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4));
+            t.build();
+            garage(pl, t, tw, td, boxOn(b, front, (len - tw) / 2, tw, td + set));
             civic.chandeliers(pl, tw, td, Tower.LOBBY);
             int[] box = boxOn(b, front, (len - tw) / 2, tw, td + set);
             ruin(box, Tower.height(floors) + 12);
