@@ -8,7 +8,7 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 echo "===== cars2"
-sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
+javap -cp "$CP" -p -c net.minecraft.client.KeyMapping 2>&1 | grep -E -A30 'static void click|static void resetMapping' | head -80
 sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'
 sig net.minecraft.world.level.storage.ValueInput 'child|list|read'
 sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
