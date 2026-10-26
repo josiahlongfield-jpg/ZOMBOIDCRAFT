@@ -270,8 +270,13 @@ public final class ZcConfig {
         public boolean enabled = true;
         /** Grey cloud ceiling all day: no blue sky, no sun, no sunsets. */
         public boolean alwaysOvercast = true;
-        /** Daylight as a share of vanilla's; 0.55 is a little darker than a vanilla thunderstorm. */
-        public double daylight = 0.55;
+        /**
+         * Endless night: the clouds keep the day nearly as dark as the night, a cold blue-grey dusk that never
+         * lifts, so lamps, signs and neon glow at noon as they do at midnight. Off gives a plain overcast day.
+         */
+        public boolean endlessNight = true;
+        /** Daylight under endless night, as a share of vanilla's; nights sit a little under 0.30. */
+        public double endlessDaylight = 0.30;
         /** Night darkness as a share of vanilla's night light; lower is darker. */
         public double nightLight = 0.8;
         /** The moon breaks through gaps in the clouds now and then at night. */
