@@ -301,6 +301,51 @@ for _name, _extra in {"guns": [(f"{ZC}:nvg_gen3", 2)], "pawn": [(f"{ZC}:nvg_gen3
     RARE[_name] = RARE.get(_name, []) + _extra
 
 
+# repair supplies, maps and radios: first added to the tables by hand, kept here so a rerun keeps them
+HAND_ADDED = {
+    "basement_guns": [(f"{ZC}:gun_oil", 4, 1, 3), (f"{ZC}:gun_parts", 4, 1, 4), (f"{ZC}:two_way_radio", 2, 1, 2), (f"{ZC}:military_radio", 2, 1, 1), (f"{ZC}:comms_headset", 2, 1, 1)],
+    "basement_supplies": [(f"{ZC}:duct_tape", 4, 1, 3), (f"{ZC}:wood_glue", 2, 1, 2), (f"{ZC}:two_way_radio", 3, 1, 2), (f"{ZC}:military_radio", 1, 1, 1)],
+    "guns": [(f"{ZC}:gun_oil", 6, 1, 3), (f"{ZC}:gun_parts", 4, 1, 3), (f"{ZC}:two_way_radio", 3, 1, 2), (f"{ZC}:military_radio", 1, 1, 1), (f"{ZC}:comms_headset", 2, 1, 1)],
+    "hardware": [(f"{ZC}:duct_tape", 6, 1, 3), (f"{ZC}:wood_glue", 5, 1, 2), (f"{ZC}:two_way_radio", 3, 1, 2)],
+    "home_books": [(f"{ZC}:street_map", 2, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1)],
+    "home_boxes": [(f"{ZC}:toy_radio", 2, 1, 2)],
+    "home_desk": [(f"{ZC}:street_map", 2, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1)],
+    "home_drawer": [(f"{ZC}:duct_tape", 1, 1, 1), (f"{ZC}:street_map", 1, 1, 1)],
+    "home_garage": [(f"{ZC}:duct_tape", 4, 1, 2), (f"{ZC}:wood_glue", 3, 1, 1), (f"{ZC}:gun_oil", 1, 1, 1), (f"{ZC}:toy_radio", 1, 1, 2), (f"{ZC}:two_way_radio", 2, 1, 2)],
+    "home_guns": [(f"{ZC}:gun_oil", 4, 1, 2), (f"{ZC}:gun_parts", 2, 1, 2)],
+    "home_tools": [(f"{ZC}:duct_tape", 4, 1, 2), (f"{ZC}:wood_glue", 3, 1, 1)],
+    "home_toys": [(f"{ZC}:toy_radio", 3, 1, 2)],
+    "office": [(f"{ZC}:street_map", 2, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1), (f"{ZC}:two_way_radio", 2, 1, 1)],
+    "pawn": [(f"{ZC}:gun_parts", 2, 1, 2), (f"{ZC}:duct_tape", 2, 1, 1), (f"{ZC}:street_map", 1, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1), (f"{ZC}:toy_radio", 1, 1, 2), (f"{ZC}:two_way_radio", 2, 1, 2)],
+    "storage": [(f"{ZC}:duct_tape", 2, 1, 1), (f"{ZC}:two_way_radio", 1, 1, 1)],
+    "thrift": [(f"{ZC}:toy_radio", 2, 1, 2), (f"{ZC}:two_way_radio", 1, 1, 1)],
+}
+for _name, _extra in HAND_ADDED.items():
+    TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
+RARE["pawn"] = RARE.get("pawn", []) + [(f"{ZC}:military_radio", 1)]
+
+# weapons wave one: the .22 wherever people shot small game, the magnum where handguns were sold or kept, the sawn-off
+# where someone hid it, and the SMG a rare find (loot never depends on how far it is from spawn)
+WAVE_ONE = {
+    "guns": [(f"{ZC}:rimfire", 4, 1, 1, worn(.1, .7)), (f"{ZC}:rimfire_magazine", 4, 1, 1),
+             (f"{ZC}:rimfire_magazine", 2, 1, 1, rounds(10)), (f"{ZC}:rimfire_ammo", 12, 10, 50),
+             (f"{ZC}:magnum", 1, 1, 1, worn(.1, .6)), (f"{ZC}:magnum_ammo", 5, 3, 18), (f"{ZC}:smg_magazine", 1, 1, 1)],
+    "pawn": [(f"{ZC}:rimfire", 2, 1, 1, worn(.2, .8)), (f"{ZC}:rimfire_ammo", 2, 5, 25),
+             (f"{ZC}:sawn_off", 1, 1, 1, worn(.3, .9)), (f"{ZC}:magnum", 1, 1, 1, worn(.2, .8)), (f"{ZC}:magnum_ammo", 1, 2, 8)],
+    "home_guns": [(f"{ZC}:rimfire", 4, 1, 1, worn(.1, .6)), (f"{ZC}:rimfire_ammo", 8, 10, 40),
+                  (f"{ZC}:rimfire_magazine", 2, 1, 1), (f"{ZC}:sawn_off", 1, 1, 1, worn(.2, .7))],
+    "basement_guns": [(f"{ZC}:rimfire", 3, 1, 1, worn(.05, .5)), (f"{ZC}:rimfire_ammo", 8, 10, 50),
+                      (f"{ZC}:sawn_off", 2, 1, 1, worn(.1, .6)), (f"{ZC}:magnum", 1, 1, 1, worn(.05, .5)),
+                      (f"{ZC}:magnum_ammo", 3, 4, 18), (f"{ZC}:smg_magazine", 1, 1, 1, rounds(30))],
+}
+for _name, _extra in WAVE_ONE.items():
+    TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
+for _name, _extra in {"guns": [(f"{ZC}:smg", 1), (f"{ZC}:magnum", 1)], "pawn": [(f"{ZC}:smg", 1)],
+                      "basement_guns": [(f"{ZC}:smg", 2), (f"{ZC}:magnum", 1)], "home_wardrobe": [(f"{ZC}:rimfire", 1)],
+                      "storage": [(f"{ZC}:sawn_off", 1)], "home_nightstand": [(f"{ZC}:magnum", 1)],
+                      "farm": [(f"{ZC}:rimfire", 3), (f"{ZC}:sawn_off", 1)]}.items():
+    RARE[_name] = RARE.get(_name, []) + _extra
+
 def entry(item, weight, lo, hi, *functions):
     if item == "-":
         return {"type": "minecraft:empty", "weight": weight}

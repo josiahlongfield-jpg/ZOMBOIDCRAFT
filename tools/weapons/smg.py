@@ -103,9 +103,15 @@ def body(m):
     b.rod(h, h + 0.10, 0.12, steel, axis=0, at=(-1.20, m1 + 0.05))                                # button
     # ---- the rear drum sight on its base
     b.box((-0.38, TUBE_Y + TUBE_R, REAR_SIGHT - 0.55), (0.38, TUBE_Y + TUBE_R + 0.22, REAR_SIGHT + 0.70), rc)
-    b.rod(-0.42, 0.42, 0.44, 'drum', axis=0, at=(SIGHT, REAR_SIGHT + 0.10))
-    b.rod(-0.48, 0.48, 0.10, steel, axis=0, at=(SIGHT, REAR_SIGHT + 0.10))
-    b.box((-0.10, SIGHT - 0.10, REAR_SIGHT - 0.36), (0.10, SIGHT + 0.10, REAR_SIGHT - 0.30), 'port')   # the aperture
+    # the drum, its aperture a real hole through it: opened right up, since in game the eye sits much further back
+    # than a cheek on the stock and a true-size peep would be filled by the front sight's hood
+    hole, dz = 0.26, REAR_SIGHT + 0.10
+    for x0, x1 in ((-0.42, -hole), (hole, 0.42)):
+        b.rod(x0, x1, 0.44, 'drum', axis=0, at=(SIGHT, dz))
+    b.box((-hole, SIGHT + hole, dz - 0.36), (hole, SIGHT + 0.44, dz + 0.36), 'drum')
+    b.box((-hole, SIGHT - 0.44, dz - 0.36), (hole, SIGHT - hole, dz + 0.36), 'drum')
+    for x0, x1 in ((-0.48, -0.42), (0.42, 0.48)):
+        b.rod(x0, x1, 0.10, steel, axis=0, at=(SIGHT, dz))
     for s in (-1, 1):                                                                             # its wings
         x0, x1 = sorted((s * 0.44, s * 0.54))
         b.box((x0, TUBE_Y + TUBE_R, REAR_SIGHT - 0.40), (x1, SIGHT + 0.42, REAR_SIGHT + 0.60), rc)

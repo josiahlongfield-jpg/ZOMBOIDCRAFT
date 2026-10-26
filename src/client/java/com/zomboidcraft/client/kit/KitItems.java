@@ -180,7 +180,7 @@ final class KitItems {
     /** Long guns go on the first weapon slot; pistols and revolvers on the second. */
     static boolean sidearm(ItemStack stack) {
         GunType t = GunType.of(stack);
-        return t == GunType.PISTOL || t == GunType.REVOLVER;
+        return t == GunType.PISTOL || t == GunType.REVOLVER || t == GunType.MAGNUM;
     }
 
     static boolean gun(ItemStack stack) {
@@ -207,6 +207,10 @@ final class KitItems {
                 case HUNTING_RIFLE -> "Bolt-action rifle";
                 case DOUBLE_BARREL -> "Break-action shotgun";
                 case REVOLVER -> "Revolver";
+                case RIMFIRE -> "Self-loading carbine";
+                case SMG -> "Submachine gun";
+                case SAWN_OFF -> "Sawn-off shotgun";
+                case MAGNUM -> "Magnum revolver";
             };
             return what + ", " + t.caliber();
         }

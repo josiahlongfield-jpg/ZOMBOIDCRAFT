@@ -436,6 +436,8 @@ MELEE_PBR = {
     'pistol_ammo': dict(carton='card'),
     'hunting_rifle_ammo': dict(carton='card'),
     'revolver_ammo': dict(carton='card'),
+    'rimfire_ammo': dict(carton='card'),
+    'magnum_ammo': dict(carton='card'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
 
@@ -654,6 +656,61 @@ def revolver_holds():
         arm, _ = Q.arm_for(h, G)
         out[name] = (h, G, arm)
     return out
+
+
+def long_holds(hand, support, butt, clear):
+    """The rifle's two holds (low ready across the body, shouldered on the sights), fitted to another long gun."""
+    out = {}
+    for name, R, G0, butt_at, off in (
+            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
+        h = Q.Hold(R, S3, hand, support, hand_off=off)
+        G = Q.solve_grip(h, G0, [(butt, np.array(butt_at), 1.0)], clear)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
+def handgun_holds(hand, support, clear):
+    """The pistol's two holds (both hands on it in front of the chest, arms out on the sights), fitted to another
+    gun held without a stock."""
+    out = {}
+    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+                        ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
+        h = Q.Hold(R, S3, hand, support, hand_off=PISTOL_HAND)
+        G = Q.solve_grip(h, G0, [], clear)
+        arm, _ = Q.arm_for(h, G)
+        out[name] = (h, G, arm)
+    return out
+
+
+# the .22: the off hand under the slim forend, the butt plate in the shoulder
+_rm_top, _rm_bot = RM.stock_line(RM.STOCK_END - 0.1)
+RIMFIRE_SUPPORT = [tuple(RM.frame_point(0, -1.35, -2.5) + (0, -1.7, 0)), tuple(RM.frame_point(0, -1.25, -8.0) + (0, -1.7, 0))]
+RIMFIRE_BUTT = tuple(RM.frame_point(0, (_rm_top + _rm_bot) / 2, RM.STOCK_END - 0.3))
+RIMFIRE_CLEAR = [tuple(RM.frame_point(*p)) for p in (
+    (0, RM.stock_line(12.0)[0], 12.0), (0, _rm_top, RM.STOCK_END - 0.1), (0, _rm_bot, RM.STOCK_END - 0.1),
+    (0, RM.RCVR_TOP, 3.0), (0, -2.95, 8.4), (0, 0, RM.MUZZLE))]
+
+# the SMG: the off hand under the handguard, the butt pad in the shoulder; the magazine's curve stays clear
+_sm_top, _sm_bot = SM.stock_line(SM.STOCK_END - 0.1)
+SMG_SUPPORT = [tuple(SM.frame_point(0, -1.38, -0.8) + (0, -1.7, 0)), tuple(SM.frame_point(0, -1.38, -4.4) + (0, -1.7, 0))]
+SMG_BUTT = tuple(SM.frame_point(0, (_sm_top + _sm_bot) / 2, SM.STOCK_END - 0.3))
+SMG_CLEAR = [tuple(SM.frame_point(*p)) for p in (
+    (0, 1.05, 12.5), (0, _sm_top, SM.STOCK_END - 0.1), (0, _sm_bot, SM.STOCK_END - 0.1), (0, SM.SIGHT + 0.44, SM.REAR_SIGHT),
+    (0, -4.6, 8.6), (0, -7.4, -0.4), (0, 0, SM.MUZZLE))]
+
+# the sawn-off: held like a handgun, the off hand under the splinter forend; the grip's foot and the hammers stay clear
+SAWN_SUPPORT = [tuple(SO.frame_point(0, -1.05, SO.FOREND[1] - 1.0) + (0, -1.7, 0)),
+                tuple(SO.frame_point(0, -0.95, SO.FOREND[0] + 1.5) + (0, -1.7, 0))]
+SAWN_CLEAR = [tuple(SO.frame_point(*p)) for p in (
+    (0, SO.GRIP_FOOT[1], SO.GRIP_FOOT[0]), (0, SO.STANDING_TOP, 0.4), (0, 0, SO.MUZZLE))]
+
+# the magnum: the revolver's two hands round its bigger grip
+MAGNUM_SUPPORT = [tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(2.7)))),
+                  tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(0.9))))]
+MAGNUM_CLEAR = [tuple(MG.frame_point(*p)) for p in ((0, 0.62, 2.8), (0, 0, MG.MUZZLE - 0.1), (0, -4.5, 4.5),
+                                                     (0, 0.62, 1.0))]
 
 
 def melee_holds():
@@ -1038,6 +1095,43 @@ REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.
                           opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0,
                           hip_aim=HIP_AIM)
 
+# the .22 carried like the hunting rifle, a light carbine on its open sights (the eye over the comb, 19" behind
+# the leaf); its charging handle cycles with each shot and doesn't hold open
+RIMFIRE_EYE_Z = 12.0
+RIMFIRE_FP = FirstPerson(hip_grip=(0.28, -0.36, -0.56), hip_turn=(4.0, 14.0, -6.0), hip_scale=0.95,
+                         reload={'mag_out': (28, -0.06), 'mag_in': (28, -0.06), 'charge': (-12, 0.0)},
+                         irons=(0.0, 0.0, -(RIMFIRE_EYE_Z - RM.REAR_SIGHT) * IN * 0.85), irons_scale=0.85,
+                         handle_travel=RM.HANDLE_TRAVEL, charge_turn=(10, 20, -15), charge_push=(0.0, 0.03, -0.04),
+                         cycles=True, wrist_grip=True, hip_aim=HIP_AIM)
+
+# the SMG held like the assault rifle, short and close; on the drum's aperture the eye is just behind it; its
+# cocking handle is pulled by the off hand, up at the front of the tube
+SMG_FP = FirstPerson(hip_grip=(0.25, -0.30, -0.56), hip_turn=(2.0, 8.0, -3.0), hip_scale=0.95,
+                     reload={'mag_out': (28, 0.06), 'mag_in': (28, 0.06), 'charge': (-14, 0.03)},
+                     irons=(0.0, 0.0, -4.6), irons_scale=0.75, handle_travel=SM.HANDLE_TRAVEL,
+                     charge_turn=(16, 20, 0), charge_push=(-0.06, 0.08, -0.24), hip_aim=HIP_AIM)
+
+# the sawn-off low at the hip, both hands on it; to load, tipped and brought up like the double; on the bead the
+# eye is well back over the rib, the gun out at arm's length
+_SO_SIGHT = SO.frame_point(0, SO.SIGHT, SO.SIGHT_Z)
+SAWN_FP = FirstPerson(hip_grip=(0.26, -0.38, -0.55), hip_turn=(4.0, 12.0, -8.0), hip_scale=1.0,
+                      reload={'mag_out': (14, -0.04), 'mag_in': (14, -0.04), 'charge': (6, -0.02)},
+                      irons=(0.0, 0.0, -8.5), irons_scale=0.95, handle_travel=0.0,
+                      charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04),
+                      load_turn=(-6, -14, 4), load_push=(-0.10, -0.02, -0.18),
+                      bead=SO.frame_point(0, SO.BEAD_TOP, SO.BEAD_Z) - _SO_SIGHT, eye_rise=0.9,
+                      opens=True, open_axis=(1.0, 0.0, 0.0), open_angle=-SO.OPEN,
+                      chamber_step=-SO.LOOSE_GAP * IN, hip_aim=HIP_AIM)
+
+# the magnum held out like the service revolver, a little smaller on screen for its size
+MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.20,
+                        reload={'mag_out': (-20, -0.05), 'mag_in': (-20, -0.05), 'charge': (-6, 0.02)},
+                        irons=(0.0, 0.0, -6.5), irons_scale=1.05, handle_travel=0.0,
+                        charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
+                        load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
+                        opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=MG.OPEN, cylinder=True, chamber_step=-60.0,
+                        hip_aim=HIP_AIM)
+
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
 # the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
 # face's distance plus the eye relief the sight was shaped for), and the scale they're drawn at. Through the
@@ -1300,28 +1394,64 @@ def main():
     home = RV.frame_point(*RV.LOOSE_ROUND)
     write_loose_round('revolver', RV.round38, RV.round_look(), home, gr - rv.hand, 922)
     write_loose_round('revolver', RV.case38, RV.round_look(), home, gr - rv.hand, 923, 'loose_case')
+    # wave one
+    rm = rimfire()
+    _Pm, gm = rifle_frame()
+    rm_hold = long_holds(RM.HAND, RIMFIRE_SUPPORT, RIMFIRE_BUTT, RIMFIRE_CLEAR)
+    aimed(rm, gm, RIMFIRE_FP)
+    line, _ = kit.write_gun(rm, ASSETS, gm - rm.hand, gun_displays(gm, rm_hold, RIMFIRE_FP), lang, ads_eyes(rm, RIMFIRE_FP))
+    summary.append(line)
+    sm = smg()
+    _Pm, gq = rifle_frame()
+    sm_hold = long_holds(SM.HAND, SMG_SUPPORT, SMG_BUTT, SMG_CLEAR)
+    aimed(sm, gq, SMG_FP)
+    line, _ = kit.write_gun(sm, ASSETS, gq - sm.hand, gun_displays(gq, sm_hold, SMG_FP), lang, ads_eyes(sm, SMG_FP))
+    summary.append(line)
+    so = sawn_off()
+    gw = centred_grip(so)
+    so_hold = handgun_holds(SO.HAND, SAWN_SUPPORT, SAWN_CLEAR)
+    aimed(so, gw, SAWN_FP)
+    line, _ = kit.write_gun(so, ASSETS, gw - so.hand, gun_displays(gw, so_hold, SAWN_FP), lang, ads_eyes(so, SAWN_FP))
+    summary.append(line)
+    write_loose_round('sawn_off', SG.shell, SG.look(), SO.frame_point(*SO.LOOSE_SHELL), gw - so.hand, 914)
+    mg = magnum()
+    gn = centred_grip(mg)
+    mg_hold = handgun_holds(MG.HAND, MAGNUM_SUPPORT, MAGNUM_CLEAR)
+    aimed(mg, gn, MAGNUM_FP)
+    line, _ = kit.write_gun(mg, ASSETS, gn - mg.hand, gun_displays(gn, mg_hold, MAGNUM_FP), lang, ads_eyes(mg, MAGNUM_FP))
+    summary.append(line)
+    home = MG.frame_point(*MG.LOOSE_ROUND)
+    write_loose_round('magnum', MG.round44, MG.round_look(), home, gn - mg.hand, 942)
+    write_loose_round('magnum', MG.case44, MG.round_look(), home, gn - mg.hand, 943, 'loose_case')
     part_display = lambda m: small_display(m, (20, 60, 0))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
     own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
     kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_part_items([hr.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
+    kit.write_part_items([rm.parts['mag'], sm.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr, db, rv])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg])
     write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
                      (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
                      (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
                      (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
                      (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
-                     (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr))])
+                     (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr)),
+                     (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
+                     (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
+                     (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
+                     (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn))])
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
                                       ('hunting_rifle_ammo', '.308 Rounds', '#6e2a22', 560),
-                                      ('revolver_ammo', '.38 Special Rounds', '#2f4a63', 561)):
+                                      ('revolver_ammo', '.38 Special Rounds', '#2f4a63', 561),
+                                      ('rimfire_ammo', '.22 LR Rounds', '#7a6a2a', 562),
+                                      ('magnum_ammo', '.44 Magnum Rounds', '#5b2a4a', 563)):
         box = M.Model(name)
         build_ammo_box(box)
         lo, hi = box.bounds()
@@ -1337,7 +1467,8 @@ def main():
     merge_lang(lang)
     write_java()
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
-                                 'double_barrel': db_hold, 'revolver': rv_hold},
+                                 'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
+                                 'sawn_off': so_hold, 'magnum': mg_hold},
                                 (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
@@ -1671,6 +1802,93 @@ def revolver_points(gun, g):
         'quietMuzzle': quiet_muzzle(gun) + shift,
         'hinge': RV.PIVOT_POINT + shift,
         'cylAxis': RV.CYL_AXIS + shift,
+    }
+
+
+def floor_held(gun, shift):
+    """Where the off hand holds a magazine by its floor, the palm under it, to push it straight up into the well."""
+    key = gun.slots['magazine'].default
+    R, t = gun.mount(key)
+    mlo, mhi = kit.drawn(key, gun.parts[key].build, R, t).bounds()
+    return np.array([8.0, mlo[1] + shift[1] - 0.6, (mlo[2] + mhi[2]) / 2 + shift[2] + 0.4])
+
+
+def no_rail(gun, shift):
+    """The lens points of a gun with no rails: nothing beams from it."""
+    tip = kit.flash_tip(gun) + shift
+    return {'laser': tip, 'light': tip, 'muzzle': tip, 'quietMuzzle': quiet_muzzle(gun) + shift}
+
+
+def rimfire_points(gun, g):
+    shift = g - gun.hand
+    fp = RM.frame_point
+    centre, _ = mag_points(gun, shift)
+    support = fp(0, -1.35, -5.5) + shift + np.array([0, -0.8, 0])     # the off hand cups the forend from below
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': gun.slots['magazine'].at + shift,
+        'magHold': floor_held(gun, shift),
+        'magCentre': centre,
+        # the off hand's fingers on the charging handle's knob, under the port on the right
+        'handle': fp(RM.RCVR_HALF + 0.5, RM.HANDLE_Y - 0.3, RM.SLOT[0] + 0.25) + shift,
+        **no_rail(gun, shift),
+    }
+
+
+def smg_points(gun, g):
+    shift = g - gun.hand
+    fp = SM.frame_point
+    centre, hold = mag_points(gun, shift)
+    support = fp(0, -1.38, -2.6) + shift + np.array([0, -0.8, 0])     # the off hand cups the handguard from below
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': gun.slots['magazine'].at + shift,
+        'magHold': hold,
+        'magCentre': centre,
+        # the off hand's fingers round the cocking handle's knob, up on the left of the tube
+        'handle': fp(-SM.TUBE_R - 1.0, SM.TUBE_Y + 0.4, SM.HANDLE_SLOT[0] + 0.2) + shift,
+        **no_rail(gun, shift),
+    }
+
+
+def sawn_points(gun, g):
+    shift = g - gun.hand
+    fp = SO.frame_point
+    support = fp(0, -1.0, (SO.FOREND[0] + SO.FOREND[1]) / 2) + shift + np.array([0, -0.8, 0])
+    home = fp(*SO.LOOSE_SHELL) + shift
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': home,
+        'magHold': home + np.array([-0.4, -3.2, 0.6]),
+        'magCentre': home,
+        'handle': support,
+        **no_rail(gun, shift),
+        'hinge': SO.HINGE_POINT + shift,
+    }
+
+
+def magnum_points(gun, g):
+    shift = g - gun.hand
+    fp = MG.frame_point
+    home = fp(*MG.LOOSE_ROUND) + shift
+    support = fp(-1.0, *reversed(MG.D._grip(1.9))) + shift
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': home,
+        'magHold': home + np.array([-0.3, -2.6, 0.8]),
+        'magCentre': home,
+        'handle': fp(-MG.CYL_R - 0.25, MG.CYL_Y, 0.8) + shift,
+        **no_rail(gun, shift),
+        'hinge': MG.PIVOT_POINT + shift,
+        'cylAxis': MG.CYL_AXIS + shift,
     }
 
 

@@ -81,6 +81,24 @@ RARE = {
 }
 
 
+# repair supplies, maps and radios: first added to the tables by hand, kept here so a rerun keeps them
+HAND_ADDED = {
+    "ambulance": [(f"{ZC}:two_way_radio", 2, 1, 1)],
+    "bus": [(f"{ZC}:street_map", 2, 1, 1)],
+    "fire": [(f"{ZC}:two_way_radio", 3, 1, 1)],
+    "police": [(f"{ZC}:gun_oil", 2, 1, 1), (f"{ZC}:street_map", 2, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1), (f"{ZC}:two_way_radio", 4, 1, 1), (f"{ZC}:comms_headset", 1, 1, 1)],
+    "swat": [(f"{ZC}:military_radio", 3, 1, 1), (f"{ZC}:comms_headset", 3, 1, 1)],
+    "trunk": [(f"{ZC}:toy_radio", 1, 1, 2), (f"{ZC}:two_way_radio", 1, 1, 1)],
+    "work": [(f"{ZC}:duct_tape", 3, 1, 2), (f"{ZC}:street_map", 2, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1), (f"{ZC}:two_way_radio", 3, 1, 2)],
+}
+for _name, _extra in HAND_ADDED.items():
+    TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
+
+# weapons wave one: a .22 or a magnum left in a boot, an SMG in the back of a SWAT van now and then
+TABLES["trunk"] = (TABLES["trunk"][0], TABLES["trunk"][1] + [(f"{ZC}:rimfire_ammo", 2, 5, 25), (f"{ZC}:magnum_ammo", 1, 3, 12)])
+TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:smg", 2, 1, 1, worn(0, .4)), (f"{ZC}:smg_magazine", 3, 1, 2, rounds(30))])
+RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:rimfire", 2), (f"{ZC}:magnum", 1), (f"{ZC}:sawn_off", 1)]
+RARE["police"] = RARE["police"] + [(f"{ZC}:smg", 1)]
 def table(name):
     (lo, hi), entries = TABLES[name]
     pools = [{"rolls": {"type": "minecraft:uniform", "min": lo, "max": hi}, "entries": [entry(*e) for e in entries]}]

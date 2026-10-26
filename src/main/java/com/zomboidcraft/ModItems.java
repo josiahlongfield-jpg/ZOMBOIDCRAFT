@@ -82,6 +82,14 @@ public final class ModItems {
     public static final Item DOUBLE_BARREL = gun("double_barrel", GunType.DOUBLE_BARREL, 1500);
     public static final Item REVOLVER = gun("revolver", GunType.REVOLVER, 1400);
     public static final Item REVOLVER_AMMO = register("revolver_ammo", Item::new, new Item.Properties().stacksTo(60));
+    public static final Item RIMFIRE = gun("rimfire", GunType.RIMFIRE, 1500);
+    public static final Item RIMFIRE_MAGAZINE = magazine("rimfire_magazine", GunType.RIMFIRE);
+    public static final Item RIMFIRE_AMMO = register("rimfire_ammo", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item SMG = gun("smg", GunType.SMG, 1500);
+    public static final Item SMG_MAGAZINE = magazine("smg_magazine", GunType.SMG);
+    public static final Item SAWN_OFF = gun("sawn_off", GunType.SAWN_OFF, 1100);
+    public static final Item MAGNUM = gun("magnum", GunType.MAGNUM, 1600);
+    public static final Item MAGNUM_AMMO = register("magnum_ammo", Item::new, new Item.Properties().stacksTo(50));
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -209,7 +217,9 @@ public final class ModItems {
                         : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));
                 }
-                output.accept(kitted);
+                if (!ItemStack.matches(kitted, gun)) {      // a gun with no rails or threads has nothing to put on
+                    output.accept(kitted);
+                }
             }
         });
     }

@@ -71,6 +71,14 @@ public final class Weights {
         mod("hunting_rifle", 3.6);
         mod("hunting_rifle_magazine", 0.2);
         mod("hunting_rifle_ammo", 0.025);
+        mod("rimfire", 2.3);
+        mod("rimfire_magazine", 0.1);
+        mod("rimfire_ammo", 0.0035);
+        mod("smg", 2.5);
+        mod("smg_magazine", 0.17);
+        mod("sawn_off", 2.3);
+        mod("magnum", 1.35);
+        mod("magnum_ammo", 0.022);
         vanilla("stick", 0.1);
         vanilla("arrow", 0.03);
         vanilla("bow", 0.8);
