@@ -61,6 +61,10 @@ PICKS = {
     "weapon.melee.swing": ("weapon/melee/swing", -14.0, [("silenced", "whoosh_swish_small_harsh_01")]),
 }
 
+# Josiah: reloads on every gun "need to be a little louder"
+RELOADS = ("mag_out", "mag_in", "load_round", "slide", "pump", "shell_in", "bolt", "cock", "open", "round_in", "close")
+LOUDER = 4.0
+
 
 def main():
     root = Path(sys.argv[1])
@@ -72,6 +76,8 @@ def main():
     ours = json.loads(ours_path.read_text())
     used = {}
     for event, (folder, peak, picks) in PICKS.items():
+        if event.endswith(RELOADS):
+            peak = min(peak + LOUDER, -1.0)
         old = ours.get(event, {}).get("sounds", [{}])
         dist = old[0].get("attenuation_distance", 16) if isinstance(old[0], dict) else 16
         out = RES / "zomboidcraft/sounds" / folder
