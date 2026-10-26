@@ -358,11 +358,21 @@ public class CarProp extends Entity {
 
     /** A point in the world in the car's model space (metres, nose toward +z, the driver's side +x). */
     public Vec3 toLocal(Vec3 at) {
+        if (aircraft()) {
+            // pitched and rolled with the airframe, about its pivot
+            Vec3 d = at.subtract(position()).subtract(0, pivot(), 0);
+            org.joml.Vector3f v = new Quaternionf(flight().q).conjugate().transform(new org.joml.Vector3f((float) d.x, (float) d.y, (float) d.z));
+            return new Vec3(v.x, v.y + pivot(), v.z);
+        }
         return local(at.subtract(position()));
     }
 
     /** A point in model space (metres, nose toward +z, the driver's side +x) in the world. */
     public Vec3 toWorld(float[] p) {
+        if (aircraft()) {
+            org.joml.Vector3f v = flight().q.transform(new org.joml.Vector3f(p[0], p[1] - pivot(), p[2]), new org.joml.Vector3f());
+            return position().add(v.x, v.y + pivot(), v.z);
+        }
         return position().add(world(p[0], p[1], p[2]));
     }
 
