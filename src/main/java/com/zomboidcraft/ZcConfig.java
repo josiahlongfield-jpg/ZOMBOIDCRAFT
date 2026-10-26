@@ -397,8 +397,8 @@ public final class ZcConfig {
         public boolean ghostPower = true;
         /** Scales the wait between ghost power surges (2 to 6 minutes); 0.5 is twice as often. Client side. */
         public double ghostPowerEvery = 1.0;
-        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. */
-        public boolean alarms = true;
+        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. Off for now. */
+        public boolean stormAlarms = false;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
