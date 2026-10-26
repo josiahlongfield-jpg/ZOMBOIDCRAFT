@@ -62,6 +62,8 @@ final class Carrier {
     /** The hangar: x from and to, z from and to inside its walls; the fire doors across it. */
     private static final int BAY0 = 54, BAY1 = 262, HZ0 = -17, HZ1 = 16;
     private static final int[] FIRE_DOORS = {126, 196};
+    /** The helicopter spot's middle, aft to starboard of the landing area. */
+    private static final int PAD_X = 22, PAD_Z = 16;
     /** The island's footprint at the flight deck. */
     private static final int IX0 = 124, IX1 = 155, IZ0 = 20, IZ1 = 28;
     /** The gun sponsons: x, side, and what's on it (0 close-in gun, 1 missile launcher, 2 box launcher). */
@@ -526,16 +528,28 @@ final class Carrier {
 
     /**
      * A jet at its spot: its middle at (x, y, z), the nose toward yaw (0 is +z, 90 is -x, 180 is
-     * -z, 270 is +x), one of the two fighters at full size (tools/cars/jets.py); chocks at its
+     * -z, 270 is +x), one of the two fighters at full size (tools/cars/aircraft.py); chocks at its
      * wheels and chains to the pad eyes.
      */
     private void park(double x, int y, double z, double yaw) {
         jets.add(new double[] {x + 0.5, y, z + 0.5, yaw});
-        p.vehicle(x + 0.5, y, z + 0.5, (float) yaw, rng.nextBoolean() ? "jet_corvid" : "jet_gyrfalcon", rng.nextLong());
+        tieDown(x, y, z, yaw, rng.nextBoolean() ? "jet_corvid" : "jet_gyrfalcon");
+    }
+
+    /** Where each aircraft's wheels touch, in metres from its middle: {forward, to the side}. */
+    private static double[][] wheels(String model) {
+        return switch (model) {
+            case "jet_corvid" -> new double[][] {{3.9, 0}, {-2.2, 1.7}, {-2.2, -1.7}};
+            case "jet_gyrfalcon" -> new double[][] {{2.6, 0}, {-3.0, 2.2}, {-3.0, -2.2}};
+            default -> new double[][] {{2.75, 1.0}, {2.75, -1.0}};
+        };
+    }
+
+    private void tieDown(double x, int y, double z, double yaw, String model) {
+        p.vehicle(x + 0.5, y, z + 0.5, (float) yaw, model, rng.nextLong());
         double a = Math.toRadians(yaw);
         double fx = -Math.sin(a), fz = Math.cos(a);
-        double[][] wheels = {{4.6, 0}, {-2, 1.5}, {-2, -1.5}};
-        for (double[] w : wheels) {
+        for (double[] w : wheels(model)) {
             int wx = (int) Math.floor(x + 0.5 + fx * w[0] - fz * w[1]), wz = (int) Math.floor(z + 0.5 + fz * w[0] + fx * w[1]);
             p.setIfAir(wx, y, wz, "navy_chocks[facing=" + (Math.abs(fx) > Math.abs(fz) ? "east" : "north") + "]");
         }
@@ -1873,6 +1887,7 @@ final class Carrier {
                 park(s[0], y, s[1], s[2]);
             }
         }
+        helipad(y);
         // tractors by the jets and in the street
         for (int i = 0; i < 9; i++) {
             int x = 40 + rng.nextInt(260), z = -20 + rng.nextInt(44);
@@ -1903,11 +1918,39 @@ final class Carrier {
         }
         for (int i = 0; i < 10; i++) {
             int x = 20 + rng.nextInt(LEN - 40), z = -30 + rng.nextInt(56);
-            if (plan(x, z)) {
+            if (plan(x, z) && !onPad(x, z)) {
                 p.setIfAir(x, y, z, any("navy_toolbox[facing=north]", "navy_chocks[facing=east]", "navy_extinguisher[facing=west]",
                         "navy_chains", "blood_splat", "debris_chunk[facing=north]", "bunk_casings"));
             }
         }
+    }
+
+    /**
+     * The helicopter spot on the starboard quarter, clear of the landing area: a yellow ring, a
+     * white H read from astern, and the gunship tied down on it with its nose to the bow.
+     */
+    private void helipad(int y) {
+        for (int dx = -7; dx <= 7; dx++) {
+            for (int dz = -7; dz <= 7; dz++) {
+                double r = Math.sqrt(dx * dx + dz * dz);
+                if (r >= 5.6 && r < 6.7) {
+                    setDeck(PAD_X + dx, PAD_Z + dz, "navy_fl_paint_yellow");
+                }
+            }
+        }
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz : new int[] {-3, -2, 2, 3}) {
+                setDeck(PAD_X + dx, PAD_Z + dz, "navy_fl_paint");
+            }
+        }
+        for (int dz = -1; dz <= 1; dz++) {
+            setDeck(PAD_X, PAD_Z + dz, "navy_fl_paint");
+        }
+        tieDown(PAD_X - 1.84, y, PAD_Z, 270, "heli_hornbill");  // its rotor hub over the H
+    }
+
+    private static boolean onPad(int x, int z) {
+        return (x - PAD_X) * (x - PAD_X) + (z - PAD_Z) * (z - PAD_Z) <= 64;
     }
 
     /** The yellow crash crane parked at (x, z): its cab, wheels and boom laid back along its length. */

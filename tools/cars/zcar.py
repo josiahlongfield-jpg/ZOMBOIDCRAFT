@@ -1,4 +1,4 @@
-"""Reads the packed vehicle files (.zcar, written by pack.py and jets.py) back for the previews.
+"""Reads the packed vehicle files (.zcar, written by pack.py and aircraft.py) back for the previews.
 
     from zcar import read, place
     states = read('jet_corvid')            # {state: dict(T, UV, glass, image)}
