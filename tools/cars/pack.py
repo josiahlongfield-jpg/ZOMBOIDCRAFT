@@ -155,7 +155,7 @@ def main():
         models = pool.map(build, files)
     idx = os.path.join(ROOT, 'src/main/resources/data/zomboidcraft/zc_cars')
     os.makedirs(idx, exist_ok=True)
-    # the jets come from tools/cars/jets.py, not the car pack: keep them
+    # the aircraft come from tools/cars/aircraft.py, not the car pack: keep them
     try:
         with open(os.path.join(idx, 'models.json')) as f:
             models += [m for m in json.load(f)['models'] if m.get('kind') == 'jet']

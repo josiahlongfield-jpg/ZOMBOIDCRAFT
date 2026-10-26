@@ -20,7 +20,7 @@ final class WatchHud {
     static int render(GuiGraphicsExtractor g) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.level == null || player.isCreative() || !wearing(player)) return TOP + 2;
+        if (player == null || mc.level == null || !wearing(player)) return TOP + 2;
         long clock = mc.level.getDefaultClockTime();
         int dayTicks = (int) Math.floorMod(clock, 24000L);
         int minutes = ((dayTicks / 1000 + 6) % 24) * 60 + (dayTicks % 1000) * 60 / 1000;

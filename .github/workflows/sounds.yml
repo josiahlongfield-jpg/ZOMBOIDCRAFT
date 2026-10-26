@@ -20,7 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - gun_sup_sniper
+          - gun_dbl
+          - gun_dbl_foley
+          - gun_revolver
+          - gun_revolver_foley
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

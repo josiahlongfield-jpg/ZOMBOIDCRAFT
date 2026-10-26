@@ -7,6 +7,13 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== zbody"
+javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -i "entity\|cutout" | head -60
+javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -i "attack\|swing" | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.ArmedEntityRenderState 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.EntityRenderState 2>&1 | head -40
+exit 0
+
 echo "===== nvg4"
 for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
 javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head

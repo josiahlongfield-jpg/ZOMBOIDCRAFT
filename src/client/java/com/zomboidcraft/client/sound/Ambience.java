@@ -22,8 +22,9 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The world's own sound (sounds.json amb.*): rain on the street outside and on the roof once you're under one,
  * rain on the glass beside a window in a blow, drips, wind that rises with the weather, the night, and now and
- * then a creak in the house, a crow, or something far off. The game's rain loops are silenced in sounds.json and
- * replaced by these; indoors is worked out here by looking up for a roof, not from the heightmap.
+ * then a creak in the house or something far off. The game's rain loops are silenced in sounds.json and
+ * replaced by these; indoors is worked out here by looking up for a roof, not from the heightmap. No animals:
+ * Josiah found the crows and owl annoying, so they're gone.
  */
 public final class Ambience {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -37,18 +38,13 @@ public final class Ambience {
     private static final Bed[] BEDS = {RAIN, ROOF, WINDOW, DRIP, WIND, NIGHT};
 
     private static final SoundEvent CREAK = event("amb.creak");
-    private static final SoundEvent CROW = event("amb.crow");
-    private static final SoundEvent OWL = event("amb.owl");
     private static final SoundEvent DISTANT = event("amb.distant");
 
     /** How far up a roof is looked for, and how far round a window. */
     private static final int ROOF_HEIGHT = 24, WINDOW_REACH = 4;
 
     private static float indoors, nearWindow;
-    private static int nextCreak = 400, nextCrow = 2400, nextDistant = 6000;
-    /** The owl sits at one spot: a few screeches, a long quiet, again; walk off or wait it out and it's gone for a while. */
-    private static Vec3 perch;
-    private static int nextOwl = 4800, owlCalls, owlBouts;
+    private static int nextCreak = 400, nextDistant = 6000;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(Ambience::tick);
@@ -91,45 +87,9 @@ public final class Ambience {
                 shot(client, CREAK, around(player.getEyePosition(), 3, 7, -2, 3), 0.6f + RANDOM.nextFloat() * 0.4f);
             }
         }
-        if (--nextCrow <= 0) {
-            nextCrow = between(120, 300);  // Josiah: animals and far-off guns much rarer
-            if (night < 0.3f && rain < 0.6f) {
-                shot(client, CROW, around(player.getEyePosition(), 20, 40, 4, 12), (0.5f + RANDOM.nextFloat() * 0.5f) * (1 - 0.5f * indoors));
-            }
-        }
-        owl(client, player.getEyePosition(), night, rain);
         if (--nextDistant <= 0) {
             nextDistant = between(360, 720);
             shot(client, DISTANT, around(player.getEyePosition(), 60, 90, 0, 10), 0.8f + RANDOM.nextFloat() * 0.2f);
-        }
-    }
-
-    private static void owl(Minecraft client, Vec3 eye, float night, float rain) {
-        if (perch != null && (eye.distanceTo(perch) > 96 || night < 0.4f)) {
-            perch = null;  // left behind, or morning: it doesn't follow you to the next street
-            nextOwl = between(480, 900);
-        }
-        if (--nextOwl > 0) {
-            return;
-        }
-        if (perch == null) {
-            if (night < 0.6f || rain > 0.4f) {
-                nextOwl = between(60, 120);
-                return;
-            }
-            perch = around(eye, 30, 55, 6, 14);
-            owlBouts = 2 + RANDOM.nextInt(3);
-            owlCalls = 2 + RANDOM.nextInt(3);
-        }
-        shot(client, OWL, perch, 0.7f + RANDOM.nextFloat() * 0.3f);
-        if (--owlCalls > 0) {
-            nextOwl = between(3, 8);
-        } else if (--owlBouts > 0) {
-            owlCalls = 2 + RANDOM.nextInt(3);
-            nextOwl = between(90, 240);
-        } else {
-            perch = null;  // flown off
-            nextOwl = between(480, 900);
         }
     }
 

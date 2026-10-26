@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -35,17 +36,17 @@ final class SuppliesPage {
     record Entry(ItemStack stack, int count, List<Integer> slots, KitItems.Category category) {
     }
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
     private KitItems.Category category = KitItems.Category.ALL;
     private ItemStack selected = ItemStack.EMPTY;
     private int scroll;
 
-    SuppliesPage(KitScreen screen) {
+    SuppliesPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
     private List<Entry> entries() {
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         List<Entry> out = new ArrayList<>();
         for (int i : screen.carried()) {
             ItemStack stack = menu.slots.get(i).getItem();
@@ -137,7 +138,7 @@ final class SuppliesPage {
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select", hx, hy);
         hx += KitDraw.hint(g, font, "Wheel", "Scroll", hx, hy);
-        KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
+        screen.pagesAndClose(g, font, hx, hy);
     }
 
     /** Totals across the top: rounds, nails, medical and food. */

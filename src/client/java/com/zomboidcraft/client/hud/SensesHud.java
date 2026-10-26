@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 
 /**
- * Two short meters beside your figure: how far your last noise carried (the server says, so rain and wind count),
+ * Two short meters above your figure: how far your last noise carried (the server says, so rain and wind count),
  * and how far a zombie could see you now, from the light where you stand and whether you're crouched. They come up
  * when you move, crouch or make a noise, and fade when you stand still.
  */
@@ -44,7 +44,8 @@ final class SensesHud {
         ZcConfig.Senses senses = ZcConfig.get().senses;
         double seen = Sight.range(player, senses);
         Font font = mc.font;
-        int x = 66, y = g.guiHeight() - 40;
+        // above your figure in the bottom-left corner, clear of the belt however many slots it shows
+        int x = BodyHud.LEFT, y = g.guiHeight() - BodyHud.BOTTOM - BodyHud.H - 30;
         int lit = 0;
         for (double step : NOISE_STEPS) if (noise >= step) lit++;
         String word = noise < 0.5 ? "Silent" : (player.isSprinting() ? "Running" : noise > 30 ? "Gunshot" : noise <= 6 ? "Footsteps"

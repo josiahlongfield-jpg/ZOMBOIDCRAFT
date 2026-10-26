@@ -12,13 +12,15 @@ import com.zomboidcraft.survival.Body.Region;
 import com.zomboidcraft.survival.Treatment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import com.zomboidcraft.client.hud.InjuryGlowLayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The health page: every part of you down the left, a flat figure in the middle lit where it hurts, and on the right
+ * The health page: every part of you down the left, you in the middle (your own skin, glowing red where it hurts), and on the right
  * what the chosen part needs, with the bandage or splint you carry ready to put on. Treating is a timed action on the
  * server, so the bar fills here and nothing is used up until it's done.
  */
@@ -26,13 +28,13 @@ final class HealthPage {
     private static final String[] NAMES = {"Head", "Torso", "Left arm", "Right arm", "Left leg", "Right leg"};
     /** The flat figure, front on (so your right arm is on our left): x, y, w, h in model pixels. */
     private static final int[][] SHAPE = {{4, 0, 8, 8}, {4, 8, 8, 12}, {12, 8, 4, 12}, {0, 8, 4, 12}, {8, 20, 4, 12}, {4, 20, 4, 12}};
-    private static final int[] SKIN = {0xFF9C7A5E, 0xFF4F5640, 0xFF4A513C, 0xFF4A513C, 0xFF3D3F44, 0xFF43454A};
-    private static final int U = 6;
+    /** The figure's box height and its scale (gui pixels per block). */
+    private static final int FIGURE_H = 214, SCALE = 104;
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
     private Region selected;
 
-    HealthPage(KitScreen screen) {
+    HealthPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
@@ -63,13 +65,12 @@ final class HealthPage {
             screen.hot(rx, ry, rw, rh, () -> select(r));
         }
 
-        figure(g, body, x + 308 - 8 * U, y + 66, mx, my);
+        figure(g, body, x + 308, y + 58, mx, my);
         treat(g, font, player, body, x + 417, y + 58, mx, my);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select a part / treat it", hx, hy);
-        hx += KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
-        KitDraw.hint(g, font, "I", "Close", hx, hy);
+        screen.pagesAndClose(g, font, hx, hy);
         KitDraw.textRight(g, font, "Moving or a hit stops a treatment; nothing is used up", x + 579, hy + 1, KitDraw.FAINT, 0.9f);
     }
 
@@ -101,39 +102,29 @@ final class HealthPage {
         }
     }
 
-    /** A flat, blocky you: each part washed red as it hurts, bleeding ones pulsing, bandages and splints drawn on. */
-    private void figure(GuiGraphicsExtractor g, Body body, int fx, int fy, int mx, int my) {
-        g.fill(fx - 6, fy + 32 * U + 4, fx + 16 * U + 6, fy + 32 * U + 8, 0x40000000);
-        float pulse = 0.55f + 0.45f * Mth.sin((System.currentTimeMillis() % 1100) / 1100f * (float) (Math.PI * 2));
+    /**
+     * You, as you look: your own skin and whatever you're wearing, standing still and facing out, with the same red glow
+     * round each hurt part that the HUD's figure has. Each part can be clicked to pick it.
+     */
+    private void figure(GuiGraphicsExtractor g, Body body, int cx, int top, int mx, int my) {
+        int x1 = cx - 70, x2 = cx + 70, y1 = top, y2 = top + FIGURE_H;
+        g.fill(cx - 52, y2 - 6, cx + 52, y2 - 2, 0x40000000);
+        InjuryGlowLayer.capturing = true;
+        try {
+            // the "mouse" sits dead centre, so the figure looks straight out and holds still
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x1, y1, x2, y2, SCALE, 0.0625f, cx, (y1 + y2) / 2f,
+                    screen.player());
+        } finally {
+            InjuryGlowLayer.capturing = false;
+        }
+        // where each part lands on screen, front on (your right arm on our left), for picking
+        float u = SCALE * 0.9375f / 16f;
+        float fx = cx - 8 * u, fy = (y1 + y2) / 2f - 16 * u;
         for (Region r : Region.values()) {
             int[] s = SHAPE[r.ordinal()];
-            int px = fx + s[0] * U, py = fy + s[1] * U, pw = s[2] * U, ph = s[3] * U;
-            Part p = body.part(r);
-            int sev = p.severity();
-            float a = new float[]{0, 0.32f, 0.6f, 0.85f}[sev] * (p.bleeding() ? pulse : 1);
-            if (sev > 0) {
-                for (int i = 4; i >= 1; i--) {
-                    g.fill(px - i * 2, py - i * 2, px + pw + i * 2, py + ph + i * 2, colour(0xFF2A12, a * 0.12f * (5 - i)));
-                }
-            }
-            g.fill(px, py, px + pw, py + ph, SKIN[r.ordinal()]);
-            if (r == Region.HEAD) g.fill(px, py, px + pw, py + ph / 4, 0xFF4A3A2C);
-            if (r.arm()) g.fill(px, py + ph * 4 / 5, px + pw, py + ph, 0xFFB48A6C);
-            if (r.leg()) g.fill(px, py + ph * 5 / 6, px + pw, py + ph, 0xFF2A2522);
-            g.fillGradient(px, py, px + pw, py + ph / 3, 0x14FFFFFF, 0x00FFFFFF);
-            if (sev > 0) g.fill(px, py, px + pw, py + ph, colour(0xFF3418, a * 0.45f));
-            if (p.bandaged()) {
-                int by = py + ph * 2 / 5;
-                g.fill(px, by, px + pw, by + Math.max(3, ph / 5), 0xEBE9E4D6);
-                for (int sx = px + 5; sx < px + pw; sx += 7) g.fill(sx, by, sx + 1, by + Math.max(3, ph / 5), 0xFFD9D2C0);
-            }
-            if (p.fractured() && p.splinted()) {
-                g.fill(px - 2, py + 2, px, py + ph - 2, 0xFF8A6A44);
-                g.fill(px + pw, py + 2, px + pw + 2, py + ph - 2, 0xFF8A6A44);
-            }
-            boolean on = r == selected, over = screen.hovered(px, py, pw, ph, mx, my);
-            if (on) KitDraw.frame(g, px - 2, py - 2, pw + 4, ph + 4, 0xFFFFFFFF);
-            else if (over) KitDraw.frame(g, px - 1, py - 1, pw + 2, ph + 2, 0xB3FFFFFF);
+            int px = Math.round(fx + s[0] * u), py = Math.round(fy + s[1] * u);
+            int pw = Math.round(s[2] * u), ph = Math.round(s[3] * u);
+            if (r != selected && screen.hovered(px, py, pw, ph, mx, my)) KitDraw.frame(g, px - 1, py - 1, pw + 2, ph + 2, 0x59FFFFFF);
             screen.hot(px, py, pw, ph, () -> select(r));
         }
     }
@@ -205,10 +196,16 @@ final class HealthPage {
         KitDraw.capsCentred(g, font, verb, bx + bw / 2f, by + 3, over ? 0xFF121314 : can ? KitDraw.BRIGHT : KitDraw.FAINT, 0.75f);
         Region r = selected;
         if (can) {
-            screen.hot(bx, by, bw, 12, () -> {
+            Runnable treat = () -> {
                 screen.button(Bench.treatButton(kind, r));
                 com.zomboidcraft.client.sound.UiSounds.play(com.zomboidcraft.client.sound.UiSounds.CLICK);
-            });
+            };
+            screen.hot(bx, by, bw, 12, treat);
+            screen.hot(x, y, 24, 24, icon, treat, null, null, -1);
+        } else {
+            // greyed out: say why when it's pointed at
+            screen.hot(bx, by, bw, 12, ItemStack.EMPTY, null, null, what, -1);
+            screen.hot(x, y, 24, 24, ItemStack.EMPTY, null, null, what, -1);
         }
         return y + 26;
     }

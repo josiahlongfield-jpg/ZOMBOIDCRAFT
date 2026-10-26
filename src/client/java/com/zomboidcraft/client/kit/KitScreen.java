@@ -2,7 +2,10 @@ package com.zomboidcraft.client.kit;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.carry.CarrySlots;
+import com.zomboidcraft.loot.Nearby;
+import com.zomboidcraft.loot.NearbyMenu;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.mixin.client.SlotAccessor;
 import java.util.ArrayList;
@@ -10,15 +13,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
@@ -26,16 +36,18 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The kit screen: your survivor laid out like a looter shooter's character screen, over the player's own inventory
- * menu. It has its own key (I), beside the field kit on E, which stays the place for bag grids and looting. Q and E
- * flip its pages: Character (weapons, belt, clothing, carry gear and your figure), Supplies (everything you carry,
- * sorted), the Bench (a weapon up close, with every part you carry that fits it, and its condition), Health (each body
- * part and treating it), Skills (levels and what they really do) and the Map (where you've been, on M as well).
+ * The kit screen, and the only inventory: your survivor laid out like a looter shooter's character screen. E (or I)
+ * opens it, and so does searching a container. It runs over the nearby menu when the server has the mod (your own
+ * slots in the inventory menu's order, then the floor and the containers in reach) or the plain inventory otherwise.
+ * Q and R flip its pages: Character (weapons, belt, clothing, carry gear and your figure), Pack (pockets, belt and every
+ * bag beside the floor and containers in reach, plus field craft), Supplies (everything you carry, sorted), the Bench
+ * (a weapon up close, with every part you carry that fits it, and its condition), Health (each body part and treating
+ * it), Skills (levels and what they really do) and the Map (where you've been, on M as well).
  * <p>
  * Nothing here is a vanilla slot on screen: every tile is drawn by hand, and clicks become the same slot clicks and
  * menu buttons a vanilla screen sends, so the server checks every move as usual.
  */
-public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
+public class KitScreen<M extends AbstractContainerMenu> extends AbstractContainerScreen<M> {
     static final int W = 616, H = 346;
     private static final int AWAY = -10000;
 
@@ -45,7 +57,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", true), SKILLS("Skills", true),
+        CHARACTER("Character", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", true), SKILLS("Skills", true),
         MAP("Map", true);
 
         final String label;
@@ -61,7 +73,13 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     private static Page last = Page.CHARACTER;
 
     Page page = last;
+    /** The page a key asked for, for the screen the server is about to open; null when a container opened it. */
+    private static @Nullable Page requested;
+    /** Shift was held for the click being handled. */
+    boolean shift;
+
     final CharacterPage character = new CharacterPage(this);
+    final PackPage pack = new PackPage(this);
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
     final HealthPage health = new HealthPage(this);
@@ -91,25 +109,47 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         KeyMappingHelper.registerKeyMapping(OPEN);
         KeyMappingHelper.registerKeyMapping(MAP_KEY);
         ClientTickEvents.END_CLIENT_TICK.register(KitScreen::tick);
+        MenuScreens.<NearbyMenu, KitScreen<NearbyMenu>>register(Nearby.MENU, KitScreen::new);
     }
 
     private static void tick(Minecraft mc) {
         while (OPEN.consumeClick()) {
-            LocalPlayer player = mc.player;
-            if (player != null && mc.gui.screen() == null) mc.gui.setScreen(new KitScreen(player));
+            if (mc.gui.screen() == null) open(mc, last);
         }
         while (MAP_KEY.consumeClick()) {
-            LocalPlayer player = mc.player;
-            if (player != null && mc.gui.screen() == null) {
-                KitScreen screen = new KitScreen(player);
-                screen.page = Page.MAP;
-                mc.gui.setScreen(screen);
-            }
+            if (mc.gui.screen() == null) open(mc, Page.MAP);
         }
     }
 
-    public KitScreen(LocalPlayer player) {
-        super(player.inventoryMenu, player.getInventory(), Component.literal("Kit"), W, H);
+    /**
+     * Opens the kit on a page. With the mod on the server it asks for the nearby menu, whose screen this becomes when
+     * it arrives; otherwise it opens straight over the plain inventory.
+     */
+    private static void open(Minecraft mc, Page page) {
+        LocalPlayer player = mc.player;
+        if (player == null) return;
+        requested = page;
+        if (ClientPlayNetworking.canSend(Nearby.OpenKit.TYPE)) {
+            ClientPlayNetworking.send(new Nearby.OpenKit());
+        } else {
+            mc.gui.setScreen(new KitScreen<>(player.inventoryMenu, player.getInventory(), Component.literal("Kit")));
+        }
+    }
+
+    /** Minecraft's survival inventory is about to open (E): the kit opens instead. Creative keeps its own screen. */
+    public static @Nullable Screen replace(InventoryScreen vanilla) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || !ZcConfig.get().look.fieldKitInventory || player.hasInfiniteMaterials()) return vanilla;
+        open(mc, last);
+        return null;
+    }
+
+    public KitScreen(M menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, W, H);
+        // a key asked for a page; searching a container opens on the pack, with that container showing
+        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : last;
+        requested = null;
     }
 
     LocalPlayer player() {
@@ -128,8 +168,13 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         return topPos;
     }
 
-    InventoryMenu menu() {
+    AbstractContainerMenu menu() {
         return menu;
+    }
+
+    /** The floor and containers in reach, or null over the plain inventory. */
+    @Nullable NearbyMenu near() {
+        return menu instanceof NearbyMenu near ? near : null;
     }
 
     @Override
@@ -184,6 +229,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
             Slot slot = menu.slots.get(i);
             if (slot instanceof CarrySlots.GearSlot gear && gear.gear != com.zomboidcraft.carry.GearStore.SLING) continue;
             if (slot instanceof CarrySlots.BagSlot bag && !bag.open()) continue;
+            if (slot instanceof NearbyMenu.NearbySlot) break;
             out.add(i);
         }
         return out;
@@ -232,12 +278,19 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         UiSounds.play(UiSounds.TAB);
     }
 
+    /** A plain click on a slot, the way a vanilla screen sends it: shift moves it across, right takes half. */
+    void slotClick(int slot, int button) {
+        boolean had = !menu.getCarried().isEmpty() || slot >= 0 && slot < menu.slots.size() && menu.slots.get(slot).hasItem();
+        click(slot, button, shift ? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP);
+        if (had) UiSounds.play(UiSounds.ITEM_MOVE);
+    }
+
     void inspect(int slot) {
         bench.show(slot);
         open(Page.BENCH);
     }
 
-    private void flip(int dir) {
+    void flip(int dir) {
         Page[] pages = Page.values();
         int i = page.ordinal();
         do {
@@ -256,6 +309,19 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         hot(x, y, w, h, ItemStack.EMPTY, click, null, null, -1);
     }
 
+    /** A footer key hint that does what it says when clicked. Returns the width used. */
+    int hint(GuiGraphicsExtractor g, Font font, String k, String what, int x, int y, @Nullable Runnable run) {
+        int w = KitDraw.hint(g, font, k, what, x, y);
+        if (run != null) hot(x - 1, y - 2, w - 8, 13, run);
+        return w;
+    }
+
+    /** The two hints every page ends with: flipping pages and closing. Returns the width used. */
+    int pagesAndClose(GuiGraphicsExtractor g, Font font, int x, int y) {
+        int w = hint(g, font, "Q/R", "Pages", x, y, () -> flip(1));
+        return w + hint(g, font, minecraft.options.keyInventory.getTranslatedKeyMessage().getString(), "Close", x + w, y, this::onClose);
+    }
+
     boolean hovered(int x, int y, int w, int h, int mx, int my) {
         return fly == null && KitDraw.in(mx, my, x, y, w, h);
     }
@@ -264,6 +330,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         double mx = event.x(), my = event.y();
         boolean right = event.button() == 1;
+        shift = minecraft.hasShiftDown();
         if (fly == null && page == Page.MAP && map.pressed(mx, my, event.button())) return true;
         if (fly != null) {
             for (Hot h : flyHots) {
@@ -314,11 +381,15 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
             return true;
         }
         if (minecraft.options.keyInventory.matches(event)) {
-            flip(1);
+            onClose();
             return true;
         }
         if (minecraft.options.keyDrop.matches(event)) {
             flip(-1);
+            return true;
+        }
+        if (event.key() == InputConstants.KEY_R) {
+            flip(1);
             return true;
         }
         if (OPEN.matches(event) || MAP_KEY.matches(event) && page == Page.MAP) {
@@ -350,6 +421,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
         top(g, x, y, mouseX, mouseY);
         switch (page) {
             case CHARACTER -> character.draw(g, x, y, mouseX, mouseY);
+            case PACK -> pack.draw(g, x, y, mouseX, mouseY);
             case SUPPLIES -> supplies.draw(g, x, y, mouseX, mouseY);
             case BENCH -> bench.draw(g, x, y, mouseX, mouseY);
             case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
@@ -392,7 +464,7 @@ public class KitScreen extends AbstractContainerScreen<InventoryMenu> {
             px += w + 14;
         }
         px += 7 - 14 + 6;
-        KitDraw.key(g, font, "E", Math.round(px), y + 9, KitDraw.DIM);
+        KitDraw.key(g, font, "R", Math.round(px), y + 9, KitDraw.DIM);
         hot(Math.round(px), y + 9, 10, 10, () -> flip(1));
 
         // time and weather

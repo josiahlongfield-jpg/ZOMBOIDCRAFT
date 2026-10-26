@@ -4,31 +4,14 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 
 | Sound | Recording | By | Licence |
 |---|---|---|---|
-| weapon.rifle.shot | [SemiAutoRifleShot.wav](https://freesound.org/people/SuperPhat/sounds/421710/) | SuperPhat | CC0 1.0 |
 | weapon.rifle.shot_distant | [SemiAutoRifleShot.wav](https://freesound.org/people/SuperPhat/sounds/421710/) | SuperPhat | CC0 1.0 |
 | weapon.rifle.shot_suppressed | Sako_TRG_22_TRG_silencer_1m_right_MKH8040_1_clean_Single_shots_x_6 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.rifle.shot_suppressed_distant | Sako_TRG_22_TRG_silencer_1m_right_MKH8040_1_clean_Single_shots_x_6 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
-| weapon.pistol.shot_suppressed | De_Lisle_Carbine_.45ACP_suppressed_1m_right_MKH8040_1_clean_Single_shots_x_14 (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.pistol.shot_suppressed_distant | De_Lisle_Carbine_.45ACP_suppressed_55m_in_front_off_axis_clean_Single_shots_x_14.L (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
-| weapon.rifle.dry | [357 Magnum Ext 2 shots Empty Chamber Clicks.wav](https://freesound.org/people/klangfabrik/sounds/232867/) | klangfabrik | CC0 1.0 |
-| weapon.rifle.mag_out | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.rifle.mag_out | [Assault Rifle Reload](https://freesound.org/people/qubodup/sounds/815879/) | qubodup | CC0 1.0 |
-| weapon.rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.rifle.mag_in | [Assault Rifle Reload](https://freesound.org/people/qubodup/sounds/815879/) | qubodup | CC0 1.0 |
 | weapon.rifle.bolt | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.rifle.bolt | [Assault Rifle Reload](https://freesound.org/people/qubodup/sounds/815879/) | qubodup | CC0 1.0 |
-| weapon.rifle.load_round | [Pushing 50 Cal BMG Round into Magazine](https://freesound.org/people/qubodup/sounds/855580/) | qubodup | CC0 1.0 |
-| weapon.rifle.load_round | [Loading bullets into Sauer 404 mag.wav](https://freesound.org/people/moosegravy/sounds/431830/) | moosegravy | CC0 1.0 |
-| weapon.rifle.load_round | [SingleBullet1.wav](https://freesound.org/people/BMacZero/sounds/94122/) | BMacZero | CC0 1.0 |
-| weapon.casing | [.30 Shell Bouncing](https://freesound.org/people/Danwardvs/sounds/205126/) | Danwardvs | CC0 1.0 |
-| weapon.casing | [Brass bullet shell casing drop onto concrete, multiple takes](https://freesound.org/people/GrayJoy/sounds/210102/) | GrayJoy | CC0 1.0 |
-| weapon.bullet.flesh | [VisceralBulletImpacts.wav](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | CC0 1.0 |
-| weapon.bullet.flesh | [Headshot.wav](https://freesound.org/people/Pablobd/sounds/511194/) | Pablobd | CC0 1.0 |
 | weapon.bullet.ricochet | [ricochet.mp3](https://freesound.org/people/cedarstudios/sounds/148840/) | cedarstudios | CC0 1.0 |
 | weapon.bullet.ricochet | [Ricochet 2.wav](https://freesound.org/people/morganpurkis/sounds/392975/) | morganpurkis | CC0 1.0 |
-| weapon.melee.swing | [bat swoosh](https://freesound.org/people/MrGungus/sounds/766542/) | MrGungus | CC0 1.0 |
-| weapon.melee.swing | [Woosh (stick swung in the air)](https://freesound.org/people/Dalesome/sounds/352719/) | Dalesome | CC0 1.0 |
-| weapon.melee.swing | [swing.mp3](https://freesound.org/people/GaussTheWizard/sounds/367182/) | GaussTheWizard | CC0 1.0 |
 | weapon.melee.swing_heavy | [Weapon Swings - Variations](https://freesound.org/people/SecureSubset/sounds/784302/) | SecureSubset | CC0 1.0 |
 | weapon.melee.swing_heavy | [Swoosh](https://freesound.org/people/pasdepoisson/sounds/201216/) | pasdepoisson | CC0 1.0 |
 | weapon.melee.hit_blunt | [body_hit.wav](https://freesound.org/people/insanity54/sounds/276600/) | insanity54 | CC0 1.0 |
@@ -82,6 +65,8 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 ## Vehicles
 
 The street cars, vans, trucks and buses are from the [American Cars 80s Pack](https://www.cgtrader.com/3d-model-packs/american-cars-80s-pack) on CGTrader, used under CGTrader's Royalty Free licence. They were repainted, weathered and damaged for ZomboidCraft by tools/cars/wreck.py and ship only as packed meshes inside the mod. The original model files are not part of this repository and may not be redistributed.
+
+The aircraft on the carrier are three models bought on CGTrader and used under its Royalty Free licence: [Lockheed Martin F-22 Raptor](https://www.cgtrader.com/3d-models/aircraft/military-aircraft/lockheed-martin-f-22-raptor-73212c3c-8419-4d38-81b5-443f1ca23646) (the Corvid), "Sukhoi Su-27 with interior" (the Gyrfalcon) and "Apache AH64D Low" (the Hornbill helicopter). tools/cars/aircraft.py repainted them with made-up markings, weathered and damaged them, and packs them into the mod; the original files are not part of this repository and may not be redistributed or used to train AI models.
 
 ## Looting and item sounds
 
@@ -161,8 +146,6 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | amb.wind | RMB10_AMBIENCE_CITY RUMBLE_Large city_Light wind debris (Collected Transients - Diffuse City) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.wind | Wind,Ext,Marina,Masts,Wires,Buffeting,Whistle,Clank (Hzandbits - Urban Winds II) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.night | [Wind singing in the mountain, some night cricket in background](https://freesound.org/people/felix.blume/sounds/165526/) | felix.blume | CC0 1.0 |
-| amb.night | AMB PARK Solo Cricket, Seagulls, City Rumble, Montreal, Canada, LOOP (Articulated Sounds - Nature in the City) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
-| amb.owl | [screech_owl.wav](https://freesound.org/people/ivolipa/sounds/353173/) | ivolipa | CC0 1.0 |
 | amb.thunder | Thunder_Boom_Fienup_005 (Soundopolis - Natures Fury_Thunder) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
 | amb.thunder | thunder_clap_04 (Soundrangers – Thunder) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | amb.thunder | Thunder_Very-Close_Rain_08 (InspectorJ - 44.1 General Library) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
@@ -175,10 +158,6 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | amb.creak | Bluezone_BC0254_wood_creaking_tree_005 (BlueZone - Wood Sound Effects) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | amb.creak | [creaking floor OWI.wav](https://freesound.org/people/miekyj/sounds/326460/) | miekyj | CC0 1.0 |
 | amb.creak | [Door opening stairs walking.wav](https://freesound.org/people/BonnyOrbit/sounds/334143/) | BonnyOrbit | CC0 1.0 |
-| amb.crow | [Raven call.wav](https://freesound.org/people/deleted_user_958643/sounds/328846/) | deleted_user_958643 | CC0 1.0 |
-| amb.crow | Ravens 2015 Medlock Ravens 3 (Discover Oregon - Ravens and Robins) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
-| amb.crow | AMB SUBURB Crow in City, Sparrow Chirps, Montreal, Canada, LOOP (Articulated Sounds - Nature in the City) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
-| amb.crow | [A Murder of Crows](https://freesound.org/people/Franki-01234/sounds/214869/) | Franki-01234 | CC0 1.0 |
 | amb.distant | explosion_far_distant_02 (Gamemaster Audio -  Explosion Sound Pack) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | amb.distant | warfare_t1b_cannon_firing_forest_distant_MKH8060_2 (Pole Position - The Warfare Library) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 
@@ -203,13 +182,7 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 |---|---|---|---|
 | weapon.pistol.shot, weapon.pistol.shot_distant | [9mm pistol shot](https://freesound.org/people/michorvath/sounds/427592/) | michorvath | CC0 1.0 |
 | weapon.pistol.dry, weapon.shotgun.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.pistol.mag_out | [Magazine Insert](https://freesound.org/people/brianhanson2nd/sounds/171209/) | brianhanson2nd | CC0 1.0 |
-| weapon.pistol.mag_in | [Handgun / Pistol Removing Mag and Inserting Mag Foley](https://freesound.org/people/e9118586020/sounds/456195/) | e9118586020 | CC0 1.0 |
-| weapon.pistol.slide | [1911 Reload](https://freesound.org/people/nioczkus/sounds/396331/) | nioczkus | CC0 1.0 |
-| weapon.shotgun.shot | [shotgun shoot](https://freesound.org/people/MrGungus/sounds/773873/) | MrGungus | CC0 1.0 |
 | weapon.shotgun.shot_distant | SPAS-12 - FIRING - Pump Action - Take 1 - 20m In Front - AB - MKH8020 (Pole Position - Franchi SPAS-12 Combat Shotgun) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
-| weapon.shotgun.pump | [Remington 870 12 gauge shotgun pump racking cha chock](https://freesound.org/people/TotallyPhilip/sounds/755495/) | TotallyPhilip | CC0 1.0 |
-| weapon.shotgun.shell_in | [shell load.ogg](https://freesound.org/people/CeebFrack/sounds/108793/) | CeebFrack | CC0 1.0 |
 
 ## Hunting rifle sounds
 
@@ -217,9 +190,46 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 
 | Sound | Recording | By | Licence |
 |---|---|---|---|
-| weapon.hunting_rifle.shot | [Sauer 404 close shot.wav](https://freesound.org/people/moosegravy/sounds/431834/) | moosegravy | CC0 1.0 |
 | weapon.hunting_rifle.shot_distant | [Distant Gunshot](https://freesound.org/people/Resaural/sounds/541164/) | Resaural | CC0 1.0 |
-| weapon.hunting_rifle.dry | [9mm Handgun Being Dry Fired](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/674568/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
-| weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+
+## Gamemaster gun sounds
+
+From Gamemaster Audio's Gun Sound Pack and Silenced Gun Sounds (sold on [Sonniss](https://sonniss.com)), licensed by Josiah Longfield for this game. Each take is used whole, mixed to mono and levelled by tools/audio/build_gamemaster_sounds.py. The raw library is not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.bullet.flesh | bullet_impact_body_thump_08 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.bullet.flesh | bullet_impact_ice_06 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.bullet.flesh | bullet_impact_body_flesh_04 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.casing | bullet_shell_bounce_concrete2_05 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.casing | bullet_shell_bounce_concrete1_05 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.casing | bullet_shell_bounce_concrete2_06 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.double_barrel.dry, weapon.revolver.dry | gun_revolver_pistol_dry_fire_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.double_barrel.shell_in | gun_shotgun_load_bullet_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.double_barrel.shot | gun_shotgun_shot_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.bolt | gun_rifle_sniper_cock_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.dry | gun_rifle_sniper_dry_fire_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.mag_in | gun_rifle_magazine_load_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.mag_out | gun_rifle_magazine_unload_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.shot, weapon.rifle.shot | gun_rifle_shot_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.hunting_rifle.shot_suppressed | gun_silenced_AR_sniper_shot_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.melee.swing | whoosh_swish_small_harsh_01 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.dry | gun_pistol_dry_fire_06 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.mag_in | gun_pistol_insert_mag_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.mag_out | gun_pistol_remove_mag_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.shot | gun_pistol_shot_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.shot_suppressed | gun_pistol_shot_silenced_02 (Silenced Gun Sounds) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.pistol.slide | gun_pistol_cock_07 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.revolver.close | gun_revolver_pistol_cylinder_close_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.revolver.cock | gun_revolver_pistol_cock_01 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.revolver.open | gun_revolver_pistol_cylinder_open_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.revolver.round_in | gun_revolver_pistol_load_bullet_05 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.revolver.shot | gun_revolver_pistol_shot_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rifle.dry | gun_semi_auto_rifle_dry_fire_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rifle.load_round | gun_semi_auto_rifle_load_bullet_03 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rifle.mag_in | gun_rifle_magazine_load_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.rifle.mag_out | gun_rifle_magazine_unload_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.shotgun.dry | gun_shotgun_dry_fire_02 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.shotgun.pump | gun_shotgun_cock_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.shotgun.shell_in | gun_shotgun_load_bullet_08 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |
+| weapon.shotgun.shot | gun_shotgun_shot_04 (Gun Sound Pack) | Gamemaster Audio | Licensed by Josiah Longfield |

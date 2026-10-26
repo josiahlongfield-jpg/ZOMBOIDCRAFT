@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
  * stays on screen, or with that setting off keeps out of sight while you're fine. Low health and fresh hurts also put blood at the screen's edge.
  */
 final class BodyHud {
-    private static final int W = 50, H = 84, LEFT = 8, BOTTOM = 14;
+    static final int W = 50, H = 84, LEFT = 8, BOTTOM = 14;
     private static final float SHOW = 5f;
 
     private static final Hud.Fade fade = new Hud.Fade();

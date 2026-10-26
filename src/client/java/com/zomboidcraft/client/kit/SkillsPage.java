@@ -61,10 +61,10 @@ final class SkillsPage {
 
     private static final String[] GROUPS = {"Combat", "Survival", "Agility"};
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
     private Skill selected = Skill.AIMING;
 
-    SkillsPage(KitScreen screen) {
+    SkillsPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
@@ -104,8 +104,7 @@ final class SkillsPage {
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select", hx, hy);
-        hx += KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
-        KitDraw.hint(g, font, "I", "Close", hx, hy);
+        screen.pagesAndClose(g, font, hx, hy);
         KitDraw.textRight(g, font, "Every number here is the real effect in game", x + 579, hy + 1, KitDraw.FAINT, 0.9f);
     }
 
