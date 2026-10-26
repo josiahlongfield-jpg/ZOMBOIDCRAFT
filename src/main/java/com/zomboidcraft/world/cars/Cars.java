@@ -5,6 +5,7 @@ import com.zomboidcraft.ZomboidCraft;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.random.RandomGenerator;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -15,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -36,7 +38,10 @@ public final class Cars {
             .isSuffocating((state, level, pos) -> false).setId(HULL_KEY)));
 
     public static void register() {
-        // Loading the class registers the entity and the block.
+        // a mob's blow at someone in a car lands on its windows until they give
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
+                !(entity.getVehicle() instanceof CarProp car && source.getEntity() instanceof Mob attacker
+                        && !attacker.isPassengerOfSameVehicle(entity)) || car.blowAtRider(attacker, amount));
     }
 
     /** A hull block from a code packing its four quarter heights (0-4 each) in base 5, north-west first. */

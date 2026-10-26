@@ -13,6 +13,13 @@ public class CarRenderState extends EntityRenderState {
     public float steer;
     /** The local player is sitting in this car, looking out of it. */
     public boolean inside;
+    /** Zombies have smashed the windows in: no glass. */
+    public boolean smashed;
     /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
     public int lod;
+    /** The engine's running, so the lamps and the dash are lit; the brake or reversing lights too. */
+    public boolean lights, braking, reversing;
+    /** How dark it is round the car, 0 (day) to 1 (night), and whether a shader pack draws the glow. */
+    public float dark;
+    public boolean shaders;
 }
