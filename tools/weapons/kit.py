@@ -25,6 +25,7 @@ import numpy as np
 import model as M
 import paint as P
 import pbr
+import toon
 
 NS = 'zomboidcraft'
 SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
@@ -162,24 +163,38 @@ def face_density(p, name, eyes, base):
     return want
 
 
-def paint(models, px=PX, eyes=()):
+def paint(models, px=PX, eyes=(), cache=None):
     """Paints every visible face of every model into one set of patches: colour, LabPBR specular and normal.
-    Faces seen up close from an aiming eye get more pixels (see face_density)."""
+    Faces seen up close from an aiming eye get more pixels (see face_density). Each part is drawn in the
+    character style (toon): an outline only round its outside, chipped edges. cache: shared between paintings
+    of the same models (finishes, wear), so where each part's joints are is only worked out once."""
     old, M.PX = M.PX, px
+    cache = {} if cache is None else cache
     patches = []
     try:
         for mi, m in enumerate(models):
+            if ('pieces', mi) not in cache:
+                cache[('pieces', mi)] = toon.pieces(m.parts)
+            piece = cache[('pieces', mi)]
             for k, p in enumerate(m.parts):
                 info = p['paint']
                 R, t = p.get('R', np.eye(3)), p.get('t', np.zeros(3))
                 local = p.get('local', p)
                 look = info['look']
+                mates = [q for j, q in enumerate(m.parts) if j != k and piece[j] == piece[k]]
                 for name, (ax, sgn, ua, ud, va, vd) in M.FACES.items():
                     if name in p.get('skip', ()):
                         continue
                     M.PX = face_density(p, name, eyes, px) if eyes else px
                     M.PX = max(M.PX, look.get('_px', {}).get(p['mat'], 0))   # finishes with fine detail
-                    pos, n, edge, uv = M.face_grid(p, name)
+                    pos, n, _edge, uv = M.face_grid(p, name)
+                    key = (mi, k, name, M.PX)
+                    if key not in cache:
+                        covers = toon.cover(p, name, pos, n, mates, M.PX)
+                        if toon.step_face(p, pos, n, mates):
+                            covers = [np.ones(pos.shape[:2], bool)] * 4
+                        cache[key] = covers, toon.outer_edge(p, name, covers, M.PX)
+                    covers, edge = cache[key]
                     pos_l = (pos - t) @ R
                     n_l = R.T @ n
                     lname = next(fn for fn, (a2, s2, *_r) in M.FACES.items() if abs(n_l[a2] - s2) < 1e-6)
@@ -192,12 +207,15 @@ def paint(models, px=PX, eyes=()):
                     for fx in look.get('_after', []):
                         if mat not in ('dot', 'flash', 'lens', 'lens_green', 'lamp'):
                             rgb = fx(f, rgb)
-                    rgb = np.clip(rgb, 0, 1)
                     lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
+                    rgb, ink = toon.style(f, rgb, mat, M.PX, n[1], lu, lv)
+                    rgb = np.clip(rgb, 0, 1)
                     seam = p.get('seam', ())                    # slices: no bevel where one meets the next
                     flat = (M.FACES[name][2] in seam, M.FACES[name][4] in seam)
-                    patches.append(((mi, k), name, dict(rgb=rgb, s=pbr.spec(mat, f, rgb, look.get('_spec')),
-                                                        n=pbr.normal(f, rgb, lu, lv, M.PX, bevel=0.12, tilt=0.6, rel=True, flat=flat))))
+                    s = pbr.spec(mat, f, rgb, look.get('_spec'))
+                    s[..., 0] = np.where(ink, s[..., 0] * 0.5, s[..., 0])     # the outline is matt
+                    patches.append(((mi, k), name, dict(rgb=rgb, s=s, n=pbr.normal(f, rgb, lu, lv, M.PX, bevel=0.12, tilt=0.6,
+                                                                                   rel=True, flat=flat, cover=covers))))
     finally:
         M.PX = old
     return patches
@@ -433,12 +451,22 @@ def opened(m, axis, angle, origin):
     return out
 
 
+# How worn a gun looks follows its condition (its damage): (skin, how worn it's painted, the damage it starts at).
+# Clean through Pristine and Good, worn once it's Worn, battered from Battered down.
+WEARS = [('', 0.12, 0.0), ('worn', 0.55, 0.4), ('battered', 1.0, 0.65)]
+
+
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
-    Returns a summary line and the data the preview page reads."""
-    seed, wear = gun.seed, gun.wear
+    Every finish comes in each of the WEARS skins, laid out alike. Returns a summary line and the data the
+    preview page reads."""
+    seed = gun.seed
     fins = list(gun.finishes) if gun.finishes else [None]
     base_fin = fins[0]
+
+    def skin(f, w):
+        """The name a skin's texture and models go under: '' for the first finish, clean."""
+        return '_'.join(x for x in ((f if f != base_fin else ''), w) if x)
 
     def finish_look(f):
         return gun.finishes[f][1] if f else gun.look
@@ -449,7 +477,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         for mat, d in finish_look(f).get('_px', {}).items():
             px[mat] = max(px.get(mat, 0), d)
 
-    def build(look):
+    def build(look, wear):
         models = {'body': drawn('body', gun.body, look=look, seed=seed, wear=wear)}
         if gun.irons:
             models['irons_up'] = drawn('irons_up', lambda m: gun.irons(m, True), look=look, seed=seed + 1, wear=wear)
@@ -465,27 +493,31 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
 
     base = f'weapon/{gun.name}'
     texs = {}
+    cache = {}
     for f in fins:
         look = dict(finish_look(f), _px=px) if px else finish_look(f)
-        fm = build(look)
-        painted = [n for n in fm if n != 'charging_handle_open']      # the open handle is the closed one, turned
-        patches = paint([fm[n] for n in painted], eyes=eyes)
-        img, fuvs, T = pack(patches)
-        if f == base_fin:
-            models, uvs = fm, fuvs
-        elif fuvs != uvs:
-            raise ValueError(f'{gun.name}: finish {f} packs its texture differently')
-        tex = f'item/weapon/{gun.name}' + ('' if f == base_fin else f'_{f}')
-        save_textures(img, assets / f'textures/{tex}.png')
-        texs[f] = f'{NS}:{tex}'
+        for w, amount, _at in WEARS:
+            fm = build(look, amount)
+            painted = [n for n in fm if n != 'charging_handle_open']      # the open handle is the closed one, turned
+            patches = paint([fm[n] for n in painted], eyes=eyes, cache=cache)
+            img, fuvs, T = pack(patches)
+            key = skin(f, w)
+            if not key:
+                models, uvs = fm, fuvs
+            elif fuvs != uvs:
+                raise ValueError(f'{gun.name}: skin {key} packs its texture differently')
+            tex = f'item/weapon/{gun.name}' + (f'_{key}' if key else '')
+            save_textures(img, assets / f'textures/{tex}.png')
+            texs[key] = f'{NS}:{tex}'
+    skins = [k for k in texs if k]
     names = list(models)
     for n in names:
         mi = painted.index('charging_handle' if n == 'charging_handle_open' else n)
-        M.dump({'gui_light': 'front', 'textures': {'0': texs[base_fin], 'particle': texs[base_fin]},
+        M.dump({'gui_light': 'front', 'textures': {'0': texs[''], 'particle': texs['']},
                 'elements': elements(models[n], mi, uvs, shift)}, assets / f'models/item/{base}/{n}.json')
-        for f in fins[1:]:
-            M.dump({'parent': f'{NS}:item/{base}/{n}', 'textures': {'0': texs[f], 'particle': texs[f]}},
-                   assets / f'models/item/{base}/{f}/{n}.json')
+        for k in skins:
+            M.dump({'parent': f'{NS}:item/{base}/{n}', 'textures': {'0': texs[k], 'particle': texs[k]}},
+                   assets / f'models/item/{base}/{k}/{n}.json')
     if gun.flash:
         k = gun.flash_size
         flash = flash_model(flash_tip(gun) + shift, 2.4 * k, 0.75 * k, 1.1 * k)
@@ -517,13 +549,13 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         shown[st] = disp
         for n in names_posed:
             M.dump({'parent': f'{NS}:item/{base}/{n}', 'display': disp}, assets / f'models/item/{base}/{st}/{n}.json')
-            for f in fins[1:]:
+            for k in skins:
                 if n in names:      # the flash has its own texture
-                    M.dump({'parent': f'{NS}:item/{base}/{st}/{n}', 'textures': {'0': texs[f], 'particle': texs[f]}},
-                           assets / f'models/item/{base}/{f}/{st}/{n}.json')
+                    M.dump({'parent': f'{NS}:item/{base}/{st}/{n}', 'textures': {'0': texs[k], 'particle': texs[k]}},
+                           assets / f'models/item/{base}/{k}/{st}/{n}.json')
 
-    def pose(st, fin=base_fin):
-        r = lambda n: ref(f'{base}/{st}/{n}' if fin == base_fin or n not in names else f'{base}/{fin}/{st}/{n}')
+    def pose(st, key=''):
+        r = lambda n: ref(f'{base}/{st}/{n}' if not key or n not in names else f'{base}/{key}/{st}/{n}')
         entries = [r('body')]
         if gun.handle:
             # first person draws the handle or slide itself: worked in a reload, run back by each shot, locked open;
@@ -563,15 +595,15 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select(slot_name, cases, r(s.default) if s.default else EMPTY))
         return composite(entries)
 
-    def tree(fin):
-        aim = select('optic', {k: pose(f'ads_{k}', fin) for k in gun.optics()}, pose('ads', fin)) if gun.optics() else pose('ads', fin)
+    def tree(key):
+        aim = select('optic', {k: pose(f'ads_{k}', key) for k in gun.optics()}, pose('ads', key)) if gun.optics() else pose('ads', key)
         return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
-                'entries': [{'threshold': 1, 'model': pose('mag_out', fin)}, {'threshold': 2, 'model': pose('mag_in', fin)},
-                            {'threshold': 3, 'model': pose('charge', fin)}],
+                'entries': [{'threshold': 1, 'model': pose('mag_out', key)}, {'threshold': 2, 'model': pose('mag_in', key)},
+                            {'threshold': 3, 'model': pose('charge', key)}],
                 'fallback': {'type': 'minecraft:condition', 'property': 'minecraft:using_item',
-                             'on_true': aim, 'on_false': pose('hip', fin)}}
+                             'on_true': aim, 'on_false': pose('hip', key)}}
 
-    M.dump({'model': by_finish(fins, tree)}, assets / f'items/{gun.name}.json')
+    M.dump({'model': by_finish(fins, lambda f: by_wear(lambda w: tree(skin(f, w))))}, assets / f'items/{gun.name}.json')
     lang[f'item.{NS}.{gun.name}'] = gun.title
     for f in fins:
         if f:
@@ -582,10 +614,18 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
              'flash': 'muzzle_flash' if gun.flash else None,
              'flash_quiet': 'muzzle_flash_quiet' if gun.flash and quiet_tip(gun) is not None else None}
     for name, key in loose.items():
-        if key:
-            own = key in names         # the flash has no finish
-            M.dump({'model': by_finish(fins if own else [None], lambda f: ref(f'{base}/{key}' if f == base_fin else f'{base}/{f}/{key}'))},
-                   assets / f'items/{gun.name}_loose_{name}.json')
+        if not key:
+            continue
+        if name == 'charging_handle':
+            # the slide, cylinder or barrels first person draws all the time: the gun's finish and wear (it's given
+            # the gun's model data and damage)
+            at = lambda k: ref(f'{base}/{k}/{key}' if k else f'{base}/{key}')
+            model = by_finish(fins, lambda f: by_wear(lambda w: at(skin(f, w))))
+        elif key in names:
+            model = by_finish(fins, lambda f: ref(f'{base}/{key}' if f == base_fin else f'{base}/{f}/{key}'))
+        else:
+            model = ref(f'{base}/{key}')      # the flash has no finish
+        M.dump({'model': model}, assets / f'items/{gun.name}_loose_{name}.json')
 
     # ghosts and the weapon screen's slot data
     slot_data = []
@@ -616,6 +656,12 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     M.dump({'gun': f'{NS}:{gun.name}', 'note': 'Generated by tools/weapons/weapons.py. Mount points are in item '
             'model pixels, before the display transform.', 'slots': slot_data}, assets / f'gun_slots/{gun.name}.json')
     return f'{gun.name}: {sum(len(m.parts) for m in models.values())} boxes in {len(models)} parts, {T}px', slot_data
+
+
+def by_wear(model):
+    """The model for how worn the gun is (see WEARS), picked by its damage."""
+    return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:damage',
+            'entries': [{'threshold': at, 'model': model(w)} for w, _a, at in WEARS[1:]], 'fallback': model('')}
 
 
 def by_finish(fins, model):
