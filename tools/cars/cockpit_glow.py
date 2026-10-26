@@ -90,6 +90,11 @@ MODELS = {
 }
 
 
+# The seat eyes the regions above were picked from. The game's eyes moved forward and down onto the
+# design eye point later, so the picks keep these.
+GLOW_EYES = {'jet_corvid': [(0.0, 3.24, 5.2)], 'jet_gyrfalcon': [(0.003, 3.72, 5.378)]}
+
+
 # ------------------------------------------------------------------ the seat's view
 
 def camera(eye, pitch):
@@ -378,7 +383,7 @@ def build(model, spec, preview=None):
     u = states['usable']
     T, UV, glass, img = u['T'], u['UV'], u['glass'], u['image']
     W, H = img.size
-    eyes = [tuple(e) for e in {m['id']: m for m in zcar.models()}[model]['seats']]
+    eyes = GLOW_EYES.get(model) or [tuple(e) for e in {m['id']: m for m in zcar.models()}[model]['seats']]
     near = np.zeros(len(T), bool)
     for e in eyes:
         near |= np.linalg.norm(T.mean(1) - np.array(e), axis=1) < 4
