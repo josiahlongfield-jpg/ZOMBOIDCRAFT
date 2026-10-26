@@ -166,7 +166,8 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(3);
         int asked = ctx.computeOnClient(mc -> com.zomboidcraft.client.building.Placer.asked);
         if (asked == 0) {
-            ctx.getInput().pressMouse(0);   // the first press only grabbed the mouse
+            // the test's mouse doesn't reach key bindings in game: click the attack binding the way the mouse handler does
+            ctx.runOnClient(mc -> net.minecraft.client.KeyMapping.click(mc.options.keyAttack.getDefaultKey()));
             ctx.waitTicks(3);
         }
         String after = ctx.computeOnClient(mc -> com.zomboidcraft.client.building.Placer.asked + " " + mc.mouseHandler.isMouseGrabbed());
