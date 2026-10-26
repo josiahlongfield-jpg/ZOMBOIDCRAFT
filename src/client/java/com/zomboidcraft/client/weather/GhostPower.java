@@ -52,7 +52,7 @@ final class GhostPower {
             while (lamp.step < lamp.switches.length && lamp.at >= lamp.switches[lamp.step]) {
                 boolean on = lamp.step % 2 == 0;
                 // only touch it if nobody changed it meanwhile
-                if (level.getBlockState(lamp.pos) == (on ? lamp.dead : lamp.lit)) {
+                if (lamp.lit != null && level.getBlockState(lamp.pos) == (on ? lamp.dead : lamp.lit)) {
                     level.setBlock(lamp.pos, on ? lamp.lit : lamp.dead, FLAGS);
                 }
                 lamp.step++;
@@ -68,14 +68,17 @@ final class GhostPower {
     }
 
     private static void surge(ClientLevel level, BlockPos center) {
-        List<BlockPos> found = new ArrayList<>();
+        // keep the lit state from the scan: lit() rolls the window share, so asking again can say no
+        List<Lamp> found = new ArrayList<>();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x = -REACH; x <= REACH; x++) {
             for (int z = -REACH; z <= REACH; z++) {
                 for (int y = -BELOW; y <= ABOVE; y++) {
                     pos.set(center.getX() + x, center.getY() + y, center.getZ() + z);
-                    if (lit(level.getBlockState(pos)) != null) {
-                        found.add(pos.immutable());
+                    BlockState dead = level.getBlockState(pos);
+                    BlockState lit = lit(dead);
+                    if (lit != null) {
+                        found.add(new Lamp(pos.immutable(), dead, lit, null));
                     }
                 }
             }
@@ -83,9 +86,8 @@ final class GhostPower {
         // the power comes back all together, then each lamp holds on as long as it can
         int hold = 400 + RANDOM.nextInt(800);
         for (int i = 0; i < MAX && !found.isEmpty(); i++) {
-            BlockPos at = found.remove(RANDOM.nextInt(found.size()));
-            BlockState dead = level.getBlockState(at);
-            LAMPS.add(new Lamp(at, dead, lit(dead), pattern(hold)));
+            Lamp at = found.remove(RANDOM.nextInt(found.size()));
+            LAMPS.add(new Lamp(at.pos, at.dead, at.lit, pattern(hold)));
         }
     }
 
