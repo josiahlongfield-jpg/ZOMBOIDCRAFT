@@ -7,18 +7,6 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== particles"
-classes 'client/particle/[A-Za-z]*\.class$|fabric/api/client/particle/|fabric/api/particle/' | head -150
-for c in net.minecraft.client.particle.Particle net.minecraft.client.particle.SingleQuadParticle net.minecraft.client.particle.ParticleRenderType net.minecraft.client.particle.ParticleProvider net.minecraft.client.particle.SpriteSet net.minecraft.client.particle.ParticleEngine net.minecraft.core.particles.SimpleParticleType net.fabricmc.fabric.api.particle.v1.FabricParticleTypes net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry 'net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry$PendingParticleProvider'; do
-  echo "----- $c"; javap -cp "$CP" -p "$c" 2>&1 | head -80
-done
-javap -cp "$CP" -p net.minecraft.client.particle.CampfireSmokeParticle 2>&1 | head -40
-javap -cp "$CP" -p -c 'net.minecraft.client.particle.CampfireSmokeParticle' 2>&1 | grep -A30 "getLayer\|getGroup\|RenderType\|Layer" | head -60
-javap -cp "$CP" -p 'net.minecraft.client.particle.CampfireSmokeParticle$CosyProvider' 2>&1 | head -20
-javap -cp "$CP" -p -c 'net.minecraft.client.particle.CampfireSmokeParticle$CosyProvider' 2>&1 | grep -A20 "createParticle" | head -40
-for j in $MC_JARS; do unzip -p "$j" assets/minecraft/particles/campfire_cosy_smoke.json 2>/dev/null; done
-exit 0
-
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
