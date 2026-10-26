@@ -41,6 +41,9 @@ final class GroundFog {
     private static int originX, originZ, clock;
     private static boolean ready;
     private static float thick;
+    /** Each sheet's drift so far (texture repeats), the wind it's following, and the last frame's time. */
+    private static final double[] OFF_U = new double[8], OFF_V = new double[8];
+    private static double windX, windZ = 1, drift = 0.25, lastT = Double.NaN;
 
     /** Every tick: follow the player, and every half second re-read the ground under the fog. */
     static void tick(ClientLevel level, LocalPlayer player, Weather w, float night) {
@@ -97,9 +100,14 @@ final class GroundFog {
         Vec3 eye = cam.pos;
         Weather w = WeatherView.client();
         double t = (level.getGameTime() + cam.cameraEntityPartialTicks) / 20.0;
+        double dt = Double.isNaN(lastT) ? 0 : Mth.clamp(t - lastT, 0, 0.25);
+        lastT = t;
+        // the wind as the mist feels it: eased toward the real one over a few seconds
         double yaw = Math.toRadians(w.windYaw());
-        double windX = -Math.sin(yaw), windZ = Math.cos(yaw);
-        double drift = 0.25 + 0.9 * w.wind();
+        double ease = 1 - Math.exp(-dt / 3.0);
+        windX += (-Math.sin(yaw) - windX) * ease;
+        windZ += (Math.cos(yaw) - windZ) * ease;
+        drift += (0.25 + 0.9 * w.wind() - drift) * ease;
         float flash = WeatherView.flash();
         // the low sheets always; more of them, higher up, as fog comes in
         int layers = Mth.clamp(1 + Math.round(thick * 3), 2, 5);
@@ -112,8 +120,11 @@ final class GroundFog {
                         double scale = 22 + layer * 9;
                         double turn = (layer % 2 == 0 ? 1 : -1) * 0.35 * layer;
                         double dx = windX * Math.cos(turn) - windZ * Math.sin(turn), dz = windX * Math.sin(turn) + windZ * Math.cos(turn);
-                        double offU = dx * drift * t * (1 + 0.15 * layer) / scale + layer * 0.37;
-                        double offV = dz * drift * t * (1 + 0.15 * layer) / scale + layer * 0.61;
+                        // moved on by this frame's share of the wind, never worked out from the clock: a
+                        // wind that turns or picks up then just steers the drift instead of jumping it
+                        OFF_U[layer] = (OFF_U[layer] + dx * drift * dt * (1 + 0.15 * layer) / scale) % 1;
+                        OFF_V[layer] = (OFF_V[layer] + dz * drift * dt * (1 + 0.15 * layer) / scale) % 1;
+                        double offU = OFF_U[layer] + layer * 0.37, offV = OFF_V[layer] + layer * 0.61;
                         // thinner the higher it lies
                         float alpha = strength * (1 - 0.09f * layer);
                         sheet(pose, out, eye, lift, scale, offU, offV, alpha);
