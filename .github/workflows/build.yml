@@ -48,6 +48,10 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v5
 
+      # Stamp the commit on the version (0.5.2+abc1234), so the mod list shows which build is installed.
+      - name: Stamp build version
+        run: echo "ORG_GRADLE_PROJECT_mod_version=$(sed -n 's/^mod_version=//p' gradle.properties)+${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
       - name: Build
         run: |
           set -o pipefail
