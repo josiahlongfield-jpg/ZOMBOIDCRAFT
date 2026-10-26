@@ -215,11 +215,10 @@ public enum GunType {
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
             case DOUBLE_BARREL -> distant ? ModSounds.DOUBLE_BARREL_SHOT_DISTANT : ModSounds.DOUBLE_BARREL_SHOT;
             case REVOLVER -> distant ? ModSounds.REVOLVER_SHOT_DISTANT : ModSounds.REVOLVER_SHOT;
-            // stand-ins till their own recordings come: the pistol's for the 9mm and .22, the double's, the revolver's
-            case RIMFIRE, SMG -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
-                    : distant ? ModSounds.PISTOL_SHOT_DISTANT : ModSounds.PISTOL_SHOT;
-            case SAWN_OFF -> distant ? ModSounds.DOUBLE_BARREL_SHOT_DISTANT : ModSounds.DOUBLE_BARREL_SHOT;
-            case MAGNUM -> distant ? ModSounds.REVOLVER_SHOT_DISTANT : ModSounds.REVOLVER_SHOT;
+            case RIMFIRE -> suppressed ? ModSounds.RIMFIRE_SHOT_SUPPRESSED : distant ? ModSounds.RIMFIRE_SHOT_DISTANT : ModSounds.RIMFIRE_SHOT;
+            case SMG -> suppressed ? ModSounds.SMG_SHOT_SUPPRESSED : distant ? ModSounds.SMG_SHOT_DISTANT : ModSounds.SMG_SHOT;
+            case SAWN_OFF -> distant ? ModSounds.SAWN_OFF_SHOT_DISTANT : ModSounds.SAWN_OFF_SHOT;
+            case MAGNUM -> distant ? ModSounds.MAGNUM_SHOT_DISTANT : ModSounds.MAGNUM_SHOT;
         };
     }
 
@@ -230,19 +229,25 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_DRY;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_DRY;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_DRY;
-            case REVOLVER, MAGNUM -> ModSounds.REVOLVER_DRY;
-            case RIMFIRE, SMG -> ModSounds.PISTOL_DRY;
-            case SAWN_OFF -> ModSounds.DOUBLE_BARREL_DRY;
+            case REVOLVER -> ModSounds.REVOLVER_DRY;
+            case RIMFIRE -> ModSounds.RIMFIRE_DRY;
+            case SMG -> ModSounds.SMG_DRY;
+            case SAWN_OFF -> ModSounds.SAWN_OFF_DRY;
+            case MAGNUM -> ModSounds.MAGNUM_DRY;
         };
     }
 
     /** The magazine out, or a gun opened to load. */
     public SoundEvent magOut() {
         return switch (this) {
-            case PISTOL, RIMFIRE -> ModSounds.PISTOL_MAG_OUT;
+            case PISTOL -> ModSounds.PISTOL_MAG_OUT;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_OUT;
-            case DOUBLE_BARREL, SAWN_OFF -> ModSounds.DOUBLE_BARREL_OPEN;
-            case REVOLVER, MAGNUM -> ModSounds.REVOLVER_OPEN;
+            case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_OPEN;
+            case REVOLVER -> ModSounds.REVOLVER_OPEN;
+            case RIMFIRE -> ModSounds.RIMFIRE_MAG_OUT;
+            case SMG -> ModSounds.SMG_MAG_OUT;
+            case SAWN_OFF -> ModSounds.SAWN_OFF_OPEN;
+            case MAGNUM -> ModSounds.MAGNUM_OPEN;
             default -> ModSounds.RIFLE_MAG_OUT;
         };
     }
@@ -255,10 +260,11 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_SHELL_IN;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_IN;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_SHELL_IN;
-            case REVOLVER, MAGNUM -> ModSounds.REVOLVER_ROUND_IN;
-            case RIMFIRE -> ModSounds.PISTOL_MAG_IN;
-            case SMG -> ModSounds.RIFLE_MAG_IN;
-            case SAWN_OFF -> ModSounds.DOUBLE_BARREL_SHELL_IN;
+            case REVOLVER -> ModSounds.REVOLVER_ROUND_IN;
+            case RIMFIRE -> ModSounds.RIMFIRE_MAG_IN;
+            case SMG -> ModSounds.SMG_MAG_IN;
+            case SAWN_OFF -> ModSounds.SAWN_OFF_SHELL_IN;
+            case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
         };
     }
 
@@ -273,15 +279,17 @@ public enum GunType {
             case SHOTGUN -> ModSounds.SHOTGUN_PUMP;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_BOLT;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_CLOSE;
-            case REVOLVER, MAGNUM -> ModSounds.REVOLVER_CLOSE;
-            case RIMFIRE, SMG -> ModSounds.RIFLE_BOLT;
-            case SAWN_OFF -> ModSounds.DOUBLE_BARREL_CLOSE;
+            case REVOLVER -> ModSounds.REVOLVER_CLOSE;
+            case RIMFIRE -> ModSounds.RIMFIRE_COCK;
+            case SMG -> ModSounds.SMG_COCK;
+            case SAWN_OFF -> ModSounds.SAWN_OFF_CLOSE;
+            case MAGNUM -> ModSounds.MAGNUM_CLOSE;
         };
     }
 
     /** The empties pushed out as it opens (the ejector rod), or null where they just fall out with the opening. */
     public @Nullable SoundEvent eject() {
-        return this == REVOLVER || this == MAGNUM ? ModSounds.REVOLVER_EJECT : null;
+        return this == REVOLVER ? ModSounds.REVOLVER_EJECT : this == MAGNUM ? ModSounds.MAGNUM_EJECT : null;
     }
 
     /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */

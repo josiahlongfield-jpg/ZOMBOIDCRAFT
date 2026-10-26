@@ -72,6 +72,46 @@ public final class ModSounds {
     public static final SoundEvent HUNTING_RIFLE_MAG_OUT = register("weapon.hunting_rifle.mag_out");
     public static final SoundEvent HUNTING_RIFLE_MAG_IN = register("weapon.hunting_rifle.mag_in");
     public static final SoundEvent HUNTING_RIFLE_BOLT = register("weapon.hunting_rifle.bolt");
+    /**
+     * Wave one, on stand-ins until their own recordings land (the audio thread swaps the sounds.json entries): the .22
+     * is a light crack, the sawn-off and the magnum heavy, the lever gun a .30-30's bark, the crossbow just its string.
+     */
+    public static final SoundEvent RIMFIRE_SHOT = register("weapon.rimfire.shot");
+    public static final SoundEvent RIMFIRE_SHOT_DISTANT = register("weapon.rimfire.shot_distant", 64f);
+    public static final SoundEvent RIMFIRE_SHOT_SUPPRESSED = register("weapon.rimfire.shot_suppressed", 24f);
+    public static final SoundEvent RIMFIRE_DRY = register("weapon.rimfire.dry");
+    public static final SoundEvent RIMFIRE_MAG_OUT = register("weapon.rimfire.mag_out");
+    public static final SoundEvent RIMFIRE_MAG_IN = register("weapon.rimfire.mag_in");
+    public static final SoundEvent RIMFIRE_COCK = register("weapon.rimfire.cock");
+    public static final SoundEvent SMG_SHOT = register("weapon.smg.shot");
+    public static final SoundEvent SMG_SHOT_DISTANT = register("weapon.smg.shot_distant", 96f);
+    public static final SoundEvent SMG_SHOT_SUPPRESSED = register("weapon.smg.shot_suppressed", 40f);
+    public static final SoundEvent SMG_DRY = register("weapon.smg.dry");
+    public static final SoundEvent SMG_MAG_OUT = register("weapon.smg.mag_out");
+    public static final SoundEvent SMG_MAG_IN = register("weapon.smg.mag_in");
+    public static final SoundEvent SMG_COCK = register("weapon.smg.cock");
+    public static final SoundEvent SAWN_OFF_SHOT = register("weapon.sawn_off.shot");
+    public static final SoundEvent SAWN_OFF_SHOT_DISTANT = register("weapon.sawn_off.shot_distant", 160f);
+    public static final SoundEvent SAWN_OFF_DRY = register("weapon.sawn_off.dry");
+    public static final SoundEvent SAWN_OFF_OPEN = register("weapon.sawn_off.open");
+    public static final SoundEvent SAWN_OFF_SHELL_IN = register("weapon.sawn_off.shell_in");
+    public static final SoundEvent SAWN_OFF_CLOSE = register("weapon.sawn_off.close");
+    public static final SoundEvent MAGNUM_SHOT = register("weapon.magnum.shot");
+    public static final SoundEvent MAGNUM_SHOT_DISTANT = register("weapon.magnum.shot_distant", 128f);
+    public static final SoundEvent MAGNUM_DRY = register("weapon.magnum.dry");
+    public static final SoundEvent MAGNUM_COCK = register("weapon.magnum.cock");
+    public static final SoundEvent MAGNUM_OPEN = register("weapon.magnum.open");
+    public static final SoundEvent MAGNUM_EJECT = register("weapon.magnum.eject");
+    public static final SoundEvent MAGNUM_ROUND_IN = register("weapon.magnum.round_in");
+    public static final SoundEvent MAGNUM_CLOSE = register("weapon.magnum.close");
+    public static final SoundEvent LEVER_ACTION_SHOT = register("weapon.lever_action.shot");
+    public static final SoundEvent LEVER_ACTION_SHOT_DISTANT = register("weapon.lever_action.shot_distant", 160f);
+    public static final SoundEvent LEVER_ACTION_DRY = register("weapon.lever_action.dry");
+    public static final SoundEvent LEVER_ACTION_LEVER = register("weapon.lever_action.lever");
+    public static final SoundEvent LEVER_ACTION_ROUND_IN = register("weapon.lever_action.round_in");
+    public static final SoundEvent CROSSBOW_SHOT = register("weapon.crossbow.shot", 16f);
+    public static final SoundEvent CROSSBOW_COCK = register("weapon.crossbow.cock");
+    public static final SoundEvent CROSSBOW_HIT = register("weapon.crossbow.hit", 24f);
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");
