@@ -58,6 +58,8 @@ public final class CityBlocks {
         static final int LOOT = 4;
         /** A lamp on a dying circuit: its light comes and goes (see {@link Flicker}). */
         static final int FLICKER = 8;
+        /** Grass and seedlings: nudged about their block like vanilla grass, so a field isn't a grid. */
+        static final int OFFSET = 16;
 
         protected void s(String name, int kind, int flags, int light, SoundType sound, float strength, double... boxes) {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
@@ -71,6 +73,9 @@ public final class CityBlocks {
             }
             if ((flags & DECOR) != 0) {
                 properties.noCollision().replaceable();
+            }
+            if ((flags & OFFSET) != 0) {
+                properties.offsetType(BlockBehaviour.OffsetType.XZ);
             }
             boolean flicker = (flags & FLICKER) != 0;
             if (flicker) {

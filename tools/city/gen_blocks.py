@@ -334,6 +334,8 @@ def java_line(name, spec, tex_dir):
         flags.append("LOOT")
     if "flicker" in spec:
         flags.append("FLICKER")
+    if spec.get("offset"):
+        flags.append("OFFSET")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
     else:

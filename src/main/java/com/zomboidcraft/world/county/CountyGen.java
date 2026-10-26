@@ -44,7 +44,8 @@ public final class CountyGen {
         double forest, moisture;
     }
 
-    public void generate(int chunkX, int chunkZ, ChunkSink out) {
+    public void generate(int chunkX, int chunkZ, ChunkSink sink) {
+        ChunkSink out = Cover.wrap(sink, county.seed);
         int bx = chunkX << 4, bz = chunkZ << 4;
         Terrain t = county.terrain;
         List<Place> places = county.placesNear(bx - TREE_REACH, bz - TREE_REACH, bx + 15 + TREE_REACH, bz + 15 + TREE_REACH, County.SKIRT);

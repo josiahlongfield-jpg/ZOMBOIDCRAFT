@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gc_twigs_3": "zomboidcraft:block/city/gc_twigs_3",
+    "particle": "zomboidcraft:block/city/gc_twigs_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gc_twigs_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gc_twigs_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gc_twigs_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gc_twigs_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gc_twigs_3"
+        },
+        "down": {
+          "texture": "#gc_twigs_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
