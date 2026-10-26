@@ -2,6 +2,8 @@ name: UI test
 
 on:
   workflow_dispatch:
+  push:
+    branches: [claude/project-thread-j1d6bj]
 
 jobs:
   uitest:
