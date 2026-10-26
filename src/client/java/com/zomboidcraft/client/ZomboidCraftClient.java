@@ -29,7 +29,6 @@ public class ZomboidCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
-        com.zomboidcraft.client.inventory.FieldKitScreen.register();
         com.zomboidcraft.client.kit.KitScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();

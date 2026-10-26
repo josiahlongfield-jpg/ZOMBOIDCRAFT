@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -37,16 +38,16 @@ final class CharacterPage {
     private static final EquipmentSlot[] CLOTHING_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     private static final String[] CARRY_LABELS = {"Back", "Vest", "Waist", "Sling", "Off hand"};
 
-    private final KitScreen screen;
+    private final KitScreen<?> screen;
 
-    CharacterPage(KitScreen screen) {
+    CharacterPage(KitScreen<?> screen) {
         this.screen = screen;
     }
 
     void draw(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
         Font font = screen.mc().font;
         LocalPlayer player = screen.player();
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         strip(g, font, player, x + 181, y + 33);
 
         // the survivor
@@ -161,10 +162,12 @@ final class CharacterPage {
         hx += KitDraw.hint(g, font, "LMB", "Change", hx, hy);
         hx += KitDraw.hint(g, font, "RMB", "Take off", hx, hy);
         hx += KitDraw.hint(g, font, "F", "Inspect weapon", hx, hy);
-        hx += KitDraw.hint(g, font, "Q/E", "Pages", hx, hy);
-        KitDraw.hint(g, font, "I", "Close", hx, hy);
-        KitDraw.textRight(g, font, "Bags and looting stay on " + screen.mc().options.keyInventory.getTranslatedKeyMessage().getString(),
-                x + 579, hy + 1, KitDraw.FAINT, 0.9f);
+        screen.pagesAndClose(g, font, hx, hy);
+        String link = "Bags and looting: Pack ›";
+        float lw = KitDraw.width(font, link, 0.9f);
+        boolean over = screen.hovered(Math.round(x + 579 - lw), hy - 1, Math.round(lw), 11, mx, my);
+        KitDraw.textRight(g, font, link, x + 579, hy + 1, over ? 0xFFFFF1B8 : KitDraw.LINK, 0.9f);
+        screen.hot(Math.round(x + 579 - lw), hy - 1, Math.round(lw), 11, () -> screen.open(KitScreen.Page.PACK));
     }
 
     private static int H() {
@@ -223,7 +226,7 @@ final class CharacterPage {
     /** Carried slots, other than the target, holding something that passes the test; best first. */
     private List<Integer> choices(int target, Predicate<ItemStack> test, ToIntFunction<ItemStack> order) {
         List<Integer> out = new ArrayList<>();
-        InventoryMenu menu = screen.menu();
+        AbstractContainerMenu menu = screen.menu();
         for (int i : screen.carried()) {
             if (i == target) continue;
             ItemStack stack = menu.slots.get(i).getItem();
