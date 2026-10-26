@@ -1,448 +1,146 @@
 {
  "model": {
   "type": "minecraft:range_dispatch",
-  "property": "minecraft:damage",
+  "property": "minecraft:custom_model_data",
+  "index": 0,
   "entries": [
    {
-    "threshold": 0.4,
+    "threshold": 1,
     "model": {
-     "type": "minecraft:range_dispatch",
-     "property": "minecraft:custom_model_data",
-     "index": 0,
-     "entries": [
+     "type": "minecraft:composite",
+     "models": [
       {
-       "threshold": 1,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/worn/mag_out/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/worn/mag_out/charging_handle"
-          }
-         }
-        ]
-       }
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/shotgun/mag_out/body"
       },
       {
-       "threshold": 2,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/worn/mag_in/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/worn/mag_in/charging_handle"
-          }
-         }
-        ]
-       }
-      },
-      {
-       "threshold": 3,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/worn/charge/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/worn/charge/charging_handle"
-          }
-         }
-        ]
-       }
-      }
-     ],
-     "fallback": {
-      "type": "minecraft:condition",
-      "property": "minecraft:using_item",
-      "on_true": {
-       "type": "minecraft:composite",
-       "models": [
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/worn/ads/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/worn/ads/charging_handle"
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
          }
         }
-       ]
-      },
-      "on_false": {
-       "type": "minecraft:composite",
-       "models": [
-        {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/worn/hip/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/worn/hip/charging_handle"
-         }
-        }
-       ]
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/shotgun/mag_out/charging_handle"
+       }
       }
-     }
+     ]
     }
    },
    {
-    "threshold": 0.65,
+    "threshold": 2,
     "model": {
-     "type": "minecraft:range_dispatch",
-     "property": "minecraft:custom_model_data",
-     "index": 0,
-     "entries": [
+     "type": "minecraft:composite",
+     "models": [
       {
-       "threshold": 1,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/battered/mag_out/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/battered/mag_out/charging_handle"
-          }
-         }
-        ]
-       }
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/shotgun/mag_in/body"
       },
       {
-       "threshold": 2,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/battered/mag_in/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/battered/mag_in/charging_handle"
-          }
-         }
-        ]
-       }
-      },
-      {
-       "threshold": 3,
-       "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/battered/charge/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/shotgun/battered/charge/charging_handle"
-          }
-         }
-        ]
-       }
-      }
-     ],
-     "fallback": {
-      "type": "minecraft:condition",
-      "property": "minecraft:using_item",
-      "on_true": {
-       "type": "minecraft:composite",
-       "models": [
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/battered/ads/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/battered/ads/charging_handle"
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
          }
         }
-       ]
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/shotgun/mag_in/charging_handle"
+       }
+      }
+     ]
+    }
+   },
+   {
+    "threshold": 3,
+    "model": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/shotgun/charge/body"
       },
-      "on_false": {
-       "type": "minecraft:composite",
-       "models": [
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/battered/hip/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/shotgun/battered/hip/charging_handle"
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
          }
         }
-       ]
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/shotgun/charge/charging_handle"
+       }
       }
-     }
+     ]
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:range_dispatch",
-   "property": "minecraft:custom_model_data",
-   "index": 0,
-   "entries": [
-    {
-     "threshold": 1,
-     "model": {
-      "type": "minecraft:composite",
-      "models": [
+   "type": "minecraft:condition",
+   "property": "minecraft:using_item",
+   "on_true": {
+    "type": "minecraft:composite",
+    "models": [
+     {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/shotgun/ads/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/mag_out/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/mag_out/charging_handle"
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
         }
        }
-      ]
-     }
-    },
-    {
-     "threshold": 2,
-     "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/mag_in/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/mag_in/charging_handle"
-        }
-       }
-      ]
-     }
-    },
-    {
-     "threshold": 3,
-     "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/charge/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/charge/charging_handle"
-        }
-       }
-      ]
-     }
-    }
-   ],
-   "fallback": {
-    "type": "minecraft:condition",
-    "property": "minecraft:using_item",
-    "on_true": {
-     "type": "minecraft:composite",
-     "models": [
-      {
+      ],
+      "fallback": {
        "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/shotgun/ads/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/ads/charging_handle"
-       }
+       "model": "zomboidcraft:item/weapon/shotgun/ads/charging_handle"
       }
-     ]
-    },
-    "on_false": {
-     "type": "minecraft:composite",
-     "models": [
-      {
+     }
+    ]
+   },
+   "on_false": {
+    "type": "minecraft:composite",
+    "models": [
+     {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/shotgun/hip/body"
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
        "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/shotgun/hip/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/hip/charging_handle"
-       }
+       "model": "zomboidcraft:item/weapon/shotgun/hip/charging_handle"
       }
-     ]
-    }
+     }
+    ]
    }
   }
  }

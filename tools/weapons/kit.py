@@ -31,6 +31,11 @@ NS = 'zomboidcraft'
 SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
 FINISH = len(SLOTS)     # the model data string after the slot keys: the gun's finish
 PX = 16
+# Skins by how damaged the gun is: (skin, how worn it's painted, the damage it starts at). Josiah wants every gun and
+# attachment like new at all times (2026-10-26), so there's one; more (('worn', 0.55, 0.4), ('battered', 1.0, 0.65))
+# would follow the gun's condition.
+LIKE_NEW = 0.12
+WEARS = [('', LIKE_NEW, 0.0)]
 
 # how a part drawn on a top rail turns to sit on each face (columns: where its x, y, z end up)
 FACING = {
@@ -118,7 +123,7 @@ def place(part, R, t):
     return q
 
 
-def drawn(name, build, R=np.eye(3), t=(0, 0, 0), look=None, seed=0, wear=0.4):
+def drawn(name, build, R=np.eye(3), t=(0, 0, 0), look=None, seed=0, wear=LIKE_NEW):
     """Draws a part in its own frame, places it, tidies it. Returns a Model in the build frame."""
     m = M.Model(name)
     build(m)
@@ -451,11 +456,6 @@ def opened(m, axis, angle, origin):
     return out
 
 
-# How worn a gun looks follows its condition (its damage): (skin, how worn it's painted, the damage it starts at).
-# Clean through Pristine and Good, worn once it's Worn, battered from Battered down.
-WEARS = [('', 0.12, 0.0), ('worn', 0.55, 0.4), ('battered', 1.0, 0.65)]
-
-
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
     Every finish comes in each of the WEARS skins, laid out alike. Returns a summary line and the data the
@@ -660,6 +660,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
 
 def by_wear(model):
     """The model for how worn the gun is (see WEARS), picked by its damage."""
+    if len(WEARS) == 1:
+        return model(WEARS[0][0])
     return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:damage',
             'entries': [{'threshold': at, 'model': model(w)} for w, _a, at in WEARS[1:]], 'fallback': model('')}
 

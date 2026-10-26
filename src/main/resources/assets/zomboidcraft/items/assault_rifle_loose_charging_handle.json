@@ -1,26 +1,6 @@
 {
  "model": {
-  "type": "minecraft:range_dispatch",
-  "property": "minecraft:damage",
-  "entries": [
-   {
-    "threshold": 0.4,
-    "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle/worn/charging_handle"
-    }
-   },
-   {
-    "threshold": 0.65,
-    "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/assault_rifle/battered/charging_handle"
-    }
-   }
-  ],
-  "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/assault_rifle/charging_handle"
-  }
+  "type": "minecraft:model",
+  "model": "zomboidcraft:item/weapon/assault_rifle/charging_handle"
  }
 }
