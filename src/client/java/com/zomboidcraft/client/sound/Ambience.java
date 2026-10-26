@@ -148,12 +148,17 @@ public final class Ambience {
     }
 
     /** One looping bed, eased toward a level each tick; started when it's wanted, stopped once it's silent. */
+    /**
+     * A bed loops one of its recordings, and every 24 to 72 seconds crossfades over three seconds into a fresh
+     * random one, so a bed that never goes quiet (wind, mostly) doesn't sit on the same take forever.
+     */
     private static final class Bed {
+        private static final int FADE = 60, MIN_RUN = 480, MAX_RUN = 1440;
         private final SoundEvent event;
         private final SoundSource source;
         private float level;
-        private Loop playing;
-        private int silent;
+        private Loop playing, fading;
+        private int silent, run;
 
         Bed(String name, SoundSource source) {
             this.event = event(name);
@@ -167,27 +172,53 @@ public final class Ambience {
             }
             boolean active = playing != null && !playing.isStopped() && client.getSoundManager().isActive(playing);
             if (level > 0.01f && !active) {
-                playing = new Loop(this);
-                client.getSoundManager().play(playing);
+                start(client, 1);
+            } else if (active && --run <= 0) {
+                if (fading != null) {
+                    client.getSoundManager().stop(fading);
+                }
+                fading = playing;
+                fading.fade = -1f / FADE;
+                start(client, 0);
+            }
+            if (fading != null && (fading.gain <= 0 || fading.isStopped())) {
+                client.getSoundManager().stop(fading);
+                fading = null;
             }
             silent = level <= 0 ? silent + 1 : 0;
             if (playing != null && silent > 40) {
                 client.getSoundManager().stop(playing);
                 playing = null;
+                if (fading != null) {
+                    client.getSoundManager().stop(fading);
+                    fading = null;
+                }
             }
+        }
+
+        private void start(Minecraft client, float gain) {
+            playing = new Loop(this, gain);
+            if (gain < 1) {
+                playing.fade = 1f / FADE;
+            }
+            run = MIN_RUN + RANDOM.nextInt(MAX_RUN - MIN_RUN);
+            client.getSoundManager().play(playing);
         }
     }
 
     /** A bed's loop, played at your ears rather than from a place in the world. */
     private static final class Loop extends AbstractTickableSoundInstance {
         private final Bed bed;
+        /** This take's share of the bed while crossfading, and how much it changes each tick. */
+        private float gain, fade;
 
-        Loop(Bed bed) {
+        Loop(Bed bed, float gain) {
             super(bed.event, bed.source, SoundInstance.createUnseededRandom());
             this.bed = bed;
+            this.gain = gain;
             this.looping = true;
             this.delay = 0;
-            this.volume = bed.level;
+            this.volume = bed.level * gain;
             this.relative = true;
             this.attenuation = SoundInstance.Attenuation.NONE;
         }
@@ -199,7 +230,8 @@ public final class Ambience {
 
         @Override
         public void tick() {
-            volume = bed.level;
+            gain = Mth.clamp(gain + fade, 0, 1);
+            volume = bed.level * gain;
         }
     }
 
