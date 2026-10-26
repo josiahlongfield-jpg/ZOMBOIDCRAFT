@@ -228,9 +228,10 @@ def lever(m):
     b.rod(-0.30, 0.30, 0.16, 'lever', axis=0, at=(py, pz))
     b.box((-0.22, -1.62, pz - 0.30), (0.22, -1.48, LOOP[0] + 0.15), 'lever')
     b.box((-0.18, -1.48, pz), (0.18, py + 0.10, pz + 0.45), 'lever')
-    zc, yc = (LOOP[0] + LOOP[1]) / 2, (-1.48 + LOOP_BOT) / 2
-    az, ay = (LOOP[1] - LOOP[0]) / 2, (-1.48 - LOOP_BOT) / 2
-    angles = np.radians([180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5, 360, 382.5])
+    # the loop hangs from the receiver's underside: down in front of the trigger, round, and up to the lower tang
+    zc, yc = (LOOP[0] + LOOP[1]) / 2, -1.55
+    az, ay = (LOOP[1] - LOOP[0]) / 2, yc - LOOP_BOT
+    angles = np.radians(np.arange(180, 361, 22.5))
     pts = [(zc + az * np.cos(a), yc + ay * np.sin(a)) for a in angles]
     for p0, p1 in zip(pts[:-1], pts[1:]):
         b.seg(p0, p1, 0.22, 0.34, 'lever', over=0.06)
