@@ -291,6 +291,9 @@ public final class Guns {
         boolean head = !downed && at.y >= headY;
         boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
         float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
+        if (!head && !downed && ZombieTypes.isWalker(target)) {
+            damage *= (float) ZcConfig.get().combat.zombieBodyShots;     // body hits slow them; it takes the head
+        }
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));

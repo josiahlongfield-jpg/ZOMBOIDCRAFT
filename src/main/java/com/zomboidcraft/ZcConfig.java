@@ -472,6 +472,12 @@ public final class ZcConfig {
         public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
+        /**
+         * Zombies die like Zomboid's: a bullet anywhere but the head (on one still standing) does this much of its
+         * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
+         */
+        public double zombieBodyShots = 0.33;
+        public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
         /** Swinging, shoving and sprinting tire you; tired swings are slower and weaker. */

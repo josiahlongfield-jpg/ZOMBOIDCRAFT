@@ -33,11 +33,11 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    /** Blows on a zombie on the ground land harder; then the weapon skill bonus against zombies. */
+    /** Blows on zombies are cut, and land harder on one on the ground; then the weapon skill bonus against zombies. */
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
-        return Combat.modifyDamage(self, source, CombatEvents.groundAttack(self, source, amount));
+        return Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount));
     }
 
     /** A zombie knocked flat or reeling from a blow doesn't move or attack. */
