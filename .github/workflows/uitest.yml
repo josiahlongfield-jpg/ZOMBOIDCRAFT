@@ -15,7 +15,7 @@ jobs:
           distribution: temurin
           java-version: '25'
       - uses: gradle/actions/setup-gradle@v5
-      - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri mesa-vulkan-drivers > /dev/null
+      - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers > /dev/null
       - name: Compile
         run: ./gradlew compileJava -Puitest > build.log 2>&1 || true
       - name: API probe
@@ -30,8 +30,12 @@ jobs:
       - name: Run client test
         run: |
           set -o pipefail
-          export LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=4.6 MESA_GLSL_VERSION_OVERRIDE=460
-          xvfb-run -a -s "-screen 0 1920x1080x24 +extension GLX +render -noreset" ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCUI|error:|ERROR|Exception|FAIL|BUILD|Caused|Backend|GL_|Graphics" | head -200
+          sudo Xorg :99 -noreset -logfile /tmp/xorg.log -config $PWD/.github/ci/xorg-dummy.conf &
+          sleep 3
+          export DISPLAY=:99
+          glxinfo -B 2>&1 | head -20 || true
+          javap -cp "$(find ~/.gradle/caches/fabric-loom -name 'minecraft-*.jar' | tr '\n' ':')" -c -p net.minecraft.client.Minecraft 2>&1 | sed -n '/boolean handleGlobalKeyPress(/,/^$/p' | grep -E "invoke|getfield|ireturn" | head -40
+          ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCUI|error:|ERROR|Exception|FAIL|BUILD|Caused|Backend|Graphics" | head -200
       - name: Show failures
         if: failure()
         run: grep -E "error:|warning:" -A3 build.log test.log | head -80 || true; tail -60 test.log || true
