@@ -80,7 +80,8 @@ public class GunLookTest implements FabricClientGameTest {
         ctx.takeScreenshot(name + "-hip");
         ctx.getInput().holdKey(options -> options.keyUse);
         ctx.waitTicks(20);
-        LOG.info("ZCLOOK aiming: {}", ctx.computeOnClient(mc -> mc.player.isUsingItem()));
+        boolean aiming = ctx.computeOnClient(mc -> mc.player.isUsingItem());
+        LOG.info("ZCLOOK aiming: {}", aiming);
         ctx.takeScreenshot(name + "-sights");
         ctx.getInput().releaseKey(options -> options.keyUse);
         // turned toward the grass, the laser landing in it
