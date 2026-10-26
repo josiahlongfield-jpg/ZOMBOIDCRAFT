@@ -47,6 +47,8 @@ public final class ZcConfig {
     public Carry carry = new Carry();
     /** What a gun case or an ammo can has in it when it's found shut. */
     public Cases cases = new Cases();
+    /** Night vision goggles on headgear: their batteries and the look through them. */
+    public NightVision nightVision = new NightVision();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
 
@@ -73,6 +75,28 @@ public final class ZcConfig {
         public double fullMagazineChance = 0.5;
         /** Chance an ammo can holds a second calibre. */
         public double secondCalibreChance = 0.35;
+    }
+
+    public static class NightVision {
+        /** Goggles need an AA battery. Off, they never run down. */
+        public boolean batteries = true;
+        /** How long one AA battery runs the goggles, in minutes of use. */
+        public double batteryMinutes = 30;
+        /** Goggles found in the world have a part-used battery somewhere between these fractions of full. */
+        public double foundChargeMin = 0.2;
+        public double foundChargeMax = 0.8;
+        /** How often the battery used is written to the goggles, in seconds (lower saves more often). */
+        public int saveEverySeconds = 10;
+        /**
+         * Draws the view through the tube (green or white phosphor, grain, the round tube edge) as a screen effect.
+         * Off, a plain tint and the tube edge are drawn over the screen instead, for shader packs that hide the effect.
+         * Client side.
+         */
+        public boolean tubeEffect = true;
+        /** How much of the screen's height the tube fills, 0.5 to 1.2. Client side. */
+        public double tubeSize = 0.92;
+        /** How bright the view through the tube is, 0.2 to 2 (1 is the preview's look). Client side. */
+        public double brightness = 0.85;
     }
 
     /**

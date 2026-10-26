@@ -30,6 +30,8 @@ public final class CombatNet {
         public static final int STRUGGLE = 2;
         public static final int RAIL = 3;
         public static final int LASER = 4;
+        /** Flip the night vision on your headgear down or up. */
+        public static final int NVG = 5;
         /** The quick-use wheel let go over a belt slot: QUICK_USE + slot. */
         public static final int QUICK_USE = 16;
         public static final Type<Action> TYPE = new Type<>(ZomboidCraft.id("action"));
@@ -64,6 +66,7 @@ public final class CombatNet {
                     case Action.STRUGGLE -> Grabs.struggle(player);
                     case Action.RAIL -> Guns.toggleLight(player);
                     case Action.LASER -> Guns.toggleLaser(player);
+                    case Action.NVG -> com.zomboidcraft.gear.Headgear.flip(player);
                     default -> {
                         int slot = payload.action() - Action.QUICK_USE;
                         if (slot >= 0 && slot < net.minecraft.world.entity.player.Inventory.getSelectionSize()) {

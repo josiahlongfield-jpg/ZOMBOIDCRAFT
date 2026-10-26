@@ -1,0 +1,94 @@
+{
+    "targets": {
+        "swap": {}
+    },
+    "passes": [
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "zomboidcraft:post/night_vision",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                },
+                {
+                    "sampler_name": "Params",
+                    "location": "zomboidcraft:nvg_params",
+                    "width": 4,
+                    "height": 4,
+                    "bilinear": false
+                }
+            ],
+            "output": "swap",
+            "uniforms": {
+                "NightVisionConfig": [
+                    {
+                        "name": "Phosphor",
+                        "type": "vec4",
+                        "value": [
+                            0.45,
+                            1.0,
+                            0.56,
+                            2.6
+                        ]
+                    },
+                    {
+                        "name": "Dark",
+                        "type": "vec4",
+                        "value": [
+                            0.0,
+                            0.03,
+                            0.012,
+                            0.07
+                        ]
+                    },
+                    {
+                        "name": "Look",
+                        "type": "vec4",
+                        "value": [
+                            0.45,
+                            1.1,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "name": "Tube",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "swap"
+                }
+            ],
+            "uniforms": {
+                "BlitConfig": [
+                    {
+                        "name": "ColorModulate",
+                        "type": "vec4",
+                        "value": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    }
+                ]
+            },
+            "output": "minecraft:main"
+        }
+    ]
+}
