@@ -156,8 +156,8 @@ final class DowntownSite extends Site {
         double r = g.nextDouble();
         Bunker.State state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
         int[] in = civic.courtInterior;
-        if (Shelter.dig(civic.courthouse, g, state, in, 0, -28, new int[] {2, 2, w - 3, d - 3})) {
-            Shelter.plate(civic.courthouse, in[0], in[2], 4);
+        if (Shelter.dig(civic.courthouse, g, state, in, civic.courtFloor, -28 + civic.courtFloor, new int[] {2, 2, w - 3, d - 3})) {
+            Shelter.plate(civic.courthouse, in[0], in[2], 6);
         }
     }
 

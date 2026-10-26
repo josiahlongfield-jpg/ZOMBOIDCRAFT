@@ -9,7 +9,7 @@ Carnegie libraries at Bayliss, Dunfermline and Gilroy; refs/town/post-office; re
   name cut in it, balustrades along a roof, stone steps, water table and belt courses;
 - tall round-arched windows (the arched head over a window, in red or buff brick or stone,
   its fanlight's glass leaded) and a round oculus for a pediment;
-- the clock tower: a three-by-three dial (some still lit from behind, amber), copper gone green
+- the clock tower: a four-by-four dial (some still lit from behind, amber), copper gone green
   in sheets and slabs, louvres, the bell, a ball-and-spike finial;
 - a slate hip roof's corners (the courses come from the house kit);
 - inside: the hall's hexagon mosaic with its black border, terrazzo, marble wainscot, cream
@@ -49,7 +49,8 @@ BRICK = {"red": "brick_red", "buff": "brick_buff", "stone": STONE}
 ROOF_KINDS = ("slate", "charcoal", "green", "red")
 PLAQUES = {"clerk": "COUNTY|CLERK", "circuit": "CIRCUIT|CLERK", "court": "COURT|ROOM", "judge": "JUDGE'S|CHAMBERS",
            "records": "RECORDS", "pva": "PROPERTY|VALUATION", "treasurer": "TREASURER", "restroom": "REST|ROOMS",
-           "sheriff": "SHERIFF", "library": "READING|ROOM", "postmaster": "POST|MASTER", "office": "OFFICE"}
+           "sheriff": "SHERIFF", "library": "READING|ROOM", "postmaster": "POST|MASTER", "office": "OFFICE",
+           "jury": "JURY|ROOM"}
 
 
 # ---------------------------------------------------------------- textures
@@ -108,10 +109,11 @@ def column(seed, rgb, stone=False):
     return t
 
 
-def dial(seed, lit):
-    """A clock dial three blocks across (192 square): cream glass, black Roman hours, minute ring,
-    hands stopped at seventeen minutes to four. Returns nine 64 tiles, row by row from the top."""
-    S = N * 3
+def dial(seed, lit, n=4):
+    """A clock dial n blocks across: cream glass, black Roman hours, minute ring, hands stopped at
+    seventeen minutes to four. Returns n * n tiles of 64, row by row from the top."""
+    S = N * n
+    k = n / 3  # the drawing below is for three blocks across
     rng = np.random.default_rng(seed)
     yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
     cx = cy = S / 2 - 0.5
@@ -119,25 +121,25 @@ def dial(seed, lit):
     ang = np.arctan2(xx - cx, -(yy - cy))  # 0 at twelve, clockwise
     col = np.zeros((S, S, 3), np.float32)
     col[:] = (34, 32, 30)  # the tower's dark surround behind the dial's frame
-    face = r < 88
+    face = r < 88 * k
     col[face] = (226, 214, 180) if lit else (196, 188, 164)
     # the copper frame ring and the minute track
-    col[(r >= 88) & (r < 94)] = (80, 128, 108)
-    col[(r >= 94) & (r < 96)] = (40, 60, 50)
-    col[(r > 78) & (r < 79.5) & face] = (30, 28, 26)
-    col[(r > 72) & (r < 73.2) & face] = (30, 28, 26)
+    col[(r >= 88 * k) & (r < 94 * k)] = (80, 128, 108)
+    col[(r >= 94 * k) & (r < 96 * k)] = (40, 60, 50)
+    col[(r > 78 * k) & (r < 79.5 * k) & face] = (30, 28, 26)
+    col[(r > 72 * k) & (r < 73.2 * k) & face] = (30, 28, 26)
     for i in range(60):
         a = i / 60 * 2 * np.pi
-        tick = (np.abs(((ang - a + np.pi) % (2 * np.pi)) - np.pi) < (0.03 if i % 5 else 0.05)) & (r > 72) & (r < 79)
+        tick = (np.abs(((ang - a + np.pi) % (2 * np.pi)) - np.pi) < (0.03 if i % 5 else 0.05)) & (r > 72 * k) & (r < 79 * k)
         col[tick] = (30, 28, 26)
     # the hours, cut from a Roman serif and stood round the ring
     numerals = ["XII", "I", "II", "III", "IIII", "V", "VI", "VII", "VIII", "IX", "X", "XI"]
     alpha = np.zeros((S, S), np.float32)
     for i, s in enumerate(numerals):
         a = i / 12 * 2 * np.pi
-        m = text_mask(s, SERIF, 15, 34, 18, seed=seed + i)
+        m = text_mask(s, SERIF, round(15 * k), round(34 * k), round(18 * k), seed=seed + i)
         h, w = m.shape
-        px, py = cx + np.sin(a) * 58 - w / 2, cy - np.cos(a) * 58 - h / 2
+        px, py = cx + np.sin(a) * 58 * k - w / 2, cy - np.cos(a) * 58 * k - h / 2
         x0, y0 = int(round(px)), int(round(py))
         alpha[y0:y0 + h, x0:x0 + w] = np.maximum(alpha[y0:y0 + h, x0:x0 + w], m)
     col = col * (1 - alpha[..., None] * 0.9) + np.array((28, 26, 24), np.float32) * alpha[..., None] * 0.9
@@ -150,23 +152,23 @@ def dial(seed, lit):
 
     hour = (3 + 43 / 60) / 12 * 2 * np.pi
     minute = 43 / 60 * 2 * np.pi
-    col[hand(hour, 46, 4.5)] = (24, 22, 20)
-    col[hand(minute, 68, 3.2)] = (24, 22, 20)
-    col[r < 5] = (60, 56, 50)
+    col[hand(hour, 46 * k, 4.5 * k)] = (24, 22, 20)
+    col[hand(minute, 68 * k, 3.2 * k)] = (24, 22, 20)
+    col[r < 5 * k] = (60, 56, 50)
     # grime down from the top and a crack or two across the glass
     col[face] *= (0.9 + 0.1 * np.clip((yy[face] / S), 0, 1))[..., None]
     for _ in range(2):
-        a0, x0, y0 = rng.uniform(0, np.pi), rng.uniform(40, 150), rng.uniform(40, 150)
-        for s in range(60):
+        a0, x0, y0 = rng.uniform(0, np.pi), rng.uniform(40, S - 40), rng.uniform(40, S - 40)
+        for s in range(round(60 * k)):
             x0 += np.cos(a0) * 1.0 + rng.normal(0, 0.3)
             y0 += np.sin(a0) * 1.0 + rng.normal(0, 0.3)
             xi, yi = int(x0), int(y0)
-            if 0 <= xi < S and 0 <= yi < S and r[yi, xi] < 86:
+            if 0 <= xi < S and 0 <= yi < S and r[yi, xi] < 86 * k:
                 col[yi, xi] = (70, 66, 58)
     tiles = []
-    for j in range(3):
-        for i in range(3):
-            t = P.Tex(seed + j * 3 + i, (0, 0, 0))
+    for j in range(n):
+        for i in range(n):
+            t = P.Tex(seed + j * n + i, (0, 0, 0))
             t.c = col[j * N:(j + 1) * N, i * N:(i + 1) * N].copy()
             f = face[j * N:(j + 1) * N, i * N:(i + 1) * N]
             t.smooth[:] = np.where(f, 0.75, 0.3)
@@ -223,11 +225,14 @@ def arch(brick, part, span, seed):
     return t
 
 
-def oculus(bg, seed):
-    """A round window in a pediment or a gable: four keystones, the glass and its cross of cames."""
+def oculus(bg, seed, part=None):
+    """A round window in a pediment or a gable: four keystones, the glass and its cross of cames.
+    part 0 or 1 draws the left or right half of one centred on the line between two blocks."""
     t = NS.build(bg)
     t.rng = np.random.default_rng(seed)
     yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    if part is not None:
+        xx = xx - 32 + part * N
     r = np.hypot(xx - 31.5, yy - 31.5)
     s = NS.build("stone_trim").c
     ring = (r >= 19) & (r < 27)
@@ -490,7 +495,7 @@ def textures():
     T["cv_column_white"] = lambda: column(9004, (226, 222, 210))
     T["cv_column_stone"] = lambda: column(9005, None, stone=True)
     for lit in (False, True):
-        for i in range(9):
+        for i in range(16):
             T[f"cv_dial{'_lit' if lit else ''}_{i}"] = lambda i=i, lit=lit: dial(9010, lit)[i]
     for b in BRICK:
         T[f"cv_arch_{b}_1"] = lambda b=b: arch(b, 0, 1, 9030)
@@ -498,6 +503,8 @@ def textures():
         T[f"cv_arch_{b}_r"] = lambda b=b: arch(b, 1, 2, 9032)
     T["cv_oculus_white"] = lambda: oculus(WHITE, 9040)
     T["cv_oculus_red"] = lambda: oculus("brick_red", 9041)
+    T["cv_oculus_white_l"] = lambda: oculus(WHITE, 9040, 0)
+    T["cv_oculus_white_r"] = lambda: oculus(WHITE, 9040, 1)
     T["cv_hex_tile"] = lambda: hex_tile(9042)
     T["cv_hex_border"] = lambda: hex_tile(9043, True)
     T["cv_terrazzo"] = lambda: F.wear(F.mat("Terrazzo003", None, seed=9044, smooth=0.6), 0.2, 2)
@@ -522,10 +529,11 @@ def textures():
     T["cv_pew"] = lambda: pew_wood(9090)
     T["cv_cushion_red"] = lambda: bench_cushion(9091, (118, 34, 36))
     T["cv_cushion_green"] = lambda: bench_cushion(9092, (40, 76, 52))
-    T["cv_louvre"] = lambda: E.louvres(9093, (214, 210, 198))
+    T["cv_louvre"] = lambda: E.louvres(9093, (96, 104, 94))
     T["cv_bell"] = lambda: F.wear(F.mat("green_metal_rust", (120, 92, 56), 0.8, seed=9094, smooth=0.5), 0.3, 0)
     T["cv_brass"] = lambda: F.plain(9095, (172, 140, 78), 0.06, 0.65)
     T["cv_iron"] = lambda: F.plain(9096, (34, 34, 34), 0.06, 0.4)
+    T["cv_cellbar"] = lambda: F.wear(F.plain(9097, (118, 120, 112), 0.07, 0.45), 0.35, 1)
     return T
 
 
@@ -540,6 +548,14 @@ def register(ns):
 
 def mirror_x(boxes):
     return [[16 - b[3], b[1], b[2], 16 - b[0], b[4], b[5], *b[6:]] for b in boxes]
+
+
+def shift(boxes, dx, dz):
+    return [[b[0] + dx, b[1], b[2] + dz, b[3] + dx, b[4], b[5] + dz, *b[6:]] for b in boxes]
+
+
+def blocks_of(out, name):
+    return out[name]["boxes"]
 
 
 def round_post(y0, y1, r, tex, cx=8.0, cz=8.0):
@@ -612,12 +628,15 @@ def blocks():
                                                                "side": BRICK[b], "up": BRICK[b], "down": BRICK[b]}]],
                 "Arched Window", "GLASS", render="translucent")
     add("cv_oculus_white", None, "Round Window", "STONE", tex={"north": "cv_oculus_white", "side": WHITE, "up": WHITE, "down": WHITE})
+    for part in ("l", "r"):
+        add(f"cv_oculus_white_{part}", None, "Round Window", "STONE",
+            tex={"north": f"cv_oculus_white_{part}", "side": WHITE, "up": WHITE, "down": WHITE})
     add("cv_oculus_red", None, "Round Window", "STONE", tex={"north": "cv_oculus_red", "side": "brick_red", "up": "brick_red",
                                                             "down": "brick_red"})
 
-    # ---- the clock: nine dial pieces three by three (0 top left), dark or lit from behind
+    # ---- the clock: sixteen dial pieces four by four (0 top left), dark or lit from behind
     for lit in ("", "_lit"):
-        for i in range(9):
+        for i in range(16):
             add(f"cv_dial{lit}_{i}", [[0, 0, 15, 16, 16, 16.5, {"north": f"cv_dial{lit}_{i}", "south": "cv_iron", "side": "cv_iron"}]],
                 "Clock Dial", "GLASS", decor=True, **({"light": 8} if lit else {}))
     # ---- copper: sheets, a slab, a ball-and-spike finial, a bell and louvres for the belfry
@@ -629,8 +648,11 @@ def blocks():
         "Copper Roof", "METAL")
     add("cv_finial", [[4, 0, 4, 12, 3, 12, "cv_copper"], [5, 3, 5, 11, 9, 11, "cv_copper"], [6, 9, 6, 10, 11, 10, "cv_copper"],
                       [7.25, 11, 7.25, 8.75, 16, 8.75, "cv_iron"]], "Finial", "METAL", rotate=None)
+    # the same on the corner where four blocks meet (south-east of its own cell), atop an even-sided tower
+    add("cv_finial_c", shift(blocks_of(out, "cv_finial"), 8, 8), "Finial", "METAL", rotate=None)
     add("cv_bell", [[3, 2, 3, 13, 4, 13, "cv_bell"], [4, 4, 4, 12, 10, 12, "cv_bell"], [5, 10, 5, 11, 13, 11, "cv_bell"],
                     [7, 13, 3, 9, 16, 13, "cv_oak"], [7.5, 0, 7.5, 8.5, 2, 8.5, "cv_iron"]], "Bell", "METAL")
+    add("cv_bell_c", shift(blocks_of(out, "cv_bell"), 8, 8), "Bell", "METAL", rotate=None)
     add("cv_louvre", [[0, 0, 7, 16, 16, 9, "cv_louvre"], [0, 0, 6, 1.5, 16, 10, WHITE], [14.5, 0, 6, 16, 16, 10, WHITE]],
         "Louvres", "WOOD", rotate="axis")
 
@@ -662,6 +684,8 @@ def blocks():
     add("cv_judge_bench_top", [[0, 0, 0, 16, 6, 3, {"north": "cv_panel_oak", "side": "cv_oak"}], [0, 6, -1, 16, 8, 10, "cv_oak"]],
         "Judge's Bench", "WOOD")
     add("cv_seal", [[1, 1, 15, 15, 15, 16, {"north": "cv_seal", "side": "cv_oak"}]], "County Seal", "WOOD", decor=True)
+    # the seal hung across the line between two blocks (the cell to its right as you face it, facing out)
+    add("cv_seal_c", shift(blocks_of(out, "cv_seal"), 8, 0), "County Seal", "WOOD", decor=True)
     # the bar between the well of the court and the public (and round the jury box): turned spindles under a rail
     bar = [[0, 13, 6, 16, 15.5, 10, "cv_oak"], [0, 0, 6.5, 16, 2, 9.5, "cv_oak"]]
     bar += [[x - 0.75, 2, 7.25, x + 0.75, 13, 8.75, "cv_oak"] for x in (2, 6, 10, 14)]
@@ -695,6 +719,17 @@ def blocks():
         add(f"cv_exit_{c}", [[2, 4, 14.5, 14, 11, 16, {"north": f"cv_exit_{c}", "side": "cv_iron", "up": "cv_iron", "down": "cv_iron"}]],
             "Exit Sign", "METAL", decor=True, light=4)
 
+    # ---- the flagpole out front: a white pole, the flag flying off its top, a gilt ball
+    add("cv_flagpole", [[7.25, 0, 7.25, 8.75, 16, 8.75, WHITE]], "Flagpole", "METAL", rotate=None)
+    add("cv_flagpole_base", [[4, 0, 4, 12, 4, 12, "concrete_dark"], [7, 4, 7, 9, 16, 9, WHITE]], "Flagpole", "METAL", rotate=None)
+    add("cv_flagpole_top", [[7.25, 0, 7.25, 8.75, 13, 8.75, WHITE], [6.5, 13, 6.5, 9.5, 16, 9.5, "cv_brass"],
+                            [8.75, 1, 7.6, 32, 12.5, 8.4, "cv_flag_us"]], "Flagpole", "METAL", decor=True, render="cutout")
+
+    # ---- the county jail's holding cells in the basement: painted flat bars, riveted bands
+    bars = [[x - 0.8, 0, 7.2, x + 0.8, 16, 8.8, "cv_cellbar"] for x in (1.5, 4.5, 7.5, 10.5, 13.5)]
+    bars += [[0, 1, 7, 16, 2.5, 9, "cv_cellbar"], [0, 13.5, 7, 16, 15, 9, "cv_cellbar"]]
+    add("cv_cell_bars", bars, "Cell Bars", "METAL", rotate="axis")
+
     # ---- outside: the lawn's railings, the globe lamps by the steps
     add("cv_iron_fence", [[0, 0, 7.5, 16, 16, 8.5, "cv_iron_fence"]], "Iron Railings", "METAL", rotate="axis", render="cutout")
     add("cv_iron_post", [[6, 0, 6, 10, 15, 10, "cv_iron"], [5.5, 0, 5.5, 10.5, 2, 10.5, "cv_iron"], [6.5, 15, 6.5, 9.5, 17, 9.5, "cv_iron"]],
@@ -710,9 +745,9 @@ def blocks():
 
 
 def frieze_tiles():
-    """The county's name cut in the frieze, one tile per block across the portico (widths 7 to 13)."""
+    """The county's name cut in the frieze, one tile per block across the portico (even widths 8 to 14)."""
     T, B = {}, {}
-    for w in (7, 9, 11, 13):
+    for w in (8, 10, 12, 14):
         text = f"{COUNTY} COUNTY COURTHOUSE" if w >= 11 else "COUNTY COURTHOUSE"
 
         def build(w=w, text=text):

@@ -30,6 +30,8 @@ final class PropSwaps {
         Map.entry("home_dishwasher_oak", new String[] {"home_dishwasher_oak", "pk_dishwasher"}),
         Map.entry("home_dishwasher_walnut", new String[] {"home_dishwasher_walnut", "pk_dishwasher"}),
         Map.entry("home_dishwasher_white", new String[] {"home_dishwasher_white", "pk_dishwasher"}),
+        Map.entry("home_drawers_oak", new String[] {"home_drawers_oak", "pk_cabinet_oak"}),
+        Map.entry("home_drawers_walnut", new String[] {"home_drawers_walnut", "pk_cabinet_oak"}),
         Map.entry("home_fridge", new String[] {"home_fridge", "pk_fridge"}),
         Map.entry("home_fridge_top", new String[] {"home_fridge", "pk_fridge_010"}),
         Map.entry("home_garage_shelf", new String[] {"home_garage_shelf", "pk_garage_shelves", "pk_garage_shelves_2", "pk_metal_rack"}),

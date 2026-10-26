@@ -1,0 +1,67 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "cv_seal": "zomboidcraft:block/city/cv_seal",
+    "particle": "zomboidcraft:block/city/cv_seal"
+  },
+  "elements": [
+    {
+      "from": [
+        9,
+        1,
+        15
+      ],
+      "to": [
+        23,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_seal",
+          "uv": [
+            0,
+            1,
+            14,
+            15
+          ]
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "uv": [
+            2,
+            1,
+            16,
+            15
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "uv": [
+            2,
+            15,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "uv": [
+            2,
+            0,
+            16,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

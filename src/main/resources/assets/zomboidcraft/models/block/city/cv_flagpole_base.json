@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/concrete_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        4,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        4,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white"
+        },
+        "east": {
+          "texture": "#ext_trim_white"
+        },
+        "west": {
+          "texture": "#ext_trim_white"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white"
+        }
+      }
+    }
+  ]
+}

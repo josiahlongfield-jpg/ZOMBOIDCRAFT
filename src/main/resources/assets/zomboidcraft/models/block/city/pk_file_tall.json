@@ -1,0 +1,70 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_file_tall": "zomboidcraft:block/city/pk_file_tall",
+    "particle": "zomboidcraft:block/city/pk_file_tall"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        5
+      ],
+      "to": [
+        13,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_file_tall",
+          "uv": [
+            0.0625,
+            0.0625,
+            2.5625,
+            4.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_file_tall",
+          "uv": [
+            2.6875,
+            0.0625,
+            5.1875,
+            4.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_file_tall",
+          "uv": [
+            8.1875,
+            0.0625,
+            10.9375,
+            4.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_file_tall",
+          "uv": [
+            5.3125,
+            0.0625,
+            8.0625,
+            4.0625
+          ]
+        },
+        "down": {
+          "texture": "#pk_file_tall",
+          "uv": [
+            11.0625,
+            0.0625,
+            13.5625,
+            2.8125
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

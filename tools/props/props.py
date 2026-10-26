@@ -401,6 +401,17 @@ PROPS = {
     "file_cabinet": dict(src=obj(CABINETS / "Obj/File_Cabinet.obj", None, CABINETS / "Textures/ue/T_FileCabinet_BC.tga"),
                          cells=(1, 1, 1), height=0.95, fill=(0.62, 0.7), front="+z", title="Filing Cabinet", sound="WOOD", shine=0.25,
                          swap={"000": "filing_cabinet"}),
+    # the rest of the vintage cabinets: a low oak cabinet of drawers and doors, its two-wide sideboard
+    # brother and the tall narrow file (in offices, the courthouse, the library's catalogue room)
+    "cabinet_oak": dict(src=obj(CABINETS / "Obj/Cabinet.obj", None, CABINETS / "Textures/ue/T_Cabinet_BC.tga"),
+                        cells=(1, 1, 1), height=0.9, fill=(0.7, 0.7), front="+z", title="Cabinet", sound="WOOD", shine=0.25,
+                        loot="office", swap=[{"000": f"home_drawers_{f}"} for f in ("oak", "walnut")]),
+    "sideboard": dict(src=obj(CABINETS / "Obj/Cabinet_2.obj", None, CABINETS / "Textures/ue/T_Cabinet_2_BC.tga"),
+                      cells=(2, 1, 1), height=0.9, fill=(0.7, 0.7), front="+z", title="Sideboard", sound="WOOD", shine=0.25,
+                      loot="office"),
+    "file_tall": dict(src=obj(CABINETS / "Obj/File_Cabinet_2.obj", None, CABINETS / "Textures/ue/T_FileCabinet_2_BC.tga"),
+                      cells=(1, 2, 1), height=1.65, fill=(0.62, 0.7), front="+z", title="File Cabinet", sound="WOOD",
+                      shine=0.25, loot="office"),
 }
 
 # ---- grocery pack: stocked store bays, several of each so a run of them never repeats; they
