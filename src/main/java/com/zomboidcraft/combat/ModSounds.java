@@ -111,7 +111,10 @@ public final class ModSounds {
     public static final SoundEvent LEVER_ACTION_ROUND_IN = register("weapon.lever_action.round_in");
     public static final SoundEvent CROSSBOW_SHOT = register("weapon.crossbow.shot", 16f);
     public static final SoundEvent CROSSBOW_COCK = register("weapon.crossbow.cock");
+    public static final SoundEvent CROSSBOW_DRY = register("weapon.crossbow.dry");
+    public static final SoundEvent CROSSBOW_LOAD = register("weapon.crossbow.load");
     public static final SoundEvent CROSSBOW_HIT = register("weapon.crossbow.hit", 24f);
+    public static final SoundEvent CROSSBOW_HIT_BLOCK = register("weapon.crossbow.hit_block", 24f);
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");

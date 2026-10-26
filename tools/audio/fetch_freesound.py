@@ -31,6 +31,15 @@ QUERIES = {
     "break": ["wood break", "stick snap", "bat break", "metal snap"],
     "equip": ["gun foley", "weapon equip", "gun handling", "rifle sling"],
     "load_round": ["bullet into magazine", "loading magazine rounds", "cartridge insert", "loading bullets"],
+    # Josiah: in-game music should be ambient noise, drones and textures, not composed songs
+    "amb_music_drone": ["dark drone", "drone ambient dark", "low drone", "ominous drone", "horror drone", "deep drone rumble",
+                        "evolving drone", "cinematic drone"],
+    "amb_music_dark": ["dark ambient", "dark ambience texture", "eerie ambience", "creepy atmosphere", "horror ambience",
+                       "unsettling atmosphere", "apocalyptic ambience", "desolate ambience"],
+    "amb_music_texture": ["ambient texture", "granular texture", "soundscape dark", "drone texture metal", "bowed metal drone",
+                          "reverse ambient pad", "dissonant pad", "industrial drone"],
+    "amb_music_tension": ["tension drone", "suspense ambience", "tension rising drone", "heartbeat drone", "pulsing drone",
+                          "tension bed", "horror tension", "dread atmosphere"],
     "zombie_idle": ["zombie groan", "zombie moan", "undead groan", "zombie breathing", "creature groan low"],
     "zombie_alert": ["zombie scream", "zombie roar", "zombie growl aggressive", "monster screech human"],
     "zombie_chase": ["zombie snarl", "zombie running breath", "zombie growl", "rabid growl human"],
@@ -79,6 +88,11 @@ QUERIES = {
     "amb_night": ["crickets night", "night ambience insects", "owl hoot"],
     # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
+    # the weather's storm-tripped alarms: a looping car alarm and an electric burglar bell
+    "amb_alarm_car": ["car alarm", "car alarm loop", "car alarm siren", "car alarm whoop", "car alarm going off",
+                      "vehicle alarm", "car alarm distant", "car alarm street"],
+    "amb_alarm_bell": ["burglar alarm bell", "alarm bell ringing", "electric bell ringing", "fire alarm bell",
+                       "school bell ringing", "shop alarm bell", "security alarm bell", "bell alarm loop"],
     "amb_alarm": ["car alarm", "house alarm ringing", "burglar alarm bell", "alarm bell ringing outside"],
     "amb_animal": ["dog howling distant", "coyote howl", "fox scream night", "dogs barking in the distance"],
     # guns, round 2: the M9 pistol and the 870 pump shotgun

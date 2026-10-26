@@ -26,6 +26,7 @@ public class ZomboidCraft implements ModInitializer {
         Skills.register();
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
+        com.zomboidcraft.building.BuildBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
@@ -43,6 +44,8 @@ public class ZomboidCraft implements ModInitializer {
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();
         com.zomboidcraft.barricade.Barricades.register();
+        com.zomboidcraft.building.DigRules.register();
+        com.zomboidcraft.building.Builder.register();
         SurvivalEvents.register();
         com.zomboidcraft.survival.Injuries.register();
         com.zomboidcraft.survival.TimedActions.register();

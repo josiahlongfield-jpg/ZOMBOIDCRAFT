@@ -21,6 +21,8 @@ public class BarricadeBlock extends Block {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty PLANKS = IntegerProperty.create("planks", 1, 4);
     public static final IntegerProperty STRENGTH = IntegerProperty.create("strength", 0, 2);
+    /** Blows the outer board has taken, in eighths of what it can stand (ZcConfig building.boardHits). */
+    public static final IntegerProperty DAMAGE = IntegerProperty.create("damage", 0, 7);
     public static final int MAX_PLANKS = 4;
 
     private static final Map<Direction, VoxelShape> SHAPES = Map.of(
@@ -32,12 +34,12 @@ public class BarricadeBlock extends Block {
     public BarricadeBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any()
-                .setValue(FACING, Direction.NORTH).setValue(PLANKS, 1).setValue(STRENGTH, 0));
+                .setValue(FACING, Direction.NORTH).setValue(PLANKS, 1).setValue(STRENGTH, 0).setValue(DAMAGE, 0));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PLANKS, STRENGTH);
+        builder.add(FACING, PLANKS, STRENGTH, DAMAGE);
     }
 
     @Override
@@ -45,9 +47,10 @@ public class BarricadeBlock extends Block {
         return SHAPES.get(state.getValue(FACING));
     }
 
-    /** Chance that one zombie blow knocks a board loose. */
-    public static float breakChance(BlockState state) {
-        return (1f / 6f) * (1f - 0.25f * state.getValue(STRENGTH));
+    /** Blows one board stands, by how well it was nailed. */
+    public static int boardHits(BlockState state) {
+        var c = com.zomboidcraft.ZcConfig.get().building;
+        return Math.max(1, c.boardHits + c.boardHitsPerStrength * state.getValue(STRENGTH));
     }
 
     public static int strengthFor(int carpentryLevel) {

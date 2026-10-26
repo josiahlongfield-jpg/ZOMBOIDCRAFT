@@ -144,6 +144,7 @@ final class Carrier {
         lifts();
         catwalks();
         sponsons();
+        underside();
         island();
         trunk(ISLAND_STAIR, ISLAND_STAIR_Z, GALLERY, new int[] {4, 3, 3, 3, 3, 3, 3}, "floor_lino",
                 new int[] {11, 15, 18, 21, 24, 27, 30, 33});
@@ -2086,11 +2087,14 @@ final class Carrier {
             }
         }
         islandRooms(levels);
-        // her number on both faces, five high
+        // her number on both faces, five high, the bulbs that light it at night along every stroke
         for (int[] px : figure(1)) {
             p.set(152 - px[0], 23 - px[1], IZ0, "navy_hull_white");
             p.set(146 + px[0], 23 - px[1], IZ1, "navy_hull_white");
+            p.setIfAir(152 - px[0], 23 - px[1], IZ0 - 1, bulbs("north"));
+            p.setIfAir(146 + px[0], 23 - px[1], IZ1 + 1, bulbs("south"));
         }
+        islandOutside(levels);
         // the arrays round the top, the masts, radars, domes, lights
         int[] t = levels[7];
         for (int y = t[0] + 1; y <= t[0] + 2; y++) {
@@ -2183,10 +2187,70 @@ final class Carrier {
         if (i == 6 && (face && x < L[2] && x > L[1] || x == L[1] && z > L[3] && z < L[4])) {
             return w + "[facing=" + (face ? "north" : "west") + "]";
         }
-        if ((i == 1 || i == 2 || i == 3) && top && x % 4 == 1 && (x < 145 || x > 153)) {
+        if ((i == 1 || i == 2 || i == 3) && top && x % 8 == 5 && (x < 145 || x > 153)) {
             return "ship_porthole[facing=" + (face ? "north" : z == L[4] ? "south" : x == L[2] ? "east" : "west") + "]";
         }
         return y == L[0] + 1 && x % 12 == 0 ? "navy_hull_butt" : "navy_hull";
+    }
+
+    /** The number's bulbs on the dead circuit: most out, the odd one still glowing or stuttering. */
+    private String bulbs(String f) {
+        double r = chance();
+        return (r < 0.08 ? "fit_numlight_on" : r < 0.2 ? "fit_numlight_flicker" : "fit_numlight") + "[facing=" + f + "]";
+    }
+
+    /**
+     * What hangs on the island's outside: floodlights over the deck under each level's roof, the
+     * cable and pipe runs climbing its faces, visors over the bridge and flight control windows,
+     * the signal searchlights on the bridge roof.
+     */
+    private void islandOutside(int[][] levels) {
+        for (int i = 1; i <= 4; i++) {
+            int[] L = levels[i];
+            // (the third level's face is left clear over its catwalk)
+            for (int x = L[1] + 6; x < L[2] - 1 && i != 3; x += 7) {
+                p.setIfAir(x, L[0] + 2, L[3] - 1, (chance() < 0.1 ? "fit_flood_on" : "fit_flood") + "[facing=north]");
+            }
+            p.setIfAir(L[2] + 1, L[0] + 2, (L[3] + L[4]) / 2, "fit_speaker[facing=east]");
+        }
+        for (int y = FLIGHT + 1; y <= levels[4][0] + 2; y++) {
+            for (int x : new int[] {131, 140}) {
+                p.setIfAir(x, y, IZ0 - 1, "fit_pipe_drop[facing=north]");
+                p.setIfAir(x + 2, y, IZ1 + 1, "fit_pipe_drop[facing=south]");
+            }
+            p.setIfAir(IX1 + 1, y, IZ0 + 2, "fit_pipe_drop[facing=east]");
+            if (y % 3 == 1) {
+                p.setIfAir(IX1 + 1, y, IZ1 - 2, "fit_jbox[facing=east]");
+            }
+        }
+        // a catwalk along both faces of the third level, railed outboard, brackets under it, a door out
+        int[] C = levels[3];
+        for (int s : new int[] {-1, 1}) {
+            int wz = s < 0 ? IZ0 - 1 : IZ1 + 1;
+            for (int x = C[1]; x <= C[2]; x++) {
+                p.set(x, C[0], wz, "bunk_walkway");
+                p.setIfAir(x, C[0] + 1, wz + s, "vessel_rail[axis=x]");
+                if (x % 6 == 1) {
+                    p.setIfAir(x, C[0] - 1, wz, "steel_girder");
+                }
+            }
+            p.setIfAir(C[1] - 1, C[0] + 1, wz, "vessel_rail[axis=z]");
+            p.setIfAir(C[2] + 1, C[0] + 1, wz, "vessel_rail[axis=z]");
+            Doors.abandoned(p, rng, 150, C[0] + 1, s < 0 ? IZ0 : IZ1, "ship_door", s < 0 ? "north" : "south", Doors.hinge(rng));
+        }
+        int[] B = levels[5], F = levels[6];
+        for (int z = B[3] + 1; z < B[4]; z++) {
+            p.setIfAir(B[2] + 1, B[0] + 2, z, "fit_visor[facing=east]");
+        }
+        for (int x = B[2] - 10; x < B[2]; x++) {
+            p.setIfAir(x, B[0] + 2, B[3] - 1, "fit_visor[facing=north]");
+            p.setIfAir(x, B[0] + 2, B[4] + 1, "fit_visor[facing=south]");
+        }
+        for (int x = F[1] + 1; x < F[2]; x++) {
+            p.setIfAir(x, F[0] + 2, F[3] - 1, "fit_visor[facing=north]");
+        }
+        p.setIfAir(B[2] - 3, B[0] + 4, B[3] + 1, (chance() < 0.15 ? "fit_searchlight_on" : "fit_searchlight") + "[facing=north]");
+        p.setIfAir(B[2] - 3, B[0] + 4, B[4] - 1, (chance() < 0.15 ? "fit_searchlight_on" : "fit_searchlight") + "[facing=south]");
     }
 
     private void islandRooms(int[][] levels) {
@@ -2435,8 +2499,63 @@ final class Carrier {
                 onSide(hx, HANGAR + 1, s, "vessel_anchor_shank");
                 onSide(hx, HANGAR, s, "vessel_anchor_crown");
             }
+            // the scuppers, rust weeping down the plating under each; the hangar deck's drains lower down
             for (int x = 30; x < 300; x += 26) {
-                onSide(x, HANGAR + 6, s, "vessel_scupper");
+                if (onSide(x, HANGAR + 6, s, "vessel_scupper")) {
+                    weep(x, HANGAR + 5, s, 3);
+                }
+            }
+            for (int x = 17; x < 310; x += 13) {
+                if (onSide(x, HANGAR + 1, s, "fit_scupper")) {
+                    weep(x, HANGAR, s, 2);
+                }
+            }
+            // vents in pairs high on her sides under the flight deck, and side doors lower down
+            for (int x = 44; x < 290; x += 18) {
+                hullFitting(x, GALLERY + 1, s, "fit_louvre");
+                hullFitting(x + 1, GALLERY + 1, s, "fit_louvre");
+            }
+            for (int x = 61; x < 280; x += 37) {
+                hullFitting(x, HANGAR + 3, s, "fit_hatch");
+            }
+            // her number on the bow where her side runs straight, ten metres high, read from outboard
+            int x0 = 246, top = 11;
+            for (int[] px : figure(2)) {
+                int x = s > 0 ? x0 + px[0] : x0 + 15 - px[0], y = top - px[1];
+                int z = edgeZ(x, y, s);
+                if (z != Integer.MIN_VALUE && kind(x, y, z) == 1) {
+                    p.set(x, y, z, "navy_hull_white");
+                }
+            }
+        }
+    }
+
+    /** A fitting flat on her plating at (x, y) on side s, where nothing else is fitted. */
+    private void hullFitting(int x, int y, int s, String block) {
+        int z = edgeZ(x, y, s);
+        if (z != Integer.MIN_VALUE && kind(x, y, z) == 1) {
+            p.setIfAir(x, y, z + s, block + "[facing=" + (s > 0 ? "south" : "north") + "]");
+        }
+    }
+
+    /** Rust run down n plates of her side s under (x, y). */
+    private void weep(int x, int y, int s, int n) {
+        for (int k = 0; k < n; k++) {
+            int z = edgeZ(x, y - k, s);
+            if (z != Integer.MIN_VALUE && kind(x, y - k, z) == 1 && y - k > -2) {
+                p.set(x, y - k, z, "navy_hull_rust");
+            }
+        }
+    }
+
+    /** Under the flight deck where it overhangs her sides: deep girders across it every fourth frame, carrying it out. */
+    private void underside() {
+        int y = FLIGHT - 1;
+        for (int x = 0; x < LEN; x += 4) {
+            for (int z = Z0; z < Z0 + NZ; z++) {
+                if (kind(x, FLIGHT, z) == 1 && kind(x, y, z) == 0 && lift(x, z) < 0) {
+                    p.setIfAir(x, y, z, "fit_girder[axis=x]");
+                }
             }
         }
     }

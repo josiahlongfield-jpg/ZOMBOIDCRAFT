@@ -55,11 +55,22 @@ def touch_ups(t, rgb, amount=1.0):
     B.patches(t, 0.35 * amount, tuple(c * 0.84 for c in rgb), 0.2, 0.45)
 
 
+def rain_streaks(t, amount=0.1):
+    """Grime washed down the plating by the rain: faint dark streaks running down, heavier low down."""
+    cols = t.rng.random(N)
+    cols = (cols + np.roll(cols, 1) + np.roll(cols, -1)) / 3
+    y = np.arange(N)[:, None] / N
+    g = np.clip((cols[None, :] - 0.45) * 2.2, 0, 1) * (0.35 + 0.65 * y)
+    t.c *= (1 - amount * g)[..., None]
+
+
 def hull_plate(seed, rgb, kind="plain"):
-    """Hull plating: thick coats touched up in patches, the weld of a seam (along the top) or a
-    butt (down the left), rust weeping from above, or scraped through to the primer by fenders."""
-    t = B.painted(seed, rgb, "PaintedMetal004", 0.8, 0.4)
+    """Hull plating: thick smooth coats touched up in patches, grime streaked down by the rain, the
+    weld of a seam (along the top) or a butt (down the left), rust weeping from above, or scraped
+    through to the primer by fenders."""
+    t = B.painted(seed, rgb, "PaintedMetal004", 0.15, 0.45)
     touch_ups(t, rgb)
+    rain_streaks(t)
     if kind == "seam":
         F.area(t, 0, 0, N, 2, mul=0.76, dh=0.1)
         F.area(t, 0, 2, N, 3, mul=1.18, dh=0.05)
@@ -79,7 +90,7 @@ def hull_plate(seed, rgb, kind="plain"):
             F.area(t, x0 + ln * 0.2, y + w, x0 + ln * 0.7, y + w + 0.8, mul=0.85)
         B.rust_runs(t, 4, 0.45, 24)
     t.smooth = np.clip(t.smooth, 0, 0.5)
-    return F.wear(t, 0.15, 3)
+    return F.wear(t, 0.12, 1, specks=0.002)
 
 
 def bottom(seed, kind="plain"):

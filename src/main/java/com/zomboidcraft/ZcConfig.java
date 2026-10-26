@@ -67,6 +67,10 @@ public final class ZcConfig {
     public Radio radio = new Radio();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
+    /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
+    public Digging digging = new Digging();
+    /** What the Build page makes: how tough boards and sheets are, how loud a tripwire is, how fast a barrel fills. */
+    public Building building = new Building();
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -206,8 +210,6 @@ public final class ZcConfig {
         public double tier2FlawChance = 0.25;
         /** How much a flaw worsens the stat it hits (1.3 = 30% worse). */
         public double flawPenalty = 1.3;
-        /** Jam chance per shot of a rolled gun in new condition, before its roll (worn guns jam more on top). */
-        public double jamFloor = 0.003;
     }
 
     /** Weights: how often a found gun turns up in each of its finishes, against its others. */
@@ -331,6 +333,43 @@ public final class ZcConfig {
         public boolean reanimate = true;
     }
 
+    public static class Building {
+        /** Blows one board stands before it comes loose, and how many more each step of Carpentry adds (reinforced, heavy). */
+        public int boardHits = 6;
+        public int boardHitsPerStrength = 3;
+        /** Blows a metal sheet stands. */
+        public int metalSheetHits = 32;
+        /** How far zombies hear a tripwire rattle, in blocks. */
+        public double tripwireNoise = 14;
+        /** Chance each random tick in the rain that a rain barrel fills an eighth more (double in a storm). */
+        public double rainBarrelFill = 0.5;
+        /** Builds take this many times their usual time. */
+        public double timeMultiplier = 1.0;
+    }
+
+    public static class Digging {
+        /** Off, every block breaks the vanilla way and there's no floor. */
+        public boolean rules = true;
+        /** How deep under the natural ground you can dig, in blocks. Built places (basements, bunkers) don't count. */
+        public int floorDepth = 8;
+        /** The level a wall needs: wood with Carpentry, brick and concrete with Masonry, steel with Metalworking. */
+        public int carpentryLevel = 2;
+        public int masonryLevel = 2;
+        public int metalworkingLevel = 2;
+        /** How far zombies hear each kind of wall coming down, in blocks. */
+        public double woodNoise = 16;
+        public double masonryNoise = 36;
+        public double metalNoise = 14;
+        /** Endurance a wall costs to knock through (a sprint uses about 1 a second). */
+        public double woodEndurance = 8;
+        public double masonryEndurance = 14;
+        public double metalEndurance = 5;
+        /** Seconds to break a wall at its needed level; every level more takes 12% off. */
+        public double woodSeconds = 3;
+        public double masonrySeconds = 5;
+        public double metalSeconds = 6;
+    }
+
     public static class Progression {
         public double xpMultiplier = 1.0;
     }
@@ -449,6 +488,12 @@ public final class ZcConfig {
         public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
+        /**
+         * Zombies die like Zomboid's: a bullet anywhere but the head (on one still standing) does this much of its
+         * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
+         */
+        public double zombieBodyShots = 0.33;
+        public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
         /** Swinging, shoving and sprinting tire you; tired swings are slower and weaker. */
@@ -777,6 +822,13 @@ public final class ZcConfig {
         public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
+        /**
+         * Jam chance per shot of a gun in new condition, and how much is added at no condition left (rising with the
+         * square of the wear), both before its reliability roll. 0.001 and 0.015: about 1 magazine in 30 jams on a
+         * new gun, 1 in 8 at half condition, 1 in 3 nearly worn out.
+         */
+        public double jamNew = 0.001;
+        public double jamWorn = 0.015;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */

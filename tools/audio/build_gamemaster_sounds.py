@@ -50,6 +50,12 @@ PICKS = {
     "weapon.revolver.open": ("weapon/revolver/open", -8.0, [("gun", "gun_revolver_pistol_cylinder_open_03")]),
     "weapon.revolver.round_in": ("weapon/revolver/round_in", -8.0, [("gun", "gun_revolver_pistol_load_bullet_05")]),
     "weapon.revolver.close": ("weapon/revolver/close", -8.0, [("gun", "gun_revolver_pistol_cylinder_close_01")]),
+    # Until Josiah picks their own: the same mechanism's pick on the gun that has one (the magnum's empties falling out,
+    # the sawn-off's barrels dropping), in place of a pistol slide and a rifle magazine
+    "weapon.revolver.eject": ("weapon/revolver/eject", -8.0, [("silenced", s) for s in (
+        "bullet_shell_bounce_general_06", "bullet_shell_bounce_metal1_01", "bullet_shell_bounce_general_05",
+        "bullet_shell_bounce_general_01", "bullet_shell_bounce_metal1_02", "bullet_shell_bounce_general_02")]),
+    "weapon.double_barrel.open": ("weapon/double_barrel/open", -8.0, [("gun", "gun_pistol_general_handling_05")]),
     "weapon.casing": ("weapon/casing", -6.0, [("silenced", "bullet_shell_bounce_concrete2_05"),
                                               ("silenced", "bullet_shell_bounce_concrete1_05"),
                                               ("silenced", "bullet_shell_bounce_concrete2_06")]),
@@ -96,14 +102,33 @@ PICKS = {
 EXTRA = {"weapon.magnum.shot": {"pitch": 0.88}, "weapon.sawn_off.shot": {"pitch": 0.94}}
 DRIVE = {"weapon.sawn_off.shot": "acrusher=level_in=1.6:level_out=0.7:bits=10:mix=0.25:mode=log,"}
 # Far-off shots made from the near one: muffled, echoing off buildings, quieter
-DISTANT = {"weapon.rimfire.shot_distant": "weapon.rimfire.shot", "weapon.smg.shot_distant": "weapon.smg.shot",
+DISTANT = {"weapon.rifle.shot_distant": "weapon.rifle.shot", "weapon.pistol.shot_distant": "weapon.pistol.shot",
+           "weapon.hunting_rifle.shot_distant": "weapon.hunting_rifle.shot",
+           "weapon.hunting_rifle.shot_suppressed_distant": "weapon.hunting_rifle.shot_suppressed",
+           "weapon.revolver.shot_distant": "weapon.revolver.shot", "weapon.double_barrel.shot_distant": "weapon.double_barrel.shot",
+           "weapon.rimfire.shot_distant": "weapon.rimfire.shot", "weapon.smg.shot_distant": "weapon.smg.shot",
            "weapon.sawn_off.shot_distant": "weapon.sawn_off.shot", "weapon.magnum.shot_distant": "weapon.magnum.shot",
            "weapon.lever_action.shot_distant": "weapon.lever_action.shot"}
 DISTANT_AF = "lowpass=f=1100,aecho=0.8:0.6:140|330|610:0.4|0.28|0.16,apad=pad_dur=0.8"
+# The SMG and .22 picks are single shots cut from an automatic string (50-90 ms, no room): each gets its own recording's
+# tail, as the pack means them to be played, so a shot rings out instead of ticking (tail level in dB)
+TAILS = {"weapon.smg.shot": ("gun", "gun_submachine_auto_shot_00_tail_only_01", 0.0),
+         "weapon.rimfire.shot": ("gun", "gun_semi_auto_rifle_shot_00_tail_only_01", -4.0)}
 
 # Josiah: reloads on every gun "need to be a little louder"
 RELOADS = ("mag_out", "mag_in", "load_round", "slide", "pump", "shell_in", "bolt", "cock", "open", "round_in", "close", "eject", "lever")
 LOUDER = 4.0
+
+
+def render(files, event, pack, stem, af, dst):
+    """One pick to a mono wav through af, with its gun's tail under it if it has one."""
+    if event in TAILS:
+        tpack, tstem, tdb = TAILS[event]
+        ff("-i", str(files[(pack, stem)]), "-i", str(files[(tpack, tstem)]), "-filter_complex",
+           f"[0]aformat=channel_layouts=stereo[s];[1]aformat=channel_layouts=stereo,volume={tdb}dB[t];"
+           f"[s][t]amix=inputs=2:duration=longest:normalize=0,{af}", "-ac", "1", "-ar", "44100", str(dst))
+    else:
+        ff("-i", str(files[(pack, stem)]), "-af", af, "-ac", "1", "-ar", "44100", str(dst))
 
 
 def main():
@@ -126,9 +151,11 @@ def main():
             f.unlink()
         for n, (pack, stem) in enumerate(picks, 1):
             tmp = out / f"{n}.wav"
-            ff("-i", str(files[(pack, stem)]), "-af", DRIVE.get(event, "") + "anull", "-ac", "1", "-ar", "44100", str(tmp))
+            render(files, event, pack, stem, DRIVE.get(event, "") + "anull", tmp)
             level(tmp, out / f"{n}.ogg", peak)
             used.setdefault((pack, stem), set()).add(event)
+            if event in TAILS:
+                used.setdefault(TAILS[event][:2], set()).add(event)
         ours[event] = {"sounds": [dict({"name": f"zomboidcraft:{folder}/{n}", "attenuation_distance": dist}, **EXTRA.get(event, {}))
                                  for n in range(1, len(picks) + 1)]}
     for event, near in DISTANT.items():
@@ -139,7 +166,7 @@ def main():
             f.unlink()
         pack, stem = picks[0]
         tmp = out / "1.wav"
-        ff("-i", str(files[(pack, stem)]), "-af", DRIVE.get(near, "") + DISTANT_AF, "-ac", "1", "-ar", "44100", str(tmp))
+        render(files, near, pack, stem, DRIVE.get(near, "") + DISTANT_AF, tmp)
         level(tmp, out / "1.ogg", -4.0)
         used.setdefault((pack, stem), set()).add(event)
         old = ours.get(event, {}).get("sounds", [{}])

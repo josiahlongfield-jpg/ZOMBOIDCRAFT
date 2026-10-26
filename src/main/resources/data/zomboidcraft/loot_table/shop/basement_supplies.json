@@ -250,6 +250,21 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:military_radio",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:empty_sandbag",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
+            }
+          ]
         }
       ]
     },
