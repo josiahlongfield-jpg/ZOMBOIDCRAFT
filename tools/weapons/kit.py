@@ -358,16 +358,18 @@ def star_flash(at, star):
 
 def flash_model(tip, length=2.4, half=0.75, star=1.1):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
-    see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
+    see-through at the edges and lit by themselves. Pixels; the bore runs toward -z. A flash that would reach past
+    the front of the model limits (a long rifle's suppressor ends near them) is cut off there: its star stays."""
     x, y, z = (round(float(v), 4) for v in tip)
     lit = {'shade': False, 'light_emission': 15}
+    front = max(z - length, M.LIMIT[0])
 
     def tongue(angle):
-        return dict(lit, **{'from': [x, round(y - half, 4), round(z - length, 4)], 'to': [x, round(y + half, 4), z],
+        return dict(lit, **{'from': [x, round(y - half, 4), round(front, 4)], 'to': [x, round(y + half, 4), z],
                             'rotation': {'angle': angle, 'axis': 'z', 'origin': [x, y, z]},
                             'faces': {'east': {'uv': [8, 0, 16, 16], 'texture': '#0'},
                                       'west': {'uv': [16, 0, 8, 16], 'texture': '#0'}}})
-    zs = round(z - 0.2, 4)
+    zs = round(max(z - 0.2, M.LIMIT[0]), 4)
     face = dict(lit, **{'from': [round(x - star, 4), round(y - star, 4), zs], 'to': [round(x + star, 4), round(y + star, 4), zs],
                         'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'},
                                   'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}})
