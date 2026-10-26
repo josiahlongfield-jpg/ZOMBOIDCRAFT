@@ -109,7 +109,7 @@ public final class Guns {
         ZcConfig.Guns config = ZcConfig.get().guns;
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
-        if (!config.enabled || type == null || player.isSpectator()) {
+        if (!config.enabled || type == null || player.isSpectator() || !com.zomboidcraft.world.cars.CarProp.mayUse(player, gun)) {
             return;
         }
         ZcConfig.GunStats stats = type.stats();

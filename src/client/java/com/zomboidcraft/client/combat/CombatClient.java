@@ -65,6 +65,9 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
+            if (!com.zomboidcraft.world.cars.CarProp.mayUse(player, hand)) {
+                return true;    // driving: a hand on the wheel, nothing but a handgun
+            }
             if (GunType.isGun(hand)) {
                 if (clicks > 0 && ZcConfig.get().guns.enabled) {
                     pullTrigger(client, player, hand, false);
@@ -112,7 +115,9 @@ public final class CombatClient {
             ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
         }
         while (RAIL.consumeClick()) {
-            if (GunType.isGun(player.getMainHandItem())) {
+            if (com.zomboidcraft.client.cars.CarClient.driving(player)) {
+                com.zomboidcraft.client.cars.CarClient.headlights();     // at the wheel the key works the headlights
+            } else if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RAIL));
             }
         }
