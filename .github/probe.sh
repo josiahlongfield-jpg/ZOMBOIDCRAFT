@@ -7,6 +7,26 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== flight"
+sig net.minecraft.client.Camera '.'
+javap -cp "$CP" -c -p net.minecraft.client.Camera 2>&1 | grep -E 'Method|invoke|putfield|getfield' | head -150
+sig net.minecraft.client.player.LocalPlayer 'Riding|riding|input|Vehicle|vehicle|turn'
+sig net.minecraft.world.entity.player.Player 'Riding|riding|Shift|shift'
+sig net.minecraft.server.level.ServerPlayer 'Riding|riding|Input|input|Shift'
+javap -cp "$CP" -c -p net.minecraft.server.level.ServerPlayer 2>&1 | grep -B2 -A12 'wantsToStopRiding\|LastClientInput' | head -60
+javap -cp "$CP" -c -p net.minecraft.server.network.ServerGamePacketListenerImpl 2>&1 | grep -A80 'void handleMoveVehicle' | grep -E 'ldc|dcmpl|invoke' | head -60
+sig net.minecraft.network.syncher.EntityDataSerializers 'QUATERNION|VECTOR3|FLOAT|BYTE'
+sig net.minecraft.world.entity.Entity ' turn\(|getXRot|setXRot|rideTick|positionRider|canControl|isControlledByLocal|isLocalInstanceAuthoritative|moveTo|snapTo|absSnapTo|lerp|onAboveBubbleColumn|causeFallDamage|fallDistance|resetFallDistance'
+sig net.minecraft.client.renderer.GameRenderer '.'
+sig net.minecraft.client.renderer.state.level.CameraRenderState '.'
+sig net.minecraft.client.multiplayer.MultiPlayerGameMode 'Riding|riding|isServerControlledInventory'
+sig net.minecraft.client.KeyMapping 'isDown|consumeClick|setDown|matches'
+sig net.minecraft.client.Options 'keyShift|keySprint|keyJump|fov|Fov'
+sig net.minecraft.client.MouseHandler '.'
+sig net.minecraft.world.level.Level 'explode'
+sig net.minecraft.world.level.Explosion '.'
+exit 0
+
 echo "===== atlases"
 ALL_JARS=$(find ~/.gradle/caches/fabric-loom -name '*.jar' 2>/dev/null)
 for j in $ALL_JARS; do
