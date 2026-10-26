@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_board": "zomboidcraft:block/city/fit_board",
+    "fit_gauges": "zomboidcraft:block/city/fit_gauges",
+    "particle": "zomboidcraft:block/city/fit_gauges"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_gauges"
+        },
+        "south": {
+          "texture": "#fit_board",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_board",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_board",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15.5,
+        11
+      ],
+      "to": [
+        16,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_board"
+        },
+        "south": {
+          "texture": "#fit_board"
+        },
+        "east": {
+          "texture": "#fit_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_board",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_board"
+        }
+      }
+    }
+  ]
+}

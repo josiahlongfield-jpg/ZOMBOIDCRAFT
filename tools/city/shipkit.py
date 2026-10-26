@@ -299,6 +299,215 @@ def label(seed, text, col=(226, 222, 210), ink=(24, 24, 22)):
     return t
 
 
+# ---- the island and the machinery spaces
+
+def line(t, x0, y0, x1, y1, col, w=1):
+    """A thin straight line: a needle, a course pencilled on a chart, a mimic diagram's pipe."""
+    n = int(max(abs(x1 - x0), abs(y1 - y0)) * 2) + 1
+    for k in range(n + 1):
+        x, y = int(round(x0 + (x1 - x0) * k / n)), int(round(y0 + (y1 - y0) * k / n))
+        F.area(t, x, y, x + w, y + w, col)
+
+
+def gauge(t, cx, cy, r, rng):
+    """A round gauge: black bezel, white face and ticks; most needles dropped to zero, a red arc on some."""
+    F.disc(t, cx, cy, r, (34, 34, 32), dh=0.25, f0=160, smooth=0.7)
+    F.disc(t, cx, cy, r - 1.3, (234, 232, 222), smooth=0.85)
+    for k in range(9):
+        a = np.radians(135 + k * 33.75)
+        F.area(t, int(round(cx + (r - 2.3) * np.cos(a))), int(round(cy + (r - 2.3) * np.sin(a))),
+               int(round(cx + (r - 2.3) * np.cos(a))) + 1, int(round(cy + (r - 2.3) * np.sin(a))) + 1, (30, 30, 28))
+    if rng.random() < 0.35:
+        for k in range(5):
+            a = np.radians(345 + k * 12)
+            x, y = int(round(cx + (r - 2.3) * np.cos(a))), int(round(cy + (r - 2.3) * np.sin(a)))
+            F.area(t, x, y, x + 1, y + 1, (190, 40, 34))
+    a = np.radians(135 + (0 if rng.random() < 0.7 else rng.uniform(20, 250)))
+    line(t, cx, cy, cx + (r - 2.6) * np.cos(a), cy + (r - 2.6) * np.sin(a), (40, 40, 38))
+    F.disc(t, cx, cy, 1, (30, 30, 28))
+
+
+def board(seed):
+    """A gauge board's off-white enamel, the edges rolled darker."""
+    t = F.enamel(seed, (222, 222, 214))
+    t.smooth[:] = 0.6
+    for a in ((0, 0, N, 2), (0, 62, N, N)):
+        F.area(t, *a, mul=0.8, dh=0.1)
+    for a in ((0, 0, 2, N), (62, 0, N, N)):
+        F.area(t, *a, mul=0.85)
+    return t
+
+
+def gauges(seed):
+    """The upper half of a gauge board: big gauges, a row of small ones, square meters, blue name plates."""
+    t = board(seed)
+    rng = t.rng
+    for x in (12, 32, 52):
+        gauge(t, x, 12, 8.5, rng)
+        F.area(t, x - 6, 22, x + 6, 25, (40, 84, 160))
+    for x in (8, 20, 32, 44, 56):
+        gauge(t, x, 33, 5.2, rng)
+    for x in (5, 25, 45):
+        F.area(t, x, 42, x + 14, 54, (30, 30, 28), dh=0.2)
+        F.area(t, x + 1.5, 43.5, x + 12.5, 52.5, (232, 230, 220), smooth=0.85)
+        line(t, x + 7, 51, x + 3 + rng.integers(0, 8), 45, (40, 40, 38))
+        F.area(t, x + 2, 56, x + 12, 59, (40, 84, 160))
+    return F.wear(t, 0.2, 3, specks=0.004)
+
+
+def throttle(seed):
+    """The lower half of a gauge board: the mimic of the steam lines, toggles, lamps and their plates."""
+    t = board(seed)
+    rng = t.rng
+    for y, col in ((6, (180, 40, 34)), (13, (40, 84, 160))):
+        F.area(t, 4, y, 60, y + 1, col)
+    line(t, 20, 6, 20, 26, (180, 40, 34))
+    line(t, 44, 13, 44, 26, (40, 84, 160))
+    for x, y in ((12, 6), (30, 6), (52, 13), (20, 20), (44, 22)):
+        F.area(t, x - 2, y - 2, x + 2, y + 3, (30, 30, 28))
+    for x in range(5, 60, 8):
+        F.area(t, x, 32, x + 5, 38, (70, 72, 72), dh=0.2)
+        F.area(t, x + 2, 29 if rng.random() < 0.5 else 36, x + 3, 33 if rng.random() < 0.5 else 40, (200, 200, 196), dh=0.4)
+        F.disc(t, x + 2.5, 44, 1.6, (150, 40, 30) if rng.random() < 0.5 else (40, 110, 50), dh=0.3, smooth=0.9)
+    for x in (4, 24, 44):
+        F.area(t, x, 50, x + 16, 54, (40, 84, 160))
+    return F.wear(t, 0.3, 4, specks=0.004)
+
+
+def wheel_tex(seed, col):
+    """A valve's hand wheel cut out on clear: rim, five spokes, the hub."""
+    t = B.clear(seed)
+    B.wheel(t, 32, 32, 30, 5, col, spokes=5, hub=6)
+    t.f0[t.alpha > 0] = 60
+    return t
+
+
+def bronze(seed):
+    """Valve bodies and bonnets: cast bronze, green where it weeps."""
+    t = F.plain(seed, (150, 108, 58), 0.08, 0.55)
+    t.f0[:] = 200
+    t.speckle(0.03, (70, 120, 96), 0.6)
+    return F.wear(t, 0.3, 2)
+
+
+def plate(seed):
+    """Diamond deck plate: raised bars crossing in a grid, worn bright on top, oily in the low spots."""
+    t = F.plain(seed, (96, 98, 96), 0.04, 0.45)
+    t.f0[:] = 120
+    for y in range(0, N, 8):
+        for x in range(0, N, 8):
+            if (x // 8 + y // 8) % 2:
+                F.area(t, x + 1, y + 3, x + 7, y + 5, mul=1.45, dh=0.35)
+                F.area(t, x + 1, y + 5, x + 7, y + 6, mul=0.7)
+            else:
+                F.area(t, x + 3, y + 1, x + 5, y + 7, mul=1.45, dh=0.35)
+                F.area(t, x + 5, y + 1, x + 6, y + 7, mul=0.7)
+    n = P.fbm(t.rng, ((16, 1.0), (32, 0.5)))
+    t.c[n > 0.45] *= 0.72
+    return F.wear(t, 0.15, 3, specks=0.003)
+
+
+def burner(seed):
+    """A boiler front: three burner registers in their bronze rings, the fire-row doors cold and sooted."""
+    t = F.plain(seed, (70, 72, 72), 0.06, 0.35)
+    for x in (12, 32, 52):
+        F.disc(t, x, 26, 8, (150, 108, 58), dh=0.3, f0=200)
+        F.disc(t, x, 26, 6, (24, 22, 20), dh=-0.2)
+        F.disc(t, x, 26, 2, (110, 112, 110), dh=0.4)
+        F.area(t, x - 1, 36, x + 1, 46, (150, 108, 58), dh=0.3)
+    F.area(t, 0, 0, N, 6, mul=0.7)
+    F.area(t, 0, 52, N, N, (54, 48, 40))
+    B.rust_runs(t, 4, 0.4, 30)
+    return F.wear(t, 0.5, 4, col=(20, 18, 16))
+
+
+def console_face(seed):
+    """A bridge console's panel: rows of lit-push buttons, a label strip, toggles."""
+    t = F.enamel(seed, (88, 94, 96))
+    t.smooth[:] = 0.5
+    rng = t.rng
+    cols = ((190, 40, 34), (40, 150, 70), (214, 168, 40), (226, 226, 218), (54, 56, 56))
+    for y in range(8, 40, 8):
+        for x in range(6, 58, 7):
+            F.area(t, x, y, x + 5, y + 5, cols[rng.integers(len(cols))], dh=0.25, smooth=0.8)
+            F.area(t, x, y + 5, x + 5, y + 6, mul=0.5)
+    F.area(t, 4, 44, 60, 49, (30, 30, 30))
+    for x in range(6, 60, 6):
+        F.area(t, x, 45, x + 3, 48, (200, 200, 196))
+    for x in range(8, 60, 10):
+        F.area(t, x, 53, x + 2, 60, (200, 200, 196), dh=0.3)
+    return F.wear(t, 0.25, 4, specks=0.003)
+
+
+def console_top(seed):
+    """The console's desk: a keyboard, the trackball, a clipboard left on it."""
+    t = F.enamel(seed, (72, 78, 80))
+    for y in range(6, 30, 6):
+        for x in range(4, 44, 5):
+            F.area(t, x, y, x + 4, y + 4, (150, 154, 152), dh=0.2)
+    F.disc(t, 52, 16, 5, (30, 30, 30), dh=0.4, smooth=0.9)
+    F.area(t, 18, 38, 46, 62, (230, 226, 210))
+    F.area(t, 28, 36, 36, 40, (170, 172, 170), dh=0.3)
+    for y in range(44, 60, 4):
+        F.area(t, 21, y, 43, y + 1, (60, 60, 70))
+    return F.wear(t, 0.25, 4)
+
+
+def screen(seed, on):
+    """A console display: lit, a radar picture and rows of amber data; dead, dark glass and a reflection."""
+    t = F.plain(seed, (14, 20, 18), 0.04, 0.9)
+    t.f0[:] = 40
+    rng = t.rng
+    if on:
+        g = (90, 220, 120)
+        for r in (6, 12, 18):
+            F.disc(t, 22, 32, r, g, ring=1)
+        line(t, 22, 32, 36, 22, g)
+        for _ in range(8):
+            F.disc(t, rng.integers(8, 36), rng.integers(16, 48), 1, (200, 255, 200))
+        for y in range(10, 56, 5):
+            F.area(t, 44, y, 44 + rng.integers(6, 16), y + 2, (230, 176, 70))
+        bright = t.c.sum(-1) > 200
+        t.emit[:] = 0.2
+        t.emit[bright] = 1.0
+    else:
+        yy, xx = np.mgrid[0:N, 0:N]
+        band = np.abs((xx + yy) - 52) < 6
+        t.c[band] *= 2.2
+        t.speckle(0.03, (90, 90, 86), 0.5)
+    F.area(t, 0, 0, N, 3, (40, 42, 42))
+    F.area(t, 0, 61, N, N, (40, 42, 42))
+    t.emit[:3] = 0
+    t.emit[61:] = 0
+    return t
+
+
+def chart(seed):
+    """A sea chart on the chart table: land, the shoals in blue, soundings, the pencilled course and its fixes."""
+    t = F.plain(seed, (222, 224, 212), 0.03, 0.25)
+    n = P.fbm(t.rng, ((16, 1.0), (32, 0.5)))
+    t.c[n > 0.2] = (226, 212, 164)
+    t.c[(n > -0.05) & (n <= 0.2)] = (190, 212, 228)
+    t.c[np.abs(n + 0.05) < 0.015] = (90, 120, 150)
+    for k in range(0, N, 16):
+        F.area(t, k, 0, k + 1, N, mul=0.85)
+        F.area(t, 0, k, N, k + 1, mul=0.85)
+    F.disc(t, 48, 46, 9, (170, 40, 140), ring=1)
+    line(t, 6, 58, 40, 10, (50, 50, 54))
+    for x, y in ((14, 47), (23, 34), (32, 21)):
+        F.disc(t, x, y, 2, (50, 50, 54), ring=1)
+    return F.wear(t, 0.15, 2, specks=0.004)
+
+
+def drawers(seed):
+    """A chart table's flat drawers: wide and shallow, a brass pull on each."""
+    t = F.enamel(seed, (150, 154, 150))
+    for y in range(0, N, 10):
+        F.area(t, 0, y, N, y + 1, mul=0.6, dh=-0.1)
+        F.area(t, 26, y + 4, 38, y + 6, (180, 150, 80), dh=0.3, f0=200)
+    return F.wear(t, 0.2, 3)
+
+
 SIGNS = {
     "fire": ("FIRE STATION", (176, 34, 28)), "repair": ("REPAIR|LOCKER", (176, 34, 28)),
     "escape": ("ESCAPE|TRUNK", (226, 222, 210)), "hearing": ("HEARING|PROTECTION|REQUIRED", (218, 178, 38)),
@@ -331,6 +540,12 @@ def textures():
         "fit_stainless": lambda: stainless(8026), "fit_oven": lambda: oven_front(8027),
         "fit_dispenser": lambda: dispenser_front(8028), "fit_cabinet": lambda: cabinet_front(8029),
         "fit_litter": lambda: litter(8030), "fit_vinyl": lambda: vinyl(8031), "fit_sodium_on": lambda: lens(8021, (255, 170, 72), True),
+        "fit_gauges": lambda: gauges(8100), "fit_throttle": lambda: throttle(8101), "fit_board": lambda: board(8102),
+        "fit_wheel_yellow": lambda: wheel_tex(8103, YELLOW), "fit_wheel_steel": lambda: wheel_tex(8104, (78, 80, 80)),
+        "fit_wheel_red": lambda: wheel_tex(8105, RED), "fit_bronze": lambda: bronze(8106), "fit_plate": lambda: plate(8107),
+        "fit_burner": lambda: burner(8108), "fit_console": lambda: console_face(8109), "fit_console_top": lambda: console_top(8110),
+        "fit_screen_on": lambda: screen(8111, True), "fit_screen_off": lambda: screen(8112, False),
+        "fit_chart": lambda: chart(8113), "fit_drawers": lambda: drawers(8114), "fit_leather": lambda: vinyl(8115, (64, 44, 32)),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
         T[f"fit_st_{k}"] = (lambda a, b, c: lambda: B.stencil_sign(a, b, c, 12))(8040 + i, text, col)
@@ -549,6 +764,57 @@ def blocks():
                                                "down": "fit_beige"}]], "Medical Cabinet")
     add("fit_fan", [[7, 8, 13, 9, 10, 16, "fit_grey"], [6, 7, 9, 10, 11, 13, "fit_grey"],
                     [3, 4, 7.5, 13, 14, 9, "bunk_cage_wire"]], "Wall Fan")
+
+    FULL = {f: [0, 0, 16, 16] for f in ("north", "south", "east", "west", "up", "down")}  # a whole wheel on each face
+    # ---- the island: consoles with their displays (lit, dead or failing), the high chairs, the chart table
+    side = {"side": "bunk_grey", "down": "bunk_grey"}
+    lamp("fit_console", [[0, 0, 4, 16, 10, 16, dict(side, north="fit_console", up="fit_console_top")],
+                         [0, 10, 8, 16, 11.5, 16, dict(side, up="fit_console_top")],
+                         [1, 11.5, 10, 15, 20, 14, "bunk_grey"], [2, 12.5, 9.6, 14, 19, 10, G]],
+         "Bridge Console", "facing", 4, G, "fit_screen_on", "fit_screen_off", 4)
+    lamp("fit_overhead", [[0, 9, 2, 16, 16, 16, dict(side, north="fit_console", down="fit_console", up="bunk_grey")],
+                          [3, 5, 10, 13, 9, 13, "bunk_grey"], [4, 5.5, 9.6, 12, 8.5, 10, G]],
+         "Overhead Console", "facing", 3, G, "fit_screen_on", "fit_screen_off", 3)
+    add("fit_chair_high", [[4, 0, 4, 12, 0.5, 12, "fit_grey"], [7, 0.5, 7, 9, 11, 9, "fit_grey"],
+                           [4, 5, 3, 12, 5.6, 4, "home_chrome"], [7.5, 5, 4, 8.5, 5.6, 7, "home_chrome"],
+                           [3, 11, 3, 13, 13, 13, "fit_leather"], [3.5, 13, 12, 12.5, 22, 13.5, "fit_leather"],
+                           [4.5, 22, 12, 11.5, 23, 13.5, "fit_leather"], [2, 15, 5, 3.5, 16, 12, "fit_leather"],
+                           [12.5, 15, 5, 14, 16, 12, "fit_leather"], [2.5, 13, 10.5, 3, 15, 11.5, "fit_grey"],
+                           [13, 13, 10.5, 13.5, 15, 11.5, "fit_grey"]],
+        "Bridge Chair", decor=False)
+    add("fit_chart_table", [[0, 14, 0, 16, 15, 16, {"up": "fit_chart", "side": "fit_grey", "down": "fit_grey"}],
+                            [1, 0, 2, 15, 14, 16, {"north": "fit_drawers", "side": "fit_grey", "up": "fit_grey",
+                                                   "down": "fit_grey"}],
+                            [3, 15, 4, 11, 15.3, 5.5, "fit_stainless"], [13, 15, 13, 14, 21, 14, "fit_grey"],
+                            [10.5, 20, 10, 14.5, 22, 14, "fit_grey"]], "Chart Table", decor=False, loot="office")
+    add("fit_pelorus", [[6, 0, 6, 10, 11, 10, "fit_grey"], [4, 11, 4, 12, 13, 12, "fit_bronze"],
+                        [5, 13, 5, 11, 13.5, 11, "bunk_glass_off"], [7.5, 13.5, 4, 8.5, 16, 5, "fit_bronze"],
+                        [7.5, 13.5, 11, 8.5, 16, 12, "fit_bronze"]], "Gyro Repeater", rotate=None)
+
+    # ---- the machinery spaces: gauge boards with their throttle wheels, fuel valves in yellow, bronze
+    # valves on the low runs, lagged risers, boiler fronts, deck plate
+    add("fit_gauges", [[0, 0, 13, 16, 16, 16, {"north": "fit_gauges", "side": "fit_board", "up": "fit_board",
+                                                "down": "fit_board"}], [0, 15.5, 11, 16, 16, 13, "fit_board"]],
+        "Gauge Board")
+    add("fit_throttle", [[0, 0, 12, 16, 16, 16, {"north": "fit_throttle", "side": "fit_board", "up": "fit_board",
+                                                  "down": "fit_board"}], [0, 9, 9, 16, 10, 12, "fit_board"],
+                         [1, 1, 10.25, 9, 9, 10.25, "fit_wheel_steel", FULL], [4.5, 4.5, 10.5, 5.5, 5.5, 12, "bunk_grey"],
+                         [10, 3, 10.25, 15, 8, 10.25, "fit_wheel_red", FULL], [12, 5, 10.5, 13, 6, 12, "bunk_grey"]],
+        "Throttle Board")
+    add("fit_fuel_valves", [[2, 0, 13.5, 4.5, 16, 16, "fit_yellow"], [11, 0, 13.5, 13.5, 16, 16, "fit_yellow"],
+                            [2, 11, 14, 13.5, 13, 16, "fit_yellow"], [1.5, 4, 12, 5, 7, 16, "fit_bronze"],
+                            [2.5, 4.5, 10, 4, 6.5, 12, "fit_bronze"], [0, 2, 9.75, 6.5, 8.5, 9.75, "fit_wheel_yellow", FULL],
+                            [10.5, 7, 12, 14, 10, 16, "fit_bronze"], [11.5, 7.5, 10, 13, 9.5, 12, "fit_bronze"],
+                            [9, 5.5, 9.75, 15.5, 12, 9.75, "fit_wheel_yellow", FULL]], "Fuel Valves")
+    add("fit_valve_bronze", [[0, 2, 10, 16, 5, 13, "bunk_pipe_grey"], [5, 1, 9, 11, 6, 14, "fit_bronze"],
+                             [6.5, 6, 10, 9.5, 11, 13, "fit_bronze"], [7.5, 11, 11, 8.5, 13, 12, "bunk_grey"],
+                             [3.5, 13.25, 7, 12.5, 13.25, 16, "fit_wheel_red", FULL]], "Gate Valve")
+    add("fit_riser", [[3, 0, 9, 13, 16, 16, "fit_lagging"], [2, 14, 8, 14, 16, 16, "bunk_grey"],
+                      [2, 0, 8, 14, 2, 16, "bunk_grey"]], "Lagged Riser")
+    add("fit_burner", [[0, 0, 4, 16, 16, 16, {"north": "fit_burner", "side": "bunk_grey", "up": "bunk_grey",
+                                               "down": "bunk_grey"}], [2, 9, 2, 14, 10, 4, "fit_bronze"]],
+        "Boiler Front", decor=False)
+    out["fit_deckplate"] = {"tex": "fit_plate", "title": "Deck Plate", "sound": "METAL"}
 
     add("fit_line", [[0, 0, 0, 16, 0.25, 16, "fit_line"]], "Deck Line", rotate="axis")
 

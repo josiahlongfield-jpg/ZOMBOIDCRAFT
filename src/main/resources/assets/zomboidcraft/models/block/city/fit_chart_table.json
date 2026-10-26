@@ -1,0 +1,226 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_chart": "zomboidcraft:block/city/fit_chart",
+    "fit_drawers": "zomboidcraft:block/city/fit_drawers",
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "particle": "zomboidcraft:block/city/fit_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_grey",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_grey",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_chart"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_drawers"
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        15,
+        4
+      ],
+      "to": [
+        11,
+        15.3,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        15,
+        13
+      ],
+      "to": [
+        14,
+        21,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey",
+          "uv": [
+            2,
+            0,
+            3,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "uv": [
+            13,
+            0,
+            14,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#fit_grey",
+          "uv": [
+            2,
+            0,
+            3,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#fit_grey",
+          "uv": [
+            13,
+            0,
+            14,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        20,
+        10
+      ],
+      "to": [
+        14.5,
+        22,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey",
+          "uv": [
+            1.5,
+            0,
+            5.5,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "uv": [
+            10.5,
+            0,
+            14.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#fit_grey",
+          "uv": [
+            2,
+            0,
+            6,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#fit_grey",
+          "uv": [
+            10,
+            0,
+            14,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    }
+  ]
+}
