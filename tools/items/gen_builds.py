@@ -295,23 +295,23 @@ def main():
         m.shift(C - (lo + hi) / 2)
         m.tidy()
         img, uvs, T = paint(m, name, wear, mats)
-        (ASSETS / 'textures/item/build').mkdir(parents=True, exist_ok=True)
-        M.save_png(img, ASSETS / f'textures/item/build/{name}.png')
-        M.dump(M.model_json(m, uvs, f'{NS}:item/build/{name}', held_display(m, held), gui_light='side'),
-               ASSETS / f'models/item/build/{name}.json')
-        M.dump({'model': {'type': 'minecraft:model', 'model': f'{NS}:item/build/{name}'}}, ASSETS / f'items/{name}.json')
+        (ASSETS / 'textures/item/building').mkdir(parents=True, exist_ok=True)
+        M.save_png(img, ASSETS / f'textures/item/building/{name}.png')
+        M.dump(M.model_json(m, uvs, f'{NS}:item/building/{name}', held_display(m, held), gui_light='side'),
+               ASSETS / f'models/item/building/{name}.json')
+        M.dump({'model': {'type': 'minecraft:model', 'model': f'{NS}:item/building/{name}'}}, ASSETS / f'items/{name}.json')
         print(f'{name}: {len(m.parts)} boxes, {T}px')
-    (ASSETS / 'textures/block/build').mkdir(parents=True, exist_ok=True)
+    (ASSETS / 'textures/block/building').mkdir(parents=True, exist_ok=True)
     for name, build, wear, mats in BLOCKS:
         m = M.Model(name)
         build(m)
         m.tidy()
         img, uvs, T = paint(m, name, wear, mats)
-        M.save_png(img, ASSETS / f'textures/block/build/{name}.png')
-        out = M.model_json(m, uvs, f'{NS}:block/build/{name}', {}, gui_light='side')
+        M.save_png(img, ASSETS / f'textures/block/building/{name}.png')
+        out = M.model_json(m, uvs, f'{NS}:block/building/{name}', {}, gui_light='side')
         del out['display']
         out['ambientocclusion'] = False
-        M.dump(out, ASSETS / f'models/block/build/{name}.json')
+        M.dump(out, ASSETS / f'models/block/building/{name}.json')
         print(f'{name}: {len(m.parts)} boxes, {T}px')
     # the rain barrel: one texture painted with water in the funnel; the empty model leaves the water out
     old = M.PX
@@ -321,19 +321,19 @@ def main():
     full.tidy()
     img, uvs, T = paint(full, 'rain_barrel', 0.35, BARREL)
     M.PX = old
-    M.save_png(img, ASSETS / 'textures/block/build/rain_barrel.png')
+    M.save_png(img, ASSETS / 'textures/block/building/rain_barrel.png')
     for state, keep in (('rain_barrel_empty', len(full.parts) - 1), ('rain_barrel_full', len(full.parts))):
-        out = M.model_json(full, {k: v for k, v in uvs.items() if k[0] < keep}, f'{NS}:block/build/rain_barrel', {}, gui_light='side')
+        out = M.model_json(full, {k: v for k, v in uvs.items() if k[0] < keep}, f'{NS}:block/building/rain_barrel', {}, gui_light='side')
         del out['display']
         out['ambientocclusion'] = False
-        M.dump(out, ASSETS / f'models/block/build/{state}.json')
+        M.dump(out, ASSETS / f'models/block/building/{state}.json')
     print(f'rain_barrel: {len(full.parts)} boxes, {T}px')
     bs = ASSETS / 'blockstates'
-    M.dump(facing_states(f'{NS}:block/build/metal_sheet_cover'), bs / 'metal_sheet_cover.json')
-    M.dump(facing_states(f'{NS}:block/build/sandbag_wall'), bs / 'sandbag_wall.json')
-    M.dump({'variants': {'axis=x': {'model': f'{NS}:block/build/can_tripwire'},
-                         'axis=z': {'model': f'{NS}:block/build/can_tripwire', 'y': 90}}}, bs / 'can_tripwire.json')
-    M.dump({'variants': {f'level={n}': {'model': f'{NS}:block/build/rain_barrel_{"full" if n else "empty"}'} for n in range(9)}},
+    M.dump(facing_states(f'{NS}:block/building/metal_sheet_cover'), bs / 'metal_sheet_cover.json')
+    M.dump(facing_states(f'{NS}:block/building/sandbag_wall'), bs / 'sandbag_wall.json')
+    M.dump({'variants': {'axis=x': {'model': f'{NS}:block/building/can_tripwire'},
+                         'axis=z': {'model': f'{NS}:block/building/can_tripwire', 'y': 90}}}, bs / 'can_tripwire.json')
+    M.dump({'variants': {f'level={n}': {'model': f'{NS}:block/building/rain_barrel_{"full" if n else "empty"}'} for n in range(9)}},
            bs / 'rain_barrel.json')
     # what each gives back when a player takes it down
     drops = {'metal_sheet_cover': [('metal_sheet', 1)], 'can_tripwire': [('tin_can', 3), ('minecraft:string', 1)],

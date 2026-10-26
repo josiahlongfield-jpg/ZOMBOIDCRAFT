@@ -154,11 +154,11 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> {
             mc.player.setXRot(55f);
             mc.player.setYRot(0f);
-            com.zomboidcraft.client.build.Placer.start(com.zomboidcraft.building.Build.SANDBAGS);
+            com.zomboidcraft.client.building.Placer.start(com.zomboidcraft.building.Build.SANDBAGS);
         });
         ctx.waitTicks(10);
         String aim = ctx.computeOnClient(mc -> String.valueOf(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult b ? b.getBlockPos() + " " + b.getDirection() : mc.hitResult));
-        LOG.info("ZCUI placer: building {} looking at {}", ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.build.Placer.building())), aim);
+        LOG.info("ZCUI placer: building {} looking at {}", ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.building.Placer.building())), aim);
         ctx.takeScreenshot("build-ghost");
         ctx.getInput().pressMouse(0);
         ctx.waitTicks(10);
@@ -176,7 +176,7 @@ public class KitUiTest implements FabricClientGameTest {
         });
         LOG.info("ZCUI placer: {}", placed);
         ctx.takeScreenshot("build-placed");
-        ctx.runOnClient(mc -> com.zomboidcraft.client.build.Placer.stop());
+        ctx.runOnClient(mc -> com.zomboidcraft.client.building.Placer.stop());
     }
 
     /** Tries the digging rules on the server: a brick wall by hand, with a sledgehammer before and after Masonry 2, and stone under the floor. */
