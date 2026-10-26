@@ -57,7 +57,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", true), SKILLS("Skills", true),
+        CHARACTER("Character", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), HEALTH("Health", true), SKILLS("Skills", true),
         MAP("Map", true);
 
         final String label;
@@ -82,6 +82,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     final PackPage pack = new PackPage(this);
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
+    final BuildPage build = new BuildPage(this);
     final HealthPage health = new HealthPage(this);
     final SkillsPage skills = new SkillsPage(this);
     final MapPage map = new MapPage(this);
@@ -427,6 +428,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             case PACK -> pack.draw(g, x, y, mouseX, mouseY);
             case SUPPLIES -> supplies.draw(g, x, y, mouseX, mouseY);
             case BENCH -> bench.draw(g, x, y, mouseX, mouseY);
+            case BUILD -> build.draw(g, x, y, mouseX, mouseY);
             case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
             case SKILLS -> skills.draw(g, x, y, mouseX, mouseY);
             case MAP -> map.draw(g, x, y, mouseX, mouseY);

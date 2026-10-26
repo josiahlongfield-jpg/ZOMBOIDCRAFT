@@ -46,7 +46,7 @@ public class HammerItem extends MeleeWeaponItem {
         if (!(context.getLevel() instanceof ServerLevel level) || !(context.getPlayer() instanceof ServerPlayer player)) {
             BlockState state = context.getLevel().getBlockState(context.getClickedPos());
             boolean board = state.is(ModBlocks.BARRICADE)
-                    || context.getClickedFace().getAxis().isHorizontal() && (isWindow(state) || state.is(BlockTags.DOORS));
+                    || context.getClickedFace().getAxis().isHorizontal() && (isWindow(state) || isDoor(state));
             return board ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
         BlockPos clicked = context.getClickedPos();
@@ -62,7 +62,8 @@ public class HammerItem extends MeleeWeaponItem {
         int carpentry = Skills.level(player, Skill.CARPENTRY);
         int ticks = pry ? 30 : Math.max(30, 60 - 3 * carpentry);
         level.playSound(null, clicked, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.5f, 1.1f);
-        TimedActions.start(player, key, pry ? "Prying off a board" : "Boarding up", ticks, p -> {
+        boolean patch = !pry && level.getBlockState(clicked).is(ModBlocks.BARRICADE) && level.getBlockState(clicked).getValue(BarricadeBlock.DAMAGE) > 0;
+        TimedActions.start(player, key, pry ? "Prying off a board" : patch ? "Patching the boards" : "Boarding up", ticks, p -> {
             if (p.getItemInHand(hand).getItem() instanceof HammerItem) act(level, p, clicked, face, hand, prying, true);
         });
         return InteractionResult.CONSUME;
@@ -88,7 +89,7 @@ public class HammerItem extends MeleeWeaponItem {
         if (isWindow(state)) {
             return placeBarricade(level, player, clicked, face, hand, commit);
         }
-        if (state.is(BlockTags.DOORS)) {
+        if (isDoor(state)) {
             BlockPos inFront = clicked.relative(face);
             if (level.getBlockState(inFront).isAir()) {
                 return placeBarricade(level, player, inFront, face.getOpposite(), hand, commit);
@@ -99,7 +100,11 @@ public class HammerItem extends MeleeWeaponItem {
 
     private static boolean isWindow(BlockState state) {
         return state.is(Blocks.GLASS_PANE) || state.is(Blocks.GLASS) || state.is(BlockTags.IMPERMEABLE)
-                || state.getBlock().getDescriptionId().contains("glass_pane");
+                || com.zomboidcraft.building.Build.isWindow(state);
+    }
+
+    private static boolean isDoor(BlockState state) {
+        return state.is(BlockTags.DOORS) || com.zomboidcraft.building.Build.isDoor(state);
     }
 
     private boolean placeBarricade(ServerLevel level, ServerPlayer player, BlockPos pos, Direction facing,
@@ -120,6 +125,15 @@ public class HammerItem extends MeleeWeaponItem {
     private boolean addBoard(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
                              InteractionHand hand, boolean commit) {
         int planks = state.getValue(BarricadeBlock.PLANKS);
+        if (state.getValue(BarricadeBlock.DAMAGE) > 0) {
+            // a battered outer board: a fresh plank over it, no nails needed
+            if (!commit) return player.hasInfiniteMaterials() || com.zomboidcraft.building.Materials.count(player, s -> s.is(ItemTags.PLANKS)) > 0
+                    || say(player, "You need a plank to patch the boards.");
+            if (!player.hasInfiniteMaterials() && !com.zomboidcraft.building.Materials.take(player, s -> s.is(ItemTags.PLANKS), 1)) return false;
+            level.setBlockAndUpdate(pos, state.setValue(BarricadeBlock.DAMAGE, 0));
+            hammered(level, player, pos, hand);
+            return true;
+        }
         if (planks >= BarricadeBlock.MAX_PLANKS) {
             player.sendOverlayMessage(Component.literal("Can't fit any more boards.").withStyle(ChatFormatting.GRAY));
             return false;
@@ -149,6 +163,11 @@ public class HammerItem extends MeleeWeaponItem {
         level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.9f, 0.8f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);
         Skills.addXp(player, Skill.CARPENTRY, 2);
+    }
+
+    private static boolean say(ServerPlayer player, String text) {
+        player.sendOverlayMessage(Component.literal(text).withStyle(ChatFormatting.GRAY));
+        return false;
     }
 
     private void hammered(ServerLevel level, ServerPlayer player, BlockPos pos, InteractionHand hand) {

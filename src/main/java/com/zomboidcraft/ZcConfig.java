@@ -69,6 +69,8 @@ public final class ZcConfig {
     public WeaponRolls rolls = new WeaponRolls();
     /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
     public Digging digging = new Digging();
+    /** What the Build page makes: how tough boards and sheets are, how loud a tripwire is, how fast a barrel fills. */
+    public Building building = new Building();
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -329,6 +331,20 @@ public final class ZcConfig {
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
+    }
+
+    public static class Building {
+        /** Blows one board stands before it comes loose, and how many more each step of Carpentry adds (reinforced, heavy). */
+        public int boardHits = 6;
+        public int boardHitsPerStrength = 3;
+        /** Blows a metal sheet stands. */
+        public int metalSheetHits = 32;
+        /** How far zombies hear a tripwire rattle, in blocks. */
+        public double tripwireNoise = 14;
+        /** Chance each random tick in the rain that a rain barrel fills an eighth more (double in a storm). */
+        public double rainBarrelFill = 0.5;
+        /** Builds take this many times their usual time. */
+        public double timeMultiplier = 1.0;
     }
 
     public static class Digging {
