@@ -196,14 +196,14 @@ def laser(m):
     b = Inch(m)
     b.box((-0.47, 0.0, -0.85), (0.47, 0.30, 0.85), 'anod')
     jaws(b, -0.85, 0.85)
-    b.box((-0.64, 0.30, -1.35), (0.64, 1.20, 1.25), 'tan')
-    b.box((-0.60, 0.40, -1.42), (0.60, 1.10, -1.35), 'tan')
+    b.box((-0.64, 0.30, -1.35), (0.64, 1.20, 1.25), 'poly')
+    b.box((-0.60, 0.40, -1.42), (0.60, 1.10, -1.35), 'poly')
     b.box((-0.45, 0.55, -1.45), (-0.12, 0.88, -1.42), 'lens_green')
     b.box((0.12, 0.55, -1.45), (0.45, 0.88, -1.42), 'lens')
     b.box((-0.30, 0.50, 1.25), (0.30, 0.95, 1.36), 'rubber')
     for x0 in (-0.42, 0.16):
         b.box((x0, 1.20, -0.60), (x0 + 0.26, 1.27, -0.34), 'steel')
-    b.rod(0.64, 0.78, 0.28, 'tan', axis=0, at=(0.75, 0.30))                  # battery cap
+    b.rod(0.64, 0.78, 0.28, 'poly', axis=0, at=(0.75, 0.30))                  # battery cap
 
 
 # ---------------------------------------------------------------- looks
@@ -310,8 +310,8 @@ def look(wear=0.4):
              cap=cap, gripper=gripper, bezel=bezel, park=lambda f: P.parkerised(f, '#2c2d2a'), steel=lambda f: P.steel(f, 0.21, tint='#7d8186', spread=0.08),
              poly=lambda f: P.polymer(f, '#1d1d20'), rubber=lambda f: P.rubber(f, '#121212', 0.1),
              tan=lambda f: P.polymer(f, '#9b8a69', 0.08))
-    d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.2 * (0.3 + wear))]
+    d['_after'] = [lambda f, c: P.grime(f, c, 0.3 * (0.4 + f.wear)),
+                   lambda f, c: P.scratches(f, c, 0.2 * (0.3 + f.wear))]
     return d
 
 

@@ -369,6 +369,6 @@ def look(finish='field', wear=0.4):
                   'butt': (0.22, 10, None), 'line': (0.30, 10, None)}
     # checkering and engraving get twice the texels, so their cuts read as cuts
     d['_px'] = dict(gcheck=32, fcheck=32, **({'rcvr': 32, 'guard': 32, 'iron': 32} if action == 'coin' else {}))
-    d['_after'] = [lambda f, c: P.grime(f, c, 0.25 * (0.4 + wear)),
-                   lambda f, c: P.scratches(f, c, 0.2 * (0.3 + wear))]
+    d['_after'] = [lambda f, c: P.grime(f, c, 0.25 * (0.4 + f.wear)),
+                   lambda f, c: P.scratches(f, c, 0.2 * (0.3 + f.wear))]
     return d

@@ -909,6 +909,52 @@ final class CitySpecs extends CityBlocks.Specs {
         s("blade_cafe_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
         s("blade_cafe_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
         s("blade_cafe_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_0", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_0_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_1", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_1_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_2", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_guns_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_0", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_0_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_1", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_1_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_2", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_wash_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_0", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_0_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_1", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_1_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_2", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_4", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_4_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_5", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_liquor_5_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_0", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_0_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_1", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_1_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_2", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_4", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_pizza_4_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_0", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_0_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_1", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_1_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_2", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_2_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_3", FACING, DECOR, 8, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
+        s("blade_cash_3_off", FACING, DECOR, 0, SoundType.METAL, 0f, 6.5, 0, 0, 9.5, 16, 16);
         s("neon_open_0", FACING, SEE_THROUGH | DECOR, 6, SoundType.STONE, 0f, 0, 0, 0, 16, 16, 0.5);
         s("neon_open_0_off", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 0, 16, 16, 0.5);
         s("neon_open_1", FACING, SEE_THROUGH | DECOR, 6, SoundType.STONE, 0f, 0, 0, 0, 16, 16, 0.5);
@@ -959,6 +1005,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_chair", FACING, 0, 0, SoundType.WOOD, 1f, 2.5, 7, 2.5, 13.5, 8, 13.5, 2.5, 0, 2.5, 4, 7, 4, 12, 0, 2.5, 13.5, 7, 4, 2.5, 0, 12, 4, 7, 13.5, 12, 0, 12, 13.5, 7, 13.5, 2.5, 8, 12, 4, 17, 13.5, 12, 8, 12, 13.5, 17, 13.5, 4, 11, 12.5, 12, 12, 13, 4, 14, 12.5, 12, 16.5, 13);
         s("home_chair_tipped", FACING, 0, 0, SoundType.WOOD, 1f, 6.59, 0, 2.5, 7.53, 11, 13.5, 0, 0, 2.5, 6.59, 1.5, 4, 0, 9.5, 2.5, 6.59, 11, 4, 0, 0, 12, 6.59, 1.5, 13.5, 0, 9.5, 12, 6.59, 11, 13.5, 7.53, 0, 12, 16, 1.5, 13.5, 7.53, 9.5, 12, 16, 11, 13.5, 10.35, 1.5, 12.5, 11.29, 9.5, 13, 13.18, 1.5, 12.5, 15.53, 9.5, 13);
         s("home_sofa_floral_l", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1.5, 1, 16, 5, 16, 0, 5, 12, 16, 15, 16, 3, 5, 1, 16, 8, 12, 3, 8, 10, 16, 14, 12, 0, 5, 1, 3, 10, 16, 1, 0, 2, 2.5, 1.5, 3.5, 1, 0, 13.5, 2.5, 1.5, 15);
+    }
+
+    private void part4() {
         s("home_sofa_floral_m", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1.5, 1, 16, 5, 16, 0, 5, 12, 16, 15, 16, 0, 5, 1, 16, 8, 12, 0, 8, 10, 16, 14, 12);
         s("home_sofa_floral_r", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1.5, 1, 16, 5, 16, 0, 5, 12, 16, 15, 16, 0, 5, 1, 13, 8, 12, 0, 8, 10, 13, 14, 12, 13, 5, 1, 16, 10, 16, 13.5, 0, 2, 15, 1.5, 3.5, 13.5, 0, 13.5, 15, 1.5, 15);
         s("home_armchair_floral", FACING, 0, 0, SoundType.WOOL, 1f, 0, 1.5, 1, 16, 5, 16, 0, 5, 12, 16, 15, 16, 3, 5, 1, 13, 8, 12, 3, 8, 10, 13, 14, 12, 0, 5, 1, 3, 10, 16, 1, 0, 2, 2.5, 1.5, 3.5, 1, 0, 13.5, 2.5, 1.5, 15, 13, 5, 1, 16, 10, 16, 13.5, 0, 2, 15, 1.5, 3.5, 13.5, 0, 13.5, 15, 1.5, 15);
@@ -973,9 +1022,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_coffee_table", FACING, 0, 0, SoundType.WOOD, 1f, 1, 6, 2, 15, 7.5, 14, 2, 1.5, 3, 14, 2.5, 13, 1.5, 0, 2.5, 3, 6, 4, 13, 0, 2.5, 14.5, 6, 4, 1.5, 0, 12, 3, 6, 13.5, 13, 0, 12, 14.5, 6, 13.5);
         s("home_tv", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 6, 14, 2, 6, 4, 14, 17, 15, 3, 7.5, 3.5, 13, 15.5, 4, 5.5, 17, 9, 6, 23, 9.5, 10, 17, 9, 10.5, 22, 9.5);
         s("home_tv_smashed", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 6, 14, 2, 6, 4, 14, 17, 15, 3, 7.5, 3.5, 13, 15.5, 4, 5.5, 17, 9, 6, 23, 9.5, 10, 17, 9, 10.5, 22, 9.5);
-    }
-
-    private void part4() {
         s("home_bookcase", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("home_bookcase", "home_books");
         s("home_bookcase_top", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 3, 16, 16, 16);
@@ -1091,6 +1137,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_bottles_low", FACING, DECOR, 0, SoundType.GLASS, 0f, 3, -2.5, 4, 5, 4.5, 6, 3.5, 4.5, 4.5, 4.5, 7.5, 5.5, 7, -2.5, 7, 9, 3.5, 9, 7.5, 3.5, 7.5, 8.5, 6, 8.5, 9, -2.5, 2, 15, -0.5, 4, 15, -2, 2.5, 16, -1, 3.5);
         s("home_cans_low", FACING, DECOR, 0, SoundType.METAL, 0f, 2, -2.5, 4, 5.5, 1.7, 7.5, 2, 1.7, 4, 5.5, 2, 7.5, 6, -2.5, 4, 9.5, 1.7, 7.5, 6, 1.7, 4, 9.5, 2, 7.5, 10, -2.5, 4, 13.5, 1.7, 7.5, 10, 1.7, 4, 13.5, 2, 7.5, 4, 2, 5, 7.5, 6.2, 8.5, 4, 6.2, 5, 7.5, 6.5, 8.5, 8, 2, 5, 11.5, 6.2, 8.5, 8, 6.2, 5, 11.5, 6.5, 8.5, 5, -2.5, 10, 8.5, 1.7, 13.5, 5, 1.7, 10, 8.5, 2, 13.5);
         s("home_dishes_low", FACING, DECOR, 0, SoundType.GLASS, 0f, 2, -2.5, 2, 9, -0.5, 9, 9, -2.5, 8, 14, 0, 13, 3, -2.5, 10.5, 6, 0.5, 13.5, 10, -2.5, 3, 13, 0.5, 6);
+    }
+
+    private void part5() {
         s("home_jars", FACING, DECOR, 0, SoundType.METAL, 0f, 2, 0, 5, 5.5, 7, 8.5, 6.5, 0, 5, 10, 6, 8.5, 11, 0, 5, 14, 5, 8.5, 2, 7, 5, 5.5, 7.6, 8.5, 6.5, 6, 5, 10, 6.6, 8.5, 11, 5, 5, 14, 5.6, 8.5);
         s("home_crib", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 1.5, 15, 1.5, 14.5, 0, 0, 16, 15, 1.5, 0, 0, 14.5, 1.5, 15, 16, 14.5, 0, 14.5, 16, 15, 16, 1.5, 13, 0.3, 14.5, 14, 1.2, 1.5, 13, 14.8, 14.5, 14, 15.7, 0.3, 13, 1.5, 1.2, 14, 14.5, 14.8, 13, 1.5, 15.7, 14, 14.5, 1.5, 3, 1.5, 14.5, 5, 14.5, 3, 5, 3, 11, 5.6, 11, 10, 5, 9, 13, 8, 12, 3, 3, 0.4, 3.8, 13, 1.1, 5.5, 3, 0.4, 6.3, 13, 1.1, 8, 3, 0.4, 8.8, 13, 1.1, 10.5, 3, 0.4, 11.3, 13, 1.1, 13, 3, 0.4, 13.8, 13, 1.1, 3, 3, 14.9, 3.8, 13, 15.6, 5.5, 3, 14.9, 6.3, 13, 15.6, 8, 3, 14.9, 8.8, 13, 15.6, 10.5, 3, 14.9, 11.3, 13, 15.6, 13, 3, 14.9, 13.8, 13, 15.6, 0.4, 3, 4, 1.1, 13, 4.8, 0.4, 3, 7.5, 1.1, 13, 8.3, 0.4, 3, 11, 1.1, 13, 11.8, 14.9, 3, 4, 15.6, 13, 4.8, 14.9, 3, 7.5, 15.6, 13, 8.3, 14.9, 3, 11, 15.6, 13, 11.8);
         s("home_teddy", FACING, DECOR, 0, SoundType.WOOL, 0f, 5, 0, 6, 11, 6, 11, 6, 6, 6.5, 10, 10, 10.5, 5.5, 9, 8, 7, 11, 9, 9, 9, 8, 10.5, 11, 9, 3.5, 2, 7, 5, 5, 9, 11, 2, 7, 12.5, 5, 9, 5.5, 0, 4, 7.5, 2, 6, 8.5, 0, 4, 10.5, 2, 6, 7.2, 7.5, 6.2, 8.8, 8.5, 6.5);
@@ -1117,9 +1166,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("home_wall_damask_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_cream", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_cream_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
-    }
-
-    private void part5() {
         s("home_wall_sage", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_sage_worn", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("home_wall_blue", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -1227,6 +1273,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ext_downspout_top", FACING, 0, 0, SoundType.METAL, 2f, 6.5, 0, 13, 9.5, 6, 16, 6.5, 4, 9, 9.5, 10, 13.5, 6.5, 8, 5, 9.5, 14, 9.5, 6.5, 12, 1, 9.5, 16, 5.5);
         s("ext_downspout_shoe", FACING, 0, 0, SoundType.METAL, 2f, 6.5, 3, 13, 9.5, 16, 16, 6.5, 0.5, 8, 9.5, 3.5, 16, 5, 0, 2, 11, 0.6, 12);
         s("ext_win_white_six_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
+    }
+
+    private void part6() {
         s("ext_win_white_six_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
         s("ext_win_white_six_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25, 6.2, 3.5, 7.45, 6.8, 14.5, 8.55, 9.2, 3.5, 7.45, 9.8, 14.5, 8.55, 3.5, 8.7, 7.45, 12.5, 9.3, 8.55);
         s("ext_win_white_six_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05);
@@ -1238,9 +1287,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ext_win_white_six_boarded_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75, 6.2, 1.5, 6.95, 6.8, 12, 8.05, 9.2, 1.5, 6.95, 9.8, 12, 8.05, 3.5, 6.45, 6.95, 12.5, 7.05, 8.05, 0.5, 1.5, 0, 15.5, 5, 0, 1.5, 8, 0, 14.5, 11.5, 0);
         s("ext_win_white_one_glass_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
         s("ext_win_white_one_glass_hi", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
-    }
-
-    private void part6() {
         s("ext_win_white_one_lit_lo", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
         s("ext_win_white_one_lit_hi", FACING, SEE_THROUGH, 12, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 13.5, 0, 16, 16, 16, 0, 15.5, 0, 16, 16, 0, 2.5, 0, 6.5, 13.5, 1.5, 8.5, 2.5, 0, 6.5, 3.5, 13.5, 8.5, 12.5, 0, 6.5, 13.5, 13.5, 8.5, 2.5, 12, 6.5, 13.5, 13.5, 8.5, 3.5, 1.5, 7.25, 12.5, 12, 7.75);
         s("ext_win_white_one_broken_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 2.5, 16, 16, 13.5, 0, 0, 16, 16, 16, 0, 0, 0, 16, 1.5, 16, 2.5, 1.5, 7, 13.5, 3.5, 9, 2.5, 1.5, 7, 3.5, 16, 9, 12.5, 1.5, 7, 13.5, 16, 9, 2.5, 14.5, 7, 13.5, 16, 9.5, 3.5, 3.5, 7.75, 12.5, 14.5, 8.25);
@@ -1315,6 +1361,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ext_number_2", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
         s("ext_number_3", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
         s("ext_number_4", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
+    }
+
+    private void part7() {
         s("ext_number_5", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 4, 15, 15, 10, 16);
         s("ext_notice", FACING, DECOR, 0, SoundType.WOOL, 0f, 4, 2, 15.7, 12, 13, 16);
         s("ext_meter", FACING, 0, 0, SoundType.METAL, 2f, 5, 4, 13, 11, 12, 16, 6, 5, 11, 10, 11, 13, 7, 0, 14, 9, 4, 16);
@@ -1346,9 +1395,6 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("cellar_shelf_preserves", "basement_food");
         s("cellar_shelf_cans", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("cellar_shelf_cans", "basement_food");
-    }
-
-    private void part7() {
         s("cellar_shelf_medical", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
         loot("cellar_shelf_medical", "basement_medicine");
         s("cellar_shelf_ammo", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 4, 1, 16, 16, 15, 0, 4, 16, 16, 16, 1, 0, 5, 15, 15, 15, 1, 0, 15, 15, 16, 16, 1, 0, 4, 15, 1, 15, 1, 5, 4, 15, 6, 15, 1, 10, 4, 15, 11, 15, 0, 15, 4, 16, 16, 16);
@@ -1497,6 +1543,9 @@ final class CitySpecs extends CityBlocks.Specs {
         loot("bunk_gun_rack", "basement_guns");
         s("bunk_pegboard", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 2, 15.5, 16, 15, 16);
         loot("bunk_pegboard", "basement_supplies");
+    }
+
+    private void part8() {
         s("bunk_gen_engine", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 2, 15, 1, 2, 2, 16, 13, 14, 6, 13, 6, 8, 16, 8, 3, 13, 4, 12, 14, 12);
         s("bunk_gen_alternator", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 1, 16, 2, 15, 0, 2, 3, 12, 12, 13, 12, 2, 1, 15, 15, 7);
         s("bunk_filter", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 2, 15, 16, 15);
@@ -1538,9 +1587,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bunk_floor_dirty", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("bunk_floor_crack", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("bunk_floor_stain", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
-    }
-
-    private void part8() {
         s("bunk_tile_dirty", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("bunk_plate_b", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ship_wall_grey_b", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);

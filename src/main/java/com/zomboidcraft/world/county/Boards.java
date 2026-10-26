@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.Signs;
 import java.util.Map;
 import java.util.SplittableRandom;
 
@@ -63,11 +64,14 @@ final class Boards {
         }
     }
 
-    /** Letters of a neon blade, top to bottom from y, hung at (x, z) off a front; lit or dead. */
+    /** Letters of a neon blade, top to bottom from y, hung at (x, z) off a front; lit (a lamp box under it) or dead. */
     static void blade(Placer p, SplittableRandom rng, String id, int letters, int x, int top, int z, boolean lit) {
         for (int i = 0; i < letters; i++) {
             boolean on = lit && rng.nextDouble() > 0.15;
             p.set(x, top - i, z, "blade_" + id + "_" + i + (on ? "" : "_off") + "[facing=south]");
+        }
+        if (lit) {
+            Signs.glow(p, id, x, top - letters, z);
         }
     }
 

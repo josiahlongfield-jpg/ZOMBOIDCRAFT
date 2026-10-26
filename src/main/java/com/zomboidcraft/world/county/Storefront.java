@@ -3,6 +3,7 @@ package com.zomboidcraft.world.county;
 import com.zomboidcraft.world.city.Placer;
 import com.zomboidcraft.world.city.ShopLights;
 import com.zomboidcraft.world.city.Shops;
+import com.zomboidcraft.world.city.Signs;
 import java.util.SplittableRandom;
 
 /**
@@ -239,18 +240,18 @@ final class Storefront {
         String blade = switch (trade) {
             case CAFE -> "cafe";
             case DRUGSTORE -> "drugs";
-            case TAVERN, LIQUOR -> "bar";
+            case TAVERN -> "bar";
+            case LIQUOR -> "liquor";
             case HOTEL -> "hotel";
             case PAWN -> "pawn";
             case DINER -> "eat";
+            case GUNS -> "guns";
+            case LAUNDROMAT -> "wash";
+            case PIZZA -> "pizza";
+            case CASH -> "cash";
             default -> null;
         };
-        int letters = blade == null ? 0 : switch (blade) {
-            case "cafe" -> 4;
-            case "drugs", "hotel" -> 5;
-            case "pawn" -> 4;
-            default -> 3;
-        };
+        int letters = blade == null ? 0 : Signs.bladeLength(blade);
         int bladeTop = 4 + letters;
         if (blade != null && (floors >= 2 && bladeTop <= floors * STOREY + 1 || floors == 1 && letters <= 3)) {
             Boards.blade(p, rng, blade, letters, w - 1, bladeTop, -2, rng.nextDouble() < 0.4);

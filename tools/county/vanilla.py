@@ -57,6 +57,16 @@ def painted(rgb, vary=0.12, speckle=None, seed=1):
     return make
 
 
+def lamp(rgb):
+    """A froglight: a glowing box in its colour (mesh.py reads the glow from the specular map)."""
+    def make():
+        t = P.Tex(3, rgb)
+        t.vary(0.05)
+        t.emit[:] = 0.9
+        return t
+    return make
+
+
 def city(name, rgb=None, contrast=1.0):
     """A city texture already in TEX_DIR, optionally recoloured."""
     def make():
@@ -191,9 +201,9 @@ CUBE = {
     "chiseled_stone_bricks": ph("stone_brick_wall_001", (128, 128, 124)),
     "red_nether_bricks": ph("stone_brick_wall_001", (86, 22, 24)),
     "quartz_pillar": painted((222, 218, 208), 0.03),
-    "pearlescent_froglight": painted((236, 220, 226), 0.04),
-    "ochre_froglight": painted((240, 220, 150), 0.04),
-    "verdant_froglight": painted((200, 236, 200), 0.04),
+    "pearlescent_froglight": lamp((236, 196, 240)),
+    "ochre_froglight": lamp((244, 214, 140)),
+    "verdant_froglight": lamp((196, 240, 200)),
     "coal_block": painted((26, 26, 28), 0.1),
 }
 WOODS = list(PLANK)
@@ -367,6 +377,8 @@ def spec(base):
         return {"model": "boxes", "tex": t, "rotate": "facing", "boxes": [[1, 0, 14.5, 15, 16, 16, t]]}
     if base.startswith("waxed_"):
         return spec(base[6:])
+    if base.endswith("_froglight"):
+        return {"model": "cube", "tex": tex_of(base), "light": 15}
     return {"model": "cube", "tex": tex_of(base)}
 
 

@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_liquor_3_off": "zomboidcraft:block/city/blade_liquor_3_off",
+    "particle": "zomboidcraft:block/city/blade_liquor_3_off"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_liquor_3_off",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_liquor_3_off",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_liquor_3_off"
+        },
+        "west": {
+          "texture": "#blade_liquor_3_off"
+        },
+        "up": {
+          "texture": "#blade_liquor_3_off",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_liquor_3_off",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

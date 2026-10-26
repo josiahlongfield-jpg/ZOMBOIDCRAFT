@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "blade_pizza_2_off": "zomboidcraft:block/city/blade_pizza_2_off",
+    "particle": "zomboidcraft:block/city/blade_pizza_2_off"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#blade_pizza_2_off",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#blade_pizza_2_off",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#blade_pizza_2_off"
+        },
+        "west": {
+          "texture": "#blade_pizza_2_off"
+        },
+        "up": {
+          "texture": "#blade_pizza_2_off",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#blade_pizza_2_off",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

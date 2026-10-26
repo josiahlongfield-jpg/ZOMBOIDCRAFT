@@ -107,17 +107,24 @@ FASCIA = [
     ("aid", "box", "FEMA AID STATION", (30, 50, 92), (236, 232, 220), 5, "black"),
     ("hardhat", "painted", "HARD HAT AREA - KEEP OUT", (232, 188, 40), (26, 26, 24), 6, "black"),
 ]
-# hanging neon, a letter per block: id, letters, tube colour
+# hanging neon, a letter per block: id, letters, tube colour. Colours keep to the three a
+# froglight can throw under Photon (the city's Signs/Boards put the matching one over a lit
+# blade): pink-violet (pearlescent), green (verdant), amber (ochre)
 BLADES = [
-    ("hotel", "HOTEL", (255, 70, 60)),
-    ("bar", "BAR", (70, 150, 255)),
+    ("hotel", "HOTEL", (255, 80, 170)),
+    ("bar", "BAR", (190, 110, 255)),
     ("pawn", "PAWN", (255, 176, 60)),
     ("diner", "DINER", (255, 90, 190)),
-    ("motel", "MOTEL", (255, 70, 60)),
+    ("motel", "MOTEL", (255, 80, 170)),
     ("eat", "EAT", (255, 170, 60)),
     ("rialto", "RIALTO", (255, 196, 80)),
     ("drugs", "DRUGS", (90, 230, 130)),
     ("cafe", "CAFE", (255, 120, 60)),
+    ("guns", "GUNS", (255, 150, 50)),
+    ("wash", "WASH", (110, 235, 160)),
+    ("liquor", "LIQUOR", (200, 100, 255)),
+    ("pizza", "PIZZA", (255, 160, 60)),
+    ("cash", "CASH", (100, 235, 120)),
 ]
 OPEN_TUBE, OPEN_RIM = (255, 60, 50), (60, 130, 255)
 

@@ -7,21 +7,81 @@
    {
     "when": "nickel",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/revolver/nickel/charging_handle"
+     "type": "minecraft:range_dispatch",
+     "property": "minecraft:damage",
+     "entries": [
+      {
+       "threshold": 0.4,
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/nickel_worn/charging_handle"
+       }
+      },
+      {
+       "threshold": 0.65,
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/nickel_battered/charging_handle"
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/revolver/nickel/charging_handle"
+     }
     }
    },
    {
     "when": "engraved",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/revolver/engraved/charging_handle"
+     "type": "minecraft:range_dispatch",
+     "property": "minecraft:damage",
+     "entries": [
+      {
+       "threshold": 0.4,
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/engraved_worn/charging_handle"
+       }
+      },
+      {
+       "threshold": 0.65,
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/engraved_battered/charging_handle"
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/revolver/engraved/charging_handle"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/revolver/charging_handle"
+   "type": "minecraft:range_dispatch",
+   "property": "minecraft:damage",
+   "entries": [
+    {
+     "threshold": 0.4,
+     "model": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/revolver/worn/charging_handle"
+     }
+    },
+    {
+     "threshold": 0.65,
+     "model": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/revolver/battered/charging_handle"
+     }
+    }
+   ],
+   "fallback": {
+    "type": "minecraft:model",
+    "model": "zomboidcraft:item/weapon/revolver/charging_handle"
+   }
   }
  }
 }
