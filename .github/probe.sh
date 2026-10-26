@@ -7,24 +7,16 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== nvg2"
-javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE 'posteffect|postchain|effectActive|blur|resourcePool|public void render\(|renderLevel' | head -30
-javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E 'PostChain|postEffect|PostEffect|getPostChain|process|Method .*render|extract' | head -60
-sig net.minecraft.client.renderer.PostChain 'public'
-sig net.minecraft.client.renderer.ShaderManager 'getPostChain|public'
-sig net.minecraft.client.renderer.LevelTargetBundle 'static'
-for j in $MC_JARS; do unzip -Z1 "$j" 2>/dev/null | grep -E 'post_effect/|shaders/post/' ; done | sort -u | head -60
-for f in assets/minecraft/post_effect/invert.json assets/minecraft/post_effect/creeper.json assets/minecraft/post_effect/spider.json assets/minecraft/shaders/post/invert.fsh assets/minecraft/shaders/post/blit.vsh assets/minecraft/shaders/core/screenquad.vsh assets/minecraft/shaders/post/sobel.vsh assets/minecraft/shaders/post/color_convolve.fsh; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
-sig net.minecraft.client.model.HumanoidModel 'head|hat'
-sig 'net.minecraft.client.renderer.entity.layers.CustomHeadLayer$Transforms' 'public|static'
-sig net.minecraft.core.Registry 'wrapAsHolder'
-sig net.minecraft.world.item.Item ' use\(|inventoryTick|overrideOtherStackedOnMe|overrideStackedOnOther|isBarVisible|getBarWidth|getBarColor|appendHoverText'
-sig net.minecraft.world.effect.MobEffects 'NIGHT_VISION|DARKNESS|BLINDNESS'
-sig net.minecraft.client.Minecraft 'gameRenderer|getMainRenderTarget'
-sig net.minecraft.client.renderer.LevelRenderer 'public .*doEntityOutline|getTranslucentTarget'
-classes 'com/mojang/renderpearl/api/pipeline/[A-Za-z]*\.class'
-sig com.mojang.renderpearl.api.pipeline.RenderPipeline 'static|builder'
-sig 'com.mojang.renderpearl.api.pipeline.RenderPipeline$Builder' 'public'
+echo "===== nvg3"
+javap -cp "$CP" -c -p net.minecraft.client.renderer.GameRenderer > /tmp/gr.txt 2>&1
+for m in 'public void render()' 'private void preparePostEffects(' 'private void applyPostEffects()' 'public java.util.List<net.minecraft.resources.Identifier> getRequestedPostEffects()' 'public void renderLevel()' 'public void checkEntityPostEffect(' 'public void toggleSpectatorPostEffect()'; do
+  echo "+++ $m"
+  awk -v m="$m" 'index($0, m) {on=1} on && /^$/ {on=0} on' /tmp/gr.txt | grep -E 'invoke|field|Field|ifeq|ifne|ifnull|ifnonnull|goto|return|^  [a-z]' | head -90
+done
+for f in assets/minecraft/shaders/post/blit.fsh assets/minecraft/shaders/post/bits.fsh; do for j in $MC_JARS; do if unzip -p "$j" "$f" > /tmp/sh.txt 2>/dev/null && [ -s /tmp/sh.txt ]; then echo "+++ $f"; cat /tmp/sh.txt; break; fi; done; done
+javap -cp "$CP" -p net.minecraft.client.renderer.PostChainConfig 2>&1 | head -20
+javap -cp "$CP" -p 'net.minecraft.client.renderer.PostChainConfig$Pass' 2>&1 | head -20
+javap -cp "$CP" -p 'net.minecraft.client.renderer.UniformValue' 2>&1 | head -30
 exit 0
 
 echo "===== injuries"
