@@ -7,14 +7,6 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== lightning"
-javap -cp "$CP" -p net.minecraft.world.entity.LightningBolt 2>&1 | head -60
-javap -cp "$CP" -p -c net.minecraft.world.entity.LightningBolt 2>&1 | grep -B3 -A60 "public void tick()" | grep -E "invoke|getstatic|ldc" | head -60
-sig net.minecraft.client.multiplayer.ClientLevel 'addEntity|removeEntity|Flash|flash|playLocalSound|playSound'
-sig net.minecraft.world.entity.Entity 'setId|snapTo|getId\('
-sig net.minecraft.world.level.Level 'Flash|flash'
-exit 0
-
 echo "===== injuries"
 javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -iE "translucent|eyes|glow|beacon|lightning|debug|energy|leash|lines" | head -40
 sig net.minecraft.client.renderer.SubmitNodeCollector '.'
