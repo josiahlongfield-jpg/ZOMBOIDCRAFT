@@ -158,11 +158,16 @@ public class KitUiTest implements FabricClientGameTest {
         });
         ctx.waitTicks(10);
         String aim = ctx.computeOnClient(mc -> String.valueOf(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult b ? b.getBlockPos() + " " + b.getDirection() : mc.hitResult));
-        LOG.info("ZCUI placer: building {} looking at {}", ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.building.Placer.building())), aim);
+        String building = ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.building.Placer.building()));
+        LOG.info("ZCUI placer: building {} looking at {}", building, aim);
         ctx.takeScreenshot("build-ghost");
         ctx.getInput().pressMouse(0);
         ctx.waitTicks(10);
-        LOG.info("ZCUI placer: timed action {}", ctx.computeOnClient(mc -> String.valueOf(mc.player.getAttached(com.zomboidcraft.survival.TimedActions.TYPE))));
+        String action = ctx.computeOnClient(mc -> {
+            Object v = mc.player.getAttached(com.zomboidcraft.survival.TimedActions.TYPE);
+            return String.valueOf(v);
+        });
+        LOG.info("ZCUI placer: timed action {}", action);
         ctx.waitTicks(140);
         String placed = sp.getServer().computeOnServer(server -> {
             ServerPlayer p = server.getPlayerList().getPlayers().get(0);
