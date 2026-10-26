@@ -22,7 +22,7 @@ import pack, wreck
 LENS, TAIL = np.array([173, 168, 165]), np.array([161, 48, 49])
 # the instrument faces and the radio's display
 DIALS = np.array([[82, 51, 160], [42, 101, 163], [100, 132, 171], [163, 42, 131]])
-HEAD, BRAKE, REVERSE, DASH = 1, 2, 3, 4
+HEAD, BRAKE, REVERSE, DASH, PANEL = 1, 2, 3, 4, 5  # PANEL: the cabin kit's backlit dials and displays
 
 
 def source_colour(car):
@@ -111,6 +111,7 @@ def build(path):
         o = b['origin']
         C = np.where((o >= 0)[:, None], src[np.maximum(o, 0)], 0)
         k = kinds(b['tris'], C, wreck.seats(car)[0])
+        k[b['lit']] = PANEL
         if i == 0:
             lo, hi = b['tris'].reshape(-1, 3).min(0), b['tris'].reshape(-1, 3).max(0)
             centre = np.array([(lo[0] + hi[0]) / 2, 0, (lo[2] + hi[2]) / 2])
@@ -121,7 +122,7 @@ def build(path):
         lamps = []
         for j, m in enumerate(meshes):
             opaque = np.where(m & ~b['glass'])[0]
-            for kind in (HEAD, BRAKE, REVERSE, DASH):
+            for kind in (HEAD, BRAKE, REVERSE, DASH, PANEL):
                 for start, count in runs(np.where(k[opaque] == kind)[0]):
                     lamps.append([j, kind, start, count])
         out[vname] = lamps

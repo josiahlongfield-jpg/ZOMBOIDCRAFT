@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "park_st_stairs": "zomboidcraft:block/city/park_st_stairs",
+    "particle": "zomboidcraft:block/city/park_st_stairs"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#park_st_stairs"
+        },
+        "south": {
+          "texture": "#park_st_stairs",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#park_st_stairs",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#park_st_stairs",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#park_st_stairs",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#park_st_stairs",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

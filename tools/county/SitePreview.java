@@ -42,6 +42,9 @@ public final class SitePreview {
         long t = System.currentTimeMillis();
         Builders.build(p, new County(seed), v);
         System.err.println("built " + p + " in " + (System.currentTimeMillis() - t) + " ms, top y " + v.maxY());
+        for (Voxels.Mark mk : v.marks) {
+            System.err.println("mark " + mk.what() + " at " + mk.x() + " " + mk.y() + " " + mk.z());
+        }
 
         int sx = w + 2 * m, sz = d + 2 * m, h = Math.min(LEVEL + v.maxY() + 4, 400);
         short[] vox = new short[sx * sz * h];

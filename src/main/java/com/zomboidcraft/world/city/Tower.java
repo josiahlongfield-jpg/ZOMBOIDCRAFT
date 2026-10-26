@@ -55,6 +55,15 @@ public final class Tower {
         }
     }
 
+    /** The core's north-west corner, which everything below the lobby lines up with. */
+    public int coreX() {
+        return cx0;
+    }
+
+    public int coreZ() {
+        return cz0;
+    }
+
     public static int height(int floors) {
         return LOBBY + floors * FLOOR + 3;
     }

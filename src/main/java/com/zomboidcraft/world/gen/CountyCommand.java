@@ -3,8 +3,10 @@ package com.zomboidcraft.world.gen;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.zomboidcraft.world.county.County;
+import com.zomboidcraft.world.county.CountyGen;
 import com.zomboidcraft.world.county.Place;
 import com.zomboidcraft.world.county.PlaceType;
+import com.zomboidcraft.world.county.Voxels;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -18,7 +20,8 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * /zc places [type]: the nearest towns, farms, ports and bases with their variants and where
- * they are. /zc goto type: teleports to the nearest one (for trying the world out).
+ * they are. /zc goto type: teleports to the nearest one (for trying the world out). /zc bunker:
+ * teleports to the hatch of the nearest bunker under a city tower, or with "door" to its blast door.
  */
 public final class CountyCommand {
     public static void register() {
@@ -33,7 +36,10 @@ public final class CountyCommand {
                         .then(Commands.literal("goto")
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(types(), b))
-                                        .executes(ctx -> go(ctx, StringArgumentType.getString(ctx, "type")))))));
+                                        .executes(ctx -> go(ctx, StringArgumentType.getString(ctx, "type")))))
+                        .then(Commands.literal("bunker")
+                                .executes(ctx -> bunker(ctx, false))
+                                .then(Commands.literal("door").executes(ctx -> bunker(ctx, true))))));
     }
 
     private static List<String> types() {
@@ -95,6 +101,41 @@ public final class CountyCommand {
         src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + gate[0] + " " + (p.level + 3) + " " + (gate[1] + 6));
         src.sendSuccess(() -> Component.literal("At the south gate of " + p), false);
         return 1;
+    }
+
+    /** The nearest downtowns are built (or taken from the cache) and searched for the bunker marks. */
+    private static int bunker(CommandContext<CommandSourceStack> ctx, boolean door) {
+        CommandSourceStack src = ctx.getSource();
+        County county = county(src);
+        if (county == null || src.getEntity() == null) {
+            return 0;
+        }
+        List<Place> towns = nearest(county, src.getPosition(), PlaceType.DOWNTOWN.name(), 8000);
+        CountyGen gen = CountyChunkGenerator.gen(src.getLevel().getSeed());
+        for (Place p : towns.subList(0, Math.min(3, towns.size()))) {
+            Voxels v = gen.voxels(p);
+            Voxels.Mark hatch = null, at = null;
+            for (Voxels.Mark m : v.marks) {
+                if (m.what().equals("bunker door")) {
+                    at = door ? m : at;
+                } else if (m.what().startsWith("bunker")) {
+                    hatch = m;
+                    at = door ? at : m;
+                }
+            }
+            if (hatch == null || at == null) {
+                continue;
+            }
+            Voxels.Mark go = at;
+            String state = hatch.what().substring("bunker ".length());
+            src.getServer().getCommands().performPrefixedCommand(src,
+                    "tp @s " + (p.x0 + go.x()) + ".5 " + (p.level + go.y()) + " " + (p.z0 + go.z()) + ".5");
+            src.sendSuccess(() -> Component.literal("The bunker under " + p + " (" + state + "): "
+                    + (door ? "at its blast door" : "on the hatch in the electrical room")), false);
+            return 1;
+        }
+        src.sendFailure(Component.literal("No tower bunker in the nearest cities."));
+        return 0;
     }
 
     private static String compass(double dx, double dz) {

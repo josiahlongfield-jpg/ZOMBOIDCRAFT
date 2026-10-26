@@ -12,8 +12,13 @@ dump); besides cube/boxes/cross/slab they may use the vanilla shapes stairs, fen
 pane, trapdoor, log and flat.
 
 Output: OUT_DIR/mesh.json plus one <texture>.bin per texture holding, per vertex, int16 x,y,z in
-1/unit block (mesh.json's unit: 64 when the scene fits, so thin decals keep their depth, else 16), int8 normal (padded to 4), int16 u,v in texels and uint8 AO (padded to 4), then
-uint32 triangle indices.
+1/unit block (mesh.json's unit: 64 when the scene fits, so thin decals keep their depth, else 16), int8 normal (padded to 4), int16 u,v in 16ths of the texture (times the texture's uvScale) and uint8 AO plus
+block light (warm, red, glow-stick green; 255 is level 15), then uint32 triangle indices.
+
+Block light is Minecraft's: each lamp's level, one less for every block it spreads, stopped by
+solid blocks, smoothed over each face's corners. Underground (the preview's &dark=1) that is all
+the light there is, so a room lit through a wall in the preview would be lit through a wall
+in the game too.
 """
 import argparse
 import json
@@ -82,6 +87,30 @@ def rotate_dir(d, rot):
     for _ in range(rot):
         n = np.array([-n[2], n[1], n[0]])
     return int(np.where((NORMALS == n).all(1))[0][0])
+
+
+def atlas_uv(uv, rect):
+    """A face's corner UVs moved onto its own rectangle of an atlas (Minecraft's [u0, v0, u1, v1],
+    v down), as an inked box gives (tools/city/ink.py)."""
+    u, v = uv[:, 0], 16 - uv[:, 1]
+    su = (rect[2] - rect[0]) / max(u.max() - u.min(), 1e-6)
+    sv = (rect[3] - rect[1]) / max(v.max() - v.min(), 1e-6)
+    return np.stack([rect[0] + (u - u.min()) * su, 16 - (rect[1] + (v - v.min()) * sv)], 1)
+
+
+def lit_spec(spec):
+    """A flickering lamp caught lit: its dark textures swapped for the lit ones."""
+    swap = spec["flicker"]["on"]
+    s = json.loads(json.dumps(spec))
+
+    def sw(t):
+        return swap.get(t, t) if isinstance(t, str) else {k: swap.get(v, v) for k, v in t.items()}
+
+    for b in s.get("boxes", []):
+        b[6] = sw(b[6])
+    if "tex" in s:
+        s["tex"] = sw(s["tex"])
+    return s
 
 
 def parse(name):
@@ -181,6 +210,7 @@ class Palette:
         self.glass = np.zeros(n, bool)         # translucent cube: glass hides glass
         self.pane = np.zeros(n, bool)          # a window or shutter filling the wall (solid from afar)
         self.height = np.full(n, 16.0)
+        self.turn = np.zeros(n, np.int64)      # quarter turns of a cube's top and bottom (Minecraft's y rotation)
         self.face_tex = np.full((n, 6), -1, int)
         self.models = {}                       # id -> list of (corners, uvs, dir, tex, on_edge)
         self.tex_dir = tex_dir
@@ -189,6 +219,8 @@ class Palette:
                 continue
             base, props = parse(name)
             spec = blocks[base]
+            if "flicker" in spec and props.get("lit") == "true":
+                spec = lit_spec(spec)
             if "door" in spec:
                 self.models[i] = self.door(spec, props)
                 continue
@@ -217,6 +249,7 @@ class Palette:
                 continue
             if model == "cube":
                 self.cube[i] = True
+                self.turn[i] = rot
                 self.height[i] = spec.get("height", 16)
                 for d in range(6):
                     self.face_tex[i, rotate_dir(d, rot)] = self.tex(self.tex_for(spec["tex"], DIRS[d]))
@@ -231,7 +264,7 @@ class Palette:
                         # one texture for the box, or a dict of faces (a roof step's shingled tread)
                         t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
-                        uv = fit_uv(uv)
+                        uv = fit_uv(uv) if len(b) < 8 else atlas_uv(uv, b[7][DIRS[d]])
                         # a face on the block's boundary hides behind a solid neighbour
                         edge = box[[3, 0, 4, 1, 5, 2][d]] == (16 if d % 2 == 0 else 0)
                         faces.append((rotate_pts(c, rot), uv, rotate_dir(d, rot), t, edge))
@@ -285,11 +318,14 @@ class Out:
     def __init__(self, ntex):
         self.parts = [[] for _ in range(ntex)]
 
-    def add(self, tex, corners, normals, uvs, ao):
-        # corners (n,4,3) in 16ths, normals (n,3), uvs (n,4,2) texels, ao (n,4) 0..3
+    def add(self, tex, corners, normals, uvs, ao, light=None):
+        # corners (n,4,3) in 16ths, normals (n,3), uvs (n,4,2) texels, ao (n,4) 0..3,
+        # light (n,4,3) block light levels 0..15 per corner and colour
+        if light is None:
+            light = np.zeros((len(tex), 4, 3))
         for t in np.unique(tex):
             m = tex == t
-            self.parts[t].append((corners[m], normals[m], uvs[m], ao[m]))
+            self.parts[t].append((corners[m], normals[m], uvs[m], ao[m], light[m]))
 
     def write(self, out_dir, names, alpha):
         index = []
@@ -302,21 +338,24 @@ class Out:
             n = np.repeat(np.concatenate([p[1] for p in parts]), 4, axis=0)
             uv = np.concatenate([p[2] for p in parts]).reshape(-1, 2)
             ao = np.concatenate([p[3] for p in parts]).reshape(-1)
+            bl = np.concatenate([p[4] for p in parts]).reshape(-1, 3)
             nq = len(c) // 4
             pos = np.round(c * (self.unit / 16)).astype("<i2")
             nrm = np.zeros((len(n), 4), "i1")
             nrm[:, :3] = n * 127
-            uvs = np.round(uv).astype("<i2")
+            # UVs in 16ths of the texture; an atlas's face rectangles need finer steps
+            scale = 64 if np.abs(uv - np.round(uv)).max(initial=0) > 1e-3 and np.abs(uv).max(initial=0) * 64 < 32000 else 1
+            uvs = np.round(uv * scale).astype("<i2")
             aos = np.zeros((len(ao), 4), "u1")
-            aos[:, :3] = (np.array([0.45, 0.65, 0.82, 1.0])[ao.astype(int)] * 255)[:, None]
-            aos[:, 3] = 255
+            aos[:, 0] = np.array([0.45, 0.65, 0.82, 1.0])[ao.astype(int)] * 255
+            aos[:, 1:] = np.round(np.clip(bl, 0, 15) * 17)
             base = np.arange(nq, dtype="<u4") * 4
             idx = np.stack([base, base + 1, base + 2, base, base + 2, base + 3], 1).reshape(-1)
             path = out_dir / f"{names[t]}.bin"
             with open(path, "wb") as f:
                 for a in (pos, nrm, uvs, aos, idx):
                     f.write(a.tobytes())
-            index.append({"tex": names[t], "verts": len(pos), "indices": len(idx), "alpha": alpha[names[t]]})
+            index.append({"tex": names[t], "verts": len(pos), "indices": len(idx), "alpha": alpha[names[t]], "uvScale": scale})
         return index
 
 
@@ -343,6 +382,70 @@ def ao_for(opaque_pad, ys, zs, xs, d):
         corner_o = occ(v0[0] + v1[0], v0[1] + v1[1], v0[2] + v1[2])
         corners_out.append(np.where((side1 + side2) == 2, 0, 3 - side1 - side2 - corner_o))
     return np.stack(corners_out, 1)
+
+
+def emitted(name, blocks):
+    """The light level a block state gives off: a flickering lamp only while its lit=true."""
+    if name == "air":
+        return 0
+    spec = blocks.get(parse(name)[0], {})
+    return spec["flicker"]["light"] if "flicker" in spec and "lit=true" in name else spec.get("light", 0)
+
+
+def block_light(vox, palette, blocks, opaque):
+    """Minecraft block light, one field per lamp colour (warm, red, green glow stick): each lamp's
+    level, one less for every block it spreads, stopped by solid blocks."""
+    H, sz, sx = vox.shape
+    fields = np.zeros((3, H, sz, sx), np.int16)
+    for i, name in enumerate(palette):
+        level = emitted(name, blocks)
+        if level:
+            k = 1 if "red" in name else 2 if "glowstick" in name else 0
+            np.maximum(fields[k], np.where(vox == i, level, 0), out=fields[k])
+    clear = ~opaque
+    for k in range(3):
+        L = fields[k]
+        for _ in range(int(L.max()) - 1 if L.any() else 0):
+            nb = np.zeros_like(L)
+            for ax in range(3):
+                lo = [slice(None)] * 3; hi = [slice(None)] * 3
+                lo[ax] = slice(0, -1); hi[ax] = slice(1, None)
+                np.maximum(nb[tuple(hi)], L[tuple(lo)], out=nb[tuple(hi)])
+                np.maximum(nb[tuple(lo)], L[tuple(hi)], out=nb[tuple(lo)])
+            L = np.maximum(L, np.where(clear, nb - 1, 0))
+        fields[k] = L
+    return fields
+
+
+def light_for(light_pad, opaque_pad, ys, zs, xs, d):
+    """Smooth block light at each corner of faces of cells (ys, zs, xs) facing d: the mean over the
+    open cells of the four in front of the face that touch the corner, as Minecraft does it."""
+    n = NORMALS[d]
+    axes = [a for a in range(3) if n[a] == 0]
+    out = np.zeros((len(ys), 4, 3))
+    c, _ = face_quad((0, 0, 0, 16, 16, 16), d)
+    for ci, corner in enumerate(c):
+        s = [0, 0, 0]
+        for a in axes:
+            s[a] = 1 if corner[a] > 8 else -1
+        a0, a1 = axes
+        v0 = [0, 0, 0]; v0[a0] = s[a0]
+        v1 = [0, 0, 0]; v1[a1] = s[a1]
+        total = np.zeros((len(ys), 3)); count = np.zeros(len(ys))
+        sides = []
+        for k, v in enumerate(((0, 0, 0), v0, v1, (v0[0] + v1[0], v0[1] + v1[1], v0[2] + v1[2]))):
+            y, z, x = ys + 1 + n[1] + v[1], zs + 1 + n[2] + v[2], xs + 1 + n[0] + v[0]
+            open_ = ~opaque_pad[y, z, x]
+            if k == 3:
+                open_ &= ~(sides[0] & sides[1])  # light doesn't squeeze between two solid blocks
+            elif k:
+                sides.append(~open_)
+            if k == 0:
+                open_ = np.ones(len(ys), bool)
+            total += light_pad[:, y, z, x].T * open_[:, None]
+            count += open_
+        out[:, ci] = total / count[:, None]
+    return out
 
 
 def export_maps(tex_dir, out_dir, name):
@@ -374,6 +477,7 @@ def main():
     ap.add_argument("--near", action="append", default=[])
     ap.add_argument("--radius", type=float, default=110)
     ap.add_argument("--extra", action="append", default=[])
+    ap.add_argument("--flicker-on", action="store_true", help="catch every flickering lamp lit")
     a = ap.parse_args()
     meta = json.load(open(a.dump + ".json"))
     sx, H, sz = meta["size"]
@@ -383,6 +487,9 @@ def main():
     for extra in a.extra:
         blocks.update(json.load(open(extra))["blocks"])
     meta["palette"] = connect(meta["palette"], vox, blocks)
+    if a.flicker_on:
+        meta["palette"] = [n if "flicker" not in blocks.get(parse(n)[0], {}) or "lit=" in n
+                           else n[:-1] + ",lit=true]" if n.endswith("]") else n + "[lit=true]" for n in meta["palette"]]
     pal = Palette(meta["palette"], blocks, a.tex_dir)
 
     # near: within the radius of any camera; far: LOD (no interiors, windows solid)
@@ -403,6 +510,8 @@ def main():
     del covered, sky
 
     opaque_pad = np.pad(opaque, 1)
+    light = block_light(vox, meta["palette"], blocks, opaque)
+    light_pad = np.pad(light, ((0, 0), (1, 1), (1, 1), (1, 1)))
     out = Out(0)
     out.parts = []
     nfaces = 0
@@ -442,20 +551,26 @@ def main():
         ids = vox[ys, zs, xs]
         tex = pal.face_tex[ids, d]
         ao = ao_for(opaque_pad, ys, zs, xs, d)
-        # merge runs along x (or z for faces looking along x): same texture, same AO, same height
+        bl = light_for(light_pad, opaque_pad, ys, zs, xs, d)
+        # merge runs along x (or z for faces looking along x): same texture, AO, light and height
         run_axis = xs if d not in (0, 1) else zs
+        turn = pal.turn[ids] if d in (2, 3) else np.zeros(len(ids), np.int64)
         key = (tex.astype(np.int64) << 20) | (ao[:, 0] << 18) | (ao[:, 1] << 16) | (ao[:, 2] << 14) | (ao[:, 3] << 12) | pal.height[ids].astype(np.int64)
+        key |= turn << 60
+        lkey = (np.round(bl * 4).astype(np.int64).reshape(len(ys), 12) * (61 ** np.arange(12) % (1 << 40))).sum(1)
         other = (ys, zs) if d not in (0, 1) else (ys, xs)
         order = np.lexsort((run_axis, other[1], other[0]))
         ys, zs, xs, tex, ao, key, run_axis = ys[order], zs[order], xs[order], tex[order], ao[order], key[order], run_axis[order]
+        bl, lkey, turn = bl[order], lkey[order], turn[order]
         o0, o1 = other[0][order], other[1][order]
         start = np.ones(len(ys), bool)
         if len(ys):
-            start[1:] = ~((o0[1:] == o0[:-1]) & (o1[1:] == o1[:-1]) & (run_axis[1:] == run_axis[:-1] + 1) & (key[1:] == key[:-1]))
+            start[1:] = ~((o0[1:] == o0[:-1]) & (o1[1:] == o1[:-1]) & (run_axis[1:] == run_axis[:-1] + 1) & (key[1:] == key[:-1]) & (lkey[1:] == lkey[:-1]))
+            start |= turn != 0  # a turned top is drawn on its own, its texture turned with it
         rid = np.cumsum(start) - 1
         length = np.bincount(rid)
         first = np.nonzero(start)[0]
-        ys, zs, xs, tex, ao = ys[first], zs[first], xs[first], tex[first], ao[first]
+        ys, zs, xs, tex, ao, bl, turn = ys[first], zs[first], xs[first], tex[first], ao[first], bl[first], turn[first]
         ids = vox[ys, zs, xs]
         h = pal.height[ids]
         nq = len(ys)
@@ -469,9 +584,17 @@ def main():
             c, uv = face_quad(box, d)
             corners[m] = origin[m][:, None, :] + c[None]
             uvs[m] = uv[None]
+        for t in (1, 2, 3):
+            m = turn == t
+            if m.any():
+                # Minecraft turns the model clockwise seen from above; the texture turns with it
+                u, v = uvs[m][..., 0] - 8, uvs[m][..., 1] - 8
+                for _ in range(t if d == 2 else 4 - t):
+                    u, v = -v, u
+                uvs[m] = np.stack([u + 8, v + 8], -1)
         normals = np.repeat(NORMALS[d][None], nq, 0)
         grow()
-        out.add(tex, corners, normals, uvs, ao)
+        out.add(tex, corners, normals, uvs, ao, bl)
         print(f"cubes {DIRS[d]}: {nq} quads ({len(order)} faces)")
     del cube
 
@@ -495,8 +618,10 @@ def main():
             if not k:
                 continue
             corners = base[sel][:, None, :] + c[None]
+            own = light[:, py[sel], pz[sel], px[sel]].T
             grow()
-            out.add(np.full(k, t), corners, np.repeat(NORMALS[d][None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3))
+            out.add(np.full(k, t), corners, np.repeat(NORMALS[d][None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3),
+                    np.repeat(own[:, None, :], 4, 1))
             nfaces += k
     print("total quads", nfaces)
 
@@ -509,13 +634,14 @@ def main():
     lights = []
     for i, name in enumerate(meta["palette"]):
         base = parse(name)[0]
-        if name == "air" or base.startswith("streetlight") or blocks[base].get("light", 0) < 12:
+        if name == "air" or base.startswith("streetlight") or emitted(name, blocks) < 4:
             continue
         ys, zs, xs = np.nonzero(vox == i)
         keep = near_col[zs, xs]
         for x, y, z in zip(xs[keep], ys[keep], zs[keep]):
-            lights.append([int(x + ox), int(y), int(z + oz), base])
-    json.dump({"unit": out.unit, "textures": index, "lamps": meta.get("lamps", []), "lights": lights}, open(a.out_dir / "mesh.json", "w"))
+            lights.append([int(x + ox), int(y), int(z + oz), base, int(emitted(name, blocks))])
+    json.dump({"unit": out.unit, "textures": index, "lamps": meta.get("lamps", []), "lights": lights, "baked": True},
+              open(a.out_dir / "mesh.json", "w"))
 
 
 if __name__ == "__main__":

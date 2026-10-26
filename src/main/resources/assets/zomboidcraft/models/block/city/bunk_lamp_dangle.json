@@ -1,0 +1,237 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cables": "zomboidcraft:block/city/bunk_cables",
+    "bunk_cage_wire": "zomboidcraft:block/city/bunk_cage_wire",
+    "bunk_glass_off": "zomboidcraft:block/city/bunk_glass_off",
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "particle": "zomboidcraft:block/city/bunk_cables"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        -2,
+        7.6
+      ],
+      "to": [
+        8.4,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_cables",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#bunk_cables",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#bunk_cables",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#bunk_cables",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        -3,
+        5.5
+      ],
+      "to": [
+        10.5,
+        -2,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey",
+          "uv": [
+            5.5,
+            15,
+            10.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_grey",
+          "uv": [
+            5.5,
+            15,
+            10.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#bunk_grey",
+          "uv": [
+            5.5,
+            15,
+            10.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#bunk_grey",
+          "uv": [
+            5.5,
+            15,
+            10.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        -7,
+        6
+      ],
+      "to": [
+        10,
+        -3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            6,
+            12,
+            10,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            6,
+            12,
+            10,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            6,
+            12,
+            10,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#bunk_glass_off",
+          "uv": [
+            6,
+            12,
+            10,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#bunk_glass_off"
+        },
+        "down": {
+          "texture": "#bunk_glass_off"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        -7.5,
+        5.5
+      ],
+      "to": [
+        10.5,
+        -3,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cage_wire",
+          "uv": [
+            5.5,
+            11.5,
+            10.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_cage_wire",
+          "uv": [
+            5.5,
+            11.5,
+            10.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#bunk_cage_wire",
+          "uv": [
+            5.5,
+            11.5,
+            10.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#bunk_cage_wire",
+          "uv": [
+            5.5,
+            11.5,
+            10.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#bunk_cage_wire"
+        },
+        "down": {
+          "texture": "#bunk_cage_wire"
+        }
+      }
+    }
+  ]
+}

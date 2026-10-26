@@ -23,7 +23,11 @@ public final class Voxels implements BlockSink {
     /** Which sections were written at all, so explicit air (cleared rooms) carves the terrain. */
     private final Map<Long, long[]> written = new HashMap<>();
     public final List<Car> cars = new ArrayList<>();
+    /** Spots the builders marked: {@link BlockSink#mark}. */
+    public final List<Mark> marks = new ArrayList<>();
     private int maxY = 0;
+
+    public record Mark(String what, int x, int y, int z) {}
 
     static long key(int sx, int sy, int sz) {
         return ((long) sx & 0x1FFFFF) << 42 | ((long) sz & 0x1FFFFF) << 21 | ((long) sy & 0x1FFFFF);
@@ -71,6 +75,11 @@ public final class Voxels implements BlockSink {
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
         cars.add(new Car(x, y, z, yaw, 0, 99, seed, models));
+    }
+
+    @Override
+    public void mark(String what, int x, int y, int z) {
+        marks.add(new Mark(what, x, y, z));
     }
 
     public int maxY() {

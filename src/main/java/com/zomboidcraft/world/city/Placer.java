@@ -91,6 +91,12 @@ public final class Placer {
         sink.vehicle(ox + wx + 0.5, oy + y, oz + wz + 0.5, yaw + 90 * rot, models, seed);
     }
 
+    /** Marks a local block for the sink (see {@link BlockSink#mark}). */
+    public void mark(String what, int x, int y, int z) {
+        int[] at = world(x, z);
+        sink.mark(what, at[0], oy + y, at[1]);
+    }
+
     /** The place (sink) coordinates of a local block, as {x, z}. */
     public int[] world(int x, int z) {
         return switch (rot) {

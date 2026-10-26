@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_fitting": "zomboidcraft:block/city/bunk_fitting",
+    "bunk_tube_off": "zomboidcraft:block/city/bunk_tube_off",
+    "glass_shards": {
+      "sprite": "zomboidcraft:block/city/glass_shards",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/bunk_fitting"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        0.5
+      ],
+      "to": [
+        12,
+        2,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_fitting"
+        },
+        "south": {
+          "texture": "#bunk_fitting"
+        },
+        "east": {
+          "texture": "#bunk_fitting"
+        },
+        "west": {
+          "texture": "#bunk_fitting"
+        },
+        "up": {
+          "texture": "#bunk_fitting"
+        },
+        "down": {
+          "texture": "#bunk_fitting",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        2
+      ],
+      "to": [
+        11,
+        2.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tube_off"
+        },
+        "south": {
+          "texture": "#bunk_tube_off"
+        },
+        "east": {
+          "texture": "#bunk_tube_off"
+        },
+        "west": {
+          "texture": "#bunk_tube_off"
+        },
+        "up": {
+          "texture": "#bunk_tube_off"
+        },
+        "down": {
+          "texture": "#bunk_tube_off"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#glass_shards",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#glass_shards",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#glass_shards",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#glass_shards",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#glass_shards"
+        },
+        "down": {
+          "texture": "#glass_shards",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_concrete": "zomboidcraft:block/city/bunk_concrete",
+    "park_band_green": "zomboidcraft:block/city/park_band_green",
+    "particle": "zomboidcraft:block/city/park_band_green"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#park_band_green",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#park_band_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#park_band_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#park_band_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bunk_concrete",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

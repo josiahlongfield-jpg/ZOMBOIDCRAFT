@@ -34,4 +34,9 @@ final class FrameSink implements BlockSink {
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
         frame.vehicle(x, y, z, yaw, models, seed);
     }
+
+    @Override
+    public void mark(String what, int x, int y, int z) {
+        frame.mark(what, x, y, z);
+    }
 }

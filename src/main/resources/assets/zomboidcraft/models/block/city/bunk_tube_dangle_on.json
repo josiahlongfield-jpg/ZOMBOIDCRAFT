@@ -1,0 +1,339 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_cables": "zomboidcraft:block/city/bunk_cables",
+    "bunk_fitting": "zomboidcraft:block/city/bunk_fitting",
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "bunk_tube_on": "zomboidcraft:block/city/bunk_tube_on",
+    "particle": "zomboidcraft:block/city/bunk_fitting"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        13.5,
+        0
+      ],
+      "to": [
+        12,
+        15.5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_fitting",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_fitting"
+        },
+        "east": {
+          "texture": "#bunk_fitting"
+        },
+        "west": {
+          "texture": "#bunk_fitting"
+        },
+        "up": {
+          "texture": "#bunk_fitting"
+        },
+        "down": {
+          "texture": "#bunk_fitting"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        13.0,
+        0
+      ],
+      "to": [
+        11.5,
+        13.5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tube_on",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_tube_on"
+        },
+        "east": {
+          "texture": "#bunk_tube_on"
+        },
+        "west": {
+          "texture": "#bunk_tube_on"
+        },
+        "up": {
+          "texture": "#bunk_tube_on"
+        },
+        "down": {
+          "texture": "#bunk_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        10,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_fitting"
+        },
+        "south": {
+          "texture": "#bunk_fitting"
+        },
+        "east": {
+          "texture": "#bunk_fitting"
+        },
+        "west": {
+          "texture": "#bunk_fitting"
+        },
+        "up": {
+          "texture": "#bunk_fitting"
+        },
+        "down": {
+          "texture": "#bunk_fitting"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        9.5,
+        4
+      ],
+      "to": [
+        11.5,
+        10,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tube_on"
+        },
+        "south": {
+          "texture": "#bunk_tube_on"
+        },
+        "east": {
+          "texture": "#bunk_tube_on"
+        },
+        "west": {
+          "texture": "#bunk_tube_on"
+        },
+        "up": {
+          "texture": "#bunk_tube_on"
+        },
+        "down": {
+          "texture": "#bunk_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6.5,
+        8
+      ],
+      "to": [
+        12,
+        8.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_fitting"
+        },
+        "south": {
+          "texture": "#bunk_fitting"
+        },
+        "east": {
+          "texture": "#bunk_fitting"
+        },
+        "west": {
+          "texture": "#bunk_fitting"
+        },
+        "up": {
+          "texture": "#bunk_fitting"
+        },
+        "down": {
+          "texture": "#bunk_fitting"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        6.0,
+        8
+      ],
+      "to": [
+        11.5,
+        6.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tube_on"
+        },
+        "south": {
+          "texture": "#bunk_tube_on"
+        },
+        "east": {
+          "texture": "#bunk_tube_on"
+        },
+        "west": {
+          "texture": "#bunk_tube_on"
+        },
+        "up": {
+          "texture": "#bunk_tube_on"
+        },
+        "down": {
+          "texture": "#bunk_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        12
+      ],
+      "to": [
+        12,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_fitting"
+        },
+        "south": {
+          "texture": "#bunk_fitting",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_fitting"
+        },
+        "west": {
+          "texture": "#bunk_fitting"
+        },
+        "up": {
+          "texture": "#bunk_fitting"
+        },
+        "down": {
+          "texture": "#bunk_fitting"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        2.5,
+        12
+      ],
+      "to": [
+        11.5,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tube_on"
+        },
+        "south": {
+          "texture": "#bunk_tube_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_tube_on"
+        },
+        "west": {
+          "texture": "#bunk_tube_on"
+        },
+        "up": {
+          "texture": "#bunk_tube_on"
+        },
+        "down": {
+          "texture": "#bunk_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        15,
+        0
+      ],
+      "to": [
+        12,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bunk_grey"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        5,
+        14.6
+      ],
+      "to": [
+        8.4,
+        16,
+        15.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_cables"
+        },
+        "south": {
+          "texture": "#bunk_cables"
+        },
+        "east": {
+          "texture": "#bunk_cables"
+        },
+        "west": {
+          "texture": "#bunk_cables"
+        },
+        "up": {
+          "texture": "#bunk_cables",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_cables"
+        }
+      }
+    }
+  ]
+}

@@ -32,6 +32,11 @@ public final class CountyGen {
         return cache;
     }
 
+    /** A place's blocks as its builder left them (built now if no chunk has asked for them yet). */
+    public Voxels voxels(Place p) {
+        return cache.get(p, county);
+    }
+
     /** What the column-pass found, kept for the vegetation pass. */
     private static final class Column {
         int top;
