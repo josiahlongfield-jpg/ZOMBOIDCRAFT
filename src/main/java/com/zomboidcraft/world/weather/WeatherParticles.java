@@ -18,6 +18,8 @@ public final class WeatherParticles {
     public static final SimpleParticleType PLUME = register("plume");
     /** The orange glow at the foot of a fire. */
     public static final SimpleParticleType EMBER = register("ember");
+    /** A raindrop lit up as it falls past a lamp. */
+    public static final SimpleParticleType GLINT = register("glint");
 
     private static SimpleParticleType register(String name) {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE, ZomboidCraft.id(name), FabricParticleTypes.simple(true));

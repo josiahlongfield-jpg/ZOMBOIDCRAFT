@@ -169,7 +169,10 @@ public final class Downed {
         zombie.setPose(Pose.STANDING);
     }
 
-    /** On load: some zombies are found crawling, a few with no legs; crawlers lie down again (the pose isn't saved). */
+    /**
+     * On load: some zombies are found crawling, a few with no legs; crawlers lie down again (the pose isn't saved),
+     * and one with both legs shot off crawls even with crawlers turned off.
+     */
     public static void onLoad(Zombie zombie) {
         ZcConfig.Combat config = ZcConfig.get().combat;
         if (!zombie.hasAttached(LEGLESS)) {
@@ -181,7 +184,7 @@ public final class Downed {
         if (!zombie.hasAttached(CRAWLER)) {
             zombie.setAttached(CRAWLER, config.crawlers && zombie.getRandom().nextFloat() < config.crawlerSpawnChance);
         }
-        if (isCrawler(zombie) && config.crawlers) {
+        if (isCrawler(zombie) && (config.crawlers || Dismember.legsGone(Dismember.cuts(zombie)) == 2)) {
             applyCrawl(zombie);
         } else if (zombie.hasPose(Pose.SWIMMING)) {
             zombie.setPose(Pose.STANDING);

@@ -69,9 +69,12 @@ public final class CarLights {
         LevelRenderEvents.COLLECT_SUBMITS.register(CarLights::draw);
     }
 
-    /** Whether a car's lamps are on: its engine is running (a burnt-out shell has none left). */
+    /** Whether a car's lamps are on: its engine is running, or its alarm is flashing them (a burnt-out shell has none left). */
     static boolean on(CarProp car) {
-        return car.engineOn() && !"burnt".equals(car.variant());
+        if ("burnt".equals(car.variant())) {
+            return false;
+        }
+        return car.engineOn() || car.alarming() && car.tickCount / 8 % 2 == 0;
     }
 
     /** A car's headlights, left and right, from its lamps (none if the model has no headlights found). */

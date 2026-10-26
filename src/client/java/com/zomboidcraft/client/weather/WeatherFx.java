@@ -60,6 +60,12 @@ public final class WeatherFx {
                 (type, level, x, y, z, dx, dy, dz, random) -> new PlumeParticle(level, x, y, z, dx, dz, (float) dy, sprites.get(random)));
         ParticleProviderRegistry.getInstance().register(WeatherParticles.EMBER, sprites ->
                 (type, level, x, y, z, dx, dy, dz, random) -> new EmberParticle(level, x, y, z, (float) dy, sprites.get(random)));
+        // a glint's colour travels in the velocity slots
+        ParticleProviderRegistry.getInstance().register(WeatherParticles.GLINT, sprites -> (type, level, x, y, z, dx, dy, dz, random) -> {
+            GlintParticle glint = new GlintParticle(level, x, y, z, (float) dx, (float) dy, (float) dz, sprites.get(random));
+            glint.lean(Glints.leanX, Glints.leanZ);
+            return glint;
+        });
         ClientTickEvents.END_CLIENT_TICK.register(WeatherFx::tick);
         // every bolt that lands near you, the server's real strikes too, lights up the street
         ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
@@ -97,6 +103,8 @@ public final class WeatherFx {
             StormLights.forget();
             FlashLights.forget();
             Water.forget();
+            Glints.forget();
+            GhostPower.forget();
             Skyline.forget();
             THUNDER.clear();
             lastLevel = level;
@@ -124,6 +132,12 @@ public final class WeatherFx {
         }
         if (c.skylineFires) {
             Skyline.tick(level, player, w);
+        }
+        if (c.wetGlints) {
+            Glints.tick(level, player, w, windX, windZ);
+        }
+        if (c.ghostPower) {
+            GhostPower.tick(level, player.blockPosition(), (float) c.ghostPowerEvery);
         }
         clock++;
         // a flash lasts a few ticks, dying away fast

@@ -55,6 +55,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.map.MapNet.register();
         com.zomboidcraft.combat.Guns.register();
         com.zomboidcraft.combat.Downed.register();
+        com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Stamina.register();
         com.zomboidcraft.combat.Grabs.register();
         com.zomboidcraft.combat.CombatEvents.register();

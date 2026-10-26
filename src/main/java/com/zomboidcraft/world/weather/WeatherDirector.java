@@ -150,8 +150,10 @@ public final class WeatherDirector {
         if (ticks % 5 == 0 && current.wind() > 0.85f && config.windDamage) {
             gusts(level);
         }
+        Alarms.tick(level);
         if (ticks % SECOND == 0) {
             sync(server, level);
+            Alarms.second(level, current);
             for (ServerPlayer player : level.players()) {
                 if (!player.isSpectator()) {
                     effects(level, player, config);

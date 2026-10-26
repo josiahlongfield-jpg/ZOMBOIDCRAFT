@@ -31,6 +31,8 @@ public final class ZcConfig {
     public World world = new World();
     public Weather weather = new Weather();
     public Combat combat = new Combat();
+    /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
+    public Limbs limbs = new Limbs();
     public Guns guns = new Guns();
     /** The M9-style pistol's own numbers (shared gun settings are in guns). */
     public GunStats pistol = GunStats.pistol();
@@ -389,6 +391,14 @@ public final class ZcConfig {
         public boolean skylineFires = true;
         /** A close strike makes the lamps and neon round you flicker, sometimes browning out for a few seconds. Client side. */
         public boolean stormSurges = true;
+        /** Rain sparkling in the colour of every lamp it falls past. Client side. */
+        public boolean wetGlints = true;
+        /** Now and then the dead grid twitches: streetlights, signs and windows round you stutter on for a while, then die. Client side. */
+        public boolean ghostPower = true;
+        /** Scales the wait between ghost power surges (2 to 6 minutes); 0.5 is twice as often. Client side. */
+        public double ghostPowerEvery = 1.0;
+        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. */
+        public boolean alarms = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
@@ -483,6 +493,43 @@ public final class ZcConfig {
         public double leglessSpawnChance = 0.03;
         /** Chance a knockdown from a heavy weapon or gunshot leaves a zombie crawling. */
         public double crippleChance = 0.2;
+    }
+
+    public static class Limbs {
+        /** A bullet that hits an arm or a leg instead of the head can tear it off, where it was hit. */
+        public boolean enabled = true;
+        /**
+         * How much a forearm (with the hand) takes before it tears off at the elbow, in gun damage: each hit adds the
+         * bullet's or pellet's damage times its kind of gun's tearing below.
+         */
+        public double forearm = 24;
+        /** How much an upper arm takes before the whole arm tears off at the shoulder. */
+        public double arm = 34;
+        /** How much a shin (with the foot) takes before it tears off at the knee. */
+        public double shin = 28;
+        /** How much a thigh takes before the whole leg tears off at the hip. */
+        public double leg = 40;
+        /** Tearing per pellet of buckshot: a shotgun up close takes a limb off nearly every time. */
+        public double shotguns = 2.0;
+        /**
+         * Tearing for handgun rounds (pistol, revolver, .44 magnum, SMG) and the .22: they mostly go clean through,
+         * though the magnum hits hard enough to take a limb in a few.
+         */
+        public double handguns = 0.8;
+        /** Tearing for the assault rifle: a few hits take a limb. */
+        public double rifles = 1.0;
+        /** Tearing for the hunting rifle and lever-action: one hit can take a limb. */
+        public double huntingRifles = 1.4;
+        /** Tearing for crossbow bolts: a bolt pins a limb more than it tears it. */
+        public double crossbows = 0.3;
+        /** Tearing for any other gun. */
+        public double otherGuns = 1.0;
+        /** How fast a zombie hopping on one leg gets about, against walking (1 = as fast). */
+        public double hopSpeed = 0.55;
+        /** Seconds a torn-off limb lies on the ground before it's gone. Client side. */
+        public double limbSeconds = 60;
+        /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
+        public int maxLimbs = 64;
     }
 
     /**
