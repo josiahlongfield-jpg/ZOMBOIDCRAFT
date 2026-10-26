@@ -61,7 +61,12 @@ public final class CarAssets {
         final Ready[] levels = new Ready[CarLod.LEVELS];
     }
 
+    /** A crashed aircraft: the shell that stays, and the pieces that flew off ({@link AirBreakup} order). */
+    public record Broken(Ready remains, List<Mesh> pieces) {
+    }
+
     private static final Map<String, Map<String, Variant>> MODELS = new HashMap<>();
+    private static final Map<String, Broken> BROKEN = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
 
     /** The full mesh and texture for a model in a state, or null if it can't be loaded. Render thread only. */
@@ -123,6 +128,48 @@ public final class CarAssets {
             v.levels[level] = ready;
         }
         return ready;
+    }
+
+    /** The model in a state cut into the pieces a crash tears off, or null if it can't be loaded. Render thread only. */
+    public static Broken broken(String model, String state) {
+        String key = model + "/" + state;
+        Broken b = BROKEN.get(key);
+        if (b != null) {
+            return b;
+        }
+        Ready whole = get(model, state, 0);
+        com.zomboidcraft.world.cars.CarModels.Model spec = com.zomboidcraft.world.cars.CarModels.get(model);
+        if (whole == null || spec == null) {
+            return null;
+        }
+        int count = com.zomboidcraft.world.cars.AirBreakup.pieces(model).size();
+        java.util.BitSet[] take = new java.util.BitSet[count];
+        java.util.BitSet gone = new java.util.BitSet();
+        for (int i = 0; i < count; i++) {
+            take[i] = new java.util.BitSet();
+        }
+        Mesh m = whole.mesh();
+        for (int t = 0; t < m.triangles(); t++) {
+            float cx = 0, cy = 0, cz = 0;
+            for (int c = 0; c < 3; c++) {
+                cx += m.pos()[t * 9 + c * 3] / 3;
+                cy += m.pos()[t * 9 + c * 3 + 1] / 3;
+                cz += m.pos()[t * 9 + c * 3 + 2] / 3;
+            }
+            int piece = com.zomboidcraft.world.cars.AirBreakup.pieceOf(model, spec.size, cx, cy, cz);
+            if (piece >= 0) {
+                take[piece].set(t);
+                gone.set(t);
+            }
+        }
+        List<Mesh> pieces = new ArrayList<>(count);
+        for (java.util.BitSet bits : take) {
+            pieces.add(subset(m, bits, false));
+        }
+        // the rotors went with the rotor piece; the doors and wheels stay on the shell
+        b = new Broken(new Ready(subset(m, gone, true), whole.lids(), whole.wheels(), List.of(), whole.texture()), pieces);
+        BROKEN.put(key, b);
+        return b;
     }
 
     private static Map<String, Variant> read(String model) throws IOException {

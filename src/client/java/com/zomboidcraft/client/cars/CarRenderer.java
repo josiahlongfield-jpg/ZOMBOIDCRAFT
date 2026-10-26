@@ -57,6 +57,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
         state.shaders = (state.lights || state.cockpit >= 0) && CarLights.shaderPackOn();
         state.air = car.aircraft();
+        state.broken = state.air && car.broken();
         if (state.air) {
             com.zomboidcraft.world.cars.Flight f = car.flight();
             f.qO.slerp(f.q, partialTick, state.attitude);
@@ -76,7 +77,13 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     @Override
     public void submit(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        CarAssets.Ready car = CarAssets.get(state.model, state.variant, state.lod);
+        CarAssets.Ready car;
+        if (state.broken) {
+            CarAssets.Broken broken = CarAssets.broken(state.model, state.variant);
+            car = broken == null ? null : broken.remains();
+        } else {
+            car = CarAssets.get(state.model, state.variant, state.lod);
+        }
         if (car == null) {
             return;
         }
@@ -281,7 +288,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
     private static final int FAR_GLASS = 0xFF5A6068;
 
     /** Moves a point (or, with normal set, a direction) of a moving part into place, in place. */
-    private interface Turn {
+    interface Turn {
         void apply(float[] v, boolean normal);
     }
 
@@ -361,6 +368,15 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
      * Triangles from to end of a mesh as quads (last corner doubled), moved by turn if it has one; with a
      * glow ({x, y, z, strength}, from {@link #cabinGlow}), the inside round the dash is lit by it.
      */
+    /** A whole loose piece (crash debris): its solid triangles, or with glass set its see-through ones. */
+    static void drawPiece(CarAssets.Mesh mesh, PoseStack.Pose pose, VertexConsumer out, int light, boolean glass) {
+        if (glass) {
+            draw(mesh, mesh.opaque(), mesh.triangles(), null, pose, out, light, GLASS, null);
+        } else {
+            draw(mesh, 0, mesh.opaque(), null, pose, out, light, -1, null);
+        }
+    }
+
     private static void draw(CarAssets.Mesh mesh, int from, int end, Turn turn, PoseStack.Pose pose, VertexConsumer out, int light, int colour,
                              float[] glow) {
         float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();

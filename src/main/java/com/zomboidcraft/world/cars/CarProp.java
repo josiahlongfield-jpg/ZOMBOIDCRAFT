@@ -75,6 +75,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Float> AIR_RPM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> AIR_POWER = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> AIR_TOP = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** A crashed aircraft whose wings, nose and tail have been torn off ({@link AirBreakup}). */
+    private static final EntityDataAccessor<Boolean> BROKEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -149,12 +151,14 @@ public class CarProp extends Entity {
         builder.define(AIR_RPM, 0f);
         builder.define(AIR_POWER, 0f);
         builder.define(AIR_TOP, 0f);
+        builder.define(BROKEN, false);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         setLook(input.getStringOr("model", "sedan"), input.getStringOr("variant", "usable"));
         searched = input.getIntOr("searched", 0) != 0;
+        entityData.set(BROKEN, input.getIntOr("broken", 0) != 0);
         windows = input.getFloatOr("windows", windowsWhole());
         entityData.set(SMASHED, windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
@@ -169,6 +173,7 @@ public class CarProp extends Entity {
         output.putString("model", model());
         output.putString("variant", variant());
         output.putInt("searched", searched ? 1 : 0);
+        output.putInt("broken", broken() ? 1 : 0);
         output.putFloat("windows", windows);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
@@ -1027,6 +1032,11 @@ public class CarProp extends Entity {
         return m == null ? 1 : m.size[1] * 0.4f;
     }
 
+    /** Torn apart in a crash: drawn without the pieces that flew off. */
+    public boolean broken() {
+        return entityData.get(BROKEN);
+    }
+
     public boolean crashed() {
         return crashed;
     }
@@ -1230,7 +1240,11 @@ public class CarProp extends Entity {
         for (Entity rider : List.copyOf(getPassengers())) {
             rider.stopRiding();
             if (rider instanceof LivingEntity living) {
-                living.hurtServer(server, damageSources().explosion(this, this), 8 + 30 * violence);
+                // nobody walks away from an aircraft crash
+                living.hurtServer(server, damageSources().explosion(this, this), 1000);
+                if (living.isAlive()) {
+                    living.kill(server);
+                }
             }
         }
         entityData.set(ENGINE, false);
@@ -1239,7 +1253,10 @@ public class CarProp extends Entity {
         Quaternionf q = new Quaternionf(f.q);
         float rpm = f.rpm;
         Vec3 vel = f.vel.scale(0.3);
-        setLook(model(), violence > 0.6f ? "burnt" : "wrecked");
+        // it comes apart: the wings, nose and tail tumble off burning and the rest is a burnt-out shell
+        AirDebris.throwFrom(server, this, q, vel.scale(1 / 0.3 / 20), "burnt");
+        setLook(model(), "burnt");
+        entityData.set(BROKEN, true);
         f = flight();
         f.q.set(q);
         f.rpm = rpm;

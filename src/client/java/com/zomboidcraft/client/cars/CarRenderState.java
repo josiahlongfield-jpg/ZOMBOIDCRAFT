@@ -30,4 +30,6 @@ public class CarRenderState extends EntityRenderState {
     public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
     public float pivot;
     public double rotor;
+    /** Torn apart in a crash: only the shell is drawn. */
+    public boolean broken;
 }

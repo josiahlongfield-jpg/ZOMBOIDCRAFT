@@ -32,6 +32,12 @@ public final class Cars {
                     .sized(2.0f, 1.5f).clientTrackingRange(10).updateInterval(3).fireImmune().noLootTable()
                     .build(CAR_KEY));
 
+    private static final ResourceKey<EntityType<?>> DEBRIS_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("aircraft_debris"));
+    public static final EntityType<AirDebris> DEBRIS = Registry.register(BuiltInRegistries.ENTITY_TYPE, DEBRIS_KEY,
+            EntityType.Builder.<AirDebris>of(AirDebris::new, MobCategory.MISC)
+                    .sized(1.2f, 0.8f).clientTrackingRange(10).updateInterval(2).fireImmune().noLootTable()
+                    .build(DEBRIS_KEY));
+
     private static final ResourceKey<Block> HULL_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("car_hull"));
     public static final Block HULL = Registry.register(BuiltInRegistries.BLOCK, HULL_KEY, new CarHull(BlockBehaviour.Properties.of()
             .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles()
