@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_pilot_ladder": "zomboidcraft:block/city/vessel_pilot_ladder",
+    "particle": "zomboidcraft:block/city/vessel_pilot_ladder"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_pilot_ladder"
+        },
+        "south": {
+          "texture": "#vessel_pilot_ladder",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_pilot_ladder",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_pilot_ladder",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_pilot_ladder",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_pilot_ladder",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

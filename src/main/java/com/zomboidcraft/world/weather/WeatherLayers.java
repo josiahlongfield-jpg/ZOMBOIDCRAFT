@@ -28,12 +28,16 @@ public final class WeatherLayers {
     /** The endless night's day sky and fog: a cold slate dusk. */
     private static final Vector3fc DUSK_SKY = new Vector3f(0.11f, 0.13f, 0.17f);
     private static final Vector3fc DUSK_FOG = new Vector3f(0.14f, 0.16f, 0.20f);
+    /** The cold white of the sky and air in a lightning flash. */
+    private static final Vector3fc FLASH = new Vector3f(0.72f, 0.76f, 0.88f);
 
     public static void add(EnvironmentAttributeSystem.Builder builder, Level level) {
         if (level.dimension() != Level.OVERWORLD) {
             return;
         }
-        layer(builder, level, EnvironmentAttributes.SKY_LIGHT_FACTOR, (v, w, night, c) -> v * light(w, night, c));
+        // a lightning flash lights the street, day or night, whatever the gloom (client side only)
+        layer(builder, level, EnvironmentAttributes.SKY_LIGHT_FACTOR, (v, w, night, c) ->
+                (float) Mth.lerp(flash(level) * 0.9, v * light(w, night, c), 1));
         // the light level the game goes by (spawning, zombie eyes) keeps the plain overcast day:
         // endless night only darkens what you see
         layer(builder, level, EnvironmentAttributes.SKY_LIGHT_LEVEL, (v, w, night, c) ->
@@ -43,12 +47,13 @@ public final class WeatherLayers {
             sky = endless(c) ? toward(sky, DUSK_SKY, 0.8f * (float) (1 - night)) : sky;
             sky = gray(sky, 0.55f, 0.8f * w.fog());
             // moonlight through the gap: a faint cold blue
-            return w.moon() > 0 ? new Vector3f(sky).add(0.035f * w.moon(), 0.045f * w.moon(), 0.07f * w.moon()) : sky;
+            sky = w.moon() > 0 ? new Vector3f(sky).add(0.035f * w.moon(), 0.045f * w.moon(), 0.07f * w.moon()) : sky;
+            return toward(sky, FLASH, 0.75f * flash(level));
         });
         layer(builder, level, EnvironmentAttributes.FOG_COLOR, (v, w, night, c) -> {
             Vector3fc fog = overcast(c) ? gray(v, 0.5f, 0.75f) : v;
             fog = endless(c) ? toward(fog, DUSK_FOG, 0.7f * (float) (1 - night)) : fog;
-            return gray(fog, 0.6f, 0.85f * w.fog());
+            return toward(gray(fog, 0.6f, 0.85f * w.fog()), FLASH, 0.6f * flash(level));
         });
         layer(builder, level, EnvironmentAttributes.CLOUD_COLOR, (v, w, night, c) ->
                 overcast(c) ? ColorModifier.BLEND_TO_GRAY_ARGB.apply(v, new ColorModifier.BlendToGray(endless(c) ? 0.22f : 0.32f, 0.85f)) : v);
@@ -59,7 +64,9 @@ public final class WeatherLayers {
         // couple of dozen blocks away
         layer(builder, level, EnvironmentAttributes.FOG_START_DISTANCE, (v, w, night, c) ->
                 (float) Mth.lerp(w.fog(), haze(v, c, 0.15), 0));
-        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 22));
+        // a lightning flash throws the fog back for a moment: shapes down the street show up
+        layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) ->
+                (float) Mth.lerp(flash(level), fogEnd(haze(v, c, 1), w, 22), Math.max(fogEnd(haze(v, c, 1), w, 22), 110)));
         layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 30));
         layer(builder, level, EnvironmentAttributes.CLOUD_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 30));
     }
@@ -82,6 +89,10 @@ public final class WeatherLayers {
 
     private static boolean overcast(ZcConfig.Weather c) {
         return c.alwaysOvercast;
+    }
+
+    private static float flash(Level level) {
+        return level.isClientSide() ? WeatherView.flash() : 0;
     }
 
     private static boolean endless(ZcConfig.Weather c) {

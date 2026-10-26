@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_bomb": "zomboidcraft:block/city/navy_bomb",
+    "navy_od": "zomboidcraft:block/city/navy_od",
+    "navy_yellow": "zomboidcraft:block/city/navy_yellow",
+    "particle": "zomboidcraft:block/city/navy_bomb"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        4,
+        0
+      ],
+      "to": [
+        11,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_bomb",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_bomb",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_bomb"
+        },
+        "west": {
+          "texture": "#navy_bomb"
+        },
+        "up": {
+          "texture": "#navy_bomb"
+        },
+        "down": {
+          "texture": "#navy_bomb"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        5,
+        -1
+      ],
+      "to": [
+        10,
+        9,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_od"
+        },
+        "south": {
+          "texture": "#navy_od"
+        },
+        "east": {
+          "texture": "#navy_od",
+          "uv": [
+            15,
+            7,
+            16,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#navy_od",
+          "uv": [
+            0,
+            7,
+            1,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#navy_od",
+          "uv": [
+            6,
+            0,
+            10,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#navy_od",
+          "uv": [
+            6,
+            15,
+            10,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        16
+      ],
+      "to": [
+        10,
+        8,
+        17
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_od"
+        },
+        "south": {
+          "texture": "#navy_od"
+        },
+        "east": {
+          "texture": "#navy_od",
+          "uv": [
+            0,
+            8,
+            1,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#navy_od",
+          "uv": [
+            15,
+            8,
+            16,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#navy_od",
+          "uv": [
+            6,
+            15,
+            10,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#navy_od",
+          "uv": [
+            6,
+            0,
+            10,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        4,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        11
+      ],
+      "to": [
+        13,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

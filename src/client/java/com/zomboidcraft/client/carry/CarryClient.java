@@ -16,6 +16,7 @@ public final class CarryClient {
         LivingEntityRenderLayerRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
             if (renderer instanceof AvatarRenderer<?> avatar) {
                 helper.register(new WornGearLayer(avatar, context.getItemModelResolver()));
+                helper.register(new com.zomboidcraft.client.gear.HeadGearLayer(avatar, context.getItemModelResolver()));
             }
         });
         ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {

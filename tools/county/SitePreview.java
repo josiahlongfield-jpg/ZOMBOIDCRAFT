@@ -27,7 +27,7 @@ import java.util.Map;
  * The place's ground (its y = 0) is dump y = 12; a port's water is on its north side.
  */
 public final class SitePreview {
-    private static final int LEVEL = 12;
+    private static final int LEVEL = Integer.getInteger("level", 12);
 
     public static void main(String[] args) throws IOException {
         String out = args[0];
@@ -115,8 +115,8 @@ public final class SitePreview {
         }
         StringBuilder cars = new StringBuilder();
         for (Voxels.Car c : v.cars) {
-            cars.append(cars.length() > 0 ? "," : "").append(String.format(Locale.ROOT, "[%.2f,%d,%.2f,%.1f,%.1f,%.1f]",
-                    c.x() + m, c.y() + LEVEL, c.z() + m, c.yaw(), c.minLength(), c.maxLength()));
+            cars.append(cars.length() > 0 ? "," : "").append(String.format(Locale.ROOT, "[%.2f,%d,%.2f,%.1f,%.1f,%.1f,\"%s\"]",
+                    c.x() + m, c.y() + LEVEL, c.z() + m, c.yaw(), c.minLength(), c.maxLength(), c.models() == null ? "" : c.models()));
         }
         try (PrintWriter pw = new PrintWriter(out + ".json")) {
             StringBuilder ps = new StringBuilder();

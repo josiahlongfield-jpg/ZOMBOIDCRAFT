@@ -1,6 +1,8 @@
 package com.zomboidcraft.client.zombie;
 
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.client.zombie.body.ZBodyMesh;
+import com.zomboidcraft.client.zombie.body.ZMove;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import net.minecraft.resources.Identifier;
 
@@ -17,4 +19,13 @@ public class WalkerRenderState extends ZombieRenderState {
     public int missingLimb;
     /** Crawls for good: lies face down. A zombie knocked over without this lies on its back. */
     public boolean crawler;
+    /** Lost both legs (and lying down, as it always is then): drawn with stumps. */
+    public boolean legless;
+    /** The new body for this outfit, or null to draw the old model. */
+    public ZBodyMesh zbody;
+    public Identifier zskin;
+    public Identifier zkit;
+    /** The new body's eye mask, or null when look.glowingEyes is off. */
+    public Identifier zeyes;
+    public final ZMove.Pose zpose = new ZMove.Pose();
 }

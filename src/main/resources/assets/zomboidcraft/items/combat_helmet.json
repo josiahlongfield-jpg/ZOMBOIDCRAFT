@@ -1,0 +1,228 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "head",
+    "model": {
+     "type": "minecraft:select",
+     "property": "minecraft:context_entity_type",
+     "cases": [
+      {
+       "when": "minecraft:player",
+       "model": {
+        "type": "minecraft:empty"
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/headgear/combat_helmet"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "nvg_gen1",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "cases": [
+            {
+             "when": "up",
+             "model": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/headgear/nvg_gen1_up"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/headgear/nvg_gen1_down"
+           }
+          }
+         },
+         {
+          "when": "nvg_gen3",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "cases": [
+            {
+             "when": "up",
+             "model": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/headgear/nvg_gen3_up"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/headgear/nvg_gen3_down"
+           }
+          }
+         },
+         {
+          "when": "nvg_white",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "cases": [
+            {
+             "when": "up",
+             "model": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/headgear/nvg_white_up"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/headgear/nvg_white_down"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "comms_headset",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/headgear/comms_headset_worn"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     }
+    }
+   },
+   {
+    "when": "none",
+    "model": {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/headgear/combat_helmet"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:composite",
+   "models": [
+    {
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/headgear/combat_helmet"
+    },
+    {
+     "type": "minecraft:select",
+     "property": "minecraft:custom_model_data",
+     "index": 0,
+     "cases": [
+      {
+       "when": "nvg_gen1",
+       "model": {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "up",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/headgear/nvg_gen1_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/headgear/nvg_gen1_down"
+        }
+       }
+      },
+      {
+       "when": "nvg_gen3",
+       "model": {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "up",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/headgear/nvg_gen3_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/headgear/nvg_gen3_down"
+        }
+       }
+      },
+      {
+       "when": "nvg_white",
+       "model": {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "up",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/headgear/nvg_white_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/headgear/nvg_white_down"
+        }
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:empty"
+     }
+    },
+    {
+     "type": "minecraft:select",
+     "property": "minecraft:custom_model_data",
+     "index": 2,
+     "cases": [
+      {
+       "when": "comms_headset",
+       "model": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/headgear/comms_headset_worn"
+       }
+      }
+     ],
+     "fallback": {
+      "type": "minecraft:empty"
+     }
+    }
+   ]
+  }
+ }
+}

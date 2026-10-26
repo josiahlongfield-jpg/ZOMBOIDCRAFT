@@ -10,7 +10,8 @@
   "environment": "*",
   "entrypoints": {
     "main": ["com.zomboidcraft.ZomboidCraft"],
-    "client": ["com.zomboidcraft.client.ZomboidCraftClient"]
+    "client": ["com.zomboidcraft.client.ZomboidCraftClient"],
+    "voicechat": ["com.zomboidcraft.voice.RadioVoice"]
   },
   "mixins": [
     "zomboidcraft.mixins.json",
@@ -21,5 +22,8 @@
     "minecraft": "~${minecraft_version}",
     "java": ">=25",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "voicechat": "*"
   }
 }

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_berthing": "zomboidcraft:block/city/navy_st_berthing",
+    "particle": "zomboidcraft:block/city/navy_st_berthing"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_berthing"
+        },
+        "south": {
+          "texture": "#navy_st_berthing",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_berthing",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_berthing",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_berthing",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_berthing",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -65,13 +65,18 @@ TABLES = {
         ("string", 2, 1, 3), (f"{ZC}:baseball_bat", 1, 1, 1, worn()), ("-", 12, 1, 1)]),
 }
 
+# night vision (gear/Headgear): a patrol car's spare batteries, a SWAT team's goggles
+TABLES["police"] = (TABLES["police"][0], TABLES["police"][1] + [(f"{ZC}:combat_helmet", 1, 1, 1), (f"{ZC}:aa_battery", 3, 2, 6)])
+TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:combat_helmet", 3, 1, 1), (f"{ZC}:nvg_gen3", 2, 1, 1),
+                                                          (f"{ZC}:aa_battery", 4, 2, 8)])
+
 # a rare find on top
 RARE = {
     "trunk": [(f"{ZC}:assault_rifle", 1), (f"{ZC}:pistol", 2), (f"{ZC}:shotgun", 1), (f"{ZC}:double_barrel", 1), (f"{ZC}:revolver", 2),
               (f"{ZC}:hunting_rifle", 1),
               (f"{ZC}:machete", 1), (f"{ZC}:katana", 1), (f"{ZC}:rifle_case", 2), (f"{ZC}:pistol_case", 2), (f"{ZC}:ammo_can", 1)],
-    "police": [(f"{ZC}:assault_rifle", 2)],
-    "swat": [("totem_of_undying", 1), ("diamond_chestplate", 1)],
+    "police": [(f"{ZC}:assault_rifle", 2), (f"{ZC}:nvg_gen3", 1)],
+    "swat": [("totem_of_undying", 1), ("diamond_chestplate", 1), (f"{ZC}:nvg_white", 1)],
     "ambulance": [("totem_of_undying", 1), ("enchanted_golden_apple", 1)],
 }
 

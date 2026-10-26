@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_mast": "zomboidcraft:block/city/vessel_mast",
+    "particle": "zomboidcraft:block/city/vessel_mast"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        3
+      ],
+      "to": [
+        13,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        13,
+        4
+      ],
+      "to": [
+        12,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_mast"
+        },
+        "south": {
+          "texture": "#vessel_mast"
+        },
+        "east": {
+          "texture": "#vessel_mast"
+        },
+        "west": {
+          "texture": "#vessel_mast"
+        },
+        "up": {
+          "texture": "#vessel_mast"
+        },
+        "down": {
+          "texture": "#vessel_mast"
+        }
+      }
+    }
+  ]
+}

@@ -31,6 +31,7 @@ public final class County {
     private final Map<Long, Optional<Place>> places = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> cities = new ConcurrentHashMap<>();
     private final Map<Long, List<Road>> roads = new ConcurrentHashMap<>();
+    private final Map<Long, Optional<Place>> hideouts = new ConcurrentHashMap<>();
 
     public County(long seed) {
         this.seed = seed;
@@ -96,7 +97,7 @@ public final class County {
             case TOWN -> 3;
             case SUBURB -> 2;
             case FARM -> 1;
-            case ROADSIDE -> 0;
+            case ROADSIDE, HIDEOUT -> 0;
         };
     }
 
@@ -311,11 +312,17 @@ public final class County {
     private Place port(int px, int pz, double v, long h) {
         String variant;
         int width, land, basin;
-        if (v < 0.4) {
+        if (v < 0.3) {
             variant = "container";
             width = 340;
             land = 190;
             basin = 110;
+        } else if (v < 0.42) {
+            // the naval wharf: long enough for the carrier, the basin wide enough for her overhang
+            variant = "naval";
+            width = 430;
+            land = 170;
+            basin = 130;
         } else if (v < 0.7) {
             variant = "industrial";
             width = 280;
@@ -361,6 +368,86 @@ public final class County {
             z0 = sz - width / 2; z1 = z0 + width - 1; x0 = sx - basin; x1 = x0 + along - 1;
         }
         return new Place(PlaceType.PORT, variant, x0, z0, x1, z1, Terrain.WATER + 3, h, side, basin);
+    }
+
+    // ------------------------------------------------------------------ hideouts
+
+    /** How far a hideout's footprint reaches from its hatch: room for its bunker turned any way. */
+    public static final int HIDE_REACH = 56;
+    /** Ground cover keeps this far from a hatch and trees a little further, leaving its clues room. */
+    public static final int CLEARING = 7;
+
+    /**
+     * The hideout a cell hides, if any: a hatch in thick woods on gentle ground, at least 120 blocks
+     * from any place and 90 from any road, with dry land all round for the bunker under it. It is
+     * a place of its own kind on a layer of its own: nothing is levelled for it, no road leads to it.
+     */
+    public Optional<Place> hideout(int cx, int cz) {
+        return hideouts.computeIfAbsent(key(cx, cz), k -> Optional.ofNullable(planHideout(cx, cz)));
+    }
+
+    /** Every hideout whose footprint plus margin touches the box. */
+    public List<Place> hideoutsNear(int x0, int z0, int x1, int z1, int margin) {
+        List<Place> out = new ArrayList<>();
+        int reach = HIDE_REACH + margin;
+        for (int cx = Math.floorDiv(x0 - reach, CELL); cx <= Math.floorDiv(x1 + reach, CELL); cx++) {
+            for (int cz = Math.floorDiv(z0 - reach, CELL); cz <= Math.floorDiv(z1 + reach, CELL); cz++) {
+                hideout(cx, cz).ifPresent(p -> {
+                    if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                        out.add(p);
+                    }
+                });
+            }
+        }
+        return out;
+    }
+
+    private Place planHideout(int cx, int cz) {
+        if (rand(0x41DEL, cx, cz) > 0.05 || Math.abs(cx) <= 1 && Math.abs(cz) <= 1) {
+            return null;
+        }
+        long h = Noise.hash(seed ^ 0x41DE0L, cx, cz);
+        for (int i = 0; i < 24; i++) {
+            int x = cx * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L)) * (CELL - 200));
+            int z = cz * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L + 1)) * (CELL - 200));
+            if (hatchFits(x, z)) {
+                int level = (int) Math.floor(terrain.height(x, z));
+                return new Place(PlaceType.HIDEOUT, "forest_hatch", x - HIDE_REACH, z - HIDE_REACH, x + HIDE_REACH,
+                        z + HIDE_REACH, level, Noise.mix(h ^ i), -1, -1);
+            }
+        }
+        return null;
+    }
+
+    private boolean hatchFits(int x, int z) {
+        if (terrain.forest(x, z) < 0.62) {
+            return false;
+        }
+        double g = terrain.height(x, z);
+        if (g < Terrain.WATER + 4) {
+            return false;
+        }
+        for (int[] d : new int[][] {{-3, 0}, {3, 0}, {0, -3}, {0, 3}, {-3, -3}, {3, 3}, {-3, 3}, {3, -3}}) {
+            if (Math.abs(terrain.height(x + d[0], z + d[1]) - g) > 1.6) {
+                return false;
+            }
+        }
+        // dry land over wherever the bunker may run
+        for (int dx = -48; dx <= 48; dx += 8) {
+            for (int dz = -48; dz <= 48; dz += 8) {
+                if (terrain.height(x + dx, z + dz) < Terrain.WATER + 3 || terrain.riverChannel(x + dx, z + dz)) {
+                    return false;
+                }
+            }
+        }
+        if (!placesNear(x - 120, z - 120, x + 120, z + 120, 0).isEmpty()) {
+            return false;
+        }
+        Road.Hit hit = new Road.Hit();
+        for (Road r : roadsNear(x - 100, z - 100, x + 100, z + 100)) {
+            r.nearest(x + 0.5, z + 0.5, hit);
+        }
+        return hit.distance > 90;
     }
 
     // ------------------------------------------------------------------ ground
@@ -442,6 +529,7 @@ public final class County {
             case TOWN, PORT -> 3;
             case SUBURB, MILITARY, FARM -> 2;
             case ROADSIDE -> 1;
+            case HIDEOUT -> 0;
         };
     }
 

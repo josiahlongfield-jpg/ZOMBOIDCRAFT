@@ -47,6 +47,10 @@ public final class ZcConfig {
     public Carry carry = new Carry();
     /** What a gun case or an ammo can has in it when it's found shut. */
     public Cases cases = new Cases();
+    /** Night vision goggles on headgear: their batteries and the look through them. */
+    public NightVision nightVision = new NightVision();
+    /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
+    public Radio radio = new Radio();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
 
@@ -73,6 +77,62 @@ public final class ZcConfig {
         public double fullMagazineChance = 0.5;
         /** Chance an ammo can holds a second calibre. */
         public double secondCalibreChance = 0.35;
+    }
+
+    public static class NightVision {
+        /** Goggles need an AA battery. Off, they never run down. */
+        public boolean batteries = true;
+        /** How long one AA battery runs the goggles, in minutes of use. */
+        public double batteryMinutes = 30;
+        /** Goggles found in the world have a part-used battery somewhere between these fractions of full. */
+        public double foundChargeMin = 0.2;
+        public double foundChargeMax = 0.8;
+        /** How often the battery used is written to the goggles, in seconds (lower saves more often). */
+        public int saveEverySeconds = 10;
+        /**
+         * Draws the view through the tube (green or white phosphor, grain, the round tube edge) as a screen effect.
+         * Off, a plain tint and the tube edge are drawn over the screen instead, for shader packs that hide the effect.
+         * Client side.
+         */
+        public boolean tubeEffect = true;
+        /** How much of the screen's height the tube fills, 0.5 to 1.2. Client side. */
+        public double tubeSize = 0.92;
+        /** How bright the view through the tube is, 0.2 to 2 (1 is the preview's look). Client side. */
+        public double brightness = 0.85;
+    }
+
+    public static class Radio {
+        /** How far each radio carries a voice, in blocks: the talking radio's reach is what counts. */
+        public double toyRange = 150;
+        public double twoWayRange = 1000;
+        public double militaryRange = 3000;
+        /** How many channels each radio tunes to. Channel numbers are shared between them. */
+        public int toyChannels = 3;
+        public int twoWayChannels = 22;
+        public int militaryChannels = 99;
+        /** How far into the reach (0 to 1) the voice starts to crackle and break up. */
+        public double crackleStart = 0.65;
+        /** The hiss under every radio voice, 0 to 0.1. */
+        public double hiss = 0.012;
+        /** How far a radio's speaker carries for other players, in blocks. */
+        public double speakerRange = 12;
+        /** How far zombies hear a radio's speaker, in blocks (0: they don't). */
+        public double speakerNoise = 10;
+        /** Talking needs the radio in a hand, unless you wear a comms headset. Off: any radio on you will do. */
+        public boolean holdToTalk = true;
+        /** Radios need an AA battery. Off, they never run down. */
+        public boolean batteries = true;
+        /** How long one AA battery runs a radio that's switched on, in minutes. */
+        public double batteryMinutes = 120;
+        /** How many times faster the battery drains while you talk. */
+        public double talkDrain = 3;
+        /** Radios found in the world have a part-used battery somewhere between these fractions of full. */
+        public double foundChargeMin = 0.2;
+        public double foundChargeMax = 0.8;
+        /** How often the battery used is written to the radios, in seconds. */
+        public int saveEverySeconds = 10;
+        /** How loud gunshots are through a comms headset, 0 to 1. Client side. */
+        public double headsetGunshotVolume = 0.45;
     }
 
     /**
@@ -281,12 +341,30 @@ public final class ZcConfig {
         public double nightLight = 0.8;
         /** The moon breaks through gaps in the clouds now and then at night. */
         public boolean moonBreaks = true;
-        /** Scales how often rain, fog, wind and storms come; 0 keeps a steady drizzle. */
+        /** Scales how often downpours, fog, wind and storms come; 0 keeps a steady rain. */
         public double eventFrequency = 1.0;
         /** Scales how often storms come, and how many of them turn dangerous. */
         public double stormFrequency = 1.0;
         /** Thick fog now and then, as its own weather or rolling in over the rain. */
         public boolean fog = true;
+        /** The rain never eases below this (0..1); 0.55 is moderate rain, 1 a downpour. */
+        public double minRain = 0.55;
+        /** Fog rolling in and out on its own over any weather, from clear to a thick bank; 0 turns it off, 0.5 halves it. */
+        public double rollingFog = 1.0;
+        /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
+        public boolean mist = true;
+        /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
+        public double mistAmount = 1.0;
+        /** Lightning flickering over the skyline in storms, the odd bolt between the towers, thunder after. Client side. */
+        public boolean stormFlashes = true;
+        /** Paper, leaves and plastic blown down the street when the wind picks up. Client side. */
+        public boolean windDebris = true;
+        /** Rain dripping off ledges and awnings, downpipes pouring, splashes underfoot, leaks under the roof. Client side. */
+        public boolean drips = true;
+        /** Fires and smoke columns burning far off on the skyline, and smoulder where lightning struck. Client side. */
+        public boolean skylineFires = true;
+        /** A close strike makes the lamps and neon round you flicker, sometimes browning out for a few seconds. Client side. */
+        public boolean stormSurges = true;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
@@ -302,6 +380,10 @@ public final class ZcConfig {
     public static class Look {
         /** Zomboid-style zombie model and outfits. Client side; needs a restart. */
         public boolean customZombies = true;
+        /** The new zombie bodies: Zomboid-shaped, in worn 3D clothes, with the new movements. Off draws the older model. Client side. */
+        public boolean newZombies = true;
+        /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
+        public double zombieDetailDistance = 16;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
         public boolean hdSkins = true;
         /** Raised 3D pieces on zombie outfits: caps, helmets, pouches, collars, hoods, a hanging jaw. */
@@ -373,6 +455,8 @@ public final class ZcConfig {
         public boolean crawlers = true;
         /** Share of zombies that spawn crawling. */
         public double crawlerSpawnChance = 0.05;
+        /** Share of zombies found with no legs, dragging themselves along on their arms. */
+        public double leglessSpawnChance = 0.03;
         /** Chance a knockdown from a heavy weapon or gunshot leaves a zombie crawling. */
         public double crippleChance = 0.2;
     }
@@ -530,6 +614,15 @@ public final class ZcConfig {
         public boolean reloadAnimation = true;
         /** A faint green beam shows in the air between a laser and its dot. Client side. */
         public boolean laserBeam = true;
+        /** How strongly the laser's beam shows (with a shader pack: how much dust it lights). Client side. */
+        public double laserBeamStrength = 1.0;
+        /** How big the laser's dot is: 1 = a few pixels across at any range. Client side. */
+        public double laserDotSize = 1.0;
+        /**
+         * From the hip with only the light on, how far ahead (blocks) the gun is turned to point its light at the
+         * middle of the view. The light then shines straight down the barrel. Client side.
+         */
+        public double lightZero = 12;
         /**
          * How bright (a light level, 1 to 15) a gun light lights the world just ahead of it, fading a level every
          * three blocks down the beam. Higher lights more of the rooms around it too. Client side.

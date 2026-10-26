@@ -13,6 +13,7 @@ public final class Builders {
             case PORT -> new PortSite(p, out).build();
             case MILITARY -> new MilitarySite(p, out).build();
             case ROADSIDE -> new RoadsideSite(p, out).build();
+            case HIDEOUT -> new HatchSite(p, county, out).build();
         }
     }
 

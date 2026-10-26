@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_house": "zomboidcraft:block/city/vessel_house",
+    "vessel_window": "zomboidcraft:block/city/vessel_window",
+    "particle": "zomboidcraft:block/city/vessel_window"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_window",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_window",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_house",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_house",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_house",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_house",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

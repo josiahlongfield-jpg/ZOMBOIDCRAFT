@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,11 @@ import java.util.List;
  * gravel, a saw-tooth factory and its chimney, warehouses;</li>
  * <li>fishing: a harbour behind its breakwater and lighthouse, wooden jetties with the trawlers,
  * sailboats and skiffs tied up (and the ones that sank there), the fish market, the cannery,
- * the net sheds and the boatyard, the bait shop and the harbourmaster.</li>
+ * the net sheds and the boatyard, the bait shop and the harbourmaster;</li>
+ * <li>naval: the aircraft carrier at her full size along the wharf ({@link Carrier}), held off by
+ * her camels: the apron clear under her overhang, the shore power pits, the mobile cranes; the
+ * security fence behind it with the gate and guard booth, the barracks, the supply warehouse, the
+ * motor pool.</li>
  * </ul>
  * It's drawn in a frame turned so the water is always to the north (local -z) and the quay runs
  * along x at z = {@link Place#quay}: the basin to the north of it, the land to the south.
@@ -57,6 +62,7 @@ final class PortSite extends Site {
         switch (p.variant) {
             case "industrial" -> industrial();
             case "fishing" -> fishing();
+            case "naval" -> naval();
             default -> container();
         }
         kit.woods(variant("fishing") ? 0.18 : 0.3);
@@ -216,40 +222,43 @@ final class PortSite extends Site {
                 }
             }
         }
-        // the ship along the quay, a gap of two for the fenders
-        int beam = 24 + 2 * rng.nextInt(3);
-        int len = Math.min(lw - 30, 165 + rng.nextInt(60));
-        int sx = 12 + rng.nextInt(Math.max(1, lw - len - 24));
-        int zc = quay - 2 - beam / 2;
+        // the ship along the quay at her full size, a gap of two for the fenders; most carry a bunker deep aft
+        int beam = 40 + 2 * rng.nextInt(2), hbm = beam / 2;
+        int len = Math.min(lw - 40, 250 + rng.nextInt(40));
+        int sx = 14 + rng.nextInt(Math.max(1, lw - len - 28));
+        int zc = quay - 2 - hbm;
         boolean bowEast = chance() < 0.5;
-        Ships ship = new Ships(bowEast ? at(sx, zc, 0) : at(sx + len - 1, zc - 1, 2), rng, hit);
-        ship.containerShip(len, beam);
+        Bunker.State state = null;
+        if (chance() < 0.6) {
+            double r = chance();
+            state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        }
+        new BigShip(bowEast ? at(sx, zc, 0) : at(sx + len - 1, zc - 1, 2), rng, hit, bowEast ? hbm + 2 : -hbm - 3)
+                .container(len, beam, state);
         // a tug still made fast at her bow, a feeder ship riding at anchor out in the basin
         int bowX = bowEast ? sx + len + 3 : sx - 25;
         if (bowX > 2 && bowX + 22 < lw - 2) {
-            new Ships(at(bowX, quay - 4 - beam / 2 - rng.nextInt(4), 0), rng, hit).tug(20 + rng.nextInt(4));
+            new Ships(at(bowX, quay - 4 - hbm - rng.nextInt(4), 0), rng, hit).tug(20 + rng.nextInt(4));
         }
-        int outZ = zc - beam / 2 - 16 - 9;
-        if (outZ - 12 > 4 && lw > 200) {
-            int flen = 80 + rng.nextInt(30);
+        int fbeam = 26 + 2 * rng.nextInt(2);
+        int outZ = zc - hbm - 16 - fbeam / 2;
+        if (outZ - fbeam / 2 > 4 && lw > 200) {
+            int flen = Math.min(lw - 20, 140 + rng.nextInt(40));
             int fx = rng.nextInt(Math.max(1, lw - flen - 10)) + 5;
             boolean east = chance() < 0.5;
-            new Ships(east ? at(fx, outZ, 0) : at(fx + flen - 1, outZ - 1, 2), rng, hit).containerShip(flen, 18);
+            new BigShip(east ? at(fx, outZ, 0) : at(fx + flen - 1, outZ - 1, 2), rng, hit, 0).container(flen, fbeam, null);
         }
-        // the gangway down to the quay
-        int gx = sx + len / 2;
-        for (int k = 0; k <= 4; k++) {
-            f.set(gx, 4 - k, quay - 2 + k, "steel_stairs[facing=north]");
-            f.set(gx + 1, 5 - k, quay - 2 + k, "minecraft:iron_bars");
-        }
-        // the gantries along the rails: the ones over the ship were working her when it stopped
+        // the gantries along the rails: the ones over the ship were working her when it stopped, booms
+        // raised over her house (it stands higher than they reach)
         int n = Math.max(2, Math.min(5, lw / 75));
-        String crane = any("steel_red", "steel_red", "steel_red", "steel_yellow", "minecraft:light_blue_concrete");
+        String crane = any("steel_red", "steel_red", "steel_red", "steel_yellow");
+        int hx0 = bowEast ? sx - 4 : sx + len - 34, hx1 = hx0 + 38;
         for (int i = 0; i < n; i++) {
-            int cx = (int) ((i + 0.5) * lw / n) - 7 + rng.nextInt(9) - 4;
-            boolean over = cx > sx - 4 && cx + 14 < sx + len + 4;
-            hb(cx, railA, 0).gantry(14, gauge, 32 + rng.nextInt(8), !over && chance() < 0.6, crane);
-            kit.claim(Math.max(0, cx - 3), railA - 1, Math.min(lw - 1, cx + 17), railB + 2, Kit.BUILT);
+            int cx = (int) ((i + 0.5) * lw / n) - 9 + rng.nextInt(9) - 4;
+            boolean over = cx > sx - 4 && cx + 18 < sx + len + 4;
+            boolean house = cx + 18 > hx0 && cx < hx1;
+            hb(cx, railA, 0).gantry(18, gauge, beam + 10 + rng.nextInt(6), house || !over && chance() < 0.6, crane, 46);
+            kit.claim(Math.max(0, cx - 3), railA - 1, Math.min(lw - 1, cx + 21), railB + 2, Kit.BUILT);
         }
         // post lamps along the quay edge, sodium mostly, a few gone purple
         for (int x = 7; x < lw - 3; x += 16) {
@@ -289,7 +298,7 @@ final class PortSite extends Site {
         slab(0, yz0 - 2, lw - 1, ld - 2, chance() < 0.5);
         int cols = 3 + rng.nextInt(2);
         int bw = cols * 13 - 1, pitchX = bw + 12, pitchZ = 30;
-        String rtg = any("steel_yellow", "minecraft:white_concrete", "steel_red", "minecraft:light_blue_concrete");
+        String rtg = any("steel_yellow", "steel_yellow", "steel_red");
         for (int bz = yz0 + 2; bz + 22 <= yz1; bz += pitchZ) {
             for (int bx = 6; bx + bw + 6 <= lw; bx += pitchX) {
                 if (Math.abs(bx + bw / 2 - gateX) < bw / 2 + 10) {
@@ -364,6 +373,244 @@ final class PortSite extends Site {
             hb(e[0], e[1], 0).stacks(0, 0, 2, 3, 5);
         }
         litter(2, quay + 2, lw - 3, ld - 3, 60);
+    }
+
+    // ------------------------------------------------------------------ the naval wharf
+
+    private void naval() {
+        hb.quay(0, lw - 1, quay);
+        int apronEnd = Math.min(mainZ - (int) main.reach() - 2, quay + 44);
+        slab(0, quay + 1, lw - 1, apronEnd, false);
+        // the carrier, her island to the wharf, held off it by her camels
+        int sx = Math.max(4, (lw - Carrier.LEN) / 2 + rng.nextInt(9) - 4);
+        int off = 33;
+        new Carrier(at(sx, quay - off, 0), rng, hit, off).build();
+        // the shore power pits and their cables up to her side, the hoses
+        for (int x = sx + 24; x < sx + Carrier.LEN - 20; x += 36) {
+            f.set(x, 0, quay + 4, "concrete_dark");
+            f.set(x, 1, quay + 4, "bunk_switchboard[facing=north]");
+            f.set(x, 2, quay + 4, "bunk_switchboard_top[facing=north]");
+            for (int z = quay + 1; z < quay + 4; z++) {
+                f.set(x, 1, z, "bunk_cable_loose");
+            }
+            if (chance() < 0.5) {
+                f.set(x + 2, 1, quay + 2, "navy_hose_reel[facing=north]");
+            }
+        }
+        // the mobile cranes on the apron, booms up over her deck
+        for (int cx : new int[] {sx + 60 + rng.nextInt(20), sx + 250 + rng.nextInt(20)}) {
+            if (cx + 12 < lw - 2) {
+                mobileCrane(cx, quay + 9);
+                kit.claim(cx - 2, quay + 6, cx + 13, quay + 15, Kit.BUILT);
+            }
+        }
+        // a few trucks and jeeps left on the apron, pallets and crates by the brows
+        for (int i = 0; i < 5; i++) {
+            int x = 6 + rng.nextInt(Math.max(1, lw - 20)), z = quay + 18 + rng.nextInt(Math.max(1, apronEnd - quay - 22));
+            if (open(x - 2, z - 3, x + 2, z + 3)) {
+                f.vehicle(x + 0.5, 1, z + 0.5, rng.nextInt(4) * 90, "jeep,jeep_open,box_truck,pickup,ambulance,fire_truck", rng.nextLong());
+            }
+        }
+        for (int bx : new int[] {sx + 150, sx + 232}) {
+            for (int i = 0; i < 6; i++) {
+                f.setIfAir(bx - 6 + rng.nextInt(14), 1, quay + 3 + rng.nextInt(6), any("crate", "crate", "bunk_crate_ration[facing=north]",
+                        "cardboard_box[facing=north]", "bunk_jerry_cans[facing=north]"));
+            }
+        }
+        // the light masts along the back of the apron
+        for (int x = 15; x < lw - 10; x += 48) {
+            int mz = apronEnd - 1;
+            if (open(x, mz, x, mz)) {
+                navalMast(x, mz, 18);
+                kit.claim(x, mz, x, mz, Kit.BUILT);
+            }
+        }
+        // the fence behind the apron, the gate in it with its booth and barrier
+        int fz = apronEnd + 1, gx = sx + 190;
+        Camp camp = new Camp(f, rng, hit);
+        camp.fence(1, fz, gx - 6, fz, 0.04 + hit * 0.08);
+        camp.fence(gx + 6, fz, lw - 2, fz, 0.04 + hit * 0.08);
+        kit.claim(0, fz, lw - 1, fz, Kit.BUILT);
+        guardBooth(gx + 7, fz + 1);
+        for (int k = 1; k <= 5; k++) {
+            f.set(gx - 6 + k, 1, fz, k % 2 == 0 ? "steel_red" : "steel_yellow");
+        }
+        f.set(gx - 6, 1, fz, "steel_yellow");
+        f.set(gx - 6, 2, fz, "steel_yellow");
+        for (int x = gx - 4; x <= gx + 4; x += 4) {
+            f.setIfAir(x, 1, fz - 3, "jersey_barrier[facing=north]");
+        }
+        // behind the lane: the barracks, the supply warehouse, the motor pool, boxes stacked
+        int yz0 = mainZ + (int) main.reach() + 3;
+        int[] bk = room(3, yz0, lw - 4, ld - 4, 46, 16, 3, false);
+        if (bk != null) {
+            navalBarracks(bk[0], bk[1], 46, 16);
+        }
+        int[] wh = room(3, yz0, lw - 4, ld - 4, 40, 22, 3, false);
+        if (wh != null) {
+            supplyShed(wh[0], wh[1], 40, 22);
+        }
+        int[] mp = room(3, yz0, lw - 4, ld - 4, 34, 16, 2, true);
+        if (mp != null) {
+            Placer s = at(mp[0], mp[1], 0);
+            for (int x = 0; x < 34; x++) {
+                for (int z = 0; z < 16; z++) {
+                    double r = chance();
+                    s.set(x, 0, z, x % 4 == 0 && (z < 6 || z > 9) ? "road_line_white[axis=z]"
+                            : r < 0.7 ? "asphalt" : r < 0.85 ? "asphalt_crack" : "asphalt_patch");
+                }
+                if (x % 4 == 2) {
+                    if (chance() < 0.55) {
+                        s.vehicle(x + 0.5, 1, 2.5, 0, "jeep,jeep_open,jeep,box_truck", rng.nextLong());
+                    }
+                    if (chance() < 0.55) {
+                        s.vehicle(x + 0.5, 1, 13.5, 180, "jeep,jeep_open,pickup,swat_van", rng.nextLong());
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            int[] e = room(3, yz0, lw - 4, ld - 4, 25, 9, 2, true);
+            if (e == null) {
+                break;
+            }
+            hb(e[0], e[1], 0).stacks(0, 0, 2, 3, 3);
+        }
+        litter(2, quay + 2, lw - 3, ld - 3, 30);
+    }
+
+    /** A truck crane at (x, z) on its outriggers, the boom lifted out over the water toward her deck. */
+    private void mobileCrane(int x, int z) {
+        Placer s = at(x, z, 0);
+        for (int dx = 0; dx < 12; dx++) {
+            for (int dz = 0; dz < 4; dz++) {
+                boolean wheel = (dx == 1 || dx == 3 || dx == 8 || dx == 10) && (dz == 0 || dz == 3);
+                s.set(dx, 1, dz, wheel ? "tire[axis=z]" : "steel_yellow");
+            }
+        }
+        for (int dz = 0; dz < 2; dz++) {
+            s.set(10, 2, dz, "steel_yellow");
+            s.set(11, 2, dz, chance() < 0.4 ? "window_broken[axis=z]" : "window[axis=z]");
+        }
+        for (int[] o : new int[][] {{0, -2}, {0, 5}, {11, -2}, {11, 5}}) {
+            s.set(o[0], 1, o[1], "steel_yellow");
+            s.set(o[0], 0, o[1], "deck_steel");
+        }
+        for (int dx = 4; dx <= 7; dx++) {
+            for (int dz = 0; dz < 4; dz++) {
+                s.set(dx, 2, dz, "steel_yellow");
+                s.set(dx, 3, dz, dz == 3 && dx > 4 ? "window[axis=x]" : "steel_yellow");
+            }
+        }
+        int tipY = 34 + rng.nextInt(6), tipZ = -18 - rng.nextInt(6);
+        Harbour h = new Harbour(s, rng, hit);
+        h.line(5, 4, 1, 5, tipY, tipZ, "truss_yellow");
+        h.line(6, 4, 1, 6, tipY, tipZ, "truss_yellow");
+        for (int y = tipY - 1; y > tipY - 8; y--) {
+            s.set(5, y, tipZ, "vessel_chain_v");
+        }
+        s.set(5, tipY - 8, tipZ, "steel_yellow");
+        s.set(5, tipY + 1, tipZ, "aviation_light");
+    }
+
+    /** A light mast at (x, z), h tall: a pole, a head of lamps, the dead ones dark. */
+    private void navalMast(int x, int z, int h) {
+        for (int y = 1; y < h; y++) {
+            f.set(x, y, z, "streetlight_pole");
+        }
+        f.set(x, 0, z, "concrete_dark");
+        f.set(x, h, z, "navy_steel");
+        for (int[] d : new int[][] {{-1, 0}, {1, 0}, {0, -1}}) {
+            f.set(x + d[0], h, z + d[1], chance() < 0.3 + hit * 0.3 ? "navy_steel" : "minecraft:pearlescent_froglight");
+        }
+        f.set(x, h + 1, z, "aviation_light");
+    }
+
+    /** The guard booth at the gate, (x, z) its north-west corner: glass all round, the desk and the log. */
+    private void guardBooth(int x, int z) {
+        Placer s = at(x, z, 0);
+        for (int dx = 0; dx < 4; dx++) {
+            for (int dz = 0; dz < 4; dz++) {
+                boolean wall = dx == 0 || dx == 3 || dz == 0 || dz == 3;
+                s.set(dx, 0, dz, "concrete_dark");
+                for (int y = 1; y <= 3; y++) {
+                    String w = y == 2 && wall && (dx == 1 || dx == 2 || dz == 1 || dz == 2)
+                            ? (chance() < 0.3 + hit * 0.3 ? "window_broken" : "window") + "[axis=" + (dz == 0 || dz == 3 ? "x" : "z") + "]"
+                            : "concrete_panel";
+                    s.set(dx, y, dz, wall ? w : "air");
+                }
+                s.set(dx, 4, dz, "navy_steel");
+            }
+        }
+        Doors.abandoned(s, rng, 1, 1, 3, "ship_door", "north", Doors.hinge(rng));
+        s.set(2, 1, 1, "bunk_desk[facing=south]");
+        s.set(1, 1, 1, "bunk_chair[facing=north]");
+        s.set(2, 3, 0, "bunk_lamp_red[facing=north]");
+        kit.claim(x, z, x + 3, z + 3, Kit.BUILT);
+    }
+
+    /** The barracks bw x bd at (x0, z0): two floors of bunks, lockers and footlockers, the heads at one end. */
+    private void navalBarracks(int x0, int z0, int bw, int bd) {
+        Placer s = at(x0, z0, 0);
+        Bldg b = new Bldg(s, rng);
+        b.damage = 0.3 + hit * 0.5;
+        b.boarded = 0.15;
+        b.shell(0, 0, bw - 1, bd - 1, 2, 4, any("concrete_panel", "brick_buff"), "floor_lino", "floor_lino");
+        for (int y : new int[] {2, 6}) {
+            b.windowRow(2, bw - 3, 3, 0, y, "north", 1, null);
+            b.windowRow(2, bw - 3, 3, bd - 1, y, "south", 1, null);
+        }
+        b.doors(bw / 2 - 1, 1, 0, "shop_door", "north");
+        b.flat(0, 0, bw - 1, bd - 1, 8, "concrete_panel", 1, "concrete_dark");
+        b.stair(bw - 3, 2, 1, 4, "south", "steel");
+        for (int fl : new int[] {1, 5}) {
+            for (int x = 2; x < bw - 6; x += 3) {
+                for (int z : new int[] {1, bd - 3}) {
+                    boolean north = z == 1;
+                    String f = north ? "south" : "north";
+                    if (chance() < 0.9) {
+                        s.set(x, fl, z, "bunk_bed_head[facing=" + f + "]");
+                        s.set(x, fl, z + 1, "bunk_bed_foot[facing=" + f + "]");
+                        s.set(x, fl + 1, z, "bunk_bed_head_top[facing=" + f + "]");
+                        s.set(x, fl + 1, z + 1, "bunk_bed_foot_top[facing=" + f + "]");
+                    }
+                    s.set(x + 1, fl, north ? 1 : bd - 2, "bunk_locker[facing=" + f + "]");
+                    s.set(x, fl, north ? 3 : bd - 4, "bunk_footlocker[facing=" + f + "]");
+                }
+            }
+            for (int z = 2; z < bd - 2; z += 2) {
+                s.set(bw - 6, fl, z, "bunk_sink[facing=west]");
+            }
+            b.lights(1, 1, bw - 2, bd - 2, fl + 2, 0.05);
+            b.mess(1, 1, bw - 2, bd - 2, fl, 0.05 + hit * 0.05);
+        }
+    }
+
+    /** The supply warehouse bw x bd at (x0, z0): corrugated, a big roller door, racks of stores inside. */
+    private void supplyShed(int x0, int z0, int bw, int bd) {
+        Placer s = at(x0, z0, 0);
+        Bldg b = new Bldg(s, rng);
+        b.damage = 0.3 + hit * 0.4;
+        b.shell(0, 0, bw - 1, bd - 1, 1, 8, "corrugated_grey", "floor_concrete", "floor_concrete");
+        b.flat(0, 0, bw - 1, bd - 1, 8, "corrugated_grey", 1, "concrete_dark");
+        for (int x = bw / 2 - 3; x <= bw / 2 + 2; x++) {
+            for (int y = 1; y <= 6; y++) {
+                s.set(x, y, 0, y > 6 - rng.nextInt(3) * 2 ? "navy_roller[facing=north]" : "air");
+            }
+        }
+        for (int z = 3; z < bd - 3; z += 3) {
+            for (int x = 3; x < bw - 3; x++) {
+                if (Math.abs(x - bw / 2) < 4) {
+                    continue;
+                }
+                s.set(x, 1, z, any("bunk_rack_crates", "bunk_rack_boxes", "bunk_rack_drums") + "[facing=north]");
+                if (chance() < 0.7) {
+                    s.set(x, 2, z, any("bunk_rack_crates", "bunk_rack_boxes") + "[facing=north]");
+                }
+            }
+        }
+        b.lights(1, 1, bw - 2, bd - 2, 7, 0.05);
+        b.mess(1, 1, bw - 2, bd - 2, 1, 0.04);
     }
 
     /** The truck gate across the road in at gate x, row z: a canopy over four lanes, booths, barriers, the queue that never moved. */
@@ -461,11 +708,11 @@ final class PortSite extends Site {
         int apronEnd = mainZ - (int) main.reach() - 2;
         slab(0, quay + 1, lw - 1, apronEnd, false);
         boolean tanker = chance() < 0.45;
-        int beam = 18 + 2 * rng.nextInt(2);
-        int len = Math.min(lw - 60, 110 + rng.nextInt(40));
-        int sx = 8 + rng.nextInt(Math.max(1, lw - len - 70));
-        int zc = quay - 2 - beam / 2;
-        new Ships(at(sx, zc, 0), rng, hit).bulkShip(len, beam, tanker);
+        int beam = 32 + 2 * rng.nextInt(3), hbm = beam / 2;
+        int len = Math.min(lw - 60, 190 + rng.nextInt(40));
+        int sx = 10 + rng.nextInt(Math.max(1, lw - len - 70));
+        int zc = quay - 2 - hbm;
+        new BigShip(at(sx, zc, 0), rng, hit, hbm + 2).bulk(len, beam, tanker);
         // barges and the tug further along
         int bx = sx + len + 6;
         for (int i = 0; i < 2 && bx + 34 < lw - 4; i++) {

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_st_bridge": "zomboidcraft:block/city/navy_st_bridge",
+    "particle": "zomboidcraft:block/city/navy_st_bridge"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_st_bridge"
+        },
+        "south": {
+          "texture": "#navy_st_bridge",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_st_bridge",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#navy_st_bridge",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#navy_st_bridge",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#navy_st_bridge",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

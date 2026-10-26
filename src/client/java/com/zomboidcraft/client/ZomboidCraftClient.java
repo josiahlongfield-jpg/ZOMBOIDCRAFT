@@ -41,6 +41,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, ZomboidCraft.id("scope"), CombatHud::scope);
         HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, Crosshair::wrap);
         CombatClient.register();
+        com.zomboidcraft.client.gear.NightVisionClient.register();
+        com.zomboidcraft.client.gear.RadioClient.register();
         RailLights.register();
         RifleView.register();
         AimSensitivity.register();
@@ -49,6 +51,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         SoundSliders.register();
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
+        com.zomboidcraft.client.weather.WeatherFx.register();
         if (ZcConfig.get().look.customZombies) {
             ModelLayerRegistry.registerModelLayer(WalkerModel.LAYER, WalkerModel::createLayer);
             ModelLayerRegistry.registerModelLayer(WalkerAddonModel.LAYER, WalkerAddonModel::createLayer);

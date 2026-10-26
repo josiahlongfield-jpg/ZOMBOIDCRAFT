@@ -329,6 +329,14 @@ def model_json(model, uvs, texture, display, gui_light='front'):
             'elements': elements_json(model, uvs), 'display': display}
 
 
+# How far an item model's elements may reach (pixels): the game refuses to load a model past these.
+LIMIT = (-16.0, 32.0)
+
+
 def dump(obj, path):
+    for e in obj.get('elements', ()) if isinstance(obj, dict) else ():
+        for corner in ('from', 'to'):
+            if not all(LIMIT[0] <= v <= LIMIT[1] for v in e[corner]):
+                raise ValueError(f'{path}: an element\'s {corner!r} {e[corner]} is outside the model limits {LIMIT}')
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=1) + '\n')

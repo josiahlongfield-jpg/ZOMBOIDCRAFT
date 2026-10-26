@@ -40,6 +40,11 @@ public final class ZombieLook {
         // Loading the class registers the attachment.
     }
 
+    /** Every outfit name, most common first. */
+    public static List<String> outfits() {
+        return GENERAL.stream().map(Outfit::name).toList();
+    }
+
     public static String outfit(Entity zombie) {
         String chosen = zombie.getAttached(OUTFIT);
         if (chosen != null) {

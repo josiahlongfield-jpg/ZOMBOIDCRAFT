@@ -22,7 +22,7 @@ import net.minecraft.util.Mth;
  * @param hail     0 .. 1, hail falling
  */
 public record Weather(int kind, float rain, float thunder, float fog, float wind, float windYaw, float moon, float hail) {
-    public static final Weather CALM = new Weather(WeatherKind.DRIZZLE.ordinal(), WeatherKind.DRIZZLE.rain, 0, 0.1f, 0.15f, 45, 0, 0);
+    public static final Weather CALM = new Weather(WeatherKind.RAIN.ordinal(), WeatherKind.RAIN.rain, 0, 0.1f, 0.15f, 45, 0, 0);
 
     public static final StreamCodec<io.netty.buffer.ByteBuf, Weather> STREAM_CODEC = new StreamCodec<>() {
         @Override

@@ -99,8 +99,8 @@ def body(m):
     b.box((-0.24, -3.32, g0), (0.24, RCVR_BOT - 0.42, g0 + 0.24), 'trigplate')          # the guard's front
     b.box((-0.24, -3.32, g0), (0.24, -3.08, g1), 'trigplate')                           # its bow
     b.seg((g1 - 0.2, -3.20), (g1 + 0.45, RCVR_BOT - 0.42), 0.22, 0.48, 'trigplate', over=0.03)
-    b.seg((4.55, RCVR_BOT - 0.42), (4.75, -2.62), 0.24, 0.26, steel, over=0.03)        # trigger
-    b.seg((4.75, -2.62), (5.05, -2.95), 0.22, 0.26, steel, over=0.03)
+    b.seg((5.55, RCVR_BOT - 0.42), (5.55, -2.56), 0.24, 0.26, steel, over=0.03)        # trigger: back in the guard,
+    b.seg((5.55, -2.56), (5.40, -2.92), 0.22, 0.26, steel, over=0.03)                  # its tip curving forward
     b.rod(-0.60, 0.60, 0.13, steel, axis=0, at=(-2.22, 6.10))                           # crossbolt safety
     b.box((-0.60, -2.42, 3.30), (-0.52, -2.18, 3.70), steel)                            # action-bar lock, left
     # ---- the stock: wrist and semi-pistol grip, then the butt, built up in slices so its lines run true

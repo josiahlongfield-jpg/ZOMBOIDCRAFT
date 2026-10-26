@@ -7,13 +7,34 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== kit buttons"
-javap -cp "$CP" -c -p net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket 2>&1 | grep -E "VAR_INT|BYTE|INT|readByte|writeByte|readVarInt|writeVarInt|getstatic|record|public"
-javap -cp "$CP" -c -p net.minecraft.server.network.ServerGamePacketListenerImpl 2>&1 | sed -n '/public void handleContainerButtonClick(/,/return$/p' | grep -E "invoke|if|getfield" | head -30
-sig net.minecraft.client.Minecraft 'hasShiftDown|hasControlDown|hasAltDown'
-sig net.minecraft.client.input.MouseButtonEvent '.'
-sig net.minecraft.client.input.InputWithModifiers '.'
-sig com.mojang.blaze3d.platform.InputConstants 'isKeyDown'
+echo "===== atlases"
+ALL_JARS=$(find ~/.gradle/caches/fabric-loom -name '*.jar' 2>/dev/null)
+for j in $ALL_JARS; do
+  if unzip -Z1 "$j" 2>/dev/null | grep -q '^assets/minecraft/atlases/'; then
+    echo "+++ $j"; unzip -Z1 "$j" | grep '^assets/minecraft/atlases/'
+    for f in items blocks; do echo "--- $f.json"; unzip -p "$j" "assets/minecraft/atlases/$f.json" 2>/dev/null | head -c 1500; echo; done
+    break
+  fi
+done
+classes 'renderer/texture/atlas/sources/' | head -20
+sig net.minecraft.client.renderer.texture.atlas.sources.SourceFilter '.'
+javap -cp "$CP" -c -p net.minecraft.client.renderer.texture.atlas.SpriteSources 2>&1 | grep -E 'ldc' | head -20
+javap -cp "$CP" -p net.minecraft.util.ResourceLocationPattern net.minecraft.util.IdentifierPattern 2>&1 | head -20
+javap -cp "$CP" -c -p net.minecraft.client.resources.model.AtlasManager 2>&1 | grep -E 'ldc' | head -30
+javap -cp "$CP" -c -p net.minecraft.data.AtlasIds 2>&1 | grep -E 'ldc' | head -30
+exit 0
+
+echo "===== nvg4"
+for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostChain 2>&1 | grep -E 'ldc|TextureInput|getTexture|withPath|SNIPPET|withUniform|withSampler|BindGroup' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostPass 2>&1 | grep -E 'ldc|setUniform|bindDefault|Globals|getTexture|bindTexture|setTexture' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B3 -A25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+sig com.mojang.blaze3d.systems.RenderSystem 'bindDefault|Globals|globalSettings'
+sig net.minecraft.client.renderer.texture.DynamicTexture 'public'
+sig com.mojang.blaze3d.platform.NativeImage 'setPixel|getPixels|NativeImage\(|setPixelABGR|setPixelRGBA'
 exit 0
 
 echo "===== injuries"

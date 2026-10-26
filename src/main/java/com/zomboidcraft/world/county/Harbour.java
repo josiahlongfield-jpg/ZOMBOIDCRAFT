@@ -92,7 +92,7 @@ final class Harbour {
                 p.set(x, y, z, y <= Ships.SEA && y >= Ships.SEA - 1 ? "concrete_panel_moss" : y < Ships.SEA ? "concrete_dark" : "concrete_panel_stain");
             }
             if ((x - x0) % 9 == 4) {
-                p.set(x, 1, z, "minecraft:polished_blackstone_wall");
+                p.set(x, 1, z, "vessel_bollard[axis=x]");
             }
             if ((x - x0) % 6 == 1 && chance() > hit * 0.3) {
                 p.set(x, -1, z - 1, "tire[axis=x]");
@@ -100,7 +100,7 @@ final class Harbour {
             }
             if ((x - x0) % 27 == 13) {
                 for (int y = Ships.SEA - 1; y <= -1; y++) {
-                    p.set(x, y, z - 1, "minecraft:ladder[facing=north]");
+                    p.set(x, y, z - 1, "bunk_ladder[facing=north]");
                 }
             }
         }
@@ -212,8 +212,8 @@ final class Harbour {
      * over the water to -reach and back over the land (or raised, standing up over the water),
      * the A-frame and its stays, the machinery house, the trolley with a box hanging from it.
      */
-    void gantry(int pw, int gauge, int reach, boolean raised, String steel) {
-        int top = 24, apex = top + 18, back = 14;
+    void gantry(int pw, int gauge, int reach, boolean raised, String steel, int top) {
+        int apex = top + 18, back = 14;
         for (int[] c : new int[][] {{0, 0}, {pw - 1, 0}, {0, gauge - 1}, {pw - 1, gauge - 1}}) {
             for (int y = 1; y <= top; y++) {
                 for (int i = 0; i < 2; i++) {
@@ -293,8 +293,8 @@ final class Harbour {
             }
             int drop = 6 + rng.nextInt(10);
             for (int y = top - drop; y <= top; y++) {
-                p.set(b0 + 3, y, tz + 1, "minecraft:iron_chain[axis=y]");
-                p.set(b1 - 1, y, tz + 1, "minecraft:iron_chain[axis=y]");
+                p.set(b0 + 3, y, tz + 1, "vessel_rope_v");
+                p.set(b1 - 1, y, tz + 1, "vessel_rope_v");
             }
             int sy = top - drop - 1;
             for (int x = 0; x < pw; x++) {
@@ -313,7 +313,7 @@ final class Harbour {
             p.set(x, apex, 3, steel);
         }
         for (int x : new int[] {b0, b1}) {
-            line(x, apex, 3, x, tipY, tipZ, "minecraft:iron_chain[axis=y]".equals(steel) ? steel : "steel_girder");
+            line(x, apex, 3, x, tipY, tipZ, "steel_girder");
             line(x, apex, 3, x, top + 2, gauge + back, "steel_girder");
         }
         // the machinery house on the back reach
@@ -330,7 +330,7 @@ final class Harbour {
         p.set(pw / 2, top - 1, gauge / 2, lamp(0.3));
         // a ladder up the landside leg
         for (int y = 2; y < top; y++) {
-            p.set(0, y, gauge, "minecraft:ladder[facing=south]");
+            p.set(0, y, gauge, "bunk_ladder[facing=south]");
         }
     }
 

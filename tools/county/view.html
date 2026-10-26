@@ -13,7 +13,9 @@
 // the LabPBR normal and specular maps, a blue sky with clouds, sky light only where the sky is seen,
 // lamps that light by direction (Photonics), bloom and bloomy fog, auto exposure (bias -0.3),
 // Purkinje in the dark, saturation 0.8 and contrast 1.1. It renders at &ss=2 times the size and
-// scales down. &hand=1 adds a held torch; &ev=N shifts the exposure by N stops.
+// scales down. &hand=1 adds a held torch; &ev=N shifts the exposure by N stops. &rain=1 is his
+// permanent rain: a low grey overcast instead of the sun, wet ground (darker, with puddle shine on
+// whatever faces the sky), grey fog and faint streaks.
 const P = new URLSearchParams(location.search);
 const W = +(P.get('w') || 1440), H = +(P.get('h') || 1080);
 const DIR = P.get('mesh') || 'mesh';
@@ -26,7 +28,7 @@ const AMB = +(P.get('amb') || 0.04), TORCH = DARK && P.get('torch') !== '0';
 const SKY = DARK ? [0.01, 0.01, 0.012] : [0.50, 0.53, 0.56], HAZE = DARK ? [0.004, 0.004, 0.005] : [0.47, 0.50, 0.52];
 const NL = 24;
 const PHOTON = P.get('photon') === '1', SS = PHOTON ? +(P.get('ss') || 2) : 1, NLP = 48;
-const HAND = P.get('hand') === '1', EV = +(P.get('ev') || 0);
+const HAND = P.get('hand') === '1', EV = +(P.get('ev') || 0), RAIN = P.get('rain') === '1';
 // Photon (Colored Lights on) colours a froglight's light by its block: lavender-pink, green, amber
 const FROG = {pearlescent_froglight: [0.95, 0.55, 1.0], verdant_froglight: [0.45, 1.0, 0.5], ochre_froglight: [1.0, 0.72, 0.32]};
 
@@ -161,7 +163,7 @@ const PH_SCENE = PHOTON && program(`
   in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec3 vBL; in vec4 vSun; in vec4 vSky;
   uniform sampler2D tex, nmap, orm, emis; uniform highp sampler2DShadow shadow, skyShadow;
   uniform vec3 eye, sunDir, sunCol, warm; uniform float cutout, glow, hasN, skyTexel;
-  uniform int dark, hand; uniform vec3 tPos;
+  uniform int dark, hand, rain; uniform vec3 tPos;
   uniform vec4 lPos[${NLP}]; uniform vec3 lCol[${NLP}]; uniform int nl;
   out vec4 col;
   const float PI = 3.14159265;
@@ -197,10 +199,26 @@ const PH_SCENE = PHOTON && program(`
     vec3 o = texture(orm, vUV).rgb;
     float rough = clamp(o.g, 0.05, 1.0), metal = o.b;
     vec3 alb = pow(t.rgb, vec3(2.2));
-    vec3 f0 = mix(vec3(0.04), alb, metal), dif = alb * (1.0 - metal) / PI;
     vec3 v = normalize(eye - vW);
     float ao = (0.35 + 0.65 * vAO) * mix(1.0, o.r, 0.7);
     vec3 c = vec3(0.0);
+    // sky light only where the sky can be seen from (a wide soft look straight up)
+    float sv = 0.0;
+    if (dark == 0) {
+      vec3 q = vSky.xyz / vSky.w * 0.5 + 0.5;
+      for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++)
+        sv += texture(skyShadow, vec3(q.xy + vec2(i, j) * skyTexel, q.z - 0.002));
+      sv /= 49.0;
+      if (q.x < 0.0 || q.x > 1.0 || q.y < 0.0 || q.y > 1.0) sv = 1.0;
+    }
+    if (rain == 1 && dark == 0) {
+      // rained on: darker where wet, and what faces the sky holds a film of water that shines
+      float wet = sv * (0.4 + 0.6 * smoothstep(0.2, 0.95, ng.y)), pool = sv * smoothstep(0.6, 0.98, ng.y);
+      alb *= mix(1.0, 0.6, wet);
+      rough = mix(rough * mix(1.0, 0.6, wet), 0.08, pool * 0.6);
+      n = normalize(mix(n, ng, pool * 0.6));
+    }
+    vec3 f0 = mix(vec3(0.04), alb, metal), dif = alb * (1.0 - metal) / PI;
     if (dark == 0) {
       vec3 p = vSun.xyz / vSun.w * 0.5 + 0.5;
       float lit = 0.0;
@@ -209,19 +227,15 @@ const PH_SCENE = PHOTON && program(`
       lit /= 25.0;
       if (p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0) lit = 1.0;
       lit *= step(0.0, dot(ng, sunDir));
-      c += (dif * max(dot(n, sunDir), 0.0) * PI + ggx(n, v, sunDir, rough, f0) * PI) * sunCol * lit;
-      // sky light only where the sky can be seen from (a wide soft look straight up)
-      vec3 q = vSky.xyz / vSky.w * 0.5 + 0.5;
-      float sv = 0.0;
-      for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++)
-        sv += texture(skyShadow, vec3(q.xy + vec2(i, j) * skyTexel, q.z - 0.002));
-      sv /= 49.0;
-      if (q.x < 0.0 || q.x > 1.0 || q.y < 0.0 || q.y > 1.0) sv = 1.0;
-      vec3 skyIrr = mix(vec3(0.30, 0.29, 0.27), vec3(0.62, 0.74, 1.0) * 1.35, n.y * 0.5 + 0.5);
+      c += (dif * max(dot(n, sunDir), 0.0) * PI + ggx(n, v, sunDir, rough, f0) * PI) * sunCol * lit * (rain == 1 ? 0.06 : 1.0);
+      vec3 skyIrr = rain == 1 ? mix(vec3(0.16, 0.17, 0.18), vec3(0.47, 0.49, 0.52) * 1.6, n.y * 0.5 + 0.5)
+                              : mix(vec3(0.30, 0.29, 0.27), vec3(0.62, 0.74, 1.0) * 1.35, n.y * 0.5 + 0.5);
       c += alb * (1.0 - metal) * skyIrr * ao * (0.06 + 0.94 * sv);
       vec3 r = reflect(-v, n);
       float fr = pow(1.0 - max(dot(n, v), 0.0), 5.0);
-      c += (f0 + (1.0 - f0) * fr) * mix(vec3(0.3), vec3(0.62, 0.74, 1.0) * 1.6, clamp(r.y * 0.5 + 0.5, 0.0, 1.0)) * sv * (1.0 - rough) * (1.0 - rough) * ao;
+      vec3 skyRef = rain == 1 ? mix(vec3(0.12), vec3(0.47, 0.49, 0.52) * 0.9, clamp(r.y * 0.5 + 0.5, 0.0, 1.0))
+                              : mix(vec3(0.3), vec3(0.62, 0.74, 1.0) * 1.6, clamp(r.y * 0.5 + 0.5, 0.0, 1.0));
+      c += (f0 + (1.0 - f0) * fr) * skyRef * sv * (1.0 - rough) * (1.0 - rough) * ao;
     }
     // block light: the nearest lamps light by direction, scaled down where walls stop the baked light
     vec3 bc = warm * fall(vBL.x) + vec3(1.0, 0.10, 0.05) * fall(vBL.y) + vec3(0.30, 1.0, 0.35) * fall(vBL.z);
@@ -251,7 +265,7 @@ const PH_SCENE = PHOTON && program(`
 const PH_QUAD_VS = `in vec3 pos; out vec2 v; void main() { v = pos.xy * 0.5 + 0.5; gl_Position = vec4(pos.xy, 0.9999, 1.0); }`;
 // Photon's sky: deep blue overhead, pale at the horizon, a glow round the sun, a layer of cumulus
 const PH_SKY = PHOTON && program(PH_QUAD_VS, `
-  in vec2 v; uniform mat4 invVP; uniform vec3 eye, sunDir; uniform int dark; out vec4 col;
+  in vec2 v; uniform mat4 invVP; uniform vec3 eye, sunDir; uniform int dark, rain; out vec4 col;
   float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float nz(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
     return mix(mix(h(i), h(i + vec2(1, 0)), f.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), f.x), f.y); }
@@ -260,6 +274,18 @@ const PH_SKY = PHOTON && program(PH_QUAD_VS, `
     if (dark == 1) { col = vec4(0.0, 0.0, 0.0, 3000.0); return; }
     vec4 a = invVP * vec4(v * 2.0 - 1.0, 1.0, 1.0);
     vec3 d = normalize(a.xyz / a.w - eye);
+    if (rain == 1) {
+      // one low deck of rain cloud, darker in its folds, lighter towards the horizon
+      vec3 lo = vec3(0.27, 0.29, 0.31), hi = vec3(0.47, 0.49, 0.52);
+      vec3 c = hi;
+      if (d.y > 0.0) {
+        vec2 cp = d.xz / (d.y + 0.08) * 300.0 + eye.xz;
+        float cl = fbm(cp * 0.004) * 0.7 + fbm(cp * 0.017) * 0.3;
+        c = mix(hi, lo, smoothstep(0.3, 0.7, cl) * smoothstep(0.0, 0.25, d.y));
+      } else c = mix(hi, vec3(0.22, 0.23, 0.24), min(-d.y * 5.0, 1.0));
+      col = vec4(c, 3000.0);
+      return;
+    }
     vec3 zen = vec3(0.10, 0.24, 0.62) * 1.3, hor = vec3(0.56, 0.66, 0.80) * 1.5;
     float up = max(d.y, 0.0);
     vec3 c = mix(hor, zen, pow(up, 0.5));
@@ -297,7 +323,8 @@ const PH_UP = PHOTON && program(PH_QUAD_VS, `
 // fog, bloom, exposure, Purkinje, tone map and Josiah's grade
 const PH_POST = PHOTON && program(PH_QUAD_VS, `
   in vec2 v; uniform sampler2D scene, bloom, wide; uniform float exposure, bloomK, fogK, nb, nw;
-  uniform vec3 fogCol, sunDir, eye; uniform mat4 invVP; uniform int dark; uniform vec2 res; out vec4 col;
+  uniform vec3 fogCol, sunDir, eye; uniform mat4 invVP; uniform int dark, rain; uniform vec2 res; out vec4 col;
+  float h1(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   vec3 aces(vec3 x) { return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
   void main() {
     vec4 s = texture(scene, v); vec3 c = s.rgb; float d = s.a;
@@ -306,8 +333,16 @@ const PH_POST = PHOTON && program(PH_QUAD_VS, `
     if (dark == 0) {
       vec4 a = invVP * vec4(v * 2.0 - 1.0, 1.0, 1.0);
       vec3 dir = normalize(a.xyz / a.w - eye);
-      vec3 fc = fogCol + vec3(1.0, 0.85, 0.65) * pow(max(dot(dir, sunDir), 0.0), 8.0) * 1.2;
+      vec3 fc = fogCol + (rain == 1 ? vec3(0.0) : vec3(1.0, 0.85, 0.65) * pow(max(dot(dir, sunDir), 0.0), 8.0) * 1.2);
       if (d < 2000.0) c = mix(c, fc, f);
+      if (rain == 1) {
+        // falling rain: short slanted streaks, a little brighter than what's behind them
+        vec2 px = v * res; px.x += px.y * 0.16;
+        float lane = floor(px.x / 2.0), len = res.y * 0.06;
+        float seg = floor(px.y / len + h1(vec2(lane, 3.0)) * 9.0);
+        float on = step(0.985, h1(vec2(lane, seg))) * smoothstep(0.0, 0.6, fract(px.y / len + h1(vec2(lane, 3.0)) * 9.0));
+        c += fogCol * on * 0.07;
+      }
     } else {
       c = mix(c, bw * 1.3, f);   // bloomy fog: the haze glows round the lamps
     }
@@ -407,6 +442,7 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   gl.uniform3fv(gl.getUniformLocation(PH_SKY, 'eye'), eye);
   gl.uniform3fv(gl.getUniformLocation(PH_SKY, 'sunDir'), sunDir);
   gl.uniform1i(gl.getUniformLocation(PH_SKY, 'dark'), DARK ? 1 : 0);
+  gl.uniform1i(gl.getUniformLocation(PH_SKY, 'rain'), RAIN ? 1 : 0);
   gl.depthMask(false); full(); gl.depthMask(true);
 
   gl.useProgram(PH_SCENE);
@@ -416,7 +452,7 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   gl.uniform1f(u('unit'), unit); gl.uniform3fv(u('eye'), eye); gl.uniform3fv(u('sunDir'), sunDir);
   gl.uniform3fv(u('sunCol'), [0.86 * 2.6, 0.90 * 2.6, 1.0 * 2.6]); gl.uniform3fv(u('warm'), warm);
   gl.uniform1f(u('skyTexel'), 0.6 / (2 * R));   // 0.6 blocks between taps
-  gl.uniform1i(u('dark'), DARK ? 1 : 0); gl.uniform1i(u('hand'), HAND ? 1 : 0);
+  gl.uniform1i(u('dark'), DARK ? 1 : 0); gl.uniform1i(u('hand'), HAND ? 1 : 0); gl.uniform1i(u('rain'), RAIN ? 1 : 0);
   const right = norm(cross(fwd, [0, 1, 0]));
   gl.uniform3fv(u('tPos'), [eye[0] + right[0] * 0.4, eye[1] - 0.4, eye[2] + right[2] * 0.4]);
   const lamps = (index.lights || []).map(([x, y, z, name]) => [x + 0.5, y + 0.5, z + 0.5, name])
@@ -488,7 +524,8 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   }
   const avg = Math.exp(sum / ws);
   // underground the eye settles darker than by day, so a torch lights a pool and not the room
-  const exposure = Math.min(Math.max((DARK ? 0.09 : 0.18) / avg, 0.05), DARK ? 4 : 3) * 2 ** (-0.3 + EV);
+  // and in the rain it keeps the day dim and grey
+  const exposure = Math.min(Math.max((DARK ? 0.09 : RAIN ? 0.12 : 0.18) / avg, 0.05), DARK ? 4 : RAIN ? 1.25 : 3) * 2 ** (-0.3 + EV);
   console.warn('photon: average', avg.toFixed(4), 'exposure', exposure.toFixed(3));
 
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -501,8 +538,8 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   gl.uniform1i(q('scene'), 0); gl.uniform1i(q('bloom'), 1); gl.uniform1i(q('wide'), 2);
   gl.uniform1f(q('nb'), down.length); gl.uniform1f(q('nw'), down.length - 3);
   gl.uniform1f(q('exposure'), exposure); gl.uniform1f(q('bloomK'), +(P.get('bloom') || 0.08));
-  gl.uniform1f(q('fogK'), +(P.get('pfog') || (DARK ? 0.03 : 0.004)));
-  gl.uniform3fv(q('fogCol'), [0.62, 0.72, 0.86]); gl.uniform3fv(q('sunDir'), sunDir); gl.uniform3fv(q('eye'), eye);
+  gl.uniform1f(q('fogK'), +(P.get('pfog') || (DARK ? 0.03 : RAIN ? 0.0055 : 0.004)));
+  gl.uniform3fv(q('fogCol'), RAIN ? [0.40, 0.42, 0.45] : [0.62, 0.72, 0.86]); gl.uniform1i(q('rain'), RAIN ? 1 : 0); gl.uniform3fv(q('sunDir'), sunDir); gl.uniform3fv(q('eye'), eye);
   gl.uniformMatrix4fv(q('invVP'), false, invVP);
   gl.uniform1i(q('dark'), DARK ? 1 : 0); gl.uniform2fv(q('res'), [W, H]);
   full();

@@ -56,28 +56,31 @@ public final class Cars {
     /**
      * The columns under a car standing at (x, z) and turned to yaw (Minecraft's: 0 faces south):
      * {block x, block z, then the body height in centimetres over each quarter of the block,
-     * north-west, north-east, south-west, south-east} for every column it covers. A quarter counts
-     * the car's height over at least two of its four sample points, so the hull stays inside the
-     * body's outline rather than spilling past its corners.
+     * north-west, north-east, south-west, south-east, then the underside's height over each
+     * quarter the same way} for every column it covers. A quarter counts the car's height over at
+     * least two of its four sample points, so the hull stays inside the body's outline rather than
+     * spilling past its corners; its underside is the lowest one under the body there.
      */
     public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw) {
         List<int[]> out = new ArrayList<>();
         double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
         double reach = Math.hypot(model.size[0], model.size[2]) / 2 + 0.5;
-        float[] samples = new float[4];
+        float[] samples = new float[4], unders = new float[4];
         for (int bx = Mth.floor(x - reach); bx <= Mth.floor(x + reach); bx++) {
             for (int bz = Mth.floor(z - reach); bz <= Mth.floor(z + reach); bz++) {
-                int[] col = {bx, bz, 0, 0, 0, 0};
+                int[] col = {bx, bz, 0, 0, 0, 0, 0, 0, 0, 0};
                 boolean any = false;
                 for (int q = 0; q < 4; q++) {
                     for (int s = 0; s < 4; s++) {
                         double dx = bx + (q & 1) * 0.5 + 0.125 + (s & 1) * 0.25 - x;
                         double dz = bz + (q >> 1) * 0.5 + 0.125 + (s >> 1) * 0.25 - z;
                         samples[s] = model.heightAt(dx * cos - dz * sin, dx * sin + dz * cos);
+                        unders[s] = samples[s] > 0.15f ? model.floorAt(dx * cos - dz * sin, dx * sin + dz * cos) : 99f;
                     }
                     java.util.Arrays.sort(samples);
                     if (samples[2] > 0.15f) {
                         col[2 + q] = Math.round(samples[2] * 100);
+                        col[6 + q] = Math.round(Math.min(Math.min(unders[0], unders[1]), Math.min(unders[2], unders[3])) * 100);
                         any = true;
                     }
                 }
@@ -108,6 +111,7 @@ public final class Cars {
     /**
      * One column's hull blocks from the ground up, as hull() codes: each quarter's height above
      * the block's floor, less lift centimetres (the gap between the ground and the first block).
+     * A quarter is left empty in every whole block under its underside (0 codes are no block).
      */
     public static int[] layers(int[] column, int lift) {
         int top = 0;
@@ -119,7 +123,8 @@ public final class Cars {
         for (int i = 0; i < n; i++) {
             int code = 0;
             for (int q = 3; q >= 0; q--) {
-                int cm = Mth.clamp(column[2 + q] - lift - i * 100, 0, 100);
+                boolean under = column.length > 6 && column[6 + q] - lift >= (i + 1) * 100;
+                int cm = under ? 0 : Mth.clamp(column[2 + q] - lift - i * 100, 0, 100);
                 code = code * 5 + (cm + 12) / 25;
             }
             out[i] = code;
@@ -197,7 +202,7 @@ public final class Cars {
         }
         int base = Mth.floor(car.getY() + 0.01);
         for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
-            for (int i = 0; i <= 5; i++) {
+            for (int i = 0; i <= 7; i++) {
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                 if (level.getBlockState(pos).is(HULL)) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);

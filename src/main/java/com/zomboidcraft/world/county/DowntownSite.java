@@ -140,6 +140,24 @@ final class DowntownSite extends Site {
         kit.overgrow(0.55);
         kit.roadWeeds(0.35);
         kit.tidyPlants();
+        shelter();
+    }
+
+    /**
+     * Most old cities dug a fallout shelter under the courthouse, deep enough to pass under the
+     * subway and the towers' bunkers; the plate by its door still says so. Its own dice again.
+     */
+    private void shelter() {
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, 0x5E17, 0xC17E));
+        if (civic.courthouse == null || g.nextDouble() > 0.75) {
+            return;
+        }
+        double r = g.nextDouble();
+        Bunker.State state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        int[] in = civic.courtInterior;
+        if (Shelter.dig(civic.courthouse, g, state, in, 0, -28, new int[] {2, 2, w - 3, d - 3})) {
+            Shelter.plate(civic.courthouse, in[0], in[2], 4);
+        }
     }
 
     // ------------------------------------------------------------------ the grid

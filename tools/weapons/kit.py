@@ -31,6 +31,11 @@ NS = 'zomboidcraft'
 SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
 FINISH = len(SLOTS)     # the model data string after the slot keys: the gun's finish
 PX = 16
+# Skins by how damaged the gun is: (skin, how worn it's painted, the damage it starts at). Josiah wants every gun and
+# attachment like new at all times (2026-10-26), so there's one; more (('worn', 0.55, 0.4), ('battered', 1.0, 0.65))
+# would follow the gun's condition.
+LIKE_NEW = 0.12
+WEARS = [('', LIKE_NEW, 0.0)]
 
 # how a part drawn on a top rail turns to sit on each face (columns: where its x, y, z end up)
 FACING = {
@@ -118,7 +123,7 @@ def place(part, R, t):
     return q
 
 
-def drawn(name, build, R=np.eye(3), t=(0, 0, 0), look=None, seed=0, wear=0.4):
+def drawn(name, build, R=np.eye(3), t=(0, 0, 0), look=None, seed=0, wear=LIKE_NEW):
     """Draws a part in its own frame, places it, tidies it. Returns a Model in the build frame."""
     m = M.Model(name)
     build(m)
@@ -353,16 +358,18 @@ def star_flash(at, star):
 
 def flash_model(tip, length=2.4, half=0.75, star=1.1):
     """A light muzzle flash: two crossed tongues of flame along the bore and a soft star facing down it, all
-    see-through at the edges and lit by themselves. Pixels; the bore runs toward -z."""
+    see-through at the edges and lit by themselves. Pixels; the bore runs toward -z. A flash that would reach past
+    the front of the model limits (a long rifle's suppressor ends near them) is cut off there: its star stays."""
     x, y, z = (round(float(v), 4) for v in tip)
     lit = {'shade': False, 'light_emission': 15}
+    front = max(z - length, M.LIMIT[0])
 
     def tongue(angle):
-        return dict(lit, **{'from': [x, round(y - half, 4), round(z - length, 4)], 'to': [x, round(y + half, 4), z],
+        return dict(lit, **{'from': [x, round(y - half, 4), round(front, 4)], 'to': [x, round(y + half, 4), z],
                             'rotation': {'angle': angle, 'axis': 'z', 'origin': [x, y, z]},
                             'faces': {'east': {'uv': [8, 0, 16, 16], 'texture': '#0'},
                                       'west': {'uv': [16, 0, 8, 16], 'texture': '#0'}}})
-    zs = round(z - 0.2, 4)
+    zs = round(max(z - 0.2, M.LIMIT[0]), 4)
     face = dict(lit, **{'from': [round(x - star, 4), round(y - star, 4), zs], 'to': [round(x + star, 4), round(y + star, 4), zs],
                         'faces': {'north': {'uv': [0, 0, 8, 16], 'texture': '#0'},
                                   'south': {'uv': [0, 0, 8, 16], 'texture': '#0'}}})
@@ -449,11 +456,6 @@ def opened(m, axis, angle, origin):
             q['rot'] = dict(axis=axis, angle=angle, origin=[float(v) for v in origin])
         out.parts.append(q)
     return out
-
-
-# How worn a gun looks follows its condition (its damage): (skin, how worn it's painted, the damage it starts at).
-# Clean through Pristine and Good, worn once it's Worn, battered from Battered down.
-WEARS = [('', 0.12, 0.0), ('worn', 0.55, 0.4), ('battered', 1.0, 0.65)]
 
 
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
@@ -660,6 +662,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
 
 def by_wear(model):
     """The model for how worn the gun is (see WEARS), picked by its damage."""
+    if len(WEARS) == 1:
+        return model(WEARS[0][0])
     return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:damage',
             'entries': [{'threshold': at, 'model': model(w)} for w, _a, at in WEARS[1:]], 'fallback': model('')}
 

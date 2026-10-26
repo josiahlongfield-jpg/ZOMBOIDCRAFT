@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_leather": "zomboidcraft:block/city/navy_leather",
+    "navy_tyre": "zomboidcraft:block/city/navy_tyre",
+    "navy_yellow": "zomboidcraft:block/city/navy_yellow",
+    "particle": "zomboidcraft:block/city/navy_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        2,
+        0
+      ],
+      "to": [
+        15,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        8,
+        1
+      ],
+      "to": [
+        13,
+        10,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_leather"
+        },
+        "south": {
+          "texture": "#navy_leather"
+        },
+        "east": {
+          "texture": "#navy_leather"
+        },
+        "west": {
+          "texture": "#navy_leather"
+        },
+        "up": {
+          "texture": "#navy_leather"
+        },
+        "down": {
+          "texture": "#navy_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        6
+      ],
+      "to": [
+        13,
+        15,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_leather"
+        },
+        "south": {
+          "texture": "#navy_leather"
+        },
+        "east": {
+          "texture": "#navy_leather"
+        },
+        "west": {
+          "texture": "#navy_leather"
+        },
+        "up": {
+          "texture": "#navy_leather"
+        },
+        "down": {
+          "texture": "#navy_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        9
+      ],
+      "to": [
+        11,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_yellow"
+        },
+        "south": {
+          "texture": "#navy_yellow"
+        },
+        "east": {
+          "texture": "#navy_yellow"
+        },
+        "west": {
+          "texture": "#navy_yellow"
+        },
+        "up": {
+          "texture": "#navy_yellow"
+        },
+        "down": {
+          "texture": "#navy_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        10
+      ],
+      "to": [
+        9,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tyre"
+        },
+        "south": {
+          "texture": "#navy_tyre"
+        },
+        "east": {
+          "texture": "#navy_tyre"
+        },
+        "west": {
+          "texture": "#navy_tyre"
+        },
+        "up": {
+          "texture": "#navy_tyre"
+        },
+        "down": {
+          "texture": "#navy_tyre"
+        }
+      }
+    }
+  ]
+}

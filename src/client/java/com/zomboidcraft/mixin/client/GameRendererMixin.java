@@ -6,13 +6,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.zomboidcraft.client.combat.RifleView;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
+ * Night vision goggles flipped down add their tube's screen effect to the frame's list (NightVisionClient).
+ *
  * On the sights, the walking bob is calmed (guns.aimSway). It's done inside bobView itself, so it holds wherever the
  * bob is called from: shader packs (Iris) draw the hands with their own call to it.
  */
@@ -45,5 +49,10 @@ public abstract class GameRendererMixin {
     private void zomboidcraft$steadySights(PoseStack pose, float x, float y, float z, Operation<Void> original) {
         float keep = RifleView.bobShiftScale();
         original.call(pose, x * keep, y * keep, z * keep);
+    }
+
+    @ModifyVariable(method = "preparePostEffects", at = @At("HEAD"), argsOnly = true)
+    private java.util.List<Identifier> zomboidcraft$nightVision(java.util.List<Identifier> requested) {
+        return com.zomboidcraft.client.gear.NightVisionClient.withEffect(requested);
     }
 }

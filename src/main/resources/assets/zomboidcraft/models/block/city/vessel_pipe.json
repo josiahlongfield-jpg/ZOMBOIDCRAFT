@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_pipe": "zomboidcraft:block/city/vessel_pipe",
+    "particle": "zomboidcraft:block/city/vessel_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        0
+      ],
+      "to": [
+        12,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_pipe",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vessel_pipe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_pipe"
+        },
+        "west": {
+          "texture": "#vessel_pipe"
+        },
+        "up": {
+          "texture": "#vessel_pipe"
+        },
+        "down": {
+          "texture": "#vessel_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        6
+      ],
+      "to": [
+        13,
+        2,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_bollard"
+        },
+        "south": {
+          "texture": "#vessel_bollard"
+        },
+        "east": {
+          "texture": "#vessel_bollard"
+        },
+        "west": {
+          "texture": "#vessel_bollard"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

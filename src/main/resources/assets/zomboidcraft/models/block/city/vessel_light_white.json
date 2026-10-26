@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_bollard": "zomboidcraft:block/city/vessel_bollard",
+    "vessel_lens_white": "zomboidcraft:block/city/vessel_lens_white",
+    "particle": "zomboidcraft:block/city/vessel_lens_white"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        7,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_lens_white"
+        },
+        "south": {
+          "texture": "#vessel_lens_white"
+        },
+        "east": {
+          "texture": "#vessel_lens_white"
+        },
+        "west": {
+          "texture": "#vessel_lens_white"
+        },
+        "up": {
+          "texture": "#vessel_bollard"
+        },
+        "down": {
+          "texture": "#vessel_bollard",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

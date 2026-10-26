@@ -20,10 +20,16 @@ loom {
     }
 }
 
+repositories {
+    // Simple Voice Chat's plugin API, for radios that carry players' voices (optional at run time)
+    maven { url = 'https://maven.maxhenkel.de/repository/public' }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    compileOnly "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
 }
 
 processResources {

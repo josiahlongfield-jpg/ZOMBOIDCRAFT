@@ -132,8 +132,8 @@ def body(m):
     b.box((-0.20, -3.00, g0), (0.20, -2.78, g1 - 0.6), 'floor')
     b.seg((g1 - 0.75, -2.90), (g1, -2.10), 0.22, 0.40, 'floor', over=0.03)
     b.box((-0.13, -2.44, g0 + 0.16), (0.13, -2.20, g0 + 0.38), steel)                        # magazine latch
-    b.seg((6.55, -2.06), (6.70, -2.55), 0.22, 0.24, steel, over=0.03)                         # trigger
-    b.seg((6.70, -2.55), (6.98, -2.78), 0.20, 0.24, steel, over=0.03)
+    b.seg((6.85, -2.06), (6.85, -2.38), 0.22, 0.24, steel, over=0.03)                         # trigger: back in the guard,
+    b.seg((6.85, -2.38), (6.72, -2.68), 0.20, 0.24, steel, over=0.03)                         # its tip curving forward
     # ---- the stock: forend under the barrel, inletted round the receiver, then the wrist, grip and butt
     _stock(b)
 

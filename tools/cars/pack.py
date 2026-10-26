@@ -153,9 +153,15 @@ def main():
     os.makedirs(os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars'), exist_ok=True)
     with Pool(a.jobs) as pool:
         models = pool.map(build, files)
-    models.sort(key=lambda m: m['id'])
     idx = os.path.join(ROOT, 'src/main/resources/data/zomboidcraft/zc_cars')
     os.makedirs(idx, exist_ok=True)
+    # the aircraft come from tools/cars/aircraft.py, not the car pack: keep them
+    try:
+        with open(os.path.join(idx, 'models.json')) as f:
+            models += [m for m in json.load(f)['models'] if m.get('kind') == 'jet']
+    except FileNotFoundError:
+        pass
+    models.sort(key=lambda m: m['id'])
     with open(os.path.join(idx, 'models.json'), 'w') as f:
         json.dump({'variants': VARIANTS, 'models': models}, f, separators=(',', ':'))
     print(len(models), 'models')

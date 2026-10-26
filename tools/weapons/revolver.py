@@ -1,6 +1,6 @@
 """The revolver: a Smith & Wesson Model 10-style .38 Special service revolver (a K-frame with a 4" heavy barrel,
-fixed sights, a round-nosed square butt with wood service stocks), drawn from the real thing's measurements: 9.3"
-long, a 1.44" six-shot cylinder 1.56" long, a 5.5" sight radius. Measurements are inches from the bore line (y) and
+fixed sights, a square butt with its corners rounded and wood service stocks), drawn from the real thing's
+measurements: about 9" long and 5.3" tall, a 1.44" six-shot cylinder 1.56" long, a 5.5" sight radius. Measurements are inches from the bore line (y) and
 the cylinder's front face (z, positive back toward the shooter).
 
 It loads with the cylinder swung out: the latch on the left is pushed forward, and the cylinder swings out to the
@@ -41,7 +41,7 @@ GROOVE = 0.06           # the sight groove's depth
 STRAP_BOT = CYL_Y + CYL_R + 0.015
 FRAME_BOT = -1.42       # the frame's belly under the cylinder
 SHIELD_BACK = CYL_BACK + 0.32   # the recoil shield behind the cylinder
-FRAME_BACK = 3.40
+FRAME_BACK = 2.95       # the side plate's back edge; the back strap runs on up behind it to the hammer
 SIGHT = STRAP_TOP - GROOVE      # the sight groove's floor
 NOTCH_TOP = STRAP_TOP + 0.035   # the line of sight: the rear notch's top, level with the front blade's
 NOTCH_W = 0.085                 # half the notch's width: a sliver of light shows each side of the blade
@@ -53,12 +53,15 @@ PIVOT = (-0.42, -1.12)
 OPEN = 100.0
 # the grip, leaned back 22.5 degrees: its centre line's top and length (the wood's), and its widths
 GRIP_TOP = (2.95, -0.97)
-GRIP_LEN = 3.45
+GRIP_LEN = 3.45         # down to where the butt's corners start rounding: 5.3" tall overall, butt to hammer
 GRIP_DIR = np.array([np.sin(np.radians(22.5)), -np.cos(np.radians(22.5))])     # (z, y), down the grip
-GRIP_W = 1.34           # the grip frame front strap to back strap
-WOOD_W = 1.22           # the stocks leave the straps bare
+GRIP_W = 1.45           # the grip frame front strap to back strap
+WOOD_W = 1.35           # the stocks leave the straps bare
 WOOD_X = 0.60           # half the grip's thickness over the stocks
-GUARD = (1.45, -1.45, 1.00, 0.80)   # the trigger guard's bow: centre (z, y), half length, depth
+BUTT_CUT = 0.36         # the square butt's corners, rounded off
+STOCK_TOP, STOCK_CUT = -0.10, 0.40      # the stocks' top, up over the frame, and how much its corners are rounded
+# the trigger guard's bow (z, y): down from the frame's belly, flat under the trigger, then up into the front strap
+GUARD = ((0.40, -1.36), (0.60, -1.86), (0.95, -2.21), (1.85, -2.21), (2.25, -2.04), (2.55, -1.74))
 
 
 def frame_point(x, y, z):
@@ -109,36 +112,67 @@ def body(m):
     _round(b, 0.0, CYL_Y, 0.66, CYL_BACK + 0.004, SHIELD_BACK, fr)
     b.box((-FRAME_W, FRAME_BOT, CYL_BACK + 0.004), (FRAME_W, STRAP_BOT, SHIELD_BACK), fr)
     b.box((-0.42, FRAME_BOT, SHIELD_BACK), (0.42, 0.30, FRAME_BACK), fr)
-    b.seg((3.05, 0.40), (3.50, -0.62), 0.42, 0.62, fr, over=0.06)       # the back strap's hump behind the hammer
     # the side plate's screws (right) and the crane's lock screw at the front
-    for x, y, z in ((0.42, -0.35, 2.95), (0.42, -1.05, 2.70), (FRAME_W, -1.30, -0.30)):
+    for x, y, z in ((0.42, -0.20, 2.62), (0.42, -1.05, 2.40), (FRAME_W, -1.30, -0.30)):
         b.rod(x, x + 0.035, 0.07, 'screw', axis=0, at=(y, z))
     # ---- the cylinder latch, left behind the cylinder: pushed forward to swing it out
     b.box((-0.52, -0.40, CYL_BACK + 0.36), (-0.42, -0.12, CYL_BACK + 0.90), 'latch')
-    # ---- the hammer, its spur over the frame's back; the trigger and its guard
-    b.box((-0.13, 0.05, 2.04), (0.13, 0.60, 2.30), 'hammer')
-    b.seg((2.22, 0.50), (2.82, 0.25), 0.18, 0.30, 'hammer', over=0.06)        # the spur, down over the back strap
-    b.seg((1.12, FRAME_BOT), (1.16, -1.76), 0.17, 0.34, 'trigger', over=0.04)
-    b.seg((1.16, -1.76), (1.34, -2.04), 0.16, 0.34, 'trigger', over=0.04)
-    zc, yc, az, ay = GUARD
-    angles = np.radians([180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5, 360])
-    pts = [(zc + az * np.cos(a), yc + ay * np.sin(a)) for a in angles]
-    for p0, p1 in zip(pts[:-1], pts[1:]):
-        b.seg(p0, p1, 0.15, 0.30, 'guard', over=0.05)
+    # ---- the hammer, its spur back over the frame, resting on the back strap's top; the trigger and its guard
+    # (all of it under the line of sight: the spur's top is 0.05" below the rear notch's)
+    b.box((-0.13, 0.0, 2.06), (0.13, 0.58, 2.40), 'hammer')
+    b.seg((2.30, 0.49), (2.84, 0.49), 0.18, 0.34, 'hammer', over=0.0)
+    b.seg((2.84, 0.49), (3.20, 0.34), 0.18, 0.34, 'hammer', over=0.04)
+    b.box((-0.42, 0.25, 2.40), (0.42, 0.40, 3.0), fr)                     # the frame round the hammer, under its spur
+    b.seg((1.65, FRAME_BOT), (1.65, -1.78), 0.17, 0.34, 'trigger', over=0.04)    # back in the guard,
+    b.seg((1.65, -1.78), (1.53, -2.04), 0.16, 0.34, 'trigger', over=0.04)        # its tip curving forward
+    for p0, p1 in zip(GUARD[:-1], GUARD[1:]):
+        b.seg(p0, p1, 0.15, 0.30, fr, over=0.05)
     _grip_frame(b)
 
 
-def _grip_frame(b):
-    """The grip: the frame's steel straps, the wood stocks either side with a checkered panel and a medallion
-    each, the butt's flat."""
-    top, bot = _grip(0.30), _grip(GRIP_LEN + 0.04)
-    b.seg(top, bot, GRIP_W, 0.60, 'frame', over=0.0)
-    w0, w1 = _grip(0.0), _grip(GRIP_LEN)
-    b.seg(w0, w1, WOOD_W, 2 * WOOD_X, 'stock', over=0.0)
-    b.seg(_grip(0.05), _grip(GRIP_LEN - 0.05), WOOD_W + 0.08, 2 * WOOD_X - 0.16, 'stock', over=0.0)
+GRIP_BACK = np.array([GRIP_DIR[1] * -1, GRIP_DIR[0]])      # (z, y) across the grip, toward the back strap
+
+
+def _corner(u, t):
+    """A point u inches across the grip (toward the back strap) and t down it."""
+    return tuple(np.array(_grip(t)) + GRIP_BACK * u)
+
+
+def _end(b, t, half, cut, thick, mat, up=False, **kw):
+    """The grip's end, t inches down its centre line (up=True: its top end): a flat end with its corners cut off
+    at 45 degrees, `cut` inches each way, out from a grip `half` inches either side of the centre line. The middle
+    is a bar; each corner is a square turned 45 degrees with its outer side on the cut, its inner half buried."""
+    sgn = -1 if up else 1
+    b.seg(_grip(t - sgn * 0.02), _grip(t + sgn * cut), 2 * (half - cut), thick, mat, over=0.0, **kw)
+    side = cut * np.sqrt(2)
     for s in (-1, 1):
-        b.seg(_grip(1.25), _grip(GRIP_LEN - 0.30), WOOD_W - 0.22, 0.012, 'gcheck', x=s * (WOOD_X + 0.006), over=0.0)
-        mz, my = _grip(0.62)
+        a, c = np.array(_corner(s * half, t)), np.array(_corner(s * (half - cut), t + sgn * cut))
+        mid, e = np.array(_corner(s * (half - cut), t)), (c - a) / np.linalg.norm(c - a)
+        b.seg(tuple(mid - e * side / 2), tuple(mid + e * side / 2), side, thick, mat, over=0.0, **kw)
+
+
+def _grip_frame(b):
+    """The grip: the frame's steel straps (the back strap carries on up behind the side plate to meet the hammer's
+    spur) down to the butt, its corners rounded off, and the wood stocks either side, rounded at the top and
+    thicker down the middle, with a checkered panel and a medallion each. The steel shows round the stocks' edges."""
+    top = _grip(-1.10)
+    b.seg(top, _grip(0.30), GRIP_W, 0.84, 'frame', over=0.0)        # the frame's full width down to the stocks
+    b.seg(top, _grip(GRIP_LEN), GRIP_W, 0.60, 'frame', over=0.0)
+    _end(b, GRIP_LEN, GRIP_W / 2, BUTT_CUT, 0.60, 'frame')
+    # the stocks: 0.05" in from the straps and the butt, so the cut corners sit 0.05" in from the steel's too
+    inset, half = (GRIP_W - WOOD_W) / 2, WOOD_W / 2
+    shift = half - (GRIP_W / 2 - inset * np.sqrt(2))
+    t0, t1 = STOCK_TOP, GRIP_LEN - shift
+    thin = 2 * WOOD_X - 0.14
+    b.seg(_grip(t0), _grip(t1), WOOD_W, thin, 'stock', over=0.0)
+    _end(b, t0, half, STOCK_CUT, thin, 'stock', up=True)
+    _end(b, t1, half, BUTT_CUT + shift - inset, thin, 'stock')
+    core = half - 0.18                                                # the core stays inside the cut corners
+    b.seg(_grip(t0 - (STOCK_CUT - 0.18)), _grip(t1 + (BUTT_CUT + shift - inset) - 0.18), 2 * core, 2 * WOOD_X,
+          'stock', over=0.0)
+    for s in (-1, 1):
+        b.seg(_grip(0.85), _grip(GRIP_LEN - 0.05), WOOD_W - 0.42, 0.012, 'gcheck', x=s * (WOOD_X + 0.006), over=0.0)
+        mz, my = _grip(STOCK_TOP + 0.32)
         x0, x1 = sorted((s * WOOD_X, s * (WOOD_X + 0.016)))
         b.rod(x0, x1, 0.13, 'medal', axis=0, at=(my, mz))
 

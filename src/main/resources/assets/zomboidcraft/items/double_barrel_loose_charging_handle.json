@@ -7,81 +7,21 @@
    {
     "when": "case_hardened",
     "model": {
-     "type": "minecraft:range_dispatch",
-     "property": "minecraft:damage",
-     "entries": [
-      {
-       "threshold": 0.4,
-       "model": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/case_hardened_worn/charging_handle"
-       }
-      },
-      {
-       "threshold": 0.65,
-       "model": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/case_hardened_battered/charging_handle"
-       }
-      }
-     ],
-     "fallback": {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charging_handle"
-     }
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charging_handle"
     }
    },
    {
     "when": "engraved",
     "model": {
-     "type": "minecraft:range_dispatch",
-     "property": "minecraft:damage",
-     "entries": [
-      {
-       "threshold": 0.4,
-       "model": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/engraved_worn/charging_handle"
-       }
-      },
-      {
-       "threshold": 0.65,
-       "model": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/engraved_battered/charging_handle"
-       }
-      }
-     ],
-     "fallback": {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/double_barrel/engraved/charging_handle"
-     }
+     "type": "minecraft:model",
+     "model": "zomboidcraft:item/weapon/double_barrel/engraved/charging_handle"
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:range_dispatch",
-   "property": "minecraft:damage",
-   "entries": [
-    {
-     "threshold": 0.4,
-     "model": {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/double_barrel/worn/charging_handle"
-     }
-    },
-    {
-     "threshold": 0.65,
-     "model": {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/double_barrel/battered/charging_handle"
-     }
-    }
-   ],
-   "fallback": {
-    "type": "minecraft:model",
-    "model": "zomboidcraft:item/weapon/double_barrel/charging_handle"
-   }
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/weapon/double_barrel/charging_handle"
   }
  }
 }

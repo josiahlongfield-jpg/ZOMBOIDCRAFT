@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "navy_steel": "zomboidcraft:block/city/navy_steel",
+    "navy_tube_on": "zomboidcraft:block/city/navy_tube_on",
+    "particle": "zomboidcraft:block/city/navy_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        10,
+        13
+      ],
+      "to": [
+        11,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_steel"
+        },
+        "south": {
+          "texture": "#navy_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_steel"
+        },
+        "west": {
+          "texture": "#navy_steel"
+        },
+        "up": {
+          "texture": "#navy_steel"
+        },
+        "down": {
+          "texture": "#navy_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        10.5,
+        12.5
+      ],
+      "to": [
+        10,
+        13.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_tube_on"
+        },
+        "south": {
+          "texture": "#navy_tube_on"
+        },
+        "east": {
+          "texture": "#navy_tube_on"
+        },
+        "west": {
+          "texture": "#navy_tube_on"
+        },
+        "up": {
+          "texture": "#navy_tube_on"
+        },
+        "down": {
+          "texture": "#navy_tube_on"
+        }
+      }
+    }
+  ]
+}
