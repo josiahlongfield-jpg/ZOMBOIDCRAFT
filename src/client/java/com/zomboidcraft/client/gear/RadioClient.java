@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,7 +40,6 @@ public final class RadioClient {
     private static final Path KEYS_MOVED = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft-voicekeys.txt");
     private static boolean down;
     private static boolean keysChecked;
-    private static Component keysMessage;
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(TALK);
@@ -60,11 +58,7 @@ public final class RadioClient {
             moveVoiceKeys(mc);
         }
         LocalPlayer player = mc.player;
-        if (player != null && keysMessage != null) {
-            mc.gui.getChat().addMessage(keysMessage);
-            keysMessage = null;
-        }
-        boolean now = player != null && mc.screen == null && TALK.isDown();
+        boolean now = player != null && mc.gui.screen() == null && TALK.isDown();
         if (now != down && player != null) {
             ClientPlayNetworking.send(new CombatNet.Action(now ? CombatNet.Action.RADIO_DOWN : CombatNet.Action.RADIO_UP));
         }
@@ -86,8 +80,8 @@ public final class RadioClient {
         List<String> moved = new ArrayList<>();
         for (KeyMapping key : mc.options.keyMappings) {
             InputConstants.Key to = switch (key.getName()) {
-                case "key.voice_chat" -> InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_Y);
-                case "key.mute_microphone" -> InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_U);
+                case "key.voice_chat" -> InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_Y);
+                case "key.mute_microphone" -> InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_U);
                 case "key.disable_voice_chat", "key.hide_icons" -> InputConstants.UNKNOWN;
                 default -> null;
             };
@@ -111,8 +105,6 @@ public final class RadioClient {
         KeyMapping.resetMapping();
         mc.options.save();
         ZomboidCraft.LOGGER.info("Moved voice chat keys off ZomboidCraft's: {}", moved);
-        keysMessage = Component.literal("Voice chat keys moved off ZomboidCraft's: " + String.join(", ", moved)
-                + ". Hold B to talk on a radio.").withStyle(ChatFormatting.GRAY);
     }
 
     private RadioClient() {

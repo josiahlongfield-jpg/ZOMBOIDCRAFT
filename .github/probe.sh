@@ -7,24 +7,17 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== voice2"
-VC=$(find ~/.gradle/caches/modules-2 -path '*voicechat-api*' -name '*.jar' ! -name '*sources*' | head -1)
-for c in packets.ConvertablePacket audiochannel.AudioChannel config.ConfigAccessor; do javap -cp "$VC" "de.maxhenkel.voicechat.api.$c" 2>&1 | grep -v '^Compiled'; done
-sig net.minecraft.client.sounds.SoundEngine 'calculateVolume|play\(|getVolume|private float|public void play'
-sig net.minecraft.client.sounds.SoundManager 'play\('
-sig net.minecraft.client.resources.sounds.SoundInstance 'getVolume|getIdentifier|getLocation|Identifier'
-sig net.minecraft.server.level.ServerPlayer 'playNotifySound|sendOverlayMessage|playSound'
-sig net.minecraft.world.InteractionResult 'static'
-sig net.minecraft.client.KeyMapping 'isDefault|getName|saveString|resetMapping'
-sig net.minecraft.client.Options 'save\(|keyMappings'
-sig net.minecraft.network.protocol.game.ClientboundSoundPacket 'ClientboundSoundPacket\('
-for f in $(find /tmp/svc/x -name 'PTTMicrophoneProcessor.class' 2>/dev/null | head -1); do javap -cp /tmp/svc/x -c -p de.maxhenkel.voicechat.voice.client.PTTMicrophoneProcessor | grep -E 'Method|invoke' | head -20; done
-mkdir -p /tmp/svc && SVC_URL=$(curl -sfG https://api.modrinth.com/v2/project/simple-voice-chat/version --data-urlencode 'game_versions=["26.3"]' --data-urlencode 'loaders=["fabric"]' | jq -r '.[0].files[0].url') && curl -sfL "$SVC_URL" -o /tmp/svc/svc.jar && unzip -q -o /tmp/svc/svc.jar -d /tmp/svc/x
-javap -cp /tmp/svc/x -c -p de.maxhenkel.voicechat.voice.client.PTTMicrophoneProcessor | grep -E 'Method|invoke' | head -20
-javap -cp /tmp/svc/x -c -p de.maxhenkel.voicechat.voice.client.PTTKeyHandler | grep -A8 -E 'boolean is(PTT|Any)Down' | head -30
-javap -cp /tmp/svc/x -c -p de.maxhenkel.voicechat.voice.client.MicThread | grep -B2 -A12 'sendAudio' | grep -E 'invoke|Method' | head -20
-javap -cp /tmp/svc/x -c -p de.maxhenkel.voicechat.plugins.impl.VolumeCategoryImpl 2>/dev/null | grep -E 'ldc|matches|Pattern' | head
-grep -rl 'a-z_' /tmp/svc/x --include=*.class | head -3
+echo "===== nvg4"
+for c in 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 'net.minecraft.client.renderer.PostChainConfig$Input' 'net.minecraft.client.renderer.PostPass$TextureInput' 'net.minecraft.client.renderer.PostPass'; do echo "+++ $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TextureInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p 'net.minecraft.client.renderer.PostChainConfig$TargetInput' 2>&1 | grep -E 'ldc' | head
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostChain 2>&1 | grep -E 'ldc|TextureInput|getTexture|withPath|SNIPPET|withUniform|withSampler|BindGroup' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.PostPass 2>&1 | grep -E 'ldc|setUniform|bindDefault|Globals|getTexture|bindTexture|setTexture' | head -40
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B3 -A25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+javap -cp "$CP" -c -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B25 'putstatic.*POST_PROCESSING_SNIPPET' | grep -E 'ldc|invoke|getstatic|putstatic' | head -30
+sig com.mojang.blaze3d.systems.RenderSystem 'bindDefault|Globals|globalSettings'
+sig net.minecraft.client.renderer.texture.DynamicTexture 'public'
+sig com.mojang.blaze3d.platform.NativeImage 'setPixel|getPixels|NativeImage\(|setPixelABGR|setPixelRGBA'
 exit 0
 
 echo "===== injuries"
