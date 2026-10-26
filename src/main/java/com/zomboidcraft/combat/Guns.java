@@ -441,8 +441,8 @@ public final class Guns {
 
     private static void tickLoading(ServerPlayer player, ItemStack gun, GunType type, State st) {
         st.reloadTick++;
-        if (type == GunType.CROSSBOW && st.reloadTick == type.raise - 2) {
-            sound(player, type.charged());      // the string clicks into the latch
+        if (type == GunType.CROSSBOW && st.reloadTick == GunType.COCK_AT) {
+            sound(player, type.charged());      // the whole draw, as the hand takes the string; it seats COCK_SEAT later
         }
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;

@@ -754,11 +754,12 @@ public final class RifleView {
      */
     private static final float GATE_YAW = 28f, GATE_TUCK = 0.2f;
     /**
-     * A crossbow: ticks into the reload the hand takes the string (it's drawn back to the latch by the end of the
-     * raise); how long the string takes to fly forward with a shot; how flat it lies let go (its depth, of cocked);
-     * and how far ahead of the latch (item pixels) a bolt is laid on the rail before it's slid back.
+     * A crossbow: how far back the string is when the stretch is done, before its last snap into the latch (the draw
+     * keeps time with the cock recording, GunType.COCK_AT); how long the string takes to fly forward with a shot; how
+     * flat it lies let go (its depth, of cocked); and how far ahead of the latch (item pixels) a bolt is laid on the
+     * rail before it's slid back.
      */
-    private static final float COCK_FROM = 5f, STRING_FLY = 0.5f, STRING_SLACK = 0.04f, BOLT_AHEAD = 3.0f;
+    private static final float STRETCH = 0.9f, STRING_FLY = 0.5f, STRING_SLACK = 0.04f, BOLT_AHEAD = 3.0f;
 
     /** Ticks into the current shell (0 to perShell), or -1 while the gun is still coming up for the first. */
     private static float shellTime(float age) {
@@ -769,7 +770,8 @@ public final class RifleView {
     /** How far over for loading the gun is (0 to 1): up as the loading starts, down when it stops. */
     private static float loadAmount(float age) {
         // a crossbow is tipped down quickly to be cocked, the rest are brought up over the whole raise
-        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0, rig.crossbow() ? 5 : type.raise - 1);
+        float up = smooth01((stopAt < 0 ? age : Math.min(age, stopAt)) - clockStart, 0,
+                rig.crossbow() ? GunType.COCK_AT : type.raise - 1);
         return stopAt < 0 ? up : up * (1 - smooth01(age - stopAt, 0, pumpFrom >= 0 ? PUMP_START : LOWER));
     }
 
@@ -846,13 +848,27 @@ public final class RifleView {
      */
     private static float cocked(ItemStack gun, boolean animate, float age) {
         if (animate) {
-            return smooth01(age - clockStart, COCK_FROM, type.raise - 1.5f);
+            return draw(age - clockStart);
         }
         float since = age - shotAt;
         if (since >= 0 && since < STRING_FLY) {
             return 1 - smooth(since / STRING_FLY);
         }
         return gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0 ? 1 : 0;
+    }
+
+    /**
+     * How far back a crossbow's string is s ticks into the reload, in step with the cock recording: held while the
+     * hand takes up the slack, stretched steadily with the creak, then snapped home on the seating hit.
+     */
+    private static float draw(float s) {
+        float t = s - GunType.COCK_AT;
+        if (t < GunType.COCK_STRETCHED) {
+            float v = Mth.clamp((t - GunType.COCK_CREAK) / (GunType.COCK_STRETCHED - GunType.COCK_CREAK), 0, 1);
+            return STRETCH * (v + smooth(v)) / 2;
+        }
+        float v = Mth.clamp((t - GunType.COCK_STRETCHED) / (GunType.COCK_SEAT - GunType.COCK_STRETCHED), 0, 1);
+        return STRETCH + (1 - STRETCH) * v * v;
     }
 
     /** The string k of the way cocked: drawn cocked, so let go it's flattened onto its slack line (the hinge's z). */
@@ -871,10 +887,10 @@ public final class RifleView {
     /** The off hand cocking a crossbow: off the foregrip to the string, then drawing it back to the latch. */
     private static Hand cockHand(Pose gun, float age) {
         float s = age - clockStart;
-        if (s < COCK_FROM) {
-            return support(gun, false, 0, 0).lerp(onString(gun, 0), smooth01(s, 0, COCK_FROM));
+        if (s < GunType.COCK_AT) {
+            return support(gun, false, 0, 0).lerp(onString(gun, 0), smooth01(s, 0, GunType.COCK_AT));
         }
-        return onString(gun, smooth01(s, COCK_FROM, type.raise - 1.5f));
+        return onString(gun, draw(s));
     }
 
     /**
