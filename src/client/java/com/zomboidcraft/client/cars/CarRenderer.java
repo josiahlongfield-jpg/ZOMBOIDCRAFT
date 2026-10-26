@@ -86,9 +86,22 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         CarAssets.Ready full = !state.lights ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
         CarLamps.Lamps lamps = full == null ? null : CarLamps.get(state.model, state.variant, full);
         float[] glow = lamps != null && state.lod == 0 && state.dark > 0.05f ? cabinGlow(lamps, state.dark) : null;
+        java.util.BitSet panel = lamps != null && state.lod == 0 ? lamps.panel() : null;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, (mesh, turn) -> {
-                draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1, mesh == car.mesh() ? glow : null);
+                if (mesh == car.mesh() && panel != null && !panel.isEmpty()) {
+                    // the backlit dials and displays at full brightness, the rest as usual
+                    int t = 0;
+                    while (t < mesh.opaque()) {
+                        boolean lit = panel.get(t);
+                        int next = lit ? panel.nextClearBit(t) : panel.nextSetBit(t);
+                        int end = next < 0 ? mesh.opaque() : Math.min(next, mesh.opaque());
+                        draw(mesh, t, end, turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : glow);
+                        t = end;
+                    }
+                } else {
+                    draw(mesh, 0, mesh.opaque(), turn, pose, out, light, -1, mesh == car.mesh() ? glow : null);
+                }
                 if (solidGlass) {
                     draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, FAR_GLASS, null);
                 }

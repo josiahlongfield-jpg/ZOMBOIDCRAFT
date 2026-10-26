@@ -22,6 +22,8 @@ import net.minecraft.client.Minecraft;
  */
 public final class CarLamps {
     public static final int HEAD = 1, TAIL = 2, REVERSE = 3, DASH = 4;
+    /** The cabin kit's backlit faces (dials, radio, CB, taxi meter): drawn at full brightness, in their own colours. */
+    public static final int PANEL = 5;
 
     /** count triangles from start in a mesh (0 the body, then each lid) are a lamp of this kind. */
     public record Run(int mesh, int kind, int start, int count) {
@@ -31,7 +33,8 @@ public final class CarLamps {
     public record Spot(int kind, float x, float y, float z, float nx, float ny, float nz, float size) {
     }
 
-    public record Lamps(List<Run> runs, List<Spot> spots, float[] dash) {
+    /** panel: which of the body's solid triangles are backlit. */
+    public record Lamps(List<Run> runs, List<Spot> spots, float[] dash, java.util.BitSet panel) {
         public Spot first(int kind) {
             for (Spot s : spots) {
                 if (s.kind() == kind) {
@@ -76,7 +79,14 @@ public final class CarLamps {
                 runs.add(new Run(r.get(0).getAsInt(), r.get(1).getAsInt(), start, count));
             }
         }
-        return new Lamps(runs, spots(runs, full, d), d);
+        java.util.BitSet panel = new java.util.BitSet();
+        for (Run run : runs) {
+            if (run.kind() == PANEL && run.mesh() == 0) {
+                panel.set(run.start(), run.start() + run.count());
+            }
+        }
+        List<Run> lamps = runs.stream().filter(r -> r.kind() != PANEL).toList();
+        return new Lamps(lamps, spots(lamps, full, d), d, panel);
     }
 
     /** Mesh 0 is the body, then the lids in order. */

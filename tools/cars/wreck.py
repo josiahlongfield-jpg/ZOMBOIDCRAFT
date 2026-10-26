@@ -22,6 +22,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from glb import load
+import interior
 
 PX_PER_M = 64  # 4x Minecraft's 16 px per block, same density as the HD zombie skins
 
@@ -753,6 +754,10 @@ def seats(car):
     front = [s for s in out if s[2] > out[0][2] - 0.5]
     if not any(s[0] > 0 for s in front):  # no driver's door (some vans): mirror the passenger's
         out.insert(0, out[0] * [-1, 1, 1])
+    if len(out) == 2 and out[1][2] > out[0][2] - 0.5:  # two doors: a back seat behind the front ones?
+        rear = interior.rear_bench(car, out[0])
+        if rear is not None:
+            out += [rear, rear * [-1, 1, 1]]
     return out[:4]
 
 
@@ -793,10 +798,19 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
         wheel = np.concatenate([wheel, np.full(len(add), -1)])
         glass = np.concatenate([glass, np.zeros(len(add), bool)])
         origin = np.concatenate([origin, np.full(len(add), -1)])
+    # the cabin's detail kit, painted onto a strip added under the atlas (interior.py)
+    ktris, kuv, klit, img, shrink, drop = interior.fit(car, seats(car), vname, seed, tris, origin, img)
+    tris, uv, lid, wheel, glass, origin = (x[~drop] for x in (tris, uv, lid, wheel, glass, origin))
+    uv = uv * np.array([1, shrink])
+    tris = np.concatenate([tris, ktris]); uv = np.concatenate([uv, kuv])
+    lid = np.concatenate([lid, np.full(len(ktris), -1)]); wheel = np.concatenate([wheel, np.full(len(ktris), -1)])
+    glass = np.concatenate([glass, np.zeros(len(ktris), bool)]); origin = np.concatenate([origin, np.full(len(ktris), -1)])
+    lit = np.concatenate([np.zeros(len(tris) - len(ktris), bool), klit])
+    spec = np.concatenate([spec, np.zeros((img.shape[0] - spec.shape[0],) + spec.shape[1:], np.float32)])
     colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
     specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
     return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'wheel': wheel, 'wheels': wheels, 'glass': glass,
-            'origin': origin, 'colour': colour, 'specular': specular}
+            'origin': origin, 'lit': lit, 'colour': colour, 'specular': specular}
 
 
 def make_variant(car, vname, seed, out_dir, opened=0.0):
