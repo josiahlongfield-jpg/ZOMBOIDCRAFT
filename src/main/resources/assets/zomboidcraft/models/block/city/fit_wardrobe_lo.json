@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_laminate": "zomboidcraft:block/city/fit_laminate",
+    "fit_wardrobe": "zomboidcraft:block/city/fit_wardrobe",
+    "particle": "zomboidcraft:block/city/fit_wardrobe"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_wardrobe"
+        },
+        "south": {
+          "texture": "#fit_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_laminate"
+        },
+        "west": {
+          "texture": "#fit_laminate"
+        },
+        "up": {
+          "texture": "#fit_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_laminate",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -225,3 +225,7 @@ CC0 (public domain) recordings from [Freesound](https://freesound.org) and royal
 | weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+
+## Trees
+
+The county's trees are voxelised from the Ultimate Trees Pack (Deezl, bought on CGTrader under its Royalty Free licence) by tools/nature/trees.py: oak, maple, beech, birch, elm, spruce, fir, juniper, willow and dead trees, each at three sizes. The bark and leaf textures are repainted from the pack's own, cut down to 64 pixels and graded to the world's palette. The pack's original models and textures are not part of this repository or the mod jar.

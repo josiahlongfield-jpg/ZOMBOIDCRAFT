@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tree_fir_bark": "zomboidcraft:block/city/tree_fir_bark",
+    "particle": "zomboidcraft:block/city/tree_fir_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "to": [
+        12.0,
+        12.0,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_fir_bark"
+        },
+        "south": {
+          "texture": "#tree_fir_bark"
+        },
+        "east": {
+          "texture": "#tree_fir_bark"
+        },
+        "west": {
+          "texture": "#tree_fir_bark"
+        },
+        "up": {
+          "texture": "#tree_fir_bark"
+        },
+        "down": {
+          "texture": "#tree_fir_bark"
+        }
+      }
+    }
+  ]
+}

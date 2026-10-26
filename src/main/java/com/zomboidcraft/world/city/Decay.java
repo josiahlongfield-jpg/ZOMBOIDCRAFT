@@ -433,12 +433,12 @@ public final class Decay {
         int h = 3 + rng.nextInt(3);
         int tx = x, tz = z;
         for (int k = 0; k < h; k++) {
-            sink.set(tx, y + k, tz, "tree_log");
+            sink.set(tx, y + k, tz, "tree_elm_bark");
             if (k == h - 2 && rng.nextBoolean()) {
                 int[] s = SIDES[rng.nextInt(4)];
                 tx += s[0];
                 tz += s[1];
-                sink.set(tx, y + k, tz, "tree_log");
+                sink.set(tx, y + k, tz, "tree_elm_bark");
             }
         }
         int cy = y + h;
@@ -448,7 +448,7 @@ public final class Decay {
                 for (int dz = -3; dz <= 3; dz++) {
                     double dist = Math.sqrt(dx * dx + dy * dy * 2.2 + dz * dz) + (hash(tx + dx, cy + dy, tz + dz, 9) - 0.5) * 1.4;
                     if (dist < rad && air(tx + dx, cy + dy, tz + dz)) {
-                        sink.set(tx + dx, cy + dy, tz + dz, "leaves_dark");
+                        sink.set(tx + dx, cy + dy, tz + dz, dist > rad - 0.8 ? "tree_elm_leaves_sparse" : "tree_elm_leaves");
                     }
                 }
             }

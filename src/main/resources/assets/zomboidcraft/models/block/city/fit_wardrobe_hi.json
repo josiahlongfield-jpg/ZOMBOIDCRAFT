@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_drawers_lam": "zomboidcraft:block/city/fit_drawers_lam",
+    "fit_laminate": "zomboidcraft:block/city/fit_laminate",
+    "particle": "zomboidcraft:block/city/fit_drawers_lam"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_drawers_lam"
+        },
+        "south": {
+          "texture": "#fit_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_laminate"
+        },
+        "west": {
+          "texture": "#fit_laminate"
+        },
+        "up": {
+          "texture": "#fit_laminate"
+        },
+        "down": {
+          "texture": "#fit_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        15,
+        1.5
+      ],
+      "to": [
+        15.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_laminate"
+        },
+        "south": {
+          "texture": "#fit_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_laminate"
+        },
+        "west": {
+          "texture": "#fit_laminate"
+        },
+        "up": {
+          "texture": "#fit_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_laminate"
+        }
+      }
+    }
+  ]
+}

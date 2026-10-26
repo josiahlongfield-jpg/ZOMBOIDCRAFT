@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_laminate": "zomboidcraft:block/city/fit_laminate",
+    "fit_mirror_cab": "zomboidcraft:block/city/fit_mirror_cab",
+    "fit_reading_on": "zomboidcraft:block/city/fit_reading_on",
+    "particle": "zomboidcraft:block/city/fit_mirror_cab"
+  },
+  "elements": [
+    {
+      "from": [
+        2.5,
+        1,
+        12
+      ],
+      "to": [
+        13.5,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_mirror_cab"
+        },
+        "south": {
+          "texture": "#fit_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_laminate"
+        },
+        "west": {
+          "texture": "#fit_laminate"
+        },
+        "up": {
+          "texture": "#fit_laminate"
+        },
+        "down": {
+          "texture": "#fit_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        12.5,
+        13
+      ],
+      "to": [
+        13.5,
+        13.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_reading_on"
+        },
+        "south": {
+          "texture": "#fit_reading_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_reading_on"
+        },
+        "west": {
+          "texture": "#fit_reading_on"
+        },
+        "up": {
+          "texture": "#fit_reading_on"
+        },
+        "down": {
+          "texture": "#fit_reading_on"
+        }
+      }
+    }
+  ]
+}

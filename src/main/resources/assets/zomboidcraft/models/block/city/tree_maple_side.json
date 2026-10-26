@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tree_maple_bark": "zomboidcraft:block/city/tree_maple_bark",
+    "tree_maple_rings": "zomboidcraft:block/city/tree_maple_rings",
+    "particle": "zomboidcraft:block/city/tree_maple_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_maple_bark",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tree_maple_bark"
+        },
+        "east": {
+          "texture": "#tree_maple_bark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tree_maple_bark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tree_maple_rings",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tree_maple_rings",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -185,6 +185,11 @@ public final class StandIns {
             props = new HashMap<>();
         } else {
             id = TABLE.get(name);
+            if (id == null && name.startsWith("tree_")) {
+                // the pack trees: leaves as leaves, trunks and limbs as logs, twigs left out
+                id = name.contains("_leaves") ? "oak_leaves[persistent=true]"
+                        : name.endsWith("_limb_3") || name.endsWith("_limb_5") ? "air" : "oak_log";
+            }
             if (id == null && (name.startsWith("sign_") || name.startsWith("blade_") || name.startsWith("neon_")
                     || name.startsWith("store_"))) {
                 return Blocks.AIR.defaultBlockState();  // shop signs and small fittings only come with the real blocks
