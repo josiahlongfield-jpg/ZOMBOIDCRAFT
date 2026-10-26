@@ -67,12 +67,12 @@ function program(vs, fs) {
 }
 const MAIN = program(`
   in vec3 pos; in vec3 nrm; in vec2 uv; in vec4 ao;
-  uniform mat4 view, proj, sunMat; uniform float unit;
+  uniform mat4 view, proj, sunMat; uniform float unit, uvScale;
   out vec3 vW; out vec3 vN; out vec2 vUV; out float vAO; out vec3 vBL; out vec4 vSun;
   void main() {
     vec3 w = pos / unit;
     // face UVs count up from the bottom; images load top row first
-    vW = w; vN = nrm; vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; vAO = ao.r; vBL = ao.gba;
+    vW = w; vN = nrm; vUV = vec2(uv.x / uvScale, 16.0 - uv.y / uvScale) / 16.0; vAO = ao.r; vBL = ao.gba;
     vSun = sunMat * vec4(w + nrm * 0.06, 1.0);
     gl_Position = proj * view * vec4(w, 1.0);
   }`, `
@@ -127,8 +127,8 @@ const MAIN = program(`
     col = vec4(pow(c, vec3(1.0 / 2.2)), 1.0);
   }`);
 const DEPTH = program(`
-  in vec3 pos; in vec2 uv; uniform mat4 sunMat; uniform float unit; out vec2 vUV;
-  void main() { vUV = vec2(uv.x, 16.0 - uv.y) / 16.0; gl_Position = sunMat * vec4(pos / unit, 1.0); }`, `
+  in vec3 pos; in vec2 uv; uniform mat4 sunMat; uniform float unit, uvScale; out vec2 vUV;
+  void main() { vUV = vec2(uv.x / uvScale, 16.0 - uv.y / uvScale) / 16.0; gl_Position = sunMat * vec4(pos / unit, 1.0); }`, `
   in vec2 vUV; uniform sampler2D tex; uniform float cutout; out vec4 col;
   void main() { if (texture(tex, vUV).a < cutout) discard; col = vec4(1.0); }`);
 const SKYP = program(`
@@ -172,7 +172,7 @@ function loadTex(url) {
     const ib = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(buf, V * 18, I), gl.STATIC_DRAW);
-    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0,
+    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0, uvScale: e.uvScale || 1,
              emis: e.emissive ? await loadTex(`${DIR}/${e.tex}_e.png`) : null };
   }));
 
@@ -209,6 +209,7 @@ function loadTex(url) {
     if (!p.tex) continue;
     gl.bindTexture(gl.TEXTURE_2D, p.tex);
     gl.uniform1f(gl.getUniformLocation(DEPTH, 'cutout'), p.cutout);
+    gl.uniform1f(gl.getUniformLocation(DEPTH, 'uvScale'), p.uvScale);
     gl.bindVertexArray(p.vao);
     gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);
   }
@@ -267,7 +268,7 @@ function loadTex(url) {
     gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, p.emis || black);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, p.tex);
-    gl.uniform1f(u('glow'), p.emis ? 1.0 : 0.0);
+    gl.uniform1f(u('glow'), p.emis ? 1.0 : 0.0); gl.uniform1f(u('uvScale'), p.uvScale);
     gl.uniform1f(u('cutout'), p.cutout);
     gl.bindVertexArray(p.vao);
     gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);

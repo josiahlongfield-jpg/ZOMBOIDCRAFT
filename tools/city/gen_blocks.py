@@ -76,8 +76,9 @@ def boxes(spec):
         return [[0, 0, 0, 16, h, 16, {f: face_tex(spec, f) for f in DIRS}]]
     if model == "slab":
         return [[0, 0, 0, 16, 8, 16, {f: spec["tex"] for f in DIRS}]]
-    # a box's texture is one name for every face, or a dict of faces like a cube's tex
-    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}]
+    # a box's texture is one name for every face, or a dict of faces like a cube's tex; an inked
+    # box (tools/city/ink.py) adds an eighth item, each face's own rectangle on its atlas
+    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}] + b[7:8]
             for b in spec["boxes"]]
 
 
@@ -106,12 +107,15 @@ def fit(a0, a1):
 
 
 def element(b):
-    x0, y0, z0, x1, y1, z1, tex = b
+    x0, y0, z0, x1, y1, z1, tex = b[:7]
+    uvs = b[7] if len(b) > 7 else None
     faces = {}
     for f in DIRS:
         face = {"texture": "#" + tex[f]}
         u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
-        if min(u0, v0) < 0 or max(u1, v1) > 16:
+        if uvs:
+            face["uv"] = uvs[f]
+        elif min(u0, v0) < 0 or max(u1, v1) > 16:
             (u0, u1), (v0, v1) = fit(u0, u1), fit(v0, v1)
             face["uv"] = [u0, v0, u1, v1]
         edge = {"north": z0 == 0, "south": z1 == 16, "west": x0 == 0, "east": x1 == 16,

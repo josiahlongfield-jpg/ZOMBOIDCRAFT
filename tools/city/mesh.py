@@ -12,7 +12,7 @@ dump); besides cube/boxes/cross/slab they may use the vanilla shapes stairs, fen
 pane, trapdoor, log and flat.
 
 Output: OUT_DIR/mesh.json plus one <texture>.bin per texture holding, per vertex, int16 x,y,z in
-1/unit block (mesh.json's unit: 64 when the scene fits, so thin decals keep their depth, else 16), int8 normal (padded to 4), int16 u,v in texels and uint8 AO plus
+1/unit block (mesh.json's unit: 64 when the scene fits, so thin decals keep their depth, else 16), int8 normal (padded to 4), int16 u,v in 16ths of the texture (times the texture's uvScale) and uint8 AO plus
 block light (warm, red, glow-stick green; 255 is level 15), then uint32 triangle indices.
 
 Block light is Minecraft's: each lamp's level, one less for every block it spreads, stopped by
@@ -87,6 +87,15 @@ def rotate_dir(d, rot):
     for _ in range(rot):
         n = np.array([-n[2], n[1], n[0]])
     return int(np.where((NORMALS == n).all(1))[0][0])
+
+
+def atlas_uv(uv, rect):
+    """A face's corner UVs moved onto its own rectangle of an atlas (Minecraft's [u0, v0, u1, v1],
+    v down), as an inked box gives (tools/city/ink.py)."""
+    u, v = uv[:, 0], 16 - uv[:, 1]
+    su = (rect[2] - rect[0]) / max(u.max() - u.min(), 1e-6)
+    sv = (rect[3] - rect[1]) / max(v.max() - v.min(), 1e-6)
+    return np.stack([rect[0] + (u - u.min()) * su, 16 - (rect[1] + (v - v.min()) * sv)], 1)
 
 
 def lit_spec(spec):
@@ -253,7 +262,7 @@ class Palette:
                         # one texture for the box, or a dict of faces (a roof step's shingled tread)
                         t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
-                        uv = fit_uv(uv)
+                        uv = fit_uv(uv) if len(b) < 8 else atlas_uv(uv, b[7][DIRS[d]])
                         # a face on the block's boundary hides behind a solid neighbour
                         edge = box[[3, 0, 4, 1, 5, 2][d]] == (16 if d % 2 == 0 else 0)
                         faces.append((rotate_pts(c, rot), uv, rotate_dir(d, rot), t, edge))
@@ -332,7 +341,9 @@ class Out:
             pos = np.round(c * (self.unit / 16)).astype("<i2")
             nrm = np.zeros((len(n), 4), "i1")
             nrm[:, :3] = n * 127
-            uvs = np.round(uv).astype("<i2")
+            # UVs in 16ths of the texture; an atlas's face rectangles need finer steps
+            scale = 64 if np.abs(uv - np.round(uv)).max(initial=0) > 1e-3 and np.abs(uv).max(initial=0) * 64 < 32000 else 1
+            uvs = np.round(uv * scale).astype("<i2")
             aos = np.zeros((len(ao), 4), "u1")
             aos[:, 0] = np.array([0.45, 0.65, 0.82, 1.0])[ao.astype(int)] * 255
             aos[:, 1:] = np.round(np.clip(bl, 0, 15) * 17)
@@ -342,7 +353,7 @@ class Out:
             with open(path, "wb") as f:
                 for a in (pos, nrm, uvs, aos, idx):
                     f.write(a.tobytes())
-            index.append({"tex": names[t], "verts": len(pos), "indices": len(idx), "alpha": alpha[names[t]]})
+            index.append({"tex": names[t], "verts": len(pos), "indices": len(idx), "alpha": alpha[names[t]], "uvScale": scale})
         return index
 
 
