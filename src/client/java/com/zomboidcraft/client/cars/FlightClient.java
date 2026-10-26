@@ -128,6 +128,8 @@ public final class FlightClient {
         }
         Input in = player.input.keyPresses;
         Flight f = car.flight();
+        f.trainee = !com.zomboidcraft.world.cars.AirReadiness.knows(player, com.zomboidcraft.world.cars.AirReadiness.manualFor(f.kind));
+        f.skill = com.zomboidcraft.world.cars.AirReadiness.skill(player);
         float fwd = (in.forward() ? 1 : 0) - (in.backward() ? 1 : 0);
         float side = (in.right() ? 1 : 0) - (in.left() ? 1 : 0);
         if (f.kind == Flight.Kind.HELI) {

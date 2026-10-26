@@ -17,6 +17,8 @@ import org.joml.Quaternionf;
 public final class AirNet {
     /** Set on a state when the pilot's game saw the aircraft hit something hard enough to wreck it. */
     public static final int CRASHED = 1;
+    /** Set when it touched down safely; violence then carries how fast it was sinking (m/s). */
+    public static final int LANDED = 2;
 
     public record State(float qx, float qy, float qz, float qw, float power, float rpm, float throttle, int flags, float violence)
             implements CustomPacketPayload {

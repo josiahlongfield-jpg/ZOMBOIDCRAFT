@@ -50,6 +50,13 @@ public final class Flight {
     public boolean stalled, grounded = true, airbrake;
     /** Top speed allowed (metres a second), from the server's settings. */
     public float top;
+    /**
+     * The pilot (set by their game each tick, {@link AirReadiness}): a trainee hasn't read the manual and
+     * can only taxi; skill 0 to 1 is Piloting, which steadies the controls.
+     */
+    public boolean trainee;
+    public float skill = 1;
+    private int shake;
 
     public Flight(Kind kind) {
         this.kind = kind;
@@ -168,6 +175,9 @@ public final class Flight {
         liftDir = liftDir.lengthSqr() < 1e-6 ? u : liftDir.normalize();
 
         float thrust = 1.1f * G * thrustShare();
+        if (trainee && grounded && speed > 9) {
+            thrust = 0;     // without the manual you don't know how to take off: taxi speed at most
+        }
         float cd0 = 1.1f * G / (top * top);
         double drag = cd0 * speed * speed + Math.abs(lift) * Math.min(a, 0.6f) * 0.6f + (airbrake ? 0.25f * G + 0.5f * G * speed * speed / (top * top) : 0);
         Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust)).add(liftDir.scale(lift)).subtract(along.scale(drag));
@@ -175,7 +185,12 @@ public final class Flight {
         float authority = (float) Mth.clamp((speed / (1.4 * vs)) * (speed / (1.4 * vs)), 0.05, 1);
         acc = acc.subtract(l.scale(vel.dot(l) * 2.0 * authority));
 
-        float pitchRate = c.pitch() * 28 * authority, rollRate = c.roll() * 190 * authority, yawRate = c.yaw() * 8 * authority;
+        // an unpractised pilot's hands: slower on the stick, and a wobble that settles as Piloting grows
+        float hands = 0.65f + 0.35f * skill, wobble = grounded ? 0 : (1 - skill) * 0.18f;
+        shake++;
+        float pitchRate = (c.pitch() + wobble * (float) Math.sin(shake * 0.23)) * 28 * authority * hands;
+        float rollRate = (c.roll() + wobble * (float) Math.sin(shake * 0.17 + 1.3)) * 190 * authority * hands;
+        float yawRate = c.yaw() * 8 * authority;
         if (stalled) {
             pitchRate -= 12;    // the nose drops through
         }
@@ -220,6 +235,9 @@ public final class Flight {
         Vec3 u = up();
         float targetVy = c.collective() > 0 ? 7 : c.collective() < 0 ? -6 : grounded ? -1 : 0;
         float most = 1.7f * G * rpm * rpm;
+        if (trainee && grounded) {
+            most = Math.min(most, 0.96f * G);   // without the manual it never comes off the ground
+        }
         float want = (float) ((targetVy - vel.y) * 1.2 + G) / (float) Math.max(u.y, 0.35);
         float thrust = Mth.clamp(want, 0, most);
         power = most > 0 ? thrust / most : 0;
@@ -237,12 +255,19 @@ public final class Flight {
 
         float wantPitch = c.cyclicFwd() > 0 ? -18 : c.cyclicFwd() < 0 ? 12 : 0;
         float wantRoll = c.cyclicSide() * 25;
+        shake++;
+        if (!grounded) {
+            float wobble = (1 - skill) * 6;
+            wantPitch += wobble * (float) Math.sin(shake * 0.19);
+            wantRoll += wobble * (float) Math.sin(shake * 0.13 + 2.1);
+        }
         if (grounded && thrust < G) {
             wantPitch = 0;
             wantRoll = 0;
         }
-        pitch += Mth.clamp(wantPitch - pitch, -25 * DT, 25 * DT);
-        roll += Mth.clamp(wantRoll - roll, -50 * DT, 50 * DT);
+        float hands = 0.65f + 0.35f * skill;
+        pitch += Mth.clamp(wantPitch - pitch, -25 * DT * hands, 25 * DT * hands);
+        roll += Mth.clamp(wantRoll - roll, -50 * DT * hands, 50 * DT * hands);
         float turn = Mth.clamp(c.turn(), -3, 3);
         if (!grounded && hs > 8) {
             turn += (float) Math.toDegrees(G * Math.tan(Math.toRadians(roll)) / hs) * DT * 0.8f;

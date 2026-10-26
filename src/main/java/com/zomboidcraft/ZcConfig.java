@@ -392,6 +392,8 @@ public final class ZcConfig {
         public double jetTopSpeed = 300;
         /** The helicopter's top speed in km/h. */
         public double heliTopSpeed = 250;
+        /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
+        public boolean aircraftService = true;
     }
 
     public static class Weather {

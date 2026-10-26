@@ -77,6 +77,10 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Float> AIR_TOP = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** A crashed aircraft whose wings, nose and tail have been torn off ({@link AirBreakup}). */
     private static final EntityDataAccessor<Boolean> BROKEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** Fuel, 0 to 1 of the tanks ({@link #fuelCapacity}); the aircraft's battery and condition (percent). See {@link AirReadiness}. */
+    private static final EntityDataAccessor<Float> FUEL = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> BATTERY = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> CONDITION = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -152,6 +156,9 @@ public class CarProp extends Entity {
         builder.define(AIR_POWER, 0f);
         builder.define(AIR_TOP, 0f);
         builder.define(BROKEN, false);
+        builder.define(FUEL, 1f);
+        builder.define(BATTERY, true);
+        builder.define(CONDITION, 100);
     }
 
     @Override
@@ -159,6 +166,10 @@ public class CarProp extends Entity {
         setLook(input.getStringOr("model", "sedan"), input.getStringOr("variant", "usable"));
         searched = input.getIntOr("searched", 0) != 0;
         entityData.set(BROKEN, input.getIntOr("broken", 0) != 0);
+        airFound = input.getIntOr("air_found", 0) != 0;
+        entityData.set(FUEL, input.getFloatOr("fuel", 1f));
+        entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
+        entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
         entityData.set(SMASHED, windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
@@ -174,6 +185,10 @@ public class CarProp extends Entity {
         output.putString("variant", variant());
         output.putInt("searched", searched ? 1 : 0);
         output.putInt("broken", broken() ? 1 : 0);
+        output.putInt("air_found", airFound ? 1 : 0);
+        output.putFloat("fuel", fuel());
+        output.putInt("battery", battery() ? 1 : 0);
+        output.putInt("condition", condition());
         output.putFloat("windows", windows);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
@@ -207,6 +222,10 @@ public class CarProp extends Entity {
             return;
         }
         CarModels.Model m = CarModels.get(model());
+        if (m != null && m.jet() && player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player)
+                && AirReadiness.service(this, sp)) {
+            return;     // fuel, a battery or parts in hand: service it rather than climb in
+        }
         if (m != null && m.jet() || !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
             return;
@@ -715,6 +734,10 @@ public class CarProp extends Entity {
             if (isVehicle() && model != null) {
                 keepOut(model);
             }
+            if (aircraft() && !airFound) {
+                airFound = true;
+                AirReadiness.found(this);
+            }
             if (aircraft()) {
                 flown(server, moved);
             } else if (getControllingPassenger() instanceof Player driver) {
@@ -1032,6 +1055,63 @@ public class CarProp extends Entity {
         return m == null ? 1 : m.size[1] * 0.4f;
     }
 
+    /** Whether the aircraft's first-found state (fuel, battery, wear) has been rolled. */
+    private boolean airFound;
+    /** Server: ticks in the air since the last landing. */
+    private int flightTicks;
+
+    public float fuel() {
+        return entityData.get(FUEL);
+    }
+
+    public void setFuel(float fuel) {
+        entityData.set(FUEL, Math.clamp(fuel, 0f, 1f));
+    }
+
+    /** What the tanks hold when full, litres: the real aircraft's internal fuel, or a car's tank. */
+    public float fuelCapacity() {
+        String m = model();
+        return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : m.startsWith("heli") ? 1420 : 55;
+    }
+
+    public boolean battery() {
+        return entityData.get(BATTERY);
+    }
+
+    public void setBattery(boolean ok) {
+        entityData.set(BATTERY, ok);
+    }
+
+    /** How sound the airframe is, percent; it won't start below {@link AirReadiness#AIRWORTHY}. */
+    public int condition() {
+        return entityData.get(CONDITION);
+    }
+
+    public void setCondition(int condition) {
+        entityData.set(CONDITION, Math.clamp(condition, 0, 100));
+    }
+
+    /** The pilot put it down without breaking it: experience for a clean landing, wear for a heavy one. */
+    private void landed(net.minecraft.server.level.ServerPlayer pilot, float sink) {
+        if (flightTicks < 100) {
+            return;     // a hop or a bounce, not a flight
+        }
+        flightTicks = 0;
+        float limit = landingLimit(flight().kind, AirReadiness.skill(pilot));
+        if (sink > 0.75f * limit) {
+            setCondition(condition() - Math.round(10 * sink / limit));
+            pilot.sendOverlayMessage(Component.literal("Heavy landing. Condition " + condition() + "%."));
+            com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, 5);
+        } else {
+            com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, sink < 2.5f ? 30 : 18);
+        }
+    }
+
+    /** The fastest it can come down onto its wheels (m/s) without breaking up, for a pilot of this skill (0 to 1). */
+    public static float landingLimit(Flight.Kind kind, float skill) {
+        return (kind == Flight.Kind.JET ? 7 : 6) + 3 * skill;
+    }
+
     /** Torn apart in a crash: drawn without the pieces that flew off. */
     public boolean broken() {
         return entityData.get(BROKEN);
@@ -1073,7 +1153,7 @@ public class CarProp extends Entity {
         }
         touchedDown = 0;
         if (f.grounded && !wasGround && vyBefore < -0.5) {
-            float limit = f.kind == Flight.Kind.JET ? 7 : 6;
+            float limit = landingLimit(f.kind, f.skill);
             float bank = Math.abs(f.bank()), nose = f.noseUp();
             if (-vyBefore > limit || bank > 30 || f.kind == Flight.Kind.JET && nose < -10 || f.kind == Flight.Kind.HELI && Math.abs(nose) > 30) {
                 violence = Math.max(violence, (float) Math.min(1, -vyBefore / 20 + 0.3));
@@ -1093,7 +1173,8 @@ public class CarProp extends Entity {
         setDeltaMovement(went);
         if (level().isClientSide()) {
             Quaternionf q = f.q;
-            pilotReport.accept(new AirNet.State(q.x, q.y, q.z, q.w, f.power, f.rpm, f.throttle, violence > 0 ? AirNet.CRASHED : 0, violence));
+            int flags = violence > 0 ? AirNet.CRASHED : touchedDown > 0 ? AirNet.LANDED : 0;
+            pilotReport.accept(new AirNet.State(q.x, q.y, q.z, q.w, f.power, f.rpm, f.throttle, flags, violence > 0 ? violence : touchedDown));
         } else {
             entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
             entityData.set(AIR_RPM, f.rpm);
@@ -1161,6 +1242,8 @@ public class CarProp extends Entity {
         entityData.set(AIR_POWER, f.power);
         if ((state.flags() & AirNet.CRASHED) != 0 && level() instanceof ServerLevel server) {
             crash(server, Math.clamp(state.violence(), 0.05f, 1f));
+        } else if ((state.flags() & AirNet.LANDED) != 0 && getControllingPassenger() instanceof net.minecraft.server.level.ServerPlayer pilot) {
+            landed(pilot, state.violence());
         }
     }
 
@@ -1180,6 +1263,25 @@ public class CarProp extends Entity {
             f.vel = moved.scale(1 / Flight.DT);
             f.grounded = onGround();
             airborne = !f.grounded || f.vel.lengthSqr() > 0.05;
+            if (!f.grounded) {
+                flightTicks++;
+                if (flightTicks % 400 == 0 && getControllingPassenger() instanceof net.minecraft.server.level.ServerPlayer pilot) {
+                    com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, 4);
+                }
+            }
+        }
+        if (engineOn() && com.zomboidcraft.ZcConfig.get().world.aircraftService) {
+            // a full tank lasts about 25 minutes cruising in a jet, 30 in the helicopter; the afterburner drinks
+            float burn = f.kind == Flight.Kind.JET
+                    ? (0.2f * f.rpm + 0.8f * (float) Math.pow(f.thrustShare(), 1.3) + (f.afterburner() ? 1.2f : 0)) * 6.6e-5f
+                    : (0.3f * f.rpm + 0.7f * f.power) * 4.6e-5f;
+            setFuel(fuel() - burn);
+            if (fuel() <= 0) {
+                entityData.set(ENGINE, false);
+                if (getControllingPassenger() instanceof Player pilot) {
+                    pilot.sendOverlayMessage(Component.literal("Flameout: the tanks are dry."));
+                }
+            }
         }
         if (engineOn() && tickCount % 10 == 0) {
             // like Zomboid's helicopter: every zombie for miles comes to look
@@ -1192,8 +1294,12 @@ public class CarProp extends Entity {
         if (driver != airPilot) {
             airPilot = driver;
             if (driver instanceof Player player) {
+                AirReadiness.Manual manual = AirReadiness.manualFor(flight().kind);
+                String status = "Fuel " + Math.round(fuel() * 100) + "%, " + (battery() ? "battery good" : "battery flat") + ", condition "
+                        + condition() + "%." + (AirReadiness.knows(player, manual) ? "" : " You haven't read the " + manual.title
+                        + ": you can only taxi.");
                 player.sendOverlayMessage(Component.literal(!engineRuns() ? "It's wrecked. It won't fly again."
-                        : engineOn() ? flightHelp() : "Press the engine key to run the start-up. Interact to get out."));
+                        : engineOn() ? flightHelp() : "Press the engine key to run the start-up. " + status));
             }
         }
     }
@@ -1214,6 +1320,12 @@ public class CarProp extends Entity {
             return;
         }
         boolean on = !engineOn();
+        String why = on ? AirReadiness.cantStart(this, player) : null;
+        if (why != null) {
+            player.sendOverlayMessage(Component.literal(why));
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.6f, 1.2f);
+            return;
+        }
         entityData.set(ENGINE, on);
         server.playSound(null, getX(), getY(), getZ(), helicopter() ? (on ? AirSounds.HELI_START : AirSounds.HELI_SHUTDOWN)
                 : (on ? AirSounds.JET_START : AirSounds.JET_SHUTDOWN), SoundSource.NEUTRAL, 1.5f, 1f);
