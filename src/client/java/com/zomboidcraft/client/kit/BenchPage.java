@@ -33,6 +33,7 @@ final class BenchPage {
     private Tab tab = Tab.PARTS;
     /** The part under the mouse, so the stats can show what fitting it would do. */
     private ItemStack trying = ItemStack.EMPTY;
+    private final GunStage stage = new GunStage();
 
     BenchPage(KitScreen<?> screen) {
         this.screen = screen;
@@ -116,9 +117,18 @@ final class BenchPage {
             tx += Math.round(w) + 12;
         }
 
-        // the weapon, big
-        g.fillGradient(x + 200, y + 182, x + 405, y + 196, 0x00000000, 0x33000000);
-        KitDraw.item(g, weapon, x + 302 - 56, y + 86, 112);
+        // the weapon, big: a gun turns on the stage with its empty sockets as green ghosts
+        Attachments.Slot lit = trying.isEmpty() ? null : Attachments.slotOf(trying);
+        if (!(gun && Attachments.isModular(weapon) && stage.draw(g, weapon, x + 185, y + 92, 235, 104, mx, my, lit))) {
+            g.fillGradient(x + 200, y + 182, x + 405, y + 196, 0x00000000, 0x33000000);
+            KitDraw.item(g, weapon, x + 302 - 56, y + 86, 112);
+        } else {
+            for (GunStage.Point p : stage.points) {
+                int gunSlot = slot;
+                Runnable act = p.fitted() ? () -> screen.button(Bench.takeOffButton(gunSlot, p.slot())) : spare(weapon, p.slot(), gunSlot);
+                screen.hot(p.x() - 6, p.y() - 6, 13, 13, ItemStack.EMPTY, act, null, GunStage.label(p, weapon), -1);
+            }
+        }
 
         // its stats, showing what the part under the mouse would change
         ItemStack after = null;
@@ -147,10 +157,36 @@ final class BenchPage {
         int hx = x + 37, hy = y + KitScreen.H - 14;
         if (tab == Tab.PARTS && gun) {
             hx += KitDraw.hint(g, font, "LMB", "Fit a part / take one off", hx, hy);
+            hx += KitDraw.hint(g, font, "Drag", "Turn the gun", hx, hy);
         } else if (tab == Tab.CONDITION) {
             hx += KitDraw.hint(g, font, "LMB", "Repair with it", hx, hy);
         }
         screen.pagesAndClose(g, font, hx, hy);
+    }
+
+    /** Fits the first part you carry for this socket, or null if you carry none. */
+    private @Nullable Runnable spare(ItemStack weapon, Attachments.Slot socket, int gunSlot) {
+        AbstractContainerMenu menu = screen.menu();
+        for (int i : screen.carried()) {
+            ItemStack s = menu.slots.get(i).getItem();
+            if (i != gunSlot && !s.isEmpty() && Attachments.slotOf(s) == socket && Attachments.fits(weapon, s.getItem())) {
+                int from = i;
+                return () -> screen.button(Bench.fitButton(from, gunSlot, socket));
+            }
+        }
+        return null;
+    }
+
+    boolean pressed(double mx, double my) {
+        return stage.pressed(mx, my);
+    }
+
+    void dragged(double mx, double my) {
+        stage.dragged(mx, my);
+    }
+
+    void released() {
+        stage.released();
     }
 
     /** Each socket: what's fitted, then every part you carry that fits it. */

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_st_escape": "zomboidcraft:block/city/fit_st_escape",
+    "particle": "zomboidcraft:block/city/fit_st_escape"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.75
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_st_escape"
+        },
+        "south": {
+          "texture": "#fit_st_escape",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_st_escape",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_st_escape",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_st_escape",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_st_escape",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

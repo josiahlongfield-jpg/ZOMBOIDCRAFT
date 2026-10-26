@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_exit": "zomboidcraft:block/city/fit_exit",
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "particle": "zomboidcraft:block/city/fit_exit"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        10,
+        15.4
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_exit"
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    }
+  ]
+}

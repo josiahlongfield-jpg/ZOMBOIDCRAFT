@@ -335,7 +335,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         if (fly != null) {
             for (Hot h : flyHots) {
                 if (h.has(mx, my)) {
-                    Runnable r = right ? h.alt() : h.click();
+                    Runnable r = right && h.alt() != null ? h.alt() : h.click();
                     if (r != null) r.run();
                     return true;
                 }
@@ -346,23 +346,26 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         for (int i = hots.size() - 1; i >= 0; i--) {
             Hot h = hots.get(i);
             if (h.has(mx, my)) {
-                Runnable r = right ? h.alt() : h.click();
+                Runnable r = right && h.alt() != null ? h.alt() : h.click();
                 if (r != null) r.run();
                 return true;
             }
         }
+        if (page == Page.BENCH && !right) bench.pressed(mx, my);
         return true;
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         if (page == Page.MAP) map.released(event.x(), event.y());
+        if (page == Page.BENCH) bench.released();
         return true;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         if (page == Page.MAP) map.dragged(event.x(), event.y());
+        if (page == Page.BENCH) bench.dragged(event.x(), event.y());
         return true;
     }
 

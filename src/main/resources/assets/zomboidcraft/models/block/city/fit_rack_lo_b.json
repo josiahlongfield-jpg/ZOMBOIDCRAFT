@@ -1,0 +1,253 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_beige": "zomboidcraft:block/city/fit_beige",
+    "fit_pan": "zomboidcraft:block/city/fit_pan",
+    "navy_curtain_blue": "zomboidcraft:block/city/navy_curtain_blue",
+    "navy_mattress": "zomboidcraft:block/city/navy_mattress",
+    "particle": "zomboidcraft:block/city/fit_beige"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beige"
+        },
+        "south": {
+          "texture": "#fit_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beige",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beige",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_beige"
+        },
+        "east": {
+          "texture": "#fit_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beige"
+        },
+        "up": {
+          "texture": "#fit_beige",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        1
+      ],
+      "to": [
+        16,
+        4.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_pan"
+        },
+        "south": {
+          "texture": "#fit_beige"
+        },
+        "east": {
+          "texture": "#fit_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beige"
+        },
+        "down": {
+          "texture": "#fit_beige"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        4.5,
+        1.5
+      ],
+      "to": [
+        15.5,
+        6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_mattress"
+        },
+        "south": {
+          "texture": "#navy_mattress"
+        },
+        "east": {
+          "texture": "#navy_mattress"
+        },
+        "west": {
+          "texture": "#navy_mattress"
+        },
+        "up": {
+          "texture": "#navy_mattress"
+        },
+        "down": {
+          "texture": "#navy_mattress"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_pan"
+        },
+        "south": {
+          "texture": "#fit_beige"
+        },
+        "east": {
+          "texture": "#fit_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beige",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beige"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        0.5
+      ],
+      "to": [
+        10,
+        13,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_curtain_blue"
+        },
+        "south": {
+          "texture": "#navy_curtain_blue"
+        },
+        "east": {
+          "texture": "#navy_curtain_blue"
+        },
+        "west": {
+          "texture": "#navy_curtain_blue"
+        },
+        "up": {
+          "texture": "#navy_curtain_blue"
+        },
+        "down": {
+          "texture": "#navy_curtain_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        1,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beige"
+        },
+        "south": {
+          "texture": "#fit_beige"
+        },
+        "east": {
+          "texture": "#fit_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beige"
+        },
+        "down": {
+          "texture": "#fit_beige",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_tank": "zomboidcraft:block/city/fit_tank",
+    "fit_yellow": "zomboidcraft:block/city/fit_yellow",
+    "particle": "zomboidcraft:block/city/fit_tank"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_tank",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_tank"
+        },
+        "east": {
+          "texture": "#fit_tank"
+        },
+        "west": {
+          "texture": "#fit_tank"
+        },
+        "up": {
+          "texture": "#fit_tank"
+        },
+        "down": {
+          "texture": "#fit_tank"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        6
+      ],
+      "to": [
+        12,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_tank"
+        },
+        "south": {
+          "texture": "#fit_tank",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_tank"
+        },
+        "west": {
+          "texture": "#fit_tank"
+        },
+        "up": {
+          "texture": "#fit_tank"
+        },
+        "down": {
+          "texture": "#fit_tank"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        11
+      ],
+      "to": [
+        14,
+        4.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_yellow"
+        },
+        "south": {
+          "texture": "#fit_yellow"
+        },
+        "east": {
+          "texture": "#fit_yellow"
+        },
+        "west": {
+          "texture": "#fit_yellow"
+        },
+        "up": {
+          "texture": "#fit_yellow"
+        },
+        "down": {
+          "texture": "#fit_yellow",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

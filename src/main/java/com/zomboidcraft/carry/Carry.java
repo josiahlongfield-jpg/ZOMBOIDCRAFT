@@ -220,6 +220,11 @@ public final class Carry {
             // a heavy load wears you out on the move
             if (tier >= 2 && player.getDeltaMovement().horizontalDistanceSqr() > 0.001) {
                 Stamina.use(player, 0.15 * (tier - 1));
+                // and a crushing one hurts: half a heart every six seconds you keep moving under it
+                if (tier >= 4 && ticks % 120 == 0) {
+                    player.hurtServer(player.level(), com.zomboidcraft.survival.ModDamageTypes.source(player.level(),
+                            com.zomboidcraft.survival.ModDamageTypes.STRAIN), 1f);
+                }
             }
         }
     }

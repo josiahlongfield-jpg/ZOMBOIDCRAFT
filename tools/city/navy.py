@@ -35,7 +35,7 @@ PREFIXES = ("navy_",)
 
 HAZE = (118, 124, 128)
 DECK = (60, 62, 64)
-HANGAR = (92, 96, 98)
+HANGAR = (78, 82, 84)
 WHITE = (222, 220, 212)
 YELLOW = (218, 178, 38)
 RED = (172, 38, 30)
@@ -339,9 +339,19 @@ def engine_face(seed):
     return t
 
 
-def wall(seed, rgb=(196, 198, 192), runs=False):
-    """An interior bulkhead: pale paint over weld seams, the frame showing every block."""
-    t = B.ship_wall(seed, rgb)
+def wall(seed, rgb=(216, 212, 198), runs=False):
+    """An interior bulkhead as the photos show them: glossy off-white enamel laid smooth over the
+    plating, the weld seams and the frame every block just showing through, a little rust weeping."""
+    t = F.enamel(seed, rgb)
+    t.smooth[:] = 0.72
+    t.f0[:] = 45
+    for y in (0, 32):
+        F.area(t, 0, y, N, y + 1, mul=0.86, dh=0.05)
+        F.area(t, 0, y + 1, N, y + 2, mul=1.04, dh=0.05)
+    F.area(t, 30, 0, 34, N, mul=0.95, dh=0.08)
+    F.area(t, 30, 0, 31, N, mul=1.05)
+    B.rust_runs(t, 2, 0.25)
+    t = F.wear(t, 0.12, 3, specks=0.002)
     if runs:
         for y in (6, 14):
             F.area(t, 0, y, N, y + 5, (170, 172, 166), dh=0.25)
@@ -478,7 +488,7 @@ def textures():
         "navy_wall": lambda: wall(7646), "navy_wall_runs": lambda: wall(7647, runs=True),
         "navy_overhead": lambda: overhead(7648),
         "navy_tile_blue": lambda: tile(7649, (70, 92, 132)), "navy_tile_green": lambda: tile(7650, (84, 118, 92)),
-        "navy_tile_grey": lambda: tile(7651, (140, 142, 138)), "navy_tile_red": lambda: tile(7652, (132, 54, 48)),
+        "navy_tile_grey": lambda: tile(7651, (178, 176, 166)), "navy_tile_red": lambda: tile(7652, (132, 54, 48)),
         "navy_formica": lambda: formica(7653), "navy_curtain_blue": lambda: curtain_fabric(7654),
         "navy_mattress": lambda: B.ticking(7655), "navy_alu": lambda: F.plain(7656, (176, 178, 176), 0.04, 0.55),
         "navy_toolbox": lambda: toolbox(7657), "navy_leather": lambda: leather(7658),

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_beige": "zomboidcraft:block/city/fit_beige",
+    "fit_cabinet": "zomboidcraft:block/city/fit_cabinet",
+    "particle": "zomboidcraft:block/city/fit_cabinet"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        3,
+        9
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_cabinet"
+        },
+        "south": {
+          "texture": "#fit_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_beige"
+        },
+        "west": {
+          "texture": "#fit_beige"
+        },
+        "up": {
+          "texture": "#fit_beige"
+        },
+        "down": {
+          "texture": "#fit_beige"
+        }
+      }
+    }
+  ]
+}

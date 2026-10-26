@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_beam": "zomboidcraft:block/city/fit_beam",
+    "particle": "zomboidcraft:block/city/fit_beam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        9,
+        7.25
+      ],
+      "to": [
+        16,
+        16,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beam"
+        },
+        "south": {
+          "texture": "#fit_beam"
+        },
+        "east": {
+          "texture": "#fit_beam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beam",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_beam"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8.5,
+        5
+      ],
+      "to": [
+        16,
+        9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_beam"
+        },
+        "south": {
+          "texture": "#fit_beam"
+        },
+        "east": {
+          "texture": "#fit_beam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_beam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_beam"
+        },
+        "down": {
+          "texture": "#fit_beam"
+        }
+      }
+    }
+  ]
+}
