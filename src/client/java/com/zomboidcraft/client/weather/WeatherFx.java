@@ -206,7 +206,7 @@ public final class WeatherFx {
 
     private static void mist(ClientLevel level, LocalPlayer player, Weather w, float night, double windX, double windZ, float amount) {
         // fog banks, plus a thin mist that always lies in the streets, more of it at night
-        float ground = 0.10f + 0.12f * night + 0.08f * w.rain();
+        float ground = 0.30f + 0.12f * night + 0.08f * w.rain();
         float thick = Math.max(w.fog(), ground);
         mistDue += MIST_MAX * thick * amount / MIST_LIFE;
         float drift = 0.008f + 0.05f * w.wind();
@@ -219,8 +219,10 @@ public final class WeatherFx {
                 continue;  // a roof well above you, or a drop: keep the mist where you are
             }
             // ground mist hugs the street; a fog bank stands taller
-            double y = top + 0.2 + RANDOM.nextDouble() * (1.2 + 5 * w.fog());
-            float strength = (0.03f + 0.13f * w.fog() + 0.03f * night) * (0.6f + 0.4f * RANDOM.nextFloat());
+            // most of it lies low, washing over the street; the more fog, the more of it stands tall
+            boolean low = RANDOM.nextFloat() > w.fog();
+            double y = top + 0.1 + RANDOM.nextDouble() * (low ? 0.9 : 1.5 + 6 * w.fog());
+            float strength = (low ? 0.07f + 0.03f * night : 0.05f + 0.22f * w.fog()) * (0.6f + 0.4f * RANDOM.nextFloat());
             double speed = drift * (0.6 + 0.8 * RANDOM.nextDouble());
             level.addParticle(WeatherParticles.MIST, x, y, z, windX * speed, strength, windZ * speed);
         }
