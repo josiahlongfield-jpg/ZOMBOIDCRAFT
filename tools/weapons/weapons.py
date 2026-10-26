@@ -437,6 +437,7 @@ MELEE_PBR = {
     'hunting_rifle_ammo': dict(carton='card'),
     'revolver_ammo': dict(carton='card'),
     'rimfire_ammo': dict(carton='card'),
+    'lever_ammo': dict(carton='card'),
     'magnum_ammo': dict(carton='card'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
@@ -706,6 +707,14 @@ SAWN_SUPPORT = [tuple(SO.frame_point(0, -1.05, SO.FOREND[1] - 1.0) + (0, -1.7, 0
 SAWN_CLEAR = [tuple(SO.frame_point(*p)) for p in (
     (0, SO.GRIP_FOOT[1], SO.GRIP_FOOT[0]), (0, SO.STANDING_TOP, 0.4), (0, 0, SO.MUZZLE))]
 
+# the lever gun: the off hand under the forend, the butt plate in the shoulder; the lever's loop stays clear
+_la_top, _la_bot = LA.stock_line(LA.STOCK_END - 0.1)
+LEVER_SUPPORT = [tuple(LA.frame_point(0, -1.40, -3.5) + (0, -1.7, 0)), tuple(LA.frame_point(0, -1.40, -8.5) + (0, -1.7, 0))]
+LEVER_BUTT = tuple(LA.frame_point(0, (_la_top + _la_bot) / 2, LA.STOCK_END - 0.3))
+LEVER_CLEAR = [tuple(LA.frame_point(*p)) for p in (
+    (0, LA.stock_line(12.0)[0], 12.0), (0, _la_top, LA.STOCK_END - 0.1), (0, _la_bot, LA.STOCK_END - 0.1),
+    (0, LA.RCVR_TOP + 0.55, LA.RCVR[1] + 0.6), (0, LA.LOOP_BOT, (LA.LOOP[0] + LA.LOOP[1]) / 2), (0, 0, LA.MUZZLE))]
+
 # the magnum: the revolver's two hands round its bigger grip
 MAGNUM_SUPPORT = [tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(2.7)))),
                   tuple(MG.frame_point(-0.95, *reversed(MG.D._grip(0.9))))]
@@ -921,7 +930,7 @@ def lever_action():
     finishes = {k: (v[0], LA.look(k)) for k, v in LA.FINISHES.items()}
     return kit.Gun('lever_action', 'Lever-Action Carbine', LA.body, finishes['field'][1], LA.HAND, {}, {},
                    aperture=fp(0, LA.SIGHT, LA.REAR_SIGHT), flash=flash, handle=LA.lever, seed=939, flash_size=1.1,
-                   finishes=finishes)
+                   finishes=finishes, slide=LA.bolt)
 
 
 def magnum():
@@ -979,13 +988,16 @@ class FirstPerson:
     cylinder, chamber_step: the rounds sit in a cylinder that turns chamber_step degrees for each one (about its
       axis point); without one, the chambers sit side by side chamber_step item pixels apart along x;
     hip_aim: the hip pose's muzzle-up and muzzle-in angles are worked out (see aim_hip) so the bore points at the
-      middle of the view this many blocks ahead; hip_turn's roll is kept."""
+      middle of the view this many blocks ahead; hip_turn's roll is kept;
+    lever: a tube gun worked by a lever: the handle (the lever) turns open_angle degrees about open_axis through the
+      hinge point, the shooting hand's fingers in its loop, and the slide (the bolt) rides back handle_travel with it;
+      its rounds go in through a gate on the right, swung in about their noses (magCentre)."""
 
     def __init__(self, hip_grip, hip_turn, hip_scale, reload, irons, irons_scale, handle_travel, charge_turn,
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
                  wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
-                 cylinder=False, chamber_step=0.0, hip_aim=None):
+                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -1000,6 +1012,7 @@ class FirstPerson:
         self.opens, self.open_axis, self.open_angle = opens, open_axis, open_angle
         self.cylinder, self.chamber_step = cylinder, chamber_step
         self.hip_aim = hip_aim
+        self.lever = lever
 
 
 # From the hip a gun points at the crosshair (Josiah, 2026-10-26): its bore meets the middle of the view this many
@@ -1122,6 +1135,16 @@ SAWN_FP = FirstPerson(hip_grip=(0.26, -0.38, -0.55), hip_turn=(4.0, 12.0, -8.0),
                       bead=SO.frame_point(0, SO.BEAD_TOP, SO.BEAD_Z) - _SO_SIGHT, eye_rise=0.9,
                       opens=True, open_axis=(1.0, 0.0, 0.0), open_angle=-SO.OPEN,
                       chamber_step=-SO.LOOSE_GAP * IN, hip_aim=HIP_AIM)
+
+# the lever gun carried like the .22, a saddle carbine on its buckhorn (the eye over the comb, 18" behind the
+# notch); rolled right side up to load through the gate; the lever swung by the shooting hand after each shot
+LEVER_EYE_Z = 12.0
+LEVER_FP = FirstPerson(hip_grip=(0.28, -0.36, -0.56), hip_turn=(4.0, 14.0, -6.0), hip_scale=0.92,
+                       reload={'mag_out': (-30, -0.04), 'mag_in': (-30, -0.04), 'charge': (-6, 0.0)},
+                       irons=(0.0, 0.0, -(LEVER_EYE_Z - LA.REAR_SIGHT) * IN * 0.85), irons_scale=0.85,
+                       handle_travel=LA.BOLT_TRAVEL, charge_turn=(6, 4, 0), charge_push=(0.0, 0.02, -0.03),
+                       load_turn=(-8, 10, 25), load_push=(-0.10, 0.06, 0.0), wrist_grip=True,
+                       open_axis=(1.0, 0.0, 0.0), open_angle=LA.LEVER_OPEN, hip_aim=HIP_AIM, lever=True)
 
 # the magnum held out like the service revolver, a little smaller on screen for its size
 MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0), hip_scale=1.20,
@@ -1423,6 +1446,13 @@ def main():
     home = MG.frame_point(*MG.LOOSE_ROUND)
     write_loose_round('magnum', MG.round44, MG.round_look(), home, gn - mg.hand, 942)
     write_loose_round('magnum', MG.case44, MG.round_look(), home, gn - mg.hand, 943, 'loose_case')
+    la = lever_action()
+    _Pm, gl = rifle_frame()
+    la_hold = long_holds(LA.HAND, LEVER_SUPPORT, LEVER_BUTT, LEVER_CLEAR)
+    aimed(la, gl, LEVER_FP)
+    line, _ = kit.write_gun(la, ASSETS, gl - la.hand, gun_displays(gl, la_hold, LEVER_FP), lang, ads_eyes(la, LEVER_FP))
+    summary.append(line)
+    write_loose_round('lever_action', LA.round_3030, LA.round_look(), LA.frame_point(*LA.LOOSE_ROUND), gl - la.hand, 944)
     part_display = lambda m: small_display(m, (20, 60, 0))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
@@ -1434,7 +1464,7 @@ def main():
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la])
     write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
                      (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
                      (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
@@ -1444,14 +1474,16 @@ def main():
                      (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
                      (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
                      (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
-                     (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn))])
+                     (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
+                     (la, gl, la_hold, LEVER_FP, lever_points(la, gl))])
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
                                       ('hunting_rifle_ammo', '.308 Rounds', '#6e2a22', 560),
                                       ('revolver_ammo', '.38 Special Rounds', '#2f4a63', 561),
                                       ('rimfire_ammo', '.22 LR Rounds', '#7a6a2a', 562),
-                                      ('magnum_ammo', '.44 Magnum Rounds', '#5b2a4a', 563)):
+                                      ('magnum_ammo', '.44 Magnum Rounds', '#5b2a4a', 563),
+                                      ('lever_ammo', '.30-30 Rounds', '#7a3b1e', 564)):
         box = M.Model(name)
         build_ammo_box(box)
         lo, hi = box.bounds()
@@ -1468,7 +1500,7 @@ def main():
     write_java()
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
-                                 'sawn_off': so_hold, 'magnum': mg_hold},
+                                 'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold},
                                 (mh, mG, mkeys))
     print('\n'.join(summary))
     if preview:
@@ -1892,6 +1924,25 @@ def magnum_points(gun, g):
     }
 
 
+def lever_points(gun, g):
+    shift = g - gun.hand
+    fp = LA.frame_point
+    gz, gy = LA.GATE
+    home = fp(*LA.LOOSE_ROUND) + shift
+    support = fp(0, -1.40, -6.0) + shift + np.array([0, -0.8, 0])     # the off hand cups the forend from below
+    return {
+        'grip': g,
+        'support': support,
+        'foregrip': support,
+        'magTop': fp(LA.RCVR_HALF, gy, gz) + shift,                      # the gate
+        'magHold': home + np.array([0.6, -1.3, 0.5]),                    # the thumb behind the round's base
+        'magCentre': fp(LA.LOOSE_ROUND[0], gy, gz) + shift,              # its nose, which it's swung in about
+        'handle': fp(0, (LA.LOOP_BOT - 1.55) / 2, (LA.LOOP[0] + LA.LOOP[1]) / 2) + shift,    # the fingers in the loop
+        **no_rail(gun, shift),
+        'hinge': LA.PIVOT_POINT + shift,
+    }
+
+
 def rig_data(gun, g, holds, fp, points):
     """One gun's first-person rig (GunRig's fields, in order): the hip pose's numbers, so a reload can cant it
     smoothly, each sight's aiming pose, how its handle or slide is worked, the points the hands hold (item
@@ -1920,7 +1971,8 @@ def rig_data(gun, g, holds, fp, points):
     data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
                  'supportGrip': fp.support_grip, 'pump': fp.pump, 'wristGrip': fp.wrist_grip, 'bolt': fp.bolt})
     data.update({'hinge': vec(hinge), 'openAxis': vec(fp.open_axis), 'openAngle': float(fp.open_angle),
-                 'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder})
+                 'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder,
+                 'lever': fp.lever})
     return data
 
 
@@ -1940,6 +1992,7 @@ RIG_NOTES = {
     'openAngle': 'how far it turns open (degrees)', 'cylAxis': "a point on the cylinder's axis",
     'chamberStep': 'between chambers: pixels along x, or degrees round a cylinder',
     'opens': 'loaded by hand with the action open', 'cylinder': 'the rounds sit in a turning cylinder',
+    'lever': 'worked by a lever, its bolt riding back with it',
 }
 
 

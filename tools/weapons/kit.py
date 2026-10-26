@@ -67,7 +67,7 @@ class Part:
 
 class Gun:
     def __init__(self, name, title, body, look, hand, slots, parts, irons=None, aperture=None, flash=None,
-                 seed=556, wear=0.4, handle=None, flash_size=1.0, finishes=None, opened=None):
+                 seed=556, wear=0.4, handle=None, flash_size=1.0, finishes=None, opened=None, slide=None):
         self.name, self.title, self.body, self.look = name, title, body, look
         self.hand = np.asarray(hand, float)     # centre of the shooting hand on the grip, build frame
         self.slots = slots                      # {slot name: Slot}
@@ -84,6 +84,7 @@ class Gun:
         # (axis, degrees, origin): how the handle (a double's barrels, a revolver's cylinder) is turned to show it
         # opened in third person while it's loaded; the steps the game takes (22.5 degrees) limit it
         self.opened = opened
+        self.slide = slide                      # fn(m): a second worked piece drawn apart (a lever gun's bolt), or None
 
     def mount(self, key):
         part = self.parts[key]
@@ -515,6 +516,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
             models['charging_handle'] = drawn('charging_handle', gun.handle, look=look, seed=seed + 3, wear=wear)
             if gun.opened:
                 models['charging_handle_open'] = opened(models['charging_handle'], *gun.opened)
+        if gun.slide:
+            models['slide'] = drawn('slide', gun.slide, look=look, seed=seed + 5, wear=wear)
         return models
 
     base = f'weapon/{gun.name}'
@@ -598,6 +601,9 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
             shown = r('charging_handle_open' if gun.opened and st in ('mag_out', 'mag_in') else 'charging_handle')
             entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
                             'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': shown})
+        if gun.slide:
+            entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
+                            'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': r('slide')})
         for slot_name in SLOTS:
             s = gun.slots.get(slot_name)
             if not s:
@@ -646,12 +652,13 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
     # the loose pieces first person draws during a reload, in the gun's own model space (no display of their own)
     loose = {'mag': gun.slots['magazine'].default if 'magazine' in gun.slots else None,
              'charging_handle': 'charging_handle' if gun.handle else None,
+             'slide': 'slide' if gun.slide else None,
              'flash': 'muzzle_flash' if gun.flash else None,
              'flash_quiet': 'muzzle_flash_quiet' if gun.flash and quiet_tip(gun) is not None else None}
     for name, key in loose.items():
         if not key:
             continue
-        if name == 'charging_handle':
+        if name in ('charging_handle', 'slide'):
             # the slide, cylinder or barrels first person draws all the time: the gun's finish and wear (it's given
             # the gun's model data and damage)
             at = lambda k: ref(f'{base}/{k}/{key}' if k else f'{base}/{key}')

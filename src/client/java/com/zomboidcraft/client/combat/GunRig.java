@@ -39,6 +39,9 @@ import java.util.Map;
  * @param opens        loaded by hand with the action open; the loose round (in magTop's chamber when home) goes in
  *                     one chamber at a time
  * @param cylinder     the rounds sit in a cylinder that turns a chamber with each shot
+ * @param lever        a tube gun worked by a lever (the handle): it turns openAngle about the hinge with the shooting
+ *                     hand's fingers in its loop, and its bolt (the slide) rides back handleTravel with it; the rounds
+ *                     go in through a gate on the right, each swung in about its nose (magCentre)
  */
 record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, float[] charge,
               Map<String, float[]> sights, float handleTravel, float[] chargeTurn, float[] chargePush,
@@ -48,5 +51,5 @@ record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, 
               float[] magAxis,
               boolean locksBack, boolean cycles, boolean supportGrip, boolean pump, boolean wristGrip, boolean bolt,
               float[] hinge, float[] openAxis, float openAngle, float[] cylAxis, float chamberStep, boolean opens,
-              boolean cylinder) {
+              boolean cylinder, boolean lever) {
 }

@@ -94,10 +94,11 @@ HAND_ADDED = {
 for _name, _extra in HAND_ADDED.items():
     TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
 
-# weapons wave one: a .22 or a magnum left in a boot, an SMG in the back of a SWAT van now and then
-TABLES["trunk"] = (TABLES["trunk"][0], TABLES["trunk"][1] + [(f"{ZC}:rimfire_ammo", 2, 5, 25), (f"{ZC}:magnum_ammo", 1, 3, 12)])
+# weapons wave one: a .22, a lever gun or a magnum left in a boot, an SMG in the back of a SWAT van now and then
+TABLES["trunk"] = (TABLES["trunk"][0], TABLES["trunk"][1] + [(f"{ZC}:rimfire_ammo", 2, 5, 25), (f"{ZC}:magnum_ammo", 1, 3, 12),
+                                                             (f"{ZC}:lever_ammo", 1, 3, 12)])
 TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:smg", 2, 1, 1, worn(0, .4)), (f"{ZC}:smg_magazine", 3, 1, 2, rounds(30))])
-RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:rimfire", 2), (f"{ZC}:magnum", 1), (f"{ZC}:sawn_off", 1)]
+RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:rimfire", 2), (f"{ZC}:magnum", 1), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 1)]
 RARE["police"] = RARE["police"] + [(f"{ZC}:smg", 1)]
 def table(name):
     (lo, hi), entries = TABLES[name]

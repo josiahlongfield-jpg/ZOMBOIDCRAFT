@@ -10,7 +10,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The guns and what tells them apart: their item, magazine and rounds, their own numbers in settings, their
  * sounds, and their reload timings in ticks (first person animates on the same numbers, see RifleView).
- * A tube gun (the pump shotgun) has no magazine: its shells go in one at a time, and it's pumped after each shot.
+ * A tube gun (the pump shotgun, the lever gun) has no magazine: its shells go in one at a time, and it's pumped (or its
+ * lever worked) after each shot.
  * A bolt gun (the hunting rifle) takes a magazine, and its bolt is worked by hand after each shot.
  * A gun that opens to load (the double-barrel broken open, the revolver's cylinder swung out) is loaded by hand like a
  * tube gun, then closed: its spent shells or cases come out as it opens.
@@ -33,7 +34,10 @@ public enum GunType {
     // the double's loading, a little quicker in the hand
     SAWN_OFF("sawn_off", "12 gauge", 8, 10, 6, true),
     // the service revolver's loading, with bigger rounds
-    MAGNUM("magnum", ".44 Magnum", 10, 10, 5, true);
+    MAGNUM("magnum", ".44 Magnum", 10, 10, 5, true),
+    // rolled right side up, a round at a time thumbed in through the gate; the lever swung down and up after each shot
+    // (heard as it goes down, the empty thrown up and out)
+    LEVER_ACTION("lever_action", ".30-30", 6, 11, 6, 3);
 
     private final String id;
     private final String caliber;
@@ -147,6 +151,7 @@ public enum GunType {
             case SMG -> ModItems.SMG;
             case SAWN_OFF -> ModItems.SAWN_OFF;
             case MAGNUM -> ModItems.MAGNUM;
+            case LEVER_ACTION -> ModItems.LEVER_ACTION;
         };
     }
 
@@ -155,7 +160,7 @@ public enum GunType {
         return switch (this) {
             case ASSAULT_RIFLE -> ModItems.RIFLE_MAGAZINE;
             case PISTOL -> ModItems.PISTOL_MAGAZINE;
-            case SHOTGUN, DOUBLE_BARREL, REVOLVER, SAWN_OFF, MAGNUM -> null;
+            case SHOTGUN, DOUBLE_BARREL, REVOLVER, SAWN_OFF, MAGNUM, LEVER_ACTION -> null;
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_MAGAZINE;
             case RIMFIRE -> ModItems.RIMFIRE_MAGAZINE;
             case SMG -> ModItems.SMG_MAGAZINE;
@@ -171,6 +176,7 @@ public enum GunType {
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
             case RIMFIRE -> ModItems.RIMFIRE_AMMO;
             case MAGNUM -> ModItems.MAGNUM_AMMO;
+            case LEVER_ACTION -> ModItems.LEVER_AMMO;
         };
     }
 
@@ -191,6 +197,7 @@ public enum GunType {
             case SMG -> ZcConfig.get().smg;
             case SAWN_OFF -> ZcConfig.get().sawnOff;
             case MAGNUM -> ZcConfig.get().magnum;
+            case LEVER_ACTION -> ZcConfig.get().leverAction;
         };
     }
 
@@ -219,6 +226,7 @@ public enum GunType {
             case SMG -> suppressed ? ModSounds.SMG_SHOT_SUPPRESSED : distant ? ModSounds.SMG_SHOT_DISTANT : ModSounds.SMG_SHOT;
             case SAWN_OFF -> distant ? ModSounds.SAWN_OFF_SHOT_DISTANT : ModSounds.SAWN_OFF_SHOT;
             case MAGNUM -> distant ? ModSounds.MAGNUM_SHOT_DISTANT : ModSounds.MAGNUM_SHOT;
+            case LEVER_ACTION -> distant ? ModSounds.LEVER_ACTION_SHOT_DISTANT : ModSounds.LEVER_ACTION_SHOT;
         };
     }
 
@@ -234,6 +242,7 @@ public enum GunType {
             case SMG -> ModSounds.SMG_DRY;
             case SAWN_OFF -> ModSounds.SAWN_OFF_DRY;
             case MAGNUM -> ModSounds.MAGNUM_DRY;
+            case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
         };
     }
 
@@ -265,6 +274,7 @@ public enum GunType {
             case SMG -> ModSounds.SMG_MAG_IN;
             case SAWN_OFF -> ModSounds.SAWN_OFF_SHELL_IN;
             case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
+            case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
         };
     }
 
@@ -284,6 +294,7 @@ public enum GunType {
             case SMG -> ModSounds.SMG_COCK;
             case SAWN_OFF -> ModSounds.SAWN_OFF_CLOSE;
             case MAGNUM -> ModSounds.MAGNUM_CLOSE;
+            case LEVER_ACTION -> ModSounds.LEVER_ACTION_LEVER;
         };
     }
 

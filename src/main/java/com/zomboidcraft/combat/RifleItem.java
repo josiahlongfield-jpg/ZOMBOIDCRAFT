@@ -153,10 +153,13 @@ public class RifleItem extends Item {
         }
         tooltip.accept(Component.literal(type == GunType.REVOLVER || type == GunType.MAGNUM ? "Right-click: aim   Left-click: fire   R: swing out and load (fire to stop)"
                 : type.opens ? "Right-click: aim   Left-click: fire   R: break open and load (fire to stop)"
-                : type.tube ? "Right-click: aim   Left-click: fire   R: load shells (fire to stop)"
+                : type.tube ? "Right-click: aim   Left-click: fire   R: load " + type.rounds() + " (fire to stop)"
                 : "Right-click: aim   Left-click: fire   R: reload").withStyle(ChatFormatting.DARK_GRAY));
         if (type.bolt) {
             tooltip.accept(Component.literal("Bolt action: the bolt is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
+        }
+        if (type == GunType.LEVER_ACTION) {
+            tooltip.accept(Component.literal("Lever action: the lever is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
         }
         if (type.stats().selectFire) {
             tooltip.accept(Component.literal("X: semi / full auto (" + (Guns.fullAuto(stack) ? "full auto" : "semi-auto") + ")")

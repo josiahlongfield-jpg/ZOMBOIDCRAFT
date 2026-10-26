@@ -40,6 +40,8 @@ public final class GunSlotData {
         Map.entry("sawn_off", Map.ofEntries(
 )),
         Map.entry("magnum", Map.ofEntries(
+)),
+        Map.entry("lever_action", Map.ofEntries(
 )));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
@@ -52,7 +54,8 @@ public final class GunSlotData {
         Map.entry("rimfire", Map.ofEntries()),
         Map.entry("smg", Map.ofEntries()),
         Map.entry("sawn_off", Map.ofEntries()),
-        Map.entry("magnum", Map.ofEntries()));
+        Map.entry("magnum", Map.ofEntries()),
+        Map.entry("lever_action", Map.ofEntries()));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),

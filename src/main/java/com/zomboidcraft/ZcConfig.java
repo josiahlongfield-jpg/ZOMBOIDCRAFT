@@ -50,6 +50,8 @@ public final class ZcConfig {
     public ShotgunStats sawnOff = ShotgunStats.sawnOff();
     /** The .44 magnum revolver's own numbers. */
     public GunStats magnum = GunStats.magnum();
+    /** The lever-action carbine's own numbers. */
+    public GunStats leverAction = GunStats.leverAction();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -73,6 +75,7 @@ public final class ZcConfig {
         public int rimfireWeight = 4;
         public int smgWeight = 1;
         public int sawnOffWeight = 2;
+        public int leverActionWeight = 3;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
         public int revolverWeight = 2;
@@ -215,6 +218,9 @@ public final class ZcConfig {
         /** The magnum: blued with rosewood target stocks, or nickel with exhibition walnut. */
         public int magnumBlued = 75;
         public int magnumNickel = 25;
+        /** The lever gun: blued with plain walnut, or colour case hardened with figured walnut. */
+        public int leverActionField = 75;
+        public int leverActionCaseHardened = 25;
     }
 
     public static class Carry {
@@ -552,6 +558,25 @@ public final class ZcConfig {
             s.range = 200.0;
             s.fireDelayTicks = 25;     // never less than the bolt takes to work (GunType.fireDelay)
             s.magazineSize = 5;
+            return s;
+        }
+
+        /**
+         * The .30-30 lever gun: a deer round, short of the .308 in reach and punch but far quicker to work, six in the
+         * tube; a sharp kick and a loud bark.
+         */
+        static GunStats leverAction() {
+            GunStats s = new GunStats();
+            s.damage = 22.0;
+            s.headshotMultiplier = 3.0;
+            s.hipSpread = 3.2;
+            s.aimSpread = 0.3;
+            s.recoil = 1.9;
+            s.shotNoise = 130.0;
+            s.aimZoom = 0.84;
+            s.range = 140.0;
+            s.fireDelayTicks = 9;      // never less than the lever takes to work (GunType.fireDelay)
+            s.magazineSize = 6;
             return s;
         }
 
