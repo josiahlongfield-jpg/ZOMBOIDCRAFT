@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "navy_formica": "zomboidcraft:block/city/navy_formica",
+    "particle": "zomboidcraft:block/city/navy_formica"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        10,
+        0
+      ],
+      "to": [
+        14.5,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#navy_formica",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#navy_formica",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#navy_formica"
+        },
+        "west": {
+          "texture": "#navy_formica"
+        },
+        "up": {
+          "texture": "#navy_formica"
+        },
+        "down": {
+          "texture": "#navy_formica"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        9.5,
+        0
+      ],
+      "to": [
+        14.5,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        9.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        0.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

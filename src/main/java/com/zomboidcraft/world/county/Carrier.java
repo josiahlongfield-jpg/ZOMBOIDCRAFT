@@ -926,7 +926,7 @@ final class Carrier {
         String toNear = port ? "south" : "north", toFar = port ? "north" : "south";
         int dx = (xa + xb) / 2;
         String floor = switch (r) {
-            case MESS -> any("navy_tile_blue", "navy_tile_red");
+            case MESS -> chance() < 0.7 ? "navy_tile_grey" : "navy_tile_blue";
             case GALLEY, BRIG -> "navy_tile_grey";
             case SICKBAY -> "navy_tile_green";
             case BERTHING, STATEROOM, OFFICE, READY, CONTROL -> any("navy_tile_blue", "floor_lino");
@@ -968,43 +968,76 @@ final class Carrier {
         int lo2 = Math.min(near, far) + (port ? 0 : 1), hi2 = Math.max(near, far) - (port ? 1 : 0);
         switch (r) {
             case BERTHING -> {
+                // racks three high back to back in rows across the compartment, two long with a tall locker
+                // between each pair (as in the berthing photos), the aisles between the rows
+                int z0 = Math.min(near, far) + 1, z1 = Math.max(near, far) - 1;
                 for (int x = xa; x <= xb; x++) {
                     int k = (x - xa) % 3;
                     if (k == 0) {
                         continue;
                     }
                     String f = k == 1 ? "west" : "east";
-                    for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z++) {
+                    for (int z = z0; z <= z1; z++) {
+                        int q = (z - z0) % 3;
+                        boolean pair = q < 2 && (q == 1 || z + 1 <= z1);
+                        String end = (q == 0) == f.equals("east") ? "a" : "b";
                         if (inside(x, y + 1, z) && inside(x, y + 2, z)) {
-                            p.set(x, y + 1, z, "navy_rack_lo[facing=" + f + "]");
-                            p.set(x, y + 2, z, "navy_rack_hi[facing=" + f + "]");
+                            p.set(x, y + 1, z, (pair ? "fit_rack_lo_" + end : "fit_locker_lo") + "[facing=" + f + "]");
+                            p.set(x, y + 2, z, (pair ? "fit_rack_hi_" + end : "fit_locker_hi") + "[facing=" + f + "]");
                         }
                     }
-                    in(x, y + 1, far, "bunk_locker[facing=" + toNear + "]");
+                    if (inside(x, y + 2, far)) {
+                        in(x, y + 1, far, "fit_locker_lo[facing=" + toNear + "]");
+                        in(x, y + 2, far, "fit_locker_hi[facing=" + toNear + "]");
+                    }
                 }
                 litter(xa, xb, za, zb, y, "home_clothes_pile", 0.06);
             }
             case MESS -> {
+                // tables in rows with their fixed stools either side, the serving line down one end, screens
                 for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z++) {
                     if (Math.floorMod(z - far, 3) != 1) {
                         continue;
                     }
                     for (int x = xa + 1; x <= xb - 2; x++) {
-                        in(x, y + 1, z, "navy_mess_table[axis=x]");
+                        in(x, y + 1, z, "fit_mess_table[axis=x]");
+                        if (free(x, y + 1, z - 1)) {
+                            p.set(x, y + 1, z - 1, "fit_stools[facing=south]");
+                        }
+                        if (free(x, y + 1, z + 1)) {
+                            p.set(x, y + 1, z + 1, "fit_stools[facing=north]");
+                        }
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
                     if (z != near) {
-                        in(xb, y + 1, z, "bunk_counter[facing=west]");
+                        in(xb, y + 1, z, "fit_counter_steel[facing=west]");
+                        if (Math.floorMod(z, 3) == 0) {
+                            in(xb, y + 2, z, "fit_dispenser[facing=west]");
+                        }
                     }
+                }
+                for (int x = xa + 1; x < xb; x += 4) {
+                    in(x, y + 2, far, "navy_screen[facing=" + toNear + "]");
                 }
                 litter(xa, xb, za, zb, y, "paper", 0.05);
             }
             case GALLEY -> {
                 for (int x = xa; x <= xb; x++) {
-                    in(x, y + 1, far, (x % 3 == 0 ? "bunk_counter" : "bunk_range") + "[facing=" + toNear + "]");
-                    if (x > xa + 1 && x < xb - 1) {
-                        in(x, y + 1, far + in * 3, "bunk_counter[facing=" + toFar + "]");
+                    if (x % 3 == 0) {
+                        in(x, y + 1, far, "fit_counter_steel[facing=" + toNear + "]");
+                    } else {
+                        in(x, y + 1, far, "fit_oven[facing=" + toNear + "]");
+                        in(x, y + 2, far, "fit_oven[facing=" + toNear + "]");
+                    }
+                    // the islands: worktops, kettles and ovens back to back in rows down the galley
+                    for (int z = far - in * 3; (z - near) * in > 1; z -= in * 3) {
+                        if (x > xa + 1 && x < xb - 1) {
+                            in(x, y + 1, z, (x % 4 == 0 ? "fit_kettle" : x % 4 == 2 ? "fit_oven" : "fit_counter_steel") + "[facing=" + toFar + "]");
+                            if (x % 4 == 1) {
+                                in(x, y + 2, z, "fit_dispenser[facing=" + toFar + "]");
+                            }
+                        }
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
@@ -1020,15 +1053,27 @@ final class Carrier {
                         p.set(x, y + 1, far, "bunk_medbed_head[facing=" + toNear + "]");
                         p.set(x, y + 1, far - in, "bunk_medbed_foot[facing=" + toNear + "]");
                         in(x + 1, y + 1, far, "bunk_iv_stand");
+                        in(x, y + 2, far, "fit_cabinet[facing=" + toNear + "]");
+                        in(x + 1, y + 2, far, "fit_fan[facing=" + toNear + "]");
                     }
                 }
                 for (int z = Math.min(near, far); z <= Math.max(near, far); z++) {
                     if (z != near && z != far) {
                         in(xa, y + 1, z, "bunk_medcab[facing=east]");
+                        in(xa, y + 2, z, "fit_cabinet[facing=east]");
                     }
                 }
+                // the treatment table under its lamp, the litters on the bulkhead
+                int mz = (near + far) / 2;
+                in(dx, y + 1, mz, "bunk_medbed_head[facing=east]");
+                in(dx + 1, y + 1, mz, "bunk_medbed_foot[facing=east]");
+                in(dx, y + 3, mz, "fit_surgical_on");
+                for (int z = Math.min(near, far) + 1; z < Math.max(near, far); z += 3) {
+                    in(xb, y + 1, z, "fit_litter[facing=west]");
+                    in(xb, y + 2, z, "fit_litter[facing=west]");
+                }
                 in(xb, y + 1, near, "bunk_desk[facing=west]");
-                in(xb, y + 2, (near + far) / 2, "bunk_first_aid[facing=west]");
+                in(xb, y + 2, (near + far) / 2 + in, "bunk_first_aid[facing=west]");
                 litter(xa, xb, za, zb, y, "blood_splat", 0.08);
             }
             case BRIG -> {

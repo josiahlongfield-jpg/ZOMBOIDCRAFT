@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "fit_vinyl": "zomboidcraft:block/city/fit_vinyl",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        3.25,
+        0,
+        2.25
+      ],
+      "to": [
+        4.75,
+        6,
+        3.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        1
+      ],
+      "to": [
+        6,
+        7.5,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_vinyl"
+        },
+        "south": {
+          "texture": "#fit_vinyl"
+        },
+        "east": {
+          "texture": "#fit_vinyl"
+        },
+        "west": {
+          "texture": "#fit_vinyl"
+        },
+        "up": {
+          "texture": "#fit_vinyl"
+        },
+        "down": {
+          "texture": "#fit_vinyl"
+        }
+      }
+    },
+    {
+      "from": [
+        11.25,
+        0,
+        2.25
+      ],
+      "to": [
+        12.75,
+        6,
+        3.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        6,
+        1
+      ],
+      "to": [
+        14,
+        7.5,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_vinyl"
+        },
+        "south": {
+          "texture": "#fit_vinyl"
+        },
+        "east": {
+          "texture": "#fit_vinyl"
+        },
+        "west": {
+          "texture": "#fit_vinyl"
+        },
+        "up": {
+          "texture": "#fit_vinyl"
+        },
+        "down": {
+          "texture": "#fit_vinyl"
+        }
+      }
+    }
+  ]
+}

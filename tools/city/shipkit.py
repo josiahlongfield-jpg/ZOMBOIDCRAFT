@@ -173,6 +173,101 @@ def enamel_steel(seed, rgb):
     return F.wear(t, 0.15, 3, specks=0.002)
 
 
+BEIGE = (198, 188, 158)
+
+
+def beige(seed):
+    """The berthing's beige enamel (racks, lockers, cabinets), scuffed at the edges."""
+    t = F.enamel(seed, BEIGE)
+    B.chips(t, 0.03, (120, 116, 104))
+    return F.wear(t, 0.18, 4, specks=0.003)
+
+
+def pan_front(seed):
+    """A rack's storage pan: the lid seam, a red latch, a card holder for the name."""
+    t = beige(seed)
+    F.area(t, 0, 0, N, 2, mul=0.8, dh=0.1)
+    F.area(t, 0, 20, N, 22, mul=0.7, dh=-0.1)
+    F.area(t, 28, 30, 38, 38, (176, 36, 30), dh=0.2)
+    F.area(t, 8, 34, 22, 44, (226, 222, 210), dh=0.1)
+    F.area(t, 42, 34, 56, 44, (226, 222, 210), dh=0.1)
+    return t
+
+
+def locker_door(seed):
+    """A tall locker's door: vents at the top, a chrome handle, the edges darker."""
+    t = beige(seed)
+    for y in range(6, 18, 3):
+        F.area(t, 14, y, 50, y + 1, (60, 58, 52), dh=-0.15)
+    F.area(t, 50, 28, 54, 42, (190, 192, 192), dh=0.25, f0=180)
+    F.area(t, 0, 0, 2, N, mul=0.8)
+    F.area(t, 62, 0, N, N, mul=0.8)
+    return t
+
+
+def stainless(seed):
+    """Brushed stainless steel: the galley, the sick bay's sinks and trolleys."""
+    t = F.plain(seed, (178, 180, 180), 0.03, 0.7)
+    rng = t.rng
+    for y in range(N):
+        t.c[y] *= 0.94 + 0.08 * rng.random()
+    t.f0[:] = 170
+    return F.wear(t, 0.12, 6, specks=0.002)
+
+
+def oven_front(seed):
+    """A stainless deck oven: two doors with their windows, the knobs along the top."""
+    t = stainless(seed)
+    for y0 in (14, 40):
+        F.area(t, 6, y0, 58, y0 + 22, mul=0.9, dh=0.15)
+        F.area(t, 14, y0 + 5, 50, y0 + 14, (34, 30, 26), dh=-0.1)
+        F.area(t, 10, y0 + 1, 54, y0 + 3, (200, 202, 202), dh=0.3)
+    for x in range(8, 58, 10):
+        F.disc(t, x + 2, 7, 2.5, (40, 40, 40), dh=0.3)
+    return t
+
+
+def dispenser_front(seed):
+    """A drinks dispenser on the serving line: three nozzles under their coloured labels."""
+    t = stainless(seed)
+    for i, col in enumerate(((176, 40, 34), (220, 140, 40), (110, 60, 140))):
+        x = 6 + i * 19
+        F.area(t, x, 10, x + 14, 22, col)
+        F.area(t, x + 4, 30, x + 10, 40, (40, 40, 40), dh=0.3)
+        F.area(t, x + 2, 52, x + 12, 56, (60, 60, 60), dh=-0.1)
+    return t
+
+
+def cabinet_front(seed):
+    """A sick bay cabinet: two beige doors, their handles, a red cross on a white square."""
+    t = beige(seed)
+    F.area(t, 31, 0, 33, N, mul=0.7, dh=-0.1)
+    F.area(t, 26, 26, 28, 38, (190, 192, 192), dh=0.25, f0=180)
+    F.area(t, 36, 26, 38, 38, (190, 192, 192), dh=0.25, f0=180)
+    F.area(t, 40, 8, 56, 24, (236, 234, 226))
+    F.area(t, 46, 10, 50, 22, (190, 30, 30))
+    F.area(t, 42, 14, 54, 18, (190, 30, 30))
+    return t
+
+
+def litter(seed):
+    """A Stokes litter stowed on the bulkhead: orange wire basket, a grid of rods."""
+    t = B.clear(seed)
+    col = (214, 98, 30)
+    for k in list(range(0, N, 8)) + [N - 2]:
+        F.area(t, k, 0, k + 2, N, col, alpha=255)
+        t.alpha[:, k:k + 2] = 255
+    for k in (0, 31, N - 3):
+        F.area(t, 0, k, N, k + 3, col, alpha=255)
+        t.alpha[k:k + 3, :] = 255
+    return t
+
+
+def vinyl(seed, rgb=(116, 36, 42)):
+    t = F.plain(seed, rgb, 0.06, 0.45)
+    return F.wear(t, 0.2, 2)
+
+
 def deck_line(seed):
     """A painted yellow line on the hangar deck, scuffed through to the non-skid by tyres and boots."""
     t = B.clear(seed)
@@ -231,7 +326,11 @@ def textures():
         "fit_dc_locker_b": lambda: locker(8016, "REPAIR 5|DC LOCKER"),
         "fit_gse": lambda: gse(8017), "fit_bottle": lambda: bottle(8018),
         "fit_tank": lambda: F.wear(F.enamel(8019, (176, 180, 178)), 0.25, 3),
-        "fit_lagging": lambda: lagging(8020), "fit_line": lambda: deck_line(8022), "fit_sodium_on": lambda: lens(8021, (255, 170, 72), True),
+        "fit_lagging": lambda: lagging(8020), "fit_line": lambda: deck_line(8022),
+        "fit_beige": lambda: beige(8023), "fit_pan": lambda: pan_front(8024), "fit_locker_door": lambda: locker_door(8025),
+        "fit_stainless": lambda: stainless(8026), "fit_oven": lambda: oven_front(8027),
+        "fit_dispenser": lambda: dispenser_front(8028), "fit_cabinet": lambda: cabinet_front(8029),
+        "fit_litter": lambda: litter(8030), "fit_vinyl": lambda: vinyl(8031), "fit_sodium_on": lambda: lens(8021, (255, 170, 72), True),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
         T[f"fit_st_{k}"] = (lambda a, b, c: lambda: B.stencil_sign(a, b, c, 12))(8040 + i, text, col)
@@ -395,6 +494,61 @@ def blocks():
                          [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
     add("fit_droptank_nose", [[5, 5, 0, 11, 11, 6, "fit_tank"], [4, 4, 6, 12, 12, 16, "fit_tank"],
                               [2, 0, 11, 14, 4.5, 13, "fit_yellow"]], "Drop Tank", rotate="axis", decor=False)
+
+    # ---- berthing: racks three high in beige pans (two blocks tall, two long: a has its end panel at
+    # x 0, b at x 16), the tall lockers between them
+    def rack(end, lo):
+        e = [[0, 0, 0, 1, 16, 14, "fit_beige"]] if end == "a" else [[15, 0, 0, 16, 16, 14, "fit_beige"]]
+        pan = lambda y0, y1: [0, y0, 1, 16, y1, 14, {"north": "fit_pan", "side": "fit_beige", "up": "fit_beige",
+                                                       "down": "fit_beige"}]
+        back = [[0, 0, 14, 16, 16, 16, "fit_beige"]]
+        if lo:
+            body = [pan(1, 4.5), [0.5, 4.5, 1.5, 15.5, 6, 13.5, "navy_mattress"], pan(13, 16),
+                    [6 if end == "a" else 1, 6, 0.5, 15 if end == "a" else 10, 13, 1, "navy_curtain_blue"],
+                    [0, 0, 1, 16, 1, 2, "fit_beige"]]
+        else:
+            body = [[0.5, 0, 1.5, 15.5, 1.5, 13.5, "navy_mattress"], pan(8, 11), [0.5, 11, 1.5, 15.5, 12.5, 13.5, "navy_mattress"],
+                    [0, 15, 0, 16, 16, 14, "fit_beige"], [3, 14.2, 11, 13, 15, 13, "navy_tube_on"],
+                    [1 if end == "a" else 9, 1.5, 0.5, 7 if end == "a" else 15, 8, 1, "navy_curtain_blue"]]
+        return back + e + body
+
+    for end in ("a", "b"):
+        add(f"fit_rack_lo_{end}", rack(end, True), "Berthing Rack", decor=False, loot="home_wardrobe")
+        add(f"fit_rack_hi_{end}", rack(end, False), "Berthing Rack", decor=False, loot="home_nightstand")
+    door = {"north": "fit_locker_door", "side": "fit_beige", "up": "fit_beige", "down": "fit_beige"}
+    add("fit_locker_lo", [[1, 0, 2, 15, 16, 16, door]], "Locker", decor=False, loot="home_wardrobe")
+    add("fit_locker_hi", [[1, 0, 2, 15, 15, 16, door], [0.5, 15, 1.5, 15.5, 16, 16, "fit_beige"]], "Locker",
+        decor=False)
+
+    # ---- the mess decks and the galley
+    add("fit_mess_table", [[1.5, 10, 0, 14.5, 11, 16, "navy_formica"], [1.5, 9.5, 0, 14.5, 10, 16, "fit_stainless"],
+                           [7, 0, 7, 9, 9.5, 9, "fit_stainless"], [5, 0, 5, 11, 0.5, 11, "fit_stainless"]],
+        "Mess Table", rotate="axis", decor=False)
+    stool = lambda x, z: [[x + 1.25, 0, z + 1.25, x + 2.75, 6, z + 2.75, "fit_stainless"],
+                          [x, 6, z, x + 4, 7.5, z + 4, "fit_vinyl"]]
+    add("fit_stools", stool(2, 1) + stool(10, 1), "Mess Stools")
+    add("fit_counter_steel", [[0, 13, 0, 16, 14.5, 16, "fit_stainless"], [0, 3, 1, 16, 4, 15, "fit_stainless"],
+                              [0.5, 0, 0.5, 2, 13, 2, "fit_stainless"], [14, 0, 0.5, 15.5, 13, 2, "fit_stainless"],
+                              [0.5, 0, 14, 2, 13, 15.5, "fit_stainless"], [14, 0, 14, 15.5, 13, 15.5, "fit_stainless"],
+                              [2, 4, 3, 14, 7, 13, "bunk_tins"]], "Steel Counter", decor=False)
+    add("fit_oven", [[0.5, 0, 1, 15.5, 16, 15, {"north": "fit_oven", "side": "fit_stainless", "up": "fit_stainless",
+                                                 "down": "fit_stainless"}]], "Deck Oven", decor=False)
+    add("fit_kettle", [[3, 5, 3, 13, 13, 13, "fit_stainless"], [2.5, 12.5, 2.5, 13.5, 14, 13.5, "fit_stainless"],
+                       [4, 0, 4, 5, 5, 5, "fit_stainless"], [11, 0, 4, 12, 5, 5, "fit_stainless"],
+                       [4, 0, 11, 5, 5, 12, "fit_stainless"], [11, 0, 11, 12, 5, 12, "fit_stainless"],
+                       [7, 8, -1, 9, 9, 3, "fit_grey"], [6, 4, 13, 10, 12, 15, "fit_grey"]], "Steam Kettle", decor=False)
+    add("fit_dispenser", [[2, 0, 4, 14, 11, 14, {"north": "fit_dispenser", "side": "fit_stainless", "up": "fit_stainless",
+                                                    "down": "fit_stainless"}], [3, 0, 1, 13, 1, 4, "fit_grey"]],
+        "Drinks Dispenser", decor=False)
+
+    # ---- the sick bay
+    lamp("fit_surgical", [[7.5, 10, 7.5, 8.5, 16, 8.5, "fit_grey"], [3, 7, 3, 13, 9.5, 13, "fit_stainless"],
+                          [4, 6.5, 4, 12, 7, 12, G]], "Operating Lamp", None, 15, G, "bunk_glass_on", "bunk_glass_off")
+    add("fit_litter", [[2, 0, 14.5, 14, 16, 15.5, "fit_litter"], [2, 0, 15.5, 14, 0.5, 16, "fit_grey"]], "Stokes Litter")
+    add("fit_cabinet", [[1, 3, 9, 15, 15, 16, {"north": "fit_cabinet", "side": "fit_beige", "up": "fit_beige",
+                                               "down": "fit_beige"}]], "Medical Cabinet")
+    add("fit_fan", [[7, 8, 13, 9, 10, 16, "fit_grey"], [6, 7, 9, 10, 11, 13, "fit_grey"],
+                    [3, 4, 7.5, 13, 14, 9, "bunk_cage_wire"]], "Wall Fan")
 
     add("fit_line", [[0, 0, 0, 16, 0.25, 16, "fit_line"]], "Deck Line", rotate="axis")
 

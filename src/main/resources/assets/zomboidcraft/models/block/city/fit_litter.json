@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "fit_litter": "zomboidcraft:block/city/fit_litter",
+    "particle": "zomboidcraft:block/city/fit_litter"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        14.5
+      ],
+      "to": [
+        14,
+        16,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_litter"
+        },
+        "south": {
+          "texture": "#fit_litter"
+        },
+        "east": {
+          "texture": "#fit_litter"
+        },
+        "west": {
+          "texture": "#fit_litter"
+        },
+        "up": {
+          "texture": "#fit_litter",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_litter",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        15.5
+      ],
+      "to": [
+        14,
+        0.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey"
+        },
+        "down": {
+          "texture": "#fit_grey",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
