@@ -211,6 +211,8 @@ final class KitItems {
                 case SMG -> "Submachine gun";
                 case SAWN_OFF -> "Sawn-off shotgun";
                 case MAGNUM -> "Magnum revolver";
+                case LEVER_ACTION -> "Lever-action carbine";
+                case CROSSBOW -> "Compound crossbow";
             };
             return what + ", " + t.caliber();
         }

@@ -50,6 +50,10 @@ public final class ZcConfig {
     public ShotgunStats sawnOff = ShotgunStats.sawnOff();
     /** The .44 magnum revolver's own numbers. */
     public GunStats magnum = GunStats.magnum();
+    /** The lever-action carbine's own numbers. */
+    public GunStats leverAction = GunStats.leverAction();
+    /** The crossbow's own numbers, and how often its bolts break. */
+    public CrossbowStats crossbow = new CrossbowStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -73,6 +77,8 @@ public final class ZcConfig {
         public int rimfireWeight = 4;
         public int smgWeight = 1;
         public int sawnOffWeight = 2;
+        public int leverActionWeight = 3;
+        public int crossbowWeight = 1;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
         public int revolverWeight = 2;
@@ -215,6 +221,9 @@ public final class ZcConfig {
         /** The magnum: blued with rosewood target stocks, or nickel with exhibition walnut. */
         public int magnumBlued = 75;
         public int magnumNickel = 25;
+        /** The lever gun: blued with plain walnut, or colour case hardened with figured walnut. */
+        public int leverActionField = 75;
+        public int leverActionCaseHardened = 25;
     }
 
     public static class Carry {
@@ -555,6 +564,25 @@ public final class ZcConfig {
             return s;
         }
 
+        /**
+         * The .30-30 lever gun: a deer round, short of the .308 in reach and punch but far quicker to work, six in the
+         * tube; a sharp kick and a loud bark.
+         */
+        static GunStats leverAction() {
+            GunStats s = new GunStats();
+            s.damage = 22.0;
+            s.headshotMultiplier = 3.0;
+            s.hipSpread = 3.2;
+            s.aimSpread = 0.3;
+            s.recoil = 1.9;
+            s.shotNoise = 130.0;
+            s.aimZoom = 0.84;
+            s.range = 140.0;
+            s.fireDelayTicks = 9;      // never less than the lever takes to work (GunType.fireDelay)
+            s.magazineSize = 6;
+            return s;
+        }
+
         /** The .22: a light round that needs a good hit, a whisper of a kick, quiet, accurate, ten in its magazine. */
         static GunStats rimfire() {
             GunStats s = new GunStats();
@@ -607,6 +635,28 @@ public final class ZcConfig {
      * damage is per pellet, its magazine size is the shells it holds (four in the tube and one chambered), and its
      * time between shots covers working the pump.
      */
+    /**
+     * The crossbow: one heavy bolt at a time, silent but for the string, slow to cock. Its bolts are found again
+     * where they land (in what they hit, under it), unless they break.
+     */
+    public static class CrossbowStats extends GunStats {
+        /** Chance a bolt breaks when it hits something, rather than being left to pick up. */
+        public double boltBreakChance = 0.2;
+
+        CrossbowStats() {
+            damage = 30.0;
+            headshotMultiplier = 3.0;
+            hipSpread = 3.0;
+            aimSpread = 0.2;
+            recoil = 0.4;
+            shotNoise = 8.0;
+            aimZoom = 0.85;
+            range = 60.0;
+            fireDelayTicks = 10;
+            magazineSize = 1;
+        }
+    }
+
     public static class ShotgunStats extends GunStats {
         /** Pellets in each shell (00 buckshot has eight or nine). */
         public int pellets = 8;
