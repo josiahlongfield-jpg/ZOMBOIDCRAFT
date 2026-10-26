@@ -44,6 +44,9 @@ final class CityCivic {
     int cars;
     /** The most vehicles the civic blocks may put down between them. */
     int carCap = 14;
+    /** The old city's courthouse, once the square is built: its frame and the room inside its walls. */
+    Placer courthouse;
+    int[] courtInterior;
 
     CityCivic(Kit kit, double hit) {
         this.kit = kit;
@@ -421,6 +424,8 @@ final class CityCivic {
             Placer hp = new Placer(out, hx, 0, hz - 4, 0);
             hp.fill(-1, 1, -1, cw, 8, cd + 4, "air");
             new Civic(hp, rng).courthouse(cw, cd + 4);
+            courthouse = hp;
+            courtInterior = new int[] {1, 5, cw - 2, cd + 2};
         }
         new Landmarks(world, rng).memorial(cx + 8, z1 - 5);
         for (int[] c : new int[][] {{x0 + 4, z0 + 4}, {x1 - 4, z0 + 4}, {x0 + 4, z1 - 4}, {x1 - 4, z1 - 4}}) {
