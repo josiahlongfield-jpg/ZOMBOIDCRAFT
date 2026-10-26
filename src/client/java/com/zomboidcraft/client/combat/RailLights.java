@@ -235,8 +235,8 @@ public final class RailLights {
             }
         }
         if (quads.count > 0) {
-            // added light normally; with a shader pack, drawn the way a beacon beam's solid core is, which the packs
-            // make glow
+            // see-through glow that ignores the light level; with a shader pack, drawn the way a beacon beam's solid
+            // core is, which the packs make glow
             context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
                     shaders ? RenderTypes.beaconBeam(GLOW, false) : RenderTypes.eyes(GLOW), quads::emit);
         }
@@ -290,7 +290,7 @@ public final class RailLights {
         }
         float beam = (float) Math.max(0, config.laserBeamStrength);
         if (config.laserBeam && beam > 0) {
-            if (quads.blended) {
+            if (quads.solid) {
                 dust(held.laser(), end, beam, quads);
             } else {
                 quads.ribbon(held.laser(), end, 14, (s, away) -> Math.max(0.0025, away * 0.0011),
@@ -301,14 +301,14 @@ public final class RailLights {
             Vec3 toCam = quads.cam.subtract(end).normalize();
             Vec3 c = end.add(toCam.scale(0.03));
             double away = c.distanceTo(quads.cam), scale = Math.max(0.1, config.laserDotSize);
-            if (quads.blended) {
+            if (quads.solid) {
                 // a pack draws only the solid middle of the glow (half its size across): a dot a few pixels wide
                 double size = (0.024 + 0.009 * away) * scale;
                 quads.facing(c, size, quads.shade(GREEN, 1f));
                 quads.facing(c.add(toCam.scale(0.01)), size * 0.45, quads.shade(GREEN_CORE, 1f));
             } else {
                 double size = (0.03 + 0.0025 * away) * scale;
-                quads.facing(c, size, quads.shade(GREEN, 0.7f));
+                quads.facing(c, size, quads.shade(GREEN, 0.85f));
                 quads.facing(c, size * 0.35, quads.shade(GREEN_CORE, 1f));
             }
         }
@@ -390,8 +390,8 @@ public final class RailLights {
     }
 
     /**
-     * Whether a shader pack is drawing the world (asked of Iris, when it is installed). The glow is added light, but
-     * shader packs draw it as a surface coloured by its strength, so a faint glow comes out as a dark smear.
+     * Whether a shader pack is drawing the world (asked of Iris, when it is installed). Shader packs draw the glow as
+     * a solid surface and drop its faint parts, so it's drawn differently for them.
      */
     private static boolean shaderPackOn() {
         if (!irisAsked) {
@@ -487,27 +487,28 @@ public final class RailLights {
     private static final class Quads {
         private static final int STRIDE = 8;
         final Vec3 cam;
-        /** Blended over what's behind (a shader pack's beacon-beam look) instead of added to it. */
-        final boolean blended;
+        /**
+         * Drawn solid by a shader pack (its beacon-beam look), which throws away the faint parts: the laser's beam is
+         * dust and its dot bigger. Without one the glow is see-through, fainter for weaker.
+         */
+        final boolean solid;
         private float[] corners = new float[64 * 4 * STRIDE];
         private int[] colours = new int[64 * 4];
         int count;
 
-        Quads(Vec3 cam, boolean blended) {
+        Quads(Vec3 cam, boolean solid) {
             this.cam = cam;
-            this.blended = blended;
+            this.solid = solid;
         }
 
         /**
-         * A colour at a strength, packed: added light gets dimmer for fainter (a shader pack draws that dark, so
-         * blended quads keep the full colour and get more see-through instead).
+         * A colour at a strength, packed: always the full colour, more see-through for fainter. (The glow's render
+         * type blends over what's behind rather than adding to it, so a dimmed colour would draw dark.)
          */
         int shade(float[] rgb, float strength) {
-            float k = blended ? 1 : strength;
-            int r = Mth.clamp((int) (rgb[0] * k * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * k * 255), 0, 255),
-                    b = Mth.clamp((int) (rgb[2] * k * 255), 0, 255);
-            int a = blended ? Mth.clamp((int) (strength * 255), 0, 255) : 255;
-            return a << 24 | r << 16 | g << 8 | b;
+            int r = Mth.clamp((int) (rgb[0] * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * 255), 0, 255),
+                    b = Mth.clamp((int) (rgb[2] * 255), 0, 255);
+            return Mth.clamp((int) (strength * 255), 0, 255) << 24 | r << 16 | g << 8 | b;
         }
 
         private void corner(Vec3 p, float u, float v, int colour, Vec3 normal) {
