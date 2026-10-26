@@ -1,0 +1,1311 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_chair_painted": "zomboidcraft:block/city/pk_chair_painted",
+    "particle": "zomboidcraft:block/city/pk_chair_painted"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        6,
+        8,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.0625,
+            0.0625,
+            6.5625,
+            2.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.6875,
+            0.0625,
+            7.1875,
+            2.0625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.6875,
+            0.0625,
+            7.9375,
+            2.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.3125,
+            0.0625,
+            7.5625,
+            2.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.1875,
+            5.9375,
+            4.6875,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.5625,
+            5.9375,
+            4.0625,
+            6.1875
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        8,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.0625,
+            0.0625,
+            8.5625,
+            2.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.6875,
+            0.0625,
+            9.1875,
+            2.0625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.6875,
+            0.0625,
+            9.9375,
+            2.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.3125,
+            0.0625,
+            9.5625,
+            2.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            5.4375,
+            5.9375,
+            5.9375,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.8125,
+            5.9375,
+            5.3125,
+            6.1875
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        6,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.0625,
+            0.0625,
+            3.3125,
+            2.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.4375,
+            0.0625,
+            3.6875,
+            2.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.1875,
+            0.0625,
+            4.4375,
+            2.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.8125,
+            0.0625,
+            4.0625,
+            2.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.4375,
+            5.9375,
+            6.6875,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.0625,
+            5.9375,
+            6.3125,
+            6.1875
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        10
+      ],
+      "to": [
+        11,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.5625,
+            0.0625,
+            4.8125,
+            2.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.9375,
+            0.0625,
+            5.1875,
+            2.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            5.6875,
+            0.0625,
+            5.9375,
+            2.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            5.3125,
+            0.0625,
+            5.5625,
+            2.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.1875,
+            5.9375,
+            7.4375,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.8125,
+            5.9375,
+            7.0625,
+            6.1875
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        11
+      ],
+      "to": [
+        6,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.0625,
+            0.0625,
+            0.3125,
+            3.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.4375,
+            0.0625,
+            0.6875,
+            3.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.1875,
+            0.0625,
+            1.4375,
+            3.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.8125,
+            0.0625,
+            1.0625,
+            3.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.9375,
+            5.9375,
+            8.1875,
+            6.1875
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.5625,
+            5.9375,
+            7.8125,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        2,
+        11
+      ],
+      "to": [
+        11,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.5625,
+            0.0625,
+            1.8125,
+            3.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.9375,
+            0.0625,
+            2.1875,
+            3.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.6875,
+            0.0625,
+            2.9375,
+            3.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.3125,
+            0.0625,
+            2.5625,
+            3.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.6875,
+            5.9375,
+            8.9375,
+            6.1875
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.3125,
+            5.9375,
+            8.5625,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        3
+      ],
+      "to": [
+        6,
+        8,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.0625,
+            0.0625,
+            10.3125,
+            1.3125
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.8125,
+            0.0625,
+            11.0625,
+            1.3125
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.4375,
+            0.0625,
+            10.6875,
+            1.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.4375,
+            5.9375,
+            9.6875,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.0625,
+            5.9375,
+            9.3125,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        3,
+        3
+      ],
+      "to": [
+        11,
+        8,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.1875,
+            0.0625,
+            11.4375,
+            1.3125
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.9375,
+            0.0625,
+            12.1875,
+            1.3125
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.5625,
+            0.0625,
+            11.8125,
+            1.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.1875,
+            5.9375,
+            10.4375,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.8125,
+            5.9375,
+            10.0625,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        5
+      ],
+      "to": [
+        6,
+        8,
+        8
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.1875,
+            3.6875,
+            1.6875,
+            4.6875
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.6875,
+            3.6875,
+            3.4375,
+            4.6875
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.8125,
+            3.6875,
+            2.5625,
+            4.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.3125,
+            3.6875,
+            11.8125,
+            4.4375
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.6875,
+            3.6875,
+            11.1875,
+            4.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        4,
+        5
+      ],
+      "to": [
+        12,
+        8,
+        7
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.5625,
+            3.6875,
+            4.0625,
+            4.6875
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.8125,
+            3.6875,
+            5.3125,
+            4.6875
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.1875,
+            3.6875,
+            4.6875,
+            4.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            3.4375,
+            5.0625,
+            3.9375,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.8125,
+            5.0625,
+            3.3125,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        4,
+        7
+      ],
+      "to": [
+        11,
+        8,
+        10
+      ],
+      "faces": {
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            6.3125,
+            3.6875,
+            7.0625,
+            4.6875
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            5.4375,
+            3.6875,
+            6.1875,
+            4.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.3125,
+            3.6875,
+            12.5625,
+            4.4375
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.9375,
+            3.6875,
+            12.1875,
+            4.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        4,
+        8
+      ],
+      "to": [
+        6,
+        8,
+        10
+      ],
+      "faces": {
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.8125,
+            3.6875,
+            8.3125,
+            4.6875
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.1875,
+            3.6875,
+            7.6875,
+            4.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.4375,
+            5.0625,
+            4.6875,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.0625,
+            5.0625,
+            4.3125,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        10
+      ],
+      "to": [
+        10,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.4375,
+            3.6875,
+            9.4375,
+            4.6875
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.5625,
+            3.6875,
+            10.5625,
+            4.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            5.9375,
+            5.0625,
+            6.9375,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            4.8125,
+            5.0625,
+            5.8125,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        3
+      ],
+      "to": [
+        5,
+        8,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.6875,
+            3.6875,
+            12.9375,
+            4.4375
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            13.0625,
+            3.6875,
+            13.3125,
+            4.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.9375,
+            5.9375,
+            11.1875,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.5625,
+            5.9375,
+            10.8125,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        5,
+        3
+      ],
+      "to": [
+        10,
+        8,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            13.4375,
+            3.6875,
+            14.4375,
+            4.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            14.5625,
+            3.6875,
+            15.5625,
+            4.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            8.1875,
+            5.0625,
+            9.1875,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            7.0625,
+            5.0625,
+            8.0625,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        5,
+        7
+      ],
+      "to": [
+        12,
+        8,
+        8
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            15.6875,
+            3.6875,
+            15.9375,
+            4.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.0625,
+            5.0625,
+            0.3125,
+            5.8125
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.6875,
+            5.9375,
+            11.9375,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.3125,
+            5.9375,
+            11.5625,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        6,
+        3
+      ],
+      "to": [
+        12,
+        8,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.3125,
+            5.0625,
+            9.5625,
+            5.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            9.6875,
+            5.0625,
+            9.9375,
+            5.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.4375,
+            5.9375,
+            12.6875,
+            6.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.0625,
+            5.9375,
+            12.3125,
+            6.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        5
+      ],
+      "to": [
+        10,
+        8,
+        10
+      ],
+      "faces": {
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            13.4375,
+            0.0625,
+            14.4375,
+            1.3125
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.3125,
+            0.0625,
+            13.3125,
+            1.3125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        8
+      ],
+      "to": [
+        5,
+        8,
+        10
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.8125,
+            5.0625,
+            11.0625,
+            5.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.1875,
+            5.0625,
+            11.6875,
+            5.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.4375,
+            5.0625,
+            10.6875,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            10.0625,
+            5.0625,
+            10.3125,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        6,
+        8
+      ],
+      "to": [
+        12,
+        8,
+        10
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.5625,
+            5.0625,
+            12.8125,
+            5.5625
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.9375,
+            5.0625,
+            13.4375,
+            5.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.1875,
+            5.0625,
+            12.4375,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            11.8125,
+            5.0625,
+            12.0625,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        9,
+        10
+      ],
+      "to": [
+        10,
+        11,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.0625,
+            5.9375,
+            1.0625,
+            6.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            1.1875,
+            5.9375,
+            2.1875,
+            6.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.9375,
+            5.9375,
+            3.4375,
+            6.4375
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.3125,
+            5.9375,
+            2.8125,
+            6.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            14.6875,
+            5.0625,
+            15.6875,
+            5.5625
+          ]
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            13.5625,
+            5.0625,
+            14.5625,
+            5.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        11
+      ],
+      "to": [
+        10,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            14.5625,
+            0.0625,
+            15.5625,
+            1.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.0625,
+            3.6875,
+            1.0625,
+            4.9375
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            12.8125,
+            5.9375,
+            13.8125,
+            6.1875
+          ],
+          "cullface": "up"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        12
+      ],
+      "to": [
+        11,
+        16,
+        13
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.4375,
+            5.0625,
+            1.9375,
+            5.8125
+          ]
+        },
+        "east": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.4375,
+            5.0625,
+            2.6875,
+            5.8125
+          ]
+        },
+        "west": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            2.0625,
+            5.0625,
+            2.3125,
+            5.8125
+          ]
+        },
+        "up": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            0.0625,
+            6.5625,
+            1.5625,
+            6.8125
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pk_chair_painted",
+          "uv": [
+            13.9375,
+            5.9375,
+            15.4375,
+            6.1875
+          ]
+        }
+      }
+    }
+  ]
+}

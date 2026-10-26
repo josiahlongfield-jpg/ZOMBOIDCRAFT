@@ -76,9 +76,10 @@ KX = PK / "kitchen/x"
 OFFICE = next(PK.glob("low-poly-office-pack-*"), PK) / "x"
 
 
-def ph(name):
-    """A Poly Haven model (glTF, 1K textures) from the project's CC0 library."""
-    return gltf(next((POLY / name).glob("*.gltf")))
+def ph(name, node=None):
+    """A Poly Haven model (glTF, 1K textures) from the project's CC0 library; `node` picks one
+    variant out of a file that carries several."""
+    return gltf(next((POLY / name).glob("*.gltf")), node)
 
 
 def office(name):
@@ -88,8 +89,213 @@ def office(name):
 def grocery(name, tex=None):
     return fbx(GROCERY / "FBX" / f"{name}.fbx", GROCERY / "Textures" / tex if tex else None)
 
+# ---------------------------------------------------------------- stocked shelves
+
+GTEX = GROCERY / "Textures"
+_IMAGES = {}
+
+
+def _image(path):
+    if path not in _IMAGES:
+        _IMAGES[path] = np.array(Image.open(path).convert("RGBA"), np.float32)
+    return _IMAGES[path]
+
+
+def _goods(name, tex, turn=0, scale=1.0):
+    return (name, tex, turn, scale)
+
+
+SODA, GSP1, GSP2 = "T_SodasSnacks_BC.png", "M_GasStationProps_01_BC.tga", "M_GasStationProps_02_BC.tga"
+# the grocery pack's goods: mesh, texture, turn (degrees about up) that brings the label round to
+# the shelf's front, scale
+GOODS = {
+    "can_1": _goods("SM_SodaCan_01", SODA), "can_2": _goods("SM_SodaCan_02", SODA),
+    "can_3": _goods("SM_SodaCan_03", SODA),
+    "soda_1": _goods("SM_SodaBottle_01", SODA), "soda_2": _goods("SM_SodaBottle_02", SODA),
+    "soda_3": _goods("SM_SodaBottle_03", SODA), "water": _goods("SM_WaterBottle_01", SODA),
+    "water_big": _goods("SM_WaterBottle", GSP1), "cola": _goods("SM_ColaBottle", GSP2, 0, 0.72),
+    "chips_1": _goods("SM_Chips_01", GSP2, 90), "chips_2": _goods("SM_Chips_02", GSP2),
+    "tube": _goods("SM_ChipsCylinder", GSP1), "sauce": _goods("SM_PastaSauce", GSP1),
+    "bread": _goods("SM_BreadLoaf", GSP1), "paper": _goods("SM_ToilerPaper", GSP1),
+    "cleaner": _goods("SM_CleanerBottle", GSP1, 90), "milk": _goods("SM_MilkJug", GSP1),
+    "cigs": _goods("SM_CigarettePack", GSP1, 90),
+}
+GOODS_H = {"cola": 29.5, "tube": 31.2}   # the tall ones (cm)
+# what a shelf carries, level by level: each level draws one of its kind's themes
+THEMES = {
+    "drinks": ["can_1", "can_2", "can_3", "soda_1", "soda_2", "soda_3", "water", "cola"],
+    "snacks": ["chips_1", "chips_2", "tube", "chips_1", "chips_2"],
+    "pantry": ["sauce", "bread", "tube", "sauce"],
+    "household": ["paper", "cleaner", "water_big", "paper"],
+    "smokes": ["cigs", "cigs", "chips_2"],
+}
+SHELF_THEMES = {
+    "grocery": ["drinks", "snacks", "pantry", "pantry", "household"],
+    "liquor": ["drinks", "drinks", "drinks", "snacks", "smokes"],
+    "pharmacy": ["household", "household", "smokes", "drinks"],
+    "empty": ["pantry", "household", "drinks"],
+}
+
+
+def _goods_parts(key):
+    """A product's parts in centimetres, standing on y = 0, centred on x and z, turned and scaled."""
+    name, tex, turn, scale = GOODS[key]
+    parts = meshio.load_fbx(GROCERY / "FBX" / f"{name}.fbx")
+    img = _image(GTEX / tex)
+    allp = np.concatenate([q.tris.reshape(-1, 3) for q in parts])
+    lo, hi = allp.min(0), allp.max(0)
+    mid = np.array([(lo[0] + hi[0]) / 2, lo[1], (lo[2] + hi[2]) / 2])
+    th = np.radians(turn)
+    rot = np.array([[np.cos(th), 0, np.sin(th)], [0, 1, 0], [-np.sin(th), 0, np.cos(th)]])
+    return [meshio.Part(((q.tris - mid) * scale) @ rot.T, q.uvs, img, (1, 1, 1, 1), key) for q in parts]
+
+
+def _clip_poly(poly, axis, val, keep_above):
+    out = []
+    for i in range(len(poly)):
+        (p, t), (q, u) = poly[i], poly[(i + 1) % len(poly)]
+        pin = p[axis] >= val if keep_above else p[axis] <= val
+        qin = q[axis] >= val if keep_above else q[axis] <= val
+        if pin:
+            out.append((p, t))
+        if pin != qin:
+            f = (val - p[axis]) / (q[axis] - p[axis])
+            out.append((p + (q - p) * f, t + (u - t) * f))
+    return out
+
+
+def clipped(part, axis, lo, hi, shift):
+    """The part cut to lo..hi along an axis (uvs carried to the cut), then moved by shift."""
+    tris, uvs = [], []
+    for T, U in zip(part.tris, part.uvs):
+        poly = _clip_poly(list(zip(T, U)), axis, lo, True)
+        if len(poly) >= 3:
+            poly = _clip_poly(poly, axis, hi, False)
+        for j in range(1, len(poly) - 1):
+            tris.append([poly[0][0], poly[j][0], poly[j + 1][0]])
+            uvs.append([poly[0][1], poly[j][1], poly[j + 1][1]])
+    t = np.array(tris, np.float64).reshape(-1, 3, 3)
+    t[..., axis] += shift
+    return meshio.Part(t, np.array(uvs, np.float64).reshape(-1, 3, 2), part.image, part.factor, part.name)
+
+
+def moved(part, at, tilt=None):
+    t = part.tris
+    if tilt is not None:
+        t = t @ tilt.T
+    return meshio.Part(t + np.asarray(at, np.float64), part.uvs, part.image, part.factor, part.name)
+
+
+# SM_Shelf_01: a wall bay 146 cm long (z), its front to +x, a closed base to 49.9 cm, boards with
+# price rails at 81.9-84.8 and 117.2-120.1, end panels at both ends. One block of it is the two ends
+# brought together, MODULE cm long; 84.8 cm (the first board's top) makes one block, so the board
+# closes the lower block and a lone lower block reads as a low gondola.
+SHELF_CM = 84.8
+MODULE = SHELF_CM * 15.5 / 16
+LEVELS = [(49.9, 81.4), (84.8, 116.7), (120.1, 152.0)]
+
+
+def stocked(kind, seed, looted=0.25):
+    """A bay of SM_Shelf_01 stocked with the pack's goods: a theme a level, facings of two to five of
+    a product in rows from the front back, gaps where it was looted, a few knocked over, and now and
+    then something dropped on the floor in front."""
+    def load():
+        rng = np.random.default_rng(seed)
+        frame = meshio.load_fbx(GROCERY / "FBX" / "SM_Shelf_01.fbx", GTEX / "M_Shelves_BC.tga")
+        half, end = MODULE / 2, 73.4
+        parts = []
+        for q in frame:
+            parts += [c for c in (clipped(q, 2, -end, -end + half, end - half),
+                                  clipped(q, 2, end - half, end, half - end)) if len(c.tris)]
+        cache = {}
+        themes = SHELF_THEMES[kind]
+        for y0, y1 in LEVELS:
+            pool = [k for k in THEMES[themes[rng.integers(len(themes))]] if GOODS_H.get(k, 0) <= y1 - y0]
+            z, misses = -half + 5.2, 0
+            while z < half - 5.2 and pool and misses < 8:
+                key = pool[rng.integers(len(pool))]
+                if key not in cache:
+                    cache[key] = _goods_parts(key)
+                goods = cache[key]
+                allp = np.concatenate([g.tris.reshape(-1, 3) for g in goods])
+                w, dep, h = np.ptp(allp[:, 2]), np.ptp(allp[:, 0]), np.ptp(allp[:, 1])
+                n = min(int(rng.integers(2, 6)), int((half - 5.2 - z + 0.6) // (w + 0.6)))
+                if n < 1:
+                    misses += 1   # too long for what is left: something narrower
+                    continue
+                gone = rng.random() < looted
+                for i in range(n):
+                    zc = z + w / 2 + i * (w + 0.6)
+                    rows = int((24.4 - 1.5 + 20.5) // (dep + 0.8))
+                    for r in range(rows):
+                        if gone and (r == 0 or rng.random() < 0.3):
+                            continue   # taken: the front of the facing first
+                        if rng.random() < 0.04:
+                            continue
+                        x = 24.4 - 1.5 - dep / 2 - r * (dep + 0.8)
+                        jit = rng.normal(0, 0.4, 3) * [1, 0, 1]
+                        if r == 0 and not gone and rng.random() < 0.05 and zc + h < half - 5.2 and w < y1 - y0:
+                            # knocked over, lying along the shelf
+                            tilt = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], np.float64)
+                            parts += [moved(g, (x, y0 + w / 2, zc), tilt) for g in goods]
+                            continue
+                        parts += [moved(g, np.array([x, y0, zc]) + jit) for g in goods]
+                z += n * (w + 0.6) + rng.uniform(0.4, 2.0)
+        # dropped goods on the floor in front of the bay
+        for _ in range(int(rng.integers(0, 3))):
+            key = list(GOODS)[rng.integers(len(GOODS))]
+            if key not in cache:
+                cache[key] = _goods_parts(key)
+            goods = cache[key]
+            allp = np.concatenate([g.tris.reshape(-1, 3) for g in goods])
+            h = np.ptp(allp[:, 1])
+            if h > 30:
+                continue
+            th = rng.uniform(0, 2 * np.pi)
+            c, s_ = np.cos(th), np.sin(th)
+            lie = np.array([[c, 0, s_], [0, 1, 0], [-s_, 0, c]]) @ np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]], np.float64)
+            r_ = np.ptp(allp[:, 0]) / 2
+            parts += [moved(g, (rng.uniform(32, 48), r_, rng.uniform(-half + 8, half - 8)), lie) for g in goods]
+        return parts, True
+    return load
+
+
+def counter(seed, till=False):
+    """One block of SM_StoreCounter_01 (its customer side to +x, 208 cm long in z): its two ends
+    brought together 80 cm apart, so a run of them reads as a row of counter units; the till
+    version carries the pack's cash register, keys to the back, and the odd thing left lying."""
+    def load():
+        rng = np.random.default_rng(seed)
+        body = meshio.load_fbx(GROCERY / "FBX" / "SM_StoreCounter_01.fbx", GTEX / "M_Shelves_BC.tga")
+        half, end = 40.0, 104.4
+        parts = []
+        for q in body:
+            parts += [c for c in (clipped(q, 2, -end, -end + half, end - half),
+                                  clipped(q, 2, end - half, end, half - end)) if len(c.tris)]
+        if till:
+            reg = meshio.load_fbx(GROCERY / "FBX" / "SM_Cashier_Machine.fbx", GTEX / GSP1)
+            allp = np.concatenate([q.tris.reshape(-1, 3) for q in reg])
+            mid = np.array([(allp[:, 0].min() + allp[:, 0].max()) / 2, allp[:, 1].min(),
+                            (allp[:, 2].min() + allp[:, 2].max()) / 2])
+            turn = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]], np.float64)   # keys to -x, the back
+            parts += [moved(meshio.Part(q.tris - mid, q.uvs, q.image, q.factor, q.name),
+                            (-8 + rng.normal(0, 1), 75.7, rng.uniform(-8, 8)), turn) for q in reg]
+        for _ in range(int(rng.integers(0, 3))):
+            key = ["cigs", "chips_1", "chips_2", "can_1", "can_2", "sauce"][rng.integers(6)]
+            goods = _goods_parts(key)
+            th = rng.uniform(0, 2 * np.pi)
+            rot = np.array([[np.cos(th), 0, np.sin(th)], [0, 1, 0], [-np.sin(th), 0, np.cos(th)]])
+            z = rng.uniform(-30, 30)
+            if till and abs(z) < 22:
+                z = 26 * np.sign(z or 1)
+            parts += [moved(g, (rng.uniform(-30, 30), 75.7, z), rot) for g in goods]
+        return parts, True
+    return load
+
+
 # name: source, blocks (w, h, d) it spans, height in blocks, the way its front faces in the
-# source (+x, -x, +z, -z), how it sits (back: against the wall at the block's south side), how
+# source (+x, -x, +z, -z) (ref: the source height that height scales, when something stands on
+# top), how it sits (back: against the wall at the block's south side), how
 # hard it is worn, its material (sound, shine), title and loot table
 PROPS = {
     "fridge": dict(src=gltf(KITCHEN, "^Fridge$"), cells=(1, 2, 1), height=1.86, front="+z",
@@ -118,12 +324,101 @@ PROPS = {
     "armchair_green": dict(src=ph("GreenChair_01"), cells=(1, 1, 1), width=0.94, front="+z", title="Armchair",
                            sound="WOOL", sit="middle", swap=[{"000": f"home_armchair_{c}"} for c in ("blue", "brown", "floral")]),
     "vending": dict(src=grocery("SM_Vending Machine_01", "T_VendingMachine_01_BC.png"), cells=(1, 2, 1),
-                    height=1.95, front="-x", title="Vending Machine", sound="METAL", shine=0.5,
+                    height=1.95, front="+x", title="Vending Machine", sound="METAL", shine=0.5,
                     swap={"000": "store_vending", "010": "store_vending_top"}),
+    # ---- Poly Haven (CC0): homes
+    "nightstand": dict(src=ph("ClassicNightstand_01"), height=0.75, title="Nightstand", swap={"000": "home_nightstand"}),
+    "nightstand_painted": dict(src=ph("painted_wooden_nightstand"), height=0.75, title="Nightstand",
+                               swap={"000": "home_nightstand"}),
+    "coffee_table": dict(src=ph("CoffeeTable_01"), width=0.94, sit="middle", title="Coffee Table",
+                         swap={"000": "home_coffee_table"}),
+    "coffee_table_round": dict(src=ph("coffee_table_round_01"), width=0.9, sit="middle", title="Coffee Table",
+                               swap={"000": "home_coffee_table"}),
+    "chair_dining": dict(src=ph("dining_chair_02"), height=1.05, sit="middle", title="Chair", swap={"000": "home_chair"}),
+    "chair_wooden": dict(src=ph("WoodenChair_01"), height=1.05, sit="middle", title="Chair", swap={"000": "home_chair"}),
+    "chair_painted": dict(src=ph("painted_wooden_chair_01"), height=1.05, sit="middle", title="Chair",
+                          swap={"000": "home_chair"}),
+    "chair_painted_2": dict(src=ph("painted_wooden_chair_02"), height=1.05, sit="middle", title="Chair",
+                            swap={"000": "home_chair"}),
+    "table_wooden": dict(src=ph("WoodenTable_01"), height=0.84, fill=True, sit="middle", title="Kitchen Table",
+                         swap={"000": "home_table"}),
+    "table_wooden_2": dict(src=ph("WoodenTable_02"), height=0.84, fill=True, sit="middle", title="Kitchen Table",
+                           swap={"000": "home_table"}),
+    "table_painted": dict(src=ph("painted_wooden_table"), height=0.84, fill=True, sit="middle", title="Kitchen Table",
+                          swap={"000": "home_table"}),
+    "houseplant": dict(src=ph("potted_plant_04"), height=0.95, sit="middle", title="Houseplant", sound="GRASS",
+                       swap={"000": "home_plant"}),
+    "boombox": dict(src=ph("boombox"), width=0.7, title="Boombox", sound="METAL", swap={"000": "home_radio"}),
+    "cassette_player": dict(src=ph("cassette_player"), width=0.24, sit="middle", title="Cassette Player", sound="METAL",
+                            swap={"000": "home_radio"}),
+    "tool_chest": dict(src=ph("metal_tool_chest"), width=0.94, title="Tool Chest", sound="METAL", shine=0.35,
+                       swap={"000": "home_tool_chest"}),
+    "bookshelf_worn": dict(src=ph("wooden_bookshelf_worn"), cells=(1, 2, 1), height=1.9, title="Bookcase",
+                           swap={"000": "home_bookcase", "010": "home_bookcase_top"}),
+    "desk_metal": dict(src=ph("metal_office_desk"), height=0.84, fill=True, title="Desk", sound="METAL",
+                       swap=[{"000": "home_desk"}, {"000": "desk"}]),
+    "garage_shelves": dict(src=ph("steel_frame_shelves_01"), height=0.98, fill=True, title="Steel Shelves",
+                           sound="METAL", swap={"000": "home_garage_shelf"}),
+    "garage_shelves_2": dict(src=ph("steel_frame_shelves_03"), height=0.98, fill=True, title="Steel Shelves",
+                             sound="METAL", swap={"000": "home_garage_shelf"}),
+    "metal_rack": dict(src=ph("worn_metal_rack"), height=0.98, fill=True, title="Metal Rack", sound="METAL",
+                       swap={"000": "home_garage_shelf"}),
+    "trash_can_home": dict(src=ph("metal_trash_can", "^metal_trash_can(_lid|_handle_left|_handle_right)?$"), height=0.75, sit="middle", title="Trash Can", sound="METAL",
+                           swap={"000": "home_trash_can"}),
+    # ---- streets and yards
+    "trash_can": dict(src=ph("metal_trash_can", "^metal_trash_can_rust"), height=0.95, sit="middle", title="Trash Can", sound="METAL",
+                      swap={"000": "ext_trash_can"}),
+    "trash_bag": dict(src=ph("trashbag"), height=0.45, sit="middle", title="Trash Bag", sound="WOOL",
+                      swap={"000": "trash_bag"}),
+    "barrel_1": dict(src=ph("Barrel_01"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
+    "barrel_2": dict(src=ph("Barrel_02"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
+    "barrel_3": dict(src=ph("barrel_03"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
+    "crate_1": dict(src=ph("wooden_crate_01"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}]),
+    "crate_2": dict(src=ph("wooden_crate_02"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}]),
+    "aircon": dict(src=ph("exterior_aircon_unit", "^exterior_aircon_unit_rusted$"), width=0.94, sit="middle",
+                   title="Air Conditioner", sound="METAL", shine=0.3, swap={"000": "hvac"}),
+    "aircon_clean": dict(src=ph("exterior_aircon_unit", "^exterior_aircon_unit$"), width=0.94, sit="middle",
+                         title="Air Conditioner", sound="METAL", shine=0.3, swap={"000": "hvac"}),
+    "planter": dict(src=ph("planter_box_01"), width=0.94, sit="middle", title="Planter", swap={"000": "planter"}),
+    # ---- shops and trades
+    "stool_1": dict(src=ph("metal_stool_01"), height=0.75, sit="middle", title="Stool", sound="METAL", swap={"000": "store_stool"}),
+    "stool_2": dict(src=ph("metal_stool_02"), height=0.75, sit="middle", title="Stool", sound="METAL", swap={"000": "store_stool"}),
+    "bar_chair": dict(src=ph("bar_chair_round_01"), height=0.75, sit="middle", title="Bar Stool", sound="METAL",
+                      swap={"000": "store_stool"}),
+    "monobloc": dict(src=ph("plastic_monobloc_chair_01"), height=1.0, sit="middle", title="Plastic Chair",
+                     sound="METAL", swap={"000": "store_chair"}),
+    "barber_chair": dict(src=ph("BarberShopChair_01"), height=1.35, sit="middle", title="Barber Chair", sound="METAL",
+                         shine=0.4, swap={"000": "trade_barber_chair"}),
+    # ---- bunkers, garages, the navy
+    "military_crate": dict(src=ph("wooden_military_crate"), width=0.94, title="Weapon Crate",
+                           swap={"000": "bunk_crate_gun"}),
+    "military_crate_old": dict(src=ph("old_military_crate", "_a$"), width=0.94, title="Ammo Crate",
+                               swap={"000": "bunk_crate_ammo"}),
+    "military_crate_old_b": dict(src=ph("old_military_crate", "_b$"), width=0.94, title="Ammo Crate",
+                                 swap={"000": "bunk_crate_ammo"}),
+    "toolbox": dict(src=ph("metal_toolbox"), width=0.75, title="Tool Box", sound="METAL", shine=0.35,
+                    swap={"000": "navy_toolbox"}),
     "file_cabinet": dict(src=obj(CABINETS / "Obj/File_Cabinet.obj", None, CABINETS / "Textures/ue/T_FileCabinet_BC.tga"),
-                         cells=(1, 1, 1), height=0.95, front="+z", title="Filing Cabinet", sound="WOOD", shine=0.25,
+                         cells=(1, 1, 1), height=0.95, fill=(0.62, 0.7), front="+z", title="Filing Cabinet", sound="WOOD", shine=0.25,
                          swap={"000": "filing_cabinet"}),
 }
+
+# ---- grocery pack: stocked store bays, several of each so a run of them never repeats; they
+# always stand in for the built-in shelves (a run mixing the two would not match)
+for _kind, _n, _looted in (("grocery", 5, 0.2), ("liquor", 3, 0.25), ("pharmacy", 3, 0.3), ("empty", 2, 0.85)):
+    for _i in range(_n):
+        PROPS[f"shelf_{_kind}_{_i + 1}"] = dict(
+            src=stocked(_kind, 7000 + 97 * _i + len(_kind), _looted), cells=(1, 2, 1),
+            height=round(155.2 / SHELF_CM, 4), front="+x", sound="METAL", shine=0.3, wear=0.4, always=True,
+            title=f"{_kind.title()} Shelf", swap={"000": f"store_shelf_{_kind}", "010": f"store_shelf_{_kind}_top"})
+
+for _i in range(3):
+    PROPS[f"counter_{_i + 1}"] = dict(src=counter(8100 + _i), height=0.76, ref=75.7, fill=True, front="+x", sound="METAL",
+                                     shine=0.3, wear=0.45, title="Counter", always=True, swap={"000": "store_counter"})
+for _i in range(2):
+    PROPS[f"till_{_i + 1}"] = dict(src=counter(8200 + _i, till=True), height=0.76, ref=75.7, fill=True,
+                                  front="+x", sound="METAL", shine=0.3, wear=0.45, title="Till", always=True,
+                                  swap={"000": "store_register"})
 
 
 # ---------------------------------------------------------------- sampling
@@ -183,7 +478,9 @@ def placed(cfg, parts):
     room = cells * 15.5 / 16
     if cfg.get("fill"):
         # kitchen units fill their block like the rest of a counter run: scaled on each axis
-        k = np.array([room[0] / size[0], cfg["height"] / size[1], room[2] / size[2]]) * R
+        # (a pair fills that share of the block across and deep)
+        fx, fz = cfg["fill"] if isinstance(cfg["fill"], tuple) else (1, 1)
+        k = np.array([room[0] * fx / size[0], cfg["height"] / cfg.get("ref", size[1]), room[2] * fz / size[2]]) * R
     else:
         k = cfg["height"] / size[1] if "height" in cfg else cfg["width"] / size[0]
         k = np.full(3, min(k, room[0] / size[0], room[1] / size[1], room[2] / size[2]) * R)
@@ -392,6 +689,8 @@ def hidden(solid, d, box):
 def wear(rgb, d, pts, occ, rng, cfg, height):
     """Dull, grimy and chipped: old furniture in a dead town."""
     amount = cfg.get("wear", 0.5)
+    # lift the darks first: scanned dark woods and fabrics read as black blobs in a dim room
+    rgb = 255 * (np.clip(rgb, 0, 255) / 255) ** cfg.get("lift", 0.8)
     lum = rgb @ np.array([0.299, 0.587, 0.114])
     rgb = lum[..., None] + (rgb - lum[..., None]) * 0.82
     rgb = rgb * 0.94
@@ -400,7 +699,7 @@ def wear(rgb, d, pts, occ, rng, cfg, height):
     noise = blotch(rng, h, w)
     floor = np.clip(1 - pts[..., 1] / max(height * 0.35, 1), 0, 1)
     g = amount * (0.1 + 0.25 * noise + 0.25 * floor + 0.35 * occ)
-    rgb = rgb * (1 - g[..., None] * 0.55) + np.array([62, 52, 40]) * g[..., None] * 0.55 * 0.4
+    rgb = rgb * (1 - g[..., None] * 0.45) + np.array([62, 52, 40]) * g[..., None] * 0.45 * 0.4
     # chips along the edges of fronts and tops
     if d != 0 and min(h, w) > 3:
         edge = np.zeros((h, w), bool)
@@ -441,7 +740,11 @@ def pack(rects):
         size *= 2
 
 
+DEFAULTS = dict(cells=(1, 1, 1), front="+z", sound="WOOD")
+
+
 def build(name, cfg):
+    cfg = {**DEFAULTS, **cfg}
     parts, flip = cfg["src"]()
     solid, P, C, NR = voxelise(cfg, parts, flip)
     surf = Surface(P, C, NR)
@@ -558,9 +861,10 @@ def write_swaps(layout):
         for swap in swaps(cfg):
             key = tuple(sorted(swap.items()))
             groups.setdefault(key, []).append({c: cells.get(int(c), "air") for c in swap})
+    always = {tuple(sorted(w.items())) for cfg in PROPS.values() if cfg.get("always") for w in swaps(cfg)}
     entries = []
     for key, variants in sorted(groups.items()):
-        first = key[0][1]
+        first = ("!" if key in always else "") + key[0][1]
         for cell, orig in key:
             alts = [first] + [v[cell] for v in variants]
             entries.append(f'        Map.entry("{orig}", new String[] {{{", ".join(json.dumps(a) for a in alts)}}})')
@@ -572,7 +876,8 @@ import java.util.Map;
 /**
  * Written by tools/props/props.py: the pack props that stand in for built-in blocks. Each entry is
  * the object's group (its first block, so a fridge and its top pick alike) and then one stand-in
- * per variant; {{@link Cover}} keeps the built-in block as one more variant.
+ * per variant; {{@link Cover}} keeps the built-in block as one more variant, unless the group is
+ * marked "!" (always swapped).
  */
 final class PropSwaps {{
     static final Map<String, String[]> TABLE = Map.ofEntries(
@@ -596,7 +901,7 @@ def main():
     for name, cfg in PROPS.items():
         if args.only and not re.search(args.only, name):
             continue
-        for k in [k for k in data["blocks"] if k == f"pk_{name}" or k.startswith(f"pk_{name}_")]:
+        for k in [k for k in data["blocks"] if re.fullmatch(rf"pk_{name}(_\d{{3}})?", k)]:
             del data["blocks"][k]
         blocks, lay = build(name, cfg)
         data["blocks"].update(blocks)
