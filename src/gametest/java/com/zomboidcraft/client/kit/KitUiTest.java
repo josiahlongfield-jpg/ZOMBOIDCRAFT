@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,6 +27,19 @@ public class KitUiTest implements FabricClientGameTest {
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
+            LOG.info("ZCUI   screen opened: {}", screen.getClass().getSimpleName());
+            ScreenEvents.remove(screen).register(closed -> {
+                StringBuilder why = new StringBuilder();
+                for (StackTraceElement e : new Throwable().getStackTrace()) {
+                    String c = e.getClassName();
+                    if (c.startsWith("net.fabricmc.fabric.impl") || c.startsWith("java.")) continue;
+                    why.append("\n      at ").append(c).append('.').append(e.getMethodName()).append(':').append(e.getLineNumber());
+                    if (why.length() > 1500) break;
+                }
+                LOG.info("ZCUI   screen closed: {}{}", closed.getClass().getSimpleName(), why);
+            });
+        }));
         try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
             sp.getConnection().waitForChunksRender();
             for (String c : List.of("gamemode survival @a", "give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight",
