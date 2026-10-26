@@ -1,0 +1,112 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_gilt": "zomboidcraft:block/city/ch_gilt",
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "particle": "zomboidcraft:block/city/ch_gilt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        7.5
+      ],
+      "to": [
+        16,
+        12,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_gilt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_gilt"
+        },
+        "down": {
+          "texture": "#ch_gilt"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        2,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

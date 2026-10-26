@@ -51,33 +51,14 @@ final class Civic {
         }
     }
 
-    /** Pews in two blocks either side of an aisle, facing the far end (+z). */
-    private void pews(int x0, int x1, int z0, int z1, int y, int aisle) {
-        for (int z = z0; z <= z1; z += 2) {
-            for (int x = x0; x <= x1; x++) {
-                if (Math.abs(x - aisle) <= 1) {
-                    continue;
-                }
-                if (rng.nextDouble() < 0.12) {
-                    p.set(x, y, z, rng.nextBoolean() ? "minecraft:spruce_slab[type=bottom]" : "air");  // smashed, or dragged off
-                    continue;
-                }
-                p.set(x, y, z, "minecraft:spruce_stairs[facing=north]");
-            }
-        }
-    }
-
-    /** A flag pole: chain up to a banner of the faded colours. */
+    /** A flagpole h high on its concrete pad: the white pole, the flag off the gilt ball at the top (or torn down). */
     void flagpole(int x, int z, int h) {
         p.set(x, 0, z, "concrete_dark");
-        for (int y = 1; y < h; y++) {
-            p.set(x, y, z, "minecraft:iron_chain[axis=y]");
+        p.set(x, 1, z, "cv_flagpole_base");
+        for (int y = 2; y < h; y++) {
+            p.set(x, y, z, "cv_flagpole");
         }
-        p.set(x, h, z, "minecraft:lightning_rod");
-        if (rng.nextDouble() < 0.7) {
-            p.set(x + 1, h - 1, z, pick("minecraft:white_wall_banner[facing=east]", "minecraft:blue_wall_banner[facing=east]",
-                    "minecraft:red_wall_banner[facing=east]"));
-        }
+        p.set(x, h, z, rng.nextDouble() < 0.75 ? "cv_flagpole_top[facing=north]" : "cv_flagpole");
     }
 
     /** A last stand: sandbags across the door, a barricade, the casings and blood. */
@@ -99,218 +80,66 @@ final class Civic {
     /** Lot size a church of the kind wants: {w, d}. */
     static int[] churchSize(Church kind) {
         return switch (kind) {
-            case CHAPEL -> new int[] {13, 30};
+            case CHAPEL -> new int[] {14, 30};
             case BRICK -> new int[] {19, 36};
             case STONE -> new int[] {23, 44};
         };
     }
 
-    /**
-     * A church on a lot w wide and d deep, set back behind its own lawn with the tower at the
-     * front. sign: the board out front (church, methodist, stmary) or null.
-     */
+    /** A church of the kind on a lot w wide and d deep (see {@link com.zomboidcraft.world.county.Church}); sign: the board out front or null. */
     void church(Church kind, int w, int d, String sign) {
-        int nw, nd, tower, setback;
-        String wall, roof, trimWall;
-        switch (kind) {
-            case CHAPEL -> {
-                nw = 9 + (rng.nextBoolean() ? 2 : 0);
-                nd = Math.min(d - 9, 16 + rng.nextInt(5));
-                tower = 3;
-                setback = 5;
-                wall = "siding_white";
-                trimWall = "siding_white";
-                roof = pick("minecraft:deepslate_tile", "minecraft:dark_oak", "minecraft:waxed_weathered_cut_copper");
-            }
-            case BRICK -> {
-                nw = 13 + (rng.nextBoolean() ? 2 : 0);
-                nd = Math.min(d - 10, 22 + rng.nextInt(5));
-                tower = 5;
-                setback = 6;
-                wall = pick("brick_red", "brick_red", "brick_dark", "brick_buff");
-                trimWall = "stone_trim";
-                roof = pick(ROOFS);
-            }
-            default -> {
-                nw = 15 + (rng.nextBoolean() ? 2 : 0);
-                nd = Math.min(d - 12, 28 + rng.nextInt(5));
-                tower = 5;
-                setback = 8;
-                wall = pick("minecraft:stone_bricks", "minecraft:tuff_bricks", "minecraft:polished_andesite");
-                trimWall = "stone_trim";
-                roof = pick("minecraft:deepslate_tile", "minecraft:blackstone", "minecraft:cobbled_deepslate");
-            }
-        }
-        int x0 = (w - nw) / 2, x1 = x0 + nw - 1, z0 = setback, z1 = z0 + nd - 1;
-        int wallH = kind == Church.CHAPEL ? 6 : kind == Church.BRICK ? 8 : 10;
-        b.walls(x0, z0, x1, z1, 1, wallH, wall);
-        b.floor(x0, z0, x1, z1, 0, "concrete_dark");
-        b.floor(x0 + 1, z0 + 1, x1 - 1, z1 - 1, 0, kind == Church.STONE ? "lobby_floor_dark" : "floor_boards");
-        b.clear(x0 + 1, 1, z0 + 1, x1 - 1, wallH, z1 - 1);
-        // tall windows down both sides, stained glass in the brick and stone, clear in the chapel
-        String g = GLASS[rng.nextInt(GLASS.length)];
-        for (int z = z0 + 3; z <= z1 - 3; z += 3) {
-            for (int side = 0; side < 2; side++) {
-                int x = side == 0 ? x0 : x1;
-                int top = wallH - 2;
-                for (int y = 2; y <= top; y++) {
-                    String pane = kind == Church.CHAPEL ? b.glass("z") : rng.nextDouble() < b.damage * 0.35 ? "air"
-                            : rng.nextDouble() < 0.3 ? GLASS[rng.nextInt(GLASS.length)] : g;
-                    p.set(x, y, z, pane);
-                }
-                if (kind != Church.CHAPEL) {
-                    // a pointed head over the lancet, and a buttress between the bays
-                    int o = side == 0 ? -1 : 1;
-                    p.set(x, top + 1, z, b.wall(trimWall, top + 1));
-                    if (z + 1 < z1) {
-                        for (int y = 1; y <= wallH - 2; y++) {
-                            p.set(x + o, y, z + 2, b.wall(wall, y));
-                        }
-                        p.set(x + o, wallH - 1, z + 2, (wall.startsWith("minecraft:") ? stairsFamily(wall) : "minecraft:stone_brick")
-                                + "_stairs[facing=" + (side == 0 ? "east" : "west") + "]");
-                    }
-                }
-            }
-        }
-        b.gable(x0, x1, z0, z1, wallH + 1, roof, true, kind == Church.CHAPEL ? wall : trimWall.equals("stone_trim") ? wall : wall, 1);
-        // the far end: an apse window over the altar
-        int cx = (x0 + x1) / 2;
-        for (int y = 3; y <= wallH; y++) {
-            p.set(cx, y, z1, kind == Church.CHAPEL ? b.glass("x") : g);
-        }
-        // the tower over the door
-        int tx0 = kind == Church.BRICK ? (rng.nextBoolean() ? x0 - 1 : x1 - tower + 2) : cx - tower / 2;
-        int tz0 = z0 - (kind == Church.CHAPEL ? 2 : 3);
-        int towerTop = wallH + (kind == Church.CHAPEL ? 6 : kind == Church.BRICK ? 9 : 12);
-        String towerWall = wall;
-        b.walls(tx0, tz0, tx0 + tower - 1, tz0 + tower - 1, 1, towerTop, towerWall);
-        b.floor(tx0 + 1, tz0 + 1, tx0 + tower - 2, tz0 + tower - 2, 0, "floor_boards");
-        b.clear(tx0 + 1, 1, tz0 + 1, tx0 + tower - 2, towerTop - 1, tz0 + tower - 2);
-        // the belfry: open louvres on all four sides, the bell hanging inside
-        int bel = towerTop - 3;
-        for (int i = 1; i < tower - 1; i++) {
-            for (int y = bel; y <= bel + 1; y++) {
-                p.set(tx0 + i, y, tz0, "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]");
-                p.set(tx0 + i, y, tz0 + tower - 1, "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]");
-                p.set(tx0, y, tz0 + i, "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]");
-                p.set(tx0 + tower - 1, y, tz0 + i, "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]");
-            }
-        }
-        p.set(tx0 + tower / 2, bel + 2, tz0 + tower / 2, "minecraft:bell[attachment=ceiling,facing=north]");
-        for (int x = tx0; x < tx0 + tower; x++) {
-            for (int z = tz0; z < tz0 + tower; z++) {
-                p.set(x, towerTop, z, b.wall(towerWall, towerTop));
-            }
-        }
-        // corner pinnacles on a stone tower, then the spire
-        if (kind == Church.STONE) {
-            for (int[] c : new int[][] {{tx0, tz0}, {tx0 + tower - 1, tz0}, {tx0, tz0 + tower - 1}, {tx0 + tower - 1, tz0 + tower - 1}}) {
-                p.set(c[0], towerTop + 1, c[1], "minecraft:stone_brick_wall");
-                p.set(c[0], towerTop + 2, c[1], "minecraft:stone_brick_wall");
-            }
-        }
-        String spireRoof = kind == Church.CHAPEL ? roof : pick("minecraft:deepslate_tile", "minecraft:waxed_oxidized_cut_copper",
-                "minecraft:blackstone");
-        b.spire(tx0, tz0, tower, towerTop + 1, spireRoof, "minecraft:lightning_rod");
-        // a clock on the brick and stone towers, stopped
-        if (kind != Church.CHAPEL) {
-            int cy = bel - 3;
-            p.set(tx0 + tower / 2, cy, tz0 - 1, "clock_face[facing=south]");
-        }
-        // the door at the foot of the tower (or in the gable beside it), steps up to it
-        boolean towerDoor = kind != Church.BRICK;
-        int dx = towerDoor ? tx0 + tower / 2 : cx;
-        int dz = towerDoor ? tz0 : z0;
-        if (towerDoor) {
-            b.clear(tx0 + 1, 1, tz0 + tower - 1, tx0 + tower - 2, 3, tz0 + tower - 1);  // into the nave
-            b.clear(cx - 1, 1, z0, cx + 1, 3, z0);
-        }
-        b.door(dx, 1, dz, "minecraft:dark_oak_door", "north");
-        if (kind != Church.CHAPEL) {
-            b.door(dx - 1, 1, dz, "minecraft:dark_oak_door", "north");
-        }
-        p.set(dx, 3, dz, kind == Church.CHAPEL ? "minecraft:spruce_planks" : g);
-        // a rose window in the gable of a brick church
-        if (kind == Church.BRICK) {
-            int ry = wallH + 3;
-            p.set(cx, ry, z0, g);
-            p.set(cx - 1, ry, z0, GLASS[rng.nextInt(GLASS.length)]);
-            p.set(cx + 1, ry, z0, GLASS[rng.nextInt(GLASS.length)]);
-            p.set(cx, ry + 1, z0, GLASS[rng.nextInt(GLASS.length)]);
-            p.set(cx, ry - 1, z0, GLASS[rng.nextInt(GLASS.length)]);
-            for (int y = 4; y <= wallH - 1; y++) {
-                p.set(cx, y, z0, rng.nextDouble() < 0.5 ? g : GLASS[rng.nextInt(GLASS.length)]);
-            }
-        }
-        // inside: pews, the altar on its step, a lectern, candles burnt down
-        pews(x0 + 1, x1 - 1, z0 + 3, z1 - 6, 1, cx);
-        for (int x = x0 + 1; x <= x1 - 1; x++) {
-            for (int z = z1 - 4; z <= z1 - 1; z++) {
-                p.set(x, 1, z, "minecraft:spruce_slab[type=bottom]");
-            }
-        }
-        p.set(cx, 1, z1 - 2, "minecraft:spruce_planks");
-        p.set(cx - 1, 1, z1 - 2, "minecraft:spruce_planks");
-        p.set(cx + 1, 1, z1 - 2, "minecraft:spruce_planks");
-        p.set(cx, 2, z1 - 2, "minecraft:candle[candles=3,lit=false]");
-        p.set(cx - 2, 2, z1 - 4, "minecraft:lectern[facing=north]");
-        for (int y = 4; y <= 6; y++) {
-            p.set(cx, y, z1 - 1, y == 5 ? "minecraft:dark_oak_fence" : "minecraft:dark_oak_fence");
-        }
-        p.set(cx - 1, 5, z1 - 1, "minecraft:dark_oak_fence");
-        p.set(cx + 1, 5, z1 - 1, "minecraft:dark_oak_fence");
-        // the refuge: cots between the pews, sandbags at the door, crates of tins
-        if (rng.nextDouble() < 0.5) {
-            lastStand(cx - 2, cx + 2, z0 + 1, 1);
-            for (int i = 0; i < 4; i++) {
-                int x = x0 + 1 + rng.nextInt(nw - 2), z = z0 + 4 + rng.nextInt(Math.max(1, nd - 10));
-                p.set(x, 1, z, rng.nextBoolean() ? "minecraft:white_bed[facing=north,part=foot]" : "crate");
-            }
-        }
-        b.mess(x0 + 1, z0 + 1, x1 - 1, z1 - 1, 1, 0.04);
-        b.lights(x0, z0, x1, z1, wallH, 0.0);
-        steps(dx, kind == Church.CHAPEL ? 1 : 2, 1, "minecraft:stone_brick");
-        // the board out front by the walk
-        if (sign != null) {
-            Boards.board(p, rng, sign, 1, 2, 1);
-        }
-        // the path up from the street
-        for (int z = 0; z < dz - 1; z++) {
-            p.set(dx, 0, z, "sidewalk");
-            p.set(dx - 1, 0, z, "sidewalk");
-        }
+        new com.zomboidcraft.world.county.Church(p, rng).build(kind, w, d, sign);
     }
 
-    private static String stairsFamily(String block) {
-        return switch (block) {
-            case "minecraft:stone_bricks" -> "minecraft:stone_brick";
-            case "minecraft:tuff_bricks" -> "minecraft:tuff_brick";
-            case "minecraft:polished_andesite" -> "minecraft:polished_andesite";
-            default -> "minecraft:stone_brick";
-        };
-    }
-
-    /** A graveyard over x0..x1, z0..z1: rows of stones gone over to moss, an iron fence round it. */
+    /**
+     * A churchyard over x0..x1, z0..z1: iron railings round it on posts, the gate in the front;
+     * rows of headstones in granite and marble (each with its grave behind it), stone crosses and
+     * the odd obelisk, some sunk and leaning, some graves dug up from below and left open.
+     */
     void graveyard(int x0, int z0, int x1, int z1) {
+        int gate = (x0 + x1) / 2;
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
-                boolean edge = x == x0 || x == x1 || z == z0 || z == z1;
-                if (edge) {
-                    p.set(x, 1, z, rng.nextDouble() < 0.1 ? "air" : "minecraft:iron_bars");
+                boolean ex = x == x0 || x == x1, ez = z == z0 || z == z1;
+                if (!ex && !ez) {
                     continue;
                 }
-                if ((x - x0) % 2 == 0 && (z - z0) % 3 == 1 && rng.nextDouble() < 0.8) {
-                    p.set(x, 1, z, pick("minecraft:stone_brick_wall", "minecraft:mossy_stone_brick_wall",
-                            "minecraft:cobblestone_wall", "minecraft:mossy_cobblestone_wall", "minecraft:andesite_wall"));
-                    if (rng.nextDouble() < 0.1) {
-                        p.set(x, 2, z, "minecraft:stone_brick_wall");  // an obelisk
-                    }
-                } else if ((x - x0) % 2 == 0 && (z - z0) % 3 == 2 && rng.nextDouble() < 0.25) {
-                    p.set(x, 0, z, "minecraft:coarse_dirt");  // a grave dug up from below
-                } else if (rng.nextDouble() < 0.3) {
-                    p.set(x, 1, z, rng.nextBoolean() ? "minecraft:short_grass" : "minecraft:tall_grass[half=lower]");
+                if (z == z0 && (x == gate || x == gate + 1)) {
+                    continue;
+                }
+                boolean post = ex && ez || (ez ? (x - x0) % 4 == 0 || x == gate - 1 || x == gate + 2 : (z - z0) % 4 == 0);
+                if (rng.nextDouble() < 0.08) {
+                    continue;  // a length of railing down
+                }
+                p.set(x, 1, z, post ? "cv_iron_post" : "cv_iron_fence[axis=" + (ez ? "x" : "z") + "]");
+            }
+        }
+        for (int z = z0 + 2; z + 1 < z1; z += 3) {
+            for (int x = x0 + 1; x < x1; x += 2) {
+                if (x == gate || x == gate + 1 || rng.nextDouble() < 0.12) {
+                    continue;
+                }
+                double r = rng.nextDouble();
+                if (r < 0.06 && z + 2 < z1) {
+                    p.set(x, 1, z, "ch_obelisk[facing=north]");
+                    p.set(x, 2, z, "ch_obelisk_top");
+                } else if (r < 0.16) {
+                    p.set(x, 1, z, "ch_grave_cross[facing=north]");
+                } else {
+                    p.set(x, 1, z, "ch_headstone_" + rng.nextInt(6) + (r > 0.84 ? "_sunk" : "") + "[facing=north]");
+                }
+                // the grave behind it, or the hole where it came up
+                if (rng.nextDouble() < 0.14) {
+                    p.set(x, 0, z + 1, "ch_grave_open");
+                } else {
+                    p.set(x, 1, z + 1, "ch_grave_mound");
                 }
             }
+        }
+        // the path from the gate, worn through the grass
+        for (int z = z0; z < z1; z++) {
+            p.set(gate, 0, z, "dirt_withered");
+            p.set(gate + 1, 0, z, "dirt_withered");
         }
     }
 

@@ -1,0 +1,124 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_frame_white_hi": "zomboidcraft:block/city/ch_frame_white_hi",
+    "ch_glass_jewel_hi_broken": {
+      "sprite": "zomboidcraft:block/city/ch_glass_jewel_hi_broken",
+      "force_translucent": true
+    },
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/ch_frame_white_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_white_hi",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_frame_white_hi"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_frame_white_hi"
+        },
+        "south": {
+          "texture": "#ch_frame_white_hi",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_trim_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_trim_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_glass_jewel_hi_broken"
+        },
+        "south": {
+          "texture": "#ch_glass_jewel_hi_broken"
+        },
+        "east": {
+          "texture": "#ch_glass_jewel_hi_broken",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_glass_jewel_hi_broken",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_glass_jewel_hi_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_glass_jewel_hi_broken",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -127,6 +127,13 @@ final class TownSite extends Site {
         Kit.lawn(lot.placer(out), rng, 0, 0, lot.w() - 1, lot.d() - 1, wild);
     }
 
+    /** A church on its lot, its lawn laid first (the basement digs out of it), no street trees hiding its front. */
+    private void church(Kit.Lot lot, Civic.Church kind, int w, String sign, double wild) {
+        yard(lot, wild);
+        new Civic(lot.placer(out), rng).church(kind, w, lot.d(), sign);
+        kit.treeless.add(new int[] {lot.x0() - 7, lot.z0() - 7, lot.x0() + lot.sizeX() + 6, lot.z0() + lot.sizeZ() + 6});
+    }
+
     /**
      * Shopfronts shoulder to shoulder along a lane from s0 to s1 on one side (0: both), each its
      * own building; the trades listed go in first (where the lot is wide enough), then a mix.
@@ -400,9 +407,8 @@ final class TownSite extends Site {
         Kit.Lot chapel = civicLot(ns, sNs + (qChapel < 2 ? -23 : 23), (qChapel & 1) == 0 ? 1 : -1, 28, 32);
         if (chapel != null) {
             Placer pl = chapel.placer(out);
-            new Civic(pl, rng).church(Civic.Church.CHAPEL, 13, chapel.d(), "church");
-            new Civic(pl.shifted(14, 0, 0), rng).graveyard(0, 6, 12, chapel.d() - 4);
-            yard(chapel, 0.7);
+            church(chapel, Civic.Church.CHAPEL, 14, "church", 0.7);
+            new Civic(pl.shifted(15, 0, 0), rng).graveyard(0, 6, 12, chapel.d() - 4);
         }
         // the post office on its corner, the volunteer fire house down the lane from it
         Kit.Lot post = civicLot(we, sWe + ((qPost & 1) == 0 ? -17 : 17), qPost >= 2 ? 1 : -1, 16, 22);
@@ -506,8 +512,7 @@ final class TownSite extends Site {
         if (church != null) {
             kit.lots.add(church);
             Civic.Church kind = rng.nextBoolean() ? Civic.Church.BRICK : Civic.Church.CHAPEL;
-            new Civic(church.placer(out), rng).church(kind, 19, 36, kind == Civic.Church.BRICK ? "methodist" : "church");
-            yard(church, 0.5);
+            church(church, kind, 19, kind == Civic.Church.BRICK ? "methodist" : "church", 0.5);
         }
         greenAround((int) xc, (int) gz, green);
 
@@ -746,16 +751,14 @@ final class TownSite extends Site {
             yard(lib, 0.5);   // first: the library digs its basement out of it
             new Civic(lib.placer(out), rng).library(21, Math.min(22, depth - 2));
         }
-        // the churches face the square from two of its corners
-        Kit.Lot stone = civicLot(sides[0], sides[0].length() - corner - mainClear - 13, outward[0], 23, depth);
-        if (stone != null) {
-            new Civic(stone.placer(out), rng).church(Civic.Church.STONE, 23, stone.d(), "stmary");
-            yard(stone, 0.5);
+        // two churches face the square from its corners (St. Mary's stands out on the road in, below)
+        Kit.Lot chapel = civicLot(sides[0], sides[0].length() - corner - mainClear - 11, outward[0], 19, depth);
+        if (chapel != null) {
+            church(chapel, Civic.Church.CHAPEL, 19, "church", 0.5);
         }
         Kit.Lot brick = civicLot(sides[1], sides[1].length() - corner - mainClear - 11, outward[1], 19, depth);
         if (brick != null) {
-            new Civic(brick.placer(out), rng).church(Civic.Church.BRICK, 19, brick.d(), "church");
-            yard(brick, 0.5);
+            church(brick, Civic.Church.BRICK, 19, "methodist", 0.5);
         }
         for (int i = 0; i < 4; i++) {
             Kit.Lane l = sides[i];
@@ -778,6 +781,15 @@ final class TownSite extends Site {
         Kit.Lot fire = civicLot(inW, along(inW, cx - outer - pastRing, cz), rng.nextBoolean() ? 1 : -1, 19, 26);
         if (fire != null) {
             new Civic(fire.placer(out), rng).fireStation(19, 24);
+        }
+        // St. Mary's, the stone church, a block out on the road in from the north where the lots run deep
+        int stoneSide = rng.nextBoolean() ? 1 : -1;
+        Kit.Lot stone = civicLot(inN, along(inN, cx, cz - outer - pastRing - 8), stoneSide, 23, 50);
+        if (stone == null) {
+            stone = civicLot(inN, along(inN, cx, cz - outer - pastRing - 8), -stoneSide, 23, 50);
+        }
+        if (stone != null) {
+            church(stone, Civic.Church.STONE, 23, "stmary", 0.5);
         }
         towerNear((int) (cx - outer - 20), (int) (cz - outer - 20), true);
         Homes.Mix town = new Homes.Mix(Homes.Mix.weights(0.1, 0.34, 0.26, 0.1, 0, 0, 0.1, 0.1), 6, 0.4, 0.25, 0.25,
@@ -960,8 +972,8 @@ final class TownSite extends Site {
         Kit.Lane vl = village.isEmpty() ? cross : village.get(0);
         Kit.Lot church = civicLot(vl, vl.length() * (0.6 + rng.nextDouble() * 0.2), 1, 19, 34);
         if (church != null) {
-            new Civic(church.placer(out), rng).church(rng.nextBoolean() ? Civic.Church.BRICK : Civic.Church.CHAPEL, 19, 34, "methodist");
-            yard(church, 0.6);
+            Civic.Church kind = rng.nextBoolean() ? Civic.Church.BRICK : Civic.Church.CHAPEL;
+            church(church, kind, 19, kind == Civic.Church.BRICK ? "methodist" : "church", 0.6);
         }
         towerNear((int) gx - 60, 16, true);
         depot((int) gx + 11, track);

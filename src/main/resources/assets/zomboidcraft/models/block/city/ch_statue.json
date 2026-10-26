@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_mantle_blue": "zomboidcraft:block/city/ch_mantle_blue",
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "ch_plaster_white": "zomboidcraft:block/city/ch_plaster_white",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        5
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_plaster_white"
+        },
+        "south": {
+          "texture": "#ch_plaster_white"
+        },
+        "east": {
+          "texture": "#ch_plaster_white"
+        },
+        "west": {
+          "texture": "#ch_plaster_white"
+        },
+        "up": {
+          "texture": "#ch_plaster_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_plaster_white"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        9,
+        4.5
+      ],
+      "to": [
+        12.5,
+        16,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_mantle_blue"
+        },
+        "south": {
+          "texture": "#ch_mantle_blue"
+        },
+        "east": {
+          "texture": "#ch_mantle_blue"
+        },
+        "west": {
+          "texture": "#ch_mantle_blue"
+        },
+        "up": {
+          "texture": "#ch_mantle_blue",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_mantle_blue"
+        }
+      }
+    }
+  ]
+}

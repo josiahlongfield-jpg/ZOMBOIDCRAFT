@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_gilt": "zomboidcraft:block/city/ch_gilt",
+    "particle": "zomboidcraft:block/city/ch_gilt"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt"
+        },
+        "west": {
+          "texture": "#ch_gilt"
+        },
+        "up": {
+          "texture": "#ch_gilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_gilt",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        9,
+        7
+      ],
+      "to": [
+        12.5,
+        11,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt"
+        },
+        "west": {
+          "texture": "#ch_gilt"
+        },
+        "up": {
+          "texture": "#ch_gilt"
+        },
+        "down": {
+          "texture": "#ch_gilt"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        2,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt"
+        },
+        "west": {
+          "texture": "#ch_gilt"
+        },
+        "up": {
+          "texture": "#ch_gilt"
+        },
+        "down": {
+          "texture": "#ch_gilt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

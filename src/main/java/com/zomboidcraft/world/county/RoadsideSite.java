@@ -837,7 +837,8 @@ final class RoadsideSite extends Site {
             return;
         }
         Placer q = lot.placer(out);
-        new Civic(q, rng).church(kind, size[0], Math.min(size[1], lot.d()), any("church", "methodist", "stmary"));
+        new Civic(q, rng).church(kind, size[0], Math.min(size[1], lot.d()),
+                kind == Civic.Church.CHAPEL ? "church" : kind == Civic.Church.BRICK ? "methodist" : "stmary");
         // the graveyard beside it, a gravel lot on the other side or out front
         new Civic(q.shifted(size[0] + 2, 0, 0), rng).graveyard(0, 8, Math.min(14, lot.w() - size[0] - 4), lot.d() - 3);
         int gx = Math.min(lot.w() - 2, size[0] + 17);
@@ -848,12 +849,6 @@ final class RoadsideSite extends Site {
                     q.vehicle(gx + 2 + i * 3, 1, 9, 0, CARS, rng.nextLong());
                 }
             }
-        }
-        if (hit > 0.5) {
-            // where they made their stand: pews dragged to the doors, the last notes on the board
-            q.set(size[0] / 2 - 1, 1, 4, "sandbags");
-            q.set(size[0] / 2 + 1, 1, 4, "sandbags");
-            q.set(size[0] / 2, 1, 3, "blood_splat");
         }
     }
 

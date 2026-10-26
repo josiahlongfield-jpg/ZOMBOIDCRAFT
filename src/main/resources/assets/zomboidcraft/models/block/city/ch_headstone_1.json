@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_grave_face_1": "zomboidcraft:block/city/ch_grave_face_1",
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        5
+      ],
+      "to": [
+        15,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        7
+      ],
+      "to": [
+        13,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_grave_face_1"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        7
+      ],
+      "to": [
+        12,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        7
+      ],
+      "to": [
+        10,
+        15.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble"
+        }
+      }
+    }
+  ]
+}

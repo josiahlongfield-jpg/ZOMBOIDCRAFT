@@ -125,6 +125,8 @@ final class Kit {
     final List<Lane> lanes = new ArrayList<>();
     final List<Bulb> bulbs = new ArrayList<>();
     final List<Lot> lots = new ArrayList<>();
+    /** Ground kept clear of street trees so a front can be seen (a church's): {x0, z0, x1, z1}. */
+    final List<int[]> treeless = new ArrayList<>();
 
     Kit(BlockSink out, SplittableRandom rng, int w, int d) {
         this.out = out;
@@ -700,6 +702,15 @@ final class Kit {
                 : r < 0.84 ? Trees.Kind.SYCAMORE : r < 0.9 ? Trees.Kind.PINE : r < 0.95 ? Trees.Kind.DEAD : Trees.Kind.SICK;
     }
 
+    private boolean treeless(int x, int z) {
+        for (int[] r : treeless) {
+            if (x >= r[0] && x <= r[2] && z >= r[1] && z <= r[3]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Street trees planted in the verges every so often, both sides. */
     void streetTrees(Lane l, int spacing, double chance) {
         for (int side = -1; side <= 1; side += 2) {
@@ -710,7 +721,7 @@ final class Kit {
                 double[] p = l.point(s);
                 double o = l.style.half + 1 + l.style.verge / 2.0 + 0.5;
                 int x = (int) Math.floor(p[0] - p[3] * side * o), z = (int) Math.floor(p[1] + p[2] * side * o);
-                if (use(x, z) == VERGE && out.get(x, 1, z) == null) {
+                if (use(x, z) == VERGE && out.get(x, 1, z) == null && !treeless(x, z)) {
                     tree(yardTree(), x, z);
                 }
             }

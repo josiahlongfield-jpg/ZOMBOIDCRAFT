@@ -25,6 +25,7 @@ final class Bldg {
             Map.entry("concrete_panel", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("concrete_dark", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("stone_trim", new String[] {"b", "crack", "moss", "soot"}),
+            Map.entry("ch_ashlar", new String[] {"b", "crack", "moss", "soot"}),
             Map.entry("plaster_sage", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("plaster_cream", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("plaster_blue", new String[] {"b", "crack", "moss", "soot", "stain"}),
