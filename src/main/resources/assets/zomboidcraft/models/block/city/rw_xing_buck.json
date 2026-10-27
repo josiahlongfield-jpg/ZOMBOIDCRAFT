@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_buck": "zomboidcraft:block/city/rw_buck",
+    "rw_galv": "zomboidcraft:block/city/rw_galv",
+    "rw_lights": "zomboidcraft:block/city/rw_lights",
+    "particle": "zomboidcraft:block/city/rw_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        12,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_galv"
+        },
+        "south": {
+          "texture": "#rw_galv"
+        },
+        "east": {
+          "texture": "#rw_galv"
+        },
+        "west": {
+          "texture": "#rw_galv"
+        },
+        "up": {
+          "texture": "#rw_galv"
+        },
+        "down": {
+          "texture": "#rw_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -6,
+        -2,
+        5.6
+      ],
+      "to": [
+        22,
+        18,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_buck",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rw_buck",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rw_galv",
+          "uv": [
+            10,
+            0,
+            10.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rw_galv",
+          "uv": [
+            5.6,
+            0,
+            6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rw_galv",
+          "uv": [
+            0,
+            5.6,
+            16,
+            6
+          ]
+        },
+        "down": {
+          "texture": "#rw_galv",
+          "uv": [
+            0,
+            10,
+            16,
+            10.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_lights"
+        },
+        "south": {
+          "texture": "#rw_lights"
+        },
+        "east": {
+          "texture": "#rw_lights"
+        },
+        "west": {
+          "texture": "#rw_lights"
+        },
+        "up": {
+          "texture": "#rw_lights",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_lights"
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.gen;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
@@ -50,8 +51,8 @@ public final class ChunkWriter implements ChunkSink {
     public static BlockState resolve(String name) {
         BlockState s = STATES.get(name);
         if (s == null) {
-            BlockState real = name.equals("air") ? AIR : name.startsWith("minecraft:") || ZcConfig.get().world.cityStandIns
-                    ? null : CityBlocks.resolve(name);
+            BlockState real = name.equals("air") ? AIR : name.startsWith("minecraft:")
+                    || ZcConfig.get().world.cityStandIns && !name.startsWith(ZomboidCraft.MOD_ID + ":") ? null : CityBlocks.resolve(name);
             s = real != null ? real : StandIns.resolve(name);
             STATES.put(name, s);
         }

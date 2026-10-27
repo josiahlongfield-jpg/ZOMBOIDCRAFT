@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_pier": "zomboidcraft:block/city/rw_pier",
+    "rw_pier_cap": "zomboidcraft:block/city/rw_pier_cap",
+    "particle": "zomboidcraft:block/city/rw_pier_cap"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_pier_cap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_pier_cap",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_pier_cap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_pier_cap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_pier_cap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_pier",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_tile_band": "zomboidcraft:block/city/rw_tile_band",
+    "particle": "zomboidcraft:block/city/rw_tile_band"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_tile_band",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_tile_band",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_tile_band",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_tile_band",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_tile_band",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_tile_band",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

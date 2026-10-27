@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_name_uptown_2": "zomboidcraft:block/city/rw_name_uptown_2",
+    "rw_wall_green": "zomboidcraft:block/city/rw_wall_green",
+    "particle": "zomboidcraft:block/city/rw_name_uptown_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        7
+      ],
+      "to": [
+        16,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_name_uptown_2"
+        },
+        "south": {
+          "texture": "#rw_wall_green"
+        },
+        "east": {
+          "texture": "#rw_wall_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_wall_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_wall_green"
+        },
+        "down": {
+          "texture": "#rw_wall_green"
+        }
+      }
+    }
+  ]
+}

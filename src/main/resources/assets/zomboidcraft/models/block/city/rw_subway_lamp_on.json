@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_el_paint": "zomboidcraft:block/city/rw_el_paint",
+    "rw_tube_on": "zomboidcraft:block/city/rw_tube_on",
+    "particle": "zomboidcraft:block/city/rw_el_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        13,
+        0
+      ],
+      "to": [
+        11,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_el_paint",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_el_paint"
+        },
+        "west": {
+          "texture": "#rw_el_paint"
+        },
+        "up": {
+          "texture": "#rw_el_paint",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        12,
+        0.5
+      ],
+      "to": [
+        10.5,
+        13,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_tube_on"
+        },
+        "south": {
+          "texture": "#rw_tube_on"
+        },
+        "east": {
+          "texture": "#rw_tube_on"
+        },
+        "west": {
+          "texture": "#rw_tube_on"
+        },
+        "up": {
+          "texture": "#rw_tube_on"
+        },
+        "down": {
+          "texture": "#rw_tube_on"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        16,
+        2
+      ],
+      "to": [
+        8.4,
+        16,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint"
+        },
+        "south": {
+          "texture": "#rw_el_paint"
+        },
+        "east": {
+          "texture": "#rw_el_paint"
+        },
+        "west": {
+          "texture": "#rw_el_paint"
+        },
+        "up": {
+          "texture": "#rw_el_paint",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_el_paint"
+        }
+      }
+    }
+  ]
+}

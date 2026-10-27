@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_timetable": "zomboidcraft:block/city/rw_timetable",
+    "rw_wall_green": "zomboidcraft:block/city/rw_wall_green",
+    "particle": "zomboidcraft:block/city/rw_timetable"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_timetable",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_wall_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_wall_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_wall_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_wall_green",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_wall_green",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

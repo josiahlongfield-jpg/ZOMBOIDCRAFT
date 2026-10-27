@@ -255876,6 +255876,3601 @@
    "sound": "METAL",
    "rotate": "facing",
    "light": 15
+  },
+  "rw_ballast": {
+   "tex": {
+    "up": "rw_ballast",
+    "side": "rw_ballast_side",
+    "down": "rw_subballast"
+   },
+   "title": "Ballast",
+   "sound": "GRAVEL"
+  },
+  "rw_ballast_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     4,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ]
+   ],
+   "title": "Ballast",
+   "sound": "GRAVEL"
+  },
+  "rw_ballast_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ]
+   ],
+   "title": "Ballast",
+   "sound": "GRAVEL"
+  },
+  "rw_ballast_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ]
+   ],
+   "title": "Ballast",
+   "sound": "GRAVEL"
+  },
+  "rw_subballast": {
+   "tex": {
+    "all": "rw_subballast"
+   },
+   "title": "Subballast",
+   "sound": "GRAVEL"
+  },
+  "rw_cinder": {
+   "tex": {
+    "up": "rw_cinder",
+    "side": "rw_subballast",
+    "down": "rw_subballast"
+   },
+   "title": "Cinders",
+   "sound": "GRAVEL"
+  },
+  "rw_street_bed": {
+   "tex": {
+    "up": "rw_street_bed",
+    "side": "rw_concrete",
+    "down": "rw_concrete"
+   },
+   "title": "Street Track",
+   "sound": "STONE"
+  },
+  "rw_crossing": {
+   "tex": {
+    "up": "rw_crossing",
+    "side": "rw_concrete",
+    "down": "rw_concrete"
+   },
+   "title": "Crossing Panel",
+   "sound": "STONE"
+  },
+  "rw_crossing_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     4,
+     16,
+     {
+      "up": "rw_crossing",
+      "side": "rw_concrete",
+      "down": "rw_concrete"
+     }
+    ]
+   ],
+   "title": "Crossing Panel",
+   "sound": "STONE"
+  },
+  "rw_crossing_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "rw_crossing",
+      "side": "rw_concrete",
+      "down": "rw_concrete"
+     }
+    ]
+   ],
+   "title": "Crossing Panel",
+   "sound": "STONE"
+  },
+  "rw_crossing_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12,
+     16,
+     {
+      "up": "rw_crossing",
+      "side": "rw_concrete",
+      "down": "rw_concrete"
+     }
+    ]
+   ],
+   "title": "Crossing Panel",
+   "sound": "STONE"
+  },
+  "rw_deck": {
+   "tex": {
+    "up": "rw_el_paint",
+    "side": "rw_girder",
+    "down": "rw_deck"
+   },
+   "title": "Steel Deck",
+   "sound": "METAL"
+  },
+  "rw_girder": {
+   "tex": {
+    "up": "rw_el_paint",
+    "side": "rw_girder",
+    "down": "rw_el_paint"
+   },
+   "title": "Plate Girder",
+   "sound": "METAL"
+  },
+  "rw_grate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     13,
+     0,
+     16,
+     16,
+     16,
+     "rw_grate"
+    ],
+    [
+     0,
+     10,
+     0,
+     16,
+     13,
+     2,
+     "rw_el_paint"
+    ],
+    [
+     0,
+     10,
+     14,
+     16,
+     13,
+     16,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Walkway Grating",
+   "sound": "METAL",
+   "render": "cutout"
+  },
+  "rw_guard": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15.5,
+     1.6,
+     "rw_el_paint"
+    ],
+    [
+     0,
+     7,
+     0.3,
+     16,
+     8.2,
+     1.3,
+     "rw_el_paint"
+    ],
+    [
+     1,
+     0,
+     0,
+     2.6,
+     14,
+     1.6,
+     "rw_el_paint"
+    ],
+    [
+     13.4,
+     0,
+     0,
+     15,
+     14,
+     1.6,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Railing",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_crossbeam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     0,
+     12,
+     16,
+     16,
+     {
+      "west": "rw_girder",
+      "east": "rw_girder",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     2,
+     0,
+     0,
+     14,
+     2,
+     16,
+     "rw_el_paint"
+    ],
+    [
+     2,
+     14,
+     0,
+     14,
+     16,
+     16,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Cross Girder",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "rw_column": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12,
+     {
+      "north": "rw_column",
+      "south": "rw_column",
+      "side": "rw_column",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     4,
+     4,
+     16,
+     12,
+     "rw_el_paint"
+    ],
+    [
+     12,
+     0,
+     4,
+     13,
+     16,
+     12,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "El Column",
+   "sound": "METAL"
+  },
+  "rw_column_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12,
+     {
+      "north": "rw_column",
+      "south": "rw_column",
+      "side": "rw_column",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     4,
+     4,
+     16,
+     12,
+     "rw_el_paint"
+    ],
+    [
+     12,
+     0,
+     4,
+     13,
+     16,
+     12,
+     "rw_el_paint"
+    ],
+    [
+     1,
+     0,
+     1,
+     15,
+     2,
+     15,
+     "rw_concrete"
+    ],
+    [
+     2.5,
+     2,
+     2.5,
+     13.5,
+     3,
+     13.5,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "El Column",
+   "sound": "METAL"
+  },
+  "rw_column_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12,
+     {
+      "north": "rw_column",
+      "south": "rw_column",
+      "side": "rw_column",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     4,
+     4,
+     16,
+     12,
+     "rw_el_paint"
+    ],
+    [
+     12,
+     0,
+     4,
+     13,
+     16,
+     12,
+     "rw_el_paint"
+    ],
+    [
+     1,
+     12,
+     3,
+     15,
+     16,
+     13,
+     "rw_el_paint"
+    ],
+    [
+     2,
+     9,
+     4,
+     14,
+     12,
+     12,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "El Column",
+   "sound": "METAL"
+  },
+  "rw_pier": {
+   "tex": {
+    "all": "rw_pier"
+   },
+   "title": "Concrete Pier",
+   "sound": "STONE"
+  },
+  "rw_pier_cap": {
+   "tex": {
+    "up": "rw_pier_cap",
+    "side": "rw_pier_cap",
+    "down": "rw_pier"
+   },
+   "title": "Pier Cap",
+   "sound": "STONE"
+  },
+  "rw_platform": {
+   "tex": {
+    "up": "rw_platform",
+    "side": "rw_platform_face",
+    "down": "rw_concrete"
+   },
+   "title": "Platform",
+   "sound": "STONE"
+  },
+  "rw_platform_edge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_platform_face",
+      "side": "rw_platform_face",
+      "up": "rw_platform_edge",
+      "down": "rw_concrete"
+     }
+    ]
+   ],
+   "title": "Platform Edge",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_platform_half": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "rw_platform",
+      "side": "rw_platform_face",
+      "down": "rw_concrete"
+     }
+    ]
+   ],
+   "title": "Platform Step",
+   "sound": "STONE"
+  },
+  "rw_platform_base": {
+   "tex": {
+    "all": "rw_concrete"
+   },
+   "title": "Concrete",
+   "sound": "STONE"
+  },
+  "rw_canopy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     14,
+     16,
+     {
+      "up": "rw_roof",
+      "side": "rw_soffit",
+      "down": "rw_soffit"
+     }
+    ]
+   ],
+   "title": "Canopy",
+   "sound": "METAL"
+  },
+  "rw_canopy_fascia": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     14,
+     16,
+     {
+      "up": "rw_roof",
+      "side": "rw_soffit",
+      "down": "rw_soffit"
+     }
+    ],
+    [
+     0,
+     4,
+     0,
+     16,
+     14,
+     1.2,
+     {
+      "north": "rw_valance",
+      "south": "rw_valance",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Canopy",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "rw_iron"
+    ],
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     2,
+     10.5,
+     "rw_iron"
+    ],
+    [
+     5.5,
+     14,
+     5.5,
+     10.5,
+     16,
+     10.5,
+     "rw_iron"
+    ]
+   ],
+   "title": "Post",
+   "sound": "METAL"
+  },
+  "rw_bench": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.5,
+     6,
+     2,
+     15.5,
+     7,
+     4.6,
+     "rw_bench_wood"
+    ],
+    [
+     0.5,
+     6,
+     5,
+     15.5,
+     7,
+     7.6,
+     "rw_bench_wood"
+    ],
+    [
+     0.5,
+     6,
+     8,
+     15.5,
+     7,
+     10.6,
+     "rw_bench_wood"
+    ],
+    [
+     0.5,
+     9,
+     11,
+     15.5,
+     11,
+     12,
+     "rw_bench_wood"
+    ],
+    [
+     0.5,
+     12,
+     11.4,
+     15.5,
+     14,
+     12.4,
+     "rw_bench_wood"
+    ],
+    [
+     1.5,
+     0,
+     2,
+     2.5,
+     6,
+     11,
+     "rw_iron"
+    ],
+    [
+     13.5,
+     0,
+     2,
+     14.5,
+     6,
+     11,
+     "rw_iron"
+    ],
+    [
+     1.5,
+     6,
+     10.6,
+     2.5,
+     14.5,
+     12,
+     "rw_iron"
+    ],
+    [
+     13.5,
+     6,
+     10.6,
+     14.5,
+     14.5,
+     12,
+     "rw_iron"
+    ],
+    [
+     1.5,
+     7,
+     2,
+     2.5,
+     9,
+     3,
+     "rw_iron"
+    ],
+    [
+     13.5,
+     7,
+     2,
+     14.5,
+     9,
+     3,
+     "rw_iron"
+    ]
+   ],
+   "title": "Bench",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_lamp_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "rw_iron"
+    ],
+    [
+     6,
+     0,
+     6,
+     10,
+     3,
+     10,
+     "rw_iron"
+    ]
+   ],
+   "title": "Lamp Post",
+   "sound": "METAL"
+  },
+  "rw_lamp_head": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     6,
+     9,
+     "rw_iron"
+    ],
+    [
+     7.2,
+     5,
+     1,
+     8.8,
+     6.6,
+     9,
+     "rw_iron"
+    ],
+    [
+     4.5,
+     3,
+     -1,
+     11.5,
+     5,
+     6,
+     {
+      "up": "rw_enamel",
+      "side": "rw_enamel",
+      "down": "rw_enamel"
+     }
+    ],
+    [
+     6.5,
+     2,
+     1,
+     9.5,
+     3,
+     4,
+     "rw_bulb"
+    ]
+   ],
+   "title": "Platform Lamp",
+   "sound": "METAL",
+   "rotate": "facing",
+   "flicker": {
+    "light": 13,
+    "on": {
+     "rw_bulb": "rw_bulb_on"
+    }
+   }
+  },
+  "rw_lamp_hang": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     9,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "rw_iron"
+    ],
+    [
+     4,
+     6,
+     4,
+     12,
+     9,
+     12,
+     {
+      "up": "rw_enamel",
+      "side": "rw_enamel",
+      "down": "rw_enamel"
+     }
+    ],
+    [
+     6.5,
+     5,
+     6.5,
+     9.5,
+     6,
+     9.5,
+     "rw_bulb"
+    ]
+   ],
+   "title": "Hanging Lamp",
+   "sound": "METAL",
+   "decor": true,
+   "flicker": {
+    "light": 13,
+    "on": {
+     "rw_bulb": "rw_bulb_on"
+    }
+   }
+  },
+  "rw_shelter_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_wall_cream",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Shelter Wall",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_shelter_window": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "rw_window",
+      "south": "rw_window",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ],
+    [
+     0,
+     0,
+     6,
+     16,
+     1.5,
+     10,
+     "rw_wall_green"
+    ]
+   ],
+   "title": "Shelter Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "rw_timetable": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_timetable",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Timetable",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_fence": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     2.5,
+     13,
+     1.5,
+     "rw_iron"
+    ],
+    [
+     13.5,
+     0,
+     0,
+     15,
+     13,
+     1.5,
+     "rw_iron"
+    ],
+    [
+     0,
+     11,
+     0.2,
+     16,
+     12.5,
+     1.3,
+     "rw_iron"
+    ],
+    [
+     0,
+     5,
+     0.2,
+     16,
+     6.5,
+     1.3,
+     "rw_iron"
+    ],
+    [
+     0,
+     12.5,
+     0.4,
+     16,
+     13.2,
+     1.1,
+     "rw_iron"
+    ]
+   ],
+   "title": "Platform Fence",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_name_union_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_union_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_union_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_union_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_union_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_union_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_union_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_union_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_uptown_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_uptown_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_uptown_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_uptown_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_uptown_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_uptown_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_uptown_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_uptown_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_pinecrest_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_pinecrest_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_pinecrest_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_pinecrest_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_pinecrest_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_pinecrest_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_pinecrest_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_pinecrest_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fort_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fort_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fort_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fort_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fort_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fort_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fort_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fort_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_riverside_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_riverside_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_riverside_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_riverside_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_riverside_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_riverside_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_riverside_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_riverside_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_millbrook_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_millbrook_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_millbrook_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_millbrook_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_millbrook_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_millbrook_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_millbrook_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_millbrook_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_dunmore_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_dunmore_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_dunmore_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_dunmore_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_dunmore_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_dunmore_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_dunmore_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_dunmore_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fairview_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fairview_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fairview_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fairview_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fairview_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fairview_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_fairview_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_fairview_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_ashby_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_ashby_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_ashby_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_ashby_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_ashby_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_ashby_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_ashby_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_ashby_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_hollow_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_hollow_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_hollow_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_hollow_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_hollow_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_hollow_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_hollow_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_hollow_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_kings_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_kings_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_kings_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_kings_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_kings_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_kings_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_kings_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_kings_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_seabright_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_seabright_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_seabright_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_seabright_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_seabright_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_seabright_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_seabright_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_seabright_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_airport_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_airport_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_airport_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_airport_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_airport_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_airport_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_airport_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_airport_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_foundry_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_foundry_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_foundry_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_foundry_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_foundry_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_foundry_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_foundry_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_foundry_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_southport_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_southport_0",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_southport_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_southport_1",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_southport_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_southport_2",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_name_southport_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "rw_name_southport_3",
+      "south": "rw_wall_green",
+      "side": "rw_wall_green",
+      "up": "rw_wall_green",
+      "down": "rw_wall_green"
+     }
+    ]
+   ],
+   "title": "Station Sign",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rw_tile": {
+   "tex": {
+    "all": "rw_tile"
+   },
+   "title": "Subway Tile",
+   "sound": "STONE"
+  },
+  "rw_tile_dado": {
+   "tex": {
+    "all": "rw_tile_dado"
+   },
+   "title": "Subway Tile",
+   "sound": "STONE"
+  },
+  "rw_tile_band": {
+   "tex": {
+    "all": "rw_tile_band"
+   },
+   "title": "Subway Tile",
+   "sound": "STONE"
+  },
+  "rw_tile_broken": {
+   "tex": {
+    "all": "rw_tile_broken"
+   },
+   "title": "Subway Tile",
+   "sound": "STONE"
+  },
+  "rw_tile_dado_broken": {
+   "tex": {
+    "all": "rw_tile_dado_broken"
+   },
+   "title": "Subway Tile",
+   "sound": "STONE"
+  },
+  "rw_mosaic_stadium_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_stadium_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_stadium_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_stadium_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_stadium_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_stadium_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_stadium_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_stadium_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_tower_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_tower_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_tower_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_tower_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_tower_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_tower_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_tower_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_tower_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_power_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_power_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_power_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_power_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_power_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_power_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_power_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_power_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_waterfront_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_waterfront_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_waterfront_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_waterfront_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_waterfront_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_waterfront_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_waterfront_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_waterfront_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_union_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_union_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_union_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_union_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_union_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_union_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_union_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_union_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_mercy_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_mercy_0",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_mercy_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_mercy_1",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_mercy_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_mercy_2",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_mosaic_mercy_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_mosaic_mercy_3",
+      "side": "rw_tile",
+      "up": "rw_tile",
+      "down": "rw_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_tunnel": {
+   "tex": {
+    "all": "rw_tunnel"
+   },
+   "title": "Tunnel Concrete",
+   "sound": "STONE"
+  },
+  "rw_tunnel_floor": {
+   "tex": {
+    "up": "rw_walkway",
+    "side": "rw_tunnel",
+    "down": "rw_tunnel"
+   },
+   "title": "Tunnel Walkway",
+   "sound": "STONE"
+  },
+  "rw_track_slab": {
+   "tex": {
+    "up": "rw_track_slab",
+    "side": "rw_tunnel",
+    "down": "rw_tunnel"
+   },
+   "title": "Track Slab",
+   "sound": "STONE"
+  },
+  "rw_tunnel_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     6,
+     14,
+     11,
+     12,
+     16,
+     "rw_el_paint"
+    ],
+    [
+     6,
+     6.5,
+     9,
+     10,
+     11.5,
+     14,
+     "rw_cage"
+    ],
+    [
+     6.8,
+     7.3,
+     10,
+     9.2,
+     10.7,
+     13,
+     "rw_bulb"
+    ]
+   ],
+   "title": "Tunnel Lamp",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "flicker": {
+    "light": 10,
+    "on": {
+     "rw_bulb": "rw_bulb_on"
+    }
+   }
+  },
+  "rw_subway_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     13,
+     0,
+     11,
+     16,
+     16,
+     {
+      "up": "rw_el_paint",
+      "side": "rw_el_paint",
+      "down": "rw_tube",
+      "north": "rw_el_paint",
+      "south": "rw_el_paint"
+     }
+    ],
+    [
+     5.5,
+     12,
+     0.5,
+     10.5,
+     13,
+     15.5,
+     "rw_tube"
+    ],
+    [
+     7.6,
+     16,
+     2,
+     8.4,
+     16,
+     3,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Strip Light",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "flicker": {
+    "light": 14,
+    "on": {
+     "rw_tube": "rw_tube_on"
+    }
+   }
+  },
+  "rw_stair": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "rw_platform",
+      "side": "rw_concrete",
+      "down": "rw_concrete",
+      "north": "rw_concrete"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "rw_platform",
+      "side": "rw_concrete",
+      "down": "rw_concrete",
+      "north": "rw_concrete"
+     }
+    ],
+    [
+     0,
+     7.6,
+     15,
+     16,
+     8.05,
+     16,
+     "rw_nosing"
+    ],
+    [
+     0,
+     15.6,
+     7,
+     16,
+     16.05,
+     8,
+     "rw_nosing"
+    ]
+   ],
+   "title": "Stairs",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "rw_stair_steel": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "rw_diamond",
+      "side": "rw_el_paint",
+      "down": "rw_el_paint",
+      "north": "rw_el_paint"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "rw_diamond",
+      "side": "rw_el_paint",
+      "down": "rw_el_paint",
+      "north": "rw_el_paint"
+     }
+    ]
+   ],
+   "title": "Steel Stairs",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rw_subway_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15.5,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     0,
+     2,
+     0.3,
+     16,
+     3,
+     1.3,
+     "rw_sub_iron"
+    ],
+    [
+     1,
+     0,
+     0,
+     2.6,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     13.4,
+     0,
+     0,
+     15,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     4,
+     3,
+     0.5,
+     4.8,
+     14,
+     1.1,
+     "rw_sub_iron"
+    ],
+    [
+     6.5,
+     3,
+     0.5,
+     7.3,
+     14,
+     1.1,
+     "rw_sub_iron"
+    ],
+    [
+     9,
+     3,
+     0.5,
+     9.8,
+     14,
+     1.1,
+     "rw_sub_iron"
+    ],
+    [
+     11.5,
+     3,
+     0.5,
+     12.3,
+     14,
+     1.1,
+     "rw_sub_iron"
+    ]
+   ],
+   "title": "Subway Railing",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_globe_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     16,
+     9.5,
+     "rw_sub_iron"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     4,
+     11,
+     "rw_sub_iron"
+    ],
+    [
+     5.5,
+     13,
+     5.5,
+     10.5,
+     16,
+     10.5,
+     "rw_sub_iron"
+    ]
+   ],
+   "title": "Globe Lamp",
+   "sound": "METAL"
+  },
+  "rw_globe": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     9,
+     12,
+     {
+      "up": "rw_globe",
+      "side": "rw_globe",
+      "down": "rw_sub_iron"
+     }
+    ],
+    [
+     7,
+     9,
+     7,
+     9,
+     11,
+     9,
+     "rw_sub_iron"
+    ]
+   ],
+   "title": "Globe Lamp",
+   "sound": "GLASS",
+   "render": "translucent",
+   "flicker": {
+    "light": 12,
+    "on": {
+     "rw_globe": "rw_globe_on"
+    }
+   }
+  },
+  "rw_subway_sign_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15.5,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     0,
+     2,
+     0.3,
+     16,
+     3,
+     1.3,
+     "rw_sub_iron"
+    ],
+    [
+     1,
+     0,
+     0,
+     2.6,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     13.4,
+     0,
+     0,
+     15,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     0,
+     4,
+     -0.2,
+     16,
+     12,
+     0,
+     {
+      "north": "rw_subway_sign_0",
+      "south": "rw_subway_sign_0",
+      "side": "rw_sub_iron",
+      "up": "rw_sub_iron",
+      "down": "rw_sub_iron"
+     }
+    ]
+   ],
+   "title": "Subway Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_subway_sign_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15.5,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     0,
+     2,
+     0.3,
+     16,
+     3,
+     1.3,
+     "rw_sub_iron"
+    ],
+    [
+     1,
+     0,
+     0,
+     2.6,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     13.4,
+     0,
+     0,
+     15,
+     14,
+     1.6,
+     "rw_sub_iron"
+    ],
+    [
+     0,
+     4,
+     -0.2,
+     16,
+     12,
+     0,
+     {
+      "north": "rw_subway_sign_1",
+      "south": "rw_subway_sign_1",
+      "side": "rw_sub_iron",
+      "up": "rw_sub_iron",
+      "down": "rw_sub_iron"
+     }
+    ]
+   ],
+   "title": "Subway Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_xing_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     16,
+     9.5,
+     {
+      "side": "rw_mast_base",
+      "up": "rw_galv",
+      "down": "rw_galv"
+     }
+    ]
+   ],
+   "title": "Crossing Signal",
+   "sound": "METAL"
+  },
+  "rw_xing_lights": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     16,
+     9.5,
+     "rw_galv"
+    ],
+    [
+     -4,
+     4,
+     5,
+     20,
+     12,
+     6.5,
+     {
+      "north": "rw_lights",
+      "side": "rw_lights",
+      "up": "rw_lights",
+      "down": "rw_lights",
+      "south": "rw_galv"
+     }
+    ],
+    [
+     -3,
+     11,
+     3,
+     3,
+     12,
+     5,
+     "rw_lights"
+    ],
+    [
+     13,
+     11,
+     3,
+     19,
+     12,
+     5,
+     "rw_lights"
+    ]
+   ],
+   "title": "Crossing Signal",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rw_xing_buck": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     12,
+     9.5,
+     "rw_galv"
+    ],
+    [
+     -6,
+     -2,
+     5.6,
+     22,
+     18,
+     6,
+     {
+      "north": "rw_buck",
+      "south": "rw_buck",
+      "side": "rw_galv",
+      "up": "rw_galv",
+      "down": "rw_galv"
+     }
+    ],
+    [
+     6,
+     12,
+     6,
+     10,
+     16,
+     10,
+     "rw_lights"
+    ]
+   ],
+   "title": "Crossbuck",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rw_pole": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11,
+     "rw_creosote"
+    ]
+   ],
+   "title": "Telegraph Pole",
+   "sound": "WOOD"
+  },
+  "rw_pole_arm": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     4,
+     11,
+     "rw_creosote"
+    ],
+    [
+     6.5,
+     4,
+     -8,
+     9.5,
+     7,
+     24,
+     "rw_creosote"
+    ],
+    [
+     7,
+     7,
+     20,
+     9,
+     9.5,
+     22,
+     "rw_insulator"
+    ],
+    [
+     7,
+     7,
+     15,
+     9,
+     9.5,
+     17,
+     "rw_insulator"
+    ],
+    [
+     7,
+     7,
+     -3,
+     9,
+     9.5,
+     -1,
+     "rw_insulator"
+    ],
+    [
+     7,
+     7,
+     -8,
+     9,
+     9.5,
+     -6,
+     "rw_insulator"
+    ]
+   ],
+   "title": "Telegraph Pole",
+   "sound": "WOOD",
+   "rotate": "axis"
   }
  }
 }

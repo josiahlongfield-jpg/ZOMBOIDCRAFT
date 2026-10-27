@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_mosaic_union_3": "zomboidcraft:block/city/rw_mosaic_union_3",
+    "rw_tile": "zomboidcraft:block/city/rw_tile",
+    "particle": "zomboidcraft:block/city/rw_mosaic_union_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_mosaic_union_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_tile",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_tile",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_tile",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_tile",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_tile",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_iron": "zomboidcraft:block/city/rw_iron",
+    "particle": "zomboidcraft:block/city/rw_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_iron"
+        },
+        "south": {
+          "texture": "#rw_iron"
+        },
+        "east": {
+          "texture": "#rw_iron"
+        },
+        "west": {
+          "texture": "#rw_iron"
+        },
+        "up": {
+          "texture": "#rw_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_iron"
+        },
+        "south": {
+          "texture": "#rw_iron"
+        },
+        "east": {
+          "texture": "#rw_iron"
+        },
+        "west": {
+          "texture": "#rw_iron"
+        },
+        "up": {
+          "texture": "#rw_iron"
+        },
+        "down": {
+          "texture": "#rw_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

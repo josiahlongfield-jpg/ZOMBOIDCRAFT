@@ -40,7 +40,9 @@ public final class CountyGen {
     /** What the column-pass found, kept for the vegetation pass. */
     private static final class Column {
         int top;
-        boolean water, road, built, shore;
+        boolean water, road, built, shore, rail;
+        /** Within reach of a railway's middle: no tree crowns hang over the line. */
+        boolean lane;
         double forest, moisture;
     }
 
@@ -52,6 +54,8 @@ public final class CountyGen {
         List<Road> roads = county.roadsNear(bx - 16, bz - 16, bx + 31, bz + 31);
         Column[] cols = new Column[256];
         int min = out.minY();
+        RailGen rails = RailGen.near(county, bx, bz);
+        boolean[] railFlag = new boolean[1];
 
         for (int i = 0; i < 256; i++) {
             int x = bx + (i & 15), z = bz + (i >> 4);
@@ -81,6 +85,11 @@ public final class CountyGen {
                     double w = Terrain.smooth(half + 9, half + 1.5, hit.distance);
                     h = Terrain.lerp(h, hit.y, w);
                 }
+            }
+            if (rails != null && in == null && !bridge) {
+                // the railway's bed, its shoulders, embankments and cuttings
+                h = rails.ground(x, z, h, railFlag);
+                c.rail = railFlag[0];
             }
             int top = (int) Math.floor(h);
             c.top = top;
@@ -123,15 +132,31 @@ public final class CountyGen {
 
         // hideouts are copied in like places, but the land round them is left as it lies
         List<Place> hideouts = county.hideoutsNear(bx - TREE_REACH, bz - TREE_REACH, bx + 15 + TREE_REACH, bz + 15 + TREE_REACH, 0);
+        boolean[] corridor = rails == null ? null : rails.corridor(bx, bz, 9.5);
+        if (corridor != null) {
+            for (int i = 0; i < 256; i++) {
+                cols[i].lane = corridor[i];
+            }
+        }
         for (Place p : places) {
             if (p.contains(bx, bz, 15) && p.x0 <= bx + 15 && p.z0 <= bz + 15) {
-                copyPlace(p, bx, bz, out);
+                copyPlace(p, bx, bz, out, corridor);
             }
         }
         for (Place p : hideouts) {
             if (p.contains(bx, bz, 15) && p.x0 <= bx + 15 && p.z0 <= bz + 15) {
-                copyPlace(p, bx, bz, out);
+                copyPlace(p, bx, bz, out, corridor);
             }
+        }
+        if (rails != null) {
+            int[] tops = new int[256];
+            boolean[] road = new boolean[256], built = new boolean[256];
+            for (int i = 0; i < 256; i++) {
+                tops[i] = cols[i].top;
+                road[i] = cols[i].road;
+                built[i] = cols[i].built;
+            }
+            rails.lay(out, bx, bz, new RailGen.Columns(tops, road, built));
         }
         vegetation(bx, bz, cols, places, hideouts, out);
     }
@@ -287,15 +312,21 @@ public final class CountyGen {
         return (hit.dz > 0) == right ? "west" : "east";
     }
 
-    private void copyPlace(Place p, int bx, int bz, ChunkSink out) {
+    /** Copies a place's share of the chunk; its trees are left out of the railway's corridor (columns marked true). */
+    private void copyPlace(Place p, int bx, int bz, ChunkSink out, boolean[] corridor) {
         Voxels v = cache.get(p, county);
         List<String> palette = v.palette();
+        boolean[] tree = new boolean[palette.size()];
+        for (int k = 0; k < tree.length; k++) {
+            tree[k] = corridor != null && palette.get(k).startsWith("tree_");
+        }
         int lx0 = bx - p.x0, lz0 = bz - p.z0;
         for (int sx = lx0 >> 4; sx <= (lx0 + 15) >> 4; sx++) {
             for (int sz = lz0 >> 4; sz <= (lz0 + 15) >> 4; sz++) {
                 v.forColumn(sx, sz, (x, y, z, id) -> {
                     int wx = x + p.x0, wz = z + p.z0;
-                    if (wx >= bx && wx < bx + 16 && wz >= bz && wz < bz + 16) {
+                    if (wx >= bx && wx < bx + 16 && wz >= bz && wz < bz + 16
+                            && !(tree[id] && corridor[(wz - bz) << 4 | (wx - bx)])) {
                         out.set(wx, y + p.level, wz, palette.get(id));
                     }
                 });
@@ -303,7 +334,7 @@ public final class CountyGen {
         }
         for (Voxels.Car car : v.cars) {
             double wx = car.x() + p.x0, wz = car.z() + p.z0;
-            if (wx >= bx && wx < bx + 16 && wz >= bz && wz < bz + 16) {
+            if (wx >= bx && wx < bx + 16 && wz >= bz && wz < bz + 16 && RailGen.distance(county, wx, wz, 8) >= 5) {
                 if (car.models() != null) {
                     out.vehicle(wx, car.y() + p.level, wz, car.yaw(), car.models(), car.seed());
                 } else {
@@ -360,7 +391,8 @@ public final class CountyGen {
                 for (Road r : roads) {
                     r.nearest(x, z, hit);
                 }
-                if (blocked || cleared(hideouts, x, z, County.CLEARING + 2) || (hit.road != null && hit.distance < hit.road.kind.half + 4)) {
+                if (blocked || cleared(hideouts, x, z, County.CLEARING + 2) || (hit.road != null && hit.distance < hit.road.kind.half + 4)
+                        || RailGen.distance(county, x + 0.5, z + 0.5, 10) < 9) {
                     continue;
                 }
                 double gr = county.ground(x, z, places);
@@ -380,7 +412,7 @@ public final class CountyGen {
             int x = (int) (k >> 38) << 6 >> 6, y = (int) (k >> 26 & 0xFFF) << 20 >> 20, z = (int) (k & 0x3FFFFFF) << 6 >> 6;
             int i = (z - bz) << 4 | (x - bx);
             Column col = cols[i];
-            if (col.road && y < col.top + Kit.HEADROOM) {
+            if (col.road && y < col.top + Kit.HEADROOM || col.rail || col.lane) {
                 continue;
             }
             if (col.built) {
@@ -396,7 +428,7 @@ public final class CountyGen {
         // ground cover: grass and weeds, ferns and litter under trees, reeds at the water
         for (int i = 0; i < 256; i++) {
             Column col = cols[i];
-            if (col.built || col.road || col.water) {
+            if (col.built || col.road || col.water || col.rail) {
                 continue;
             }
             int x = bx + (i & 15), z = bz + (i >> 4);

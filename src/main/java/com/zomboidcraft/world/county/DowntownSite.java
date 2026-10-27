@@ -130,6 +130,9 @@ final class DowntownSite extends Site {
         crosswalks();
         List<Blk> blocks = tile != null ? tileBlocks(tile) : blocks();
         Role[] roles = tile != null ? tileRoles(blocks) : roles(blocks);
+        if (p.rails != null) {
+            railRoles(blocks, roles);
+        }
         for (int i = 0; i < blocks.size(); i++) {
             fill(blocks.get(i), roles[i]);
         }
@@ -288,6 +291,21 @@ final class DowntownSite extends Site {
             roles[i] = role;
         }
         return roles;
+    }
+
+    /**
+     * The blocks the county's railway curves across, round a corner of the grid: left open, a
+     * vacant lot the trains cut through on the surface or a square over the subway's tunnel.
+     */
+    private void railRoles(List<Blk> blocks, Role[] roles) {
+        for (int i = 0; i < blocks.size(); i++) {
+            Blk b = blocks.get(i);
+            int gi = Math.floorDiv(p.x0 + (b.x0 + b.x1) / 2, pitch), gj = Math.floorDiv(p.z0 + (b.z0 + b.z1) / 2, pitch);
+            String role = p.rails.roles.get(County.key(gi, gj));
+            if (role != null) {
+                roles[i] = role.equals("plaza") ? Role.PLAZA : Role.VACANT;
+            }
+        }
     }
 
     private static int reach(Kit.Style s) {
