@@ -1349,16 +1349,18 @@ final class RailGen {
                 }
                 out.column(x, z, Y + 1, h - 1, "rw_tile");
                 out.set(x, h, z, "rw_stair[facing=" + climb + "]");
-                if (h + 4 >= SUBWAY_FLOOR - 1) {
+                // four clear over every step (a jump up them never bumps a head), up through the
+                // hall's beams and roof into the rock
+                if (h + 5 >= SUBWAY_FLOOR - 1) {
                     // through the subway platform's floor
                     clear(out, x, z, h + 1, SUBWAY_FLOOR + 4);
                 } else {
-                    clear(out, x, z, h + 1, h + 3);
-                    if (h + 4 > Y + 6) {
-                        out.set(x, h + 4, z, "rw_tunnel");
+                    clear(out, x, z, h + 1, h + 4);
+                    if (h + 5 > Y + 6) {
+                        out.set(x, h + 5, z, "rw_tunnel");
                     }
                 }
-                if (j == 4) {
+                if (j == 3) {
                     out.set(x, SUBWAY_FLOOR + 1, z, "tx_glass_rail[axis=" + across + "]");
                 }
                 continue;
@@ -1368,8 +1370,8 @@ final class RailGen {
             }
             // the sides: glass in the hall, tile up through the rock to the subway's floor
             out.column(x, z, Y + 1, Y + 5, "tx_glass[axis=" + along + "]");
-            out.column(x, z, Y + 6, Math.min(h + 4, SUBWAY_FLOOR - 2), "rw_tile");
-            if (vi == 2 && j >= 5 && j <= 9 && !subwayBent(x, z)) {
+            out.column(x, z, Y + 6, Math.min(h + 5, SUBWAY_FLOOR - 2), "rw_tile");
+            if (vi == 2 && j >= 4 && j <= 9 && !subwayBent(x, z)) {
                 out.set(x, SUBWAY_FLOOR + 1, z, "tx_glass_rail[axis=" + along + "]");
             }
         }
@@ -1422,10 +1424,10 @@ final class RailGen {
         // the glass canopy over the door on its arms from the wall's columns, the sign hung under it
         if (ui >= 6 && ui <= 11 && vi >= 5 && vi <= 7) {
             int k = vi - 4;
-            out.set(x, PIER + 4, z, k == 3 ? "tx_canopy_edge[facing=" + right + "]"
+            out.set(x, PIER + 5, z, k == 3 ? "tx_canopy_edge[facing=" + right + "]"
                     : ui == 6 || ui == 11 ? "tx_canopy_arm_" + (k == 1 ? 0 : 6) + "[facing=" + right + "]" : "tx_canopy");
             if (vi == 6 && (ui == 8 || ui == 9)) {
-                out.set(x, PIER + 3, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
+                out.set(x, PIER + 4, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
             }
         }
         // the jetty from the door to the quay, on piles clear of the tubes
@@ -1470,9 +1472,10 @@ final class RailGen {
                 out.set(x, y, z, y <= hall ? "tx_granite" : "gl_keel");
             }
             out.set(x, step, z, "tx_step[facing=" + up + "]");
-            clear(out, x, z, step + 1, Math.min(step + 3, PIER + 3));
-            if (step + 4 > hall + 1 && step + 4 < PIER) {
-                out.set(x, step + 4, z, "gl_chamfer[facing=" + down + "]");
+            // four clear over every step, the box's sloping roof a block over that
+            clear(out, x, z, step + 1, Math.min(step + 4, PIER + 4));
+            if (step + 5 > hall + 1 && step + 5 < PIER) {
+                out.set(x, step + 5, z, "gl_chamfer[facing=" + down + "]");
             }
             return;
         }
@@ -1480,10 +1483,10 @@ final class RailGen {
         for (int y = Y + 1; y <= hall; y++) {
             out.set(x, y, z, y <= step ? "tx_granite" : "tx_glass[axis=" + along + "]");
         }
-        if (step + 1 <= hall + 1 && hall + 1 <= step + 3) {
+        if (step + 1 <= hall + 1 && hall + 1 <= step + 4) {
             out.set(x, hall + 1, z, "gl_wall" + f);
         }
-        for (int y = Math.max(hall + 2, step + 1); y <= Math.min(step + 4, PIER - 1); y++) {
+        for (int y = Math.max(hall + 2, step + 1); y <= Math.min(step + 5, PIER - 1); y++) {
             out.set(x, y, z, "gl_wall" + f);
         }
     }
@@ -1499,20 +1502,20 @@ final class RailGen {
         long h = Noise.hash(county.seed ^ 0x9A71L, x, z);
         double r = Noise.unit(h);
         // the floor, open where the stair comes up
-        if (!(stair && j >= 16 && j <= 19)) {
+        if (!(stair && j >= 15 && j <= 19)) {
             boolean mat = vi >= 3 && (ui == 8 || ui == 9);
             out.set(x, PIER, z, mat ? "tx_terrazzo_d" : r < 0.75 ? "tx_terrazzo" : "tx_terrazzo_b");
         }
-        // the roof, its rooflight and the parapet round it
+        // the roof (four clear over the stair's top step), its rooflight and the parapet round it
         boolean light = ui >= 4 && ui <= 13 && vi >= -3 && vi <= 2;
-        out.set(x, PIER + 4, z, light ? "tx_roof_glass" : "tx_roof");
+        out.set(x, PIER + 5, z, light ? "tx_roof_glass" : "tx_roof");
         if (ends || sides) {
-            out.set(x, PIER + 5, z, "tx_parapet");
+            out.set(x, PIER + 6, z, "tx_parapet");
         }
         if (ends && sides || sides && (ui == 6 || ui == 11) || ends && vi == 0) {
             out.set(x, PIER + 1, z, "tx_column_base");
-            out.set(x, PIER + 2, z, "tx_column");
-            out.set(x, PIER + 3, z, "tx_column_cap");
+            out.column(x, z, PIER + 2, PIER + 3, "tx_column");
+            out.set(x, PIER + 4, z, "tx_column_cap");
             return;
         }
         if (ends || sides) {
@@ -1523,23 +1526,24 @@ final class RailGen {
                 out.set(x, PIER + 1, z, "tx_door" + props + ",half=lower]");
                 out.set(x, PIER + 2, z, "tx_door" + props + ",half=upper]");
                 out.set(x, PIER + 3, z, "tx_glass_t[axis=" + axis + "]");
+                out.set(x, PIER + 4, z, "tx_glass[axis=" + axis + "]");
                 return;
             }
-            for (int y = PIER + 1; y <= PIER + 3; y++) {
+            for (int y = PIER + 1; y <= PIER + 4; y++) {
                 double g = Noise.unit(Noise.hash(county.seed ^ 0x9A72L + y, x, z));
                 out.set(x, y, z, (g < 0.08 ? "tx_glass_broken" : g < 0.18 ? "tx_glass_cracked" : g < 0.22 ? "tx_glass_frame"
                         : y == PIER + 1 ? "tx_glass_t" : "tx_glass") + "[axis=" + axis + "]");
             }
             return;
         }
-        clear(out, x, z, PIER + 1, PIER + 3);
-        if (stair && j >= 16 && j <= 18) {
+        clear(out, x, z, PIER + 1, PIER + 4);
+        if (stair && j >= 15 && j <= 18) {
             return;
         }
         // the balustrade round the opening
-        if (stair && j == 15) {
+        if (stair && j == 14) {
             out.set(x, PIER + 1, z, "tx_glass_rail[axis=" + across + "]");
-        } else if ((vi == -2 || vi == 1) && j >= 15 && j <= 18) {
+        } else if ((vi == -2 || vi == 1) && j >= 14 && j <= 18) {
             out.set(x, PIER + 1, z, "tx_glass_rail[axis=" + along + "]");
         } else if (vi == -4 && (ui == 3 || ui == 4)) {
             out.set(x, PIER + 1, z, ui == 3 && r < 0.4 ? "tx_tvm_smashed[facing=" + right + "]" : "tx_tvm[facing=" + right + "]");
@@ -1555,9 +1559,9 @@ final class RailGen {
         }
         if (vi == 2 && (ui == 8 || ui == 9)) {
             // over the way in: down to the trains
-            out.set(x, PIER + 3, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
+            out.set(x, PIER + 4, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
         } else if ((ui == 4 || ui == 13) && (vi == -3 || vi == 2)) {
-            out.set(x, PIER + 3, z, r < 0.3 ? "tx_pendant_off" : "tx_pendant");
+            out.set(x, PIER + 4, z, r < 0.3 ? "tx_pendant_off" : "tx_pendant");
         }
     }
 
