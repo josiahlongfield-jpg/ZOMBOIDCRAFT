@@ -124,7 +124,7 @@ public final class Walkup {
                     } else if (inFloor == 3 && windowColumn(along, length) && y > FLOOR) {
                         block = "stone_trim";  // lintel
                     }
-                    p.set(x, y, z, block);
+                    p.set(x, y, z, Placer.inWall(block, front || back));
                 }
                 // parapet
                 if (edge) {
@@ -176,7 +176,7 @@ public final class Walkup {
             boolean pier = x == 0 || x == w - 1;
             for (int y = 1; y <= 2; y++) {
                 String glass = rng.nextDouble() < 0.25 ? "window_broken" : rng.nextDouble() < 0.12 ? "boarded_window" : "window";
-                p.set(x, y, 0, pier ? trim : glass);
+                p.set(x, y, 0, pier ? trim : Placer.inWall(glass, true));
             }
             p.set(x, 3, 0, trim);
             if (!pier && !sign) {
