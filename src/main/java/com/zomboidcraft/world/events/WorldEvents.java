@@ -46,13 +46,19 @@ public final class WorldEvents {
     public static final SoundEvent SIREN = register("world.siren", 480f);
     public static final SoundEvent EXPLOSION = register("world.explosion", 192f);
     public static final SoundEvent EXPLOSION_FAR = register("world.explosion.far", 640f);
+    /** Josiah's whole flyby recordings (tools/audio/build_flyby_sounds.py), one event each so everyone hears the same. */
+    public static final SoundEvent[] FLYBY_JET = {register("world.flyby.jet.1", 800f), register("world.flyby.jet.2", 800f),
+            register("world.flyby.jet.3", 800f)};
+    public static final SoundEvent[] FLYBY_HELI = {register("world.flyby.heli.1", 800f)};
 
     /**
      * One event: where it starts, how it moves (blocks a second; still for a siren or explosion), the server tick
-     * it starts on and how long it lasts. The aircraft's model is only for a flyby.
+     * it starts on and how long it lasts. The aircraft's model and sound are only for a flyby: sound is which of
+     * the whole flyby recordings everyone hears it as (world.flyby.jet.N / heli.N, from 1), or 0 for the far-off
+     * loop bent by the Doppler shift in game until the aircraft is near and its own engines take over.
      */
     public record Event(Kind kind, double x, double y, double z, double vx, double vy, double vz, long start, int ticks,
-            String model) implements CustomPacketPayload {
+            String model, int sound) implements CustomPacketPayload {
         public static final Type<Event> TYPE = new Type<>(ZomboidCraft.id("world_event"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Event> CODEC = StreamCodec.of((buf, e) -> {
             buf.writeByte(e.kind.ordinal());
@@ -65,8 +71,9 @@ public final class WorldEvents {
             buf.writeLong(e.start);
             buf.writeVarInt(e.ticks);
             buf.writeUtf(e.model);
+            buf.writeVarInt(e.sound);
         }, buf -> new Event(Kind.values()[buf.readByte()], buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(),
-                buf.readDouble(), buf.readDouble(), buf.readLong(), buf.readVarInt(), buf.readUtf()));
+                buf.readDouble(), buf.readDouble(), buf.readLong(), buf.readVarInt(), buf.readUtf(), buf.readVarInt()));
 
         /** Where it is t seconds after it started. */
         public Vec3 at(double t) {
@@ -167,6 +174,7 @@ public final class WorldEvents {
         Vec3 p = near.position();
         double ground = surface(level, p.x, p.z, p.y);
         Event e;
+        List<Event> wingmen = new ArrayList<>();
         if (kind == Kind.JET || kind == Kind.HELI) {
             boolean jet = kind == Kind.JET;
             double speed = jet ? 110 + random.nextDouble() * 50 : 50 + random.nextDouble() * 20;
@@ -177,26 +185,44 @@ public final class WorldEvents {
             // closest point to the player, then back along the line to the start
             double cx = p.x - dz * side, cz = p.z + dx * side;
             double y = Math.min(level.getMaxY() - 8, ground + (jet ? 70 + random.nextDouble() * 60 : 35 + random.nextDouble() * 30));
+            String model = jet ? JETS[random.nextInt(JETS.length)] : HELI;
             e = new Event(kind, cx - dx * reach, y, cz - dz * reach, dx * speed, 0, dz * speed, level.getGameTime(),
-                    (int) (2 * reach / speed * 20), jet ? JETS[random.nextInt(JETS.length)] : HELI);
+                    (int) (2 * reach / speed * 20), model, sound(kind, random));
+            // sometimes a few jets together: each further back and out to one side, a little higher, same type
+            int pack = jet && random.nextInt(3) == 0 ? 1 + random.nextInt(3) : 0;
+            for (int i = 1; i <= pack; i++) {
+                double back = 28 * i, out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
+                wingmen.add(new Event(kind, e.x() - dx * back - dz * out, y + 4 * i, e.z() - dz * back + dx * out, e.vx(), 0, e.vz(),
+                        e.start(), e.ticks() + (int) (back / speed * 20) + 1, model, sound(kind, random)));
+            }
         } else {
             double angle = random.nextDouble() * Math.PI * 2;
             double d = kind == Kind.SIREN ? 120 + random.nextDouble() * 220 : 100 + random.nextDouble() * 350;
             double x = p.x + Math.cos(angle) * d, z = p.z + Math.sin(angle) * d;
             double y = surface(level, x, z, ground) + (kind == Kind.SIREN ? 14 : 1);
             // a siren winds up and down for 40 seconds; an explosion's smoke hangs for a minute and a half
-            e = new Event(kind, x, y, z, 0, 0, 0, level.getGameTime(), kind == Kind.SIREN ? 44 * 20 : 90 * 20, "");
+            e = new Event(kind, x, y, z, 0, 0, 0, level.getGameTime(), kind == Kind.SIREN ? 44 * 20 : 90 * 20, "", 0);
             if (kind == Kind.EXPLOSION && level.isLoaded(BlockPos.containing(x, y, z))) {
                 level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, true, true, x, y + 2, z, 2, 2, 1, 2, 0);
                 level.sendParticles(ParticleTypes.LAVA, true, true, x, y + 1, z, 30, 2, 1, 2, 0);
             }
         }
-        RUNNING.add(new Running(e));
-        for (ServerPlayer player : level.players()) {
-            ServerPlayNetworking.send(player, e);
+        wingmen.add(0, e);
+        for (Event each : wingmen) {
+            RUNNING.add(new Running(each));
+            for (ServerPlayer player : level.players()) {
+                ServerPlayNetworking.send(player, each);
+            }
         }
         ZomboidCraft.LOGGER.info("World event {} at {} {} {}", kind.name().toLowerCase(Locale.ROOT), (int) e.x(), (int) e.y(), (int) e.z());
         return e;
+    }
+
+    /** A flyby's sound: one of the whole recordings most of the time, otherwise the far-off loop. */
+    private static int sound(Kind kind, RandomSource random) {
+        int takes = kind == Kind.JET ? FLYBY_JET.length : FLYBY_HELI.length;
+        int pick = random.nextInt(takes + 1);
+        return pick == takes ? 0 : pick + 1;
     }
 
     /** Ground height here if the chunk is loaded, otherwise the fallback. */

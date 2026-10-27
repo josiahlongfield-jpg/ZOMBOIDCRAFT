@@ -1380,6 +1380,8 @@ public class CarProp extends Entity {
     public static java.util.function.Consumer<AirNet.State> pilotReport = state -> { };
     /** Called on the client each tick for an aircraft, to keep its sounds going. */
     public static java.util.function.Consumer<CarProp> airSound = car -> { };
+    /** Client side: aircraft whose engines stay silent, as a flyby heard as a whole recording (WorldEventSound). */
+    public static java.util.function.Predicate<CarProp> quiet = car -> false;
     /** Called on the client when the local player gets into an aircraft. */
     public static java.util.function.Consumer<CarProp> boarded = car -> { };
 

@@ -29,6 +29,8 @@ public final class WorldEventSound {
     private static final List<Pending> PENDING = new ArrayList<>();
     /** How far off a flyby can still be heard, in blocks. */
     private static final double JET_RANGE = 800, HELI_RANGE = 520;
+    /** Where the aircraft is overhead in every flyby recording (tools/audio/build_flyby_sounds.py). */
+    private static final double PEAK = 10;
 
     private record Pending(WorldEvents.Event event, boolean[] played) {
     }
@@ -37,11 +39,12 @@ public final class WorldEventSound {
         ClientPlayNetworking.registerGlobalReceiver(WorldEvents.Event.TYPE, (payload, context) ->
                 context.client().execute(() -> receive(payload)));
         ClientTickEvents.END_CLIENT_TICK.register(WorldEventSound::tick);
+        CarProp.quiet = WorldEventSound::quiet;
     }
 
     private static void receive(WorldEvents.Event e) {
         Minecraft mc = Minecraft.getInstance();
-        if (e.flyby()) {
+        if (e.flyby() && e.sound() == 0) {
             mc.getSoundManager().play(new Flyby(e));
         } else {
             PENDING.add(new Pending(e, new boolean[1]));
@@ -58,6 +61,14 @@ public final class WorldEventSound {
             Pending p = it.next();
             WorldEvents.Event e = p.event();
             double t = (now - e.start()) / 20.0;
+            if (e.flyby()) {
+                if (t > e.ticks() / 20.0) {
+                    it.remove();
+                } else if (!p.played()[0]) {
+                    recording(mc, p, t);
+                }
+                continue;
+            }
             Vec3 at = e.at(0);
             double d = mc.player.getEyePosition().distanceTo(at);
             if (t > e.ticks() / 20.0 + d / WorldEvents.SOUND_SPEED) {
@@ -72,6 +83,93 @@ public final class WorldEventSound {
                     mc.getSoundManager().play(new Fixed(sound, at, e.kind() == WorldEvents.Kind.SIREN ? 1.0f : 1.6f));
                 }
             }
+        }
+    }
+
+    /**
+     * Starts a flyby's recording when its loudest moment, PEAK seconds in, will arrive here just as the sound of
+     * the aircraft at its nearest to us does. Worked out again each tick until then, as the player moves.
+     */
+    private static void recording(Minecraft mc, Pending p, double t) {
+        WorldEvents.Event e = p.event();
+        Vec3 ear = mc.player.getEyePosition(), v = e.velocity();
+        double end = e.ticks() / 20.0;
+        double tc = Mth.clamp(ear.subtract(e.at(0)).dot(v) / v.lengthSqr(), 0, end);
+        double dc = e.at(tc).distanceTo(ear);
+        double range = e.kind() == WorldEvents.Kind.JET ? JET_RANGE : HELI_RANGE;
+        double begin = tc + dc / WorldEvents.SOUND_SPEED - PEAK;
+        if (dc > range || t > begin + 3) {
+            p.played()[0] = t > begin;      // out of earshot, or we came too late to hear it come in
+            return;
+        }
+        if (t >= begin) {
+            p.played()[0] = true;
+            SoundEvent[] takes = e.kind() == WorldEvents.Kind.JET ? WorldEvents.FLYBY_JET : WorldEvents.FLYBY_HELI;
+            SoundEvent take = takes[Math.min(e.sound(), takes.length) - 1];
+            mc.getSoundManager().play(new Recording(take, e, (float) Math.pow(1 - dc / range, 1.4)));
+        }
+    }
+
+    /** Whether this aircraft is one of the flybys playing as a whole recording, so its own engines keep quiet. */
+    private static boolean quiet(CarProp car) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || car.isVehicle()) {
+            return false;
+        }
+        long now = mc.level.getGameTime();
+        for (Pending p : PENDING) {
+            WorldEvents.Event e = p.event();
+            if (e.flyby() && e.sound() > 0 && e.at((now - e.start()) / 20.0).distanceToSqr(car.position()) < 40 * 40) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Where the sound reaching ear at t seconds set off from: solves (t - ts) * c = |P(ts) - ear|. */
+    private static double heard(WorldEvents.Event e, Vec3 ear, double t) {
+        double ts = t;
+        for (int i = 0; i < 5; i++) {
+            ts = t - e.at(ts).distanceTo(ear) / WorldEvents.SOUND_SPEED;
+        }
+        return ts;
+    }
+
+    /**
+     * A whole flyby recording, its Doppler shift already in it: carried along the aircraft's line (where the
+     * sound now arriving left it) so it sweeps across from the side it comes from, as loud as how near it passes.
+     */
+    private static final class Recording extends AbstractTickableSoundInstance {
+        private final WorldEvents.Event event;
+
+        Recording(SoundEvent take, WorldEvents.Event e, float volume) {
+            super(take, SoundSource.NEUTRAL, SoundInstance.createUnseededRandom());
+            this.event = e;
+            this.attenuation = SoundInstance.Attenuation.NONE;
+            this.volume = Mth.clamp(volume, 0.02f, 1f);
+            place();
+        }
+
+        private void place() {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.level == null || mc.player == null) {
+                return;
+            }
+            double t = (mc.level.getGameTime() - event.start()) / 20.0;
+            Vec3 at = event.at(Mth.clamp(heard(event, mc.player.getEyePosition(), t), 0, event.ticks() / 20.0));
+            this.x = at.x;
+            this.y = at.y;
+            this.z = at.z;
+        }
+
+        @Override
+        public void tick() {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.level == null || mc.player == null || mc.level.dimension() != Level.OVERWORLD) {
+                stop();
+                return;
+            }
+            place();
         }
     }
 
