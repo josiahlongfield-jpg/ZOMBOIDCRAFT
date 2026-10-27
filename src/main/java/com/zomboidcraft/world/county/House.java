@@ -74,6 +74,10 @@ public final class House {
     private final int[][] lost = {{1, 0}, {1, 0}};
     /** Clusters of moss and holes on the roof: side, u, row, radius squared. */
     private final List<int[]> moss = new ArrayList<>(), holes = new ArrayList<>();
+    /** Doors boarded up from outside, nailed over once the porch and the step are in. */
+    private final List<Board> boards = new ArrayList<>();
+
+    private record Board(int x, int z, String facing) {}
     /** A tarp over a hole: side, u0, u1, row0, row1; or null. */
     private int[] tarp;
 
@@ -258,6 +262,7 @@ public final class House {
             porch(porch);
         }
         entry();
+        boardUp();
         if (style != Style.TRAILER) {
             chimneys();
             trim();
@@ -468,8 +473,12 @@ public final class House {
         String door = "ext_door_" + paint;
         double r = rng.nextDouble();
         if (cond == Condition.BOARDED && r < 0.7 && !facing.equals("west")) {
-            p.set(x, 1, z, "minecraft:spruce_planks");
-            p.set(x, 2, z, "boarded_window[axis=" + (facing.equals("north") || facing.equals("south") ? "x" : "z") + "]");
+            // shut, and boards nailed across it outside: a hammer pries them off, zombies knock
+            // them loose (the planks once laid in the doorway itself kept everyone out for good)
+            String props = "[facing=" + facing + ",hinge=" + (rng.nextBoolean() ? "left" : "right") + ",open=false";
+            p.set(x, 1, z, door + props + ",half=lower]");
+            p.set(x, 2, z, door + props + ",half=upper]");
+            boards.add(new Board(x, z, facing));
             return;
         }
         if (cond == Condition.LOOTED && r < 0.35 || cond == Condition.RUIN || cond == Condition.BURNT) {
@@ -481,6 +490,21 @@ public final class House {
         String props = "[facing=" + facing + ",hinge=" + (rng.nextBoolean() ? "left" : "right") + ",open=" + open;
         p.set(x, 1, z, door + props + ",half=lower]");
         p.set(x, 2, z, door + props + ",half=upper]");
+    }
+
+    /** The boards over each boarded door, on the cell in front of it, two to four planks a side. */
+    private void boardUp() {
+        for (Board b : boards) {
+            int ox = b.facing().equals("east") ? -1 : b.facing().equals("west") ? 1 : 0;
+            int oz = b.facing().equals("south") ? -1 : b.facing().equals("north") ? 1 : 0;
+            for (int y = 1; y <= 2; y++) {
+                String there = p.get(b.x() + ox, y, b.z() + oz);
+                if (there == null || there.startsWith("ext_doormat")) {
+                    p.set(b.x() + ox, y, b.z() + oz, "barricade[facing=" + b.facing() + ",planks=" + (2 + rng.nextInt(3))
+                            + ",strength=" + rng.nextInt(2) + "]");
+                }
+            }
+        }
     }
 
     /** True when the wall at (x, y, z) is plain wall a fitting can hang on (no window, door or gap). */

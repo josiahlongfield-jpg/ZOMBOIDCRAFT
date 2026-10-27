@@ -2267,6 +2267,8 @@ final class Carrier {
                 p.set(x, y + 2 + j, lane, "air");
                 p.set(x, y + 3 + j, lane, "air");
             }
+            // no deck three over the landing where it leaves, or a head on the first step up hits it
+            p.set(fwd ? xs - 1 : xs + 4, y + 3, lane, "air");
             // the landing it arrives at fills the rest of the trunk's length
             for (int x = fwd ? xs + n : xs - 1; fwd ? x <= xs + 4 : x <= xs + 3 - n; x++) {
                 for (int dz = 0; dz <= 1; dz++) {

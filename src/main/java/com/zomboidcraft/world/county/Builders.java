@@ -57,6 +57,22 @@ public final class Builders {
                     v.set(t[0], t[1] + k, t[2], "air");
                 }
             }
+            // and over the floor at its foot: stepping up onto the first tread a head rises half
+            // a block while still under the ceiling there, so a ceiling two over that floor (a
+            // cellar's joists under the hall floor) stops it; a floor open above (a deck's
+            // landing, walked on itself) is left
+            String b = v.get(t[0], t[1], t[2]);
+            int[] f = STEP.get(prop(b, "facing"));
+            if (f == null || "top".equals(prop(b, "half"))) {
+                continue;
+            }
+            int fx = t[0] - f[0], fz = t[2] - f[1];
+            String c = v.get(fx, t[1] + 2, fz);
+            if (!tread(v.get(fx, t[1] - 1, fz)) && v.get(fx, t[1], fz) == null && v.get(fx, t[1] + 1, fz) == null
+                    && c != null && !tread(c) && !c.contains("door") && !c.contains("wall") && !c.contains("window")
+                    && !c.contains("rail") && !c.contains("banister") && v.get(fx, t[1] + 3, fz) != null) {
+                v.set(fx, t[1] + 2, fz, "air");
+            }
         }
     }
 
@@ -134,7 +150,9 @@ public final class Builders {
      * Nothing right in front of a door or behind it: rubble, a trash bag or a box there lifts a
      * body high enough that its head meets the lintel, and a bench, a desk or a radiator a builder
      * lined a wall with stops it dead, so the doorway can't be walked through. (Sandbags and
-     * barricades are left be: those are meant.)
+     * barricades are left be: those are meant.) A building's door that opens flat against the
+     * next building's wall (a side exit on a lot built up to its neighbour) is bricked up with
+     * its own wall: a door nobody can go through is no door.
      */
     static void clearDoorways(Voxels v) {
         List<String> pal = v.palette();
@@ -145,6 +163,31 @@ public final class Builders {
                 String f = prop(b, "facing");
                 doors.add(new int[] {x, y, z, "north".equals(f) || "south".equals(f) ? 1 : 0});
             }
+        });
+        doors.removeIf(d -> {
+            String b = v.get(d[0], d[1], d[2]);
+            if (SEALED_OFF.matcher(b).find()) {
+                return false;
+            }
+            for (int s = -1; s <= 1; s += 2) {
+                int x = d[0] + (d[3] == 0 ? s : 0), z = d[2] + (d[3] == 1 ? s : 0);
+                if (!wall(v.get(x, d[1], z)) || !wall(v.get(x, d[1] + 1, z))) {
+                    continue;
+                }
+                String[] own = new String[2];
+                for (int k = 0; k < 2; k++) {
+                    for (int t = -1; t <= 1 && own[k] == null; t += 2) {
+                        String w = v.get(d[0] + (d[3] == 1 ? t : 0), d[1] + k, d[2] + (d[3] == 0 ? t : 0));
+                        own[k] = wall(w) ? w : null;
+                    }
+                }
+                if (own[0] != null && own[1] != null) {
+                    v.set(d[0], d[1], d[2], own[0]);
+                    v.set(d[0], d[1] + 1, d[2], own[1]);
+                    return true;
+                }
+            }
+            return false;
         });
         // and the doorways whose doors are gone: through whichever way the wall isn't
         for (Voxels.Mark m : v.marks) {
@@ -171,6 +214,19 @@ public final class Builders {
             }
         }
     }
+
+    /** A wall a door can't open through: masonry, siding, plaster, a building's wall block. */
+    static boolean wall(String b) {
+        return b != null && WALL.matcher(b).find() && !NOT_WALL.matcher(b).find();
+    }
+
+    private static final java.util.regex.Pattern WALL = java.util.regex.Pattern.compile(
+            "brick|^home_wall|^siding|^drywall|plaster|^stucco|wainscot|^corrugated|^cinder|^concrete_block|_wall($|_|\\[)");
+    private static final java.util.regex.Pattern NOT_WALL = java.util.regex.Pattern.compile(
+            "window|door|glass|sign|lamp|light|rail|stair|ladder|vent|pipe|poster|graffiti|hatch|pile|rubble");
+    /** Doors meant to stand where they stand whatever's in front: ships', bunkers', vaults', cells'. */
+    private static final java.util.regex.Pattern SEALED_OFF = java.util.regex.Pattern.compile(
+            "^(bunk_|ship_|navy_|vessel|vault|cell_|garage_door|car_)");
 
     private static final java.util.regex.Pattern LITTER =
             java.util.regex.Pattern.compile("^(rubble|trash_bag|debris|cardboard_box|brick_pile|ch_rubble|home_boxes)");
@@ -199,28 +255,50 @@ public final class Builders {
     }
 
     /**
-     * Trees give way to what's built, whichever went in first: no leaf inside or under anything
-     * built (a house, an awning, a lamp's arm), none lower than {@link Kit#HEADROOM} over paving,
-     * none in a car; a car that would stand in a trunk or a limb isn't left there at all.
+     * Trees give way to what's built, whichever went in first: no leaf or limb inside or under
+     * anything built (a house, an awning, a fire escape, a lamp's arm), none lower than
+     * {@link Kit#HEADROOM} over paving, no leaf in a car; a car that would stand in a trunk or a
+     * limb isn't left there at all; nor within a body's height over the top of anything built (a
+     * balcony, a porch roof, a roof). A bough (bark up in the crown) goes the same way, between
+     * built things in its column (one through a fire escape's landing shut its ladder off) or
+     * over them (one at head height on a balcony shut its door), but a trunk the built thing
+     * stands round, an arm through it, is left whole.
      */
     static void clearTrees(Voxels v) {
         List<String> pal = v.palette();
         Map<Long, Integer> roof = new HashMap<>();
+        Map<Long, Integer> base = new HashMap<>();
         List<int[]> leaves = new ArrayList<>();
+        List<int[]> boughs = new ArrayList<>();
         v.forEach((x, y, z, id) -> {
             if (id == 0 || y < 1) {
                 return;
             }
             String b = pal.get(id);
-            if (b.startsWith("tree_") && b.contains("_leaves")) {
+            if (b.startsWith("tree_") && (b.contains("_leaves") || b.contains("_limb"))) {
                 leaves.add(new int[] {x, y, z});
-            } else if (!b.startsWith("tree_") && !Kit.soft(b) && !b.equals("moss_carpet") && !b.equals("leaf_litter")) {
+            } else if (b.startsWith("tree_")) {
+                boughs.add(new int[] {x, y, z});
+            } else if (!Kit.soft(b) && !b.equals("moss_carpet") && !b.equals("leaf_litter")) {
                 roof.merge(column(x, z), y, Math::max);
+                base.merge(column(x, z), y, Math::min);
             }
         });
         for (int[] c : leaves) {
             Integer top = roof.get(column(c[0], c[2]));
-            if (top != null && c[1] < top || c[1] < Kit.HEADROOM && !Kit.soil(v.get(c[0], 0, c[2]))) {
+            if (top != null && c[1] <= top + 2 || c[1] < Kit.HEADROOM && !Kit.soil(v.get(c[0], 0, c[2]))) {
+                v.set(c[0], c[1], c[2], "air");
+            }
+        }
+        for (int[] c : boughs) {
+            Integer top = roof.get(column(c[0], c[2]));
+            if (top == null) {
+                continue;
+            }
+            int foot = base.get(column(c[0], c[2]));
+            String under = v.get(c[0], foot - 1, c[2]);
+            boolean trunk = under != null && under.startsWith("tree_") && !under.contains("_leaves") && !under.contains("_limb");
+            if (foot < c[1] && c[1] < top || !trunk && top < c[1] && c[1] <= top + 2) {
                 v.set(c[0], c[1], c[2], "air");
             }
         }

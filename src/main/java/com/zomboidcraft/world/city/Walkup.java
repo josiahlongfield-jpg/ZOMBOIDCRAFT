@@ -250,16 +250,28 @@ public final class Walkup {
         }
     }
 
-    /** Grated landings with railings at each floor, joined by steel stairs, down to a drop ladder. */
+    /**
+     * Grated landings with railings at each floor, joined by steel stairs that all climb east along
+     * the outer edge, a floor over each other so each has a whole floor of headroom under the next
+     * (from a landing you walk back along it to the next flight's foot at its west end), down to a
+     * drop ladder that comes up through the first landing. The landings are walkway grating, its
+     * deck at the top of the block, so each is level with the floor inside its window and a steel
+     * flight's top tread steps up onto it (a pixel-thin grate down at the block's foot left the
+     * first step up off it a block and a half).
+     */
     private void fireEscape(int roofY) {
-        int x0 = 1 + rng.nextInt(Math.max(1, w - 7));
-        int x1 = x0 + 4;
+        int x0 = 1 + rng.nextInt(Math.max(1, w - 8));
+        int x1 = x0 + FLOOR + 1;
         for (int k = 1; k < floors; k++) {
             int y = k * FLOOR;
             for (int x = x0; x <= x1; x++) {
-                p.set(x, y, -1, "grate");
-                p.set(x, y, -2, "grate");
+                p.set(x, y, -1, "bunk_walkway");
+                p.set(x, y, -2, "bunk_walkway");
                 p.set(x, y + 1, -2, "railing[facing=south]");
+            }
+            // the rail stops short of the foot of the flight up from here
+            if (k + 1 < floors) {
+                p.set(x0, y + 1, -2, "air");
             }
             p.set(x0 - 1, y + 1, -1, "railing[facing=east]");
             p.set(x0 - 1, y + 1, -2, "railing[facing=east]");
@@ -268,16 +280,15 @@ public final class Walkup {
             // a window opens onto each landing
             p.set(x0 + 1, y + 1, 0, "air");
             p.set(x0 + 1, y + 2, 0, "air");
-            // stairs from this landing down to the one below, alternating direction
+            // the flight up from the landing below, its top tread in this landing's plane
             if (k > 1) {
-                boolean east = k % 2 == 0;
-                for (int s = 1; s <= 3; s++) {
-                    int x = east ? x0 + s : x1 - s;
-                    p.set(x, y - FLOOR + s, -2, "steel_stairs[facing=" + (east ? "west" : "east") + "]");
+                for (int s = 1; s <= FLOOR; s++) {
+                    p.set(x0 + s, y - FLOOR + s, -2, "steel_stairs[facing=east]");
                 }
             }
         }
-        // the drop ladder stops a floor above the sidewalk
-        p.fill(x1, FLOOR - 2, -2, x1, FLOOR - 1, -2, "ladder[facing=south]");
+        // the drop ladder from the sidewalk up through the first landing, its rail open over it
+        p.fill(x1, 1, -2, x1, FLOOR, -2, "ladder[facing=south]");
+        p.set(x1, FLOOR + 1, -2, "air");
     }
 }

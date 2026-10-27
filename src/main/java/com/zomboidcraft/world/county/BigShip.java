@@ -866,13 +866,25 @@ final class BigShip {
             int zIn = s > 0 ? 2 : -hw + 1, zOut = s > 0 ? hw - 2 : -3;
             int wallZ = s > 0 ? 1 : -2;
             String door = s > 0 ? "south" : "north";
-            // the store behind the stair hall, its door onto the aft landing
+            // the store behind the stair hall, its door onto the aft landing; to starboard it stands
+            // back a lane, the way past the stair from one landing to the other on every deck
+            int storeZ = s > 0 ? wallZ + 1 : wallZ;
             for (int z = zIn; z <= zOut; z++) {
                 for (int r = 1; r <= 2; r++) {
                     p.set(x0 + 5, y + r, z, "ship_wall_white");
                 }
             }
-            Doors.abandoned(p, rng, x0 + 1, y + 1, wallZ, "ship_door", door, Doors.hinge(rng));
+            if (s > 0) {
+                for (int x = x0 + 1; x <= x0 + 5; x++) {
+                    for (int r = 1; r <= 2; r++) {
+                        p.set(x, y + r, wallZ, "air");
+                        if (x < x0 + 5) {
+                            p.set(x, y + r, storeZ, "ship_wall_white");
+                        }
+                    }
+                }
+            }
+            Doors.abandoned(p, rng, x0 + 1, y + 1, storeZ, "ship_door", door, Doors.hinge(rng));
             p.set(x0 + 2, y + 1, s > 0 ? zOut : zIn, "bunk_rack_boxes[facing=" + (s > 0 ? "north" : "south") + "]");
             // the cabins, four wide
             for (int cx = c0; cx + 3 < x1; cx += 5) {

@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.blocks;
 
+import com.zomboidcraft.ModBlocks;
 import com.zomboidcraft.ZomboidCraft;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,7 +168,10 @@ public final class CityBlocks {
 
     private static BlockState lookup(String block) {
         int open = block.indexOf('[');
-        Block found = BLOCKS.get(open < 0 ? block : block.substring(0, open));
+        String base = open < 0 ? block : block.substring(0, open);
+        // boards nailed over a doorway are the barricade players nail up themselves: pried off with
+        // a hammer, knocked loose by zombies
+        Block found = base.equals("barricade") ? ModBlocks.BARRICADE : BLOCKS.get(base);
         if (found == null) {
             return null;
         }

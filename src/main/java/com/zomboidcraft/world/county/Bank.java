@@ -326,8 +326,9 @@ final class Bank {
         }
         p.set(1, y + 3, z0 + 2, "bk_plaque_president[facing=east]");
         p.set(1, y + 5, z0 + 2, "cv_portrait[facing=east]");
-        // the check desks down the middle, the rope for the queue along the east side
-        for (int z = z0 + 2; z < zt - 1; z += 3) {
+        // the check desks down the middle (a step in from the doors, room to come in round them),
+        // the rope for the queue along the east side
+        for (int z = z0 + 3; z < zt - 1; z += 3) {
             p.set(cx - 1, y + 1, z, "bk_check_desk");
             p.set(cx, y + 1, z, "bk_check_desk");
         }

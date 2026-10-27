@@ -99,7 +99,8 @@ final class Harbour {
                 p.set(x, -2, z - 1, "tire[axis=x]");
             }
             if ((x - x0) % 27 == 13) {
-                for (int y = Ships.SEA - 1; y <= -1; y++) {
+                // up beside the capping beam, so a climber can step off it onto the quay
+                for (int y = Ships.SEA - 1; y <= 0; y++) {
                     p.set(x, y, z - 1, "bunk_ladder[facing=north]");
                 }
             }

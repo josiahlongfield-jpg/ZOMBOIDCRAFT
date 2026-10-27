@@ -138,6 +138,9 @@ class Shapes:
             return [], False
         if name.startswith("minecraft:"):
             return vanilla(name, p), name == "minecraft:ladder"
+        if name == "barricade":
+            # boards over a doorway: a hammer pries them off, zombies knock them loose
+            return [], False
         spec = self.specs.get(name)
         if spec is None:
             return [[0, 0, 0, 16, 16, 16]], False
@@ -205,12 +208,16 @@ def main():
     stamp = np.zeros((P, Q, Q, Q), bool)       # [id, sy, sz, sx], the part inside the block
     outside = {}                                 # id -> boxes reaching out of the block (sub-cell ranges)
     climb = np.zeros(P, bool)
+    plate = np.zeros(P, bool)                    # a floor a pixel thick (a grate): walked over on a
+                                                 # floor, stood on where it spans air
     stairish = np.array(["stair" in n for n in pal])
     treeish = np.array([("leaves" in n or "tree_" in n or "_log" in n) for n in pal])
     for i, st in enumerate(pal):
         boxes, cl = sh.of(st)
         climb[i] = cl
         for b in boxes:
+            if b[1] <= 0 and b[4] <= 2 and b[3] - b[0] >= 16 and b[5] - b[2] >= 16:
+                plate[i] = True
             x0, y0, z0, x1, y1, z1 = quant(b)
             if x1 <= x0 or y1 <= y0 or z1 <= z0:
                 continue
@@ -243,6 +250,10 @@ def main():
                                 yy, zz, xx = ys * Q + sy, zs * Q + sz, xs * Q + sx
                                 ok = (yy >= 0) & (yy < h * Q) & (zz >= 0) & (zz < dz * Q) & (xx >= 0) & (xx < dx * Q)
                                 occ[yy[ok], zz[ok], xx[ok]] = True
+            # a plate over air holds a body at the block's foot: the top quarter under it counts
+            ys, zs, xs = np.nonzero(plate[v][1:] & ~stamp[v[:-1]].any(axis=(3, 4, 5)))
+            for y_, z_, x_ in zip(ys + 1, zs, xs):
+                occ[y_ * Q - 1, z_ * Q:(z_ + 1) * Q, x_ * Q:(x_ + 1) * Q] = True
             n = h * Q
             foot = occ.reshape(n, dz * 2, 2, dx * 2, 2).any(axis=(2, 4))
             del occ
