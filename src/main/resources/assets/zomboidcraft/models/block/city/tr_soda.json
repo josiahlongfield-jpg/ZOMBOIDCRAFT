@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "tr_soda_front": "zomboidcraft:block/city/tr_soda_front",
+    "tr_wainscot": "zomboidcraft:block/city/tr_wainscot",
+    "particle": "zomboidcraft:block/city/tr_wainscot"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_wainscot"
+        },
+        "south": {
+          "texture": "#tr_wainscot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#tr_wainscot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        8
+      ],
+      "to": [
+        13,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_soda_front"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        6.5
+      ],
+      "to": [
+        12,
+        9.6,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

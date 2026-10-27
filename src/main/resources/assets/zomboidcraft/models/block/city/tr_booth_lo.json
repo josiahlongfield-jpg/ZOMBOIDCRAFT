@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "tr_booth_base": "zomboidcraft:block/city/tr_booth_base",
+    "tr_booth_glass": "zomboidcraft:block/city/tr_booth_glass",
+    "tr_brass": "zomboidcraft:block/city/tr_brass",
+    "particle": "zomboidcraft:block/city/tr_booth_base"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_booth_base"
+        },
+        "south": {
+          "texture": "#tr_booth_base"
+        },
+        "east": {
+          "texture": "#tr_booth_base"
+        },
+        "west": {
+          "texture": "#tr_booth_base"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#tr_booth_base",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        11,
+        1.5
+      ],
+      "to": [
+        14.5,
+        12,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass"
+        },
+        "east": {
+          "texture": "#tr_brass"
+        },
+        "west": {
+          "texture": "#tr_brass"
+        },
+        "up": {
+          "texture": "#tr_brass"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        12,
+        2.5
+      ],
+      "to": [
+        13.5,
+        16,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_booth_glass"
+        },
+        "south": {
+          "texture": "#tr_booth_glass"
+        },
+        "east": {
+          "texture": "#tr_booth_glass"
+        },
+        "west": {
+          "texture": "#tr_booth_glass"
+        },
+        "up": {
+          "texture": "#tr_booth_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_booth_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        0.5
+      ],
+      "to": [
+        11,
+        11.6,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass"
+        },
+        "east": {
+          "texture": "#tr_brass"
+        },
+        "west": {
+          "texture": "#tr_brass"
+        },
+        "up": {
+          "texture": "#tr_brass"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    }
+  ]
+}

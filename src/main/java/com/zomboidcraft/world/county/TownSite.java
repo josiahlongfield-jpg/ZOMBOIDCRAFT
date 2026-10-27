@@ -522,9 +522,10 @@ final class TownSite extends Site {
         if (bank != null) {
             new Civic(bank.placer(out), rng).bank(13, Math.min(20, depth - 2));
         }
-        Kit.Lot theatre = civicLot(main, sCross * (0.45 + rng.nextDouble() * 0.2), -1, 15, depth);
+        // the theatre short of where the side street meets the alley behind, so it gets the block's whole depth
+        Kit.Lot theatre = civicLot(main, along(main, x2, gz) - 17 - rng.nextInt(6), -1, 15, depth);
         if (theatre != null) {
-            new Civic(theatre.placer(out), rng).theatre(15, depth - 2);
+            new Civic(theatre.placer(out), rng).theatre(15, theatre.d() - 2);
         }
         Kit.Lot post = civicLot(main, sCross - clear - 9, -1, 17, depth);
         if (post != null) {
@@ -738,7 +739,7 @@ final class TownSite extends Site {
         }
         Kit.Lot theatre = civicLot(sides[1], corner + ring * 0.5, outward[1], 15, depth);
         if (theatre != null) {
-            new Civic(theatre.placer(out), rng).theatre(15, depth - 2);
+            new Civic(theatre.placer(out), rng).theatre(15, theatre.d() - 2);
         }
         Kit.Lot townHall = civicLot(sides[2], corner + ring * 0.5, outward[2], 20, depth);
         if (townHall != null) {

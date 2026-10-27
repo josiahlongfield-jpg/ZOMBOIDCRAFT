@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_mq_a_29": "zomboidcraft:block/city/tr_mq_a_29",
+    "tr_mq_metal": "zomboidcraft:block/city/tr_mq_metal",
+    "tr_soffit": "zomboidcraft:block/city/tr_soffit",
+    "particle": "zomboidcraft:block/city/tr_mq_a_29"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_mq_a_29",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_mq_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_mq_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_mq_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_mq_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_soffit",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

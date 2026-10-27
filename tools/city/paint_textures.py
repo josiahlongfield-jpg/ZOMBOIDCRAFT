@@ -25,6 +25,23 @@ def texture(fn):
     return fn
 
 
+RUDE = ("CUNT", "FUCK", "SHIT", "PISS", "COCK", "DICK", "TWAT", "SLUT", "WHORE", "FAG", "NIGG", "RAPE",
+        "CUM", "TIT", "ASS", "PORN", "SEX", "NAZI", "KKK", "POO", "BUTT", "BOOB", "WANK", "PRICK")
+
+
+def rude_gaps(text, gone):
+    """True when dropping the letters at the indices in gone would leave a rude word to be read in
+    what remains (the gaps closed up or not) that the whole text didn't already have."""
+    whole = text.upper()
+    kept = "".join(ch for i, ch in enumerate(whole) if i not in gone)
+    spaced = "".join(" " if i in gone else ch for i, ch in enumerate(whole))
+    for seen in (kept, kept.replace(" ", ""), spaced):
+        for word in RUDE:
+            if word in seen and word not in whole and word not in whole.replace(" ", ""):
+                return True
+    return False
+
+
 # ---------------------------------------------------------------- noise and helpers
 
 def tnoise(rng, cells, size=N):

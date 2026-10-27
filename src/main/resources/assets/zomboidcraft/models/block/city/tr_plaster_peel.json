@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_plaster_peel": "zomboidcraft:block/city/tr_plaster_peel",
+    "particle": "zomboidcraft:block/city/tr_plaster_peel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_plaster_peel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

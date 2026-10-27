@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_curtain": "zomboidcraft:block/city/tr_curtain",
+    "tr_valance": "zomboidcraft:block/city/tr_valance",
+    "particle": "zomboidcraft:block/city/tr_valance"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        11
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_valance"
+        },
+        "south": {
+          "texture": "#tr_valance"
+        },
+        "east": {
+          "texture": "#tr_valance",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_valance",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_curtain",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_curtain",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

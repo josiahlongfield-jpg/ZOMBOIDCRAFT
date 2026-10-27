@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_gilt": "zomboidcraft:block/city/tr_gilt",
+    "tr_tc": "zomboidcraft:block/city/tr_tc",
+    "tr_tc_panel": "zomboidcraft:block/city/tr_tc_panel",
+    "particle": "zomboidcraft:block/city/tr_tc_panel"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        6
+      ],
+      "to": [
+        14,
+        8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_tc_panel"
+        },
+        "south": {
+          "texture": "#tr_tc"
+        },
+        "east": {
+          "texture": "#tr_tc"
+        },
+        "west": {
+          "texture": "#tr_tc"
+        },
+        "up": {
+          "texture": "#tr_tc"
+        },
+        "down": {
+          "texture": "#tr_tc",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        8,
+        6
+      ],
+      "to": [
+        12,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_tc"
+        },
+        "south": {
+          "texture": "#tr_tc"
+        },
+        "east": {
+          "texture": "#tr_tc"
+        },
+        "west": {
+          "texture": "#tr_tc"
+        },
+        "up": {
+          "texture": "#tr_tc"
+        },
+        "down": {
+          "texture": "#tr_tc"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_tc"
+        },
+        "south": {
+          "texture": "#tr_tc"
+        },
+        "east": {
+          "texture": "#tr_tc"
+        },
+        "west": {
+          "texture": "#tr_tc"
+        },
+        "up": {
+          "texture": "#tr_tc",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_tc"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_gilt"
+        },
+        "south": {
+          "texture": "#tr_gilt"
+        },
+        "east": {
+          "texture": "#tr_gilt"
+        },
+        "west": {
+          "texture": "#tr_gilt"
+        },
+        "up": {
+          "texture": "#tr_gilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_gilt"
+        }
+      }
+    }
+  ]
+}

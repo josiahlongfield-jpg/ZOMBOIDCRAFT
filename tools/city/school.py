@@ -1437,9 +1437,12 @@ def lboard_pic(kind):
         y = 6 + k * 14
         tw = p.d.textlength(line, font=f) / 4
         x = p.W / 2 - tw / 2
-        for ch in line:
+        gone = {i for i, ch in enumerate(line) if ch != " " and rng.random() <= 0.05}
+        if P.rude_gaps(line, gone):
+            gone = set()
+        for i, ch in enumerate(line):
             cw = p.d.textlength(ch, font=f) / 4
-            if ch != " " and rng.random() > 0.05:
+            if ch != " " and i not in gone:
                 dy = rng.normal(0, 0.4) + (2.5 if rng.random() < 0.03 else 0)
                 q = Image.new("RGBA", (int(cw * 4) + 40, 60), (0, 0, 0, 0))
                 ImageDraw.Draw(q).text((20, 4), ch, font=f, fill=(240, 238, 230, 255))

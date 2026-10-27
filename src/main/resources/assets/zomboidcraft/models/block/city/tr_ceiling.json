@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_coffer": "zomboidcraft:block/city/tr_coffer",
+    "particle": "zomboidcraft:block/city/tr_coffer"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_coffer",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_coffer",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_coffer",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_coffer",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_coffer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_coffer",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

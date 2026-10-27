@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_can": "zomboidcraft:block/city/tr_can",
+    "tr_reel": "zomboidcraft:block/city/tr_reel",
+    "particle": "zomboidcraft:block/city/tr_can"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        1.2,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_can"
+        },
+        "south": {
+          "texture": "#tr_can"
+        },
+        "east": {
+          "texture": "#tr_can"
+        },
+        "west": {
+          "texture": "#tr_can"
+        },
+        "up": {
+          "texture": "#tr_reel"
+        },
+        "down": {
+          "texture": "#tr_can",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
