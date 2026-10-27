@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_clock_on": {
+      "sprite": "zomboidcraft:block/city/dn_clock_on",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/dn_clock_on"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        1,
+        14.5
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_clock_on"
+        },
+        "south": {
+          "texture": "#dn_clock_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_clock_on"
+        },
+        "west": {
+          "texture": "#dn_clock_on"
+        },
+        "up": {
+          "texture": "#dn_clock_on"
+        },
+        "down": {
+          "texture": "#dn_clock_on"
+        }
+      }
+    }
+  ]
+}

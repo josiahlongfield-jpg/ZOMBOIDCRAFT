@@ -1,0 +1,133 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_enamel_red": "zomboidcraft:block/city/dn_enamel_red",
+    "dn_trim_b": "zomboidcraft:block/city/dn_trim_b",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        -0.5,
+        8
+      ],
+      "to": [
+        13,
+        4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "uv": [
+            3,
+            11.5,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "uv": [
+            3,
+            11.5,
+            13,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "uv": [
+            6,
+            11.5,
+            8,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "uv": [
+            8,
+            11.5,
+            10,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        0,
+        8.5
+      ],
+      "to": [
+        12.5,
+        9,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_red"
+        },
+        "south": {
+          "texture": "#dn_enamel_red"
+        },
+        "east": {
+          "texture": "#dn_enamel_red"
+        },
+        "west": {
+          "texture": "#dn_enamel_red"
+        },
+        "up": {
+          "texture": "#dn_enamel_red"
+        },
+        "down": {
+          "texture": "#dn_enamel_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        9.5
+      ],
+      "to": [
+        12,
+        8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_trim_b"
+        },
+        "south": {
+          "texture": "#dn_trim_b"
+        },
+        "east": {
+          "texture": "#dn_trim_b"
+        },
+        "west": {
+          "texture": "#dn_trim_b"
+        },
+        "up": {
+          "texture": "#dn_trim_b"
+        },
+        "down": {
+          "texture": "#dn_trim_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

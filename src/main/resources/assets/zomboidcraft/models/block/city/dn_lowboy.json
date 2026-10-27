@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_lowboy": "zomboidcraft:block/city/dn_lowboy",
+    "dn_prep_top": "zomboidcraft:block/city/dn_prep_top",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "particle": "zomboidcraft:block/city/dn_lowboy"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1,
+        0.5
+      ],
+      "to": [
+        16,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_lowboy"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_prep_top"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_mugs": "zomboidcraft:block/city/dn_mugs",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "particle": "zomboidcraft:block/city/dn_mugs"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        11
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_mugs"
+        },
+        "south": {
+          "texture": "#home_wood_dark",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_dark",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_dark",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

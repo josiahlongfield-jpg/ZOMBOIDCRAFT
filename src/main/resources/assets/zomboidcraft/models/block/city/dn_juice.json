@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_juice": "zomboidcraft:block/city/dn_juice",
+    "home_white": "zomboidcraft:block/city/home_white",
+    "sc_glass": {
+      "sprite": "zomboidcraft:block/city/sc_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/dn_juice"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_juice"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white"
+        },
+        "up": {
+          "texture": "#sc_glass"
+        },
+        "down": {
+          "texture": "#home_white",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

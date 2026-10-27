@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_sign_showers": "zomboidcraft:block/city/dn_sign_showers",
+    "particle": "zomboidcraft:block/city/dn_sign_showers"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        15.4
+      ],
+      "to": [
+        14,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_sign_showers"
+        },
+        "south": {
+          "texture": "#dn_sign_showers",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_sign_showers"
+        },
+        "west": {
+          "texture": "#dn_sign_showers"
+        },
+        "up": {
+          "texture": "#dn_sign_showers"
+        },
+        "down": {
+          "texture": "#dn_sign_showers"
+        }
+      }
+    }
+  ]
+}
