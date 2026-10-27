@@ -94,7 +94,7 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         poseStack.pushPose();
         // as a living zombie is drawn: turned to its yaw, the model flipped upright, its feet on the ground
         poseStack.scale(state.size, state.size, state.size);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180f - state.yaw));
+        poseStack.rotateDegrees(Axis.YP, 180f - state.yaw);
         poseStack.scale(-1f, -1f, 1f);
         poseStack.translate(0f, -1.501f, 0f);
         // lying flat, so it gets less detail sooner than one standing
