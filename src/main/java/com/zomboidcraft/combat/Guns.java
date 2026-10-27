@@ -172,7 +172,7 @@ public final class Guns {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
         } else if (!type.opens && type != GunType.CROSSBOW) {   // a double keeps its empties till it's opened
             // the shooter's own client plays its case in time with the shot; the server's tick would bunch them
-            level.playSound(player, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), casing(type), SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
         Noise.emit(level, player.position(), stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
@@ -201,6 +201,7 @@ public final class Guns {
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         boolean ricochet = false;
+        boolean nearby = false;     // the crack of a round landing close, for the others round where it struck
         boolean bow = type == GunType.CROSSBOW;
         Vec3 boltAt = null;     // where a crossbow's bolt ends up: under what it hit, or stuck where it struck
         Zombie boltIn = null;   // or the zombie it went into, to stay standing in it
@@ -217,6 +218,10 @@ public final class Guns {
                 Pellet struck = pellet(target, hit, eye, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
+                if (!nearby && !bow) {
+                    nearby = true;
+                    nearbyImpact(level, player, hit.getLocation());
+                }
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
                     boltIn = target instanceof Zombie hitZombie ? hitZombie : null;
@@ -245,6 +250,10 @@ public final class Guns {
                 if (!ricochet) {
                     ricochet = true;
                     Surface surface = Surface.of(bs);
+                    if (!nearby) {
+                        nearby = true;
+                        nearbyImpact(level, player, p);
+                    }
                     level.playSound(null, p.x, p.y, p.z, surface.impact(), SoundSource.PLAYERS, pellets > 1 ? 1f : 0.85f,
                             0.92f + player.getRandom().nextFloat() * 0.16f);
                     var face = block.getDirection();
@@ -378,6 +387,17 @@ public final class Guns {
     /** The bloom just after a shot: a semi-auto shot kicks it open a little; full auto piles it up, to a limit. */
     public static double bloomed(double bloom, boolean auto, ZcConfig.GunStats stats) {
         return auto ? Math.max(bloom, Math.min(stats.autoBloomMax, bloom + stats.autoBloomPerShot)) : Math.min(Math.max(bloom, stats.autoBloomMax), bloom + stats.shotBloom);
+    }
+
+    /** The sound of this gun's spent case landing: a hull for shotguns, brass for the rest. */
+    public static net.minecraft.sounds.SoundEvent casing(GunType type) {
+        return type.ammo() == ModItems.SHOTGUN_SHELL ? ModSounds.CASING_SHOTGUN : ModSounds.CASING;
+    }
+
+    /** Everyone near where a shot struck hears it land close by, on top of what it hit; the shooter doesn't. */
+    private static void nearbyImpact(ServerLevel level, ServerPlayer shooter, Vec3 p) {
+        level.playSound(shooter, p.x, p.y, p.z, ModSounds.IMPACT_NEARBY, SoundSource.PLAYERS, 0.9f,
+                0.92f + shooter.getRandom().nextFloat() * 0.16f);
     }
 
     /** The gun has a full-auto setting and is set to it. */
@@ -633,9 +653,8 @@ public final class Guns {
                         sound(player, held.eject());
                     }
                     // a shotgun hull lands with a dull plastic bounce, a brass case with a ring
-                    boolean hull = held.ammo() == ModItems.SHOTGUN_SHELL;
-                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING,
-                            SoundSource.PLAYERS, hull ? 0.35f : 0.4f, (hull ? 0.6f : 0.85f) + player.getRandom().nextFloat() * 0.15f);
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), casing(held),
+                            SoundSource.PLAYERS, 0.4f, 0.85f + player.getRandom().nextFloat() * 0.2f);
                 }
             }
             if (st.reloadTick < 0) {
