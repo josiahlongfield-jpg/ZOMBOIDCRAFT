@@ -20,9 +20,14 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Melee hits on the walking dead: the right impact sound for the weapon, the endurance each
  * swing costs, the chance a blow puts the zombie on the ground (heavy weapons can cripple it),
- * and the extra damage of a blow or a stomp on a zombie already down.
+ * and the extra damage of a blow or a stomp on a zombie already down. Blunt blows knock a zombie
+ * back; a blade's cut doesn't.
  */
 public final class CombatEvents {
+    /** The walker a blade last cut, and the game tick it did: a cut doesn't knock it back (LivingEntityMixin). */
+    private static LivingEntity cut;
+    private static long cutAt = -1;
+
     public static void register() {
         AttackEntityCallback.EVENT.register((player, level, hand, target, hit) -> {
             if (player instanceof ServerPlayer serverPlayer && ZombieTypes.isWalker(target)) {
@@ -57,6 +62,11 @@ public final class CombatEvents {
             return amount;
         }
         float tough = ZombieTypes.isWalker(target) ? (float) config.zombieMelee : 1f;
+        WeaponSpecs.WeaponSpec spec = Weapons.spec(player.getMainHandItem());
+        if (ZombieTypes.isWalker(target) && spec != null && cuts(spec)) {
+            cut = target;
+            cutAt = target.level().getGameTime();
+        }
         if (!config.groundAttacks || !Downed.isLow(target)) {
             return amount * tough;
         }
@@ -110,6 +120,20 @@ public final class CombatEvents {
             boolean blade = spec != null && spec.sound() == WeaponSpecs.Sound.BLADE;
             Downed.stagger(target, blade ? 4 : 8);
         }
+    }
+
+    /** A knife, machete, sword or axe: it cuts rather than batters, so the blow doesn't knock a zombie back. */
+    private static boolean cuts(WeaponSpecs.WeaponSpec spec) {
+        return spec.kind() == WeaponSpecs.Kind.SHORT_BLADE || spec.kind() == WeaponSpecs.Kind.LONG_BLADE
+                || spec.kind() == WeaponSpecs.Kind.AXE;
+    }
+
+    /**
+     * Whether a blade cut this walker this tick, so the knockback from the blow (the hit's own, and the weapon's and a
+     * sprint's after it) is left off. Bats, pipes, fists and shoves still knock one back.
+     */
+    public static boolean cutJustNow(LivingEntity entity) {
+        return entity == cut && entity.level().getGameTime() == cutAt;
     }
 
     private CombatEvents() {

@@ -4,8 +4,9 @@ package com.zomboidcraft.client.zombie.body;
  * A body jerking where a shot strikes it (hits.js in the preview): the part that's hit snaps along the shot and swings
  * back, and the rest of the body rocks with it a moment later, harder for heavier rounds. A head hit whips the head
  * back or round, a chest hit knocks the shoulders back and twists the trunk, an arm hit flings the arm, and a leg hit
- * buckles the knee so the body dips. Laid on top of whatever the zombie is doing, living or falling dead; the push
- * that moves the whole zombie is the server's shove.
+ * buckles the knee so the body dips. Laid on top of whatever the zombie is doing, living or falling dead. A shot
+ * doesn't throw the zombie back: the body rocks back on its feet a touch and the server checks its advance for a
+ * split second (Downed.flinch).
  *
  * <p>The parts are Dismember's: head 0, chest 1 (left) and 2 (right), pelvis 3, right upper arm 4, forearm 5, left
  * upper arm 6, forearm 7, right thigh 8, shin 9, left thigh 10, shin 11.
@@ -99,6 +100,11 @@ public final class ZHit {
         if (part > 3) {
             // the whole body rocks back a little from the push
             add(p, ZMove.SPINE, a * 0.3f * bz * r2, 0f, -a * 0.25f * bx * r2);
+        }
+        if (part != 3) {
+            // and gives a little ground on its feet before it comes on again
+            p.hx += bx * a * 1.4f * r2;
+            p.hz += bz * a * 1.4f * r2;
         }
     }
 
