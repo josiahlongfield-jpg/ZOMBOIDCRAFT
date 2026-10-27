@@ -5,6 +5,7 @@ import zlib
 
 import numpy as np
 
+import model as M
 import paint as P
 
 # a 3x5 capital alphabet (4 wide for M, W and N), enough for the words on a label
@@ -31,11 +32,14 @@ def glyph(ch):
 
 def text_mask(u, v, word, cu, cv, h):
     """Where the word's letters are, centred at (cu, cv), letters h tall (u right, v down, same units)."""
-    px = h / 5.0
+    tex = 1.0 / M.PX                    # one texel: font pixels are whole texels so letters stay crisp
+    px = max(1, int(h / 5.0 / tex)) * tex
     widths = [glyph(c)[0] for c in word]
     total = (sum(widths) + len(word) - 1) * px
-    gx = np.floor((u - (cu - total / 2)) / px).astype(int)
-    gy = np.floor((v - (cv - h / 2)) / px).astype(int)
+    x0 = round((cu - total / 2) / tex) * tex
+    y0 = round((cv - 5 * px / 2) / tex) * tex
+    gx = np.floor((u - x0) / px + 1e-6).astype(int)
+    gy = np.floor((v - y0) / px + 1e-6).astype(int)
     ink = np.zeros(u.shape, bool)
     at = 0
     for ch, w in zip(word, widths):
@@ -52,6 +56,17 @@ def fit_text(word, width, h):
     """The letter height that fits the word across width, at most h."""
     cols = sum(glyph(c)[0] for c in word) + len(word) - 1
     return min(h, width / max(cols, 1) * 5.0)
+
+
+def hexof(c):
+    if isinstance(c, str):
+        return c
+    r, g, b = (int(round(float(v) * 255)) for v in np.clip(c, 0, 1))
+    return f'#{r:02x}{g:02x}{b:02x}'
+
+
+def plain(f, c, noise=0.12):
+    return P.plain(f, hexof(c), noise)
 
 
 def col(c):
@@ -195,28 +210,28 @@ def design(f, u, v, W, H, L, cs):
 
 
 def wrap(L, name, under=None):
-    """A paper or printed sleeve round a round part (built by Model.rod about the y axis at x = z = 0). The label
-    is one sheet as long as the circumference; its centre faces the front (+z)."""
+    """A paper or printed sleeve round a round part (built by Model.rod about the y axis at x = z = 0), its design
+    facing the front (+z)."""
     cs = label_colours(L, name)
 
     def fn(f):
         side = abs(f.n[1]) < 0.5
         if not side:
-            return P.plain(f, cs['base'], 0.06) if under is None else under(f)
+            return plain(f, cs['base'], 0.06) if under is None else under(f)
         lo, hi = f.box['lo'][1], f.box['hi'][1]
-        r = max(f.box['hi'][0], f.box['hi'][2])
+        r = f.box.get('round') or max(f.box['hi'][0], f.box['hi'][2])
         circ = 2 * np.pi * r
-        a = (np.arctan2(f.Z, f.X) / (2 * np.pi) - 0.25 + 0.5) % 1.0      # 0.5 at the front
+        a = (0.25 - np.arctan2(f.Z, f.X) / (2 * np.pi) + 0.5) % 1.0      # 0.5 at the front, rising to the right
         u = a * circ
         v = (hi - f.Y)
         H = hi - lo
-        c = design(f, u - circ * 0.25, v, circ * 0.5, H, L, cs)
-        # the back half of the sleeve: plain base with lines of type
-        back = (a < 0.25) | (a > 0.75)
-        bc = np.ones(c.shape) * cs['base']
+        # the front is printed flat across the stepped faces that look forward (straight on, as the eye sees it);
+        # the rest of the sleeve is the base colour with lines of type
+        c = np.ones(f.shape + (3,)) * cs['base']
         lines = (((v / max(H, 1e-3)) * 7) % 1 < 0.3) & (v > H * 0.25) & (v < H * 0.8) & (np.sin(u * 11) > -0.5)
-        bc = np.where(lines[..., None], bc * 0.55, bc)
-        c = np.where(back[..., None], bc, c)
+        c = np.where(lines[..., None], c * 0.55, c)
+        if f.n[2] > 0.5:
+            c = design(f, f.X + r, v, 2 * r, H, L, cs)
         if under is not None:       # torn: the can shows through where the paper's gone
             torn = (f.noise(0.9, 74, 3) > 0.8) & ((v < H * 0.18) | (v > H * 0.82))
             c = np.where(torn[..., None], under(f), c)
@@ -229,10 +244,13 @@ def printed_box(L, name, front=(2, 1)):
     cs = label_colours(L, name)
 
     def fn(f):
-        base = P.plain(f, cs['base'], 0.05)
+        base = plain(f, cs['base'], 0.05)
         lo, hi = f.box['lo'], f.box['hi']
         ax = int(np.argmax(np.abs(f.n)))
-        if ax == 1:                                   # top and bottom: plain, a flap seam
+        if ax == 1:                                   # top and bottom: plain, unless it lies flat (lid print)
+            W, D = hi[0] - lo[0], hi[2] - lo[2]
+            if f.n[1] > 0 and hi[1] - lo[1] < 0.6 * min(W, D):
+                return design(f, f.X - lo[0], f.Z - lo[2], W, D, L, cs)
             return base
         uax = 0 if ax == 2 else 2
         W = hi[uax] - lo[uax]
@@ -261,20 +279,20 @@ def alu(f):
 
 def plastic(colour, stipple=0.05):
     def fn(f):
-        return P.polymer(f, colour, stipple)
+        return P.polymer(f, hexof(colour), stipple)
     return fn
 
 
 def flat(colour, noise=0.06):
     def fn(f):
-        return P.plain(f, colour, noise)
+        return plain(f, colour, noise)
     return fn
 
 
 def glass(tint, liquid=None, level=1.0):
     """Bottle glass: its tint, a bright streak where it catches the light, the liquid darker below its line."""
     def fn(f):
-        c = P.plain(f, tint, 0.05)
+        c = plain(f, tint, 0.05)
         lo, hi = f.box['lo'][1], f.box['hi'][1]
         if liquid is not None:
             full = f.Y < lo + (hi - lo) * level
@@ -286,14 +304,14 @@ def glass(tint, liquid=None, level=1.0):
 
 
 def cardboard(f):
-    c = P.plain(f, '#a98b62', 0.1)
+    c = plain(f, '#a98b62', 0.1)
     flutes = (np.sin(f.uv[..., 0] * 40) > 0.7)
     return np.where(flutes[..., None], c * 0.94, c)
 
 
 def paper(colour='#d9cfb4'):
     def fn(f):
-        c = P.plain(f, colour, 0.08)
+        c = plain(f, colour, 0.08)
         crease = np.abs(np.sin(f.uv[..., 0] * 3.1 + f.uv[..., 1] * 1.7)) < 0.04
         return np.where(crease[..., None], c * 0.85, c)
     return fn
@@ -302,7 +320,7 @@ def paper(colour='#d9cfb4'):
 def foil(colour):
     """Crinkled foil or a printed plastic packet: bright creases."""
     def fn(f):
-        c = P.plain(f, colour, 0.08)
+        c = plain(f, colour, 0.08)
         n = f.noise(3.5, 131, 2)
         return c * (0.85 + 0.35 * np.abs(n - 0.5) * 2)[..., None]
     return fn
@@ -310,8 +328,8 @@ def foil(colour):
 
 def meat(colour='#9b3a33', fat='#e2c9b6'):
     def fn(f):
-        c = P.plain(f, colour, 0.1)
-        marb = f.noise(2.5, 141, 3) > 0.62
+        c = plain(f, colour, 0.1)
+        marb = f.noise(2.5, 141, 3) > 0.7
         return np.where(marb[..., None], col(fat), c)
     return fn
 
@@ -319,10 +337,10 @@ def meat(colour='#9b3a33', fat='#e2c9b6'):
 def skin(colour, spots=None, shine=0.15):
     """Fruit and veg skin: its colour with mottling, freckles if given."""
     def fn(f):
-        c = P.plain(f, colour, 0.14)
+        c = plain(f, colour, 0.06)
         c = P.mix(c, tone(colour, 1.25), np.clip(f.noise(1.1, 151, 3) - 0.4, 0, 1) * shine * 3)
         if spots:
-            sp = P.white(f.shape, f.rng) > 0.93
+            sp = P.white(f.shape, f.rng) > 0.975
             c = np.where(sp[..., None], col(spots), c)
         return c
     return fn
@@ -330,7 +348,7 @@ def skin(colour, spots=None, shine=0.15):
 
 def fabric(colour):
     def fn(f):
-        c = P.plain(f, colour, 0.12)
+        c = plain(f, colour, 0.12)
         u, v = f.uv[..., 0], f.uv[..., 1]
         weave = ((np.floor(u * 10) + np.floor(v * 10)) % 2) * 2 - 1
         return c * (1 + weave * 0.04)[..., None]
