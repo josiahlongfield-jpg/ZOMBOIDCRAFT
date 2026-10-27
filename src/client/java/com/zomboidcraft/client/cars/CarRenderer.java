@@ -56,7 +56,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         boolean lit = state.lights || state.dash;
         state.dark = lit && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above()) : 0;
         state.cockpit = CockpitGlow.powered(car, state.model, state.variant);
-        state.liveCockpit = state.cockpit >= 0 && mc.player != null && car.hasPassenger(mc.player) ? car : null;
+        state.liveCockpit = car.aircraft() && mc.player != null && car.hasPassenger(mc.player)
+                && ("usable".equals(state.variant) || "abandoned".equals(state.variant)) ? car : null;
         state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
         state.shaders = (lit || state.cockpit >= 0) && CarLights.shaderPackOn();
         CarClient.Target target = CarClient.target(car);
@@ -157,10 +158,17 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 each(car, lids, wheels, rotors, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
             });
         }
+        // the instrument panel drawn sharp over a blurred one, in the aircraft you're in, powered or not
+        CockpitPanel.Panel panel = state.liveCockpit != null && state.lod == 0
+                ? CockpitPanel.get(state.model, CockpitGlow.get(state.model), CockpitDisplays.eye(state.model)) : null;
+        if (panel != null) {
+            CockpitPages.Data data = CockpitDisplays.data(state.liveCockpit, state.attitude, System.currentTimeMillis(), false);
+            CockpitPanel.submit(panel, data, poseStack, collector, light, state.cockpitDark, cockpit != null, state.shaders);
+        }
         if (cockpit != null) {
             int[] colours = CockpitGlow.colours(cockpit, state.cockpit, state.cockpitDark, state.shaders);
             // the aircraft you're in shows the flight live on its screens and its head-up display
-            CockpitDisplays.Set live = state.liveCockpit != null ? CockpitDisplays.of(state.model, cockpit) : null;
+            CockpitDisplays.Set live = state.liveCockpit != null && state.cockpit >= 0 ? CockpitDisplays.of(state.model, cockpit) : null;
             if (live != null) {
                 CockpitDisplays.paint(state.liveCockpit, live, state.attitude, CockpitDisplays.eye(state.model));
                 for (CockpitDisplays.Screen s : live.screens()) {
@@ -170,8 +178,9 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 }
             }
             java.util.BitSet skip = live == null ? null : live.groups();
+            java.util.BitSet covered = panel == null ? null : panel.covered;
             collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, state.shaders),
-                    (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, pose, out));
+                    (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, covered, pose, out));
         }
         // the camera, in the car's own frame, for the glow round each lamp and the green highlight
         double dx = camera.pos.x - state.x, dz = camera.pos.z - state.z, r = Math.toRadians(state.yaw);

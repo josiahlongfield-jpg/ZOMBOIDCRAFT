@@ -114,14 +114,15 @@ public final class CockpitGlow {
 
     /**
      * Every lit triangle, each as a quad with its last corner doubled, a hair in front of the face it
-     * lights, in its group's colour; groups in live (drawn by {@link CockpitDisplays}) are left out.
+     * lights, in its group's colour; groups in live (drawn by {@link CockpitDisplays}) and triangles in
+     * covered (under a {@link CockpitPanel}) are left out.
      */
-    static void draw(Glow glow, int[] colour, java.util.BitSet live, PoseStack.Pose pose, VertexConsumer out) {
+    static void draw(Glow glow, int[] colour, java.util.BitSet live, java.util.BitSet covered, PoseStack.Pose pose, VertexConsumer out) {
         float[] p = glow.pos(), uv = glow.uv(), n = glow.normal();
         byte[] group = glow.group();
         for (int t = 0; t < group.length; t++) {
             int c = colour[group[t]];
-            if (c == 0 || live != null && live.get(group[t])) {
+            if (c == 0 || live != null && live.get(group[t]) || covered != null && covered.get(t)) {
                 continue;
             }
             float lift = glow.kinds()[group[t]] == KEYS ? 0.002f : 0.003f;

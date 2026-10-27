@@ -208,7 +208,7 @@ final class CockpitDisplays {
                 continue;
             }
             if (data == null) {
-                data = data(car, attitude, now);
+                data = data(car, attitude, now, true);
             }
             s.painted = now;
             paint(s, data, eye);
@@ -267,8 +267,8 @@ final class CockpitDisplays {
         };
     }
 
-    /** Everything the pages show, from the aircraft as it is this frame. */
-    private static CockpitPages.Data data(CarProp car, Quaternionf q, long now) {
+    /** Everything the pages show, from the aircraft as it is this frame; tracks: look for other aircraft about too. */
+    static CockpitPages.Data data(CarProp car, Quaternionf q, long now, boolean withTracks) {
         Flight f = car.flight();
         var level = car.level();
         Vector3f vel = new Vector3f((float) f.vel.x, (float) f.vel.y, (float) f.vel.z);
@@ -287,7 +287,7 @@ final class CockpitDisplays {
         }
         peak[0] = Math.max(peak[0], f.load);
         List<float[]> tracks = new ArrayList<>();
-        for (Entity e : Minecraft.getInstance().level.entitiesForRendering()) {
+        for (Entity e : withTracks ? Minecraft.getInstance().level.entitiesForRendering() : List.<Entity>of()) {
             if (e != car && e instanceof CarProp other && other.aircraft() && e.distanceToSqr(car) < 6000.0 * 6000.0) {
                 double dx = e.getX() - car.getX(), dz = e.getZ() - car.getZ();
                 float bearing = (float) Math.toDegrees(Math.atan2(dx, -dz));
