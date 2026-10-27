@@ -96,6 +96,26 @@ final class Railway {
         return layout.cityBlock(i, j);
     }
 
+    /**
+     * True if the grid line from node (i, j) one block on in heading h runs down the middle of
+     * Union Station's lot: the el's straight through the station's train hall, where the street
+     * it ran down was built over.
+     */
+    private boolean throughUnion(int i, int j, int h) {
+        Place u = layout.named.get("union");
+        if (u == null || (h & 1) == 0 || i * PITCH != (u.x0 + u.x1 + 1) / 2) {
+            return false;
+        }
+        int b = h == 1 ? j : j - 1;
+        return u.contains((int) ((i - 0.5) * PITCH), (int) ((b + 0.5) * PITCH), 0) && u.contains((int) ((i + 0.5) * PITCH), (int) ((b + 0.5) * PITCH), 0);
+    }
+
+    /** True on Union Station's lot. */
+    private boolean inUnion(double x, double z) {
+        Place u = layout.named.get("union");
+        return u != null && u.contains((int) Math.floor(x), (int) Math.floor(z), 0);
+    }
+
     /** True if a street runs from node (i, j) one block on in heading h. */
     private boolean seg(int i, int j, int h) {
         return switch (h) {
@@ -122,8 +142,11 @@ final class Railway {
         return !layout.reservedAt(x, z) && plan.toWater(x, z) > 30;
     }
 
-    /** True inside a piece of the city: on a block of its grid, or within the edge streets round it. */
+    /** True inside a piece of the city: on a block of its grid, or within the edge streets round it (or on Union Station's lot). */
     private boolean cityAt(double x, double z) {
+        if (inUnion(x, z)) {
+            return true;
+        }
         int i = Math.floorDiv((int) Math.floor(x), PITCH), j = Math.floorDiv((int) Math.floor(z), PITCH);
         for (int a = i - 1; a <= i + 1; a++) {
             for (int b = j - 1; b <= j + 1; b++) {
@@ -159,6 +182,11 @@ final class Railway {
 
         boolean inside(int i, int j) {
             return i >= i0 && i < i0 + ni && j >= j0 && j < j0 + nj;
+        }
+
+        /** A way on from node (i, j) in heading h: a street, or for the railway the el's way through Union Station. */
+        boolean open(int i, int j, int h) {
+            return seg(i, j, h) || spec.kind == Track.Kind.RAIL && throughUnion(i, j, h);
         }
 
         int state(int i, int j, int h, int g) {
@@ -211,7 +239,7 @@ final class Railway {
                         continue;
                     }
                     int ni2 = i + DX[b], nj2 = j + DZ[b];
-                    if (!inside(ni2, nj2) || !seg(i, j, b)) {
+                    if (!inside(ni2, nj2) || !open(i, j, b)) {
                         continue;
                     }
                     int ng = turn ? 1 : Math.min(g + 1, 2);
@@ -274,7 +302,7 @@ final class Railway {
                         int a0 = (int) Math.floor((mid - half) / PITCH), a1 = (int) Math.ceil((mid + half) / PITCH);
                         boolean ok = true;
                         for (int a = a0; a < a1 && ok; a++) {
-                            ok = axis == 0 ? seg(line, a, 1) : seg(a, line, 0);
+                            ok = axis == 0 ? open(line, a, 1) : open(a, line, 0);
                         }
                         if (!ok) {
                             continue;
@@ -334,7 +362,7 @@ final class Railway {
                 fromPass.put(s, first);
             } else {
                 for (Gate g : in) {
-                    if (inside(g.i, g.j) && seg(g.i, g.j, g.h)) {
+                    if (inside(g.i, g.j) && open(g.i, g.j, g.h)) {
                         sources.merge(state(g.i, g.j, g.h, 2), g.cost, Math::min);
                     }
                 }
@@ -930,8 +958,11 @@ final class Railway {
         // the stops' platforms: the samples beside them
         List<int[]> platforms = new ArrayList<>();   // {stop index, from, to, side}
         int half = (int) Math.round(spec.platformHalf + 6);
+        Place union = layout.named.get("union");
         for (Pass p : passes) {
-            platforms.add(platform(xs, zs, p.stop, p.cx, p.cz, half, spots.get(p.stop)));
+            // Union Station's el stop in the middle of its train hall, which runs the lot's length
+            boolean hall = spec.kind == Track.Kind.RAIL && union != null && spots.get(p.stop).id().equals("union");
+            platforms.add(platform(xs, zs, p.stop, p.cx, hall ? union.centreZ() : p.cz, half, spots.get(p.stop)));
         }
         if (freeStops != null) {
             for (double[] fs : freeStops) {
@@ -1028,6 +1059,13 @@ final class Railway {
         smoothModes(mode, Track.VIADUCT, 10);
         // reach: how far out the line lays anything (the subway as far as Union Station's passage under the sidewalk)
         Track track = new Track(id, name, spec.kind, xs, zs, ys, mode, street, spec.kind == Track.Kind.SUBWAY ? 16 : 24);
+        if (spec.kind == Track.Kind.RAIL) {
+            for (int i = 0; i < n; i++) {
+                if (inUnion(xs[i], zs[i])) {
+                    track.hall.set(i);
+                }
+            }
+        }
         // the stops in the order the trains reach them
         platforms.sort((a, b) -> Integer.compare(a[1], b[1]));
         for (int[] pl : platforms) {

@@ -218,8 +218,9 @@ final class Layout {
             return lot(s, PlaceType.LANDMARK, "stadium", 6, 7, h);
         }
         if (s.id().equals("union")) {
-            // the terminal: a block wide and two long, beside the el where the subway passes its front
-            return lot(s, PlaceType.LANDMARK, "union_station", 1, 2, h);
+            // the terminal: two blocks wide and two long, the el's street between them built over so
+            // the trains run through the station's top floor; the subway passes its front
+            return lot(s, PlaceType.LANDMARK, "union_station", 2, 2, h);
         }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it

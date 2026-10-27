@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_platnum_1": "zomboidcraft:block/city/tx_platnum_1",
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "particle": "zomboidcraft:block/city/tx_steel_d"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        1,
+        1
+      ],
+      "to": [
+        9,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_platnum_1"
+        },
+        "west": {
+          "texture": "#tx_platnum_1"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        15,
+        7.6
+      ],
+      "to": [
+        8.4,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    }
+  ]
+}

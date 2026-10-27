@@ -26,12 +26,12 @@ final class RailGen {
     /** Street level in the city: the top of the street's blocks. */
     private static final int STREET_TOP = Terrain.CITY + 1;
     /**
-     * Union Station's ways in (see {@link UnionStation}): the el's bridge from its platform to the
-     * mezzanine's door runs on the samples BRIDGE_LO..BRIDGE_HI from the stop's middle (its rails
-     * one more each side) out to BRIDGE_END; the subway's passage from its platform to the station's
-     * hall on PASS_LO..PASS_HI (its walls one more each side) out to PASS_END, the lot's edge.
+     * Union Station's way in from the subway (see {@link UnionStation}): the passage from its
+     * platform to the station's hall on the samples PASS_LO..PASS_HI from the stop's middle (its
+     * walls one more each side) out to PASS_END, the lot's edge. The el runs through the station's
+     * own train hall ({@link UnionHall}), which builds everything there but the bed.
      */
-    private static final int BRIDGE_LO = -2, BRIDGE_HI = 1, BRIDGE_END = 15, PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
+    private static final int PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
     /**
      * A depot's lot ({@link DepotSite}) runs DEPOT_REACH samples either way of its stop's middle
      * behind the platform, its canopy DEPOT_CANOPY.
@@ -540,6 +540,15 @@ final class RailGen {
     private void viaduct(ChunkSink out, Cut c) {
         int x = c.x, z = c.z, Y = c.Y, bed = c.bed;
         double s = c.s;
+        if (c.t.hall.get(c.i)) {
+            // through Union Station's train hall: only the bed on the station's deck, the trains' room over it
+            if (s < 2) {
+                ballast(out, c, "rw_ballast");
+                out.set(x, bed - 1, z, "rw_deck");
+                clear(out, x, z, Y + (c.q > 0 ? 1 : 0), Y + 6);
+            }
+            return;
+        }
         int street = c.t.street[c.i];
         boolean el = street > 0;
         boolean wet = c.top < Terrain.WATER;
@@ -567,9 +576,6 @@ final class RailGen {
         }
         if (station && s >= 7 && s < 9) {
             elStairs(out, c);
-        }
-        if (station && s >= 7 && s < BRIDGE_END && unionRun(c, BRIDGE_LO, BRIDGE_HI, true)) {
-            unionBridge(out, c);
         }
         // what holds it up
         int span = el ? 16 : wet ? 24 : 16;
@@ -604,8 +610,7 @@ final class RailGen {
             out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
             clear(out, x, z, Y + 1, Y + 5);
             litter(out, c, Y + 1, 1);
-            boolean mouth = unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-            if (s >= 5 && la % 8 == 0 && la <= 40 && !mouth) {
+            if (s >= 5 && la % 8 == 0 && la <= 40) {
                 out.column(x, z, Y + 1, Y + 5, "rw_post");
             } else if (s >= 5 && la % 8 == 4 && la <= 40) {
                 out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
@@ -619,14 +624,9 @@ final class RailGen {
             if (s >= 4 && s < 5) {
                 hungBoard(out, c, Y + 5);
             }
-            if (mouth && s >= 5 && (c.da == BRIDGE_LO + 1 || c.da == BRIDGE_LO + 2)) {
-                // over the way across to Union Station: down to the subway
-                out.set(x, Y + 5, z, "us_sign_subway_" + tile(c, c.da - BRIDGE_LO - 1, 2) + "[facing=" + c.in() + "]");
-            }
         } else {
             out.set(x, Y, z, paving(c));
-            boolean open = stairTop || unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-            out.set(x, Y + 1, z, open ? "air" : "rw_guard[facing=" + c.out() + "]");
+            out.set(x, Y + 1, z, stairTop ? "air" : "rw_guard[facing=" + c.out() + "]");
             clear(out, x, z, Y + 2, Y + 5);
         }
         if (la <= 40 && s >= 2) {
@@ -677,38 +677,6 @@ final class RailGen {
     private static boolean unionRun(Cut c, int lo, int hi, boolean sides) {
         int m = sides ? 1 : 0;
         return union(c) && c.plat && c.da >= lo - m && c.da <= hi + m;
-    }
-
-    /**
-     * Union Station's bridge from the el's platform across the sidewalk to the mezzanine's door: a
-     * steel deck on plate girders, railed both sides with posts every three, under the platform's
-     * roof carried on across, on a column each side at the sidewalk's back.
-     */
-    private void unionBridge(ChunkSink out, Cut c) {
-        int x = c.x, z = c.z, Y = c.Y;
-        boolean side = !unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-        String away = c.along(c.da > BRIDGE_HI ? 1 : -1);
-        out.set(x, c.bed, z, side ? "rw_girder" : "rw_deck");
-        if (side) {
-            out.set(x, c.bed - 1, z, "rw_girder");
-        }
-        out.set(x, Y, z, paving(c));
-        clear(out, x, z, Y + 1, Y + 5);
-        if (side) {
-            if ((int) c.s % 3 == 1) {
-                out.column(x, z, Y + 1, Y + 5, "rw_post");
-            } else {
-                out.set(x, Y + 1, z, "rw_guard[facing=" + away + "]");
-            }
-            if (c.s >= 12 && c.s < 13) {
-                out.set(x, STREET_TOP, z, "rw_column_base");
-                out.column(x, z, STREET_TOP + 1, c.bed - 3, "rw_column");
-                out.set(x, c.bed - 2, z, "rw_column_cap");
-            }
-        } else {
-            litter(out, c, Y + 1, 1);
-        }
-        out.set(x, Y + 6, z, side ? "rw_canopy_fascia[facing=" + away + "]" : "rw_canopy");
     }
 
     /** A platform's slab: the plain one mostly, the worn ones here and there. */

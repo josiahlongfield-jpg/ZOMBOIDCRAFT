@@ -42,6 +42,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part34();
         part35();
         part36();
+        part37();
     }
 
     private void part0() {
@@ -6433,6 +6434,14 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_name_southport_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_name_southport_6", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_name_southport_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_2", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_3", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_6", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_name_union_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_wall", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -6474,6 +6483,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_bin", PLAIN, LOOT, 0, SoundType.METAL, 2f, 4, 0, 5, 12, 11, 11, 5, 0, 4, 11, 11, 12);
         loot("tx_bin", "scraps");
         s("tx_pendant", PLAIN, DECOR | FLICKER, 13, SoundType.METAL, 0f, 7.5, 8, 7.5, 8.5, 16, 8.5, 5, 6, 5, 11, 8, 11, 3, 4, 3, 13, 6, 13);
+        s("tx_pendant_off", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7.5, 8, 7.5, 8.5, 16, 8.5, 5, 6, 5, 11, 8, 11, 3, 4, 3, 13, 6, 13);
         s("tx_board_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 12, 16, 16, 16);
         s("tx_board_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 12, 16, 16, 16);
         s("tx_board_2", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 12, 16, 16, 16);
@@ -6506,6 +6516,12 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_map_southport_3", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
         s("tx_map_southport_4", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
         s("tx_map_southport_5", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_0", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_1", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_2", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_3", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_4", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
+        s("tx_map_union_5", FACING, DECOR, 0, SoundType.GLASS, 0f, 0, 0, 15, 16, 16, 16);
         s("tx_sign_trains_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
         s("tx_sign_trains_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
         s("tx_sign_tickets_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
@@ -6516,5 +6532,45 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_sign_exit_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
         s("tx_sign_kiosk_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
         s("tx_sign_kiosk_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_subway_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_subway_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_buses_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_buses_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_platforms_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_sign_platforms_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 4.5, 7.5, 16, 11.5, 8.5, 7.6, 11.5, 7.6, 8.4, 16, 8.4);
+        s("tx_tree_base", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 6.5, 10.5, 16, 9.5, 6.5, 0, 5.5, 9.5, 16, 10.5, 3, 0, 3, 13, 1.2, 13, 4, 1.2, 4, 12, 2.4, 12, 4.8, 2.4, 4.8, 11.2, 3.4, 11.2, 3.6, 1.2, 3.6, 4.6, 1.8, 4.6, 3.6, 1.2, 11.4, 4.6, 1.8, 12.4, 11.4, 1.2, 3.6, 12.4, 1.8, 4.6, 11.4, 1.2, 11.4, 12.4, 1.8, 12.4);
+        s("tx_tree", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 6.5, 10.5, 16, 9.5, 6.5, 0, 5.5, 9.5, 16, 10.5);
+        s("tx_tree_fork", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 6.5, 10.5, 6, 9.5, 6.5, 0, 5.5, 9.5, 6, 10.5, 4.5, 6, 5.5, 11.5, 10, 10.5, 5.5, 6, 4.5, 10.5, 10, 11.5, 5, 10, 5, 11, 11, 11, 6.4, 8.15, 5.6, 9.6, 11.35, 8.8, 6.4, 9.65, 4, 9.6, 12.85, 7.2, 6.4, 11.15, 2.4, 9.6, 14.35, 5.6, 6.4, 12.65, 0.8, 9.6, 15.85, 4, 6.4, 14.15, -0.8, 9.6, 17.35, 2.4, 6.4, 8.15, 7.2, 9.6, 11.35, 10.4, 6.4, 9.65, 8.8, 9.6, 12.85, 12, 6.4, 11.15, 10.4, 9.6, 14.35, 13.6, 6.4, 12.65, 12, 9.6, 15.85, 15.2, 6.4, 14.15, 13.6, 9.6, 17.35, 16.8, 5.6, 8.15, 6.4, 8.8, 11.35, 9.6, 4, 9.65, 6.4, 7.2, 12.85, 9.6, 2.4, 11.15, 6.4, 5.6, 14.35, 9.6, 0.8, 12.65, 6.4, 4, 15.85, 9.6, -0.8, 14.15, 6.4, 2.4, 17.35, 9.6, 7.2, 8.15, 6.4, 10.4, 11.35, 9.6, 8.8, 9.65, 6.4, 12, 12.85, 9.6, 10.4, 11.15, 6.4, 13.6, 14.35, 9.6, 12, 12.65, 6.4, 15.2, 15.85, 9.6, 13.6, 14.15, 6.4, 16.8, 17.35, 9.6, 7.2, 8.1, 5.6, 10.4, 11.3, 8.8, 8.8, 9.5, 4, 12, 12.7, 7.2, 10.4, 10.9, 2.4, 13.6, 14.1, 5.6, 12, 12.3, 0.8, 15.2, 15.5, 4, 13.6, 13.7, -0.8, 16.8, 16.9, 2.4, 7.2, 8.1, 7.2, 10.4, 11.3, 10.4, 8.8, 9.5, 8.8, 12, 12.7, 12, 10.4, 10.9, 10.4, 13.6, 14.1, 13.6, 12, 12.3, 12, 15.2, 15.5, 15.2, 13.6, 13.7, 13.6, 16.8, 16.9, 16.8, 5.6, 8.1, 7.2, 8.8, 11.3, 10.4, 4, 9.5, 8.8, 7.2, 12.7, 12, 2.4, 10.9, 10.4, 5.6, 14.1, 13.6, 0.8, 12.3, 12, 4, 15.5, 15.2, -0.8, 13.7, 13.6, 2.4, 16.9, 16.8, 5.6, 8.1, 5.6, 8.8, 11.3, 8.8, 4, 9.5, 4, 7.2, 12.7, 7.2, 2.4, 10.9, 2.4, 5.6, 14.1, 5.6, 0.8, 12.3, 0.8, 4, 15.5, 4, -0.8, 13.7, -0.8, 2.4, 16.9, 2.4);
+        s("tx_branch", FACING, DECOR, 0, SoundType.METAL, 0f, 6.4, -0.1, 13.4, 9.6, 3.1, 16.6, 6.4, 1.9, 11.4, 9.6, 5.1, 14.6, 6.4, 3.9, 9.4, 9.6, 7.1, 12.6, 6.4, 5.9, 7.4, 9.6, 9.1, 10.6, 6.4, 7.9, 5.4, 9.6, 11.1, 8.6, 6.4, 9.9, 3.4, 9.6, 13.1, 6.6, 6.4, 11.9, 1.4, 9.6, 15.1, 4.6, 6.4, 13.9, -0.6, 9.6, 17.1, 2.6);
+        s("tx_branch_d", FACING, DECOR, 0, SoundType.METAL, 0f, -0.8, -0.8, 13.6, 2.4, 2.4, 16.8, 0.8, 0.8, 12, 4, 4, 15.2, 2.4, 2.4, 10.4, 5.6, 5.6, 13.6, 4, 4, 8.8, 7.2, 7.2, 12, 5.6, 5.6, 7.2, 8.8, 8.8, 10.4, 7.2, 7.2, 5.6, 10.4, 10.4, 8.8, 8.8, 8.8, 4, 12, 12, 7.2, 10.4, 10.4, 2.4, 13.6, 13.6, 5.6, 12, 12, 0.8, 15.2, 15.2, 4, 13.6, 13.6, -0.8, 16.8, 16.8, 2.4);
+        s("tx_vault", PLAIN, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 0, 16, 15, 16, 0, 12.5, 0, 1.2, 16, 16, 1.2, 12.5, 0, 16, 16, 1.2, 0, 15, 7.6, 16, 15.6, 8.4);
+        s("tx_vault_cracked", PLAIN, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 0, 16, 15, 16, 0, 12.5, 0, 1.2, 16, 16, 1.2, 12.5, 0, 16, 16, 1.2, 0, 15, 7.6, 16, 15.6, 8.4);
+        s("tx_vault_frame", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 12.5, 0, 1.2, 16, 16, 1.2, 12.5, 0, 16, 16, 1.2);
+        s("tx_vault_beam", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 0, 16, 15, 16, 4, 11, 0, 12, 14, 16, 7, 2.5, 0, 9, 11, 16, 4, 0, 0, 12, 2.5, 16);
+        s("tx_vault_node", PLAIN, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14, 0, 16, 15, 16, 4, 11, 0, 12, 14, 16, 7, 2.5, 0, 9, 11, 16, 4, 0, 0, 12, 2.5, 16, 0, 11, 4, 16, 14, 12, 0, 2.5, 7, 16, 11, 9, 0, 0, 4, 16, 2.5, 12, 3, 0, 3, 13, 3, 13);
+        s("tx_paver", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_paver_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_concrete", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_esc_step", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 8, 16, 0, 8, 0, 16, 16, 8);
+    }
+
+    private void part37() {
+        s("tx_esc_side_l", FACING, SEE_THROUGH | DECOR, 0, SoundType.GLASS, 0f, 0.8, -8, 12, 1.6, 7, 16, 0.4, 7, 12, 2, 11.4, 16, 0.4, -8, 12, 2.6, -6, 16, 0.8, -4, 8, 1.6, 11, 12, 0.4, 11, 8, 2, 15.4, 12, 0.4, -4, 8, 2.6, -2, 12, 0.8, 0, 4, 1.6, 15, 8, 0.4, 15, 4, 2, 19.4, 8, 0.4, 0, 4, 2.6, 2, 8, 0.8, 4, 0, 1.6, 19, 4, 0.4, 19, 0, 2, 23.4, 4, 0.4, 4, 0, 2.6, 6, 4);
+        s("tx_esc_newel_l", FACING, SEE_THROUGH | DECOR, 0, SoundType.GLASS, 0f, 0.8, 0, 4, 1.6, 13, 16, 0.4, 13, 2.5, 2, 15, 16, 0.4, 4, 0.5, 2, 15, 2.5, 0.1, 0, 2, 2.3, 3, 16);
+        s("tx_esc_side_r", FACING, SEE_THROUGH | DECOR, 0, SoundType.GLASS, 0f, 14.4, -8, 12, 15.2, 7, 16, 14, 7, 12, 15.6, 11.4, 16, 13.4, -8, 12, 15.6, -6, 16, 14.4, -4, 8, 15.2, 11, 12, 14, 11, 8, 15.6, 15.4, 12, 13.4, -4, 8, 15.6, -2, 12, 14.4, 0, 4, 15.2, 15, 8, 14, 15, 4, 15.6, 19.4, 8, 13.4, 0, 4, 15.6, 2, 8, 14.4, 4, 0, 15.2, 19, 4, 14, 19, 0, 15.6, 23.4, 4, 13.4, 4, 0, 15.6, 6, 4);
+        s("tx_esc_newel_r", FACING, SEE_THROUGH | DECOR, 0, SoundType.GLASS, 0f, 14.4, 0, 4, 15.2, 13, 16, 14, 13, 2.5, 15.6, 15, 16, 14, 4, 0.5, 15.6, 15, 2.5, 13.7, 0, 2, 15.9, 3, 16);
+        s("tx_step", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8, 16, 0, 8, 0, 16, 16, 8);
+        s("tx_esc_plate", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_glass_rail", AXIS, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 7.5, 0, 0, 8.5, 14.5, 16, 6.8, 14.5, 0, 9.2, 16, 16, 6.8, 0, 0, 9.2, 1.5, 16);
+        s("tx_gate", AXIS, SEE_THROUGH, 0, SoundType.METAL, 2f, 5, 0, 1, 11, 15, 15, 4.4, 6, 3, 5, 13, 13, 11, 6, 3, 11.6, 13, 13, 5.5, 15, 2, 10.5, 15.4, 14);
+        s("tx_clock", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 6.5, 2, 1, 9.5, 14, 15, 6.5, 1, 2, 9.5, 15, 14, 7.6, 15, 7.6, 8.4, 16, 8.4);
+        s("tx_rod", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7.6, 0, 7.6, 8.4, 16, 8.4);
+        s("tx_platnum_1", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 7, 1, 1, 9, 15, 15, 7.6, 15, 7.6, 8.4, 16, 8.4);
+        s("tx_platnum_2", AXIS, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 7, 1, 1, 9, 15, 15, 7.6, 15, 7.6, 8.4, 16, 8.4);
+        s("tx_ceiling", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_ceiling_lamp", AXIS, FLICKER, 12, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_ceiling_lamp_off", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("tx_help", FACING, 0, 0, SoundType.METAL, 2f, 4.5, 0, 6, 11.5, 16, 10);
     }
 }

@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_granite": "zomboidcraft:block/city/tx_granite",
+    "tx_step_top": "zomboidcraft:block/city/tx_step_top",
+    "particle": "zomboidcraft:block/city/tx_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_step_top"
+        },
+        "down": {
+          "texture": "#tx_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_granite"
+        },
+        "east": {
+          "texture": "#tx_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_step_top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_granite"
+        }
+      }
+    }
+  ]
+}

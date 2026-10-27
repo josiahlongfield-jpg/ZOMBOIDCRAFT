@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.Placer;
 
 /**
  * A city landmark on a lot of its own:
@@ -9,9 +10,11 @@ import com.zomboidcraft.world.city.BlockSink;
  * each side to its gates, the parking lots round it in rows under their light poles, still half
  * full of the cars people drove to the shelter, the ones that got no further left across the
  * avenues.</li>
- * <li>union_station: Grayhaven Union Station ({@link UnionStation}), the railway's terminal and the
- * change to the subway, its front to the street the subway runs under and its side to the el,
- * the bridge to the el's platform and the passage to the subway's (RailGen) coming in to it.</li>
+ * <li>union_station: Grayhaven Union Station, the railway's terminal and the change to the subway:
+ * the head house ({@link UnionStation}) with its front to the street the subway runs under (the
+ * passage to the subway's platform, RailGen's, coming in to it), the train hall ({@link UnionHall})
+ * beside it over the el's old street, the el running through its top floor, and the bus and taxi
+ * terminal past that.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -25,8 +28,11 @@ final class LandmarkSite extends Site {
     @Override
     void build() {
         if (variant("union_station")) {
-            // the lot runs along the el's street on its west: the front to the south, x = 0 the strip by the el
-            new UnionStation(lot(0, 0, w, d, 2), rng).build();
+            // the front to the south: the head house from x = 0, the train hall over the el, the terminal to the lot's far side
+            Placer q = lot(0, 0, w, d, 2);
+            UnionStation head = new UnionStation(q, rng);
+            head.build();
+            new UnionHall(q, rng, w, d, head.power()).build();
             return;
         }
         kit = new Kit(out, rng, w, d);
