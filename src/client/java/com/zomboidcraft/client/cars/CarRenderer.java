@@ -44,7 +44,9 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.smashed = car.smashed();
         state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         Entity eye = mc.getCameraEntity();
-        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye));
+        // a jet with its engines running is drawn whole three times further off, so its moving surfaces show
+        double far = car.aircraft() && car.flight().rpm > 0.3f ? 9 : 1;
+        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye) / far);
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
@@ -69,6 +71,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.arms = driving ? CarHands.onWheel(mc.player) : CarHands.NONE;
         state.driverEye = driving ? m.seats[0] : null;
         state.air = car.aircraft();
+        state.aircraft = state.air ? car : null;
         state.broken = state.air && car.broken();
         if (state.air) {
             com.zomboidcraft.world.cars.Flight f = car.flight();
@@ -138,15 +141,23 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 : CarSteering.of(car.mesh(), model);
         Turn steer = steering == null ? null : state.air ? AirControls.meshTurn(state.liveCockpit, state.model)
                 : state.wheelTurn == 0 ? null : steer(model.steering, state.wheelTurn);
+        // a jet's control surfaces, swung on their hinges
+        AirSurfaces.Set surfaces = state.aircraft != null && state.lod == 0 && !state.broken ? AirSurfaces.of(state.model, car.mesh()) : null;
+        Turn[] surface = surfaces == null ? null : AirSurfaces.turns(state.aircraft, state.model, surfaces);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, rotors, (mesh, turn) -> {
-                if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null)) {
-                    // the backlit dials and displays at full brightness, the steering wheel turned, the rest as usual
+                if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null || surface != null)) {
+                    // the backlit dials and displays at full brightness, the steering wheel turned, the surfaces on their hinges, the rest as usual
                     int t = 0;
                     while (t < mesh.opaque()) {
                         boolean lit = panel != null && panel.get(t), wheel = steer != null && steering.get(t);
                         int end = Math.min(change(panel, lit, t, mesh.opaque()), change(steer == null ? null : steering, wheel, t, mesh.opaque()));
-                        draw(mesh, t, end, wheel ? steer : turn, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : cabin);
+                        int on = surface == null ? -1 : surfaces.part()[t];
+                        if (surface != null) {
+                            end = Math.min(end, surfaces.end()[t]);
+                        }
+                        Turn moved = wheel ? steer : on >= 0 && surface[on] != null ? surface[on] : turn;
+                        draw(mesh, t, end, moved, pose, out, lit ? CarLights.FULL_BRIGHT : light, -1, lit ? null : cabin);
                         t = end;
                     }
                 } else {
@@ -181,8 +192,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                             (pose, out) -> CockpitDisplays.draw(s, colour, pose, out));
                 }
             }
+            if (live != null && CockpitBezels.has(state.model)) {
+                CockpitBezels.submit(state.model, live, colours[0], poseStack, collector, light, state.shaders);
+            }
             java.util.BitSet skip = live == null ? null : live.groups();
-            java.util.BitSet covered = facePanel == null ? null : facePanel.covered;
+            java.util.BitSet bezels = CockpitBezels.covered(state.model, cockpit, live);
+            java.util.BitSet covered = facePanel == null ? bezels : facePanel.covered;
             collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, state.shaders),
                     (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, covered, pose, out));
         }

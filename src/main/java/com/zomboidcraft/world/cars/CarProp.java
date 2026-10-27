@@ -1651,7 +1651,7 @@ public class CarProp extends Entity {
 
     private String flightHelp() {
         return helicopter()
-                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns. Alt looks round."
+                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover). Alt looks round."
                 : "Mouse flies, W/S throttle, A/D roll, Space brakes. Alt looks round.";
     }
 
@@ -1672,8 +1672,11 @@ public class CarProp extends Entity {
             return;
         }
         entityData.set(ENGINE, on);
-        server.playSound(null, getX(), getY(), getZ(), helicopter() ? (on ? AirSounds.HELI_START : AirSounds.HELI_SHUTDOWN)
-                : (on ? AirSounds.JET_START : AirSounds.JET_SHUTDOWN), SoundSource.NEUTRAL, 1.5f, 1f);
+        // the start-up is played by each client (AirSound), which can cut it short when it's switched off
+        if (!on) {
+            server.playSound(null, getX(), getY(), getZ(), helicopter() ? AirSounds.HELI_SHUTDOWN : AirSounds.JET_SHUTDOWN,
+                    SoundSource.NEUTRAL, 1.5f, 1f);
+        }
         player.sendOverlayMessage(Component.literal(on ? (helicopter() ? "Rotors coming up to speed. " : "Engines spooling up. ") + flightHelp()
                 : "Shutting down."));
         if (on) {
