@@ -33,9 +33,9 @@ public final class TrainSounds {
     static void horn(ServerLevel level, TrainRun run, int blasts) {
         TrainCar.Pose front = run.pose(0);
         var at = front.toWorld(0, 2, TrainCar.HALF);
-        level.playSound(null, at.x, at.y, at.z, HORN, SoundSource.NEUTRAL, 3f, blasts > 1 ? 0.95f : 1f);
+        level.playSound(null, at.x, at.y, at.z, HORN, SoundSource.NEUTRAL, 0.3f, blasts > 1 ? 0.95f : 1f);
         if (blasts > 1) {
-            level.playSound(null, at.x, at.y, at.z, HORN, SoundSource.NEUTRAL, 2f, 1.12f);
+            level.playSound(null, at.x, at.y, at.z, HORN, SoundSource.NEUTRAL, 0.22f, 1.12f);
         }
     }
 

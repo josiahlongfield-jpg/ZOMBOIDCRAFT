@@ -1317,9 +1317,9 @@ def small_display(m, gui_rot=(25, -35, 0)):
         s2, t2 = M.fit(m, R, 9.0)
         disp[ctx] = M.transform(rot, np.array(trans) + t2, s2)
     Rgr = np.eye(3)
-    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0))
+    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0), depth=True)
     disp['ground'] = M.transform([0, 0, 0], t3, s3)
-    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12)
+    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12, depth=True)
     disp['fixed'] = M.transform([0, 180, 0], t4, s4)
     return disp
 

@@ -722,6 +722,10 @@ public class CarProp extends Entity {
         }
         entityData.set(LIGHTS, !lightsOn());
         server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
+        if (helicopter()) {
+            // a helicopter's searchlight is on with the engines: the switch puts it out
+            player.sendOverlayMessage(Component.literal(lightsOn() ? "Searchlight off." : "Searchlight on."));
+        }
     }
 
     /** Opens the glovebox for someone in a front seat, its key (if it's there) and odds and ends put in the first time. */
@@ -1366,7 +1370,8 @@ public class CarProp extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 96 * 96;  // a town parks a hundred or more; further off they're lost in the haze anyway
+        // a town parks a hundred or more, further off they're lost in the haze anyway; aircraft are seen in the sky from far off
+        return distance < (aircraft() ? 256 * 256 : 96 * 96);
     }
 
     @Override
@@ -1823,7 +1828,7 @@ public class CarProp extends Entity {
 
     private String flightHelp() {
         return helicopter()
-                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover). Alt looks round."
+                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover), L searchlight. Alt looks round."
                 : "Mouse flies, W/S throttle, A/D roll, Space brakes, H flight assist on/off. Alt looks round.";
     }
 
