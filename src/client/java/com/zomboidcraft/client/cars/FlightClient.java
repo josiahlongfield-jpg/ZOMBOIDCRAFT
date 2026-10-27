@@ -163,6 +163,7 @@ public final class FlightClient {
         if (side != 0) {
             roll = side;    // A/D roll by hand
         }
+        f.assist = assist ? new Vector3f(aim) : null;
         return new Flight.Controls(pitch, roll, yaw, fwd, in.jump(), 0, 0, 0, 0);
     }
 
@@ -232,10 +233,20 @@ public final class FlightClient {
         return true;
     }
 
-    /** The helicopter's level lock, on or off (the horn key, in the pilot's seat); jets have none. */
+    /** Whether jets fly with the assist (on until the pilot turns it off). */
+    private static boolean assist = true;
+
+    /** The horn key in the pilot's seat: the helicopter's level lock, or a jet's flight assist, on or off. */
     static void levelLock(CarProp car) {
         Flight f = car.flight();
         if (f.kind != Flight.Kind.HELI) {
+            assist = !assist;
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null) {
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(assist
+                        ? "Flight assist on: the jet flies where you look and banks itself"
+                        : "Flight assist off: full physics, you roll and pull yourself"));
+            }
             return;
         }
         f.levelLock = !f.levelLock;

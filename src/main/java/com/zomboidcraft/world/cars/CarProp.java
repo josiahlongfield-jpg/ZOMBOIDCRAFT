@@ -1402,6 +1402,14 @@ public class CarProp extends Entity {
 
     /** Whether the aircraft's first-found state (fuel, battery, wear) has been rolled. */
     private boolean airFound;
+
+    /** Fuelled, a good battery and in full repair: an aircraft spawned to fly straight away. */
+    public void readyToFly() {
+        airFound = true;
+        setFuel(1);
+        setBattery(true);
+        setCondition(100);
+    }
     /** Server: ticks in the air since the last landing. */
     private int flightTicks;
 
@@ -1652,7 +1660,7 @@ public class CarProp extends Entity {
     private String flightHelp() {
         return helicopter()
                 ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover). Alt looks round."
-                : "Mouse flies, W/S throttle, A/D roll, Space brakes. Alt looks round.";
+                : "Mouse flies, W/S throttle, A/D roll, Space brakes, H flight assist on/off. Alt looks round.";
     }
 
     /** The pilot starts or shuts down the engines. */
