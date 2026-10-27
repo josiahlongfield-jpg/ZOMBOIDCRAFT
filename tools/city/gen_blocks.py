@@ -374,9 +374,32 @@ def title(name):
     return " ".join(w.capitalize() for w in words)
 
 
+# RULE (Josiah 2026-10-27): a rotate="axis" model is drawn running along z, so axis= names the
+# way a row runs and a row of rails, bars or fences joins up (paint_textures.along_z turns one
+# drawn along x). These were drawn along x before the rule and every placement turned to suit;
+# anything else drawn along x stops the build.
+AXIS_DRAWN_X = {"fit_beam", "fit_girder", "fit_beam_duct", "fit_beam_sprinkler", "fit_troffer", "fit_troffer_on",
+                "fit_troffer_flicker", "vessel_lash", "vessel_lash_open", "bunk_tripwire"}
+
+
+def axis_rule(blocks):
+    bad = []
+    for name, spec in blocks.items():
+        if spec.get("rotate") != "axis" or "boxes" not in spec or name in AXIS_DRAWN_X:
+            continue
+        bx = spec["boxes"]
+        fx = sum(1 for b in bx if b[0] <= 0.5 and b[3] >= 15.5 and b[5] - b[2] < 15)
+        fz = sum(1 for b in bx if b[2] <= 0.5 and b[5] >= 15.5 and b[3] - b[0] < 15)
+        if fx > fz:
+            bad.append(name)
+    if bad:
+        sys.exit("axis models drawn along x (turn them with paint_textures.along_z): " + " ".join(bad))
+
+
 def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
+    axis_rule(blocks)
     # the prop packs' atlases come whole from tools/props/props.py, their LabPBR maps with them
     for p in (ROOT / "tools/props/tex").glob("*.png"):
         shutil.copy(p, tex_dir / p.name)

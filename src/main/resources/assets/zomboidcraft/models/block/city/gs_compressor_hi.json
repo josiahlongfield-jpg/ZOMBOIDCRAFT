@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_machine_blue": "zomboidcraft:block/city/gs_machine_blue",
+    "gs_machine_grey": "zomboidcraft:block/city/gs_machine_grey",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/gs_machine_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_machine_grey"
+        },
+        "south": {
+          "texture": "#gs_machine_grey"
+        },
+        "east": {
+          "texture": "#gs_machine_grey"
+        },
+        "west": {
+          "texture": "#gs_machine_grey"
+        },
+        "up": {
+          "texture": "#gs_machine_grey"
+        },
+        "down": {
+          "texture": "#gs_machine_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        5
+      ],
+      "to": [
+        10,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_machine_blue"
+        },
+        "south": {
+          "texture": "#gs_machine_blue"
+        },
+        "east": {
+          "texture": "#gs_machine_blue"
+        },
+        "west": {
+          "texture": "#gs_machine_blue"
+        },
+        "up": {
+          "texture": "#gs_machine_blue"
+        },
+        "down": {
+          "texture": "#gs_machine_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        5,
+        6
+      ],
+      "to": [
+        14,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        4,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

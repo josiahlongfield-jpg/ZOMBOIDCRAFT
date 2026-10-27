@@ -247,7 +247,7 @@ final class Storefront {
                 }
                 p.set(x, 3, -1, a + "[facing=north]");
                 if (deep && rng.nextDouble() > 0.15) {
-                    p.set(x, 2, -2, a + "[facing=north]");  // a second fold, sagging lower
+                    p.set(x, 3, -2, a + "[facing=north]");  // a deeper awning, still a body's height up
                 }
             }
         }

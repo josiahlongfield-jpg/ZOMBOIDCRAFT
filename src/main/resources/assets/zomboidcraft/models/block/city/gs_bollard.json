@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_guard": "zomboidcraft:block/city/gs_guard",
+    "particle": "zomboidcraft:block/city/gs_guard"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        14,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_guard"
+        },
+        "south": {
+          "texture": "#gs_guard"
+        },
+        "east": {
+          "texture": "#gs_guard"
+        },
+        "west": {
+          "texture": "#gs_guard"
+        },
+        "up": {
+          "texture": "#gs_guard"
+        },
+        "down": {
+          "texture": "#gs_guard",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        6
+      ],
+      "to": [
+        10,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_guard"
+        },
+        "south": {
+          "texture": "#gs_guard"
+        },
+        "east": {
+          "texture": "#gs_guard"
+        },
+        "west": {
+          "texture": "#gs_guard"
+        },
+        "up": {
+          "texture": "#gs_guard"
+        },
+        "down": {
+          "texture": "#gs_guard"
+        }
+      }
+    }
+  ]
+}

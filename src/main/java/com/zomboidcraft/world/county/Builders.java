@@ -21,8 +21,38 @@ public final class Builders {
             case HIDEOUT -> new HatchSite(p, county, out).build();
         }
         if (out instanceof Voxels v) {
+            clearHeadroom(v);
             clearGrass(v);
             clearTrees(v);
+        }
+    }
+
+    /** The treads of a real flight (vanilla stairs are mostly roofs and eaves, so they're left be). */
+    static boolean tread(String b) {
+        return b != null && !b.startsWith("minecraft:") && (b.contains("stairs") || b.startsWith("tr_stair"));
+    }
+
+    /**
+     * A body's headroom over every flight, whatever the builder left there: nothing but air in
+     * the three blocks over a tread (bar the treads of a flight above), so a player or a zombie
+     * climbing never meets the floor above, a lamp or a shelf with their head. Without it a stair
+     * whose floor opening started a step late couldn't be climbed at all.
+     */
+    static void clearHeadroom(Voxels v) {
+        List<String> pal = v.palette();
+        List<int[]> treads = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            if (id != 0 && tread(pal.get(id))) {
+                treads.add(new int[] {x, y, z});
+            }
+        });
+        for (int[] t : treads) {
+            for (int k = 1; k <= 3; k++) {
+                String b = v.get(t[0], t[1] + k, t[2]);
+                if (b != null && !tread(b) && !b.contains("door")) {
+                    v.set(t[0], t[1] + k, t[2], "air");
+                }
+            }
         }
     }
 

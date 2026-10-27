@@ -1,0 +1,213 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_counter_c_candy": "zomboidcraft:block/city/gs_counter_c_candy",
+    "gs_laminate": "zomboidcraft:block/city/gs_laminate",
+    "gs_rack_chips": "zomboidcraft:block/city/gs_rack_chips",
+    "gs_rack_oil": "zomboidcraft:block/city/gs_rack_oil",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "sc_glass": {
+      "sprite": "zomboidcraft:block/city/sc_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/gs_rack_chips"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        6,
+        4,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_rack_chips"
+        },
+        "south": {
+          "texture": "#gs_rack_chips"
+        },
+        "east": {
+          "texture": "#gs_rack_chips"
+        },
+        "west": {
+          "texture": "#gs_rack_chips"
+        },
+        "up": {
+          "texture": "#gs_rack_chips"
+        },
+        "down": {
+          "texture": "#gs_rack_chips",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        3
+      ],
+      "to": [
+        6,
+        6,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_laminate"
+        },
+        "south": {
+          "texture": "#gs_laminate"
+        },
+        "east": {
+          "texture": "#gs_laminate"
+        },
+        "west": {
+          "texture": "#gs_laminate"
+        },
+        "up": {
+          "texture": "#gs_laminate"
+        },
+        "down": {
+          "texture": "#gs_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_rack_oil"
+        },
+        "south": {
+          "texture": "#gs_rack_oil"
+        },
+        "east": {
+          "texture": "#gs_rack_oil"
+        },
+        "west": {
+          "texture": "#gs_rack_oil"
+        },
+        "up": {
+          "texture": "#gs_rack_oil"
+        },
+        "down": {
+          "texture": "#gs_rack_oil",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        7,
+        4.5
+      ],
+      "to": [
+        11.5,
+        8,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        9
+      ],
+      "to": [
+        15,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "south": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "east": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "west": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "up": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "down": {
+          "texture": "#gs_counter_c_candy",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        10
+      ],
+      "to": [
+        7,
+        5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_glass"
+        },
+        "south": {
+          "texture": "#sc_glass"
+        },
+        "east": {
+          "texture": "#sc_glass"
+        },
+        "west": {
+          "texture": "#sc_glass"
+        },
+        "up": {
+          "texture": "#sc_glass"
+        },
+        "down": {
+          "texture": "#sc_glass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

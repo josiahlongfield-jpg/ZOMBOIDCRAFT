@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_price_c_12": "zomboidcraft:block/city/gs_price_c_12",
+    "gs_price_c_14": "zomboidcraft:block/city/gs_price_c_14",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "particle": "zomboidcraft:block/city/gs_price_c_12"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        5
+      ],
+      "to": [
+        16,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_price_c_12"
+        },
+        "south": {
+          "texture": "#gs_price_c_14"
+        },
+        "east": {
+          "texture": "#gs_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

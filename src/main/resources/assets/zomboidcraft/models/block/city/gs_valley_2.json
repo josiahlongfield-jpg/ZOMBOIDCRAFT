@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_enamel": "zomboidcraft:block/city/gs_enamel",
+    "gs_enamel_band": "zomboidcraft:block/city/gs_enamel_band",
+    "gs_valley_2": "zomboidcraft:block/city/gs_valley_2",
+    "particle": "zomboidcraft:block/city/gs_valley_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_valley_2",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_enamel_band",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_enamel_band",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_enamel_band",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_enamel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_enamel_band",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

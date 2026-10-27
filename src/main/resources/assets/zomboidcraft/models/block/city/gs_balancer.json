@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_machine_blue": "zomboidcraft:block/city/gs_machine_blue",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "gs_tyre": "zomboidcraft:block/city/gs_tyre",
+    "particle": "zomboidcraft:block/city/gs_machine_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_machine_blue"
+        },
+        "south": {
+          "texture": "#gs_machine_blue"
+        },
+        "east": {
+          "texture": "#gs_machine_blue"
+        },
+        "west": {
+          "texture": "#gs_machine_blue"
+        },
+        "up": {
+          "texture": "#gs_machine_blue"
+        },
+        "down": {
+          "texture": "#gs_machine_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        6,
+        6.5
+      ],
+      "to": [
+        15,
+        8,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        3,
+        3
+      ],
+      "to": [
+        16,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_tyre"
+        },
+        "south": {
+          "texture": "#gs_tyre"
+        },
+        "east": {
+          "texture": "#gs_tyre",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_tyre"
+        },
+        "up": {
+          "texture": "#gs_tyre"
+        },
+        "down": {
+          "texture": "#gs_tyre"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        8,
+        9
+      ],
+      "to": [
+        12,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_machine_blue"
+        },
+        "south": {
+          "texture": "#gs_machine_blue"
+        },
+        "east": {
+          "texture": "#gs_machine_blue"
+        },
+        "west": {
+          "texture": "#gs_machine_blue"
+        },
+        "up": {
+          "texture": "#gs_machine_blue"
+        },
+        "down": {
+          "texture": "#gs_machine_blue"
+        }
+      }
+    }
+  ]
+}

@@ -8,29 +8,29 @@
   "elements": [
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        0
       ],
       "to": [
+        9,
         16,
-        16,
-        9
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#cv_louvre"
+          "texture": "#cv_louvre",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#cv_louvre"
+          "texture": "#cv_louvre",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#cv_louvre",
-          "cullface": "east"
+          "texture": "#cv_louvre"
         },
         "west": {
-          "texture": "#cv_louvre",
-          "cullface": "west"
+          "texture": "#cv_louvre"
         },
         "up": {
           "texture": "#cv_louvre",
@@ -44,28 +44,28 @@
     },
     {
       "from": [
+        6,
         0,
-        0,
-        6
+        14.5
       ],
       "to": [
-        1.5,
+        10,
         16,
-        10
+        16
       ],
       "faces": {
         "north": {
           "texture": "#ext_trim_white"
         },
         "south": {
-          "texture": "#ext_trim_white"
+          "texture": "#ext_trim_white",
+          "cullface": "south"
         },
         "east": {
           "texture": "#ext_trim_white"
         },
         "west": {
-          "texture": "#ext_trim_white",
-          "cullface": "west"
+          "texture": "#ext_trim_white"
         },
         "up": {
           "texture": "#ext_trim_white",
@@ -79,25 +79,25 @@
     },
     {
       "from": [
-        14.5,
+        6,
         0,
-        6
+        0
       ],
       "to": [
+        10,
         16,
-        16,
-        10
+        1.5
       ],
       "faces": {
         "north": {
-          "texture": "#ext_trim_white"
+          "texture": "#ext_trim_white",
+          "cullface": "north"
         },
         "south": {
           "texture": "#ext_trim_white"
         },
         "east": {
-          "texture": "#ext_trim_white",
-          "cullface": "east"
+          "texture": "#ext_trim_white"
         },
         "west": {
           "texture": "#ext_trim_white"

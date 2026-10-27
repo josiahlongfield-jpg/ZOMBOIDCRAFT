@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_globe_broken": "zomboidcraft:block/city/gs_globe_broken",
+    "gs_oldpump_hi_rust": "zomboidcraft:block/city/gs_oldpump_hi_rust",
+    "gs_oldpump_side_rust": "zomboidcraft:block/city/gs_oldpump_side_rust",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/gs_oldpump_hi_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_oldpump_hi_rust"
+        },
+        "south": {
+          "texture": "#gs_oldpump_hi_rust"
+        },
+        "east": {
+          "texture": "#gs_oldpump_side_rust"
+        },
+        "west": {
+          "texture": "#gs_oldpump_side_rust"
+        },
+        "up": {
+          "texture": "#gs_oldpump_side_rust"
+        },
+        "down": {
+          "texture": "#gs_oldpump_side_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        12,
+        3.5
+      ],
+      "to": [
+        13.5,
+        13,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        13,
+        6.5
+      ],
+      "to": [
+        10.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_globe_broken"
+        },
+        "south": {
+          "texture": "#gs_globe_broken"
+        },
+        "east": {
+          "texture": "#gs_globe_broken"
+        },
+        "west": {
+          "texture": "#gs_globe_broken"
+        },
+        "up": {
+          "texture": "#gs_globe_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_globe_broken"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        14,
+        5.5
+      ],
+      "to": [
+        11.5,
+        15.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_globe_broken"
+        },
+        "south": {
+          "texture": "#gs_globe_broken"
+        },
+        "east": {
+          "texture": "#gs_globe_broken"
+        },
+        "west": {
+          "texture": "#gs_globe_broken"
+        },
+        "up": {
+          "texture": "#gs_globe_broken"
+        },
+        "down": {
+          "texture": "#gs_globe_broken"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        4,
+        7
+      ],
+      "to": [
+        14,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        7.5
+      ],
+      "to": [
+        13.6,
+        4,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

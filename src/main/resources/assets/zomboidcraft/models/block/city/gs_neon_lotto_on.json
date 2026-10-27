@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_neon_lotto_on": "zomboidcraft:block/city/gs_neon_lotto_on",
+    "particle": "zomboidcraft:block/city/gs_neon_lotto_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_neon_lotto_on",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_neon_lotto_on"
+        },
+        "east": {
+          "texture": "#gs_neon_lotto_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_neon_lotto_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_neon_lotto_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_neon_lotto_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
