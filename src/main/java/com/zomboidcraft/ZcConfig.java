@@ -634,7 +634,9 @@ public final class ZcConfig {
          * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
          * own: an SMG runs faster than an assault rifle.
          */
-        public double autoRpm = 700.0;
+        public double autoRpm = 600.0;
+        /** Multiplies the suppressed shot's pitch (below 1 deepens it). */
+        public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -734,7 +736,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 700
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
             return s;
         }
 
@@ -851,6 +853,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
         public boolean enabled = true;
@@ -930,6 +933,27 @@ public final class ZcConfig {
         public boolean glowWithShaders = false;
     }
 
+    /**
+     * Which round of changed defaults this file has had. A saved file keeps its old numbers, so when a default is
+     * changed on purpose, bump this and move the old default over in {@link #upgrade} (values someone set themselves
+     * are left alone).
+     */
+    public int defaultsVersion = 0;
+    private static final int DEFAULTS = 1;
+
+    private static void upgrade(ZcConfig c) {
+        if (c.defaultsVersion < 1) {
+            // 2026-10-27: the assault rifle 700 -> 600 a minute, its suppressed shot deeper
+            if (c.guns.autoRpm == 700.0) {
+                c.guns.autoRpm = 600.0;
+            }
+            if (c.guns.suppressedPitch == 1.0) {
+                c.guns.suppressedPitch = 0.88;
+            }
+        }
+        c.defaultsVersion = DEFAULTS;
+    }
+
     public static ZcConfig get() {
         return instance;
     }
@@ -940,11 +964,13 @@ public final class ZcConfig {
                 ZcConfig read = GSON.fromJson(reader, ZcConfig.class);
                 if (read != null) {
                     instance = read;
+                    upgrade(instance);
                 }
             } catch (IOException | RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Couldn't read {}, using defaults", FILE, e);
             }
         }
+        instance.defaultsVersion = Math.max(instance.defaultsVersion, DEFAULTS);
         // Writing back adds any settings that are new in this version.
         save();
     }
