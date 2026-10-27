@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_housing": "zomboidcraft:block/city/st_housing",
+    "st_ribbon_a_15": "zomboidcraft:block/city/st_ribbon_a_15",
+    "particle": "zomboidcraft:block/city/st_ribbon_a_15"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_ribbon_a_15",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_housing",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_housing",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_housing",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_housing",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_housing",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

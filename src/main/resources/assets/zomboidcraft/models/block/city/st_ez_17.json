@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_turf_side": "zomboidcraft:block/city/sc_turf_side",
+    "st_ez_17": "zomboidcraft:block/city/st_ez_17",
+    "particle": "zomboidcraft:block/city/sc_turf_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_turf_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_turf_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_turf_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_turf_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_ez_17",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_turf_side",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

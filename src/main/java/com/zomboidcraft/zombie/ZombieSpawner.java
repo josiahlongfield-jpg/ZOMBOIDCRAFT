@@ -86,7 +86,8 @@ public final class ZombieSpawner {
     /**
      * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
      * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
-     * patients. Null leaves the zombie to the general mix.
+     * patients; the stadium shelter fell with its guards and the sick it took in. Null leaves the
+     * zombie to the general mix.
      */
     private static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
         if (onShip(level, pos)) {
@@ -105,6 +106,9 @@ public final class ZombieSpawner {
                     return roll < 40 ? "soldier" : roll < 70 ? "patient" : null;
                 }
                 return roll < 70 ? "soldier" : null;
+            }
+            if (p.type == PlaceType.LANDMARK && p.variant.equals("stadium")) {
+                return roll < 20 ? "soldier" : roll < 45 ? "patient" : null;
             }
         }
         return null;

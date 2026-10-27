@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_poster_missing_b": "zomboidcraft:block/city/st_poster_missing_b",
+    "particle": "zomboidcraft:block/city/st_poster_missing_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_poster_missing_b"
+        },
+        "south": {
+          "texture": "#st_poster_missing_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_poster_missing_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_poster_missing_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_poster_missing_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_poster_missing_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

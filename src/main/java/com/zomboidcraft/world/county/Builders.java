@@ -19,6 +19,7 @@ public final class Builders {
             case MILITARY -> new MilitarySite(p, out).build();
             case ROADSIDE -> new RoadsideSite(p, out).build();
             case HIDEOUT -> new HatchSite(p, county, out).build();
+            case LANDMARK -> new LandmarkSite(p, out).build();
         }
         if (out instanceof Voxels v) {
             finishFlights(v);

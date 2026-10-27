@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "st_porta": "zomboidcraft:block/city/st_porta",
+    "st_porta_lo": "zomboidcraft:block/city/st_porta_lo",
+    "particle": "zomboidcraft:block/city/st_porta_lo"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_lo"
+        },
+        "south": {
+          "texture": "#st_porta"
+        },
+        "east": {
+          "texture": "#st_porta"
+        },
+        "west": {
+          "texture": "#st_porta"
+        },
+        "up": {
+          "texture": "#st_porta",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_porta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        0.5
+      ],
+      "to": [
+        15.5,
+        0.6,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

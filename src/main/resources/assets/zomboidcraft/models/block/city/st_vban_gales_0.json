@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "st_vban_gales_0": "zomboidcraft:block/city/st_vban_gales_0",
+    "particle": "zomboidcraft:block/city/st_vban_gales_0"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        15.2
+      ],
+      "to": [
+        13,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_vban_gales_0"
+        },
+        "south": {
+          "texture": "#st_vban_gales_0",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
