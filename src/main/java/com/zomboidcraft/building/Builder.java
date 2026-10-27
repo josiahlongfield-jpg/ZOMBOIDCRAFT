@@ -5,6 +5,7 @@ import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.barricade.BarricadeBlock;
 import com.zomboidcraft.combat.ModSounds;
+import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.TimedActions;
 import com.zomboidcraft.zombie.Noise;
@@ -31,8 +32,15 @@ import net.minecraft.world.phys.Vec3;
  * a bar fills) and only uses the materials when it's done.
  */
 public final class Builder {
-    /** Build {@code build} at what the player is looking at ({@code hit} from {@code face}); a MAKE build ignores those. */
-    public record Request(int build, BlockPos hit, int face, int looking) implements CustomPacketPayload {
+    /**
+     * Build {@code build} at what the player is looking at ({@code hit} from {@code face}), or on {@code entity} (a car's
+     * id, -1 for none) for a CAR build; a MAKE build ignores them.
+     */
+    public record Request(int build, BlockPos hit, int face, int looking, int entity) implements CustomPacketPayload {
+        public Request(int build, BlockPos hit, int face, int looking) {
+            this(build, hit, face, looking, -1);
+        }
+
         public static final Type<Request> TYPE = new Type<>(ZomboidCraft.id("build"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.of(
                 (buf, r) -> {
@@ -40,8 +48,9 @@ public final class Builder {
                     buf.writeBlockPos(r.hit());
                     buf.writeVarInt(r.face());
                     buf.writeVarInt(r.looking());
+                    buf.writeVarInt(r.entity());
                 },
-                buf -> new Request(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt(), buf.readVarInt()));
+                buf -> new Request(buf.readVarInt(), buf.readBlockPos(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt()));
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -66,6 +75,10 @@ public final class Builder {
         Build build = all[request.build()];
         Direction face = Direction.from3DDataValue(request.face());
         Direction looking = Direction.from3DDataValue(request.looking());
+        if (build.where == Build.Where.CAR) {
+            startOnCar(player, build, request.entity());
+            return;
+        }
         if (!check(player, build, request.hit(), face, looking)) return;
         String key = "build:" + build.name() + ":" + request.hit().asLong();
         if (TimedActions.doing(player, key)) return;
@@ -84,6 +97,10 @@ public final class Builder {
             case RAIN_BARREL -> "Setting up a rain barrel";
             case SANDBAGS -> "Filling sandbags";
             case WELD_SHEET -> "Welding a sheet";
+            case ALARM_CLOCK -> "Setting the alarm";
+            case CAR_ALARM -> "Wiring the clock to the alarm";
+            case PLANTER -> "Building a planter";
+            case SPIKED_WALL -> "Sharpening and driving logs";
         };
     }
 
@@ -91,7 +108,7 @@ public final class Builder {
         return switch (build) {
             case METAL_SHEET, WELD_SHEET -> SoundEvents.FIRECHARGE_USE;
             case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN.value();
-            case BOARD -> SoundEvents.WOOD_HIT;
+            case BOARD, PLANTER, SPIKED_WALL -> SoundEvents.WOOD_HIT;
             default -> SoundEvents.ARMOR_EQUIP_LEATHER.value();
         };
     }
@@ -113,21 +130,9 @@ public final class Builder {
 
     private static void finish(ServerPlayer player, Build build, BlockPos hit, Direction face, Direction looking) {
         ServerLevel level = (ServerLevel) player.level();
-        boolean free = player.hasInfiniteMaterials();
-        if (!free) {
-            for (Build.Need n : build.needs) {
-                // a skilled carpenter sometimes saves the nails
-                int count = n.icon() == ModItems.NAILS && player.getRandom().nextFloat() < 0.05f * Skills.level(player, build.skill) ? 0 : n.count();
-                if (count > 0 && !Materials.take(player, n.fits(), count)) {
-                    say(player, "Something you needed went missing.");
-                    return;
-                }
-            }
-            if (build.tool != null) {
-                ItemStack tool = Materials.find(player, build.tool.fits());
-                if (tool.isDamageableItem()) tool.hurtAndBreak(build == Build.WELD_SHEET ? 3 : 1, level, player, item -> { });
-            }
-        }
+        // the clock's time, read before the clock is used up
+        int timer = AlarmClockItem.carried(player);
+        if (!useUp(player, build)) return;
         Vec3 at;
         if (build.where == Build.Where.MAKE) {
             ItemStack made = new ItemStack(ModItems.METAL_SHEET);
@@ -147,11 +152,63 @@ public final class Builder {
                 place = place.setValue(BarricadeBlock.STRENGTH, BarricadeBlock.strengthFor(Skills.level(player, build.skill)));
             }
             level.setBlockAndUpdate(pos, place);
+            if (build == Build.ALARM_CLOCK) {
+                BuildBlocks.AlarmClock.wind(level, pos, timer * 20);
+                say(player, "It'll ring in " + AlarmClockItem.says(timer) + ".");
+            }
             at = Vec3.atCenterOf(pos);
             level.playSound(null, pos, doneSound(build), SoundSource.PLAYERS, 1f, 0.92f + level.getRandom().nextFloat() * 0.16f);
         }
         if (build.noise > 0) Noise.emit(level, at, build.noise);
-        Skills.addXp(player, build.skill, build.xp);
+        if (build.skill != null && build.xp > 0) Skills.addXp(player, build.skill, build.xp);
+    }
+
+    /** Takes what it uses (nothing in creative) and wears the tool. False when something went missing meanwhile. */
+    private static boolean useUp(ServerPlayer player, Build build) {
+        if (player.hasInfiniteMaterials()) return true;
+        for (Build.Need n : build.needs) {
+            // a skilled carpenter sometimes saves the nails
+            int count = n.icon() == ModItems.NAILS && player.getRandom().nextFloat() < 0.05f * build.skillLevel(player) ? 0 : n.count();
+            if (count > 0 && !Materials.take(player, n.fits(), count)) {
+                say(player, "Something you needed went missing.");
+                return false;
+            }
+        }
+        if (build.tool != null) {
+            ItemStack tool = Materials.find(player, build.tool.fits());
+            if (tool.isDamageableItem()) {
+                tool.hurtAndBreak(build == Build.WELD_SHEET || build == Build.SPIKED_WALL ? 3 : 1, (ServerLevel) player.level(), player, item -> { });
+            }
+        }
+        return true;
+    }
+
+    /** A build on a parked car: the clock wired into its alarm. */
+    private static void startOnCar(ServerPlayer player, Build build, int entity) {
+        if (!checkCar(player, build, entity)) return;
+        String key = "build:" + build.name() + ":car" + entity;
+        if (TimedActions.doing(player, key)) return;
+        ServerLevel level = (ServerLevel) player.level();
+        level.playSound(null, player.blockPosition(), startSound(build), SoundSource.PLAYERS, 0.6f, 1f);
+        TimedActions.start(player, key, verb(build), build.ticksFor(player), p -> {
+            if (!checkCar(p, build, entity) || !(p.level().getEntity(entity) instanceof CarProp car)) return;
+            int timer = AlarmClockItem.carried(p);
+            if (!useUp(p, build)) return;
+            car.rigAlarm(timer * 20);
+            p.level().playSound(null, car.blockPosition(), SoundEvents.TRIPWIRE_ATTACH, SoundSource.PLAYERS, 1f, 1.2f);
+            say(p, "Wired in. The alarm goes off in " + AlarmClockItem.says(timer) + ".");
+        });
+    }
+
+    private static boolean checkCar(ServerPlayer player, Build build, int entity) {
+        String missing = build.missing(player);
+        if (missing != null) return say(player, missing);
+        if (!(player.level().getEntity(entity) instanceof CarProp car)) return say(player, "Look at a parked car.");
+        if (car.getBoundingBox().distanceToSqr(player.getEyePosition()) > (REACH + 1) * (REACH + 1)) return say(player, "That's too far away.");
+        if (car.isVehicle()) return say(player, "Not with someone in it.");
+        if (!car.engineRuns()) return say(player, "Its battery's dead: the alarm won't sound.");
+        if (car.rigged()) return say(player, "There's a clock wired into it already.");
+        return true;
     }
 
     private static SoundEvent doneSound(Build build) {

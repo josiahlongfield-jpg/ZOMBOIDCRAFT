@@ -345,6 +345,18 @@ public final class ZcConfig {
         public double rainBarrelFill = 0.5;
         /** Builds take this many times their usual time. */
         public double timeMultiplier = 1.0;
+        /** How far zombies hear a ringing alarm clock, in blocks, and how long it rings, in seconds. */
+        public double alarmClockNoise = 40;
+        public int alarmClockRingSeconds = 25;
+        /** How far a car key's panic button reaches, in blocks, and how long the alarm sounds, in seconds. */
+        public double keyFobRange = 40;
+        public int carAlarmSeconds = 40;
+        /** In-game days a planter takes from seed to ripe while kept watered, and days a watering lasts. */
+        public double planterGrowDays = 4;
+        public double planterWaterDays = 1;
+        /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
+        public int spikedWallHits = 24;
+        public float spikeDamage = 2f;
     }
 
     public static class Digging {

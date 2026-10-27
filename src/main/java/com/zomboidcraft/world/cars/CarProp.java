@@ -700,8 +700,33 @@ public class CarProp extends Entity {
         return entityData.get(ALARM);
     }
 
+    /** Server side: ticks until an alarm clock wired into the alarm (building/Builder) sets it off; 0 when none is. */
+    private int rigLeft;
+
+    /** Wires a clock into the alarm: it goes off in {@code ticks}. Whether it took (a car with a good battery, not already rigged). */
+    public boolean rigAlarm(int ticks) {
+        if (!engineRuns() || rigLeft > 0) {
+            return false;
+        }
+        rigLeft = Math.max(1, ticks);
+        return true;
+    }
+
+    public boolean rigged() {
+        return rigLeft > 0;
+    }
+
+    /** The key's panic button pressed again: the alarm stops. */
+    public void stopAlarm() {
+        alarmLeft = 0;
+        entityData.set(ALARM, false);
+    }
+
     /** The alarm's whoop: the horn in a steady beat, and every zombie in earshot comes. Getting in stops it. */
     private void alarm(ServerLevel server) {
+        if (rigLeft > 0 && --rigLeft == 0) {
+            tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20);
+        }
         if (alarmLeft <= 0) {
             return;
         }

@@ -1,0 +1,128 @@
+{
+ "multipart": [
+  {
+   "when": {
+    "wet": "false"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_box_dry"
+   }
+  },
+  {
+   "when": {
+    "wet": "true"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_box_wet"
+   }
+  },
+  {
+   "when": {
+    "crop": "carrot",
+    "age": "0|1"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_carrot_0"
+   }
+  },
+  {
+   "when": {
+    "crop": "carrot",
+    "age": "2|3"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_carrot_1"
+   }
+  },
+  {
+   "when": {
+    "crop": "carrot",
+    "age": "4|5|6"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_carrot_2"
+   }
+  },
+  {
+   "when": {
+    "crop": "carrot",
+    "age": "7"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_carrot_3"
+   }
+  },
+  {
+   "when": {
+    "crop": "potato",
+    "age": "0|1"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_potato_0"
+   }
+  },
+  {
+   "when": {
+    "crop": "potato",
+    "age": "2|3"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_potato_1"
+   }
+  },
+  {
+   "when": {
+    "crop": "potato",
+    "age": "4|5|6"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_potato_2"
+   }
+  },
+  {
+   "when": {
+    "crop": "potato",
+    "age": "7"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_potato_3"
+   }
+  },
+  {
+   "when": {
+    "crop": "beet",
+    "age": "0|1"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_beet_0"
+   }
+  },
+  {
+   "when": {
+    "crop": "beet",
+    "age": "2|3"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_beet_1"
+   }
+  },
+  {
+   "when": {
+    "crop": "beet",
+    "age": "4|5|6"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_beet_2"
+   }
+  },
+  {
+   "when": {
+    "crop": "beet",
+    "age": "7"
+   },
+   "apply": {
+    "model": "zomboidcraft:block/building/planter_beet_3"
+   }
+  }
+ ]
+}
