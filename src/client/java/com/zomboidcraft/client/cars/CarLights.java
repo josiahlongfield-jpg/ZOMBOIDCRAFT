@@ -436,6 +436,58 @@ public final class CarLights {
             }
         }
 
+        /**
+         * The same strip with no texture to soften it: each piece split down the middle, its colour there and
+         * fading to nothing at both edges (for an untextured glow, such as a shader pack's lightning).
+         */
+        void fadeStrip(Vec3[] p, double[] halfWidth, int[] colour) {
+            for (int i = 1; i < p.length; i++) {
+                Vec3 a = p[i - 1], b = p[i], line = b.subtract(a);
+                if (line.lengthSqr() < 1e-8 || colour[i - 1] >>> 24 == 0 && colour[i] >>> 24 == 0) {
+                    continue;
+                }
+                Vec3 mid = a.add(b).scale(0.5), toCam = cam.subtract(mid);
+                Vec3 side = line.cross(toCam);
+                side = side.lengthSqr() < 1e-12 ? line.cross(new Vec3(0, 1, 0)).normalize() : side.normalize();
+                Vec3 wa = side.scale(halfWidth[i - 1]), wb = side.scale(halfWidth[i]);
+                double away = toCam.length();
+                Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+                int ea = colour[i - 1] & 0xFFFFFF, eb = colour[i] & 0xFFFFFF;
+                quad4(a.subtract(wa), a, b, b.subtract(wb), ea, colour[i - 1], colour[i], eb, n);
+                quad4(a, a.add(wa), b.add(wb), b, colour[i - 1], ea, eb, colour[i], n);
+            }
+        }
+
+        /** A disc lying on a surface, its colour at the middle fading to nothing at the rim, with no texture. */
+        void fadeDisc(Vec3 c, Vec3 normal, double radius, int colour) {
+            Vec3 a = Math.abs(normal.y) > 0.5 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+            Vec3 b = normal.cross(a).normalize();
+            a = b.cross(normal).normalize();
+            int edge = colour & 0xFFFFFF, sides = 20;
+            Vec3 last = c.add(a.scale(radius));
+            for (int i = 1; i <= sides; i++) {
+                double t = Math.PI * 2 * i / sides;
+                Vec3 next = c.add(a.scale(Math.cos(t) * radius)).add(b.scale(Math.sin(t) * radius));
+                quad4(c, c, last, next, colour, colour, edge, edge, normal);
+                last = next;
+            }
+        }
+
+        /** Four corners, each its own colour, wound to face the normal's side. */
+        private void quad4(Vec3 p0, Vec3 p1, Vec3 p2, Vec3 p3, int c0, int c1, int c2, int c3, Vec3 normal) {
+            if (p2.subtract(p0).cross(p3.subtract(p1)).dot(normal) >= 0) {
+                corner(p0, 0.5f, 0.5f, c0, normal);
+                corner(p1, 0.5f, 0.5f, c1, normal);
+                corner(p2, 0.5f, 0.5f, c2, normal);
+                corner(p3, 0.5f, 0.5f, c3, normal);
+            } else {
+                corner(p3, 0.5f, 0.5f, c3, normal);
+                corner(p2, 0.5f, 0.5f, c2, normal);
+                corner(p1, 0.5f, 0.5f, c1, normal);
+                corner(p0, 0.5f, 0.5f, c0, normal);
+            }
+        }
+
         void emit(PoseStack.Pose pose, VertexConsumer out) {
             for (int i = 0; i < count; i++) {
                 int k = i * STRIDE;
