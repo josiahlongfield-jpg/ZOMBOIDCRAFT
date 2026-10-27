@@ -81,6 +81,8 @@ public final class Population {
     private static List<String> outfits;
 
     private static int lastRecords, lastReal;
+    /** The cap on real zombies now (autoCap moves it by the server's tick time); below 0 until the first survey. */
+    private static double cap = -1;
     private static long placed;
 
     private record Zone(Vec3 pos, double radius, long until) {
@@ -95,6 +97,7 @@ public final class Population {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             QUEUE.clear();
             ZONES.clear();
+            cap = -1;
             Census.clear();
         });
     }
@@ -102,9 +105,9 @@ public final class Population {
     /** For /zc perf. */
     public static String stats() {
         ZcConfig.Population cfg = ZcConfig.get().population;
-        return String.format("population %s · records near players %,d · real %d of %d · placed this session %,d · chunks waiting %d"
-                        + " · places being counted %d", cfg.enabled ? "on" : "off", lastRecords, lastReal, cfg.realCap,
-                placed, QUEUE.size(), Census.pending());
+        return String.format("population %s · records near players %,d · real %d of %d%s · placed this session %,d · chunks waiting %d"
+                        + " · places being counted %d", cfg.enabled ? "on" : "off", lastRecords, lastReal, cap(cfg),
+                cfg.autoCap ? " (self-tuning)" : "", placed, QUEUE.size(), Census.pending());
     }
 
     /** A noise (Noise.emit, already scaled by hearing and weather): loud ones wake the records round it. */
@@ -273,7 +276,7 @@ public final class Population {
         int reach = (int) Math.ceil(cfg.crowdRange / 16);
         double min2 = cfg.crowdMinDistance * cfg.crowdMinDistance, street2 = cfg.streetRange * cfg.streetRange;
         double max2 = cfg.crowdRange * cfg.crowdRange;
-        boolean room = lastReal < cfg.realCap;
+        boolean room = lastReal < cap(cfg);
         List<String> names = outfits();
         List<String> general = ZombieLook.outfits();
         for (ServerPlayer p : level.players()) {
@@ -323,6 +326,30 @@ public final class Population {
         }
     }
 
+    // ---- how many can be real
+
+    private static int cap(ZcConfig.Population cfg) {
+        return cfg.autoCap && cap >= 0 ? (int) cap : cfg.realCap;
+    }
+
+    /**
+     * Twice a second: while the server's ticks run over the target the cap comes down, a twentieth at a time; while
+     * they run well under it and the cap is what's holding zombies back, it goes up a few at a time.
+     */
+    private static void tune(ServerLevel level, ZcConfig.Population cfg, int real) {
+        int lo = Math.max(1, Math.min(cfg.capMin, cfg.capMax)), hi = Math.max(lo, cfg.capMax);
+        if (cap < 0) {
+            cap = Math.clamp(cfg.realCap, lo, hi);
+        }
+        double ms = level.getServer().getAverageTickTimeNanos() / 1e6;
+        if (ms > cfg.tickTarget) {
+            cap -= Math.max(4, cap * 0.05);
+        } else if (ms < cfg.tickTarget * 0.75 && real >= cap - cfg.perStep) {
+            cap += 6;
+        }
+        cap = Math.clamp(cap, lo, hi);
+    }
+
     // ---- waking and folding back
 
     private static void survey(ServerLevel level, ZcConfig.Population cfg) {
@@ -368,7 +395,8 @@ public final class Population {
                 z -> z.isAlive() && ZombieTypes.isWalker(z));
         int real = walkers.size() - fold(level, walkers, players, cfg);
         lastReal = real;
-        int room = Math.min(cfg.perStep, cfg.realCap - real);
+        tune(level, cfg, real);
+        int room = Math.min(cfg.perStep, cap(cfg) - real);
         int records = 0;
         List<Cand> cands = new ArrayList<>();
         for (LevelChunk chunk : chunks.values()) {

@@ -148,8 +148,13 @@ public final class ZcConfig {
         public boolean enabled = true;
         /** Multiplies every place's count (Zomboid's population setting): 0.25 to 4. */
         public double density = 1.0;
-        /** At most this many real zombies at once, shared by every player. */
+        /** At most this many real zombies at once, shared by every player (where autoCap starts)... */
         public int realCap = 250;
+        /** ...moved up while the server keeps its ticks under tickTarget ms and down when it doesn't, within these. */
+        public boolean autoCap = true;
+        public int capMin = 120;
+        public int capMax = 800;
+        public double tickTarget = 40;
         /** Zombies out in the open become real within this many blocks of a player. */
         public double streetRange = 96;
         /** Zombies indoors become real within this many blocks of a player... */
