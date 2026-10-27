@@ -280,22 +280,10 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
     }
 
-    private static final float[] GREEN = {0.3f, 1f, 0.35f};
-
-    /** The interact key's target lit green: a bright core in a soft glow, facing the camera. */
+    /** The interact key's target lit green: the same small dot as on everything else you can use. */
     private static void highlight(float[] h, float size, float[] eye, boolean shaders, PoseStack.Pose pose, VertexConsumer out) {
-        float tx = eye[0] - h[0], ty = eye[1] - h[1], tz = eye[2] - h[2];
-        float len = (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
-        if (len < 0.05f) {
-            return;
-        }
-        tx /= len;
-        ty /= len;
-        tz /= len;
-        // a little toward the camera, so it isn't lost in the door or seat it's on
-        float cx = h[0] + tx * 0.04f, cy = h[1] + ty * 0.04f, cz = h[2] + tz * 0.04f;
-        halo(cx, cy, cz, tx, ty, tz, size * 2.2f, pose, out, CarLights.shade(GREEN, 0.55f, shaders));
-        halo(cx, cy, cz, tx, ty, tz, size, pose, out, CarLights.shade(GREEN, 1f, shaders));
+        com.zomboidcraft.client.interact.Interactables.dot(h[0], h[1], h[2], eye[0] - h[0], eye[1] - h[1], eye[2] - h[2], size,
+                shaders, pose, out);
     }
 
     /** Where a run of triangles that are (or aren't) in a set ends, from t; to for no set. */

@@ -45,7 +45,7 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class CarLights {
     static final Identifier GLOW = ZomboidCraft.id("textures/effect/car_glow.png");
-    static final int FULL_BRIGHT = 0xF000F0;
+    public static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     /** Only cars this near light the world, and only so many of them. */
     private static final double NEAR = 64;
@@ -263,7 +263,7 @@ public final class CarLights {
     // ------------------------------------------------------------------ shared with the car's own drawing
 
     /** Added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow. */
-    static RenderType glowType(boolean shaders) {
+    public static RenderType glowType(boolean shaders) {
         return glowType(GLOW, shaders);
     }
 
@@ -275,7 +275,7 @@ public final class CarLights {
      * A colour at a strength, packed: added light gets dimmer for fainter (a shader pack draws that dark, so
      * blended glow keeps the full colour and gets more see-through instead).
      */
-    static int shade(float[] rgb, float strength, boolean blended) {
+    public static int shade(float[] rgb, float strength, boolean blended) {
         float k = blended ? 1 : strength;
         int r = Mth.clamp((int) (rgb[0] * k * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * k * 255), 0, 255),
                 b = Mth.clamp((int) (rgb[2] * k * 255), 0, 255);
