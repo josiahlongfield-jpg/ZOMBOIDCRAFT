@@ -395,7 +395,7 @@ final class RoadsideSite extends Site {
         } else {
             b.door(1, 1, 0, "flat_door", "north");
         }
-        r.set(3, 2, 0, chance() < 0.3 + hit * 0.4 ? "window_broken[axis=x]" : chance() < 0.2 ? "boarded_window" : "window[axis=x]");
+        r.set(3, 2, 0, chance() < 0.3 + hit * 0.4 ? "window_broken[axis=x]" : chance() < 0.2 ? "boarded_window[axis=x]" : "window[axis=x]");
         String bed = any("red", "blue", "white", "brown", "green");
         r.set(2, 1, 4, "minecraft:" + bed + "_bed[facing=north,part=head]");
         r.set(2, 1, 5, "minecraft:" + bed + "_bed[facing=north,part=foot]");

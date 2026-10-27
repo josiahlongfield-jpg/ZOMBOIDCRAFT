@@ -6,6 +6,13 @@ the row, so they join up. This lists every one whose row runs the other way: it 
 of the same kind beside it across its axis and nothing along it, so it stands as a stub turned
 across the line (the bug Josiah found on a church gallery and on windows).
 
+It also lists windows turned out of their wall: a window, pane or shutter that fills its cell sits
+in a wall, so more solid blocks meet it along its run (the wall either side) than across it (the
+room behind, the street in front). One with the wall across it and open air along it stands side-on,
+its glass facing along the wall (the lit tower-crown slits Josiah found). A window written without
+its axis or facing counts as the game places it: axis=z, facing=north. Those are listed too, since
+a bare window is only right on a wall that happens to run that way.
+
 --all checks every block with an axis or facing, not only the linear kinds.
 """
 import json
@@ -51,6 +58,104 @@ def run_axis(state):
         ns = m.group(1) in ("north", "south")
         return base if ns else {"x": "z", "z": "x"}[base]
     return None
+
+
+WALL_PIECE = re.compile(r"(window|_win_|^win_|glass|pane|shutter|transom|louvre|grille)")
+NOT_WALL = re.compile(r"(shards|duct|teller|propane|bottle|glasses|jar|cabinet|case|counter|table|door|lamp|mirror|tv|"
+                      r"screen|display|fridge|freezer|cooler|oven|microwave)")
+
+
+def wall_run(name):
+    """For a window-like block that fills its cell along one way, which way it runs as drawn (unturned)."""
+    spec = BLOCKS.get(name)
+    if not spec or "boxes" not in spec or not spec.get("rotate") or not WALL_PIECE.search(name) or NOT_WALL.search(name):
+        return None
+    bx = spec["boxes"]
+    xs = min(16, max(b[3] for b in bx)) - max(0, min(b[0] for b in bx))
+    zs = min(16, max(b[5] for b in bx)) - max(0, min(b[2] for b in bx))
+    if xs >= 15.5 and zs >= 15.5:
+        return "x" if spec["rotate"] == "facing" else "z"
+    run = "x" if xs >= 15.5 else "z" if zs >= 15.5 else None
+    # a guard or rail hugging one edge of its cell isn't set in a wall
+    lo, hi = (2, 5) if run == "x" else (0, 3)
+    if run and not any(b[lo] <= 8 <= b[hi] for b in bx):
+        return None
+    return run
+
+
+def panel(name):
+    """A tall piece filling its cell one way (slats, louvres, partitions): it counts as wall."""
+    spec = BLOCKS.get(name)
+    bx = spec.get("boxes") if spec else None
+    if not bx:
+        return False
+    xs = min(16, max(b[3] for b in bx)) - max(0, min(b[0] for b in bx))
+    zs = min(16, max(b[5] for b in bx)) - max(0, min(b[2] for b in bx))
+    ys = min(16, max(b[4] for b in bx)) - max(0, min(b[1] for b in bx))
+    return (xs >= 15.5 or zs >= 15.5) and ys >= 12
+
+
+def wall_axis(state):
+    """The way an in-wall window runs as the game places it, or None if it isn't one."""
+    name = state.split("[")[0]
+    drawn_run = wall_run(name)
+    if drawn_run is None:
+        return None
+    other = {"x": "z", "z": "x"}
+    if BLOCKS[name]["rotate"] == "axis":
+        m = re.search(r"axis=([xz])", state)
+        return drawn_run if (m.group(1) if m else "z") == "z" else other[drawn_run]
+    m = re.search(r"facing=(north|south|east|west)", state)
+    return drawn_run if (m.group(1) if m else "north") in ("north", "south") else other[drawn_run]
+
+
+def solid_block(state):
+    """Something a window can be set in: anything but air, plants and small furniture."""
+    if state == "air":
+        return False
+    name = state.split("[")[0]
+    spec = BLOCKS.get(name)
+    if spec is None:
+        return not re.search(r"(grass|fern|flower|bush|leaves|vine|carpet|torch|button|pressure_plate|snow|rail)", name)
+    if spec.get("model") == "cross":
+        return False
+    return spec.get("model") != "boxes" or wall_run(name) is not None or panel(name)
+
+
+def walls(dump, nlist):
+    meta = json.loads(Path(dump + ".json").read_text())
+    W, H, D = meta["size"]
+    vox = np.fromfile(dump + ".vox", dtype="<u2").reshape(H, D, W)
+    pal = meta["palette"]
+    run = [wall_axis(s) for s in pal]
+    want = np.array([r is not None for r in run])
+    solid = np.array([solid_block(s) for s in pal])
+    bare = Counter()
+    bad = defaultdict(list)
+    cells = np.argwhere(want[vox])
+    for y, z, x in cells:
+        i = vox[y, z, x]
+        if "[" not in pal[i]:
+            bare[pal[i]] += 1
+        if x == 0 or z == 0 or x == W - 1 or z == D - 1:
+            continue    # cut off by the dump's edge
+
+        def closed(dx, dz):
+            xx, zz = x + dx, z + dz
+            return int(0 <= xx < W and 0 <= zz < D and bool(solid[vox[y, zz, xx]]))
+        xs = closed(1, 0) + closed(-1, 0)
+        zs = closed(0, 1) + closed(0, -1)
+        along, across = (xs, zs) if run[i] == "x" else (zs, xs)
+        if along < across:
+            bad[family(pal[i])].append((int(x), int(y), int(z), pal[i]))
+    total = sum(len(v) for v in bad.values())
+    print(f"{dump}: {total} windows turned out of their wall (of {len(cells)} in-wall pieces)")
+    for f, lst in sorted(bad.items(), key=lambda kv: -len(kv[1]))[:nlist]:
+        x, y, z, s = lst[0]
+        print(f"   {len(lst):5d} {f:28s} e.g. x {x} y {y} z {z}  {s}")
+    for name, n in bare.most_common(nlist):
+        print(f"   bare {n:5d} {name} (placed as axis=z / facing=north)")
+    return total
 
 
 def family(state):
@@ -102,6 +207,7 @@ def main():
     dumps = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] != "--list")]
     for d in dumps:
         check(d, every, nlist)
+        walls(d, nlist)
 
 
 if __name__ == "__main__":

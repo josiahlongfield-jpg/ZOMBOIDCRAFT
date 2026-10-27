@@ -138,6 +138,18 @@ public final class Placer {
         }
     }
 
+    /** The window pieces that turn by an axis: written bare, the game stands them along z. */
+    private static final java.util.Set<String> AXIS_WINDOWS = java.util.Set.of("window", "window_lit", "window_broken",
+            "window_empty", "boarded_window", "shutter");
+
+    /**
+     * A window set in a wall running along x (alongX) or along z, so its glass faces out of the
+     * wall: adds the axis to a bare window piece and leaves anything else as it is.
+     */
+    public static String inWall(String block, boolean alongX) {
+        return block.indexOf('[') < 0 && AXIS_WINDOWS.contains(block) ? block + "[axis=" + (alongX ? "x" : "z") + "]" : block;
+    }
+
     public static String rotate(String block, int rot) {
         int open = block.indexOf('[');
         if (open < 0 || rot == 0) {
