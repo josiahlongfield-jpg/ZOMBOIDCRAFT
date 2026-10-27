@@ -99,7 +99,7 @@ public final class CountyChunkGenerator extends ChunkGenerator {
     public ChunkGeneratorStructureState createState(HolderLookup<StructureSet> structureSets, RandomState random, long seed) {
         planned = isPlanned();
         gen(seed, planned);
-        ZomboidCraft.LOGGER.info("ZomboidCraft county ({}) for seed {}", plan, seed);
+        ZomboidCraft.LOGGER.info("ZomboidCraft county planned ({}) for seed {}", plan, seed);
         return super.createState(structureSets, random, seed);
     }
 
