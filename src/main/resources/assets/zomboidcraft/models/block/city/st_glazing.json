@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_glazing": {
+      "sprite": "zomboidcraft:block/city/st_glazing",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/st_glazing"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_glazing"
+        },
+        "south": {
+          "texture": "#st_glazing"
+        },
+        "east": {
+          "texture": "#st_glazing",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_glazing",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_glazing",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_glazing",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

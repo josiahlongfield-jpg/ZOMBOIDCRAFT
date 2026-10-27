@@ -1,0 +1,117 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_truss": "zomboidcraft:block/city/st_truss",
+    "particle": "zomboidcraft:block/city/st_truss"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_truss",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_truss",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_truss",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_truss",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_truss"
+        },
+        "down": {
+          "texture": "#st_truss"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_truss"
+        },
+        "south": {
+          "texture": "#st_truss"
+        },
+        "east": {
+          "texture": "#st_truss",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_truss",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_truss",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_truss",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        0
+      ],
+      "to": [
+        9,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_truss",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_truss",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_truss"
+        },
+        "west": {
+          "texture": "#st_truss"
+        },
+        "up": {
+          "texture": "#st_truss",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_truss",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

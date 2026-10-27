@@ -77,6 +77,7 @@ public final class CountyMap {
                 case MILITARY -> new Color(160, 160, 120);
                 case ROADSIDE -> new Color(220, 120, 200);
                 case HIDEOUT -> new Color(40, 90, 40);
+                case LANDMARK -> new Color(240, 240, 240);
             };
             g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 110));
             g.fillRect(px, pz, w, d);

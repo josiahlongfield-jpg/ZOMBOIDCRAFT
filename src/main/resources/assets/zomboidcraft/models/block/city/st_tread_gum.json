@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_riser": "zomboidcraft:block/city/st_riser",
+    "st_tread_gum": "zomboidcraft:block/city/st_tread_gum",
+    "particle": "zomboidcraft:block/city/st_riser"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_riser",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_riser",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_tread_gum",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_riser",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

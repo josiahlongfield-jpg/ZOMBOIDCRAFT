@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "st_grille": "zomboidcraft:block/city/st_grille",
+    "particle": "zomboidcraft:block/city/st_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        8,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_grille"
+        },
+        "south": {
+          "texture": "#st_grille"
+        },
+        "east": {
+          "texture": "#st_grille",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_grille",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_grille",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_grille"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7.5,
+        7
+      ],
+      "to": [
+        16,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

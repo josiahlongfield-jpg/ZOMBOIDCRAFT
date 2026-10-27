@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_rowplate": "zomboidcraft:block/city/st_rowplate",
+    "particle": "zomboidcraft:block/city/st_rowplate"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        2,
+        15.4
+      ],
+      "to": [
+        11,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_rowplate"
+        },
+        "south": {
+          "texture": "#st_rowplate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_rowplate"
+        },
+        "west": {
+          "texture": "#st_rowplate"
+        },
+        "up": {
+          "texture": "#st_rowplate"
+        },
+        "down": {
+          "texture": "#st_rowplate"
+        }
+      }
+    }
+  ]
+}

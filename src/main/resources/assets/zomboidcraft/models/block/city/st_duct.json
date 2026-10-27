@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_duct": "zomboidcraft:block/city/st_duct",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_duct"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        0
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_duct",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_duct",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_duct"
+        },
+        "west": {
+          "texture": "#st_duct"
+        },
+        "up": {
+          "texture": "#st_duct"
+        },
+        "down": {
+          "texture": "#st_duct"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        2.5,
+        0
+      ],
+      "to": [
+        14.5,
+        15.5,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

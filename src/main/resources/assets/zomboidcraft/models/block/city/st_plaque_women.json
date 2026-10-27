@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "st_plaque_women": "zomboidcraft:block/city/st_plaque_women",
+    "particle": "zomboidcraft:block/city/st_plaque_women"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        15.2
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_plaque_women"
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

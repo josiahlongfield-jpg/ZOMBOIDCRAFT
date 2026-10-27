@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_housing": "zomboidcraft:block/city/st_housing",
+    "st_slats": "zomboidcraft:block/city/st_slats",
+    "particle": "zomboidcraft:block/city/st_slats"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        9,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_slats"
+        },
+        "south": {
+          "texture": "#st_housing"
+        },
+        "east": {
+          "texture": "#st_housing",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_housing",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_housing",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_housing"
+        }
+      }
+    }
+  ]
+}
