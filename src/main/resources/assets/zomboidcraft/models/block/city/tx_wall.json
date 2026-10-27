@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_wall": "zomboidcraft:block/city/tx_wall",
+    "particle": "zomboidcraft:block/city/tx_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_wall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_wall",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_wall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_wall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_wall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_wall",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

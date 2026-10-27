@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_bin": "zomboidcraft:block/city/tx_bin",
+    "tx_bin_top": "zomboidcraft:block/city/tx_bin_top",
+    "tx_brushed": "zomboidcraft:block/city/tx_brushed",
+    "particle": "zomboidcraft:block/city/tx_bin"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        5
+      ],
+      "to": [
+        12,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_bin"
+        },
+        "south": {
+          "texture": "#tx_bin"
+        },
+        "east": {
+          "texture": "#tx_bin"
+        },
+        "west": {
+          "texture": "#tx_bin"
+        },
+        "up": {
+          "texture": "#tx_bin_top"
+        },
+        "down": {
+          "texture": "#tx_brushed",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        4
+      ],
+      "to": [
+        11,
+        11,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_bin"
+        },
+        "south": {
+          "texture": "#tx_bin"
+        },
+        "east": {
+          "texture": "#tx_bin"
+        },
+        "west": {
+          "texture": "#tx_bin"
+        },
+        "up": {
+          "texture": "#tx_bin_top"
+        },
+        "down": {
+          "texture": "#tx_brushed",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

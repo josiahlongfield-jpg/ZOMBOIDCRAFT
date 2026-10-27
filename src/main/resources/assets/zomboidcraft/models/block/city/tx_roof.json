@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_fascia": "zomboidcraft:block/city/tx_fascia",
+    "tx_membrane": "zomboidcraft:block/city/tx_membrane",
+    "tx_slat_ceiling": "zomboidcraft:block/city/tx_slat_ceiling",
+    "particle": "zomboidcraft:block/city/tx_fascia"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_fascia",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_fascia",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_membrane",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_slat_ceiling",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

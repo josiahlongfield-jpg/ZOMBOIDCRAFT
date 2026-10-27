@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_green": "zomboidcraft:block/city/tx_green",
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "tx_validator": "zomboidcraft:block/city/tx_validator",
+    "particle": "zomboidcraft:block/city/tx_steel_d"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        0.6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        5
+      ],
+      "to": [
+        11,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_validator"
+        },
+        "south": {
+          "texture": "#tx_green"
+        },
+        "east": {
+          "texture": "#tx_green"
+        },
+        "west": {
+          "texture": "#tx_green"
+        },
+        "up": {
+          "texture": "#tx_green"
+        },
+        "down": {
+          "texture": "#tx_green"
+        }
+      }
+    }
+  ]
+}

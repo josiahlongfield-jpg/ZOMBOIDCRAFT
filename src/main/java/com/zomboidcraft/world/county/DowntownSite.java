@@ -60,7 +60,7 @@ final class DowntownSite extends Site {
         }
     }
 
-    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL }
+    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL, STATION }
 
     private Kit kit;
     private CityCivic civic;
@@ -68,6 +68,8 @@ final class DowntownSite extends Site {
     private final List<Integer> xs = new ArrayList<>(), zs = new ArrayList<>();
     private final List<Kit.Style> xStyle = new ArrayList<>(), zStyle = new ArrayList<>();
     private final List<Kit.Lane> lanes = new ArrayList<>();
+    /** The railway's stations wanted on blocks of this piece, by the block. */
+    private final java.util.Map<Blk, Railway.Station> stations = new java.util.HashMap<>();
     /** Boxes {x0, z0, x1, z1, height} for the Decay pass: each building with a block of margin. */
     private final List<int[]> ruins = new ArrayList<>();
     /** The parking levels under the big towers, one of which hides a bunker. */
@@ -305,6 +307,11 @@ final class DowntownSite extends Site {
             if (role != null) {
                 roles[i] = role.equals("plaza") ? Role.PLAZA : Role.VACANT;
             }
+            Railway.Station st = p.rails.stations.get(County.key(gi, gj));
+            if (st != null && role == null && b.street[st.face()]) {
+                roles[i] = Role.STATION;
+                stations.put(b, st);
+            }
         }
     }
 
@@ -436,8 +443,70 @@ final class DowntownSite extends Site {
             case CONSTRUCTION -> construction(b);
             case CHURCH -> church(b);
             case VACANT -> vacant(b);
+            case STATION -> station(b);
             default -> walkups(b);
         }
+    }
+
+    /**
+     * The railway's station on the block beside a street stop: centred on the platform's middle,
+     * facing the line across the sidewalk, its canopy out over the sidewalk to the platform's; the
+     * rest of the block walk-ups as usual, the front's either side of the station, the far sides
+     * fitted between the front's and the back's.
+     */
+    private void station(Blk b) {
+        Railway.Station st = stations.get(b);
+        int front = st.face(), back = (front + 2) & 3;
+        int len = b.len(front), dep = b.depth(front);
+        int depth = Math.min(22, Math.min(b.w(), b.d()) / 2);
+        int L = TownStation.L, D = TownStation.D;
+        if (len < L + 2 || dep < D + 12) {
+            walkups(b);
+            return;
+        }
+        // along the side from its west (north and south sides) or north (east and west) end
+        int mid = (front & 1) == 0 ? st.x() - p.x0 - b.x0 : st.z() - p.z0 - b.z0;
+        int along = Math.max(0, Math.min(len - L, mid - L / 2 + 1));
+        Placer pl = lotOn(b, front, along, L, D);
+        // the canopy reaches from the block's edge to the platform's back, six out from the line
+        Kit.Style style = styleOn(b, front);
+        int canopy = reach(style) - 5;
+        new TownStation(pl, new SplittableRandom(Noise.hash(p.seed, b.x0, b.z0)), st.key(), canopy).build();
+        // no lamp posts through the canopy: the sidewalk under it is the station's
+        int[] box = boxOn(b, front, along, L, D);
+        for (int k = 1; k <= canopy; k++) {
+            int[] dir = {0, 0};
+            switch (front) {
+                case 0 -> dir[1] = -k;
+                case 1 -> dir[0] = k;
+                case 2 -> dir[1] = k;
+                default -> dir[0] = -k;
+            }
+            int ex = front == 1 ? box[2] : front == 3 ? box[0] : 0, ez = front == 0 ? box[1] : front == 2 ? box[3] : 0;
+            for (int a = 0; a < L; a++) {
+                int x = (front & 1) == 0 ? box[0] + a : ex + dir[0], z = (front & 1) == 0 ? ez + dir[1] : box[1] + a;
+                if (x >= 0 && z >= 0 && x < w && z < d && kit.use(x, z) == Kit.WALK) {
+                    kit.use[z * w + x] = Kit.BUILT;
+                }
+            }
+        }
+        int fdepth = Math.max(depth, D + 1);
+        frontage(b, front, 0, along - 2, Math.min(depth, 20));
+        frontage(b, front, along + L + 1, len - 1, Math.min(depth, 20));
+        if (b.street[back]) {
+            frontage(b, back, 0, len - 1, depth);
+        }
+        for (int side : new int[] {(front + 1) & 3, (front + 3) & 3}) {
+            if (!b.street[side]) {
+                continue;
+            }
+            // which end of this side meets the front: the side's start for a north or west front
+            boolean frontAtStart = front == 0 || front == 3;
+            int a0 = frontAtStart ? fdepth : (b.street[back] ? depth : 0);
+            int a1 = b.len(side) - 1 - (frontAtStart ? (b.street[back] ? depth : 0) : fdepth);
+            frontage(b, side, a0, a1, depth);
+        }
+        backyard(b);
     }
 
     /**
