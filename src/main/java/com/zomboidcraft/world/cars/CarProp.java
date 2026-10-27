@@ -1672,8 +1672,11 @@ public class CarProp extends Entity {
             return;
         }
         entityData.set(ENGINE, on);
-        server.playSound(null, getX(), getY(), getZ(), helicopter() ? (on ? AirSounds.HELI_START : AirSounds.HELI_SHUTDOWN)
-                : (on ? AirSounds.JET_START : AirSounds.JET_SHUTDOWN), SoundSource.NEUTRAL, 1.5f, 1f);
+        // a jet's start-up is played by each client (AirSound), which can cut it short when it's switched off
+        if (helicopter() || !on) {
+            server.playSound(null, getX(), getY(), getZ(), helicopter() ? (on ? AirSounds.HELI_START : AirSounds.HELI_SHUTDOWN)
+                    : AirSounds.JET_SHUTDOWN, SoundSource.NEUTRAL, 1.5f, 1f);
+        }
         player.sendOverlayMessage(Component.literal(on ? (helicopter() ? "Rotors coming up to speed. " : "Engines spooling up. ") + flightHelp()
                 : "Shutting down."));
         if (on) {

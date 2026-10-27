@@ -26,6 +26,9 @@ import net.minecraft.util.Mth;
 final class AirSound {
     private static final Map<CarProp, List<Layer>> PLAYING = new WeakHashMap<>();
     private static final Map<CarProp, Integer> WARNED = new WeakHashMap<>();
+    private static final Map<CarProp, Engine> ENGINES = new WeakHashMap<>();
+    /** How long the start-up recording runs before the idle loop (cut from the same recording) takes over. */
+    private static final int START_TICKS = 50 * 20;
 
     /** Called each client tick for every aircraft in view. */
     static void keep(CarProp car) {
@@ -44,6 +47,9 @@ final class AirSound {
                 mc.getSoundManager().play(SimpleSoundInstance.forUI(AirSounds.WARN_STALL, 1f, 0.7f));
             }
         }
+        if (f.kind == Flight.Kind.JET) {
+            starting(car);
+        }
         if (f.rpm < 0.02f && f.speed() < 3) {
             return;
         }
@@ -56,10 +62,12 @@ final class AirSound {
         }
         layers = new ArrayList<>();
         if (f.kind == Flight.Kind.JET) {
-            layers.add(new Layer(car, AirSounds.JET_IDLE, c -> inside(c) ? 0.9 * spool(c) : 0.45 * spool(c), c -> 0.7 + 0.9 * c.flight().rpm));
-            layers.add(new Layer(car, AirSounds.JET_ROAR, c -> (inside(c) ? 0.35 : 1.0) * Mth.clamp(c.flight().thrustShare() * 1.3 + 0.08 * spool(c), 0, 1),
+            // the idle loop is the real idle: pitch 1 at idle, rising only as the throttle opens
+            layers.add(new Layer(car, AirSounds.JET_IDLE, c -> (inside(c) ? 0.9 : 0.45) * spool(c) * running(c),
+                    c -> 1 + 0.45 * Mth.clamp((c.flight().rpm - 0.6) / 0.4, 0, 1)));
+            layers.add(new Layer(car, AirSounds.JET_ROAR, c -> (inside(c) ? 0.35 : 1.0) * Mth.clamp(c.flight().thrustShare() * 1.3 + 0.04 * spool(c), 0, 1) * running(c),
                     c -> 0.75 + 0.35 * c.flight().power));
-            layers.add(new Layer(car, AirSounds.JET_AFTERBURNER, c -> c.flight().afterburner() ? (inside(c) ? 0.5 : 1.2) : 0, c -> 1));
+            layers.add(new Layer(car, AirSounds.JET_AFTERBURNER, c -> c.flight().afterburner() ? (inside(c) ? 0.5 : 1.2) * running(c) : 0, c -> 1));
             layers.add(new Layer(car, AirSounds.JET_DISTANT, c -> far(c) * (0.3 + c.flight().thrustShare()), c -> 1));
         } else {
             layers.add(new Layer(car, AirSounds.HELI_ROTOR, c -> (inside(c) ? 0.7 : 1.1) * Mth.clamp(c.flight().rpm * 1.4f, 0, 1) * (0.7 + 0.4 * c.flight().power),
@@ -71,6 +79,85 @@ final class AirSound {
                 c -> 0.7 + 0.8 * Mth.clamp(c.flight().speed() / c.flight().top, 0, 1)));
         layers.forEach(l -> mc.getSoundManager().play(l));
         PLAYING.put(car, layers);
+    }
+
+    /**
+     * The start-up recording, played when the engine is switched on in sight: for its fifty seconds the
+     * engine layers stay quiet so the recording isn't doubled by a pitched copy of itself, then the idle
+     * loop comes in. Opening the throttle before then fades the start out and hands over early;
+     * switching off stops it. An aircraft first seen already running never plays it.
+     */
+    private static void starting(CarProp car) {
+        Engine e = ENGINES.computeIfAbsent(car, c -> new Engine(c.engineOn()));
+        boolean on = car.engineOn();
+        if (on && !e.on) {
+            e.start = new Start(car);
+            e.startedAt = car.tickCount;
+            Minecraft.getInstance().getSoundManager().play(e.start);
+        }
+        e.on = on;
+        boolean early = car.flight().power > 0.05f;
+        boolean playing = e.start != null && on && car.tickCount - e.startedAt < START_TICKS && !early;
+        if (e.start != null && !playing) {
+            e.start.fadeOut(on ? (early ? 20 : 6) : 2);
+            e.start = null;
+        }
+        e.running = playing ? 0 : 1;
+    }
+
+    /** 0 while the start-up recording has the engine to itself, 1 once the loops take over. */
+    private static double running(CarProp c) {
+        Engine e = ENGINES.get(c);
+        return e == null ? 1 : e.running;
+    }
+
+    private static final class Engine {
+        boolean on;
+        Start start;
+        int startedAt;
+        float running = 1;
+
+        Engine(boolean on) {
+            this.on = on;
+        }
+    }
+
+    /** The start-up recording, following the aircraft, stopped if the engine's switched off part way. */
+    private static final class Start extends AbstractTickableSoundInstance {
+        private final CarProp car;
+        private int fade = -1, fadeTicks;
+
+        Start(CarProp car) {
+            super(AirSounds.JET_START, SoundSource.NEUTRAL, SoundInstance.createUnseededRandom());
+            this.car = car;
+            this.volume = 1.5f;
+            this.pitch = 1;
+            this.attenuation = SoundInstance.Attenuation.LINEAR;
+            tick();
+        }
+
+        void fadeOut(int ticks) {
+            if (fade < 0) {
+                fade = fadeTicks = Math.max(1, ticks);
+            }
+        }
+
+        @Override
+        public void tick() {
+            if (car.isRemoved()) {
+                stop();
+                return;
+            }
+            x = car.getX();
+            y = car.getY() + 2;
+            z = car.getZ();
+            if (fade >= 0) {
+                volume = 1.5f * fade / fadeTicks;
+                if (fade-- == 0) {
+                    stop();
+                }
+            }
+        }
     }
 
     private static double spool(CarProp c) {
