@@ -170,7 +170,7 @@ public final class TrainClient {
         TrainEntity train = player == null ? null : ((TrainRider) player).zomboidcraft$train();
         Line line = train == null ? null : train.line();
         if (line == null) {
-            return -1;
+            return null;
         }
         Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
         for (int car = 0; car < line.cars; car++) {
