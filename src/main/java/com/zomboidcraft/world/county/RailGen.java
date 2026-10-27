@@ -37,6 +37,8 @@ final class RailGen {
      * behind the platform, its canopy DEPOT_CANOPY.
      */
     private static final int DEPOT_REACH = Layout.DEPOT_LEN / 2, DEPOT_CANOPY = DEPOT_REACH - 3;
+    /** A subway station's steel bents stand this many samples apart: a column on the platform, a girder across the roof. */
+    private static final int BENT = 5;
 
     private final County county;
     private final List<Track> near = new ArrayList<>();
@@ -820,12 +822,14 @@ final class RailGen {
             }
             if (s < 2) {
                 trackway(out, c);
+                bentRoof(out, c);
             } else if (s < back) {
                 out.set(x, bed, z, "rw_tunnel");
                 out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
                 clear(out, x, z, Y + 1, Y + 5);
                 out.set(x, Y + 6, z, "rw_tunnel");
                 litter(out, c, Y + 1, 2);
+                bent(out, c);
                 if (s >= back - 1 && !mouth && roll(c, 0x6A1L) < 0.07) {
                     // tags on the tile, at arm's height
                     int g = (int) (roll(c, 0x6A2L) * 8);
@@ -843,11 +847,17 @@ final class RailGen {
         }
         if (s < 3) {
             trackway(out, c);
+            if (station) {
+                bentRoof(out, c);
+            }
         } else if (s < 4) {
             out.set(x, bed - 1, z, "rw_tunnel");
             out.set(x, bed, z, "rw_tunnel_floor");
             clear(out, x, z, Y, Y + 5);
             out.set(x, Y + 6, z, "rw_tunnel");
+            if (station) {
+                bentRoof(out, c);
+            }
             if (!station && Math.floorMod(c.i, 16) == (c.o > 0 ? 0 : 8)) {
                 out.set(x, Y + 4, z, "rw_tunnel_lamp[facing=" + c.in() + "]");
             }
@@ -879,6 +889,33 @@ final class RailGen {
         litter(out, c, Y + 1, 2);
         if ((int) c.s % 4 == 1 && c.da == PASS_LO + 1) {
             out.set(x, Y + 4, z, "rw_subway_lamp[axis=" + c.across() + "]");
+        }
+    }
+
+    /**
+     * A subway station's steel, every {@link #BENT} samples: on the platform an I-beam column a
+     * block back from the edge, its girder hanging under the roof from it to the back wall; over
+     * the track (kept clear) and the far walkway the girder runs on flush with the roof.
+     */
+    private void bent(ChunkSink out, Cut c) {
+        if (Math.floorMod(c.da, BENT) != 0) {
+            return;
+        }
+        int x = c.x, z = c.z, Y = c.Y;
+        bentRoof(out, c);
+        if (c.s >= 3 && c.s < 4) {
+            String f = "[facing=" + c.along(1) + "]";
+            out.set(x, Y + 1, z, "rw_subway_column_base" + f);
+            out.column(x, z, Y + 2, Y + 4, "rw_subway_column" + f);
+            out.set(x, Y + 5, z, "rw_subway_column_cap" + f);
+        } else if (c.s >= 4) {
+            out.set(x, Y + 5, z, "rw_subway_beam[axis=" + c.across() + "]");
+        }
+    }
+
+    private void bentRoof(ChunkSink out, Cut c) {
+        if (Math.floorMod(c.da, BENT) == 0) {
+            out.set(c.x, c.Y + 6, c.z, "rw_subway_girder[axis=" + c.across() + "]");
         }
     }
 
@@ -925,7 +962,7 @@ final class RailGen {
         if (s >= back - 1 && la == 10 && !unionRun(c, PASS_LO, PASS_HI, false)) {
             out.set(x, Y + 2, z, "zomboidcraft:train_call_button[facing=" + c.in() + "]");
         }
-        if (s >= back - 2 && s < back - 1 && la % 4 == 0) {
+        if (s >= back - 2 && s < back - 1 && la % 4 == 0 && Math.floorMod(c.da, BENT) != 0) {
             out.set(x, Y + 5, z, "rw_subway_lamp[axis=" + c.axis() + "]");
         }
     }

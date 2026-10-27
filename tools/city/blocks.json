@@ -260134,6 +260134,267 @@
    "title": "Tunnel Concrete",
    "sound": "STONE"
   },
+  "rw_subway_column": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     4,
+     13,
+     16,
+     6,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     10,
+     13,
+     16,
+     12,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     7,
+     0,
+     6,
+     9,
+     16,
+     10,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Subway Column",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rw_subway_column_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     4,
+     13,
+     16,
+     6,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     10,
+     13,
+     16,
+     12,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     7,
+     0,
+     6,
+     9,
+     16,
+     10,
+     "rw_el_paint"
+    ],
+    [
+     2,
+     0,
+     2,
+     14,
+     1.5,
+     14,
+     "rw_el_paint"
+    ],
+    [
+     3,
+     1.5,
+     2.6,
+     4,
+     2.2,
+     3.6,
+     "rw_el_paint"
+    ],
+    [
+     3,
+     1.5,
+     12.4,
+     4,
+     2.2,
+     13.4,
+     "rw_el_paint"
+    ],
+    [
+     12,
+     1.5,
+     2.6,
+     13,
+     2.2,
+     3.6,
+     "rw_el_paint"
+    ],
+    [
+     12,
+     1.5,
+     12.4,
+     13,
+     2.2,
+     13.4,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Subway Column",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rw_subway_column_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     4,
+     13,
+     16,
+     6,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     3,
+     0,
+     10,
+     13,
+     16,
+     12,
+     {
+      "north": "rw_sub_steel",
+      "south": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_el_paint"
+     }
+    ],
+    [
+     7,
+     0,
+     6,
+     9,
+     16,
+     10,
+     "rw_el_paint"
+    ],
+    [
+     2,
+     14,
+     2,
+     14,
+     16,
+     14,
+     "rw_el_paint"
+    ],
+    [
+     0,
+     11,
+     5,
+     16,
+     14,
+     11,
+     "rw_el_paint"
+    ]
+   ],
+   "title": "Subway Column",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rw_subway_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     7,
+     0,
+     11,
+     16,
+     16,
+     {
+      "east": "rw_girder",
+      "west": "rw_girder",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint",
+      "down": "rw_sub_steel"
+     }
+    ],
+    [
+     4,
+     7,
+     0,
+     12,
+     8.5,
+     16,
+     {
+      "down": "rw_sub_steel",
+      "side": "rw_el_paint",
+      "up": "rw_el_paint"
+     }
+    ]
+   ],
+   "title": "Roof Girder",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "rw_subway_girder": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "rw_sub_steel",
+      "up": "rw_tunnel",
+      "side": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Roof Girder",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
   "rw_tunnel_floor": {
    "tex": {
     "up": "rw_walkway",
@@ -262558,6 +262819,24 @@
      -14,
      8,
      7.4,
+     -11,
+     11,
+     8.6,
+     "rw_dp_blade"
+    ],
+    [
+     -11,
+     8,
+     7.4,
+     -8.5,
+     11,
+     8.6,
+     "rw_dp_band"
+    ],
+    [
+     -8.5,
+     8,
+     7.4,
      7,
      11,
      8.6,
@@ -262565,6 +262844,24 @@
     ],
     [
      9,
+     8,
+     7.4,
+     24.5,
+     11,
+     8.6,
+     "rw_dp_blade"
+    ],
+    [
+     24.5,
+     8,
+     7.4,
+     27,
+     11,
+     8.6,
+     "rw_dp_band"
+    ],
+    [
+     27,
      8,
      7.4,
      30,
