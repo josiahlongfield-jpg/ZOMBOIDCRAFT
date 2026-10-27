@@ -235,7 +235,7 @@ final class FlightHud {
     }
 
     /** Where a direction lands on the screen, or null if it's behind the camera. */
-    private static float[] project(Camera cam, Vec3 d, float scale, int cx, int cy) {
+    static float[] project(Camera cam, Vec3 d, float scale, int cx, int cy) {
         Vector3fc fw = cam.forwardVector(), up = cam.upVector(), left = cam.leftVector();
         double z = d.x * fw.x() + d.y * fw.y() + d.z * fw.z();
         if (z < 0.05) {
