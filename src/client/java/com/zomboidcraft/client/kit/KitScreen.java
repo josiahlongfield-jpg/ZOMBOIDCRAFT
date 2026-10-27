@@ -341,6 +341,11 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             fly = null;
             return true;
         }
+        // on the bench the right button only turns the weapon; everything there is picked with the left
+        if (page == Page.BENCH && right) {
+            bench.pressed(mx, my);
+            return true;
+        }
         for (int i = hots.size() - 1; i >= 0; i--) {
             Hot h = hots.get(i);
             if (h.has(mx, my)) {
@@ -349,7 +354,6 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
                 return true;
             }
         }
-        if (page == Page.BENCH && !right) bench.pressed(mx, my);
         return true;
     }
 
