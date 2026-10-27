@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_chips": "zomboidcraft:block/city/sc_chips",
+    "particle": "zomboidcraft:block/city/sc_chips"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chips",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_chips",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_chips",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_chips",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_chips",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chips",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

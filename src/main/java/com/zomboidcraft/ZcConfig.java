@@ -345,6 +345,18 @@ public final class ZcConfig {
         public double rainBarrelFill = 0.5;
         /** Builds take this many times their usual time. */
         public double timeMultiplier = 1.0;
+        /** How far zombies hear a ringing alarm clock, in blocks, and how long it rings, in seconds. */
+        public double alarmClockNoise = 40;
+        public int alarmClockRingSeconds = 25;
+        /** How far a car key's panic button reaches, in blocks, and how long the alarm sounds, in seconds. */
+        public double keyFobRange = 40;
+        public int carAlarmSeconds = 40;
+        /** In-game days a planter takes from seed to ripe while kept watered, and days a watering lasts. */
+        public double planterGrowDays = 4;
+        public double planterWaterDays = 1;
+        /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
+        public int spikedWallHits = 24;
+        public float spikeDamage = 2f;
     }
 
     public static class Digging {
@@ -388,6 +400,12 @@ public final class ZcConfig {
         public double carBurnt = 0.07;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
+        /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
+        public double jetTopSpeed = 300;
+        /** The helicopter's top speed in km/h. */
+        public double heliTopSpeed = 250;
+        /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
+        public boolean aircraftService = true;
         /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
@@ -488,6 +506,18 @@ public final class ZcConfig {
         public boolean weaponCards = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
+        /**
+         * Third person (F5) is played over the shoulder: the camera close behind you and to one side, a crosshair on
+         * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
+         */
+        public boolean shoulderCam = true;
+        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
+        public double shoulderBack = 1.9;
+        public double shoulderSide = 0.6;
+        public double shoulderUp = 0.15;
+        /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
+        public double shoulderAimBack = 1.05;
+        public double shoulderAimSide = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -558,13 +588,13 @@ public final class ZcConfig {
          * How much a forearm (with the hand) takes before it tears off at the elbow, in gun damage: each hit adds the
          * bullet's or pellet's damage times its kind of gun's tearing below.
          */
-        public double forearm = 24;
+        public double forearm = 20;
         /** How much an upper arm takes before the whole arm tears off at the shoulder. */
-        public double arm = 34;
+        public double arm = 28;
         /** How much a shin (with the foot) takes before it tears off at the knee. */
-        public double shin = 28;
+        public double shin = 24;
         /** How much a thigh takes before the whole leg tears off at the hip. */
-        public double leg = 40;
+        public double leg = 34;
         /** Tearing per pellet of buckshot: a shotgun up close takes a limb off nearly every time. */
         public double shotguns = 2.0;
         /**
@@ -586,6 +616,22 @@ public final class ZcConfig {
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
         public int maxLimbs = 64;
+        /**
+         * Shows the shooter what each shot hit, over the hotbar: the part, how far a limb is to coming off (taken /
+         * toughness), and OFF when it goes.
+         */
+        public boolean showHits = false;
+
+        /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
+        void retune() {
+            if (forearm == 24 && arm == 34 && shin == 28 && leg == 40) {
+                Limbs fresh = new Limbs();
+                forearm = fresh.forearm;
+                arm = fresh.arm;
+                shin = fresh.shin;
+                leg = fresh.leg;
+            }
+        }
     }
 
     /**
@@ -616,7 +662,9 @@ public final class ZcConfig {
          * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
          * own: an SMG runs faster than an assault rifle.
          */
-        public double autoRpm = 700.0;
+        public double autoRpm = 600.0;
+        /** Multiplies the suppressed shot's pitch (below 1 deepens it). */
+        public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -716,7 +764,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 700
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
             return s;
         }
 
@@ -833,6 +881,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
         public boolean enabled = true;
@@ -912,6 +961,27 @@ public final class ZcConfig {
         public boolean glowWithShaders = false;
     }
 
+    /**
+     * Which round of changed defaults this file has had. A saved file keeps its old numbers, so when a default is
+     * changed on purpose, bump this and move the old default over in {@link #upgrade} (values someone set themselves
+     * are left alone).
+     */
+    public int defaultsVersion = 0;
+    private static final int DEFAULTS = 1;
+
+    private static void upgrade(ZcConfig c) {
+        if (c.defaultsVersion < 1) {
+            // 2026-10-27: the assault rifle 700 -> 600 a minute, its suppressed shot deeper
+            if (c.guns.autoRpm == 700.0) {
+                c.guns.autoRpm = 600.0;
+            }
+            if (c.guns.suppressedPitch == 1.0) {
+                c.guns.suppressedPitch = 0.88;
+            }
+        }
+        c.defaultsVersion = DEFAULTS;
+    }
+
     public static ZcConfig get() {
         return instance;
     }
@@ -922,11 +992,14 @@ public final class ZcConfig {
                 ZcConfig read = GSON.fromJson(reader, ZcConfig.class);
                 if (read != null) {
                     instance = read;
+                    upgrade(instance);
+                    instance.limbs.retune();
                 }
             } catch (IOException | RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Couldn't read {}, using defaults", FILE, e);
             }
         }
+        instance.defaultsVersion = Math.max(instance.defaultsVersion, DEFAULTS);
         // Writing back adds any settings that are new in this version.
         save();
     }

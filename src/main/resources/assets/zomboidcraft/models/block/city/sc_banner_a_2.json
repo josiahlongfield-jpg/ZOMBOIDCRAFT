@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_banner_a_2": {
+      "sprite": "zomboidcraft:block/city/sc_banner_a_2",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/sc_banner_a_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1,
+        15.5
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_banner_a_2"
+        },
+        "south": {
+          "texture": "#sc_banner_a_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_banner_a_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_banner_a_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_banner_a_2"
+        },
+        "down": {
+          "texture": "#sc_banner_a_2"
+        }
+      }
+    }
+  ]
+}

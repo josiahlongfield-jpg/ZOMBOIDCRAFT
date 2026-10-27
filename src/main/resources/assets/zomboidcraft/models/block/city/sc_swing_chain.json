@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_chain": "zomboidcraft:block/city/sc_chain",
+    "particle": "zomboidcraft:block/city/sc_chain"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        0,
+        3.6
+      ],
+      "to": [
+        8.4,
+        16,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain"
+        },
+        "south": {
+          "texture": "#sc_chain"
+        },
+        "east": {
+          "texture": "#sc_chain"
+        },
+        "west": {
+          "texture": "#sc_chain"
+        },
+        "up": {
+          "texture": "#sc_chain",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        0,
+        11.6
+      ],
+      "to": [
+        8.4,
+        16,
+        12.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain"
+        },
+        "south": {
+          "texture": "#sc_chain"
+        },
+        "east": {
+          "texture": "#sc_chain"
+        },
+        "west": {
+          "texture": "#sc_chain"
+        },
+        "up": {
+          "texture": "#sc_chain",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

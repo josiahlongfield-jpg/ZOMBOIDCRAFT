@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "desk_laminate": "zomboidcraft:block/city/desk_laminate",
+    "sh_booking_front": "zomboidcraft:block/city/sh_booking_front",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/desk_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#desk_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_booking_front"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

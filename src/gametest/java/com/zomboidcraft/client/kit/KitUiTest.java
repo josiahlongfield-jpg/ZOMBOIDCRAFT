@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import com.zomboidcraft.ModItems;
+import com.zomboidcraft.building.BuildBlocks;
 import com.zomboidcraft.building.DigRules;
 import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.skills.Skill;
@@ -144,7 +145,16 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.getInput().pressKey(InputConstants.KEY_E);
             ctx.waitTicks(5);
             log(ctx, "after closing");
+            // closed on the bench, it must open on Character again
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(10);
+            String reopened = ctx.computeOnClient(mc -> mc.gui.screen() instanceof KitScreen<?> k ? k.page.name() : String.valueOf(mc.gui.screen()));
+            LOG.info("ZCUI reopened after closing on the bench -> page {}", reopened);
+            if (!"CHARACTER".equals(reopened)) throw new AssertionError("kit reopened on " + reopened + ", not CHARACTER");
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(5);
             buildTest(ctx, sp);
+            wave2Test(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -195,6 +205,78 @@ public class KitUiTest implements FabricClientGameTest {
     }
 
     /** Tries the digging rules on the server: a brick wall by hand, with a sledgehammer before and after Masonry 2, and stone under the floor. */
+    /**
+     * Wave 2 on the server: an alarm clock wound for a second starts ringing, a zombie stuck against a spiked
+     * wall gets hurt, and a planter takes seed, water, grows and gives up its crop. Then a screenshot of all three.
+     */
+    private static void wave2Test(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        BlockPos[] at = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            ServerLevel level = (ServerLevel) p.level();
+            BlockPos base = p.blockPosition().offset(3, 0, 0);
+            BlockPos wall = base.offset(0, 0, -2), planter = base, clock = base.offset(0, 0, 2);
+            level.setBlockAndUpdate(wall, BuildBlocks.SPIKED_WALL.defaultBlockState());
+            level.setBlockAndUpdate(planter, BuildBlocks.PLANTER.defaultBlockState());
+            level.setBlockAndUpdate(clock, BuildBlocks.ALARM_CLOCK.defaultBlockState().setValue(BuildBlocks.AlarmClock.FACING, net.minecraft.core.Direction.WEST));
+            BuildBlocks.AlarmClock.wind(level, clock, 20);
+            s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), String.format(java.util.Locale.ROOT,
+                    "summon minecraft:zombie %.2f %d %.2f {NoAI:1b,Tags:[\"spiketest\"]}", wall.getX() + 0.5, wall.getY(), wall.getZ() + 0.12));
+            return new BlockPos[]{wall, planter, clock};
+        });
+        ctx.waitTicks(30);
+        String early = sp.getServer().computeOnServer(s -> String.valueOf(s.overworld().getBlockState(at[2])));
+        ctx.waitTicks(220);
+        String report = sp.getServer().computeOnServer(s -> {
+            StringBuilder out = new StringBuilder();
+            try {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                ServerLevel level = (ServerLevel) p.level();
+                out.append("clock after 1.5 s=").append(early).append(" after 12.5 s=").append(level.getBlockState(at[2]));
+                var zombies = level.getEntitiesOfClass(net.minecraft.world.entity.monster.zombie.Zombie.class, new AABB(at[0]).inflate(2));
+                out.append(" | zombies by the wall=").append(zombies.stream().map(z -> z.getHealth() + "/" + z.getMaxHealth()).toList());
+                zombies.forEach(z -> z.discard());
+                // the planter: seed, water, grow, pick
+                net.minecraft.world.phys.BlockHitResult hit = new net.minecraft.world.phys.BlockHitResult(
+                        net.minecraft.world.phys.Vec3.atCenterOf(at[1]).add(0, 0.5, 0), net.minecraft.core.Direction.UP, at[1], false);
+                p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.CARROT_SEEDS, 2));
+                out.append(" | plant=").append(level.getBlockState(at[1]).useItemOn(p.getMainHandItem(), level, p, InteractionHand.MAIN_HAND, hit));
+                p.setItemInHand(InteractionHand.MAIN_HAND, net.minecraft.world.item.alchemy.PotionContents.createItemStack(Items.POTION,
+                        net.minecraft.world.item.alchemy.Potions.WATER));
+                out.append(" water=").append(level.getBlockState(at[1]).useItemOn(p.getMainHandItem(), level, p, InteractionHand.MAIN_HAND, hit))
+                        .append(" hand=").append(p.getMainHandItem().getItem());
+                out.append(" state=").append(level.getBlockState(at[1]));
+                int ticks = 0;
+                while (level.getBlockState(at[1]).getValue(BuildBlocks.Planter.AGE) < 7 && ticks < 2000) {
+                    BlockState st = level.getBlockState(at[1]);
+                    if (!st.getValue(BuildBlocks.Planter.WET)) level.setBlockAndUpdate(at[1], st.setValue(BuildBlocks.Planter.WET, true));
+                    level.getBlockState(at[1]).randomTick(level, at[1], level.getRandom());
+                    ticks++;
+                }
+                out.append(" ripe after ").append(ticks).append(" random ticks (").append(String.format(java.util.Locale.ROOT, "%.1f", ticks / (24000 * 3 / 4096.0)))
+                        .append(" days)");
+                p.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                out.append(" pick=").append(level.getBlockState(at[1]).useWithoutItem(level, p, hit));
+                out.append(" dropped=").append(level.getEntitiesOfClass(ItemEntity.class, new AABB(at[1]).inflate(2)).stream()
+                        .map(e -> e.getItem().toString()).toList());
+                level.getEntitiesOfClass(ItemEntity.class, new AABB(at[1]).inflate(2)).forEach(e -> e.discard());
+                // grown again for the picture
+                level.setBlockAndUpdate(at[1], level.getBlockState(at[1]).setValue(BuildBlocks.Planter.CROP, BuildBlocks.Crop.CARROT)
+                        .setValue(BuildBlocks.Planter.AGE, 7).setValue(BuildBlocks.Planter.WET, true));
+            } catch (Throwable t) {
+                out.append(" FAILED ").append(t);
+                LOG.error("ZCUI wave 2 failed", t);
+            }
+            return out.toString();
+        });
+        LOG.info("ZCUI wave2: {}", report);
+        ctx.runOnClient(mc -> {
+            mc.player.setYRot(-90f);
+            mc.player.setXRot(25f);
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("wave2-builds");
+    }
+
     private static String digProbe(MinecraftServer server) {
         StringBuilder out = new StringBuilder();
         try {

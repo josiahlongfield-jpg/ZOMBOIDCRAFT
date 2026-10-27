@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_cmu": "zomboidcraft:block/city/sc_cmu",
+    "sc_mural_10": "zomboidcraft:block/city/sc_mural_10",
+    "particle": "zomboidcraft:block/city/sc_mural_10"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_mural_10",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_cmu",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_cmu",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_cmu",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_cmu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_cmu",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

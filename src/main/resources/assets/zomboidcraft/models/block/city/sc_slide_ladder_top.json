@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_pipe_red": "zomboidcraft:block/city/sc_pipe_red",
+    "particle": "zomboidcraft:block/city/sc_pipe_red"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        6
+      ],
+      "to": [
+        4,
+        10,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        6
+      ],
+      "to": [
+        13,
+        10,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        0
+      ],
+      "to": [
+        4,
+        10,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        9,
+        0
+      ],
+      "to": [
+        13,
+        10,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    }
+  ]
+}

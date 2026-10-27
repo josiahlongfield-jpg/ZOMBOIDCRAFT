@@ -155,16 +155,8 @@ final class CityCivic {
         }
     }
 
-    /** A street tree in its pit: a grate round the trunk, mostly maples and planes, some dead. */
+    /** A street tree in its pit (the kit digs it and edges it), mostly maples and planes, some dead. */
     private void treePit(int x, int z) {
-        out.set(x, 0, z, "minecraft:coarse_dirt");
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                if ((dx != 0 || dz != 0) && chance() < 0.7) {
-                    out.set(x + dx, 1, z + dz, "grate");
-                }
-            }
-        }
         double r = chance();
         kit.tree(r < 0.4 ? Trees.Kind.MAPLE : r < 0.7 ? Trees.Kind.SYCAMORE : r < 0.82 ? Trees.Kind.OAK : r < 0.92 ? Trees.Kind.SICK
                 : Trees.Kind.DEAD, x, z);

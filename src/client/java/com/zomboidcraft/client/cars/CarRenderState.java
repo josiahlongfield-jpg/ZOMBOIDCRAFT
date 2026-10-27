@@ -25,6 +25,15 @@ public class CarRenderState extends EntityRenderState {
     /** Seconds since the aircraft's cockpit lights came on (someone sat in it), -1 while off; how dark it is round it. */
     public float cockpit = -1;
     public float cockpitDark;
+    /** The aircraft the local player sits in, whose screens show the flight live ({@link CockpitDisplays}); else null. */
+    public com.zomboidcraft.world.cars.CarProp liveCockpit;
+    /** An aircraft: turned by its attitude about a point pivot metres up, rotors at rotor radians. */
+    public boolean air;
+    public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
+    public float pivot;
+    public double rotor;
+    /** Torn apart in a crash: only the shell is drawn. */
+    public boolean broken;
     /** What's lit green for the local player's interact key (a door handle, a seat, the glovebox), in model space, and its size; or null. */
     public float[] highlight;
     public float highlightSize;

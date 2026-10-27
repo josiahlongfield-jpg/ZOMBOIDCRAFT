@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_eye_chart": "zomboidcraft:block/city/sc_eye_chart",
+    "particle": "zomboidcraft:block/city/sc_eye_chart"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        15.6
+      ],
+      "to": [
+        13,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_eye_chart"
+        },
+        "south": {
+          "texture": "#sc_eye_chart",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_eye_chart"
+        },
+        "west": {
+          "texture": "#sc_eye_chart"
+        },
+        "up": {
+          "texture": "#sc_eye_chart",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_eye_chart",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

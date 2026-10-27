@@ -1,0 +1,277 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_white": "zomboidcraft:block/city/home_white",
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "paper": "zomboidcraft:block/city/paper",
+    "sc_apple": "zomboidcraft:block/city/sc_apple",
+    "sc_beige": "zomboidcraft:block/city/sc_beige",
+    "sc_gradebook": "zomboidcraft:block/city/sc_gradebook",
+    "sc_red": "zomboidcraft:block/city/sc_red",
+    "sc_seat_blue": "zomboidcraft:block/city/sc_seat_blue",
+    "particle": "zomboidcraft:block/city/home_white"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        9,
+        0.6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_white"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white"
+        },
+        "up": {
+          "texture": "#sc_gradebook"
+        },
+        "down": {
+          "texture": "#home_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        0,
+        4
+      ],
+      "to": [
+        12.5,
+        2,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_apple"
+        },
+        "south": {
+          "texture": "#sc_apple"
+        },
+        "east": {
+          "texture": "#sc_apple"
+        },
+        "west": {
+          "texture": "#sc_apple"
+        },
+        "up": {
+          "texture": "#sc_apple"
+        },
+        "down": {
+          "texture": "#sc_apple",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.3,
+        2,
+        4.8
+      ],
+      "to": [
+        11.7,
+        2.8,
+        5.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark"
+        },
+        "west": {
+          "texture": "#home_wood_dark"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#home_wood_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        10
+      ],
+      "to": [
+        13.5,
+        3.5,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_beige"
+        },
+        "south": {
+          "texture": "#sc_beige"
+        },
+        "east": {
+          "texture": "#sc_beige"
+        },
+        "west": {
+          "texture": "#sc_beige"
+        },
+        "up": {
+          "texture": "#sc_beige"
+        },
+        "down": {
+          "texture": "#sc_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.5,
+        3.5,
+        10.6
+      ],
+      "to": [
+        11.9,
+        5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_apple"
+        },
+        "south": {
+          "texture": "#sc_apple"
+        },
+        "east": {
+          "texture": "#sc_apple"
+        },
+        "west": {
+          "texture": "#sc_apple"
+        },
+        "up": {
+          "texture": "#sc_apple"
+        },
+        "down": {
+          "texture": "#sc_apple"
+        }
+      }
+    },
+    {
+      "from": [
+        12.3,
+        3.5,
+        11.2
+      ],
+      "to": [
+        12.7,
+        5.2,
+        11.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_seat_blue"
+        },
+        "south": {
+          "texture": "#sc_seat_blue"
+        },
+        "east": {
+          "texture": "#sc_seat_blue"
+        },
+        "west": {
+          "texture": "#sc_seat_blue"
+        },
+        "up": {
+          "texture": "#sc_seat_blue"
+        },
+        "down": {
+          "texture": "#sc_seat_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        11
+      ],
+      "to": [
+        8,
+        1.4,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#paper"
+        },
+        "south": {
+          "texture": "#paper"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper"
+        },
+        "down": {
+          "texture": "#paper",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        1.5,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_red"
+        },
+        "south": {
+          "texture": "#sc_red"
+        },
+        "east": {
+          "texture": "#sc_red"
+        },
+        "west": {
+          "texture": "#sc_red"
+        },
+        "up": {
+          "texture": "#sc_red"
+        },
+        "down": {
+          "texture": "#sc_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

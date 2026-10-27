@@ -28,15 +28,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -165,11 +162,13 @@ public final class Guns {
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
         level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+                suppressed ? (float) config.suppressedVolume : 1f,
+                (suppressed ? (float) stats.suppressedPitch : 1f) * (0.95f + player.getRandom().nextFloat() * 0.1f));
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
         } else if (!type.opens && type != GunType.CROSSBOW) {   // a double keeps its empties till it's opened
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
+            // the shooter's own client plays its case in time with the shot; the server's tick would bunch them
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
         Noise.emit(level, player.position(), stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
@@ -208,13 +207,13 @@ public final class Guns {
             Vec3 end = eye.add(dir.scale(stats.range));
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
-            EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, stop, new AABB(eye, stop).inflate(1.0),
-                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
-                    eye.distanceToSqr(stop));
+            // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
+            Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
+                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, eye, dir, stats, power);
+                Pellet struck = pellet(target, hit, eye, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
-                Dismember.pellet(target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
+                Dismember.pellet(player, target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
                     boltIn = target instanceof Zombie hitZombie ? hitZombie : null;
@@ -293,12 +292,12 @@ public final class Guns {
      * One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot;
      * power is the gun's rolled damage).
      */
-    private static Pellet pellet(LivingEntity target, Vec3 eye, Vec3 dir, ZcConfig.GunStats stats, float power) {
-        Vec3 at = target.getBoundingBox().inflate(0.1).clip(eye, eye.add(dir.scale(stats.range))).orElse(target.position());
+    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
+        Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
-        double headY = target.getEyeY() - 0.28;
-        boolean head = !downed && at.y >= headY;
-        boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
+        // a zombie's head and legs are where its body is drawn; anything else's go by height on its box
+        boolean head = !downed && (hit.part >= 0 ? hit.head() : at.y >= target.getEyeY() - 0.28);
+        boolean legs = !downed && (hit.part >= 0 ? hit.leg() : at.y < target.getY() + target.getBbHeight() * 0.35);
         float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
