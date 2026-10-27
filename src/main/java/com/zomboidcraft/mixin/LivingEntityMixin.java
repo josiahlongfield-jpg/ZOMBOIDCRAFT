@@ -47,6 +47,23 @@ public abstract class LivingEntityMixin {
         return Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
     }
 
+    /** A blade cuts a zombie without knocking it back; only blunt blows do (CombatEvents.cutJustNow). */
+    @Inject(method = "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$noKnockbackFromCuts(double strength, double x, double z, DamageSource source, float amount,
+            boolean blocked, CallbackInfo ci) {
+        if (CombatEvents.cutJustNow((LivingEntity) (Object) this)) {
+            ci.cancel();
+        }
+    }
+
+    /** The same for the weapon's and a sprint's extra knockback, where it comes this way. */
+    @Inject(method = "knockback(DDD)V", at = @At("HEAD"), cancellable = true, require = 0)
+    private void zomboidcraft$noExtraKnockbackFromCuts(double strength, double x, double z, CallbackInfo ci) {
+        if (CombatEvents.cutJustNow((LivingEntity) (Object) this)) {
+            ci.cancel();
+        }
+    }
+
     /** A zombie knocked flat or reeling from a blow doesn't move or attack. */
     @Inject(method = "isImmobile", at = @At("RETURN"), cancellable = true)
     private void zomboidcraft$downed(CallbackInfoReturnable<Boolean> cir) {

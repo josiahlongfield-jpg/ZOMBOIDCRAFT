@@ -25,14 +25,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * Zombies on the ground. A hit or a shove can knock one flat for a few seconds; a heavy blow or a
- * shot to the legs can leave it crawling for good, and a few are found that way. Both lie low
- * (the swimming pose, with a half-height hitbox), so you look down to finish them, and a blow
- * to a zombie on the ground lands much harder.
+ * Zombies on the ground. A hit or a shove can knock one flat for a few seconds; a crushing blow can
+ * leave it crawling for good, as does losing both legs to shots, and a few are found that way. Both
+ * lie low (the swimming pose, with a half-height hitbox), so you look down to finish them, and a
+ * blow to a zombie on the ground lands much harder.
  *
- * Lighter hits stagger: the zombie freezes for a moment, which is what makes a shove buy time.
+ * Lighter hits stagger: the zombie freezes for a moment, which is what makes a shove buy time. A
+ * shot only makes it flinch, its advance checked for a split second.
  */
 public final class Downed {
     /** Hitbox of a zombie lying or crawling. Under a block wide, so crawlers still fit through doorways. */
@@ -53,11 +55,13 @@ public final class Downed {
                     .syncWith(ByteBufCodecs.BOOL, AttachmentSyncPredicate.all()));
 
     private static final Identifier CRAWL_SPEED = ZomboidCraft.id("crawl");
+    private static final Identifier FLINCH_SPEED = ZomboidCraft.id("flinch");
 
-    /** Ticks left on the ground and ticks left staggered, per zombie. Server thread only. */
+    /** Ticks left on the ground, staggered and flinching from a shot, per zombie. Server thread only. */
     private static final class Timer {
         int down;
         int stun;
+        int flinch;
     }
 
     private static final Map<Mob, Timer> TIMERS = new WeakHashMap<>();
@@ -125,6 +129,24 @@ public final class Downed {
             t.stun = Math.max(t.stun, ticks);
             zombie.getNavigation().stop();
         }
+    }
+
+    /**
+     * Shot: it flinches and its advance is checked for a moment (ticks), slowed to a third, without being thrown back.
+     */
+    public static void flinch(LivingEntity target, int ticks) {
+        if (!(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()) {
+            return;
+        }
+        Timer t = TIMERS.computeIfAbsent(zombie, z -> new Timer());
+        t.flinch = Math.max(t.flinch, ticks);
+        AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.addOrUpdateTransientModifier(new AttributeModifier(FLINCH_SPEED, -0.65,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        Vec3 v = zombie.getDeltaMovement();
+        zombie.setDeltaMovement(v.x * 0.3, v.y, v.z * 0.3);
     }
 
     /**
@@ -215,10 +237,16 @@ public final class Downed {
             if (t.stun > 0) {
                 t.stun--;
             }
+            if (t.flinch > 0 && --t.flinch == 0) {
+                AttributeInstance speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (speed != null) {
+                    speed.removeModifier(FLINCH_SPEED);
+                }
+            }
             if (t.down > 0 && --t.down == 0) {
                 standUp(mob, t);
             }
-            if (t.down <= 0 && t.stun <= 0) {
+            if (t.down <= 0 && t.stun <= 0 && t.flinch <= 0) {
                 it.remove();
             }
         }

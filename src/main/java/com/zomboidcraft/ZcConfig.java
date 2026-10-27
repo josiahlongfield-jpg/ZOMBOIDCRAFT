@@ -999,7 +999,7 @@ public final class ZcConfig {
         public double pelletSpread = 2.5;
         /** Pellets hit full strength out to this many blocks, then weaken to a quarter at the gun's range. */
         public double falloffStart = 10.0;
-        /** How hard a close hit shoves a zombie back. */
+        /** How much a close hit checks a zombie's advance: its flinch lasts 5 ticks plus ten times this (it isn't thrown back). */
         public double knockback = 0.45;
 
         ShotgunStats() {
