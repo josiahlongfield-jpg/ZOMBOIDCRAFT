@@ -87,8 +87,12 @@ public final class CountyRails {
     private static int station(CommandContext<CommandSourceStack> ctx, String want) {
         CommandSourceStack src = ctx.getSource();
         County county = county(src.getLevel());
-        if (county == null || county.tracks().isEmpty() || src.getEntity() == null) {
+        if (county == null || county.tracks().isEmpty()) {
             src.sendFailure(Component.literal("This world has no railway (only a Grayhaven County world has one)."));
+            return 0;
+        }
+        if (src.getEntity() == null) {
+            src.sendFailure(Component.literal("Run /zc station as a player: it takes you to the platform."));
             return 0;
         }
         Track best = null;

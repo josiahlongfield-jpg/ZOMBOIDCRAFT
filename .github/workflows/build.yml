@@ -148,10 +148,14 @@ jobs:
           rm -rf run/world
           mkdir -p build/county
           javac -d build/county src/main/java/com/zomboidcraft/world/city/*.java src/main/java/com/zomboidcraft/world/county/*.java tools/county/ListPlaces.java
-          java -cp build/county:src/main/resources ListPlaces 12345 6000 | tee places.txt
+          java -cp build/county:src/main/resources ListPlaces 12345 6000 | tee places.all
+          # only the place rows (the planner's own log lines go to the same output)
+          grep -E '^[a-z_]+ [a-z_]+ -?[0-9]+ -?[0-9]+( |$)' places.all > places.txt
+          # and the railway: the el and subway at Union Station, a country stop, the el's bridge over the north arm
+          printf 'rail union_el 3043 -1150\nrail union_subway 3050 -1043\nrail millbrook -4750 -1003\nrail north_arm_bridge 3010 -2420\n' >> places.txt
           printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
           grep level- run/server.properties
-          trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
+          trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|County lines|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
           rm -f console2 && mkfifo console2
           ./gradlew runServer --args=nogui < console2 > county.log 2>&1 &
           pid=$!
@@ -182,6 +186,7 @@ jobs:
           grep 'Unknown vanilla block' county.log | sort -u | head -40 || true
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
+          grep 'County lines laid for the trains' county.log
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 
