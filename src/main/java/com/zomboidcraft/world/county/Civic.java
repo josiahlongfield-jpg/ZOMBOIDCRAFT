@@ -168,55 +168,7 @@ final class Civic {
 
     /** The sheriff's office and county jail: front desk, cells, a gun rack, cruisers out front. */
     void sheriff(int w, int d) {
-        int storey = 5;
-        String wall = pick("brick_buff", "brick_red", "concrete_panel");
-        int z0 = 8;
-        b.shell(0, z0, w - 1, d - 1, 1, storey, wall, "floor_lino", "roof");
-        b.windowRow(2, w - 3, 3, z0, 2, "north", 2, "sill");
-        b.windowRow(z0 + 2, d - 3, 4, 0, 2, "west", 1, null);
-        b.windowRow(z0 + 2, d - 3, 4, w - 1, 2, "east", 1, null);
-        int cx = w / 2;
-        b.doors(cx - 1, 1, z0, "fire_door", "north");
-        Boards.fascia(p, rng, "sheriff", 1, storey - 1, z0 - 1, w - 2);
-        p.set(cx - 2, 3, z0 - 1, ShopLights.lamp(rng, 0.2));
-        p.set(cx + 1, 3, z0 - 1, ShopLights.lamp(rng, 0.2));
-        b.flat(0, z0, w - 1, d - 1, storey, wall, 1, "stone_trim");
-        // front desk, then a corridor of cells at the back
-        p.set(cx, 1, z0 + 3, "reception_desk[facing=north]");
-        p.set(cx + 1, 1, z0 + 3, "reception_desk[facing=north]");
-        p.set(1, 1, z0 + 2, "store_gun_rack[facing=east,loot=guns]");
-        p.set(1, 1, z0 + 3, "store_case_guns[facing=east,loot=guns]");
-        p.set(w - 2, 1, z0 + 2, "filing_cabinet[facing=west]");
-        int cells = d - 5;
-        for (int x = 1; x < w - 1; x++) {
-            for (int y = 1; y <= 3; y++) {
-                p.set(x, y, cells, (x - 1) % 4 == 2 && y <= 2 ? (rng.nextBoolean() ? "air" : "minecraft:iron_door[facing=south,half=" + (y == 1 ? "lower" : "upper") + ",hinge=left,open=false]")
-                        : "minecraft:iron_bars");
-            }
-            if ((x - 1) % 4 == 0) {
-                for (int z = cells + 1; z < d - 1; z++) {
-                    for (int y = 1; y <= 3; y++) {
-                        p.set(x, y, z, "concrete_panel");
-                    }
-                }
-            } else if ((x - 1) % 4 == 1) {
-                p.set(x, 1, d - 2, "minecraft:gray_bed[facing=south,part=head]");
-                p.set(x, 1, d - 3, "minecraft:gray_bed[facing=south,part=foot]");
-            }
-        }
-        b.lights(0, z0, w - 1, d - 1, storey - 1, 0.05);
-        b.mess(1, z0 + 1, w - 2, d - 2, 1, 0.08);
-        // the lot: cruisers nose in, one burnt, sandbags and barriers where they held out
-        for (int i = 0; i < 3; i++) {
-            p.vehicle(4 + i * 5, 1, 3.5, 180, "police_sedan,police_suv", rng.nextLong());
-        }
-        for (int x = 0; x < w; x++) {
-            for (int z = 0; z < z0; z++) {
-                p.set(x, 0, z, rng.nextDouble() < 0.3 ? "asphalt_crack" : "asphalt");
-            }
-        }
-        lastStand(cx - 3, cx + 2, z0 - 1, 1);
-        flagpole(w - 2, z0 - 2, 9);
+        new Sheriff(p, rng).build(w, d);
     }
 
     // ------------------------------------------------------------------ schools

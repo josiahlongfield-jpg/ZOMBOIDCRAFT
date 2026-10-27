@@ -126,6 +126,31 @@ public final class CountyGen {
         vegetation(bx, bz, cols, places, hideouts, out);
     }
 
+    /**
+     * What a place has in the column at (x, z), for trees reaching in from outside: {its level,
+     * the place y of its highest built block (0 if none), 1 if its ground there is paved}; null
+     * if no place is there after all.
+     */
+    private int[] placeColumn(List<Place> places, int x, int z) {
+        for (Place p : places) {
+            if (!p.contains(x, z, 0)) {
+                continue;
+            }
+            Voxels v = cache.get(p, county);
+            int lx = x - p.x0, lz = z - p.z0;
+            int top = 0;
+            for (int y = v.maxY(); y >= 1; y--) {
+                String b = v.get(lx, y, lz);
+                if (b != null && !Kit.soft(b) && !b.startsWith("tree_")) {
+                    top = y;
+                    break;
+                }
+            }
+            return new int[] {p.level, top, Kit.soil(v.get(lx, 0, lz)) ? 0 : 1};
+        }
+        return null;
+    }
+
     /** True within a hideout's clearing (reach blocks from its hatch). */
     private static boolean cleared(List<Place> hideouts, int x, int z, double reach) {
         for (Place p : hideouts) {
@@ -307,9 +332,25 @@ public final class CountyGen {
                 Trees.grow(c, kind, x, (int) Math.floor(gr) + 1, z, rng);
             }
         }
+        // crowns keep clear of the roads (headroom over them) and give way to a place's buildings,
+        // its paving and anything it put there
+        Map<Integer, int[]> under = new HashMap<>();
         for (Map.Entry<Long, String> e : canopy.entrySet()) {
             long k = e.getKey();
-            out.set((int) (k >> 38) << 6 >> 6, (int) (k >> 26 & 0xFFF) << 20 >> 20, (int) (k & 0x3FFFFFF) << 6 >> 6, e.getValue());
+            int x = (int) (k >> 38) << 6 >> 6, y = (int) (k >> 26 & 0xFFF) << 20 >> 20, z = (int) (k & 0x3FFFFFF) << 6 >> 6;
+            int i = (z - bz) << 4 | (x - bx);
+            Column col = cols[i];
+            if (col.road && y < col.top + Kit.HEADROOM) {
+                continue;
+            }
+            if (col.built) {
+                int[] u = under.computeIfAbsent(i, j -> placeColumn(places, x, z));
+                // u: the place's level, its highest built block (place y), whether its ground is paved
+                if (u == null || y - u[0] <= u[1] || u[2] == 1 && y - u[0] < Kit.HEADROOM) {
+                    continue;
+                }
+            }
+            out.set(x, y, z, e.getValue());
         }
 
         // ground cover: grass and weeds, ferns and litter under trees, reeds at the water

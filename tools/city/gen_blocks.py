@@ -267,6 +267,10 @@ def blockstate(name, spec):
                              for f, y in FACING_Y.items()}}
     if rot == "axis":
         return {"variants": {"axis=z": {"model": model}, "axis=x": {"model": model, "y": 90}}}
+    if spec.get("spin"):
+        # a tile that would line up block to block (leaves): each block turned its own way
+        return {"variants": {"": [dict({"model": model}, **({"x": x} if x else {}), **({"y": y} if y else {}))
+                                  for x in (0, 90, 180, 270) for y in (0, 90)]}}
     return {"variants": {"": {"model": model}}}
 
 

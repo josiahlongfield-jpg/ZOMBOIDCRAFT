@@ -45,6 +45,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 /**
  * A car: an entity so the client can draw its 3D model. It can't be hurt and has no collision of
@@ -69,6 +70,17 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
     private static final EntityDataAccessor<Boolean> ALARM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** An aircraft's attitude, engine (or rotor) speed, thrust, and the top speed the server allows ({@link Flight}). */
+    private static final EntityDataAccessor<org.joml.Quaternionfc> AIR_ATTITUDE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.QUATERNION);
+    private static final EntityDataAccessor<Float> AIR_RPM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> AIR_POWER = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> AIR_TOP = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** A crashed aircraft whose wings, nose and tail have been torn off ({@link AirBreakup}). */
+    private static final EntityDataAccessor<Boolean> BROKEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** Fuel, 0 to 1 of the tanks ({@link #fuelCapacity}); the aircraft's battery and condition (percent). See {@link AirReadiness}. */
+    private static final EntityDataAccessor<Float> FUEL = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> BATTERY = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> CONDITION = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The driver has the headlights switched on. */
     private static final EntityDataAccessor<Boolean> LIGHTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
 
@@ -133,6 +145,7 @@ public class CarProp extends Entity {
     public void setLook(String model, String variant) {
         entityData.set(MODEL, model);
         entityData.set(VARIANT, variant);
+        flight = null;
         setBoundingBox(makeBoundingBox(position()));
     }
 
@@ -153,6 +166,14 @@ public class CarProp extends Entity {
         builder.define(SMASHED, false);
         builder.define(SEATS, 0);
         builder.define(ALARM, false);
+        builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
+        builder.define(AIR_RPM, 0f);
+        builder.define(AIR_POWER, 0f);
+        builder.define(AIR_TOP, 0f);
+        builder.define(BROKEN, false);
+        builder.define(FUEL, 1f);
+        builder.define(BATTERY, true);
+        builder.define(CONDITION, 100);
         builder.define(LIGHTS, false);
     }
 
@@ -160,6 +181,11 @@ public class CarProp extends Entity {
     protected void readAdditionalSaveData(ValueInput input) {
         setLook(input.getStringOr("model", "sedan"), input.getStringOr("variant", "usable"));
         searched = input.getIntOr("searched", 0) != 0;
+        entityData.set(BROKEN, input.getIntOr("broken", 0) != 0);
+        airFound = input.getIntOr("air_found", 0) != 0;
+        entityData.set(FUEL, input.getFloatOr("fuel", 1f));
+        entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
+        entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
         entityData.set(SMASHED, windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
@@ -183,6 +209,11 @@ public class CarProp extends Entity {
         output.putString("model", model());
         output.putString("variant", variant());
         output.putInt("searched", searched ? 1 : 0);
+        output.putInt("broken", broken() ? 1 : 0);
+        output.putInt("air_found", airFound ? 1 : 0);
+        output.putFloat("fuel", fuel());
+        output.putInt("battery", battery() ? 1 : 0);
+        output.putInt("condition", condition());
         output.putFloat("windows", windows);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
@@ -225,6 +256,10 @@ public class CarProp extends Entity {
             return;
         }
         CarModels.Model m = CarModels.get(model());
+        if (m != null && m.jet() && player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player)
+                && AirReadiness.service(this, sp)) {
+            return;     // fuel, a battery or parts in hand: service it rather than climb in
+        }
         if (m != null && m.jet() || !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
             return;
@@ -323,11 +358,21 @@ public class CarProp extends Entity {
 
     /** A point in the world in the car's model space (metres, nose toward +z, the driver's side +x). */
     public Vec3 toLocal(Vec3 at) {
+        if (aircraft()) {
+            // pitched and rolled with the airframe, about its pivot
+            Vec3 d = at.subtract(position()).subtract(0, pivot(), 0);
+            org.joml.Vector3f v = new Quaternionf(flight().q).conjugate().transform(new org.joml.Vector3f((float) d.x, (float) d.y, (float) d.z));
+            return new Vec3(v.x, v.y + pivot(), v.z);
+        }
         return local(at.subtract(position()));
     }
 
     /** A point in model space (metres, nose toward +z, the driver's side +x) in the world. */
     public Vec3 toWorld(float[] p) {
+        if (aircraft()) {
+            org.joml.Vector3f v = flight().q.transform(new org.joml.Vector3f(p[0], p[1] - pivot(), p[2]), new org.joml.Vector3f());
+            return position().add(v.x, v.y + pivot(), v.z);
+        }
         return position().add(world(p[0], p[1], p[2]));
     }
 
@@ -481,7 +526,9 @@ public class CarProp extends Entity {
      * wheel can stop it to keep quiet, and it dies when the last one gets out.
      */
     private void engine(ServerLevel server, Entity driver) {
-        if (driver != lastDriver) {
+        if (aircraft()) {
+            airEngine(server, driver);
+        } else if (driver != lastDriver) {
             lastDriver = driver;
             if (driver instanceof Player player && !engineOn() && catchAt < 0) {
                 player.sendOverlayMessage(Component.literal(jet() ? "Dead batteries, no ground power." : startHint(player)));
@@ -502,7 +549,8 @@ public class CarProp extends Entity {
         }
         if (doorShutAt >= 0 && tickCount >= doorShutAt) {
             doorShutAt = -1;
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.DOOR_CLOSE, SoundSource.NEUTRAL, 1f, 0.95f + random.nextFloat() * 0.1f);
+            server.playSound(null, getX(), getY(), getZ(), aircraft() ? AirSounds.CANOPY : CarSounds.DOOR_CLOSE, SoundSource.NEUTRAL, 1f,
+                    0.95f + random.nextFloat() * 0.1f);
         }
     }
 
@@ -593,8 +641,9 @@ public class CarProp extends Entity {
         crank(server);
     }
 
-    /** The aircraft's own start-up (the flight code fills this in). */
+    /** The aircraft's own start-up: no key, but fuel, power and an airworthy airframe ({@link #toggleAirEngine}). */
     private void airEngine(Player player) {
+        toggleAirEngine(player);
     }
 
     /** The starter turns over and the engine catches about three seconds later. */
@@ -676,7 +725,8 @@ public class CarProp extends Entity {
 
     /** A door opens to let someone in or out, and swings shut behind them. */
     private void door(ServerLevel server) {
-        server.playSound(null, getX(), getY(), getZ(), CarSounds.DOOR_OPEN, SoundSource.NEUTRAL, 1f, 0.95f + random.nextFloat() * 0.1f);
+        server.playSound(null, getX(), getY(), getZ(), aircraft() ? AirSounds.CANOPY : CarSounds.DOOR_OPEN, SoundSource.NEUTRAL, 1f,
+                0.95f + random.nextFloat() * 0.1f);
         doorShutAt = tickCount + 14;
     }
 
@@ -752,9 +802,9 @@ public class CarProp extends Entity {
         }
     }
 
-    /** Wrecks and burnt-out shells don't run, whatever you do; nor, for now, do the jets. */
+    /** Wrecks and burnt-out shells don't run, whatever you do. */
     public boolean engineRuns() {
-        return !jet() && ("usable".equals(variant()) || "abandoned".equals(variant()));
+        return "usable".equals(variant()) || "abandoned".equals(variant());
     }
 
     private boolean jet() {
@@ -773,7 +823,7 @@ public class CarProp extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity passenger) {
-        return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant());
+        return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
     }
 
     /** Whoever sits at the wheel drives; a car with only passengers in it goes nowhere. */
@@ -796,6 +846,12 @@ public class CarProp extends Entity {
             return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
         }
         float[] seat = m.seats[Math.min(i, m.seats.length - 1)];
+        if (aircraft()) {
+            // the seat turns with the airframe about its middle, the eyes staying upright above it
+            float pivot = pivot();
+            org.joml.Vector3f at = flight().q.transform(new org.joml.Vector3f(seat[0], seat[1] - pivot, seat[2]));
+            return new Vec3(at.x, at.y + pivot - 1.02, at.z);
+        }
         // a player's eyes are 1.02 above where they hang from a vehicle
         return world(seat[0], seat[1] - 1.02, seat[2]);
     }
@@ -804,6 +860,9 @@ public class CarProp extends Entity {
     @Override
     protected void positionRider(Entity passenger, MoveFunction move) {
         super.positionRider(passenger, move);
+        if (aircraft()) {
+            return;     // in the air your view is the aircraft's plus where you look in it (FlightClient)
+        }
         if (passenger instanceof Player player && player.isLocalPlayer()) {
             float turn = getYRot() - yRotO;
             player.setYRot(player.getYRot() + turn);
@@ -814,6 +873,9 @@ public class CarProp extends Entity {
 
     @Override
     public void onPassengerTurned(Entity passenger) {
+        if (aircraft()) {
+            return;
+        }
         clampLook(passenger);
     }
 
@@ -847,6 +909,9 @@ public class CarProp extends Entity {
         if (passenger instanceof Player player && player.isLocalPlayer()) {
             player.setYRot(getYRot());
             player.setYHeadRot(getYRot());
+            if (aircraft()) {
+                boarded.accept(this);
+            }
         }
         setBoundingBox(makeBoundingBox(position()));
     }
@@ -864,8 +929,13 @@ public class CarProp extends Entity {
             door(server);
         }
         if (getPassengers().isEmpty()) {
-            setDeltaMovement(Vec3.ZERO);
-            parkPending = level() instanceof ServerLevel;
+            if (aircraft()) {
+                // it may still be rolling or in the air: the server flies it on until it comes to rest
+                airborne = level() instanceof ServerLevel;
+            } else {
+                setDeltaMovement(Vec3.ZERO);
+                parkPending = level() instanceof ServerLevel;
+            }
         }
         setBoundingBox(makeBoundingBox(position()));
     }
@@ -913,6 +983,11 @@ public class CarProp extends Entity {
         if (m == null) {
             return super.makeBoundingBox(pos);
         }
+        if (aircraft() && (isVehicle() || airborne)) {
+            // flying: a box round the fuselage and the inner wings, kept square since it can't turn
+            double r = Math.min(m.size[0], m.size[2]) * 0.3, h = m.size[1] * 0.8;
+            return new AABB(pos.x - r, pos.y, pos.z - r, pos.x + r, pos.y + h, pos.z + r);
+        }
         if (isVehicle()) {
             double r = m.size[0] / 2;
             return new AABB(pos.x - r, pos.y, pos.z - r, pos.x + r, pos.y + m.size[1], pos.z + r);
@@ -938,9 +1013,18 @@ public class CarProp extends Entity {
         steerO = steer;
         if (isLocalInstanceAuthoritative() && getControllingPassenger() instanceof Player driver) {
             getInterpolation().cancel();
-            drive(level().isClientSide() ? clientInput.apply(driver) : Input.EMPTY);
+            if (aircraft()) {
+                fly(level().isClientSide() ? flightInput.apply(this) : Flight.Controls.NONE);
+            } else {
+                drive(level().isClientSide() ? clientInput.apply(driver) : Input.EMPTY);
+            }
         } else if (level().isClientSide()) {
             getInterpolation().interpolate();
+            if (aircraft()) {
+                followFlight();
+            }
+        } else if (aircraft() && getControllingPassenger() == null && airborne) {
+            fly(Flight.Controls.NONE);      // nobody at the controls: it glides, falls or rolls to a stop
         } else if (isVehicle() && getControllingPassenger() == null) {
             setDeltaMovement(Vec3.ZERO);  // passengers but nobody at the wheel
         }
@@ -961,13 +1045,24 @@ public class CarProp extends Entity {
             if (isVehicle() && model != null) {
                 keepOut(model);
             }
-            if (getControllingPassenger() instanceof Player driver) {
+            if (aircraft() && !airFound) {
+                airFound = true;
+                AirReadiness.found(this);
+            }
+            if (aircraft()) {
+                flown(server, moved);
+            } else if (getControllingPassenger() instanceof Player driver) {
                 driven(server, driver, moved);
             }
         } else {
             lidOpen = Math.clamp(lidOpen + (entityData.get(OPEN) ? 0.08f : -0.1f), 0f, 1f);
             wheels();
-            if (engineOn()) {
+            if (aircraft()) {
+                Flight f = flight();
+                rotorO = rotor;
+                rotor += f.rotorTurns() * Math.PI * 2 * Flight.DT;
+                airSound.accept(this);
+            } else if (engineOn()) {
                 engineSound.accept(this);
             }
         }
@@ -1209,5 +1304,387 @@ public class CarProp extends Entity {
             Cars.clearHull(server, this);
         }
         super.remove(reason);
+    }
+
+    // ---------------------------------------------------------------- aircraft
+
+    /** The local pilot's controls, from the client ({@code FlightClient}); a server never needs it. */
+    public static Function<CarProp, Flight.Controls> flightInput = car -> Flight.Controls.NONE;
+    /** Sends the pilot's state to the server each tick, from the client. */
+    public static java.util.function.Consumer<AirNet.State> pilotReport = state -> { };
+    /** Called on the client each tick for an aircraft, to keep its sounds going. */
+    public static java.util.function.Consumer<CarProp> airSound = car -> { };
+    /** Called on the client when the local player gets into an aircraft. */
+    public static java.util.function.Consumer<CarProp> boarded = car -> { };
+
+    private Flight flight;
+    /** Server side: nobody's flying it but it's still moving, so the server does. */
+    private boolean airborne;
+    private boolean crashed;
+    /** The main rotor's turn (radians) this tick and last, client side, for drawing. */
+    public double rotor, rotorO;
+    /** Server side: which pilot the start-up hint was shown to. */
+    private Entity airPilot;
+    /** Client side: how hard it hit the ground last tick, for the touchdown sound (metres a second, 0 if not). */
+    public float touchedDown;
+
+    /** A jet or the helicopter: anything that flies rather than drives. */
+    public boolean aircraft() {
+        return jet();
+    }
+
+    public boolean helicopter() {
+        return model().startsWith("heli_");
+    }
+
+    /** This aircraft's flight state (attitude, speed, engine), made the first time it's asked for. */
+    public Flight flight() {
+        if (flight == null) {
+            flight = new Flight(helicopter() ? Flight.Kind.HELI : Flight.Kind.JET);
+            org.joml.Quaternionfc synced = entityData.get(AIR_ATTITUDE);
+            if (synced.w() == 1 && synced.x() == 0 && synced.y() == 0 && synced.z() == 0) {
+                flight.set(getYRot(), 0, 0);
+            } else {
+                flight.q.set(synced);
+                flight.qO.set(synced);
+                flight.heading = flight.yaw();
+                flight.pitch = flight.noseUp();
+                flight.roll = flight.bank();
+            }
+            flight.rpm = entityData.get(AIR_RPM);
+            float top = entityData.get(AIR_TOP);
+            if (top > 0) {
+                flight.top = top;
+            }
+        }
+        return flight;
+    }
+
+    /** Height of the point the airframe turns about, above the wheels. */
+    public float pivot() {
+        CarModels.Model m = CarModels.get(model());
+        return m == null ? 1 : m.size[1] * 0.4f;
+    }
+
+    /** Whether the aircraft's first-found state (fuel, battery, wear) has been rolled. */
+    private boolean airFound;
+    /** Server: ticks in the air since the last landing. */
+    private int flightTicks;
+
+    public float fuel() {
+        return entityData.get(FUEL);
+    }
+
+    public void setFuel(float fuel) {
+        entityData.set(FUEL, Math.clamp(fuel, 0f, 1f));
+    }
+
+    /** What the tanks hold when full, litres: the real aircraft's internal fuel, or a car's tank. */
+    public float fuelCapacity() {
+        String m = model();
+        return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : m.startsWith("heli") ? 1420 : 55;
+    }
+
+    public boolean battery() {
+        return entityData.get(BATTERY);
+    }
+
+    public void setBattery(boolean ok) {
+        entityData.set(BATTERY, ok);
+    }
+
+    /** How sound the airframe is, percent; it won't start below {@link AirReadiness#AIRWORTHY}. */
+    public int condition() {
+        return entityData.get(CONDITION);
+    }
+
+    public void setCondition(int condition) {
+        entityData.set(CONDITION, Math.clamp(condition, 0, 100));
+    }
+
+    /** The pilot put it down without breaking it: experience for a clean landing, wear for a heavy one. */
+    private void landed(net.minecraft.server.level.ServerPlayer pilot, float sink) {
+        if (flightTicks < 100) {
+            return;     // a hop or a bounce, not a flight
+        }
+        flightTicks = 0;
+        float limit = landingLimit(flight().kind, AirReadiness.skill(pilot));
+        if (sink > 0.75f * limit) {
+            setCondition(condition() - Math.round(10 * sink / limit));
+            pilot.sendOverlayMessage(Component.literal("Heavy landing. Condition " + condition() + "%."));
+            com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, 5);
+        } else {
+            com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, sink < 2.5f ? 30 : 18);
+        }
+    }
+
+    /** The fastest it can come down onto its wheels (m/s) without breaking up, for a pilot of this skill (0 to 1). */
+    public static float landingLimit(Flight.Kind kind, float skill) {
+        return (kind == Flight.Kind.JET ? 7 : 6) + 3 * skill;
+    }
+
+    /** Torn apart in a crash: drawn without the pieces that flew off. */
+    public boolean broken() {
+        return entityData.get(BROKEN);
+    }
+
+    public boolean crashed() {
+        return crashed;
+    }
+
+    @Override
+    public boolean isFlyingVehicle() {
+        return aircraft();
+    }
+
+    /** One tick of flight on whichever side moves it: the controls, the physics, then the move and what it hits. */
+    private void fly(Flight.Controls c) {
+        CarModels.Model m = CarModels.get(model());
+        if (m == null) {
+            return;
+        }
+        Flight f = flight();
+        float top = entityData.get(AIR_TOP);
+        if (top > 0) {
+            f.top = top;
+        }
+        boolean on = engineOn() && !crashed;
+        Vec3 move = f.kind == Flight.Kind.JET ? f.tickJet(c, on) : f.tickHeli(c, on, clearance(8));
+        double vyBefore = f.vel.y, speedBefore = f.speed();
+        boolean wasGround = f.grounded;
+        Vec3 before = position();
+        move(MoverType.SELF, move);
+        Vec3 went = position().subtract(before);
+        f.grounded = onGround();
+        setYRot(f.yaw());
+        setXRot(-f.noseUp());
+        float violence = 0;
+        if (horizontalCollision && speedBefore > (f.kind == Flight.Kind.JET ? 14 : 9)) {
+            violence = (float) speedBefore / f.top;
+        }
+        touchedDown = 0;
+        if (f.grounded && !wasGround && vyBefore < -0.5) {
+            float limit = landingLimit(f.kind, f.skill);
+            float bank = Math.abs(f.bank()), nose = f.noseUp();
+            if (-vyBefore > limit || bank > 30 || f.kind == Flight.Kind.JET && nose < -10 || f.kind == Flight.Kind.HELI && Math.abs(nose) > 30) {
+                violence = Math.max(violence, (float) Math.min(1, -vyBefore / 20 + 0.3));
+            } else {
+                touchedDown = (float) -vyBefore;
+            }
+        }
+        if (f.kind == Flight.Kind.HELI && f.rpm > 0.3f && rotorStrike(m)) {
+            violence = Math.max(violence, 0.5f);
+        }
+        if (horizontalCollision) {
+            f.vel = new Vec3(went.x / Flight.DT, f.vel.y, went.z / Flight.DT);
+        }
+        if (verticalCollision && (f.grounded ? f.vel.y < 0 : f.vel.y > 0)) {
+            f.vel = new Vec3(f.vel.x, 0, f.vel.z);
+        }
+        setDeltaMovement(went);
+        if (level().isClientSide()) {
+            Quaternionf q = f.q;
+            int flags = violence > 0 ? AirNet.CRASHED : touchedDown > 0 ? AirNet.LANDED : 0;
+            pilotReport.accept(new AirNet.State(q.x, q.y, q.z, q.w, f.power, f.rpm, f.throttle, flags, violence > 0 ? violence : touchedDown));
+        } else {
+            entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
+            entityData.set(AIR_RPM, f.rpm);
+            entityData.set(AIR_POWER, f.power);
+            if (violence > 0 && level() instanceof ServerLevel server) {
+                crash(server, violence);
+            }
+            // come to rest: park it, hull and all
+            if (airborne && f.grounded && f.vel.lengthSqr() < 0.05 && !isVehicle()) {
+                airborne = false;
+                f.vel = Vec3.ZERO;
+                setDeltaMovement(Vec3.ZERO);
+                parkPending = true;
+            }
+        }
+    }
+
+    /** How far the ground is below the aircraft, up to max. */
+    private float clearance(int max) {
+        net.minecraft.core.BlockPos.MutableBlockPos pos = blockPosition().mutable();
+        for (int i = 0; i < max; i++, pos.move(net.minecraft.core.Direction.DOWN)) {
+            if (!level().getBlockState(pos).getCollisionShape(level(), pos).isEmpty()) {
+                return (float) Math.max(0, getY() - (pos.getY() + 1));
+            }
+        }
+        return max;
+    }
+
+    /** Whether the main rotor's tips are cutting into anything solid. */
+    private boolean rotorStrike(CarModels.Model m) {
+        Flight f = flight();
+        float radius = m.size[0] / 2 * 0.95f, hub = m.size[1] * 0.78f, pivot = pivot();
+        for (int k = 0; k < 8; k++) {
+            double a = Math.PI * 2 * k / 8;
+            org.joml.Vector3f tip = f.q.transform(new org.joml.Vector3f((float) (Math.cos(a) * radius), hub - pivot, (float) (Math.sin(a) * radius) + 1.8f));
+            net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(getX() + tip.x, getY() + pivot + tip.y, getZ() + tip.z);
+            net.minecraft.world.level.block.state.BlockState state = level().getBlockState(pos);
+            if (!state.is(Cars.HULL) && !state.getCollisionShape(level(), pos).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Someone else's aircraft (client side): turned as the server last said, eased toward it. */
+    private void followFlight() {
+        Flight f = flight();
+        f.qO.set(f.q);
+        f.q.slerp(new Quaternionf(entityData.get(AIR_ATTITUDE)), 0.45f);
+        f.rpm = entityData.get(AIR_RPM);
+        f.power = entityData.get(AIR_POWER);
+        f.vel = new Vec3(getX() - xo, getY() - yo, getZ() - zo).scale(1 / Flight.DT);
+    }
+
+    /** The server's copy of what the pilot's game reports each tick. */
+    void pilotState(AirNet.State state) {
+        Flight f = flight();
+        f.qO.set(f.q);
+        f.q.set(state.attitude());
+        f.power = state.power();
+        f.rpm = state.rpm();
+        f.throttle = state.throttle();
+        entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
+        entityData.set(AIR_RPM, f.rpm);
+        entityData.set(AIR_POWER, f.power);
+        if ((state.flags() & AirNet.CRASHED) != 0 && level() instanceof ServerLevel server) {
+            crash(server, Math.clamp(state.violence(), 0.05f, 1f));
+        } else if ((state.flags() & AirNet.LANDED) != 0 && getControllingPassenger() instanceof net.minecraft.server.level.ServerPlayer pilot) {
+            landed(pilot, state.violence());
+        }
+    }
+
+    /**
+     * The server's side of an aircraft: the top speed it allows, the engine's noise, keeping its speed in
+     * step with how far the pilot moves it (so it flies on if they bail out), and the start-up hint.
+     */
+    private void flown(ServerLevel server, Vec3 moved) {
+        Flight f = flight();
+        float top = (float) ((f.kind == Flight.Kind.JET ? com.zomboidcraft.ZcConfig.get().world.jetTopSpeed
+                : com.zomboidcraft.ZcConfig.get().world.heliTopSpeed) / 3.6);
+        if (entityData.get(AIR_TOP) != top) {
+            entityData.set(AIR_TOP, top);
+        }
+        f.top = top;
+        if (getControllingPassenger() != null) {
+            f.vel = moved.scale(1 / Flight.DT);
+            f.grounded = onGround();
+            airborne = !f.grounded || f.vel.lengthSqr() > 0.05;
+            if (!f.grounded) {
+                flightTicks++;
+                if (flightTicks % 400 == 0 && getControllingPassenger() instanceof net.minecraft.server.level.ServerPlayer pilot) {
+                    com.zomboidcraft.skills.Skills.addXp(pilot, com.zomboidcraft.skills.Skill.PILOTING, 4);
+                }
+            }
+        }
+        if (engineOn() && com.zomboidcraft.ZcConfig.get().world.aircraftService) {
+            // a full tank lasts about 25 minutes cruising in a jet, 30 in the helicopter; the afterburner drinks
+            float burn = f.kind == Flight.Kind.JET
+                    ? (0.2f * f.rpm + 0.8f * (float) Math.pow(f.thrustShare(), 1.3) + (f.afterburner() ? 1.2f : 0)) * 6.6e-5f
+                    : (0.3f * f.rpm + 0.7f * f.power) * 4.6e-5f;
+            setFuel(fuel() - burn);
+            if (fuel() <= 0) {
+                entityData.set(ENGINE, false);
+                if (getControllingPassenger() instanceof Player pilot) {
+                    pilot.sendOverlayMessage(Component.literal("Flameout: the tanks are dry."));
+                }
+            }
+        }
+        if (engineOn() && tickCount % 10 == 0) {
+            // like Zomboid's helicopter: every zombie for miles comes to look
+            Noise.emit(server, position(), f.kind == Flight.Kind.HELI ? 112 : 72 + 72 * f.power);
+        }
+    }
+
+    /** Aircraft engines don't start by themselves: the pilot runs the start-up ({@link #toggleAirEngine}). */
+    private void airEngine(ServerLevel server, Entity driver) {
+        if (driver != airPilot) {
+            airPilot = driver;
+            if (driver instanceof Player player) {
+                AirReadiness.Manual manual = AirReadiness.manualFor(flight().kind);
+                String status = "Fuel " + Math.round(fuel() * 100) + "%, " + (battery() ? "battery good" : "battery flat") + ", condition "
+                        + condition() + "%." + (AirReadiness.knows(player, manual) ? "" : " You haven't read the " + manual.title
+                        + ": you can only taxi.");
+                player.sendOverlayMessage(Component.literal(!engineRuns() ? "It's wrecked. It won't fly again."
+                        : engineOn() ? flightHelp() : "Press the engine key to run the start-up. " + status));
+            }
+        }
+    }
+
+    private String flightHelp() {
+        return helicopter()
+                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns. Alt looks round."
+                : "Mouse flies, W/S throttle, A/D roll, Space brakes. Alt looks round.";
+    }
+
+    /** The pilot starts or shuts down the engines. */
+    public void toggleAirEngine(Player player) {
+        if (!(level() instanceof ServerLevel server) || getControllingPassenger() != player) {
+            return;
+        }
+        if (!engineRuns() || crashed) {
+            player.sendOverlayMessage(Component.literal("It's wrecked. It won't start."));
+            return;
+        }
+        boolean on = !engineOn();
+        String why = on ? AirReadiness.cantStart(this, player) : null;
+        if (why != null) {
+            player.sendOverlayMessage(Component.literal(why));
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.6f, 1.2f);
+            return;
+        }
+        entityData.set(ENGINE, on);
+        server.playSound(null, getX(), getY(), getZ(), helicopter() ? (on ? AirSounds.HELI_START : AirSounds.HELI_SHUTDOWN)
+                : (on ? AirSounds.JET_START : AirSounds.JET_SHUTDOWN), SoundSource.NEUTRAL, 1.5f, 1f);
+        player.sendOverlayMessage(Component.literal(on ? (helicopter() ? "Rotors coming up to speed. " : "Engines spooling up. ") + flightHelp()
+                : "Shutting down."));
+        if (on) {
+            Noise.emit(server, position(), 48);
+        }
+    }
+
+    /**
+     * It's hit something too hard: a fireball, everyone thrown out, and the airframe left a wreck
+     * (burnt out if it came in fast). violence: 0 (barely) to 1 (flat out).
+     */
+    private void crash(ServerLevel server, float violence) {
+        if (crashed || !engineRuns()) {
+            return;     // a wreck coming down again is no new crash
+        }
+        crashed = true;
+        CarModels.Model m = CarModels.get(model());
+        double h = m == null ? 2 : m.size[1] / 2;
+        server.playSound(null, getX(), getY(), getZ(), AirSounds.CRASH, SoundSource.NEUTRAL, 3f, 0.9f + random.nextFloat() * 0.2f);
+        server.explode(this, getX(), getY() + h, getZ(), 3f + 3f * violence, false, Level.ExplosionInteraction.NONE);
+        for (Entity rider : List.copyOf(getPassengers())) {
+            rider.stopRiding();
+            if (rider instanceof LivingEntity living) {
+                // nobody walks away from an aircraft crash
+                living.hurtServer(server, damageSources().explosion(this, this), 1000);
+                if (living.isAlive()) {
+                    living.kill(server);
+                }
+            }
+        }
+        entityData.set(ENGINE, false);
+        Noise.emit(server, position(), 128);
+        Flight f = flight();
+        Quaternionf q = new Quaternionf(f.q);
+        float rpm = f.rpm;
+        Vec3 vel = f.vel.scale(0.3);
+        // it comes apart: the wings, nose and tail tumble off burning and the rest is a burnt-out shell
+        AirDebris.throwFrom(server, this, q, vel.scale(1 / 0.3 / 20), "burnt");
+        setLook(model(), "burnt");
+        entityData.set(BROKEN, true);
+        f = flight();
+        f.q.set(q);
+        f.rpm = rpm;
+        f.vel = vel;
+        airborne = true;
+        crashed = false;    // the wreck can't start again (engineRuns), but it still falls and settles
     }
 }
