@@ -509,7 +509,7 @@ public class KitUiTest implements FabricClientGameTest {
                 p.setYBodyRot(0f);
                 s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), "kill @e[type=!player]");
                 float yaw = view[0];
-                double r = 2.6;
+                double r = 0.8;
                 double cx = p.getX() + Math.sin(Math.toRadians(yaw)) * r, cz = p.getZ() - Math.cos(Math.toRadians(yaw)) * r;
                 var stand = new net.minecraft.world.entity.decoration.ArmorStand(p.level(), cx, p.getY() - 0.3, cz);
                 stand.setYRot(yaw);
@@ -531,12 +531,17 @@ public class KitUiTest implements FabricClientGameTest {
                         found++;
                     }
                 }
+                // your own model is hidden in first person, so the view sits back from the stand
+                mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
                 LOG.info("ZCUI sling camera stands found: {}", found);
             });
             ctx.waitTicks(3);
             ctx.takeScreenshot("sling-view-" + (view[0] < 0 ? "front" : view[0]));
         }
-        ctx.runOnClient(mc -> mc.setCameraEntity(mc.player));
+        ctx.runOnClient(mc -> {
+            mc.setCameraEntity(mc.player);
+            mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+        });
         sp.getServer().runCommand("kill @e[type=minecraft:armor_stand]");
     }
 
