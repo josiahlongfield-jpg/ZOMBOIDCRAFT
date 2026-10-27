@@ -29,6 +29,8 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     // body A sizes where a stump goes: forearm, shin and thigh thickness, upper arm, and the torso's half width and
     // the height of its shoulders
     static final float FORE_W = 2.5f, SHIN_W = 3.0f, THIGH_W = 3.4f, UPPER_W = 2.7f, TORSO_HALF = 3.8f, SHOULDER_Y = 7.6f;
+    /** How thick the neck is where a burst head tore away. */
+    static final float NECK_W = 3.2f;
     private static final int FULL_BRIGHT = 0xF000F0;
     /** Quad corners in drawing order (counter-clockwise from outside). */
     private static final int[] ORDER = {0, 3, 2, 1};
@@ -74,7 +76,7 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
                     (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
         }
-        if (state.zeyes != null) {
+        if (state.zeyes != null && (state.cuts & Dismember.HEAD_GONE) == 0) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(state.zeyes),
                     (pose, out) -> eyes(mats, pose, out));
         }
@@ -152,6 +154,9 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         if (legless) {
             hidden |= bit(ZMove.KN_R) | bit(ZMove.AN_R) | bit(ZMove.KN_L) | bit(ZMove.AN_L);
         }
+        if ((stumps & Dismember.HEAD_GONE) != 0) {
+            hidden |= bit(ZMove.HEAD);
+        }
         return hidden;
     }
 
@@ -161,9 +166,14 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
 
     /**
      * A torn stump on the bone above each missing limb, at the joint it came off: elbow and knee stumps hang
-     * where the forearm or shin was, a hip stump under the pelvis, a shoulder stump on the side of the chest.
+     * where the forearm or shin was, a hip stump under the pelvis, a shoulder stump on the side of the chest; and
+     * where the head burst, the neck torn open round a stub of spine.
      */
     private void stumps(float[] mats, int stumps, int seed, PoseStack.Pose pose, VertexConsumer out, int light, int overlay) {
+        if ((stumps & Dismember.HEAD_GONE) != 0) {
+            at.set(mats, ZMove.HEAD * 16).translate(0f, 0.6f, 0f).rotateZ((float) Math.PI);
+            gore.rag(out, pose, at, NECK_W, true, seed + 8, light, overlay);
+        }
         for (int side = 0; side < 2; side++) {
             boolean right = side == 0;
             float s = right ? -1f : 1f;

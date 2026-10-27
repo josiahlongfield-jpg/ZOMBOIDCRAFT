@@ -201,7 +201,7 @@ public final class Guns {
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
                 Pellet struck = pellet(target, hit, eye, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
-                Dismember.pellet(player, target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
+                Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
                     nearby = true;
                     nearbyImpact(level, player, hit.getLocation());
@@ -300,9 +300,10 @@ public final class Guns {
     private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
         Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
-        // a zombie's head and legs are where its body is drawn; anything else's go by height on its box
-        boolean head = !downed && (hit.part >= 0 ? hit.head() : at.y >= target.getEyeY() - 0.28);
-        boolean legs = !downed && (hit.part >= 0 ? hit.leg() : at.y < target.getY() + target.getBbHeight() * 0.35);
+        // a zombie's head and legs are where its body is drawn, standing or on the ground; anything else's go by height
+        // on its box, and not at all once it's down
+        boolean head = hit.part >= 0 ? hit.head() : !downed && at.y >= target.getEyeY() - 0.28;
+        boolean legs = hit.part >= 0 ? hit.leg() : !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
         float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);

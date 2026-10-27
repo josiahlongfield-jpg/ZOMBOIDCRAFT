@@ -70,7 +70,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.outfit = ZombieLook.outfit(zombie);
         state.missingLimb = ZombieLook.missingLimb(zombie);
         int limbs = Dismember.limbs(zombie);
-        state.cuts = limbs & Dismember.CUTS;
+        state.cuts = limbs & (Dismember.CUTS | Dismember.HEAD_GONE);
         state.bolts = zombie.getAttachedOrElse(com.zomboidcraft.combat.StuckBolts.BOLTS, java.util.List.of());
         ZcConfig.Look look = ZcConfig.get().look;
         state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
