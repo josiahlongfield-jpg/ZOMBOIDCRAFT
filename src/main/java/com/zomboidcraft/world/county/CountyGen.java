@@ -89,6 +89,13 @@ public final class CountyGen {
             c.forest = t.forest(x, z);
             c.moisture = t.moisture(x, z);
             c.shore = !c.water && top <= Terrain.WATER + 1;
+            // the planned city's quays are paved for a walk along the water; the open ground
+            // further back, where the city's blocks stop short of the shore, is left as a park
+            boolean paved = t.plan != null && !c.water && in == null && !bridge && (hit.road == null || hit.distance > hit.road.kind.half + 1.5)
+                    && t.city(x, z) > 0.5 && t.plan.toWater(x + 0.5, z + 0.5) <= 16;
+            if (paved) {
+                c.built = true;
+            }
 
             // rock, soil and the surface
             SplittableRandom rng = new SplittableRandom(Noise.hash(county.seed, x, z));
@@ -97,7 +104,10 @@ public final class CountyGen {
             out.column(x, z, min + 1, Math.min(top - dirt, -1), "minecraft:deepslate");
             out.column(x, z, Math.max(min + 1, 0), top - dirt, "minecraft:stone");
             out.column(x, z, top - dirt + 1, top - 1, c.water || c.shore ? "minecraft:mud" : "minecraft:dirt");
-            out.set(x, top, z, surface(c, x, z, natural, top, rng));
+            out.set(x, top, z, paved ? (rng.nextDouble() < 0.12 ? "sidewalk_cracked" : "sidewalk") : surface(c, x, z, natural, top, rng));
+            if (paved) {
+                quayRail(out, x, z, top, places);
+            }
             if (c.water) {
                 out.column(x, z, top + 1, Terrain.WATER - 1, "minecraft:water");
             }
@@ -161,7 +171,37 @@ public final class CountyGen {
         return false;
     }
 
+    /** A railing along the quay's edge wherever the paving drops into the water. */
+    private void quayRail(ChunkSink out, int x, int z, int top, List<Place> places) {
+        if (county.terrain.plan.toWater(x + 0.5, z + 0.5) > 3) {
+            return;
+        }
+        // which way the water lies, over a few blocks round, so a rail on a stepped or slanting
+        // quay still runs along the edge instead of turning at every step
+        boolean edge = false;
+        int gx = 0, gz = 0;
+        for (int dz = -2; dz <= 2; dz++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                if (Terrain.isWater(county.ground(x + dx, z + dz, places))) {
+                    gx += dx;
+                    gz += dz;
+                    edge |= Math.abs(dx) + Math.abs(dz) == 1;
+                }
+            }
+        }
+        if (!edge || gx == 0 && gz == 0) {
+            return;
+        }
+        String facing = Math.abs(gx) > Math.abs(gz) ? (gx > 0 ? "east" : "west") : (gz > 0 ? "south" : "north");
+        out.set(x, top + 1, z, "railing[facing=" + facing + "]");
+    }
+
     private String surface(Column c, int x, int z, double natural, int top, SplittableRandom rng) {
+        Plan plan = county.terrain.plan;
+        if (plan != null && (c.water || c.shore) && plan.coast(x, z) < 70 && plan.coast(x, z) > -220) {
+            // the sea's beaches and the sand under the shallows
+            return rng.nextDouble() < 0.08 ? "minecraft:gravel" : "minecraft:sand";
+        }
         if (c.water) {
             double r = rng.nextDouble();
             return r < 0.5 ? "minecraft:mud" : r < 0.8 ? "minecraft:gravel" : "minecraft:clay";
