@@ -1649,7 +1649,7 @@ def blocks():
                      [1.5, 0, 3.5, 14.5, 0.6, 12.5, black]], "Lottery Case", "GLASS", decor=True, loot="till")
     add("gs_impulse", [[1, 0, 3, 6, 4, 8, "gs_rack_chips"], [1, 4, 3, 6, 6, 8, "gs_laminate"], [8, 0, 4, 12, 7, 8, "gs_rack_oil"],
                        [8.5, 7, 4.5, 11.5, 8, 7.5, black], [11, 0, 9, 15, 3, 13, "gs_counter_c_candy"], [3, 0, 10, 7, 5, 14, glass]],
-        "Counter Display", "PAPER", decor=True, loot="theatre_candy")
+        "Counter Display", "WOOL", decor=True, loot="theatre_candy")
     add("gs_cig_lo", cube("gs_cig_lo", "home_wood_dark", "gs_laminate"), "Tobacco Cabinet", "WOOD", loot="till")
     add("gs_cig_hi", [[0, 0, 4, 16, 16, 16, {"north": "gs_cig_hi", "side": "home_wood_dark", "up": "home_wood_dark", "down": "home_wood_dark"}]],
         "Tobacco Rack", "WOOD")
@@ -1665,7 +1665,7 @@ def blocks():
             **({"light": 6} if s else {}))
     add("gs_fountain", [[1, 0, 5, 15, 16, 15, {"north": "gs_fountain", "side": black, "up": black}]], "Soda Fountain", "METAL", loot="drinks")
     add("gs_cups", [[1, 0, 9, 4, 14, 12, "ext_alu"], [5, 0, 9, 8, 12, 12, "ext_alu"], [9, 0, 9, 12, 10, 12, "ext_alu"],
-                    [12.5, 0, 6, 15, 6, 12, black], [1.5, 14, 9.5, 3.5, 15, 11.5, "home_white"]], "Cups", "PAPER", decor=True)
+                    [12.5, 0, 6, 15, 6, 12, black], [1.5, 14, 9.5, 3.5, 15, 11.5, "home_white"]], "Cups", "WOOL", decor=True)
     for i in range(3):
         add(f"gs_menu_{i}", [[0, 2, 14.5, 16, 14, 16, f"gs_menu_{i}"]], "Menu Board", "METAL", decor=True, light=5 if i == 1 else None)
     for kind, loot in (("chips", "theatre_candy"), ("oil", "hardware"), ("mags", "home_books"), ("bread", "grocery")):
@@ -1680,7 +1680,7 @@ def blocks():
     for k in ("restrooms", "card", "prepay", "hours", "office"):
         add(f"gs_sign_{k}", [[2, 4, 15.4, 14, 12, 16, f"gs_sign_{k}"]], "Sign", "METAL", decor=True)
     for n in range(len(POSTERS)):
-        add(f"gs_poster_{n}", [[1, 1, 15.6, 15, 15, 16, f"gs_poster_{n}"]], "Poster", "PAPER", decor=True, render="cutout")
+        add(f"gs_poster_{n}", [[1, 1, 15.6, 15, 15, 16, f"gs_poster_{n}"]], "Poster", "WOOL", decor=True, render="cutout")
     for kind in ("beer", "lotto"):
         for s in ("", "_on"):
             add(f"gs_neon_{kind}{s}", [[0, 0, 0, 16, 16, 0.5, f"gs_neon_{kind}{s}"]], "Neon Sign", "GLASS", decor=True, render="cutout",

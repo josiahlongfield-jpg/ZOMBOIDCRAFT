@@ -807,8 +807,9 @@ final class Interior {
                     } else if (f == 0 && cellarWay != null && cellarWay[0] == 1 && x == cellarWay[1] && z == cellarWay[2]) {
                         // looters leave the hatch thrown open
                         boolean open = (cond == House.Condition.LOOTED || cond == House.Condition.RUIN) && rng.nextBoolean();
-                        String facing = DIRS[(cellarWay[3] + 2) & 3];
-                        p.set(x, base, z, "minecraft:spruce_trapdoor[facing=" + facing + ",half=top,open=" + open + "]");
+                        // hinged on the far side from the ladder (that goes down the wall DIRS[s] faces off)
+                        String facing = DIRS[cellarWay[3] & 3];
+                        p.set(x, base, z, "bunk_hatch_wood[facing=" + facing + ",half=top,open=" + open + "]");
                     } else if (t == TOP) {
                         p.set(x, base, z, "home_stairs_" + stairsKind + "[facing=south]");
                     } else {
