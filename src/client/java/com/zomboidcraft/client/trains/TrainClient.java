@@ -4,6 +4,7 @@ import com.zomboidcraft.world.trains.Line;
 import com.zomboidcraft.world.trains.TrainCar;
 import com.zomboidcraft.world.trains.TrainEntity;
 import com.zomboidcraft.world.trains.TrainNet;
+import com.zomboidcraft.world.trains.TrainPhysics;
 import com.zomboidcraft.world.trains.TrainRider;
 import com.zomboidcraft.world.trains.Trains;
 import java.util.HashMap;
@@ -31,6 +32,8 @@ import net.minecraft.world.phys.Vec3;
 public final class TrainClient {
     /** Where the server last said each rider (by entity id) stands: train id, car, x, y, z, yaw, and the tick it said so. */
     private static final Map<Integer, float[]> RIDERS = new HashMap<>();
+    /** Where each of them stood in their car last tick: car, x, z. */
+    private static final Map<Integer, float[]> LAST_LOCAL = new HashMap<>();
     private static boolean wasRiding;
     private static long tick;
 
@@ -42,6 +45,8 @@ public final class TrainClient {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
             Trains.lines(true).clear();
             RIDERS.clear();
+            LAST_LOCAL.clear();
+            TrainPhysics.REMOTE_STEPS.clear();
         }));
         ClientTickEvents.START_CLIENT_TICK.register(TrainClient::start);
         ClientTickEvents.END_CLIENT_TICK.register(TrainClient::end);
@@ -98,6 +103,8 @@ public final class TrainClient {
             float[] r = entry.getValue();
             if (tick - (long) r[6] > 10) {
                 it.remove();
+                LAST_LOCAL.remove(entry.getKey());
+                TrainPhysics.REMOTE_STEPS.remove(entry.getKey());
                 continue;
             }
             Entity e = client.level.getEntity(entry.getKey());
@@ -110,6 +117,9 @@ public final class TrainClient {
                 continue;
             }
             TrainCar.Pose pose = TrainCar.pose(line.route, train.s(), car);
+            // their legs walk only as far as they moved in their car
+            float[] last = LAST_LOCAL.put(entry.getKey(), new float[] {r[1], r[2], r[4]});
+            TrainPhysics.REMOTE_STEPS.put(entry.getKey(), last == null || last[0] != r[1] ? 0f : (float) Math.hypot(r[2] - last[1], r[4] - last[2]));
             Vec3 at = pose.toWorld(r[2], r[3], r[4]);
             e.setPos(at);
             float yaw = pose.yawDegrees() + r[5];

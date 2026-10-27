@@ -19,6 +19,27 @@ import net.minecraft.world.phys.Vec3;
 public final class TrainPhysics {
     private static final double EPS = 1e-7;
 
+    /** Other players and mobs aboard, on your game: how far each walked in its car this tick (by entity id). */
+    public static final java.util.Map<Integer, Float> REMOTE_STEPS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * How far a living thing walked this tick, for its legs: what it moved, less what the train
+     * carried it, so someone standing in a moving car stands still rather than running on the spot.
+     */
+    public static float walkDistance(LivingEntity e, float moved) {
+        if (e.level().isClientSide()) {
+            Float step = REMOTE_STEPS.get(e.getId());
+            if (step != null) {
+                return step;
+            }
+        }
+        double[] carried = ((TrainRider) e).zomboidcraft$carried();
+        if (carried[0] == 0 && carried[1] == 0) {
+            return moved;
+        }
+        return (float) Math.hypot(e.getX() - e.xo - carried[0], e.getZ() - e.zo - carried[1]);
+    }
+
     /** Whether this side moves this entity: your own player on your game, every non-player on the server. */
     public static boolean handles(Entity e) {
         if (e instanceof TrainEntity || e.isPassenger() || e instanceof Projectile || e.isSpectator()) {
@@ -31,6 +52,9 @@ public final class TrainPhysics {
     public static void carry(Entity e) {
         TrainRider rider = (TrainRider) e;
         TrainEntity train = rider.zomboidcraft$train();
+        double[] carried = rider.zomboidcraft$carried();
+        carried[0] = 0;
+        carried[1] = 0;
         if (train == null && TrainEntity.loaded(e.level().isClientSide()).isEmpty()) {
             return;
         }
@@ -54,6 +78,8 @@ public final class TrainPhysics {
             Vec3 moved = at.subtract(e.position());
             if (moved.lengthSqr() > 1e-10) {
                 e.setPos(at);
+                carried[0] = moved.x;
+                carried[1] = moved.z;
                 float turn = Mth.wrapDegrees(to.yawDegrees() - from.yawDegrees());
                 if (turn != 0) {
                     e.setYRot(e.getYRot() + turn);

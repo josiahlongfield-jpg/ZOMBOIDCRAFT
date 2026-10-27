@@ -9,4 +9,7 @@ public interface TrainRider {
     double zomboidcraft$trainS();
 
     void zomboidcraft$ride(TrainEntity train, int car, double s);
+
+    /** How far the train carried it this tick (x, z), so its legs only count its own steps. */
+    double[] zomboidcraft$carried();
 }
