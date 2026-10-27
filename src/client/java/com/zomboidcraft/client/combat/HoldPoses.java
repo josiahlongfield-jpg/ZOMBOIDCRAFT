@@ -52,10 +52,12 @@ public final class HoldPoses {
 
         Matrix3f gun;
         float[] support;
+        float[] lens = null;
         float mirror = left ? -1f : 1f;
         float headX = model.head.xRot, headY = model.head.yRot * mirror;
         if (stack.getItem() instanceof RifleItem item) {
             boolean aiming = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
+            lens = HoldPoseData.LENS.get(lensKey(item.type()) + (aiming ? "_aim" : "_ready"));
             if (aiming) {
                 // the shouldered long gun, or the pistol out at arm's length, follows the eyes
                 gun = rot(headX, headY, 0).mul(rot(switch (item.type()) {
@@ -138,12 +140,36 @@ public final class HoldPoses {
 
         Vector3f e = gun.getEulerAnglesZYX(new Vector3f());
         gunArm.setRotation(e.x, e.y * mirror, e.z * mirror);
+        if (lens != null) {
+            // where the laser and light are now, so their beams leave the gun as others see it
+            Vector3f laser = gun.transform(new Vector3f(lens[0], lens[1], lens[2])).add(gunPivot);
+            Vector3f light = gun.transform(new Vector3f(lens[3], lens[4], lens[5])).add(gunPivot);
+            RailLights.seen(state, laser.mul(mirror, 1, 1), light.mul(mirror, 1, 1));
+        }
 
         Vector3f p0 = gun.transform(new Vector3f(support[0], support[1], support[2])).add(gunPivot);
         Vector3f p1 = gun.transform(new Vector3f(support[3], support[4], support[5])).add(gunPivot);
         Vector3f target = supportTarget(offPivot, p0, p1);
         float[] a = aim(offPivot, target, HAND_X);
         offArm.setRotation(a[0], a[1] * mirror, 0);
+    }
+
+    /** A gun's name in HoldPoseData.LENS. */
+    private static String lensKey(GunType type) {
+        return switch (type) {
+            case PISTOL -> "pistol";
+            case SHOTGUN -> "shotgun";
+            case HUNTING_RIFLE -> "hunting";
+            case DOUBLE_BARREL -> "double_barrel";
+            case REVOLVER -> "revolver";
+            case RIMFIRE -> "rimfire";
+            case SMG -> "smg";
+            case SAWN_OFF -> "sawn_off";
+            case MAGNUM -> "magnum";
+            case LEVER_ACTION -> "lever_action";
+            case CROSSBOW -> "crossbow";
+            default -> "rifle";
+        };
     }
 
     /** The swing: wind up over the right shoulder, sweep through to low on the left, come back to the ready. */

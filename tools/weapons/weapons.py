@@ -1503,18 +1503,24 @@ def main():
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
     write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb])
-    write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
-                     (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
-                     (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
-                     (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
-                     (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
-                     (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr)),
-                     (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
-                     (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
-                     (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
-                     (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
-                     (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
-                     (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))])
+    rigs = [(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
+            (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
+            (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
+            (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
+            (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
+            (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr)),
+            (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
+            (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
+            (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
+            (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
+            (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
+            (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))]
+    write_rigs_java(rigs)
+    # the laser's and light's lenses in each gun's build frame, so other players see the beams leave the gun
+    lens_names = ['rifle', 'pistol', 'shotgun', 'hunting', 'double_barrel', 'revolver', 'rimfire', 'smg',
+                  'sawn_off', 'magnum', 'lever_action', 'crossbow']
+    lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
+              for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
@@ -1540,7 +1546,7 @@ def main():
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
                                  'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
-                                (mh, mG, mkeys))
+                                (mh, mG, mkeys), lenses)
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -1643,8 +1649,9 @@ public final class GunSlotData {{
 ''')
 
 
-def write_pose_java(guns, melee):
-    """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame."""
+def write_pose_java(guns, melee, lenses):
+    """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame,
+    and where each gun's laser and light lenses are in that frame."""
     def f3(v):
         return ', '.join(f'{float(x):.5f}f' for x in v)
 
@@ -1654,6 +1661,7 @@ def write_pose_java(guns, melee):
             h, G, arm = holds[name]
             data['arms'][f'{gun}_{name}'] = [float(x) for x in arm]
             data['support'][f'{gun}_{name}'] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
+            data.setdefault('lens', {})[f'{gun}_{name}'] = [float(x) for b in lenses[gun] for x in Q.arm_local(h, G, arm, b)]
     mh, mG, keys = melee
     for k, arm in keys.items():
         data['arms']['melee_' + k] = [float(x) for x in arm]
@@ -1664,6 +1672,7 @@ def write_pose_java(guns, melee):
     held = tuple(f'{gun}_' for gun in guns)
     rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
                            for k, v in data['support'].items() if k.startswith(held))
+    lens = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['lens'].items())
     melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
                             if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
@@ -1681,6 +1690,9 @@ final class HoldPoseData {{
     static final float REACH = {Q.REACH}f;
 {arms}
 {rifle_sup}
+    /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
+    static final Map<String, float[]> LENS = Map.ofEntries(
+{lens});
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
 {melee_sup});
