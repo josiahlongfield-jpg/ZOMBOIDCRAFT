@@ -316,7 +316,7 @@ mechanic_toolbox | Mechanic's Tool Chest | R | 40 | 12.0 | auto.3 garage farm
 portable_generator | Portable Generator | G | 160 | 25.0 | build.2 farm bunker mansion
 welding_mask | Welding Mask | S | 8 | 0.6 | farm garage factory build
 welding_rods | Welding Rods | S | 4 | 0.5 | farm factory hard
-blowtorch* | Propane Torch | S | 8 | 1.2 | hard garage farm
+propane_torch* | Propane Torch | S | 8 | 1.2 | hard garage farm
 gas_mask_filter | Respirator Cartridges | S | 5 | 0.2 | hard factory build
 padlock | Padlock | C | 3 | 0.3 | hard garage gym school
 combination_lock | Combination Lock | C | 2 | 0.2 | gym.3 school hard
@@ -343,7 +343,7 @@ chain | Length of Chain | C | 4 | 2.5 | garage hard farm dock
 wire_spool | Spool of Wire | C | 3 | 1.0 | hard garage farm build
 zip_ties | Bag of Zip Ties | C | 2 | 0.1 | hard garage worktruck police
 sandpaper | Sandpaper | C | 1 | 0.05 | garage hard
-plank* | Plank | C | 1 | 2.0 | build.3 hard garage farm
+plank | Plank | C | 1 | 2.0 | build.3 hard garage farm
 two_by_four | Two-by-Four | C | 1 | 3.0 | build.3 hard
 plywood_sheet | Sheet of Plywood | C | 4 | 12.0 | build.3 hard
 metal_sheet* | Sheet Metal | S | 4 | 3.0 | factory build farm
@@ -359,7 +359,7 @@ barbed_wire | Roll of Barbed Wire | S | 6 | 8.0 | farm.3 mil
 fence_post | Fence Post | C | 1 | 4.0 | farm hard
 cinder_block | Cinder Block | C | 1 | 16.0 | build farm
 propane_tank | Propane Tank | S | 10 | 15.0 | garage.2 hard camp farm diner
-gas_can* | Gas Can | S | 6 | 1.2 | garage.3 trunk farm hard auto
+gas_can | Gas Can | S | 6 | 1.2 | garage.3 trunk farm hard auto
 """
 
 ROSTER['Electrical & electronics'] = """
@@ -780,8 +780,8 @@ entrenching_tool | Folding Shovel | S | 8 | 1.0 | mil.3 camp
 poncho | Rain Poncho | C | 4 | 0.5 | mil camp station
 mil_canteen_cup | Canteen Cup | C | 2 | 0.2 | mil camp
 field_rations_case | Case of Ration Meals | P | 60 | 7.0 | mil.3 bunker carrier
-night_vision_gen1* | Night Vision Goggles (old) | R | 35 | 1.0 | mil police bunker
-night_vision_gen3* | Night Vision Goggles | P | 80 | 0.6 | mil.3 bunker
+nvg_gen1* | Night Vision Goggles (old) | R | 35 | 1.0 | mil police bunker
+nvg_gen3* | Night Vision Goggles | P | 80 | 0.6 | mil.3 bunker
 nvg_head_mount* | NVG Head Mount | R | 20 | 0.4 | mil bunker
 comms_headset* | Comms Headset | R | 25 | 0.3 | mil police carrier
 handcuffs | Handcuffs | S | 6 | 0.3 | police.3 pcar body
