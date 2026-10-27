@@ -60,10 +60,20 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         int hidden = hiddenBones(stumps, legless);
         int lod = ZDetail.level(state.distanceToCameraSq);
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
-                (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
-                (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
+        ZBodyMesh low = state.zlow;
+        if (lod >= ZDetail.LOW && low != null) {
+            // the baked body: its own atlas already carries the skin's tint and the clothes painted over it
+            int kitLod = lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL;
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zlowSkin),
+                    (pose, out) -> emit(low, mats, pose, out, true, hidden, ZDetail.FULL, legless, light, overlay, -1));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
+                    (pose, out) -> emit(low, mats, pose, out, false, hidden, kitLod, legless, light, overlay, -1));
+        } else {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
+                    (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
+                    (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
+        }
         if (state.zeyes != null) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(state.zeyes),
                     (pose, out) -> eyes(mats, pose, out));
