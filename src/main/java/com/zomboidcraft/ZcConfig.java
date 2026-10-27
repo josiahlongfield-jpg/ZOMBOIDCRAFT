@@ -71,6 +71,24 @@ public final class ZcConfig {
     public Digging digging = new Digging();
     /** What the Build page makes: how tough boards and sheets are, how loud a tripwire is, how fast a barrel fills. */
     public Building building = new Building();
+    /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
+    public Performance performance = new Performance();
+
+    public static class Performance {
+        /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
+        public int fullDetailZombies = 12;
+        /** The nearest this many get most of it; the rest only the main shapes. Client side. */
+        public int midDetailZombies = 32;
+        /** Past this many blocks a zombie is drawn with its body and only the biggest pieces of clothing. Client side. */
+        public double simpleZombieDistance = 40;
+        /** Shader shadows (Photon's) are cast by the simple body, which looks the same in a shadow and costs far less. Client side. */
+        public boolean simpleZombieShadows = true;
+        /**
+         * Zombies standing idle further than this many blocks from every player think every fourth tick instead of
+         * every tick (they still hear and turn up the same). 0 turns it off.
+         */
+        public double idleThinkDistance = 32;
+    }
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */

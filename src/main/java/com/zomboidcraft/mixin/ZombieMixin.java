@@ -10,6 +10,7 @@ import com.zomboidcraft.zombie.ZombieTypes;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.RemoveBlockGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -30,6 +31,12 @@ public abstract class ZombieMixin implements NoiseListener {
     @Inject(method = "registerGoals", at = @At("TAIL"))
     private void zomboidcraft$addGoals(CallbackInfo ci) {
         Zombie self = (Zombie) (Object) this;
+        if (ZombieTypes.isWalkerType(self.getType())) {
+            // no turtles in the county: their egg hunt scans thousands of blocks round every zombie, a big cost in a horde
+            ((MobAccessor) self).zomboidcraft$goalSelector().removeAllGoals(goal -> goal instanceof RemoveBlockGoal);
+            ((MobAccessor) self).zomboidcraft$targetSelector().removeAllGoals(goal -> goal instanceof NearestAttackableTargetGoal<?> nearest
+                    && ((NearestAttackableTargetGoalAccessor) nearest).zomboidcraft$targetType().getSimpleName().equals("Turtle"));
+        }
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(3, new InvestigateNoiseGoal(self));
         if (ZombieTypes.isWalkerType(self.getType()) && ZcConfig.get().senses.sightEnabled) {
