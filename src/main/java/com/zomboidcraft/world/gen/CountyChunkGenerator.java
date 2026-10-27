@@ -63,6 +63,11 @@ public final class CountyChunkGenerator extends ChunkGenerator {
         this.plan = plan;
     }
 
+    /** Whether this is the hand-planned county (its places sit where the plan pins them). */
+    public boolean planned() {
+        return isPlanned();
+    }
+
     private boolean isPlanned() {
         return plan.equals("grayhaven");
     }

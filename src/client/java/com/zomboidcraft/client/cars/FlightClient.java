@@ -45,6 +45,7 @@ public final class FlightClient {
         CameraRig.register(10, FlightClient::camera);
         ClientTickEvents.END_CLIENT_TICK.register(FlightClient::tick);
         FlightHud.register();
+        FarFlybys.register();     // before the lights, which light the far ones it draws
         AirLights.register();
         com.zomboidcraft.client.interact.Interactables.finder(FlightClient::cockpitDot);
     }

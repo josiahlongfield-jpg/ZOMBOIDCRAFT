@@ -3262,5 +3262,49 @@
         "attenuation_distance": 16
       }
     ]
+  },
+  "lift.ding": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event",
+        "pitch": 1.2,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.ding"
+  },
+  "lift.doors": {
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.contract",
+        "type": "event",
+        "pitch": 1.3,
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.doors"
+  },
+  "lift.motor": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.ambient",
+        "type": "event",
+        "pitch": 0.6,
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.motor"
+  },
+  "lift.button": {
+    "sounds": [
+      {
+        "name": "minecraft:block.stone_button.click_on",
+        "type": "event",
+        "pitch": 1.4,
+        "attenuation_distance": 12
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.button"
   }
 }

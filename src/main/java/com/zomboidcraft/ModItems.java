@@ -69,6 +69,15 @@ public final class ModItems {
     public static final Item SEED_POTATOES = register("seed_potatoes", Item::new, new Item.Properties().stacksTo(16));
     public static final Item BEET_SEEDS = register("beet_seeds", Item::new, new Item.Properties().stacksTo(16));
     public static final Item DIGITAL_WATCH = register("digital_watch", Item::new, new Item.Properties().stacksTo(1));
+    // Worn kit that opens quick slots (carry/QuickSlots): belts the hip and pouches, holsters and sheaths their own slot.
+    public static final Item LEATHER_BELT = register("leather_belt", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item TOOL_BELT = register("tool_belt", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item DUTY_BELT = register("duty_belt", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item HIP_HOLSTER = register("hip_holster", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item SHOULDER_HOLSTER = register("shoulder_holster", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item THIGH_HOLSTER = register("thigh_holster", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item KNIFE_SHEATH = register("knife_sheath", Item::new, new Item.Properties().stacksTo(1));
+    public static final Item MACHETE_SHEATH = register("machete_sheath", Item::new, new Item.Properties().stacksTo(1));
     // Earning an aircraft (world/cars/AirReadiness): the manuals that teach flying, and what makes one airworthy.
     public static final Item ROTARY_WING_MANUAL = manual(com.zomboidcraft.world.cars.AirReadiness.Manual.ROTARY);
     public static final Item JET_FLIGHT_MANUAL = manual(com.zomboidcraft.world.cars.AirReadiness.Manual.JET);

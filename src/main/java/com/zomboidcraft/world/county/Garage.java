@@ -14,7 +14,7 @@ import java.util.SplittableRandom;
  * eight blocks in half-block steps: B1 to B2 in lane B, heading back toward the front, B2 to B3 in
  * lane A again. A wall runs between the lanes. Bays are painted along the walls and round the core,
  * a wheel stop at the head of each, columns on the bay lines, a few cars nobody came back for,
- * strip lights mostly dead. The fire stairs and the lifts carry on down from the lobby.
+ * strip lights mostly dead. The fire stairs and the lift carry on down from the lobby.
  *
  * The lowest level keeps the service corner at the back on the west side: the freight lift and the
  * electrical room, with a mesh cage in its corner. Under one tower in a city the cage floor has a
@@ -177,13 +177,24 @@ public final class Garage {
                 }
             }
         }
+        // the tower's lift carries on down: its shaft open through the lobby's floor to a pit on the lowest
+        // level, doors and a call button on every level (the tower's machine finds them; its lobby stays 1)
+        p.fill(lift + 2, 0, cz0 + 1, lift + 3, 0, back - 1, "air");
+        int[] ys = new int[levels];
         for (int k = 1; k <= levels; k++) {
             int y = floorY(k);
-            for (int yy = y + 1; yy <= y + 2; yy++) {
-                p.set(lift, yy, cz0, "elevator_door[facing=north]");
-                p.set(lift + 2, yy, cz0, "elevator_door[facing=north]");
-            }
+            ys[levels - k] = y;
             p.set(lift + 1, y + 2, cz0 - 1, "park_st_lifts[facing=north]");
+        }
+        for (int i = 0; i < levels; i++) {
+            int y = ys[i] + 1;
+            for (int a = 0; a < 2; a++) {
+                for (int k = 0; k < 2; k++) {
+                    p.set(lift + 2 + a, y + k, cz0, "zomboidcraft:lift_door[facing=north,part=" + (k == 0 ? "lower" : "upper")
+                            + ",side=" + (a == 0 ? "right" : "left") + ",open=false,lobby=false]");
+                }
+            }
+            p.set(lift + 4, y + 1, cz0 - 1, "zomboidcraft:lift_button[facing=north,lit=false]");
         }
     }
 

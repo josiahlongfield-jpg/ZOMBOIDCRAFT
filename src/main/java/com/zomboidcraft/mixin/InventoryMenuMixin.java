@@ -7,6 +7,7 @@ import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.GearContainer;
 import com.zomboidcraft.carry.GearStore;
+import com.zomboidcraft.carry.QuickSlots;
 import com.zomboidcraft.carry.Wear;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Gives the player's own inventory menu the field kit's slots: gear (back, vest, waist, sling) and the inside of
+ * Gives the player's own inventory menu the field kit's slots: gear (bags, belt, holster, sheath, watch) and the inside of
  * every worn bag, after Minecraft's 46. Both sides build the same slots, so the usual menu sync carries them.
  */
 @Mixin(InventoryMenu.class)
@@ -83,22 +84,20 @@ public abstract class InventoryMenuMixin implements Carry.Bags {
         }
         ItemStack stack = slot.getItem();
         ItemStack before = stack.copy();
-        int sling = zomboidcraft$firstExtra + GearStore.SLING;
+        int quick = InventoryMenu.USE_ROW_SLOT_START;
         if (fromKit) {
+            // a weapon out of a bag goes to its quick slot (holster, sheath, sling, hip) before your hands
+            CarrySlots.quick(self, player, stack, -1);
             CarrySlots.move(self, stack, InventoryMenu.INV_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
-            if (stack.getCount() == before.getCount() && index > sling) {
-                // a weapon out of a bag with the belt full goes on the sling
-                CarrySlots.move(self, stack, sling, sling + 1);
-            }
         } else {
             BagSpec spec = BagItem.spec(stack);
-            int gearSlot = spec == null ? -1 : GearStore.slotFor(spec.wear());
+            int gearSlot = spec == null ? QuickSlots.gearSlot(stack) : GearStore.slotFor(spec.wear());
             if (gearSlot >= 0) {
                 CarrySlots.move(self, stack, zomboidcraft$firstExtra + gearSlot, zomboidcraft$firstExtra + gearSlot + 1);
             }
-            if (stack.getCount() == before.getCount()) {
-                // a long gun or melee weapon goes on the sling first
-                CarrySlots.move(self, stack, sling, sling + 1);
+            if (stack.getCount() == before.getCount() && Carry.weapon(stack)) {
+                // a weapon moves up to a better quick slot (a rifle in your hands onto the sling), else into a bag
+                CarrySlots.quick(self, player, stack, index >= quick ? index - quick : -1);
             }
             if (stack.getCount() == before.getCount()) {
                 CarrySlots.move(self, stack, zomboidcraft$firstExtra + GearStore.SIZE, self.slots.size());

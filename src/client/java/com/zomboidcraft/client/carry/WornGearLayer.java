@@ -45,6 +45,9 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
 
+    /** How far down the body a belt's bottom edge sits, less the 0.8 px its model is built below centre. */
+    private static final float BELT_DOWN = 11.7f - 0.8f;
+
     /** How the slung weapon lies across the back, in degrees from level. */
     private static final float SLING_ANGLE = 55f;
 
@@ -64,7 +67,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
         List<ItemStack> worn = player.getAttachedOrElse(Carry.WORN, List.of());
         float packOut = 2f / 16f;
-        for (int i = 0; i < Math.min(worn.size(), GearStore.SLING); i++) {
+        for (int i = 0; i < Math.min(worn.size(), GearStore.BELT); i++) {
             ItemStack stack = worn.get(i);
             BagSpec spec = BagItem.spec(stack);
             if (spec == null) {
@@ -91,9 +94,53 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
-        if (worn.size() > GearStore.SLING && !worn.get(GearStore.SLING).isEmpty()) {
-            sling(pose, collector, light, state, player, worn.get(GearStore.SLING), packOut);
+        if (worn.size() > GearStore.BELT && !worn.get(GearStore.BELT).isEmpty()) {
+            // belt models are built at body scale round the waist (tools/items/gen_belts.py): just move them down to it
+            pose.pushPose();
+            getParentModel().body.translateAndRotate(pose);
+            pose.translate(0, BELT_DOWN / 16f, 0);
+            pose.scale(1f, -1f, -1f);
+            items.updateForLiving(item, worn.get(GearStore.BELT), ItemDisplayContext.NONE, player);
+            item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+            pose.popPose();
         }
+        if (worn.size() > Carry.WORN_SHEATH) {
+            if (!worn.get(Carry.WORN_BACK).isEmpty()) {
+                sling(pose, collector, light, state, player, worn.get(Carry.WORN_BACK), packOut);
+            }
+            hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1);
+            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1);
+        }
+    }
+
+    /**
+     * A holstered handgun on the right hip or a sheathed blade on the left (side -1 or 1), hanging grip up along the
+     * thigh, about as long as a hand span on the body.
+     */
+    private void hip(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player, ItemStack stack,
+                     int side) {
+        if (stack.isEmpty()) return;
+        items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
+        if (item.isEmpty()) return;
+        AABB box = item.getModelBoundingBox();
+        boolean alongZ = box.getZsize() >= Math.max(box.getXsize(), box.getYsize());
+        double length = alongZ ? box.getZsize() : Math.max(box.getXsize(), box.getYsize());
+        if (length <= 0) return;
+        float k = (float) ((side < 0 ? 6.5f : 7.5f) / 16f / length);
+        pose.pushPose();
+        getParentModel().body.translateAndRotate(pose);
+        pose.translate(side * 4.7f / 16f, 11.5f / 16f, 0.2f / 16f);
+        pose.scale(-k, -k, k);
+        // guns point their muzzle down the thigh; a blade's tip hangs down
+        if (alongZ) {
+            pose.mulPose(new org.joml.Matrix4f().rotationX((float) (Math.PI / 2)));
+            pose.mulPose(new org.joml.Matrix4f().rotationZ((float) (side * Math.PI / 2)));
+        } else if (box.getYsize() < box.getXsize()) {
+            pose.mulPose(new org.joml.Matrix4f().rotationZ((float) (Math.PI / 2)));
+        }
+        pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
+        item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        pose.popPose();
     }
 
     /**

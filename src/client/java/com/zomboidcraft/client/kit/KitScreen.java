@@ -233,12 +233,12 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         slotClicked(menu.slots.get(slot), slot, button, input);
     }
 
-    /** The slots that are yours to take from: pockets, belt, off hand, sling and inside worn bags. */
+    /** The slots that are yours to take from: pockets, quick slots, off hand and inside worn bags. */
     List<Integer> carried() {
         List<Integer> out = new ArrayList<>();
         for (int i = InventoryMenu.INV_SLOT_START; i < menu.slots.size(); i++) {
             Slot slot = menu.slots.get(i);
-            if (slot instanceof CarrySlots.GearSlot gear && gear.gear != com.zomboidcraft.carry.GearStore.SLING) continue;
+            if (slot instanceof CarrySlots.GearSlot) continue;
             if (slot instanceof CarrySlots.BagSlot bag && !bag.open()) continue;
             if (slot instanceof NearbyMenu.NearbySlot) break;
             out.add(i);

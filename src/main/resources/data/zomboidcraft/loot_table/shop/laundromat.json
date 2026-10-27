@@ -10,23 +10,8 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:string",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:white_wool",
-          "weight": 6,
+          "weight": 84,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -41,7 +26,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather",
-          "weight": 2,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -56,7 +41,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "weight": 4,
+          "weight": 56,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -71,7 +56,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:glass_bottle",
-          "weight": 4,
+          "weight": 56,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -85,23 +70,87 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 3,
+          "name": "minecraft:bucket",
+          "weight": 14
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 140
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rag",
+          "weight": 16,
           "functions": [
             {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:water"
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 1
+          "name": "zomboidcraft:ripped_sheet",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         },
         {
-          "type": "minecraft:empty",
-          "weight": 10
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bleach",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:detergent",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sewing_kit",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:thread_spool",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:safety_pins",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     }

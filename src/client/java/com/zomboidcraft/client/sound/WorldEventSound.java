@@ -44,6 +44,7 @@ public final class WorldEventSound {
 
     private static void receive(WorldEvents.Event e) {
         Minecraft mc = Minecraft.getInstance();
+        com.zomboidcraft.client.cars.FarFlybys.add(e);      // seen coming from far off
         if (e.flyby() && e.sound() == 0) {
             mc.getSoundManager().play(new Flyby(e));
         } else {

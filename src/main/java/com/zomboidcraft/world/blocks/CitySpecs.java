@@ -6572,5 +6572,31 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_ceiling_lamp", AXIS, FLICKER, 12, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_ceiling_lamp_off", AXIS, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_help", FACING, 0, 0, SoundType.METAL, 2f, 4.5, 0, 6, 11.5, 16, 10);
+        s("gl_keel", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("gl_sill", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("gl_walk", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("gl_wall", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5);
+        s("gl_wall_lo", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 0, 13, 4.5, 16, 14.2, 5.7);
+        s("gl_wall_cracked", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5);
+        s("gl_wall_lo_cracked", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 0, 13, 4.5, 16, 14.2, 5.7);
+        s("gl_wall_leak", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5);
+        s("gl_wall_lo_leak", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 0, 13, 4.5, 16, 14.2, 5.7);
+        s("gl_wall_rib", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 6, 0, 0, 10, 16, 3.5);
+        s("gl_wall_lo_rib", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 0, 13, 4.5, 16, 14.2, 5.7, 6, 0, 0, 10, 16, 3.5);
+        s("gl_wall_patch", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2.5);
+        s("gl_wall_tarp", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
+        s("gl_chamfer", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 4, 0, 16, 16, 4, 0, 8, 4, 16, 16, 8, 0, 12, 8, 16, 16, 12);
+        s("gl_chamfer_cracked", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 4, 0, 16, 16, 4, 0, 8, 4, 16, 16, 8, 0, 12, 8, 16, 16, 12);
+        s("gl_chamfer_rib", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 4, 0, 16, 16, 4, 0, 8, 4, 16, 16, 8, 0, 12, 8, 16, 16, 12);
+        s("gl_chamfer_patch", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 4, 0, 16, 16, 4, 0, 8, 4, 16, 16, 8, 0, 12, 8, 16, 16, 12);
+        s("gl_crown", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14.5, 0, 16, 16, 16);
+        s("gl_crown_cracked", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14.5, 0, 16, 16, 16);
+        s("gl_crown_rib", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 14.5, 0, 16, 16, 16);
+        s("gl_tray", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 12.5, 0.5, 16, 15, 6);
+        s("gl_lamp", FACING, DECOR | FLICKER, 12, SoundType.METAL, 0f, 0, 9, 0.5, 16, 15, 8);
+        s("gl_lamp_off", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 9, 0.5, 16, 15, 8);
+        s("gl_coal", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
+        s("gl_wall_exit_r", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 6, 0, 0, 10, 16, 3.5);
+        s("gl_wall_exit_l", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 6, 0, 0, 10, 16, 3.5);
     }
 }

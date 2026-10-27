@@ -1,0 +1,53 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gl_glass_cracked": {
+      "sprite": "zomboidcraft:block/city/gl_glass_cracked",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/gl_glass_cracked"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.5,
+        -3.3137000000000008
+      ],
+      "to": [
+        16,
+        8.5,
+        19.3137
+      ],
+      "faces": {
+        "up": {
+          "texture": "#gl_glass_cracked",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#gl_glass_cracked",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

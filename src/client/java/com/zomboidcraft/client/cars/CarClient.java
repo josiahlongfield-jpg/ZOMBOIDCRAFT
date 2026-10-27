@@ -79,10 +79,12 @@ public final class CarClient {
     private static void tick(Minecraft client) {
         LocalPlayer player = client.player;
         if (player == null || client.level == null) {
+            com.zomboidcraft.world.cars.CarShelter.update(null, null);
             target = null;
             return;
         }
         CarProp inside = player.getVehicle() instanceof CarProp c ? c : null;
+        com.zomboidcraft.world.cars.CarShelter.update(client.level, player.position());
         target = client.gui.screen() != null ? null : inside != null ? insideTarget(player, inside) : doorTarget(client, player);
         HitResult hit = client.hitResult;
         CarProp car = inside != null || target != null ? null : lookedAt(client, hit);
@@ -94,6 +96,8 @@ public final class CarClient {
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
+            } else if (com.zomboidcraft.client.lifts.LiftClient.interact(client, hit)) {
+                // a lift's call button, or the floor panel inside a car
             } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
                 // a station's call button: the train's on its way
             } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
