@@ -190,11 +190,16 @@ public final class WorldEvents {
             double speed = jet ? 75 + random.nextDouble() * 30 : 32 + random.nextDouble() * 12;   // jets 270-380 km/h, helicopters 115-160 (Josiah: slower)
             double reach = jet ? 1600 : 900;     // half the path: start and end well out of earshot
             double heading = random.nextDouble() * Math.PI * 2;
-            double side = (random.nextDouble() * 2 - 1) * (jet ? 180 : 120);
+            double side = (random.nextDouble() * 2 - 1) * (jet ? 90 : 120);   // Josiah 11:13: jets closer and lower, to show through the fog
             double dx = Math.cos(heading), dz = Math.sin(heading);
             // closest point to the player, then back along the line to the start
             double cx = p.x - dz * side, cz = p.z + dx * side;
-            double y = Math.min(level.getMaxY() - 8, ground + (jet ? 70 + random.nextDouble() * 60 : 35 + random.nextDouble() * 30));
+            double y = ground + (jet ? 35 + random.nextDouble() * 25 : 35 + random.nextDouble() * 30);
+            // ...but always over the tallest thing along the line near the player (towers downtown)
+            for (int k = -240; k <= 240; k += 12) {
+                y = Math.max(y, surface(level, cx + dx * k, cz + dz * k, 0) + 18);
+            }
+            y = Math.min(level.getMaxY() - 8, y);
             String model = jet ? JETS[random.nextInt(JETS.length)] : HELI;
             e = new Event(kind, cx - dx * reach, y, cz - dz * reach, dx * speed, 0, dz * speed, level.getGameTime(),
                     (int) (2 * reach / speed * 20), model, sound(kind, random));
