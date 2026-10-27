@@ -190,7 +190,7 @@ public final class Flight {
         Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust)).add(liftDir.scale(lift)).subtract(along.scale(drag));
         // the fin keeps it flying straight through the air rather than skidding
         float authority = (float) Mth.clamp((speed / (1.4 * vs)) * (speed / (1.4 * vs)), 0.05, 1);
-        acc = acc.subtract(l.scale(vel.dot(l) * 2.0 * authority));
+        acc = acc.subtract(l.scale(vel.dot(l) * 1.2 * authority));
 
         // an unpractised pilot's hands: slower on the stick, and a wobble that settles as Piloting grows
         float hands = 0.65f + 0.35f * skill, wobble = grounded ? 0 : (1 - skill) * 0.18f;
@@ -200,6 +200,13 @@ public final class Flight {
         float yawRate = c.yaw() * 8 * authority;
         if (stalled) {
             pitchRate -= 12;    // the nose drops through
+        }
+        if (!grounded && speed > 5) {
+            // weathercock stability: the fins swing the nose into a sideslip, so a banked jet turns into the airflow
+            // rather than sliding, and with the stick let go the nose settles back onto the flight path
+            float slip = (float) Math.toDegrees(Math.atan2(vel.dot(l), vel.dot(f)));
+            yawRate -= Mth.clamp(slip, -20, 20) * 1.6f * authority;
+            pitchRate -= (float) Math.toDegrees(aoa) * 0.35f * authority * (1 - Math.abs(c.pitch()));
         }
         if (grounded) {
             // on its wheels: rolling resistance, the brakes, no skidding, the nose wheel steers

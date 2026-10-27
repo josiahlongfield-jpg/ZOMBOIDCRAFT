@@ -45,7 +45,7 @@ final class AirControls {
     private static final float STICK = (float) Math.toRadians(14), LEVER = (float) Math.toRadians(28);
 
     private static CarProp flown;
-    private static float pitchIn, rollIn;
+    private static float pitchIn, rollIn, yawIn;
     /** The stick's lean as drawn, eased toward the controls each frame. */
     private static float pitch, roll;
     private static long last;
@@ -63,6 +63,16 @@ final class AirControls {
         boolean heli = car.flight().kind == Flight.Kind.HELI;
         pitchIn = heli ? -c.cyclicFwd() : c.pitch();
         rollIn = heli ? c.cyclicSide() : c.roll();
+        yawIn = heli ? 0 : c.yaw();
+    }
+
+    /** The local pilot's pitch, roll and yaw demands for the aircraft he's flying, or null for any other. */
+    static float[] command(CarProp car) {
+        var player = Minecraft.getInstance().player;
+        if (car != flown || player == null || car.seatOf(player) != 0) {
+            return null;
+        }
+        return new float[]{pitchIn, rollIn, yawIn};
     }
 
     static Rig rig(String model) {
