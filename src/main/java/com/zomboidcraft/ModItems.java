@@ -13,6 +13,8 @@ import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
+import com.zomboidcraft.combat.throwing.ThrowKind;
+import com.zomboidcraft.combat.throwing.ThrowableItem;
 import com.zomboidcraft.survival.BandageItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public final class ModItems {
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));
     // What the Build page builds with (building/Build).
     public static final Item METAL_SHEET = register("metal_sheet", Item::new, new Item.Properties().stacksTo(8));
-    public static final Item TIN_CAN = register("tin_can", Item::new, new Item.Properties().stacksTo(16));
+    public static final Item TIN_CAN = register("tin_can", p -> new ThrowableItem(ThrowKind.CAN, p), new Item.Properties().stacksTo(16));
     public static final Item PLASTIC_DRUM = register("plastic_drum", Item::new, new Item.Properties().stacksTo(1));
     public static final Item TARP = register("tarp", Item::new, new Item.Properties().stacksTo(4));
     public static final Item EMPTY_SANDBAG = register("empty_sandbag", Item::new, new Item.Properties().stacksTo(16));
@@ -120,6 +122,22 @@ public final class ModItems {
     public static final Item LEVER_AMMO = register("lever_ammo", Item::new, new Item.Properties().stacksTo(50));
     public static final Item CROSSBOW = gun("crossbow", GunType.CROSSBOW, 1400);
     public static final Item CROSSBOW_BOLT = register("crossbow_bolt", Item::new, new Item.Properties().stacksTo(12));
+
+    // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
+    // thrown too (see TIN_CAN and ALARM_CLOCK).
+    public static final Item GLASS_BOTTLE = throwable(ThrowKind.BOTTLE, 8);
+    public static final Item BRICK = throwable(ThrowKind.BRICK, 8);
+    public static final Item FIRECRACKERS = throwable(ThrowKind.FIRECRACKERS, 8);
+    public static final Item ROAD_FLARE = throwable(ThrowKind.FLARE, 8);
+    public static final Item MOLOTOV = throwable(ThrowKind.MOLOTOV, 4);
+    public static final Item SMOKE_GRENADE = throwable(ThrowKind.SMOKE, 4);
+    public static final Item FLASHBANG = throwable(ThrowKind.FLASHBANG, 4);
+    public static final Item PIPE_BOMB = throwable(ThrowKind.PIPE_BOMB, 4);
+    public static final Item FRAG_GRENADE = throwable(ThrowKind.FRAG, 4);
+
+    private static Item throwable(ThrowKind kind, int stack) {
+        return register(kind.id, p -> new ThrowableItem(kind, p), new Item.Properties().stacksTo(stack));
+    }
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
