@@ -4,11 +4,15 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.world.county.Place;
 import com.zomboidcraft.world.county.PlaceType;
 import com.zomboidcraft.world.gen.CountyChunkGenerator;
+import java.util.HashMap;
+import java.util.Map;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -19,6 +23,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -28,11 +33,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public final class ZombieSpawner {
     private static final double NEARBY_RADIUS = 64;
+    /** The overworld's natural ground height by column, worked out once (server thread only). */
+    private static final Map<Long, Integer> GROUND = new HashMap<>();
 
     private static int ticks;
 
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(ZombieSpawner::onServerTick);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> GROUND.clear());   // another world, another ground
     }
 
     private static void onServerTick(MinecraftServer server) {
@@ -152,30 +160,53 @@ public final class ZombieSpawner {
         boolean standable = level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)
                 || (!floor.isEmpty() && floor.max(Direction.Axis.Y) >= 0.5);
         return standable
-                && !level.getBlockState(below).is(BlockTags.LEAVES)
                 && level.getBlockState(pos).getCollisionShape(level, pos).isEmpty()
                 && level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty()
                 && !perched(level, pos);
     }
 
     /**
-     * True for a spot out under the sky that stands on something hollow: a roof, a treetop, the
-     * top of a water tower. Indoors (anything over it) and solid ground outdoors are fine.
+     * True for a spot no zombie should turn up on: in a tree, or out under the sky well above the ground the world
+     * was made with (a roof, the top of a water tower or a wall). The ground itself, indoors at any height (a
+     * ceiling over it, not just leaves) and the carrier's flight deck are fine. Natural spawns are held to it too
+     * (MobMixin).
      */
-    private static boolean perched(ServerLevel level, BlockPos pos) {
-        if (pos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ())) {
-            return false;  // under a roof or a floor: inside a building
+    public static boolean perched(ServerLevel level, BlockPos pos) {
+        if (tree(level.getBlockState(pos.below()))) {
+            return true;
         }
-        if (onFlightDeck(level, pos)) {
-            return false;  // the carrier's flight deck is a deck to walk, with the hangar under it
+        if (pos.getY() <= ground(level, pos) + 2 || onFlightDeck(level, pos)) {
+            return false;
         }
-        for (int k = 2; k <= 6; k++) {
-            BlockPos at = pos.below(k);
-            if (level.getBlockState(at).getCollisionShape(level, at).isEmpty()) {
-                return true;  // air under the block it would stand on
+        for (int dy = 2; dy <= 24; dy++) {
+            BlockPos at = pos.above(dy);
+            BlockState state = level.getBlockState(at);
+            VoxelShape shape = state.getCollisionShape(level, at);
+            if (!shape.isEmpty() && !tree(state)
+                    && shape.bounds().getXsize() >= 0.75 && shape.bounds().getZsize() >= 0.75) {
+                return false;  // a floor or roof over it (not a wire or a branch): upstairs in a building
             }
         }
-        return false;
+        return true;
+    }
+
+    /** Our trees' bark, limbs and leaves, and vanilla leaves. */
+    private static boolean tree(BlockState state) {
+        return state.is(BlockTags.LEAVES) || BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().startsWith("tree_");
+    }
+
+    /** Where the ground the world was made with lies here, before anything was built or grew on it: the first block above it. */
+    private static int ground(ServerLevel level, BlockPos pos) {
+        ServerChunkCache chunks = level.getChunkSource();
+        if (level.dimension() != Level.OVERWORLD) {
+            return chunks.getGenerator().getBaseHeight(pos.getX(), pos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, level,
+                    chunks.randomState());
+        }
+        if (GROUND.size() > 65536) {
+            GROUND.clear();
+        }
+        return GROUND.computeIfAbsent(((long) pos.getX() << 32) ^ (pos.getZ() & 0xFFFFFFFFL), k -> chunks.getGenerator()
+                .getBaseHeight(pos.getX(), pos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, level, chunks.randomState()));
     }
 
     private ZombieSpawner() {
