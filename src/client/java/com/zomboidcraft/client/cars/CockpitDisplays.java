@@ -48,6 +48,14 @@ final class CockpitDisplays {
     private static final Map<String, float[][]> HUD_GLASS = Map.of(
             "jet_gyrfalcon", new float[][]{{0.068f, 3.685f, 5.83f}, {-0.088f, 3.685f, 5.83f}, {-0.088f, 3.52f, 5.83f}, {0.068f, 3.52f, 5.83f}});
 
+    /**
+     * Screens whose glow quad runs on behind something nearer the seat (the F-22's upfront displays tuck in
+     * behind the control panel box): the part of the quad's width, left to right, the page is drawn on.
+     */
+    private static final Map<String, float[]> CROP = Map.of(
+            "jet_corvid/5", new float[]{0, 0.66f},
+            "jet_corvid/6", new float[]{0.33f, 1});
+
     /** Pixels per metre of screen, and the most a side gets. The head-up display's glass is finer. */
     private static final float PX_PER_M = 2000, HUD_PX_PER_M = 3600;
     private static final int MOST = 400;
@@ -155,6 +163,11 @@ final class CockpitDisplays {
             if (corner[0] == null || corner[1] == null || corner[2] == null || corner[3] == null) {
                 continue;
             }
+            float[] crop = CROP.get(model + "/" + g);
+            if (crop != null) {
+                corner = new float[][]{lerp(corner[0], corner[1], crop[0]), lerp(corner[0], corner[1], crop[1]),
+                        lerp(corner[3], corner[2], crop[1]), lerp(corner[3], corner[2], crop[0])};
+            }
             float[] normal = {n[first * 3], n[first * 3 + 1], n[first * 3 + 2]};
             boolean hud = glow.kinds()[g] == CockpitGlow.HUD;
             if (hud && HUD_GLASS.containsKey(model)) {
@@ -190,6 +203,10 @@ final class CockpitDisplays {
     private static float dist(float[] a, float[] b) {
         float dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
         return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    private static float[] lerp(float[] a, float[] b, float t) {
+        return new float[]{a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t};
     }
 
     private static float[] sub(float[] a, float[] b) {
