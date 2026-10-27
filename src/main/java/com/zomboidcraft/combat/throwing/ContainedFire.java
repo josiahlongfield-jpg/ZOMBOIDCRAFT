@@ -28,6 +28,8 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class ContainedFire {
     private static final int STEP = 10;
+    /** Ticks between takes of the fire's roar (the AUDIO thread cuts fire_burn to this length). */
+    private static final int FIRE_SOUND = 60;
     private static final List<Fire> FIRES = new ArrayList<>();
     private static int ticks;
 
@@ -169,6 +171,11 @@ public final class ContainedFire {
         RandomSource random = level.getRandom();
         long now = level.getGameTime();
         boolean dying = now >= fire.endAt;
+        if ((now / STEP) % (FIRE_SOUND / STEP) == 0 && !fire.flames.isEmpty()) {
+            // the roar goes on while it burns: one take every few seconds, from one of its flames
+            BlockPos at = fire.flames.keySet().stream().skip(random.nextInt(fire.flames.size())).findFirst().orElse(fire.origin);
+            level.playSound(null, at, ModSounds.FIRE_BURN, SoundSource.BLOCKS, Math.min(2f, 0.6f + fire.flames.size() / 20f), 1f);
+        }
         Set<BlockPos> spread = new HashSet<>();
         for (Iterator<Map.Entry<BlockPos, Long>> it = fire.flames.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<BlockPos, Long> e = it.next();
