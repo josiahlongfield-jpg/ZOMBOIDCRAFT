@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sh_mirror": "zomboidcraft:block/city/sh_mirror",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/sh_mirror"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_mirror"
+        },
+        "south": {
+          "texture": "#sh_mirror"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

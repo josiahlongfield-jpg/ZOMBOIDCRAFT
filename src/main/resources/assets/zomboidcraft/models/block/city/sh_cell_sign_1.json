@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sh_cell_sign_1": "zomboidcraft:block/city/sh_cell_sign_1",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/sh_cell_sign_1"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        15.4
+      ],
+      "to": [
+        13,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_cell_sign_1"
+        },
+        "south": {
+          "texture": "#streetlight_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    }
+  ]
+}

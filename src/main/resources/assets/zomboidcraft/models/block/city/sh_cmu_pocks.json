@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sh_cmu_pocks": "zomboidcraft:block/city/sh_cmu_pocks",
+    "particle": "zomboidcraft:block/city/sh_cmu_pocks"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_cmu_pocks",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

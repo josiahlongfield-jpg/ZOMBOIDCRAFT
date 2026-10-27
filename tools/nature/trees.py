@@ -41,19 +41,19 @@ R = 4  # sub-voxels per block when filling the wood
 
 # species: the pack's objects, its bark and leaf textures, sizes (scales of the model), grading
 SPECIES = {
-    "oak": dict(objs=["Oak_01", "Oak_02", "Oak_03"], wood=["Oak_trunk"], leaf=["Oak_leaves"],
+    "oak": dict(stamp=124, objs=["Oak_01", "Oak_02", "Oak_03"], wood=["Oak_trunk"], leaf=["Oak_leaves"],
                 bark="oak trunk_d.png", leaves="oak leaf_d.png", scales=(0.42, 0.58, 0.74),
                 green=(78, 96, 46), autumn={"brown": (124, 86, 44)}),
-    "maple": dict(objs=["Maple_01", "Maple_02", "Maple_03"], wood=["Maple_trunk"], leaf=["Maple_leaves"],
+    "maple": dict(stamp=34, objs=["Maple_01", "Maple_02", "Maple_03"], wood=["Maple_trunk"], leaf=["Maple_leaves"],
                   bark="maple trunk_d.png", leaves="maple leaf_d.png", scales=(0.38, 0.52, 0.66),
                   green=(84, 102, 44), autumn={"red": (124, 40, 28), "gold": (172, 116, 36)}),
-    "beech": dict(objs=["Beech_01", "Beech_02", "Beech_03"], wood=["Beech_Bark"], leaf=["Beech_Leaves"],
+    "beech": dict(stamp=86, objs=["Beech_01", "Beech_02", "Beech_03"], wood=["Beech_Bark"], leaf=["Beech_Leaves"],
                   bark="beech bark_d.png", leaves="beech leaf_d.png", scales=(0.55, 0.72, 0.9),
                   green=(88, 108, 48), autumn={"gold": (176, 128, 40)}),
-    "birch": dict(objs=["Birch_01", "Birch_02", "Birch_03"], wood=["Birch_Trunk"], leaf=["Birch_Leaves"],
+    "birch": dict(stamp=150, objs=["Birch_01", "Birch_02", "Birch_03"], wood=["Birch_Trunk"], leaf=["Birch_Leaves"],
                   bark="birch trunk_d.png", leaves="birch leaf_d.png", scales=(0.55, 0.72, 0.88),
                   green=(96, 114, 52), autumn={"gold": (186, 150, 52)}),
-    "elm": dict(objs=["Elm_01", "Elm_02", "Elm_03"], wood=["elm_trunk"], leaf=["elm_leaves"],
+    "elm": dict(stamp=100, objs=["Elm_01", "Elm_02", "Elm_03"], wood=["elm_trunk"], leaf=["elm_leaves"],
                 bark="elm trunk_d.png", leaves="elm leaf_d.png", scales=(0.45, 0.6, 0.76),
                 green=(74, 92, 44), autumn={"gold": (162, 128, 46)}),
     "spruce": dict(objs=["Spruce_01", "Spruce_02", "Spruce_03"], wood=["Spruce_trunk"], leaf=["Spruce_branches"],
@@ -65,7 +65,7 @@ SPECIES = {
     "cedar": dict(objs=["Juniper_01", "Juniper_02", "Juniper_03"], wood=["Juniper_trunk"], leaf=["Juniper_branches"],
                   bark="juniper  trunk_d.png", leaves="juniper branch_d.png", scales=(0.5, 0.64, 0.8),
                   green=(52, 72, 50), autumn={}),
-    "willow": dict(objs=["Willow_01", "Willow_02", "Willow_03"], wood=["Willow_trunk"], leaf=["Willow_branches"],
+    "willow": dict(stamp=96, objs=["Willow_01", "Willow_02", "Willow_03"], wood=["Willow_trunk"], leaf=["Willow_branches"],
                    bark="Willow trunk_d.png", leaves="willow branch_d.png", scales=(0.7, 0.86, 1.02),
                    green=(98, 112, 52), autumn={"gold": (164, 144, 58)}),
     "dead": dict(objs=["Dead_Tree_01", "Dead_Tree_02", "Dead_Tree_03"], wood=["Old_trunk", "Old_stump"],
@@ -73,6 +73,8 @@ SPECIES = {
                  green=(78, 66, 54), autumn={}),
 }
 SICK = (118, 120, 104)  # the grey, sick canopies
+# stamp: how wide a broadleaf's spray is stamped on a block's 192px canvas, so each leaf ends up
+# six to eleven pixels long on the 64px tile: many small leaves to a block, not a few giant ones
 THICK = (3, 5, 8, 12)   # limb widths in pixels
 THICKEN = 1.45
 
@@ -428,7 +430,7 @@ def tiled_crop(img, px_per_block, seed):
 
 def bark_tex(tex_dir, sp, cfg, ppm):
     img = rgba(tex_dir, cfg["bark"])
-    a = tiled_crop(img, ppm, hash(sp) % 1000)
+    a = tiled_crop(img, ppm, sum(map(ord, sp)) * 37 % 1000)  # stable from run to run
     mean = a.reshape(-1, 3).mean(0)
     # wet and dark: the county's bark is soaked, a little greener in the cracks
     a = grade(a, mean * np.array([0.9, 0.92, 0.9]), 1.2, 0.8)
@@ -451,23 +453,27 @@ def rings_tex(tex_dir, sp, bark):
 
 
 def leaf_tex(tex_dir, sp, cfg, ppm, colour, dense, suffix, seed):
-    """Leaves for a block: the pack's own sprays, stamped at their size on the tree all over a
-    tile that wraps, shaded deeper underneath, cut out sharp."""
-    img = rgba(tex_dir, cfg["leaves"])
+    """Leaves for a block: the pack's own sprays, stamped small all over a tile that wraps, the ones
+    underneath shaded deeper than the ones on top, cut out sharp."""
+    img = rgba(tex_dir, cfg["leaves"]).astype(np.float32)
     H, W = img.shape[:2]
+    # what's behind the sprays' cut-out is light; shrunk small it would ring every leaf with
+    # bright specks: make it the leaves' own colour, half as light, so each leaf gets a dark rim
+    solid = img[..., 3] > 200
+    img[~solid, :3] = img[solid, :3].mean(0) * 0.5
     spray = Image.fromarray(img.astype(np.uint8), "RGBA")
     rng = np.random.default_rng(seed)
     big = N * 3
     canvas = np.zeros((big, big, 4), np.float32)
     target = 0.82 if dense else (0.42 if sp == "dead" else 0.48)
-    # the texture's width on the tree, in metres, is its width in blocks: stamp it that big
-    size = int(np.clip(W / ppm * N * 3, 18, big * 0.9))
-    for _ in range(400):
-        s = int(size * rng.uniform(0.7, 1.2))
-        sp_img = spray.resize((s, s), Image.LANCZOS).rotate(rng.uniform(0, 360), Image.BILINEAR, expand=True)
+    # conifers and twigs: the texture's width on the tree, in metres, is its width in blocks
+    size = cfg.get("stamp") or int(np.clip(W / ppm * N * 3, 18, big * 0.9))
+    for _ in range(4000):
+        s = int(size * rng.uniform(0.75, 1.2))
+        sp_img = spray.resize((s, max(1, s * H // W)), Image.LANCZOS).rotate(rng.uniform(0, 360), Image.BILINEAR, expand=True)
         arr = np.array(sp_img, np.float32)
-        shade = rng.uniform(0.62, 1.08)
-        arr[..., :3] *= shade
+        on_top = rng.random() < 0.5
+        arr[..., :3] *= rng.uniform(0.86, 1.1) if on_top else rng.uniform(0.55, 0.84)
         h, w = arr.shape[:2]
         x0, y0 = rng.integers(-w // 2, big - w // 2), rng.integers(-h // 2, big - h // 2)
         for oy in (-big, 0, big):
@@ -477,8 +483,7 @@ def leaf_tex(tex_dir, sp, cfg, ppm, colour, dense, suffix, seed):
                 if xa >= xb or ya >= yb:
                     continue
                 src = arr[ya - Y0:yb - Y0, xa - X0:xb - X0]
-                m = (src[..., 3:4] > 110) & (canvas[ya:yb, xa:xb, 3:4] < 1)
-                m = m | ((src[..., 3:4] > 110) & (rng.random() < 0.5))
+                m = (src[..., 3:4] > 110) & ((canvas[ya:yb, xa:xb, 3:4] < 1) | on_top)
                 canvas[ya:yb, xa:xb] = np.where(m, np.concatenate([src[..., :3], np.full(src[..., :1].shape, 255)], -1),
                                                 canvas[ya:yb, xa:xb])
         cov = (canvas[..., 3] > 0).mean()
@@ -527,15 +532,24 @@ def block_specs(species):
         if cfg["leaves"]:
             leaves = "Bare Twigs" if sp == "dead" else f"{title} Leaves"
             for col in ["leaves"] + [f"leaves_{k}" for k in cfg["autumn"]]:
-                out[f"tree_{sp}_{col}"] = {"tex": f"tree_{sp}_{col}", "title": leaves, "sound": "GRASS",
-                                           "leaves": True, "drops": ""}
-                out[f"tree_{sp}_{col}_sparse"] = {"tex": f"tree_{sp}_{col}_sparse", "title": leaves,
-                                                  "sound": "GRASS", "leaves": True, "drops": ""}
+                out.update(leaf_specs(f"tree_{sp}_{col}", leaves, sp != "dead"))
                 if sp == "dead":
                     # bare twigs are a crossed spray, not a box: a box of them reads as a dark lump
                     out[f"tree_{sp}_{col}_sparse"]["model"] = "cross"
-    for col in ("leaves_sick", "leaves_sick_sparse"):
-        out[f"tree_{col}"] = {"tex": f"tree_{col}", "title": "Sick Leaves", "sound": "GRASS", "leaves": True, "drops": ""}
+                    out[f"tree_{sp}_{col}_sparse"].pop("spin")
+    out.update(leaf_specs("tree_leaves_sick", "Sick Leaves", True))
+    return out
+
+
+def leaf_specs(name, title, tuft):
+    """Dense and sparse leaf blocks, each turned at random where it's placed so the tile never
+    lines up block to block, and the sprig that feathers a crown's edge: the sparse leaves crossed."""
+    out = {name: {"tex": name, "title": title, "sound": "GRASS", "leaves": True, "spin": True, "drops": ""},
+           f"{name}_sparse": {"tex": f"{name}_sparse", "title": title, "sound": "GRASS", "leaves": True, "spin": True,
+                              "drops": ""}}
+    if tuft:
+        out[f"{name}_tuft"] = {"tex": f"{name}_sparse", "title": title, "sound": "GRASS", "leaves": True,
+                               "model": "cross", "offset": True, "drops": ""}
     return out
 
 

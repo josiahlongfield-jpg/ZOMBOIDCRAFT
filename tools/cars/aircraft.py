@@ -893,8 +893,9 @@ SPECS = {
         ao={'F22_Base': 'tex/F22_AO.png'},
         cockpit=('Cockpit',), tub=[(-0.62, 1.9, 3.7, 0.62, 3.45, 6.8)], cockpit_px=160, atlas=(2048, 2048),
         lost_when_wrecked=('Chassis01', 'Chassis02', 'Chassis03', 'Elevator_L'), sag=(1, -2.1),
-        # sat on the seat pan, head against the headrest, looking over the glareshield
-        wheelbase=5.95, eyes=[(0.0, 3.24, 5.2)],
+        # the design eye point: looking through the HUD combiner, a little down onto it, so the HUD fills
+        # the middle of the view, about 35 degrees wide (Josiah 2026-10-26); the glow regions keep the old eyes (cockpit_glow GLOW_EYES)
+        wheelbase=5.95, eyes=[(0.0, 3.05, 5.56)],
         glass_colour=(104, 92, 62), tone=tone_f22,
         soot=[(0.6, 1.9, -7.4, 0.6), (-0.6, 1.9, -7.4, 0.6)],
         marks=dict(
@@ -932,7 +933,7 @@ SPECS = {
         cockpit=('Group249',), cockpit_px=128, atlas=(2048, 2048),
         lost_when_wrecked=(lambda ac: ac.objects(('G_1_1',)) & (ac.P.mean(1)[:, 2] > 0),
                            lambda ac: (ac.P.mean(1)[:, 0] > 3.2) & (ac.P.mean(1)[:, 2] < -5.8) & (np.abs(ac.P.mean(1)[:, 1] - 2.25) < 0.45)),
-        sag=(1, -3.0), wheelbase=5.5, eyes=[(0.0, 3.72, 5.25)],
+        sag=(1, -3.0), wheelbase=5.5, eyes=[(-0.008, 3.585, 5.292)],
         tone=tone_su27, glass_colour=(110, 122, 124),
         soot=[(1.1, 1.65, -9.0, 0.6), (-1.1, 1.65, -9.0, 0.6)],
         marks=dict(
