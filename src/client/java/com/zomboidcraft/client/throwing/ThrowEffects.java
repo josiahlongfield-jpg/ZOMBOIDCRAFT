@@ -51,7 +51,7 @@ public final class ThrowEffects {
 
     private static void tick(Thrown t) {
         ClientLevel level = (ClientLevel) t.level();
-        RandomSource r = level.random;
+        RandomSource r = level.getRandom();
         ThrowKind kind = t.kind();
         Vec3 at = t.position().add(0, 0.12, 0);
         if (t.lit()) {
@@ -94,7 +94,7 @@ public final class ThrowEffects {
         ZcConfig.Throwing c = ZcConfig.get().throwing;
         double grow = Math.min(1, ticks / 60.0), fade = Mth.clamp((c.smokeTicks - ticks) / 80.0, 0, 1);
         double radius = c.smokeRadius * Math.min(grow, fade);
-        RandomSource r = level.random;
+        RandomSource r = level.getRandom();
         level.addParticle(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, true, true, at.x, at.y + 0.2, at.z,
                 (r.nextDouble() - 0.5) * 0.06, 0.05, (r.nextDouble() - 0.5) * 0.06);
         int puffs = (int) Math.ceil(radius * 1.2 * fade);
