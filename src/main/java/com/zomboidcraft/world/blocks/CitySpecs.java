@@ -6595,6 +6595,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("gl_tray", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 12.5, 0.5, 16, 15, 6);
         s("gl_lamp", FACING, DECOR | FLICKER, 12, SoundType.METAL, 0f, 0, 9, 0.5, 16, 15, 8);
         s("gl_lamp_off", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 9, 0.5, 16, 15, 8);
+        s("gl_coal", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
         s("gl_wall_exit_r", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 6, 0, 0, 10, 16, 3.5);
         s("gl_wall_exit_l", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 1.5, 6, 0, 0, 10, 16, 3.5);
     }
