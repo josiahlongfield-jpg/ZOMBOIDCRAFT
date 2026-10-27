@@ -196,6 +196,26 @@
         {
           "type": "minecraft:empty",
           "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:donut_box",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:body_bag",
+          "weight": 8
         }
       ]
     },
@@ -257,6 +277,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tourniquet",
+          "weight": 1
         }
       ]
     }

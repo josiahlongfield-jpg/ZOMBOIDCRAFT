@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:book",
-          "weight": 4,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -26,7 +26,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "weight": 4,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -41,7 +41,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:string",
-          "weight": 3,
+          "weight": 36,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -56,7 +56,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:white_wool",
-          "weight": 3,
+          "weight": 36,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -70,38 +70,23 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:cookie",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:music_disc_cat",
-          "weight": 1
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:music_disc_13",
-          "weight": 1
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:name_tag",
-          "weight": 1
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:red_dye",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -116,7 +101,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:blue_dye",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -131,7 +116,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:slime_ball",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -146,7 +131,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:snowball",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -161,12 +146,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:school_backpack",
-          "weight": 2
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:baseball_bat",
-          "weight": 1,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -181,7 +166,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hockey_stick",
-          "weight": 1,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -195,12 +180,102 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 8
+          "weight": 96
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:toy_radio",
-          "weight": 3,
+          "weight": 36,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:canned_spaghetti",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cereal_box",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:mac_and_cheese",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hard_candy",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cookies_pack",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:juice_box",
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",

@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "weight": 6,
+          "weight": 72,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -26,7 +26,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:stick",
-          "weight": 4,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -41,7 +41,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:string",
-          "weight": 3,
+          "weight": 36,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -56,7 +56,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:bone",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -71,27 +71,12 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:glass_bottle",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:rotten_flesh",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
+          "weight": 36
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lead_pipe",
-          "weight": 1,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -105,12 +90,12 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 14
+          "weight": 168
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:scrap_metal",
-          "weight": 2,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -125,7 +110,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tin_can",
-          "weight": 4,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -133,6 +118,51 @@
                 "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rag",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:empty_soda_can",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:empty_jar",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
               }
             }
           ]

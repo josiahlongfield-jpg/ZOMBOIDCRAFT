@@ -10,70 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            },
-            {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:awkward"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:strength"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            },
-            {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:water"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:honey_bottle",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:glass_bottle",
           "weight": 8,
           "functions": [
@@ -88,53 +24,78 @@
           ]
         },
         {
-          "type": "minecraft:item",
-          "name": "minecraft:sweet_berries",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 5
-              }
-            }
-          ]
+          "type": "minecraft:empty",
+          "weight": 8
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:cookie",
-          "weight": 3,
+          "name": "zomboidcraft:canned_beer",
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 4
+                "max": 2
               }
             }
           ]
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:dried_kelp",
-          "weight": 3,
+          "name": "zomboidcraft:beer_six_pack",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bottled_beer",
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
-                "min": 2,
-                "max": 6
+                "min": 1,
+                "max": 2
               }
             }
           ]
         },
         {
-          "type": "minecraft:empty",
-          "weight": 8
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wine_bottle",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:boxed_wine",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:vodka",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:whiskey",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rum",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:aged_whiskey",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:champagne",
+          "weight": 1
         }
       ]
     }
