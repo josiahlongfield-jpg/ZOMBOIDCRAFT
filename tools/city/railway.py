@@ -31,7 +31,16 @@ its back at z = 16):
 - the subway: rw_tile, rw_tile_band, rw_tile_dado, rw_mosaic_<stop>_0..3, rw_tunnel,
   rw_tunnel_floor, rw_track_slab, rw_tunnel_lamp, rw_subway_lamp, rw_stair, rw_stair_steel,
   rw_subway_rail, rw_globe_post, rw_globe, rw_subway_sign_0..1;
-- by the line: rw_xing_post, rw_xing_lights, rw_xing_buck, rw_pole, rw_pole_arm.
+- by the line: rw_xing_post, rw_xing_lights, rw_xing_buck, rw_pole, rw_pole_arm;
+- the country depots (a combination depot of the old kind: waiting room, the agent's office in
+  its bay, the freight room): rw_dp_wall, rw_dp_wall_b, rw_dp_wall_low, rw_dp_wall_low_moss
+  (cream board and batten over green lap siding outside, beadboard and pale green boards
+  inside, the inside on the south face), rw_dp_inner_wall, rw_dp_inner_wall_low, rw_dp_ceiling,
+  rw_dp_floor, rw_dp_win_{glass,broken,empty,boarded}_{lo,hi}, rw_dp_bracket, rw_dp_name_<stop>_0..3
+  (on a wall), rw_dp_freight_0..5 (the sliding door, two wide and three high, hung in front of
+  its opening), rw_dp_door_rail, rw_dp_ticket, rw_dp_bulletin, rw_dp_gooseneck, rw_dp_mast,
+  rw_dp_semaphore (the train-order signal, blades along x), rw_dp_wagon, rw_dp_milk_can,
+  rw_dp_trunk, rw_dp_scale, rw_dp_desk.
 
     python3 tools/city/railway.py        rewrites the rw_ entries in blocks.json
 
@@ -689,6 +698,205 @@ def insulator(seed):
     return t
 
 
+# ---------------------------------------------------------------- the depots
+
+# the country stops with a depot (world/county/DepotSite.java): their names go on its walls too
+DEPOTS = ("pinecrest", "millbrook", "fairview", "kings", "seabright")
+INSIDE = (150, 160, 138)    # the rooms' walls: the railway's green gone pale under years of stove smoke
+VARNISH = (128, 88, 52)     # the beadboard's old varnish
+
+
+def depot_boards(seed, worn=False):
+    """The depot's cream board and batten; worn, the paint gone off half of it to grey wood."""
+    t = boards(seed, CREAM)
+    t.grime(0.3)
+    t.streaks(0.5, dark=0.78)
+    if worn:
+        peel(t, 3.0, (124, 116, 100))
+        t.streaks(0.7, dark=0.72)
+        t.grime(0.15)
+    return t
+
+
+def lap(seed, moss=False):
+    """The course under the windows outside: green lap siding under the cream belt rail."""
+    t = F.mat("WoodSiding005", GREEN, 0.8, seed=seed, smooth=0.25)
+    for y in range(13, N, 10):
+        # each board's lower edge proud of the one under it, its shadow beneath
+        area(t, 0, y - 2, N, y, mul=1.18, dh=0.25)
+        area(t, 0, y, N, y + 1, mul=0.5, dh=-0.3)
+    area(t, 0, 0, N, 5, CREAM, dh=0.35)
+    area(t, 0, 5, N, 7, mul=0.55, dh=-0.2)
+    peel(t, 1.2, (150, 136, 112))
+    t.streaks(0.4, dark=0.8)
+    t.grime(0.2)
+    if moss:
+        # rising damp from the ground: green-brown up from the bottom edge
+        y = np.arange(N)[:, None] / N
+        damp = np.clip((y - 0.35) * 2.6 + P.fbm(t.rng) * 0.8, 0, 1)
+        t.mix(damp, (70, 84, 46), 0.85)
+        t.speckle(0.08, (96, 112, 60), 0.6)
+    return t
+
+
+def beadboard(seed, rgb=VARNISH, rail=True):
+    """Varnished beadboard: narrow tongue-and-groove boards with a bead down each, the chair rail over them."""
+    t = F.mat("white_planks_clean", rgb, 1.0, seed=seed, smooth=0.45)
+    for x in range(0, N, 8):
+        area(t, x, 0, x + 1, N, mul=0.6, dh=-0.25)
+        area(t, x + 1, 0, x + 2, N, mul=1.15, dh=0.1)
+    if rail:
+        area(t, 0, 0, N, 4, mul=1.12, dh=0.35)
+        area(t, 0, 4, N, 5, mul=0.6, dh=-0.1)
+    t.grime(0.25)
+    return t
+
+
+def inside(seed):
+    """The rooms' walls over the wainscot: boards painted pale green, darker up under the ceiling."""
+    t = F.mat("distressed_painted_planks", INSIDE, 0.8, seed=seed, smooth=0.3)
+    y = np.arange(N)[:, None] / N
+    t.c *= (0.86 + 0.14 * y)[..., None]
+    t.grime(0.2)
+    return t
+
+
+def depot_floor(seed):
+    """Wide old floorboards worn pale down the middle by a century of boots."""
+    t = F.mat("old_wood_floor", (116, 92, 64), 0.9, seed=seed, smooth=0.3)
+    t.mix(np.clip(P.fbm(t.rng) * 0.8, 0, 1), (150, 132, 104), 0.35)
+    t.grime(0.25)
+    return t
+
+
+def trim(seed):
+    """The green on the casings, brackets and doors' frames."""
+    t = F.mat("distressed_painted_planks", GREEN, 0.5, seed=seed, smooth=0.35)
+    peel(t, 0.8, (150, 136, 112))
+    return t
+
+
+@lru_cache(maxsize=None)
+def freight_pic():
+    """The freight room's sliding door, two blocks wide and three tall: green boards in a cream
+    frame with its cross braces, FREIGHT stencilled across it."""
+    p = Pic(2, 3, GREEN, 7180)
+    W, H = p.W, p.H
+    for x in range(0, W, 11):
+        p.line([(x, 0), (x, H)], (24, 40, 30), 0.7)
+    for y0, y1 in ((0, 7), (H / 2 - 4, H / 2 + 4), (H - 7, H)):
+        p.rect(0, y0, W, y1, fill=CREAM)
+    p.rect(0, 0, 7, H, fill=CREAM)
+    p.rect(W - 7, 0, W, H, fill=CREAM)
+    p.line([(7, H / 2 - 4), (W - 7, 7)], CREAM, 6)
+    p.line([(7, H - 7), (W - 7, H / 2 + 4)], CREAM, 6)
+    p.text(W / 2, H / 2 - 30, "FREIGHT", BOLD, 15, CREAM, anchor="ma")
+    for x in (3.5, W - 3.5):
+        for y in (3.5, H / 2, H - 3.5):
+            p.ellipse(x - 1, y - 1, x + 1, y + 1, fill=(40, 40, 36))
+    return p
+
+
+def freight(i):
+    t = freight_pic().tile(i, 7190 + i, smooth=0.3, grime=0)
+    peel(t, 1.6, (130, 120, 100))
+    weather(t, rust=0.2, streak=0.6, grime=0.2)
+    return t
+
+
+@lru_cache(maxsize=None)
+def ticket_pic():
+    """The agent's window into the waiting room: oak round an arched opening with brass bars, the
+    TICKETS plate over it, and a CLOSED card hung behind the bars."""
+    p = Pic(1, 1, (104, 72, 42), 7181)
+    p.rect(0, 0, N, N, fill=(104, 72, 42))
+    for x0, x1 in ((2, 12), (52, 62)):
+        p.rect(x0, 14, x1, 60, outline=(70, 46, 26), width=1)
+    p.ellipse(15, 10, 49, 34, fill=(34, 30, 26))
+    p.rect(15, 22, 49, 58, fill=(34, 30, 26))
+    p.rect(24, 34, 40, 43, fill=(226, 220, 196))
+    p.text(32, 36, "CLOSED", BOLD, 3.6, (150, 30, 24), anchor="ma")
+    for x in range(18, 49, 5):
+        p.line([(x, 12), (x, 58)], (178, 144, 74), 0.9)
+    p.rect(13, 57, 51, 61, fill=(120, 86, 52))
+    p.rect(19, 2, 45, 9, fill=(28, 28, 26))
+    p.text(32, 3, "TICKETS", BOLD, 4.4, (222, 192, 112), anchor="ma")
+    return p
+
+
+def ticket(seed):
+    t = ticket_pic().tile(0, seed, smooth=0.5, grime=0.2)
+    return t
+
+
+@lru_cache(maxsize=None)
+def bulletin_pic():
+    """The train bulletin by the door: slate in a green frame, TRAINS over the agent's last chalk."""
+    p = Pic(1, 1, GREEN, 7182)
+    p.rect(3, 10, 61, 61, fill=(38, 42, 40))
+    p.text(32, 2, "TRAINS", BOLD, 6, CREAM, anchor="ma")
+    for k, (s, c) in enumerate((("No 2   ANNULLED", school.CHALK), ("No 5   ANNULLED", school.CHALK),
+                                ("EVAC TRAIN 4:40", (236, 200, 120)), ("WAS THE LAST", school.CHALK))):
+        p.scrawl(6, 13 + k * 8.5, s, school.HAND, 4.6, c, jitter=0.25)
+    p.scrawl(8, 50, "STAY OFF THE TRACKS", school.HAND, 3.6, (226, 120, 110), jitter=0.4, angle=-4)
+    return p
+
+
+def bulletin(seed):
+    t = bulletin_pic().tile(0, seed, smooth=0.3, grime=0.2)
+    school.chalky(t, (10, 61, 3, 61))
+    return t
+
+
+def blade(seed, rgb=(164, 34, 28)):
+    """A semaphore blade's paint: signal red (and the white of the band near its end)."""
+    t = F.plain(seed, rgb, 0.05, 0.5)
+    peel(t, 0.6, (110, 100, 90))
+    weather(t, rust=0.3, streak=0.3, grime=0.2)
+    return t
+
+
+def lens(seed):
+    t = F.plain(seed, (120, 30, 26), 0.03, 0.9)
+    disc(t, N / 2, N / 2, N * 0.42, (176, 44, 34), smooth=0.9)
+    disc(t, N * 0.42, N * 0.4, N * 0.1, (230, 140, 120))
+    return t
+
+
+def wheel(seed):
+    """A baggage wagon's iron wheel: rim, six spokes, hub; nothing between."""
+    t = cast_iron(seed, (52, 50, 46))
+    yy, xx = np.mgrid[0:N, 0:N]
+    dx, dy = xx - N / 2 + 0.5, yy - N / 2 + 0.5
+    r = np.hypot(dx, dy)
+    a = np.arctan2(dy, dx)
+    spoke = (np.abs(((a / (np.pi / 3)) % 1) - 0.5) * 2 > 0.82) & (r < N * 0.46)
+    keep = ((r > N * 0.38) & (r < N * 0.5)) | (r < N * 0.11) | spoke
+    t.alpha[:] = np.where(keep, 255, 0)
+    return t
+
+
+def can(seed):
+    """A ten-gallon milk can: galvanised, dented, a rust ring where it stood in the wet."""
+    t = galv(seed)
+    area(t, 0, 20, N, 24, mul=1.15, dh=0.3)
+    weather(t, rust=0.5, streak=0.3, grime=0.3, dents=2)
+    return t
+
+
+def trunk(seed, front=False):
+    """A steamer trunk: canvas over wood, oak slats, brass corners; the hasp on the front."""
+    t = F.mat("Fabric023", (92, 70, 48), 0.8, seed=seed, smooth=0.2)
+    for x in (10, 30, 50):
+        area(t, x, 0, x + 4, N, (122, 88, 54), dh=0.3)
+    for x, y in ((0, 0), (N - 7, 0), (0, N - 7), (N - 7, N - 7)):
+        area(t, x, y, x + 7, y + 7, (150, 120, 60), dh=0.3, smooth=0.6)
+    if front:
+        area(t, 28, 6, 36, 16, (160, 130, 66), dh=0.35, smooth=0.6)
+    t.grime(0.3)
+    return t
+
+
 # ---------------------------------------------------------------- registering
 
 def textures():
@@ -755,6 +963,28 @@ def textures():
     T["rw_lights"] = lambda: lights_face(7057)
     T["rw_creosote"] = lambda: creosote(7058)
     T["rw_insulator"] = lambda: insulator(7059)
+    # the depots
+    T["rw_dp_boards"] = lambda: depot_boards(7100)
+    T["rw_dp_boards_b"] = lambda: depot_boards(7101, worn=True)
+    T["rw_dp_lap"] = lambda: lap(7102)
+    T["rw_dp_lap_moss"] = lambda: lap(7103, moss=True)
+    T["rw_dp_bead"] = lambda: beadboard(7104)
+    T["rw_dp_ceiling"] = lambda: beadboard(7105, (146, 108, 66), rail=False)
+    T["rw_dp_inside"] = lambda: inside(7106)
+    T["rw_dp_floor"] = lambda: depot_floor(7107)
+    T["rw_dp_trim"] = lambda: trim(7108)
+    for i in range(6):
+        T[f"rw_dp_freight_{i}"] = lambda i=i: freight(i)
+    T["rw_dp_ticket"] = lambda: ticket(7110)
+    T["rw_dp_bulletin"] = lambda: bulletin(7111)
+    T["rw_dp_blade"] = lambda: blade(7112)
+    T["rw_dp_band"] = lambda: blade(7119, (222, 218, 206))
+    T["rw_dp_lens"] = lambda: lens(7113)
+    T["rw_dp_wheel"] = lambda: wheel(7114)
+    T["rw_dp_can"] = lambda: can(7115)
+    T["rw_dp_trunk"] = lambda: trunk(7116)
+    T["rw_dp_trunk_front"] = lambda: trunk(7117, front=True)
+    T["rw_dp_wagon"] = lambda: bench_wood(7118)
     return T
 
 
@@ -914,6 +1144,102 @@ def blocks():
     for x in (-6, -1, 17, 22):
         arm += [[x, 7, 7, x + 2, 9.5, 9, "rw_insulator"]]
     add("rw_pole_arm", arm, "Telegraph Pole", "WOOD", rotate="axis")
+
+    # ---- the depots (outside faces north: a wall's front is the way it faces)
+    tr = "rw_dp_trim"
+    for name, front in (("rw_dp_wall", "rw_dp_boards"), ("rw_dp_wall_b", "rw_dp_boards_b")):
+        add(name, cube(front, front, south="rw_dp_inside"), "Depot Wall", "WOOD")
+    for name, front in (("rw_dp_wall_low", "rw_dp_lap"), ("rw_dp_wall_low_moss", "rw_dp_lap_moss")):
+        add(name, cube(front, front, south="rw_dp_bead"), "Depot Wall", "WOOD")
+    add("rw_dp_inner_wall", None, "Depot Wall", "WOOD", rotate=None, tex={"all": "rw_dp_inside"})
+    add("rw_dp_inner_wall_low", None, "Depot Wall", "WOOD", rotate=None, tex={"all": "rw_dp_bead"})
+    add("rw_dp_ceiling", None, "Beadboard Ceiling", "WOOD", rotate=None,
+        tex={"down": "rw_dp_ceiling", "up": "rw_dp_floor", "side": "rw_dp_inside"})
+    add("rw_dp_floor", None, "Floorboards", "WOOD", rotate=None, tex={"up": "rw_dp_floor", "side": "rw_dp_floor", "down": "rw_dp_floor"})
+
+    # windows: two-over-two sashes in a green casing, the sill outside (as the house kit's)
+    def window(glass, lo, boards):
+        b = [[0, 0, -1, 2.5, 16, 16, tr], [13.5, 0, -1, 16, 16, 16, tr]]
+        if lo:
+            b += [[0, 0, -2.5, 16, 1.5, 16.5, tr]]
+            sash = [[2.5, 1.5, 7, 13.5, 3.5, 9, tr], [2.5, 1.5, 7, 3.5, 16, 9, tr], [12.5, 1.5, 7, 13.5, 16, 9, tr],
+                    [2.5, 14.5, 7, 13.5, 16, 9.5, tr]]
+            pane = [3.5, 3.5, 7.75, 12.5, 14.5, 8.25]
+        else:
+            b += [[0, 13.5, -1.5, 16, 16, 16, tr], [0, 15.5, -2, 16, 16.5, 0, tr]]
+            sash = [[2.5, 0, 6.5, 13.5, 1.5, 8.5, tr], [2.5, 0, 6.5, 3.5, 13.5, 8.5, tr], [12.5, 0, 6.5, 13.5, 13.5, 8.5, tr],
+                    [2.5, 12, 6.5, 13.5, 13.5, 8.5, tr]]
+            pane = [3.5, 1.5, 7.25, 12.5, 12, 7.75]
+        if glass is not None:
+            b += sash + [pane + [glass], [7.7, pane[1], pane[2] - 0.3, 8.3, pane[4], pane[5] + 0.3, tr]]
+        if boards:
+            for i, y in enumerate((3, 9.5) if lo else (1.5, 8)):
+                b.append([0.5 + i, y, -2.5, 15.5 - i, y + 3.5, -1, "boards"])
+        return b
+
+    for state, glass in (("glass", "window"), ("broken", "window_broken"), ("empty", None), ("boarded", "window")):
+        for half in ("lo", "hi"):
+            add(f"rw_dp_win_{state}_{half}", window(glass, half == "lo", state == "boarded"), "Window", "GLASS",
+                render="translucent" if glass else None)
+    # the eave bracket: a post on the wall, the arm out under the eave, the brace between, a drop at the tip
+    add("rw_dp_bracket", [[6.5, 0, 14, 9.5, 16, 16, tr], [6.5, 13, 0, 9.5, 16, 14, tr], [6.5, 9.5, 3, 9.5, 13, 6.5, tr],
+                          [6.5, 6, 6.5, 9.5, 9.5, 10, tr], [6.5, 2.5, 10, 9.5, 6, 14, tr], [7, 9.5, 0.5, 9, 13, 2.5, tr]],
+        "Eave Bracket", "WOOD", decor=True)
+    for k in DEPOTS:
+        for i in range(4):
+            n = f"rw_dp_name_{k}_{i}"
+            add(n, [[0, 3, 14.5, 16, 13, 16, {"north": f"rw_name_{k}_{i}", "south": "rw_wall_green", "side": "rw_wall_green",
+                                              "up": "rw_wall_green", "down": "rw_wall_green"}]], "Station Sign", "WOOD", decor=True)
+    for i in range(6):
+        n = f"rw_dp_freight_{i}"
+        add(n, [[0, 0, 13, 16, 16, 16, {"north": n, "south": tr, "side": tr, "up": tr, "down": tr}]], "Freight Door", "WOOD")
+    add("rw_dp_door_rail", [[0, 0, 14, 16, 1.5, 16, iron], [3, 1.5, 15, 5, 3, 16, iron], [11, 1.5, 15, 13, 3, 16, iron]],
+        "Door Rail", "METAL", decor=True)
+    add("rw_dp_ticket", [[0, 0, 0, 16, 16, 16, {"north": "rw_dp_ticket", "south": "rw_dp_inside", "side": "rw_dp_inside",
+                                                 "up": "rw_dp_inside", "down": "rw_dp_inside"}],
+                         [1, 4.5, -2.5, 15, 5.5, 0, "cv_oak"]], "Ticket Window", "WOOD")
+    add("rw_dp_bulletin", [[2, 1, 15, 14, 15, 16, {"north": "rw_dp_bulletin", "side": tr, "up": tr, "down": tr, "south": tr}]],
+        "Train Bulletin", "WOOD", decor=True)
+    lamp = {"up": "rw_enamel", "side": "rw_enamel", "down": "rw_enamel"}
+    add("rw_dp_gooseneck", [[6, 5, 15, 10, 11, 16, iron], [7.2, 8, 4.5, 8.8, 9.6, 15, iron], [7.2, 5.5, 3.5, 8.8, 9.6, 5, iron],
+                            [4.5, 3.5, 0.5, 11.5, 5.5, 7.5, lamp], [6.5, 2.5, 2.5, 9.5, 3.5, 5.5, "rw_bulb"]],
+        "Depot Lamp", "METAL", decor=True, flicker={"light": 13, "on": {"rw_bulb": "rw_bulb_on"}})
+    # the train-order signal: its mast with the ladder up the back, and the head with both blades at stop
+    mast = [[7, 0, 7, 9, 16, 9, galvd], [6, 0, 9.5, 6.5, 16, 10, galvd], [9.5, 0, 9.5, 10, 16, 10, galvd]]
+    mast += [[6, y, 9.6, 10, y + 0.6, 10, galvd] for y in (1, 5, 9, 13)]
+    add("rw_dp_mast", mast, "Signal Mast", "METAL", rotate=None)
+    add("rw_dp_semaphore", [[7, 0, 7, 9, 13, 9, galvd], [6.5, 13, 6.5, 9.5, 14, 9.5, galvd], [7.5, 14, 7.5, 8.5, 16, 8.5, galvd],
+                            [5.5, 2, 5.5, 10.5, 7, 10.5, {"north": "rw_dp_lens", "south": "rw_dp_lens", "side": galvd,
+                                                          "up": galvd, "down": galvd}],
+                            [-14, 8, 7.4, -11, 11, 8.6, "rw_dp_blade"], [-11, 8, 7.4, -8.5, 11, 8.6, "rw_dp_band"],
+                            [-8.5, 8, 7.4, 7, 11, 8.6, "rw_dp_blade"], [9, 8, 7.4, 24.5, 11, 8.6, "rw_dp_blade"],
+                            [24.5, 8, 7.4, 27, 11, 8.6, "rw_dp_band"], [27, 8, 7.4, 30, 11, 8.6, "rw_dp_blade"],
+                            [6, 8.5, 7, 10, 10.5, 9, galvd]], "Train-Order Signal", "METAL")
+    # a baggage wagon: plank bed on iron wheels, stake rails, its handle out front
+    wood = "rw_dp_wagon"
+    whl = {"west": "rw_dp_wheel", "east": "rw_dp_wheel", "side": "rw_iron", "up": "rw_iron", "down": "rw_iron"}
+    add("rw_dp_wagon", [[1, 7, 0.5, 15, 8.5, 15.5, wood], [1, 8.5, 0.5, 2, 12, 15.5, wood], [14, 8.5, 0.5, 15, 12, 15.5, wood],
+                        [2, 8.5, 14.5, 14, 11, 15.5, wood], [1.5, 3, 3, 14.5, 4, 4, iron], [1.5, 3, 12, 14.5, 4, 13, iron],
+                        [0, 0, 0.5, 1, 7, 6.5, whl], [15, 0, 0.5, 16, 7, 6.5, whl], [0, 0, 9.5, 1, 7, 15.5, whl],
+                        [15, 0, 9.5, 16, 7, 15.5, whl], [7.5, 7.5, -6, 8.5, 8.5, 0.5, iron], [5, 7.5, -6.5, 11, 8.5, -5.5, iron]],
+        "Baggage Wagon", "WOOD", render="cutout")
+    cans = "rw_dp_can"
+    add("rw_dp_milk_can", [[5, 0, 5, 11, 9, 11, cans], [5.5, 9, 5.5, 10.5, 10, 10.5, cans], [6.5, 10, 6.5, 9.5, 12, 9.5, cans],
+                           [6, 12, 6, 10, 13, 10, cans], [4.4, 9, 7.5, 5, 10.5, 8.5, cans], [11, 9, 7.5, 11.6, 10.5, 8.5, cans]],
+        "Milk Can", "METAL", rotate=None)
+    add("rw_dp_trunk", [[1, 0, 3, 15, 8, 13, {"north": "rw_dp_trunk_front", "side": "rw_dp_trunk", "up": "rw_dp_trunk",
+                                              "down": "rw_dp_trunk"}],
+                        [1.3, 8, 3.3, 14.7, 9.5, 12.7, "rw_dp_trunk"]], "Steamer Trunk", "WOOD", loot="clothes")
+    # the freight scale: its platform, the pillar at the back and the beam with its poise
+    add("rw_dp_scale", [[0, 0, 0, 16, 2, 16, {"up": "rw_diamond", "side": iron, "down": iron}], [11.5, 2, 6, 14.5, 13, 10, iron],
+                        [11, 13, 5.5, 15, 16, 10.5, iron], [1, 13.5, 7.4, 11, 14.3, 8.6, "bk_bronze"],
+                        [5, 12.8, 7, 6.6, 15, 9, iron]], "Freight Scale", "METAL")
+    # the agent's table in the bay: the telegraph's sounder on its resonator, the key, the train-order book
+    add("rw_dp_desk", [[0, 12, 1, 16, 13.5, 15, "cv_oak"], [0.5, 0, 1.5, 2, 12, 3, "cv_oak"], [14, 0, 1.5, 15.5, 12, 3, "cv_oak"],
+                       [0.5, 0, 13, 2, 12, 14.5, "cv_oak"], [14, 0, 13, 15.5, 12, 14.5, "cv_oak"],
+                       [0.5, 9, 1, 15.5, 12, 1.6, "cv_oak"], [3, 13.5, 9, 8, 17, 13, "cv_oak"], [4, 17, 9.5, 7, 18, 12.5, "bk_bronze"],
+                       [9.5, 13.5, 3, 12, 14.4, 8, "bk_bronze"], [10.5, 14.4, 3.2, 11.2, 15.6, 3.9, iron],
+                       [9, 13.5, 9, 14.5, 14.2, 13.5, "paper"]], "Agent's Table", "WOOD", loot="office")
     return out
 
 

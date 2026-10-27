@@ -32,6 +32,11 @@ final class RailGen {
      * hall on PASS_LO..PASS_HI (its walls one more each side) out to PASS_END, the lot's edge.
      */
     private static final int BRIDGE_LO = -2, BRIDGE_HI = 1, BRIDGE_END = 15, PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
+    /**
+     * A depot's lot ({@link DepotSite}) runs DEPOT_REACH samples either way of its stop's middle
+     * behind the platform, its canopy DEPOT_CANOPY.
+     */
+    private static final int DEPOT_REACH = Layout.DEPOT_LEN / 2, DEPOT_CANOPY = DEPOT_REACH - 3;
 
     private final County county;
     private final List<Track> near = new ArrayList<>();
@@ -183,6 +188,8 @@ final class RailGen {
         final boolean plat;
         /** Samples from the stop's middle. */
         final int da;
+        /** The stop has a depot behind its platform (DepotSite). */
+        final boolean depot;
 
         Cut(Track t, Track.Hit h, int x, int z, int top, boolean road, boolean built) {
             this.t = t;
@@ -204,6 +211,7 @@ final class RailGen {
             stop = stop(t, i);
             plat = stop != null && Math.signum(o) == stop.side();
             da = stop == null ? 0 : i - stop.middle();
+            depot = stop != null && t.depots.get(t.stopAt[i]);
         }
 
         /** The compass way out from the line on this column's side. */
@@ -333,7 +341,16 @@ final class RailGen {
         clear(out, x, z, Y + 1, Y + 6);
         litter(out, c, Y + 1, 0);
         int len = c.stop.to() - c.stop.from();
-        if (s >= 6) {
+        if (c.depot && Math.abs(da) <= DEPOT_REACH) {
+            // the depot's lot runs along behind: no fence, no shelter; its canopy carried out over the platform
+            if (Math.abs(da) <= DEPOT_CANOPY) {
+                depotCanopy(out, c);
+                return;
+            }
+            if (s >= 6) {
+                return;
+            }
+        } else if (s >= 6) {
             // the fence along the back, a gate in the middle; the shelter's back wall
             if (Math.abs(da) <= 10) {
                 if (Math.abs(da) % 5 == 0) {
@@ -391,6 +408,28 @@ final class RailGen {
         }
         if (s >= 4 && s < 5 && (la == 31 || la == 47) && la < len / 2) {
             out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
+        }
+    }
+
+    /**
+     * A platform's canopy in front of a depot, from the depot's own canopy out to the yellow line:
+     * on posts every six, the valance along its edge, lamps under it, benches between the posts
+     * facing the line.
+     */
+    private void depotCanopy(ChunkSink out, Cut c) {
+        int x = c.x, z = c.z, Y = c.Y, la = Math.abs(c.da);
+        double s = c.s;
+        if (s >= 3) {
+            out.set(x, Y + 5, z, s < 4 ? "rw_canopy_fascia[facing=" + c.in() + "]" : "rw_canopy");
+        }
+        if (s >= 4 && s < 5 && la % 6 == 3) {
+            out.column(x, z, Y + 1, Y + 4, "rw_post");
+        }
+        if (s >= 5 && s < 6 && la % 6 == 0 && la > 0) {
+            out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
+        }
+        if (s >= 3 && s < 4 && la % 12 == 6) {
+            out.set(x, Y + 4, z, "rw_lamp_hang");
         }
     }
 
