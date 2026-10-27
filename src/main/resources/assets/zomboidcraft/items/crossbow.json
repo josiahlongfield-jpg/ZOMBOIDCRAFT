@@ -7,133 +7,268 @@
    {
     "threshold": 1,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/mag_out/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle"
+        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/charging_handle"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/mag_out/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle"
+        }
+       }
+      ]
+     }
     }
    },
    {
     "threshold": 2,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/mag_in/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 5,
-       "cases": [
-        {
-         "when": "bolt",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
-        },
-        {
-         "when": "none",
-         "model": {
-          "type": "minecraft:empty"
-         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/charging_handle"
         }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/mag_in/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+        }
+       }
+      ]
+     }
     }
    },
    {
     "threshold": 3,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/charge/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/charge/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 5,
-       "cases": [
-        {
-         "when": "bolt",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+        "model": "zomboidcraft:item/weapon/crossbow/raised_charge/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
-        },
-        {
-         "when": "none",
-         "model": {
-          "type": "minecraft:empty"
-         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/charging_handle"
         }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/charge/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/charge/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+        }
+       }
+      ]
+     }
     }
    }
   ],
@@ -190,53 +325,106 @@
     ]
    },
    "on_false": {
-    "type": "minecraft:composite",
-    "models": [
-     {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/crossbow/hip/body"
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:display_context",
-      "cases": [
-       {
-        "when": "firstperson_righthand",
-        "model": {
-         "type": "minecraft:empty"
-        }
-       }
-      ],
-      "fallback": {
+    "type": "minecraft:condition",
+    "property": "zomboidcraft:raised",
+    "on_true": {
+     "type": "minecraft:composite",
+     "models": [
+      {
        "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/hip/charging_handle"
-      }
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:custom_model_data",
-      "index": 5,
-      "cases": [
-       {
-        "when": "bolt",
-        "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+       "model": "zomboidcraft:item/weapon/crossbow/raised_hip/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
         }
-       },
-       {
-        "when": "none",
-        "model": {
-         "type": "minecraft:empty"
-        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/charging_handle"
        }
-      ],
-      "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "bolt",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+       }
       }
-     }
-    ]
+     ]
+    },
+    "on_false": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/crossbow/hip/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/hip/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "bolt",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+       }
+      }
+     ]
+    }
    }
   }
  }

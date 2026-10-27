@@ -14,133 +14,268 @@
       {
        "threshold": 1,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/charging_handle"
-          }
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
             }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_out/charging_handle"
            }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/slide"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_out/slide"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/charging_handle"
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_out/slide"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 2,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/charging_handle"
-          }
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
             }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_in/charging_handle"
            }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/slide"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_mag_in/slide"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/charging_handle"
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/mag_in/slide"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 3,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/charging_handle"
-          }
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
             }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_charge/charging_handle"
            }
-          ],
-          "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/slide"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_charge/slide"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/charging_handle"
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charge/slide"
+           }
+          }
+         ]
+        }
        }
       }
      ],
@@ -189,45 +324,90 @@
        ]
       },
       "on_false": {
-       "type": "minecraft:composite",
-       "models": [
-        {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:raised",
+       "on_true": {
+        "type": "minecraft:composite",
+        "models": [
+         {
           "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/charging_handle"
-         }
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
+          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
            }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_hip/charging_handle"
           }
-         ],
-         "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/slide"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/raised_hip/slide"
+          }
          }
-        }
-       ]
+        ]
+       },
+       "on_false": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/charging_handle"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/lever_action/case_hardened/hip/slide"
+          }
+         }
+        ]
+       }
       }
      }
     }
@@ -241,133 +421,268 @@
     {
      "threshold": 1,
      "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/lever_action/mag_out/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
+       "type": "minecraft:composite",
+       "models": [
+        {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/mag_out/charging_handle"
-        }
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
+         "model": "zomboidcraft:item/weapon/lever_action/raised_mag_out/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
           }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_mag_out/charging_handle"
          }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/mag_out/slide"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_mag_out/slide"
+         }
         }
-       }
-      ]
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/mag_out/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/mag_out/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/mag_out/slide"
+         }
+        }
+       ]
+      }
      }
     },
     {
      "threshold": 2,
      "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/lever_action/mag_in/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
+       "type": "minecraft:composite",
+       "models": [
+        {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/mag_in/charging_handle"
-        }
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
+         "model": "zomboidcraft:item/weapon/lever_action/raised_mag_in/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
           }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_mag_in/charging_handle"
          }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/mag_in/slide"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_mag_in/slide"
+         }
         }
-       }
-      ]
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/mag_in/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/mag_in/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/mag_in/slide"
+         }
+        }
+       ]
+      }
      }
     },
     {
      "threshold": 3,
      "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/lever_action/charge/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
+       "type": "minecraft:composite",
+       "models": [
+        {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/charge/charging_handle"
-        }
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
+         "model": "zomboidcraft:item/weapon/lever_action/raised_charge/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
           }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_charge/charging_handle"
          }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/lever_action/charge/slide"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/raised_charge/slide"
+         }
         }
-       }
-      ]
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/charge/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/charge/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/lever_action/charge/slide"
+         }
+        }
+       ]
+      }
      }
     }
    ],
@@ -416,45 +731,90 @@
      ]
     },
     "on_false": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/lever_action/hip/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/lever_action/hip/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
+        "model": "zomboidcraft:item/weapon/lever_action/raised_hip/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/raised_hip/charging_handle"
         }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/lever_action/hip/slide"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/raised_hip/slide"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/lever_action/hip/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/hip/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/lever_action/hip/slide"
+        }
+       }
+      ]
+     }
     }
    }
   }

@@ -10,83 +10,119 @@ import java.util.Map;
  */
 final class HoldPoseData {
     static final float REACH = 9.2f;
-    static final float[] RIFLE_READY = {-1.36291f, -0.57263f, 0.00000f};
+    static final float[] RIFLE_READY = {-1.04936f, -0.71307f, 0.00000f};
     static final float[] RIFLE_AIM = {-1.34428f, -0.64338f, 0.00000f};
-    static final float[] PISTOL_READY = {-1.14496f, -0.61318f, 0.00000f};
+    static final float[] RIFLE_RAISED = {-1.36291f, -0.57263f, 0.00000f};
+    static final float[] PISTOL_READY = {-0.95550f, -0.68830f, 0.00000f};
     static final float[] PISTOL_AIM = {-1.90867f, -0.59076f, 0.00000f};
-    static final float[] SHOTGUN_READY = {-1.25143f, -1.21256f, 0.00000f};
+    static final float[] PISTOL_RAISED = {-1.14496f, -0.61318f, 0.00000f};
+    static final float[] SHOTGUN_READY = {-1.55875f, -0.71198f, 0.00000f};
     static final float[] SHOTGUN_AIM = {-1.45007f, -1.22814f, 0.00000f};
-    static final float[] HUNTING_READY = {-1.44567f, -0.78878f, 0.00000f};
+    static final float[] SHOTGUN_RAISED = {-1.25143f, -1.21256f, 0.00000f};
+    static final float[] HUNTING_READY = {-1.23301f, -0.82286f, 0.00000f};
     static final float[] HUNTING_AIM = {-1.31504f, -1.27662f, 0.00000f};
-    static final float[] DOUBLE_BARREL_READY = {-1.43901f, -0.74308f, 0.00000f};
+    static final float[] HUNTING_RAISED = {-1.44567f, -0.78878f, 0.00000f};
+    static final float[] DOUBLE_BARREL_READY = {-1.33662f, -0.76331f, 0.00000f};
     static final float[] DOUBLE_BARREL_AIM = {-1.46413f, -0.80792f, 0.00000f};
-    static final float[] REVOLVER_READY = {-1.50652f, -0.55670f, 0.00000f};
+    static final float[] DOUBLE_BARREL_RAISED = {-1.43901f, -0.74308f, 0.00000f};
+    static final float[] REVOLVER_READY = {-0.95547f, -0.68836f, 0.00000f};
     static final float[] REVOLVER_AIM = {-1.90860f, -0.59020f, 0.00000f};
-    static final float[] RIMFIRE_READY = {-1.64331f, -0.69943f, 0.00000f};
+    static final float[] REVOLVER_RAISED = {-1.50652f, -0.55670f, 0.00000f};
+    static final float[] RIMFIRE_READY = {-1.14423f, -0.54529f, 0.00000f};
     static final float[] RIMFIRE_AIM = {-1.47425f, -1.10595f, 0.00000f};
-    static final float[] SMG_READY = {-1.52439f, -0.71267f, 0.00000f};
+    static final float[] RIMFIRE_RAISED = {-1.64331f, -0.69943f, 0.00000f};
+    static final float[] SMG_READY = {-1.13944f, -0.79560f, 0.00000f};
     static final float[] SMG_AIM = {-1.40958f, -0.77837f, 0.00000f};
-    static final float[] SAWN_OFF_READY = {-1.17662f, -1.35005f, 0.00000f};
+    static final float[] SMG_RAISED = {-1.52439f, -0.71267f, 0.00000f};
+    static final float[] SAWN_OFF_READY = {-2.34291f, -0.81530f, 0.00000f};
     static final float[] SAWN_OFF_AIM = {-1.56476f, -1.30579f, 0.00000f};
-    static final float[] MAGNUM_READY = {-1.34485f, -0.57046f, 0.00000f};
+    static final float[] SAWN_OFF_RAISED = {-1.17662f, -1.35005f, 0.00000f};
+    static final float[] MAGNUM_READY = {-0.94026f, -0.69647f, 0.00000f};
     static final float[] MAGNUM_AIM = {-1.82763f, -0.57608f, 0.00000f};
-    static final float[] LEVER_ACTION_READY = {-1.51099f, -0.72155f, 0.00000f};
+    static final float[] MAGNUM_RAISED = {-1.34485f, -0.57046f, 0.00000f};
+    static final float[] LEVER_ACTION_READY = {-1.33975f, -0.75649f, 0.00000f};
     static final float[] LEVER_ACTION_AIM = {-1.59286f, -0.82620f, 0.00000f};
-    static final float[] CROSSBOW_READY = {-1.39366f, -0.71779f, 0.00000f};
+    static final float[] LEVER_ACTION_RAISED = {-1.51099f, -0.72155f, 0.00000f};
+    static final float[] CROSSBOW_READY = {-1.11095f, -0.83716f, 0.00000f};
     static final float[] CROSSBOW_AIM = {-1.39404f, -1.16514f, 0.00000f};
+    static final float[] CROSSBOW_RAISED = {-1.39366f, -0.71779f, 0.00000f};
     static final float[] MELEE_READY = {-1.09171f, -0.72489f, 0.00000f};
     static final float[] MELEE_WINDUP = {-1.36313f, 0.36953f, 0.36347f};
     static final float[] MELEE_STRIKE = {1.50327f, -1.31919f, -2.38106f};
-    static final float[] RIFLE_READY_SUPPORT = {-0.71428f, 12.79481f, -0.28464f, -3.94455f, 17.65585f, -1.51649f};
+    static final float[] RIFLE_READY_SUPPORT = {0.41480f, 12.55366f, 0.05981f, -0.09526f, 18.48688f, 0.40402f};
     static final float[] RIFLE_AIM_SUPPORT = {-1.67771f, 12.41494f, -1.39951f, -5.25413f, 17.01744f, -2.66758f};
-    static final float[] PISTOL_READY_SUPPORT = {0.37895f, 9.89361f, -0.16008f, 0.21863f, 9.68682f, -1.16752f};
+    static final float[] RIFLE_RAISED_SUPPORT = {-0.71428f, 12.79481f, -0.28464f, -3.94455f, 17.65585f, -1.51649f};
+    static final float[] PISTOL_READY_SUPPORT = {0.56903f, 9.49029f, -0.45551f, -0.00657f, 9.76616f, -1.27769f};
     static final float[] PISTOL_AIM_SUPPORT = {0.39425f, 9.77476f, 0.35378f, 0.23908f, 10.32548f, -0.51571f};
-    static final float[] SHOTGUN_READY_SUPPORT = {-6.60346f, 12.62842f, -1.01491f, -9.86465f, 13.78764f, -1.39825f};
+    static final float[] PISTOL_RAISED_SUPPORT = {0.37895f, 9.89361f, -0.16008f, 0.21863f, 9.68682f, -1.16752f};
+    static final float[] SHOTGUN_READY_SUPPORT = {0.08026f, 15.03975f, 4.01512f, -0.20768f, 17.90154f, 5.97813f};
     static final float[] SHOTGUN_AIM_SUPPORT = {-6.97277f, 12.18472f, -1.23770f, -10.25258f, 13.34623f, -1.37861f};
-    static final float[] HUNTING_READY_SUPPORT = {-4.81716f, 15.76305f, -0.83845f, -6.79368f, 17.69838f, -1.18296f};
+    static final float[] SHOTGUN_RAISED_SUPPORT = {-6.60346f, 12.62842f, -1.01491f, -9.86465f, 13.78764f, -1.39825f};
+    static final float[] HUNTING_READY_SUPPORT = {-0.79771f, 16.40386f, 1.56029f, -1.28997f, 19.06407f, 2.23239f};
     static final float[] HUNTING_AIM_SUPPORT = {-7.79728f, 10.94376f, -1.99514f, -10.46341f, 11.69987f, -2.29651f};
-    static final float[] DOUBLE_BARREL_READY_SUPPORT = {-3.32864f, 14.58164f, -0.78104f, -5.40942f, 16.81947f, -1.13389f};
+    static final float[] HUNTING_RAISED_SUPPORT = {-4.81716f, 15.76305f, -0.83845f, -6.79368f, 17.69838f, -1.18296f};
+    static final float[] DOUBLE_BARREL_READY_SUPPORT = {-0.15510f, 14.98225f, 1.72292f, -0.54253f, 17.83385f, 2.80930f};
     static final float[] DOUBLE_BARREL_AIM_SUPPORT = {-4.31099f, 14.11018f, -1.74710f, -6.53413f, 16.21739f, -2.02875f};
-    static final float[] REVOLVER_READY_SUPPORT = {0.47301f, 9.74553f, 0.26336f, 0.27022f, 10.01118f, -0.68220f};
+    static final float[] DOUBLE_BARREL_RAISED_SUPPORT = {-3.32864f, 14.58164f, -0.78104f, -5.40942f, 16.81947f, -1.13389f};
+    static final float[] REVOLVER_READY_SUPPORT = {0.68792f, 9.39196f, -0.34354f, 0.09931f, 9.75474f, -1.06997f};
     static final float[] REVOLVER_AIM_SUPPORT = {0.45451f, 9.64562f, 0.47209f, 0.24093f, 10.25354f, -0.29642f};
-    static final float[] RIMFIRE_READY_SUPPORT = {-2.83650f, 14.60357f, 0.65975f, -4.80930f, 16.94634f, 0.77406f};
+    static final float[] REVOLVER_RAISED_SUPPORT = {0.47301f, 9.74553f, 0.26336f, 0.27022f, 10.01118f, -0.68220f};
+    static final float[] RIMFIRE_READY_SUPPORT = {1.05377f, 13.15444f, 0.83089f, 1.22035f, 16.17216f, 1.33996f};
     static final float[] RIMFIRE_AIM_SUPPORT = {-5.24325f, 12.79567f, -1.26420f, -7.98248f, 14.15762f, -1.45207f};
-    static final float[] SMG_READY_SUPPORT = {-2.81733f, 14.34161f, -0.24243f, -4.12881f, 15.85759f, -0.31283f};
+    static final float[] RIMFIRE_RAISED_SUPPORT = {-2.83650f, 14.60357f, 0.65975f, -4.80930f, 16.94634f, 0.77406f};
+    static final float[] SMG_READY_SUPPORT = {-0.26101f, 14.82469f, 0.37310f, -0.56281f, 16.77284f, 0.74292f};
     static final float[] SMG_AIM_SUPPORT = {-3.80320f, 13.83979f, -1.91105f, -5.21150f, 15.24950f, -2.14031f};
-    static final float[] SAWN_OFF_READY_SUPPORT = {-6.17596f, 11.20319f, -0.87703f, -9.17686f, 11.80357f, -1.18710f};
+    static final float[] SMG_RAISED_SUPPORT = {-2.81733f, 14.34161f, -0.24243f, -4.12881f, 15.85759f, -0.31283f};
+    static final float[] SAWN_OFF_READY_SUPPORT = {-2.92376f, 8.68021f, 4.89819f, -4.53549f, 8.27813f, 7.48714f};
     static final float[] SAWN_OFF_AIM_SUPPORT = {-6.07415f, 11.61307f, -0.05502f, -9.04231f, 12.41826f, -0.11560f};
-    static final float[] MAGNUM_READY_SUPPORT = {0.57792f, 9.83404f, 0.30724f, 0.33336f, 9.96057f, -0.84369f};
+    static final float[] SAWN_OFF_RAISED_SUPPORT = {-6.17596f, 11.20319f, -0.87703f, -9.17686f, 11.80357f, -1.18710f};
+    static final float[] MAGNUM_READY_SUPPORT = {0.85020f, 9.39359f, -0.27752f, 0.14882f, 9.80402f, -1.13779f};
     static final float[] MAGNUM_AIM_SUPPORT = {0.57481f, 9.62750f, 0.56873f, 0.32811f, 10.27255f, -0.39227f};
-    static final float[] LEVER_ACTION_READY_SUPPORT = {-3.32449f, 15.01727f, 0.05659f, -5.16464f, 17.10507f, -0.06843f};
+    static final float[] MAGNUM_RAISED_SUPPORT = {0.57792f, 9.83404f, 0.30724f, 0.33336f, 9.96057f, -0.84369f};
+    static final float[] LEVER_ACTION_READY_SUPPORT = {-0.09945f, 15.12579f, 2.22409f, -0.43059f, 17.68954f, 3.26248f};
     static final float[] LEVER_ACTION_AIM_SUPPORT = {-4.52976f, 14.25649f, -0.68679f, -6.57833f, 16.14391f, -0.64514f};
-    static final float[] CROSSBOW_READY_SUPPORT = {-3.35280f, 15.06585f, -1.15952f, -5.18509f, 17.13145f, -1.52930f};
+    static final float[] LEVER_ACTION_RAISED_SUPPORT = {-3.32449f, 15.01727f, 0.05659f, -5.16464f, 17.10507f, -0.06843f};
+    static final float[] CROSSBOW_READY_SUPPORT = {-0.64501f, 15.38522f, 0.18444f, -1.15703f, 18.08718f, 0.62939f};
     static final float[] CROSSBOW_AIM_SUPPORT = {-6.02320f, 12.46029f, -1.91238f, -8.58291f, 13.54250f, -2.10568f};
+    static final float[] CROSSBOW_RAISED_SUPPORT = {-3.35280f, 15.06585f, -1.15952f, -5.18509f, 17.13145f, -1.52930f};
     /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
     static final Map<String, float[]> LENS = Map.ofEntries(
-            Map.entry("rifle_ready", new float[] {-4.85640f, 16.58442f, -3.90823f, -3.56112f, 18.84181f, -4.22211f}),
+            Map.entry("rifle_ready", new float[] {-1.30887f, 18.64225f, -2.08654f, 0.90784f, 20.03350f, -1.93600f}),
             Map.entry("rifle_aim", new float[] {-6.12449f, 15.84018f, -5.02479f, -4.99318f, 18.17501f, -5.39995f}),
-            Map.entry("pistol_ready", new float[] {-2.49565f, 11.23214f, -2.50473f, -2.42981f, 12.27452f, -2.34739f}),
+            Map.entry("rifle_raised", new float[] {-4.85640f, 16.58442f, -3.90823f, -3.56112f, 18.84181f, -4.22211f}),
+            Map.entry("pistol_ready", new float[] {-2.53174f, 11.92456f, -0.56473f, -2.14718f, 12.78009f, -0.07910f}),
             Map.entry("pistol_aim", new float[] {-2.43058f, 12.42341f, -0.39278f, -2.34493f, 13.06588f, 0.44122f}),
-            Map.entry("shotgun_ready", new float[] {-14.87384f, 14.82392f, -4.23779f, -14.87384f, 14.82392f, -4.23779f}),
+            Map.entry("pistol_raised", new float[] {-2.49565f, 11.23214f, -2.50473f, -2.42981f, 12.27452f, -2.34739f}),
+            Map.entry("shotgun_ready", new float[] {-0.78720f, 23.62653f, 7.03527f, -0.78720f, 23.62653f, 7.03527f}),
             Map.entry("shotgun_aim", new float[] {-15.29037f, 14.84479f, -3.94840f, -15.29037f, 14.84479f, -3.94840f}),
-            Map.entry("hunting_ready", new float[] {-11.95238f, 22.55454f, -3.63274f, -11.95238f, 22.55454f, -3.63274f}),
+            Map.entry("shotgun_raised", new float[] {-14.87384f, 14.82392f, -4.23779f, -14.87384f, 14.82392f, -4.23779f}),
+            Map.entry("hunting_ready", new float[] {-2.76338f, 26.40978f, 2.48832f, -2.76338f, 26.40978f, 2.48832f}),
             Map.entry("hunting_aim", new float[] {-17.42201f, 13.27797f, -4.59509f, -17.42201f, 13.27797f, -4.59509f}),
-            Map.entry("double_barrel_ready", new float[] {-11.79323f, 23.15959f, -3.67436f, -11.79323f, 23.15959f, -3.67436f}),
+            Map.entry("hunting_raised", new float[] {-11.95238f, 22.55454f, -3.63274f, -11.95238f, 22.55454f, -3.63274f}),
+            Map.entry("double_barrel_ready", new float[] {-2.05319f, 26.87360f, 4.65457f, -2.05319f, 26.87360f, 4.65457f}),
             Map.entry("double_barrel_aim", new float[] {-13.33339f, 22.19422f, -4.36362f, -13.33339f, 22.19422f, -4.36362f}),
-            Map.entry("revolver_ready", new float[] {-2.32661f, 13.11097f, -1.88753f, -2.32661f, 13.11097f, -1.88753f}),
+            Map.entry("double_barrel_raised", new float[] {-11.79323f, 23.15959f, -3.67436f, -11.79323f, 23.15959f, -3.67436f}),
+            Map.entry("revolver_ready", new float[] {-2.58598f, 12.98924f, -0.70623f, -2.58598f, 12.98924f, -0.70623f}),
             Map.entry("revolver_aim", new float[] {-2.46065f, 13.49406f, -0.22198f, -2.46065f, 13.49406f, -0.22198f}),
-            Map.entry("rimfire_ready", new float[] {-8.48589f, 21.43908f, -0.75694f, -8.48589f, 21.43908f, -0.75694f}),
+            Map.entry("revolver_raised", new float[] {-2.32661f, 13.11097f, -1.88753f, -2.32661f, 13.11097f, -1.88753f}),
+            Map.entry("rimfire_ready", new float[] {1.59652f, 22.11460f, 0.57058f, 1.59652f, 22.11460f, 0.57058f}),
             Map.entry("rimfire_aim", new float[] {-13.08740f, 16.52724f, -3.54268f, -13.08740f, 16.52724f, -3.54268f}),
-            Map.entry("smg_ready", new float[] {-5.16708f, 16.96845f, -2.29137f, -5.16708f, 16.96845f, -2.29137f}),
+            Map.entry("rimfire_raised", new float[] {-8.48589f, 21.43908f, -0.75694f, -8.48589f, 21.43908f, -0.75694f}),
+            Map.entry("smg_ready", new float[] {-1.00453f, 18.64175f, -0.85041f, -1.00453f, 18.64175f, -0.85041f}),
             Map.entry("smg_aim", new float[] {-6.32641f, 16.05654f, -4.22173f, -6.32641f, 16.05654f, -4.22173f}),
-            Map.entry("sawn_off_ready", new float[] {-10.86235f, 11.26975f, -2.79034f, -10.86235f, 11.26975f, -2.79034f}),
+            Map.entry("smg_raised", new float[] {-5.16708f, 16.96845f, -2.29137f, -5.16708f, 16.96845f, -2.29137f}),
+            Map.entry("sawn_off_ready", new float[] {-6.43416f, 9.32097f, 8.48899f, -6.43416f, 9.32097f, 8.48899f}),
             Map.entry("sawn_off_aim", new float[] {-10.72071f, 12.60538f, -1.80206f, -10.72071f, 12.60538f, -1.80206f}),
-            Map.entry("magnum_ready", new float[] {-3.31767f, 14.11375f, -3.01368f, -3.31767f, 14.11375f, -3.01368f}),
+            Map.entry("sawn_off_raised", new float[] {-10.86235f, 11.26975f, -2.79034f, -10.86235f, 11.26975f, -2.79034f}),
+            Map.entry("magnum_ready", new float[] {-3.49288f, 14.45395f, -0.50220f, -3.49288f, 14.45395f, -0.50220f}),
             Map.entry("magnum_aim", new float[] {-3.34834f, 14.93854f, -0.39137f, -3.34834f, 14.93854f, -0.39137f}),
-            Map.entry("lever_action_ready", new float[] {-9.39701f, 21.79128f, -2.28855f, -9.39701f, 21.79128f, -2.28855f}),
+            Map.entry("magnum_raised", new float[] {-3.31767f, 14.11375f, -3.01368f, -3.31767f, 14.11375f, -3.01368f}),
+            Map.entry("lever_action_ready", new float[] {-1.35336f, 24.29252f, 3.85541f, -1.35336f, 24.29252f, 3.85541f}),
             Map.entry("lever_action_aim", new float[] {-11.29004f, 20.52767f, -2.48492f, -11.29004f, 20.52767f, -2.48492f}),
-            Map.entry("crossbow_ready", new float[] {-8.48320f, 20.45930f, -4.37484f, -8.48320f, 20.45930f, -4.37484f}),
-            Map.entry("crossbow_aim", new float[] {-13.19041f, 15.10108f, -4.63373f, -13.19041f, 15.10108f, -4.63373f}));
+            Map.entry("lever_action_raised", new float[] {-9.39701f, 21.79128f, -2.28855f, -9.39701f, 21.79128f, -2.28855f}),
+            Map.entry("crossbow_ready", new float[] {-2.36366f, 23.25487f, -0.74474f, -2.36366f, 23.25487f, -0.74474f}),
+            Map.entry("crossbow_aim", new float[] {-13.19041f, 15.10108f, -4.63373f, -13.19041f, 15.10108f, -4.63373f}),
+            Map.entry("crossbow_raised", new float[] {-8.48320f, 20.45930f, -4.37484f, -8.48320f, 20.45930f, -4.37484f}));
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
             "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},

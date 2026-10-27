@@ -14,85 +14,172 @@
       {
        "threshold": 1,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_out/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_out/charging_handle_open"
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_mag_out/charging_handle_open"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_out/charging_handle_open"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 2,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_in/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_in/charging_handle_open"
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_mag_in/charging_handle_open"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/mag_in/charging_handle_open"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 3,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charge/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charge/charging_handle"
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_charge/charging_handle"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/charge/charging_handle"
+           }
+          }
+         ]
+        }
        }
       }
      ],
@@ -125,29 +212,58 @@
        ]
       },
       "on_false": {
-       "type": "minecraft:composite",
-       "models": [
-        {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/hip/body"
-        },
-        {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
-           }
-          }
-         ],
-         "fallback": {
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:raised",
+       "on_true": {
+        "type": "minecraft:composite",
+        "models": [
+         {
           "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/hip/charging_handle"
+          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/raised_hip/charging_handle"
+          }
          }
-        }
-       ]
+        ]
+       },
+       "on_false": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/case_hardened/hip/charging_handle"
+          }
+         }
+        ]
+       }
       }
      }
     }
@@ -162,85 +278,172 @@
       {
        "threshold": 1,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_out/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_out/charging_handle_open"
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_mag_out/charging_handle_open"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_out/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_out/charging_handle_open"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 2,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_in/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_in/charging_handle_open"
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_mag_in/charging_handle_open"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_in/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/mag_in/charging_handle_open"
+           }
+          }
+         ]
+        }
        }
       },
       {
        "threshold": 3,
        "model": {
-        "type": "minecraft:composite",
-        "models": [
-         {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/engraved/charge/body"
-         },
-         {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
-           {
-            "when": "firstperson_righthand",
-            "model": {
-             "type": "minecraft:empty"
-            }
-           }
-          ],
-          "fallback": {
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:raised",
+        "on_true": {
+         "type": "minecraft:composite",
+         "models": [
+          {
            "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/double_barrel/engraved/charge/charging_handle"
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_charge/charging_handle"
+           }
           }
-         }
-        ]
+         ]
+        },
+        "on_false": {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/charge/body"
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": "firstperson_righthand",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/double_barrel/engraved/charge/charging_handle"
+           }
+          }
+         ]
+        }
        }
       }
      ],
@@ -273,11 +476,79 @@
        ]
       },
       "on_false": {
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:raised",
+       "on_true": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/raised_hip/charging_handle"
+          }
+         }
+        ]
+       },
+       "on_false": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/engraved/hip/body"
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/double_barrel/engraved/hip/charging_handle"
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:range_dispatch",
+   "property": "minecraft:custom_model_data",
+   "index": 0,
+   "entries": [
+    {
+     "threshold": 1,
+     "model": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
        "type": "minecraft:composite",
        "models": [
         {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/double_barrel/engraved/hip/body"
+         "model": "zomboidcraft:item/weapon/double_barrel/raised_mag_out/body"
         },
         {
          "type": "minecraft:select",
@@ -292,102 +563,150 @@
          ],
          "fallback": {
           "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/double_barrel/engraved/hip/charging_handle"
+          "model": "zomboidcraft:item/weapon/double_barrel/raised_mag_out/charging_handle_open"
+         }
+        }
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/double_barrel/mag_out/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/mag_out/charging_handle_open"
          }
         }
        ]
       }
      }
-    }
-   }
-  ],
-  "fallback": {
-   "type": "minecraft:range_dispatch",
-   "property": "minecraft:custom_model_data",
-   "index": 0,
-   "entries": [
-    {
-     "threshold": 1,
-     "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/mag_out/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/double_barrel/mag_out/charging_handle_open"
-        }
-       }
-      ]
-     }
     },
     {
      "threshold": 2,
      "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/mag_in/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
+       "type": "minecraft:composite",
+       "models": [
+        {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/double_barrel/mag_in/charging_handle_open"
+         "model": "zomboidcraft:item/weapon/double_barrel/raised_mag_in/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/raised_mag_in/charging_handle_open"
+         }
         }
-       }
-      ]
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/double_barrel/mag_in/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/mag_in/charging_handle_open"
+         }
+        }
+       ]
+      }
      }
     },
     {
      "threshold": 3,
      "model": {
-      "type": "minecraft:composite",
-      "models": [
-       {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/charge/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:raised",
+      "on_true": {
+       "type": "minecraft:composite",
+       "models": [
+        {
          "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/double_barrel/charge/charging_handle"
+         "model": "zomboidcraft:item/weapon/double_barrel/raised_charge/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/raised_charge/charging_handle"
+         }
         }
-       }
-      ]
+       ]
+      },
+      "on_false": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/double_barrel/charge/body"
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/double_barrel/charge/charging_handle"
+         }
+        }
+       ]
+      }
      }
     }
    ],
@@ -420,29 +739,58 @@
      ]
     },
     "on_false": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/double_barrel/hip/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/double_barrel/hip/charging_handle"
+        "model": "zomboidcraft:item/weapon/double_barrel/raised_hip/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/double_barrel/raised_hip/charging_handle"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/double_barrel/hip/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/double_barrel/hip/charging_handle"
+        }
+       }
+      ]
+     }
     }
    }
   }
