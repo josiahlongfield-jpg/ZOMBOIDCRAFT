@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
+    "rw_dp_band": "zomboidcraft:block/city/rw_dp_band",
     "rw_dp_blade": "zomboidcraft:block/city/rw_dp_blade",
     "rw_dp_lens": "zomboidcraft:block/city/rw_dp_lens",
     "rw_galv": "zomboidcraft:block/city/rw_galv",
@@ -144,7 +145,7 @@
         7.4
       ],
       "to": [
-        7,
+        -11,
         11,
         8.6
       ],
@@ -152,7 +153,7 @@
         "north": {
           "texture": "#rw_dp_blade",
           "uv": [
-            0,
+            13,
             5,
             16,
             8
@@ -163,7 +164,7 @@
           "uv": [
             0,
             5,
-            16,
+            3,
             8
           ]
         },
@@ -178,7 +179,7 @@
           "uv": [
             0,
             7.4,
-            16,
+            3,
             8.6
           ]
         },
@@ -186,6 +187,174 @@
           "texture": "#rw_dp_blade",
           "uv": [
             0,
+            7.4,
+            3,
+            8.6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -11,
+        8,
+        7.4
+      ],
+      "to": [
+        -8.5,
+        11,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            13.5,
+            5,
+            16,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            0,
+            5,
+            2.5,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#rw_dp_band"
+        },
+        "west": {
+          "texture": "#rw_dp_band"
+        },
+        "up": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            0,
+            7.4,
+            2.5,
+            8.6
+          ]
+        },
+        "down": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            0,
+            7.4,
+            2.5,
+            8.6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -8.5,
+        8,
+        7.4
+      ],
+      "to": [
+        7,
+        11,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0.5,
+            5,
+            16,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0,
+            5,
+            15.5,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#rw_dp_blade"
+        },
+        "west": {
+          "texture": "#rw_dp_blade"
+        },
+        "up": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0,
+            7.4,
+            15.5,
+            8.6
+          ]
+        },
+        "down": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0,
+            7.4,
+            15.5,
+            8.6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        8,
+        7.4
+      ],
+      "to": [
+        24.5,
+        11,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0,
+            5,
+            15.5,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0.5,
+            5,
+            16,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#rw_dp_blade"
+        },
+        "west": {
+          "texture": "#rw_dp_blade"
+        },
+        "up": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0.5,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "down": {
+          "texture": "#rw_dp_blade",
+          "uv": [
+            0.5,
             7.4,
             16,
             8.6
@@ -195,7 +364,63 @@
     },
     {
       "from": [
-        9,
+        24.5,
+        8,
+        7.4
+      ],
+      "to": [
+        27,
+        11,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            0,
+            5,
+            2.5,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            13.5,
+            5,
+            16,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#rw_dp_band"
+        },
+        "west": {
+          "texture": "#rw_dp_band"
+        },
+        "up": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            13.5,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "down": {
+          "texture": "#rw_dp_band",
+          "uv": [
+            13.5,
+            7.4,
+            16,
+            8.6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        27,
         8,
         7.4
       ],
@@ -210,14 +435,14 @@
           "uv": [
             0,
             5,
-            16,
+            3,
             8
           ]
         },
         "south": {
           "texture": "#rw_dp_blade",
           "uv": [
-            0,
+            13,
             5,
             16,
             8
@@ -232,7 +457,7 @@
         "up": {
           "texture": "#rw_dp_blade",
           "uv": [
-            0,
+            13,
             7.4,
             16,
             8.6
@@ -241,7 +466,7 @@
         "down": {
           "texture": "#rw_dp_blade",
           "uv": [
-            0,
+            13,
             7.4,
             16,
             8.6

@@ -30,7 +30,9 @@ its back at z = 16):
   rw_fence, rw_name_<stop>_0..3 (four boards);
 - the subway: rw_tile, rw_tile_band, rw_tile_dado, rw_mosaic_<stop>_0..3, rw_tunnel,
   rw_tunnel_floor, rw_track_slab, rw_tunnel_lamp, rw_subway_lamp, rw_stair, rw_stair_steel,
-  rw_subway_rail, rw_globe_post, rw_globe, rw_subway_sign_0..1;
+  rw_subway_rail, rw_globe_post, rw_globe, rw_subway_sign_0..1, rw_subway_column (with _base
+  and _cap; an I-beam, its flanges across the facing), rw_subway_beam and rw_subway_girder
+  (across the roof, along their axis);
 - by the line: rw_xing_post, rw_xing_lights, rw_xing_buck, rw_pole, rw_pole_arm;
 - the country depots (a combination depot of the old kind: waiting room, the agent's office in
   its bay, the freight room): rw_dp_wall, rw_dp_wall_b, rw_dp_wall_low, rw_dp_wall_low_moss
@@ -74,6 +76,7 @@ GREEN = (38, 62, 46)        # the railway's dark green
 CREAM = (222, 210, 172)     # and its cream
 EL_GREEN = (52, 68, 58)     # the el's paint, gone grey-green
 SUB_GREEN = (40, 84, 58)    # the subway's iron railings and globes
+SUB_STEEL = (34, 54, 46)    # and its columns and roof girders
 RUST = (112, 64, 36)
 
 # the stops with name boards (the railway's) and mosaics (the subway's): key -> what they say
@@ -537,6 +540,20 @@ def tunnel(seed):
     return t
 
 
+def sub_steel(seed):
+    """The subway's steel, its I-beam columns and the girders across its roof: dark green over the
+    red lead, chipped and rusting at the rivets, the flanges' edges darker; drawn with the beam
+    running down the texture (a column's face, a girder's underside along its axis)."""
+    t = el_paint(seed, SUB_STEEL, rust=0.9)
+    area(t, 0, 0, 4, N, mul=0.72, dh=0.25)
+    area(t, N - 4, 0, N, N, mul=0.72, dh=0.25)
+    area(t, 4, 0, 5, N, mul=1.18, dh=0.2)
+    rivets(t, (8, N - 8), step=6)
+    for y in range(0, N, 32):
+        area(t, 0, y, N, y + 1, mul=0.7, dh=-0.2)
+    return t
+
+
 def track_slab(seed):
     """The track slab between the walls: concrete black with brake dust, oil and grease in the middle."""
     t = F.mat("Concrete042C", (70, 66, 60), 0.9, seed=seed, smooth=0.2)
@@ -945,6 +962,7 @@ def textures():
         for i in range(4):
             T[f"rw_mosaic_{k}_{i}"] = lambda k=k, i=i: mosaic(k, i)
     T["rw_tunnel"] = lambda: tunnel(7043)
+    T["rw_sub_steel"] = lambda: sub_steel(7064)
     T["rw_track_slab"] = lambda: track_slab(7044)
     T["rw_walkway"] = lambda: walkway(7045)
     T["rw_nosing"] = lambda: nosing(7046)
@@ -1103,6 +1121,18 @@ def blocks():
             n = f"rw_mosaic_{k}_{i}"
             add(n, cube(n, "rw_tile"), "Name Mosaic", "STONE")
     add("rw_tunnel", None, "Tunnel Concrete", "STONE", rotate=None, tex={"all": "rw_tunnel"})
+    # the station's steel: I-beam columns along the platform a block back from its edge, holding
+    # girders across the roof (flush with it over the track, hanging under it over the platform)
+    steel = "rw_sub_steel"
+    ibeam = {"north": steel, "south": steel, "side": paint, "up": paint, "down": paint}
+    beam = [[3, 0, 4, 13, 16, 6, ibeam], [3, 0, 10, 13, 16, 12, ibeam], [7, 0, 6, 9, 16, 10, paint]]
+    add("rw_subway_column", beam, "Subway Column", "METAL")
+    add("rw_subway_column_base", beam + [[2, 0, 2, 14, 1.5, 14, paint]] + [[x, 1.5, z, x + 1, 2.2, z + 1, paint] for x in (3, 12) for z in (2.6, 12.4)],
+        "Subway Column", "METAL")
+    add("rw_subway_column_cap", beam + [[2, 14, 2, 14, 16, 14, paint], [0, 11, 5, 16, 14, 11, paint]], "Subway Column", "METAL")
+    add("rw_subway_beam", [[5, 7, 0, 11, 16, 16, {"east": "rw_girder", "west": "rw_girder", "side": paint, "up": paint, "down": steel}],
+                           [4, 7, 0, 12, 8.5, 16, {"down": steel, "side": paint, "up": paint}]], "Roof Girder", "METAL", rotate="axis")
+    add("rw_subway_girder", [[0, 0, 0, 16, 16, 16, {"down": steel, "up": "rw_tunnel", "side": "rw_tunnel"}]], "Roof Girder", "METAL", rotate="axis")
     add("rw_tunnel_floor", None, "Tunnel Walkway", "STONE", rotate=None, tex={"up": "rw_walkway", "side": "rw_tunnel", "down": "rw_tunnel"})
     add("rw_track_slab", None, "Track Slab", "STONE", rotate=None, tex={"up": "rw_track_slab", "side": "rw_tunnel", "down": "rw_tunnel"})
     tlamp = [[5, 6, 14, 11, 12, 16, "rw_el_paint"], [6, 6.5, 9, 10, 11.5, 14, "rw_cage"], [6.8, 7.3, 10, 9.2, 10.7, 13, "rw_bulb"]]
