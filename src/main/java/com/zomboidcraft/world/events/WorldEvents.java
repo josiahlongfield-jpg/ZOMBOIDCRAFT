@@ -188,10 +188,13 @@ public final class WorldEvents {
             String model = jet ? JETS[random.nextInt(JETS.length)] : HELI;
             e = new Event(kind, cx - dx * reach, y, cz - dz * reach, dx * speed, 0, dz * speed, level.getGameTime(),
                     (int) (2 * reach / speed * 20), model, sound(kind, random));
-            // sometimes a few jets together: each further back and out to one side, a little higher, same type
+            // sometimes a few jets together, same type, each 3 to 5 seconds behind the one before (Josiah: far enough
+            // back that every pass is its own Doppler sweep), a little out to one side and higher
             int pack = jet && random.nextInt(3) == 0 ? 1 + random.nextInt(3) : 0;
+            double back = 0;
             for (int i = 1; i <= pack; i++) {
-                double back = 28 * i, out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
+                back += speed * (3 + random.nextDouble() * 2);
+                double out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
                 wingmen.add(new Event(kind, e.x() - dx * back - dz * out, y + 4 * i, e.z() - dz * back + dx * out, e.vx(), 0, e.vz(),
                         e.start(), e.ticks() + (int) (back / speed * 20) + 1, model, sound(kind, random)));
             }
@@ -223,7 +226,10 @@ public final class WorldEvents {
      * far-off loop and the aircraft's own engines stay quiet for flybys).
      */
     private static int sound(Kind kind, RandomSource random) {
-        return 1 + random.nextInt(kind == Kind.JET ? FLYBY_JET.length : FLYBY_HELI.length);
+        if (kind == Kind.JET) {
+            return random.nextInt(10) < 6 ? 1 : 2 + random.nextInt(FLYBY_JET.length - 1);    // Josiah: the F/A-18 pass most often
+        }
+        return 1 + random.nextInt(FLYBY_HELI.length);
     }
 
     /** Ground height here if the chunk is loaded, otherwise the fallback. */
