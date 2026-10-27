@@ -696,6 +696,29 @@ def hatch(seed):
     return t
 
 
+def wood_hatch(seed):
+    """A house's cellar hatch: old planks gone grey at the ends and each its own shade, dirt in
+    the seams, strap hinges along the top edge, an iron ring to lift it by, scuffed and
+    trodden-in where feet cross it."""
+    t = F.mat("Wood089", (112, 88, 62), 1.1, seed=seed, smooth=0.2)
+    rng = t.rng
+    for x0 in range(0, N, 16):
+        F.area(t, x0, 0, x0 + 16, N, mul=rng.uniform(0.82, 1.08))
+    for x in (15, 31, 47):
+        F.gap(t, x, 0, x + 1, N, dark=0.55)
+    F.edges(t, 0, 0, N, N, 2)
+    for x0 in (6, 42):
+        F.area(t, x0, 3, x0 + 16, 7, (56, 50, 44), h=1.0, f0=180)
+        F.disc(t, x0 + 3, 5, 1.2, (96, 84, 70), h=1.0)
+        F.area(t, x0 + 9, 7, x0 + 14, 11, mul=(0.86, 0.74, 0.66))  # rust run off the strap
+    F.disc(t, 32, 51, 4.5, (58, 54, 48), h=1.0, f0=200, ring=1.4)
+    F.area(t, 30, 44, 34, 48, (58, 54, 48), h=1.0, f0=200)
+    F.area(t, 12, 20, 52, 42, mul=1.14, smooth=0.3)
+    for _ in range(3):
+        F.disc(t, rng.uniform(16, 48), rng.uniform(18, 44), rng.uniform(4, 7), mul=0.78, soft=5)
+    return F.wear(t, 0.5, 14)
+
+
 def collar_top(seed):
     """The concrete collar round the hatch: cracked, mossed, mostly under leaf litter."""
     t = F.mat("Concrete031", (124, 122, 112), 1.0, seed=seed, smooth=0.15)
@@ -2033,6 +2056,7 @@ def textures():
         "ship_door_top": lambda: watertight_door(6056, True), "ship_door_bottom": lambda: watertight_door(6057, False),
         "bunk_wheel": lambda: painted(6058, (150, 40, 30), "PaintedMetal001", 1.0, 0.4),
         "bunk_hatch": lambda: hatch(6060), "bunk_collar_top": lambda: collar_top(6061),
+        "bunk_hatch_wood": lambda: wood_hatch(6065),
         "bunk_rust": lambda: rusty(6062), "bunk_rust_pipe": lambda: rusty(6063, (120, 96, 76)),
         "bunk_cable_post": lambda: cable_post(6064),
         "bunk_blanket": lambda: blanket(6070), "bunk_mattress": lambda: ticking(6071),
@@ -2276,6 +2300,7 @@ def blocks():
             add(f"bunk_blast_{half}{row}", boxes, "Blast Door", "METAL")
     # climbable, so the ladder up a shaft carries on through the open hatch and you step out on top
     out["bunk_hatch"] = {"trapdoor": "steel", "tex": "bunk_hatch", "title": "Hatch", "climb": True}
+    out["bunk_hatch_wood"] = {"trapdoor": "wood", "sound": "WOOD", "tex": "bunk_hatch_wood", "title": "Cellar Hatch", "climb": True}
     add("bunk_ladder", [[1, 0, 14, 2.5, 16, 16, "bunk_grey"], [13.5, 0, 14, 15, 16, 16, "bunk_grey"]]
         + [[2.5, y, 14.5, 13.5, y + 1, 15.5, "bunk_rust_pipe"] for y in (1, 5, 9, 13)], "Ladder", "METAL", climb=True)
     add("bunk_vent_stack", [[6, 0, 6, 10, 16, 10, "bunk_rust_pipe"]], "Vent Pipe", "METAL", rotate=None)

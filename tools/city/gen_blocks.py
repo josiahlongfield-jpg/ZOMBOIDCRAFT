@@ -307,8 +307,16 @@ def has_alpha(tex_dir, names):
     return any((np.array(Image.open(tex_dir / f"{t}.png").convert("RGBA"))[..., 3] < 250).any() for t in names)
 
 
+# the SoundType constants the game has (a name it lacks only shows up as a compile error on CI)
+GAME_SOUNDS = {"STONE", "WOOD", "GRAVEL", "GRASS", "METAL", "GLASS", "WOOL", "SAND", "CHAIN", "LANTERN", "BAMBOO",
+          "COPPER", "NETHER_BRICKS", "DEEPSLATE", "TUFF", "MUD_BRICKS", "PACKED_MUD", "LADDER", "SCAFFOLDING",
+          "CHERRY_WOOD", "NETHER_WOOD", "BAMBOO_WOOD", "SNOW", "CANDLE", "HANGING_SIGN", "CHISELED_BOOKSHELF"}
+
+
 def sound(name, spec):
     if "sound" in spec:
+        if spec["sound"] not in GAME_SOUNDS:
+            sys.exit(f"{name}: no SoundType.{spec['sound']} in the game (pick one of {sorted(GAME_SOUNDS)})")
         return spec["sound"]
     words = [name] + textures(spec)
     for keys, s in SOUNDS:
@@ -320,7 +328,7 @@ def sound(name, spec):
 def java_line(name, spec, tex_dir):
     if "trapdoor" in spec:
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
-        return f'        s("{name}", TRAPDOOR, {flag}, 0, SoundType.{spec.get("sound", "METAL")}, 3f);'
+        return f'        s("{name}", TRAPDOOR, {flag}, 0, SoundType.{sound(name, spec) if "sound" in spec else "METAL"}, 3f);'
     if "door" in spec:
         s = "METAL" if spec["door"] == "steel" else "WOOD"
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
