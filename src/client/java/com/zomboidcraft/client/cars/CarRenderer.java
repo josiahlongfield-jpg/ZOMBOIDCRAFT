@@ -159,11 +159,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             });
         }
         // the instrument panel drawn sharp over a blurred one, in the aircraft you're in, powered or not
-        CockpitPanel.Panel panel = state.liveCockpit != null && state.lod == 0
+        CockpitPanel.Panel facePanel = state.liveCockpit != null && state.lod == 0
                 ? CockpitPanel.get(state.model, CockpitGlow.get(state.model), CockpitDisplays.eye(state.model)) : null;
-        if (panel != null) {
+        if (facePanel != null) {
             CockpitPages.Data data = CockpitDisplays.data(state.liveCockpit, state.attitude, System.currentTimeMillis(), false);
-            CockpitPanel.submit(panel, data, poseStack, collector, light, state.cockpitDark, cockpit != null, state.shaders);
+            CockpitPanel.submit(facePanel, data, poseStack, collector, light, state.cockpitDark, cockpit != null, state.shaders);
         }
         if (cockpit != null) {
             int[] colours = CockpitGlow.colours(cockpit, state.cockpit, state.cockpitDark, state.shaders);
@@ -178,7 +178,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 }
             }
             java.util.BitSet skip = live == null ? null : live.groups();
-            java.util.BitSet covered = panel == null ? null : panel.covered;
+            java.util.BitSet covered = facePanel == null ? null : facePanel.covered;
             collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, state.shaders),
                     (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, covered, pose, out));
         }
