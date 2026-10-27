@@ -218,11 +218,12 @@ public final class WorldEvents {
         return e;
     }
 
-    /** A flyby's sound: one of the whole recordings most of the time, otherwise the far-off loop. */
+    /**
+     * A flyby's sound: one of the whole recordings, and nothing else (Josiah: one sound for each aircraft, so the
+     * far-off loop and the aircraft's own engines stay quiet for flybys).
+     */
     private static int sound(Kind kind, RandomSource random) {
-        int takes = kind == Kind.JET ? FLYBY_JET.length : FLYBY_HELI.length;
-        int pick = random.nextInt(takes + 1);
-        return pick == takes ? 0 : pick + 1;
+        return 1 + random.nextInt(kind == Kind.JET ? FLYBY_JET.length : FLYBY_HELI.length);
     }
 
     /** Ground height here if the chunk is loaded, otherwise the fallback. */
