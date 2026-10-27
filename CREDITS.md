@@ -312,7 +312,7 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
-| amb/distant/4 | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
+| world/siren | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
 
 ## Bullet strikes
 

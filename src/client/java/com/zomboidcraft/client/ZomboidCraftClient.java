@@ -57,6 +57,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
+        com.zomboidcraft.client.sound.WorldEventSound.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
         if (ZcConfig.get().look.customZombies) {
