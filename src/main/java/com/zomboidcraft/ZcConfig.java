@@ -966,12 +966,19 @@ public final class ZcConfig {
          * How bright (a light level, 1 to 15) a gun light lights the space it's pointed at, a level less every eight
          * blocks off. Higher lights a wider patch round it. Client side.
          */
-        public int lightLevel = 11;
+        public int lightLevel = 13;
         /**
          * How many hidden lights a gun light uses (1 to 8): one where it lands and faint ones on the way there. More
          * light the floor and walls between better, but cost frames when you turn. Client side.
          */
         public int lightSources = 5;
+        /**
+         * Hidden lights spread round the middle one, where rays out across the light's spread land (0 to 24), so it
+         * lights the whole space in front of you rather than one patch. More cost frames when you turn. Client side.
+         */
+        public int lightRays = 14;
+        /** How far those rays spread from the middle, in degrees. Client side. */
+        public double lightSpread = 22;
         /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
         public double lightCone = 13;
         /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
@@ -991,7 +998,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 5;
+    private static final int DEFAULTS = 6;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1060,6 +1067,12 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.42) {
                 c.look.shoulderAimSide = 0.7;
+            }
+        }
+        if (c.defaultsVersion < 6) {
+            // 2026-10-27 (Josiah): the gun light brighter, now spread over the space in front (lightRays)
+            if (c.guns.lightLevel == 11) {
+                c.guns.lightLevel = 13;
             }
         }
         c.defaultsVersion = DEFAULTS;
