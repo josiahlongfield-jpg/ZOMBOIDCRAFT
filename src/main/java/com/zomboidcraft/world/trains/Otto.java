@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * OTTO, the robot conductor who runs every train now there's nobody left to: an Operator for
  * Transit, Timetables and Order. A cheerful customer-service voice from before it all went wrong,
- * cracking at the edges: he calls riders "valued customers" and zombies "non-paying passengers",
+ * gone foul-mouthed and rotten at the edges: he swears at his riders, calls them meatbags and dipshits,
  * honks at anything in the way, counts the doors shut whether you're through them or not, and
  * glitches mid-sentence. Our own character, with a nod to the robot bus driver of old zombie games.
  * He talks out loud (tools/trains/otto_voice.py records him) through every car's speakers.
@@ -44,6 +44,8 @@ final class Otto {
             clips.addAll(clips(OttoLines.EXPRESS_ARRIVAL[0], stop));
         }
         clips.addAll(clips(pick(arrival(stop.name()), level), stop));
+        // and as the doors open, a warm welcome
+        clips.addAll(clips(level.getRandom().nextInt(2) == 0 ? OttoLines.DOORS_OPEN[0] : pick(OttoLines.DOORS_OPEN, level), stop));
         say(level, run, clips, true);
     }
 
