@@ -517,6 +517,8 @@ public final class ZcConfig {
          * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
          */
         public boolean shoulderCam = true;
+        /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
+        public boolean spreadCrosshair = true;
         /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
         public double shoulderBack = 1.25;
         public double shoulderSide = 0.5;
@@ -673,6 +675,15 @@ public final class ZcConfig {
         public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
+        /**
+         * Spread bloom: each shot opens the spread by this much (degrees; full auto by its own, usually less, as the
+         * shots pile up), it closes again at bloomRecover degrees a second, and full auto never opens it past
+         * autoBloomMax. The crosshair's ring shows it, and the shots land inside the ring.
+         */
+        public double shotBloom = 0.5;
+        public double autoBloomPerShot = 0.45;
+        public double autoBloomMax = 3.5;
+        public double bloomRecover = 3.0;
 
         static GunStats pistol() {
             GunStats s = new GunStats();
@@ -771,6 +782,8 @@ public final class ZcConfig {
             s.magazineSize = 30;
             s.selectFire = true;
             s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
+            s.autoBloomPerShot = 0.3;     // lighter round, but nearly sixteen a second
+            s.autoBloomMax = 4.0;
             return s;
         }
 

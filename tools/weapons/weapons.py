@@ -866,7 +866,7 @@ def revolver():
     finishes = {k: (v[0], RV.look(k)) for k, v in RV.FINISHES.items()}
     # third person shows it swung out by moving it clear (its cylinder's staves are turned already)
     gun = kit.Gun('revolver', 'Service Revolver', RV.body, finishes['service'][1], RV.HAND, {}, {},
-                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
+                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8, slide=RV.hammer_piece,
                   finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
     gun.gap_flash = fp(0, 0, RV.CYL_FRONT)      # the side flash out of the barrel-cylinder gap
     return gun
@@ -960,7 +960,7 @@ def magnum():
 
     finishes = {k: (v[0], MG.look(k)) for k, v in MG.FINISHES.items()}
     gun = kit.Gun('magnum', 'Magnum Revolver', MG.body, finishes['blued'][1], MG.HAND, {}, {},
-                  aperture=fp(0, MG.SIGHT, MG.REAR_SIGHT), flash=flash, handle=MG.cylinder, seed=941, flash_size=1.15,
+                  aperture=fp(0, MG.SIGHT, MG.REAR_SIGHT), flash=flash, handle=MG.cylinder, seed=941, flash_size=1.15, slide=MG.hammer_piece,
                   finishes=finishes, opened=('shift', 0.0, MG.U * np.array([-1.25, -0.35, 0.0])))
     gun.gap_flash = fp(0, 0, MG.CYL_FRONT)
     return gun
@@ -1017,7 +1017,7 @@ class FirstPerson:
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
                  wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
-                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False, crossbow=False):
+                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False, crossbow=False, hammer_cock=0.0):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -1034,6 +1034,7 @@ class FirstPerson:
         self.hip_aim = hip_aim
         self.lever = lever
         self.crossbow = crossbow
+        self.hammer_cock = hammer_cock
 
 
 # From the hip a gun points at the crosshair (Josiah, 2026-10-26): its bore meets the middle of the view this many
@@ -1126,7 +1127,7 @@ REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.
                           irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=0.0,
                           charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
                           load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
-                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0,
+                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0, hammer_cock=RV.HAMMER_COCK,
                           hip_aim=HIP_AIM)
 
 # the .22 carried like the hunting rifle, a light carbine on its open sights (the eye over the comb, 19" behind
@@ -1182,7 +1183,7 @@ MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
                         irons=(0.0, 0.0, -6.5), irons_scale=1.05, handle_travel=0.0,
                         charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
                         load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
-                        opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=MG.OPEN, cylinder=True, chamber_step=-60.0,
+                        opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=MG.OPEN, cylinder=True, chamber_step=-60.0, hammer_cock=MG.HAMMER_COCK,
                         hip_aim=HIP_AIM)
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
@@ -1872,6 +1873,7 @@ def revolver_points(gun, g):
         'quietMuzzle': quiet_muzzle(gun) + shift,
         'hinge': RV.PIVOT_POINT + shift,
         'cylAxis': RV.CYL_AXIS + shift,
+        'hammer': RV.HAMMER_PIN + shift,
     }
 
 
@@ -1959,6 +1961,7 @@ def magnum_points(gun, g):
         **no_rail(gun, shift),
         'hinge': MG.PIVOT_POINT + shift,
         'cylAxis': MG.CYL_AXIS + shift,
+        'hammer': MG.HAMMER_PIN + shift,
     }
 
 
@@ -2022,13 +2025,15 @@ def rig_data(gun, g, holds, fp, points):
     axis = points.pop('boltAxis', points['handle'])
     hinge = points.pop('hinge', points['handle'])
     cyl = points.pop('cylAxis', hinge)
+    hammer = points.pop('hammer', None)
     data.update({k: vec(v) for k, v in points.items()})
     data['boltAxis'] = vec(axis)
     data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
                  'supportGrip': fp.support_grip, 'pump': fp.pump, 'wristGrip': fp.wrist_grip, 'bolt': fp.bolt})
     data.update({'hinge': vec(hinge), 'openAxis': vec(fp.open_axis), 'openAngle': float(fp.open_angle),
                  'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder,
-                 'lever': fp.lever, 'crossbow': fp.crossbow})
+                 'lever': fp.lever, 'crossbow': fp.crossbow,
+                 'hammer': vec(hammer) if hammer is not None else [], 'hammerCock': float(fp.hammer_cock)})
     return data
 
 
@@ -2050,6 +2055,8 @@ RIG_NOTES = {
     'opens': 'loaded by hand with the action open', 'cylinder': 'the rounds sit in a turning cylinder',
     'lever': 'worked by a lever, its bolt riding back with it',
     'crossbow': 'a crossbow: its string let go and drawn back, a bolt laid on the rail',
+    'hammer': "an exposed hammer's pin (the slide is the hammer), or none",
+    'hammerCock': 'degrees the hammer turns back to cock',
 }
 
 

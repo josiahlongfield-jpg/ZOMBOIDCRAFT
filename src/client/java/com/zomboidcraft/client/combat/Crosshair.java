@@ -20,7 +20,12 @@ public final class Crosshair {
             ZcConfig.Look look = ZcConfig.get().look;
             LocalPlayer player = minecraft.player;
             if (com.zomboidcraft.client.camera.ShoulderCam.active()) {
-                shoulderReticle(graphics, player);
+                spreadReticle(graphics, player);
+                return;
+            }
+            if (look.spreadCrosshair && player != null && GunType.isGun(player.getMainHandItem())
+                    && !(player.isUsingItem() && GunType.isGun(player.getUseItem()))) {
+                spreadReticle(graphics, player);     // from the hip: the ring is where the shots go
                 return;
             }
             if (look.hideCrosshairWhenAiming && player != null && player.isUsingItem()
@@ -54,12 +59,12 @@ public final class Crosshair {
     private static long lastFrame;
 
     /**
-     * Over the shoulder Minecraft draws no crosshair; this one is a small dot in a thin ring that shows where the
-     * shots can go: the ring's size is the gun's spread right now (wider from the hip and on the move), and it closes
+     * A small dot in a thin ring that shows where the shots can go (over the shoulder, where Minecraft draws no
+     * crosshair, and from the hip in first person): the ring's size is the gun's spread right now (wider from the hip and on the move), and it closes
      * in to just round the dot as you aim. Drawn in screen pixels so the ring stays a clean thin line, light with a
      * dark edge so it reads on snow and sky alike.
      */
-    private static void shoulderReticle(net.minecraft.client.gui.GuiGraphicsExtractor g, LocalPlayer player) {
+    private static void spreadReticle(net.minecraft.client.gui.GuiGraphicsExtractor g, LocalPlayer player) {
         Minecraft mc = Minecraft.getInstance();
         float gui = (float) mc.getWindow().getGuiScale();
         int dot = Math.max(1, Math.round(gui * 0.75f));
@@ -69,26 +74,18 @@ public final class Crosshair {
         boolean aiming = type != null && player.isUsingItem();
         if (type != null) {
             ZcConfig.GunStats stats = type.stats();
-            // the same spread the server shoots with (Guns.fire)
-            double spread = aiming ? stats.aimSpread * com.zomboidcraft.combat.Attachments.aimSpreadFactor(held)
-                    : stats.hipSpread * com.zomboidcraft.combat.Attachments.hipSpreadFactor(held);
-            int aimLevel = com.zomboidcraft.skills.Skills.level(player, com.zomboidcraft.skills.Skill.AIMING);
-            spread *= (1 - 0.05 * aimLevel) * com.zomboidcraft.combat.rolls.Rolls.multiplier(held, com.zomboidcraft.combat.rolls.Stat.ACCURACY);
-            if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
-                spread *= aimLevel >= 5 ? 1.3 : 1.6;
-            }
-            if (type.pellets() > 1 && stats instanceof ZcConfig.ShotgunStats sg) {
-                spread += sg.pelletSpread;      // buckshot opens wider than the aim point wanders
-            }
+            // the same cone the server shoots inside (Guns.fire), bloom and all, and buckshot's fan round it
+            double spread = com.zomboidcraft.combat.Guns.spread(player, held, type, aiming, CombatClient.bloom(type))
+                    + com.zomboidcraft.combat.Guns.pelletSpread(type);
             double fov = mc.options.fov().get() * (aiming ? stats.aimZoom : 1.0);
             float px = (float) (Math.tan(Math.toRadians(spread)) / Math.tan(Math.toRadians(fov / 2))
                     * mc.getWindow().getHeight() / 2);
-            target = aiming ? Math.max(target, Math.min(px, target + 2 * gui)) : Math.max(target, px);
+            target = Math.max(target, px);
         }
         long now = System.nanoTime();
         float dt = lastFrame == 0 ? 1f : Math.min(0.1f, (now - lastFrame) / 1e9f);
         lastFrame = now;
-        ring = ring < 0 ? target : ring + (target - ring) * Math.min(1f, dt * 14f);
+        ring = ring < 0 ? target : ring + (target - ring) * Math.min(1f, dt * 30f);
 
         Matrix3x2fStack pose = g.pose();
         pose.pushMatrix();

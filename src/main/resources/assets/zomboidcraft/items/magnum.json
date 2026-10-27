@@ -35,6 +35,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/magnum/nickel/mag_out/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/magnum/nickel/mag_out/slide"
+          }
          }
         ]
        }
@@ -63,6 +79,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/magnum/nickel/mag_in/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/magnum/nickel/mag_in/slide"
+          }
          }
         ]
        }
@@ -90,6 +122,22 @@
           "fallback": {
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/magnum/nickel/charge/charging_handle"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/magnum/nickel/charge/slide"
           }
          }
         ]
@@ -121,6 +169,22 @@
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/magnum/nickel/ads/charging_handle"
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/magnum/nickel/ads/slide"
+         }
         }
        ]
       },
@@ -145,6 +209,22 @@
          "fallback": {
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/magnum/nickel/hip/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/magnum/nickel/hip/slide"
          }
         }
        ]
@@ -182,6 +262,22 @@
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/magnum/mag_out/charging_handle_open"
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/magnum/mag_out/slide"
+        }
        }
       ]
      }
@@ -210,6 +306,22 @@
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/magnum/mag_in/charging_handle_open"
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/magnum/mag_in/slide"
+        }
        }
       ]
      }
@@ -237,6 +349,22 @@
         "fallback": {
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/magnum/charge/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/magnum/charge/slide"
         }
        }
       ]
@@ -268,6 +396,22 @@
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/magnum/ads/charging_handle"
        }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/magnum/ads/slide"
+       }
       }
      ]
     },
@@ -292,6 +436,22 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/magnum/hip/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/magnum/hip/slide"
        }
       }
      ]

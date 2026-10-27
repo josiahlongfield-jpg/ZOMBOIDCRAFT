@@ -35,6 +35,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/nickel/mag_out/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/nickel/mag_out/slide"
+          }
          }
         ]
        }
@@ -63,6 +79,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/nickel/mag_in/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/nickel/mag_in/slide"
+          }
          }
         ]
        }
@@ -90,6 +122,22 @@
           "fallback": {
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/nickel/charge/charging_handle"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/nickel/charge/slide"
           }
          }
         ]
@@ -121,6 +169,22 @@
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/revolver/nickel/ads/charging_handle"
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/revolver/nickel/ads/slide"
+         }
         }
        ]
       },
@@ -145,6 +209,22 @@
          "fallback": {
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/revolver/nickel/hip/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/revolver/nickel/hip/slide"
          }
         }
        ]
@@ -183,6 +263,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/engraved/mag_out/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/engraved/mag_out/slide"
+          }
          }
         ]
        }
@@ -211,6 +307,22 @@
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/engraved/mag_in/charging_handle_open"
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/engraved/mag_in/slide"
+          }
          }
         ]
        }
@@ -238,6 +350,22 @@
           "fallback": {
            "type": "minecraft:model",
            "model": "zomboidcraft:item/weapon/revolver/engraved/charge/charging_handle"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/revolver/engraved/charge/slide"
           }
          }
         ]
@@ -269,6 +397,22 @@
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/revolver/engraved/ads/charging_handle"
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/revolver/engraved/ads/slide"
+         }
         }
        ]
       },
@@ -293,6 +437,22 @@
          "fallback": {
           "type": "minecraft:model",
           "model": "zomboidcraft:item/weapon/revolver/engraved/hip/charging_handle"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/revolver/engraved/hip/slide"
          }
         }
        ]
@@ -330,6 +490,22 @@
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/revolver/mag_out/charging_handle_open"
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/revolver/mag_out/slide"
+        }
        }
       ]
      }
@@ -358,6 +534,22 @@
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/revolver/mag_in/charging_handle_open"
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/revolver/mag_in/slide"
+        }
        }
       ]
      }
@@ -385,6 +577,22 @@
         "fallback": {
          "type": "minecraft:model",
          "model": "zomboidcraft:item/weapon/revolver/charge/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/revolver/charge/slide"
         }
        }
       ]
@@ -416,6 +624,22 @@
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/revolver/ads/charging_handle"
        }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/ads/slide"
+       }
       }
      ]
     },
@@ -440,6 +664,22 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/revolver/hip/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/revolver/hip/slide"
        }
       }
      ]
