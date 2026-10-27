@@ -16,7 +16,7 @@ import java.util.SplittableRandom;
  * chandeliers on long chains, the ticket windows down one side, the information booth with its
  * clock in the middle and the departures board over the arch to the concourse, every train on it
  * cancelled. Behind the hall the long concourse under its skylights and steel, where the stair
- * climbs to the mezzanine and the bridge across to the el's platform; in the wing on the el's side
+ * climbs to the mezzanine and its door out onto platform 1 of the train hall; in the wing on the el's side
  * the stair down to the subway's hall, its turnstiles and the passage out to the subway platform
  * under the street; at the back the baggage hall with its left-luggage lockers.
  *
@@ -25,10 +25,10 @@ import java.util.SplittableRandom;
  * field hospital under the mezzanine, the notices pasted on every wall.
  *
  * <p>Drawn in its lot's frame (front along z = 0 facing north, x along the front), the lot turned
- * so the front faces the street the subway runs under and x = {@link #W} is the strip the el's
- * bridge crosses. The bridge (RailGen) comes in through the door at x = W - 1, z = BRIDGE_Z0 ..
- * BRIDGE_Z1 on the mezzanine's level, and the subway's passage (RailGen) through the lot's front at
- * x = PASS_X0 .. PASS_X1 on the subway hall's; both fixed by where the plan puts the station.
+ * so the front faces the street the subway runs under; the train hall ({@link UnionHall}) stands
+ * against its wall at x = W - 1, the mezzanine's door at z = BRIDGE_Z0 .. BRIDGE_Z1 opening onto
+ * the hall's platform 1, level with it. The subway's passage (RailGen) comes in through the lot's
+ * front at x = PASS_X0 .. PASS_X1 on the subway hall's level, fixed by where the plan puts the station.
  */
 final class UnionStation {
     /** The building's width: x 0 .. W - 1. */
@@ -41,7 +41,7 @@ final class UnionStation {
     static final int F2 = 8, F3 = 16, WING_TOP = 24, HALL_TOP = 27, CON_TOP = 18, BACK_TOP = 15;
     /** The mezzanine's floor, level with the el's platform; the subway hall's floor and ceiling. */
     static final int MEZZ = 11, SUB = -10, SUB_TOP = -4;
-    /** The el's bridge door, and the subway's passage in. */
+    /** The mezzanine's door out onto the train hall's platform 1, and the subway's passage in. */
     static final int BRIDGE_Z0 = 95, BRIDGE_Z1 = 98, PASS_X0 = 44, PASS_X1 = 47;
     /** The mezzanine, and the stair up to it. */
     private static final int MX0 = 42, MZ0 = 86, MZ1 = 106, SX0 = 44, SX1 = 48, SZ0 = 75;
@@ -62,6 +62,11 @@ final class UnionStation {
         this.clockLit = rng.nextDouble() < 0.6;
         // the army's generator still runs a few of the lights
         this.power = rng.nextDouble() < 0.7;
+    }
+
+    /** Whether the army's generator still runs (the train hall's lamps are on the same supply). */
+    boolean power() {
+        return power;
     }
 
     void build() {
@@ -709,7 +714,7 @@ final class UnionStation {
                 set(MX0, y, z, "rw_column");
             }
         }
-        // the door out to the bridge, the sign over it, the rope lines that kept the queue for the el
+        // the door out to the train hall's platform, the sign over it, the rope lines that kept the queue for the trains
         b.clear(W - 1, MEZZ + 1, BRIDGE_Z0, W - 1, MEZZ + 4, BRIDGE_Z1);
         for (int z = BRIDGE_Z0 - 1; z <= BRIDGE_Z1 + 1; z += BRIDGE_Z1 - BRIDGE_Z0 + 2) {
             for (int y = MEZZ + 1; y <= MEZZ + 4; y++) {

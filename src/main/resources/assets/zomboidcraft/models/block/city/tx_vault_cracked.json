@@ -1,0 +1,155 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "tx_steel_w": "zomboidcraft:block/city/tx_steel_w",
+    "tx_vault_glass_cracked": {
+      "sprite": "zomboidcraft:block/city/tx_vault_glass_cracked",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/tx_steel_d"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_d",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_vault_glass_cracked"
+        },
+        "down": {
+          "texture": "#tx_vault_glass_cracked"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12.5,
+        0
+      ],
+      "to": [
+        1.2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_w"
+        },
+        "west": {
+          "texture": "#tx_steel_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_steel_w",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    },
+    {
+      "from": [
+        1.2,
+        12.5,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w"
+        },
+        "east": {
+          "texture": "#tx_steel_w",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_w"
+        },
+        "up": {
+          "texture": "#tx_steel_w",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        7.6
+      ],
+      "to": [
+        16,
+        15.6,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "particle": "zomboidcraft:block/city/tx_steel_d"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        0,
+        7.6
+      ],
+      "to": [
+        8.4,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

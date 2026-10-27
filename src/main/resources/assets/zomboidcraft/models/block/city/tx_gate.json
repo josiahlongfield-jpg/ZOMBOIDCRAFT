@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_gate_side": "zomboidcraft:block/city/tx_gate_side",
+    "tx_gate_top": "zomboidcraft:block/city/tx_gate_top",
+    "tx_paddle": {
+      "sprite": "zomboidcraft:block/city/tx_paddle",
+      "force_translucent": true
+    },
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "particle": "zomboidcraft:block/city/tx_steel_d"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        1
+      ],
+      "to": [
+        11,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_gate_side"
+        },
+        "west": {
+          "texture": "#tx_gate_side"
+        },
+        "up": {
+          "texture": "#tx_gate_top"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.4,
+        6,
+        3
+      ],
+      "to": [
+        5,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_paddle"
+        },
+        "south": {
+          "texture": "#tx_paddle"
+        },
+        "east": {
+          "texture": "#tx_paddle"
+        },
+        "west": {
+          "texture": "#tx_paddle"
+        },
+        "up": {
+          "texture": "#tx_paddle"
+        },
+        "down": {
+          "texture": "#tx_paddle"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        6,
+        3
+      ],
+      "to": [
+        11.6,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_paddle"
+        },
+        "south": {
+          "texture": "#tx_paddle"
+        },
+        "east": {
+          "texture": "#tx_paddle"
+        },
+        "west": {
+          "texture": "#tx_paddle"
+        },
+        "up": {
+          "texture": "#tx_paddle"
+        },
+        "down": {
+          "texture": "#tx_paddle"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        15,
+        2
+      ],
+      "to": [
+        10.5,
+        15.4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    }
+  ]
+}

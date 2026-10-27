@@ -60,6 +60,8 @@ public final class Track {
     public final List<int[]> crossings = new ArrayList<>();
     /** The stops (by index) with a depot behind the platform (Layout, DepotSite): no fence or shelter there, the canopy instead. */
     final java.util.BitSet depots = new java.util.BitSet();
+    /** The samples inside Union Station's train hall (UnionHall): the station builds round the bed there. */
+    final java.util.BitSet hall = new java.util.BitSet();
     private final Map<Long, int[]> cells = new HashMap<>();
     private final int reach;
 

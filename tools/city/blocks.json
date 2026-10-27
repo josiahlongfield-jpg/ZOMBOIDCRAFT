@@ -263956,6 +263956,110 @@
    "sound": "METAL",
    "rotate": "facing"
   },
+  "tx_name_union_0": {
+   "tex": {
+    "north": "tx_name_union_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_1": {
+   "tex": {
+    "north": "tx_name_union_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_2": {
+   "tex": {
+    "north": "tx_name_union_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_3": {
+   "tex": {
+    "north": "tx_name_union_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_4": {
+   "tex": {
+    "north": "tx_name_union_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_5": {
+   "tex": {
+    "north": "tx_name_union_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_6": {
+   "tex": {
+    "north": "tx_name_union_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_7": {
+   "tex": {
+    "north": "tx_name_union_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
   "tx_panel": {
    "tex": {
     "all": "tx_panel"
@@ -265279,6 +265383,45 @@
     }
    }
   },
+  "tx_pendant_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     8,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     6,
+     5,
+     11,
+     8,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     4,
+     3,
+     13,
+     6,
+     13,
+     {
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_lamp"
+     }
+    ]
+   ],
+   "title": "Pendant Light",
+   "sound": "METAL",
+   "decor": true
+  },
   "tx_board_0": {
    "model": "boxes",
    "boxes": [
@@ -266039,6 +266182,150 @@
    "rotate": "facing",
    "decor": true
   },
+  "tx_map_union_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
   "tx_sign_trains_0": {
    "model": "boxes",
    "boxes": [
@@ -266378,6 +266665,2030 @@
    "rotate": "facing",
    "decor": true,
    "render": "cutout"
+  },
+  "tx_sign_subway_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_subway_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_subway_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_subway_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_buses_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_buses_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_buses_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_buses_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_platforms_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_platforms_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_platforms_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_platforms_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_tree_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     16,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     16,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     1.2,
+     13,
+     "tx_steel_d"
+    ],
+    [
+     4,
+     1.2,
+     4,
+     12,
+     2.4,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     4.8,
+     2.4,
+     4.8,
+     11.2,
+     3.4,
+     11.2,
+     "tx_steel_w"
+    ],
+    [
+     3.6,
+     1.2,
+     3.6,
+     4.6,
+     1.8,
+     4.6,
+     "tx_steel_d"
+    ],
+    [
+     3.6,
+     1.2,
+     11.4,
+     4.6,
+     1.8,
+     12.4,
+     "tx_steel_d"
+    ],
+    [
+     11.4,
+     1.2,
+     3.6,
+     12.4,
+     1.8,
+     4.6,
+     "tx_steel_d"
+    ],
+    [
+     11.4,
+     1.2,
+     11.4,
+     12.4,
+     1.8,
+     12.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL"
+  },
+  "tx_tree": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     16,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     16,
+     10.5,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL"
+  },
+  "tx_tree_fork": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     6,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     6,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     4.5,
+     6,
+     5.5,
+     11.5,
+     10,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     5.5,
+     6,
+     4.5,
+     10.5,
+     10,
+     11.5,
+     "tx_steel_w"
+    ],
+    [
+     5,
+     10,
+     5,
+     11,
+     11,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     8.15,
+     5.6,
+     9.6,
+     11.35,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.65,
+     4.0,
+     9.6,
+     12.85,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.15,
+     2.4,
+     9.6,
+     14.35,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     12.65,
+     0.8,
+     9.6,
+     15.85,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     14.15,
+     -0.8,
+     9.6,
+     17.35,
+     2.4,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     8.15,
+     7.2,
+     9.6,
+     11.35,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.65,
+     8.8,
+     9.6,
+     12.85,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.15,
+     10.4,
+     9.6,
+     14.35,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     12.65,
+     12.0,
+     9.6,
+     15.85,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     14.15,
+     13.6,
+     9.6,
+     17.35,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.15,
+     6.4,
+     8.8,
+     11.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.65,
+     6.4,
+     7.2,
+     12.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     11.15,
+     6.4,
+     5.6,
+     14.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.65,
+     6.4,
+     4.0,
+     15.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     14.15,
+     6.4,
+     2.4,
+     17.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.15,
+     6.4,
+     10.4,
+     11.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.65,
+     6.4,
+     12.0,
+     12.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     11.15,
+     6.4,
+     13.6,
+     14.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.65,
+     6.4,
+     15.2,
+     15.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     14.15,
+     6.4,
+     16.8,
+     17.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.1,
+     5.6,
+     10.4,
+     11.3,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.5,
+     4.0,
+     12.0,
+     12.7,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.9,
+     2.4,
+     13.6,
+     14.1,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.3,
+     0.8,
+     15.2,
+     15.5,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.7,
+     -0.8,
+     16.8,
+     16.9,
+     2.4,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.1,
+     7.2,
+     10.4,
+     11.3,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.5,
+     8.8,
+     12.0,
+     12.7,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.9,
+     10.4,
+     13.6,
+     14.1,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.3,
+     12.0,
+     15.2,
+     15.5,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.7,
+     13.6,
+     16.8,
+     16.9,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.1,
+     7.2,
+     8.8,
+     11.3,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.5,
+     8.8,
+     7.2,
+     12.7,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     10.9,
+     10.4,
+     5.6,
+     14.1,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.3,
+     12.0,
+     4.0,
+     15.5,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     13.7,
+     13.6,
+     2.4,
+     16.9,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.1,
+     5.6,
+     8.8,
+     11.3,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.5,
+     4.0,
+     7.2,
+     12.7,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     10.9,
+     2.4,
+     5.6,
+     14.1,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.3,
+     0.8,
+     4.0,
+     15.5,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     13.7,
+     -0.8,
+     2.4,
+     16.9,
+     2.4,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL",
+   "render": "cutout"
+  },
+  "tx_branch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.4,
+     -0.1,
+     13.4,
+     9.6,
+     3.1,
+     16.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     1.9,
+     11.4,
+     9.6,
+     5.1,
+     14.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     3.9,
+     9.4,
+     9.6,
+     7.1,
+     12.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     5.9,
+     7.4,
+     9.6,
+     9.1,
+     10.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     7.9,
+     5.4,
+     9.6,
+     11.1,
+     8.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.9,
+     3.4,
+     9.6,
+     13.1,
+     6.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.9,
+     1.4,
+     9.6,
+     15.1,
+     4.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     13.9,
+     -0.6,
+     9.6,
+     17.1,
+     2.6,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_branch_d": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.8,
+     -0.8,
+     13.6,
+     2.4,
+     2.4,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     0.8,
+     12.0,
+     4.0,
+     4.0,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     2.4,
+     10.4,
+     5.6,
+     5.6,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     4.0,
+     8.8,
+     7.2,
+     7.2,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     5.6,
+     7.2,
+     8.8,
+     8.8,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     7.2,
+     5.6,
+     10.4,
+     10.4,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     8.8,
+     4.0,
+     12.0,
+     12.0,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.4,
+     2.4,
+     13.6,
+     13.6,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.0,
+     0.8,
+     15.2,
+     15.2,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.6,
+     -0.8,
+     16.8,
+     16.8,
+     2.4,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_vault": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     15,
+     7.6,
+     16,
+     15.6,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_vault_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass_cracked",
+      "down": "tx_vault_glass_cracked",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     15,
+     7.6,
+     16,
+     15.6,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_vault_frame": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Roof Frame",
+   "sound": "METAL",
+   "render": "cutout"
+  },
+  "tx_vault_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     4,
+     11,
+     0,
+     12,
+     14,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     11,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Roof Beam",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_vault_node": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     4,
+     11,
+     0,
+     12,
+     14,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     11,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     11,
+     4,
+     16,
+     14,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     2.5,
+     7,
+     16,
+     11,
+     9,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     0,
+     4,
+     16,
+     2.5,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     3,
+     13,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof Beam",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_paver": {
+   "tex": {
+    "all": "tx_paver"
+   },
+   "title": "Paving",
+   "sound": "STONE"
+  },
+  "tx_paver_b": {
+   "tex": {
+    "all": "tx_paver_b"
+   },
+   "title": "Paving",
+   "sound": "STONE"
+  },
+  "tx_concrete": {
+   "tex": {
+    "all": "tx_concrete"
+   },
+   "title": "Concrete",
+   "sound": "STONE"
+  },
+  "tx_edge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "tx_edge_top",
+      "north": "tx_edge_face",
+      "side": "tx_concrete",
+      "down": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Platform Edge",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "tx_esc_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "tx_esc_tread",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "tx_esc_tread",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ]
+   ],
+   "title": "Escalator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_esc_side_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.8,
+     -8,
+     12,
+     1.6,
+     7,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     7,
+     12,
+     2.0,
+     11.4,
+     16,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     -8,
+     12,
+     2.6,
+     -6,
+     16,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     -4,
+     8,
+     1.6,
+     11,
+     12,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     11,
+     8,
+     2.0,
+     15.4,
+     12,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     -4,
+     8,
+     2.6,
+     -2,
+     12,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     0,
+     4,
+     1.6,
+     15,
+     8,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     15,
+     4,
+     2.0,
+     19.4,
+     8,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     0,
+     4,
+     2.6,
+     2,
+     8,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     4,
+     0,
+     1.6,
+     19,
+     4,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     19,
+     0,
+     2.0,
+     23.4,
+     4,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     4,
+     0,
+     2.6,
+     6,
+     4,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_newel_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.8,
+     0,
+     4,
+     1.6,
+     13,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     13,
+     2.5,
+     2.0,
+     15,
+     16,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     4,
+     0.5,
+     2.0,
+     15,
+     2.5,
+     "tx_rubber"
+    ],
+    [
+     0.10000000000000003,
+     0,
+     2,
+     2.3,
+     3,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_side_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.4,
+     -8,
+     12,
+     15.2,
+     7,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     7,
+     12,
+     15.6,
+     11.4,
+     16,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     -8,
+     12,
+     15.6,
+     -6,
+     16,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     -4,
+     8,
+     15.2,
+     11,
+     12,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     11,
+     8,
+     15.6,
+     15.4,
+     12,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     -4,
+     8,
+     15.6,
+     -2,
+     12,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     0,
+     4,
+     15.2,
+     15,
+     8,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     15,
+     4,
+     15.6,
+     19.4,
+     8,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     0,
+     4,
+     15.6,
+     2,
+     8,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     4,
+     0,
+     15.2,
+     19,
+     4,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     19,
+     0,
+     15.6,
+     23.4,
+     4,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     4,
+     0,
+     15.6,
+     6,
+     4,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_newel_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.4,
+     0,
+     4,
+     15.2,
+     13,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     13,
+     2.5,
+     15.6,
+     15,
+     16,
+     "tx_rubber"
+    ],
+    [
+     14.0,
+     4,
+     0.5,
+     15.6,
+     15,
+     2.5,
+     "tx_rubber"
+    ],
+    [
+     13.7,
+     0,
+     2,
+     15.9,
+     3,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "tx_step_top",
+      "side": "tx_granite",
+      "down": "tx_granite"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "tx_step_top",
+      "side": "tx_granite",
+      "down": "tx_granite"
+     }
+    ]
+   ],
+   "title": "Granite Steps",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "tx_esc_plate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "tx_esc_comb",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ]
+   ],
+   "title": "Escalator Landing",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_glass_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     0,
+     8.5,
+     14.5,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     6.8,
+     14.5,
+     0,
+     9.2,
+     16,
+     16,
+     "tx_brushed"
+    ],
+    [
+     6.8,
+     0,
+     0,
+     9.2,
+     1.5,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Glass Balustrade",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_gate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     1,
+     11,
+     15,
+     15,
+     {
+      "east": "tx_gate_side",
+      "west": "tx_gate_side",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_gate_top",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     4.4,
+     6,
+     3,
+     5,
+     13,
+     13,
+     {
+      "east": "tx_paddle",
+      "west": "tx_paddle",
+      "north": "tx_paddle",
+      "south": "tx_paddle",
+      "up": "tx_paddle",
+      "down": "tx_paddle"
+     }
+    ],
+    [
+     11,
+     6,
+     3,
+     11.6,
+     13,
+     13,
+     {
+      "east": "tx_paddle",
+      "west": "tx_paddle",
+      "north": "tx_paddle",
+      "south": "tx_paddle",
+      "up": "tx_paddle",
+      "down": "tx_paddle"
+     }
+    ],
+    [
+     5.5,
+     15,
+     2,
+     10.5,
+     15.4,
+     14,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Fare Gate",
+   "sound": "METAL",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_clock": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     2,
+     1,
+     9.5,
+     14,
+     15,
+     {
+      "east": "tx_clock",
+      "west": "tx_clock",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     6.5,
+     1,
+     2,
+     9.5,
+     15,
+     14,
+     {
+      "east": "tx_clock",
+      "west": "tx_clock",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Station Clock",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_rod": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     0,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Hanger",
+   "sound": "METAL",
+   "decor": true
+  },
+  "tx_platnum_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     1,
+     1,
+     9,
+     15,
+     15,
+     {
+      "east": "tx_platnum_1",
+      "west": "tx_platnum_1",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Platform Sign",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_platnum_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     1,
+     1,
+     9,
+     15,
+     15,
+     {
+      "east": "tx_platnum_2",
+      "west": "tx_platnum_2",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Platform Sign",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_ceiling": {
+   "tex": {
+    "down": "tx_baffle",
+    "up": "tx_concrete",
+    "side": "tx_concrete"
+   },
+   "title": "Metal Ceiling",
+   "sound": "METAL"
+  },
+  "tx_ceiling_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "tx_strip",
+      "up": "tx_concrete",
+      "side": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Ceiling Light",
+   "sound": "METAL",
+   "rotate": "axis",
+   "flicker": {
+    "light": 12,
+    "on": {
+     "tx_strip": "tx_strip_on"
+    }
+   }
+  },
+  "tx_ceiling_lamp_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "tx_strip",
+      "up": "tx_concrete",
+      "side": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Ceiling Light",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_help": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     6,
+     11.5,
+     16,
+     10,
+     {
+      "north": "tx_help",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_green"
+     }
+    ]
+   ],
+   "title": "Help Point",
+   "sound": "METAL",
+   "rotate": "facing"
   }
  }
 }
