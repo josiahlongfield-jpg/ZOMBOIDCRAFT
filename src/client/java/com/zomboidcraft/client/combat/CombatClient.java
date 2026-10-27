@@ -89,6 +89,7 @@ public final class CombatClient {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(HoldPoses::faceLook);
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 

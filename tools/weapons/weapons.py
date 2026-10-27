@@ -542,12 +542,19 @@ RIFLE_CLEAR = [tuple(RF.frame_point(*p)) for p in (
     (0, -5.1, 7.5), (0, 0, -15.1))]
 
 
+# at the ready a gun points where its carrier looks (HoldPoses turns the arm with the head), so the
+# over-the-shoulder camera's laser leaves along the barrel: a long gun level in front of the chest with
+# the stock tucked against it, a handgun in both hands out in front, both a little under the aim
+LONG_READY = ('ready', Q.UPRIGHT, [0, 6.0, -7.0], [-2.5, 5.0, -2.6], RIFLE_HAND)
+HANDGUN_READY = ('ready', Q.UPRIGHT, [0, 4.0, -8.0])
+
+
 def rifle_holds():
-    """Low ready (muzzle down and across, stock at the right shoulder) and aiming (shouldered, muzzle on
-    the line of sight, as high as Minecraft's big head allows)."""
+    """At the ready (level in front of the chest, stock tucked) and aiming (shouldered, muzzle on the line
+    of sight, as high as Minecraft's big head allows)."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY,
             # the rifle rides on top of the forearms, stock in the right of the chest, top just under the chin
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, RF.HAND, RIFLE_SUPPORT, hand_off=hand)
@@ -564,10 +571,10 @@ PISTOL_CLEAR = [tuple(PI.frame_point(*p)) for p in ((0, 0.6, 8.0), (0, 0, -0.5),
 
 
 def pistol_holds():
-    """Low ready (both hands on it in front of the chest, muzzle down) and aiming (arms out straight, the
-    sights up at the eyes)."""
+    """At the ready (both hands on it out in front of the chest) and aiming (arms out straight, the sights
+    up at the eyes)."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, PI.HAND, PISTOL_SUPPORT, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], PISTOL_CLEAR)
@@ -589,7 +596,7 @@ def shotgun_holds():
     """The rifle's two holds, fitted to the shotgun's longer reach and dropped stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, SG.HAND, SHOTGUN_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(SHOTGUN_BUTT, np.array(butt_at), 1.0)], SHOTGUN_CLEAR)
@@ -609,7 +616,7 @@ def hunting_holds():
     """The rifle's two holds, fitted to the hunting rifle's long barrel and sporter stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, HR.HAND, HUNTING_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(HUNTING_BUTT, np.array(butt_at), 1.0)], HUNTING_CLEAR)
@@ -631,7 +638,7 @@ def double_holds():
     """The rifle's two holds, fitted to the double's long barrels and dropped stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, DB.HAND, DOUBLE_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(DOUBLE_BUTT, np.array(butt_at), 1.0)], DOUBLE_CLEAR)
@@ -650,7 +657,7 @@ REVOLVER_CLEAR = [tuple(RV.frame_point(*p)) for p in ((0, 0.62, 2.8), (0, 0, RV.
 def revolver_holds():
     """The pistol's two holds, fitted to the revolver."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, RV.HAND, REVOLVER_SUPPORT, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], REVOLVER_CLEAR)
@@ -660,10 +667,10 @@ def revolver_holds():
 
 
 def long_holds(hand, support, butt, clear):
-    """The rifle's two holds (low ready across the body, shouldered on the sights), fitted to another long gun."""
+    """The rifle's two holds (level at the chest, shouldered on the sights), fitted to another long gun."""
     out = {}
     for name, R, G0, butt_at, off in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, hand, support, hand_off=off)
         G = Q.solve_grip(h, G0, [(butt, np.array(butt_at), 1.0)], clear)
@@ -676,7 +683,7 @@ def handgun_holds(hand, support, clear):
     """The pistol's two holds (both hands on it in front of the chest, arms out on the sights), fitted to another
     gun held without a stock."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, hand, support, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], clear)
