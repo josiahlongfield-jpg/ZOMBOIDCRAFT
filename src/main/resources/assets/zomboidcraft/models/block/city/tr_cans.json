@@ -1,0 +1,138 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_can": "zomboidcraft:block/city/tr_can",
+    "particle": "zomboidcraft:block/city/tr_can"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_can"
+        },
+        "south": {
+          "texture": "#tr_can"
+        },
+        "east": {
+          "texture": "#tr_can"
+        },
+        "west": {
+          "texture": "#tr_can"
+        },
+        "up": {
+          "texture": "#tr_can"
+        },
+        "down": {
+          "texture": "#tr_can",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        2,
+        2.5
+      ],
+      "to": [
+        13.5,
+        4,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_can"
+        },
+        "south": {
+          "texture": "#tr_can"
+        },
+        "east": {
+          "texture": "#tr_can"
+        },
+        "west": {
+          "texture": "#tr_can"
+        },
+        "up": {
+          "texture": "#tr_can"
+        },
+        "down": {
+          "texture": "#tr_can"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        4,
+        3.5
+      ],
+      "to": [
+        12.5,
+        6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_can"
+        },
+        "south": {
+          "texture": "#tr_can"
+        },
+        "east": {
+          "texture": "#tr_can"
+        },
+        "west": {
+          "texture": "#tr_can"
+        },
+        "up": {
+          "texture": "#tr_can"
+        },
+        "down": {
+          "texture": "#tr_can"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        3
+      ],
+      "to": [
+        13,
+        8,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_can"
+        },
+        "south": {
+          "texture": "#tr_can"
+        },
+        "east": {
+          "texture": "#tr_can"
+        },
+        "west": {
+          "texture": "#tr_can"
+        },
+        "up": {
+          "texture": "#tr_can"
+        },
+        "down": {
+          "texture": "#tr_can"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_booth_glass": "zomboidcraft:block/city/tr_booth_glass",
+    "tr_brass": "zomboidcraft:block/city/tr_brass",
+    "tr_gilt": "zomboidcraft:block/city/tr_gilt",
+    "particle": "zomboidcraft:block/city/tr_booth_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        2.5,
+        0,
+        2.5
+      ],
+      "to": [
+        13.5,
+        12,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_booth_glass"
+        },
+        "south": {
+          "texture": "#tr_booth_glass"
+        },
+        "east": {
+          "texture": "#tr_booth_glass"
+        },
+        "west": {
+          "texture": "#tr_booth_glass"
+        },
+        "up": {
+          "texture": "#tr_booth_glass"
+        },
+        "down": {
+          "texture": "#tr_booth_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        12,
+        1
+      ],
+      "to": [
+        15,
+        13.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass"
+        },
+        "east": {
+          "texture": "#tr_brass"
+        },
+        "west": {
+          "texture": "#tr_brass"
+        },
+        "up": {
+          "texture": "#tr_brass"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        13.5,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_gilt"
+        },
+        "south": {
+          "texture": "#tr_gilt"
+        },
+        "east": {
+          "texture": "#tr_gilt"
+        },
+        "west": {
+          "texture": "#tr_gilt"
+        },
+        "up": {
+          "texture": "#tr_gilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_gilt"
+        }
+      }
+    }
+  ]
+}

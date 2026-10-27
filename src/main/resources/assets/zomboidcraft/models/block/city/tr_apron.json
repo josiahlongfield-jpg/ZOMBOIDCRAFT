@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "tr_apron": "zomboidcraft:block/city/tr_apron",
+    "tr_boards": "zomboidcraft:block/city/tr_boards",
+    "particle": "zomboidcraft:block/city/tr_apron"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_apron",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_wood_dark",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_boards",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_dark",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

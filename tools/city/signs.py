@@ -335,6 +335,8 @@ def channel_sign(sid, text, face, ink, k, font, seed):
     mask, boxes = lettering(text, font, t.w, N, fill=0.6)
     letters = [i for i, (ch, _, _) in enumerate(boxes) if ch.strip()]
     gone = {int(t.rng.choice(letters))}
+    if P.rude_gaps(text, gone):
+        gone = set()
     tilt = int(t.rng.choice([i for i in letters if i not in gone]))
     keep = np.zeros_like(mask)
     for i, (ch, x0, x1) in enumerate(boxes):

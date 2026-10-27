@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "tr_brass": "zomboidcraft:block/city/tr_brass",
+    "tr_podium": "zomboidcraft:block/city/tr_podium",
+    "particle": "zomboidcraft:block/city/tr_podium"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        5
+      ],
+      "to": [
+        12,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_podium"
+        },
+        "south": {
+          "texture": "#tr_podium"
+        },
+        "east": {
+          "texture": "#tr_podium"
+        },
+        "west": {
+          "texture": "#tr_podium"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#tr_podium",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        13,
+        4
+      ],
+      "to": [
+        12.5,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark"
+        },
+        "west": {
+          "texture": "#home_wood_dark"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#home_wood_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        14,
+        6
+      ],
+      "to": [
+        11.5,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass"
+        },
+        "east": {
+          "texture": "#tr_brass"
+        },
+        "west": {
+          "texture": "#tr_brass"
+        },
+        "up": {
+          "texture": "#tr_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    }
+  ]
+}

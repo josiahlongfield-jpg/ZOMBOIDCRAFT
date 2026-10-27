@@ -1,7 +1,6 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Placer;
-import com.zomboidcraft.world.city.ShopLights;
 import java.util.SplittableRandom;
 
 /**
@@ -180,69 +179,8 @@ final class Civic {
 
     // ------------------------------------------------------------------ the picture house
 
-    /** A small-town theatre: the marquee over the sidewalk, a neon blade, seats facing the screen. */
+    /** The picture house: see {@link Theatre}. */
     void theatre(int w, int d) {
-        int h = 10;
-        String wall = pick("brick_buff", "brick_red", "plaster_cream", "plaster_rose");
-        b.walls(0, 0, w - 1, d - 1, 1, h, wall);
-        b.floor(0, 0, w - 1, d - 1, 0, "concrete_dark");
-        b.floor(1, 1, w - 2, d - 2, 0, "floor_checker");
-        b.clear(1, 1, 1, w - 2, h - 1, d - 2);
-        b.floor(1, 1, w - 2, d - 2, h, "roof");
-        int cx = w / 2;
-        // the lobby front: glass doors, the ticket booth, poster cases
-        for (int x = 1; x < w - 1; x++) {
-            p.set(x, 1, 0, x == cx || x == cx - 1 || x == cx + 1 ? "air" : "stone_trim");
-            p.set(x, 2, 0, x == cx || x == cx - 1 || x == cx + 1 ? "air" : b.glass("x"));
-            p.set(x, 3, 0, b.glass("x"));
-        }
-        b.doors(cx - 1, 1, 0, "shop_door", "north");
-        b.door(cx + 1, 1, 0, "shop_door", "north");
-        p.set(cx, 1, -2, "store_teller_glass[axis=z]");
-        p.set(cx, 2, -2, "store_teller_glass[axis=z]");
-        p.set(cx, 3, -2, "minecraft:smooth_stone_slab[type=bottom]");
-        // the marquee: a deep box over the sidewalk ringed with bulbs, the name on its face
-        for (int x = 0; x < w; x++) {
-            for (int z = -3; z <= -1; z++) {
-                p.set(x, 4, z, "concrete_dark");
-                p.set(x, 5, z, x == 0 || x == w - 1 || z == -3 ? "minecraft:smooth_quartz" : "concrete_dark");
-            }
-            if (x % 2 == 0) {
-                p.set(x, 3, -3, rng.nextDouble() < 0.5 ? ShopLights.lamp(rng, 0.2) : "minecraft:iron_chain[axis=y]");
-            }
-        }
-        Boards.fascia(p, rng, "rialto", 1, 5, -4, w - 2);
-        Boards.blade(p, rng, "rialto", 6, cx, h + 1, -1, rng.nextDouble() < 0.5);
-        // the screen at the back, rows of seats raked down toward it
-        for (int x = 2; x < w - 2; x++) {
-            for (int y = 2; y < h - 1; y++) {
-                p.set(x, y, d - 2, "minecraft:white_concrete");
-            }
-        }
-        for (int z = 6; z < d - 5; z += 2) {
-            for (int x = 2; x < w - 2; x++) {
-                if (x == cx) {
-                    continue;
-                }
-                p.set(x, 1, z, rng.nextDouble() < 0.1 ? "air" : "minecraft:red_terracotta");
-                p.set(x, 2, z, rng.nextDouble() < 0.15 ? "air" : "minecraft:dark_oak_stairs[facing=north]");
-            }
-        }
-        for (int x = 1; x < w - 1; x++) {
-            for (int y = 1; y <= 4; y++) {
-                p.set(x, y, 4, x == cx || x == cx - 1 ? "air" : "drywall");
-            }
-        }
-        p.set(2, 1, 2, "store_counter[facing=east]");
-        p.set(2, 1, 3, "store_counter[facing=east]");
-        p.set(1, 1, 2, "store_shelf_grocery[facing=east]");
-        b.lights(0, 0, w - 1, d - 1, h - 1, 0.0);
-        b.mess(1, 1, w - 2, d - 2, 1, 0.05);
-        b.flat(0, 0, w - 1, d - 1, h, wall, 1, null);
-        for (int y = h + 1; y <= h + 3; y++) {
-            for (int x = 0; x < w; x++) {
-                p.set(x, y, 0, b.wall(wall, y));
-            }
-        }
+        new Theatre(p, rng).build(w, d);
     }
 }
