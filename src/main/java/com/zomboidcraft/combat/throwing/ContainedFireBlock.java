@@ -1,6 +1,5 @@
 package com.zomboidcraft.combat.throwing;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,15 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * its fire (the world was reloaded) goes out on its next random tick.
  */
 public class ContainedFireBlock extends BaseFireBlock {
-    public static final MapCodec<ContainedFireBlock> CODEC = simpleCodec(ContainedFireBlock::new);
-
     public ContainedFireBlock(Properties properties) {
         super(properties, 1.0f);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseFireBlock> codec() {
-        return CODEC;
     }
 
     @Override

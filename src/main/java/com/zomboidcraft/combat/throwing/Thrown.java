@@ -272,7 +272,7 @@ public class Thrown extends Entity {
         Vec3 at = position().add(0, 0.1, 0);
         level.playSound(null, at.x, at.y, at.z, kind() == ThrowKind.MOLOTOV ? ModSounds.MOLOTOV_BURST : ModSounds.BOTTLE_SMASH,
                 SoundSource.PLAYERS, 1f, 0.9f + random.nextFloat() * 0.2f);
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item()), at.x, at.y, at.z, 14, 0.2, 0.1, 0.2, 0.15);
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item().getItem()), at.x, at.y, at.z, 14, 0.2, 0.1, 0.2, 0.15);
         Noise.emit(level, at, kind().noise());
         if (kind() == ThrowKind.MOLOTOV) {
             level.sendParticles(ParticleTypes.FLAME, at.x, at.y + 0.3, at.z, 40, c.molotovRadius / 2, 0.3, c.molotovRadius / 2, 0.05);
@@ -394,7 +394,7 @@ public class Thrown extends Entity {
     private void flash(ServerLevel level, ZcConfig.Throwing c) {
         Vec3 at = position().add(0, 0.3, 0);
         level.playSound(null, at.x, at.y, at.z, ModSounds.FLASHBANG, SoundSource.PLAYERS, 2f, 1f);
-        level.sendParticles(ParticleTypes.FLASH, at.x, at.y, at.z, 1, 0, 0, 0, 0);
+        level.sendParticles(ParticleTypes.END_ROD, at.x, at.y, at.z, 30, 0.1, 0.1, 0.1, 0.35);
         level.sendParticles(ParticleTypes.POOF, at.x, at.y, at.z, 12, 0.3, 0.2, 0.3, 0.05);
         Noise.emit(level, at, kind().noise());
         double r = c.flashbangRadius;
@@ -409,7 +409,9 @@ public class Thrown extends Entity {
                 float near = (float) Math.max(0.2, 1 - d / (r * 2));
                 player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, Math.round(c.flashbangBlind * near)));
                 player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, Math.round(c.flashbangBlind * near * 0.6f)));
-                player.playNotifySound(ModSounds.EAR_RING, SoundSource.PLAYERS, near, 1f);
+                player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
+                        net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.EAR_RING), SoundSource.PLAYERS,
+                        player.getX(), player.getEyeY(), player.getZ(), near, 1f, player.getRandom().nextLong()));
             }
         }
     }

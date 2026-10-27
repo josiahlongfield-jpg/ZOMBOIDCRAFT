@@ -81,8 +81,8 @@ public final class ContainedFire {
         int r = (int) Math.ceil(radius);
         BlockPos mid = BlockPos.containing(centre);
         for (BlockPos p : BlockPos.betweenClosed(mid.offset(-r, -2, -r), mid.offset(r, 2, r))) {
-            if (Vec3.atBottomCenterOf(p).distanceTo(centre) <= radius + 0.3 && level.random.nextFloat() < 0.85f) {
-                light(fire, p.immutable(), now + burnTicks - level.random.nextInt(Math.max(1, burnTicks / 3)));
+            if (Vec3.atBottomCenterOf(p).distanceTo(centre) <= radius + 0.3 && level.getRandom().nextFloat() < 0.85f) {
+                light(fire, p.immutable(), now + burnTicks - level.getRandom().nextInt(Math.max(1, burnTicks / 3)));
             }
         }
         start(fire);
@@ -101,8 +101,8 @@ public final class ContainedFire {
             }
             boolean nearFuel = touchesFlammable(level, p);
             float chance = (float) c.blastFireChance * (nearFuel ? 1f : 0.15f);
-            if (level.random.nextFloat() < chance) {
-                light(fire, p.immutable(), nearFuel ? -1 : now + 60 + level.random.nextInt(80));
+            if (level.getRandom().nextFloat() < chance) {
+                light(fire, p.immutable(), nearFuel ? -1 : now + 60 + level.getRandom().nextInt(80));
             }
         }
         start(fire);
@@ -166,7 +166,7 @@ public final class ContainedFire {
     /** One check of a fire: flames go out, eat what they touch, and creep on. False once it's out. */
     private static boolean step(Fire fire, ZcConfig.Throwing c) {
         ServerLevel level = fire.level;
-        RandomSource random = level.random;
+        RandomSource random = level.getRandom();
         long now = level.getGameTime();
         boolean dying = now >= fire.endAt;
         Set<BlockPos> spread = new HashSet<>();

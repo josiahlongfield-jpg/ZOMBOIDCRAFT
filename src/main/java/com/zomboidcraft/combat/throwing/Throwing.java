@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Throwing things: the thrown object, the contained fire it can start, and the wind-up. Fused throwables (grenades,
@@ -36,7 +35,7 @@ public final class Throwing {
     private static final ResourceKey<Block> FIRE_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("contained_fire"));
     public static final Block FIRE = Registry.register(BuiltInRegistries.BLOCK, FIRE_KEY, new ContainedFireBlock(BlockBehaviour.Properties.of()
             .mapColor(MapColor.FIRE).replaceable().noCollision().instabreak().lightLevel(s -> 15).sound(SoundType.WOOL)
-            .pushReaction(PushReaction.DESTROY).randomTicks().noLootTable().setId(FIRE_KEY)));
+            .randomTicks().noLootTable().setId(FIRE_KEY)));
 
     private static final ResourceKey<EntityType<?>> THROWN_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("thrown"));
     public static final EntityType<Thrown> THROWN = Registry.register(BuiltInRegistries.ENTITY_TYPE, THROWN_KEY,
@@ -106,7 +105,7 @@ public final class Throwing {
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.THROW, SoundSource.PLAYERS,
                     0.5f + 0.5f * power, 0.9f + 0.2f * power);
             Stamina.use(player, ZcConfig.get().throwing.throwEndurance * (0.5 + 0.5 * power));
-            player.swing(player.getUsedItemHand(), true);
+            player.swing(player.getUsedItemHand(), net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         }
         if (!player.isCreative()) {
             stack.shrink(1);
