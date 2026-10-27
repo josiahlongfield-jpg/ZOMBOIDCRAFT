@@ -318,10 +318,25 @@ final class RoadsideSite extends Site {
                     q.set(x, 8, z, Bldg.full(roof));
                 }
             }
-            // the stair up at the end
+            // the stair up at the end, two wide in line with the walkway, climbing onto a landing at its end
             for (int k = 0; k < 4; k++) {
-                q.set(bx1 + 1, 1 + k, bz - 2 - 4 + k, "steel_stairs[facing=south]");
+                for (int z = bz - 2; z <= bz - 1; z++) {
+                    q.set(bx1 + 6 - k, 1 + k, z, "steel_stairs[facing=west]");
+                    for (int r = 1; r <= 3; r++) {
+                        q.set(bx1 + 6 - k, 1 + k + r, z, "air");
+                    }
+                }
+                q.set(bx1 + 6 - k, 2 + k, bz - 2, "ext_rail_edge_dark[facing=north]");
+                q.set(bx1 + 6 - k, 2 + k, bz - 1, "ext_rail_edge_dark[facing=south]");
             }
+            for (int x = bx1 + 1; x <= bx1 + 2; x++) {
+                q.set(x, 4, bz - 2, "deck_steel");
+                q.set(x, 4, bz - 1, "deck_steel");
+                q.set(x, 5, bz - 2, "railing[axis=x]");
+            }
+            // and from the landing on up beside the rooms to a hut on the roof, its doors out onto it
+            RoofHut.flight(q.turned(bx1 + 2, 0, bz - 1, 1), rng, 0, 0, 4, 8, wall, "steel_stairs", "south",
+                    "ext_rail_edge_dark");
             parking(q, 2, bx1 - 1, bz - 8, 0.35, CARS);
             rooms = 2 * n;
         } else {
@@ -336,7 +351,9 @@ final class RoadsideSite extends Site {
             walkway(q, x0 - 1, x0 + n * 5, bz - 2, 0);
             gableRow(q, x0 - 1, x0 + n * 5, bz - 2, bz + 10, 4, roof, wall);
             int wing = Math.max(2, (bz - 12) / 5);
-            Placer side = q.turned(x0 - 1, 0, bz - 3, 1);
+            // the wing runs from the walkway's end toward the road, its doors to the courtyard
+            // (drawn from bz - 3 back it stood beside the row, its doors against the end room's wall)
+            Placer side = q.turned(x0 - 1, 0, bz - 2 - wing * 5, 1);
             for (int i = 0; i < wing; i++) {
                 motelRoom(side.shifted(i * 5, 0, 0), wall, 0, n + i);
             }
@@ -834,7 +851,14 @@ final class RoadsideSite extends Site {
                 s.vehicle(x + 2, 1, -8, 0, "box_truck,moving_truck", rng.nextLong());
             }
             s.set(x + 2, 6, -1, ShopLights.lamp(rng, 0.3));
+            // a step up onto the dock beside the bumper, and down off the door's sill inside
+            s.set(x - 1, 1, -1, "steel_stairs[facing=east]");
+            if ("air".equals(s.get(x + 1, 2, 0))) {
+                s.set(x + 1, 1, 1, "steel_stairs[facing=north]");
+            }
         }
+        // the walk-in door beside the first dock, at the floor's own level
+        b.door(1, 1, 0, "fire_door", "north");
         for (int x = 0; x < bw; x++) {
             for (int z = -1; z >= -2; z--) {
                 if (s.get(x, 1, z) == null || "air".equals(s.get(x, 1, z))) {
@@ -865,6 +889,10 @@ final class RoadsideSite extends Site {
             o.set(x, 2, 0, x == 5 ? "air" : chance() < 0.4 ? "window_broken[axis=x]" : "window[axis=x]");
         }
         ob.door(5, 1, 0, "fire_door", "north");
+        // and through to the warehouse floor
+        o.set(9, 1, 2, "air");
+        o.set(9, 2, 2, "air");
+        b.door(0, 1, 2, "fire_door", "west");
         o.set(2, 1, 3, "desk[facing=north]");
         o.set(2, 1, 4, "office_chair[facing=north]");
         o.set(7, 1, 6, "filing_cabinet[facing=west]");

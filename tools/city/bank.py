@@ -226,6 +226,27 @@ def check_top(seed):
 
 # ---------------------------------------------------------------- the vault
 
+def ring_shape(t):
+    """The collision of vault frame tile t (row by row from the top as you face the door): the
+    collar round the hole in 4px squares, so you step over the low sill and walk through. Facing
+    the door's north face your left is the block's east (+x), so the drawing runs the other way."""
+    i, j = t % 3, t // 3
+    out = []
+    for y in range(0, 16, 4):
+        run = None
+        for x in range(0, 17, 4):
+            solid = False
+            if x < 16:
+                cx, cy = i * 16 + 14 - x, (2 - j) * 16 + y + 2
+                solid = (cx - 24) ** 2 + (cy - 24) ** 2 >= 20 ** 2
+            if solid and run is None:
+                run = x
+            elif not solid and run is not None:
+                out.append([run, y, 0, x, y + 4, 4])
+                run = None
+    return out
+
+
 def vault_tiles(seed):
     """The vault door three blocks across and its frame: returns (frame, door, back, shut), nine
     tiles each, row by row from the top as you face the door."""
@@ -594,6 +615,7 @@ def blocks():
     for i in range(9):
         add(f"bk_vault_frame_{i}", [[0, 0, 0, 16, 16, 4, {"north": f"bk_vault_frame_{i}", "south": f"bk_vault_frame_{i}", "side": steel}]],
             "Vault Door Frame", "METAL", render="cutout")
+        out[f"bk_vault_frame_{i}"]["shape"] = ring_shape(i)
         add(f"bk_vault_door_{i}", [[0, 0, 11, 16, 16, 16, {"north": f"bk_vault_door_{i}", "south": f"bk_vault_back_{i}", "side": steel}]],
             "Vault Door", "METAL", render="cutout")
         add(f"bk_vault_shut_{i}", None, "Vault Door", "METAL", tex={"north": f"bk_vault_shut_{i}", "side": steel, "up": steel, "down": steel})

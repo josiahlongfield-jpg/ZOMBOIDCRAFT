@@ -315,9 +315,10 @@ final class Courthouse {
         p.set(cx, F1 + 4, z0, "cv_arch_" + arch + "_l[facing=north]");
         p.set(cx - 1, F1 + 4, z0, "cv_arch_" + arch + "_r[facing=north]");
         p.set(cx, F1 + 4, z0 + 1, "cv_exit_red[facing=south]");
-        // the last stand: sandbags across the portico, casings and blood on the flags
+        // the last stand: sandbags across the portico, casings and blood on the flags; the middle bay
+        // before the doors left open to walk through (a gap behind a column is no way in)
         for (int x = px0 + 1; x < px1; x++) {
-            if (rng.nextDouble() < 0.75) {
+            if (x != cx - 1 && x != cx && rng.nextDouble() < 0.75) {
                 p.set(x, F1 + 1, pz + 1, "sandbags[facing=north]");
             }
         }
@@ -922,10 +923,12 @@ final class Courthouse {
                 p.set(x, TOP - 2, z, rng.nextDouble() < 0.1 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
             }
         }
-        // the landing at the stair head; the judge's chambers to the west of it, the jury room east
+        // the landing at the stair head (the stair's top tread left in it); the judge's chambers to
+        // the west of it, the jury room east
         for (int x = 1; x < x1; x++) {
             for (int z = back + 1; z < z1; z++) {
-                if (p.get(x, y, z) != null) {
+                String was = p.get(x, y, z);
+                if (was != null && !was.contains("stairs")) {
                     p.set(x, y, z, x >= hx0 - 1 && x <= hx1 + 1 ? "cv_terrazzo" : "home_floor_carpet_green");
                 }
             }

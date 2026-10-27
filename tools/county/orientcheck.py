@@ -3,7 +3,7 @@
 A rail, banister, balustrade, window or pane is drawn along one axis (its axis=x|z, or for an
 edge piece its facing: a north or south edge runs along x). Laid in a row they must all run along
 the row, so they join up. This lists every one whose row runs the other way: it has a neighbour
-of the same kind beside it across its axis and none along it, so it stands as a stub turned
+of the same kind beside it across its axis and nothing along it, so it stands as a stub turned
 across the line (the bug Josiah found on a church gallery and on windows).
 
 --all checks every block with an axis or facing, not only the linear kinds.
@@ -79,7 +79,11 @@ def check(dump, every, nlist):
         def same(dx, dz):
             xx, zz = x + dx, z + dz
             return 0 <= xx < W and 0 <= zz < D and want[vox[y, zz, xx]] and fa[vox[y, zz, xx]] == fa[i]
-        along = (same(1, 0) or same(-1, 0)) if ax[i] == 0 else (same(0, 1) or same(0, -1))
+        def solid(dx, dz):
+            xx, zz = x + dx, z + dz
+            return 0 <= xx < W and 0 <= zz < D and vox[y, zz, xx] != 0
+        # along its line it meets its own kind, or a post or a wall it butts up to (a corner)
+        along = (solid(1, 0) or solid(-1, 0)) if ax[i] == 0 else (solid(0, 1) or solid(0, -1))
         across = (same(0, 1) or same(0, -1)) if ax[i] == 0 else (same(1, 0) or same(-1, 0))
         if across and not along:
             bad[fam[i]].append((int(x), int(y), int(z), pal[i]))

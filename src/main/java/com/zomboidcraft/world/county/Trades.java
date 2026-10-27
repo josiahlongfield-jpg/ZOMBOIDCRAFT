@@ -330,7 +330,7 @@ final class Trades {
      * The stairs up the back of the hotel and its floors of rooms: the back office west of the
      * stairwell, the stairwell (see {@link Flats#stairwell}), a door from the lobby to its foot.
      */
-    void hotelStairs(int floors, int storey, double lit) {
+    void hotelStairs(int floors, int storey, double lit, String hutWall) {
         int a = w - 7;
         if (a - 1 >= 3) {
             Shops.backRooms(p, rng, w, d, a - 2, "store_shelf_empty", "clothes");
@@ -341,7 +341,7 @@ final class Trades {
                 }
             }
         }
-        Flats.stairwell(p, rng, w, d, floors, storey, lit, (k, y) -> rooms(y, d - 5, storey));
+        Flats.stairwell(p, rng, w, d, floors, storey, lit, hutWall, (k, y) -> rooms(y, d - 5, storey));
         Doors.abandoned(p, rng, w - 2, 1, d - 5, Doors.FLAT, "south", Doors.hinge(rng));
     }
 

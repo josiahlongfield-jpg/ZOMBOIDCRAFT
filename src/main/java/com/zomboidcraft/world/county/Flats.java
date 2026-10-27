@@ -74,15 +74,18 @@ public final class Flats {
      * Wooden porches up the back wall (z = d - 1) of a building w wide with floors storeys of
      * height storey, one at each upper floor's level, and a stair switching back between them
      * from the yard. doors[k] is the x of floor k's back door (k from 1); each porch reaches it.
-     * Takes three blocks of yard behind the wall, and needs w of at least 8.
+     * With toRoof the stair climbs one flight more to a landing level with a flat roof at
+     * floors * storey, through a gap in the parapet onto it. Takes three blocks of yard behind
+     * the wall, and needs w of at least 8.
      */
-    public static void porches(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, int[] doors) {
+    public static void porches(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, int[] doors, boolean toRoof) {
         // the flights run between landings at a (west) and a + 5 (east), in two lanes behind the walk by the doors
         int a = 1 + rng.nextInt(Math.max(1, w - 7));
         int walk = d, inner = d + 1, outer = d + 2;
         boolean worn = rng.nextDouble() < 0.5;
-        int topY = (floors - 1) * storey;
-        for (int k = 0; k < floors - 1; k++) {
+        int last = toRoof ? floors : floors - 1;     // the level the stair climbs to
+        int topY = last * storey;
+        for (int k = 0; k < last; k++) {
             int y = k * storey, py = y + storey;
             // even floors climb east up the outer lane, odd ones west up the inner
             boolean east = k % 2 == 0;
@@ -92,9 +95,17 @@ public final class Flats {
                 p.set(east ? a + 1 + i : a + 4 - i, y + 1 + i, lane, step);
             }
             // the porch at the top, holed where the flight comes up through it
-            int door = doors[k + 1];
+            boolean roof = k + 1 == floors;      // the landing by the roof: the way on is a gap in the parapet
+            int door = roof ? (east ? a + 4 : a + 1) : doors[k + 1];
             int lo = Math.max(0, Math.min(a - 1, door - 1)), hi = Math.min(w - 1, Math.max(a + 6, door + 1));
-            boolean climbs = k + 1 < floors - 1;  // a flight goes on up from it
+            boolean climbs = k + 1 < last;  // a flight goes on up from it
+            if (roof) {
+                for (int x = door; x <= door + 1; x++) {
+                    for (int r = 1; r <= 3; r++) {
+                        p.set(x, py + r, d - 1, "air");
+                    }
+                }
+            }
             for (int x = lo; x <= hi; x++) {
                 p.set(x, py, walk, DECK);
                 boolean back = x >= a - 1 && x <= a + 6;
@@ -125,7 +136,7 @@ public final class Flats {
                 rail(p, rng, z == walk ? hi : a + 6, py + 1, z, "east", worn);
             }
             // a lamp on the wall by the door, now and then still lit
-            if (rng.nextDouble() < 0.5 && door + 1 <= hi) {
+            if (!roof && rng.nextDouble() < 0.5 && door + 1 <= hi) {
                 p.set(door + 1, py + 2, walk, (rng.nextDouble() < 0.15 ? "ext_sconce_lit" : "ext_sconce") + "[facing=south]");
             }
         }
@@ -146,12 +157,17 @@ public final class Flats {
      * so the back door (x = w - 2) opens onto the foot of it. Then a flat on each floor above,
      * its door onto the hall. Build after the shell and the shop; clears what the shop left there.
      */
-    public static void stairwell(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, double lit) {
-        stairwell(p, rng, w, d, floors, storey, lit, (k, y) -> floor(p, rng, w, d - 5, y, 1, lit));
+    public static void stairwell(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, double lit, String hutWall) {
+        stairwell(p, rng, w, d, floors, storey, lit, hutWall, (k, y) -> floor(p, rng, w, d - 5, y, 1, lit));
     }
 
-    /** The same stairwell with something else on the floors above (a hotel's rooms): upstairs builds each. */
-    public static void stairwell(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, double lit, Upstairs upstairs) {
+    /**
+     * The same stairwell with something else on the floors above (a hotel's rooms): upstairs
+     * builds each. With a hutWall the stair climbs on through the flat roof at floors * storey
+     * (build the roof first) into a hut of that wall with a door out onto the roof.
+     */
+    public static void stairwell(Placer p, SplittableRandom rng, int w, int d, int floors, int storey, double lit,
+                                 String hutWall, Upstairs upstairs) {
         int zb = d - 5, hall = d - 4, inner = d - 3, outer = d - 2;
         int a = w - 7;  // the west landing; the flights run a + 1 .. a + 4, the east landing a + 5 = w - 2
         String paper = rng.nextBoolean() ? "home_wall_cream" : rng.nextBoolean() ? "home_wall_sage" : "home_wall_stripe";
@@ -203,7 +219,7 @@ public final class Flats {
                 }
                 p.set(a + 2 + rng.nextInt(2), y + storey - 1, hall, rng.nextDouble() < lit + 0.08 ? "ceiling_light" : "ceiling_light_off");
             }
-            if (k == floors - 1) {
+            if (k == floors - 1 && hutWall == null) {
                 continue;
             }
             // the flight up: even floors climb east up the outer lane, odd ones west up the inner
@@ -217,6 +233,11 @@ public final class Flats {
             p.set(east ? a + 4 : a + 1, up, lane, step);
             p.set(a + 2, up, lane, "air");
             p.set(a + 3, up, lane, "air");
+        }
+        if (hutWall != null) {
+            // the last flight comes up through the roof at its east end (or its west): the doors there
+            boolean east = (floors - 1) % 2 == 0;
+            RoofHut.build(p, rng, a - 1, zb, w - 1, d - 1, floors * storey, hutWall, east ? a + 4 : a, "north");
         }
     }
 

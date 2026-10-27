@@ -57,9 +57,17 @@ public final class Bunkers {
             if (what.length < 3 || !what[0].equals("bunker") || kind != null && !what[2].equals(kind)) {
                 continue;
             }
+            // its blast door is the next "bunker door" after it (other marks may come between)
             Voxels.Mark at = marks.get(i), door = at;
-            if (i + 1 < marks.size() && marks.get(i + 1).what().equals("bunker door")) {
-                door = marks.get(i + 1);
+            for (int j = i + 1; j < marks.size(); j++) {
+                String w = marks.get(j).what();
+                if (w.equals("bunker door")) {
+                    door = marks.get(j);
+                    break;
+                }
+                if (w.startsWith("bunker ")) {
+                    break;
+                }
             }
             out.add(new Found(what[2], what[1], p.x0 + at.x(), p.level + at.y(), p.z0 + at.z(),
                     p.x0 + door.x(), p.level + door.y(), p.z0 + door.z(), p));

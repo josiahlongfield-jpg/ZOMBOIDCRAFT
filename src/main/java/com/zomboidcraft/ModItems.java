@@ -1,5 +1,6 @@
 package com.zomboidcraft;
 
+import com.zomboidcraft.barricade.CrowbarItem;
 import com.zomboidcraft.barricade.HammerItem;
 import com.zomboidcraft.combat.AttachmentItem;
 import com.zomboidcraft.combat.CaseItem;
@@ -79,7 +80,7 @@ public final class ModItems {
     public static final Item HAMMER = weapon("hammer", HammerItem::new);
     public static final Item KITCHEN_KNIFE = weapon("kitchen_knife", MeleeWeaponItem::new);
     public static final Item FRYING_PAN = weapon("frying_pan", MeleeWeaponItem::new);
-    public static final Item CROWBAR = weapon("crowbar", MeleeWeaponItem::new);
+    public static final Item CROWBAR = weapon("crowbar", CrowbarItem::new);
     public static final Item PIPE_WRENCH = weapon("pipe_wrench", MeleeWeaponItem::new);
     public static final Item LEAD_PIPE = weapon("lead_pipe", MeleeWeaponItem::new);
     public static final Item GOLF_CLUB = weapon("golf_club", MeleeWeaponItem::new);

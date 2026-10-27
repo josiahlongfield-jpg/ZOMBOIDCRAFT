@@ -1,4 +1,4 @@
-"""walkcheck.py DUMP [--png OUT.png] [--list N]: can players and zombies walk everywhere inside?
+"""walkcheck.py DUMP [--png OUT.png] [--list N] [--why X Z]: can players and zombies walk everywhere inside?
 
 Reads a preview dump (DUMP.json + DUMP.vox, as SitePreview, CountyPreview and the other
 preview tools write them) and the collision boxes in CitySpecs.java, builds the world's
@@ -138,12 +138,22 @@ class Shapes:
             return [], False
         if name.startswith("minecraft:"):
             return vanilla(name, p), name == "minecraft:ladder"
+        if name == "barricade":
+            # boards over a doorway: a hammer pries them off, zombies knock them loose
+            return [], False
         spec = self.specs.get(name)
         if spec is None:
             return [[0, 0, 0, 16, 16, 16]], False
         kind, decor, boxes = spec
-        if decor or kind in ("DOOR", "TRAPDOOR"):
+        if decor or kind in ("DOOR", "TRAPDOOR") or name.startswith("bunk_blast_"):
+            # a bunker's blast door is a door too: a crowbar pries it (barricade/CrowbarItem)
             return [], name in self.climb
+        if "stairs" in name:
+            # a steel flight's side stringers are a pixel thick: a body fits between them, though
+            # not the half-block lattice this walks on, so they're left out
+            boxes = [b for b in boxes if min(b[3] - b[0], b[5] - b[2]) > 2]
+            # and its bottom plate is what you stand on over an open frame, not a rug to walk over
+            boxes = [b[:4] + [max(b[4], 4)] + b[5:] if b[1] <= 0 and b[4] <= 2 else b for b in boxes]
         if kind in ("FACING",) or (kind == "PLAIN" and False):
             boxes = [rot(b, p.get("facing", "north")) for b in boxes]
         elif kind == "AXIS" and p.get("axis") == "x":
@@ -198,12 +208,16 @@ def main():
     stamp = np.zeros((P, Q, Q, Q), bool)       # [id, sy, sz, sx], the part inside the block
     outside = {}                                 # id -> boxes reaching out of the block (sub-cell ranges)
     climb = np.zeros(P, bool)
+    plate = np.zeros(P, bool)                    # a floor a pixel thick (a grate): walked over on a
+                                                 # floor, stood on where it spans air
     stairish = np.array(["stair" in n for n in pal])
     treeish = np.array([("leaves" in n or "tree_" in n or "_log" in n) for n in pal])
     for i, st in enumerate(pal):
         boxes, cl = sh.of(st)
         climb[i] = cl
         for b in boxes:
+            if b[1] <= 0 and b[4] <= 2 and b[3] - b[0] >= 16 and b[5] - b[2] >= 16:
+                plate[i] = True
             x0, y0, z0, x1, y1, z1 = quant(b)
             if x1 <= x0 or y1 <= y0 or z1 <= z0:
                 continue
@@ -236,6 +250,11 @@ def main():
                                 yy, zz, xx = ys * Q + sy, zs * Q + sz, xs * Q + sx
                                 ok = (yy >= 0) & (yy < h * Q) & (zz >= 0) & (zz < dz * Q) & (xx >= 0) & (xx < dx * Q)
                                 occ[yy[ok], zz[ok], xx[ok]] = True
+            # a plate over air holds a body at the block's foot: its own bottom quarter counts (a
+            # touch high to stand on, but the room under it stays whole)
+            ys, zs, xs = np.nonzero(plate[v][1:] & ~stamp[v[:-1]].any(axis=(3, 4, 5)))
+            for y_, z_, x_ in zip(ys + 1, zs, xs):
+                occ[y_ * Q, z_ * Q:(z_ + 1) * Q, x_ * Q:(x_ + 1) * Q] = True
             n = h * Q
             foot = occ.reshape(n, dz * 2, 2, dx * 2, 2).any(axis=(2, 4))
             del occ
@@ -341,6 +360,16 @@ def main():
 
     walk_ok = bfs(adj_walk)
     any_ok = bfs(adj_all)
+    # --why X Z: every place to stand in that block column, and how it's reached (for debugging a pocket)
+    for k in range(len(args)):
+        if args[k] == "--why":
+            bx, bz = int(args[k + 1]), int(args[k + 2])
+            for hx in (2 * bx, 2 * bx + 1):
+                for hz in (2 * bz, 2 * bz + 1):
+                    for s in nodes.get((hx, hz), []):
+                        i = idx[(hx, hz, int(s))]
+                        print(f"why x {hx / 2:.1f} z {hz / 2:.1f} y {s / Q:.2f}: walk {bool(walk_ok[i])} jump {bool(any_ok[i])}"
+                              f" links {[(keys[j][0] / 2, keys[j][1] / 2, keys[j][2] / Q) for j in undirected[i]]}")
     cov = np.array([bool(covered[(x, z)][list(nodes[(x, z)]).index(s)]) for (x, z, s) in keys])
     ground_s = int(np.median([keys[i][2] for i in seeds])) if seeds else 0
     print(f"{dump}: {N} places to stand, {walk_ok.sum()} walkable from outside, {any_ok.sum()} with jumps; "

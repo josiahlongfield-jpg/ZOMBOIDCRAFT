@@ -2283,6 +2283,8 @@ final class Carrier {
                 p.set(x, y + 2 + j, lane, "air");
                 p.set(x, y + 3 + j, lane, "air");
             }
+            // no deck three over the landing where it leaves, or a head on the first step up hits it
+            p.set(fwd ? xs - 1 : xs + 4, y + 3, lane, "air");
             // the landing it arrives at fills the rest of the trunk's length
             for (int x = fwd ? xs + n : xs - 1; fwd ? x <= xs + 4 : x <= xs + 3 - n; x++) {
                 for (int dz = 0; dz <= 1; dz++) {
@@ -3191,7 +3193,9 @@ final class Carrier {
                     p.set(x, HANGAR, z, "bunk_walkway");
                     p.set(x, HANGAR - 1, z, z % 4 == 0 ? "steel_girder" : "air");
                 }
+                // two steps up off the wharf onto the brow (its walkway tops out a block over the first)
                 p.set(x, 1, quayZ, "steel_stairs[facing=north]");
+                p.set(x, HANGAR, quayZ - 1, "steel_stairs[facing=north]");
             }
             for (int z = 20; z < quayZ; z++) {
                 p.set(bx - 1, HANGAR + 1, z, "vessel_rail[axis=z]");

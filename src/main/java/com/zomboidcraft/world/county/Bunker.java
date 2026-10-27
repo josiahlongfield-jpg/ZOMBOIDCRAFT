@@ -125,6 +125,9 @@ public final class Bunker {
                 }
             }
         }
+        if (state == State.LOOTED) {
+            pried();
+        }
     }
 
     // ------------------------------------------------------------------ the plan
@@ -1102,6 +1105,20 @@ public final class Bunker {
         decon.floor(decon.x0, decon.z0, "debris_chunk" + face(rng.nextInt(4)));
         decon.floor(0, decon.z0, "bunk_scorch" + face(0));
         decon.floor(0, decon.z0 + 2, "home_blood_drag" + face(2));
+    }
+
+    /**
+     * The blast door pried with a crowbar by whoever got here first, swung in on its hinges and left
+     * standing open against the decon room's wall, as barricade/CrowbarItem leaves a sealed one.
+     */
+    private void pried() {
+        for (int y = 1; y <= 3; y++) {
+            p.set(0, y, 0, "air");
+            p.set(1, y, 0, "air");
+            p.set(1, y, 1, "bunk_blast_e" + (y - 1) + "[facing=west]");
+            p.set(1, y, 2, "bunk_blast_w" + (y - 1) + "[facing=west]");
+        }
+        decon.floor(0, decon.z0, "debris_chunk" + face(rng.nextInt(4)));
     }
 
     /** Strip lights under the ceiling of a long room, a hanging lamp in a small one; all dead. */
