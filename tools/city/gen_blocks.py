@@ -365,7 +365,8 @@ def java_line(name, spec, tex_dir):
     nums = ", ".join(f"{v:g}" for v in shape)
     flag = " | ".join(flags) or "0"
     light = spec["flicker"]["light"] if "flicker" in spec else spec.get("light", 0)
-    line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f, {nums});'
+    # an empty shape (walk straight through) passes no boxes at all
+    line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f{", " + nums if nums else ""});'
     if "loot" in spec:
         line += f'\n        loot("{name}", "{spec["loot"]}");'
     return line
