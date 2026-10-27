@@ -226,6 +226,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
+            beltHudTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -578,6 +579,25 @@ public class KitUiTest implements FabricClientGameTest {
      * Drag and drop on the pack page with room to spare: bread dragged onto an empty pocket lands there on release;
      * a rifle dragged onto an empty pocket goes back to the belt (no guns in pockets).
      */
+    /** The HUD belt with gaps in it: every slot shows in one row, empty ones too (peeked with Left Alt). */
+    private static void beltHudTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+            p.getInventory().setItem(0, new ItemStack(ModItems.CROWBAR));
+            p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+            p.getInventory().setItem(5, new ItemStack(ModItems.HUNTING_RIFLE));
+        });
+        ctx.runOnClient(mc -> {
+            mc.gui.setScreen(null);
+            mc.player.getInventory().setSelectedSlot(0);
+        });
+        ctx.getInput().holdKey(InputConstants.KEY_LALT);
+        ctx.waitTicks(20);
+        ctx.takeScreenshot("hud-belt");
+        ctx.getInput().releaseKey(InputConstants.KEY_LALT);
+    }
+
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("clear @a");
         sp.getServer().runOnServer(s -> {
