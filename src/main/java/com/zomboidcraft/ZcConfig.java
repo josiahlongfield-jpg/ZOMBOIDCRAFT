@@ -517,13 +517,17 @@ public final class ZcConfig {
         public boolean shoulderCam = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
-        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
-        public double shoulderBack = 1.25;
-        public double shoulderSide = 0.5;
-        public double shoulderUp = 0.15;
+        /**
+         * How far behind, to the side and above your eyes the shoulder camera sits (blocks), so you're left of the
+         * crosshair with the way ahead open and the camera looking down on you a little. Client side.
+         */
+        public double shoulderBack = 1.4;
+        public double shoulderSide = 0.9;
+        public double shoulderUp = 0.55;
         /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
-        public double shoulderAimBack = 0.7;
-        public double shoulderAimSide = 0.42;
+        public double shoulderAimBack = 0.75;
+        public double shoulderAimSide = 0.7;
+        public double shoulderAimUp = 0.35;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -987,7 +991,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 4;
+    private static final int DEFAULTS = 5;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1037,6 +1041,25 @@ public final class ZcConfig {
             }
             if (c.leverAction.hipSpread == 3.2) {
                 c.leverAction.hipSpread = 1.9;
+            }
+        }
+        if (c.defaultsVersion < 5) {
+            // 2026-10-27 (Josiah): the shoulder camera up and further right, so you're left of the crosshair and the
+            // camera looks down on you a little
+            if (c.look.shoulderBack == 1.25) {
+                c.look.shoulderBack = 1.4;
+            }
+            if (c.look.shoulderSide == 0.5) {
+                c.look.shoulderSide = 0.9;
+            }
+            if (c.look.shoulderUp == 0.15) {
+                c.look.shoulderUp = 0.55;
+            }
+            if (c.look.shoulderAimBack == 0.7) {
+                c.look.shoulderAimBack = 0.75;
+            }
+            if (c.look.shoulderAimSide == 0.42) {
+                c.look.shoulderAimSide = 0.7;
             }
         }
         c.defaultsVersion = DEFAULTS;
