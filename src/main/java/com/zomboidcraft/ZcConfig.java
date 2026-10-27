@@ -302,8 +302,8 @@ public final class ZcConfig {
     }
 
     public static class Zombies {
-        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
-        public double sprinterChance = 0.05;
+        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix): about one in seven. */
+        public double sprinterChance = 0.15;
         /** Speed change for shamblers and sprinters, as a fraction of vanilla zombie speed. */
         public double shamblerSpeed = -0.3;
         public double sprinterSpeed = 0.25;
@@ -1095,7 +1095,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 5;
+    private static final int DEFAULTS = 6;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1170,6 +1170,12 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.42) {
                 c.look.shoulderAimSide = 0.7;
+            }
+        }
+        if (c.defaultsVersion < 6) {
+            // 2026-10-27 (Josiah): more sprinters, one in seven instead of one in twenty
+            if (c.zombies.sprinterChance == 0.05) {
+                c.zombies.sprinterChance = 0.15;
             }
         }
         c.defaultsVersion = DEFAULTS;
