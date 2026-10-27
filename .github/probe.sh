@@ -7,6 +7,11 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== trains3"
+javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -Ei 'walk|animation'
+javap -cp "$CP" -p net.minecraft.world.entity.WalkAnimationState 2>&1
+javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E ' xo;| xOld;|setOldPos|oldPosition'
+javap -cp "$CP" -p -c net.minecraft.world.entity.LivingEntity 2>&1 | grep -A40 'void calculateEntityAnimation' | head -50
 echo "===== trains2"
 javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E ' collide\(| move\(|horizontalCollision|onGround|noPhysics|fallDistance|resetFallDistance'
 javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -E 'yBodyRot|yHeadRot|setYHeadRot|setYBodyRot'

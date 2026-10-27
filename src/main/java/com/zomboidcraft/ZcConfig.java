@@ -581,13 +581,17 @@ public final class ZcConfig {
         public boolean shoulderCam = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
-        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
-        public double shoulderBack = 1.25;
-        public double shoulderSide = 0.5;
-        public double shoulderUp = 0.15;
+        /**
+         * How far behind, to the side and above your eyes the shoulder camera sits (blocks), so you're left of the
+         * crosshair with the way ahead open and the camera looking down on you a little. Client side.
+         */
+        public double shoulderBack = 1.4;
+        public double shoulderSide = 0.9;
+        public double shoulderUp = 0.55;
         /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
-        public double shoulderAimBack = 0.7;
-        public double shoulderAimSide = 0.42;
+        public double shoulderAimBack = 0.75;
+        public double shoulderAimSide = 0.7;
+        public double shoulderAimUp = 0.35;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -788,7 +792,7 @@ public final class ZcConfig {
         static GunStats pistol() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.5;
+            s.hipSpread = 1.5;
             s.aimSpread = 0.7;
             s.recoil = 0.9;
             s.shotNoise = 60.0;
@@ -843,7 +847,7 @@ public final class ZcConfig {
             GunStats s = new GunStats();
             s.damage = 22.0;
             s.headshotMultiplier = 3.0;
-            s.hipSpread = 3.2;
+            s.hipSpread = 1.9;
             s.aimSpread = 0.3;
             s.recoil = 1.9;
             s.shotNoise = 130.0;
@@ -873,7 +877,7 @@ public final class ZcConfig {
         static GunStats smg() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.2;
+            s.hipSpread = 1.3;
             s.aimSpread = 0.6;
             s.recoil = 0.55;
             s.shotNoise = 75.0;
@@ -921,7 +925,7 @@ public final class ZcConfig {
         CrossbowStats() {
             damage = 30.0;
             headshotMultiplier = 3.0;
-            hipSpread = 3.0;
+            hipSpread = 1.8;
             aimSpread = 0.2;
             recoil = 0.4;
             shotNoise = 8.0;
@@ -1000,6 +1004,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            hipSpread = 1.8;        // Josiah 10-27: hip rings 40% tighter at rest
             suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
@@ -1022,8 +1027,8 @@ public final class ZcConfig {
         /** Field of view looking through the 4x scope, as a share of normal. */
         public double scopeZoom = 0.25;
         /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
-        public double suppressedNoise = 0.3;
-        public double suppressedVolume = 1.0;
+        public double suppressedNoise = 0.1;
+        public double suppressedVolume = 0.7;
         /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
@@ -1090,7 +1095,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 3;
+    private static final int DEFAULTS = 5;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1121,6 +1126,50 @@ public final class ZcConfig {
             // 2026-10-27: with the baked far-off bodies, fewer zombies need the costly middle detail
             if (c.performance.midDetailZombies == 32) {
                 c.performance.midDetailZombies = 20;
+            }
+        }
+        if (c.defaultsVersion < 4) {
+            // 2026-10-27 (Josiah): suppressors for sneaking (zombies hear a third as far, 30% quieter), and the hip
+            // rings of the assault rifle, SMG, crossbow, M9 and lever action 40% tighter
+            if (c.guns.suppressedNoise == 0.3) {
+                c.guns.suppressedNoise = 0.1;
+            }
+            if (c.guns.suppressedVolume == 1.0) {
+                c.guns.suppressedVolume = 0.7;
+            }
+            if (c.guns.hipSpread == 3.0) {
+                c.guns.hipSpread = 1.8;
+            }
+            if (c.smg.hipSpread == 2.2) {
+                c.smg.hipSpread = 1.3;
+            }
+            if (c.crossbow.hipSpread == 3.0) {
+                c.crossbow.hipSpread = 1.8;
+            }
+            if (c.pistol.hipSpread == 2.5) {
+                c.pistol.hipSpread = 1.5;
+            }
+            if (c.leverAction.hipSpread == 3.2) {
+                c.leverAction.hipSpread = 1.9;
+            }
+        }
+        if (c.defaultsVersion < 5) {
+            // 2026-10-27 (Josiah): the shoulder camera up and further right, so you're left of the crosshair and the
+            // camera looks down on you a little
+            if (c.look.shoulderBack == 1.25) {
+                c.look.shoulderBack = 1.4;
+            }
+            if (c.look.shoulderSide == 0.5) {
+                c.look.shoulderSide = 0.9;
+            }
+            if (c.look.shoulderUp == 0.15) {
+                c.look.shoulderUp = 0.55;
+            }
+            if (c.look.shoulderAimBack == 0.7) {
+                c.look.shoulderAimBack = 0.75;
+            }
+            if (c.look.shoulderAimSide == 0.42) {
+                c.look.shoulderAimSide = 0.7;
             }
         }
         c.defaultsVersion = DEFAULTS;
