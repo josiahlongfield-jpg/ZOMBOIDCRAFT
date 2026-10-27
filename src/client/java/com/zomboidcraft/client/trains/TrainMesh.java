@@ -93,7 +93,8 @@ final class TrainMesh {
         Mat skin = subway ? STEEL : GREEN, clean = subway ? STEEL_CLEAN : GREEN_CLEAN, band = subway ? STRIPE : CREAM;
         Mat seat = subway ? SEAT_ORANGE : SEAT_BLUE;
         double w = TrainCar.HALF_WIDTH, t = TrainCar.WALL, h = TrainCar.HALF, ceil = TrainCar.CEILING;
-        double winLow = 1.1, winHigh = 2.3;
+        // big windows: from just above the bench backs nearly to the ceiling
+        double winLow = 1.0, winHigh = 2.72;
 
         // ---- the shell
         light = OUTSIDE;
@@ -121,24 +122,24 @@ final class TrainMesh {
                 boolean cab = front && zb > TrainCar.CAB;
                 sideBox(side, x0, x1, 0, winLow, za, zb, skin, WALL_IN);
                 sideBox(side, x0, x1, winHigh, ceil, za, zb, band, WALL_IN);
-                // window pillars about every two blocks, glass between
-                double len = zb - za;
-                int panes = Math.max(1, (int) Math.round(len / 2));
+                // slim window pillars about every three blocks, wide panes between
+                double len = zb - za, pillar = 0.08;
+                int panes = Math.max(1, (int) Math.round(len / 3));
                 double step = len / panes;
                 for (int i = 0; i <= panes; i++) {
                     double pz = za + step * i;
-                    double p0 = Math.max(za, pz - 0.12), p1 = Math.min(zb, pz + 0.12);
+                    double p0 = Math.max(za, pz - pillar), p1 = Math.min(zb, pz + pillar);
                     sideBox(side, x0, x1, winLow, winHigh, p0, p1, clean, WALL_IN);
                 }
                 for (int i = 0; i < panes; i++) {
-                    double g0 = za + step * i + 0.12, g1 = za + step * (i + 1) - 0.12;
+                    double g0 = za + step * i + pillar, g1 = za + step * (i + 1) - pillar;
                     if (g1 > g0) {
                         glassX((x0 + x1) / 2, winLow, winHigh, g0, g1);
                     }
                 }
                 // inside: ads over the windows, benches under them
                 light = INSIDE;
-                if (!cab) {
+                if (!cab && ceil - winHigh > 0.4) {
                     double ix = side > 0 ? x0 : x1;
                     panel(side, ix, winHigh + 0.05, ceil - 0.05, za + 0.3, zb - 0.3, ADS);
                 }

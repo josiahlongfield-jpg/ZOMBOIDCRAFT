@@ -86,7 +86,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
             state.at[car * 4 + 3] = p.yawDegrees();
             int lit = FULL;
             if (level != null) {
-                BlockPos pos = BlockPos.containing(p.x(), p.y() + 2.2, p.z());
+                // the world's light just over the roof (inside, the car counts as indoors)
+                BlockPos pos = BlockPos.containing(p.x(), p.y() + TrainCar.ROOF + 0.6, p.z());
                 lit = level.getBrightness(LightLayer.BLOCK, pos) << 4 | level.getBrightness(LightLayer.SKY, pos) << 20;
             }
             state.light[car] = lit;
@@ -94,7 +95,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
             long h = (time / 3 + car * 7919L + train.getId() * 31L) * 0x9E3779B97F4A7C15L;
             boolean flicker = ((h >>> 40) & 0xFF) < 6;
             int block = flicker ? 3 : 12;
-            int sky = (lit >> 20) & 0xF;
+            // little sky gets in: inside it's indoors (shader packs keep rain and wet off what's lit like this)
+            int sky = Math.min((lit >> 20) & 0xF, com.zomboidcraft.world.trains.TrainPhysics.INDOOR_SKY);
             state.inside[car] = Math.max(block, (lit >> 4) & 0xF) << 4 | sky << 20;
         }
         float d = train.doorsO + (train.doors - train.doorsO) * partialTick;
