@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_court": "zomboidcraft:block/city/sc_court",
+    "sc_court_c_b_12": "zomboidcraft:block/city/sc_court_c_b_12",
+    "particle": "zomboidcraft:block/city/sc_court"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_court",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_court",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_court",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_court",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_court_c_b_12",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_court",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

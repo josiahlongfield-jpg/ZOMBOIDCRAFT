@@ -118,6 +118,7 @@ final class Kit {
         }
     }
 
+    private static final String[] DIRS = {"north", "east", "south", "west"};
     final BlockSink out;
     final SplittableRandom rng;
     final int w, d;
@@ -1166,42 +1167,101 @@ final class Kit {
         };
     }
 
-    /** A swing set, a slide and a climbing frame on bark chips. */
+    /**
+     * A playground on bark chips, seven by seven: the swing set along the north side (a swing
+     * snapped, one wound round the bar, one gone), the slide down the east side, the merry-go-round,
+     * the spring rider, the seesaw, the monkey bars along the south edge.
+     */
     void playground(int x, int z) {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                out.set(x + i, 0, z + j, rng.nextDouble() < 0.7 ? "minecraft:coarse_dirt" : "minecraft:rooted_dirt");
+                String edge = j == 0 ? "north" : j == 6 ? "south" : i == 0 ? "west" : i == 6 ? "east" : null;
+                out.set(x + i, 0, z + j, edge != null ? "sc_chips_edge[facing=" + edge + "]" : rng.nextDouble() < 0.3 ? "sc_chips_b" : "sc_chips");
+                for (int y = 1; y <= 3; y++) {
+                    out.set(x + i, y, z + j, "air");
+                }
             }
         }
+        // the swing set: the A-frames at each end, four bays under the bar
         for (int y = 1; y <= 3; y++) {
-            out.set(x, y, z + 1, "minecraft:iron_bars");
-            out.set(x + 4, y, z + 1, "minecraft:iron_bars");
+            out.set(x, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
+            out.set(x + 5, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
         }
-        for (int i = 0; i <= 4; i++) {
-            out.set(x + i, 4, z + 1, "minecraft:iron_chain[axis=x]");
-        }
-        for (int i : new int[] {1, 3}) {
-            out.set(x + i, 3, z + 1, "minecraft:iron_chain[axis=y]");
-            if (rng.nextDouble() < 0.7) {
-                out.set(x + i, 2, z + 1, "minecraft:iron_chain[axis=y]");
-                out.set(x + i, 1, z + 1, "minecraft:dark_oak_pressure_plate");
+        for (int i = 1; i <= 4; i++) {
+            double r = rng.nextDouble();
+            if (r < 0.6) {
+                out.set(x + i, 1, z + 1, "sc_swing_seat[axis=x]");
+                out.set(x + i, 2, z + 1, "sc_swing_chain[axis=x]");
+                out.set(x + i, 3, z + 1, "sc_swing_top[axis=x]");
+            } else if (r < 0.75) {
+                out.set(x + i, 1, z + 1, "sc_swing_snapped[axis=x]");
+                out.set(x + i, 2, z + 1, "sc_swing_chain[axis=x]");
+                out.set(x + i, 3, z + 1, "sc_swing_top[axis=x]");
+            } else if (r < 0.9) {
+                out.set(x + i, 3, z + 1, "sc_swing_wrapped[axis=x]");
+            } else {
+                out.set(x + i, 3, z + 1, "sc_swing_bar[axis=x]");
             }
         }
-        // the slide: a ladder up to a platform and a chute down
-        out.set(x + 5, 1, z + 4, "minecraft:iron_bars");
-        out.set(x + 5, 2, z + 4, "minecraft:iron_bars");
-        out.set(x + 5, 3, z + 4, "minecraft:red_concrete");
-        out.set(x + 5, 3, z + 5, "minecraft:smooth_quartz_slab[type=bottom]");
-        out.set(x + 5, 2, z + 6, "minecraft:smooth_quartz_stairs[facing=north]");
-        out.set(x + 5, 1, z + 6, "minecraft:smooth_quartz_slab[type=bottom]");
-        // monkey bars
+        // the slide: up the ladder at the north end, down the chute to the south
+        out.set(x + 6, 1, z + 1, "sc_slide_ladder[facing=south]");
+        out.set(x + 6, 2, z + 1, "sc_slide_ladder[facing=south]");
+        out.set(x + 6, 3, z + 1, "sc_slide_ladder_top[facing=south]");
+        out.set(x + 6, 1, z + 2, "sc_slide_post[facing=south]");
+        out.set(x + 6, 2, z + 2, "sc_slide_post[facing=south]");
+        out.set(x + 6, 3, z + 2, "sc_slide_deck[facing=south]");
+        out.set(x + 6, 2, z + 3, "sc_slide_hi[facing=south]");
+        out.set(x + 6, 1, z + 4, "sc_slide_lo[facing=south]");
+        out.set(x + 6, 1, z + 5, "sc_slide_out[facing=south]");
+        // the merry-go-round, the spring rider, the seesaw
         for (int i = 0; i < 4; i++) {
-            out.set(x + i, 3, z + 5, "minecraft:iron_bars");
+            out.set(x + 1 + i % 2, 1, z + 3 + i / 2, "sc_merry_" + i);
         }
-        out.set(x, 1, z + 5, "minecraft:iron_bars");
-        out.set(x, 2, z + 5, "minecraft:iron_bars");
-        out.set(x + 3, 1, z + 5, "minecraft:iron_bars");
-        out.set(x + 3, 2, z + 5, "minecraft:iron_bars");
+        out.set(x + 4, 1, z + 3, "sc_horse[facing=" + (rng.nextBoolean() ? "west" : "north") + "]");
+        for (int t = 0; t < 3; t++) {
+            out.set(x + 4, 1, z + 4 + t, "sc_seesaw_" + (rng.nextBoolean() ? t : 2 - t) + "[axis=z]");
+        }
+        // the monkey bars along the south edge
+        for (int i = 0; i <= 3; i++) {
+            boolean end = i == 0 || i == 3;
+            if (end) {
+                out.set(x + i, 1, z + 6, "sc_monkey_ladder[axis=x]");
+                out.set(x + i, 2, z + 6, "sc_monkey_ladder[axis=x]");
+            }
+            out.set(x + i, 3, z + 6, (end ? "sc_monkey_end" : "sc_monkey_bars") + "[axis=x]");
+        }
+        // what was left: a bucket, a backpack, the litter
+        if (rng.nextDouble() < 0.6) {
+            out.set(x + 3, 1, z + 3, "sc_bucket[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
+        if (rng.nextDouble() < 0.4) {
+            out.set(x + 5, 1, z + 5, "sc_pack_" + new String[] {"red", "blue", "green"}[rng.nextInt(3)] + "[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
+        if (rng.nextDouble() < 0.5) {
+            out.set(x + 1 + rng.nextInt(4), 1, z + 2, rng.nextBoolean() ? "paper" : "blood_splat");
+        }
+    }
+
+    /** A sandbox, its timber edge round it, a bucket and a spade left in it. */
+    void sandbox(int x, int z, int w, int d) {
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < d; j++) {
+                boolean n = j == 0, s = j == d - 1, west = i == 0, e = i == w - 1;
+                String b;
+                if ((n || s) && (west || e)) {
+                    b = "sc_sand_corner[facing=" + (n ? (west ? "north" : "east") : (e ? "south" : "west")) + "]";
+                } else if (n || s || west || e) {
+                    b = "sc_sand_edge[facing=" + (n ? "north" : s ? "south" : west ? "west" : "east") + "]";
+                } else {
+                    b = "sc_sand";
+                }
+                out.set(x + i, 0, z + j, b);
+                out.set(x + i, 1, z + j, "air");
+            }
+        }
+        if (w > 2 && d > 2) {
+            out.set(x + 1 + rng.nextInt(w - 2), 1, z + 1 + rng.nextInt(d - 2), "sc_bucket[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
     }
 
     /** A little white gazebo with a pyramid roof. */
@@ -1229,7 +1289,7 @@ final class Kit {
         out.set(x + 2, 6, z + 2, "minecraft:lightning_rod");
     }
 
-    /** A cracked basketball court with two hoops. */
+    /** A cracked basketball court with two hoops on goosenecks, the chain nets rusted, one gone. */
     void court(int x, int z) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
@@ -1238,11 +1298,19 @@ final class Kit {
             }
         }
         for (int i : new int[] {0, 8}) {
-            out.set(x + i, 1, z + 3, "streetlight_pole");
-            out.set(x + i, 2, z + 3, "streetlight_pole");
-            out.set(x + i, 3, z + 3, "streetlight_pole");
-            out.set(x + i, 4, z + 3, "minecraft:white_concrete");
-            out.set(x + i + (i == 0 ? 1 : -1), 3, z + 3, "minecraft:iron_bars");
+            String f = i == 0 ? "east" : "west";
+            int bx = x + (i == 0 ? 1 : 7);
+            for (int y = 1; y <= 3; y++) {
+                out.set(x + i, y, z + 3, "sc_hoop_post");
+            }
+            out.set(x + i, 4, z + 3, "sc_hoop_neck[facing=" + f + "]");
+            out.set(bx, 4, z + 3, "sc_hoop_board[facing=" + f + "]");
+            if (rng.nextDouble() < 0.7) {
+                out.set(bx, 3, z + 3, "sc_hoop_net[facing=" + f + "]");
+            }
+        }
+        if (rng.nextDouble() < 0.5) {
+            out.set(x + 2 + rng.nextInt(5), 1, z + 1 + rng.nextInt(5), rng.nextBoolean() ? "sc_ball_orange" : "sc_ball_red");
         }
     }
 

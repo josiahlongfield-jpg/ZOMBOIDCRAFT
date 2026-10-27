@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_rope": "zomboidcraft:block/city/sc_rope",
+    "particle": "zomboidcraft:block/city/sc_rope"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_rope"
+        },
+        "south": {
+          "texture": "#sc_rope"
+        },
+        "east": {
+          "texture": "#sc_rope"
+        },
+        "west": {
+          "texture": "#sc_rope"
+        },
+        "up": {
+          "texture": "#sc_rope",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_rope",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

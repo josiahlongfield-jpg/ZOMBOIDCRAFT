@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "sc_lunchbox": "zomboidcraft:block/city/sc_lunchbox",
+    "particle": "zomboidcraft:block/city/sc_lunchbox"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        6
+      ],
+      "to": [
+        11,
+        4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_lunchbox"
+        },
+        "south": {
+          "texture": "#sc_lunchbox"
+        },
+        "east": {
+          "texture": "#sc_lunchbox"
+        },
+        "west": {
+          "texture": "#sc_lunchbox"
+        },
+        "up": {
+          "texture": "#sc_lunchbox"
+        },
+        "down": {
+          "texture": "#sc_lunchbox",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        4,
+        7.6
+      ],
+      "to": [
+        9,
+        5,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

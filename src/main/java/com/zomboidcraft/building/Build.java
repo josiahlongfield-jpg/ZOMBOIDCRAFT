@@ -44,12 +44,29 @@ public enum Build {
             tool("Shovel", ModItems.SHOVEL), need("Empty sandbags", ModItems.EMPTY_SANDBAG, 4),
             need("Dirt, sand, gravel or rubble", s -> s.is(Items.DIRT) || s.is(Items.COARSE_DIRT) || s.is(Items.SAND)
                     || s.is(Items.GRAVEL) || s.is(Items.ROOTED_DIRT) || s.is(ModItems.RUBBLE), 4, Items.DIRT)),
+    ALARM_CLOCK("Alarm clock decoy", Where.GROUND, null, 0, 20, 0, 0,
+            "Set it down in a street and walk away. When it rings, everything in earshot goes to it instead of you. "
+                    + "Right-click the clock first to choose when (10 seconds to 5 minutes).",
+            null, need("Alarm clock", s -> s.getItem() instanceof AlarmClockItem, 1, ModItems.ALARM_CLOCK), need("AA battery", ModItems.AA_BATTERY, 1)),
+    CAR_ALARM("Car alarm decoy", Where.CAR, null, 0, 60, 0, 0,
+            "Wire an alarm clock into a parked car's alarm. When the clock's time is up the car goes off, far louder and longer "
+                    + "than the clock. Its battery has to be good. Got its key? Hold it and press Interact (G) up to 40 blocks off.",
+            null, need("Alarm clock", s -> s.getItem() instanceof AlarmClockItem, 1, ModItems.ALARM_CLOCK)),
+    PLANTER("Planter box", Where.GROUND, Skill.CARPENTRY, 0, 120, 10, 14,
+            "A raised bed of planks full of earth. Plant a seed packet in it and keep it wet (rain, or pour a bottle of water on); "
+                    + "it's ripe in about four days. Up on a roof it's out of reach.",
+            tool("Hammer", ModItems.HAMMER), need("Planks", s -> s.is(ItemTags.PLANKS), 4, Items.OAK_PLANKS), need("Nails", ModItems.NAILS, 4),
+            need("Dirt", s -> s.is(Items.DIRT) || s.is(Items.COARSE_DIRT) || s.is(Items.ROOTED_DIRT), 4, Items.DIRT)),
+    SPIKED_WALL("Spiked log wall", Where.GROUND, Skill.CARPENTRY, 1, 160, 14, 18,
+            "Logs sharpened to points and driven in side by side, too tall to climb. Zombies pushing on it or beating at it "
+                    + "tear themselves on the spikes.",
+            tool("Axe", s -> s.is(ModItems.FIRE_AXE) || s.is(ItemTags.AXES), ModItems.FIRE_AXE), need("Logs", s -> s.is(ItemTags.LOGS), 3, Items.OAK_LOG)),
     WELD_SHEET("Metal sheet from scrap", Where.MAKE, Skill.METALWORKING, 1, 120, 10, 10,
             "Cut and weld scrap into a flat sheet you can put over a window.",
             tool("Propane torch", ModItems.PROPANE_TORCH), need("Scrap metal", ModItems.SCRAP_METAL, 4));
 
-    /** Where a build goes: on a window or doorway, on open ground, or into your pack. */
-    public enum Where { OPENING, GROUND, MAKE }
+    /** Where a build goes: on a window or doorway, on open ground, on a parked car, or into your pack. */
+    public enum Where { OPENING, GROUND, CAR, MAKE }
 
     /** Something a build uses up (or, for the tool, only needs on you). */
     public record Need(String label, Predicate<ItemStack> fits, int count, Item icon) {
@@ -68,6 +85,8 @@ public enum Build {
 
     public final String label;
     public final Where where;
+    /** The skill it trains and goes quicker with; null for something anyone does as quick (setting down a clock). */
+    @Nullable
     public final Skill skill;
     public final int level;
     /** Ticks at level 0. */
@@ -79,7 +98,7 @@ public enum Build {
     public final Need tool;
     public final List<Need> needs;
 
-    Build(String label, Where where, Skill skill, int level, int ticks, int xp, double noise, String about, @Nullable Need tool, Need... needs) {
+    Build(String label, Where where, @Nullable Skill skill, int level, int ticks, int xp, double noise, String about, @Nullable Need tool, Need... needs) {
         this.label = label;
         this.where = where;
         this.skill = skill;
@@ -96,6 +115,10 @@ public enum Build {
         return new Need(label, s -> s.is(item), 1, item);
     }
 
+    private static Need tool(String label, Predicate<ItemStack> fits, Item icon) {
+        return new Need(label, fits, 1, icon);
+    }
+
     private static Need need(String label, Item item, int count) {
         return new Need(label, s -> s.is(item), count, item);
     }
@@ -104,17 +127,22 @@ public enum Build {
         return new Need(label, fits, count, icon);
     }
 
+    /** The player's level in its skill, 0 when it has none. */
+    public int skillLevel(Player player) {
+        return skill == null ? 0 : Skills.level(player, skill);
+    }
+
     /** How long it takes this player: a tenth quicker per level of its skill. */
     public int ticksFor(Player player) {
         double m = com.zomboidcraft.ZcConfig.get().building.timeMultiplier;
-        return Math.max(10, (int) Math.round(ticks * m / (1 + 0.1 * Skills.level(player, skill))));
+        return Math.max(10, (int) Math.round(ticks * m / (1 + 0.1 * skillLevel(player))));
     }
 
     /** What's missing, as a sentence, or null when it can be built (where aside). */
     @Nullable
     public String missing(Player player) {
         if (player.hasInfiniteMaterials()) return null;
-        if (Skills.level(player, skill) < level) return "Needs " + skill.displayName() + " " + level + ".";
+        if (skill != null && Skills.level(player, skill) < level) return "Needs " + skill.displayName() + " " + level + ".";
         if (tool != null && Materials.count(player, tool.fits()) < 1) return "Needs a " + tool.label().toLowerCase(java.util.Locale.ROOT) + ".";
         for (Need n : needs) {
             if (Materials.count(player, n.fits()) < n.count()) return "Needs " + n.count() + " " + n.label().toLowerCase(java.util.Locale.ROOT) + ".";
@@ -147,6 +175,9 @@ public enum Build {
             case MAKE -> {
                 return Spot.no("");
             }
+            case CAR -> {
+                return Spot.no("Look at a parked car.");
+            }
             case OPENING -> {
                 if (this == BOARD && there.is(ModBlocks.BARRICADE)) {
                     int planks = there.getValue(BarricadeBlock.PLANKS);
@@ -174,7 +205,11 @@ public enum Build {
                 BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
                 if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
                 if (!level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)) return Spot.no("Needs solid ground under it.");
+                if (this == SPIKED_WALL && !level.getBlockState(pos.above()).canBeReplaced()) return Spot.no("Not enough room above.");
                 BlockState state = switch (this) {
+                    case ALARM_CLOCK -> BuildBlocks.ALARM_CLOCK.defaultBlockState().setValue(BuildBlocks.AlarmClock.FACING, looking.getOpposite());
+                    case PLANTER -> BuildBlocks.PLANTER.defaultBlockState();
+                    case SPIKED_WALL -> BuildBlocks.SPIKED_WALL.defaultBlockState().setValue(BuildBlocks.SpikedWall.FACING, looking);
                     case TRIPWIRE -> BuildBlocks.TRIPWIRE.defaultBlockState().setValue(BuildBlocks.Tripwire.AXIS,
                             looking.getClockWise().getAxis());
                     case RAIN_BARREL -> BuildBlocks.RAIN_BARREL.defaultBlockState();

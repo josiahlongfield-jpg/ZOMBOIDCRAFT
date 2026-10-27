@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_locker_lo_a": "zomboidcraft:block/city/sc_locker_lo_a",
+    "sc_locker_side_a": "zomboidcraft:block/city/sc_locker_side_a",
+    "particle": "zomboidcraft:block/city/sc_locker_lo_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_locker_lo_a"
+        },
+        "south": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

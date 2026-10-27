@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class CarNet {
     /** Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights. */
-    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4;
+    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5;
 
     /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
@@ -76,6 +76,10 @@ public final class CarNet {
         ServerPlayNetworking.registerGlobalReceiver(Use.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
+                if (payload.car() == FOB) {
+                    panicButton(player);
+                    return;
+                }
                 if (payload.car() < 0) {
                     if (player.getVehicle() instanceof CarProp car) {
                         switch (payload.car()) {
@@ -93,6 +97,41 @@ public final class CarNet {
                 }
             });
         });
+    }
+
+    /**
+     * The car key's panic button, pressed with the interact key while holding it and not at a car: from up to
+     * keyFobRange blocks its car's alarm whoops (a decoy to pull zombies off you), and pressed again it stops.
+     */
+    private static void panicButton(ServerPlayer player) {
+        net.minecraft.world.item.ItemStack key = player.getMainHandItem();
+        if (!key.is(com.zomboidcraft.ModItems.CAR_KEY) || player.isSpectator()) {
+            return;
+        }
+        net.minecraft.world.item.component.CustomData data = key.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        String id = data == null ? "" : data.copyTag().getStringOr("car", "");
+        net.minecraft.server.level.ServerLevel level = (net.minecraft.server.level.ServerLevel) player.level();
+        level.playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK.value(),
+                net.minecraft.sounds.SoundSource.PLAYERS, 0.25f, 2f);
+        net.minecraft.world.entity.Entity found = null;
+        try {
+            found = id.isEmpty() ? null : level.getEntity(java.util.UUID.fromString(id));
+        } catch (IllegalArgumentException ignored) {
+            // not a key cut for a car
+        }
+        double range = com.zomboidcraft.ZcConfig.get().building.keyFobRange;
+        String said;
+        if (!(found instanceof CarProp car) || car.distanceToSqr(player) > range * range) {
+            said = "Nothing. The car must be out of range.";
+        } else if (car.alarming()) {
+            car.stopAlarm();
+            said = "Alarm off.";
+        } else if (car.tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20)) {
+            said = "Panic button: the car's alarm is going off.";
+        } else {
+            said = car.isVehicle() ? "Nothing. Someone's in it." : "Nothing. Its battery must be dead.";
+        }
+        player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(said).withStyle(net.minecraft.ChatFormatting.GRAY));
     }
 
     private CarNet() {

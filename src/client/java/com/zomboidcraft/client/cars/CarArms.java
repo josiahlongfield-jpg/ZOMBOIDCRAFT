@@ -62,6 +62,35 @@ final class CarArms {
         }
     }
 
+    /**
+     * The pilot's arms on an aircraft's controls: each hand at its grip, the palm toward a point (the grip's
+     * far side), shoulders from the seat's eye as for a driver. Either hand may be null.
+     */
+    static void grips(PoseStack pose, SubmitNodeCollector out, int light, float[] eye, Vector3f leftHand, Vector3f leftPalm,
+                      Vector3f rightHand, Vector3f rightPalm) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null) {
+            return;
+        }
+        EntityRenderer<?, ?> renderer = mc.getEntityRenderDispatcher().getRenderer(player);
+        if (!(renderer instanceof AvatarRenderer<?> avatar)) {
+            return;
+        }
+        PlayerSkin skin = player.getSkin();
+        PlayerModel model = avatar.getModel();
+        Identifier texture = skin.body().texturePath();
+        boolean slim = skin.model() == PlayerModelType.SLIM;
+        if (leftHand != null) {
+            arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand,
+                    new Vector3f(eye[0] + 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), leftPalm);
+        }
+        if (rightHand != null) {
+            arm(pose, out, light, texture, model.rightArm, model.rightSleeve, slim ? -0.5f : -1f, rightHand,
+                    new Vector3f(eye[0] - 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), rightPalm);
+        }
+    }
+
     /** A point on the rim, angle round from the top toward the driver's left. */
     private static Vector3f rim(Vector3f c, Vector3f up, Vector3f left, float r, float angle) {
         return new Vector3f(c).add(new Vector3f(up).mul((float) Math.cos(angle) * r)).add(new Vector3f(left).mul((float) Math.sin(angle) * r));

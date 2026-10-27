@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_ball_orange": "zomboidcraft:block/city/sc_ball_orange",
+    "particle": "zomboidcraft:block/city/sc_ball_orange"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_ball_orange"
+        },
+        "south": {
+          "texture": "#sc_ball_orange"
+        },
+        "east": {
+          "texture": "#sc_ball_orange"
+        },
+        "west": {
+          "texture": "#sc_ball_orange"
+        },
+        "up": {
+          "texture": "#sc_ball_orange"
+        },
+        "down": {
+          "texture": "#sc_ball_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0.5,
+        4.6
+      ],
+      "to": [
+        10.5,
+        5.5,
+        11.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_ball_orange"
+        },
+        "south": {
+          "texture": "#sc_ball_orange"
+        },
+        "east": {
+          "texture": "#sc_ball_orange"
+        },
+        "west": {
+          "texture": "#sc_ball_orange"
+        },
+        "up": {
+          "texture": "#sc_ball_orange"
+        },
+        "down": {
+          "texture": "#sc_ball_orange"
+        }
+      }
+    }
+  ]
+}

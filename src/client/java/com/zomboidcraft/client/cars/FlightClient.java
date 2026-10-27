@@ -111,6 +111,12 @@ public final class FlightClient {
 
     /** The pilot's controls this tick. */
     private static Flight.Controls controls(CarProp car) {
+        Flight.Controls c = input(car);
+        AirControls.input(car, c);
+        return c;
+    }
+
+    private static Flight.Controls input(CarProp car) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.gui.screen() != null) {
@@ -189,11 +195,12 @@ public final class FlightClient {
             return false;
         }
         Quaternionf body = view(car, partialTick);
+        Flight f = car.flight();
         if (!camera.isDetached()) {
+            shake(f, body);
             CameraRig.fromBody(body, out.rotation);
             return true;
         }
-        Flight f = car.flight();
         Vector3f dir;
         if (f.kind == Flight.Kind.JET && pilot(Minecraft.getInstance().player, car) && !freeLook()) {
             dir = new Vector3f(aim);
@@ -209,6 +216,29 @@ public final class FlightClient {
         Vec3 centre = car.getPosition(partialTick).add(0, car.pivot(), 0);
         out.position = centre.add(-dir.x * dist, -dir.y * dist + 3.5, -dir.z * dist);
         return true;
+    }
+
+    /**
+     * The seat's shake, in degrees as felt by the head: the airframe buffeting under hard g or on the edge
+     * of a stall, the bumps of the runway at speed, and a helicopter's constant rotor beat.
+     */
+    private static void shake(Flight f, Quaternionf body) {
+        float speed = (float) f.vel.length();
+        float shake;
+        if (f.kind == Flight.Kind.HELI) {
+            shake = f.rpm * (0.06f + Math.min(speed, 60) / 60 * 0.18f);
+        } else {
+            shake = Math.max(0, f.load - 4.5f) * 0.22f + (f.stalled ? 0.9f : 0) + (f.aoa > Math.toRadians(13) ? 0.4f : 0)
+                    + (f.grounded ? Math.min(speed, 80) / 80 * 0.35f : 0) + (f.throttle > 0.85f && f.rpm > 0.9f ? 0.08f : 0);
+        }
+        if (shake < 0.01f) {
+            return;
+        }
+        double t = System.nanoTime() / 1e9;
+        double beat = f.kind == Flight.Kind.HELI ? 6 : 1;      // the rotor's blade pass is a quick, even beat
+        float x = (float) (Math.sin(t * 23 * beat / 2) * 0.6 + Math.sin(t * 37.3) * 0.4) * shake;
+        float y = (float) (Math.sin(t * 29.7 + 1.1) * 0.6 + Math.sin(t * 17.1 * beat / 2) * 0.4) * shake;
+        body.rotateX((float) Math.toRadians(x)).rotateY((float) Math.toRadians(y * 0.6f));
     }
 
     private FlightClient() {

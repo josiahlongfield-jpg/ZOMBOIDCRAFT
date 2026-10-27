@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_white": "zomboidcraft:block/city/home_white",
+    "sc_sign_visitors": "zomboidcraft:block/city/sc_sign_visitors",
+    "particle": "zomboidcraft:block/city/sc_sign_visitors"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        4,
+        15.4
+      ],
+      "to": [
+        15,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_sign_visitors"
+        },
+        "south": {
+          "texture": "#home_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white"
+        },
+        "up": {
+          "texture": "#home_white"
+        },
+        "down": {
+          "texture": "#home_white"
+        }
+      }
+    }
+  ]
+}
