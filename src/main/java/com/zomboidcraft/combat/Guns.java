@@ -318,9 +318,10 @@ public final class Guns {
                                   ZcConfig.GunStats stats) {
         Vec3 at = hit.at;
         target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), hit.damage);
-        // buckshot up close knocks a zombie back hard; a single bullet barely moves it
-        double push = stats instanceof ZcConfig.ShotgunStats sg ? sg.knockback * Math.min(1, 1.5 * hit.count / pellets) : 0.12;
-        Shove.push(target, hit.dir.multiply(1, 0, 1).normalize(), push);
+        // a shot doesn't throw a zombie back: it flinches and its advance is checked for a split second, longer for a
+        // close load of buckshot; only a blunt blow knocks one back
+        Downed.flinch(target, stats instanceof ZcConfig.ShotgunStats sg
+                ? 5 + (int) Math.round(10 * sg.knockback * Math.min(1, 1.5 * hit.count / pellets)) : 5);
         // blood out along the shot, and splashed on the wall and floor behind (drawn by each client)
         float size = (float) Math.min(2.5, (0.6 + stats.damage / 20) * (1 + 0.15 * (hit.count - 1)) * (hit.head ? 1.3 : 1));
         Impacts.flesh(level, target, at, hit.dir, size);
@@ -331,9 +332,6 @@ public final class Guns {
             player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
                     net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.BULLET_WHIZZ), SoundSource.PLAYERS,
                     at.x, at.y, at.z, 0.8f, 0.9f + player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
-        }
-        if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
-            Downed.crippleChance(target, 0.5);
         }
     }
 
