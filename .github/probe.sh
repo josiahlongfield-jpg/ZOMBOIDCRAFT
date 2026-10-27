@@ -7,6 +7,20 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== trains2"
+javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E ' collide\(| move\(|horizontalCollision|onGround|noPhysics|fallDistance|resetFallDistance'
+javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -E 'yBodyRot|yHeadRot|setYHeadRot|setYBodyRot'
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.state.EntityRenderState 2>&1 | grep -E 'public double|lightCoords'
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -Ei 'static.*light'
+javap -cp "$CP" -p net.minecraft.world.level.BlockAndTintGetter 2>&1 | grep -Ei 'bright|light'
+javap -cp "$CP" -p net.minecraft.server.level.ServerLevel 2>&1 | grep -E 'sendParticles'
+javap -cp "$CP" -p net.minecraft.world.level.block.Block 2>&1 | grep -E 'getShape|useWithoutItem|codec|simpleCodec|createBlockStateDefinition|getStateForPlacement'
+javap -cp "$CP" -p net.minecraft.world.level.block.state.BlockBehaviour 2>&1 | grep -E 'getShape|useWithoutItem|codec'
+javap -cp "$CP" -p net.minecraft.client.renderer.entity.EntityRenderer 2>&1 | grep -E 'submit|getBoundingBoxForCulling|shouldRender|affectedByCulling'
+javap -cp "$CP" -p net.minecraft.client.player.RemotePlayer 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.world.level.entity.EntityTypeTest 2>&1 | head -5
+javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E 'hurtServer|push\(|knockback|hurtMarked|getBoundingBox\(|isAlive|getBbWidth|getBbHeight|addDeltaMovement|teleportTo'
+javap -cp "$CP" -p net.minecraft.world.damagesource.DamageSources 2>&1 | grep -E 'generic|flyIntoWall|cramming|fall'
 echo "===== cars2"
 sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
 sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'

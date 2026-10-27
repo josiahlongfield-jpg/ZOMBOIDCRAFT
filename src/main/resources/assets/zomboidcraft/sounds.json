@@ -1900,5 +1900,70 @@
         "attenuation_distance": 64
       }
     ]
+  },
+  "train.horn": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:car.horn",
+        "type": "event",
+        "pitch": 0.55,
+        "attenuation_distance": 192
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.horn"
+  },
+  "train.chime": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "pitch": 0.8,
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.chime"
+  },
+  "train.doors": {
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.contract",
+        "type": "event",
+        "pitch": 0.6,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.doors"
+  },
+  "train.otto": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bit",
+        "type": "event",
+        "pitch": 1.0,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.otto"
+  },
+  "train.rolling": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.minecart.riding",
+        "type": "event",
+        "pitch": 0.8,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "train.flare": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.firework_rocket.launch",
+        "type": "event",
+        "pitch": 0.7,
+        "attenuation_distance": 96
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.flare"
   }
 }
