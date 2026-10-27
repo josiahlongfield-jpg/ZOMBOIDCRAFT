@@ -104,14 +104,15 @@ jobs:
           echo 'data get entity @e[type=minecraft:husk,limit=1] Health' >&3
           echo 'execute as @e[type=zomboidcraft:car] run say car here' >&3
           # A walker that dies falls, then leaves its body (no puff), which saves with the world.
-          echo 'summon minecraft:zombie 6 101 6 {Tags:["zc_dead"]}' >&3
+          # (the test zombies hover: dropped from y 101 they'd die of the fall before the commands reach them)
+          echo 'summon minecraft:zombie 6 101 6 {Tags:["zc_dead"],NoGravity:1b}' >&3
           sleep 2
           echo 'kill @e[tag=zc_dead]' >&3
           sleep 4
           echo 'execute as @e[type=zomboidcraft:corpse] run say corpse here' >&3
           echo 'data get entity @e[type=zomboidcraft:corpse,limit=1] outfit' >&3
           # Only the head kills: a bullet anywhere else leaves a walker alive however hard it hits.
-          echo 'summon minecraft:zombie 8 101 8 {Tags:["zc_tough"]}' >&3
+          echo 'summon minecraft:zombie 8 101 8 {Tags:["zc_tough"],NoGravity:1b}' >&3
           sleep 2
           echo 'damage @e[tag=zc_tough,limit=1] 500 zomboidcraft:bullet' >&3
           sleep 1
