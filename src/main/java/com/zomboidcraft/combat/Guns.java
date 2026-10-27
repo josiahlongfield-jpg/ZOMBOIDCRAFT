@@ -77,8 +77,6 @@ public final class Guns {
         ItemStack loading = ItemStack.EMPTY;
         /** When the pump or bolt is worked after a shot (game time), or -1; when its empty case lands. */
         long cycleAt = -1, caseAt = -1;
-        /** A revolver's hammer, thumbed back on the sights: down again with the next pull of the trigger. */
-        boolean hammerBack;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -92,19 +90,6 @@ public final class Guns {
     }
 
     // ------------------------------------------------------------------ firing
-
-    /** Brought up onto the sights: a loaded revolver has its hammer thumbed back, once until the trigger drops it. */
-    public static void aim(ServerPlayer player, ItemStack gun) {
-        GunType type = GunType.of(gun);
-        net.minecraft.sounds.SoundEvent hammer = type == null ? null : type.hammer();
-        State st = state(player);
-        if (hammer == null || st.hammerBack || st.reloadTick >= 0
-                || gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() <= 0) {
-            return;
-        }
-        st.hammerBack = true;
-        sound(player, hammer);
-    }
 
     public static void fire(ServerPlayer player, boolean aiming) {
         ZcConfig.Guns config = ZcConfig.get().guns;
@@ -135,7 +120,6 @@ public final class Guns {
             endReload(gun, st);
         }
         st.lastShot = now;
-        st.hammerBack = false;
         if (auto) {
             st.autoNext = nextAuto(st.autoNext, now, stats);
         }
@@ -524,7 +508,6 @@ public final class Guns {
         st.needsCharge = !type.opens && g.rounds() == 0;
         st.loadStopped = false;
         st.loading = gun;
-        st.hammerBack = false;      // let down before the gun's opened
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         if (type.opens) {
             // thrown open: the empties come out as the barrels drop

@@ -800,7 +800,8 @@ def pistol():
         PI.flash(m, PI.CAP_TIP)
 
     return kit.Gun('pistol', 'M9 Pistol', PI.body, look, PI.HAND, slots, parts,
-                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7)
+                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7,
+                   slide=PI.hammer_piece)
 
 
 def shotgun():
@@ -1086,7 +1087,8 @@ PISTOL_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
                         reload={'mag_out': (25, -0.18), 'mag_in': (25, -0.18), 'charge': (-6, 0.02)},
                         irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=PI.HANDLE_TRAVEL,
                         charge_turn=(20, 20, -35), charge_push=(0.02, 0.02, -0.30),
-                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz))
+                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz),
+                        hammer_cock=PI.HAMMER_COCK)
 # the shotgun low at the hip, turned in so its right side and the ejection port show; for loading it's canted
 # over and rolled back so the loading port under the receiver faces the off hand; on the bead the eye sits well
 # over the receiver (a cheek on the comb) with the bead tipped onto the eye line
@@ -1789,6 +1791,7 @@ def pistol_points(gun, g):
         'light': lens_point(gun, 'light', PI.LIGHT_LENS, shift),
         'muzzle': kit.flash_tip(gun) + shift,
         'quietMuzzle': quiet_muzzle(gun) + shift,
+        'hammer': PI.HAMMER_PIN + shift,
     }
 
 
