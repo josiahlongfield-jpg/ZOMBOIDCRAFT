@@ -567,6 +567,27 @@ public class KitUiTest implements FabricClientGameTest {
             LOG.info("ZCUI drag test: {}", out);
         }
         ctx.takeScreenshot("pack-after-drag");
+        // shift + right click on the bread drops it on the floor
+        ctx.getInput().holdKey(InputConstants.KEY_LSHIFT);
+        ctx.waitTicks(1);
+        String dropped = ctx.computeOnClient(mc -> {
+            if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+            for (KitScreen.Hot h : hots(k)) {
+                if (h.slot() >= 0 && h.card().is(Items.BREAD)) {
+                    k.mouseClicked(new MouseButtonEvent(h.x() + 2, h.y() + 2, new MouseButtonInfo(1, 1)), false);
+                    k.mouseReleased(new MouseButtonEvent(h.x() + 2, h.y() + 2, new MouseButtonInfo(1, 1)));
+                    return "slot " + h.slot() + " now " + k.menu().slots.get(h.slot()).getItem();
+                }
+            }
+            return "no bread";
+        });
+        ctx.getInput().releaseKey(InputConstants.KEY_LSHIFT);
+        ctx.waitTicks(10);
+        String floor = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            return p.level().getEntitiesOfClass(ItemEntity.class, p.getBoundingBox().inflate(4)).stream().map(e -> e.getItem().toString()).toList().toString();
+        });
+        LOG.info("ZCUI shift right click: {} floor {}", dropped, floor);
         ctx.getInput().pressKey(InputConstants.KEY_E);
         ctx.waitTicks(3);
     }

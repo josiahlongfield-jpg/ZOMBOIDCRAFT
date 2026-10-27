@@ -383,6 +383,13 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         for (int i = hots.size() - 1; i >= 0; i--) {
             Hot h = hots.get(i);
             if (h.has(mx, my)) {
+                // shift + right click drops the whole stack on the floor at your feet
+                if (right && shift && h.slot() >= 0 && h.slot() < menu.slots.size() && menu.slots.get(h.slot()).hasItem()
+                        && menu.getCarried().isEmpty()) {
+                    click(h.slot(), 1, ContainerInput.THROW);
+                    UiSounds.play(UiSounds.ITEM_MOVE);
+                    return true;
+                }
                 // a left press on something you could drag waits: moved, it's a drag; let go where it is, a click
                 if (!right && h.slot() >= 0 && h.slot() < menu.slots.size() && menu.slots.get(h.slot()).hasItem() && menu.getCarried().isEmpty()) {
                     pressed = h;
