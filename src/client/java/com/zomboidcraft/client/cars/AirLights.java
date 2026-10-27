@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,6 +33,10 @@ import org.joml.Vector3f;
  * would swallow them, each one you could see from where you stand (nothing solid in the way) is drawn a few
  * blocks in front of the camera on the line to it instead, scaled to look exactly as it would, so lights,
  * beam and the lit patch carry through the murk the way lights in the night sky do.
+ *
+ * A shader pack (Photon) draws glow solid and throws away any pixel fainter than half, which left none of the
+ * soft glows: there the lights are solid glowing dots its bloom softens, and the beam and patch are drawn as
+ * lightning, the one see-through glow it keeps (white, faded by alpha, with no texture, so faded at the edges).
  */
 final class AirLights {
     private static final float[] RED = {1f, 0.12f, 0.08f}, GREEN = {0.15f, 1f, 0.3f}, WHITE = {1f, 0.97f, 0.88f};
@@ -47,8 +52,9 @@ final class AirLights {
      * Past this far a light's glow fades out where it is and comes in drawn PROXY blocks in front of the camera
      * instead, on the line to it, where fog and haze don't reach; never smaller than MIN_ANGLE across (radians).
      */
-    private static final double HAZE_FROM = 16, HAZE_FULL = 32, PROXY = 6, MIN_ANGLE = 0.0022;
-    private static final Identifier POINT = ZomboidCraft.id("textures/effect/air_glow.png"), BEAM = ZomboidCraft.id("textures/effect/rail_glow.png");
+    private static final double HAZE_FROM = 16, HAZE_FULL = 32, PROXY = 6, MIN_ANGLE = 0.004, MIN_DOT = 0.003;
+    private static final Identifier POINT = ZomboidCraft.id("textures/effect/air_glow.png"), DOT = ZomboidCraft.id("textures/effect/air_dot.png"),
+            BEAM = ZomboidCraft.id("textures/effect/rail_glow.png");
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
     private record Light(float x, float y, float z, float[] rgb) {
@@ -57,6 +63,11 @@ final class AirLights {
     /** The light blocks each helicopter's searchlight has put where it lands, client side only. */
     private static final Map<Integer, BlockPos> LIT = new HashMap<>();
     private static ClientLevel litIn;
+    /**
+     * Whether this frame's lights are solid dots (under a shader pack): they need fewer pixels than a soft glow,
+     * and switch from where they are to in front of the camera rather than fading across (a faded solid dot is dark).
+     */
+    private static boolean solid;
 
     private AirLights() {
     }
@@ -96,7 +107,9 @@ final class AirLights {
             return;
         }
         boolean shaders = CarLights.shaderPackOn();
-        CarLights.Quads points = new CarLights.Quads(cam.pos, shaders), beams = new CarLights.Quads(cam.pos, shaders);
+        // lights are always solid colour, dimmer for fainter; the beam fades by alpha under a shader pack
+        CarLights.Quads points = new CarLights.Quads(cam.pos, false), beams = new CarLights.Quads(cam.pos, shaders);
+        solid = shaders;
         float partial = cam.cameraEntityPartialTicks;
         for (CarProp car : level.getEntitiesOfClass(CarProp.class, new AABB(cam.pos, cam.pos).inflate(NEAR), AirLights::lit)) {
             Quaternionf q = car.flight().qO.slerp(car.flight().q, partial, new Quaternionf());
@@ -113,10 +126,12 @@ final class AirLights {
             }
         }
         if (beams.count > 0) {
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(BEAM, shaders), beams::emit);
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
+                    shaders ? RenderTypes.lightning() : CarLights.glowType(BEAM, false), beams::emit);
         }
         if (points.count > 0) {
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(POINT, shaders), points::emit);
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(),
+                    shaders ? RenderTypes.beaconBeam(DOT, false) : CarLights.glowType(POINT, false), points::emit);
         }
     }
 
@@ -129,6 +144,9 @@ final class AirLights {
                               CarLights.Quads quads) {
         double d = at.distanceTo(cam);
         float near = near(d);
+        if (solid) {
+            near = near < 0.5f ? 0 : 1;
+        }
         if (near > 0.01f) {
             quads.spot(at, half, quads.shade(rgb, strength * near));
         }
@@ -136,7 +154,7 @@ final class AirLights {
             return;
         }
         Vec3 dir = at.subtract(cam).scale(1 / d);
-        quads.spot(cam.add(dir.scale(PROXY)), PROXY * Math.max(half / d, MIN_ANGLE), quads.shade(rgb, strength * (1 - near)));
+        quads.spot(cam.add(dir.scale(PROXY)), PROXY * Math.max(half / d, solid ? MIN_DOT : MIN_ANGLE), quads.shade(rgb, strength * (1 - near)));
     }
 
     /** How much of a light is drawn where it really is (1) rather than in front of the camera (0), by distance. */
@@ -179,8 +197,15 @@ final class AirLights {
             proxyWide[i] = PROXY * width / Math.max(dist, 1e-3);
             proxyColour[i] = beams.shade(WHITE, seen ? k * (1 - n) : 0);
         }
-        beams.strip(here, wide, colour);
-        if (far) {
+        boolean faded = beams.blended;
+        if (faded) {
+            beams.fadeStrip(here, wide, colour);
+        } else {
+            beams.strip(here, wide, colour);
+        }
+        if (far && faded) {
+            beams.fadeStrip(proxy, proxyWide, proxyColour);
+        } else if (far) {
             beams.strip(proxy, proxyWide, proxyColour);
         }
         if (lands) {
@@ -189,13 +214,22 @@ final class AirLights {
             Vec3 patch = hit.getLocation().add(normal.scale(0.02));
             double r = Math.max(1.5, length * 0.13);
             float n = near(patch.distanceTo(cam));
-            beams.flat(patch, normal, r, beams.shade(WHITE, (0.35f + 0.3f * dark) * n));
+            float glow = 0.35f + 0.3f * dark;
+            disc(beams, patch, normal, r, beams.shade(WHITE, glow * n));
             if (!own && n < 0.99f && clear(level, cam, patch.add(normal.scale(0.4)), car)) {
                 double dist = patch.distanceTo(cam);
                 Vec3 toward = patch.subtract(cam).scale(1 / dist);
                 // seen from afar the lit patch is a soft smudge of light, flattened as the ground is
-                beams.flat(cam.add(toward.scale(PROXY)), normal, PROXY * r / dist, beams.shade(WHITE, (0.35f + 0.3f * dark) * (1 - n)));
+                disc(beams, cam.add(toward.scale(PROXY)), normal, PROXY * r / dist, beams.shade(WHITE, glow * (1 - n)));
             }
+        }
+    }
+
+    private static void disc(CarLights.Quads beams, Vec3 c, Vec3 normal, double r, int colour) {
+        if (beams.blended) {
+            beams.fadeDisc(c, normal, r, colour);
+        } else {
+            beams.flat(c, normal, r, colour);
         }
     }
 
