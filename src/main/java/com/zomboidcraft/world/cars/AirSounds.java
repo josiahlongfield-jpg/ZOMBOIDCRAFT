@@ -22,7 +22,9 @@ public final class AirSounds {
     public static final SoundEvent JET_DISTANT = register("aircraft.jet.distant", 400f);
     public static final SoundEvent HELI_START = register("aircraft.heli.start", 96f);
     public static final SoundEvent HELI_SHUTDOWN = register("aircraft.heli.shutdown", 96f);
-    /** Blade slap at one steady rate, pitched by rotor speed. */
+    /** The cabin at flight idle, from the same recording as the start: comes in when the start ends. */
+    public static final SoundEvent HELI_IDLE = register("aircraft.heli.idle", 48f);
+    /** Blade slap heard outside, pitched by rotor speed and the Doppler shift. */
     public static final SoundEvent HELI_ROTOR = register("aircraft.heli.rotor", 160f);
     public static final SoundEvent HELI_TURBINE = register("aircraft.heli.turbine", 48f);
     public static final SoundEvent HELI_DISTANT = register("aircraft.heli.distant", 300f);
