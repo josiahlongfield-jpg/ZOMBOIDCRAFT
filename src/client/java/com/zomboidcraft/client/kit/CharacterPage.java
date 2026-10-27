@@ -6,10 +6,10 @@ import com.zomboidcraft.carry.BagSpec;
 import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.GearStore;
+import com.zomboidcraft.carry.QuickSlots;
 import com.zomboidcraft.carry.Weights;
 import com.zomboidcraft.client.hud.InjuryGlowLayer;
 import com.zomboidcraft.combat.MeleeWeaponItem;
-import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.survival.Body;
 import java.util.ArrayList;
@@ -29,14 +29,19 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Weapons and the belt down the left, clothing and carry gear down the right, your survivor in the middle and a strip
+ * Weapon quick slots and the belt down the left, clothing, bags and belt kit down the right, your survivor in the middle and a strip
  * of what your kit adds up to across the top. Every slot opens a picker of what you carry that could go in it.
  */
 final class CharacterPage {
-    private static final String[] WEAPON_LABELS = {"Primary", "Sidearm", "Melee"};
+    /** The weapon quick slots, big down the left: your hands, the sling and the holster. */
+    private static final int[] WEAPON_SLOTS = {QuickSlots.HANDS, QuickSlots.BACK, QuickSlots.HOLSTER};
+    /** The rest, small along the belt. */
+    private static final int[] BELT_SLOTS = {QuickSlots.HIP, QuickSlots.HIP_2, QuickSlots.SHEATH, QuickSlots.POUCH, QuickSlots.POUCH_2};
     private static final String[] CLOTHING_LABELS = {"Head", "Torso", "Legs", "Feet"};
     private static final EquipmentSlot[] CLOTHING_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    private static final String[] CARRY_LABELS = {"Back", "Vest", "Waist", "Sling", "Off hand"};
+    private static final String[] CARRY_LABELS = {"Back", "Vest", "Waist", "Off hand"};
+    private static final String[] WORN_LABELS = {"Belt", "Holster", "Sheath", "Wrist"};
+    private static final String[] WORN_EMPTY = {"Opens two hip slots", "Opens the holster slot", "Opens the sheath slot", "Shows the time"};
 
     private final KitScreen<?> screen;
 
@@ -59,19 +64,25 @@ final class CharacterPage {
             InjuryGlowLayer.capturing = false;
         }
 
-        // weapons: the first three belt slots
+        // weapons: hands, the sling and the holster
         KitDraw.heading(g, font, "Weapons", x + 37, y + 58, 170, false);
         int selected = player.getInventory().getSelectedSlot();
-        for (int i = 0; i < 3; i++) {
-            int slot = InventoryMenu.USE_ROW_SLOT_START + i;
+        for (int i = 0; i < WEAPON_SLOTS.length; i++) {
+            int quick = WEAPON_SLOTS[i];
+            int slot = InventoryMenu.USE_ROW_SLOT_START + quick;
             int ty = y + 68 + i * 46;
             ItemStack stack = menu.slots.get(slot).getItem();
-            KitDraw.caps(g, font, WEAPON_LABELS[i] + " · " + (i + 1), x + 37, ty, i == selected ? KitDraw.LINK : KitDraw.DIM, 0.72f);
+            String label = QuickSlots.label(quick);
+            KitDraw.caps(g, font, label + " · " + (quick + 1), x + 37, ty, quick == selected ? KitDraw.LINK : KitDraw.DIM, 0.72f);
             int tx = x + 37, tyy = ty + 8, tw = 81, th = 32;
+            if (!QuickSlots.open(player, quick) && stack.isEmpty()) {
+                KitDraw.frame(g, tx, tyy, tw, th, 0x1FE8E4DA);
+                KitDraw.text(g, font, "Wear a holster", tx + tw + 6, tyy + 4, KitDraw.FAINT, 1.1f);
+                continue;
+            }
             KitDraw.tile(g, font, stack, tx, tyy, tw, th, screen.hovered(tx, tyy, tw, th, mx, my));
-            int which = i;
-            screen.hot(tx, tyy, tw, th, stack, () -> pickWeapon(slot, which, tx + tw + 6, tyy), stack.isEmpty() ? null : () -> screen.unequip(slot),
-                    stack.isEmpty() ? WEAPON_LABELS[i] + ": empty" : null, slot);
+            screen.hot(tx, tyy, tw, th, stack, () -> pickWeapon(slot, label, tx + tw + 6, tyy), stack.isEmpty() ? null : () -> screen.unequip(slot),
+                    stack.isEmpty() ? label + ": empty" : null, slot);
             if (stack.isEmpty()) {
                 KitDraw.text(g, font, "Empty", tx + tw + 6, tyy + 4, KitDraw.FAINT, 1.1f);
                 continue;
@@ -90,19 +101,27 @@ final class CharacterPage {
             screen.hot(lx, tyy + 20, 32, 9, () -> screen.inspect(slot));
         }
 
-        // the belt: the other six
+        // the belt: hip, sheath and pouches, the ones what you wear gives you
         KitDraw.heading(g, font, "Belt", x + 37, y + 210, 162, false);
-        for (int i = 3; i < 9; i++) {
-            int slot = InventoryMenu.USE_ROW_SLOT_START + i;
-            int n = i + 1;
-            int tx = x + 37 + (i - 3) * 28, ty = y + 220;
+        int shown = 0;
+        for (int quick : BELT_SLOTS) {
+            int slot = InventoryMenu.USE_ROW_SLOT_START + quick;
             ItemStack stack = menu.slots.get(slot).getItem();
+            if (!QuickSlots.open(player, quick) && stack.isEmpty()) continue;
+            int n = quick + 1;
+            int tx = x + 37 + shown++ * 33, ty = y + 220;
+            String label = QuickSlots.label(quick);
             KitDraw.tile(g, font, stack, tx, ty, 24, 24, screen.hovered(tx, ty, 24, 24, mx, my));
-            KitDraw.caps(g, font, String.valueOf(i + 1), tx + 2, ty + 2, i == selected ? KitDraw.LINK : KitDraw.FAINT, 0.6f);
-            if (i == selected) g.fill(tx, ty + 25, tx + 24, ty + 26, KitDraw.LINK);
+            KitDraw.caps(g, font, String.valueOf(n), tx + 2, ty + 2, quick == selected ? KitDraw.LINK : KitDraw.FAINT, 0.6f);
+            KitDraw.capsCentred(g, font, label, tx + 12, ty + 28, quick == selected ? KitDraw.LINK : KitDraw.DIM, 0.55f);
+            if (quick == selected) g.fill(tx, ty + 25, tx + 24, ty + 26, KitDraw.LINK);
+            Slot target = menu.slots.get(slot);
             screen.hot(tx, ty, 24, 24, stack,
-                    () -> screen.pick("Belt · " + n, slot, choices(slot, s -> !s.isEmpty(), null), tx, ty + 28, 24, 24),
-                    stack.isEmpty() ? null : () -> screen.unequip(slot), stack.isEmpty() ? "Belt " + n + ": empty" : null, slot);
+                    () -> screen.pick(label + " · " + n, slot, choices(slot, target::mayPlace, null), tx, ty + 28, 24, 24),
+                    stack.isEmpty() ? null : () -> screen.unequip(slot), stack.isEmpty() ? label + " " + n + ": empty" : null, slot);
+        }
+        if (shown == 0) {
+            KitDraw.text(g, font, "No belt: wear one for hip slots", x + 37, y + 226, KitDraw.FAINT, 1f);
         }
         load(g, font, player, x + 37, y + 258);
 
@@ -130,15 +149,29 @@ final class CharacterPage {
             KitDraw.textRight(g, font, line, tx - 6, ty + 22, KitDraw.DIM, 0.8f);
         }
 
-        // carry gear: bags, the sling and the off hand
-        KitDraw.heading(g, font, "Carry", x + 420, y + 220, 159, true);
+        // carry gear: bags and the off hand, then the belt kit that opens quick slots
+        KitDraw.heading(g, font, "Carry", x + 420, y + 216, 159, true);
         int firstGear = InventoryMenu.SHIELD_SLOT + 1;
-        int[] slots = {firstGear + GearStore.BACK, firstGear + GearStore.VEST, firstGear + GearStore.WAIST, firstGear + GearStore.SLING,
-                InventoryMenu.SHIELD_SLOT};
+        int[] slots = {firstGear + GearStore.BACK, firstGear + GearStore.VEST, firstGear + GearStore.WAIST, InventoryMenu.SHIELD_SLOT};
+        int[] worn = {firstGear + GearStore.BELT, firstGear + GearStore.HOLSTER, firstGear + GearStore.SHEATH, firstGear + GearStore.WRIST};
+        for (int i = 0; i < worn.length; i++) {
+            int slot = worn[i];
+            if (slot >= menu.slots.size()) continue;
+            int tx = x + 579 - 26 - (worn.length - 1 - i) * 31, ty = y + 270;
+            ItemStack stack = menu.slots.get(slot).getItem();
+            KitDraw.tile(g, font, stack, tx, ty, 26, 26, screen.hovered(tx, ty, 26, 26, mx, my));
+            boolean idle = !stack.isEmpty() && (i == 1 || i == 2) && !QuickSlots.working(player, i == 1 ? GearStore.HOLSTER : GearStore.SHEATH);
+            KitDraw.capsCentred(g, font, idle ? "Needs belt" : WORN_LABELS[i], tx + 13, ty + 30, idle ? KitDraw.WARN : KitDraw.DIM, 0.62f);
+            Slot target = menu.slots.get(slot);
+            String label = WORN_LABELS[i], empty = WORN_EMPTY[i];
+            screen.hot(tx, ty, 26, 26, stack,
+                    () -> screen.pick(label, slot, choices(slot, target::mayPlace, null), tx - 40, ty - 70, 26, 26),
+                    stack.isEmpty() ? null : () -> screen.unequip(slot), stack.isEmpty() ? label + ": " + empty : null, slot);
+        }
         for (int i = 0; i < slots.length; i++) {
             int slot = slots[i];
             if (slot >= menu.slots.size()) continue;
-            int tx = x + 579 - 26 - (slots.length - 1 - i) * 31, ty = y + 230;
+            int tx = x + 579 - 26 - (slots.length - 1 - i) * 31, ty = y + 226;
             ItemStack stack = menu.slots.get(slot).getItem();
             KitDraw.tile(g, font, stack, tx, ty, 26, 26, screen.hovered(tx, ty, 26, 26, mx, my));
             KitDraw.capsCentred(g, font, CARRY_LABELS[i], tx + 13, ty + 30, KitDraw.DIM, 0.62f);
@@ -213,14 +246,10 @@ final class CharacterPage {
         }
     }
 
-    private void pickWeapon(int slot, int which, int x, int y) {
-        ToIntFunction<ItemStack> order = s -> switch (which) {
-            case 0 -> KitItems.gun(s) && !KitItems.sidearm(s) ? 0 : 1;
-            case 1 -> KitItems.sidearm(s) ? 0 : 1;
-            default -> s.getItem() instanceof MeleeWeaponItem ? 0 : 1;
-        };
-        screen.pick(WEAPON_LABELS[which] + " · carried", slot,
-                choices(slot, s -> s.getItem() instanceof RifleItem || s.getItem() instanceof MeleeWeaponItem, order), x, y, 54, 22);
+    private void pickWeapon(int slot, String label, int x, int y) {
+        ToIntFunction<ItemStack> order = s -> KitItems.gun(s) ? 0 : s.getItem() instanceof MeleeWeaponItem ? 1 : 2;
+        Slot target = screen.menu().slots.get(slot);
+        screen.pick(label + " · carried", slot, choices(slot, target::mayPlace, order), x, y, 54, 22);
     }
 
     /** Carried slots, other than the target, holding something that passes the test; best first. */

@@ -357,6 +357,11 @@ public final class ZcConfig {
         public double capacity = 8;
         /** A bag you pick up goes straight on when its place (back, vest, waist, off hand) is free. */
         public boolean autoWear = true;
+        /**
+         * Quick slots come from what you wear: hands and back always, the hip with a belt, pouches with a duty or tool
+         * belt, a holster and a sheath slot with those. Off gives the plain nine-slot hotbar.
+         */
+        public boolean quickSlots = true;
     }
 
     public static class Zombies {

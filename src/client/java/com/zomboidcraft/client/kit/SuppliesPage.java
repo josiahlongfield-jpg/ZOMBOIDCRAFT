@@ -232,9 +232,9 @@ final class SuppliesPage {
     private String place(int index) {
         Slot slot = screen.menu().slots.get(index);
         if (slot instanceof CarrySlots.BagSlot bag) return bag.bag.bag().getHoverName().getString();
-        if (slot instanceof CarrySlots.GearSlot) return "Sling";
+        if (slot instanceof CarrySlots.GearSlot) return "Worn";
         if (index == InventoryMenu.SHIELD_SLOT) return "Off hand";
-        if (index >= InventoryMenu.USE_ROW_SLOT_START) return "Belt";
+        if (index >= InventoryMenu.USE_ROW_SLOT_START) return com.zomboidcraft.carry.QuickSlots.label(index - InventoryMenu.USE_ROW_SLOT_START);
         return "Pockets";
     }
 
@@ -254,13 +254,15 @@ final class SuppliesPage {
         names.add("Pockets");
         fill.add(pocketsAll == 0 ? 0 : pocketsUsed / (float) pocketsAll);
         lines.add(pocketsUsed + " / " + pocketsAll + " slots");
-        int beltUsed = 0;
+        int beltUsed = 0, beltAll = 0;
         for (int i = InventoryMenu.USE_ROW_SLOT_START; i < InventoryMenu.USE_ROW_SLOT_END; i++) {
+            if (!com.zomboidcraft.carry.QuickSlots.open(player, i - InventoryMenu.USE_ROW_SLOT_START)) continue;
+            beltAll++;
             if (screen.menu().slots.get(i).hasItem()) beltUsed++;
         }
-        names.add("Belt");
-        fill.add(beltUsed / 9f);
-        lines.add(beltUsed + " / 9 slots");
+        names.add("Quick slots");
+        fill.add(beltAll == 0 ? 0 : beltUsed / (float) beltAll);
+        lines.add(beltUsed + " / " + beltAll + " slots");
         if (screen.menu() instanceof Carry.Bags bags) {
             for (BagContainer bag : bags.zomboidcraft$bags()) {
                 BagSpec spec = bag.spec();
