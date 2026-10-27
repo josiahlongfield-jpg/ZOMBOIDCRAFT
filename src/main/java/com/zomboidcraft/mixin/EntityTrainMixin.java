@@ -21,6 +21,8 @@ public abstract class EntityTrainMixin implements TrainRider {
     private int zomboidcraft$car;
     @Unique
     private double zomboidcraft$trainS;
+    @Unique
+    private final double[] zomboidcraft$carried = new double[2];
 
     @Override
     public TrainEntity zomboidcraft$train() {
@@ -42,6 +44,11 @@ public abstract class EntityTrainMixin implements TrainRider {
         zomboidcraft$train = train;
         zomboidcraft$car = car;
         zomboidcraft$trainS = s;
+    }
+
+    @Override
+    public double[] zomboidcraft$carried() {
+        return zomboidcraft$carried;
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
