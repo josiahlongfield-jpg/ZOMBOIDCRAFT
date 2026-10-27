@@ -85,7 +85,7 @@ public final class Downed {
 
     /** Frozen in place: knocked flat or staggered. Checked by the AI mixin, on the server only. */
     public static boolean isHeld(Mob mob) {
-        if (mob.level().isClientSide()) {
+        if (mob.level().isClientSide() || com.zomboidcraft.zombie.Acts.climbing(mob)) {
             return false;
         }
         Timer t = TIMERS.get(mob);
@@ -95,8 +95,9 @@ public final class Downed {
     /** Knocks a zombie flat for the configured time. A crawler is already down, so it is only staggered. */
     public static void knockDown(LivingEntity target) {
         ZcConfig.Combat config = ZcConfig.get().combat;
-        if (!config.knockdowns || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()) {
-            return;
+        if (!config.knockdowns || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()
+                || com.zomboidcraft.zombie.Acts.climbing(zombie)) {
+            return;   // half through a window, it can't be knocked off its feet
         }
         if (isCrawler(zombie)) {
             stagger(zombie, 20);

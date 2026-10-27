@@ -77,6 +77,7 @@ public abstract class LivingEntityMixin {
     private void zomboidcraft$died(DamageSource source, CallbackInfo ci) {
         if ((Object) this instanceof Zombie zombie && !zombie.level().isClientSide() && ZombieTypes.isWalker(zombie)) {
             Deaths.died(zombie, source);
+            com.zomboidcraft.zombie.Acts.died(zombie);
         }
     }
 

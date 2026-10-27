@@ -351,6 +351,10 @@ public final class ZcConfig {
         public int doorHits = 120;
         /** The same for a window's glass. */
         public int windowHits = 45;
+        /** Zombies climb in (and out) through windows whose glass is gone. */
+        public boolean climbWindows = true;
+        /** A zombie that can't get to you goes round to the nearest door or window to break in. */
+        public boolean seekWayIn = true;
         /** A walker screams when it first spots you. */
         public boolean alertScreams = true;
         /** Seconds before the same zombie can scream again. */

@@ -6,6 +6,9 @@ import com.zomboidcraft.zombie.ZombieLook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.zomboidcraft.combat.Deaths;
+import com.zomboidcraft.client.zombie.body.ZMove;
+import com.zomboidcraft.zombie.Acts;
+import com.zomboidcraft.zombie.ClimbPath;
 import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.client.zombie.body.Gibs;
@@ -21,6 +24,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Draws every walker (zombie, husk, zombie villager): the new Zomboid-style body with its worn clothes
@@ -126,7 +130,11 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             facts.deathTime = zombie.deathTime > 0 ? zombie.deathTime + partialTick : 0f;
             facts.death = zombie.getAttachedOrElse(Deaths.DEATH, 0L);
             facts.mesh = state.zbody;
+            acting(zombie, state, partialTick);
             int newly = animator.animate(zombie, facts, partialTick, state.zpose);
+            if (zombie.deathTime <= 0) {
+                state.bodyRot = animator.drawYaw;
+            }
             if (zombie.deathTime > 0) {
                 // it falls in its own way, not vanilla's tip onto its side, and not flushed red
                 state.bodyRot = animator.dyingYaw;
@@ -140,6 +148,37 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                         newly, state.cuts & ~newly | ZBodyLayer.missingCuts(state.missingLimb), limbs,
                         state.x, state.y, state.z, state.bodyRot, state.scale, state.variant);
             }
+        }
+    }
+
+    /**
+     * Breaking in (Acts): beating on a door or a window, its body drawn square in front of it with its hands on it,
+     * each blow coming down as the server lands it; or climbing through a window, drawn where the climb has it whatever
+     * the zombie's own glide is doing.
+     */
+    private void acting(Zombie zombie, WalkerRenderState state, float partialTick) {
+        Acts.Act act = Acts.get(zombie);
+        facts.act = 0;
+        if (act == null || zombie.deathTime > 0) {
+            return;
+        }
+        double now = zombie.level().getGameTime() + partialTick;
+        facts.actYaw = act.yaw();
+        if (act.kind() == Acts.CLIMB) {
+            facts.act = ZMove.CLIMB;
+            facts.actTime = Math.min(Acts.climbTime(act, now), ClimbPath.END);
+            Vec3 at = Acts.climbPlace(act, facts.actTime);
+            facts.shiftX = (float) (at.x - state.x);
+            facts.shiftY = (float) (at.y - state.y);
+            facts.shiftZ = (float) (at.z - state.z);
+        } else {
+            facts.act = act.kind() == Acts.BASH_DOOR ? ZMove.BASH_DOOR : ZMove.BASH_WIN;
+            // a blow lands 0.55 s into each second of the swing; until the first is on its way it leans there
+            facts.actTime = Math.max(0f, (float) (now - act.tick()) / Acts.BLOW + 0.55f);
+            Vec3 shift = Acts.bashShift(zombie.level(), act, state.x, state.z, false);
+            facts.shiftX = (float) shift.x;
+            facts.shiftY = 0f;
+            facts.shiftZ = (float) shift.z;
         }
     }
 

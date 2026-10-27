@@ -143,12 +143,14 @@ public class BashGoal extends Goal {
         hits = 0;
         zombie.getNavigation().stop();
         zombie.setAggressive(true);
+        Acts.bash(zombie, block, glass);
     }
 
     @Override
     public void stop() {
         zombie.setAggressive(false);
         zombie.level().destroyBlockProgress(zombie.getId(), block, -1);
+        Acts.stop(zombie);
         block = null;
     }
 
@@ -170,6 +172,7 @@ public class BashGoal extends Goal {
                 SoundSource.HOSTILE, 1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
         Noise.emit(level, center, BANG_NOISE);
         hits++;
+        Acts.blow(zombie, block, glass);
         if (door) {
             hitDoor(level, state);
         } else {
