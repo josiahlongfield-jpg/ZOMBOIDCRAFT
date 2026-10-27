@@ -987,7 +987,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 3;
+    private static final int DEFAULTS = 4;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1014,7 +1014,7 @@ public final class ZcConfig {
                 c.look.shoulderAimSide = 0.42;
             }
         }
-        if (c.defaultsVersion < 3) {
+        if (c.defaultsVersion < 4) {     // (3 is the zombie bodies' detail step, on their branch)
             // 2026-10-27 (Josiah): suppressors for sneaking (zombies hear a third as far, 30% quieter), and the hip
             // rings of the assault rifle, SMG, crossbow, M9 and lever action 40% tighter
             if (c.guns.suppressedNoise == 0.3) {
