@@ -101,7 +101,7 @@ public final class ZcConfig {
         /** Seconds the doors stay open at a stop before they close by themselves. */
         public int doorSeconds = 30;
         /** Cars in each train. */
-        public int railCars = 4;
+        public int railCars = 3;
         public int subwayCars = 3;
         /** Trains running each line. */
         public int railTrains = 1;
@@ -1213,7 +1213,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 9;
+    private static final int DEFAULTS = 10;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1320,6 +1320,12 @@ public final class ZcConfig {
             }
             if (c.trains.ottoChatter == 75) {
                 c.trains.ottoChatter = 45;
+            }
+        }
+        if (c.defaultsVersion < 10) {
+            // 2026-10-27 (Josiah): shorter railway trains, three cars with OTTO's
+            if (c.trains.railCars == 4) {
+                c.trains.railCars = 3;
             }
         }
         c.defaultsVersion = DEFAULTS;
