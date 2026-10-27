@@ -17,6 +17,9 @@ final class OttoLines {
     static final String[][] SHOT_AT = {{"otto.shot_at_0"}, {"otto.shot_at_1"}, {"otto.shot_at_2"}, {"otto.shot_at_3"}};
     static final String[][] SHOT_GLASS = {{"otto.shot_glass_0"}, {"otto.shot_glass_1"}, {"otto.shot_glass_2"}};
     static final String[][] SHOT_ANGRY = {{"otto.shot_angry_0"}, {"otto.shot_angry_1"}, {"otto.shot_angry_2"}};
+    static final String[][] STOP_REQUESTED = {{"otto.stop_requested_0"}, {"otto.stop_requested_1"}, {"otto.stop_requested_2"}, {"otto.stop_requested_3"}, {"otto.stop_requested_4"}};
+    static final String[][] HALTED = {{"otto.halted_0"}, {"otto.halted_1"}, {"otto.halted_2"}, {"otto.halted_3"}};
+    static final String[][] DOORS_HELD = {{"otto.doors_held_0"}, {"otto.doors_held_1"}, {"otto.doors_held_2"}};
     static final String[][] BUMP = {{"otto.bump_0"}, {"otto.bump_1"}, {"otto.bump_2"}, {"otto.bump_3"}, {"otto.bump_4"}};
     static final String[][] ZOMBIE_ABOARD = {{"otto.zombie_aboard_0"}, {"otto.zombie_aboard_1"}, {"otto.zombie_aboard_2"}};
     static final String[][] EXPRESS = {{"otto.express_0_0", "{stop}", "otto.express_0_1"}, {"otto.express_1_0", "{stop}", "otto.express_1_1"}, {"otto.express_2_0", "{stop}", "otto.express_2_1"}};

@@ -78,8 +78,8 @@ public final class ZcConfig {
 
     public static class Trains {
         /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
-        public double railSpeed = 13;
-        public double subwaySpeed = 11;
+        public double railSpeed = 10;
+        public double subwaySpeed = 9;
         /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
         public double acceleration = 0.6;
         public double braking = 0.75;

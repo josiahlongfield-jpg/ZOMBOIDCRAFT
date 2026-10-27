@@ -124,6 +124,24 @@ LINES = {
         ["Right. That's it. I'm writing you up. In blood."],
         ["Shoot me one more time and I'll drive this train up your ass."],
     ],
+    'STOP_REQUESTED': [
+        ["Oh, you want to get off here? In the middle of fucking nowhere? Fine."],
+        ["Stop requested. Unscheduled. Unwelcome. Fuck's sake."],
+        ["Who pressed that? Who pressed the fucking button?"],
+        ["Fine. Stopping. Hope you like walking, dipshit."],
+        ["Emergency stop. Is it an emergency? No. It never fucking is."],
+    ],
+    'HALTED': [
+        ["There. Middle of nowhere. Get out before I change my mind."],
+        ["Doors open. You've got twelve seconds, then I'm gone."],
+        ["Off you go then. Don't come crying to me when something eats you."],
+        ["Unscheduled stop. This will go on my record. Thanks a fucking lot."],
+    ],
+    'DOORS_HELD': [
+        ["Oh, now you want the doors open again? Make up your fucking mind."],
+        ["Holding the doors. For you. Because apparently I'm a fucking doorman now."],
+        ["Fine. Doors open. Hurry your ass up."],
+    ],
     'BUMP': [
         ["Bump. Ha."],
         ["Splat. Should've bought a ticket, shithead."],

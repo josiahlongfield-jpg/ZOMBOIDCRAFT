@@ -22,6 +22,21 @@ public final class TrainCar {
     public static final double GANGWAY_HALF = 0.7, GANGWAY_HEIGHT = 2.3;
     /** The cab partition at the front of the first car; the cab's behind it. */
     public static final double CAB = 8.9;
+    /** The stop-request buttons, on the grab pole beside each door, both sides (car frame: x, y, z of the button's face). */
+    public static final double[][] STOP_BUTTONS = stopButtons();
+    /** How near a look has to pass a button's middle to press it. */
+    public static final double BUTTON_RADIUS = 0.22;
+
+    private static double[][] stopButtons() {
+        double[][] out = new double[DOORS.length * 2][];
+        int i = 0;
+        for (double d : DOORS) {
+            for (int side = -1; side <= 1; side += 2) {
+                out[i++] = new double[] {side * 1.24, 1.35, d + 1.25};
+            }
+        }
+        return out;
+    }
     public static final double SEAT_DEPTH = 0.5, SEAT_HEIGHT = 0.45;
 
     /** Where a car is: its floor's middle (top of the floor), and which way it faces. */
