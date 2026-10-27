@@ -21,8 +21,23 @@ public final class Place {
      * that side the quay runs; -1 elsewhere.
      */
     public final int waterSide, quay;
+    /** For a piece of the planned city's street grid, how it fits the grid; null for a place of its own. */
+    public final Tile tile;
+
+    /**
+     * A piece of the planned city: the street grid runs on world lines every {@code pitch} blocks
+     * (every third one an avenue), and the footprint runs either to the centre line of a street
+     * shared with the next piece or out past the whole street where nothing is next door. Its
+     * buildings grow taller toward its district's centre (cx, cz): density is the distance from
+     * it over radius, plus offset (more walk-ups the higher it is).
+     */
+    public record Tile(int pitch, int cx, int cz, int radius, double offset) {}
 
     public Place(PlaceType type, String variant, int x0, int z0, int x1, int z1, int level, long seed, int waterSide, int quay) {
+        this(type, variant, x0, z0, x1, z1, level, seed, waterSide, quay, null);
+    }
+
+    public Place(PlaceType type, String variant, int x0, int z0, int x1, int z1, int level, long seed, int waterSide, int quay, Tile tile) {
         this.type = type;
         this.variant = variant;
         this.x0 = x0;
@@ -33,6 +48,7 @@ public final class Place {
         this.seed = seed;
         this.waterSide = waterSide;
         this.quay = quay;
+        this.tile = tile;
     }
 
     public int width() {

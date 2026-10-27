@@ -8,9 +8,14 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Plans the county from the seed: which places stand where, and the roads between them.
+ * Plans the county: which places stand where, and the roads between them.
  *
- * The world is cut into {@link #CELL}-block cells. Each cell holds at most one place, picked by
+ * A county world follows the master plan Josiah approved ({@link Plan}, laid out by
+ * {@link Layout}): Grayhaven Island and the walled city round it, the towns, ports and bases where
+ * the map puts them, suburbs, farms and woods between, the highways and bridges. The seed only
+ * decides how each place is built.
+ *
+ * {@link #endless(long)} is the county before the plan, still used to try builders out: the world is cut into {@link #CELL}-block cells. Each cell holds at most one place, picked by
  * how built-up the district is (towns and suburbs near cities, farms and woods in the country),
  * jittered inside the cell and levelled to the land around it. Every few cells a big city takes
  * over a whole block of cells. Each place is joined to its nearest neighbours by highways, county
@@ -27,6 +32,9 @@ public final class County {
 
     public final long seed;
     public final Terrain terrain;
+    /** The planned county's layout, made the first time anything asks where things are. */
+    private volatile Layout layout;
+    private volatile boolean laidOut;
     private final Map<Long, Optional<Place>> candidates = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> places = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> cities = new ConcurrentHashMap<>();
@@ -35,16 +43,71 @@ public final class County {
     private final Map<Long, List<Road>> joins = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> hideouts = new ConcurrentHashMap<>();
 
+    /** The planned county. */
     public County(long seed) {
+        this(seed, true);
+    }
+
+    /** The endless county the seed alone lays out, one place to a cell. */
+    public static County endless(long seed) {
+        return new County(seed, false);
+    }
+
+    private County(long seed, boolean planned) {
         this.seed = seed;
-        this.terrain = new Terrain(seed);
+        this.terrain = new Terrain(seed, planned ? Plan.get() : null);
+    }
+
+    public boolean planned() {
+        return terrain.plan != null;
+    }
+
+    /**
+     * The layout, made once (the thread making it gets the half-made one back while it works; any
+     * other waits for it to finish).
+     */
+    Layout layout() {
+        if (laidOut) {
+            return layout;
+        }
+        synchronized (this) {
+            if (layout == null) {
+                new Layout(this);
+                laidOut = true;
+            }
+            return layout;
+        }
+    }
+
+    /** Called by the layout as it starts, so the roads it builds can already find its places. */
+    void layingOut(Layout l) {
+        layout = l;
+    }
+
+    /** Every place in the planned county (none in the endless one). */
+    public List<Place> allPlaces() {
+        return planned() ? List.copyOf(layout().places) : List.of();
+    }
+
+    /**
+     * True on Grayhaven Island, the county's biggest landmark: between the river's two arms, west
+     * of the sea. Only the planned county has it; ask {@link #island} of a world's county when it
+     * may be an older, endless one.
+     */
+    public static boolean onIsland(int x, int z) {
+        return Plan.onIsland(x + 0.5, z + 0.5);
+    }
+
+    /** {@link #onIsland} in this county: never in the endless one. */
+    public boolean island(int x, int z) {
+        return planned() && onIsland(x, z);
     }
 
     static long key(int a, int b) {
         return (long) a << 32 | (b & 0xFFFFFFFFL);
     }
 
-    private double rand(long salt, int a, int b) {
+    double rand(long salt, int a, int b) {
         return Noise.unit(Noise.hash(seed ^ salt, a, b));
     }
 
@@ -57,6 +120,9 @@ public final class County {
 
     /** Every place whose footprint plus margin touches the box. */
     public List<Place> placesNear(int x0, int z0, int x1, int z1, int margin) {
+        if (planned()) {
+            return layout().placesNear(x0, z0, x1, z1, margin);
+        }
         List<Place> out = new ArrayList<>();
         int reach = 360 + margin;
         for (int cx = Math.floorDiv(x0 - reach, CELL); cx <= Math.floorDiv(x1 + reach, CELL); cx++) {
@@ -303,13 +369,13 @@ public final class County {
         return fitOrShrink(PlaceType.ROADSIDE, kinds[k], px, pz, sizes[k][0], sizes[k][1], h);
     }
 
-    private Place fitOrShrink(PlaceType type, String variant, int px, int pz, int w, int d, long h) {
+    Place fitOrShrink(PlaceType type, String variant, int px, int pz, int w, int d, long h) {
         Place p = fit(type, variant, px, pz, w, d, h);
         return p != null ? p : fit(type, variant, px, pz, w * 3 / 4, d * 3 / 4, h);
     }
 
     /** A footprint centred on (px, pz) if the land there is dry, levelled to its average height. */
-    private Place fit(PlaceType type, String variant, int px, int pz, int w, int d, long h) {
+    Place fit(PlaceType type, String variant, int px, int pz, int w, int d, long h) {
         int x0 = px - w / 2, z0 = pz - d / 2, x1 = x0 + w - 1, z1 = z0 + d - 1;
         double sum = 0;
         int n = 0;
@@ -523,6 +589,9 @@ public final class County {
 
     /** Every road passing within reach of the box. */
     public List<Road> roadsNear(int x0, int z0, int x1, int z1) {
+        if (planned()) {
+            return layout().roadsNear(x0, z0, x1, z1);
+        }
         List<Road> out = new ArrayList<>();
         int reach = LINK_RANGE / 2 + 400;
         for (int cx = Math.floorDiv(x0 - reach, CELL); cx <= Math.floorDiv(x1 + reach, CELL); cx++) {
@@ -739,7 +808,7 @@ public final class County {
         return t == PlaceType.DOWNTOWN || t == PlaceType.TOWN || t == PlaceType.PORT || t == PlaceType.MILITARY;
     }
 
-    private Road build(Place a, Place b, int maxWater) {
+    Road build(Place a, Place b, int maxWater) {
         Road.Kind kind;
         double dist = Math.hypot(a.centreX() - b.centreX(), a.centreZ() - b.centreZ());
         if (major(a.type) && major(b.type) && dist > 600) {
@@ -821,7 +890,7 @@ public final class County {
     }
 
     /** Midpoint displacement: a road that wanders a little instead of running dead straight. */
-    private void wander(List<double[]> pts, double ax, double az, double bx, double bz, long rs, int depth, double amp) {
+    void wander(List<double[]> pts, double ax, double az, double bx, double bz, long rs, int depth, double amp) {
         double len = Math.hypot(bx - ax, bz - az);
         if (len < 70 || depth > 6) {
             return;
@@ -836,7 +905,7 @@ public final class County {
     }
 
     /** A port's road never leaves from its water side: it turns to whichever land side is nearer b. */
-    private static int landSide(Place a, int side, Place b) {
+    static int landSide(Place a, int side, Place b) {
         if (side != a.waterSide) {
             return side;
         }
@@ -846,7 +915,7 @@ public final class County {
     }
 
     /** Which side of a faces b: 0 north, 1 east, 2 south, 3 west. */
-    private static int sideFacing(Place a, Place b) {
+    static int sideFacing(Place a, Place b) {
         double dx = b.centreX() - a.centreX(), dz = b.centreZ() - a.centreZ();
         if (Math.abs(dx) > Math.abs(dz)) {
             return dx > 0 ? 1 : 3;
