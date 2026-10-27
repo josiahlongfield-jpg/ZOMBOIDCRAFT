@@ -20,6 +20,8 @@ public final class Builders {
             case ROADSIDE -> {
                 if (p.variant.equals("depot")) {
                     new DepotSite(p, county, out).build();
+                } else if (p.variant.equals("halt")) {
+                    new HaltSite(p, county, out).build();
                 } else {
                     new RoadsideSite(p, out).build();
                 }

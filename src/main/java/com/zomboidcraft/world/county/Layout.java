@@ -298,11 +298,19 @@ final class Layout {
     static final Set<String> DEPOTS = Set.of("pinecrest", "millbrook", "fairview", "kings", "seabright");
     /** A depot's lot: along the platform, and back from its back edge. */
     static final int DEPOT_LEN = 44, DEPOT_DEPTH = 24;
+    /**
+     * A halt's car park ({@link HaltSite}) behind the fence of a country stop the plan's roads pass
+     * well clear of: along the platform's middle (out past its gates), and back from the fence.
+     */
+    static final int HALT_LEN = 36, HALT_DEPTH = 14;
+    /** No plan road within this of a stop's middle: it gets a halt, whose own road the county runs in to it. */
+    private static final double HALT_ROAD = 90;
 
     /**
      * A depot's lot ({@link DepotSite}) behind the platform at each of the bigger country stops:
      * along the platform's middle, from its back edge out, levelled to the land beside the line (a
-     * block under the platform), its front to the line, the side no road leaves it by.
+     * block under the platform), its front to the line, the side no road leaves it by. At a stop
+     * the plan's roads pass well clear of, a halt's car park instead, which links() runs a road to.
      */
     private void depots() {
         for (Track t : railway.tracks) {
@@ -310,18 +318,44 @@ final class Layout {
                 continue;
             }
             for (int k = 0; k < t.stops.size(); k++) {
-                String key = RailGen.key(t.stops.get(k));
-                Place p = key != null && DEPOTS.contains(key) ? depot(t, t.stops.get(k)) : null;
-                if (p != null) {
-                    places.add(p);
-                    t.depots.set(k);
+                Track.Stop st = t.stops.get(k);
+                String key = RailGen.key(st);
+                if (key != null && DEPOTS.contains(key)) {
+                    Place p = lot(t, st, "depot", DEPOT_LEN, DEPOT_DEPTH, 7);
+                    if (p != null) {
+                        places.add(p);
+                        t.depots.set(k);
+                    }
+                } else if (t.street[st.middle()] == 0 && roadless(t, st)) {
+                    Place p = lot(t, st, "halt", HALT_LEN, HALT_DEPTH, 8);
+                    if (p != null) {
+                        places.add(p);
+                    }
                 }
             }
         }
     }
 
-    private Place depot(Track t, Track.Stop st) {
-        int m = st.middle(), half = DEPOT_LEN / 2;
+    /** True if none of the plan's roads comes within HALT_ROAD of the stop's middle. */
+    private boolean roadless(Track t, Track.Stop st) {
+        int m = st.middle();
+        for (Plan.Line rd : plan.roads) {
+            for (double[] q : resample(rd.shape, Road.STEP)) {
+                if (Math.hypot(q[0] - t.xs[m], q[1] - t.zs[m]) < HALT_ROAD) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * A lot behind a country stop's platform, len along it and depth back, from gap out from the
+     * middle of the line; its variant's Site draws it. Null where the line isn't a straight squared
+     * to the compass and level the whole way, or the lot would be wet or in another's way.
+     */
+    private Place lot(Track t, Track.Stop st, String variant, int len, int depth, int gap) {
+        int m = st.middle(), half = len / 2;
         double tx = t.tx[m], tz = t.tz[m];
         if (Math.max(Math.abs(tx), Math.abs(tz)) < 0.999) {
             return null;   // only on a straight squared to the compass
@@ -341,15 +375,15 @@ final class Layout {
         double lat = alongX ? t.zs[m] : t.xs[m];
         int n = alongX ? nz : nx;
         // the first column off the platform (offset 7.5 or more on its side)
-        int near = n > 0 ? (int) Math.ceil(lat + 7 - 1e-6) : (int) Math.floor(lat - 8 + 1e-6);
-        int far = near + n * (DEPOT_DEPTH - 1);
-        int a0 = (int) Math.floor(alongX ? t.xs[m] : t.zs[m]) - half, a1 = a0 + DEPOT_LEN - 1;
+        int near = n > 0 ? (int) Math.ceil(lat + gap - 1e-6) : (int) Math.floor(lat - gap - 1 + 1e-6);
+        int far = near + n * (depth - 1);
+        int a0 = (int) Math.floor(alongX ? t.xs[m] : t.zs[m]) - half, a1 = a0 + len - 1;
         int c0 = Math.min(near, far), c1 = Math.max(near, far);
         // its front faces the line: 0 north, 1 east, 2 south, 3 west
         int facing = alongX ? (n > 0 ? 0 : 2) : (n > 0 ? 3 : 1);
         Place p = alongX
-                ? new Place(PlaceType.ROADSIDE, "depot", a0, c0, a1, c1, Y - 1, Noise.hash(seed ^ 0xDE90L, a0, c0), facing, 0)
-                : new Place(PlaceType.ROADSIDE, "depot", c0, a0, c1, a1, Y - 1, Noise.hash(seed ^ 0xDE90L, c0, a0), facing, 0);
+                ? new Place(PlaceType.ROADSIDE, variant, a0, c0, a1, c1, Y - 1, Noise.hash(seed ^ 0xDE90L, a0, c0), facing, 0)
+                : new Place(PlaceType.ROADSIDE, variant, c0, a0, c1, a1, Y - 1, Noise.hash(seed ^ 0xDE90L, c0, a0), facing, 0);
         for (Place o : places) {
             if (p.overlaps(o, 16)) {
                 return null;
