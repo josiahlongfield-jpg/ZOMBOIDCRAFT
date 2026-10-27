@@ -686,7 +686,7 @@ public final class ZcConfig {
         static GunStats pistol() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.5;
+            s.hipSpread = 1.5;
             s.aimSpread = 0.7;
             s.recoil = 0.9;
             s.shotNoise = 60.0;
@@ -741,7 +741,7 @@ public final class ZcConfig {
             GunStats s = new GunStats();
             s.damage = 22.0;
             s.headshotMultiplier = 3.0;
-            s.hipSpread = 3.2;
+            s.hipSpread = 1.9;
             s.aimSpread = 0.3;
             s.recoil = 1.9;
             s.shotNoise = 130.0;
@@ -771,7 +771,7 @@ public final class ZcConfig {
         static GunStats smg() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.2;
+            s.hipSpread = 1.3;
             s.aimSpread = 0.6;
             s.recoil = 0.55;
             s.shotNoise = 75.0;
@@ -819,7 +819,7 @@ public final class ZcConfig {
         CrossbowStats() {
             damage = 30.0;
             headshotMultiplier = 3.0;
-            hipSpread = 3.0;
+            hipSpread = 1.8;
             aimSpread = 0.2;
             recoil = 0.4;
             shotNoise = 8.0;
@@ -898,6 +898,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            hipSpread = 1.8;        // Josiah 10-27: hip rings 40% tighter at rest
             suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
@@ -920,8 +921,8 @@ public final class ZcConfig {
         /** Field of view looking through the 4x scope, as a share of normal. */
         public double scopeZoom = 0.25;
         /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
-        public double suppressedNoise = 0.3;
-        public double suppressedVolume = 1.0;
+        public double suppressedNoise = 0.1;
+        public double suppressedVolume = 0.7;
         /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
@@ -986,7 +987,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 2;
+    private static final int DEFAULTS = 3;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1011,6 +1012,31 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.5) {
                 c.look.shoulderAimSide = 0.42;
+            }
+        }
+        if (c.defaultsVersion < 3) {
+            // 2026-10-27 (Josiah): suppressors for sneaking (zombies hear a third as far, 30% quieter), and the hip
+            // rings of the assault rifle, SMG, crossbow, M9 and lever action 40% tighter
+            if (c.guns.suppressedNoise == 0.3) {
+                c.guns.suppressedNoise = 0.1;
+            }
+            if (c.guns.suppressedVolume == 1.0) {
+                c.guns.suppressedVolume = 0.7;
+            }
+            if (c.guns.hipSpread == 3.0) {
+                c.guns.hipSpread = 1.8;
+            }
+            if (c.smg.hipSpread == 2.2) {
+                c.smg.hipSpread = 1.3;
+            }
+            if (c.crossbow.hipSpread == 3.0) {
+                c.crossbow.hipSpread = 1.8;
+            }
+            if (c.pistol.hipSpread == 2.5) {
+                c.pistol.hipSpread = 1.5;
+            }
+            if (c.leverAction.hipSpread == 3.2) {
+                c.leverAction.hipSpread = 1.9;
             }
         }
         c.defaultsVersion = DEFAULTS;
