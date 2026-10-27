@@ -223,7 +223,7 @@ public final class CarClient {
     }
 
     /** The car under the crosshair: picked itself, or one of its invisible hull blocks. */
-    private static CarProp lookedAt(Minecraft client, HitResult hit) {
+    static CarProp lookedAt(Minecraft client, HitResult hit) {
         if (hit instanceof EntityHitResult e) {
             return e.getEntity() instanceof CarProp car ? car : null;
         }
