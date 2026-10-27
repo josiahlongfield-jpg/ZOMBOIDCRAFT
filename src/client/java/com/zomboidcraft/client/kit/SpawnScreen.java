@@ -127,7 +127,10 @@ public final class SpawnScreen extends Screen {
         int size = Math.max(60, Math.min(mapRight - mapLeft, bottom - top));
         int mapX = mapLeft + (mapRight - mapLeft - size) / 2, mapY = top;
 
-        list(g, listX, top, bottom, mx, my);
+        // friends already out there sit under the list
+        int friendsH = open.friends().isEmpty() ? 0 : 12 + Math.min(4, open.friends().size()) * 16;
+        list(g, listX, top, bottom - friendsH, mx, my);
+        friends(g, listX, bottom - friendsH + 6, mx, my);
         map(g, mapX, mapY, size, mx, my);
         card(g, cardX, top, bottom, mx, my);
 
@@ -205,7 +208,6 @@ public final class SpawnScreen extends Screen {
     }
 
     private void card(GuiGraphicsExtractor g, int x, int top, int bottom, int mx, int my) {
-        friendRows.clear();
         SpawnNet.Place p = place(selected);
         if (p == null) return;
         int w = CARD_W, in = 8, tw = w - in * 2;
@@ -244,19 +246,21 @@ public final class SpawnScreen extends Screen {
         KitDraw.frame(g, x + in, y, tw, 14, in(random, mx, my) ? 0xFFF2EFE8 : 0x73E8E4DA);
         KitDraw.capsCentred(g, font, "Pick for me", x + w / 2f, y + 4, KitDraw.TEXT, 0.85f);
 
-        if (!open.friends().isEmpty()) {
-            int fy = top + h + 10;
-            KitDraw.heading(g, font, "Friends in this world", x, fy, w, false);
-            fy += 10;
-            for (SpawnNet.Friend f : open.friends()) {
-                if (fy + 14 > bottom) break;
-                int[] r = {x, fy, w, 14};
-                KitDraw.frame(g, x, fy, w, 14, in(r, mx, my) ? 0xFFF2EFE8 : 0x4DE8E4DA);
-                KitDraw.text(g, font, "Wake up near " + f.name(), x + 4, fy + 3, KitDraw.TEXT, 0.8f);
-                KitDraw.textRight(g, font, f.where(), x + w - 4, fy + 3, KitDraw.DIM, 0.7f);
-                friendRows.add(r);
-                fy += 16;
-            }
+    }
+
+    private void friends(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
+        friendRows.clear();
+        if (open.friends().isEmpty()) return;
+        KitDraw.heading(g, font, "Friends in this world", x, y, LIST_W, false);
+        y += 10;
+        for (int i = 0; i < Math.min(4, open.friends().size()); i++) {
+            SpawnNet.Friend f = open.friends().get(i);
+            int[] r = {x, y, LIST_W, 14};
+            KitDraw.frame(g, x, y, LIST_W, 14, in(r, mx, my) ? 0xFFF2EFE8 : 0x4DE8E4DA);
+            KitDraw.text(g, font, "Near " + f.name(), x + 4, y + 3, KitDraw.TEXT, 0.8f);
+            KitDraw.textRight(g, font, f.where(), x + LIST_W - 4, y + 3, KitDraw.DIM, 0.7f);
+            friendRows.add(r);
+            y += 16;
         }
     }
 

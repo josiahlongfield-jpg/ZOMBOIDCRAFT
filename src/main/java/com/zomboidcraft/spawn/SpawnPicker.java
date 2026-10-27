@@ -92,7 +92,15 @@ public final class SpawnPicker {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> pick(player, payload));
         });
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> offer(handler.getPlayer(), false)));
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
+            ServerPlayer player = handler.getPlayer();
+            // someone who was already playing this world before the picker came in keeps their place
+            if (!player.hasAttached(SPAWNED) && !player.hasAttached(HELD)
+                    && player.getStats().getValue(net.minecraft.stats.Stats.CUSTOM.get(net.minecraft.stats.Stats.PLAY_TIME)) > 20 * 60) {
+                player.setAttached(SPAWNED, true);
+            }
+            offer(player, false);
+        }));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> server.execute(() -> SEARCHES.remove(handler.getPlayer().getUUID())));
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             if (alive) {
