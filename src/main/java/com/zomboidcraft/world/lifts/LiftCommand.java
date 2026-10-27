@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.LiftBuild;
 import com.zomboidcraft.world.city.Placer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;

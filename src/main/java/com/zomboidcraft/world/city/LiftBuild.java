@@ -1,10 +1,10 @@
-package com.zomboidcraft.world.lifts;
+package com.zomboidcraft.world.city;
 
 /**
  * Lays a working lift into a builder's blocks, in the builder's own frame with the doors facing
  * north (local -z), as the towers have them; the builder's placer turns it with the building.
  * The builder walls the shaft; this clears it, sets the landing doors, the call buttons and the
- * machine on top (see {@link LiftShaft} for how the game reads it back).
+ * machine on top (see {@code world.lifts.LiftShaft} for how the game reads it back).
  */
 public final class LiftBuild {
     /** Where the blocks go: a builder's placer (set(x, y, z, block)). */

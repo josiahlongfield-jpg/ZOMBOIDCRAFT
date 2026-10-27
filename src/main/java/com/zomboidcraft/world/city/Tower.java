@@ -1,6 +1,5 @@
 package com.zomboidcraft.world.city;
 
-import com.zomboidcraft.world.lifts.LiftBuild;
 import java.util.SplittableRandom;
 
 /**
