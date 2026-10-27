@@ -29,7 +29,8 @@ import org.joml.Vector3f;
  * the ground, and after a while is gone. As the preview does it (limbs.js), in blocks.
  *
  * A head that bursts goes the same way in pieces: bits of skull and scalp, brain and bone sprayed out along the shot,
- * and its hat (or hair) thrown off whole.
+ * and its hat (or hair) thrown off whole. A chest blown open throws rags of its clothes and bits of flesh and bone
+ * out of its back.
  */
 public final class Gibs {
     /** Preview units to blocks. */
@@ -40,6 +41,8 @@ public final class Gibs {
     private static final Random RANDOM = new Random();
     /** How many bits of skull and scalp, and of brain and bone, a burst head throws; most bits lying about at once. */
     private static final int SKULL_BITS = 8, GORE_BITS = 7, MAX_BITS = 150;
+    /** How many rags of clothes (or skin), and bits of flesh and bone, a chest blown open throws. */
+    private static final int RAG_BITS = 7, CHEST_GORE_BITS = 9;
     /** Seconds a bit of head lies about (at most the limbs' time). */
     private static final float BIT_SECONDS = 20f;
 
@@ -146,6 +149,9 @@ public final class Gibs {
         if ((newly & Dismember.HEAD_GONE) != 0) {
             head(mesh, skin, kit, mats, model, x, y, z, heading, fling, entityScale, seed);
         }
+        if ((newly & Dismember.CHEST_HOLE) != 0) {
+            chest(mesh, skin, kit, mats, model, x, y, z, heading, fling, entityScale);
+        }
         trim();
     }
 
@@ -232,6 +238,55 @@ public final class Gibs {
             g.vx = -Math.sin(way) * speed;
             g.vz = Math.cos(way) * speed;
             g.vy = (15f + RANDOM.nextFloat() * 50f) * UNIT;
+            g.spin.set(RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f).mul(20f);
+            GIBS.add(g);
+        }
+    }
+
+    /** A chest blown open: rags of what it wore there (or its skin) and bits of flesh and bone, out of its back. */
+    private static void chest(ZBodyMesh mesh, Identifier skin, Identifier kit, float[] mats, Matrix4f model,
+                              double x, double y, double z, float heading, float fling, float entityScale) {
+        M.set(model).mul(new Matrix4f().set(mats, ZMove.SPINE * 16));
+        M.transformPosition(V.set(-0.1f, 6.45f, 0f));
+        double cx = x + V.x, cy = y + V.y, cz = z + V.z;
+        List<float[]> cloth = new ArrayList<>(), flesh = new ArrayList<>();
+        for (int q = 0; q < mesh.count; q++) {
+            if (mesh.bone[q] == ZMove.SPINE && Math.abs(mesh.normal[q * 3 + 2]) > 0.9f) {
+                ((mesh.flags[q] & ZBodyMesh.BODY) != 0 ? flesh : cloth).add(
+                        new float[] {mesh.uv[q * 4], mesh.uv[q * 4 + 1], mesh.uv[q * 4 + 2], mesh.uv[q * 4 + 3]});
+            }
+        }
+        boolean worn = !cloth.isEmpty();
+        List<float[]> rags = worn ? cloth : flesh;
+        for (int i = 0; i < RAG_BITS + CHEST_GORE_BITS; i++) {
+            Gib g = new Gib();
+            if (i < RAG_BITS && !rags.isEmpty()) {
+                float[] f = rags.get(RANDOM.nextInt(rags.size()));
+                float w = (f[2] - f[0]) * (0.4f + RANDOM.nextFloat() * 0.3f), h = (f[3] - f[1]) * (0.4f + RANDOM.nextFloat() * 0.3f);
+                float u = f[0] + (f[2] - f[0] - w) * RANDOM.nextFloat(), v = f[1] + (f[3] - f[1] - h) * RANDOM.nextFloat();
+                g.tex = worn ? kit : skin;
+                g.uv = new float[] {u, v, u + w, v + h};
+                g.colour = worn ? -1 : ZBodyLayer.BODY_TINT;
+            } else {
+                g.tex = Gore.TEXTURE;
+                g.uv = Gore.region(i % 3 == 0 ? Gore.BONE : i % 3 == 1 ? Gore.FLESH : Gore.SHRED);
+            }
+            g.size = 0.8f + RANDOM.nextFloat() * 1.3f;
+            for (int c = 0; c < 8; c++) {
+                g.corners[c * 3] = (c & 1) == 0 ? -g.size / 2 : g.size / 2;
+                g.corners[c * 3 + 1] = (c & 2) == 0 ? -g.size / 2 : g.size / 2;
+                g.corners[c * 3 + 2] = (c & 4) == 0 ? -g.size / 2 : g.size / 2;
+            }
+            g.x = cx + RANDOM.nextGaussian() * 0.08;
+            g.y = cy + RANDOM.nextGaussian() * 0.08;
+            g.z = cz + RANDOM.nextGaussian() * 0.08;
+            g.scale = UNIT * entityScale;
+            g.rot.rotationXYZ(RANDOM.nextFloat() * 6.28f, RANDOM.nextFloat() * 6.28f, RANDOM.nextFloat() * 6.28f);
+            float speed = fling * UNIT * (0.5f + RANDOM.nextFloat() * 0.9f);
+            double way = heading + RANDOM.nextGaussian() * 0.45;
+            g.vx = -Math.sin(way) * speed;
+            g.vz = Math.cos(way) * speed;
+            g.vy = (10f + RANDOM.nextFloat() * 40f) * UNIT;
             g.spin.set(RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f).mul(20f);
             GIBS.add(g);
         }

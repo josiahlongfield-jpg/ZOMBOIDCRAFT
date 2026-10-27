@@ -54,7 +54,8 @@ import net.minecraft.world.phys.Vec3;
  * Losing a leg, it stumbles and then hops slowly on the other; losing both, it falls and crawls. A zombie with no
  * hands left can't grab hold of you.
  *
- * A big enough hit to the head bursts it: a hunting rifle headshot, or most of a blast of buckshot up close.
+ * A big enough hit to the head bursts it: a hunting rifle headshot, or most of a blast of buckshot up close. Most of
+ * a blast of buckshot in the chest from point-blank range blows a hole right through it.
  */
 public final class Dismember {
     /** Limbs gone, one bit each (forearm at the elbow, whole arm at the shoulder, shin at the knee, leg at the hip). */
@@ -62,11 +63,16 @@ public final class Dismember {
     public static final int RIGHT_LEG = KN_R | HIP_R, LEFT_LEG = KN_L | HIP_L, RIGHT_ARM = EL_R | SH_R, LEFT_ARM = EL_L | SH_L;
     /** Its head has been blown apart (bit 18 of the saved value, apart from the limbs). */
     public static final int HEAD_GONE = 1 << 18;
+    /** Its chest has been blown open by buckshot up close, a hole right through it (bit 19). */
+    public static final int CHEST_HOLE = 1 << 19;
+    /** What it bears apart from its limbs: the head gone, the chest blown open. */
+    public static final int MARKS = HEAD_GONE | CHEST_HOLE;
 
     /**
      * The limbs a zombie has lost (bits 0-7), which way the last one flew (the shot's heading in 256ths of a turn,
-     * bits 8-15) and how hard (0 handgun to 3 buckshot, bits 16-17), and whether its head burst (bit 18). Saved, and
-     * sent to clients, which draw the stumps and throw the limb or the pieces of the head.
+     * bits 8-15) and how hard (0 handgun to 3 buckshot, bits 16-17), whether its head burst (bit 18) and whether its
+     * chest was blown open (bit 19). Saved, and sent to clients, which draw the stumps and the hole and throw the limb
+     * or the pieces.
      */
     public static final AttachmentType<Integer> LIMBS = AttachmentRegistry.create(
             ZomboidCraft.id("limbs"),
@@ -79,7 +85,7 @@ public final class Dismember {
 
     // the body's parts: head, torso (two side by side), pelvis, then right upper arm, forearm, left upper arm, forearm,
     // right thigh, shin, left thigh, shin. Their shapes in each pose are in BodyCaps.
-    private static final int PARTS = 12, HEAD = 0;
+    private static final int PARTS = 12, HEAD = 0, CHEST = 1;
     private static final int[] CUT_OF = {0, 0, 0, 0, SH_R, EL_R, SH_L, EL_L, HIP_R, KN_R, HIP_L, KN_L};
     private static final int[] MIRROR = {0, 2, 1, 3, 6, 7, 4, 5, 10, 11, 8, 9};
     /** How far past its box a walker's body reaches (arms held out, lying flat, crawling), in blocks at scale 1. */
@@ -103,6 +109,8 @@ public final class Dismember {
         float head;
         Vec3 headDir;
         GunType headGun;
+        /** Pellets of buckshot that went into its chest this tick from point-blank range, toward blowing it open. */
+        int chestPellets;
         /** The last shot to land anywhere, and when: the way it falls if that killed it (Deaths). */
         Vec3 shotDir;
         GunType shotGun;
@@ -296,6 +304,9 @@ public final class Dismember {
             w.head += (float) (damage * bursting(gun, config));
             w.headDir = dir;
             w.headGun = gun;
+        } else if ((part == CHEST || part == 2) && gun.pellets() > 1 && shooter != null
+                && shooter.getEyePosition().distanceTo(hit.getLocation()) <= config.chestHoleRange) {
+            w.chestPellets++;
         }
     }
 
@@ -342,6 +353,7 @@ public final class Dismember {
         ZcConfig.Limbs config = ZcConfig.get().limbs;
         if (!config.enabled) {
             w.struck = 0;
+            w.chestPellets = 0;
             return;
         }
         float[] took = w.dealt.clone();
@@ -356,6 +368,13 @@ public final class Dismember {
                 sever(zombie, cut, partOf(cut), w.dir, w.gun);
             }
         }
+        // most of a blast in the chest from point-blank range: it goes right through
+        boolean blown = config.chestHoles && w.chestPellets > 0 && w.shotGun != null
+                && w.chestPellets > w.shotGun.pellets() * config.chestHoleShare && (limbs(zombie) & CHEST_HOLE) == 0;
+        if (blown) {
+            blowOpen(zombie, w);
+        }
+        w.chestPellets = 0;
         float head = w.head;
         boolean burst = config.headBursts && head > 0f && head >= config.headBurst && !headGone(zombie);
         if (burst) {
@@ -363,9 +382,38 @@ public final class Dismember {
         }
         w.head = 0f;
         if (config.showHits && w.shooter != null && w.struck != 0) {
-            w.shooter.sendOverlayMessage(readout(w.struck, took, severed, head, burst, config));
+            w.shooter.sendOverlayMessage(readout(w.struck, took, severed, head, burst, blown, config));
         }
         w.struck = 0;
+    }
+
+    /**
+     * Blows its chest open: a hole right through it, in a spray of blood and bits out of its back (the client throws
+     * the pieces and draws the hole), and it's knocked back a step. With only headshots killing, it keeps coming.
+     */
+    private static void blowOpen(Zombie zombie, Wounds w) {
+        Vec3 dir = w.shotDir;
+        int heading = Math.floorMod(Math.round((float) Math.toDegrees(Math.atan2(-dir.x, dir.z)) / 360f * 256f), 256);
+        zombie.setAttached(LIMBS, limbs(zombie) & (CUTS | MARKS) | CHEST_HOLE | heading << 8 | force(w.shotGun) << 16);
+        ServerLevel level = (ServerLevel) zombie.level();
+        Vec3 at = chest(zombie);
+        BlockParticleOption blood = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState());
+        level.sendParticles(blood, at.x, at.y, at.z, 50, 0.16, 0.16, 0.16, 0.35);
+        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.defaultBlockState()),
+                at.x, at.y, at.z, 10, 0.12, 0.12, 0.12, 0.3);
+        for (int i = 0; i < 18; i++) {
+            // most of it goes out of its back, with the shot
+            Vec3 v = dir.scale(0.6 + zombie.getRandom().nextDouble() * 0.6).add(
+                    zombie.getRandom().nextGaussian() * 0.18, zombie.getRandom().nextDouble() * 0.15,
+                    zombie.getRandom().nextGaussian() * 0.18);
+            level.sendParticles(blood, at.x, at.y, at.z, 0, v.x, v.y, v.z, 1.0);
+        }
+        level.playSound(null, at.x, at.y, at.z, ModSounds.HEAD_BURST, SoundSource.HOSTILE, 1.5f,
+                0.65f + zombie.getRandom().nextFloat() * 0.1f);
+        BLEEDING.add(new Bleed(zombie, CHEST, level.getGameTime() + 100));
+        if (!Downed.isCrawler(zombie)) {
+            Downed.stagger(zombie, 14);
+        }
     }
 
     /**
@@ -375,7 +423,7 @@ public final class Dismember {
     private static void burst(Zombie zombie, Wounds w) {
         Vec3 dir = w.headDir;
         int heading = Math.floorMod(Math.round((float) Math.toDegrees(Math.atan2(-dir.x, dir.z)) / 360f * 256f), 256);
-        zombie.setAttached(LIMBS, cuts(zombie) | HEAD_GONE | heading << 8 | force(w.headGun) << 16);
+        zombie.setAttached(LIMBS, limbs(zombie) & (CUTS | MARKS) | HEAD_GONE | heading << 8 | force(w.headGun) << 16);
         ServerLevel level = (ServerLevel) zombie.level();
         Vec3 at = joint(zombie, HEAD);
         BlockParticleOption blood = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState());
@@ -400,11 +448,14 @@ public final class Dismember {
     }
 
     /** The hits readout: the parts a shot struck, how far along each limb is to coming off, and what came off. */
-    private static Component readout(int struck, float[] took, int severed, float head, boolean burst,
+    private static Component readout(int struck, float[] took, int severed, float head, boolean burst, boolean blown,
                                      ZcConfig.Limbs config) {
         Set<String> parts = new LinkedHashSet<>();
         if (burst) {
             parts.add("head BURST");
+        }
+        if (blown) {
+            parts.add("chest BLOWN OPEN");
         }
         for (int cut : ORDER) {
             if ((severed & cut) != 0) {
@@ -490,7 +541,7 @@ public final class Dismember {
     private static void sever(Zombie zombie, int cut, int part, Vec3 dir, GunType gun) {
         int before = cuts(zombie), cuts = before | cut;
         int heading = Math.floorMod(Math.round((float) Math.toDegrees(Math.atan2(-dir.x, dir.z)) / 360f * 256f), 256);
-        zombie.setAttached(LIMBS, cuts | heading << 8 | force(gun) << 16);
+        zombie.setAttached(LIMBS, cuts | limbs(zombie) & MARKS | heading << 8 | force(gun) << 16);
         ServerLevel level = (ServerLevel) zombie.level();
         Vec3 joint = joint(zombie, part);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
@@ -531,6 +582,14 @@ public final class Dismember {
         zombie.setAttached(LIMBS, 0);
         WOUNDS.remove(zombie);
         removeHop(zombie);
+    }
+
+    /** Blows its chest open with no shot (the test command's holed zombie), as if by a blast from in front. */
+    public static void blowOpen(Zombie zombie) {
+        Wounds w = new Wounds();
+        w.shotDir = zombie.getLookAngle().reverse();
+        w.shotGun = GunType.SHOTGUN;
+        blowOpen(zombie, w);
     }
 
     /** Takes a limb off with no shot (the test command's hopper), as if blown off from behind. */
@@ -671,6 +730,16 @@ public final class Dismember {
      * it.
      */
     private static Vec3 joint(Zombie zombie, int part) {
+        return at(zombie, part, part == HEAD);
+    }
+
+    /** The middle of its chest (both halves of the torso) in the world, near enough. */
+    private static Vec3 chest(Zombie zombie) {
+        return at(zombie, CHEST, true).add(at(zombie, 2, true)).scale(0.5);
+    }
+
+    /** Where a part meets the body in the world, or (middle) the middle of it. */
+    private static Vec3 at(Zombie zombie, int part, boolean middle) {
         BodyTrack.Frame f = BodyTrack.now(zombie);
         float[] caps = BodyCaps.TABLES[f.pose()];
         boolean mirror = BodyCaps.oneLeg(f.pose()) && (cuts(zombie) & LEFT_LEG) != 0;
@@ -681,7 +750,7 @@ public final class Dismember {
             if ((int) caps[k] != want) {
                 continue;
             }
-            if (part == HEAD) {
+            if (middle) {
                 x += (caps[k + 1] + caps[k + 4]) / 2;
                 y += (caps[k + 2] + caps[k + 5]) / 2;
                 z += (caps[k + 3] + caps[k + 6]) / 2;
@@ -725,7 +794,8 @@ public final class Dismember {
                 continue;
             }
             if (level.getGameTime() % 4 == 0) {
-                Vec3 at = joint(zombie, b.part()).add(0, b.part() == HEAD ? -0.15 : 0, 0);
+                Vec3 at = b.part() == CHEST ? chest(zombie).add(0, -0.1, 0)
+                        : joint(zombie, b.part()).add(0, b.part() == HEAD ? -0.15 : 0, 0);
                 level.sendParticles(new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.REDSTONE_BLOCK.defaultBlockState()),
                         at.x, at.y - 0.05, at.z, 1, 0.03, 0.02, 0.03, 0.0);
             }

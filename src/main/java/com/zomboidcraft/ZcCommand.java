@@ -145,17 +145,17 @@ public final class ZcCommand {
         return 1;
     }
 
-    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless", "hopper");
+    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless", "hopper", "holed");
 
     /**
-     * Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling, with no legs, or
-     * hopping on one (the other shot off at the knee).
+     * Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling, with no legs,
+     * hopping on one (the other shot off at the knee), or walking with its chest blown open.
      */
     private static int zombie(CommandContext<CommandSourceStack> ctx, String outfit, String kind) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         if ((outfit != null && !ZombieLook.outfits().contains(outfit)) || !ZOMBIE_KINDS.contains(kind)) {
             ctx.getSource().sendFailure(Component.literal("Outfits: " + String.join(", ", ZombieLook.outfits())
-                    + "; then walker, crawler, legless or hopper"));
+                    + "; then walker, crawler, legless, hopper or holed"));
             return 0;
         }
         double yaw = Math.toRadians(player.getYRot());
@@ -181,6 +181,11 @@ public final class ZcCommand {
                 com.zomboidcraft.combat.Dismember.restore(zombie);
                 com.zomboidcraft.combat.Dismember.cut(zombie, zombie.getRandom().nextBoolean()
                         ? com.zomboidcraft.combat.Dismember.KN_R : com.zomboidcraft.combat.Dismember.KN_L);
+            }
+            case "holed" -> {
+                com.zomboidcraft.combat.Downed.makeWalker(zombie);
+                com.zomboidcraft.combat.Dismember.restore(zombie);
+                com.zomboidcraft.combat.Dismember.blowOpen(zombie);
             }
             default -> {
                 com.zomboidcraft.combat.Downed.makeWalker(zombie);

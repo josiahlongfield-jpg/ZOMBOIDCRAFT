@@ -9,8 +9,8 @@ import net.minecraft.resources.Identifier;
 import org.joml.Matrix4f;
 
 /**
- * Draws one new-style body in a pose: the skin, the worn clothes (or the baked far-off body), the eyes, and torn
- * stumps where limbs are gone. For a walking zombie (ZBodyLayer) and for a dead one's body lying on the ground
+ * Draws one new-style body in a pose: the skin, the worn clothes (or the baked far-off body), the eyes, torn
+ * stumps where limbs are gone, and a chest blown open. For a walking zombie (ZBodyLayer) and for a dead one's body lying on the ground
  * (CorpseRenderer). Render thread only.
  */
 public final class ZBodyDraw {
@@ -27,7 +27,7 @@ public final class ZBodyDraw {
     /**
      * @param low the outfit's baked far-off body, or null
      * @param eyes the eye mask, or null for none (turned off, or dead)
-     * @param cuts limbs shot off, with Dismember.HEAD_GONE
+     * @param cuts limbs shot off, with Dismember.HEAD_GONE and CHEST_HOLE
      * @param missingLimb a limb lost before it rose (ZombieLook.missingLimb)
      * @param lod how much detail (ZDetail)
      */
@@ -37,27 +37,38 @@ public final class ZBodyDraw {
         float[] mats = ZBodyLayer.matrices(mesh, pose, legless, world);
         int stumps = ZBodyLayer.stumps(cuts, missingLimb);
         int hidden = ZBodyLayer.hiddenBones(stumps, legless);
-        if (lod >= ZDetail.LOW && low != null) {
+        boolean holed = (cuts & Dismember.CHEST_HOLE) != 0;
+        ZBodyMesh near = holed ? ChestHole.of(mesh) : mesh;
+        ZBodyMesh far = holed && low != null ? ChestHole.of(low) : low;
+        ZBodyMesh drawn = lod >= ZDetail.LOW && far != null ? far : near;
+        if (drawn == far) {
             // the baked body: its own atlas already carries the skin's tint and the clothes painted over it
             int kitLod = lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL;
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(lowSkin),
-                    (p, out) -> ZBodyLayer.emit(low, mats, p, out, true, hidden, ZDetail.FULL, legless, light, overlay, -1));
+                    (p, out) -> ZBodyLayer.emit(far, mats, p, out, true, hidden, ZDetail.FULL, legless, light, overlay, -1));
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(kit),
-                    (p, out) -> ZBodyLayer.emit(low, mats, p, out, false, hidden, kitLod, legless, light, overlay, -1));
+                    (p, out) -> ZBodyLayer.emit(far, mats, p, out, false, hidden, kitLod, legless, light, overlay, -1));
         } else {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(skin),
-                    (p, out) -> ZBodyLayer.emit(mesh, mats, p, out, true, hidden, lod, legless, light, overlay,
+                    (p, out) -> ZBodyLayer.emit(near, mats, p, out, true, hidden, lod, legless, light, overlay,
                             ZBodyLayer.BODY_TINT));
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(kit),
-                    (p, out) -> ZBodyLayer.emit(mesh, mats, p, out, false, hidden, lod, legless, light, overlay, -1));
+                    (p, out) -> ZBodyLayer.emit(near, mats, p, out, false, hidden, lod, legless, light, overlay, -1));
         }
         if (eyes != null && (cuts & Dismember.HEAD_GONE) == 0) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(eyes),
                     (p, out) -> ZBodyLayer.eyes(mats, p, out));
         }
-        if (stumps != 0 && lod < 2) {
-            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(Gore.TEXTURE),
-                    (p, out) -> rags(mats, stumps, variant, p, out, light, overlay));
+        boolean torn = (stumps & (Dismember.CUTS | Dismember.HEAD_GONE)) != 0 && lod < 2;
+        if (torn || holed) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(Gore.TEXTURE), (p, out) -> {
+                if (torn) {
+                    rags(mats, stumps, variant, p, out, light, overlay);
+                }
+                if (holed) {
+                    ChestHole.draw(gore, at, mats, drawn, lod < 2, variant, p, out, light, overlay);
+                }
+            });
         }
     }
 
