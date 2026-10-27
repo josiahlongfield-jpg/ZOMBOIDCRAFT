@@ -58,6 +58,8 @@ public final class Track {
      * its half width, 0 for a county road or 1 for a city street}.
      */
     public final List<int[]> crossings = new ArrayList<>();
+    /** The stops (by index) with a depot behind the platform (Layout, DepotSite): no fence or shelter there, the canopy instead. */
+    final java.util.BitSet depots = new java.util.BitSet();
     private final Map<Long, int[]> cells = new HashMap<>();
     private final int reach;
 

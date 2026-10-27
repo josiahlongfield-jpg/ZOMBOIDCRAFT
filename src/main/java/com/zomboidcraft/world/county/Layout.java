@@ -76,6 +76,7 @@ final class Layout {
         city();
         railway = new Railway(this, plan, terrain);
         railway.markTiles(places);
+        depots();
         suburbs();
         country();
         for (Place p : places) {
@@ -291,6 +292,89 @@ final class Layout {
             }
         }
         return null;
+    }
+
+    /** The country stops with a depot behind the platform (the rw_ kit has their names for its walls). */
+    static final Set<String> DEPOTS = Set.of("pinecrest", "millbrook", "fairview", "kings", "seabright");
+    /** A depot's lot: along the platform, and back from its back edge. */
+    static final int DEPOT_LEN = 44, DEPOT_DEPTH = 24;
+
+    /**
+     * A depot's lot ({@link DepotSite}) behind the platform at each of the bigger country stops:
+     * along the platform's middle, from its back edge out, levelled to the land beside the line (a
+     * block under the platform), its front to the line, the side no road leaves it by.
+     */
+    private void depots() {
+        for (Track t : railway.tracks) {
+            if (t.kind != Track.Kind.RAIL) {
+                continue;
+            }
+            for (int k = 0; k < t.stops.size(); k++) {
+                String key = RailGen.key(t.stops.get(k));
+                Place p = key != null && DEPOTS.contains(key) ? depot(t, t.stops.get(k)) : null;
+                if (p != null) {
+                    places.add(p);
+                    t.depots.set(k);
+                }
+            }
+        }
+    }
+
+    private Place depot(Track t, Track.Stop st) {
+        int m = st.middle(), half = DEPOT_LEN / 2;
+        double tx = t.tx[m], tz = t.tz[m];
+        if (Math.max(Math.abs(tx), Math.abs(tz)) < 0.999) {
+            return null;   // only on a straight squared to the compass
+        }
+        for (int i = m - half - 2; i <= m + half + 2; i++) {
+            int k = t.wrap(i);
+            if (t.mode[k] != Track.GROUND || t.street[k] > 0 || t.stopAt[k] != t.stopAt[m] || t.ys[k] != t.ys[m]) {
+                return null;
+            }
+        }
+        // the bed top as the platform has it (RailGen's Cut): the land beside the line is a block under it
+        double y = t.ys[m];
+        int whole = (int) Math.floor(y), Y = whole + (Math.round((y - whole) * 4) == 4 ? 1 : 0);
+        // the platform's side, out from the line: right of the way the trains run is (-tz, tx)
+        int nx = (int) Math.round(-tz * st.side()), nz = (int) Math.round(tx * st.side());
+        boolean alongX = Math.abs(tx) > Math.abs(tz);
+        double lat = alongX ? t.zs[m] : t.xs[m];
+        int n = alongX ? nz : nx;
+        // the first column off the platform (offset 7.5 or more on its side)
+        int near = n > 0 ? (int) Math.ceil(lat + 7 - 1e-6) : (int) Math.floor(lat - 8 + 1e-6);
+        int far = near + n * (DEPOT_DEPTH - 1);
+        int a0 = (int) Math.floor(alongX ? t.xs[m] : t.zs[m]) - half, a1 = a0 + DEPOT_LEN - 1;
+        int c0 = Math.min(near, far), c1 = Math.max(near, far);
+        // its front faces the line: 0 north, 1 east, 2 south, 3 west
+        int facing = alongX ? (n > 0 ? 0 : 2) : (n > 0 ? 3 : 1);
+        Place p = alongX
+                ? new Place(PlaceType.ROADSIDE, "depot", a0, c0, a1, c1, Y - 1, Noise.hash(seed ^ 0xDE90L, a0, c0), facing, 0)
+                : new Place(PlaceType.ROADSIDE, "depot", c0, a0, c1, a1, Y - 1, Noise.hash(seed ^ 0xDE90L, c0, a0), facing, 0);
+        for (Place o : places) {
+            if (p.overlaps(o, 16)) {
+                return null;
+            }
+        }
+        // on dry land, and no other line (nor this one coming round again) through it
+        for (int x = p.x0; x <= p.x1; x += 8) {
+            for (int z = p.z0; z <= p.z1; z += 8) {
+                if (terrain.height(x, z) < Terrain.WATER + 1 || terrain.riverChannel(x, z)) {
+                    return null;
+                }
+            }
+        }
+        for (Track o : railway.tracks) {
+            if (o.kind == Track.Kind.SUBWAY) {
+                continue;
+            }
+            for (int i = 0; i < o.n; i += 2) {
+                boolean own = o == t && Math.abs(i - m) < 200 || o == t && o.n - Math.abs(i - m) < 200;
+                if (!own && p.contains((int) o.xs[i], (int) o.zs[i], 8)) {
+                    return null;
+                }
+            }
+        }
+        return p;
     }
 
     /** True if p keeps margin clear of every place laid so far and of the county fence. */
