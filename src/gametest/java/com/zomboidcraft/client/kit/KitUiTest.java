@@ -645,6 +645,12 @@ public class KitUiTest implements FabricClientGameTest {
             this.turn = turn;
         }
 
+        // a pause screen stops the integrated server ticking, and with it the worn-gear sync
+        @Override
+        public boolean isPauseScreen() {
+            return false;
+        }
+
         @Override
         public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
             g.fill(0, 0, width, height, 0xFF7A8490);
