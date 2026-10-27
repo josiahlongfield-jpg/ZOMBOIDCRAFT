@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "axis=z,lit=false": {
+      "model": "zomboidcraft:block/city/tx_ceiling_lamp"
+    },
+    "axis=z,lit=true": {
+      "model": "zomboidcraft:block/city/tx_ceiling_lamp_on"
+    },
+    "axis=x,lit=false": {
+      "model": "zomboidcraft:block/city/tx_ceiling_lamp",
+      "y": 90
+    },
+    "axis=x,lit=true": {
+      "model": "zomboidcraft:block/city/tx_ceiling_lamp_on",
+      "y": 90
+    }
+  }
+}

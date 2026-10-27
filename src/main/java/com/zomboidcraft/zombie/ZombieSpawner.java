@@ -92,11 +92,40 @@ public final class ZombieSpawner {
     }
 
     /**
+     * A test horde (/zc horde): this many zombies scattered between half and one and a half times the distance around
+     * the player, dressed for where they stand. Returns how many found room.
+     */
+    public static int spawnAround(ServerLevel level, ServerPlayer player, int count, int distance) {
+        RandomSource random = player.getRandom();
+        int made = 0;
+        for (int i = 0; i < count; i++) {
+            BlockPos pos = null;
+            for (int tries = 0; tries < 6 && pos == null; tries++) {
+                double angle = random.nextDouble() * Math.PI * 2;
+                double r = distance * (0.5 + random.nextDouble());
+                pos = findSpot(level, player.getBlockX() + (int) (Math.cos(angle) * r),
+                        player.getBlockZ() + (int) (Math.sin(angle) * r), player.getBlockY());
+            }
+            Zombie zombie = pos == null ? null : EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
+            if (zombie != null) {
+                String uniform = uniform(level, pos, random);
+                if (uniform != null) {
+                    zombie.setAttached(ZombieLook.OUTFIT, uniform);
+                }
+                made++;
+            }
+        }
+        return made;
+    }
+
+    /**
      * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
      * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
-     * patients. Null leaves the zombie to the general mix.
+     * patients; the stadium shelter fell with its guards and the sick it took in, and Union
+     * Station's camp with the soldiers who ran it and its field hospital's patients. Null leaves the
+     * zombie to the general mix.
      */
-    private static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
+    public static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
         if (onShip(level, pos)) {
             return random.nextInt(100) < 85 ? "soldier" : null;
         }
@@ -113,6 +142,12 @@ public final class ZombieSpawner {
                     return roll < 40 ? "soldier" : roll < 70 ? "patient" : null;
                 }
                 return roll < 70 ? "soldier" : null;
+            }
+            if (p.type == PlaceType.LANDMARK && p.variant.equals("stadium")) {
+                return roll < 20 ? "soldier" : roll < 45 ? "patient" : null;
+            }
+            if (p.type == PlaceType.LANDMARK && p.variant.equals("union_station")) {
+                return roll < 20 ? "soldier" : roll < 50 ? "patient" : null;
             }
         }
         return null;

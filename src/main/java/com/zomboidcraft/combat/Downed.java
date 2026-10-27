@@ -25,14 +25,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * Zombies on the ground. A hit or a shove can knock one flat for a few seconds; a heavy blow or a
- * shot to the legs can leave it crawling for good, and a few are found that way. Both lie low
- * (the swimming pose, with a half-height hitbox), so you look down to finish them, and a blow
- * to a zombie on the ground lands much harder.
+ * Zombies on the ground. A hit or a shove can knock one flat for a few seconds; a crushing blow can
+ * leave it crawling for good, as does losing both legs to shots, and a few are found that way. Both
+ * lie low (the swimming pose, with a half-height hitbox), so you look down to finish them, and a
+ * blow to a zombie on the ground lands much harder.
  *
- * Lighter hits stagger: the zombie freezes for a moment, which is what makes a shove buy time.
+ * Lighter hits stagger: the zombie freezes for a moment, which is what makes a shove buy time. A
+ * shot only makes it flinch, its advance checked for a split second.
  */
 public final class Downed {
     /** Hitbox of a zombie lying or crawling. Under a block wide, so crawlers still fit through doorways. */
@@ -53,11 +55,13 @@ public final class Downed {
                     .syncWith(ByteBufCodecs.BOOL, AttachmentSyncPredicate.all()));
 
     private static final Identifier CRAWL_SPEED = ZomboidCraft.id("crawl");
+    private static final Identifier FLINCH_SPEED = ZomboidCraft.id("flinch");
 
-    /** Ticks left on the ground and ticks left staggered, per zombie. Server thread only. */
+    /** Ticks left on the ground, staggered and flinching from a shot, per zombie. Server thread only. */
     private static final class Timer {
         int down;
         int stun;
+        int flinch;
     }
 
     private static final Map<Mob, Timer> TIMERS = new WeakHashMap<>();
@@ -81,7 +85,7 @@ public final class Downed {
 
     /** Frozen in place: knocked flat or staggered. Checked by the AI mixin, on the server only. */
     public static boolean isHeld(Mob mob) {
-        if (mob.level().isClientSide()) {
+        if (mob.level().isClientSide() || com.zomboidcraft.zombie.Acts.climbing(mob)) {
             return false;
         }
         Timer t = TIMERS.get(mob);
@@ -91,8 +95,9 @@ public final class Downed {
     /** Knocks a zombie flat for the configured time. A crawler is already down, so it is only staggered. */
     public static void knockDown(LivingEntity target) {
         ZcConfig.Combat config = ZcConfig.get().combat;
-        if (!config.knockdowns || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()) {
-            return;
+        if (!config.knockdowns || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()
+                || com.zomboidcraft.zombie.Acts.climbing(zombie)) {
+            return;   // half through a window, it can't be knocked off its feet
         }
         if (isCrawler(zombie)) {
             stagger(zombie, 20);
@@ -128,6 +133,24 @@ public final class Downed {
     }
 
     /**
+     * Shot: it flinches and its advance is checked for a moment (ticks), slowed to a third, without being thrown back.
+     */
+    public static void flinch(LivingEntity target, int ticks) {
+        if (!(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || !zombie.isAlive()) {
+            return;
+        }
+        Timer t = TIMERS.computeIfAbsent(zombie, z -> new Timer());
+        t.flinch = Math.max(t.flinch, ticks);
+        AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.addOrUpdateTransientModifier(new AttributeModifier(FLINCH_SPEED, -0.65,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        Vec3 v = zombie.getDeltaMovement();
+        zombie.setDeltaMovement(v.x * 0.3, v.y, v.z * 0.3);
+    }
+
+    /**
      * Rolls whether a blow cripples a zombie so it crawls from now on.
      *
      * @param scale multiplies the configured chance (heavier blows cripple more often)
@@ -146,6 +169,7 @@ public final class Downed {
     public static void makeCrawler(Zombie zombie) {
         zombie.setAttached(CRAWLER, true);
         applyCrawl(zombie);
+        Dismember.crawlSpeed(zombie);
         Timer t = TIMERS.get(zombie);
         if (t != null) {
             t.down = 0;
@@ -166,6 +190,7 @@ public final class Downed {
         if (speed != null) {
             speed.removeModifier(CRAWL_SPEED);
         }
+        Dismember.crawlSpeed(zombie);
         zombie.setPose(Pose.STANDING);
     }
 
@@ -213,10 +238,16 @@ public final class Downed {
             if (t.stun > 0) {
                 t.stun--;
             }
+            if (t.flinch > 0 && --t.flinch == 0) {
+                AttributeInstance speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (speed != null) {
+                    speed.removeModifier(FLINCH_SPEED);
+                }
+            }
             if (t.down > 0 && --t.down == 0) {
                 standUp(mob, t);
             }
-            if (t.down <= 0 && t.stun <= 0) {
+            if (t.down <= 0 && t.stun <= 0 && t.flinch <= 0) {
                 it.remove();
             }
         }

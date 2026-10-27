@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_el_paint": "zomboidcraft:block/city/rw_el_paint",
+    "particle": "zomboidcraft:block/city/rw_el_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15.5,
+        1.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_el_paint"
+        },
+        "east": {
+          "texture": "#rw_el_paint",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_el_paint",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_el_paint"
+        },
+        "down": {
+          "texture": "#rw_el_paint"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        0.3
+      ],
+      "to": [
+        16,
+        8.2,
+        1.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint"
+        },
+        "south": {
+          "texture": "#rw_el_paint"
+        },
+        "east": {
+          "texture": "#rw_el_paint",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_el_paint",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_el_paint"
+        },
+        "down": {
+          "texture": "#rw_el_paint"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        2.6,
+        14,
+        1.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_el_paint"
+        },
+        "east": {
+          "texture": "#rw_el_paint"
+        },
+        "west": {
+          "texture": "#rw_el_paint"
+        },
+        "up": {
+          "texture": "#rw_el_paint"
+        },
+        "down": {
+          "texture": "#rw_el_paint",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.4,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        14,
+        1.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_el_paint"
+        },
+        "east": {
+          "texture": "#rw_el_paint"
+        },
+        "west": {
+          "texture": "#rw_el_paint"
+        },
+        "up": {
+          "texture": "#rw_el_paint"
+        },
+        "down": {
+          "texture": "#rw_el_paint",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

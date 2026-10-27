@@ -771,10 +771,6 @@
       {
         "name": "zomboidcraft:amb/distant/3",
         "attenuation_distance": 96
-      },
-      {
-        "name": "zomboidcraft:amb/distant/4",
-        "attenuation_distance": 96
       }
     ]
   },
@@ -1797,6 +1793,1285 @@
       {
         "name": "zomboidcraft:weapon/casing/shotgun/1",
         "attenuation_distance": 16
+      }
+    ]
+  },
+  "world.siren": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/siren",
+        "attenuation_distance": 480
+      }
+    ]
+  },
+  "world.explosion": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:aircraft/crash",
+        "attenuation_distance": 192
+      }
+    ]
+  },
+  "world.explosion.far": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:amb/distant/1",
+        "attenuation_distance": 640
+      }
+    ]
+  },
+  "world.flyby.jet.1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/1",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "world.flyby.jet.2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/2",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "world.flyby.jet.3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/3",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "world.flyby.heli.1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/heli/1",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "weapon.bullet.whizz": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/4",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "train.horn": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:car.horn",
+        "type": "event",
+        "pitch": 0.55,
+        "attenuation_distance": 128
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.horn"
+  },
+  "train.chime": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "pitch": 0.8,
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.chime"
+  },
+  "train.doors": {
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.contract",
+        "type": "event",
+        "pitch": 0.6,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.doors"
+  },
+  "train.otto": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bit",
+        "type": "event",
+        "pitch": 1.0,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.otto"
+  },
+  "train.rolling": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.minecart.riding",
+        "type": "event",
+        "pitch": 0.8,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "train.flare": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.firework_rocket.launch",
+        "type": "event",
+        "pitch": 0.7,
+        "attenuation_distance": 96
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.flare"
+  },
+  "otto.doors_open_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_open_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_open_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_open_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_open_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_open_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_open_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_open_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.depart_5": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/depart_5",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.closing_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/closing_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.closing_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/closing_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.closing_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/closing_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.closing_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/closing_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_5": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_5",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_6": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_6",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_7": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_7",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_8": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_8",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_9": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_9",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_10": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_10",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_11": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_11",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_12": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_12",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.chatter_13": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/chatter_13",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_5": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_5",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_6": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_6",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_7": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_7",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_8": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_8",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.job_9": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/job_9",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.board_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/board_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.board_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/board_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.board_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/board_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.board_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/board_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.board_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/board_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.alight_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/alight_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.alight_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/alight_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.alight_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/alight_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.alight_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/alight_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.jumped_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/jumped_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.jumped_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/jumped_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.jumped_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/jumped_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_platform_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_platform_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_platform_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_platform_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_platform_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_platform_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_outside_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_outside_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_outside_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_outside_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombies_outside_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombies_outside_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_at_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_at_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_at_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_at_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_at_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_at_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_at_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_at_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_glass_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_glass_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_glass_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_glass_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_glass_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_glass_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_angry_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_angry_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_angry_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_angry_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.shot_angry_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/shot_angry_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_requested_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_requested_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_requested_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_requested_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_requested_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_requested_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_requested_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_requested_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_requested_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_requested_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.halted_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/halted_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.halted_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/halted_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.halted_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/halted_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.halted_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/halted_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_held_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_held_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_held_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_held_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_held_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_held_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.bump_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/bump_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.bump_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/bump_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.bump_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/bump_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.bump_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/bump_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.bump_4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/bump_4",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombie_aboard_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombie_aboard_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombie_aboard_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombie_aboard_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.zombie_aboard_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/zombie_aboard_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_0_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_0_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_0_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_0_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_1_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_1_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_1_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_1_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_2_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_2_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_2_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_2_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.called_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/called_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.called_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/called_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.called_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/called_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.here_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/here_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.here_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/here_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.cut_short_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/cut_short_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.cut_short_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/cut_short_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.next_stop_0_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/next_stop_0_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.express_arrival_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/express_arrival_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_stadium_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_stadium_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_stadium_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_stadium_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_union_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_union_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_union_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_union_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_mercy_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_mercy_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_mercy_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_mercy_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_waterfront_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_waterfront_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_waterfront_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_waterfront_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_tower_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_tower_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_tower_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_tower_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_power_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_power_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_power_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_power_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_any_0_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_any_0_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_any_1_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_any_1_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.arrive_any_2_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/arrive_any_2_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_grayhaven_stadium": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_grayhaven_stadium",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_union_station": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_union_station",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_mercy_general": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_mercy_general",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_waterfront": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_waterfront",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_broadcast_tower": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_broadcast_tower",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.stop_power_station": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/stop_power_station",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "weapon.bullet.head_burst": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/2",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/3",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "world.flyby.jet.4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/4",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "world.flyby.jet.5": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/5",
+        "attenuation_distance": 800
       }
     ]
   }

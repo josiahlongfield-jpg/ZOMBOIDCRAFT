@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_tarp_black": "zomboidcraft:block/city/st_tarp_black",
+    "particle": "zomboidcraft:block/city/st_tarp_black"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_tarp_black",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_tarp_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_tarp_black",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_tarp_black",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_tarp_black"
+        },
+        "down": {
+          "texture": "#st_tarp_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

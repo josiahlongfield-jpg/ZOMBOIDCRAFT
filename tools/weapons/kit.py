@@ -584,6 +584,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         fit_parts.append(models[gun.slots['muzzle'].fits[0]])
     fit = shifted_model(fit_parts, shift)
     states = ['hip', 'ads'] + [f'ads_{k}' for k in gun.optics()] + ['mag_out', 'mag_in', 'charge']
+    states += ['raised_' + st for st in ('hip', 'mag_out', 'mag_in', 'charge')]     # the same, gun up in third person
     shown = {}
     for st in states:
         optic = st[4:] if st.startswith('ads_') else None
@@ -597,12 +598,13 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                            assets / f'models/item/{base}/{k}/{st}/{n}.json')
 
     def pose(st, key=''):
+        base_st = st.removeprefix('raised_')
         r = lambda n: ref(f'{base}/{st}/{n}' if not key or n not in names else f'{base}/{key}/{st}/{n}')
         entries = [r('body')]
         if gun.handle:
             # first person draws the handle or slide itself: worked in a reload, run back by each shot, locked open;
             # others see a double's barrels or a revolver's cylinder open while it's loaded
-            shown = r('charging_handle_open' if gun.opened and st in ('mag_out', 'mag_in') else 'charging_handle')
+            shown = r('charging_handle_open' if gun.opened and base_st in ('mag_out', 'mag_in') else 'charging_handle')
             entries.append({'type': 'minecraft:select', 'property': 'minecraft:display_context',
                             'cases': [{'when': 'firstperson_righthand', 'model': EMPTY}], 'fallback': shown})
         if gun.slide:
@@ -629,7 +631,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 cases['none'] = bare
                 entries.append(select('muzzle', cases, bare))
             elif slot_name == 'magazine':
-                if st == 'mag_out':
+                if base_st == 'mag_out':
                     continue    # first person draws the old magazine falling away and the new one coming up
                 cases = {k: r(k) for k in s.fits}
                 cases['none'] = EMPTY
@@ -640,13 +642,18 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select(slot_name, cases, r(s.default) if s.default else EMPTY))
         return composite(entries)
 
+    def held(st, key):
+        # others see the gun raised while its carrier looks over their shoulder or has just fired (GunRaise)
+        return {'type': 'minecraft:condition', 'property': f'{NS}:raised',
+                'on_true': pose('raised_' + st, key), 'on_false': pose(st, key)}
+
     def tree(key):
         aim = select('optic', {k: pose(f'ads_{k}', key) for k in gun.optics()}, pose('ads', key)) if gun.optics() else pose('ads', key)
         return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
-                'entries': [{'threshold': 1, 'model': pose('mag_out', key)}, {'threshold': 2, 'model': pose('mag_in', key)},
-                            {'threshold': 3, 'model': pose('charge', key)}],
+                'entries': [{'threshold': 1, 'model': held('mag_out', key)}, {'threshold': 2, 'model': held('mag_in', key)},
+                            {'threshold': 3, 'model': held('charge', key)}],
                 'fallback': {'type': 'minecraft:condition', 'property': 'minecraft:using_item',
-                             'on_true': aim, 'on_false': pose('hip', key)}}
+                             'on_true': aim, 'on_false': held('hip', key)}}
 
     M.dump({'model': by_finish(fins, lambda f: by_wear(lambda w: tree(skin(f, w))))}, assets / f'items/{gun.name}.json')
     lang[f'item.{NS}.{gun.name}'] = gun.title

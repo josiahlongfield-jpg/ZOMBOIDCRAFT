@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_galv": "zomboidcraft:block/city/rw_galv",
+    "rw_mast_base": "zomboidcraft:block/city/rw_mast_base",
+    "particle": "zomboidcraft:block/city/rw_mast_base"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_mast_base"
+        },
+        "south": {
+          "texture": "#rw_mast_base"
+        },
+        "east": {
+          "texture": "#rw_mast_base"
+        },
+        "west": {
+          "texture": "#rw_mast_base"
+        },
+        "up": {
+          "texture": "#rw_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

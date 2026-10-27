@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_deck": "zomboidcraft:block/city/st_deck",
+    "st_membrane": "zomboidcraft:block/city/st_membrane",
+    "st_truss": "zomboidcraft:block/city/st_truss",
+    "particle": "zomboidcraft:block/city/st_truss"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_truss",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_truss",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_truss",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_truss",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_membrane",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_deck",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

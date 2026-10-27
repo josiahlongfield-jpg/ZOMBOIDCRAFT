@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.gen;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
@@ -29,7 +30,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Writes {@link com.zomboidcraft.world.county.CountyGen}'s blocks straight into a chunk's sections. */
-final class ChunkWriter implements ChunkSink {
+public final class ChunkWriter implements ChunkSink {
     private static final Map<String, BlockState> STATES = new ConcurrentHashMap<>();
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
 
@@ -47,11 +48,11 @@ final class ChunkWriter implements ChunkSink {
         this.maxY = chunk.getMinY() + chunk.getHeight() - 1;
     }
 
-    static BlockState resolve(String name) {
+    public static BlockState resolve(String name) {
         BlockState s = STATES.get(name);
         if (s == null) {
-            BlockState real = name.equals("air") ? AIR : name.startsWith("minecraft:") || ZcConfig.get().world.cityStandIns
-                    ? null : CityBlocks.resolve(name);
+            BlockState real = name.equals("air") ? AIR : name.startsWith("minecraft:")
+                    || ZcConfig.get().world.cityStandIns && !name.startsWith(ZomboidCraft.MOD_ID + ":") ? null : CityBlocks.resolve(name);
             s = real != null ? real : StandIns.resolve(name);
             STATES.put(name, s);
         }

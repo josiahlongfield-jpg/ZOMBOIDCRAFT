@@ -2,28 +2,36 @@ package com.zomboidcraft.client.combat;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.GunRaise;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
 import com.zomboidcraft.combat.WeaponSpecs;
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import org.joml.Matrix3f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * How survivors carry and aim their weapons as other players see them: a rifle at the low ready or
- * shouldered, the big melee weapons in both hands. The gun arm takes a fixed angle (the weapon's item
+ * How survivors carry and aim their weapons as other players see them: a gun at the low ready, raised
+ * (pointing where they look: over the shoulder or just after a shot) or shouldered, the big melee weapons in
+ * both hands. The gun arm takes a fixed angle (the weapon's item
  * model is fitted to it, see tools/weapons/poses.py) turned by what the player is doing: looking about
  * while aiming, walking, swinging. The off arm then reaches for the weapon's support line (magazine well
  * and handguard, the end of a handle) wherever that left it, so both hands stay on the weapon.
@@ -36,6 +44,32 @@ public final class HoldPoses {
     private static final float HAND_X = 1f;
 
     private HoldPoses() {
+    }
+
+    /**
+     * Every tick: anyone holding a gun up turns their whole body with their eyes instead of only the head, so the
+     * gun (turned with the head, see apply) stays in front of them and on the crosshair.
+     */
+    /**
+     * A gun is up, pointing where its carrier looks: over the shoulder, or for a few seconds after a shot. Otherwise
+     * it's at the low ready. The item model (RaisedProperty) and the arms here must agree.
+     */
+    public static boolean raised(Player player) {
+        Minecraft mc = Minecraft.getInstance();
+        return player == mc.player ? CombatClient.raisedHere() : GunRaise.raised(player);
+    }
+
+    public static void faceLook(Minecraft client) {
+        if (client.level == null || !ZcConfig.get().combat.weaponHolds) {
+            return;
+        }
+        for (Player player : client.level.players()) {
+            if (player.getMainHandItem().getItem() instanceof RifleItem && raised(player) && !player.isPassenger()
+                    && !player.isSleeping() && !player.isFallFlying() && !player.isVisuallySwimming()) {
+                player.yBodyRot = player.yHeadRot;
+                player.yBodyRotO = player.yHeadRotO;
+            }
+        }
     }
 
     public static void apply(PlayerModel model, AvatarRenderState state) {
@@ -53,11 +87,17 @@ public final class HoldPoses {
         Matrix3f gun;
         float[] support;
         float[] lens = null;
+        float[] reloadAt = null;
+        GunType gunType = null;
         float mirror = left ? -1f : 1f;
         float headX = model.head.xRot, headY = model.head.yRot * mirror;
         if (stack.getItem() instanceof RifleItem item) {
             boolean aiming = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
-            lens = HoldPoseData.LENS.get(lensKey(item.type()) + (aiming ? "_aim" : "_ready"));
+            Minecraft mc = Minecraft.getInstance();
+            boolean up = !aiming && mc.level != null && mc.level.getEntity(state.id) instanceof Player p && raised(p);
+            lens = HoldPoseData.LENS.get(lensKey(item.type()) + (aiming ? "_aim" : up ? "_raised" : "_ready"));
+            gunType = item.type();
+            reloadAt = HoldPoseData.RELOAD.get(lensKey(item.type()) + (up ? "_raised" : "_ready"));
             if (aiming) {
                 // the shouldered long gun, or the pistol out at arm's length, follows the eyes
                 gun = rot(headX, headY, 0).mul(rot(switch (item.type()) {
@@ -88,7 +128,38 @@ public final class HoldPoses {
                     case CROSSBOW -> HoldPoseData.CROSSBOW_AIM_SUPPORT;
                     default -> HoldPoseData.RIFLE_AIM_SUPPORT;
                 };
+            } else if (up) {
+                // raised, the gun points where they look, so a laser runs down the barrel to the crosshair
+                gun = rot(headX + bob(state), headY, 0).mul(rot(switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_RAISED;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED;
+                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED;
+                    case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED;
+                    case REVOLVER -> HoldPoseData.REVOLVER_RAISED;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED;
+                    case SMG -> HoldPoseData.SMG_RAISED;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_RAISED;
+                    case MAGNUM -> HoldPoseData.MAGNUM_RAISED;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_RAISED;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_RAISED;
+                    default -> HoldPoseData.RIFLE_RAISED;
+                }));
+                support = switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_RAISED_SUPPORT;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED_SUPPORT;
+                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED_SUPPORT;
+                    case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED_SUPPORT;
+                    case REVOLVER -> HoldPoseData.REVOLVER_RAISED_SUPPORT;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED_SUPPORT;
+                    case SMG -> HoldPoseData.SMG_RAISED_SUPPORT;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_RAISED_SUPPORT;
+                    case MAGNUM -> HoldPoseData.MAGNUM_RAISED_SUPPORT;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_RAISED_SUPPORT;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_RAISED_SUPPORT;
+                    default -> HoldPoseData.RIFLE_RAISED_SUPPORT;
+                };
             } else {
+                // the low ready: muzzle down, not following the eyes
                 gun = rot(bob(state), 0, 0).mul(rot(switch (item.type()) {
                     case PISTOL -> HoldPoseData.PISTOL_READY;
                     case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
@@ -133,6 +204,12 @@ public final class HoldPoses {
         if (twist != 0) {
             gun = rot(0, twist, 0).mul(gun);
         }
+        Reload reload = gunType == null ? null : reload(state.id, stack, gunType);
+        if (reload != null) {
+            // the gun comes up and in toward the chest to be worked on
+            float c = reload.cant(System.currentTimeMillis());
+            gun = rot(-RELOAD_LIFT * c, -RELOAD_TURN * c, 0).mul(gun);
+        }
         ModelPart gunArm = left ? model.leftArm : model.rightArm;
         ModelPart offArm = left ? model.rightArm : model.leftArm;
         Vector3f gunPivot = new Vector3f(gunArm.x * mirror, gunArm.y, gunArm.z);
@@ -150,8 +227,142 @@ public final class HoldPoses {
         Vector3f p0 = gun.transform(new Vector3f(support[0], support[1], support[2])).add(gunPivot);
         Vector3f p1 = gun.transform(new Vector3f(support[3], support[4], support[5])).add(gunPivot);
         Vector3f target = supportTarget(offPivot, p0, p1);
+        if (reload != null && reloadAt != null) {
+            Vector3f well = gun.transform(new Vector3f(reloadAt[0], reloadAt[1], reloadAt[2])).add(gunPivot);
+            Vector3f handle = gun.transform(new Vector3f(reloadAt[3], reloadAt[4], reloadAt[5])).add(gunPivot);
+            target = reload.hand(System.currentTimeMillis(), gunType, target, well, handle);
+        }
         float[] a = aim(offPivot, target, HAND_X);
         offArm.setRotation(a[0], a[1] * mirror, 0);
+    }
+
+    private static final float RELOAD_LIFT = 0.25f, RELOAD_TURN = 0.3f;
+    /** Where the off hand takes a fresh magazine or round from: the belt at the front of the left hip. */
+    private static final Vector3f POUCH = new Vector3f(3.0f, 10.5f, -3.2f);
+    /** How far a charging handle, slide, bolt or pump is pulled back toward the body (model pixels). */
+    private static final float PULL = 2.5f;
+    private static final long EASE_MS = 200;
+    private static final Map<Integer, Reload> RELOADS = new HashMap<>();
+
+    /**
+     * What others see of someone's reload, from the step their gun's model shows (Guns.setModelData: 1 magazine out
+     * or loading, 1.5 the same needing a charge after, 2 magazine in, 3 charging or closing) and when each began.
+     * Null when they aren't reloading.
+     */
+    private static Reload reload(int id, ItemStack gun, GunType type) {
+        CustomModelData data = gun.get(DataComponents.CUSTOM_MODEL_DATA);
+        float step = data == null || data.floats().isEmpty() ? 0 : data.floats().get(0);
+        long now = System.currentTimeMillis();
+        Reload r = RELOADS.get(id);
+        if (step < 1) {
+            if (r == null) {
+                return null;
+            }
+            if (r.step >= 1) {
+                r.step = 0;
+                r.since = now;
+            }
+            if (now - r.since > EASE_MS) {
+                RELOADS.remove(id);
+                return null;
+            }
+            return r;
+        }
+        if (r == null) {
+            r = new Reload();
+            r.started = now;
+            RELOADS.put(id, r);
+        }
+        if (step != r.step) {
+            if (r.step < 1) {
+                r.started = now;
+            }
+            if (step == 1.5f) {
+                r.charges = true;
+            } else if (step == 1f) {
+                r.charges = false;
+            }
+            r.step = step;
+            r.since = now;
+        }
+        return r;
+    }
+
+    private static final class Reload {
+        float step;
+        long started, since;
+        boolean charges;
+
+        /** How far the gun is turned up for working on: eased in at the start, out at the end. */
+        float cant(long now) {
+            if (step < 1) {
+                return ease(Math.max(0, 1 - (now - since) / (float) EASE_MS));
+            }
+            return ease(Math.min(1, (now - started) / (float) EASE_MS));
+        }
+
+        /** Where the off hand is now, from its place on the gun (rest) by way of the magazine, belt and handle. */
+        Vector3f hand(long now, GunType type, Vector3f rest, Vector3f well, Vector3f handle) {
+            float ms = now - since;
+            if (step < 1) {
+                return rest;
+            }
+            Vector3f back = new Vector3f(handle).add(0, 0, PULL);
+            if (step >= 3) {
+                // work the handle: reach it, pull it back, let it go, back to the gun
+                float u = ms / ticks(type.opens ? type.close : type.tube ? type.cycle : type.chargeDone - type.charge);
+                if (u < 0.35f) {
+                    return between(rest, handle, u / 0.35f);
+                }
+                if (u < 0.6f) {
+                    return type.opens ? handle : between(handle, back, (u - 0.35f) / 0.25f);
+                }
+                return between(type.opens ? handle : back, rest, Math.min(1, (u - 0.6f) / 0.4f));
+            }
+            if (type.tube) {
+                // up to the port, then a round at a time from the belt: each goes in as its stroke ends
+                float raise = ticks(type.raise);
+                if (ms < raise) {
+                    return between(rest, well, ms / raise);
+                }
+                float u = ((ms - raise) % ticks(type.perShell)) / ticks(type.perShell);
+                if (u < 0.4f) {
+                    return between(well, POUCH, u / 0.4f);
+                }
+                if (u < 0.5f) {
+                    return POUCH;
+                }
+                return between(POUCH, well, Math.min(1, (u - 0.5f) / 0.45f));
+            }
+            if (step >= 2) {
+                // the new magazine slapped home, then the hand goes to the handle (when it needs charging) or the gun
+                float u = ms / ticks(Math.max(4, (charges ? type.charge : type.tacticalDone) - type.magIn));
+                if (u < 0.3f) {
+                    return well;
+                }
+                return between(well, charges ? handle : rest, Math.min(1, (u - 0.3f) / 0.7f));
+            }
+            // the old magazine out and down to the belt, the fresh one up into the well
+            float u = ms / ticks(type.magIn);
+            if (u < 0.2f) {
+                return between(rest, well, u / 0.2f);
+            }
+            if (u < 0.5f) {
+                return between(well, POUCH, (u - 0.2f) / 0.3f);
+            }
+            if (u < 0.62f) {
+                return POUCH;
+            }
+            return between(POUCH, well, Math.min(1, (u - 0.62f) / 0.38f));
+        }
+
+        private static float ticks(int t) {
+            return Math.max(1, t) * 50f;
+        }
+
+        private static Vector3f between(Vector3f a, Vector3f b, float u) {
+            return new Vector3f(a).lerp(b, ease(Math.max(0, Math.min(1, u))));
+        }
     }
 
     /** A gun's name in HoldPoseData.LENS. */

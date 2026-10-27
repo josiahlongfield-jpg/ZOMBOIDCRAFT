@@ -6,8 +6,11 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -76,11 +79,12 @@ public final class ShoulderCam {
         Vec3 fwd = player.getViewVector(partialTick);
         Vec3 right = fwd.cross(new Vec3(0, 1, 0));
         right = right.lengthSqr() < 1e-6 ? Vec3.directionFromRotation(0, player.getViewYRot(partialTick) + 90) : right.normalize();
-        Vec3 up = right.cross(fwd).normalize();
         double back = lerp(look.shoulderBack, look.shoulderAimBack, aim);
         double across = lerp(look.shoulderSide, look.shoulderAimSide, aim) * side;
-        // the shoulder first (so a wall at your side stops it there), then back from it
-        Vec3 shoulderAt = clip(mc, entity, eye, eye.add(right.scale(across)).add(up.scale(look.shoulderUp)));
+        double rise = lerp(look.shoulderUp, look.shoulderAimUp, aim);
+        // the shoulder first (so a wall at your side stops it there), then back from it; raised straight up, so it
+        // looks down on you whichever way you look
+        Vec3 shoulderAt = clip(mc, entity, eye, eye.add(right.scale(across)).add(0, rise, 0));
         Vec3 pos = clip(mc, entity, shoulderAt, shoulderAt.subtract(fwd.scale(back)));
 
         // the point the eyes' line meets: what the middle of the screen must show. Eased, so looking past an edge
@@ -88,10 +92,17 @@ public final class ShoulderCam {
         BlockHitResult hit = mc.level.clip(new ClipContext(eye, eye.add(fwd.scale(REACH)), ClipContext.Block.OUTLINE,
                 ClipContext.Fluid.NONE, entity));
         double dist = hit.getType() == HitResult.Type.MISS ? REACH : Math.max(0.5, hit.getLocation().distanceTo(eye));
-        if (mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.ENTITY) {
-            dist = Math.min(dist, Math.max(0.5, mc.hitResult.getLocation().distanceTo(eye)));
+        // anything standing on that line too, however far: the camera sits off to the side, so if it looked at the
+        // wall behind a zombie the head in the middle of the screen wouldn't be on the line the shots take
+        AABB along = entity.getBoundingBox().expandTowards(fwd.scale(dist)).inflate(1);
+        EntityHitResult on = ProjectileUtil.getEntityHitResult(entity, eye, eye.add(fwd.scale(dist)), along,
+                e -> !e.isSpectator() && e.isPickable(), dist * dist);
+        if (on != null) {
+            dist = Math.max(0.5, on.getLocation().distanceTo(eye));
         }
-        aimDist = dt == 0 ? dist : aimDist + (dist - aimDist) * Math.min(1, dt * 14);
+        // eased, quicker coming nearer than going away, so a zombie stepping into the line is centred at once
+        double rate = dist < aimDist ? 40 : 14;
+        aimDist = dt == 0 ? dist : aimDist + (dist - aimDist) * Math.min(1, dt * rate);
         Vec3 to = eye.add(fwd.scale(aimDist)).subtract(pos);
         double flat = Math.sqrt(to.x * to.x + to.z * to.z);
         float yRot = (float) Math.toDegrees(Math.atan2(-to.x, to.z));

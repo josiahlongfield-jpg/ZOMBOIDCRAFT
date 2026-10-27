@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_ballast": "zomboidcraft:block/city/rw_ballast",
+    "rw_ballast_side": "zomboidcraft:block/city/rw_ballast_side",
+    "rw_subballast": "zomboidcraft:block/city/rw_subballast",
+    "particle": "zomboidcraft:block/city/rw_ballast_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_ballast_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_ballast_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_ballast_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_ballast_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_ballast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_subballast",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

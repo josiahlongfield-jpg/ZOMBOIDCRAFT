@@ -387,8 +387,9 @@ final class Theatre {
         p.set(12, 1, ZL + 3, "tr_soda[facing=west]");
         p.set(12, 3, ZL + 2, "tr_sign_food[facing=west]");
         p.set(12, 3, ZL + 3, "tr_lobbycard_" + rng.nextInt(3) + "[facing=west]");
+        // (the staff aisle is a block wide and leads to the booth door: litter only, a stool in it shut it)
         if (chance() < 0.6) {
-            p.set(11, 1, ZL + 2, chance() < 0.5 ? "store_stool" : "paper");
+            p.set(11, 1, ZL + 2, "paper");
         }
         // the ladder up through the hatch to the booth in the west corner, its sign
         for (int y = 1; y <= UF; y++) {

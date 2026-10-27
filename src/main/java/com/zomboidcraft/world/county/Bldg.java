@@ -446,13 +446,15 @@ final class Bldg {
 
     /**
      * A straight stair from y up `rise` blocks, starting at (x, z) and climbing toward dir, with
-     * the floor above opened over it.
+     * the floor above opened over it. family is the stair's material ("minecraft:oak" makes oak
+     * stairs, "steel" the mod's steel_stairs) or a whole stair block ("stairs_concrete").
      */
     void stair(int x, int z, int y, int rise, String dir, String family) {
         int[] s = step(dir);
+        String step = family.contains("stairs") ? family + "[facing=" + dir + "]" : family + "_stairs[facing=" + dir + ",half=bottom]";
         for (int i = 0; i < rise; i++) {
             int sx = x + s[0] * i, sz = z + s[1] * i;
-            p.set(sx, y + i, sz, family + "_stairs[facing=" + dir + ",half=bottom]");
+            p.set(sx, y + i, sz, step);
             for (int k = 1; k <= 3 && y + i + k <= y + rise; k++) {
                 if (y + i + k == y + rise && i == rise - 1) {
                     break;

@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_steel_w": "zomboidcraft:block/city/tx_steel_w",
+    "particle": "zomboidcraft:block/city/tx_steel_w"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12.5,
+        0
+      ],
+      "to": [
+        1.2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_w"
+        },
+        "west": {
+          "texture": "#tx_steel_w",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_steel_w",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    },
+    {
+      "from": [
+        1.2,
+        12.5,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w"
+        },
+        "east": {
+          "texture": "#tx_steel_w",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_w"
+        },
+        "up": {
+          "texture": "#tx_steel_w",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    }
+  ]
+}

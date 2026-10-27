@@ -103,15 +103,38 @@ jobs:
           echo 'data get entity @e[type=zomboidcraft:car,limit=1] model' >&3
           echo 'data get entity @e[type=minecraft:husk,limit=1] Health' >&3
           echo 'execute as @e[type=zomboidcraft:car] run say car here' >&3
-          sleep 10
+          # A walker that dies falls, then leaves its body (no puff), which saves with the world.
+          # (the test zombies hover: dropped from y 101 they'd die of the fall before the commands reach them)
+          echo 'summon minecraft:zombie 6 101 6 {Tags:["zc_dead"],NoGravity:1b}' >&3
+          sleep 2
+          echo 'kill @e[tag=zc_dead]' >&3
+          sleep 4
+          echo 'execute as @e[type=zomboidcraft:corpse] run say corpse here' >&3
+          echo 'data get entity @e[type=zomboidcraft:corpse,limit=1] outfit' >&3
+          # Only the head kills: a bullet anywhere else leaves a walker alive however hard it hits.
+          echo 'summon minecraft:zombie 8 101 8 {Tags:["zc_tough"],NoGravity:1b}' >&3
+          sleep 2
+          echo 'damage @e[tag=zc_tough,limit=1] 500 zomboidcraft:bullet' >&3
+          sleep 1
+          echo 'execute as @e[tag=zc_tough] run say still alive after a body shot' >&3
+          # A test train line gets laid and its train runs round it.
+          echo 'execute positioned 0 100 0 run zc train test rail' >&3
+          sleep 8
+          echo 'zc train list' >&3
+          sleep 32  # it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
+          echo 'zc train list' >&3
+          sleep 2
           echo 'stop' >&3
           for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 3>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
-          grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
+          grep -E 'zomboidcraft|test_rail|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
+          grep -q 'corpse here' server.log
+          grep -q 'still alive after a body shot' server.log
+          grep -q 'Laid test line test_rail' server.log && grep -E 'test_rail \(rail.*train 0 at' server.log && grep -E 'test_rail \(rail.*\(stopped\)' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
           grep -E 'Rain (cover|falls through)' server.log
@@ -125,10 +148,14 @@ jobs:
           rm -rf run/world
           mkdir -p build/county
           javac -d build/county src/main/java/com/zomboidcraft/world/city/*.java src/main/java/com/zomboidcraft/world/county/*.java tools/county/ListPlaces.java
-          java -cp build/county ListPlaces 12345 6000 | tee places.txt
+          java -cp build/county:src/main/resources ListPlaces 12345 6000 | tee places.all
+          # only the place rows (the planner's own log lines go to the same output)
+          grep -E '^[a-z_]+ [a-z_]+ -?[0-9]+ -?[0-9]+( |$)' places.all > places.txt
+          # and the railway: the el and subway at Union Station, a country stop, the el's bridge over the north arm
+          printf 'rail union_el 3043 -1150\nrail union_subway 3050 -1043\nrail millbrook -4750 -1003\nrail north_arm_bridge 3010 -2420\n' >> places.txt
           printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
           grep level- run/server.properties
-          trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
+          trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|County lines|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
           rm -f console2 && mkfifo console2
           ./gradlew runServer --args=nogui < console2 > county.log 2>&1 &
           pid=$!
@@ -159,6 +186,7 @@ jobs:
           grep 'Unknown vanilla block' county.log | sort -u | head -40 || true
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
+          grep 'County lines laid for the trains' county.log
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 

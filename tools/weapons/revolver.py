@@ -78,8 +78,8 @@ HAND = frame_point(0.0, *reversed(_grip(1.15)))         # middle of the shooting
 CYL_AXIS = frame_point(0.0, CYL_Y, CYL_FRONT)
 AXIS_XY = CYL_AXIS[:2]
 PIVOT_POINT = frame_point(PIVOT[0], PIVOT[1], CYL_FRONT)
-HAMMER_PIN = frame_point(0.0, 0.20, 2.23)     # the hammer's pin, low in its front: it turns back about this
-HAMMER_COCK = 32.0                            # degrees it turns back to full cock
+HAMMER_PIN = frame_point(0.0, 0.0, 2.23)      # the hammer's pin, at its foot: the foot stays put, the top swings back
+HAMMER_COCK = 22.0                            # degrees the trigger draws it back before it falls
 # the loose round first person loads: in the top chamber, its rim on the cylinder's back face
 LOOSE_ROUND = (0.0, 0.0, CYL_BACK)
 
@@ -203,20 +203,19 @@ def round38(m):
     """A .38 Special round as it sits home: its rim on the cylinder's back face (z 0), the case forward of it, the
     lead round nose out ahead."""
     b = Inch(m)
-    b.rod(0.0, 0.058, 0.218, 'brass', axis=2)
-    b.rod(-1.097, 0.0, 0.190, 'brass', axis=2)
-    b.rod(-1.40, -1.097, 0.178, 'lead', axis=2)
-    b.rod(-1.53, -1.40, 0.12, 'lead', axis=2)
-    b.rod(0.058, 0.064, 0.085, 'primer', axis=2)
+    b.round_rod(0.0, 0.058, 0.218, 'brass')
+    b.round_rod(-1.097, 0.0, 0.190, 'brass')
+    b.ogive(-1.097, -1.53, 0.178, 'lead')
+    b.round_rod(0.058, 0.064, 0.085, 'primer')
 
 
 def case38(m):
     """A fired .38 case: the rim and the case, its mouth open and sooted."""
     b = Inch(m)
-    b.rod(0.0, 0.058, 0.218, 'brass', axis=2)
-    b.rod(-1.097, 0.0, 0.190, 'brass', axis=2)
-    b.rod(-1.105, -1.097, 0.15, 'soot', axis=2)
-    b.rod(0.058, 0.064, 0.085, 'primer', axis=2)
+    b.round_rod(0.0, 0.058, 0.218, 'brass')
+    b.round_rod(-1.097, 0.0, 0.190, 'brass')
+    b.round_rod(-1.105, -1.097, 0.15, 'soot')
+    b.round_rod(0.058, 0.064, 0.085, 'primer')
 
 
 def round_look():

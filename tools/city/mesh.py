@@ -533,6 +533,83 @@ def export_vehicle(out_dir, name, image, glass):
     return False
 
 
+def track_quads(path, meta, light, pal, out, grow):
+    """The rails and sleepers along the county's lines (tools/county/TrackDump.java writes them),
+    drawn as the game's TrackRenderer draws them: sleepers every half block on the bed's top,
+    two rails at the trains' gauge. In game they aren't blocks, so a dump alone has none."""
+    GAUGE, SLEEPER_H, RAIL_H, RAIL_W = 0.7175, 0.12, 0.16, 0.1
+    wx, oy, wz = meta.get("world_origin", meta["origin"])
+    ox, _, oz = meta["origin"]
+    sx, H, sz = meta["size"]
+    tex_sleeper, tex_top, tex_side = pal.tex("rw_creosote"), pal.tex("rw_galv"), pal.tex("bunk_rust")
+    quads = []  # (corners 4x3 in blocks, normal, tex)
+
+    def box_faces(c, along, across, half_a, half_c, y0, y1, t):
+        pts = [c + along * a * half_a + across * b * half_c for a, b in ((-1, -1), (-1, 1), (1, 1), (1, -1))]
+        top = [np.array([p[0], y1, p[2]]) for p in pts]
+        quads.append((np.array(top), np.array([0, 1, 0]), t))
+        for i in range(4):
+            p, q = pts[i], pts[(i + 1) % 4]
+            m = (p + q) / 2 - c
+            n = np.array([m[0], 0, m[2]]) / max(1e-9, np.hypot(m[0], m[2]))
+            quads.append((np.array([[q[0], y1, q[2]], [p[0], y1, p[2]], [p[0], y0, p[2]], [q[0], y0, q[2]]]), n, t))
+
+    for line in json.load(open(path))["tracks"]:
+        P = np.array(line["points"], float)
+        P[:, 0] += ox - wx
+        P[:, 1] -= oy
+        P[:, 2] += oz - wz
+        n = len(P)
+        inside = (P[:, 0] > ox - 3) & (P[:, 0] < ox + sx + 3) & (P[:, 2] > oz - 3) & (P[:, 2] < oz + sz + 3)
+        for i in np.nonzero(inside)[0]:
+            j = (i + 1) % n
+            p0, p1 = P[i], P[j]
+            d = p1 - p0
+            ds = np.hypot(d[0], d[2])
+            if ds < 1e-6 or ds > 3:
+                continue
+            u = np.array([d[0], 0, d[2]]) / ds
+            across = np.array([-u[2], 0, u[0]])
+
+            def acr(k):
+                e = P[(k + 1) % n] - P[(k - 1) % n]
+                v = np.array([-e[2], 0, e[0]])
+                return v / max(1e-9, np.hypot(v[0], v[2]))
+            a0, a1 = acr(i), acr(j)
+            for k in np.arange(0.25, ds, 0.5):
+                c = p0 + d * k / ds
+                box_faces(np.array([c[0], 0, c[2]]), u, across, 0.13, 1.25, c[1], c[1] + SLEEPER_H, tex_sleeper)
+            for side in (-1, 1):
+                q0, q1 = p0 + a0 * GAUGE * side, p1 + a1 * GAUGE * side
+                y0, y1 = p0[1] + SLEEPER_H, p1[1] + SLEEPER_H
+                w = RAIL_W / 2
+                l0, r0, l1, r1 = q0 - a0 * w, q0 + a0 * w, q1 - a1 * w, q1 + a1 * w
+                quads.append((np.array([[l0[0], y0 + RAIL_H, l0[2]], [r0[0], y0 + RAIL_H, r0[2]], [r1[0], y1 + RAIL_H, r1[2]],
+                                        [l1[0], y1 + RAIL_H, l1[2]]]), np.array([0, 1, 0]), tex_top))
+                quads.append((np.array([[r0[0], y0 + RAIL_H, r0[2]], [r0[0], y0, r0[2]], [r1[0], y1, r1[2]], [r1[0], y1 + RAIL_H, r1[2]]]),
+                              a0, tex_side))
+                quads.append((np.array([[l1[0], y1 + RAIL_H, l1[2]], [l1[0], y1, l1[2]], [l0[0], y0, l0[2]], [l0[0], y0 + RAIL_H, l0[2]]]),
+                              -a0, tex_side))
+    if not quads:
+        return 0
+    corners = np.stack([q[0] for q in quads])
+    normals = np.stack([q[1] for q in quads]).astype(float)
+    tex = np.array([q[2] for q in quads])
+    # wound outward, as face_quad winds them
+    cr = np.cross(corners[:, 1] - corners[:, 0], corners[:, 2] - corners[:, 0])
+    flip = (cr * normals).sum(1) < 0
+    corners[flip] = corners[flip][:, ::-1]
+    uvs = np.repeat(np.array([[[0, 0], [16, 0], [16, 16], [0, 16]]], float), len(quads), 0)
+    mid = corners.mean(1)
+    yi = np.clip(np.floor(mid[:, 1] + 0.02).astype(int), 0, H - 1)
+    zi = np.clip(np.floor(mid[:, 2] - oz).astype(int), 0, sz - 1)
+    xi = np.clip(np.floor(mid[:, 0] - ox).astype(int), 0, sx - 1)
+    own = light[:, yi, zi, xi].T
+    grow()
+    out.add(tex, corners * 16, normals, uvs, np.full((len(quads), 4), 3), np.repeat(own[:, None, :], 4, 1))
+    return len(quads)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("dump")
@@ -543,6 +620,7 @@ def main():
     ap.add_argument("--extra", action="append", default=[])
     ap.add_argument("--flicker-on", action="store_true", help="catch every flickering lamp lit")
     ap.add_argument("--cars", action="store_true", help="draw the dump's cars and jets from their .zcar models")
+    ap.add_argument("--track", help="the county's lines (tools/county/TrackDump.java): draw their rails and sleepers")
     a = ap.parse_args()
     meta = json.load(open(a.dump + ".json"))
     sx, H, sz = meta["size"]
@@ -688,6 +766,10 @@ def main():
             out.add(np.full(k, t), corners, np.repeat(NORMALS[d][None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3),
                     np.repeat(own[:, None, :], 4, 1))
             nfaces += k
+    if a.track:
+        k = track_quads(a.track, meta, light, pal, out, grow)
+        nfaces += k
+        print("track", k, "quads")
     car_tex = vehicles(meta, pal, out, grow) if a.cars else {}
     print("total quads", nfaces)
 

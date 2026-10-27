@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_col_paint": "zomboidcraft:block/city/st_col_paint",
+    "particle": "zomboidcraft:block/city/st_col_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_col_paint"
+        },
+        "south": {
+          "texture": "#st_col_paint"
+        },
+        "east": {
+          "texture": "#st_col_paint"
+        },
+        "west": {
+          "texture": "#st_col_paint"
+        },
+        "up": {
+          "texture": "#st_col_paint",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_col_paint",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

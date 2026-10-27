@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_frame_m": "zomboidcraft:block/city/dn_frame_m",
+    "dn_paintwin_11": {
+      "sprite": "zomboidcraft:block/city/dn_paintwin_11",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/dn_paintwin_11"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_paintwin_11"
+        },
+        "south": {
+          "texture": "#dn_paintwin_11"
+        },
+        "east": {
+          "texture": "#dn_frame_m",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_frame_m",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_frame_m",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_frame_m",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

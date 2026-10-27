@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_glass_broken": {
+      "sprite": "zomboidcraft:block/city/tx_glass_broken",
+      "force_translucent": true
+    },
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "particle": "zomboidcraft:block/city/tx_glass_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        1.5
+      ],
+      "to": [
+        8.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass_broken"
+        },
+        "south": {
+          "texture": "#tx_glass_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_glass_broken"
+        },
+        "west": {
+          "texture": "#tx_glass_broken"
+        },
+        "up": {
+          "texture": "#tx_glass_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_glass_broken",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

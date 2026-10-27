@@ -60,7 +60,7 @@ final class DowntownSite extends Site {
         }
     }
 
-    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL }
+    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL, STATION }
 
     private Kit kit;
     private CityCivic civic;
@@ -68,6 +68,8 @@ final class DowntownSite extends Site {
     private final List<Integer> xs = new ArrayList<>(), zs = new ArrayList<>();
     private final List<Kit.Style> xStyle = new ArrayList<>(), zStyle = new ArrayList<>();
     private final List<Kit.Lane> lanes = new ArrayList<>();
+    /** The railway's stations wanted on blocks of this piece, by the block. */
+    private final java.util.Map<Blk, Railway.Station> stations = new java.util.HashMap<>();
     /** Boxes {x0, z0, x1, z1, height} for the Decay pass: each building with a block of margin. */
     private final List<int[]> ruins = new ArrayList<>();
     /** The parking levels under the big towers, one of which hides a bunker. */
@@ -119,17 +121,28 @@ final class DowntownSite extends Site {
         civic = new CityCivic(kit, hit);
         civic.old = variant("old_city");
         civic.carCap = carBudget / 3;
-        grid();
+        Place.Tile tile = p.tile;
+        if (tile != null) {
+            pitch = tile.pitch();
+            tileGrid(tile);
+        } else {
+            grid();
+        }
         kit.pave();
         crosswalks();
-        List<Blk> blocks = blocks();
-        Role[] roles = roles(blocks);
+        List<Blk> blocks = tile != null ? tileBlocks(tile) : blocks();
+        Role[] roles = tile != null ? tileRoles(blocks) : roles(blocks);
+        if (p.rails != null) {
+            railRoles(blocks, roles);
+        }
         for (int i = 0; i < blocks.size(); i++) {
             fill(blocks.get(i), roles[i]);
         }
-        subway();
+        if (tile == null) {
+            subway();
+        }
         hideout();
-        if (variant("old_city") || variant("metro") && chance() < 0.5) {
+        if (tile == null && (variant("old_city") || variant("metro") && chance() < 0.5)) {
             elevated();
         }
         streetLife();
@@ -190,6 +203,115 @@ final class DowntownSite extends Site {
             boolean gate = z == cz;
             lanes.add(kit.lane(zStyle.get(i), gate ? -3 : xs.get(0) - 0.5, z + 0.5, gate ? w + 2 : xs.get(xs.size() - 1) + 0.5,
                     z + 0.5));
+        }
+    }
+
+    /**
+     * A piece of the planned city: its streets lie on the county's grid lines, every third an
+     * avenue, so they carry straight on into the next piece. A street on the footprint's edge is
+     * laid here only as far as the edge (the next piece lays the rest); one where nothing is next
+     * door lies whole inside it. Streets run from the first cross street to the last, so none
+     * pokes out past the city's edge.
+     */
+    private void tileGrid(Place.Tile tile) {
+        int g = tile.pitch(), r = TILE_EDGE;
+        for (int i = Math.floorDiv(p.x0 - r, g); i * g <= p.x1 + r; i++) {
+            int lx = i * g - p.x0;
+            if (lx >= -r && lx <= w - 1 + r) {
+                xs.add(lx);
+                xStyle.add(Math.floorMod(i, 3) == 0 ? Kit.Style.MAIN : Kit.Style.CITY);
+            }
+        }
+        for (int j = Math.floorDiv(p.z0 - r, g); j * g <= p.z1 + r; j++) {
+            int lz = j * g - p.z0;
+            if (lz >= -r && lz <= d - 1 + r) {
+                zs.add(lz);
+                zStyle.add(Math.floorMod(j, 3) == 0 ? Kit.Style.MAIN : Kit.Style.CITY);
+            }
+        }
+        for (int i = 0; i < xs.size(); i++) {
+            lanes.add(kit.lane(xStyle.get(i), xs.get(i) + 0.5, zs.get(0) + 0.5, xs.get(i) + 0.5, zs.get(zs.size() - 1) + 0.5));
+        }
+        for (int j = 0; j < zs.size(); j++) {
+            lanes.add(kit.lane(zStyle.get(j), xs.get(0) + 0.5, zs.get(j) + 0.5, xs.get(xs.size() - 1) + 0.5, zs.get(j) + 0.5));
+        }
+    }
+
+    /** How far past a street's centre line a piece of the city reaches when nothing is next door. */
+    static final int TILE_EDGE = 13;
+
+    /** Every block between the grid's streets; how dense it is comes from its district. */
+    private List<Blk> tileBlocks(Place.Tile tile) {
+        List<Blk> made = new ArrayList<>();
+        for (int i = 0; i + 1 < xs.size(); i++) {
+            int x0 = xs.get(i) + reach(xStyle.get(i)) + 1, x1 = xs.get(i + 1) - reach(xStyle.get(i + 1)) - 1;
+            for (int j = 0; j + 1 < zs.size(); j++) {
+                int z0 = zs.get(j) + reach(zStyle.get(j)) + 1, z1 = zs.get(j + 1) - reach(zStyle.get(j + 1)) - 1;
+                if (x1 - x0 < 14 || z1 - z0 < 14 || x0 < 0 || z0 < 0 || x1 >= w || z1 >= d) {
+                    continue;
+                }
+                double cx = p.x0 + (x0 + x1) / 2.0, cz = p.z0 + (z0 + z1) / 2.0;
+                double t = Math.hypot(cx - tile.cx(), cz - tile.cz()) / tile.radius() + tile.offset();
+                made.add(new Blk(x0, z0, x1, z1, new boolean[] {true, true, true, true}, t));
+            }
+        }
+        return made;
+    }
+
+    /**
+     * What each block of a piece of the city becomes: towers near its district's heart, mixed
+     * blocks round them, walk-ups on the outskirts, and here and there the civic blocks a city
+     * has all over: squares, car parks, a site left half built, a precinct, a church.
+     */
+    private Role[] tileRoles(List<Blk> blocks) {
+        Role[] roles = new Role[blocks.size()];
+        for (int i = 0; i < blocks.size(); i++) {
+            double t = blocks.get(i).t;
+            Role role = t < 0.3 ? Role.TOWERS : t < 0.65 ? (chance() < 0.55 ? Role.TOWERS : Role.MIXED)
+                    : t < 1.0 ? Role.MIXED : chance() < 0.6 ? Role.WALKUPS : Role.MIXED;
+            if (variant("old_city") && chance() < 0.55) {
+                role = t < 0.3 ? Role.MIXED : Role.WALKUPS;
+            }
+            double r = chance();
+            if (r < 0.025 && t < 0.9) {
+                role = Role.PLAZA;
+            } else if (r < 0.06) {
+                role = Role.PARKING;
+            } else if (r < 0.085 && !variant("old_city")) {
+                role = Role.CONSTRUCTION;
+            } else if (r < 0.125) {
+                role = Role.VACANT;
+            } else if (r < 0.14 && t > 0.2) {
+                role = Role.POLICE;
+            } else if (r < 0.146 && t > 0.2) {
+                role = Role.HOSPITAL;
+            } else if (r < 0.166 && !variant("metro")) {
+                role = Role.CHURCH;
+            } else if (r < 0.172 && variant("old_city")) {
+                role = Role.HALL;
+            }
+            roles[i] = role;
+        }
+        return roles;
+    }
+
+    /**
+     * The blocks the county's railway curves across, round a corner of the grid: left open, a
+     * vacant lot the trains cut through on the surface or a square over the subway's tunnel.
+     */
+    private void railRoles(List<Blk> blocks, Role[] roles) {
+        for (int i = 0; i < blocks.size(); i++) {
+            Blk b = blocks.get(i);
+            int gi = Math.floorDiv(p.x0 + (b.x0 + b.x1) / 2, pitch), gj = Math.floorDiv(p.z0 + (b.z0 + b.z1) / 2, pitch);
+            String role = p.rails.roles.get(County.key(gi, gj));
+            if (role != null) {
+                roles[i] = role.equals("plaza") ? Role.PLAZA : Role.VACANT;
+            }
+            Railway.Station st = p.rails.stations.get(County.key(gi, gj));
+            if (st != null && role == null && b.street[st.face()]) {
+                roles[i] = Role.STATION;
+                stations.put(b, st);
+            }
         }
     }
 
@@ -321,8 +443,70 @@ final class DowntownSite extends Site {
             case CONSTRUCTION -> construction(b);
             case CHURCH -> church(b);
             case VACANT -> vacant(b);
+            case STATION -> station(b);
             default -> walkups(b);
         }
+    }
+
+    /**
+     * The railway's station on the block beside a street stop: centred on the platform's middle,
+     * facing the line across the sidewalk, its canopy out over the sidewalk to the platform's; the
+     * rest of the block walk-ups as usual, the front's either side of the station, the far sides
+     * fitted between the front's and the back's.
+     */
+    private void station(Blk b) {
+        Railway.Station st = stations.get(b);
+        int front = st.face(), back = (front + 2) & 3;
+        int len = b.len(front), dep = b.depth(front);
+        int depth = Math.min(22, Math.min(b.w(), b.d()) / 2);
+        int L = TownStation.L, D = TownStation.D;
+        if (len < L + 2 || dep < D + 12) {
+            walkups(b);
+            return;
+        }
+        // along the side from its west (north and south sides) or north (east and west) end
+        int mid = (front & 1) == 0 ? st.x() - p.x0 - b.x0 : st.z() - p.z0 - b.z0;
+        int along = Math.max(0, Math.min(len - L, mid - L / 2 + 1));
+        Placer pl = lotOn(b, front, along, L, D);
+        // the canopy reaches from the block's edge to the platform's back, six out from the line
+        Kit.Style style = styleOn(b, front);
+        int canopy = reach(style) - 5;
+        new TownStation(pl, new SplittableRandom(Noise.hash(p.seed, b.x0, b.z0)), st.key(), canopy).build();
+        // no lamp posts through the canopy: the sidewalk under it is the station's
+        int[] box = boxOn(b, front, along, L, D);
+        for (int k = 1; k <= canopy; k++) {
+            int[] dir = {0, 0};
+            switch (front) {
+                case 0 -> dir[1] = -k;
+                case 1 -> dir[0] = k;
+                case 2 -> dir[1] = k;
+                default -> dir[0] = -k;
+            }
+            int ex = front == 1 ? box[2] : front == 3 ? box[0] : 0, ez = front == 0 ? box[1] : front == 2 ? box[3] : 0;
+            for (int a = 0; a < L; a++) {
+                int x = (front & 1) == 0 ? box[0] + a : ex + dir[0], z = (front & 1) == 0 ? ez + dir[1] : box[1] + a;
+                if (x >= 0 && z >= 0 && x < w && z < d && kit.use(x, z) == Kit.WALK) {
+                    kit.use[z * w + x] = Kit.BUILT;
+                }
+            }
+        }
+        int fdepth = Math.max(depth, D + 1);
+        frontage(b, front, 0, along - 2, Math.min(depth, 20));
+        frontage(b, front, along + L + 1, len - 1, Math.min(depth, 20));
+        if (b.street[back]) {
+            frontage(b, back, 0, len - 1, depth);
+        }
+        for (int side : new int[] {(front + 1) & 3, (front + 3) & 3}) {
+            if (!b.street[side]) {
+                continue;
+            }
+            // which end of this side meets the front: the side's start for a north or west front
+            boolean frontAtStart = front == 0 || front == 3;
+            int a0 = frontAtStart ? fdepth : (b.street[back] ? depth : 0);
+            int a1 = b.len(side) - 1 - (frontAtStart ? (b.street[back] ? depth : 0) : fdepth);
+            frontage(b, side, a0, a1, depth);
+        }
+        backyard(b);
     }
 
     /**
@@ -922,7 +1106,8 @@ final class DowntownSite extends Site {
     private void streetLamps() {
         for (Kit.Lane l : lanes) {
             int side = 1;
-            int spacing = l.style == Kit.Style.MAIN ? 26 : 30;
+            // the planned city's lamps keep step from one piece to the next
+            int spacing = p.tile != null ? 40 : l.style == Kit.Style.MAIN ? 26 : 30;
             for (double s = spacing / 2.0; s < l.length() - 4; s += spacing) {
                 double[] q = l.point(s);
                 double nx = -q[3] * side, nz = q[2] * side;

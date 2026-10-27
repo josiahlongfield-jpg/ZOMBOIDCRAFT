@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_shards_plate": "zomboidcraft:block/city/dn_shards_plate",
+    "particle": "zomboidcraft:block/city/dn_shards_plate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_shards_plate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_shards_plate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_shards_plate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_shards_plate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_shards_plate"
+        },
+        "down": {
+          "texture": "#dn_shards_plate",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_cinder": "zomboidcraft:block/city/rw_cinder",
+    "rw_subballast": "zomboidcraft:block/city/rw_subballast",
+    "particle": "zomboidcraft:block/city/rw_subballast"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_subballast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_subballast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_subballast",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_subballast",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_cinder",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_subballast",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

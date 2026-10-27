@@ -51,6 +51,11 @@ public final class ZcCommand {
                                 .then(Commands.argument("model", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(AIRCRAFT.keySet(), b))
                                         .executes(ctx -> aircraft(ctx, StringArgumentType.getString(ctx, "model")))))
+                        .then(Commands.literal("event")
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.world.events.WorldEvents.kinds(), b))
+                                        .executes(ctx -> worldEvent(ctx, StringArgumentType.getString(ctx, "kind")))))
                         .then(Commands.literal("zombie")
                                 .executes(ctx -> zombie(ctx, null, "walker"))
                                 .then(Commands.argument("outfit", StringArgumentType.word())
@@ -140,17 +145,17 @@ public final class ZcCommand {
         return 1;
     }
 
-    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless", "hopper");
+    private static final java.util.List<String> ZOMBIE_KINDS = java.util.List.of("walker", "crawler", "legless", "hopper", "holed");
 
     /**
-     * Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling, with no legs, or
-     * hopping on one (the other shot off at the knee).
+     * Puts a zombie a few blocks in front of you: any outfit or the one named, walking, crawling, with no legs,
+     * hopping on one (the other shot off at the knee), or walking with its chest blown open.
      */
     private static int zombie(CommandContext<CommandSourceStack> ctx, String outfit, String kind) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         if ((outfit != null && !ZombieLook.outfits().contains(outfit)) || !ZOMBIE_KINDS.contains(kind)) {
             ctx.getSource().sendFailure(Component.literal("Outfits: " + String.join(", ", ZombieLook.outfits())
-                    + "; then walker, crawler, legless or hopper"));
+                    + "; then walker, crawler, legless, hopper or holed"));
             return 0;
         }
         double yaw = Math.toRadians(player.getYRot());
@@ -176,6 +181,11 @@ public final class ZcCommand {
                 com.zomboidcraft.combat.Dismember.restore(zombie);
                 com.zomboidcraft.combat.Dismember.cut(zombie, zombie.getRandom().nextBoolean()
                         ? com.zomboidcraft.combat.Dismember.KN_R : com.zomboidcraft.combat.Dismember.KN_L);
+            }
+            case "holed" -> {
+                com.zomboidcraft.combat.Downed.makeWalker(zombie);
+                com.zomboidcraft.combat.Dismember.restore(zombie);
+                com.zomboidcraft.combat.Dismember.blowOpen(zombie);
             }
             default -> {
                 com.zomboidcraft.combat.Downed.makeWalker(zombie);
@@ -241,6 +251,22 @@ public final class ZcCommand {
             player.setAttached(com.zomboidcraft.world.cars.AirReadiness.READ, read);
         }
         ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + ", fuelled and ready: G to get in, C to start"), false);
+        return 1;
+    }
+
+    /** /zc event jet|heli|siren|explosion: starts one of the shared world events around you now. */
+    private static int worldEvent(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.events.WorldEvents.Kind kind;
+        try {
+            kind = com.zomboidcraft.world.events.WorldEvents.Kind.valueOf(name.toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren or explosion)"));
+            return 0;
+        }
+        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player);
+        ctx.getSource().sendSuccess(() -> Component.literal(String.format("Started %s at %d %d %d", name, (int) e.x(), (int) e.y(),
+                (int) e.z())), false);
         return 1;
     }
 

@@ -32,6 +32,13 @@ final class AirSound {
 
     /** Called each client tick for every aircraft in view. */
     static void keep(CarProp car) {
+        if (CarProp.quiet.test(car)) {
+            List<Layer> playing = PLAYING.remove(car);     // a flyby heard as a whole recording (WorldEventSound)
+            if (playing != null) {
+                playing.forEach(Layer::end);
+            }
+            return;
+        }
         Flight f = car.flight();
         Minecraft mc = Minecraft.getInstance();
         if (car.touchedDown > 2) {

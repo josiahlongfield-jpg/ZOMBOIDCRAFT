@@ -15,7 +15,7 @@ public final class ListPlaces {
     public static void main(String[] args) {
         long seed = args.length > 0 ? Long.parseLong(args[0]) : 12345L;
         int r = args.length > 1 ? Integer.parseInt(args[1]) : 6000;
-        County county = new County(seed);
+        County county = Boolean.getBoolean("county.endless") ? County.endless(seed) : new County(seed);
         List<Place> found = new java.util.ArrayList<>(county.placesNear(-r, -r, r, r, 0));
         found.addAll(county.hideoutsNear(-r, -r, r, r, 0));
         List<Place> all = found.stream()

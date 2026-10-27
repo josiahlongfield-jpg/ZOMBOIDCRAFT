@@ -275,6 +275,11 @@ Ambient beds picked by Josiah Longfield, made to loop seamlessly by tools/audio/
 | weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Beheading 02 (344 Audio - Flesh, Bones & Gore) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Heavy Body Crunch 02 (344 Audio - Flesh, Bones & Gore) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.bullet.head_burst | EFX SD GORE Snap 05 C.M (Coll Anderson - Gore) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Smash_Gore_Juicy_Smash_07 (Sound Spark LLC – Gore) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Melee_Deep_Wound_05 (Sound Spark LLC – Gore) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 
 ## Trees
 
@@ -312,7 +317,7 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
-| amb/distant/4 | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
+| world/siren | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
 
 ## Bullet strikes
 
@@ -331,5 +336,24 @@ Picked by Josiah Longfield on the Dead Air Bullet Strikes page, cut into single 
 | weapon.bullet.impact.glass | bullet_impact_concrete_brick_01 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | weapon.bullet.impact.soft | [bullet zip and hit.wav by TheLittleCrow](https://freesound.org/people/TheLittleCrow/sounds/496509/) | TheLittleCrow | Freesound, CC0 1.0 |
 | weapon.bullet.ricochet | [bullet ricochet.wav by aust_paul](https://freesound.org/people/aust_paul/sounds/30932/) | aust_paul | Freesound, CC0 1.0 |
-| weapon.bullet.impact.nearby | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
+| weapon.bullet.impact.nearby, weapon.bullet.whizz | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
 | weapon.casing.shotgun | [empty shotgun shells/casings hitting ground bouncing by Metrolynn](https://freesound.org/people/Metrolynn/sounds/620929/) | Metrolynn | Freesound, CC0 1.0 |
+
+## Flybys
+
+Jets and helicopters crossing the map (world events), picked by Josiah Longfield on the Dead Air Aircraft page, lined up and faded by tools/audio/build_flyby_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| world.flyby.jet 1 | F-16 Jet Fighter passing by overhead and vanishing into the horizon 03 (Sound Ex Machina - F16 Maneuvers) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| world.flyby.jet 2 | F-16 pass by (Contact mic, ORTF) 03 (Sound Ex Machina - F16 Maneuvers) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| world.flyby.jet 3 | Jet,Fighter,FA-18C,Hornet,Medium Distant,Climb,Right to High,Crest and Hold,Kill Engine,191 (Airborne Sound - Attack Aircraft Maneuvers) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| world.flyby.jet 4 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.jet 5 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.heli 1 | Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040 (Pole Position - The Aircraft Ambient Library) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+
+## OTTO's voice (train conductor)
+
+Spoken with the Piper text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl) using the
+"joe" voice (en_US-joe-medium, dataset licence CC0, https://huggingface.co/rhasspy/piper-voices),
+then given a robot and train-speaker treatment with ffmpeg. Made by tools/trains/otto_voice.py.

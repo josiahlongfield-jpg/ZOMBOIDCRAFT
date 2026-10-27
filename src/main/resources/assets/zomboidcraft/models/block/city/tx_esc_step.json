@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_esc_riser": "zomboidcraft:block/city/tx_esc_riser",
+    "tx_esc_tread": "zomboidcraft:block/city/tx_esc_tread",
+    "particle": "zomboidcraft:block/city/tx_esc_riser"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_esc_riser",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_esc_riser",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_esc_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_esc_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_esc_tread"
+        },
+        "down": {
+          "texture": "#tx_esc_riser",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_esc_riser",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_esc_riser"
+        },
+        "east": {
+          "texture": "#tx_esc_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_esc_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_esc_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_esc_riser"
+        }
+      }
+    }
+  ]
+}

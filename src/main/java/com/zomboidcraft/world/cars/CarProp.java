@@ -256,7 +256,7 @@ public class CarProp extends Entity {
 
     /** The interact key on this car, at location relative to it: the back end searches the boot, elsewhere gets in. */
     public void use(Player player, Vec3 location) {
-        if (!(level() instanceof ServerLevel server)) {
+        if (!(level() instanceof ServerLevel server) || flyby) {
             return;
         }
         CarModels.Model m = CarModels.get(model());
@@ -722,6 +722,10 @@ public class CarProp extends Entity {
         }
         entityData.set(LIGHTS, !lightsOn());
         server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
+        if (helicopter()) {
+            // a helicopter's searchlight is on with the engines: the switch puts it out
+            player.sendOverlayMessage(Component.literal(lightsOn() ? "Searchlight off." : "Searchlight on."));
+        }
     }
 
     /** Opens the glovebox for someone in a front seat, its key (if it's there) and odds and ends put in the first time. */
@@ -1071,6 +1075,9 @@ public class CarProp extends Entity {
     @Override
     public void tick() {
         super.tick();
+        if (flyby) {
+            return;     // server side, a flyby is flown by WorldEvents
+        }
         lidOpenO = lidOpen;
         rolledO = rolled;
         steerO = steer;
@@ -1363,7 +1370,8 @@ public class CarProp extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance < 96 * 96;  // a town parks a hundred or more; further off they're lost in the haze anyway
+        // a town parks a hundred or more, further off they're lost in the haze anyway; aircraft are seen in the sky from far off
+        return distance < (aircraft() ? 256 * 256 : 96 * 96);
     }
 
     @Override
@@ -1383,10 +1391,14 @@ public class CarProp extends Entity {
     public static java.util.function.Consumer<AirNet.State> pilotReport = state -> { };
     /** Called on the client each tick for an aircraft, to keep its sounds going. */
     public static java.util.function.Consumer<CarProp> airSound = car -> { };
+    /** Client side: aircraft whose engines stay silent, as a flyby heard as a whole recording (WorldEventSound). */
+    public static java.util.function.Predicate<CarProp> quiet = car -> false;
     /** Called on the client when the local player gets into an aircraft. */
     public static java.util.function.Consumer<CarProp> boarded = car -> { };
 
     private Flight flight;
+    /** Server side: one of WorldEvents' flybys, crossing the map on its own line; never saved, never boarded. */
+    private boolean flyby;
     /** Server side: nobody's flying it but it's still moving, so the server does. */
     private boolean airborne;
     private boolean crashed;
@@ -1439,6 +1451,38 @@ public class CarProp extends Entity {
     private boolean airFound;
 
     /** Fuelled, a good battery and in full repair: an aircraft spawned to fly straight away. */
+    /**
+     * One tick of a flyby (WorldEvents): puts it where its line says, nose along it, engines running at cruise
+     * (or in afterburner), so everyone's game draws it flying and plays its engines as for any aircraft.
+     */
+    public void flyby(Vec3 at, Vec3 velocity, boolean afterburner) {
+        flyby = true;
+        noPhysics = true;
+        Flight f = flight();
+        double horizontal = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+        float yaw = (float) Math.toDegrees(Math.atan2(-velocity.x, velocity.z));
+        float nose = f.kind == Flight.Kind.HELI ? -7 : (float) Math.toDegrees(Math.atan2(velocity.y, horizontal));
+        f.set(yaw, nose, 0);
+        f.vel = velocity;
+        f.grounded = false;
+        f.rpm = 1;
+        f.power = f.kind == Flight.Kind.HELI ? 0.65f : afterburner ? 0.95f : 0.8f;
+        f.throttle = f.power;
+        setPos(at.x, at.y, at.z);
+        setYRot(yaw);
+        setXRot(-nose);
+        setDeltaMovement(velocity.scale(Flight.DT));
+        entityData.set(ENGINE, true);
+        entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
+        entityData.set(AIR_RPM, f.rpm);
+        entityData.set(AIR_POWER, f.power);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return !flyby && super.shouldBeSaved();
+    }
+
     public void readyToFly() {
         airFound = true;
         setFuel(1);
@@ -1784,7 +1828,7 @@ public class CarProp extends Entity {
 
     private String flightHelp() {
         return helicopter()
-                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover). Alt looks round."
+                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover), L searchlight. Alt looks round."
                 : "Mouse flies, W/S throttle, A/D roll, Space brakes, H flight assist on/off. Alt looks round.";
     }
 

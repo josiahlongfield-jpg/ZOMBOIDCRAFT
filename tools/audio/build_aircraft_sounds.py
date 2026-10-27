@@ -57,8 +57,11 @@ EVENTS = {
     "aircraft.heli.idle": (["heli/idle"], 48),
     "aircraft.warn.stall": (["warn/stall", "warn/stall2"], 8),
 }
-# Josiah: the WW2 air-raid siren becomes one of the random far-off sounds in the world (Ambience's amb.distant)
-AMBIENT = {"amb/distant/4": ("fs:578987", 0.0, None, 0.0, -4.0, "lowpass=f=3000")}
+# Josiah: the WW2 air-raid siren wails over the world now and then (world.siren, one of the shared WorldEvents that
+# everyone hears together, from where they stand); it was first one of each player's own far-off sounds
+# Josiah 09:02: it always sounds far off, wherever it's heard: thinned to the middle band, echoing off the town
+AMBIENT = {"world/siren": ("fs:578987", 0.0, None, 0.0, -1.0,
+                           "highpass=f=300,lowpass=f=1800,aecho=0.8:0.75:190|430|800:0.45|0.3|0.18")}
 
 
 def load(path, filt):
@@ -103,9 +106,12 @@ def main():
     ours = json.loads(sj.read_text())
     for event, (files, rng) in EVENTS.items():
         ours[event] = {"sounds": [{"name": f"zomboidcraft:aircraft/{f}", "attenuation_distance": rng} for f in files]}
-    dist = ours["amb.distant"]["sounds"]
-    if not any(s["name"].endswith("amb/distant/4") for s in dist):
-        dist.append(dict(dist[0], name="zomboidcraft:amb/distant/4"))
+    ours["amb.distant"]["sounds"] = [s for s in ours["amb.distant"]["sounds"] if not s["name"].endswith("amb/distant/4")]
+    # the shared world events (WorldEvents): the siren, and the explosions reuse the crash and the far-off blast
+    # not streamed, like the flybys: the 8 streaming channels can all be taken by the rain, wind and music loops
+    ours["world.siren"] = {"sounds": [{"name": "zomboidcraft:world/siren", "attenuation_distance": 480}]}
+    ours["world.explosion"] = {"sounds": [{"name": "zomboidcraft:aircraft/crash", "attenuation_distance": 192}]}
+    ours["world.explosion.far"] = {"sounds": [{"name": "zomboidcraft:amb/distant/1", "attenuation_distance": 640}]}
     sj.write_text(json.dumps(ours, indent=2) + "\n")
 
     path = ROOT / "CREDITS.md"

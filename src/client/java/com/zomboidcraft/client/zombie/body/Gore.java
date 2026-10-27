@@ -15,7 +15,7 @@ public final class Gore {
     public static final Identifier TEXTURE = ZomboidCraft.id("textures/entity/zbody/gore.png");
     /** Texture squares: wet flesh, bone, shreds of muscle. */
     private static final float[][] REGION = {{0f, 0f, 0.5f, 0.5f}, {0.5f, 0f, 1f, 0.5f}, {0f, 0.5f, 0.5f, 1f}};
-    private static final int FLESH = 0, BONE = 1, SHRED = 2;
+    public static final int FLESH = 0, BONE = 1, SHRED = 2;
     /** Each face's corners as signs of the half sizes, and its normal. */
     private static final float[][] FACES = {
             {1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 0, 0},
@@ -55,16 +55,32 @@ public final class Gore {
         }
     }
 
-    private void box(VertexConsumer out, PoseStack.Pose pose, Matrix4f at, float cx, float cy, float cz, float turn,
-                     float sx, float sy, float sz, int region, int light, int overlay) {
+    /** A square of the gore texture: wet flesh, bone or shreds of muscle (u0, v0, u1, v1). */
+    public static float[] region(int region) {
+        return REGION[region];
+    }
+
+    /** A little cube about the space's middle, every face from one square of a texture (u0, v0, u1, v1), tinted. */
+    public void cube(VertexConsumer out, PoseStack.Pose pose, float size, float[] uv, int colour, int light, int overlay) {
+        box.identity();
+        faces(out, pose, size, size, size, uv, colour, light, overlay);
+    }
+
+    /** A box of one square of the texture: its middle and its turn about y in the end's space, then its sizes. */
+    void box(VertexConsumer out, PoseStack.Pose pose, Matrix4f at, float cx, float cy, float cz, float turn,
+             float sx, float sy, float sz, int region, int light, int overlay) {
         box.set(at).translate(cx, cy, cz).rotateY(turn);
-        float[] uv = REGION[region];
+        faces(out, pose, sx, sy, sz, REGION[region], -1, light, overlay);
+    }
+
+    private void faces(VertexConsumer out, PoseStack.Pose pose, float sx, float sy, float sz, float[] uv, int colour,
+                       int light, int overlay) {
         for (float[] f : FACES) {
             box.transformDirection(n.set(f[12], f[13], f[14])).normalize();
             for (int c = 0; c < 4; c++) {
                 box.transformPosition(p.set(f[c * 3] * sx / 2, f[c * 3 + 1] * sy / 2, f[c * 3 + 2] * sz / 2));
                 out.addVertex(pose, p.x, p.y, p.z)
-                        .setColor(-1)
+                        .setColor(colour)
                         .setUv(uv[0] + (uv[2] - uv[0]) * U[c], uv[1] + (uv[3] - uv[1]) * V[c])
                         .setOverlay(overlay)
                         .setLight(light)

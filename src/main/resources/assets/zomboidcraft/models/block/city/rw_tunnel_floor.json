@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_tunnel": "zomboidcraft:block/city/rw_tunnel",
+    "rw_walkway": "zomboidcraft:block/city/rw_walkway",
+    "particle": "zomboidcraft:block/city/rw_tunnel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_tunnel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_tunnel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_tunnel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_tunnel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_walkway",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_tunnel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

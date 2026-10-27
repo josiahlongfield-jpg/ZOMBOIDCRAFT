@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_globe_on": "zomboidcraft:block/city/dn_globe_on",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        11,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        10,
+        6
+      ],
+      "to": [
+        10,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        3,
+        4.5
+      ],
+      "to": [
+        11.5,
+        10,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_globe_on"
+        },
+        "south": {
+          "texture": "#dn_globe_on"
+        },
+        "east": {
+          "texture": "#dn_globe_on"
+        },
+        "west": {
+          "texture": "#dn_globe_on"
+        },
+        "up": {
+          "texture": "#dn_globe_on"
+        },
+        "down": {
+          "texture": "#dn_globe_on"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        2,
+        5.5
+      ],
+      "to": [
+        10.5,
+        3,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_globe_on"
+        },
+        "south": {
+          "texture": "#dn_globe_on"
+        },
+        "east": {
+          "texture": "#dn_globe_on"
+        },
+        "west": {
+          "texture": "#dn_globe_on"
+        },
+        "up": {
+          "texture": "#dn_globe_on"
+        },
+        "down": {
+          "texture": "#dn_globe_on"
+        }
+      }
+    }
+  ]
+}

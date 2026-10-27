@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_dp_bead": "zomboidcraft:block/city/rw_dp_bead",
+    "rw_dp_lap": "zomboidcraft:block/city/rw_dp_lap",
+    "particle": "zomboidcraft:block/city/rw_dp_lap"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_lap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_dp_bead",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_dp_lap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_dp_lap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_dp_lap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_dp_lap",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

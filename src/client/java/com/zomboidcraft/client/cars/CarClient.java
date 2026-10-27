@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -25,9 +24,9 @@ import net.minecraft.world.phys.Vec3;
  * a door and facing its handle lights the handle green and gets you into that door's seat; otherwise it's
  * the nearest free seat, or the boot from the back end. Inside, it moves you to a free seat you look at
  * (lit green), opens the glovebox from the front, or gets you out. At the wheel, C turns the key (or
- * hotwires a car with none), the rail-light key works the headlights, and H sounds the horn. A hint shows
- * what the key will do; the driving keys are handed to the car you drive; running engines are heard; and
- * headlights light the road.
+ * hotwires a car with none), the rail-light key works the headlights, and H sounds the horn. What the key
+ * would use is lit with a small green dot ({@link com.zomboidcraft.client.interact.Interactables}), the boot
+ * too; the driving keys are handed to the car you drive; running engines are heard; and headlights light the road.
  */
 public final class CarClient {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ZomboidCraft.id("vehicles"));
@@ -48,7 +47,6 @@ public final class CarClient {
     }
 
     private static Target target;
-    private static Object hinted;
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(INTERACT);
@@ -58,6 +56,8 @@ public final class CarClient {
         // a car you drive moves on your side, from your movement keys
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
+        com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
+        com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         CarLights.register();
     }
 
@@ -94,6 +94,8 @@ public final class CarClient {
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
+            } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
+                // a station's call button: the train's on its way
             } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
                 // not at a car, key in hand: its panic button
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
@@ -115,23 +117,27 @@ public final class CarClient {
         if (player.isUsingItem() && !CarProp.mayUse(player, player.getUseItem()) && client.gameMode != null) {
             client.gameMode.releaseUsingItem(player);
         }
-        hint(player, target != null ? target : car, hit);
     }
 
-    /** The hint for what the interact key would do, refreshed every second while it's the same thing. */
-    private static void hint(LocalPlayer player, Object on, HitResult hit) {
-        if (on != null && (on != hinted && !on.equals(hinted) || player.tickCount % 20 == 0)) {
-            String what;
-            if (on instanceof Target t) {
-                what = t.label();
-            } else {
-                CarProp car = (CarProp) on;
-                boolean boot = player.isShiftKeyDown() || car.atBoot(hit.getLocation().subtract(car.position()));
-                what = boot ? "Search" : car.nearestFreeSeat(player) == 0 ? "Drive" : "Get in";
-            }
-            player.sendOverlayMessage(Component.literal("[").append(INTERACT.getTranslatedKeyMessage()).append("] " + what));
+    /**
+     * The boot's dot: you're at the back of a car, close, looking at it, so the interact key would search it.
+     * At the middle of the back, a little under the top of the body.
+     */
+    private static com.zomboidcraft.client.interact.Interactables.Spot boot(Minecraft client, LocalPlayer player) {
+        if (target != null || player.isPassenger()) {
+            return null;
         }
-        hinted = on;
+        HitResult hit = client.hitResult;
+        CarProp car = lookedAt(client, hit);
+        CarModels.Model m = car == null ? null : CarModels.get(car.model());
+        if (m == null || m.jet() || hit.getLocation().distanceTo(player.getEyePosition()) > DOOR_REACH
+                || !car.atBoot(hit.getLocation().subtract(car.position()))) {
+            return null;
+        }
+        float z = -m.size[2] / 2;
+        float y = 0.8f * m.heightAt(0, z + 0.3f);
+        return new com.zomboidcraft.client.interact.Interactables.Spot(car.toWorld(new float[]{0, y, z}),
+                com.zomboidcraft.client.interact.Interactables.SIZE);
     }
 
     /**
@@ -166,7 +172,7 @@ public final class CarClient {
                 double cos = d < 1e-3 ? 1 : to.dot(look) / d;
                 if (d < DOOR_REACH && cos > bestCos) {
                     bestCos = cos;
-                    best = new Target(car, s, h, 0.07f, seatName(m, s));
+                    best = new Target(car, s, h, com.zomboidcraft.client.interact.Interactables.SIZE, seatName(m, s));
                 }
             }
         }
@@ -193,14 +199,14 @@ public final class CarClient {
             double d = to.length(), cos = to.dot(look) / Math.max(1e-3, d);
             if (d < 3.5 && cos > bestCos) {
                 bestCos = cos;
-                best = new Target(car, s, p, 0.16f, s == 0 ? "Take the wheel" : "Move to the " + seatName(m, s).toLowerCase());
+                best = new Target(car, s, p, 0.045f, s == 0 ? "Take the wheel" : "Move to the " + seatName(m, s).toLowerCase());
             }
         }
         if (m.glovebox != null && mine >= 0 && mine <= 1) {
             Vec3 to = car.toWorld(m.glovebox).subtract(eye);
             double d = to.length(), cos = to.dot(look) / Math.max(1e-3, d);
             if (d < 1.6 && cos > Math.max(bestCos, GLOVE_CONE)) {
-                best = new Target(car, CarNet.Seat.GLOVEBOX, m.glovebox, 0.1f, "Glovebox");
+                best = new Target(car, CarNet.Seat.GLOVEBOX, m.glovebox, com.zomboidcraft.client.interact.Interactables.SIZE, "Glovebox");
             }
         }
         return best;

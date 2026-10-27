@@ -225,6 +225,7 @@ def main():
             if x0 < 0 or y0 < 0 or z0 < 0 or x1 > Q or y1 > Q or z1 > Q:
                 outside.setdefault(i, []).append((x0, y0, z0, x1, y1, z1))
     full = stamp.all(axis=(1, 2, 3))
+    stairish &= stamp.any(axis=(1, 2, 3))      # a "way to the stairs" sign is no stair
     # the body stands on a lattice of half-block cells ("halves"): its footprint is one half square
     nodes = {}        # (hx, hz) -> array of stand levels (sub-cells)
     edges = []        # (hx, hz, s, hx2, hz2, s2)

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_menucase": "zomboidcraft:block/city/dn_menucase",
+    "home_wood_walnut": "zomboidcraft:block/city/home_wood_walnut",
+    "particle": "zomboidcraft:block/city/dn_menucase"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        14.5
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_menucase"
+        },
+        "south": {
+          "texture": "#home_wood_walnut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_wood_walnut"
+        },
+        "west": {
+          "texture": "#home_wood_walnut"
+        },
+        "up": {
+          "texture": "#home_wood_walnut"
+        },
+        "down": {
+          "texture": "#home_wood_walnut"
+        }
+      }
+    }
+  ]
+}

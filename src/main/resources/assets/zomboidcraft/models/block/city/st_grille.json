@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_grille": "zomboidcraft:block/city/st_grille",
+    "particle": "zomboidcraft:block/city/st_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_grille"
+        },
+        "south": {
+          "texture": "#st_grille"
+        },
+        "east": {
+          "texture": "#st_grille",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_grille",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_grille",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_grille",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

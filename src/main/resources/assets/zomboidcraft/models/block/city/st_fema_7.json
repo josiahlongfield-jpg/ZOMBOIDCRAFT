@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_fema_7": "zomboidcraft:block/city/st_fema_7",
+    "particle": "zomboidcraft:block/city/st_fema_7"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_fema_7"
+        },
+        "south": {
+          "texture": "#st_fema_7",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_fema_7",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_fema_7",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_fema_7",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_fema_7",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

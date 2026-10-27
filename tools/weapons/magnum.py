@@ -141,20 +141,20 @@ def round44(m):
     """A .44 Magnum round as it sits home: its rim on the cylinder's back face (z 0), the 1.285" case, the
     semi-wadcutter's lead nose out ahead (1.61" overall). Drawn at real size, not the frame's."""
     b = Inch(m)
-    b.rod(0.0, 0.06, 0.257, 'brass', axis=2)
-    b.rod(-1.285, 0.0, 0.228, 'brass', axis=2)
-    b.rod(-1.42, -1.285, 0.215, 'lead', axis=2)
-    b.rod(-1.61, -1.42, 0.13, 'lead', axis=2)
-    b.rod(0.06, 0.066, 0.10, 'primer', axis=2)
+    b.round_rod(0.0, 0.06, 0.257, 'brass')
+    b.round_rod(-1.285, 0.0, 0.228, 'brass')
+    b.round_rod(-1.42, -1.285, 0.215, 'lead')       # the semi-wadcutter's shoulder, then its flat-topped nose
+    b.ogive(-1.42, -1.61, 0.17, 'lead', steps=3)
+    b.round_rod(0.06, 0.066, 0.10, 'primer')
 
 
 def case44(m):
     """A fired .44 Magnum case: the rim and the case, its mouth open and sooted."""
     b = Inch(m)
-    b.rod(0.0, 0.06, 0.257, 'brass', axis=2)
-    b.rod(-1.285, 0.0, 0.228, 'brass', axis=2)
-    b.rod(-1.293, -1.285, 0.19, 'soot', axis=2)
-    b.rod(0.06, 0.066, 0.10, 'primer', axis=2)
+    b.round_rod(0.0, 0.06, 0.257, 'brass')
+    b.round_rod(-1.285, 0.0, 0.228, 'brass')
+    b.round_rod(-1.293, -1.285, 0.19, 'soot')
+    b.round_rod(0.06, 0.066, 0.10, 'primer')
 
 
 round_look = D.round_look

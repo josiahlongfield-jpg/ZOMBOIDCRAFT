@@ -279,13 +279,14 @@ def R_xyz(a, b, c):
     return rot_matrix('x', a) @ rot_matrix('y', b) @ rot_matrix('z', c)
 
 
-def fit(model, M, size, centre_at=(0, 0, 0)):
-    """Scale and translation that fit the model, turned by M, into a size-unit square at centre_at."""
+def fit(model, M, size, centre_at=(0, 0, 0), depth=False, scale=None):
+    """Scale and translation that fit the model, turned by M, into a size-unit square at centre_at (a cube with
+    depth: for the ground and item frames, where a long thin part seen end on would otherwise blow up huge)."""
     lo, hi = model.bounds()
     pts = np.array([c for p in model.parts for c in corners(p)]) - 8
     q = pts @ M.T
     ext = q.max(0) - q.min(0)
-    s = size / max(ext[0], ext[1])
+    s = scale if scale is not None else size / (max(ext) if depth else max(ext[0], ext[1]))
     mid = (q.max(0) + q.min(0)) / 2
     t = np.array(centre_at) - mid * s
     return round(s, 4), [round(v, 3) for v in t]

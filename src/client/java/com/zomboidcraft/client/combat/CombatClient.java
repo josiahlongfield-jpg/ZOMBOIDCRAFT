@@ -61,6 +61,12 @@ public final class CombatClient {
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
     private static float kickPending;
     private static float recoverLeft;
+    /** When this player last fired (wall clock), and the over-the-shoulder flag the server last heard. */
+    private static long shotMs = Long.MIN_VALUE / 2;
+    private static Boolean shoulderSent;
+    private static Object shoulderPlayer;
+    /** The camera went to first person for a 4x scope aimed over the shoulder, and goes back when it's lowered. */
+    private static boolean scopeFromShoulder;
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(RELOAD);
@@ -89,6 +95,8 @@ public final class CombatClient {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(HoldPoses::faceLook);
+        RaisedProperty.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 
@@ -107,10 +115,34 @@ public final class CombatClient {
         }
     }
 
+    /** This player's own gun is raised: over the shoulder, or fired a moment ago. Sooner than waiting on the server. */
+    static boolean raisedHere() {
+        return com.zomboidcraft.client.camera.ShoulderCam.active()
+                || System.currentTimeMillis() - shotMs < ZcConfig.get().guns.raiseAfterShot * 1000;
+    }
+
     private static void tick(Minecraft client) {
         LocalPlayer player = client.player;
         if (player == null) {
             return;
+        }
+        boolean scoping = player.isUsingItem() && GunType.isGun(player.getUseItem()) && Attachments.scoped(player.getUseItem());
+        if (scoping && !scopeFromShoulder && ZcConfig.get().look.scopeFromShoulder
+                && com.zomboidcraft.client.camera.ShoulderCam.active()) {
+            scopeFromShoulder = true;
+            client.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+        } else if (!scoping && scopeFromShoulder) {
+            scopeFromShoulder = false;
+            if (client.options.getCameraType().isFirstPerson()) {
+                client.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
+            }
+        }
+        boolean shoulder = com.zomboidcraft.client.camera.ShoulderCam.active();
+        if (shoulderPlayer != player || shoulderSent == null || shoulderSent != shoulder) {
+            // others see the gun raised while you look over your shoulder, low in first person (GunRaise)
+            shoulderPlayer = player;
+            shoulderSent = shoulder;
+            ClientPlayNetworking.send(new CombatNet.Action(shoulder ? CombatNet.Action.SHOULDER_ON : CombatNet.Action.SHOULDER_OFF));
         }
         while (RELOAD.consumeClick()) {
             if (GunType.isGun(player.getMainHandItem())) {
@@ -195,6 +227,7 @@ public final class CombatClient {
         }
         boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
         ClientPlayNetworking.send(new CombatNet.Fire(aiming));
+        shotMs = System.currentTimeMillis();
         if (dry) {
             return;     // the server answers with the dry click
         }

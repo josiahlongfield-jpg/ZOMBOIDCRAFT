@@ -386,7 +386,7 @@ public final class RifleView {
             pose.popPose();
         }
         if (rig.hammer().length == 3) {
-            // an exposed hammer: back at full cock on the sights, falling forward with each shot
+            // an exposed hammer: it strikes with each shot (see hammerAmount)
             float[] h = rig.hammer();
             Matrix4f local = new Matrix4f().translation(h[0], h[1], h[2])
                     .rotateX(rig.hammerCock() * hammerAmount(player, gun, animate) * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
@@ -501,7 +501,6 @@ public final class RifleView {
     public static void fired(LocalPlayer player, boolean flash) {
         hammerShot = System.nanoTime();
         hammer = 0;
-        hammerRecock = player.isUsingItem();
         shotTick = player.tickCount;
         shotWaiting = true;
         shotFlash = flash;
@@ -536,40 +535,37 @@ public final class RifleView {
 
     private static final int FULL_BRIGHT = 0xF000F0;
 
-    /** The hammer: how far back it is (0 down, 1 full cock), when the last shot let it fall, and whether to cock it again. */
+    /** The hammer: how far back it is (0 down, 1 full cock), and when the last shot let it fall. */
     private static float hammer;
     private static long hammerShot, hammerFrame;
-    private static boolean hammerRecock;
-    /** How long the hammer takes to fall, how long after a shot before the thumb takes it back, and how long that takes (s). */
-    private static final float HAMMER_FALL = 0.05f, HAMMER_WAIT = 0.28f, HAMMER_COCKING = 0.16f;
+    /** A revolver's double-action strike on each shot: drawn back, then falling, all inside the flash (s). */
+    private static final float STRIKE_BACK = 0.03f, STRIKE_FALL = 0.025f;
+    /** A pistol's: falls on the shot, then the slide runs back over it and leaves it cocked as it returns (s). */
+    private static final float HAMMER_FALL = 0.05f, SLIDE_HAMMER_WAIT = 0.05f, SLIDE_HAMMER_COCKING = 0.03f;
 
     /**
-     * How far back an exposed hammer is this frame: thumbed back to full cock while aiming a loaded gun (the cock
-     * sound is the server's as the gun comes up; cocked again after a shot while still on the sights, heard here),
-     * and on each shot it falls, from full cock, whether it was cocked or the trigger drew it back.
+     * How far back an exposed hammer is this frame. A revolver's rests down; each shot the trigger snaps it back
+     * and lets it fall onto the round, done before the flash is. A pistol's sits cocked while it's loaded,
+     * slams forward with the shot and is pushed back by the slide.
      */
     private static float hammerAmount(LocalPlayer player, ItemStack gun, boolean reloading) {
         long now = System.nanoTime();
         float dt = hammerFrame == 0 ? 0f : Math.min(0.1f, (now - hammerFrame) / 1e9f);
         hammerFrame = now;
         float since = (now - hammerShot) / 1e9f;
+        if (!rig.cycles()) {
+            hammer = 0f;
+            if (hammerShot == 0 || since >= STRIKE_BACK + STRIKE_FALL) {
+                return 0f;
+            }
+            return since < STRIKE_BACK ? since / STRIKE_BACK : 1f - (since - STRIKE_BACK) / STRIKE_FALL;
+        }
         if (hammerShot != 0 && since < HAMMER_FALL) {
             return 1f - since / HAMMER_FALL;
         }
-        boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
         boolean loaded = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0;
-        boolean cock = aiming && loaded && !reloading && (hammerShot == 0 || since > HAMMER_WAIT);
-        if (!aiming) {
-            hammerRecock = false;
-        }
-        if (cock && hammer == 0f && hammerRecock) {
-            hammerRecock = false;
-            GunType t = GunType.of(gun);
-            if (t != null && t.hammer() != null) {
-                com.zomboidcraft.client.sound.EarSound.play(t.hammer(), net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1f);
-            }
-        }
-        hammer = cock ? Math.min(1f, hammer + dt / HAMMER_COCKING) : Math.max(0f, hammer - dt / HAMMER_FALL);
+        boolean cock = loaded && !reloading && (hammerShot == 0 || since > SLIDE_HAMMER_WAIT);
+        hammer = cock ? Math.min(1f, hammer + dt / SLIDE_HAMMER_COCKING) : Math.max(0f, hammer - dt / HAMMER_FALL);
         return hammer;
     }
 

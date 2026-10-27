@@ -5,6 +5,10 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.zomboidcraft.combat.Deaths;
+import com.zomboidcraft.client.zombie.body.ZMove;
+import com.zomboidcraft.zombie.Acts;
+import com.zomboidcraft.zombie.ClimbPath;
 import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.client.zombie.body.Gibs;
@@ -20,6 +24,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Draws every walker (zombie, husk, zombie villager): the new Zomboid-style body with its worn clothes
@@ -70,7 +75,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.outfit = ZombieLook.outfit(zombie);
         state.missingLimb = ZombieLook.missingLimb(zombie);
         int limbs = Dismember.limbs(zombie);
-        state.cuts = limbs & Dismember.CUTS;
+        state.cuts = limbs & (Dismember.CUTS | Dismember.MARKS);
         state.bolts = zombie.getAttachedOrElse(com.zomboidcraft.combat.StuckBolts.BOLTS, java.util.List.of());
         ZcConfig.Look look = ZcConfig.get().look;
         state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
@@ -79,7 +84,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             Identifier[] tex = BODY_TEXTURES.computeIfAbsent(state.outfit, o -> new Identifier[] {
                     ZomboidCraft.id("textures/entity/zbody/skin/" + o + ".png"),
                     ZomboidCraft.id("textures/entity/zbody/kit/" + o + ".png"),
-                    ZomboidCraft.id("textures/entity/zbody/eyes/" + o + ".png")});
+                    ZomboidCraft.id("textures/entity/zbody/eyes/" + o + ".png"),
+                    ZomboidCraft.id("textures/entity/zbody/low/" + o + ".png")});
             state.texture = tex[0];
             state.addonTexture = null;
             state.eyesTexture = null;
@@ -107,6 +113,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             state.zskin = tex[0];
             state.zkit = tex[1];
             state.zeyes = look.glowingEyes ? tex[2] : null;
+            state.zlow = ZcConfig.get().performance.bakedZombies ? ZBodyMesh.get(state.outfit + "_low") : null;
+            state.zlowSkin = tex[3];
             facts.age = state.ageInTicks;
             facts.walkPos = state.walkAnimationPos;
             facts.walkSpeed = state.walkAnimationSpeed;
@@ -117,13 +125,60 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             facts.crawler = state.crawler;
             facts.legless = state.legless;
             facts.cuts = state.cuts;
+            facts.missingLimb = state.missingLimb;
+            facts.bodyYaw = state.bodyRot;
+            facts.deathTime = zombie.deathTime > 0 ? zombie.deathTime + partialTick : 0f;
+            facts.death = zombie.getAttachedOrElse(Deaths.DEATH, 0L);
+            facts.mesh = state.zbody;
+            acting(zombie, state, partialTick);
             int newly = animator.animate(zombie, facts, partialTick, state.zpose);
+            if (zombie.deathTime <= 0) {
+                state.bodyRot = animator.drawYaw;
+            }
+            if (zombie.deathTime > 0) {
+                // it falls in its own way, not vanilla's tip onto its side, and not flushed red
+                state.bodyRot = animator.dyingYaw;
+                state.deathTime = 0f;
+                state.hasRedOverlay = false;
+                state.zeyes = null;
+            }
             if (newly != 0) {
                 // the limb flies off in the pose it was in the moment before
                 Gibs.spawn(state.zbody, state.zskin, state.zkit, ZBodyLayer.pose(state.zbody, animator.before, state.legless),
                         newly, state.cuts & ~newly | ZBodyLayer.missingCuts(state.missingLimb), limbs,
                         state.x, state.y, state.z, state.bodyRot, state.scale, state.variant);
             }
+        }
+    }
+
+    /**
+     * Breaking in (Acts): beating on a door or a window, its body drawn square in front of it with its hands on it,
+     * each blow coming down as the server lands it; or climbing through a window, drawn where the climb has it whatever
+     * the zombie's own glide is doing.
+     */
+    private void acting(Zombie zombie, WalkerRenderState state, float partialTick) {
+        Acts.Act act = Acts.get(zombie);
+        facts.act = 0;
+        if (act == null || zombie.deathTime > 0) {
+            return;
+        }
+        double now = zombie.level().getGameTime() + partialTick;
+        facts.actYaw = act.yaw();
+        if (act.kind() == Acts.CLIMB) {
+            facts.act = ZMove.CLIMB;
+            facts.actTime = Math.min(Acts.climbTime(act, now), ClimbPath.END);
+            Vec3 at = Acts.climbPlace(act, facts.actTime);
+            facts.shiftX = (float) (at.x - state.x);
+            facts.shiftY = (float) (at.y - state.y);
+            facts.shiftZ = (float) (at.z - state.z);
+        } else {
+            facts.act = act.kind() == Acts.BASH_DOOR ? ZMove.BASH_DOOR : ZMove.BASH_WIN;
+            // a blow lands 0.55 s into each second of the swing; until the first is on its way it leans there
+            facts.actTime = Math.max(0f, (float) (now - act.tick()) / Acts.BLOW + 0.55f);
+            Vec3 shift = Acts.bashShift(zombie.level(), act, state.x, state.z, false);
+            facts.shiftX = (float) shift.x;
+            facts.shiftY = 0f;
+            facts.shiftZ = (float) shift.z;
         }
     }
 

@@ -31,6 +31,20 @@ class Inch:
         return self.m.rod(o[axis] + IN * a0, o[axis] + IN * a1, IN * r, mat,
                           cx=o[others[0]] + IN * at[0], cz=o[others[1]] + IN * at[1], axis=axis, **kw)
 
+    def round_rod(self, z0, z1, r, mat, at=(0.0, 0.0), **kw):
+        """A small round bar along z that still reads as round: four boxes in a stepped circle, where rod draws one
+        square box for anything under a third of a pixel (a cartridge, seen up close in first person)."""
+        x, y = at
+        for ca, cb in ((0.98, 0.195), (0.83, 0.556), (0.556, 0.83), (0.195, 0.98)):
+            self.box((x - r * ca, y - r * cb, z0), (x + r * ca, y + r * cb, z1), mat, axis=2, round=IN * r, **kw)
+
+    def ogive(self, z_base, z_tip, r, mat, steps=4, **kw):
+        """A bullet's rounded nose from radius r at z_base to a blunt point at z_tip, in round steps."""
+        for i in range(steps):
+            t0, t1 = i / steps, (i + 1) / steps
+            rr = r * (1 - t0 ** 2) ** 0.5 if t0 > 0 else r
+            self.round_rod(z_base + (z_tip - z_base) * t0, z_base + (z_tip - z_base) * t1, max(rr, r * 0.3), mat, **kw)
+
     def seg(self, p0, p1, w, t, mat, x=0.0, **kw):
         """A straight bar in the side (z-y) plane from p0 to p1, each (z, y); w across it, t wide in x."""
         o = self.o

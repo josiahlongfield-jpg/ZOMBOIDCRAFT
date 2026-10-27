@@ -45,7 +45,7 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class CarLights {
     static final Identifier GLOW = ZomboidCraft.id("textures/effect/car_glow.png");
-    static final int FULL_BRIGHT = 0xF000F0;
+    public static final int FULL_BRIGHT = 0xF000F0;
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
     /** Only cars this near light the world, and only so many of them. */
     private static final double NEAR = 64;
@@ -263,15 +263,19 @@ public final class CarLights {
     // ------------------------------------------------------------------ shared with the car's own drawing
 
     /** Added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow. */
-    static RenderType glowType(boolean shaders) {
-        return shaders ? RenderTypes.beaconBeam(GLOW, true) : RenderTypes.eyes(GLOW);
+    public static RenderType glowType(boolean shaders) {
+        return glowType(GLOW, shaders);
+    }
+
+    static RenderType glowType(Identifier texture, boolean shaders) {
+        return shaders ? RenderTypes.beaconBeam(texture, true) : RenderTypes.eyes(texture);
     }
 
     /**
      * A colour at a strength, packed: added light gets dimmer for fainter (a shader pack draws that dark, so
      * blended glow keeps the full colour and gets more see-through instead).
      */
-    static int shade(float[] rgb, float strength, boolean blended) {
+    public static int shade(float[] rgb, float strength, boolean blended) {
         float k = blended ? 1 : strength;
         int r = Mth.clamp((int) (rgb[0] * k * 255), 0, 255), g = Mth.clamp((int) (rgb[1] * k * 255), 0, 255),
                 b = Mth.clamp((int) (rgb[2] * k * 255), 0, 255);
@@ -280,7 +284,7 @@ public final class CarLights {
     }
 
     /** Whether a shader pack is drawing the world (asked of Iris, when it's installed). */
-    static boolean shaderPackOn() {
+    public static boolean shaderPackOn() {
         if (!irisAsked) {
             irisAsked = true;
             try {
@@ -306,16 +310,16 @@ public final class CarLights {
 
     // ------------------------------------------------------------------ the glow's quads
 
-    private interface Along {
+    interface Along {
         double at(double s);
     }
 
-    private interface Shade {
+    interface Shade {
         int at(double s);
     }
 
     /** This frame's glow quads, four corners each, from the camera: a position, a colour, a normal. */
-    private static final class Quads {
+    static final class Quads {
         private static final int STRIDE = 8;
         final Vec3 cam;
         final boolean blended;
@@ -347,6 +351,17 @@ public final class CarLights {
             corners[k + 6] = (float) normal.y;
             corners[k + 7] = (float) normal.z;
             colours[count++] = colour;
+        }
+
+        /** A soft round glow turned to face the camera. */
+        void spot(Vec3 c, double half, int colour) {
+            Vec3 toCam = cam.subtract(c);
+            double away = toCam.length();
+            Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+            Vec3 a = Math.abs(n.y) > 0.9 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+            Vec3 side = n.cross(a).normalize().scale(half), up = side.cross(n).normalize().scale(half);
+            quad(c.subtract(side).subtract(up), c.subtract(side).add(up), c.add(side).add(up), c.add(side).subtract(up), 0, 0, 0, 1, 1, 1,
+                    1, 0, colour, colour, n);
         }
 
         /** A soft disc lying on a surface. */
@@ -401,6 +416,75 @@ public final class CarLights {
                 lastL = l;
                 lastR = r;
                 lastC = c;
+            }
+        }
+
+        /** A soft strip through points, turned to face the camera, each point with its own half width and colour. */
+        void strip(Vec3[] p, double[] halfWidth, int[] colour) {
+            for (int i = 1; i < p.length; i++) {
+                Vec3 a = p[i - 1], b = p[i], line = b.subtract(a);
+                if (line.lengthSqr() < 1e-8) {
+                    continue;
+                }
+                Vec3 mid = a.add(b).scale(0.5), toCam = cam.subtract(mid);
+                Vec3 side = line.cross(toCam);
+                side = side.lengthSqr() < 1e-12 ? line.cross(new Vec3(0, 1, 0)).normalize() : side.normalize();
+                Vec3 wa = side.scale(halfWidth[i - 1]), wb = side.scale(halfWidth[i]);
+                double away = toCam.length();
+                Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+                quad(a.subtract(wa), a.add(wa), b.add(wb), b.subtract(wb), 0, 0.5f, 1, 0.5f, 1, 0.5f, 0, 0.5f, colour[i - 1], colour[i], n);
+            }
+        }
+
+        /**
+         * The same strip with no texture to soften it: each piece split down the middle, its colour there and
+         * fading to nothing at both edges (for an untextured glow, such as a shader pack's lightning).
+         */
+        void fadeStrip(Vec3[] p, double[] halfWidth, int[] colour) {
+            for (int i = 1; i < p.length; i++) {
+                Vec3 a = p[i - 1], b = p[i], line = b.subtract(a);
+                if (line.lengthSqr() < 1e-8 || colour[i - 1] >>> 24 == 0 && colour[i] >>> 24 == 0) {
+                    continue;
+                }
+                Vec3 mid = a.add(b).scale(0.5), toCam = cam.subtract(mid);
+                Vec3 side = line.cross(toCam);
+                side = side.lengthSqr() < 1e-12 ? line.cross(new Vec3(0, 1, 0)).normalize() : side.normalize();
+                Vec3 wa = side.scale(halfWidth[i - 1]), wb = side.scale(halfWidth[i]);
+                double away = toCam.length();
+                Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+                int ea = colour[i - 1] & 0xFFFFFF, eb = colour[i] & 0xFFFFFF;
+                quad4(a.subtract(wa), a, b, b.subtract(wb), ea, colour[i - 1], colour[i], eb, n);
+                quad4(a, a.add(wa), b.add(wb), b, colour[i - 1], ea, eb, colour[i], n);
+            }
+        }
+
+        /** A disc lying on a surface, its colour at the middle fading to nothing at the rim, with no texture. */
+        void fadeDisc(Vec3 c, Vec3 normal, double radius, int colour) {
+            Vec3 a = Math.abs(normal.y) > 0.5 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+            Vec3 b = normal.cross(a).normalize();
+            a = b.cross(normal).normalize();
+            int edge = colour & 0xFFFFFF, sides = 20;
+            Vec3 last = c.add(a.scale(radius));
+            for (int i = 1; i <= sides; i++) {
+                double t = Math.PI * 2 * i / sides;
+                Vec3 next = c.add(a.scale(Math.cos(t) * radius)).add(b.scale(Math.sin(t) * radius));
+                quad4(c, c, last, next, colour, colour, edge, edge, normal);
+                last = next;
+            }
+        }
+
+        /** Four corners, each its own colour, wound to face the normal's side. */
+        private void quad4(Vec3 p0, Vec3 p1, Vec3 p2, Vec3 p3, int c0, int c1, int c2, int c3, Vec3 normal) {
+            if (p2.subtract(p0).cross(p3.subtract(p1)).dot(normal) >= 0) {
+                corner(p0, 0.5f, 0.5f, c0, normal);
+                corner(p1, 0.5f, 0.5f, c1, normal);
+                corner(p2, 0.5f, 0.5f, c2, normal);
+                corner(p3, 0.5f, 0.5f, c3, normal);
+            } else {
+                corner(p3, 0.5f, 0.5f, c3, normal);
+                corner(p2, 0.5f, 0.5f, c2, normal);
+                corner(p1, 0.5f, 0.5f, c1, normal);
+                corner(p0, 0.5f, 0.5f, c0, normal);
             }
         }
 

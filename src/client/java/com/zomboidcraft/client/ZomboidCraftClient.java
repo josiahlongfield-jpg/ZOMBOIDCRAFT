@@ -46,6 +46,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         RailLights.register();
         com.zomboidcraft.client.building.Placer.register();
         com.zomboidcraft.client.zombie.body.Gibs.register();
+        com.zomboidcraft.client.zombie.body.CrowdFx.register();
         com.zomboidcraft.client.zombie.body.ZDetail.register();
         com.zomboidcraft.client.combat.ImpactFx.register();
         com.zomboidcraft.client.camera.ShoulderCam.register();
@@ -54,10 +55,15 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
+        EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);
+        com.zomboidcraft.client.zombie.body.ZBodyAnimator.register();
         SoundSliders.register();
+        com.zomboidcraft.client.interact.Interactables.register();
         com.zomboidcraft.client.cars.CarClient.register();
+        com.zomboidcraft.client.trains.TrainClient.register();
         com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
+        com.zomboidcraft.client.sound.WorldEventSound.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
         if (ZcConfig.get().look.customZombies) {

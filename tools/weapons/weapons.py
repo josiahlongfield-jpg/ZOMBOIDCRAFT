@@ -542,12 +542,22 @@ RIFLE_CLEAR = [tuple(RF.frame_point(*p)) for p in (
     (0, -5.1, 7.5), (0, 0, -15.1))]
 
 
+# low ready: a long gun muzzle down and across, stock at the right shoulder; a handgun in both hands, muzzle down
+LONG_READY = ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND)
+HANDGUN_READY = ('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0])
+# raised (over the shoulder camera, or just after a shot): the gun points where its carrier looks (HoldPoses turns
+# the arm with the head), so the laser leaves along the barrel: a long gun level in front of the chest with the
+# stock tucked against it, a handgun in both hands out in front, both a little under the aim
+LONG_RAISED = ('raised', Q.UPRIGHT, [0, 6.0, -7.0], [-2.5, 5.0, -2.6], RIFLE_HAND)
+HANDGUN_RAISED = ('raised', Q.UPRIGHT, [0, 4.0, -8.0])
+
+
 def rifle_holds():
-    """Low ready (muzzle down and across, stock at the right shoulder) and aiming (shouldered, muzzle on
-    the line of sight, as high as Minecraft's big head allows)."""
+    """Low ready (muzzle down and across, stock at the right shoulder), raised (level in front of the chest)
+    and aiming (shouldered, muzzle on the line of sight, as high as Minecraft's big head allows)."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY, LONG_RAISED,
             # the rifle rides on top of the forearms, stock in the right of the chest, top just under the chin
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, RF.HAND, RIFLE_SUPPORT, hand_off=hand)
@@ -564,10 +574,10 @@ PISTOL_CLEAR = [tuple(PI.frame_point(*p)) for p in ((0, 0.6, 8.0), (0, 0, -0.5),
 
 
 def pistol_holds():
-    """Low ready (both hands on it in front of the chest, muzzle down) and aiming (arms out straight, the
-    sights up at the eyes)."""
+    """Low ready (both hands on it in front of the chest, muzzle down), raised (out in front, level) and
+    aiming (arms out straight, the sights up at the eyes)."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY, HANDGUN_RAISED,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, PI.HAND, PISTOL_SUPPORT, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], PISTOL_CLEAR)
@@ -586,10 +596,10 @@ SHOTGUN_CLEAR = [tuple(SG.frame_point(*p)) for p in (
 
 
 def shotgun_holds():
-    """The rifle's two holds, fitted to the shotgun's longer reach and dropped stock."""
+    """The rifle's holds, fitted to the shotgun's longer reach and dropped stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY, LONG_RAISED,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, SG.HAND, SHOTGUN_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(SHOTGUN_BUTT, np.array(butt_at), 1.0)], SHOTGUN_CLEAR)
@@ -606,10 +616,10 @@ HUNTING_CLEAR = [tuple(HR.frame_point(*p)) for p in (
 
 
 def hunting_holds():
-    """The rifle's two holds, fitted to the hunting rifle's long barrel and sporter stock."""
+    """The rifle's holds, fitted to the hunting rifle's long barrel and sporter stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY, LONG_RAISED,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, HR.HAND, HUNTING_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(HUNTING_BUTT, np.array(butt_at), 1.0)], HUNTING_CLEAR)
@@ -628,10 +638,10 @@ DOUBLE_CLEAR = [tuple(DB.frame_point(*p)) for p in (
 
 
 def double_holds():
-    """The rifle's two holds, fitted to the double's long barrels and dropped stock."""
+    """The rifle's holds, fitted to the double's long barrels and dropped stock."""
     out = {}
     for name, R, G0, butt_at, hand in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY, LONG_RAISED,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, DB.HAND, DOUBLE_SUPPORT, hand_off=hand)
         G = Q.solve_grip(h, G0, [(DOUBLE_BUTT, np.array(butt_at), 1.0)], DOUBLE_CLEAR)
@@ -648,9 +658,9 @@ REVOLVER_CLEAR = [tuple(RV.frame_point(*p)) for p in ((0, 0.62, 2.8), (0, 0, RV.
 
 
 def revolver_holds():
-    """The pistol's two holds, fitted to the revolver."""
+    """The pistol's holds, fitted to the revolver."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY, HANDGUN_RAISED,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, RV.HAND, REVOLVER_SUPPORT, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], REVOLVER_CLEAR)
@@ -660,10 +670,10 @@ def revolver_holds():
 
 
 def long_holds(hand, support, butt, clear):
-    """The rifle's two holds (low ready across the body, shouldered on the sights), fitted to another long gun."""
+    """The rifle's holds (low ready, raised, shouldered on the sights), fitted to another long gun."""
     out = {}
     for name, R, G0, butt_at, off in (
-            ('ready', Q.Ry(-35) @ Q.Rx(35) @ Q.UPRIGHT, [0, 5.5, -6.5], [-2.3, 2.8, -2.4], RIFLE_HAND),
+            LONG_READY, LONG_RAISED,
             ('aim', Q.UPRIGHT, [0, 2.5, -7.8], [-1.6, 1.5, -2.3], (-1.2, 1.7, 0.0))):
         h = Q.Hold(R, S3, hand, support, hand_off=off)
         G = Q.solve_grip(h, G0, [(butt, np.array(butt_at), 1.0)], clear)
@@ -673,10 +683,10 @@ def long_holds(hand, support, butt, clear):
 
 
 def handgun_holds(hand, support, clear):
-    """The pistol's two holds (both hands on it in front of the chest, arms out on the sights), fitted to another
-    gun held without a stock."""
+    """The pistol's holds (low ready, raised, arms out on the sights), fitted to another gun held without a
+    stock."""
     out = {}
-    for name, R, G0 in (('ready', Q.Rx(45) @ Q.UPRIGHT, [0, 6.5, -6.0]),
+    for name, R, G0 in (HANDGUN_READY, HANDGUN_RAISED,
                         ('aim', Q.UPRIGHT, [0, -1.5, -7.5])):
         h = Q.Hold(R, S3, hand, support, hand_off=PISTOL_HAND)
         G = Q.solve_grip(h, G0, [], clear)
@@ -800,7 +810,8 @@ def pistol():
         PI.flash(m, PI.CAP_TIP)
 
     return kit.Gun('pistol', 'M9 Pistol', PI.body, look, PI.HAND, slots, parts,
-                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7)
+                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7,
+                   slide=PI.hammer_piece)
 
 
 def shotgun():
@@ -1086,7 +1097,8 @@ PISTOL_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
                         reload={'mag_out': (25, -0.18), 'mag_in': (25, -0.18), 'charge': (-6, 0.02)},
                         irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=PI.HANDLE_TRAVEL,
                         charge_turn=(20, 20, -35), charge_push=(0.02, 0.02, -0.30),
-                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz))
+                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz),
+                        hammer_cock=PI.HAMMER_COCK)
 # the shotgun low at the hip, turned in so its right side and the ejection port show; for loading it's canted
 # over and rolled back so the loading port under the receiver faces the off hand; on the bead the eye sits well
 # over the receiver (a cheek on the comb) with the bead tipped onto the eye line
@@ -1209,10 +1221,13 @@ def gun_displays(g, holds, fp):
     """Display transforms for each pose: third person from the holds, first person at the hip (canted for
     the reload steps) or with the sight on the eye line, and the inventory, ground and frame views."""
     def disp(state, fit, sight):
+        # a raised_ twin is its pose with the gun up in third person; first person is the same
+        raised = state.startswith('raised_')
+        state = state.removeprefix('raised_')
         ads = state.startswith('ads')
         cant, drop = fp.reload.get(state, (0.0, 0.0))
         d = {}
-        h, G, arm = holds['aim' if ads else 'ready']
+        h, G, arm = holds['aim' if ads else 'raised' if raised else 'ready']
         d['thirdperson_righthand'] = Q.display_for(h, G, arm, g, S3)
         armv = np.array([0.56, -0.52, -0.72]) * 16
         S = fp.irons_scale
@@ -1305,7 +1320,9 @@ def carton(f, colour='#4b5a37'):
     return P.grime(f, c, 0.4)
 
 
-def small_display(m, gui_rot=(25, -35, 0)):
+def small_display(m, gui_rot=(25, -35, 0), real=None):
+    """Fitted views for a small item. real: (ground, frame) scales of the gun it's from, so a dropped attachment
+    lies at its true size beside the gun instead of blown up to fill the space a whole item would."""
     disp = {}
     Rg = M.R_xyz(*gui_rot)
     s, t = M.fit(m, Rg, 13.5)
@@ -1315,9 +1332,9 @@ def small_display(m, gui_rot=(25, -35, 0)):
         s2, t2 = M.fit(m, R, 9.0)
         disp[ctx] = M.transform(rot, np.array(trans) + t2, s2)
     Rgr = np.eye(3)
-    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0))
+    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0), depth=True, scale=real and real[0])
     disp['ground'] = M.transform([0, 0, 0], t3, s3)
-    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12)
+    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12, depth=True, scale=real and real[1])
     disp['fixed'] = M.transform([0, 180, 0], t4, s4)
     return disp
 
@@ -1491,7 +1508,10 @@ def main():
     line, _ = kit.write_gun(xb, ASSETS, gx - xb.hand, gun_displays(gx, xb_hold, CROSSBOW_FP), lang, ads_eyes(xb, CROSSBOW_FP))
     summary.append(line)
     write_loose_round('crossbow', XB.bolt, XB.look(), XB.frame_point(0, 0, 0), gx - xb.hand, 945)
-    part_display = lambda m: small_display(m, (20, 60, 0))
+    # dropped or framed, an attachment, magazine or bolt is drawn at its true size: the parts are built in inches
+    # (IN units each) and a block is 39.37 of them, 16 units across
+    true_size = 16 / 39.37 / IN
+    part_display = lambda m: small_display(m, (20, 60, 0), (true_size, true_size * 1.7))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
     own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
@@ -1521,6 +1541,10 @@ def main():
                   'sawn_off', 'magnum', 'lever_action', 'crossbow']
     lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
+    # where the off hand goes in a reload, so other players see it: the magazine's foot (a tube gun's port, the
+    # chamber of one that opens) and the charging handle (slide, bolt knob, pump, cylinder)
+    reloads = {name: [pts['magHold'] - (gg - gun.hand), pts['handle'] - (gg - gun.hand)]
+               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
@@ -1546,7 +1570,7 @@ def main():
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
                                  'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
-                                (mh, mG, mkeys), lenses)
+                                (mh, mG, mkeys), lenses, reloads)
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -1649,19 +1673,20 @@ public final class GunSlotData {{
 ''')
 
 
-def write_pose_java(guns, melee, lenses):
+def write_pose_java(guns, melee, lenses, reloads):
     """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame,
-    and where each gun's laser and light lenses are in that frame."""
+    and where each gun's laser and light lenses and reload hand points are in that frame."""
     def f3(v):
         return ', '.join(f'{float(x):.5f}f' for x in v)
 
     data = {'arms': {}, 'support': {}, 'reach': Q.REACH}
     for gun, holds in guns.items():
-        for name in ('ready', 'aim'):
+        for name in ('ready', 'aim', 'raised'):
             h, G, arm = holds[name]
             data['arms'][f'{gun}_{name}'] = [float(x) for x in arm]
             data['support'][f'{gun}_{name}'] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
             data.setdefault('lens', {})[f'{gun}_{name}'] = [float(x) for b in lenses[gun] for x in Q.arm_local(h, G, arm, b)]
+            data.setdefault('reload', {})[f'{gun}_{name}'] = [float(x) for b in reloads[gun] for x in Q.arm_local(h, G, arm, b)]
     mh, mG, keys = melee
     for k, arm in keys.items():
         data['arms']['melee_' + k] = [float(x) for x in arm]
@@ -1673,6 +1698,7 @@ def write_pose_java(guns, melee, lenses):
     rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
                            for k, v in data['support'].items() if k.startswith(held))
     lens = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['lens'].items())
+    reload = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['reload'].items())
     melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
                             if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
@@ -1690,9 +1716,12 @@ final class HoldPoseData {{
     static final float REACH = {Q.REACH}f;
 {arms}
 {rifle_sup}
-    /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
+    /** Each gun's laser lens then light lens (x, y, z twice), per hold, in the gun arm's frame. */
     static final Map<String, float[]> LENS = Map.ofEntries(
 {lens});
+    /** Where the off hand goes in a reload: the magazine's foot (or the loading port), then the charging handle. */
+    static final Map<String, float[]> RELOAD = Map.ofEntries(
+{reload});
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
 {melee_sup});
@@ -1789,6 +1818,7 @@ def pistol_points(gun, g):
         'light': lens_point(gun, 'light', PI.LIGHT_LENS, shift),
         'muzzle': kit.flash_tip(gun) + shift,
         'quietMuzzle': quiet_muzzle(gun) + shift,
+        'hammer': PI.HAMMER_PIN + shift,
     }
 
 
