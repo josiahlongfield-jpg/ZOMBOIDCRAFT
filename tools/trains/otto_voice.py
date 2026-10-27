@@ -126,7 +126,7 @@ LINES = {
     ],
 }
 
-# The treatments (A is the default; see the samples sent to Josiah 2026-10-27).
+# The treatments; Josiah picked B, the full robot (2026-10-27).
 ROBOT = "afftfilt=real='hypot(re,im)':imag='0':win_size={win}:overlap=0.75"
 STYLES = {
     'A': ('en_US-joe-medium', "[0:a]aresample=44100,asplit=2[a][b];[a]" + ROBOT.format(win=1024) + ",volume=0.8[r];[b]volume=0.7[d];"
@@ -169,7 +169,7 @@ def stutter(wav, out, rnd):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--voices', required=True)
-    ap.add_argument('--style', default='A', choices=STYLES)
+    ap.add_argument('--style', default='B', choices=STYLES)
     args = ap.parse_args()
     voice, chain = STYLES[args.style]
     model = Path(args.voices) / (voice + '.onnx')
