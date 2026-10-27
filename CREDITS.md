@@ -335,10 +335,8 @@ Picked by Josiah Longfield on the Dead Air Bullet Strikes page, cut into single 
 | weapon.bullet.impact.car | Bullet Impact 16 - Light Version (Olivier Girardot - Hand Guns Sound Effects Pack) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
 | weapon.bullet.impact.glass | bullet_impact_concrete_brick_01 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
 | weapon.bullet.impact.soft | [bullet zip and hit.wav by TheLittleCrow](https://freesound.org/people/TheLittleCrow/sounds/496509/) | TheLittleCrow | Freesound, CC0 1.0 |
-| weapon.bullet.whizz | [ricochet.mp3](https://freesound.org/people/cedarstudios/sounds/148840/) | cedarstudios | Freesound, CC0 1.0 |
-| weapon.bullet.whizz | [Ricochet 2.wav](https://freesound.org/people/morganpurkis/sounds/392975/) | morganpurkis | Freesound, CC0 1.0 |
 | weapon.bullet.ricochet | [bullet ricochet.wav by aust_paul](https://freesound.org/people/aust_paul/sounds/30932/) | aust_paul | Freesound, CC0 1.0 |
-| weapon.bullet.impact.nearby | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
+| weapon.bullet.impact.nearby, weapon.bullet.whizz | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
 | weapon.casing.shotgun | [empty shotgun shells/casings hitting ground bouncing by Metrolynn](https://freesound.org/people/Metrolynn/sounds/620929/) | Metrolynn | Freesound, CC0 1.0 |
 
 ## Flybys

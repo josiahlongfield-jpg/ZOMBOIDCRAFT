@@ -75,6 +75,39 @@ public final class ZcConfig {
     public Building building = new Building();
     /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
     public Performance performance = new Performance();
+    /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
+    public Trains trains = new Trains();
+
+    public static class Trains {
+        /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
+        public double railSpeed = 13;
+        public double subwaySpeed = 11;
+        /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
+        public double acceleration = 0.6;
+        public double braking = 0.75;
+        /** How hard a curve may be taken (sideways blocks/s/s): lower slows trains more on bends. */
+        public double curveGrip = 1.1;
+        /** Seconds the doors stay open at a stop before they close by themselves. */
+        public int doorSeconds = 30;
+        /** Cars in each train. */
+        public int railCars = 4;
+        public int subwayCars = 3;
+        /** Trains running each line. */
+        public int railTrains = 1;
+        public int subwayTrains = 1;
+        /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
+        public double flareNoise = 72;
+        public double sirenNoise = 64;
+        /** How long one flare burns, in seconds; another goes up if the train still hasn't come. */
+        public int flareSeconds = 45;
+        /** Damage a moving train does to a zombie it hits, and to a player per block-a-second of speed. */
+        public float hitZombie = 40;
+        public float hitPlayerPerSpeed = 1.2f;
+        /** OTTO, the robot conductor, talks in chat to riders and people on the platform. */
+        public boolean ottoTalks = true;
+        /** Seconds between OTTO's remarks while running between stops. */
+        public int ottoChatter = 75;
+    }
 
     public static class Performance {
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */

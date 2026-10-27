@@ -119,7 +119,7 @@ public final class WorldEventSound {
         long now = mc.level.getGameTime();
         for (Pending p : PENDING) {
             WorldEvents.Event e = p.event();
-            if (e.flyby() && e.sound() > 0 && e.at((now - e.start()) / 20.0).distanceToSqr(car.position()) < 40 * 40) {
+            if (e.flyby() && e.at((now - e.start()) / 20.0).distanceToSqr(car.position()) < 40 * 40) {
                 return true;
             }
         }
