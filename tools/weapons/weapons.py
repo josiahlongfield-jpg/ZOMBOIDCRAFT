@@ -1307,7 +1307,9 @@ def carton(f, colour='#4b5a37'):
     return P.grime(f, c, 0.4)
 
 
-def small_display(m, gui_rot=(25, -35, 0)):
+def small_display(m, gui_rot=(25, -35, 0), real=None):
+    """Fitted views for a small item. real: (ground, frame) scales of the gun it's from, so a dropped attachment
+    lies at its true size beside the gun instead of blown up to fill the space a whole item would."""
     disp = {}
     Rg = M.R_xyz(*gui_rot)
     s, t = M.fit(m, Rg, 13.5)
@@ -1317,9 +1319,9 @@ def small_display(m, gui_rot=(25, -35, 0)):
         s2, t2 = M.fit(m, R, 9.0)
         disp[ctx] = M.transform(rot, np.array(trans) + t2, s2)
     Rgr = np.eye(3)
-    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0), depth=True)
+    s3, t3 = M.fit(m, Rgr, 7.0, (0, 2, 0), depth=True, scale=real and real[0])
     disp['ground'] = M.transform([0, 0, 0], t3, s3)
-    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12, depth=True)
+    s4, t4 = M.fit(m, M.R_xyz(0, 180, 0), 12, depth=True, scale=real and real[1])
     disp['fixed'] = M.transform([0, 180, 0], t4, s4)
     return disp
 
@@ -1493,7 +1495,10 @@ def main():
     line, _ = kit.write_gun(xb, ASSETS, gx - xb.hand, gun_displays(gx, xb_hold, CROSSBOW_FP), lang, ads_eyes(xb, CROSSBOW_FP))
     summary.append(line)
     write_loose_round('crossbow', XB.bolt, XB.look(), XB.frame_point(0, 0, 0), gx - xb.hand, 945)
-    part_display = lambda m: small_display(m, (20, 60, 0))
+    # dropped or framed, an attachment, magazine or bolt is drawn at its true size: the parts are built in inches
+    # (IN units each) and a block is 39.37 of them, 16 units across
+    true_size = 16 / 39.37 / IN
+    part_display = lambda m: small_display(m, (20, 60, 0), (true_size, true_size * 1.7))
     kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
     # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
     own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
