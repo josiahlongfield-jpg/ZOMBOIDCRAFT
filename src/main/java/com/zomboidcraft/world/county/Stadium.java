@@ -2163,8 +2163,9 @@ final class Stadium {
             if (ch == ' ' || col == 2) {
                 continue;
             }
-            set(c[0], y, c[1], "st_let_" + ch + "_" + col + "[facing=" + face + "]");
-            set(c[0], y - 1, c[1], "st_let_" + ch + "_" + (col + 2) + "[facing=" + face + "]");
+            char lc = Character.toLowerCase(ch);
+            set(c[0], y, c[1], "st_let_" + lc + "_" + col + "[facing=" + face + "]");
+            set(c[0], y - 1, c[1], "st_let_" + lc + "_" + (col + 2) + "[facing=" + face + "]");
         }
     }
 
@@ -2188,7 +2189,7 @@ final class Stadium {
                 continue;
             }
             for (int r = 0; r < 3; r++) {
-                set(c[0], y - r, c[1], "st_big_" + ch + "_" + (r * 3 + col) + "[facing=" + face + "]");
+                set(c[0], y - r, c[1], "st_big_" + Character.toLowerCase(ch) + "_" + (r * 3 + col) + "[facing=" + face + "]");
             }
         }
     }

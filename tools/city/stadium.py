@@ -1221,10 +1221,10 @@ def textures():
     T["st_duct"] = lambda: duct(9704)
     for c in LETTERS:
         for i in range(4):
-            T[f"st_let_{c}_{i}"] = lambda c=c, i=i: letter(c, i)
+            T[f"st_let_{c.lower()}_{i}"] = lambda c=c, i=i: letter(c, i)
     for c in BIG:
         for i in range(9):
-            T[f"st_big_{c}_{i}"] = lambda c=c, i=i: big(c, i)
+            T[f"st_big_{c.lower()}_{i}"] = lambda c=c, i=i: big(c, i)
     T["st_poster_rules"] = lambda: poster(9701, False)
     T["st_poster_missing"] = lambda: poster(9702, True)
     T["st_poster_missing_b"] = lambda: poster(9703, True)
@@ -1518,10 +1518,13 @@ def blocks():
 
     for c in LETTERS:
         for i in range(4):
-            add(f"st_let_{c}_{i}", [[0, 0, 15, 16, 16, 16, f"st_let_{c}_{i}"]], "Letter", "METAL", decor=True, render="cutout")
+            # block and texture ids are lower case (the game refuses capitals in a resource path)
+            n = f"st_let_{c.lower()}_{i}"
+            add(n, [[0, 0, 15, 16, 16, 16, n]], "Letter", "METAL", decor=True, render="cutout")
     for c in BIG:
         for i in range(9):
-            add(f"st_big_{c}_{i}", [[0, 0, 14.5, 16, 16, 16, {"north": f"st_big_{c}_{i}", "side": f"st_big_{c}_{i}"}]], "Letter",
+            n = f"st_big_{c.lower()}_{i}"
+            add(n, [[0, 0, 14.5, 16, 16, 16, {"north": n, "side": n}]], "Letter",
                 "METAL", decor=True, render="cutout")
 
     # ---- the sideline: the team benches and their coolers
