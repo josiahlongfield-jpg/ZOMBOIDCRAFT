@@ -10,8 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2fStack;
 
 /**
- * The belt: bare squares along the bottom, one for each thing you carry on it plus your hands, with the real item
- * models in them. It tucks away a few seconds after you last drew from it or put something on it.
+ * The belt: bare squares along the bottom, one for every slot on it, empty or not, with the real item models in
+ * them. It tucks away a few seconds after you last drew from it or put something on it.
  */
 final class BeltHud {
     private static final int BOX = 24, GAP = 5, BOTTOM = 10;
@@ -34,10 +34,11 @@ final class BeltHud {
         float n = name.update(Hud.peek || sinceSwitch < NAME);
         if (a <= 0) return;
 
+        // every slot you have sits in the row, empty or not, so the one you want is always where you left it
         int[] shown = new int[last.length];
         int count = 0;
         for (int i = 0; i < last.length; i++) {
-            if (i == selected || !inventory.getItem(i).isEmpty()) shown[count++] = i;
+            shown[count++] = i;
         }
         int width = count * BOX + (count - 1) * GAP;
         // tucking away: it fades and drops below the screen's edge, so the 3D items go with it

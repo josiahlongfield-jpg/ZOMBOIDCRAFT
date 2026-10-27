@@ -226,6 +226,8 @@ public class KitUiTest implements FabricClientGameTest {
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
+            beltHudTest(ctx, sp);
+            spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -561,6 +563,13 @@ public class KitUiTest implements FabricClientGameTest {
             for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
         });
         ctx.waitTicks(60);
+        String gearNow = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var g = com.zomboidcraft.carry.Carry.gear(p);
+            return g.get(0) + ", " + g.get(1) + ", " + g.get(2) + ", " + g.get(3) + " worn " + p.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of());
+        });
+        String wornClient = ctx.computeOnClient(mc -> String.valueOf(mc.player.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of())));
+        LOG.info("ZCUI sling axe: server gear {} client worn {}", gearNow, wornClient);
         ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(20f)));
         ctx.waitTicks(3);
         ctx.takeScreenshot("sling-figure-axe");
@@ -571,6 +580,50 @@ public class KitUiTest implements FabricClientGameTest {
      * Drag and drop on the pack page with room to spare: bread dragged onto an empty pocket lands there on release;
      * a rifle dragged onto an empty pocket goes back to the belt (no guns in pockets).
      */
+    /** The spawn picker drawn with the real place list (the test world isn't a county, so it's opened by hand). */
+    private static void spawnPickerTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        var places = sp.getServer().computeOnServer(s -> com.zomboidcraft.spawn.SpawnPicker.places());
+        LOG.info("ZCUI spawn picker: {} places offered", places.size());
+        if (places.size() < 20) throw new AssertionError("spawn picker offers only " + places.size() + " places");
+        var open = new com.zomboidcraft.spawn.SpawnNet.Open(places,
+                List.of(new com.zomboidcraft.spawn.SpawnNet.Friend("00000000-0000-0000-0000-000000000000", "Sam", "Seabright")), false);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new SpawnScreen(open)));
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("spawn-picker");
+        // a click on the Riverside row picks it
+        int[] row = ctx.computeOnClient(mc -> {
+            SpawnScreen s = (SpawnScreen) mc.gui.screen();
+            return s.rowFor("riverside");
+        });
+        if (row != null) {
+            click(ctx, row[0] + 5, row[1] + 4, 0);
+            ctx.waitTicks(3);
+        }
+        String sel = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SpawnScreen s ? s.selected() : "closed");
+        LOG.info("ZCUI spawn picker: clicked Riverside row {} -> selected {}", row == null ? "missing" : row[0] + "," + row[1], sel);
+        ctx.takeScreenshot("spawn-picker-riverside");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** The HUD belt with gaps in it: every slot shows in one row, empty ones too (peeked with Left Alt). */
+    private static void beltHudTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+            p.getInventory().setItem(0, new ItemStack(ModItems.CROWBAR));
+            p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+            p.getInventory().setItem(5, new ItemStack(ModItems.HUNTING_RIFLE));
+        });
+        ctx.runOnClient(mc -> {
+            mc.gui.setScreen(null);
+            mc.player.getInventory().setSelectedSlot(0);
+        });
+        ctx.getInput().holdKey(InputConstants.KEY_LALT);
+        ctx.waitTicks(20);
+        ctx.takeScreenshot("hud-belt");
+        ctx.getInput().releaseKey(InputConstants.KEY_LALT);
+    }
+
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("clear @a");
         sp.getServer().runOnServer(s -> {
@@ -636,6 +689,12 @@ public class KitUiTest implements FabricClientGameTest {
         BackView(float turn) {
             super(net.minecraft.network.chat.Component.literal("back"));
             this.turn = turn;
+        }
+
+        // a pause screen stops the integrated server ticking, and with it the worn-gear sync
+        @Override
+        public boolean isPauseScreen() {
+            return false;
         }
 
         @Override

@@ -78,6 +78,16 @@ public final class ZcConfig {
     public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
+    public Start start = new Start();
+
+    public static class Start {
+        /** The spawn picker in a planned county world: choose a place, wake inside a building with no dead in it. */
+        public boolean picker = true;
+        /** Show it again after each death (death starts a new survivor). */
+        public boolean afterDeath = true;
+        /** Chunks looked through for a way in before settling for the best found. */
+        public int searchChunks = 48;
+    }
 
     public static class Trains {
         /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
@@ -805,6 +815,21 @@ public final class ZcConfig {
         public double burstMagnum = 0;
         /** Bursting for every other gun (0 = never). */
         public double burstOtherGuns = 0;
+        /**
+         * Pipe bombs and grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
+         * of one the head sometimes bursts.
+         */
+        public boolean blasts = true;
+        /**
+         * What a blast puts into each limb right on top of it, facing it, against the toughness above (less as it's
+         * farther off or turned away, give or take a quarter): 60 takes whole limbs up close, a forearm or a shin at
+         * about half strength, and little near the edge.
+         */
+        public double blastTearing = 60;
+        /** The chance a blast right on top of a walker bursts its head (less with it below the blast). */
+        public double blastHeadBurst = 0.35;
+        /** How close a blast must be to burst a head at all: its strength, 0 at the edge of its reach to 1 on top. */
+        public double blastHeadBurstFrom = 0.6;
         /**
          * Buckshot from point-blank range with most of the blast in the chest blows a hole right through it (with only
          * headshots killing, it keeps coming).
