@@ -61,6 +61,13 @@ public final class Flight {
      * let go, and with the cyclic centred tilts against any drift until it hovers in place.
      */
     public boolean levelLock;
+    /**
+     * The jet's flight assist (the pilot's client sets it each tick): where the pilot is looking, which the
+     * jet flies straight toward, banking itself through the turn; null flies on the full physics.
+     */
+    public org.joml.Vector3f assist;
+    /** Ticks since the wheels last touched. */
+    private int airTicks;
     /** How far it has drifted above the held height, metres, while the lock is on. */
     private float heightError;
     private int shake;
@@ -166,6 +173,10 @@ public final class Flight {
             rpm = Math.max(0, rpm - 0.1f * DT);
         }
         airbrake = c.brake() && !grounded;
+        airTicks = grounded ? 0 : airTicks + 1;
+        if (assist != null && !grounded) {
+            return assisted(c);
+        }
 
         Vec3 f = forward(), u = up(), l = left();
         double speed = vel.length();
@@ -218,6 +229,8 @@ public final class Flight {
             rollRate = 0;
             if (speed < 0.8 * vs) {
                 pitchRate = Math.min(pitchRate, 0);
+            } else if (assist != null && speed > 1.05 * vs && noseUp() < 9) {
+                pitchRate = Math.max(pitchRate, 6);     // the assist rotates for take-off at flying speed
             }
         }
         load = grounded ? 1 : lift / G;
@@ -230,6 +243,67 @@ public final class Flight {
         }
         q.normalize();
         vel = vel.add(acc.scale(DT));
+        double s = vel.length();
+        if (s > top * 1.15) {
+            vel = vel.scale(top * 1.15 / s);
+        }
+        return vel.scale(DT);
+    }
+
+    /**
+     * A tick of the assisted jet in the air: the nose turns toward the pilot's aim as fast as the jet can
+     * turn at this speed, the wings bank into the turn by themselves and come level when it straightens,
+     * and the jet goes where it points. Thrust, drag and climbing or diving still set the speed; too slow
+     * and the nose drops until it has flying speed again. A or D still roll it by hand.
+     */
+    private Vec3 assisted(Controls c) {
+        Vec3 f = forward();
+        double speed = vel.length();
+        float vs = stallSpeed();
+        float thrust = 1.1f * G * thrustShare();
+        float cd0 = 1.1f * G / (top * top);
+        double drag = cd0 * speed * speed + (airbrake ? 0.25f * G + 0.5f * G * speed * speed / (top * top) : 0);
+        double newSpeed = Math.max(0, speed + (thrust - drag - G * f.y) * DT);
+        float authority = (float) Mth.clamp((speed / (1.2 * vs)) * (speed / (1.2 * vs)), 0.05, 1);
+        float hands = 0.7f + 0.3f * skill;
+        org.joml.Vector3f nose = new org.joml.Vector3f((float) f.x, (float) f.y, (float) f.z);
+        org.joml.Vector3f want = new org.joml.Vector3f(assist).normalize();
+        if (airTicks < 80 && want.y < 0.14f && want.x * want.x + want.z * want.z > 1e-4f) {
+            // just off the ground: keep climbing away whatever the aim, so it doesn't settle back onto the deck
+            want.set(want.x, 0, want.z).normalize().mul(0.99f).add(0, 0.14f, 0).normalize();
+        }
+        stalled = speed < 0.75f * vs;
+        if (stalled) {
+            // no flying speed: the nose falls through toward the ground until it has some
+            want.set(nose.x, nose.y - 1.5f, nose.z).normalize();
+        }
+        float before = yaw();
+        float angle = nose.angle(want), most = (float) Math.toRadians(40 * (stalled ? 1 : authority) * hands) * DT;
+        if (angle > 1e-4f) {
+            org.joml.Vector3f axis = nose.cross(want, new org.joml.Vector3f());
+            if (axis.lengthSquared() > 1e-10f) {
+                axis.normalize();
+                q.set(new Quaternionf().rotationAxis(Math.min(angle, most), axis).mul(q));
+            }
+        }
+        // the wings: into the turn by themselves (right turn, right wing down), level again when it straightens
+        float turnRate = Mth.wrapDegrees(yaw() - before) / DT;
+        if (c.roll() != 0) {
+            q.rotateZ((float) Math.toRadians(c.roll() * 150 * DT));
+        } else {
+            float wantBank = Mth.clamp(turnRate * 2.4f, -70, 70);
+            q.rotateZ((float) Math.toRadians(Mth.clamp(wantBank - bank(), -120 * DT, 120 * DT)));
+        }
+        q.normalize();
+        // it goes where it points, a beat behind the nose
+        Vec3 along = speed > 0.01 ? vel.scale(1 / speed) : forward();
+        Vec3 dir = along.add(forward().subtract(along).scale(0.3)).normalize();
+        vel = dir.scale(newSpeed);
+        if (newSpeed < vs) {
+            vel = vel.add(0, -G * (1 - (newSpeed / vs) * (newSpeed / vs)) * DT, 0);
+        }
+        aoa = (float) Math.atan2(-vel.dot(up()), Math.max(0.1, vel.dot(forward())));
+        load = 1 + (float) (Math.abs(Math.toRadians(turnRate)) * newSpeed / G);
         double s = vel.length();
         if (s > top * 1.15) {
             vel = vel.scale(top * 1.15 / s);
