@@ -43,7 +43,7 @@ public final class Carry {
 
     /**
      * What everyone can see you wearing (back, vest, waist, sling), synced to every client for drawing on the body.
-     * Plain copies of the items, so what's inside a bag stays with its owner.
+     * Plain copies of the bags, so what's inside a bag stays with its owner; the slung weapon as it is.
      */
     public static final AttachmentType<List<ItemStack>> WORN = AttachmentRegistry.create(
             ZomboidCraft.id("worn"),
@@ -97,6 +97,46 @@ public final class Carry {
         ZcConfig.Carry config = ZcConfig.get().carry;
         return config.pocketsOnly && !player.hasInfiniteMaterials()
                 && inventorySlot >= Inventory.getSelectionSize() + pockets() && inventorySlot < Inventory.INVENTORY_SIZE;
+    }
+
+    // ---------------------------------------------------------------- weapons
+
+    /** Guns and melee weapons: carried in hand, on the belt, slung or in a bag, never in a pocket. */
+    public static boolean weapon(ItemStack stack) {
+        return stack.getItem() instanceof com.zomboidcraft.combat.RifleItem || stack.getItem() instanceof com.zomboidcraft.combat.MeleeWeaponItem;
+    }
+
+    /** What the sling takes across your back: every gun bar a handgun, and melee weapons. */
+    public static boolean slings(ItemStack stack) {
+        com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(stack);
+        return weapon(stack) && type != com.zomboidcraft.combat.GunType.PISTOL && type != com.zomboidcraft.combat.GunType.REVOLVER
+                && type != com.zomboidcraft.combat.GunType.MAGNUM;
+    }
+
+    /** Whether a slot of the player's inventory is a pocket (the main rows, locked or not), where weapons never go. */
+    public static boolean pocket(Player player, int inventorySlot) {
+        return !player.hasInfiniteMaterials() && inventorySlot >= Inventory.getSelectionSize() && inventorySlot < Inventory.INVENTORY_SIZE;
+    }
+
+    /**
+     * Takes a weapon you pick up, keeping it out of your pockets: a free belt slot, then the sling if it goes there,
+     * then your bags. Returns true if any of it went somewhere (the stack is emptied).
+     */
+    public static boolean takeWeapon(Player player, ItemStack stack) {
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+            if (inventory.getItem(i).isEmpty()) {
+                inventory.setItem(i, stack.copyAndClear());
+                return true;
+            }
+        }
+        if (slings(stack) && gear(player).get(GearStore.SLING).isEmpty()) {
+            gear(player).items.set(GearStore.SLING, stack.copyAndClear());
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), WEAR_SOUND,
+                    SoundSource.PLAYERS, 0.8f, 1.05f + player.getRandom().nextFloat() * 0.1f);
+            return true;
+        }
+        return stow(player, stack);
     }
 
     // ---------------------------------------------------------------- bags
@@ -235,7 +275,8 @@ public final class Carry {
         List<ItemStack> shown = player.getAttachedOrElse(WORN, List.of());
         boolean same = shown.size() == GearStore.SIZE;
         for (int i = 0; same && i < GearStore.SIZE; i++) {
-            same = shown.get(i).getItem() == gear.get(i).getItem() && shown.get(i).isEmpty() == gear.get(i).isEmpty();
+            same = i == GearStore.SLING ? ItemStack.isSameItemSameComponents(shown.get(i), gear.get(i))
+                    : shown.get(i).getItem() == gear.get(i).getItem() && shown.get(i).isEmpty() == gear.get(i).isEmpty();
         }
         if (same) {
             return;
@@ -243,7 +284,8 @@ public final class Carry {
         List<ItemStack> now = new ArrayList<>();
         for (int i = 0; i < GearStore.SIZE; i++) {
             ItemStack stack = gear.get(i);
-            now.add(stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem()));
+            // the slung weapon keeps its parts and finish, so it looks the same on your back
+            now.add(stack.isEmpty() ? ItemStack.EMPTY : i == GearStore.SLING ? stack.copyWithCount(1) : new ItemStack(stack.getItem()));
         }
         player.setAttached(WORN, List.copyOf(now));
     }

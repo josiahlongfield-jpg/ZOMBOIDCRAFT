@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * The pocket limit, in every menu that shows the player's inventory: main slots past the pockets take nothing new,
- * and once empty they disappear. Whatever was already in them can still be taken out.
+ * and once empty they disappear. Weapons never go in a pocket. Whatever was already in them can still be taken out.
  */
 @Mixin(Slot.class)
 public abstract class SlotMixin {
@@ -30,7 +30,8 @@ public abstract class SlotMixin {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$lockedPocket(net.minecraft.world.item.ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (container instanceof Inventory inventory && Carry.locked(inventory.player, getContainerSlot())) {
+        if (container instanceof Inventory inventory && (Carry.locked(inventory.player, getContainerSlot())
+                || Carry.weapon(stack) && Carry.pocket(inventory.player, getContainerSlot()))) {
             cir.setReturnValue(false);
         }
     }

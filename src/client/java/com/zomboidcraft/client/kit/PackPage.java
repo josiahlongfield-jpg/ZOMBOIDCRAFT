@@ -50,9 +50,10 @@ final class PackPage {
         craft(g, font, x + RX, y + 236, mx, my);
 
         int hx = x + LX, hy = y + KitScreen.H - 14;
-        hx += KitDraw.hint(g, font, "LMB", "Take / put", hx, hy);
+        hx += KitDraw.hint(g, font, "Drag", "Move", hx, hy);
         hx += KitDraw.hint(g, font, "RMB", "Half", hx, hy);
-        hx += KitDraw.hint(g, font, "Shift", "Move across", hx, hy);
+        hx += KitDraw.hint(g, font, "Shift+LMB", "Quick move", hx, hy);
+        hx += KitDraw.hint(g, font, "Shift+RMB", "Drop", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 

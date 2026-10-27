@@ -1,7 +1,5 @@
 package com.zomboidcraft.carry;
 
-import com.zomboidcraft.combat.MeleeWeaponItem;
-import com.zomboidcraft.combat.RifleItem;
 import java.util.function.Predicate;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +39,7 @@ public final class CarrySlots {
         @Override
         public boolean mayPlace(ItemStack stack) {
             if (gear == GearStore.SLING) {
-                return stack.getItem() instanceof RifleItem || stack.getItem() instanceof MeleeWeaponItem;
+                return Carry.slings(stack);
             }
             BagSpec spec = BagItem.spec(stack);
             return spec != null && GearStore.slotFor(spec.wear()) == gear;

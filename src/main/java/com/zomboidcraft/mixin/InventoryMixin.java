@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Pickups put bags straight on, skip the locked pockets and spill into worn bags; worn gear drops with everything
+ * Pickups put bags straight on, skip the locked pockets (and keep weapons out of all of them) and spill into worn
+ * bags; worn gear drops with everything
  * else on death.
  */
 @Mixin(Inventory.class)
@@ -43,6 +44,16 @@ public abstract class InventoryMixin {
         if (slot == -1 && Carry.wear(player, stack)) {
             cir.setReturnValue(true);
         }
+    }
+
+    /** A weapon picked up (or put back) goes on the belt, the sling or into a bag, never into a pocket. */
+    @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$weaponsSkipPockets(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (player.level().isClientSide() || stack.isEmpty() || !Carry.weapon(stack) || slot != -1 && !Carry.pocket(player, slot)
+                || player.hasInfiniteMaterials()) {
+            return;
+        }
+        cir.setReturnValue(Carry.takeWeapon(player, stack));
     }
 
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)

@@ -244,6 +244,9 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
             if (stack.getCount() == before.getCount()) {
                 if (index >= firstGear + GearStore.SIZE) {
                     CarrySlots.move(this, stack, carriedStart, carriedEnd);
+                    if (stack.getCount() == before.getCount()) {
+                        CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
+                    }
                 } else {
                     CarrySlots.move(this, stack, bagsStart, bagsEnd);
                     CarrySlots.move(this, stack, carriedStart, carriedEnd);
@@ -253,6 +256,10 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
             // pockets and belt
             if (toContainer) {
                 CarrySlots.move(this, stack, sourceStart(selected), sourceEnd(selected));
+            }
+            if (stack.getCount() == before.getCount()) {
+                // a long gun or melee weapon goes on the sling first, then into a bag
+                CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
             }
             if (stack.getCount() == before.getCount()) {
                 wearOrStow(stack, bagsStart, bagsEnd);
@@ -288,6 +295,13 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
 
     private void toYou(ItemStack stack, int bagsStart, int bagsEnd, int carriedStart, int carriedEnd) {
         int count = stack.getCount();
+        if (com.zomboidcraft.carry.Carry.weapon(stack)) {
+            // a weapon goes to hand: the belt, then the sling, then a bag (never a pocket)
+            CarrySlots.move(this, stack, InventoryMenu.USE_ROW_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
+            if (!stack.isEmpty()) CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
+            if (!stack.isEmpty()) CarrySlots.move(this, stack, bagsStart, bagsEnd);
+            return;
+        }
         wearOrStow(stack, bagsStart, bagsEnd);
         if (stack.getCount() == count) {
             CarrySlots.move(this, stack, carriedStart, carriedEnd);

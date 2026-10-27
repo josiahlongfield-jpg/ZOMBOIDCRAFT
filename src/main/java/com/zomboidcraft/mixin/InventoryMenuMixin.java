@@ -83,13 +83,22 @@ public abstract class InventoryMenuMixin implements Carry.Bags {
         }
         ItemStack stack = slot.getItem();
         ItemStack before = stack.copy();
+        int sling = zomboidcraft$firstExtra + GearStore.SLING;
         if (fromKit) {
             CarrySlots.move(self, stack, InventoryMenu.INV_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
+            if (stack.getCount() == before.getCount() && index > sling) {
+                // a weapon out of a bag with the belt full goes on the sling
+                CarrySlots.move(self, stack, sling, sling + 1);
+            }
         } else {
             BagSpec spec = BagItem.spec(stack);
             int gearSlot = spec == null ? -1 : GearStore.slotFor(spec.wear());
             if (gearSlot >= 0) {
                 CarrySlots.move(self, stack, zomboidcraft$firstExtra + gearSlot, zomboidcraft$firstExtra + gearSlot + 1);
+            }
+            if (stack.getCount() == before.getCount()) {
+                // a long gun or melee weapon goes on the sling first
+                CarrySlots.move(self, stack, sling, sling + 1);
             }
             if (stack.getCount() == before.getCount()) {
                 CarrySlots.move(self, stack, zomboidcraft$firstExtra + GearStore.SIZE, self.slots.size());

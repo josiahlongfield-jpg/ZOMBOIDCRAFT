@@ -21,12 +21,18 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The bench: one weapon up close. Down the left, every weapon you carry; in the middle, the weapon itself and its
- * stats; on the right, either its parts (each socket with what's fitted and every part you carry that fits it, one
+ * The bench: one weapon up close. Down the left, every weapon you carry; in the middle, the weapon itself on a big
+ * stage that fills most of the page, turned by dragging with the right mouse button, and its stats under it; on the right, either its parts (each socket with what's fitted and every part you carry that fits it, one
  * click to fit or take off, with the stats showing the change before you commit) or its condition and quality.
  */
 final class BenchPage {
     enum Tab { PARTS, CONDITION }
+
+    // the three columns, from the page's left edge: weapons, the stage and stats, then parts or condition
+    private static final int LIST_X = 14, LIST_W = 112;
+    private static final int MID_X = 136, MID_W = 314;
+    private static final int SIDE_X = 463, SIDE_W = 139;
+    private static final int STAGE_Y = 76, STAGE_H = 196;
 
     private final KitScreen<?> screen;
     private int slot = -1;
@@ -63,28 +69,30 @@ final class BenchPage {
         }
 
         // every weapon you carry
-        KitDraw.heading(g, font, "Your weapons", x + 37, y + 44, 133, false);
+        KitDraw.heading(g, font, "Your weapons", LIST_X + x, y + 44, LIST_W, false);
         int ly = y + 54;
         for (int i : weapons) {
             if (ly > y + 300) break;
             ItemStack stack = menu.slots.get(i).getItem();
             boolean on = i == slot;
-            KitDraw.tile(g, font, stack, x + 37, ly, 54, 24, on || screen.hovered(x + 37, ly, 133, 24, mx, my));
+            int lx = x + LIST_X;
+            KitDraw.tile(g, font, stack, lx, ly, 40, 24, on || screen.hovered(lx, ly, LIST_W, 24, mx, my));
             String name = stack.getHoverName().getString();
-            if (KitDraw.width(font, name, 0.95f) > 74) name = font.plainSubstrByWidth(name, 72) + "..";
-            KitDraw.text(g, font, name, x + 95, ly + 4, on ? KitDraw.BRIGHT : KitDraw.DIM, 0.95f);
+            if (KitDraw.width(font, name, 0.85f) > LIST_W - 46) name = font.plainSubstrByWidth(name, (int) ((LIST_W - 52) / 0.85f)) + "..";
+            KitDraw.text(g, font, name, lx + 44, ly + 4, on ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
             KitItems.Rarity r = KitItems.rarity(stack);
-            KitDraw.caps(g, font, r.label, x + 95, ly + 14, r.text, 0.65f);
-            if (on) g.fill(x + 33, ly, x + 34, ly + 24, KitDraw.LINK);
+            KitDraw.caps(g, font, r.label, lx + 44, ly + 14, r.text, 0.6f);
+            if (on) g.fill(lx - 4, ly, lx - 3, ly + 24, KitDraw.LINK);
             int pick = i;
-            screen.hot(x + 37, ly, 133, 24, () -> {
+            screen.hot(lx, ly, LIST_W, 24, () -> {
                 show(pick);
                 UiSounds.play(UiSounds.CLICK);
             });
-            ly += 29;
+            ly += 28;
         }
+        int cx = x + MID_X;
         if (weapons.isEmpty()) {
-            KitDraw.text(g, font, "You aren't carrying a weapon.", x + 185, y + 60, KitDraw.DIM, 1.2f);
+            KitDraw.text(g, font, "You aren't carrying a weapon.", cx, y + 60, KitDraw.DIM, 1.2f);
             return;
         }
 
@@ -92,37 +100,41 @@ final class BenchPage {
         boolean gun = KitItems.gun(weapon);
         KitItems.Rarity r = KitItems.rarity(weapon);
 
-        // the name, its rarity and kind, and the two tabs
+        // the name, its rarity and kind
         String name = weapon.getHoverName().getString();
-        KitDraw.caps(g, font, name, x + 185, y + 44, KitDraw.BRIGHT, KitDraw.capsWidth(font, name, 1.8f) > 235 ? 1.3f : 1.8f);
+        KitDraw.caps(g, font, name, cx, y + 44, KitDraw.BRIGHT, KitDraw.capsWidth(font, name, 1.8f) > MID_W ? 1.3f : 1.8f);
         int bw = Math.round(KitDraw.capsWidth(font, r.label, 0.7f)) + 8;
-        g.fill(x + 185, y + 61, x + 185 + bw, y + 70, r.band);
-        KitDraw.caps(g, font, r.label, x + 189, y + 63, r.bandText, 0.7f);
+        g.fill(cx, y + 61, cx + bw, y + 70, r.band);
+        KitDraw.caps(g, font, r.label, cx + 4, y + 63, r.bandText, 0.7f);
         int tier = KitItems.tier(weapon);
-        int px = x + 185 + bw + 5;
+        int px = cx + bw + 5;
         if (tier > 0) px += KitDraw.pips(g, px, y + 62, tier, r.text, 2) + 4;
         KitDraw.text(g, font, KitItems.kind(weapon), px, y + 62, KitDraw.DIM, 0.9f);
-        int tx = x + 185;
+
+        // the right panel's two tabs, standing in for its heading
+        int rx = x + SIDE_X;
+        int tx = rx;
         for (Tab t : Tab.values()) {
             String label = t == Tab.PARTS ? "Parts" : "Condition";
             float w = KitDraw.capsWidth(font, label, 0.85f);
             boolean on = t == tab;
-            boolean over = screen.hovered(tx - 2, y + 75, Math.round(w) + 4, 12, mx, my);
-            KitDraw.caps(g, font, label, tx, y + 77, on || over ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
-            if (on) g.fill(tx, y + 86, Math.round(tx + w), y + 87, KitDraw.TEXT);
-            screen.hot(tx - 2, y + 75, Math.round(w) + 4, 12, () -> {
+            boolean over = screen.hovered(tx - 2, y + 42, Math.round(w) + 4, 12, mx, my);
+            KitDraw.caps(g, font, label, tx, y + 44, on || over ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
+            if (on) g.fill(tx, y + 53, Math.round(tx + w), y + 54, KitDraw.TEXT);
+            screen.hot(tx - 2, y + 42, Math.round(w) + 4, 12, () -> {
                 tab = t;
                 UiSounds.play(UiSounds.TAB);
             });
-            tx += Math.round(w) + 12;
+            tx += Math.round(w) + 10;
         }
+        if (tx < rx + SIDE_W) g.fill(tx, y + 47, rx + SIDE_W, y + 48, KitDraw.LINE);
 
         // the weapon, big and in 3D, turned by dragging: every gun and melee weapon, a modular gun with its empty sockets
         // as green ghosts
         Attachments.Slot lit = trying.isEmpty() ? null : Attachments.slotOf(trying);
-        if (!stage.draw(g, weapon, x + 185, y + 92, 235, 104, mx, my, lit)) {
-            g.fillGradient(x + 200, y + 182, x + 405, y + 196, 0x00000000, 0x33000000);
-            KitDraw.item(g, weapon, x + 302 - 56, y + 86, 112);
+        if (!stage.draw(g, weapon, cx, y + STAGE_Y, MID_W, STAGE_H, mx, my, lit)) {
+            g.fillGradient(cx + 20, y + STAGE_Y + STAGE_H - 30, cx + MID_W - 20, y + STAGE_Y + STAGE_H - 14, 0x00000000, 0x33000000);
+            KitDraw.item(g, weapon, cx + MID_W / 2 - 80, y + STAGE_Y + STAGE_H / 2 - 80, 160);
         } else {
             for (GunStage.Point p : stage.points) {
                 int gunSlot = slot;
@@ -137,31 +149,35 @@ final class BenchPage {
             ItemStack copy = weapon.copy();
             if (Attachments.mount(copy, trying) != null) after = copy;
         }
+        // in two columns under the stage
         List<KitItems.Stat> stats = gun ? KitItems.gunStats(weapon, after) : KitItems.meleeStats(weapon);
-        KitDraw.heading(g, font, "Stats", x + 185, y + 202, 235, false);
-        int sy = y + 213;
+        int colW = (MID_W - 14) / 2;
+        int n = 0;
+        int sy0 = y + STAGE_Y + STAGE_H + 7;
         for (KitItems.Stat s : stats) {
-            KitDraw.text(g, font, s.label(), x + 185, sy, KitDraw.DIM, 0.9f);
-            KitDraw.bar(g, x + 260, sy + 2, 120, 4, s.value(), s.changed());
-            KitDraw.textRight(g, font, s.shown(), x + 420, sy, KitDraw.TEXT, 0.9f);
-            sy += 12;
+            int sx = cx + (n % 2) * (colW + 14), sy = sy0 + (n / 2) * 11;
+            KitDraw.text(g, font, s.label(), sx, sy, KitDraw.DIM, 0.8f);
+            KitDraw.bar(g, sx + 62, sy + 2, colW - 108, 3, s.value(), s.changed());
+            KitDraw.textRight(g, font, s.shown(), sx + colW, sy, KitDraw.TEXT, 0.8f);
+            n++;
         }
         if (gun) {
-            KitDraw.text(g, font, "Loaded", x + 185, sy, KitDraw.DIM, 0.9f);
-            KitDraw.textRight(g, font, KitItems.loaded(weapon), x + 420, sy, KitDraw.TEXT, 0.9f);
+            int sx = cx + (n % 2) * (colW + 14), sy = sy0 + (n / 2) * 11;
+            KitDraw.text(g, font, "Loaded", sx, sy, KitDraw.DIM, 0.8f);
+            KitDraw.textRight(g, font, KitItems.loaded(weapon), sx + colW, sy, KitDraw.TEXT, 0.8f);
         }
 
         trying = ItemStack.EMPTY;
-        if (tab == Tab.PARTS) parts(g, font, weapon, x + 440, y + 44, mx, my);
-        else condition(g, font, weapon, x + 440, y + 44, mx, my);
+        if (tab == Tab.PARTS) parts(g, font, weapon, rx, y + 44, mx, my);
+        else condition(g, font, weapon, rx, y + 44, mx, my);
 
-        int hx = x + 37, hy = y + KitScreen.H - 14;
+        int hx = x + LIST_X, hy = y + KitScreen.H - 14;
         if (tab == Tab.PARTS && gun && Attachments.isModular(weapon)) {
             hx += KitDraw.hint(g, font, "LMB", "Fit a part / take one off", hx, hy);
         } else if (tab == Tab.CONDITION) {
             hx += KitDraw.hint(g, font, "LMB", "Repair with it", hx, hy);
         }
-        hx += KitDraw.hint(g, font, "Drag", gun ? "Turn the gun" : "Turn it", hx, hy);
+        hx += KitDraw.hint(g, font, "RMB drag", gun ? "Turn the gun" : "Turn it", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 
@@ -192,7 +208,6 @@ final class BenchPage {
 
     /** Each socket: what's fitted, then every part you carry that fits it. */
     private void parts(GuiGraphicsExtractor g, Font font, ItemStack weapon, int x, int y, int mx, int my) {
-        KitDraw.heading(g, font, "Parts", x, y, 139, false);
         List<Attachments.Slot> sockets = Attachments.slots(weapon);
         if (sockets.isEmpty()) {
             KitDraw.wrap(g, font, KitItems.gun(weapon) ? "Nothing fits this gun." : "Melee weapons take no parts.", x, y + 12, 139, KitDraw.DIM);
@@ -250,7 +265,6 @@ final class BenchPage {
 
     /** Quality, condition and repairs. */
     private void condition(GuiGraphicsExtractor g, Font font, ItemStack weapon, int x, int y, int mx, int my) {
-        KitDraw.heading(g, font, "Quality", x, y, 139, false);
         KitItems.Rarity r = KitItems.rarity(weapon);
         int cy = y + 12;
         row(g, font, "Rarity", r.label, r.text, x, cy);

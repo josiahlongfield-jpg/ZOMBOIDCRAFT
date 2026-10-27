@@ -95,6 +95,11 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     private final List<Hot> hots = new ArrayList<>();
     private final List<Hot> flyHots = new ArrayList<>();
     private @Nullable Hot hover;
+    /** A left press on a filled slot, waiting to see whether it's a click or the start of a drag. */
+    private @Nullable Hot pressed;
+    private double pressX, pressY;
+    /** The slot a dragged thing came from, or -1 when nothing is being dragged. */
+    private int dragFrom = -1;
     private final Map<Slot, int[]> original = new HashMap<>();
 
     /** A slot's picker: what you carry that could go there. */
@@ -200,6 +205,14 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     }
 
     @Override
+    public void onClose() {
+        // closed mid-drag: the dragged thing goes back where it came from
+        if (dragFrom >= 0 && !menu.getCarried().isEmpty()) click(dragFrom, 0, ContainerInput.PICKUP);
+        dragFrom = -1;
+        super.onClose();
+    }
+
+    @Override
     public void removed() {
         original.forEach((slot, xy) -> {
             ((SlotAccessor) slot).zomboidcraft$setX(xy[0]);
@@ -250,6 +263,27 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     void unequip(int slot) {
         click(slot, 0, ContainerInput.QUICK_MOVE);
         UiSounds.play(UiSounds.ITEM_MOVE);
+    }
+
+    /**
+     * Lets go of a dragged thing: over a slot it goes there (swapping with what was in it, which goes back where the
+     * dragged thing came from); anywhere else it goes back where it came from.
+     */
+    private void drop(double mx, double my) {
+        int from = dragFrom;
+        dragFrom = -1;
+        if (menu.getCarried().isEmpty()) return;
+        int to = -1;
+        for (int i = hots.size() - 1; i >= 0 && to < 0; i--) {
+            Hot h = hots.get(i);
+            if (h.slot() >= 0 && h.slot() < menu.slots.size() && h.has(mx, my)) to = h.slot();
+        }
+        if (to >= 0 && to != from) {
+            click(to, 0, ContainerInput.PICKUP);
+            UiSounds.play(UiSounds.ITEM_MOVE);
+        }
+        if (!menu.getCarried().isEmpty()) click(from, 0, ContainerInput.PICKUP);
+        if (!menu.getCarried().isEmpty()) putDown();
     }
 
     /** Whatever is left on the cursor goes into the first carried slot that takes it. */
@@ -341,20 +375,46 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             fly = null;
             return true;
         }
+        // on the bench the right button only turns the weapon; everything there is picked with the left
+        if (page == Page.BENCH && right) {
+            bench.pressed(mx, my);
+            return true;
+        }
         for (int i = hots.size() - 1; i >= 0; i--) {
             Hot h = hots.get(i);
             if (h.has(mx, my)) {
+                // shift + right click drops the whole stack on the floor at your feet
+                if (right && shift && h.slot() >= 0 && h.slot() < menu.slots.size() && menu.slots.get(h.slot()).hasItem()
+                        && menu.getCarried().isEmpty()) {
+                    click(h.slot(), 1, ContainerInput.THROW);
+                    UiSounds.play(UiSounds.ITEM_MOVE);
+                    return true;
+                }
+                // a left press on something you could drag waits: moved, it's a drag; let go where it is, a click
+                if (!right && h.slot() >= 0 && h.slot() < menu.slots.size() && menu.slots.get(h.slot()).hasItem() && menu.getCarried().isEmpty()) {
+                    pressed = h;
+                    pressX = mx;
+                    pressY = my;
+                    return true;
+                }
                 Runnable r = right && h.alt() != null ? h.alt() : h.click();
                 if (r != null) r.run();
                 return true;
             }
         }
-        if (page == Page.BENCH && !right) bench.pressed(mx, my);
         return true;
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == 0 && dragFrom >= 0) {
+            drop(event.x(), event.y());
+        } else if (event.button() == 0 && pressed != null) {
+            Hot h = pressed;
+            pressed = null;
+            if (h.click() != null) h.click().run();
+        }
+        pressed = null;
         if (page == Page.MAP) map.released(event.x(), event.y());
         if (page == Page.BENCH) bench.released();
         return true;
@@ -362,6 +422,17 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (event.button() == 0 && pressed != null && dragFrom < 0 && Math.hypot(event.x() - pressX, event.y() - pressY) > 3) {
+            // picked up off its slot and carried under the mouse until you let go
+            int from = pressed.slot();
+            pressed = null;
+            click(from, 0, ContainerInput.PICKUP);
+            if (!menu.getCarried().isEmpty()) {
+                dragFrom = from;
+                UiSounds.play(UiSounds.ITEM_MOVE);
+            }
+            return true;
+        }
         if (page == Page.MAP) map.dragged(event.x(), event.y());
         if (page == Page.BENCH) bench.dragged(event.x(), event.y());
         return true;
