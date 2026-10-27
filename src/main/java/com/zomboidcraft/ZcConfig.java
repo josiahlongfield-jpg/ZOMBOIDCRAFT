@@ -414,9 +414,13 @@ public final class ZcConfig {
         public double carKeyGlovebox = 0.3;
         public double carKeyZombie = 0.35;
         public double carKeyDrop = 0.3;
-        /** Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again. */
+        /**
+         * Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again in a car in
+         * perfect condition; hotwireWear is how much of the remaining chance a car at 0% adds (worse cars fail more).
+         */
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
+        public double hotwireWear = 0.8;
     }
 
     public static class Weather {
