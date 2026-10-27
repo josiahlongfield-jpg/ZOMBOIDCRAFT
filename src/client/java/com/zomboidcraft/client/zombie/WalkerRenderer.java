@@ -79,7 +79,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             Identifier[] tex = BODY_TEXTURES.computeIfAbsent(state.outfit, o -> new Identifier[] {
                     ZomboidCraft.id("textures/entity/zbody/skin/" + o + ".png"),
                     ZomboidCraft.id("textures/entity/zbody/kit/" + o + ".png"),
-                    ZomboidCraft.id("textures/entity/zbody/eyes/" + o + ".png")});
+                    ZomboidCraft.id("textures/entity/zbody/eyes/" + o + ".png"),
+                    ZomboidCraft.id("textures/entity/zbody/low/" + o + ".png")});
             state.texture = tex[0];
             state.addonTexture = null;
             state.eyesTexture = null;
@@ -107,6 +108,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             state.zskin = tex[0];
             state.zkit = tex[1];
             state.zeyes = look.glowingEyes ? tex[2] : null;
+            state.zlow = ZcConfig.get().performance.bakedZombies ? ZBodyMesh.get(state.outfit + "_low") : null;
+            state.zlowSkin = tex[3];
             facts.age = state.ageInTicks;
             facts.walkPos = state.walkAnimationPos;
             facts.walkSpeed = state.walkAnimationSpeed;

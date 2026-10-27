@@ -2743,7 +2743,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bk_vault_frame_3", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 12, 0, 0, 16, 4, 4, 12, 4, 0, 16, 8, 4, 12, 8, 0, 16, 12, 4, 12, 12, 0, 16, 16, 4);
         s("bk_vault_door_3", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 11, 16, 16, 16);
         s("bk_vault_shut_3", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
-        s("bk_vault_frame_4", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, );
+        s("bk_vault_frame_4", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f);
         s("bk_vault_door_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 11, 16, 16, 16);
         s("bk_vault_shut_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("bk_vault_frame_5", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 4, 4, 4, 0, 4, 0, 4, 8, 4, 0, 8, 0, 4, 12, 4, 0, 12, 0, 4, 16, 4);
