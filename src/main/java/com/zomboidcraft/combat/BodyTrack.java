@@ -80,6 +80,24 @@ final class BodyTrack {
         return new Frame(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.yBodyRot, pose, -1);
     }
 
+    /** What it's doing now, as one of the ways it can die (Deaths' kinds). */
+    static int deathKind(Zombie zombie) {
+        int pose = now(zombie).pose();
+        if (pose >= BodyCaps.CRAWL_REST && pose < BodyCaps.HOP) {
+            return Deaths.CRAWL;
+        }
+        if (pose >= BodyCaps.ATTACK && pose < BodyCaps.DOWN) {
+            return Deaths.LUNGE;
+        }
+        return switch (pose) {
+            case BodyCaps.SHAMBLE -> Deaths.SHAMBLE;
+            case BodyCaps.CHASE -> Deaths.RUN;
+            case BodyCaps.DOWN -> Deaths.DOWN;
+            case BodyCaps.HOP, BodyCaps.HOP_REACH, BodyCaps.STAND1, BodyCaps.STAND1_REACH -> Deaths.HOP;
+            default -> Deaths.STILL;
+        };
+    }
+
     private int index(int back) {
         return Math.floorMod(newest - Math.min(back, count - 1), SIZE);
     }

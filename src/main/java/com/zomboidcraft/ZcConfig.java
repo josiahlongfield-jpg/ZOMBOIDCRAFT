@@ -33,6 +33,8 @@ public final class ZcConfig {
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
+    /** How the dead fall and the bodies they leave, and how the living jerk when shot. */
+    public Corpses corpses = new Corpses();
     public Guns guns = new Guns();
     /** The M9-style pistol's own numbers (shared gun settings are in guns). */
     public GunStats pistol = GunStats.pistol();
@@ -300,8 +302,8 @@ public final class ZcConfig {
     }
 
     public static class Zombies {
-        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
-        public double sprinterChance = 0.05;
+        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix): about one in seven. */
+        public double sprinterChance = 0.15;
         /** Speed change for shamblers and sprinters, as a fraction of vanilla zombie speed. */
         public double shamblerSpeed = -0.3;
         public double sprinterSpeed = 0.25;
@@ -606,6 +608,12 @@ public final class ZcConfig {
          * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
          */
         public double zombieBodyShots = 0.33;
+        /**
+         * Only a shot to the head kills a zombie: body and limb shots wear it down and take it apart, but one with
+         * every limb shot off still wriggles on the ground, and a crawler keeps coming, until it's shot in the head.
+         * Any bullet or bolt in the head finishes it. Blows, stomps, fire and explosions kill as before.
+         */
+        public boolean onlyHeadshotsKill = true;
         public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
@@ -653,6 +661,22 @@ public final class ZcConfig {
         public double crippleChance = 0.2;
     }
 
+    public static class Corpses {
+        /**
+         * A dead zombie falls the way it was going and the shot pushed it, and its body stays lying where it fell,
+         * missing whatever was shot off it (off: vanilla's tip-over and puff of smoke).
+         */
+        public boolean enabled = true;
+        /** Most bodies kept in a world while it's loaded; past this the oldest go. */
+        public int maxBodies = 300;
+        /** Minutes a body lies before it's gone (0 = it stays for good). */
+        public double minutes = 0;
+        /** Living zombies jerk and rock back where shots hit them. */
+        public boolean hitReactions = true;
+        /** How far off bodies are drawn, in blocks. Client side. */
+        public double drawDistance = 64;
+    }
+
     public static class Limbs {
         /** A bullet that hits an arm or a leg instead of the head can tear it off, where it was hit. */
         public boolean enabled = true;
@@ -684,6 +708,12 @@ public final class ZcConfig {
         public double otherGuns = 1.0;
         /** How fast a zombie hopping on one leg gets about, against walking (1 = as fast). */
         public double hopSpeed = 0.55;
+        /**
+         * How fast a zombie on the ground gets about with one arm left to drag itself, and with none (it wriggles
+         * along on its belly), against crawling on both (1 = as fast).
+         */
+        public double oneArmCrawl = 0.65;
+        public double wriggleSpeed = 0.3;
         /** Seconds a torn-off limb lies on the ground before it's gone. Client side. */
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
@@ -1084,7 +1114,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 6;
+    private static final int DEFAULTS = 7;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1165,6 +1195,12 @@ public final class ZcConfig {
             // 2026-10-27 (Josiah): the gun light brighter, now spread over the space in front (lightRays)
             if (c.guns.lightLevel == 11) {
                 c.guns.lightLevel = 13;
+            }
+        }
+        if (c.defaultsVersion < 7) {
+            // 2026-10-27 (Josiah): more sprinters, one in seven instead of one in twenty
+            if (c.zombies.sprinterChance == 0.05) {
+                c.zombies.sprinterChance = 0.15;
             }
         }
         c.defaultsVersion = DEFAULTS;

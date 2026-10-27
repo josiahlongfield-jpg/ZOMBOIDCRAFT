@@ -26,8 +26,8 @@ public final class ZMove {
 
     private static final float PI = (float) Math.PI;
     // body A sizes (STYLES.A in the preview)
-    private static final float THIGH = 7.2f, SHIN = 6.6f, FOOT = 1.4f, PELVIS_H = 3f, PELVIS_D = 3.8f;
-    private static final float BASE = THIGH + SHIN + FOOT + PELVIS_H / 2;
+    static final float THIGH = 7.2f, SHIN = 6.6f, FOOT = 1.4f, PELVIS_H = 3f, PELVIS_D = 3.8f;
+    static final float BASE = THIGH + SHIN + FOOT + PELVIS_H / 2;
 
     /** One frame's joint angles plus where the hips sit. */
     public static final class Pose {
@@ -35,6 +35,11 @@ public final class ZMove {
         public float hx, hy = BASE, hz;
         /** Hips turn X-Y-Z (lying down) rather than Y-X-Z. */
         public boolean lying;
+        /**
+         * Going over or gone over (standing order only): after the hips' own turn, the whole body tipped by tilt
+         * radians toward fallDir (radians from its front round toward its left), about the hips.
+         */
+        public float fallDir, tilt;
 
         void clear() {
             java.util.Arrays.fill(rot, 0f);
@@ -42,6 +47,8 @@ public final class ZMove {
             hy = BASE;
             hz = 0f;
             lying = false;
+            fallDir = 0f;
+            tilt = 0f;
         }
 
         void add(Pose p, float w) {
@@ -65,6 +72,8 @@ public final class ZMove {
             hy = p.hy;
             hz = p.hz;
             lying = p.lying;
+            fallDir = p.fallDir;
+            tilt = p.tilt;
         }
     }
 
@@ -90,6 +99,8 @@ public final class ZMove {
          * spring, off the ground to about 0.74, then landing).
          */
         public float hop;
+        /** No hands left (both arms shot off, or lost long ago): on the ground it can only wriggle. */
+        public boolean armless;
     }
 
     private final Pose tmp = new Pose();
@@ -169,31 +180,31 @@ public final class ZMove {
         out.lying = lying > total * 0.5f;
     }
 
-    private static float sin(float a) {
+    static float sin(float a) {
         return (float) Math.sin(a);
     }
 
-    private static float cos(float a) {
+    static float cos(float a) {
         return (float) Math.cos(a);
     }
 
-    private static float clamp(float x, float a, float b) {
+    static float clamp(float x, float a, float b) {
         return Math.max(a, Math.min(b, x));
     }
 
-    private static float seg(float x, float a, float b) {
+    static float seg(float x, float a, float b) {
         float s = clamp((x - a) / (b - a), 0f, 1f);
         return s * s * (3 - 2 * s);
     }
 
-    private static void arm(Pose p, boolean right, float sx, float out, float sy, float el, float wr, float wz) {
+    static void arm(Pose p, boolean right, float sx, float out, float sy, float el, float wr, float wz) {
         float s = right ? -1f : 1f;
         p.set(right ? SH_R : SH_L, sx, sy * s, out * s);
         p.set(right ? EL_R : EL_L, el, 0f, 0f);
         p.set(right ? WR_R : WR_L, wr, 0f, wz * s);
     }
 
-    private static void leg(Pose p, boolean right, float a, float k, float an, float out, float tw) {
+    static void leg(Pose p, boolean right, float a, float k, float an, float out, float tw) {
         float s = right ? -1f : 1f;
         p.set(right ? HIP_R : HIP_L, a, tw * s, out * s);
         p.set(right ? KN_R : KN_L, k, 0f, 0f);
@@ -331,6 +342,10 @@ public final class ZMove {
             }
             return;
         }
+        if (in.armless) {
+            wriggle(p, kind, legless, in);
+            return;
+        }
         boolean pulling = kind == Crawl.SLOW || kind == Crawl.FAST;
         float q = in.gait * (kind == Crawl.FAST ? 1f : 0.8f) + ph;
         float r = sin(q), pullR = Math.max(0f, r), pullL = Math.max(0f, -r);
@@ -379,6 +394,43 @@ public final class ZMove {
             leg(p, true, -0.05f - (pulling ? pullL * 0.3f : 0f), kR, 0.6f, 0.12f, 0.1f);
             leg(p, false, -0.05f - (pulling ? pullR * 0.3f : 0f), kL, 0.6f, 0.12f, 0.1f);
         }
+    }
+
+    /**
+     * No arms to drag itself with: it wriggles along on its belly, the hips and legs swinging from side to side with
+     * the chest humping up as it inches forward, the head craned at what it's after and kept in line (so a headshot
+     * still finds it), the stumps flapping. Alive until it's shot in the head, it never lies still: at rest it
+     * squirms where it is.
+     */
+    private static void wriggle(Pose p, Crawl kind, boolean legless, Input in) {
+        float t = in.t, ph = in.phase;
+        boolean moving = kind == Crawl.SLOW || kind == Crawl.FAST;
+        float q = moving ? in.gait * 1.4f + ph : t * (kind == Crawl.ALERT ? 2.6f : 1.7f) + ph;
+        float s = sin(q), hump = Math.max(0f, sin(2 * q)), big = moving ? 1f : 0.6f;
+        p.set(HIPS, PI / 2 - (legless ? 0.05f : 0f), sin(q + 0.6f) * 0.2f * big, s * 0.28f * big);
+        p.hx = -s * 0.5f * big;
+        p.hy = PELVIS_D / 2 + (legless ? 0.2f : 0.5f);
+        p.hz = -7f + (moving ? hump : 0f);
+        // the chest swings back against the hips, a beat behind, so the body waves and the head stays on line
+        p.set(SPINE, -0.03f - hump * 0.25f * big, -sin(q - 0.4f) * 0.15f, -sin(q - 0.25f) * 0.32f * big);
+        float hd = clamp(in.look, -1.4f, 1.4f);
+        p.set(NECK, -0.55f - hump * 0.08f, hd * 0.3f, sin(q - 0.9f) * 0.12f * big);
+        p.set(HEAD, -0.5f + sin(2 * q - 0.8f) * 0.06f, hd * 0.45f + sin(q - 2.2f) * 0.12f, 0.08f + sin(t * 0.8f + ph) * 0.06f);
+        if (kind == Crawl.GRAB) {
+            // it snaps at your ankle: the chest heaves up and the head lunges and bites
+            float c = Math.min(in.attack, 1.79f), l = seg(c, 0.2f, 0.45f) * (1 - seg(c, 1.2f, 1.7f));
+            p.rot[SPINE * 3] = -0.3f - 0.3f * l;
+            p.rot[NECK * 3] = -0.6f - 0.2f * l;
+            p.rot[HEAD * 3] = -0.45f - 0.15f * l + 0.35f * l * Math.max(0f, sin(c * 18f));
+            p.hz += 1.6f * l;
+        }
+        // what's left of the arms flaps at its sides
+        arm(p, true, -0.2f + sin(q - 0.5f) * 0.3f, 0.25f, 0f, 0f, 0f, 0f);
+        arm(p, false, -0.2f - sin(q - 0.5f) * 0.3f, 0.25f, 0f, 0f, 0f, 0f);
+        // the legs (or thigh stumps) kick in turn behind it, pushing
+        float kR = 0.25f + Math.max(0f, s) * 0.8f * big, kL = 0.25f + Math.max(0f, -s) * 0.8f * big;
+        leg(p, true, -0.05f - Math.max(0f, -s) * 0.35f * big, kR, 0.6f, 0.12f + s * 0.1f, 0.1f);
+        leg(p, false, -0.05f - Math.max(0f, s) * 0.35f * big, kL, 0.6f, 0.12f - s * 0.1f, 0.1f);
     }
 
     /**
@@ -487,6 +539,8 @@ public final class ZMove {
         out.hy = a.hy + (b.hy - a.hy) * s;
         out.hz = a.hz + (b.hz - a.hz) * s;
         out.lying = s < 0.5f ? a.lying : b.lying;
+        out.tilt = a.tilt + (b.tilt - a.tilt) * s;
+        out.fallDir = b.tilt != 0f ? b.fallDir : a.fallDir;
     }
 
     /**

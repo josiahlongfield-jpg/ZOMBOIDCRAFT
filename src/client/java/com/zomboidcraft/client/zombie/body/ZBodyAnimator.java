@@ -1,7 +1,11 @@
 package com.zomboidcraft.client.zombie.body;
 
+import com.zomboidcraft.combat.Deaths;
 import com.zomboidcraft.combat.Dismember;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 
 /**
@@ -10,7 +14,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
  * turns, lurches into a chase or topples over instead of snapping between poses.
  *
  * It also watches for limbs coming off: losing a leg plays the stumble into a hop, losing the
- * last one plays the fall into a crawl.
+ * last one plays the fall into a crawl. Shots make the body jerk where they land (ZHit), and a
+ * dead zombie falls the way the server says it went down (ZDeath).
  */
 public final class ZBodyAnimator {
     /** How fast one movement hands over to the next (weight per second). */
@@ -48,6 +53,34 @@ public final class ZBodyAnimator {
         /** On one leg: how far through the hop (0 to 1), and how much ground a hop covers, in blocks. */
         float hop;
         float hopStride = 0.4f;
+        /** Shots that landed on it lately, the newest last. */
+        final List<Hit> hits = new ArrayList<>();
+        /** Dead: the pose it died in, the way it faced then, and how it goes down. */
+        boolean dying;
+        final ZMove.Pose deathFrom = new ZMove.Pose();
+        float deathYaw;
+        final ZDeath.Fall fall = new ZDeath.Fall();
+    }
+
+    /** Shots landing on one zombie (Deaths.Hit): the parts struck, the shot's yaw, how hard, and when (nanoseconds). */
+    private record Hit(int parts, float yaw, int force, long at) {
+    }
+
+    /** Shots told by the server, waiting for their zombie's next frame. Render thread only. */
+    private static final Int2ObjectOpenHashMap<List<Hit>> PENDING = new Int2ObjectOpenHashMap<>();
+
+    /** Hears the server's shots on living walkers (Deaths.Hit). */
+    public static void register() {
+        ClientPlayNetworking.registerGlobalReceiver(Deaths.Hit.TYPE, (payload, context) ->
+                context.client().execute(() -> hit(payload.entity(), payload.parts(), payload.heading(), payload.force())));
+    }
+
+    /** Shots struck zombie {@code entity} (from the server, on the render thread). */
+    public static void hit(int entity, int parts, int heading, int force) {
+        List<Hit> list = PENDING.computeIfAbsent(entity, id -> new ArrayList<>());
+        if (list.size() < 8) {
+            list.add(new Hit(parts, heading / 256f * (float) Math.PI * 2f, force, System.nanoTime()));
+        }
     }
 
     /** What the renderer reads off a zombie each frame. */
@@ -63,13 +96,26 @@ public final class ZBodyAnimator {
         public boolean legless;
         /** Limbs shot off (Dismember's cut bits). */
         public int cuts;
+        /** A limb lost before it rose (ZombieLook.missingLimb). */
+        public int missingLimb;
+        /** Which way its body faces (degrees of yaw). */
+        public float bodyYaw;
+        /** Ticks since it died (with the frame's part of a tick), 0 alive; and how it died (Deaths), 0 if not told yet. */
+        public float deathTime;
+        public long death;
+        /** Its body, for laying it on the ground when it's dead. */
+        public ZBodyMesh mesh;
     }
+
+    /** Dead: the way its body faces while it falls (degrees of yaw), for the renderer. */
+    public float dyingYaw;
 
     /** The pose a zombie was in the frame before it last lost a limb: the limb flies off frozen in it. */
     public final ZMove.Pose before = new ZMove.Pose();
 
     private final Int2ObjectOpenHashMap<Track> tracks = new Int2ObjectOpenHashMap<>();
     private final ZMove move = new ZMove();
+    private final ZDeath death = new ZDeath();
     private final ZMove.Input input = new ZMove.Input();
     private final float[] target = new float[ZMove.MODES];
     private long frames;
@@ -127,6 +173,22 @@ public final class ZBodyAnimator {
             tr.cuts = f.cuts;
         }
 
+        List<Hit> fresh = PENDING.remove(zombie.getId());
+        if (fresh != null) {
+            tr.hits.addAll(fresh);
+        }
+        tr.hits.removeIf(h -> now - h.at > 600_000_000L);
+        while (tr.hits.size() > 4) {
+            tr.hits.remove(0);
+        }
+
+        if (f.deathTime > 0f) {
+            dead(zombie, tr, f, out, legsGone);
+            tr.last.copy(out);
+            return newly;
+        }
+        tr.dying = false;
+
         boolean moving = f.walkSpeed > (legsGone == 1 ? HOP_MOVING : 0.08f);
         boolean looking = Math.abs(f.headYaw) > 10f;
         boolean noLegs = (f.legless || legsGone == 2) && (f.low || tr.event == FALL);
@@ -175,6 +237,8 @@ public final class ZBodyAnimator {
         input.look = Math.clamp(-(float) Math.toRadians(f.headYaw) / 1.1f, -1.5f, 1.5f);
         input.attack = Math.max(0f, attack);
         input.legless = noLegs;
+        int stumps = ZBodyLayer.stumps(f.cuts, f.missingLimb);
+        input.armless = (stumps & Dismember.RIGHT_ARM) != 0 && (stumps & Dismember.LEFT_ARM) != 0;
         input.goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
         input.reach = f.aggressive || attacking;
         input.hop = tr.hop;
@@ -198,12 +262,56 @@ public final class ZBodyAnimator {
         } else {
             tr.event = 0;
         }
+        // shots jerk it where they land
+        float yaw = (float) Math.toRadians(f.bodyYaw);
+        for (Hit h : tr.hits) {
+            float age = (now - h.at) / 1e9f, scale = 1f / (float) Math.sqrt(Integer.bitCount(h.parts));
+            for (int part = 0; part < 12; part++) {
+                if ((h.parts >> part & 1) != 0) {
+                    ZHit.apply(out, part, yaw - h.yaw, h.force, age, f.variant + part, out.lying, scale);
+                }
+            }
+        }
         tr.last.copy(out);
 
         if (++frames % 1200 == 0) {
             tracks.values().removeIf(old -> now - old.seen > 10_000_000_000L);
+            // shots on zombies that never came on screen
+            PENDING.values().removeIf(list -> now - list.get(list.size() - 1).at > 1_000_000_000L);
         }
         return newly;
+    }
+
+    /**
+     * Dead: it falls from the pose it died in, the way the server says it went down, facing the way it faced then; until
+     * the server's word comes, it starts to drop where it stood.
+     */
+    private void dead(Zombie zombie, Track tr, Facts f, ZMove.Pose out, int legsGone) {
+        float tau = Math.max(0f, f.deathTime - 1f) / 20f;
+        if (!tr.dying) {
+            tr.dying = true;
+            tr.deathFrom.copy(tr.last);
+            tr.deathYaw = f.bodyYaw;
+        }
+        long d = f.death;
+        int stumps = ZBodyLayer.stumps(f.cuts, f.missingLimb);
+        boolean goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
+        if (d != 0L) {
+            tr.fall.set(Deaths.kind(d), Deaths.heading(d), Deaths.force(d), Deaths.part(d), Deaths.seed(d), goneRight,
+                    f.legless, stumps);
+        } else {
+            int kind = f.low ? (f.crawler || f.legless ? ZDeath.CRAWL : ZDeath.DOWN) : legsGone == 1 ? ZDeath.HOP : ZDeath.STILL;
+            tr.fall.set(kind, 0f, -1, -1, f.variant & 0xFF, goneRight, f.legless, stumps);
+        }
+        if (f.mesh == null) {
+            out.copy(tr.deathFrom);
+            dyingYaw = tr.deathYaw;
+            return;
+        }
+        death.pose(out, tr.deathFrom, tr.fall, f.mesh, tau);
+        float told = d != 0L ? Deaths.yaw(d) : tr.deathYaw;
+        float turn = ((told - tr.deathYaw) % 360f + 540f) % 360f - 180f;
+        dyingYaw = tr.deathYaw + turn * smooth(tau / 0.15f);
     }
 
     private static float smooth(float x) {

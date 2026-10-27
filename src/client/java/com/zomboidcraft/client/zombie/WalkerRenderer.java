@@ -5,6 +5,7 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.ZombieLook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.zomboidcraft.combat.Deaths;
 import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.client.zombie.body.Gibs;
@@ -120,7 +121,19 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             facts.crawler = state.crawler;
             facts.legless = state.legless;
             facts.cuts = state.cuts;
+            facts.missingLimb = state.missingLimb;
+            facts.bodyYaw = state.bodyRot;
+            facts.deathTime = zombie.deathTime > 0 ? zombie.deathTime + partialTick : 0f;
+            facts.death = zombie.getAttachedOrElse(Deaths.DEATH, 0L);
+            facts.mesh = state.zbody;
             int newly = animator.animate(zombie, facts, partialTick, state.zpose);
+            if (zombie.deathTime > 0) {
+                // it falls in its own way, not vanilla's tip onto its side, and not flushed red
+                state.bodyRot = animator.dyingYaw;
+                state.deathTime = 0f;
+                state.hasRedOverlay = false;
+                state.zeyes = null;
+            }
             if (newly != 0) {
                 // the limb flies off in the pose it was in the moment before
                 Gibs.spawn(state.zbody, state.zskin, state.zkit, ZBodyLayer.pose(state.zbody, animator.before, state.legless),

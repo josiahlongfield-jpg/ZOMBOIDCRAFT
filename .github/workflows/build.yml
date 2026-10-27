@@ -103,6 +103,20 @@ jobs:
           echo 'data get entity @e[type=zomboidcraft:car,limit=1] model' >&3
           echo 'data get entity @e[type=minecraft:husk,limit=1] Health' >&3
           echo 'execute as @e[type=zomboidcraft:car] run say car here' >&3
+          # A walker that dies falls, then leaves its body (no puff), which saves with the world.
+          # (the test zombies hover: dropped from y 101 they'd die of the fall before the commands reach them)
+          echo 'summon minecraft:zombie 6 101 6 {Tags:["zc_dead"],NoGravity:1b}' >&3
+          sleep 2
+          echo 'kill @e[tag=zc_dead]' >&3
+          sleep 4
+          echo 'execute as @e[type=zomboidcraft:corpse] run say corpse here' >&3
+          echo 'data get entity @e[type=zomboidcraft:corpse,limit=1] outfit' >&3
+          # Only the head kills: a bullet anywhere else leaves a walker alive however hard it hits.
+          echo 'summon minecraft:zombie 8 101 8 {Tags:["zc_tough"],NoGravity:1b}' >&3
+          sleep 2
+          echo 'damage @e[tag=zc_tough,limit=1] 500 zomboidcraft:bullet' >&3
+          sleep 1
+          echo 'execute as @e[tag=zc_tough] run say still alive after a body shot' >&3
           # A test train line gets laid and its train runs round it.
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
           sleep 8
@@ -118,6 +132,8 @@ jobs:
           grep -E 'zomboidcraft|test_rail|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
+          grep -q 'corpse here' server.log
+          grep -q 'still alive after a body shot' server.log
           grep -q 'Laid test line test_rail' server.log && grep -E 'test_rail \(rail.*train 0 at' server.log && grep -E 'test_rail \(rail.*\(stopped\)' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
