@@ -192,8 +192,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                             (pose, out) -> CockpitDisplays.draw(s, colour, pose, out));
                 }
             }
+            if (live != null && CockpitBezels.has(state.model)) {
+                CockpitBezels.submit(state.model, live, colours[0], poseStack, collector, light, state.shaders);
+            }
             java.util.BitSet skip = live == null ? null : live.groups();
-            java.util.BitSet covered = facePanel == null ? null : facePanel.covered;
+            java.util.BitSet bezels = CockpitBezels.covered(state.model, cockpit, live);
+            java.util.BitSet covered = facePanel == null ? bezels : facePanel.covered;
             collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, state.shaders),
                     (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, covered, pose, out));
         }
