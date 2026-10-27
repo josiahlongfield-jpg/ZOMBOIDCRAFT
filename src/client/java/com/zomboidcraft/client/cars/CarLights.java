@@ -306,16 +306,16 @@ public final class CarLights {
 
     // ------------------------------------------------------------------ the glow's quads
 
-    private interface Along {
+    interface Along {
         double at(double s);
     }
 
-    private interface Shade {
+    interface Shade {
         int at(double s);
     }
 
     /** This frame's glow quads, four corners each, from the camera: a position, a colour, a normal. */
-    private static final class Quads {
+    static final class Quads {
         private static final int STRIDE = 8;
         final Vec3 cam;
         final boolean blended;
@@ -347,6 +347,17 @@ public final class CarLights {
             corners[k + 6] = (float) normal.y;
             corners[k + 7] = (float) normal.z;
             colours[count++] = colour;
+        }
+
+        /** A soft round glow turned to face the camera. */
+        void spot(Vec3 c, double half, int colour) {
+            Vec3 toCam = cam.subtract(c);
+            double away = toCam.length();
+            Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+            Vec3 a = Math.abs(n.y) > 0.9 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
+            Vec3 side = n.cross(a).normalize().scale(half), up = side.cross(n).normalize().scale(half);
+            quad(c.subtract(side).subtract(up), c.subtract(side).add(up), c.add(side).add(up), c.add(side).subtract(up), 0, 0, 0, 1, 1, 1,
+                    1, 0, colour, colour, n);
         }
 
         /** A soft disc lying on a surface. */

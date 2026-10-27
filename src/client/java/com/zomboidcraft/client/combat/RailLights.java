@@ -157,7 +157,7 @@ public final class RailLights {
                 continue;
             }
             lit.add(player.getUUID());
-            moveLights(level, player.getUUID(), land, brightest, Mth.clamp(ZcConfig.get().guns.lightSources, 1, 8));
+            moveLights(level, player, land, brightest, Mth.clamp(ZcConfig.get().guns.lightSources, 1, 8));
         }
         LIT.entrySet().removeIf(e -> {
             if (lit.contains(e.getKey())) {
@@ -174,7 +174,8 @@ public final class RailLights {
      * blocks nearer it, so what lights up is the space it's pointed at. Pointed at nothing in reach, the end of its
      * reach gets a dim one.
      */
-    private static void moveLights(ClientLevel level, UUID id, Land land, int brightest, int sources) {
+    private static void moveLights(ClientLevel level, AbstractClientPlayer player, Land land, int brightest, int sources) {
+        UUID id = player.getUUID();
         Map<BlockPos, Integer> had = LIT.getOrDefault(id, Map.of()), want = new HashMap<>();
         double end = land.at() != null ? land.distance() - 0.5 : land.distance();
         int pool = land.at() != null
@@ -188,6 +189,7 @@ public final class RailLights {
                 lightAt(level, land, s, brightness, had, want);
             }
         }
+        spread(level, player, land, brightest, had, want);
         for (BlockPos old : had.keySet()) {
             if (!want.containsKey(old)) {
                 clear(level, old);
@@ -207,6 +209,43 @@ public final class RailLights {
             }
         });
         LIT.put(id, placed);
+    }
+
+    /**
+     * The rest of the cone: rays out across the light's spread, in two rings round the middle, each putting a light
+     * just short of what it lands on (a little dimmer toward the edge), so the floor, walls and whatever's in front
+     * light up across the width of the beam, not one patch where its middle lands.
+     */
+    private static void spread(ClientLevel level, AbstractClientPlayer player, Land land, int brightest,
+                               Map<BlockPos, Integer> had, Map<BlockPos, Integer> want) {
+        ZcConfig.Guns config = ZcConfig.get().guns;
+        int rays = Mth.clamp(config.lightRays, 0, 24);
+        if (rays == 0) {
+            return;
+        }
+        Vec3 dir = land.dir();
+        Vec3 right = dir.cross(new Vec3(0, 1, 0));
+        right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();
+        Vec3 up = right.cross(dir).normalize();
+        int inner = Math.min(6, rays), outer = rays - inner;
+        for (int i = 0; i < rays; i++) {
+            boolean edge = i >= inner;
+            int n = edge ? outer : inner, k = edge ? i - inner : i;
+            double cone = Math.toRadians(config.lightSpread) * (edge ? 1 : 0.5);
+            double turn = 2 * Math.PI * k / n + (edge ? Math.PI / n : 0);
+            Vec3 way = dir.add(right.scale(Math.cos(turn) * Math.tan(cone))).add(up.scale(Math.sin(turn) * Math.tan(cone))).normalize();
+            HitResult hit = aim(level, player, land.from(), way, LIGHT_RANGE);
+            boolean lands = hit.getType() != HitResult.Type.MISS;
+            double d = lands ? hit.getLocation().distanceTo(land.from()) : LIGHT_RANGE;
+            if (d < TRAIL_START) {
+                continue;
+            }
+            int brightness = Mth.clamp(brightest - (edge ? 2 : 1) - (int) (d / POOL_FADE), 1, 15);
+            if (!lands) {
+                brightness = Math.max(1, brightness / 2);
+            }
+            lightAt(level, new Land(land.from(), null, way, d), lands ? d - 0.5 : d, brightness, had, want);
+        }
     }
 
     /** A light block s blocks down the beam, in the air on the gun's side of anything in the way: back along it a little if that's taken. */

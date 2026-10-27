@@ -345,7 +345,9 @@ Jets and helicopters crossing the map (world events), picked by Josiah Longfield
 
 | Sound | Recording | By | Licence |
 |---|---|---|---|
-| world.flyby.jet 1 | Jet,Fighter,FA-18C,Hornet,Medium Distant,Climb,Right to High,Crest and Hold,Kill Engine,191 (Airborne Sound - Attack Aircraft Maneuvers) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
-| world.flyby.jet 2 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
-| world.flyby.jet 3 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.jet 1 | F-16 Jet Fighter passing by overhead and vanishing into the horizon 03 (Sound Ex Machina - F16 Maneuvers) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| world.flyby.jet 2 | F-16 pass by (Contact mic, ORTF) 03 (Sound Ex Machina - F16 Maneuvers) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| world.flyby.jet 3 | Jet,Fighter,FA-18C,Hornet,Medium Distant,Climb,Right to High,Crest and Hold,Kill Engine,191 (Airborne Sound - Attack Aircraft Maneuvers) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| world.flyby.jet 4 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.jet 5 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | world.flyby.heli 1 | Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040 (Pole Position - The Aircraft Ambient Library) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |

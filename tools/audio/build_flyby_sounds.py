@@ -22,7 +22,9 @@ PEAK = 10.0     # WorldEventSound.PEAK
 FADE = 6.0
 # event: [(Sonniss id, where its loudest moment is (s), cut off after (s) or None)]
 EVENTS = {
-    "world.flyby.jet": [("bd9b93ee", 11.5, None), ("ce7962b6", 5.0, None), ("dee4b56e", 4.5, 20.0)],
+    # the two F-16 passes first: Josiah wants them the common ones (WorldEvents.sound)
+    "world.flyby.jet": [("0d2dc01b", 4.5, None), ("aac4a615", 14.0, 34.0),
+                        ("bd9b93ee", 11.5, None), ("ce7962b6", 5.0, None), ("dee4b56e", 4.5, 20.0)],
     "world.flyby.heli": [("76994416", 9.0, None)],
 }
 
