@@ -66,8 +66,9 @@ public final class Gore {
         faces(out, pose, size, size, size, uv, colour, light, overlay);
     }
 
-    private void box(VertexConsumer out, PoseStack.Pose pose, Matrix4f at, float cx, float cy, float cz, float turn,
-                     float sx, float sy, float sz, int region, int light, int overlay) {
+    /** A box of one square of the texture: its middle and its turn about y in the end's space, then its sizes. */
+    void box(VertexConsumer out, PoseStack.Pose pose, Matrix4f at, float cx, float cy, float cz, float turn,
+             float sx, float sy, float sz, int region, int light, int overlay) {
         box.set(at).translate(cx, cy, cz).rotateY(turn);
         faces(out, pose, sx, sy, sz, REGION[region], -1, light, overlay);
     }

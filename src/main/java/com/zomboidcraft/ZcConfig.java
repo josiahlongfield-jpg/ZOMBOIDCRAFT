@@ -745,6 +745,15 @@ public final class ZcConfig {
         public double burstMagnum = 0;
         /** Bursting for every other gun (0 = never). */
         public double burstOtherGuns = 0;
+        /**
+         * Buckshot from point-blank range with most of the blast in the chest blows a hole right through it (with only
+         * headshots killing, it keeps coming).
+         */
+        public boolean chestHoles = true;
+        /** How close counts as point-blank for that, in blocks. */
+        public double chestHoleRange = 3.0;
+        /** The share of the blast's pellets that must go into the chest: more than this. */
+        public double chestHoleShare = 0.5;
 
         /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
         void retune() {

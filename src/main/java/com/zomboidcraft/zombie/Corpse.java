@@ -49,7 +49,7 @@ public class Corpse extends Entity {
     void copy(net.minecraft.world.entity.monster.zombie.Zombie zombie, long death) {
         entityData.set(OUTFIT, ZombieLook.outfit(zombie));
         entityData.set(LIMBS, com.zomboidcraft.combat.Dismember.limbs(zombie)
-                & (com.zomboidcraft.combat.Dismember.CUTS | com.zomboidcraft.combat.Dismember.HEAD_GONE));
+                & (com.zomboidcraft.combat.Dismember.CUTS | com.zomboidcraft.combat.Dismember.MARKS));
         entityData.set(LOOK, ZombieLook.missingLimb(zombie) | (com.zomboidcraft.combat.Downed.isLegless(zombie) ? 8 : 0));
         entityData.set(DEATH_LO, (int) death);
         entityData.set(DEATH_HI, (int) (death >>> 32));
