@@ -388,6 +388,12 @@ public final class ZcConfig {
         public double carBurnt = 0.07;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
+        /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
+        public double jetTopSpeed = 300;
+        /** The helicopter's top speed in km/h. */
+        public double heliTopSpeed = 250;
+        /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
+        public boolean aircraftService = true;
         /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.

@@ -56,6 +56,13 @@ final class SkillsPage {
                     l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
             new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
                     l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
+            new Info(Skill.PILOTING, "Survival", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
+                    + "reading a flight manual gets you off the ground in the first place.", List.of(
+                    new Perk(0, "Shaky hands: the controls are slow and twitchy"),
+                    new Perk(0, "Each level steadies the controls and lets you land a little harder"),
+                    new Perk(10, "Full control authority, no wobble")),
+                    l -> "Right now: " + Math.round(65 + 3.5 * l) + "% control authority, touch down at up to "
+                            + String.format(Locale.ROOT, "%.1f", 7 + 0.3 * l) + " m/s."),
             new Info(Skill.SPRINTING, "Agility", "Run. Long sprints teach the most.", List.of(
                     new Perk(0, "A tenth less tiring each level"),
                     new Perk(10, "Only 1.5 times as tiring as walking, down from 2.5")),
