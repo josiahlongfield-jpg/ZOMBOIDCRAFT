@@ -105,18 +105,22 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
         if (item.isEmpty()) return;
         AABB box = item.getModelBoundingBox();
-        double longest = Math.max(box.getXsize(), box.getYsize());
-        if (longest <= 0) return;
+        // gun models run along z (barrel forward); laid on the back that becomes the long side across it
+        boolean alongZ = box.getZsize() >= Math.max(box.getXsize(), box.getYsize());
+        double length = alongZ ? box.getZsize() : Math.max(box.getXsize(), box.getYsize());
+        double thick = alongZ ? box.getXsize() : box.getZsize();
+        if (length <= 0) return;
         boolean gun = stack.getItem() instanceof com.zomboidcraft.combat.RifleItem;
-        float k = (float) ((gun ? 18 : 14) / 16f / longest);
-        float out = packOut + (float) box.getZsize() * k / 2 + 0.2f / 16f;
+        float k = (float) ((gun ? 18 : 14) / 16f / length);
+        float out = packOut + (float) thick * k / 2 + 0.2f / 16f;
         pose.pushPose();
         getParentModel().body.translateAndRotate(pose);
         pose.translate(0, 6.5f / 16f, out);
         // tall models (a bat on its handle) stand along y: either way the long side runs corner to corner
-        float angle = box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
+        float angle = !alongZ && box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
         pose.mulPose(new org.joml.Matrix4f().rotationZ((float) Math.toRadians(angle)));
         pose.scale(-k, -k, k);
+        if (alongZ) pose.mulPose(new org.joml.Matrix4f().rotationY((float) (Math.PI / 2)));
         pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
         item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         pose.popPose();

@@ -549,6 +549,21 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.waitTicks(3);
             ctx.takeScreenshot("sling-figure-" + Math.round(turn));
         }
+        // a melee weapon on the sling instead, without the pack
+        sp.getServer().runOnServer(s -> {
+            var gear = com.zomboidcraft.carry.Carry.gear(s.getPlayerList().getPlayers().get(0));
+            gear.takeAll(x -> { });
+        });
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, new ItemStack(Items.DIRT));
+            p.getInventory().add(new ItemStack(ModItems.FIRE_AXE));
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+        });
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(20f)));
+        ctx.waitTicks(3);
+        ctx.takeScreenshot("sling-figure-axe");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
