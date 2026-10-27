@@ -561,6 +561,13 @@ public class KitUiTest implements FabricClientGameTest {
             for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
         });
         ctx.waitTicks(60);
+        String gearNow = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var g = com.zomboidcraft.carry.Carry.gear(p);
+            return g.get(0) + ", " + g.get(1) + ", " + g.get(2) + ", " + g.get(3) + " worn " + p.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of());
+        });
+        String wornClient = ctx.computeOnClient(mc -> String.valueOf(mc.player.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of())));
+        LOG.info("ZCUI sling axe: server gear {} client worn {}", gearNow, wornClient);
         ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(20f)));
         ctx.waitTicks(3);
         ctx.takeScreenshot("sling-figure-axe");
