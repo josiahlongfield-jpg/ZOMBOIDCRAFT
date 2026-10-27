@@ -44,9 +44,9 @@ final class GroundFog {
     private static boolean ready;
     private static float thick;
     /** Each sheet's drift so far in blocks, the wind it's following, and the last frame's time. */
-    private static final double[] OFF_X = new double[8], OFF_Z = new double[8];
+    private static final double[] OFF_X = new double[14], OFF_Z = new double[14];
     /** How many times the speckle tile repeats across one quad (CELL blocks): about 4 texture pixels a block-sixteenth. */
-    private static final double SPECKLE = 1.5;
+    private static final double SPECKLE = 2.5;
     private static double windX, windZ = 1, drift = 0.25, lastT = Double.NaN;
 
     /** Every tick: follow the player, and every half second re-read the ground under the fog. */
@@ -70,7 +70,7 @@ final class GroundFog {
                 HEIGHT[i * SIDE + j] = top > feet + 6 || hollow(level, pos, x, top, z) ? Float.NaN : top;
                 pos.set(x, top, z);
                 int block = level.getBrightness(LightLayer.BLOCK, pos), sky = level.getBrightness(LightLayer.SKY, pos);
-                LIGHT[i * SIDE + j] = sky << 20 | Math.max(block, 5) << 4;
+                LIGHT[i * SIDE + j] = sky << 20 | Mth.clamp(block, 5, 9) << 4;  // lamps tint it but don't light up every fleck
             }
         }
         ready = true;
@@ -114,14 +114,15 @@ final class GroundFog {
         drift += (0.25 + 0.9 * w.wind() - drift) * ease;
         float flash = WeatherView.flash();
         // many thin sheets, sparser the higher they lie, so the mist has depth and no top surface
-        int layers = Mth.clamp(4 + Math.round(thick * 3), 4, 8);
-        float strength = (float) Math.min(0.6, 0.42 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
-        // the speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into smooth haze
-        double jitterU = Math.random(), jitterV = Math.random();
+        // each sheet stays faint (its flecks barely over what the pack keeps, so none of them stands out
+        // as a dot); the thickness comes from stacking many of them, each speckled differently
+        int layers = Mth.clamp(8 + Math.round(thick * 4), 8, 13);
+        float strength = (float) Math.min(0.22, 0.2 * c.mistAmount * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        // every sheet's speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into haze
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),
                 (pose, out) -> {
                     for (int layer = 0; layer < layers; layer++) {
-                        float lift = 0.08f + layer * 0.22f;
+                        float lift = 0.06f + layer * 0.13f;
                         // each sheet drifts its own way through the wind, so they shear past each other
                         double turn = (layer % 2 == 0 ? 1 : -1) * 0.3 * layer;
                         double dx = windX * Math.cos(turn) - windZ * Math.sin(turn), dz = windX * Math.sin(turn) + windZ * Math.cos(turn);
@@ -130,8 +131,8 @@ final class GroundFog {
                         OFF_X[layer] += dx * drift * dt * (1 + 0.12 * layer);
                         OFF_Z[layer] += dz * drift * dt * (1 + 0.12 * layer);
                         // sparser the higher it lies, fading out to nothing at the top
-                        float alpha = strength * (1 - layer / (float) (layers + 1));
-                        sheet(pose, out, eye, lift, layer, alpha, jitterU + layer * 0.29, jitterV + layer * 0.53);
+                        float alpha = strength * (1 - 0.6f * layer / (float) layers);
+                        sheet(pose, out, eye, lift, layer, alpha, Math.random(), Math.random());
                     }
                 });
     }
