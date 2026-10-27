@@ -76,11 +76,12 @@ public final class ShoulderCam {
         Vec3 fwd = player.getViewVector(partialTick);
         Vec3 right = fwd.cross(new Vec3(0, 1, 0));
         right = right.lengthSqr() < 1e-6 ? Vec3.directionFromRotation(0, player.getViewYRot(partialTick) + 90) : right.normalize();
-        Vec3 up = right.cross(fwd).normalize();
         double back = lerp(look.shoulderBack, look.shoulderAimBack, aim);
         double across = lerp(look.shoulderSide, look.shoulderAimSide, aim) * side;
-        // the shoulder first (so a wall at your side stops it there), then back from it
-        Vec3 shoulderAt = clip(mc, entity, eye, eye.add(right.scale(across)).add(up.scale(look.shoulderUp)));
+        double rise = lerp(look.shoulderUp, look.shoulderAimUp, aim);
+        // the shoulder first (so a wall at your side stops it there), then back from it; raised straight up, so it
+        // looks down on you whichever way you look
+        Vec3 shoulderAt = clip(mc, entity, eye, eye.add(right.scale(across)).add(0, rise, 0));
         Vec3 pos = clip(mc, entity, shoulderAt, shoulderAt.subtract(fwd.scale(back)));
 
         // the point the eyes' line meets: what the middle of the screen must show. Eased, so looking past an edge
