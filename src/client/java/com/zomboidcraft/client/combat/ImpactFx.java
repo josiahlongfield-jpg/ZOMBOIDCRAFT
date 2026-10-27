@@ -93,6 +93,16 @@ public final class ImpactFx {
                 Direction face = Direction.from3DDataValue(impact.face());
                 BlockState state = Block.stateById(impact.block());
                 Vec3 n = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
+                com.zomboidcraft.combat.Surface surface = com.zomboidcraft.combat.Surface.of(state);
+                if (surface == com.zomboidcraft.combat.Surface.CAR) {
+                    // a car's body is an unseen block round the model: sparks and a puff, no hole hanging in the air
+                    for (int i = 0; i < 6; i++) {
+                        Vec3 v = n.scale(0.2).add(jitter(0.25));
+                        lvl.addParticle(ParticleTypes.ELECTRIC_SPARK, p.x, p.y, p.z, v.x, v.y, v.z);
+                    }
+                    lvl.addParticle(ParticleTypes.SMOKE, p.x + n.x * 0.05, p.y + n.y * 0.05, p.z + n.z * 0.05, 0, 0.01, 0);
+                    return;
+                }
                 // chips of the block thrown back out, a puff of its dust hanging there, sparks off metal
                 int chips = Math.round(6 * impact.size());
                 for (int i = 0; i < chips; i++) {
@@ -106,8 +116,7 @@ public final class ImpactFx {
                             n.x * 0.02, n.y * 0.02 + 0.01, n.z * 0.02);
                 }
                 lvl.addParticle(ParticleTypes.SMOKE, p.x + n.x * 0.05, p.y + n.y * 0.05, p.z + n.z * 0.05, 0, 0.01, 0);
-                if (state.getSoundType() == SoundType.METAL || state.getSoundType() == SoundType.CHAIN
-                        || state.getSoundType() == SoundType.ANVIL) {
+                if (surface == com.zomboidcraft.combat.Surface.METAL) {
                     for (int i = 0; i < 4; i++) {
                         Vec3 v = n.scale(0.2).add(jitter(0.2));
                         lvl.addParticle(ParticleTypes.ELECTRIC_SPARK, p.x, p.y, p.z, v.x, v.y, v.z);

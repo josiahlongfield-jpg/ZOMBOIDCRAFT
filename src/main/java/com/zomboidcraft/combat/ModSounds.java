@@ -118,6 +118,15 @@ public final class ModSounds {
     public static final SoundEvent CASING = register("weapon.casing");
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");
+    /** A bullet striking each kind of surface (Surface): heard a street or so away. */
+    public static final SoundEvent IMPACT_GROUND = register("weapon.bullet.impact.ground", 40f);
+    public static final SoundEvent IMPACT_CONCRETE = register("weapon.bullet.impact.concrete", 40f);
+    public static final SoundEvent IMPACT_BRICK = register("weapon.bullet.impact.brick", 40f);
+    public static final SoundEvent IMPACT_WOOD = register("weapon.bullet.impact.wood", 40f);
+    public static final SoundEvent IMPACT_METAL = register("weapon.bullet.impact.metal", 48f);
+    public static final SoundEvent IMPACT_CAR = register("weapon.bullet.impact.car", 48f);
+    public static final SoundEvent IMPACT_GLASS = register("weapon.bullet.impact.glass", 48f);
+    public static final SoundEvent IMPACT_SOFT = register("weapon.bullet.impact.soft", 24f);
     public static final SoundEvent SWING = register("weapon.melee.swing");
     public static final SoundEvent SWING_HEAVY = register("weapon.melee.swing_heavy");
     public static final SoundEvent HIT_BLUNT = register("weapon.melee.hit_blunt");
