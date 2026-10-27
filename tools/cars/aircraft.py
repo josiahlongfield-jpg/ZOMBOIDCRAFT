@@ -918,7 +918,7 @@ SPECS = {
         cockpit=('interior.001',), cockpit_px=128, atlas=(2048, 2048),
         # the tail wheel snapped off: the boom sinks onto the deck
         lost_when_wrecked=(lambda ac: ac.objects(('wheels',)) & (ac.P.mean(1)[:, 2] < -6.5),), sag=(-1, 3.0),
-        wheelbase=10.75, eyes=[(0.0, 2.98, 3.0), (0.0, 2.6, 4.35)],
+        wheelbase=10.75, eyes=[(0.0, 2.6, 4.35), (0.0, 2.98, 3.0)],
         tone=lambda c, p, n, cls, mat: c * 1.08,
         soot=[(1.1, 2.7, -1.8, 0.4), (-1.1, 2.7, -1.8, 0.4)],
         marks=dict(
