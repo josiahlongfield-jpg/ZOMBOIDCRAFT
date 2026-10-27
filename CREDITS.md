@@ -346,3 +346,9 @@ Jets and helicopters crossing the map (world events), picked by Josiah Longfield
 | world.flyby.jet 2 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | world.flyby.jet 3 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | world.flyby.heli 1 | Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040 (Pole Position - The Aircraft Ambient Library) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+
+## OTTO's voice (train conductor)
+
+Spoken with the Piper text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl) using the
+"joe" voice (en_US-joe-medium, dataset licence CC0, https://huggingface.co/rhasspy/piper-voices),
+then given a robot and train-speaker treatment with ffmpeg. Made by tools/trains/otto_voice.py.
