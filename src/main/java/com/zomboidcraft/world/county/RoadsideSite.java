@@ -318,10 +318,25 @@ final class RoadsideSite extends Site {
                     q.set(x, 8, z, Bldg.full(roof));
                 }
             }
-            // the stair up at the end
+            // the stair up at the end, two wide in line with the walkway, climbing onto a landing at its end
             for (int k = 0; k < 4; k++) {
-                q.set(bx1 + 1, 1 + k, bz - 2 - 4 + k, "steel_stairs[facing=south]");
+                for (int z = bz - 2; z <= bz - 1; z++) {
+                    q.set(bx1 + 6 - k, 1 + k, z, "steel_stairs[facing=west]");
+                    for (int r = 1; r <= 3; r++) {
+                        q.set(bx1 + 6 - k, 1 + k + r, z, "air");
+                    }
+                }
+                q.set(bx1 + 6 - k, 2 + k, bz - 2, "ext_rail_edge_dark[facing=north]");
+                q.set(bx1 + 6 - k, 2 + k, bz - 1, "ext_rail_edge_dark[facing=south]");
             }
+            for (int x = bx1 + 1; x <= bx1 + 2; x++) {
+                q.set(x, 4, bz - 2, "deck_steel");
+                q.set(x, 4, bz - 1, "deck_steel");
+                q.set(x, 5, bz - 2, "railing[axis=x]");
+            }
+            // and from the landing on up beside the rooms to a hut on the roof, its doors out onto it
+            RoofHut.flight(q.turned(bx1 + 2, 0, bz - 1, 1), rng, 0, 0, 4, 8, wall, "steel_stairs", "south",
+                    "ext_rail_edge_dark");
             parking(q, 2, bx1 - 1, bz - 8, 0.35, CARS);
             rooms = 2 * n;
         } else {

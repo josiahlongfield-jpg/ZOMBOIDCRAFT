@@ -23,6 +23,7 @@ public final class Builders {
         if (out instanceof Voxels v) {
             clearHeadroom(v);
             fitHatches(v);
+            clearDoorways(v);
             clearGrass(v);
             clearTrees(v);
         }
@@ -50,7 +51,8 @@ public final class Builders {
         for (int[] t : treads) {
             for (int k = 1; k <= 3; k++) {
                 String b = v.get(t[0], t[1] + k, t[2]);
-                if (b != null && !tread(b) && !b.contains("door")) {
+                // a banister up the flight's edge stays: it stands at the side, clear of heads
+                if (b != null && !tread(b) && !b.contains("door") && !b.contains("rail_edge") && !b.contains("banister")) {
                     v.set(t[0], t[1] + k, t[2], "air");
                 }
             }
@@ -91,6 +93,35 @@ public final class Builders {
                     + ",open=" + (open == null ? "false" : open) + "]");
         }
     }
+
+    /**
+     * Nothing underfoot right in front of a door or behind it: rubble, a trash bag or a box there
+     * lifts a body high enough that its head meets the lintel, and the doorway can't be walked
+     * through. (Furniture pushed against a door as a barricade is left be.)
+     */
+    static void clearDoorways(Voxels v) {
+        List<String> pal = v.palette();
+        List<int[]> doors = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            String b = id == 0 ? null : pal.get(id);
+            if (b != null && b.contains("door") && b.contains("half=lower") && !b.contains("trapdoor")) {
+                String f = prop(b, "facing");
+                doors.add(new int[] {x, y, z, "north".equals(f) || "south".equals(f) ? 1 : 0});
+            }
+        });
+        for (int[] d : doors) {
+            for (int s = -1; s <= 1; s += 2) {
+                int x = d[0] + (d[3] == 0 ? s : 0), z = d[2] + (d[3] == 1 ? s : 0);
+                String b = v.get(x, d[1], z);
+                if (b != null && LITTER.matcher(b).find()) {
+                    v.set(x, d[1], z, "air");
+                }
+            }
+        }
+    }
+
+    private static final java.util.regex.Pattern LITTER =
+            java.util.regex.Pattern.compile("^(rubble|trash_bag|debris|cardboard_box|brick_pile|ch_rubble|home_boxes)");
 
     private static final Map<String, String> OPPOSITE = Map.of("north", "south", "south", "north", "east", "west", "west", "east");
 

@@ -144,6 +144,12 @@ class Shapes:
         kind, decor, boxes = spec
         if decor or kind in ("DOOR", "TRAPDOOR"):
             return [], name in self.climb
+        if "stairs" in name:
+            # a steel flight's side stringers are a pixel thick: a body fits between them, though
+            # not the half-block lattice this walks on, so they're left out
+            boxes = [b for b in boxes if min(b[3] - b[0], b[5] - b[2]) > 2]
+            # and its bottom plate is what you stand on over an open frame, not a rug to walk over
+            boxes = [b[:4] + [max(b[4], 4)] + b[5:] if b[1] <= 0 and b[4] <= 2 else b for b in boxes]
         if kind in ("FACING",) or (kind == "PLAIN" and False):
             boxes = [rot(b, p.get("facing", "north")) for b in boxes]
         elif kind == "AXIS" and p.get("axis") == "x":

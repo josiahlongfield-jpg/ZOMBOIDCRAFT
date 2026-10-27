@@ -57,6 +57,38 @@ public final class RoofHut {
         }
     }
 
+    /**
+     * A straight flight two wide from a top floor's slab at y up through the flat roof at roofY,
+     * with the hut over its head. Drawn climbing east from its foot at x0, in lanes z0 and z0 + 1:
+     * the first tread at x0 + 1, the last in the roof's plane at x0 + h (h = roofY - y), then a
+     * landing two long at roof level; draw it in a turned frame to climb another way. The hut
+     * stands over the last treads and the landing (x0 + h - 4 .. x0 + h + 3 by z0 - 1 .. z0 + 2,
+     * walls on that edge), its doors in its north wall (doorSide "north") or south over the
+     * landing. Needs the top floor clear over the lanes from x0 to x0 + h + 2. A rail, when
+     * given, runs up the flight's south side (an edge piece, as ext_rail_edge_dark).
+     */
+    public static void flight(Placer p, SplittableRandom rng, int x0, int z0, int y, int roofY, String wall,
+                              String tread, String doorSide, String rail) {
+        int h = roofY - y;
+        for (int i = 1; i <= h; i++) {
+            for (int z = z0; z <= z0 + 1; z++) {
+                p.set(x0 + i, y + i, z, tread + "[facing=east]");
+                for (int r = 1; r <= 3; r++) {
+                    p.set(x0 + i, y + i + r, z, "air");
+                }
+            }
+            if (rail != null && y + i + 1 < roofY) {
+                p.set(x0 + i, y + i + 1, z0 + 1, rail + "[facing=south]");
+            }
+        }
+        for (int x = x0 + h + 1; x <= x0 + h + 2; x++) {
+            for (int z = z0; z <= z0 + 1; z++) {
+                p.set(x, roofY, z, "roof");
+            }
+        }
+        build(p, rng, x0 + h - 4, z0 - 1, x0 + h + 3, z0 + 2, roofY, wall, x0 + h + 1, doorSide);
+    }
+
     private static boolean stair(String b) {
         return b != null && (b.contains("stairs") || b.contains("ladder"));
     }
