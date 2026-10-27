@@ -83,8 +83,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     /** A flyby still drawn from far off (FarFlybys) hides the real one there, which trails a little behind it. */
     @Override
-    public boolean shouldRender(CarProp car, net.minecraft.client.renderer.culling.Frustum frustum, double x, double y, double z) {
-        return !FarFlybys.covers(car) && super.shouldRender(car, frustum, x, y, z);
+    public boolean shouldRender(CarProp car, net.minecraft.client.renderer.culling.Frustum frustum, double x, double y, double z, float partialTick) {
+        return !FarFlybys.covers(car) && super.shouldRender(car, frustum, x, y, z, partialTick);
     }
 
     /** The whole car, not the entity's small box, decides whether it's on screen. */
