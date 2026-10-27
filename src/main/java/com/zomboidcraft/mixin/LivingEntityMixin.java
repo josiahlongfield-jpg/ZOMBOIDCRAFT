@@ -48,8 +48,17 @@ public abstract class LivingEntityMixin {
     }
 
     /** A blade cuts a zombie without knocking it back; only blunt blows do (CombatEvents.cutJustNow). */
-    @Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
-    private void zomboidcraft$noKnockbackFromCuts(double strength, double x, double z, CallbackInfo ci) {
+    @Inject(method = "knockback(DDDLnet/minecraft/world/damagesource/DamageSource;FZ)V", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$noKnockbackFromCuts(double strength, double x, double z, DamageSource source, float amount,
+            boolean blocked, CallbackInfo ci) {
+        if (CombatEvents.cutJustNow((LivingEntity) (Object) this)) {
+            ci.cancel();
+        }
+    }
+
+    /** The same for the weapon's and a sprint's extra knockback, where it comes this way. */
+    @Inject(method = "knockback(DDD)V", at = @At("HEAD"), cancellable = true, require = 0)
+    private void zomboidcraft$noExtraKnockbackFromCuts(double strength, double x, double z, CallbackInfo ci) {
         if (CombatEvents.cutJustNow((LivingEntity) (Object) this)) {
             ci.cancel();
         }
