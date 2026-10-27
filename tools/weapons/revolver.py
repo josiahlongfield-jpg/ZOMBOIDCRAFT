@@ -78,6 +78,8 @@ HAND = frame_point(0.0, *reversed(_grip(1.15)))         # middle of the shooting
 CYL_AXIS = frame_point(0.0, CYL_Y, CYL_FRONT)
 AXIS_XY = CYL_AXIS[:2]
 PIVOT_POINT = frame_point(PIVOT[0], PIVOT[1], CYL_FRONT)
+HAMMER_PIN = frame_point(0.0, 0.20, 2.23)     # the hammer's pin, low in its front: it turns back about this
+HAMMER_COCK = 32.0                            # degrees it turns back to full cock
 # the loose round first person loads: in the top chamber, its rim on the cylinder's back face
 LOOSE_ROUND = (0.0, 0.0, CYL_BACK)
 
@@ -86,6 +88,15 @@ def _round(b, x, y, r, z0, z1, mat, **kw):
     """A rounder bar along z than Inch.rod: four boxes in steps, for the big round parts."""
     for ca, cb in ((0.98, 0.195), (0.83, 0.556), (0.556, 0.83), (0.195, 0.98)):
         b.box((x - r * ca, y - r * cb, z0), (x + r * ca, y + r * cb, z1), mat, axis=2, round=IN * r, **kw)
+
+
+def hammer_piece(m):
+    """The hammer, drawn apart from the body (the kit's slide) so first person turns it back about its pin to cock
+    it and lets it fall on a shot: its body over the frame and the checkered spur back over the strap."""
+    b = Inch(m, (0.0, BORE_Y, Z0))
+    b.box((-0.13, 0.0, 2.06), (0.13, 0.58, 2.40), 'hammer')
+    b.seg((2.30, 0.49), (2.84, 0.49), 0.18, 0.34, 'hammer', over=0.0)
+    b.seg((2.84, 0.49), (3.20, 0.34), 0.18, 0.34, 'hammer', over=0.04)
 
 
 def body(m):
@@ -119,9 +130,7 @@ def body(m):
     b.box((-0.52, -0.40, CYL_BACK + 0.36), (-0.42, -0.12, CYL_BACK + 0.90), 'latch')
     # ---- the hammer, its spur back over the frame, resting on the back strap's top; the trigger and its guard
     # (all of it under the line of sight: the spur's top is 0.05" below the rear notch's)
-    b.box((-0.13, 0.0, 2.06), (0.13, 0.58, 2.40), 'hammer')
-    b.seg((2.30, 0.49), (2.84, 0.49), 0.18, 0.34, 'hammer', over=0.0)
-    b.seg((2.84, 0.49), (3.20, 0.34), 0.18, 0.34, 'hammer', over=0.04)
+    # (the hammer itself is drawn apart, hammer_piece, so first person can cock it and let it fall)
     b.box((-0.42, 0.25, 2.40), (0.42, 0.40, 3.0), fr)                     # the frame round the hammer, under its spur
     b.seg((1.65, FRAME_BOT), (1.65, -1.78), 0.17, 0.34, 'trigger', over=0.04)    # back in the guard,
     b.seg((1.65, -1.78), (1.53, -2.04), 0.16, 0.34, 'trigger', over=0.04)        # its tip curving forward
