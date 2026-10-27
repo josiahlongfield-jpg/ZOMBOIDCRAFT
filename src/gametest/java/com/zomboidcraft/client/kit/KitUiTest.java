@@ -543,6 +543,13 @@ public class KitUiTest implements FabricClientGameTest {
             mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
         });
         sp.getServer().runCommand("kill @e[type=minecraft:armor_stand]");
+        // and drawn flat on a plain screen, turned to show the back
+        for (float turn : new float[]{0f, 35f, 180f}) {
+            ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+            ctx.waitTicks(3);
+            ctx.takeScreenshot("sling-figure-" + Math.round(turn));
+        }
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     /**
@@ -604,6 +611,72 @@ public class KitUiTest implements FabricClientGameTest {
         LOG.info("ZCUI shift right click: {} floor {}", dropped, floor);
         ctx.getInput().pressKey(InputConstants.KEY_E);
         ctx.waitTicks(3);
+    }
+
+    /** A plain screen with the player drawn big, body turned {@code turn} degrees from facing away. */
+    static final class BackView extends Screen {
+        private final float turn;
+        private boolean logged;
+
+        BackView(float turn) {
+            super(net.minecraft.network.chat.Component.literal("back"));
+            this.turn = turn;
+        }
+
+        @Override
+        public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
+            g.fill(0, 0, width, height, 0xFF7A8490);
+            var player = minecraft.player;
+            float body = player.yBodyRot, bodyO = player.yBodyRotO, head = player.yHeadRot, headO = player.yHeadRotO, yaw = player.getYRot(),
+                    yawO = player.yRotO, pitch = player.getXRot(), pitchO = player.xRotO;
+            player.yBodyRot = player.yBodyRotO = turn;
+            player.yHeadRot = player.yHeadRotO = turn;
+            player.setYRot(turn);
+            player.yRotO = turn;
+            player.setXRot(0);
+            player.xRotO = 0;
+            try {
+                for (var m : net.minecraft.client.gui.screens.inventory.InventoryScreen.class.getDeclaredMethods()) {
+                    if (!m.getName().startsWith("extractEntityInInventory") || m.getName().contains("Follows")) continue;
+                    if (!logged) LOG.info("ZCUI back view method {}", m);
+                    Object[] args = new Object[m.getParameterCount()];
+                    int ints = 0;
+                    int[] box = {width / 2 - 90, 4, width / 2 + 90, height - 4};
+                    boolean quat = false, ok = true;
+                    for (int i = 0; i < args.length; i++) {
+                        Class<?> t = m.getParameterTypes()[i];
+                        if (t == int.class) args[i] = box[Math.min(3, ints++)];
+                        else if (t == float.class) args[i] = (height - 8) / player.getBbHeight() / 1.15f;
+                        else if (t.isInstance(g)) args[i] = g;
+                        else if (t == org.joml.Vector3f.class) args[i] = new org.joml.Vector3f(0, player.getBbHeight() / 2 + 0.0625f, 0);
+                        else if (t == org.joml.Quaternionf.class) {
+                            args[i] = quat ? null : new org.joml.Quaternionf().rotateZ((float) Math.PI);
+                            quat = true;
+                        } else if (t.isInstance(player)) args[i] = player;
+                        else ok = false;
+                    }
+                    if (!ok) {
+                        if (!logged) LOG.info("ZCUI back view: can't fill {}", m);
+                        continue;
+                    }
+                    m.setAccessible(true);
+                    m.invoke(null, args);
+                    break;
+                }
+            } catch (Throwable t) {
+                if (!logged) LOG.error("ZCUI back view failed", t);
+            } finally {
+                logged = true;
+                player.yBodyRot = body;
+                player.yBodyRotO = bodyO;
+                player.yHeadRot = head;
+                player.yHeadRotO = headO;
+                player.setYRot(yaw);
+                player.yRotO = yawO;
+                player.setXRot(pitch);
+                player.xRotO = pitchO;
+            }
+        }
     }
 
     /** Keeps the test survivor alive from here on: no zombie bites, no bleeding out, healed. */
