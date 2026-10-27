@@ -92,6 +92,33 @@ public final class ZombieSpawner {
     }
 
     /**
+     * A test horde (/zc horde): this many zombies scattered between half and one and a half times the distance around
+     * the player, dressed for where they stand. Returns how many found room.
+     */
+    public static int spawnAround(ServerLevel level, ServerPlayer player, int count, int distance) {
+        RandomSource random = player.getRandom();
+        int made = 0;
+        for (int i = 0; i < count; i++) {
+            BlockPos pos = null;
+            for (int tries = 0; tries < 6 && pos == null; tries++) {
+                double angle = random.nextDouble() * Math.PI * 2;
+                double r = distance * (0.5 + random.nextDouble());
+                pos = findSpot(level, player.getBlockX() + (int) (Math.cos(angle) * r),
+                        player.getBlockZ() + (int) (Math.sin(angle) * r), player.getBlockY());
+            }
+            Zombie zombie = pos == null ? null : EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
+            if (zombie != null) {
+                String uniform = uniform(level, pos, random);
+                if (uniform != null) {
+                    zombie.setAttached(ZombieLook.OUTFIT, uniform);
+                }
+                made++;
+            }
+        }
+        return made;
+    }
+
+    /**
      * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
      * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
      * patients. Null leaves the zombie to the general mix.

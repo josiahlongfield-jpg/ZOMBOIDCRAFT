@@ -128,6 +128,8 @@ public final class ZcConfig {
          * every tick (they still hear and turn up the same). 0 turns it off.
          */
         public double idleThinkDistance = 32;
+        /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
+        public boolean showStats = false;
     }
 
     public static class Cases {

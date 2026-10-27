@@ -49,9 +49,16 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         if (state.zbody == null || state.isInvisible) {
             return;
         }
+        int lod = ZDetail.level(state.distanceToCameraSq);
+        // counted here, not in ZBodyDraw, so the readout counts walking zombies and not corpses
+        boolean baked = lod >= ZDetail.LOW && state.zlow != null;
+        ZBodyMesh drawn = baked ? state.zlow : state.zbody;
+        int kitLod = baked ? (lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL) : lod;
+        ZDetail.drew(baked ? 2 : Math.min(lod, 2), drawn.quads(true, baked ? ZDetail.FULL : lod, state.legless).length
+                + drawn.quads(false, kitLod, state.legless).length);
         draw.draw(poseStack, collector, light, LivingEntityRenderer.getOverlayCoords(state, 0f), state.zbody,
                 state.zlow, state.zskin, state.zkit, state.zlowSkin, state.zeyes, state.zpose, state.cuts,
-                state.missingLimb, state.legless, state.variant, ZDetail.level(state.distanceToCameraSq));
+                state.missingLimb, state.legless, state.variant, lod);
     }
 
     /**

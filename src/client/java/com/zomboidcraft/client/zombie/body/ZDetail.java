@@ -28,6 +28,11 @@ public final class ZDetail {
     /** How much the view is magnified (squared): 1 normally, the scope's power through one. */
     private static double zoomSq = 1;
 
+    /** What was drawn since the last readout (main pass only): zombies at full, most and baked detail, and quads. */
+    private static final int[] drawn = new int[3];
+    private static long quads;
+    private static int readoutTicks;
+
     private static boolean irisAsked;
     private static Object iris;
     private static Method shadowPass;
@@ -59,6 +64,19 @@ public final class ZDetail {
             }
         }
         Arrays.sort(dist, 0, n);
+        if (++readoutTicks >= 20) {
+            readoutTicks = 0;
+            if (perf.showStats && mc.player != null) {
+                // a second's worth, shared out over the frames drawn in it
+                double frames = Math.max(1, mc.getFps());
+                mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(String.format(
+                        "%d fps · zombies loaded %d · drawn full %d, most %d, baked %d · %,d pieces a frame",
+                        mc.getFps(), n, Math.round(drawn[0] / frames), Math.round(drawn[1] / frames),
+                        Math.round(drawn[2] / frames), Math.round(quads / frames))));
+            }
+            Arrays.fill(drawn, 0);
+            quads = 0;
+        }
         fullSq = Math.min(detail * detail, nth(n, perf.fullDetailZombies));
         midSq = Math.min(detail * detail * 6.25, nth(n, perf.midDetailZombies));
     }
@@ -81,6 +99,14 @@ public final class ZDetail {
             level = Math.max(level, distanceSq < fullSq ? LOW : SIMPLE);
         }
         return level;
+    }
+
+    /** Counts one zombie drawn in the main pass (0 full, 1 most, 2 baked or less), for the stats readout. */
+    public static void drew(int level, int pieces) {
+        if (!shadowPass()) {
+            drawn[Math.clamp(level, 0, 2)]++;
+            quads += pieces;
+        }
     }
 
     /** Whether a shader pack (through Iris) is drawing its shadow map right now; false without Iris. */
