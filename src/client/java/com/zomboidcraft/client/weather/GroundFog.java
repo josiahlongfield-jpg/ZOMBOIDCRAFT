@@ -23,13 +23,15 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The mist lying on the ground: a few thin sheets of fog stacked just over the street, draped
- * over the ground round you, each sliding its own way with the wind so the mist wisps and
- * curls along. Seen from above it's thin; looking along the street the sheets pile up into a
- * low bank. In fog the stack grows taller.
+ * The mist lying on the ground: thin sheets of fog stacked just over the street, draped over
+ * the ground round you, sparser the higher they lie. How thick the mist is comes from soft cloud
+ * noise drifting with the wind, a little differently in each sheet, so it wisps and curls along.
+ * In fog the stack grows taller.
  *
- * Shader packs drop anything fainter than about a tenth, so the sheets never go that faint:
- * where the fog texture thins, the sheet opens into holes instead, which reads as wisps.
+ * Shader packs drop anything fainter than about a tenth, which turns a soft fade into a hard
+ * edge. So the sheets are speckle, not smooth: each pixel a random strength, and the thinner the
+ * mist the fewer pixels clear the bar. The speckle moves every frame and the pack's frame
+ * blending smooths it into haze that thins out to nothing, with no edge anywhere.
  */
 final class GroundFog {
     private static final Identifier TEXTURE = ZomboidCraft.id("textures/effect/ground_fog.png");
@@ -41,8 +43,10 @@ final class GroundFog {
     private static int originX, originZ, clock;
     private static boolean ready;
     private static float thick;
-    /** Each sheet's drift so far (texture repeats), the wind it's following, and the last frame's time. */
-    private static final double[] OFF_U = new double[8], OFF_V = new double[8];
+    /** Each sheet's drift so far in blocks, the wind it's following, and the last frame's time. */
+    private static final double[] OFF_X = new double[8], OFF_Z = new double[8];
+    /** How many times the speckle tile repeats across one quad (CELL blocks): about 4 texture pixels a block-sixteenth. */
+    private static final double SPECKLE = 1.5;
     private static double windX, windZ = 1, drift = 0.25, lastT = Double.NaN;
 
     /** Every tick: follow the player, and every half second re-read the ground under the fog. */
@@ -109,31 +113,31 @@ final class GroundFog {
         windZ += (Math.cos(yaw) - windZ) * ease;
         drift += (0.25 + 0.9 * w.wind() - drift) * ease;
         float flash = WeatherView.flash();
-        // the low sheets always; more of them, higher up, as fog comes in
-        int layers = Mth.clamp(1 + Math.round(thick * 3), 2, 5);
-        float strength = (float) Math.min(1, 0.27 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        // many thin sheets, sparser the higher they lie, so the mist has depth and no top surface
+        int layers = Mth.clamp(4 + Math.round(thick * 3), 4, 8);
+        float strength = (float) Math.min(0.6, 0.42 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        // the speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into smooth haze
+        double jitterU = Math.random(), jitterV = Math.random();
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),
                 (pose, out) -> {
                     for (int layer = 0; layer < layers; layer++) {
-                        float lift = 0.12f + layer * (0.28f + 0.1f * layer);
-                        // each sheet its own scale and way through the wind, so they shear past each other
-                        double scale = 22 + layer * 9;
-                        double turn = (layer % 2 == 0 ? 1 : -1) * 0.35 * layer;
+                        float lift = 0.08f + layer * 0.22f;
+                        // each sheet drifts its own way through the wind, so they shear past each other
+                        double turn = (layer % 2 == 0 ? 1 : -1) * 0.3 * layer;
                         double dx = windX * Math.cos(turn) - windZ * Math.sin(turn), dz = windX * Math.sin(turn) + windZ * Math.cos(turn);
                         // moved on by this frame's share of the wind, never worked out from the clock: a
                         // wind that turns or picks up then just steers the drift instead of jumping it
-                        OFF_U[layer] = (OFF_U[layer] + dx * drift * dt * (1 + 0.15 * layer) / scale) % 1;
-                        OFF_V[layer] = (OFF_V[layer] + dz * drift * dt * (1 + 0.15 * layer) / scale) % 1;
-                        double offU = OFF_U[layer] + layer * 0.37, offV = OFF_V[layer] + layer * 0.61;
-                        // thinner the higher it lies
-                        float alpha = strength * (1 - 0.09f * layer);
-                        sheet(pose, out, eye, lift, scale, offU, offV, alpha);
+                        OFF_X[layer] += dx * drift * dt * (1 + 0.12 * layer);
+                        OFF_Z[layer] += dz * drift * dt * (1 + 0.12 * layer);
+                        // sparser the higher it lies, fading out to nothing at the top
+                        float alpha = strength * (1 - layer / (float) (layers + 1));
+                        sheet(pose, out, eye, lift, layer, alpha, jitterU + layer * 0.29, jitterV + layer * 0.53);
                     }
                 });
     }
 
-    private static void sheet(PoseStack.Pose pose, VertexConsumer out, Vec3 eye, float lift, double scale,
-                              double offU, double offV, float alpha) {
+    private static void sheet(PoseStack.Pose pose, VertexConsumer out, Vec3 eye, float lift, int layer, float alpha,
+                              double ju, double jv) {
         for (int i = 0; i < SIDE - 1; i++) {
             for (int j = 0; j < SIDE - 1; j++) {
                 int a = i * SIDE + j, b = (i + 1) * SIDE + j, cc = (i + 1) * SIDE + j + 1, d = i * SIDE + j + 1;
@@ -145,29 +149,59 @@ final class GroundFog {
                 if (hi - lo > STEP) {
                     continue;
                 }
-                // the texture repeats; keep each quad's coordinates near 0..1 whether or not the sampler wraps
-                double su = Math.floor((originX + i * CELL) / scale - offU), sv = Math.floor((originZ + j * CELL) / scale - offV);
-                corner(pose, out, eye, i, j, ha, lift, scale, offU + su, offV + sv, alpha, LIGHT[a]);
-                corner(pose, out, eye, i, j + 1, hd, lift, scale, offU + su, offV + sv, alpha, LIGHT[d]);
-                corner(pose, out, eye, i + 1, j + 1, hc, lift, scale, offU + su, offV + sv, alpha, LIGHT[cc]);
-                corner(pose, out, eye, i + 1, j, hb, lift, scale, offU + su, offV + sv, alpha, LIGHT[b]);
+                corner(pose, out, eye, i, j, 0, 0, ha, lift, layer, alpha, ju, jv, LIGHT[a]);
+                corner(pose, out, eye, i, j + 1, 0, 1, hd, lift, layer, alpha, ju, jv, LIGHT[d]);
+                corner(pose, out, eye, i + 1, j + 1, 1, 1, hc, lift, layer, alpha, ju, jv, LIGHT[cc]);
+                corner(pose, out, eye, i + 1, j, 1, 0, hb, lift, layer, alpha, ju, jv, LIGHT[b]);
             }
         }
     }
 
-    private static void corner(PoseStack.Pose pose, VertexConsumer out, Vec3 eye, int i, int j, float ground, float lift,
-                               double scale, double offU, double offV, float alpha, int light) {
+    /**
+     * One corner of a quad. How thick the mist is here comes from the drifting cloud noise and
+     * fades out toward the edge of the patch, and it's carried in the corner's alpha. The texture
+     * is pure speckle (each pixel a random strength): the pack drops the pixels too faint to keep,
+     * so a thinner corner keeps fewer of them, and the thickness fades smoothly to nothing with
+     * no edge anywhere.
+     */
+    private static void corner(PoseStack.Pose pose, VertexConsumer out, Vec3 eye, int i, int j, int du, int dv, float ground,
+                               float lift, int layer, float alpha, double ju, double jv, int light) {
         double x = originX + i * CELL, z = originZ + j * CELL;
-        // the edge of the patch thins out; past a tenth the pack drops it, so the rim breaks up along the wisps
         double away = Math.hypot(x - eye.x, z - eye.z);
-        float a = alpha * (float) Mth.clamp((REACH - 2 - away) / 12.0, 0, 1);
+        float edge = (float) Mth.clamp((REACH - 2 - away) / 14.0, 0, 1);
+        float cloud = cloud(x - OFF_X[layer] + layer * 31.7, z - OFF_Z[layer] - layer * 17.3);
+        float a = alpha * edge * cloud;
         int col = Mth.clamp((int) (a * 255), 0, 255) << 24 | 0x9A9EA8;
+        // the speckle tile spans one quad
         out.addVertex(pose, (float) (x - eye.x), (float) (ground + lift - eye.y), (float) (z - eye.z))
                 .setColor(col)
-                .setUv((float) (x / scale - offU), (float) (z / scale - offV))
+                .setUv((float) (du * SPECKLE + ju), (float) (dv * SPECKLE + jv))
                 .setOverlay(OverlayTexture.NO_OVERLAY)
                 .setLight(light)
                 .setNormal(pose, 0, 1, 0);
+    }
+
+    /** Soft drifting thickness, 0.15..1: two octaves of smooth value noise over the world. */
+    private static float cloud(double x, double z) {
+        double v = 0.65 * noise(x / 14, z / 14) + 0.35 * noise(x / 5.5 + 7.1, z / 5.5 - 3.3);
+        return (float) Mth.clamp(0.15 + 1.1 * (v - 0.2), 0.15, 1);
+    }
+
+    private static double noise(double x, double z) {
+        int x0 = Mth.floor(x), z0 = Mth.floor(z);
+        double fx = x - x0, fz = z - z0;
+        fx = fx * fx * (3 - 2 * fx);
+        fz = fz * fz * (3 - 2 * fz);
+        double a = hash(x0, z0), b = hash(x0 + 1, z0), c = hash(x0, z0 + 1), d = hash(x0 + 1, z0 + 1);
+        return Mth.lerp(fz, Mth.lerp(fx, a, b), Mth.lerp(fx, c, d));
+    }
+
+    private static double hash(int x, int z) {
+        long h = x * 0x9E3779B97F4A7C15L ^ z * 0xC2B2AE3D27D4EB4FL;
+        h ^= h >>> 29;
+        h *= 0xBF58476D1CE4E5B9L;
+        h ^= h >>> 32;
+        return (h & 0xFFFFFF) / (double) 0xFFFFFF;
     }
 
     private GroundFog() {
