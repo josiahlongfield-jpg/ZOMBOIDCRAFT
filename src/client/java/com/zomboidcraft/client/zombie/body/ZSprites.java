@@ -99,6 +99,43 @@ public final class ZSprites {
         }
     }
 
+    /**
+     * The same card for a figure with no entity behind it (CrowdFx): feet at (ox, oy, oz) from the camera, facing
+     * {@code yaw} degrees, drawn through a pose at the camera. Works out the model space an entity's renderer would
+     * have set up (turned 180 - yaw, flipped, raised 1.501) by hand, so a whole crowd goes in one batch.
+     */
+    public static void cardAt(Sheet sheet, int frame, float ox, float oy, float oz, float yaw, PoseStack.Pose pose,
+            VertexConsumer out, int light, int overlay) {
+        double t = Math.toRadians(180f - yaw);
+        float cos = (float) Math.cos(t), sin = (float) Math.sin(t);
+        // the camera in the figure's model space: back through the turn, then the flip (only x and z matter)
+        float cx = -ox, cz = -oz;
+        float mx = -(cx * cos - cz * sin), mz = cx * sin + cz * cos;
+        double a = Math.atan2(mx, mz);
+        int side = (int) Math.floorMod(Math.round(a / (Math.PI * 2 / SIDES)), SIDES);
+        float ang = (float) (side * Math.PI * 2 / SIDES);
+        float dx = (float) Math.sin(ang), dz = (float) Math.cos(ang);
+        float rx = dz, rz = -dx;
+        float[] uv = sheet.uv(side, frame);
+        float[][] corners = {{-HALF_W, TOP, uv[0], uv[1]}, {-HALF_W, BOTTOM, uv[0], uv[3]},
+                {HALF_W, BOTTOM, uv[2], uv[3]}, {HALF_W, TOP, uv[2], uv[1]}};
+        // model (x, y, z) -> flipped (-x, 1.501 - y, z) -> turned about y -> from the camera
+        float nx = -dx * cos + dz * sin, nz = dx * sin + dz * cos;
+        for (int face = 0; face < 2; face++) {
+            float s = face == 0 ? 1f : -1f;
+            for (int i = 0; i < 4; i++) {
+                float[] c = corners[face == 0 ? i : 3 - i];
+                float fx = -(rx * c[0]), fy = 1.501f - c[1], fz = rz * c[0];
+                out.addVertex(pose, ox + fx * cos + fz * sin, oy + fy, oz - fx * sin + fz * cos)
+                        .setColor(-1)
+                        .setUv(c[2], c[3])
+                        .setOverlay(overlay)
+                        .setLight(light)
+                        .setNormal(pose, nx * s, 0f, nz * s);
+            }
+        }
+    }
+
     private static Sheet make(String outfit, ZBodyMesh low, Identifier skinId, Identifier kitId) throws Exception {
         long start = System.nanoTime();
         int[][] skin = read(skinId), kit = read(kitId);
