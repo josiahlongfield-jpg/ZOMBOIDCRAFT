@@ -689,14 +689,18 @@ final class Library {
             }
         }
         // it climbs north to come out on the cross aisle's deck, where every upper aisle starts
-        for (int k = 0; k < 3; k++) {
-            p.set(ax, y + 1 + k, zb + 4 - k, "steel_stairs[facing=north]");
+        // (the deck open over its foot too: a head stepping onto the first tread from under the
+        // deck's edge met it)
+        for (int k = zb + 5 < z1 ? -1 : 0; k < 3; k++) {
+            if (k >= 0) {
+                p.set(ax, y + 1 + k, zb + 4 - k, "steel_stairs[facing=north]");
+            }
             if (k < 2) {
                 p.set(ax, deck, zb + 4 - k, "air");
             }
         }
-        if (zb + 5 < z1) {
-            p.set(ax, deck + 1, zb + 5, "railing[facing=north]");
+        if (zb + 6 < z1) {
+            p.set(ax, deck + 1, zb + 6, "railing[facing=north]");
         }
         // the stair down to the basement: its top in the floor at the cross aisle, the well behind a rail
         for (int k = 0; k <= F1 - BASE - 1; k++) {
@@ -724,6 +728,9 @@ final class Library {
         }
         books(sx + 1, zb + 1, x1, z1 - 1, y + 1, 0.12);
         books(sx, zb + 1, x1, z1 - 1, deck + 1, 0.08);
+        if (zb + 5 < z1) {
+            p.set(ax, y + 1, zb + 5, "air");
+        }
         // the rolling steps left at the cross aisle's far end, clear of the doors in
         p.setIfAir(x1, y + 1, zb + 1, rng.nextDouble() < 0.5 ? "trade_stepladder[facing=south]" : "cardboard_box[facing=east]");
     }

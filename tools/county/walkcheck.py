@@ -250,10 +250,11 @@ def main():
                                 yy, zz, xx = ys * Q + sy, zs * Q + sz, xs * Q + sx
                                 ok = (yy >= 0) & (yy < h * Q) & (zz >= 0) & (zz < dz * Q) & (xx >= 0) & (xx < dx * Q)
                                 occ[yy[ok], zz[ok], xx[ok]] = True
-            # a plate over air holds a body at the block's foot: the top quarter under it counts
+            # a plate over air holds a body at the block's foot: its own bottom quarter counts (a
+            # touch high to stand on, but the room under it stays whole)
             ys, zs, xs = np.nonzero(plate[v][1:] & ~stamp[v[:-1]].any(axis=(3, 4, 5)))
             for y_, z_, x_ in zip(ys + 1, zs, xs):
-                occ[y_ * Q - 1, z_ * Q:(z_ + 1) * Q, x_ * Q:(x_ + 1) * Q] = True
+                occ[y_ * Q, z_ * Q:(z_ + 1) * Q, x_ * Q:(x_ + 1) * Q] = True
             n = h * Q
             foot = occ.reshape(n, dz * 2, 2, dx * 2, 2).any(axis=(2, 4))
             del occ
