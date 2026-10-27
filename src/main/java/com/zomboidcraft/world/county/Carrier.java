@@ -3174,7 +3174,9 @@ final class Carrier {
                     p.set(x, HANGAR, z, "bunk_walkway");
                     p.set(x, HANGAR - 1, z, z % 4 == 0 ? "steel_girder" : "air");
                 }
+                // two steps up off the wharf onto the brow (its walkway tops out a block over the first)
                 p.set(x, 1, quayZ, "steel_stairs[facing=north]");
+                p.set(x, HANGAR, quayZ - 1, "steel_stairs[facing=north]");
             }
             for (int z = 20; z < quayZ; z++) {
                 p.set(bx - 1, HANGAR + 1, z, "vessel_rail[axis=z]");

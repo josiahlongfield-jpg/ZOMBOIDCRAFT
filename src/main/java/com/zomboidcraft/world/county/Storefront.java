@@ -139,7 +139,8 @@ final class Storefront {
         b.lights(0, 0, w - 1, d - 1, STOREY - 1, 0.05);
         if (stairs) {
             // the hotel's stairs inside at the back, a floor of rooms off each landing
-            trades.hotelStairs(floors, STOREY, b.lit);
+            // up through a flat roof into a hut (a false front's pitched roof has no way out)
+            trades.hotelStairs(floors, STOREY, b.lit, style == Style.FALSE_FRONT ? null : wall);
         } else if (floors > 1) {
             // a flat on each floor over the shop (rooms in a small hotel), up the porches at the back
             int[] doors = new int[floors];
@@ -148,7 +149,7 @@ final class Storefront {
                         : Flats.floor(p, rng, w, d - 1, k * STOREY, 1, b.lit);
                 Doors.abandoned(p, rng, doors[k], k * STOREY + 1, d - 1, Doors.FLAT, "north", Doors.hinge(rng));
             }
-            Flats.porches(p, rng, w, d, floors, STOREY, doors);
+            Flats.porches(p, rng, w, d, floors, STOREY, doors, style != Style.FALSE_FRONT);
         }
         weather(roofY);
     }

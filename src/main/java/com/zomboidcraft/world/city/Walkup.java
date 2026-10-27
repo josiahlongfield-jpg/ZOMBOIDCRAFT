@@ -50,11 +50,12 @@ public final class Walkup {
         for (int k = 0; k < (flats ? 1 : floors); k++) {
             interior(k * FLOOR);
         }
-        if (flats) {
-            // a stairwell up the back and a flat on every floor, furnished room by room
-            Flats.stairwell(p, rng, w, d, floors, FLOOR, 0.03);
-        }
         roof(roofY);
+        if (flats) {
+            // a stairwell up the back and a flat on every floor, furnished room by room, and on up
+            // through the roof into a hut with a door out onto it
+            Flats.stairwell(p, rng, w, d, floors, FLOOR, 0.03, wall);
+        }
         glowingRooms();
         if (w >= 9 && floors >= 3) {
             fireEscape(roofY);
@@ -232,13 +233,15 @@ public final class Walkup {
                 p.set(x, roofY, z, "roof");
             }
         }
+        // the stair hut takes the back east corner of a block of flats (see Flats.stairwell)
+        int clear = flats ? d - 7 : d - 2;
         if (rng.nextDouble() < 0.5) {
-            int x = 1 + rng.nextInt(Math.max(1, w - 4)), z = 2 + rng.nextInt(Math.max(1, d - 5));
+            int x = 1 + rng.nextInt(Math.max(1, w - 4)), z = 2 + rng.nextInt(Math.max(1, clear - 3));
             p.fill(x, roofY + 1, z, x + 1, roofY + 2, z + 1, "hvac");
         }
         if (rng.nextDouble() < 0.4 && w >= 8) {
             // wooden water tower on a steel frame, the old-city silhouette
-            int x = w - 5, z = d - 5;
+            int x = flats ? 1 : w - 5, z = flats ? 1 : d - 5;
             for (int[] leg : new int[][] {{0, 0}, {2, 0}, {0, 2}, {2, 2}}) {
                 p.fill(x + leg[0], roofY + 1, z + leg[1], x + leg[0], roofY + 2, z + leg[1], "steel_mullion");
             }
