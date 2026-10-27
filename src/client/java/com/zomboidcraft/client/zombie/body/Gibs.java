@@ -27,6 +27,9 @@ import org.joml.Vector3f;
  * Limbs shot off zombies, on this computer only: each comes away whole, frozen in the pose it was in with a torn
  * end of its own, flies along the shot (harder from a shotgun than a handgun), tumbles, bounces and settles flat on
  * the ground, and after a while is gone. As the preview does it (limbs.js), in blocks.
+ *
+ * A head that bursts goes the same way in pieces: bits of skull and scalp, brain and bone sprayed out along the shot,
+ * and its hat (or hair) thrown off whole.
  */
 public final class Gibs {
     /** Preview units to blocks. */
@@ -35,6 +38,10 @@ public final class Gibs {
     /** How hard a limb is flung, by the gun's kind (handgun, rifle, hunting rifle, buckshot), preview units a second. */
     private static final float[] FLING = {45f, 60f, 80f, 95f};
     private static final Random RANDOM = new Random();
+    /** How many bits of skull and scalp, and of brain and bone, a burst head throws; most bits lying about at once. */
+    private static final int SKULL_BITS = 8, GORE_BITS = 7, MAX_BITS = 150;
+    /** Seconds a bit of head lies about (at most the limbs' time). */
+    private static final float BIT_SECONDS = 20f;
 
     private static final class Gib {
         ZBodyMesh mesh;
@@ -57,6 +64,13 @@ public final class Gibs {
         /** 0 flying, then settling flat up to 1, then lying still. */
         float rest;
         float age;
+        /** Only the clothes of its bones: a hat or hair, without the head under it. No torn end either. */
+        boolean kitOnly;
+        /** A bit of a burst head instead of a piece of body: a cube this big, from this square of this texture. */
+        Identifier tex;
+        float[] uv;
+        int colour = -1;
+        float size;
     }
 
     private static final List<Gib> GIBS = new ArrayList<>();
@@ -129,10 +143,107 @@ public final class Gibs {
             g.spin.set(RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f).mul(14f);
             GIBS.add(g);
         }
-        int max = Math.max(0, ZcConfig.get().limbs.maxLimbs);
-        while (GIBS.size() > max) {
-            GIBS.remove(0);
+        if ((newly & Dismember.HEAD_GONE) != 0) {
+            head(mesh, skin, kit, mats, model, x, y, z, heading, fling, entityScale, seed);
         }
+        trim();
+    }
+
+    /** Too many pieces lying about: the oldest limbs go first, and the oldest bits of head. */
+    private static void trim() {
+        int max = Math.max(0, ZcConfig.get().limbs.maxLimbs), limbs = 0, bits = 0;
+        for (int i = GIBS.size() - 1; i >= 0; i--) {
+            boolean bit = GIBS.get(i).tex != null;
+            if (bit ? ++bits > MAX_BITS : ++limbs > max) {
+                GIBS.remove(i);
+            }
+        }
+    }
+
+    /**
+     * A head bursting: its hat or hair thrown off whole, and bits of skull and scalp (from its own skin), brain and
+     * bone sprayed out along the shot.
+     */
+    private static void head(ZBodyMesh mesh, Identifier skin, Identifier kit, float[] mats, Matrix4f model,
+                             double x, double y, double z, float heading, float fling, float entityScale, int seed) {
+        int head = 1 << ZMove.HEAD;
+        M.set(model).mul(new Matrix4f().set(mats, ZMove.HEAD * 16));
+        float scale = M.getScale(V).x;
+        M.transformPosition(V.set(0f, 3.6f, 0f));
+        double hx = x + V.x, hy = y + V.y, hz = z + V.z;
+        if (hasKit(mesh, head)) {
+            Gib g = new Gib();
+            g.mesh = mesh;
+            g.skin = skin;
+            g.kit = kit;
+            g.hidden = ~head;
+            g.kitOnly = true;
+            g.seed = seed * 31 + 99;
+            // its own space is the head bone's
+            for (int k = 0; k < 16; k += 5) {
+                g.mats[ZMove.HEAD * 16 + k] = 1f;
+            }
+            extent(g, head);
+            g.x = x + M.m30();
+            g.y = y + M.m31();
+            g.z = z + M.m32();
+            M.getNormalizedRotation(g.rot);
+            g.scale = scale;
+            float speed = fling * UNIT * (0.5f + RANDOM.nextFloat() * 0.3f);
+            g.vx = -Math.sin(heading) * speed;
+            g.vz = Math.cos(heading) * speed;
+            g.vy = (45f + RANDOM.nextFloat() * 25f) * UNIT;
+            g.spin.set(RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f).mul(10f);
+            GIBS.add(g);
+        }
+        List<float[]> faces = new ArrayList<>();
+        for (int q = 0; q < mesh.count; q++) {
+            if (mesh.bone[q] == ZMove.HEAD && (mesh.flags[q] & ZBodyMesh.BODY) != 0) {
+                faces.add(new float[] {mesh.uv[q * 4], mesh.uv[q * 4 + 1], mesh.uv[q * 4 + 2], mesh.uv[q * 4 + 3]});
+            }
+        }
+        for (int i = 0; i < SKULL_BITS + GORE_BITS; i++) {
+            Gib g = new Gib();
+            if (i < SKULL_BITS && !faces.isEmpty()) {
+                // a patch of the head's own skin
+                float[] f = faces.get(RANDOM.nextInt(faces.size()));
+                float w = (f[2] - f[0]) * (0.3f + RANDOM.nextFloat() * 0.2f), h = (f[3] - f[1]) * (0.3f + RANDOM.nextFloat() * 0.2f);
+                float u = f[0] + (f[2] - f[0] - w) * RANDOM.nextFloat(), v = f[1] + (f[3] - f[1] - h) * RANDOM.nextFloat();
+                g.tex = skin;
+                g.uv = new float[] {u, v, u + w, v + h};
+                g.colour = ZBodyLayer.BODY_TINT;
+            } else {
+                g.tex = Gore.TEXTURE;
+                g.uv = Gore.region(i % 3 == 0 ? Gore.BONE : i % 3 == 1 ? Gore.FLESH : Gore.SHRED);
+            }
+            g.size = 0.9f + RANDOM.nextFloat() * 1.4f;
+            for (int c = 0; c < 8; c++) {
+                g.corners[c * 3] = (c & 1) == 0 ? -g.size / 2 : g.size / 2;
+                g.corners[c * 3 + 1] = (c & 2) == 0 ? -g.size / 2 : g.size / 2;
+                g.corners[c * 3 + 2] = (c & 4) == 0 ? -g.size / 2 : g.size / 2;
+            }
+            g.x = hx + RANDOM.nextGaussian() * 0.06;
+            g.y = hy + RANDOM.nextGaussian() * 0.06;
+            g.z = hz + RANDOM.nextGaussian() * 0.06;
+            g.scale = UNIT * entityScale;
+            g.rot.rotationXYZ(RANDOM.nextFloat() * 6.28f, RANDOM.nextFloat() * 6.28f, RANDOM.nextFloat() * 6.28f);
+            float speed = fling * UNIT * (0.4f + RANDOM.nextFloat() * 0.9f);
+            double way = heading + RANDOM.nextGaussian() * 0.5;
+            g.vx = -Math.sin(way) * speed;
+            g.vz = Math.cos(way) * speed;
+            g.vy = (15f + RANDOM.nextFloat() * 50f) * UNIT;
+            g.spin.set(RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f, RANDOM.nextFloat() - 0.5f).mul(20f);
+            GIBS.add(g);
+        }
+    }
+
+    private static boolean hasKit(ZBodyMesh mesh, int bones) {
+        for (int q = 0; q < mesh.count; q++) {
+            if ((bones >> mesh.bone[q] & 1) != 0 && (mesh.flags[q] & ZBodyMesh.BODY) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static int above(int cut) {
@@ -163,7 +274,8 @@ public final class Gibs {
         float[] lo = {Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE}, hi = {-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE};
         ZBodyMesh m = g.mesh;
         for (int q = 0; q < m.count; q++) {
-            if ((bones >> m.bone[q] & 1) == 0 || (m.flags[q] & ZBodyMesh.STUMP) != 0) {
+            if ((bones >> m.bone[q] & 1) == 0 || (m.flags[q] & ZBodyMesh.STUMP) != 0
+                    || g.kitOnly && (m.flags[q] & ZBodyMesh.BODY) != 0) {
                 continue;
             }
             int o = m.bone[q] * 16;
@@ -216,13 +328,14 @@ public final class Gibs {
         for (int i = GIBS.size() - 1; i >= 0; i--) {
             Gib g = GIBS.get(i);
             g.age += dt;
-            if (g.age > life) {
+            float lasts = g.tex != null ? Math.min(life, BIT_SECONDS) : life;
+            if (g.age > lasts) {
                 GIBS.remove(i);
                 continue;
             }
             step(g, dt);
             // in its last two seconds it sinks out of sight
-            double sink = Math.max(0, g.age - (life - 2f)) * 0.15;
+            double sink = Math.max(0, g.age - (lasts - 2f)) * 0.15;
             BlockPos at = BlockPos.containing(g.x, g.y + 0.1, g.z);
             int light = level.getBrightness(LightLayer.BLOCK, at) << 4 | level.getBrightness(LightLayer.SKY, at) << 20;
             double away = c.distanceToSqr(g.x, g.y, g.z);
@@ -231,13 +344,23 @@ public final class Gibs {
             stack.translate((float) (g.x - c.x), (float) (g.y - sink - c.y), (float) (g.z - c.z));
             stack.mulPose(TURN.rotation(g.rot).scale(g.scale));
             int overlay = OverlayTexture.NO_OVERLAY;
-            context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(g.skin),
-                    (pose, out) -> ZBodyLayer.emit(g.mesh, g.mats, pose, out, true, g.hidden, lod, false, light, overlay,
-                            ZBodyLayer.BODY_TINT));
+            if (g.tex != null) {
+                context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(g.tex),
+                        (pose, out) -> GORE.cube(out, pose, g.size, g.uv, g.colour, light, overlay));
+                stack.popPose();
+                continue;
+            }
+            if (!g.kitOnly) {
+                context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(g.skin),
+                        (pose, out) -> ZBodyLayer.emit(g.mesh, g.mats, pose, out, true, g.hidden, lod, false, light, overlay,
+                                ZBodyLayer.BODY_TINT));
+            }
             context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(g.kit),
                     (pose, out) -> ZBodyLayer.emit(g.mesh, g.mats, pose, out, false, g.hidden, lod, false, light, overlay, -1));
-            context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(Gore.TEXTURE),
-                    (pose, out) -> GORE.rag(out, pose, g.end, g.endWidth, g.endBone, g.seed, light, overlay));
+            if (!g.kitOnly) {
+                context.submitNodeCollector().submitCustomGeometry(stack, RenderTypes.entityCutout(Gore.TEXTURE),
+                        (pose, out) -> GORE.rag(out, pose, g.end, g.endWidth, g.endBone, g.seed, light, overlay));
+            }
             stack.popPose();
         }
     }

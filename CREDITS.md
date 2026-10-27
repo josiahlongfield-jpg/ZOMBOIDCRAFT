@@ -275,6 +275,11 @@ Ambient beds picked by Josiah Longfield, made to loop seamlessly by tools/audio/
 | weapon.hunting_rifle.mag_out | [A rifle being moved around and handled w/ magazine removals](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725403/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.mag_in | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.hunting_rifle.bolt | M1903A3, Handling, Cycling Bolt, MKH416 (Pole Position - Springfield 1903A3 bolt-action rifle) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Beheading 02 (344 Audio - Flesh, Bones & Gore) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Heavy Body Crunch 02 (344 Audio - Flesh, Bones & Gore) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.bullet.head_burst | EFX SD GORE Snap 05 C.M (Coll Anderson - Gore) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Smash_Gore_Juicy_Smash_07 (Sound Spark LLC – Gore) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| weapon.bullet.head_burst | Melee_Deep_Wound_05 (Sound Spark LLC – Gore) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 
 ## Trees
 

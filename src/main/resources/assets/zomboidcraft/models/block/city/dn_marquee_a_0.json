@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_marquee_a_0": "zomboidcraft:block/city/dn_marquee_a_0",
+    "dn_trim_s": "zomboidcraft:block/city/dn_trim_s",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/dn_marquee_a_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        5
+      ],
+      "to": [
+        16,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_marquee_a_0"
+        },
+        "south": {
+          "texture": "#dn_trim_s"
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

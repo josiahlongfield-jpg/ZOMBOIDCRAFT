@@ -1,0 +1,162 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_drain_top": "zomboidcraft:block/city/dn_drain_top",
+    "fit_cabinet": "zomboidcraft:block/city/fit_cabinet",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_drain_top"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        13
+      ],
+      "to": [
+        16,
+        20,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            6
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            3,
+            6
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            13,
+            0,
+            16,
+            6
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        3
+      ],
+      "to": [
+        14,
+        21,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_cabinet",
+          "uv": [
+            2,
+            0,
+            14,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#fit_cabinet",
+          "uv": [
+            2,
+            0,
+            14,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#fit_cabinet",
+          "uv": [
+            4,
+            0,
+            13,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#fit_cabinet",
+          "uv": [
+            3,
+            0,
+            12,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#fit_cabinet"
+        },
+        "down": {
+          "texture": "#fit_cabinet"
+        }
+      }
+    }
+  ]
+}

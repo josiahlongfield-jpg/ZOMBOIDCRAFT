@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_frame_g": "zomboidcraft:block/city/dn_frame_g",
+    "dn_win_g_lo": {
+      "sprite": "zomboidcraft:block/city/dn_win_g_lo",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/dn_frame_g"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        0
+      ],
+      "to": [
+        10,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_frame_g",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_frame_g",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_win_g_lo"
+        },
+        "west": {
+          "texture": "#dn_win_g_lo"
+        },
+        "up": {
+          "texture": "#dn_frame_g",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_frame_g",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        0,
+        0
+      ],
+      "to": [
+        11.5,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_frame_g",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_frame_g",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_frame_g"
+        },
+        "west": {
+          "texture": "#dn_frame_g"
+        },
+        "up": {
+          "texture": "#dn_frame_g"
+        },
+        "down": {
+          "texture": "#dn_frame_g",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

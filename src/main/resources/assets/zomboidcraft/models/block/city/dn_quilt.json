@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_quilt": "zomboidcraft:block/city/dn_quilt",
+    "particle": "zomboidcraft:block/city/dn_quilt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_quilt",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_quilt",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_quilt",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_quilt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_quilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_quilt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

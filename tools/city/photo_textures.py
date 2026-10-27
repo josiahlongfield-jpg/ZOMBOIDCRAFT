@@ -1095,6 +1095,8 @@ import theatre  # noqa: E402
 theatre.register(sys.modules[__name__])
 import gasstation  # noqa: E402
 gasstation.register(sys.modules[__name__])
+import diner  # noqa: E402
+diner.register(sys.modules[__name__])
 import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 

@@ -1,0 +1,112 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_shelf_cold": "zomboidcraft:block/city/dn_shelf_cold",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "particle": "zomboidcraft:block/city/dn_shelf_cold"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_shelf_cold"
+        },
+        "south": {
+          "texture": "#dn_shelf_cold"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        1.5
+      ],
+      "to": [
+        1.5,
+        16,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.5,
+        0,
+        1.5
+      ],
+      "to": [
+        15.5,
+        16,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

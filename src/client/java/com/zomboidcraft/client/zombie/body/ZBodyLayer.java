@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /**
  * Draws the new zombie: body A in its per-type skin, the worn 3D clothes from the outfit's atlas,
@@ -27,6 +29,8 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     // body A sizes where a stump goes: forearm, shin and thigh thickness, upper arm, and the torso's half width and
     // the height of its shoulders
     static final float FORE_W = 2.5f, SHIN_W = 3.0f, THIGH_W = 3.4f, UPPER_W = 2.7f, TORSO_HALF = 3.8f, SHOULDER_Y = 7.6f;
+    /** How thick the neck is where a burst head tore away. */
+    static final float NECK_W = 3.2f;
     private static final int FULL_BRIGHT = 0xF000F0;
     /** Quad corners in drawing order (counter-clockwise from outside). */
     private static final int[] ORDER = {0, 3, 2, 1};
@@ -58,11 +62,21 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         int hidden = hiddenBones(stumps, legless);
         int lod = ZDetail.level(state.distanceToCameraSq);
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
-                (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
-                (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
-        if (state.zeyes != null) {
+        ZBodyMesh low = state.zlow;
+        if (lod >= ZDetail.LOW && low != null) {
+            // the baked body: its own atlas already carries the skin's tint and the clothes painted over it
+            int kitLod = lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL;
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zlowSkin),
+                    (pose, out) -> emit(low, mats, pose, out, true, hidden, ZDetail.FULL, legless, light, overlay, -1));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
+                    (pose, out) -> emit(low, mats, pose, out, false, hidden, kitLod, legless, light, overlay, -1));
+        } else {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
+                    (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zkit),
+                    (pose, out) -> emit(mesh, mats, pose, out, false, hidden, lod, legless, light, overlay, -1));
+        }
+        if (state.zeyes != null && (state.cuts & Dismember.HEAD_GONE) == 0) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucentEmissive(state.zeyes),
                     (pose, out) -> eyes(mats, pose, out));
         }
@@ -140,6 +154,9 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         if (legless) {
             hidden |= bit(ZMove.KN_R) | bit(ZMove.AN_R) | bit(ZMove.KN_L) | bit(ZMove.AN_L);
         }
+        if ((stumps & Dismember.HEAD_GONE) != 0) {
+            hidden |= bit(ZMove.HEAD);
+        }
         return hidden;
     }
 
@@ -149,9 +166,14 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
 
     /**
      * A torn stump on the bone above each missing limb, at the joint it came off: elbow and knee stumps hang
-     * where the forearm or shin was, a hip stump under the pelvis, a shoulder stump on the side of the chest.
+     * where the forearm or shin was, a hip stump under the pelvis, a shoulder stump on the side of the chest; and
+     * where the head burst, the neck torn open round a stub of spine.
      */
     private void stumps(float[] mats, int stumps, int seed, PoseStack.Pose pose, VertexConsumer out, int light, int overlay) {
+        if ((stumps & Dismember.HEAD_GONE) != 0) {
+            at.set(mats, ZMove.HEAD * 16).translate(0f, 0.6f, 0f).rotateZ((float) Math.PI);
+            gore.rag(out, pose, at, NECK_W, true, seed + 8, light, overlay);
+        }
         for (int side = 0; side < 2; side++) {
             boolean right = side == 0;
             float s = right ? -1f : 1f;
@@ -210,17 +232,13 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         // each bone's matrix with the pose stack's folded in, so a corner costs one transform instead of two
         float[] w = new float[a.length];
         Matrix4f bone = new Matrix4f(), stack = pose.pose();
+        Matrix3f normal = pose.normal();
+        Vector3f n = new Vector3f();
         for (int b = 0; b * 16 < a.length; b++) {
             stack.mul(bone.set(a, b * 16), bone).get(w, b * 16);
         }
-        for (int q = 0; q < m.count; q++) {
-            int f = m.flags[q];
-            if (((f & ZBodyMesh.BODY) != 0) != body || (hidden >> m.bone[q] & 1) != 0
-                    || ((f & ZBodyMesh.STUMP) != 0 && !legless)) {
-                continue;
-            }
-            if (!body && lod > ZDetail.FULL && ((f & ZBodyMesh.SMALL) != 0
-                    || (lod >= ZDetail.LOW && m.minEdge[q] < (lod == ZDetail.SIMPLE ? 2f : 1f)))) {
+        for (int q : m.quads(body, lod, legless)) {
+            if ((hidden >> m.bone[q] & 1) != 0) {
                 continue;
             }
             int o = m.bone[q] * 16;
@@ -228,11 +246,11 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
             float nx = a[o] * nx0 + a[o + 4] * ny0 + a[o + 8] * nz0;
             float ny = a[o + 1] * nx0 + a[o + 5] * ny0 + a[o + 9] * nz0;
             float nz = a[o + 2] * nx0 + a[o + 6] * ny0 + a[o + 10] * nz0;
-            float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+            // into view space once a quad, not once a corner
+            normal.transform(n.set(nx, ny, nz));
+            float len = n.length();
             if (len > 0f) {
-                nx /= len;
-                ny /= len;
-                nz /= len;
+                n.div(len);
             }
             float u0 = m.uv[q * 4], v0 = m.uv[q * 4 + 1], u1 = m.uv[q * 4 + 2], v1 = m.uv[q * 4 + 3];
             for (int c : ORDER) {
@@ -245,7 +263,7 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
                         .setUv(c == 1 || c == 2 ? u1 : u0, c >= 2 ? v1 : v0)
                         .setOverlay(overlay)
                         .setLight(light)
-                        .setNormal(pose, nx, ny, nz);
+                        .setNormal(n.x, n.y, n.z);
             }
         }
     }

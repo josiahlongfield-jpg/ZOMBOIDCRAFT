@@ -78,7 +78,12 @@ public final class ZcConfig {
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
-        public int midDetailZombies = 32;
+        public int midDetailZombies = 20;
+        /**
+         * Zombies past the nearest few are drawn from a baked body: the clothes painted on and only the pieces that
+         * change its outline kept 3D, about a tenth of the full one. Off draws them from the full body, thinned. Client side.
+         */
+        public boolean bakedZombies = true;
         /** Past this many blocks a zombie is drawn with its body and only the biggest pieces of clothing. Client side. */
         public double simpleZombieDistance = 40;
         /** Shader shadows (Photon's) are cast by the simple body, which looks the same in a shadow and costs far less. Client side. */
@@ -651,6 +656,28 @@ public final class ZcConfig {
          * toughness), and OFF when it goes.
          */
         public boolean showHits = false;
+        /**
+         * How many ticks behind the server a shooter sees zombies, on top of their ping (the game sends a zombie's
+         * moves every few ticks and glides it there over a few more): a shot is checked against where it was then.
+         */
+        public int lagTicks = 4;
+        /** A big enough hit to the head bursts it: a hunting rifle headshot, or a clean blast of buckshot up close. */
+        public boolean headBursts = true;
+        /**
+         * What one shot or blast must put into a head to burst it: its headshot damage (after buckshot falls off with
+         * range) times the gun's bursting below.
+         */
+        public double headBurst = 240;
+        /** Bursting per pellet of buckshot: three pellets in the head up close (a clean blast) do it, two don't. */
+        public double burstShotguns = 10.0;
+        /** Bursting for the bolt-action hunting rifle: every headshot does it. */
+        public double burstHuntingRifle = 4.0;
+        /** Bursting for the lever-action (0 = never; about 4 makes every headshot do it). */
+        public double burstLeverAction = 0;
+        /** Bursting for the .44 magnum (0 = never; about 5 makes every headshot do it). */
+        public double burstMagnum = 0;
+        /** Bursting for every other gun (0 = never). */
+        public double burstOtherGuns = 0;
 
         /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
         void retune() {
@@ -1012,7 +1039,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 2;
+    private static final int DEFAULTS = 3;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1037,6 +1064,12 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.5) {
                 c.look.shoulderAimSide = 0.42;
+            }
+        }
+        if (c.defaultsVersion < 3) {
+            // 2026-10-27: with the baked far-off bodies, fewer zombies need the costly middle detail
+            if (c.performance.midDetailZombies == 32) {
+                c.performance.midDetailZombies = 20;
             }
         }
         c.defaultsVersion = DEFAULTS;

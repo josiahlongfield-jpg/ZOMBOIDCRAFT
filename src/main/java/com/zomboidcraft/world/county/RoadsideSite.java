@@ -13,8 +13,8 @@ import com.zomboidcraft.world.city.ShopLights;
  * sale (the stations and the pumps are {@link GasStation}'s).</li>
  * <li>motel: a single-storey L of rooms, a two-storey bar with a walkway and stairs, or a U round
  * a courtyard; the office, the tall neon sign, the drained pool, a lamp over every door.</li>
- * <li>diner: a stainless railcar diner, a brick roadside one, or a truck stop with its rigs; a
- * counter and stools, booths, the grill, the pie case.</li>
+ * <li>diner: a lunch car with its kitchen built on behind, the brick cafe, or the truck stop
+ * with its store, showers and diesel canopy ({@link Diner}'s).</li>
  * <li>church: a chapel, a brick church or a stone one, its graveyard and its gravel lot.</li>
  * <li>school: an elementary with its playground and court, or a high school with a football
  * field, bleachers and lights; the bus lot, and on some the evacuation centre it became.</li>
@@ -25,7 +25,6 @@ import com.zomboidcraft.world.city.ShopLights;
  */
 final class RoadsideSite extends Site {
     private static final String CARS = "sedan,hatchback,pickup,suv,minivan,wagon,coupe,van";
-    private static final String TRUCKS = "box_truck,moving_truck,step_van,tow_truck";
 
     private Kit kit;
     private Kit.Lane road;
@@ -524,131 +523,31 @@ final class RoadsideSite extends Site {
 
     // ------------------------------------------------------------------ the diner
 
+    /** A lunch car, the brick cafe or the truck stop (see {@link Diner}). */
     private void diner() {
         int style = rng.nextInt(3);
-        Kit.Lot lot = business(style == 2 ? 56 : 40, style == 2 ? 40 : 32);
+        Kit.Lot lot = switch (style) {
+            case 2 -> business(64, 46);
+            case 1 -> business(40, 36);
+            default -> business(40, 34);
+        };
         if (lot == null) {
             return;
         }
         Placer q = lot.placer(out);
-        int lw = lot.w(), ld = lot.d();
-        int dw = style == 0 ? 22 : 18, dd = style == 0 ? 9 : 14;
-        int dx = (lw - dw) / 2, dz = Math.min(12, ld - dd - 4);
-        if (style == 2) {
-            gravel(q, 1, 0, lw - 2, ld - 2);
-            dx = 3;
-        } else {
-            slab(q, 1, 0, lw - 2, dz - 1, true);
-            parking(q, 2, lw - 3, 1, 0.3, CARS);
-        }
-        Placer s = q.shifted(dx, 0, dz);
-        if (style == 0) {
-            railcar(s, dw, dd);
-        } else {
-            brickDiner(s, dw, dd);
-        }
-        if (style == 2) {
-            // the rigs out back, nose to tail, and a fuel island for them
-            for (int i = 0; i < 3; i++) {
-                if (chance() < 0.75) {
-                    q.vehicle(dx + dw + 6 + i * 5, 1, ld - 10, 0, TRUCKS, rng.nextLong());
-                }
+        Diner dn = new Diner(q, rng, hit);
+        switch (style) {
+            case 2 -> {
+                dn.truckStop(lot.w(), lot.d());
+                pylon(q, lot.w() - 7, 1, "route9", 9);
             }
-            for (int x = dx + dw + 4; x <= dx + dw + 14 && x < lw - 2; x++) {
-                q.set(x, 0, 6, "concrete_dark");
-            }
-            q.set(dx + dw + 6, 1, 6, "gas_pump[facing=north]");
-            q.set(dx + dw + 11, 1, 6, "gas_pump[facing=north]");
-            pylon(q, lw - 7, 1, "route9", 8);
-        } else {
-            pylon(q, 2, 1, style == 0 ? "joes" : any("joes", "cafe"), 6 + rng.nextInt(3));
+            case 1 -> dn.cafe(lot.w(), lot.d());
+            default -> dn.railcar(lot.w(), lot.d());
         }
-        junk(q, dx + dw + 1, dz + dd - 1);
-        q.set(dx + dw + 1, 1, dz + 2, "minecraft:barrel[facing=up]");
-        q.set(dx - 2, 1, dz, "lamp_post");
         if (hit > 0.65) {
-            scorch(q, dx + dw / 2, dz - 3, 3);
-            q.vehicle(dx + dw / 2.0, 1, dz - 3, 90, "police_sedan,sedan", rng.nextLong());
+            scorch(q, lot.w() / 2, 3, 2);
+            q.vehicle(lot.w() / 2.0, 1, 3, 90, "police_sedan,sedan", rng.nextLong());
         }
-    }
-
-    /** The stainless railcar diner: a long low barrel-roofed car, a band of windows, the counter inside. */
-    private void railcar(Placer s, int dw, int dd) {
-        Bldg b = new Bldg(s, rng);
-        b.shell(0, 0, dw - 1, dd - 1, 1, 4, "deck_steel", "floor_checker", "floor_checker");
-        for (int x = 1; x < dw - 1; x++) {
-            s.set(x, 2, 0, x == dw / 2 ? "air" : chance() < 0.35 + hit * 0.4 ? "window_broken[axis=x]" : "window[axis=x]");
-            s.set(x, 2, dd - 1, chance() < 0.3 ? "window_broken[axis=x]" : "window[axis=x]");
-            s.set(x, 1, 0, "steel_red");
-            s.set(x, 3, 0, "minecraft:smooth_quartz");
-        }
-        b.door(dw / 2, 1, 0, "shop_door", "north");
-        // the barrel roof: two slab steps up to a flat crown
-        for (int x = 0; x < dw; x++) {
-            for (int z = 0; z < dd; z++) {
-                boolean outer = z == 0 || z == dd - 1;
-                s.set(x, 4, z, outer ? "minecraft:smooth_quartz_slab[type=bottom]" : "minecraft:smooth_quartz");
-                if (!outer && z > 1 && z < dd - 2) {
-                    s.set(x, 5, z, "minecraft:smooth_quartz_slab[type=bottom]");
-                }
-            }
-        }
-        // the counter down the middle with its stools, booths at the windows, the grill behind
-        for (int x = 2; x < dw - 2; x++) {
-            s.set(x, 1, dd / 2 + 1, "store_counter[facing=north]");
-            if (x % 2 == 0) {
-                s.set(x, 1, dd / 2, "store_stool");
-            }
-            s.set(x, 1, dd - 2, x % 4 == 0 ? "store_grill[facing=north]" : x % 4 == 2 ? "store_coffee[facing=north]" : "store_counter[facing=north]");
-        }
-        for (int x = 1; x < dw - 1; x += 3) {
-            if (Math.abs(x - dw / 2) > 1) {
-                s.set(x, 1, 1, "store_booth[facing=east]");
-                s.set(x + 1, 1, 1, "store_table");
-            }
-        }
-        s.set(dw - 3, 2, dd / 2 + 1, "store_case_pies[facing=north]");
-        s.set(2, 2, dd / 2 + 1, "store_register[facing=north]");
-        s.set(dw / 2 + 2, 3, -1, ShopLights.lamp(rng, 0.15));
-        Boards.blade(s, rng, "diner", 5, dw - 1, 5, -1, hit < 0.7 && chance() < 0.7);
-        Boards.fascia(s, rng, "joes", 1, 4, -1, dw - 2);
-    }
-
-    /** A brick roadside diner: big windows, the sign on the roof edge, EAT down the corner in neon. */
-    private void brickDiner(Placer s, int dw, int dd) {
-        Bldg b = new Bldg(s, rng);
-        String wall = any("brick_red", "brick_buff", "plaster_cream", "brick_orange");
-        b.shell(0, 0, dw - 1, dd - 1, 1, 5, wall, "floor_checker", "floor_checker");
-        for (int x = 1; x < dw - 1; x++) {
-            for (int y = 1; y <= 3; y++) {
-                if (x != dw / 2 || y == 3) {
-                    s.set(x, y, 0, y == 1 ? wall : chance() < 0.3 + hit * 0.4 ? "window_broken[axis=x]" : "window[axis=x]");
-                }
-            }
-        }
-        b.door(dw / 2, 1, 0, "shop_door", "north");
-        for (int z = 2; z < dd - 4; z += 3) {
-            s.set(1, 1, z, "store_booth[facing=east]");
-            s.set(2, 1, z, "store_table");
-            s.set(dw - 2, 1, z, "store_booth[facing=west]");
-            s.set(dw - 3, 1, z, "store_table");
-        }
-        for (int x = 3; x < dw - 3; x++) {
-            s.set(x, 1, dd - 4, x == dw - 4 ? "air" : "store_counter[facing=north]");
-            if (x % 2 == 1) {
-                s.set(x, 1, dd - 5, "store_stool");
-            }
-            s.set(x, 1, dd - 2, x % 3 == 0 ? "store_grill[facing=north]" : x % 3 == 1 ? "store_oven[facing=north]" : "store_counter[facing=north]");
-        }
-        s.set(4, 2, dd - 4, "store_register[facing=north]");
-        s.set(6, 2, dd - 4, "store_case_pies[facing=north]");
-        s.set(dw - 5, 3, dd - 1, "store_menu[facing=north]");
-        b.flat(0, 0, dw - 1, dd - 1, 5, wall, 1, "stone_trim");
-        Boards.fascia(s, rng, "joes", 1, 5, -1, dw - 2);
-        Boards.blade(s, rng, "eat", 3, dw, 5, -1, hit < 0.7 && chance() < 0.75);
-        s.set(dw / 2 - 2, 4, -1, ShopLights.lamp(rng, 0.15));
-        s.set(dw / 2 + 2, 4, -1, ShopLights.lamp(rng, 0.15));
-        s.set(dw - 3, 7, 4, "hvac");
     }
 
     // ------------------------------------------------------------------ the church
