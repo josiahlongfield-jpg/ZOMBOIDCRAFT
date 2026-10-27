@@ -66,6 +66,11 @@ public final class Flight {
      * jet flies straight toward, banking itself through the turn; null flies on the full physics.
      */
     public org.joml.Vector3f assist;
+    /**
+     * A carrier catapult's pull this tick, metres a second squared along the nose (set by whoever moves the
+     * jet while it sits on a catapult track at full power), 0 elsewhere.
+     */
+    public float catapult;
     /** Ticks since the wheels last touched. */
     private int airTicks;
     /** How far it has drifted above the held height, metres, while the lock is on. */
@@ -164,8 +169,8 @@ public final class Flight {
             if (rpm < spooled - 0.01f && power == 0) {
                 rpm = Math.min(spooled, rpm + spooled / 160f);   // eight seconds from cold to idle
             } else {
-                throttle = Mth.clamp(throttle + c.throttle() * 0.5f * DT, 0, 1);
-                power += Mth.clamp(throttle - power, -0.45f * DT, 0.35f * DT);
+                throttle = Mth.clamp(throttle + c.throttle() * 0.9f * DT, 0, 1);
+                power += Mth.clamp(throttle - power, -0.5f * DT, 0.55f * DT);
                 rpm += Mth.clamp(spooled + 0.4f * power - rpm, -0.3f * DT, 0.3f * DT);
             }
         } else {
@@ -174,7 +179,8 @@ public final class Flight {
         }
         airbrake = c.brake() && !grounded;
         airTicks = grounded ? 0 : airTicks + 1;
-        if (assist != null && !grounded) {
+        // a wheel lifting over a bump for a tick or two isn't flying yet
+        if (assist != null && !grounded && airTicks > 3) {
             return assisted(c);
         }
 
@@ -198,7 +204,7 @@ public final class Flight {
         }
         float cd0 = 1.1f * G / (top * top);
         double drag = cd0 * speed * speed + Math.abs(lift) * Math.min(a, 0.6f) * 0.6f + (airbrake ? 0.25f * G + 0.5f * G * speed * speed / (top * top) : 0);
-        Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust)).add(liftDir.scale(lift)).subtract(along.scale(drag));
+        Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust + (grounded ? catapult : 0))).add(liftDir.scale(lift)).subtract(along.scale(drag));
         // the fin keeps it flying straight through the air rather than skidding
         float authority = (float) Mth.clamp((speed / (1.4 * vs)) * (speed / (1.4 * vs)), 0.05, 1);
         acc = acc.subtract(l.scale(vel.dot(l) * 1.2 * authority));
@@ -229,8 +235,8 @@ public final class Flight {
             rollRate = 0;
             if (speed < 0.8 * vs) {
                 pitchRate = Math.min(pitchRate, 0);
-            } else if (assist != null && speed > 1.05 * vs && noseUp() < 9) {
-                pitchRate = Math.max(pitchRate, 6);     // the assist rotates for take-off at flying speed
+            } else if (assist != null && speed > 1.2 * vs && noseUp() < 9) {
+                pitchRate = Math.max(pitchRate, 6);     // the assist rotates for take-off once it's safely past flying speed
             }
         }
         load = grounded ? 1 : lift / G;
@@ -272,10 +278,11 @@ public final class Flight {
             // just off the ground: keep climbing away whatever the aim, so it doesn't settle back onto the deck
             want.set(want.x, 0, want.z).normalize().mul(0.99f).add(0, 0.14f, 0).normalize();
         }
-        stalled = speed < 0.75f * vs;
+        stalled = speed < 0.62f * vs;
         if (stalled) {
-            // no flying speed: the nose falls through toward the ground until it has some
-            want.set(nose.x, nose.y - 1.5f, nose.z).normalize();
+            // no flying speed: the nose lowers a little below the horizon until it has some back
+            double h = Math.toRadians(yaw());
+            want.set((float) -Math.sin(h), 0, (float) Math.cos(h)).mul(0.985f).add(0, -0.17f, 0).normalize();
         }
         float before = yaw();
         float angle = nose.angle(want), most = (float) Math.toRadians(40 * (stalled ? 1 : authority) * hands) * DT;
