@@ -181,6 +181,21 @@ public final class Trains {
         return seen != null && seen.ride.train() >= 0 && player.level().getGameTime() - seen.tick < 40;
     }
 
+    /** A rider pressed a stop button: the train they're on pulls up where it can and opens up. */
+    private static void requestStop(ServerLevel level, int trainId, ServerPlayer by) {
+        if (by.isSpectator() || !(level.getEntity(trainId) instanceof TrainEntity train) || !riders(level, train).contains(by)) {
+            return;
+        }
+        for (Line line : SERVER.values()) {
+            for (TrainRun run : line.trains) {
+                if (train.getUUID().equals(run.entity)) {
+                    run.requestStop(level, by);
+                    return;
+                }
+            }
+        }
+    }
+
     /** A gunshot from where it left to where it stopped: OTTO notices one at him or through his cab's glass. */
     public static void shot(ServerLevel level, ServerPlayer shooter, Vec3 from, Vec3 to) {
         for (Line line : SERVER.values()) {
@@ -214,6 +229,11 @@ public final class Trains {
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.OttoSay.TYPE, TrainNet.OttoSay.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Ride.TYPE, TrainNet.Ride.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Call.TYPE, TrainNet.Call.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(TrainNet.StopRequest.TYPE, TrainNet.StopRequest.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(TrainNet.StopRequest.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> requestStop((ServerLevel) player.level(), payload.train(), player));
+        });
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.Ride.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> RIDING.put(player.getUUID(), new Seen(payload, player.level().getGameTime())));

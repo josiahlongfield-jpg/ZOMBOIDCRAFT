@@ -65,6 +65,18 @@ final class Otto {
         say(level, run, clips(pick(OttoLines.CLOSING, level), null), true);
     }
 
+    static void stopRequested(ServerLevel level, TrainRun run, ServerPlayer by) {
+        say(level, run, clips(pick(OttoLines.STOP_REQUESTED, level), null), false, by);
+    }
+
+    static void halted(ServerLevel level, TrainRun run) {
+        say(level, run, clips(pick(OttoLines.HALTED, level), null), true);
+    }
+
+    static void doorsHeld(ServerLevel level, TrainRun run, ServerPlayer by) {
+        say(level, run, clips(pick(OttoLines.DOORS_HELD, level), null), true, by);
+    }
+
     static void cutShort(ServerLevel level, TrainRun run) {
         say(level, run, clips(pick(OttoLines.CUT_SHORT, level), null), true);
     }

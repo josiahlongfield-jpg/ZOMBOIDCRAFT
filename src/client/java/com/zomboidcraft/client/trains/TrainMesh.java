@@ -85,6 +85,8 @@ final class TrainMesh {
     private int seed;
     private int part = STATIC;
     private int lamp = -1;
+    /** Whether a face shows its whole tile however small it is (labels, buttons), not a block-sized piece of it. */
+    private boolean stretch;
     private byte light = OUTSIDE;
 
     private static final Map<String, TrainMesh> CACHE = new HashMap<>();
@@ -215,6 +217,18 @@ final class TrainMesh {
         }
         for (double z : new double[] {-3.5, 3.5, -9.5}) {
             pole(0, z);
+        }
+        // a stop button on the pole beside each door, facing in: press it (interact) to be let off
+        for (double[] b : TrainCar.STOP_BUTTONS) {
+            double in = b[0] > 0 ? -1 : 1;     // the side of the pole toward the aisle
+            double x0 = Math.min(b[0], b[0] - in * 0.05), x1 = Math.max(b[0], b[0] - in * 0.05);
+            light = GLOW;
+            stretch = true;
+            box(x0, b[1] - 0.14, b[2] - 0.09, x1, b[1] + 0.14, b[2] + 0.09,
+                    in > 0 ? null : EMERGENCY, in > 0 ? EMERGENCY : null, null, null, null, null);
+            stretch = false;
+            light = INSIDE;
+            box(x0 + 0.005, b[1] - 0.14, b[2] - 0.09, x1 - 0.005, b[1] + 0.14, b[2] + 0.09, null, null, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);
         }
         for (int side = -1; side <= 1; side += 2) {
             box(side * 1.05 - 0.03, 2.55, -h + 0.4, side * 1.05 + 0.03, 2.61, (front ? TrainCar.CAB : h) - 0.4,
@@ -492,7 +506,7 @@ final class TrainMesh {
                     q.p[k * 3] = (float) (ox + rx * c[k][0] + dx * c[k][1]);
                     q.p[k * 3 + 1] = (float) (oy + ry * c[k][0] + dy * c[k][1]);
                     q.p[k * 3 + 2] = (float) (oz + rz * c[k][0] + dz * c[k][1]);
-                    double tu = c[k][0] - u, tv = c[k][1] - v;
+                    double tu = stretch ? c[k][0] / rl : c[k][0] - u, tv = stretch ? c[k][1] / dl : c[k][1] - v;
                     q.uv[k * 2] = (float) ((col * TILE + tu * TILE) / ATLAS);
                     q.uv[k * 2 + 1] = (float) ((mat.row() * TILE + tv * TILE) / ATLAS);
                 }
