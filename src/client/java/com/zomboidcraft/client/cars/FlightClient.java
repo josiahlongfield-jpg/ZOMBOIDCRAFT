@@ -42,6 +42,7 @@ public final class FlightClient {
         CameraRig.register(10, FlightClient::camera);
         ClientTickEvents.END_CLIENT_TICK.register(FlightClient::tick);
         FlightHud.register();
+        AirLights.register();
     }
 
     /** The aircraft the local player sits in, or null. */
