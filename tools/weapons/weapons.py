@@ -1541,6 +1541,10 @@ def main():
                   'sawn_off', 'magnum', 'lever_action', 'crossbow']
     lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
+    # where the off hand goes in a reload, so other players see it: the magazine's foot (a tube gun's port, the
+    # chamber of one that opens) and the charging handle (slide, bolt knob, pump, cylinder)
+    reloads = {name: [pts['magHold'] - (gg - gun.hand), pts['handle'] - (gg - gun.hand)]
+               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
@@ -1566,7 +1570,7 @@ def main():
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
                                  'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
-                                (mh, mG, mkeys), lenses)
+                                (mh, mG, mkeys), lenses, reloads)
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -1669,9 +1673,9 @@ public final class GunSlotData {{
 ''')
 
 
-def write_pose_java(guns, melee, lenses):
+def write_pose_java(guns, melee, lenses, reloads):
     """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame,
-    and where each gun's laser and light lenses are in that frame."""
+    and where each gun's laser and light lenses and reload hand points are in that frame."""
     def f3(v):
         return ', '.join(f'{float(x):.5f}f' for x in v)
 
@@ -1682,6 +1686,7 @@ def write_pose_java(guns, melee, lenses):
             data['arms'][f'{gun}_{name}'] = [float(x) for x in arm]
             data['support'][f'{gun}_{name}'] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
             data.setdefault('lens', {})[f'{gun}_{name}'] = [float(x) for b in lenses[gun] for x in Q.arm_local(h, G, arm, b)]
+            data.setdefault('reload', {})[f'{gun}_{name}'] = [float(x) for b in reloads[gun] for x in Q.arm_local(h, G, arm, b)]
     mh, mG, keys = melee
     for k, arm in keys.items():
         data['arms']['melee_' + k] = [float(x) for x in arm]
@@ -1693,6 +1698,7 @@ def write_pose_java(guns, melee, lenses):
     rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
                            for k, v in data['support'].items() if k.startswith(held))
     lens = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['lens'].items())
+    reload = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['reload'].items())
     melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
                             if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
@@ -1710,9 +1716,12 @@ final class HoldPoseData {{
     static final float REACH = {Q.REACH}f;
 {arms}
 {rifle_sup}
-    /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
+    /** Each gun's laser lens then light lens (x, y, z twice), per hold, in the gun arm's frame. */
     static final Map<String, float[]> LENS = Map.ofEntries(
 {lens});
+    /** Where the off hand goes in a reload: the magazine's foot (or the loading port), then the charging handle. */
+    static final Map<String, float[]> RELOAD = Map.ofEntries(
+{reload});
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
 {melee_sup});
