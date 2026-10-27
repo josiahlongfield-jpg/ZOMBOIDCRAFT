@@ -511,18 +511,27 @@ public class KitUiTest implements FabricClientGameTest {
                 float yaw = view[0];
                 double r = 2.6;
                 double cx = p.getX() + Math.sin(Math.toRadians(yaw)) * r, cz = p.getZ() - Math.cos(Math.toRadians(yaw)) * r;
-                s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), String.format(java.util.Locale.ROOT,
-                        "summon minecraft:armor_stand %.2f %.2f %.2f {Invisible:1b,NoGravity:1b,Tags:[\"cam\"],Rotation:[%.1ff,%d.0f]}",
-                        cx, p.getY() - 0.3, cz, yaw, view[1]));
+                var stand = new net.minecraft.world.entity.decoration.ArmorStand(p.level(), cx, p.getY() - 0.3, cz);
+                stand.setYRot(yaw);
+                stand.setYHeadRot(yaw);
+                stand.setXRot(view[1]);
+                stand.setInvisible(true);
+                stand.setNoGravity(true);
+                p.level().addFreshEntity(stand);
             });
             ctx.waitTicks(5);
             ctx.runOnClient(mc -> {
                 mc.player.setYRot(0f);
                 mc.player.yBodyRot = 0f;
                 mc.player.yHeadRot = 0f;
+                int found = 0;
                 for (var e : mc.level.entitiesForRendering()) {
-                    if (e instanceof net.minecraft.world.entity.decoration.ArmorStand) mc.setCameraEntity(e);
+                    if (e instanceof net.minecraft.world.entity.decoration.ArmorStand) {
+                        mc.setCameraEntity(e);
+                        found++;
+                    }
                 }
+                LOG.info("ZCUI sling camera stands found: {}", found);
             });
             ctx.waitTicks(3);
             ctx.takeScreenshot("sling-view-" + (view[0] < 0 ? "front" : view[0]));
