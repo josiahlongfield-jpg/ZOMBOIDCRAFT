@@ -575,7 +575,8 @@ public class KitUiTest implements FabricClientGameTest {
     private static void safe(TestSingleplayerContext sp) {
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);
-            p.setInvulnerable(true);
+            p.getAbilities().invulnerable = true;
+            p.onUpdateAbilities();
             p.setHealth(p.getMaxHealth());
             s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), "kill @e[type=!player]");
         });
