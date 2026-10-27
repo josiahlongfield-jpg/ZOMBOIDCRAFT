@@ -196,8 +196,15 @@ public final class CombatClient {
         }
         boolean suppressed = Attachments.suppressed(gun);
         // at your ears, so it doesn't stay behind where you fired as you strafe
+        // on full auto the pitch barely varies, so the string of shots sounds even
+        float vary = auto ? 0.02f : 0.1f;
         EarSound.play(type.shot(suppressed, false), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+                suppressed ? (float) config.suppressedVolume : 1.4f,
+                (suppressed ? (float) stats.suppressedPitch : 1f) * (1f - vary / 2 + player.getRandom().nextFloat() * vary));
+        // the case comes out with the shot, here, rather than when the server's tick gets to it
+        if (!type.manual() && !type.opens && type != GunType.CROSSBOW) {
+            EarSound.play(com.zomboidcraft.ModSounds.CASING, SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+        }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
                 * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0));
