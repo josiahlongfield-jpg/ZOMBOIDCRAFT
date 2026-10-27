@@ -625,6 +625,28 @@ public final class ZcConfig {
          * toughness), and OFF when it goes.
          */
         public boolean showHits = false;
+        /**
+         * How many ticks behind the server a shooter sees zombies, on top of their ping (the game sends a zombie's
+         * moves every few ticks and glides it there over a few more): a shot is checked against where it was then.
+         */
+        public int lagTicks = 4;
+        /** A big enough hit to the head bursts it: a hunting rifle headshot, or a clean blast of buckshot up close. */
+        public boolean headBursts = true;
+        /**
+         * What one shot or blast must put into a head to burst it: its headshot damage (after buckshot falls off with
+         * range) times the gun's bursting below.
+         */
+        public double headBurst = 240;
+        /** Bursting per pellet of buckshot: about three pellets in the head up close (a clean blast) does it. */
+        public double burstShotguns = 1.0;
+        /** Bursting for the bolt-action hunting rifle: every headshot does it. */
+        public double burstHuntingRifle = 4.0;
+        /** Bursting for the lever-action (0 = never; about 4 makes every headshot do it). */
+        public double burstLeverAction = 0;
+        /** Bursting for the .44 magnum (0 = never; about 5 makes every headshot do it). */
+        public double burstMagnum = 0;
+        /** Bursting for every other gun (0 = never). */
+        public double burstOtherGuns = 0;
 
         /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
         void retune() {
