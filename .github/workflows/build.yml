@@ -110,6 +110,12 @@ jobs:
           sleep 4
           echo 'execute as @e[type=zomboidcraft:corpse] run say corpse here' >&3
           echo 'data get entity @e[type=zomboidcraft:corpse,limit=1] outfit' >&3
+          # Only the head kills: a bullet anywhere else leaves a walker alive however hard it hits.
+          echo 'summon minecraft:zombie 8 101 8 {Tags:["zc_tough"]}' >&3
+          sleep 2
+          echo 'damage @e[tag=zc_tough,limit=1] 500 zomboidcraft:bullet' >&3
+          sleep 1
+          echo 'execute as @e[tag=zc_tough] run say still alive after a body shot' >&3
           # A test train line gets laid and its train runs round it.
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
           sleep 8
@@ -126,6 +132,7 @@ jobs:
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
           grep -q 'corpse here' server.log
+          grep -q 'still alive after a body shot' server.log
           grep -q 'Laid test line test_rail' server.log && grep -E 'test_rail \(rail.*train 0 at' server.log && grep -E 'test_rail \(rail.*\(stopped\)' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log

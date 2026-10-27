@@ -3,6 +3,7 @@ package com.zomboidcraft.mixin;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.CombatEvents;
 import com.zomboidcraft.combat.Deaths;
+import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.skills.Combat;
 import com.zomboidcraft.survival.Drinks;
@@ -36,11 +37,14 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    /** Blows on zombies are cut, and land harder on one on the ground; then the weapon skill bonus against zombies. */
+    /**
+     * Blows on zombies are cut, and land harder on one on the ground; then the weapon skill bonus against zombies; and
+     * only a shot to the head kills one (Dismember.onlyTheHead).
+     */
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
-        return Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount));
+        return Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
     }
 
     /** A zombie knocked flat or reeling from a blow doesn't move or attack. */

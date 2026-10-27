@@ -29,6 +29,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -74,6 +75,7 @@ public final class Dismember {
                     .syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.all()));
 
     private static final Identifier HOP_SPEED = ZomboidCraft.id("hop");
+    private static final Identifier WRIGGLE_SPEED = ZomboidCraft.id("wriggle");
 
     // the body's parts: head, torso (two side by side), pelvis, then right upper arm, forearm, left upper arm, forearm,
     // right thigh, shin, left thigh, shin. Their shapes in each pose are in BodyCaps.
@@ -146,10 +148,34 @@ public final class Dismember {
 
     /** Has at least one hand: shot off at either joint, or lost long ago, an arm has none. */
     public static boolean hasHands(Entity zombie) {
+        return hands(zombie) > 0;
+    }
+
+    /** How many hands it has left, 0 to 2. */
+    public static int hands(Entity zombie) {
         int cuts = cuts(zombie), missing = ZombieLook.missingLimb(zombie);
         boolean right = (cuts & RIGHT_ARM) == 0 && missing != 1 && missing != 3;
         boolean left = (cuts & LEFT_ARM) == 0 && missing != 2 && missing != 4;
-        return right || left;
+        return (right ? 1 : 0) + (left ? 1 : 0);
+    }
+
+    /**
+     * On the ground a zombie drags itself on its arms: slower with one left, and with none it can only wriggle along
+     * on its belly (still coming for you; only a headshot stops it). Up on its feet, it walks as it is.
+     */
+    public static void crawlSpeed(Zombie zombie) {
+        AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed == null) {
+            return;
+        }
+        int hands = hands(zombie);
+        if (!Downed.isCrawler(zombie) || hands == 2) {
+            speed.removeModifier(WRIGGLE_SPEED);
+            return;
+        }
+        ZcConfig.Limbs config = ZcConfig.get().limbs;
+        speed.addOrReplacePermanentModifier(new AttributeModifier(WRIGGLE_SPEED,
+                (hands == 1 ? config.oneArmCrawl : config.wriggleSpeed) - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     /**
@@ -283,6 +309,25 @@ public final class Dismember {
             return null;
         }
         return new Shot(w.shotDir, w.shotGun, w.shotPart);
+    }
+
+    /**
+     * Only the head kills (combat.onlyHeadshotsKill): a bullet or bolt that struck a walker this tick without touching
+     * its head can't take the last of its health, so one shot to pieces lives on, crawling or wriggling, until it's
+     * shot in the head; one that did strike the head is finished, whatever it wears. Anything else hurts as before.
+     */
+    public static float onlyTheHead(LivingEntity target, DamageSource source, float amount) {
+        if (!(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie) || zombie.level().isClientSide()
+                || !source.is(ModDamageTypes.BULLET) || !ZcConfig.get().combat.onlyHeadshotsKill) {
+            return amount;
+        }
+        Wounds w = WOUNDS.get(zombie);
+        boolean head = headGone(zombie) || w != null && (w.struck >> HEAD & 1) != 0
+                && w.shotTick == zombie.level().getGameTime();
+        if (head) {
+            return Math.max(amount, (zombie.getMaxHealth() + zombie.getAbsorptionAmount()) * 25f);
+        }
+        return Math.min(amount, Math.max(0f, zombie.getHealth() - 1f));
     }
 
     /** After the shots: the body jerks where they struck, and every limb past its toughness comes off. */
@@ -471,6 +516,7 @@ public final class Dismember {
                         ZcConfig.get().limbs.hopSpeed - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
+        crawlSpeed(zombie);
     }
 
     private static void removeHop(Zombie zombie) {

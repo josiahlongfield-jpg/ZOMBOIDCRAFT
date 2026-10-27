@@ -237,6 +237,8 @@ public final class ZBodyAnimator {
         input.look = Math.clamp(-(float) Math.toRadians(f.headYaw) / 1.1f, -1.5f, 1.5f);
         input.attack = Math.max(0f, attack);
         input.legless = noLegs;
+        int stumps = ZBodyLayer.stumps(f.cuts, f.missingLimb);
+        input.armless = (stumps & Dismember.RIGHT_ARM) != 0 && (stumps & Dismember.LEFT_ARM) != 0;
         input.goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
         input.reach = f.aggressive || attacking;
         input.hop = tr.hop;

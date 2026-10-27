@@ -99,6 +99,8 @@ public final class ZMove {
          * spring, off the ground to about 0.74, then landing).
          */
         public float hop;
+        /** No hands left (both arms shot off, or lost long ago): on the ground it can only wriggle. */
+        public boolean armless;
     }
 
     private final Pose tmp = new Pose();
@@ -340,6 +342,10 @@ public final class ZMove {
             }
             return;
         }
+        if (in.armless) {
+            wriggle(p, kind, legless, in);
+            return;
+        }
         boolean pulling = kind == Crawl.SLOW || kind == Crawl.FAST;
         float q = in.gait * (kind == Crawl.FAST ? 1f : 0.8f) + ph;
         float r = sin(q), pullR = Math.max(0f, r), pullL = Math.max(0f, -r);
@@ -388,6 +394,43 @@ public final class ZMove {
             leg(p, true, -0.05f - (pulling ? pullL * 0.3f : 0f), kR, 0.6f, 0.12f, 0.1f);
             leg(p, false, -0.05f - (pulling ? pullR * 0.3f : 0f), kL, 0.6f, 0.12f, 0.1f);
         }
+    }
+
+    /**
+     * No arms to drag itself with: it wriggles along on its belly, the hips and legs swinging from side to side with
+     * the chest humping up as it inches forward, the head craned at what it's after and kept in line (so a headshot
+     * still finds it), the stumps flapping. Alive until it's shot in the head, it never lies still: at rest it
+     * squirms where it is.
+     */
+    private static void wriggle(Pose p, Crawl kind, boolean legless, Input in) {
+        float t = in.t, ph = in.phase;
+        boolean moving = kind == Crawl.SLOW || kind == Crawl.FAST;
+        float q = moving ? in.gait * 1.4f + ph : t * (kind == Crawl.ALERT ? 2.6f : 1.7f) + ph;
+        float s = sin(q), hump = Math.max(0f, sin(2 * q)), big = moving ? 1f : 0.6f;
+        p.set(HIPS, PI / 2 - (legless ? 0.05f : 0f), sin(q + 0.6f) * 0.2f * big, s * 0.28f * big);
+        p.hx = -s * 0.5f * big;
+        p.hy = PELVIS_D / 2 + (legless ? 0.2f : 0.5f);
+        p.hz = -7f + (moving ? hump : 0f);
+        // the chest swings back against the hips, a beat behind, so the body waves and the head stays on line
+        p.set(SPINE, -0.03f - hump * 0.25f * big, -sin(q - 0.4f) * 0.15f, -sin(q - 0.25f) * 0.32f * big);
+        float hd = clamp(in.look, -1.4f, 1.4f);
+        p.set(NECK, -0.55f - hump * 0.08f, hd * 0.3f, sin(q - 0.9f) * 0.12f * big);
+        p.set(HEAD, -0.5f + sin(2 * q - 0.8f) * 0.06f, hd * 0.45f + sin(q - 2.2f) * 0.12f, 0.08f + sin(t * 0.8f + ph) * 0.06f);
+        if (kind == Crawl.GRAB) {
+            // it snaps at your ankle: the chest heaves up and the head lunges and bites
+            float c = Math.min(in.attack, 1.79f), l = seg(c, 0.2f, 0.45f) * (1 - seg(c, 1.2f, 1.7f));
+            p.rot[SPINE * 3] = -0.3f - 0.3f * l;
+            p.rot[NECK * 3] = -0.6f - 0.2f * l;
+            p.rot[HEAD * 3] = -0.45f - 0.15f * l + 0.35f * l * Math.max(0f, sin(c * 18f));
+            p.hz += 1.6f * l;
+        }
+        // what's left of the arms flaps at its sides
+        arm(p, true, -0.2f + sin(q - 0.5f) * 0.3f, 0.25f, 0f, 0f, 0f, 0f);
+        arm(p, false, -0.2f - sin(q - 0.5f) * 0.3f, 0.25f, 0f, 0f, 0f, 0f);
+        // the legs (or thigh stumps) kick in turn behind it, pushing
+        float kR = 0.25f + Math.max(0f, s) * 0.8f * big, kL = 0.25f + Math.max(0f, -s) * 0.8f * big;
+        leg(p, true, -0.05f - Math.max(0f, -s) * 0.35f * big, kR, 0.6f, 0.12f + s * 0.1f, 0.1f);
+        leg(p, false, -0.05f - Math.max(0f, s) * 0.35f * big, kL, 0.6f, 0.12f - s * 0.1f, 0.1f);
     }
 
     /**

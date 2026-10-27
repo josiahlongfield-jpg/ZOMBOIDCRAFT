@@ -146,6 +146,7 @@ public final class Downed {
     public static void makeCrawler(Zombie zombie) {
         zombie.setAttached(CRAWLER, true);
         applyCrawl(zombie);
+        Dismember.crawlSpeed(zombie);
         Timer t = TIMERS.get(zombie);
         if (t != null) {
             t.down = 0;
@@ -166,6 +167,7 @@ public final class Downed {
         if (speed != null) {
             speed.removeModifier(CRAWL_SPEED);
         }
+        Dismember.crawlSpeed(zombie);
         zombie.setPose(Pose.STANDING);
     }
 

@@ -608,6 +608,12 @@ public final class ZcConfig {
          * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
          */
         public double zombieBodyShots = 0.33;
+        /**
+         * Only a shot to the head kills a zombie: body and limb shots wear it down and take it apart, but one with
+         * every limb shot off still wriggles on the ground, and a crawler keeps coming, until it's shot in the head.
+         * Any bullet or bolt in the head finishes it. Blows, stomps, fire and explosions kill as before.
+         */
+        public boolean onlyHeadshotsKill = true;
         public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
@@ -702,6 +708,12 @@ public final class ZcConfig {
         public double otherGuns = 1.0;
         /** How fast a zombie hopping on one leg gets about, against walking (1 = as fast). */
         public double hopSpeed = 0.55;
+        /**
+         * How fast a zombie on the ground gets about with one arm left to drag itself, and with none (it wriggles
+         * along on its belly), against crawling on both (1 = as fast).
+         */
+        public double oneArmCrawl = 0.65;
+        public double wriggleSpeed = 0.3;
         /** Seconds a torn-off limb lies on the ground before it's gone. Client side. */
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
