@@ -1,4 +1,4 @@
-"""walkcheck.py DUMP [--png OUT.png] [--list N]: can players and zombies walk everywhere inside?
+"""walkcheck.py DUMP [--png OUT.png] [--list N] [--why X Z]: can players and zombies walk everywhere inside?
 
 Reads a preview dump (DUMP.json + DUMP.vox, as SitePreview, CountyPreview and the other
 preview tools write them) and the collision boxes in CitySpecs.java, builds the world's
@@ -142,7 +142,8 @@ class Shapes:
         if spec is None:
             return [[0, 0, 0, 16, 16, 16]], False
         kind, decor, boxes = spec
-        if decor or kind in ("DOOR", "TRAPDOOR"):
+        if decor or kind in ("DOOR", "TRAPDOOR") or name.startswith("bunk_blast_"):
+            # a bunker's blast door is a door too: a crowbar pries it (barricade/CrowbarItem)
             return [], name in self.climb
         if "stairs" in name:
             # a steel flight's side stringers are a pixel thick: a body fits between them, though
@@ -347,6 +348,16 @@ def main():
 
     walk_ok = bfs(adj_walk)
     any_ok = bfs(adj_all)
+    # --why X Z: every place to stand in that block column, and how it's reached (for debugging a pocket)
+    for k in range(len(args)):
+        if args[k] == "--why":
+            bx, bz = int(args[k + 1]), int(args[k + 2])
+            for hx in (2 * bx, 2 * bx + 1):
+                for hz in (2 * bz, 2 * bz + 1):
+                    for s in nodes.get((hx, hz), []):
+                        i = idx[(hx, hz, int(s))]
+                        print(f"why x {hx / 2:.1f} z {hz / 2:.1f} y {s / Q:.2f}: walk {bool(walk_ok[i])} jump {bool(any_ok[i])}"
+                              f" links {[(keys[j][0] / 2, keys[j][1] / 2, keys[j][2] / Q) for j in undirected[i]]}")
     cov = np.array([bool(covered[(x, z)][list(nodes[(x, z)]).index(s)]) for (x, z, s) in keys])
     ground_s = int(np.median([keys[i][2] for i in seeds])) if seeds else 0
     print(f"{dump}: {N} places to stand, {walk_ok.sum()} walkable from outside, {any_ok.sum()} with jumps; "

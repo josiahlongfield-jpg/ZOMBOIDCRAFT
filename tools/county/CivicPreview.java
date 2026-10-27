@@ -57,6 +57,7 @@ public final class CivicPreview {
             x += w + 12;
             maxD = Math.max(maxD, d);
         }
+        Builders.finishFlights(v);
         Builders.clearHeadroom(v);
         Builders.fitHatches(v);
         Builders.clearDoorways(v);

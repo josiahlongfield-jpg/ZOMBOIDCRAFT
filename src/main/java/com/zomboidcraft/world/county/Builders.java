@@ -21,6 +21,7 @@ public final class Builders {
             case HIDEOUT -> new HatchSite(p, county, out).build();
         }
         if (out instanceof Voxels v) {
+            finishFlights(v);
             clearHeadroom(v);
             fitHatches(v);
             clearDoorways(v);
@@ -59,6 +60,41 @@ public final class Builders {
         }
     }
 
+    /**
+     * A flight that stops a tread short of the floor it climbs to: its top tread one under the
+     * floor's plane, so the last step up is a whole block that a body has to jump (a landing laid
+     * over the top tread does it). The floor's edge cell in front of it becomes one more tread.
+     */
+    static void finishFlights(Voxels v) {
+        List<String> pal = v.palette();
+        List<int[]> treads = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            if (id != 0 && tread(pal.get(id))) {
+                treads.add(new int[] {x, y, z});
+            }
+        });
+        for (int[] t : treads) {
+            String b = v.get(t[0], t[1], t[2]);
+            int[] f = STEP.get(prop(b, "facing"));
+            if (f == null || "top".equals(prop(b, "half"))) {
+                continue;
+            }
+            int nx = t[0] + f[0], ny = t[1] + 1, nz = t[2] + f[1];
+            String n = v.get(nx, ny, nz), on = v.get(nx + f[0], ny, nz + f[1]);
+            if (n != null && on != null && !tread(n) && !tread(on) && FLOOR.matcher(n).find() && FLOOR.matcher(on).find()
+                    && v.get(nx, ny + 1, nz) == null && v.get(nx + f[0], ny + 1, nz + f[1]) == null) {
+                v.set(nx, ny, nz, b);
+            }
+        }
+    }
+
+    private static final Map<String, int[]> STEP = Map.of("north", new int[] {0, -1}, "south", new int[] {0, 1},
+            "east", new int[] {1, 0}, "west", new int[] {-1, 0});
+
+    /** Blocks a floor is laid in. */
+    private static final java.util.regex.Pattern FLOOR = java.util.regex.Pattern.compile(
+            "floor|terrazzo|parquet|lino|carpet|boards|plank|deck|tile|concrete|slab|marble|grate|plate");
+
     /** Ladders a hatch can stand over (not a stepladder, a slide's or the monkey bars). */
     private static final Set<String> LADDERS = Set.of("ladder", "bunk_ladder", "minecraft:ladder", "vessel_pilot_ladder");
 
@@ -95,9 +131,10 @@ public final class Builders {
     }
 
     /**
-     * Nothing underfoot right in front of a door or behind it: rubble, a trash bag or a box there
-     * lifts a body high enough that its head meets the lintel, and the doorway can't be walked
-     * through. (Furniture pushed against a door as a barricade is left be.)
+     * Nothing right in front of a door or behind it: rubble, a trash bag or a box there lifts a
+     * body high enough that its head meets the lintel, and a bench, a desk or a radiator a builder
+     * lined a wall with stops it dead, so the doorway can't be walked through. (Sandbags and
+     * barricades are left be: those are meant.)
      */
     static void clearDoorways(Voxels v) {
         List<String> pal = v.palette();
@@ -109,12 +146,27 @@ public final class Builders {
                 doors.add(new int[] {x, y, z, "north".equals(f) || "south".equals(f) ? 1 : 0});
             }
         });
+        // and the doorways whose doors are gone: through whichever way the wall isn't
+        for (Voxels.Mark m : v.marks) {
+            if (m.what().equals("doorway")) {
+                boolean alongX = v.get(m.x() - 1, m.y(), m.z()) != null && v.get(m.x() + 1, m.y(), m.z()) != null;
+                boolean alongZ = v.get(m.x(), m.y(), m.z() - 1) != null && v.get(m.x(), m.y(), m.z() + 1) != null;
+                if (alongX != alongZ) {
+                    doors.add(new int[] {m.x(), m.y(), m.z(), alongX ? 1 : 0});
+                }
+            }
+        }
         for (int[] d : doors) {
             for (int s = -1; s <= 1; s += 2) {
                 int x = d[0] + (d[3] == 0 ? s : 0), z = d[2] + (d[3] == 1 ? s : 0);
                 String b = v.get(x, d[1], z);
-                if (b != null && LITTER.matcher(b).find()) {
+                if (b != null && (LITTER.matcher(b).find() || FURNITURE.matcher(b).find() && !KEEP.matcher(b).find())) {
                     v.set(x, d[1], z, "air");
+                    String up = v.get(x, d[1] + 1, z);
+                    // and what stood on it, or its top half
+                    if (up != null && (up.startsWith(b.split("\\[")[0]) || FURNITURE.matcher(up).find() && !KEEP.matcher(up).find())) {
+                        v.set(x, d[1] + 1, z, "air");
+                    }
                 }
             }
         }
@@ -122,6 +174,14 @@ public final class Builders {
 
     private static final java.util.regex.Pattern LITTER =
             java.util.regex.Pattern.compile("^(rubble|trash_bag|debris|cardboard_box|brick_pile|ch_rubble|home_boxes)");
+    /** Furniture and fittings that don't belong in a doorway. */
+    private static final java.util.regex.Pattern FURNITURE = java.util.regex.Pattern.compile(
+            "bench|chair|desk|table|radiator|cabinet|bookcase|books_sta|shelf|shelves|shelving|stepladder|crate|barrel|drum|locker|counter|"
+            + "safe|coat_rack|sofa|couch|stool|cooler|bin\\b|cart|trolley|plant|potted|flag|cot_|dresser|wardrobe|fridge|"
+            + "stove|washer|dryer|piano|pew|lectern|podium|vending|rack|armchair|tv|lamp_floor|filing|copier|mailbox");
+    /** What stays even in front of a door. */
+    private static final java.util.regex.Pattern KEEP = java.util.regex.Pattern.compile(
+            "door|window|wall|water_table|trim|sill|sandbag|barricade|boarded|stairs|rail|ladder|hatch");
 
     private static final Map<String, String> OPPOSITE = Map.of("north", "south", "south", "north", "east", "west", "west", "east");
 

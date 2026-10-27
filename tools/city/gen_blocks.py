@@ -352,6 +352,9 @@ def java_line(name, spec, tex_dir):
         flags.append("OFFSET")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
+    elif "shape" in spec:
+        # a block you see through in places walks through there too: its own collision boxes
+        shape = [v for b in spec["shape"] for v in b[:6]]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
         if name.startswith(("ext_", "front_")):

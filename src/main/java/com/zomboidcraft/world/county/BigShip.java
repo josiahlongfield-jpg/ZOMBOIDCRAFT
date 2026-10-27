@@ -1221,7 +1221,8 @@ final class BigShip {
         for (int x = xt - 1; x <= xt + 2; x++) {
             p.set(x, deck + 1, ez, "air");
         }
-        p.set(xt + 1, deck, zg, "vessel_deck_walk[axis=x]");
+        // the landing is the flight's top tread, in the deck's plane, so its last step is a step
+        p.set(xt + 1, deck, zg, "steel_stairs[facing=east]");
         p.set(xt + 1, deck + 1, zg + side, "vessel_rail[axis=x]");
         p.set(xt + 2, deck + 1, zg, "vessel_rail[axis=z]");
         int k = 0;

@@ -409,7 +409,10 @@ final class Bank {
                 for (int yy = y + 2 + i; yy <= y + 4 + i && yy < TOP; yy++) {
                     p.set(x1 - 1, yy, z, "air");
                 }
-                p.set(x1 - 2, y + 1 + i, z, "cv_bar_rail[axis=z]");
+                // no rail by the bottom tread: the way off it into the tellers' side, through the counter's gate
+                if (i > 0) {
+                    p.set(x1 - 2, y + 1 + i, z, "cv_bar_rail[axis=z]");
+                }
             }
             for (int x = 1; x < x1; x++) {
                 p.set(x, M - 1, zt + 2, (x - 1) % 4 == 1 ? (rng.nextDouble() < 0.1 ? "ceiling_light" : "ceiling_light_off") : "air");
@@ -495,7 +498,8 @@ final class Bank {
         int x1 = w - 1, y = M, za = zt + 3;
         for (int x = 1; x < x1; x++) {
             for (int z = zt + 1; z < z1; z++) {
-                if (!(x == x1 - 1 && z <= zt + M - F - 1)) {
+                // the stair's well, its top tread (in this floor's plane) left as it is
+                if (!(x == x1 - 1 && z <= zt + M - F)) {
                     p.set(x, y, z, "home_floor_oak");
                 }
             }

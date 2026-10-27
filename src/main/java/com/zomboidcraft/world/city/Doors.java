@@ -24,6 +24,8 @@ public final class Doors {
         if (r < 0.12) {
             p.set(x, y, z, type.equals(SHOP) ? "glass_shards" : "air");
             p.set(x, y + 1, z, "air");
+            // the empty doorway, for the pass that keeps every way through clear (county/Builders)
+            p.mark("doorway", x, y, z);
             return;
         }
         place(p, x, y, z, type, facing, hinge, r < 0.5);

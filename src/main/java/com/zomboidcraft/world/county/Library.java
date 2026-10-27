@@ -660,7 +660,7 @@ final class Library {
 
     /**
      * The closed stacks behind the desk: iron ranges two tiers high (the upper tier on a grated
-     * deck reached by a steel stair in the end aisle), slit windows down each aisle, bulbs hung
+     * deck reached by a steel stair up the end aisle to the cross aisle), slit windows down each aisle, bulbs hung
      * in the aisles; the stair down to the basement along the west side behind a rail.
      */
     private void stacks(int w, int z1, int zb, int cx) {
@@ -670,9 +670,10 @@ final class Library {
                 p.set(x, y, z, "cv_terrazzo");
             }
         }
-        // the ranges, double-faced, running back from the cross aisle; uprights through both tiers
+        // the ranges, double-faced, running back from the cross aisle to an aisle along the back
+        // wall (the way round to the stair's foot); uprights through both tiers
         for (int x = cx; x <= x1; x += 2) {
-            for (int z = zb + 2; z < z1; z++) {
+            for (int z = zb + 2; z < z1 - 1; z++) {
                 for (int yy = y + 1; yy <= y + 5; yy++) {
                     p.set(x, yy, z, "cv_stack[axis=z]");
                 }
@@ -687,13 +688,16 @@ final class Library {
                 }
             }
         }
+        // it climbs north to come out on the cross aisle's deck, where every upper aisle starts
         for (int k = 0; k < 3; k++) {
-            p.set(ax, y + 1 + k, zb + 2 + k, "steel_stairs[facing=south]");
+            p.set(ax, y + 1 + k, zb + 4 - k, "steel_stairs[facing=north]");
             if (k < 2) {
-                p.set(ax, deck, zb + 2 + k, "air");
+                p.set(ax, deck, zb + 4 - k, "air");
             }
         }
-        p.set(ax, deck + 1, zb + 1, "railing[facing=south]");
+        if (zb + 5 < z1) {
+            p.set(ax, deck + 1, zb + 5, "railing[facing=north]");
+        }
         // the stair down to the basement: its top in the floor at the cross aisle, the well behind a rail
         for (int k = 0; k <= F1 - BASE - 1; k++) {
             int z = zb + 1 + k;
@@ -720,7 +724,8 @@ final class Library {
         }
         books(sx + 1, zb + 1, x1, z1 - 1, y + 1, 0.12);
         books(sx, zb + 1, x1, z1 - 1, deck + 1, 0.08);
-        p.setIfAir(cx - 1, y + 1, zb + 1, rng.nextDouble() < 0.5 ? "trade_stepladder[facing=south]" : "cardboard_box[facing=east]");
+        // the rolling steps left at the cross aisle's far end, clear of the doors in
+        p.setIfAir(x1, y + 1, zb + 1, rng.nextDouble() < 0.5 ? "trade_stepladder[facing=south]" : "cardboard_box[facing=east]");
     }
 
     // ------------------------------------------------------------------ the basement
