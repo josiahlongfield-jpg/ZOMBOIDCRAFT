@@ -2,15 +2,18 @@ package com.zomboidcraft.mixin;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.CombatEvents;
+import com.zomboidcraft.combat.Deaths;
 import com.zomboidcraft.combat.Downed;
 import com.zomboidcraft.skills.Combat;
 import com.zomboidcraft.survival.Drinks;
+import com.zomboidcraft.zombie.Corpses;
 import com.zomboidcraft.zombie.ZombieTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,6 +48,22 @@ public abstract class LivingEntityMixin {
     private void zomboidcraft$downed(CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValueZ() && (Object) this instanceof Mob mob && Downed.isHeld(mob)) {
             cir.setReturnValue(true);
+        }
+    }
+
+    /** A walker's death: how it goes down, for every client to draw the same fall (combat.Deaths). */
+    @Inject(method = "die", at = @At("HEAD"))
+    private void zomboidcraft$died(DamageSource source, CallbackInfo ci) {
+        if ((Object) this instanceof Zombie zombie && !zombie.level().isClientSide() && ZombieTypes.isWalker(zombie)) {
+            Deaths.died(zombie, source);
+        }
+    }
+
+    /** A dead walker falls, then its body stays where it lies (zombie.Corpses), instead of a tip-over and a puff of smoke. */
+    @Inject(method = "tickDeath", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$fall(CallbackInfo ci) {
+        if (Corpses.holds((LivingEntity) (Object) this)) {
+            ci.cancel();
         }
     }
 

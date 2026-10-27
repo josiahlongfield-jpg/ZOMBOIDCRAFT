@@ -101,6 +101,11 @@ public final class Dismember {
         float head;
         Vec3 headDir;
         GunType headGun;
+        /** The last shot to land anywhere, and when: the way it falls if that killed it (Deaths). */
+        Vec3 shotDir;
+        GunType shotGun;
+        int shotPart;
+        long shotTick;
     }
 
     private static final Map<Zombie, Wounds> WOUNDS = new WeakHashMap<>();
@@ -237,7 +242,7 @@ public final class Dismember {
     public static void pellet(ServerPlayer shooter, LivingEntity target, BodyHit hit, Vec3 dir, float damage, boolean head,
                               boolean legs, GunType gun) {
         ZcConfig.Limbs config = ZcConfig.get().limbs;
-        if (!config.enabled || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie)) {
+        if (!(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie)) {
             return;
         }
         int part = head ? HEAD : hit.part;
@@ -247,6 +252,16 @@ public final class Dismember {
         Wounds w = WOUNDS.computeIfAbsent(zombie, z -> new Wounds());
         w.struck |= 1 << part;
         w.shooter = shooter;
+        w.shotDir = dir;
+        w.shotGun = gun;
+        w.shotPart = part;
+        w.shotTick = zombie.level().getGameTime();
+        if (!SHOT.contains(zombie)) {
+            SHOT.add(zombie);
+        }
+        if (!config.enabled) {
+            return;
+        }
         if (CUT_OF[part] != 0) {
             w.dealt[Integer.numberOfTrailingZeros(CUT_OF[part])] += (float) (damage / (legs ? 0.7 : 1.0) * tearing(gun, config));
             w.dir = dir;
@@ -256,18 +271,34 @@ public final class Dismember {
             w.headDir = dir;
             w.headGun = gun;
         }
-        if (!SHOT.contains(zombie)) {
-            SHOT.add(zombie);
-        }
     }
 
-    /** After the shots: every limb past its toughness comes off. */
+    /** The shot that last landed on a zombie, if it was this tick or the one before. */
+    record Shot(Vec3 dir, GunType gun, int part) {
+    }
+
+    static Shot lastShot(Zombie zombie) {
+        Wounds w = WOUNDS.get(zombie);
+        if (w == null || w.shotDir == null || zombie.level().getGameTime() - w.shotTick > 1) {
+            return null;
+        }
+        return new Shot(w.shotDir, w.shotGun, w.shotPart);
+    }
+
+    /** After the shots: the body jerks where they struck, and every limb past its toughness comes off. */
     private static void settle(Zombie zombie) {
         Wounds w = WOUNDS.get(zombie);
         if (w == null || zombie.isRemoved()) {
             return;
         }
+        if (zombie.isAlive() && w.struck != 0 && w.shotDir != null) {
+            Deaths.jerk(zombie, w.struck, w.shotDir, force(w.shotGun));
+        }
         ZcConfig.Limbs config = ZcConfig.get().limbs;
+        if (!config.enabled) {
+            w.struck = 0;
+            return;
+        }
         float[] took = w.dealt.clone();
         int severed = 0;
         for (int cut : ORDER) {
@@ -389,8 +420,8 @@ public final class Dismember {
         };
     }
 
-    /** How hard a limb is flung: 0 handgun, 1 rifle, 2 hunting rifle, 3 buckshot. */
-    private static int force(GunType gun) {
+    /** How hard a limb is flung (and a body pushed): 0 handgun, 1 rifle, 2 hunting rifle, 3 buckshot. */
+    static int force(GunType gun) {
         if (gun.pellets() > 1) {
             return 3;
         }

@@ -26,8 +26,8 @@ public final class ZMove {
 
     private static final float PI = (float) Math.PI;
     // body A sizes (STYLES.A in the preview)
-    private static final float THIGH = 7.2f, SHIN = 6.6f, FOOT = 1.4f, PELVIS_H = 3f, PELVIS_D = 3.8f;
-    private static final float BASE = THIGH + SHIN + FOOT + PELVIS_H / 2;
+    static final float THIGH = 7.2f, SHIN = 6.6f, FOOT = 1.4f, PELVIS_H = 3f, PELVIS_D = 3.8f;
+    static final float BASE = THIGH + SHIN + FOOT + PELVIS_H / 2;
 
     /** One frame's joint angles plus where the hips sit. */
     public static final class Pose {
@@ -35,6 +35,11 @@ public final class ZMove {
         public float hx, hy = BASE, hz;
         /** Hips turn X-Y-Z (lying down) rather than Y-X-Z. */
         public boolean lying;
+        /**
+         * Going over or gone over (standing order only): after the hips' own turn, the whole body tipped by tilt
+         * radians toward fallDir (radians from its front round toward its left), about the hips.
+         */
+        public float fallDir, tilt;
 
         void clear() {
             java.util.Arrays.fill(rot, 0f);
@@ -42,6 +47,8 @@ public final class ZMove {
             hy = BASE;
             hz = 0f;
             lying = false;
+            fallDir = 0f;
+            tilt = 0f;
         }
 
         void add(Pose p, float w) {
@@ -65,6 +72,8 @@ public final class ZMove {
             hy = p.hy;
             hz = p.hz;
             lying = p.lying;
+            fallDir = p.fallDir;
+            tilt = p.tilt;
         }
     }
 
@@ -169,31 +178,31 @@ public final class ZMove {
         out.lying = lying > total * 0.5f;
     }
 
-    private static float sin(float a) {
+    static float sin(float a) {
         return (float) Math.sin(a);
     }
 
-    private static float cos(float a) {
+    static float cos(float a) {
         return (float) Math.cos(a);
     }
 
-    private static float clamp(float x, float a, float b) {
+    static float clamp(float x, float a, float b) {
         return Math.max(a, Math.min(b, x));
     }
 
-    private static float seg(float x, float a, float b) {
+    static float seg(float x, float a, float b) {
         float s = clamp((x - a) / (b - a), 0f, 1f);
         return s * s * (3 - 2 * s);
     }
 
-    private static void arm(Pose p, boolean right, float sx, float out, float sy, float el, float wr, float wz) {
+    static void arm(Pose p, boolean right, float sx, float out, float sy, float el, float wr, float wz) {
         float s = right ? -1f : 1f;
         p.set(right ? SH_R : SH_L, sx, sy * s, out * s);
         p.set(right ? EL_R : EL_L, el, 0f, 0f);
         p.set(right ? WR_R : WR_L, wr, 0f, wz * s);
     }
 
-    private static void leg(Pose p, boolean right, float a, float k, float an, float out, float tw) {
+    static void leg(Pose p, boolean right, float a, float k, float an, float out, float tw) {
         float s = right ? -1f : 1f;
         p.set(right ? HIP_R : HIP_L, a, tw * s, out * s);
         p.set(right ? KN_R : KN_L, k, 0f, 0f);
@@ -487,6 +496,8 @@ public final class ZMove {
         out.hy = a.hy + (b.hy - a.hy) * s;
         out.hz = a.hz + (b.hz - a.hz) * s;
         out.lying = s < 0.5f ? a.lying : b.lying;
+        out.tilt = a.tilt + (b.tilt - a.tilt) * s;
+        out.fallDir = b.tilt != 0f ? b.fallDir : a.fallDir;
     }
 
     /**

@@ -103,6 +103,13 @@ jobs:
           echo 'data get entity @e[type=zomboidcraft:car,limit=1] model' >&3
           echo 'data get entity @e[type=minecraft:husk,limit=1] Health' >&3
           echo 'execute as @e[type=zomboidcraft:car] run say car here' >&3
+          # A walker that dies falls, then leaves its body (no puff), which saves with the world.
+          echo 'summon minecraft:zombie 6 101 6 {Tags:["zc_dead"]}' >&3
+          sleep 2
+          echo 'kill @e[tag=zc_dead]' >&3
+          sleep 4
+          echo 'execute as @e[type=zomboidcraft:corpse] run say corpse here' >&3
+          echo 'data get entity @e[type=zomboidcraft:corpse,limit=1] outfit' >&3
           sleep 10
           echo 'stop' >&3
           for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
@@ -112,6 +119,7 @@ jobs:
           grep -E 'zomboidcraft|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
+          grep -q 'corpse here' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
           grep -E 'Rain (cover|falls through)' server.log

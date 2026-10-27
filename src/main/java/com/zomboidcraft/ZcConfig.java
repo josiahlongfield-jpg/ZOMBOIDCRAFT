@@ -33,6 +33,8 @@ public final class ZcConfig {
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
+    /** How the dead fall and the bodies they leave, and how the living jerk when shot. */
+    public Corpses corpses = new Corpses();
     public Guns guns = new Guns();
     /** The M9-style pistol's own numbers (shared gun settings are in guns). */
     public GunStats pistol = GunStats.pistol();
@@ -614,6 +616,22 @@ public final class ZcConfig {
         public double leglessSpawnChance = 0.03;
         /** Chance a knockdown from a heavy weapon or gunshot leaves a zombie crawling. */
         public double crippleChance = 0.2;
+    }
+
+    public static class Corpses {
+        /**
+         * A dead zombie falls the way it was going and the shot pushed it, and its body stays lying where it fell,
+         * missing whatever was shot off it (off: vanilla's tip-over and puff of smoke).
+         */
+        public boolean enabled = true;
+        /** Most bodies kept in a world while it's loaded; past this the oldest go. */
+        public int maxBodies = 300;
+        /** Minutes a body lies before it's gone (0 = it stays for good). */
+        public double minutes = 0;
+        /** Living zombies jerk and rock back where shots hit them. */
+        public boolean hitReactions = true;
+        /** How far off bodies are drawn, in blocks. Client side. */
+        public double drawDistance = 64;
     }
 
     public static class Limbs {
