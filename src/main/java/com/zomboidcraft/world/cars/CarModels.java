@@ -87,6 +87,7 @@ public final class CarModels {
             if (in != null) {
                 Index index = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), Index.class);
                 for (Model m : index.models) {
+                    seatToWheel(m);
                     found.put(m.id, m);
                 }
                 names = index.variants;
@@ -96,6 +97,32 @@ public final class CarModels {
         }
         variants = names;
         models = found;
+    }
+
+    /**
+     * Where the driver's eyes sit against the steering wheel, the same in every vehicle: this far behind the
+     * rim's nearest point, the wheel's middle this far below, and square behind it. The pack's seats put some
+     * drivers twice as far back as others; this sits them all close enough to see out over the dash.
+     */
+    private static final float WHEEL_GAP = 0.18f, WHEEL_DROP = 0.28f;
+
+    /** Seats the driver against the wheel (cars with one only); whoever sits beside them moves up or back as much. */
+    private static void seatToWheel(Model m) {
+        if (m.steering == null || m.seats == null || m.seats.length == 0) {
+            return;
+        }
+        float[] w = m.steering, eye = m.seats[0];
+        // the rim's nearest point to the driver: down the wheel's face from its middle
+        float ny = w[4], nz = w[5], upY = 1 - ny * ny, upZ = -ny * nz, len = (float) Math.sqrt(upY * upY + upZ * upZ);
+        float nearZ = len < 1e-4f ? w[2] : w[2] - upZ / len * w[6];
+        float front = eye[2], z = nearZ - WHEEL_GAP;
+        for (float[] seat : m.seats) {
+            if (Math.abs(seat[2] - front) < 0.3f) {
+                seat[2] += z - front;
+            }
+        }
+        eye[0] = w[0];
+        eye[1] = w[1] + WHEEL_DROP;
     }
 
     public static Map<String, Model> all() {

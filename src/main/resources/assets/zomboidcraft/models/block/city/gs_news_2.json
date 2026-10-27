@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_news_2": "zomboidcraft:block/city/gs_news_2",
+    "gs_news_body_2": "zomboidcraft:block/city/gs_news_body_2",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/home_plastic_black"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        5
+      ],
+      "to": [
+        13,
+        2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        2,
+        4.5
+      ],
+      "to": [
+        12.5,
+        14,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_news_2"
+        },
+        "south": {
+          "texture": "#gs_news_body_2"
+        },
+        "east": {
+          "texture": "#gs_news_body_2"
+        },
+        "west": {
+          "texture": "#gs_news_body_2"
+        },
+        "up": {
+          "texture": "#gs_news_body_2"
+        },
+        "down": {
+          "texture": "#gs_news_body_2"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        14,
+        5
+      ],
+      "to": [
+        12.5,
+        14.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_news_body_2"
+        },
+        "south": {
+          "texture": "#gs_news_body_2"
+        },
+        "east": {
+          "texture": "#gs_news_body_2"
+        },
+        "west": {
+          "texture": "#gs_news_body_2"
+        },
+        "up": {
+          "texture": "#gs_news_body_2"
+        },
+        "down": {
+          "texture": "#gs_news_body_2"
+        }
+      }
+    }
+  ]
+}

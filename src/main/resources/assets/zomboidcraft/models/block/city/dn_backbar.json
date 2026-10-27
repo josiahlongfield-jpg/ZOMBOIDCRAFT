@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_bb_front": "zomboidcraft:block/city/dn_bb_front",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/dn_bb_front"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_bb_front"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0.5
+      ],
+      "to": [
+        16,
+        1,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

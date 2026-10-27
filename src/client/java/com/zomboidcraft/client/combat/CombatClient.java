@@ -54,6 +54,10 @@ public final class CombatClient {
      */
     private static double autoNextMs = -1e18;
     private static int burstLeft = -1;
+    /** The spread's bloom as of bloomAt (wall clock ns), for the gun it was fired with: kept in step with the server's. */
+    private static double bloom;
+    private static long bloomAt;
+    private static GunType bloomGun;
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
     private static float kickPending;
     private static float recoverLeft;
@@ -194,6 +198,9 @@ public final class CombatClient {
         if (dry) {
             return;     // the server answers with the dry click
         }
+        // the spread blooms as the server's does (Guns.fire), so the crosshair's ring is where the next shot can go
+        bloom = Guns.bloomed(bloom(type), auto, stats);
+        bloomAt = System.nanoTime();
         boolean suppressed = Attachments.suppressed(gun);
         // at your ears, so it doesn't stay behind where you fired as you strafe
         // on full auto the pitch barely varies, so the string of shots sounds even
@@ -203,7 +210,7 @@ public final class CombatClient {
                 (suppressed ? (float) stats.suppressedPitch : 1f) * (1f - vary / 2 + player.getRandom().nextFloat() * vary));
         // the case comes out with the shot, here, rather than when the server's tick gets to it
         if (!type.manual() && !type.opens && type != GunType.CROSSBOW) {
-            EarSound.play(com.zomboidcraft.combat.ModSounds.CASING, SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+            EarSound.play(Guns.casing(type), SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
@@ -213,6 +220,15 @@ public final class CombatClient {
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);
         kickPending += kick - now65;
         recoverLeft += kick * 0.4f;
+    }
+
+    /** How far the spread has bloomed open right now with this gun (degrees). */
+    public static double bloom(GunType type) {
+        if (type != bloomGun) {
+            bloomGun = type;
+            bloom = 0;
+        }
+        return Guns.bloomNow(bloom, (System.nanoTime() - bloomAt) / 1e9, type.stats());
     }
 
     /** The rest of the kick lands next tick, then the muzzle settles part of the way back. */

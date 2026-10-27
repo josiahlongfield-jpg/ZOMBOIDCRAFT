@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_roof_r": "zomboidcraft:block/city/dn_roof_r",
+    "particle": "zomboidcraft:block/city/dn_roof_r"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_roof_r",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_roof_r",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_roof_r",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_roof_r",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_roof_r"
+        },
+        "down": {
+          "texture": "#dn_roof_r",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        8
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_roof_r"
+        },
+        "south": {
+          "texture": "#dn_roof_r",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_roof_r",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_roof_r",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_roof_r"
+        },
+        "down": {
+          "texture": "#dn_roof_r"
+        }
+      }
+    }
+  ]
+}

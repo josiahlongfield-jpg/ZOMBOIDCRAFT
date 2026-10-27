@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_neon_diner_0_on": "zomboidcraft:block/city/dn_neon_diner_0_on",
+    "particle": "zomboidcraft:block/city/dn_neon_diner_0_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_neon_diner_0_on"
+        },
+        "south": {
+          "texture": "#dn_neon_diner_0_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_neon_diner_0_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_neon_diner_0_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_neon_diner_0_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_neon_diner_0_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

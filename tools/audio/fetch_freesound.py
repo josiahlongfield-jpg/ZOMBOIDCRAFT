@@ -89,6 +89,20 @@ QUERIES = {
     # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
     # the weather's storm-tripped alarms: a looping car alarm and an electric burglar bell
+    # bullet strikes by surface (Josiah: the old hit sounded cartoonish); WEAPONS plays one per shot
+    "imp_ground": ["bullet impact dirt", "bullet hit ground", "bullet impact sand", "bullet impact grass", "bullet hitting dirt",
+                   "bullet impact gravel"],
+    "imp_concrete": ["bullet impact concrete", "bullet hit concrete", "bullet impact asphalt", "bullet hitting wall concrete",
+                     "bullet impact stone", "bullet impact rock", "concrete bullet hole", "ricochet concrete"],
+    "imp_brick": ["bullet impact brick", "bullet hit wall", "bullet impact plaster", "bullet impact tile", "bullet hits drywall",
+                  "bullet impacts", "gunshot impact wall", "bullet impact"],
+    "imp_wood": ["bullet impact wood", "bullet hit wood", "bullet hitting wooden door", "bullet impact tree", "bullet wood splinter"],
+    "imp_metal": ["bullet impact metal", "bullet hit metal", "bullet hitting steel", "bullet impact sheet metal", "bullet ping metal"],
+    "imp_car": ["bullet hitting car", "bullet impact car door", "bullet hits vehicle", "bullet impact car body", "gunshot car metal",
+                "bullet impact metal hollow", "bullet hit car", "car shot"],
+    "imp_glass": ["bullet impact glass", "bullet through glass", "bullet hit window", "glass bullet hole", "window shot"],
+    "imp_soft": ["bullet impact fabric", "bullet hit cushion", "bullet impact upholstery", "bullet hit cloth", "bullet impact sandbag",
+                 "bullet hit pillow", "bullet impact soft", "bullet hit mattress"],
     # flyable jets and the Apache-style helicopter (the aircraft thread's events)
     "air_jet_start": ["jet engine start", "jet engine startup", "turbine spool up", "apu start aircraft", "jet engine spool up",
                       "jet engine shutdown", "turbine spool down"],
@@ -167,11 +181,22 @@ def get(url, binary=False):
     return None
 
 
-def search(q):
+# Real bullet strikes are scarce under CC0, so these groups also take Attribution (CC-BY) sounds, credited in CREDITS.md
+ATTRIBUTION_OK = ("imp_",)
+
+
+def licence_filter(cat):
+    if cat.startswith(ATTRIBUTION_OK):
+        return 'license:("Creative Commons 0" OR "Attribution")'
+    return 'license:"Creative Commons 0"'
+
+
+def search(q, cat=""):
+    f = licence_filter(cat)
     params = [
-        {"q": q, "f": 'license:"Creative Commons 0"', "s": "Downloads (most first)"},
-        {"q": q, "f": 'license:"Creative Commons 0"', "s": "num_downloads desc"},
-        {"q": q, "f": 'license:"Creative Commons 0"'},
+        {"q": q, "f": f, "s": "Downloads (most first)"},
+        {"q": q, "f": f, "s": "num_downloads desc"},
+        {"q": q, "f": f},
     ]
     for p in params:
         html = get("https://freesound.org/search/?" + urllib.parse.urlencode(p))
@@ -201,14 +226,14 @@ def main():
             if over_budget():
                 print("time budget used up")
                 break
-            ids, html = search(q)
+            ids, html = search(q, cat)
             print(f"{cat} / {q}: {len(ids)} results")
             if not ids and not dumped:
                 (out / "search_debug.html").write_text(html[:200000])
                 dumped = True
             taken = 0
             for user, sid in ids:
-                if taken >= PER_QUERY:
+                if taken >= (10 if cat.startswith(ATTRIBUTION_OK) else PER_QUERY):
                     break
                 if sid in manifest:
                     continue
@@ -216,9 +241,12 @@ def main():
                 page = get(page_url)
                 if not page:
                     continue
-                if not re.search(r"publicdomain/zero|Creative Commons 0", page):
-                    print("  skip (not CC0)", sid)
+                cc0 = re.search(r"publicdomain/zero|Creative Commons 0", page)
+                by = re.search(r"creativecommons\.org/licenses/by/(\d\.\d)", page)
+                if not cc0 and not (by and cat.startswith(ATTRIBUTION_OK)):
+                    print("  skip (licence)", sid)
                     continue
+                licence = "CC0 1.0" if cc0 else f"CC-BY {by.group(1)}"
                 m = re.search(r'https://cdn\.freesound\.org/previews/\d+/\d+_\d+-hq\.ogg', page) \
                     or re.search(r'https://cdn\.freesound\.org/previews/\d+/\d+_\d+-hq\.mp3', page)
                 if not m:
@@ -236,7 +264,7 @@ def main():
                 manifest[sid] = {"category": cat, "query": q, "file": f"{cat}/{sid}.{ext}", "user": user,
                                  "title": title.group(1) if title else "", "description": (desc.group(1) if desc else "")[:300],
                                  "tags": sorted(set(tags))[:20], "downloads": dl.group(1) if dl else "",
-                                 "page": page_url, "license": "CC0 1.0"}
+                                 "page": page_url, "license": licence}
                 taken += 1
                 (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
                 time.sleep(0.5)

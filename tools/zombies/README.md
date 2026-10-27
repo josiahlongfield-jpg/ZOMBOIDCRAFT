@@ -8,6 +8,7 @@ preview into game data:
    small-detail flags) and `out/<outfit>.png` (the worn kit atlas).
 2. `pack.py` writes `assets/zomboidcraft/zbody/<outfit>.bin` (read by `ZBodyMesh`), the kit atlas,
    the 1024 px per-type skin and the eye mask under `textures/entity/zbody/`.
+2b. `cull.py` then strips clothing faces hidden inside the body or another closed box on the same bone (about 7%; never body, stump or cut faces). Run it after every pack.
 3. `check.py` re-renders an export flat as a quick look.
 
 The preview's own sources (kits.js, move.js, the patch scripts) live in the project files under

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_pine": "zomboidcraft:block/city/dn_pine",
+    "particle": "zomboidcraft:block/city/dn_pine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_pine",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_pine",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_pine",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_pine",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_pine",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_pine",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

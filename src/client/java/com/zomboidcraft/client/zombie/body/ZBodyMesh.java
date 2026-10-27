@@ -36,6 +36,9 @@ public final class ZBodyMesh {
 
     private static final Map<String, ZBodyMesh> CACHE = new HashMap<>();
 
+    /** Which quads each pass draws, worked out once: body or clothes, by detail level, with or without legs. */
+    private final int[][] lists = new int[16][];
+
     private ZBodyMesh(ByteBuffer b) {
         if (b.get() != 'Z' || b.get() != 'B' || b.get() != 'D' || b.get() != '1') {
             throw new IllegalArgumentException("not a zombie body mesh");
@@ -77,6 +80,32 @@ public final class ZBodyMesh {
         float dy = pos[q * 12 + c * 3 + 1] - pos[q * 12 + a * 3 + 1];
         float dz = pos[q * 12 + c * 3 + 2] - pos[q * 12 + a * 3 + 2];
         return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    /**
+     * The quads drawn for the body or the clothes at a detail level ({@link ZDetail}): past level 0 the smallest
+     * pieces go, from level 2 the clothes' thin edges (under a pixel, at 3 under two). Stump caps only on the legless.
+     */
+    public int[] quads(boolean body, int lod, boolean legless) {
+        int key = (body ? 8 : 0) | (legless ? 4 : 0) | Math.clamp(lod, 0, 3);
+        int[] list = lists[key];
+        if (list == null) {
+            int[] all = new int[count];
+            int n = 0;
+            for (int q = 0; q < count; q++) {
+                int f = flags[q];
+                if (((f & BODY) != 0) != body || ((f & STUMP) != 0 && !legless)) {
+                    continue;
+                }
+                if (!body && lod > ZDetail.FULL && ((f & SMALL) != 0
+                        || (lod >= ZDetail.LOW && minEdge[q] < (lod == ZDetail.SIMPLE ? 2f : 1f)))) {
+                    continue;
+                }
+                all[n++] = q;
+            }
+            list = lists[key] = java.util.Arrays.copyOf(all, n);
+        }
+        return list;
     }
 
     /** The outfit's mesh, loaded once; null if the outfit has none (the old model draws it then). */

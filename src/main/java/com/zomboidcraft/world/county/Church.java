@@ -365,7 +365,8 @@ final class Church {
             hang(cx - 3, z, "ch_chandelier", 0.06, eave - 1);
             hang(cx + 2, z, "ch_chandelier", 0.06, eave - 1);
         }
-        stairDown(xi1, z0 + 1, -1);
+        // its head a step in from the front wall's lining, so you come onto it from the nave
+        stairDown(xi1, z0 + 2, -1);
         refuge(z0 + 1);
         b.mess(xi0, z0 + 1, xi1, z1 - 4, floor + 1, 0.03);
         hall(xi1);
@@ -825,8 +826,14 @@ final class Church {
         }
     }
 
-    /** The stair down to the basement along x from z (its top in the floor), a rail on the side toward dir. */
+    /**
+     * The stair down to the basement along x from z (its top in the floor), a rail on the side
+     * toward dir. You step onto its head from that side, kept clear two high.
+     */
     private void stairDown(int sx, int z, int dir) {
+        for (int yy = floor + 1; yy <= floor + 2; yy++) {
+            p.set(sx + dir, yy, z, "air");
+        }
         for (int k = 0; k <= floor - base - 1; k++) {
             int zz = z + k;
             p.set(sx, floor - k, zz, "stairs_concrete[facing=north]");

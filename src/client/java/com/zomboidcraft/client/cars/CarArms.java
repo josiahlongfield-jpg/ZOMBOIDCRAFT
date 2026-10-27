@@ -20,14 +20,18 @@ import org.joml.Vector3f;
 /**
  * The local driver's own arms on the steering wheel in first person, drawn with the car in its own space
  * so the hands sit on the rim whatever the field of view: each arm cut from their player model (their
- * skin and sleeves, wide or slim), running from the shoulder to a hand gripping the rim at ten to two,
- * the hands going round with the wheel as it turns (up to a point, then the wheel slides through them).
+ * skin and sleeves, wide or slim), running low from the shoulder to a hand gripping the side of the rim at
+ * a little above quarter to three, so they stay down by the edges of the view rather than across the windscreen; the hands
+ * go round with the wheel as it turns (up to a point, then the wheel slides through them). The arms are
+ * drawn at the rider's size (shrunk in a car) and slimmer still, as they're right under the camera.
  */
 final class CarArms {
     /** The arm's length in model pixels from the grip to the shoulder end, and how far the fist goes past the grip. */
     private static final float REACH = 10.5f, FIST = 1.5f, HAND_END = 10f;
     /** Where the hands grip: this far round from the top of the wheel, each way, and how far they follow its turn. */
-    private static final float GRIP = (float) Math.toRadians(62), FOLLOW = (float) Math.toRadians(80);
+    private static final float GRIP = (float) Math.toRadians(75), FOLLOW = (float) Math.toRadians(80);
+    /** How thick the driver's arms are drawn against the rider's own. */
+    private static final float SLIM = 0.8f;
 
     /**
      * Draws the arms. pose is the car's frame (model space); eye is the driver's seat (eyes) in it; wheel is the
@@ -54,11 +58,12 @@ final class CarArms {
         float follow = Math.max(-FOLLOW, Math.min(FOLLOW, turn));
         Vector3f leftHand = rim(c, up, left, wheel[6], GRIP + follow);
         Vector3f rightHand = rim(c, up, left, wheel[6], -GRIP + follow);
-        Vector3f leftShoulder = new Vector3f(eye[0] + 0.2f, eye[1] - 0.32f, eye[2] - 0.08f);
-        Vector3f rightShoulder = new Vector3f(eye[0] - 0.2f, eye[1] - 0.32f, eye[2] - 0.08f);
-        arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand, leftShoulder, c);
+        float s = player.getScale();
+        Vector3f leftShoulder = new Vector3f(eye[0] + 0.21f * s, eye[1] - 0.36f * s, eye[2] - 0.08f * s);
+        Vector3f rightShoulder = new Vector3f(eye[0] - 0.21f * s, eye[1] - 0.36f * s, eye[2] - 0.08f * s);
+        arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand, leftShoulder, c, SLIM * s);
         if (hands == CarHands.BOTH) {
-            arm(pose, out, light, texture, model.rightArm, model.rightSleeve, slim ? -0.5f : -1f, rightHand, rightShoulder, c);
+            arm(pose, out, light, texture, model.rightArm, model.rightSleeve, slim ? -0.5f : -1f, rightHand, rightShoulder, c, SLIM * s);
         }
     }
 
@@ -83,11 +88,11 @@ final class CarArms {
         boolean slim = skin.model() == PlayerModelType.SLIM;
         if (leftHand != null) {
             arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand,
-                    new Vector3f(eye[0] + 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), leftPalm);
+                    new Vector3f(eye[0] + 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), leftPalm, 1f);
         }
         if (rightHand != null) {
             arm(pose, out, light, texture, model.rightArm, model.rightSleeve, slim ? -0.5f : -1f, rightHand,
-                    new Vector3f(eye[0] - 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), rightPalm);
+                    new Vector3f(eye[0] - 0.2f, eye[1] - 0.32f, eye[2] - 0.08f), rightPalm, 1f);
         }
     }
 
@@ -97,7 +102,7 @@ final class CarArms {
     }
 
     private static void arm(PoseStack pose, SubmitNodeCollector out, int light, Identifier skin, ModelPart arm, ModelPart sleeve,
-                            float centreX, Vector3f hand, Vector3f shoulder, Vector3f wheel) {
+                            float centreX, Vector3f hand, Vector3f shoulder, Vector3f wheel, float thick) {
         Vector3f back = new Vector3f(shoulder).sub(hand);
         float length = back.length();
         back.normalize();
@@ -110,7 +115,7 @@ final class CarArms {
         }
         x.normalize();
         Vector3f z = new Vector3f(x).cross(y);
-        float stretch = Math.max(0.6f, (length + 0.1f) * 16f / REACH);
+        float stretch = Math.max(0.6f, (length + 0.1f * thick) * 16f / REACH);
         arm.resetPose();
         arm.x = arm.y = arm.z = 0;
         arm.xRot = arm.yRot = arm.zRot = 0;
@@ -119,8 +124,8 @@ final class CarArms {
         pose.pushPose();
         pose.translate(hand.x, hand.y, hand.z);
         pose.rotate(new Quaternionf().setFromNormalized(new Matrix3f(x, y, z)));
-        pose.scale(1f, stretch, 1f);
-        pose.translate(-centreX / 16f, -(HAND_END - FIST / stretch) / 16f, 0);
+        pose.scale(thick, stretch, thick);
+        pose.translate(-centreX / 16f, -(HAND_END - FIST * thick / stretch) / 16f, 0);
         out.submitModelPart(arm, pose, RenderTypes.entityTranslucent(skin), light, OverlayTexture.NO_OVERLAY, null);
         pose.popPose();
     }

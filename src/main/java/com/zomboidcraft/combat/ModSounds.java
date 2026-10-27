@@ -116,9 +116,24 @@ public final class ModSounds {
     public static final SoundEvent CROSSBOW_HIT = register("weapon.crossbow.hit", 24f);
     public static final SoundEvent CROSSBOW_HIT_BLOCK = register("weapon.crossbow.hit_block", 24f);
     public static final SoundEvent CASING = register("weapon.casing");
+    /** A spent shotgun hull landing: a dull plastic bounce, not brass. */
+    public static final SoundEvent CASING_SHOTGUN = register("weapon.casing.shotgun", 16f);
     public static final SoundEvent BULLET_FLESH = register("weapon.bullet.flesh", 64f);  // Josiah: hear your hits from across the street
     public static final SoundEvent HEAD_BURST = register("weapon.bullet.head_burst", 64f);
     public static final SoundEvent BULLET_RICOCHET = register("weapon.bullet.ricochet");
+    /** A bullet striking each kind of surface (Surface): heard a street or so away. */
+    public static final SoundEvent IMPACT_GROUND = register("weapon.bullet.impact.ground", 40f);
+    public static final SoundEvent IMPACT_CONCRETE = register("weapon.bullet.impact.concrete", 40f);
+    public static final SoundEvent IMPACT_BRICK = register("weapon.bullet.impact.brick", 40f);
+    public static final SoundEvent IMPACT_WOOD = register("weapon.bullet.impact.wood", 40f);
+    public static final SoundEvent IMPACT_METAL = register("weapon.bullet.impact.metal", 48f);
+    public static final SoundEvent IMPACT_CAR = register("weapon.bullet.impact.car", 48f);
+    public static final SoundEvent IMPACT_GLASS = register("weapon.bullet.impact.glass", 48f);
+    public static final SoundEvent IMPACT_SOFT = register("weapon.bullet.impact.soft", 24f);
+    /** A round striking close by, as heard by everyone near it but the one who fired it. */
+    public static final SoundEvent IMPACT_NEARBY = register("weapon.bullet.impact.nearby", 24f);
+    /** Josiah: the shooter hears their round whizz in as it sinks into a zombie (Guns.hitEntity), only them. */
+    public static final SoundEvent BULLET_WHIZZ = register("weapon.bullet.whizz", 48f);
     public static final SoundEvent SWING = register("weapon.melee.swing");
     public static final SoundEvent SWING_HEAVY = register("weapon.melee.swing_heavy");
     public static final SoundEvent HIT_BLUNT = register("weapon.melee.hit_blunt");

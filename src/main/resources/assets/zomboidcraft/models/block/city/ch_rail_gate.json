@@ -8,29 +8,29 @@
   "elements": [
     {
       "from": [
-        0,
+        7.5,
         2,
-        7.5
+        0
       ],
       "to": [
-        16,
+        8.5,
         12,
-        8.5
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#ch_gilt"
+          "texture": "#ch_gilt",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#ch_gilt"
+          "texture": "#ch_gilt",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#ch_gilt",
-          "cullface": "east"
+          "texture": "#ch_gilt"
         },
         "west": {
-          "texture": "#ch_gilt",
-          "cullface": "west"
+          "texture": "#ch_gilt"
         },
         "up": {
           "texture": "#ch_gilt"
@@ -42,28 +42,28 @@
     },
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        14
       ],
       "to": [
-        2,
+        9,
         14,
-        9
+        16
       ],
       "faces": {
         "north": {
           "texture": "#ch_marble"
         },
         "south": {
-          "texture": "#ch_marble"
+          "texture": "#ch_marble",
+          "cullface": "south"
         },
         "east": {
           "texture": "#ch_marble"
         },
         "west": {
-          "texture": "#ch_marble",
-          "cullface": "west"
+          "texture": "#ch_marble"
         },
         "up": {
           "texture": "#ch_marble"
@@ -76,25 +76,25 @@
     },
     {
       "from": [
-        14,
+        7,
         0,
-        7
+        0
       ],
       "to": [
-        16,
+        9,
         14,
-        9
+        2
       ],
       "faces": {
         "north": {
-          "texture": "#ch_marble"
+          "texture": "#ch_marble",
+          "cullface": "north"
         },
         "south": {
           "texture": "#ch_marble"
         },
         "east": {
-          "texture": "#ch_marble",
-          "cullface": "east"
+          "texture": "#ch_marble"
         },
         "west": {
           "texture": "#ch_marble"

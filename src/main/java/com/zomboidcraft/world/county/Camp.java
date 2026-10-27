@@ -127,16 +127,18 @@ final class Camp {
         }
     }
 
-    /** Jersey barriers along x or z, the odd one knocked askew. */
+    /**
+     * Jersey barriers along x or z, every one in line with the row (never one turned across it),
+     * the odd one dragged away to leave a gap.
+     */
     void jersey(int x0, int z0, int x1, int z1) {
         boolean alongX = z0 == z1;
         for (int x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
             for (int z = Math.min(z0, z1); z <= Math.max(z0, z1); z++) {
-                if (chance() < 0.08) {
+                if (chance() < 0.12) {
                     continue;
                 }
-                boolean askew = chance() < 0.12;
-                p.set(x, 1, z, "jersey_barrier[facing=" + (alongX != askew ? "north" : "east") + "]");
+                p.set(x, 1, z, "jersey_barrier[facing=" + (alongX ? "north" : "east") + "]");
             }
         }
     }

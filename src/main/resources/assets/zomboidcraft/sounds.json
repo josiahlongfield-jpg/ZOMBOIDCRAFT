@@ -178,6 +178,10 @@
       {
         "name": "zomboidcraft:weapon/bullet/ricochet/2",
         "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/ricochet/3",
+        "attenuation_distance": 32
       }
     ]
   },
@@ -1593,6 +1597,10 @@
       {
         "name": "zomboidcraft:aircraft/heli/distant",
         "attenuation_distance": 300
+      },
+      {
+        "name": "zomboidcraft:aircraft/heli/distant2",
+        "attenuation_distance": 300
       }
     ]
   },
@@ -1608,6 +1616,10 @@
     "sounds": [
       {
         "name": "zomboidcraft:aircraft/warn/stall",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "zomboidcraft:aircraft/warn/stall2",
         "attenuation_distance": 8
       }
     ]
@@ -1657,6 +1669,203 @@
       {
         "name": "zomboidcraft:aircraft/canopy",
         "attenuation_distance": 16
+      }
+    ]
+  },
+  "weapon.bullet.impact.ground": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/ground/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.bullet.impact.concrete": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/concrete/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.bullet.impact.brick": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/brick/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.bullet.impact.wood": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/wood/1",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon.bullet.impact.metal": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/metal/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/metal/2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/metal/3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/metal/4",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "weapon.bullet.impact.car": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/car/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/car/2",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "weapon.bullet.impact.glass": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/glass/1",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "weapon.bullet.impact.soft": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/soft/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "aircraft.heli.idle": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:aircraft/heli/idle",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "weapon.bullet.impact.nearby": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/3",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/4",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon.casing.shotgun": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/casing/shotgun/1",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "world.siren": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/siren",
+        "attenuation_distance": 480,
+        "stream": true
+      }
+    ]
+  },
+  "world.explosion": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:aircraft/crash",
+        "attenuation_distance": 192
+      }
+    ]
+  },
+  "world.explosion.far": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:amb/distant/1",
+        "attenuation_distance": 640
+      }
+    ]
+  },
+  "world.flyby.jet.1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/1",
+        "attenuation_distance": 800,
+        "stream": true
+      }
+    ]
+  },
+  "world.flyby.jet.2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/2",
+        "attenuation_distance": 800,
+        "stream": true
+      }
+    ]
+  },
+  "world.flyby.jet.3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/3",
+        "attenuation_distance": 800,
+        "stream": true
+      }
+    ]
+  },
+  "world.flyby.heli.1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/heli/1",
+        "attenuation_distance": 800,
+        "stream": true
+      }
+    ]
+  },
+  "weapon.bullet.whizz": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/whizz/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/whizz/2",
+        "attenuation_distance": 48
       }
     ]
   },

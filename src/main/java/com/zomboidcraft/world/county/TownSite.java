@@ -349,14 +349,9 @@ final class TownSite extends Site {
         }
     }
 
-    /** Old gas pumps on a concrete island in front of a country store. */
+    /** Old gas pumps (now and then a brand's) on a concrete island in front of a country store. */
     private void pumps(Placer pl, int x, int z) {
-        for (int i = -1; i <= 3; i++) {
-            pl.set(x + i, 0, z, "concrete_dark");
-            pl.set(x + i, 0, z + 1, "concrete_dark");
-        }
-        pl.set(x, 1, z, "gas_pump[facing=north]");
-        pl.set(x + 2, 1, z, "gas_pump[facing=north]");
+        new GasStation(pl, rng, 0.4).storePumps(x, z);
         pl.set(x + 1, 1, z + 1, "minecraft:barrel[facing=up,loot=hardware]");
     }
 
@@ -947,7 +942,7 @@ final class TownSite extends Site {
         Kit.Lot mill = civicLot(main, sCross - clear - 4 - millW / 2.0, -1, millW, millD);
         if (mill != null) {
             Placer pl = mill.placer(out);
-            new Landmarks(pl, rng).mill(millW, millD);
+            int[] tower = new Landmarks(pl, rng).mill(millW, millD);
             for (int x = 0; x < millW; x++) {
                 for (int z = 0; z < millD; z++) {
                     if (pl.get(x, 0, z) == null) {
@@ -955,7 +950,9 @@ final class TownSite extends Site {
                     }
                 }
             }
-            Kit.chainlink(pl, rng, -1, -1, millW, -1, 3);
+            // the fence along the front stops either side of the stair tower (it stands out past it)
+            Kit.chainlink(pl, rng, -1, -1, tower[0] - 1, -1, 3);
+            Kit.chainlink(pl, rng, tower[1] + 1, -1, millW, -1, 3);
         }
         // the main street facing it: the company store first, then the rest
         int depth = back - (int) Kit.Style.MAIN.reach() - 3;

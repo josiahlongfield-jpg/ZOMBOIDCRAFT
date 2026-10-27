@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_droptile_stain": "zomboidcraft:block/city/dn_droptile_stain",
+    "drywall": "zomboidcraft:block/city/drywall",
+    "particle": "zomboidcraft:block/city/drywall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#drywall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#drywall",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#drywall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#drywall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#drywall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_droptile_stain",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

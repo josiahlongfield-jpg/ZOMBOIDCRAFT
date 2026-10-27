@@ -28,6 +28,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderState, WalkerModel> {
     private final ZBodyAnimator animator = new ZBodyAnimator();
     private final ZBodyAnimator.Facts facts = new ZBodyAnimator.Facts();
+    /** Each outfit's new-body skin, clothes atlas and eye mask. */
+    private static final java.util.Map<String, Identifier[]> BODY_TEXTURES = new java.util.HashMap<>();
 
     public WalkerRenderer(EntityRendererProvider.Context context) {
         super(context, new WalkerModel(context.bakeLayer(WalkerModel.LAYER)), 0.5f);
@@ -71,30 +73,40 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         state.cuts = limbs & (Dismember.CUTS | Dismember.HEAD_GONE);
         state.bolts = zombie.getAttachedOrElse(com.zomboidcraft.combat.StuckBolts.BOLTS, java.util.List.of());
         ZcConfig.Look look = ZcConfig.get().look;
-        String name = state.outfit + "_" + ZombieLook.skin(zombie);
-        String hd = name + "_" + ZombieLook.damage(zombie) + ".png";
-        state.texture = look.hdSkins
-                ? ZomboidCraft.id("textures/entity/walker_hd/" + hd)
-                : ZomboidCraft.id("textures/entity/walker/" + name + ".png");
-        state.addonTexture = !look.outfitPieces || !WalkerAddonParts.PIECES.containsKey(state.outfit) ? null
-                : look.hdSkins
-                ? ZomboidCraft.id("textures/entity/walker_addons_hd/" + hd)
-                : ZomboidCraft.id("textures/entity/walker_addons/" + name + ".png");
-        state.eyesTexture = !look.glowingEyes ? null
-                : look.hdSkins
-                ? ZomboidCraft.id("textures/entity/walker_eyes_hd/" + hd)
-                : ZomboidCraft.id("textures/entity/walker_eyes/" + name + ".png");
+        state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
+        if (state.zbody != null) {
+            // the old model's skins aren't drawn under the new body, so don't build their names every frame
+            Identifier[] tex = BODY_TEXTURES.computeIfAbsent(state.outfit, o -> new Identifier[] {
+                    ZomboidCraft.id("textures/entity/zbody/skin/" + o + ".png"),
+                    ZomboidCraft.id("textures/entity/zbody/kit/" + o + ".png"),
+                    ZomboidCraft.id("textures/entity/zbody/eyes/" + o + ".png")});
+            state.texture = tex[0];
+            state.addonTexture = null;
+            state.eyesTexture = null;
+        } else {
+            String name = state.outfit + "_" + ZombieLook.skin(zombie);
+            String hd = name + "_" + ZombieLook.damage(zombie) + ".png";
+            state.texture = look.hdSkins
+                    ? ZomboidCraft.id("textures/entity/walker_hd/" + hd)
+                    : ZomboidCraft.id("textures/entity/walker/" + name + ".png");
+            state.addonTexture = !look.outfitPieces || !WalkerAddonParts.PIECES.containsKey(state.outfit) ? null
+                    : look.hdSkins
+                    ? ZomboidCraft.id("textures/entity/walker_addons_hd/" + hd)
+                    : ZomboidCraft.id("textures/entity/walker_addons/" + name + ".png");
+            state.eyesTexture = !look.glowingEyes ? null
+                    : look.hdSkins
+                    ? ZomboidCraft.id("textures/entity/walker_eyes_hd/" + hd)
+                    : ZomboidCraft.id("textures/entity/walker_eyes/" + name + ".png");
+        }
         state.variant = (int) zombie.getUUID().getLeastSignificantBits();
         state.crawler = Downed.isCrawler(zombie);
         boolean low = zombie.hasPose(Pose.SWIMMING);
         state.legless = low && Downed.isLegless(zombie);
-        state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
         if (state.zbody != null) {
-            state.zskin = ZomboidCraft.id("textures/entity/zbody/skin/" + state.outfit + ".png");
-            state.zkit = ZomboidCraft.id("textures/entity/zbody/kit/" + state.outfit + ".png");
-            state.zeyes = look.glowingEyes ? ZomboidCraft.id("textures/entity/zbody/eyes/" + state.outfit + ".png") : null;
-            state.addonTexture = null;
-            state.eyesTexture = null;
+            Identifier[] tex = BODY_TEXTURES.get(state.outfit);
+            state.zskin = tex[0];
+            state.zkit = tex[1];
+            state.zeyes = look.glowingEyes ? tex[2] : null;
             facts.age = state.ageInTicks;
             facts.walkPos = state.walkAnimationPos;
             facts.walkSpeed = state.walkAnimationSpeed;

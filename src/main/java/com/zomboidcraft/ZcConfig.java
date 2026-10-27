@@ -71,6 +71,24 @@ public final class ZcConfig {
     public Digging digging = new Digging();
     /** What the Build page makes: how tough boards and sheets are, how loud a tripwire is, how fast a barrel fills. */
     public Building building = new Building();
+    /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
+    public Performance performance = new Performance();
+
+    public static class Performance {
+        /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
+        public int fullDetailZombies = 12;
+        /** The nearest this many get most of it; the rest only the main shapes. Client side. */
+        public int midDetailZombies = 32;
+        /** Past this many blocks a zombie is drawn with its body and only the biggest pieces of clothing. Client side. */
+        public double simpleZombieDistance = 40;
+        /** Shader shadows (Photon's) are cast by the simple body, which looks the same in a shadow and costs far less. Client side. */
+        public boolean simpleZombieShadows = true;
+        /**
+         * Zombies standing idle further than this many blocks from every player think every fourth tick instead of
+         * every tick (they still hear and turn up the same). 0 turns it off.
+         */
+        public double idleThinkDistance = 32;
+    }
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -406,6 +424,10 @@ public final class ZcConfig {
         public double heliTopSpeed = 250;
         /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
         public boolean aircraftService = true;
+        /** Air-raid sirens, far-off explosions and jets and helicopters crossing the map, heard by everyone (WorldEvents). */
+        public boolean worldEvents = true;
+        /** About how many minutes between those events. */
+        public double worldEventMinutes = 10;
         /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
@@ -421,6 +443,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How big a player is while in a car or aircraft (1 = full size): a little smaller so arms and legs stay inside the cabin. */
+        public double carRiderScale = 0.85;
     }
 
     public static class Weather {
@@ -515,13 +539,15 @@ public final class ZcConfig {
          * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
          */
         public boolean shoulderCam = true;
+        /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
+        public boolean spreadCrosshair = true;
         /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
-        public double shoulderBack = 1.9;
-        public double shoulderSide = 0.6;
+        public double shoulderBack = 1.25;
+        public double shoulderSide = 0.5;
         public double shoulderUp = 0.15;
         /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
-        public double shoulderAimBack = 1.05;
-        public double shoulderAimSide = 0.5;
+        public double shoulderAimBack = 0.7;
+        public double shoulderAimSide = 0.42;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -693,6 +719,15 @@ public final class ZcConfig {
         public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
+        /**
+         * Spread bloom: each shot opens the spread by this much (degrees; full auto by its own, usually less, as the
+         * shots pile up), it closes again at bloomRecover degrees a second, and full auto never opens it past
+         * autoBloomMax. The crosshair's ring shows it, and the shots land inside the ring.
+         */
+        public double shotBloom = 0.5;
+        public double autoBloomPerShot = 0.45;
+        public double autoBloomMax = 3.5;
+        public double bloomRecover = 3.0;
 
         static GunStats pistol() {
             GunStats s = new GunStats();
@@ -791,6 +826,8 @@ public final class ZcConfig {
             s.magazineSize = 30;
             s.selectFire = true;
             s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
+            s.autoBloomPerShot = 0.3;     // lighter round, but nearly sixteen a second
+            s.autoBloomMax = 4.0;
             return s;
         }
 
@@ -939,6 +976,10 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** How often a glancing shot off something hard whines away as a ricochet (0 to 1). */
+        public double ricochetChance = 0.35;
+        /** The shooter hears their round whizz into a zombie they hit within this many blocks (0: never). */
+        public double hitWhizzRange = 48;
         /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
         public boolean bulletHoles = true;
         public double bulletHoleSeconds = 90.0;
@@ -993,7 +1034,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 1;
+    private static final int DEFAULTS = 2;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1003,6 +1044,21 @@ public final class ZcConfig {
             }
             if (c.guns.suppressedPitch == 1.0) {
                 c.guns.suppressedPitch = 0.88;
+            }
+        }
+        if (c.defaultsVersion < 2) {
+            // 2026-10-27: the shoulder camera closer in (Josiah: "the player model needs to be closer")
+            if (c.look.shoulderBack == 1.9) {
+                c.look.shoulderBack = 1.25;
+            }
+            if (c.look.shoulderSide == 0.6) {
+                c.look.shoulderSide = 0.5;
+            }
+            if (c.look.shoulderAimBack == 1.05) {
+                c.look.shoulderAimBack = 0.7;
+            }
+            if (c.look.shoulderAimSide == 0.5) {
+                c.look.shoulderAimSide = 0.42;
             }
         }
         c.defaultsVersion = DEFAULTS;

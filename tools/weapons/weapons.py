@@ -800,7 +800,8 @@ def pistol():
         PI.flash(m, PI.CAP_TIP)
 
     return kit.Gun('pistol', 'M9 Pistol', PI.body, look, PI.HAND, slots, parts,
-                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7)
+                   aperture=fp(0, PI.SIGHT, PI.REAR_SIGHT), flash=flash, handle=PI.slide, seed=912, flash_size=0.7,
+                   slide=PI.hammer_piece)
 
 
 def shotgun():
@@ -866,7 +867,7 @@ def revolver():
     finishes = {k: (v[0], RV.look(k)) for k, v in RV.FINISHES.items()}
     # third person shows it swung out by moving it clear (its cylinder's staves are turned already)
     gun = kit.Gun('revolver', 'Service Revolver', RV.body, finishes['service'][1], RV.HAND, {}, {},
-                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8,
+                  aperture=fp(0, RV.NOTCH_TOP, RV.REAR_SIGHT), flash=flash, handle=RV.cylinder, seed=921, flash_size=0.8, slide=RV.hammer_piece,
                   finishes=finishes, opened=('shift', 0.0, IN * np.array([-1.25, -0.35, 0.0])))
     gun.gap_flash = fp(0, 0, RV.CYL_FRONT)      # the side flash out of the barrel-cylinder gap
     return gun
@@ -960,7 +961,7 @@ def magnum():
 
     finishes = {k: (v[0], MG.look(k)) for k, v in MG.FINISHES.items()}
     gun = kit.Gun('magnum', 'Magnum Revolver', MG.body, finishes['blued'][1], MG.HAND, {}, {},
-                  aperture=fp(0, MG.SIGHT, MG.REAR_SIGHT), flash=flash, handle=MG.cylinder, seed=941, flash_size=1.15,
+                  aperture=fp(0, MG.SIGHT, MG.REAR_SIGHT), flash=flash, handle=MG.cylinder, seed=941, flash_size=1.15, slide=MG.hammer_piece,
                   finishes=finishes, opened=('shift', 0.0, MG.U * np.array([-1.25, -0.35, 0.0])))
     gun.gap_flash = fp(0, 0, MG.CYL_FRONT)
     return gun
@@ -1017,7 +1018,7 @@ class FirstPerson:
                  charge_push, locks_back=False, cycles=False, support_grip=False, mag_axis=(0.0, -1.0, 0.0),
                  pump=False, load_turn=(0.0, 0.0, 0.0), load_push=(0.0, 0.0, 0.0), bead=None, eye_rise=0.0,
                  wrist_grip=False, bolt=False, bolt_lift=0.0, opens=False, open_axis=(1.0, 0.0, 0.0), open_angle=0.0,
-                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False, crossbow=False):
+                 cylinder=False, chamber_step=0.0, hip_aim=None, lever=False, crossbow=False, hammer_cock=0.0):
         self.hip_grip, self.hip_turn, self.hip_scale = hip_grip, hip_turn, hip_scale
         self.reload, self.irons, self.irons_scale = reload, np.asarray(irons, float), irons_scale
         self.handle_travel, self.charge_turn, self.charge_push = handle_travel, charge_turn, charge_push
@@ -1034,6 +1035,7 @@ class FirstPerson:
         self.hip_aim = hip_aim
         self.lever = lever
         self.crossbow = crossbow
+        self.hammer_cock = hammer_cock
 
 
 # From the hip a gun points at the crosshair (Josiah, 2026-10-26): its bore meets the middle of the view this many
@@ -1085,7 +1087,8 @@ PISTOL_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
                         reload={'mag_out': (25, -0.18), 'mag_in': (25, -0.18), 'charge': (-6, 0.02)},
                         irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=PI.HANDLE_TRAVEL,
                         charge_turn=(20, 20, -35), charge_push=(0.02, 0.02, -0.30),
-                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz))
+                        locks_back=True, cycles=True, support_grip=True, mag_axis=(0.0, -1.0, -_dz),
+                        hammer_cock=PI.HAMMER_COCK)
 # the shotgun low at the hip, turned in so its right side and the ejection port show; for loading it's canted
 # over and rolled back so the loading port under the receiver faces the off hand; on the bead the eye sits well
 # over the receiver (a cheek on the comb) with the bead tipped onto the eye line
@@ -1126,7 +1129,7 @@ REVOLVER_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.
                           irons=(0.0, 0.0, -6.0), irons_scale=1.15, handle_travel=0.0,
                           charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
                           load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
-                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0,
+                          opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=RV.OPEN, cylinder=True, chamber_step=-60.0, hammer_cock=RV.HAMMER_COCK,
                           hip_aim=HIP_AIM)
 
 # the .22 carried like the hunting rifle, a light carbine on its open sights (the eye over the comb, 19" behind
@@ -1182,7 +1185,7 @@ MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
                         irons=(0.0, 0.0, -6.5), irons_scale=1.05, handle_travel=0.0,
                         charge_turn=(4, 6, 0), charge_push=(0.0, 0.02, -0.04), support_grip=True,
                         load_turn=(-15, 10, 25), load_push=(-0.06, 0.12, 0.0),
-                        opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=MG.OPEN, cylinder=True, chamber_step=-60.0,
+                        opens=True, open_axis=(0.0, 0.0, 1.0), open_angle=MG.OPEN, cylinder=True, chamber_step=-60.0, hammer_cock=MG.HAMMER_COCK,
                         hip_aim=HIP_AIM)
 
 # Red dots and holos are drawn bigger and closer than life: the eye sits under two inches behind the back of
@@ -1502,18 +1505,24 @@ def main():
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
     write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb])
-    write_rigs_java([(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
-                     (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
-                     (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
-                     (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
-                     (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
-                     (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr)),
-                     (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
-                     (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
-                     (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
-                     (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
-                     (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
-                     (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))])
+    rigs = [(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
+            (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
+            (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
+            (hr, gh, hr_hold, HUNTING_FP, hunting_points(hr, gh)),
+            (db, gd, db_hold, DOUBLE_FP, double_points(db, gd)),
+            (rv, gr, rv_hold, REVOLVER_FP, revolver_points(rv, gr)),
+            (rm, gm, rm_hold, RIMFIRE_FP, rimfire_points(rm, gm)),
+            (sm, gq, sm_hold, SMG_FP, smg_points(sm, gq)),
+            (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
+            (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
+            (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
+            (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))]
+    write_rigs_java(rigs)
+    # the laser's and light's lenses in each gun's build frame, so other players see the beams leave the gun
+    lens_names = ['rifle', 'pistol', 'shotgun', 'hunting', 'double_barrel', 'revolver', 'rimfire', 'smg',
+                  'sawn_off', 'magnum', 'lever_action', 'crossbow']
+    lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
+              for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
 
     for name, title, colour, seed in (('rifle_ammo', '5.56mm Rounds', '#4b5a37', 558),
                                       ('pistol_ammo', '9mm Rounds', '#5a3b2e', 559),
@@ -1539,7 +1548,7 @@ def main():
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
                                  'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
-                                (mh, mG, mkeys))
+                                (mh, mG, mkeys), lenses)
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -1642,8 +1651,9 @@ public final class GunSlotData {{
 ''')
 
 
-def write_pose_java(guns, melee):
-    """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame."""
+def write_pose_java(guns, melee, lenses):
+    """HoldPoseData.java: gun-arm angles and the support lines the off hand reaches for, in the gun arm's frame,
+    and where each gun's laser and light lenses are in that frame."""
     def f3(v):
         return ', '.join(f'{float(x):.5f}f' for x in v)
 
@@ -1653,6 +1663,7 @@ def write_pose_java(guns, melee):
             h, G, arm = holds[name]
             data['arms'][f'{gun}_{name}'] = [float(x) for x in arm]
             data['support'][f'{gun}_{name}'] = [float(x) for b in h.support for x in Q.arm_local(h, G, arm, b)]
+            data.setdefault('lens', {})[f'{gun}_{name}'] = [float(x) for b in lenses[gun] for x in Q.arm_local(h, G, arm, b)]
     mh, mG, keys = melee
     for k, arm in keys.items():
         data['arms']['melee_' + k] = [float(x) for x in arm]
@@ -1663,6 +1674,7 @@ def write_pose_java(guns, melee):
     held = tuple(f'{gun}_' for gun in guns)
     rifle_sup = '\n'.join(f'    static final float[] {k.upper()}_SUPPORT = {{{f3(v)}}};'
                            for k, v in data['support'].items() if k.startswith(held))
+    lens = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['lens'].items())
     melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
                             if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
@@ -1680,6 +1692,9 @@ final class HoldPoseData {{
     static final float REACH = {Q.REACH}f;
 {arms}
 {rifle_sup}
+    /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
+    static final Map<String, float[]> LENS = Map.ofEntries(
+{lens});
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
 {melee_sup});
@@ -1776,6 +1791,7 @@ def pistol_points(gun, g):
         'light': lens_point(gun, 'light', PI.LIGHT_LENS, shift),
         'muzzle': kit.flash_tip(gun) + shift,
         'quietMuzzle': quiet_muzzle(gun) + shift,
+        'hammer': PI.HAMMER_PIN + shift,
     }
 
 
@@ -1872,6 +1888,7 @@ def revolver_points(gun, g):
         'quietMuzzle': quiet_muzzle(gun) + shift,
         'hinge': RV.PIVOT_POINT + shift,
         'cylAxis': RV.CYL_AXIS + shift,
+        'hammer': RV.HAMMER_PIN + shift,
     }
 
 
@@ -1959,6 +1976,7 @@ def magnum_points(gun, g):
         **no_rail(gun, shift),
         'hinge': MG.PIVOT_POINT + shift,
         'cylAxis': MG.CYL_AXIS + shift,
+        'hammer': MG.HAMMER_PIN + shift,
     }
 
 
@@ -2022,13 +2040,15 @@ def rig_data(gun, g, holds, fp, points):
     axis = points.pop('boltAxis', points['handle'])
     hinge = points.pop('hinge', points['handle'])
     cyl = points.pop('cylAxis', hinge)
+    hammer = points.pop('hammer', None)
     data.update({k: vec(v) for k, v in points.items()})
     data['boltAxis'] = vec(axis)
     data.update({'magAxis': vec(fp.mag_axis), 'locksBack': fp.locks_back, 'cycles': fp.cycles,
                  'supportGrip': fp.support_grip, 'pump': fp.pump, 'wristGrip': fp.wrist_grip, 'bolt': fp.bolt})
     data.update({'hinge': vec(hinge), 'openAxis': vec(fp.open_axis), 'openAngle': float(fp.open_angle),
                  'cylAxis': vec(cyl), 'chamberStep': float(fp.chamber_step), 'opens': fp.opens, 'cylinder': fp.cylinder,
-                 'lever': fp.lever, 'crossbow': fp.crossbow})
+                 'lever': fp.lever, 'crossbow': fp.crossbow,
+                 'hammer': vec(hammer) if hammer is not None else [], 'hammerCock': float(fp.hammer_cock)})
     return data
 
 
@@ -2050,6 +2070,8 @@ RIG_NOTES = {
     'opens': 'loaded by hand with the action open', 'cylinder': 'the rounds sit in a turning cylinder',
     'lever': 'worked by a lever, its bolt riding back with it',
     'crossbow': 'a crossbow: its string let go and drawn back, a bolt laid on the rail',
+    'hammer': "an exposed hammer's pin (the slide is the hammer), or none",
+    'hammerCock': 'degrees the hammer turns back to cock',
 }
 
 

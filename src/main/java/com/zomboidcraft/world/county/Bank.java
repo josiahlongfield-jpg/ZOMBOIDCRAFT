@@ -242,7 +242,8 @@ final class Bank {
             }
         }
         Doors.abandoned(p, rng, x1, F + 1, zt + 1, "fire_door", "east", Doors.hinge(rng));
-        p.set(x1 + 1, F, zt + 1, "stone_trim");
+        // two half steps up to the sill (a whole block's rise strands a zombie)
+        p.set(x1 + 1, F, zt + 1, "cv_step_stone[facing=west]");
         p.set(x1 + 1, F - 1, zt + 1, "stone_trim");
         p.set(x1 + 2, F - 1, zt + 1, "cv_step_stone[facing=west]");
         // the alarm lamp high on the side, still flashing red in some
@@ -325,8 +326,9 @@ final class Bank {
         }
         p.set(1, y + 3, z0 + 2, "bk_plaque_president[facing=east]");
         p.set(1, y + 5, z0 + 2, "cv_portrait[facing=east]");
-        // the check desks down the middle, the rope for the queue along the east side
-        for (int z = z0 + 2; z < zt - 1; z += 3) {
+        // the check desks down the middle (a step in from the doors, room to come in round them),
+        // the rope for the queue along the east side
+        for (int z = z0 + 3; z < zt - 1; z += 3) {
             p.set(cx - 1, y + 1, z, "bk_check_desk");
             p.set(cx, y + 1, z, "bk_check_desk");
         }
@@ -408,7 +410,10 @@ final class Bank {
                 for (int yy = y + 2 + i; yy <= y + 4 + i && yy < TOP; yy++) {
                     p.set(x1 - 1, yy, z, "air");
                 }
-                p.set(x1 - 2, y + 1 + i, z, "cv_bar_rail[axis=z]");
+                // no rail by the bottom tread: the way off it into the tellers' side, through the counter's gate
+                if (i > 0) {
+                    p.set(x1 - 2, y + 1 + i, z, "cv_bar_rail[axis=z]");
+                }
             }
             for (int x = 1; x < x1; x++) {
                 p.set(x, M - 1, zt + 2, (x - 1) % 4 == 1 ? (rng.nextDouble() < 0.1 ? "ceiling_light" : "ceiling_light_off") : "air");
@@ -494,7 +499,8 @@ final class Bank {
         int x1 = w - 1, y = M, za = zt + 3;
         for (int x = 1; x < x1; x++) {
             for (int z = zt + 1; z < z1; z++) {
-                if (!(x == x1 - 1 && z <= zt + M - F - 1)) {
+                // the stair's well, its top tread (in this floor's plane) left as it is
+                if (!(x == x1 - 1 && z <= zt + M - F)) {
                     p.set(x, y, z, "home_floor_oak");
                 }
             }

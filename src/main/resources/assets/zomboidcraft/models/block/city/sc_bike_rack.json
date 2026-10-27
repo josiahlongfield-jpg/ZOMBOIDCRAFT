@@ -7,29 +7,29 @@
   "elements": [
     {
       "from": [
+        7,
         0,
-        0,
-        7
+        0
       ],
       "to": [
-        16,
+        9,
         1,
-        9
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#sc_galv"
+          "texture": "#sc_galv",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#sc_galv"
+          "texture": "#sc_galv",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#sc_galv",
-          "cullface": "east"
+          "texture": "#sc_galv"
         },
         "west": {
-          "texture": "#sc_galv",
-          "cullface": "west"
+          "texture": "#sc_galv"
         },
         "up": {
           "texture": "#sc_galv"
@@ -42,29 +42,29 @@
     },
     {
       "from": [
-        0,
+        7.4,
         11,
-        7.4
+        0
       ],
       "to": [
-        16,
+        8.6,
         12,
-        8.6
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#sc_galv"
-        },
-        "south": {
-          "texture": "#sc_galv"
-        },
-        "east": {
           "texture": "#sc_galv",
-          "cullface": "east"
+          "cullface": "north"
         },
-        "west": {
+        "south": {
           "texture": "#sc_galv",
-          "cullface": "west"
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_galv"
+        },
+        "west": {
+          "texture": "#sc_galv"
         },
         "up": {
           "texture": "#sc_galv"
@@ -76,14 +76,14 @@
     },
     {
       "from": [
+        7.6,
         1,
-        1,
-        7.6
+        14.2
       ],
       "to": [
-        1.8,
+        8.4,
         11,
-        8.4
+        15
       ],
       "faces": {
         "north": {
@@ -108,14 +108,14 @@
     },
     {
       "from": [
-        4,
+        7.6,
         1,
-        7.6
+        11.2
       ],
       "to": [
-        4.8,
+        8.4,
         11,
-        8.4
+        12
       ],
       "faces": {
         "north": {
@@ -140,14 +140,14 @@
     },
     {
       "from": [
-        7,
+        7.6,
         1,
-        7.6
+        8.2
       ],
       "to": [
-        7.8,
+        8.4,
         11,
-        8.4
+        9
       ],
       "faces": {
         "north": {
@@ -172,14 +172,14 @@
     },
     {
       "from": [
-        10,
+        7.6,
         1,
-        7.6
+        5.199999999999999
       ],
       "to": [
-        10.8,
+        8.4,
         11,
-        8.4
+        6
       ],
       "faces": {
         "north": {
@@ -204,14 +204,14 @@
     },
     {
       "from": [
-        13,
+        7.6,
         1,
-        7.6
+        2.1999999999999993
       ],
       "to": [
-        13.8,
+        8.4,
         11,
-        8.4
+        3
       ],
       "faces": {
         "north": {

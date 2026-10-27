@@ -61,6 +61,32 @@ final class HoldPoseData {
     static final float[] LEVER_ACTION_AIM_SUPPORT = {-4.52976f, 14.25649f, -0.68679f, -6.57833f, 16.14391f, -0.64514f};
     static final float[] CROSSBOW_READY_SUPPORT = {-0.64501f, 15.38522f, 0.18444f, -1.15703f, 18.08718f, 0.62939f};
     static final float[] CROSSBOW_AIM_SUPPORT = {-6.02320f, 12.46029f, -1.91238f, -8.58291f, 13.54250f, -2.10568f};
+    /** Each gun's laser lens then light lens (x, y, z twice), held at the ready or aiming, in the gun arm's frame. */
+    static final Map<String, float[]> LENS = Map.ofEntries(
+            Map.entry("rifle_ready", new float[] {-1.30887f, 18.64225f, -2.08654f, 0.90784f, 20.03350f, -1.93600f}),
+            Map.entry("rifle_aim", new float[] {-6.12449f, 15.84018f, -5.02479f, -4.99318f, 18.17501f, -5.39995f}),
+            Map.entry("pistol_ready", new float[] {-2.53174f, 11.92456f, -0.56473f, -2.14718f, 12.78009f, -0.07910f}),
+            Map.entry("pistol_aim", new float[] {-2.43058f, 12.42341f, -0.39278f, -2.34493f, 13.06588f, 0.44122f}),
+            Map.entry("shotgun_ready", new float[] {-0.78720f, 23.62653f, 7.03527f, -0.78720f, 23.62653f, 7.03527f}),
+            Map.entry("shotgun_aim", new float[] {-15.29037f, 14.84479f, -3.94840f, -15.29037f, 14.84479f, -3.94840f}),
+            Map.entry("hunting_ready", new float[] {-2.76338f, 26.40978f, 2.48832f, -2.76338f, 26.40978f, 2.48832f}),
+            Map.entry("hunting_aim", new float[] {-17.42201f, 13.27797f, -4.59509f, -17.42201f, 13.27797f, -4.59509f}),
+            Map.entry("double_barrel_ready", new float[] {-2.05319f, 26.87360f, 4.65457f, -2.05319f, 26.87360f, 4.65457f}),
+            Map.entry("double_barrel_aim", new float[] {-13.33339f, 22.19422f, -4.36362f, -13.33339f, 22.19422f, -4.36362f}),
+            Map.entry("revolver_ready", new float[] {-2.58598f, 12.98924f, -0.70623f, -2.58598f, 12.98924f, -0.70623f}),
+            Map.entry("revolver_aim", new float[] {-2.46065f, 13.49406f, -0.22198f, -2.46065f, 13.49406f, -0.22198f}),
+            Map.entry("rimfire_ready", new float[] {1.59652f, 22.11460f, 0.57058f, 1.59652f, 22.11460f, 0.57058f}),
+            Map.entry("rimfire_aim", new float[] {-13.08740f, 16.52724f, -3.54268f, -13.08740f, 16.52724f, -3.54268f}),
+            Map.entry("smg_ready", new float[] {-1.00453f, 18.64175f, -0.85041f, -1.00453f, 18.64175f, -0.85041f}),
+            Map.entry("smg_aim", new float[] {-6.32641f, 16.05654f, -4.22173f, -6.32641f, 16.05654f, -4.22173f}),
+            Map.entry("sawn_off_ready", new float[] {-6.43416f, 9.32097f, 8.48899f, -6.43416f, 9.32097f, 8.48899f}),
+            Map.entry("sawn_off_aim", new float[] {-10.72071f, 12.60538f, -1.80206f, -10.72071f, 12.60538f, -1.80206f}),
+            Map.entry("magnum_ready", new float[] {-3.49288f, 14.45395f, -0.50220f, -3.49288f, 14.45395f, -0.50220f}),
+            Map.entry("magnum_aim", new float[] {-3.34834f, 14.93854f, -0.39137f, -3.34834f, 14.93854f, -0.39137f}),
+            Map.entry("lever_action_ready", new float[] {-1.35336f, 24.29252f, 3.85541f, -1.35336f, 24.29252f, 3.85541f}),
+            Map.entry("lever_action_aim", new float[] {-11.29004f, 20.52767f, -2.48492f, -11.29004f, 20.52767f, -2.48492f}),
+            Map.entry("crossbow_ready", new float[] {-2.36366f, 23.25487f, -0.74474f, -2.36366f, 23.25487f, -0.74474f}),
+            Map.entry("crossbow_aim", new float[] {-13.19041f, 15.10108f, -4.63373f, -13.19041f, 15.10108f, -4.63373f}));
     /** Two-handed melee weapons and where the off hand holds the handle. */
     static final Map<String, float[]> MELEE_SUPPORT = Map.of(
             "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},

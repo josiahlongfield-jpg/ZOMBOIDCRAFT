@@ -35,6 +35,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.cars.AirSounds.register();
         com.zomboidcraft.world.cars.AirReadiness.register();
         com.zomboidcraft.world.cars.AirNet.register();
+        com.zomboidcraft.world.events.WorldEvents.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
@@ -50,6 +51,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.barricade.Barricades.register();
         com.zomboidcraft.building.DigRules.register();
         com.zomboidcraft.building.Builder.register();
+        com.zomboidcraft.barricade.CrowbarItem.register();
         SurvivalEvents.register();
         com.zomboidcraft.survival.Injuries.register();
         com.zomboidcraft.survival.TimedActions.register();

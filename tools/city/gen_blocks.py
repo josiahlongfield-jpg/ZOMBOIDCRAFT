@@ -307,8 +307,16 @@ def has_alpha(tex_dir, names):
     return any((np.array(Image.open(tex_dir / f"{t}.png").convert("RGBA"))[..., 3] < 250).any() for t in names)
 
 
+# the SoundType constants the game has (a name it lacks only shows up as a compile error on CI)
+GAME_SOUNDS = {"STONE", "WOOD", "GRAVEL", "GRASS", "METAL", "GLASS", "WOOL", "SAND", "CHAIN", "LANTERN", "BAMBOO",
+          "COPPER", "NETHER_BRICKS", "DEEPSLATE", "TUFF", "MUD_BRICKS", "PACKED_MUD", "LADDER", "SCAFFOLDING",
+          "CHERRY_WOOD", "NETHER_WOOD", "BAMBOO_WOOD", "SNOW", "CANDLE", "HANGING_SIGN", "CHISELED_BOOKSHELF"}
+
+
 def sound(name, spec):
     if "sound" in spec:
+        if spec["sound"] not in GAME_SOUNDS:
+            sys.exit(f"{name}: no SoundType.{spec['sound']} in the game (pick one of {sorted(GAME_SOUNDS)})")
         return spec["sound"]
     words = [name] + textures(spec)
     for keys, s in SOUNDS:
@@ -320,7 +328,7 @@ def sound(name, spec):
 def java_line(name, spec, tex_dir):
     if "trapdoor" in spec:
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
-        return f'        s("{name}", TRAPDOOR, {flag}, 0, SoundType.{spec.get("sound", "METAL")}, 3f);'
+        return f'        s("{name}", TRAPDOOR, {flag}, 0, SoundType.{sound(name, spec) if "sound" in spec else "METAL"}, 3f);'
     if "door" in spec:
         s = "METAL" if spec["door"] == "steel" else "WOOD"
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
@@ -344,6 +352,9 @@ def java_line(name, spec, tex_dir):
         flags.append("OFFSET")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
+    elif "shape" in spec:
+        # a block you see through in places walks through there too: its own collision boxes
+        shape = [v for b in spec["shape"] for v in b[:6]]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
         if name.startswith(("ext_", "front_")):
@@ -374,9 +385,32 @@ def title(name):
     return " ".join(w.capitalize() for w in words)
 
 
+# RULE (Josiah 2026-10-27): a rotate="axis" model is drawn running along z, so axis= names the
+# way a row runs and a row of rails, bars or fences joins up (paint_textures.along_z turns one
+# drawn along x). These were drawn along x before the rule and every placement turned to suit;
+# anything else drawn along x stops the build.
+AXIS_DRAWN_X = {"fit_beam", "fit_girder", "fit_beam_duct", "fit_beam_sprinkler", "fit_troffer", "fit_troffer_on",
+                "fit_troffer_flicker", "vessel_lash", "vessel_lash_open", "bunk_tripwire"}
+
+
+def axis_rule(blocks):
+    bad = []
+    for name, spec in blocks.items():
+        if spec.get("rotate") != "axis" or "boxes" not in spec or name in AXIS_DRAWN_X:
+            continue
+        bx = spec["boxes"]
+        fx = sum(1 for b in bx if b[0] <= 0.5 and b[3] >= 15.5 and b[5] - b[2] < 15)
+        fz = sum(1 for b in bx if b[2] <= 0.5 and b[5] >= 15.5 and b[3] - b[0] < 15)
+        if fx > fz:
+            bad.append(name)
+    if bad:
+        sys.exit("axis models drawn along x (turn them with paint_textures.along_z): " + " ".join(bad))
+
+
 def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
+    axis_rule(blocks)
     # the prop packs' atlases come whole from tools/props/props.py, their LabPBR maps with them
     for p in (ROOT / "tools/props/tex").glob("*.png"):
         shutil.copy(p, tex_dir / p.name)

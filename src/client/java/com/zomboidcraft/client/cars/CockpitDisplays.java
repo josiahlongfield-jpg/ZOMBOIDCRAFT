@@ -256,6 +256,14 @@ final class CockpitDisplays {
             for (int x = 0; x < s.w; x++) {
                 int c = argb[y * s.w + x];
                 int a = c >>> 24;
+                if (s.hud) {
+                    // the combiner glass: a faint dark coating the symbols sit on, so they read against a bright sky
+                    float sa = a / 255f, ta = TINT_ALPHA * (1 - sa), out = sa + ta;
+                    int r = Math.round(((c >> 16 & 255) * sa + TINT[0] * ta) / out), gr = Math.round(((c >> 8 & 255) * sa + TINT[1] * ta) / out),
+                            b = Math.round(((c & 255) * sa + TINT[2] * ta) / out);
+                    pixels.setPixel(x, y, Math.round(out * 255) << 24 | r << 16 | gr << 8 | b);
+                    continue;
+                }
                 // drawn as added light: premultiplied, its strength the brightest channel
                 int r = (c >> 16 & 255) * a / 255, gr = (c >> 8 & 255) * a / 255, b = (c & 255) * a / 255;
                 int k = Math.max(r, Math.max(gr, b));
@@ -322,8 +330,15 @@ final class CockpitDisplays {
     }
 
     static RenderType type(Screen s, boolean shaders) {
+        if (s.hud) {
+            return RenderTypes.entityTranslucentEmissive(s.id);
+        }
         return shaders ? RenderTypes.beaconBeam(s.id, true) : RenderTypes.eyes(s.id);
     }
+
+    /** The head-up display's glass coating: its colour and how much of the view behind it it dims. */
+    private static final int[] TINT = {8, 22, 16};
+    private static final float TINT_ALPHA = 0.3f;
 
     /** A live screen's quad, a hair in front of its face, in the strength its glow group has now. */
     static void draw(Screen s, int colour, PoseStack.Pose pose, VertexConsumer out) {
@@ -332,6 +347,11 @@ final class CockpitDisplays {
         }
         float lift = 0.0035f;
         float nx = s.normal[0], ny = s.normal[1], nz = s.normal[2];
+        if (s.hud) {
+            // drawn blended, not added: the group's strength fades the whole glass in
+            float strength = (colour >>> 24) / 255f * ((colour >> 16 & 255) / 255f);
+            colour = Math.round(strength * 255) << 24 | 0xFFFFFF;
+        }
         for (int k = 0; k < 4; k++) {
             float[] c = s.drawOrder[k];
             out.addVertex(pose, c[0] + nx * lift, c[1] + ny * lift, c[2] + nz * lift)

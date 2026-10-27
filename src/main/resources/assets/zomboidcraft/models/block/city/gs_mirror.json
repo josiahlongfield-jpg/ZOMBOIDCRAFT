@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_mirror": "zomboidcraft:block/city/gs_mirror",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "particle": "zomboidcraft:block/city/gs_mirror"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        12
+      ],
+      "to": [
+        13,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_mirror"
+        },
+        "south": {
+          "texture": "#gs_mirror",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_mirror"
+        },
+        "west": {
+          "texture": "#gs_mirror"
+        },
+        "up": {
+          "texture": "#gs_mirror"
+        },
+        "down": {
+          "texture": "#gs_mirror"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        15
+      ],
+      "to": [
+        9,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_steel"
+        }
+      }
+    }
+  ]
+}

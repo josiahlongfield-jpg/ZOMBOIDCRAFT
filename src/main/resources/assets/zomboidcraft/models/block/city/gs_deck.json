@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_canopy_roof": "zomboidcraft:block/city/gs_canopy_roof",
+    "gs_soffit": "zomboidcraft:block/city/gs_soffit",
+    "particle": "zomboidcraft:block/city/gs_soffit"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_soffit",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_soffit",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_soffit",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_soffit",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_canopy_roof",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_soffit",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

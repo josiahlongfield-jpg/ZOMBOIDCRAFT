@@ -559,8 +559,9 @@ final class TownHall {
         p.set(hx1, y + 2, za + 2, "th_honor[facing=west]");
         p.set(hx1, y + 2, z0 + 6, "th_notice_" + rng.nextInt(3) + "[facing=west]");
         p.set(hx0, y + 2, zs - 2, "th_notice_" + rng.nextInt(3) + "[facing=east]");
-        p.set(hx1, y + 1, zs - 1, "trade_water_cooler[facing=west]");
-        p.set(hx0, y + 1, zs - 1, "home_plant_dead");
+        // (a step short of the stair's end, clear of the clerk's door and the water office's)
+        p.set(hx1, y + 1, zs - 2, "trade_water_cooler[facing=west]");
+        p.set(hx0, y + 1, zs - 2, "home_plant_dead");
         p.set(cx - 2, y + 1, zs - 1, "cv_flag_us[facing=north]");
         p.set(cx - 2, y + 2, zs - 1, "cv_flag_us_top[facing=north]");
         p.set(cx + 1, y + 1, zs - 1, "cv_flag_state[facing=north]");
@@ -798,10 +799,14 @@ final class TownHall {
             }
         }
         b.mess(1, z0 + 5, x1 - 1, zb - 1, y + 1, 0.04);
-        // the landing round the stairwell, the committee room west of it, the civil-defence office east
+        // the landing round the stairwell (the stair's top tread left in it), the committee room west
+        // of it, the civil-defence office east
         for (int x = hx0; x <= hx1; x++) {
             for (int z = zb + 1; z < z1; z++) {
-                p.set(x, y, z, "cv_terrazzo");
+                String was = p.get(x, y, z);
+                if (was == null || !was.contains("stairs")) {
+                    p.set(x, y, z, "cv_terrazzo");
+                }
             }
         }
         for (int x = cx - 1; x <= cx; x++) {

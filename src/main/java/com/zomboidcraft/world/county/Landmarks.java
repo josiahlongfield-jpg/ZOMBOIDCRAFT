@@ -226,9 +226,10 @@ final class Landmarks {
      * A textile mill on a lot w by d: a long brick block of three or four storeys pierced with
      * rows of big windows, a stair tower in the middle of the front with its pyramid roof and
      * the mill's name, a one-storey weave shed with a sawtooth roof behind, the boiler house and
-     * its smokestack, loading docks.
+     * its smokestack, loading docks. Returns the stair tower's west and east x, so a fence
+     * along the front can stop either side of it.
      */
-    void mill(int w, int d) {
+    int[] mill(int w, int d) {
         int floors = 3 + rng.nextInt(2), storey = 5;
         String wall = rng.nextBoolean() ? "brick_red" : "brick_dark";
         int bd = 16;
@@ -259,22 +260,24 @@ final class Landmarks {
             p.set(x, top + 1, -1, b.wall(wall, top + 1));
         }
         b.flat(0, 0, bx1, bd - 1, top, wall, 2, "stone_trim");
-        // the stair tower, rising two floors past the roof, with the name and a pyramid roof
-        int tx = bx1 / 2 - 3, tw = 7, tz = -3;
+        // the stair tower, rising two floors past the roof, with the name and a pyramid roof; a
+        // two-wide switchback inside it climbs to every floor and out onto the roof
+        int tw = Stairwell.length(storey) + 2, tx = bx1 / 2 - tw / 2, tz = -3;
         int tTop = top + 9;
         b.walls(tx, tz, tx + tw - 1, tz + 5, 1, tTop, wall);
         b.clear(tx + 1, 1, tz + 1, tx + tw - 2, tTop - 1, tz + 4);
         for (int y = 3; y < tTop - 2; y += storey) {
             b.window(tx + tw / 2, y, tz, "north", 3, null);
         }
-        b.doors(tx + tw / 2 - 1, 1, tz, "minecraft:dark_oak_door", "north");
-        b.clear(tx + 1, 1, tz + 5, tx + tw - 2, 3, tz + 5);
         Boards.fascia(p, rng, "mill", tx - 1, tTop - 2, tz - 1, tw + 2);
         b.hip(tx, tx + tw - 1, tz, tz + 5, tTop + 1, "minecraft:deepslate_tile", 1);
-        for (int k = 0; k < floors; k++) {
-            b.stair(tx + 1, tz + 4, k * storey + 1, storey, "north", "minecraft:spruce");
-            p.set(tx + 1, k * storey + storey, tz + 5, "air");
-        }
+        Stairwell stair = new Stairwell(p, rng, tx + 1, tz + 1, 0, storey);
+        stair.wall = wall;
+        stair.landing = "floor_boards";
+        String[] ways = new String[floors];
+        java.util.Arrays.fill(ways, "south");
+        stair.build(floors, ways, true, "south");
+        b.doors(tx + 1, 1, tz, "ext_door_oak", "north");
         // the floors: looms in long rows, bobbins and bales strewn about
         for (int k = 0; k < floors; k++) {
             int y = k * storey + 1;
@@ -346,6 +349,7 @@ final class Landmarks {
             p.set(bx1 + 1, 0, z + 1, "concrete_dark");
         }
         p.vehicle(bx1 + 6, 1, 4.5, 90, "box_truck,moving_truck,step_van", rng.nextLong());
+        return new int[] {tx, tx + tw - 1};
     }
 
     // ------------------------------------------------------------------ the memorial

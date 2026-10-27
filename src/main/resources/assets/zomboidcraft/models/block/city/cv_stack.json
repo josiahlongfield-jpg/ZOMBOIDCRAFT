@@ -9,60 +9,25 @@
   "elements": [
     {
       "from": [
+        2,
         0,
-        0,
-        2
+        15
       ],
       "to": [
-        1,
+        14,
         16,
-        14
+        16
       ],
       "faces": {
         "north": {
           "texture": "#cv_steel_olive"
         },
         "south": {
-          "texture": "#cv_steel_olive"
+          "texture": "#cv_steel_olive",
+          "cullface": "south"
         },
         "east": {
           "texture": "#cv_steel_olive"
-        },
-        "west": {
-          "texture": "#cv_steel_olive",
-          "cullface": "west"
-        },
-        "up": {
-          "texture": "#cv_steel_olive",
-          "cullface": "up"
-        },
-        "down": {
-          "texture": "#cv_steel_olive",
-          "cullface": "down"
-        }
-      }
-    },
-    {
-      "from": [
-        15,
-        0,
-        2
-      ],
-      "to": [
-        16,
-        16,
-        14
-      ],
-      "faces": {
-        "north": {
-          "texture": "#cv_steel_olive"
-        },
-        "south": {
-          "texture": "#cv_steel_olive"
-        },
-        "east": {
-          "texture": "#cv_steel_olive",
-          "cullface": "east"
         },
         "west": {
           "texture": "#cv_steel_olive"
@@ -79,27 +44,62 @@
     },
     {
       "from": [
-        1,
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_steel_olive",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_steel_olive"
+        },
+        "east": {
+          "texture": "#cv_steel_olive"
+        },
+        "west": {
+          "texture": "#cv_steel_olive"
+        },
+        "up": {
+          "texture": "#cv_steel_olive",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_steel_olive",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.6,
         0.5,
-        2.6
+        1
       ],
       "to": [
-        15,
+        13.4,
         15.5,
-        13.4
+        15
       ],
       "faces": {
         "north": {
-          "texture": "#cv_books_a"
+          "texture": "#cv_steel_olive"
         },
         "south": {
+          "texture": "#cv_steel_olive"
+        },
+        "east": {
           "texture": "#cv_books_b"
         },
-        "east": {
-          "texture": "#cv_steel_olive"
-        },
         "west": {
-          "texture": "#cv_steel_olive"
+          "texture": "#cv_books_a"
         },
         "up": {
           "texture": "#cv_steel_olive"
@@ -111,14 +111,14 @@
     },
     {
       "from": [
-        1,
+        2,
         5,
-        2
+        1
       ],
       "to": [
-        15,
+        14,
         5.75,
-        14
+        15
       ],
       "faces": {
         "north": {
@@ -143,14 +143,14 @@
     },
     {
       "from": [
-        1,
+        2,
         10,
-        2
+        1
       ],
       "to": [
-        15,
+        14,
         10.75,
-        14
+        15
       ],
       "faces": {
         "north": {
@@ -175,14 +175,14 @@
     },
     {
       "from": [
-        1,
+        2,
         0,
-        2
+        1
       ],
       "to": [
-        15,
+        14,
         1,
-        14
+        15
       ],
       "faces": {
         "north": {
@@ -208,29 +208,29 @@
     },
     {
       "from": [
-        0,
+        1.5,
         15,
-        1.5
+        0
       ],
       "to": [
+        14.5,
         16,
-        16,
-        14.5
+        16
       ],
       "faces": {
         "north": {
-          "texture": "#cv_steel_olive"
+          "texture": "#cv_steel_olive",
+          "cullface": "north"
         },
         "south": {
-          "texture": "#cv_steel_olive"
+          "texture": "#cv_steel_olive",
+          "cullface": "south"
         },
         "east": {
-          "texture": "#cv_steel_olive",
-          "cullface": "east"
+          "texture": "#cv_steel_olive"
         },
         "west": {
-          "texture": "#cv_steel_olive",
-          "cullface": "west"
+          "texture": "#cv_steel_olive"
         },
         "up": {
           "texture": "#cv_steel_olive",

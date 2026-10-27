@@ -56,6 +56,25 @@ public final class Flight {
      */
     public boolean trainee;
     public float skill = 1;
+    /**
+     * The helicopter's level lock (set by the pilot's game): holds the height it had when the collective was
+     * let go, and with the cyclic centred tilts against any drift until it hovers in place.
+     */
+    public boolean levelLock;
+    /**
+     * The jet's flight assist (the pilot's client sets it each tick): where the pilot is looking, which the
+     * jet flies straight toward, banking itself through the turn; null flies on the full physics.
+     */
+    public org.joml.Vector3f assist;
+    /**
+     * A carrier catapult's pull this tick, metres a second squared along the nose (set by whoever moves the
+     * jet while it sits on a catapult track at full power), 0 elsewhere.
+     */
+    public float catapult;
+    /** Ticks since the wheels last touched. */
+    private int airTicks;
+    /** How far it has drifted above the held height, metres, while the lock is on. */
+    private float heightError;
     private int shake;
 
     public Flight(Kind kind) {
@@ -150,8 +169,8 @@ public final class Flight {
             if (rpm < spooled - 0.01f && power == 0) {
                 rpm = Math.min(spooled, rpm + spooled / 160f);   // eight seconds from cold to idle
             } else {
-                throttle = Mth.clamp(throttle + c.throttle() * 0.5f * DT, 0, 1);
-                power += Mth.clamp(throttle - power, -0.45f * DT, 0.35f * DT);
+                throttle = Mth.clamp(throttle + c.throttle() * 0.9f * DT, 0, 1);
+                power += Mth.clamp(throttle - power, -0.5f * DT, 0.55f * DT);
                 rpm += Mth.clamp(spooled + 0.4f * power - rpm, -0.3f * DT, 0.3f * DT);
             }
         } else {
@@ -159,6 +178,11 @@ public final class Flight {
             rpm = Math.max(0, rpm - 0.1f * DT);
         }
         airbrake = c.brake() && !grounded;
+        airTicks = grounded ? 0 : airTicks + 1;
+        // a wheel lifting over a bump for a tick or two isn't flying yet
+        if (assist != null && !grounded && airTicks > 3) {
+            return assisted(c);
+        }
 
         Vec3 f = forward(), u = up(), l = left();
         double speed = vel.length();
@@ -180,10 +204,10 @@ public final class Flight {
         }
         float cd0 = 1.1f * G / (top * top);
         double drag = cd0 * speed * speed + Math.abs(lift) * Math.min(a, 0.6f) * 0.6f + (airbrake ? 0.25f * G + 0.5f * G * speed * speed / (top * top) : 0);
-        Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust)).add(liftDir.scale(lift)).subtract(along.scale(drag));
+        Vec3 acc = new Vec3(0, -G, 0).add(f.scale(thrust + (grounded ? catapult : 0))).add(liftDir.scale(lift)).subtract(along.scale(drag));
         // the fin keeps it flying straight through the air rather than skidding
         float authority = (float) Mth.clamp((speed / (1.4 * vs)) * (speed / (1.4 * vs)), 0.05, 1);
-        acc = acc.subtract(l.scale(vel.dot(l) * 2.0 * authority));
+        acc = acc.subtract(l.scale(vel.dot(l) * 1.2 * authority));
 
         // an unpractised pilot's hands: slower on the stick, and a wobble that settles as Piloting grows
         float hands = 0.65f + 0.35f * skill, wobble = grounded ? 0 : (1 - skill) * 0.18f;
@@ -193,6 +217,13 @@ public final class Flight {
         float yawRate = c.yaw() * 8 * authority;
         if (stalled) {
             pitchRate -= 12;    // the nose drops through
+        }
+        if (!grounded && speed > 5) {
+            // weathercock stability: the fins swing the nose into a sideslip, so a banked jet turns into the airflow
+            // rather than sliding, and with the stick let go the nose settles back onto the flight path
+            float slip = (float) Math.toDegrees(Math.atan2(vel.dot(l), vel.dot(f)));
+            yawRate -= Mth.clamp(slip, -20, 20) * 1.6f * authority;
+            pitchRate -= (float) Math.toDegrees(aoa) * 0.35f * authority * (1 - Math.abs(c.pitch()));
         }
         if (grounded) {
             // on its wheels: rolling resistance, the brakes, no skidding, the nose wheel steers
@@ -204,6 +235,8 @@ public final class Flight {
             rollRate = 0;
             if (speed < 0.8 * vs) {
                 pitchRate = Math.min(pitchRate, 0);
+            } else if (assist != null && speed > 1.2 * vs && noseUp() < 9) {
+                pitchRate = Math.max(pitchRate, 6);     // the assist rotates for take-off once it's safely past flying speed
             }
         }
         load = grounded ? 1 : lift / G;
@@ -223,6 +256,68 @@ public final class Flight {
         return vel.scale(DT);
     }
 
+    /**
+     * A tick of the assisted jet in the air: the nose turns toward the pilot's aim as fast as the jet can
+     * turn at this speed, the wings bank into the turn by themselves and come level when it straightens,
+     * and the jet goes where it points. Thrust, drag and climbing or diving still set the speed; too slow
+     * and the nose drops until it has flying speed again. A or D still roll it by hand.
+     */
+    private Vec3 assisted(Controls c) {
+        Vec3 f = forward();
+        double speed = vel.length();
+        float vs = stallSpeed();
+        float thrust = 1.1f * G * thrustShare();
+        float cd0 = 1.1f * G / (top * top);
+        double drag = cd0 * speed * speed + (airbrake ? 0.25f * G + 0.5f * G * speed * speed / (top * top) : 0);
+        double newSpeed = Math.max(0, speed + (thrust - drag - G * f.y) * DT);
+        float authority = (float) Mth.clamp((speed / (1.2 * vs)) * (speed / (1.2 * vs)), 0.05, 1);
+        float hands = 0.7f + 0.3f * skill;
+        org.joml.Vector3f nose = new org.joml.Vector3f((float) f.x, (float) f.y, (float) f.z);
+        org.joml.Vector3f want = new org.joml.Vector3f(assist).normalize();
+        if (airTicks < 80 && want.y < 0.14f && want.x * want.x + want.z * want.z > 1e-4f) {
+            // just off the ground: keep climbing away whatever the aim, so it doesn't settle back onto the deck
+            want.set(want.x, 0, want.z).normalize().mul(0.99f).add(0, 0.14f, 0).normalize();
+        }
+        stalled = speed < 0.62f * vs;
+        if (stalled) {
+            // no flying speed: the nose lowers a little below the horizon until it has some back
+            double h = Math.toRadians(yaw());
+            want.set((float) -Math.sin(h), 0, (float) Math.cos(h)).mul(0.985f).add(0, -0.17f, 0).normalize();
+        }
+        float before = yaw();
+        float angle = nose.angle(want), most = (float) Math.toRadians(40 * (stalled ? 1 : authority) * hands) * DT;
+        if (angle > 1e-4f) {
+            org.joml.Vector3f axis = nose.cross(want, new org.joml.Vector3f());
+            if (axis.lengthSquared() > 1e-10f) {
+                axis.normalize();
+                q.set(new Quaternionf().rotationAxis(Math.min(angle, most), axis).mul(q));
+            }
+        }
+        // the wings: into the turn by themselves (right turn, right wing down), level again when it straightens
+        float turnRate = Mth.wrapDegrees(yaw() - before) / DT;
+        if (c.roll() != 0) {
+            q.rotateZ((float) Math.toRadians(c.roll() * 150 * DT));
+        } else {
+            float wantBank = Mth.clamp(turnRate * 2.4f, -70, 70);
+            q.rotateZ((float) Math.toRadians(Mth.clamp(wantBank - bank(), -120 * DT, 120 * DT)));
+        }
+        q.normalize();
+        // it goes where it points, a beat behind the nose
+        Vec3 along = speed > 0.01 ? vel.scale(1 / speed) : forward();
+        Vec3 dir = along.add(forward().subtract(along).scale(0.3)).normalize();
+        vel = dir.scale(newSpeed);
+        if (newSpeed < vs) {
+            vel = vel.add(0, -G * (1 - (newSpeed / vs) * (newSpeed / vs)) * DT, 0);
+        }
+        aoa = (float) Math.atan2(-vel.dot(up()), Math.max(0.1, vel.dot(forward())));
+        load = 1 + (float) (Math.abs(Math.toRadians(turnRate)) * newSpeed / G);
+        double s = vel.length();
+        if (s > top * 1.15) {
+            vel = vel.scale(top * 1.15 / s);
+        }
+        return vel.scale(DT);
+    }
+
     // ---------------------------------------------------------------- the helicopter
 
     /**
@@ -234,6 +329,14 @@ public final class Flight {
         rpm = engine ? Math.min(1, rpm + 1 / 200f) : Math.max(0, rpm - 1 / 300f);
         Vec3 u = up();
         float targetVy = c.collective() > 0 ? 7 : c.collective() < 0 ? -6 : grounded ? -1 : 0;
+        boolean holding = levelLock && !grounded && c.collective() == 0;
+        if (holding) {
+            // back to the held height, gently
+            heightError += (float) vel.y * DT;
+            targetVy = Mth.clamp(-heightError * 0.9f, -4, 4);
+        } else {
+            heightError = 0;
+        }
         float most = 1.7f * G * rpm * rpm;
         if (trainee && grounded) {
             most = Math.min(most, 0.96f * G);   // without the manual it never comes off the ground
@@ -255,6 +358,19 @@ public final class Flight {
 
         float wantPitch = c.cyclicFwd() > 0 ? -18 : c.cyclicFwd() < 0 ? 12 : 0;
         float wantRoll = c.cyclicSide() * 25;
+        if (levelLock && !grounded) {
+            // the lock flies the hover: with the cyclic centred it leans against the drift, ahead and sideways
+            double ahead = vel.x * -Math.sin(r) + vel.z * Math.cos(r), leftward = vel.dot(side);
+            if (c.cyclicFwd() == 0) {
+                wantPitch = (float) Mth.clamp(ahead * 1.6, -14, 14);
+            }
+            if (c.cyclicSide() == 0) {
+                wantRoll = (float) Mth.clamp(leftward * 2.2, -16, 16);
+            }
+            if (c.cyclicFwd() == 0 && c.cyclicSide() == 0 && hs < 3) {
+                acc = acc.subtract(flat.scale(0.6));   // and settles the last of it
+            }
+        }
         shake++;
         if (!grounded) {
             float wobble = (1 - skill) * 6;

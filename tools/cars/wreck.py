@@ -458,7 +458,8 @@ def swing(kind, lo, hi):
         return np.array([0, hi[1], hi[2]]), 'x', 1.2
     if kind == 'shutter':  # a box truck's roll-up door, folded up under the roof inside
         return np.array([0, hi[1] - 0.08, lo[2]]), 'x', -1.6
-    return np.array([hi[0] if sgn > 0 else lo[0], 0, lo[2]]), 'y', sgn * 1.6
+    # one of a pair of back doors, hinged at its outer edge, swinging out and round toward the side
+    return np.array([hi[0] if sgn > 0 else lo[0], 0, lo[2]]), 'y', -sgn * 1.6
 
 
 def turn(Q, pivot, axis, a):

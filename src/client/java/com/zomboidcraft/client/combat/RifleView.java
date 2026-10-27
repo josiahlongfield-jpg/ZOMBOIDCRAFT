@@ -385,6 +385,15 @@ public final class RifleView {
             drawPiece(pose, out, light, player, want, new Matrix4f().translation(0, 0, lever * rig.handleTravel()), LOOSE_SLIDE);
             pose.popPose();
         }
+        if (rig.hammer().length == 3) {
+            // an exposed hammer: back at full cock while loaded, falling forward with each shot
+            float[] h = rig.hammer();
+            Matrix4f local = new Matrix4f().translation(h[0], h[1], h[2])
+                    .rotateX(rig.hammerCock() * hammerAmount(player, gun, animate) * Mth.DEG_TO_RAD).translate(-h[0], -h[1], -h[2]);
+            pose.pushPose();
+            drawPiece(pose, out, light, player, want, local, LOOSE_SLIDE);
+            pose.popPose();
+        }
         drawFlash(pose, out, player, want, gun, age);
         Quaternionf turn = new Quaternionf().rotationX(swayX * Mth.DEG_TO_RAD).rotateY(swayY * Mth.DEG_TO_RAD).mul(breath);
         rail = new Rail(eye(want, turn, rig.laser()), eye(want, turn, rig.light()),
@@ -490,6 +499,8 @@ public final class RifleView {
      * shows from the next frame drawn.
      */
     public static void fired(LocalPlayer player, boolean flash) {
+        hammerShot = System.nanoTime();
+        hammer = 0;
         shotTick = player.tickCount;
         shotWaiting = true;
         shotFlash = flash;
@@ -523,6 +534,41 @@ public final class RifleView {
     }
 
     private static final int FULL_BRIGHT = 0xF000F0;
+
+    /** The hammer: how far back it is (0 down, 1 full cock), and when the last shot let it fall. */
+    private static float hammer;
+    private static long hammerShot, hammerFrame;
+    /** How long the hammer takes to fall, how long after a shot before the thumb takes it back, and how long that takes (s). */
+    private static final float HAMMER_FALL = 0.05f, HAMMER_WAIT = 0.28f, HAMMER_COCKING = 0.16f;
+    /** A pistol's: the slide runs back over it and leaves it cocked as it returns. */
+    private static final float SLIDE_HAMMER_WAIT = 0.05f, SLIDE_HAMMER_COCKING = 0.03f;
+
+    /**
+     * How far back an exposed hammer is this frame: at full cock whenever the gun's loaded, from the hip or on the
+     * sights, so each shot it slams forward; then a revolver's is thumbed back again (with its click) and a
+     * pistol's is pushed back by the slide.
+     */
+    private static float hammerAmount(LocalPlayer player, ItemStack gun, boolean reloading) {
+        long now = System.nanoTime();
+        float dt = hammerFrame == 0 ? 0f : Math.min(0.1f, (now - hammerFrame) / 1e9f);
+        hammerFrame = now;
+        float since = (now - hammerShot) / 1e9f;
+        if (hammerShot != 0 && since < HAMMER_FALL) {
+            return 1f - since / HAMMER_FALL;
+        }
+        boolean slide = rig.cycles();
+        boolean loaded = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() > 0;
+        boolean cock = loaded && !reloading && (hammerShot == 0 || since > (slide ? SLIDE_HAMMER_WAIT : HAMMER_WAIT));
+        if (cock && hammer == 0f && !slide) {
+            GunType t = GunType.of(gun);
+            if (t != null && t.hammer() != null) {
+                com.zomboidcraft.client.sound.EarSound.play(t.hammer(), net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1f);
+            }
+        }
+        hammer = cock ? Math.min(1f, hammer + dt / (slide ? SLIDE_HAMMER_COCKING : HAMMER_COCKING))
+                : Math.max(0f, hammer - dt / HAMMER_FALL);
+        return hammer;
+    }
 
     /** Draws a loose piece of the gun (drawn in the gun's own model space), moved by local (item pixels). */
     private static void drawPiece(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, Pose gun,

@@ -65,6 +65,16 @@ final class FireStation {
         apron(x1, z0);
         rear(x1, z1, tx0);
         roof(x1, z0, z1, tx0, tz0);
+        roofStair(z0);
+    }
+
+    /**
+     * The stair up to the roof: two wide up the bunk room's west wall from its front end, climbing
+     * toward the back, into a hut on the roof with its doors out east.
+     */
+    private void roofStair(int z0) {
+        RoofHut.flight(p.turned(2, 0, z0 + 6, 1), rng, 0, 0, S2, TOP, brick, "stairs_concrete", "north",
+                "ext_rail_edge_dark");
     }
 
     // ------------------------------------------------------------------ the shell
@@ -416,12 +426,10 @@ final class FireStation {
         // the bunk room: beds head to the walls, a locker and a footlocker each
         partition(1, 9, zb, y, top);
         Doors.abandoned(p, rng, 7, y, zb, "home_door_white", "north", Doors.hinge(rng));
-        for (int z = z0 + 6; z < zb - 1; z += 3) {
-            bunk(1, z, "east");
-        }
+        // (the west wall of it carries the stair up to the roof, see roofStair)
         for (int z = z0 + 2; z < zb - 1; z += 3) {
-            if (z == z0 + 8) {
-                continue;
+            if (z == z0 + 2 || z == z0 + 8) {
+                continue;     // clear of the lounge door, and of the pole
             }
             bunk(9, z, "west");
         }

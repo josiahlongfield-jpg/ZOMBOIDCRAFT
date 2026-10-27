@@ -2,7 +2,6 @@ package com.zomboidcraft.client.zombie.body;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.client.zombie.WalkerModel;
 import com.zomboidcraft.client.zombie.WalkerRenderState;
@@ -12,12 +11,14 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /**
  * Draws the new zombie: body A in its per-type skin, the worn 3D clothes from the outfit's atlas,
  * and the red eyes, every quad hung off its bone and posed by {@link ZMove}. Zombies further off
- * leave off the smallest clothing details so a horde stays cheap. Limbs that have been shot off (or were lost
+ * leave off the smallest clothing details so a horde stays cheap ({@link ZDetail}). Limbs that have been shot off (or were lost
  * before it rose) are left out, with a torn stump where they were.
  */
 public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
@@ -59,9 +60,7 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         float[] mats = matrices(mesh, state.zpose, legless, world);
         int stumps = stumps(state.cuts, state.missingLimb);
         int hidden = hiddenBones(stumps, legless);
-        double detail = Math.max(1.0, ZcConfig.get().look.zombieDetailDistance);
-        double dist = state.distanceToCameraSq;
-        int lod = dist < detail * detail ? 0 : dist < detail * detail * 6.25 ? 1 : 2;
+        int lod = ZDetail.level(state.distanceToCameraSq);
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zskin),
                 (pose, out) -> emit(mesh, mats, pose, out, true, hidden, lod, legless, light, overlay, BODY_TINT));
@@ -220,13 +219,16 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
 
     static void emit(ZBodyMesh m, float[] a, PoseStack.Pose pose, VertexConsumer out, boolean body, int hidden,
             int lod, boolean legless, int light, int overlay, int colour) {
-        for (int q = 0; q < m.count; q++) {
-            int f = m.flags[q];
-            if (((f & ZBodyMesh.BODY) != 0) != body || (hidden >> m.bone[q] & 1) != 0
-                    || ((f & ZBodyMesh.STUMP) != 0 && !legless)) {
-                continue;
-            }
-            if (!body && lod > 0 && ((f & ZBodyMesh.SMALL) != 0 || (lod > 1 && m.minEdge[q] < 1f))) {
+        // each bone's matrix with the pose stack's folded in, so a corner costs one transform instead of two
+        float[] w = new float[a.length];
+        Matrix4f bone = new Matrix4f(), stack = pose.pose();
+        Matrix3f normal = pose.normal();
+        Vector3f n = new Vector3f();
+        for (int b = 0; b * 16 < a.length; b++) {
+            stack.mul(bone.set(a, b * 16), bone).get(w, b * 16);
+        }
+        for (int q : m.quads(body, lod, legless)) {
+            if ((hidden >> m.bone[q] & 1) != 0) {
                 continue;
             }
             int o = m.bone[q] * 16;
@@ -234,24 +236,24 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
             float nx = a[o] * nx0 + a[o + 4] * ny0 + a[o + 8] * nz0;
             float ny = a[o + 1] * nx0 + a[o + 5] * ny0 + a[o + 9] * nz0;
             float nz = a[o + 2] * nx0 + a[o + 6] * ny0 + a[o + 10] * nz0;
-            float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+            // into view space once a quad, not once a corner
+            normal.transform(n.set(nx, ny, nz));
+            float len = n.length();
             if (len > 0f) {
-                nx /= len;
-                ny /= len;
-                nz /= len;
+                n.div(len);
             }
             float u0 = m.uv[q * 4], v0 = m.uv[q * 4 + 1], u1 = m.uv[q * 4 + 2], v1 = m.uv[q * 4 + 3];
             for (int c : ORDER) {
                 int i = q * 12 + c * 3;
                 float x = m.pos[i], y = m.pos[i + 1], z = m.pos[i + 2];
-                out.addVertex(pose, a[o] * x + a[o + 4] * y + a[o + 8] * z + a[o + 12],
-                                a[o + 1] * x + a[o + 5] * y + a[o + 9] * z + a[o + 13],
-                                a[o + 2] * x + a[o + 6] * y + a[o + 10] * z + a[o + 14])
+                out.addVertex(w[o] * x + w[o + 4] * y + w[o + 8] * z + w[o + 12],
+                                w[o + 1] * x + w[o + 5] * y + w[o + 9] * z + w[o + 13],
+                                w[o + 2] * x + w[o + 6] * y + w[o + 10] * z + w[o + 14])
                         .setColor(colour)
                         .setUv(c == 1 || c == 2 ? u1 : u0, c >= 2 ? v1 : v0)
                         .setOverlay(overlay)
                         .setLight(light)
-                        .setNormal(pose, nx, ny, nz);
+                        .setNormal(n.x, n.y, n.z);
             }
         }
     }

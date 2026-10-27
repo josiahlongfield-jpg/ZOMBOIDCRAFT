@@ -46,6 +46,16 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("aircraft")
+                                .executes(ctx -> aircraft(ctx, "jet_corvid"))
+                                .then(Commands.argument("model", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(AIRCRAFT.keySet(), b))
+                                        .executes(ctx -> aircraft(ctx, StringArgumentType.getString(ctx, "model")))))
+                        .then(Commands.literal("event")
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.world.events.WorldEvents.kinds(), b))
+                                        .executes(ctx -> worldEvent(ctx, StringArgumentType.getString(ctx, "kind")))))
                         .then(Commands.literal("zombie")
                                 .executes(ctx -> zombie(ctx, null, "walker"))
                                 .then(Commands.argument("outfit", StringArgumentType.word())
@@ -197,6 +207,61 @@ public final class ZcCommand {
         double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
         Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
         ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + look + ")"), false);
+        return 1;
+    }
+
+    /** The flyable aircraft, by the name the command takes (the model id works too). */
+    private static final java.util.Map<String, String> AIRCRAFT = java.util.Map.of(
+            "f22", "jet_corvid", "su27", "jet_gyrfalcon", "apache", "heli_hornbill",
+            "jet_corvid", "jet_corvid", "jet_gyrfalcon", "jet_gyrfalcon", "heli_hornbill", "heli_hornbill");
+
+    /**
+     * An aircraft in front of you, nose the way you're facing, ready to fly: full tanks, a good battery,
+     * in full repair, and you've read its flight manual.
+     */
+    private static int aircraft(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        String id = AIRCRAFT.get(name.toLowerCase(java.util.Locale.ROOT));
+        CarModels.Model m = id == null ? null : CarModels.get(id);
+        if (m == null) {
+            ctx.getSource().sendFailure(Component.literal("Unknown aircraft: " + name + " (f22, su27 or apache)"));
+            return 0;
+        }
+        // far enough ahead that its wings and nose clear you; you stand behind its tail
+        double yaw = Math.toRadians(player.getYRot());
+        double reach = m.size[2] / 2 + 4;
+        double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
+        com.zomboidcraft.world.cars.CarProp car = Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot(), m.id,
+                "usable", true);
+        if (car == null) {
+            ctx.getSource().sendFailure(Component.literal("Couldn't spawn " + m.id));
+            return 0;
+        }
+        car.readyToFly();
+        var manual = com.zomboidcraft.world.cars.AirReadiness.manualFor(car.helicopter()
+                ? com.zomboidcraft.world.cars.Flight.Kind.HELI : com.zomboidcraft.world.cars.Flight.Kind.JET);
+        java.util.List<String> read = new java.util.ArrayList<>(player.getAttachedOrCreate(com.zomboidcraft.world.cars.AirReadiness.READ));
+        if (!read.contains(manual.name())) {
+            read.add(manual.name());
+            player.setAttached(com.zomboidcraft.world.cars.AirReadiness.READ, read);
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + ", fuelled and ready: G to get in, C to start"), false);
+        return 1;
+    }
+
+    /** /zc event jet|heli|siren|explosion: starts one of the shared world events around you now. */
+    private static int worldEvent(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.events.WorldEvents.Kind kind;
+        try {
+            kind = com.zomboidcraft.world.events.WorldEvents.Kind.valueOf(name.toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren or explosion)"));
+            return 0;
+        }
+        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player);
+        ctx.getSource().sendSuccess(() -> Component.literal(String.format("Started %s at %d %d %d", name, (int) e.x(), (int) e.y(),
+                (int) e.z())), false);
         return 1;
     }
 

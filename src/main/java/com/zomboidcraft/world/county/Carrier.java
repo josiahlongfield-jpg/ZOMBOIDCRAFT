@@ -555,13 +555,13 @@ final class Carrier {
                 }
             }
         }
-        // the jets packed in: two staggered rows to a bay, noses toward the bay's ends, the support gear under their wings
+        // the jets packed in: two staggered rows to a bay, all nose forward, the support gear under their wings
         int[][] spots = {{67, -7, 1}, {90, -7, 1}, {113, -7, 1}, {79, 6, 0}, {102, 6, 0},
             {139, -7, 1}, {162, -7, 1}, {184, -7, 1}, {151, 6, 0}, {174, 6, 0},
             {209, -7, 1}, {232, -7, 1}, {221, 6, 0}, {244, 6, 0}};
         for (int[] s : spots) {
             if (chance() < 0.9) {
-                park(s[0], HANGAR + 1, s[1], s[2] == 1 ? 270 : 90);
+                park(s[0], HANGAR + 1, s[1], 270);
                 for (int side : new int[] {-1, 1}) {
                     if (chance() < 0.7) {
                         String g = any("fit_firebottle", "fit_gse_power", "fit_gse_air", "fit_tyres", "fit_fod", "navy_toolbox");
@@ -656,6 +656,22 @@ final class Carrier {
     private void park(double x, int y, double z, double yaw) {
         jets.add(new double[] {x + 0.5, y, z + 0.5, yaw});
         tieDown(x, y, z, yaw, rng.nextBoolean() ? "jet_corvid" : "jet_gyrfalcon");
+    }
+
+    /** True if (x, z) on deck y lies under a parked jet or in the run ahead of its nose, where it taxis out. */
+    private boolean inTaxiLane(int x, int y, int z) {
+        for (double[] j : jets) {
+            if (j[1] != y) {
+                continue;
+            }
+            double a = Math.toRadians(j[3]), fx = -Math.sin(a), fz = Math.cos(a);
+            double dx = x + 0.5 - j[0], dz = z + 0.5 - j[2];
+            double ahead = dx * fx + dz * fz, aside = Math.abs(dx * fz - dz * fx);
+            if (aside < 9 && ahead > -11 && ahead < 45) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Where each aircraft's wheels touch, in metres from its middle: {forward, to the side}. */
@@ -2267,6 +2283,8 @@ final class Carrier {
                 p.set(x, y + 2 + j, lane, "air");
                 p.set(x, y + 3 + j, lane, "air");
             }
+            // no deck three over the landing where it leaves, or a head on the first step up hits it
+            p.set(fwd ? xs - 1 : xs + 4, y + 3, lane, "air");
             // the landing it arrives at fills the rest of the trunk's length
             for (int x = fwd ? xs + n : xs - 1; fwd ? x <= xs + 4 : x <= xs + 3 - n; x++) {
                 for (int dz = 0; dz <= 1; dz++) {
@@ -2448,6 +2466,7 @@ final class Carrier {
      */
     private void catwalks() {
         int y = GALLERY;
+        java.util.List<int[]> rails = new java.util.ArrayList<>();
         for (int x = 0; x < LEN; x++) {
             for (int z = Z0; z < Z0 + NZ; z++) {
                 if (plan(x, z) || lift(x, z) >= 0 || kind(x, y, z) != 0 || kind(x, y - 1, z) != 0) {
@@ -2467,10 +2486,16 @@ final class Carrier {
                         p.set(x, y - 1, z, "steel_girder");
                     }
                 } else if (d == 3) {
-                    boolean alongX = near(x, z + 1) || near(x, z - 1), alongZ = near(x + 1, z) || near(x - 1, z);
-                    p.set(x, y + 1, z, alongX && alongZ ? "vessel_rail_cross" : alongX ? "vessel_rail[axis=x]" : "vessel_rail[axis=z]");
+                    rails.add(new int[] {x, z});
                 }
             }
+        }
+        // the rail along the outer edge, once all the gratings are down: it runs the way the
+        // walk beside it runs (worked out mid-way, the gratings not yet laid on one side turned it)
+        for (int[] c : rails) {
+            int x = c[0], z = c[1];
+            boolean alongX = near(x, z + 1) || near(x, z - 1), alongZ = near(x + 1, z) || near(x - 1, z);
+            p.set(x, y + 1, z, alongX && alongZ ? "vessel_rail_cross" : alongX ? "vessel_rail[axis=x]" : "vessel_rail[axis=z]");
         }
         // steps up to the deck, rafts, guns and antennas along the sides
         for (int x = 10; x < LEN - 10; x++) {
@@ -2908,13 +2933,14 @@ final class Carrier {
      */
     private void gear() {
         int y = FLIGHT + 1;
+        // every one nose to the bow, toward the catapults, with a clear run forward to taxi out
         double[][] spots = {
-            {268, 18, 135}, {286, 15, 125}, {300, 10, 120},     // the bow, tails out to starboard
-            {262, -20, 45}, {280, -16, 55}, {296, -12, 60},     // and to port
-            {214, 18, 160}, {196, 18, 160}, {178, 18, 160},     // the street
-            {58, 18, 200}, {76, 20, 190}, {40, 12, 210},        // the corral aft of the island
-            {90, -36, 330}, {112, -40, 330},                    // the junkyard to port
-            {212, 28, 180},                                     // on the forward elevator
+            {250, 19, 270}, {271, 19, 270},                     // the bow, starboard of the catapults
+            {250, -22, 270}, {271, -22, 270},                   // and to port
+            {176, 14, 270}, {196, 14, 270},                     // the street
+            {40, 12, 270}, {62, 12, 270},                       // the corral aft of the island, clear of the bomb farm
+            {92, -37, 270}, {114, -37, 270},                    // the junkyard to port, lined up on the waist catapult
+            {212, 29, 270},                                     // on the forward elevator
         };
         for (double[] s : spots) {
             if (chance() < 0.85) {
@@ -2925,7 +2951,7 @@ final class Carrier {
         // tractors by the jets and in the street
         for (int i = 0; i < 9; i++) {
             int x = 40 + rng.nextInt(260), z = -20 + rng.nextInt(44);
-            if (plan(x, z) && plan(x + 1, z + 1) && plan(x - 1, z - 1)) {
+            if (plan(x, z) && plan(x + 1, z + 1) && plan(x - 1, z - 1) && !inTaxiLane(x, y, z)) {
                 tractor(x, y, z);
             }
         }
@@ -3167,7 +3193,9 @@ final class Carrier {
                     p.set(x, HANGAR, z, "bunk_walkway");
                     p.set(x, HANGAR - 1, z, z % 4 == 0 ? "steel_girder" : "air");
                 }
+                // two steps up off the wharf onto the brow (its walkway tops out a block over the first)
                 p.set(x, 1, quayZ, "steel_stairs[facing=north]");
+                p.set(x, HANGAR, quayZ - 1, "steel_stairs[facing=north]");
             }
             for (int z = 20; z < quayZ; z++) {
                 p.set(bx - 1, HANGAR + 1, z, "vessel_rail[axis=z]");

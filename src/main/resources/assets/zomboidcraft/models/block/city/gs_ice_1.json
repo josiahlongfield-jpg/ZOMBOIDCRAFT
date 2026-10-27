@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_ice_1": "zomboidcraft:block/city/gs_ice_1",
+    "gs_ice_side": "zomboidcraft:block/city/gs_ice_side",
+    "particle": "zomboidcraft:block/city/gs_ice_1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_ice_1"
+        },
+        "south": {
+          "texture": "#gs_ice_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_ice_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_ice_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_ice_side"
+        },
+        "down": {
+          "texture": "#gs_ice_side",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_ice_side"
+        },
+        "south": {
+          "texture": "#gs_ice_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_ice_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_ice_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_ice_side",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_ice_side"
+        }
+      }
+    }
+  ]
+}

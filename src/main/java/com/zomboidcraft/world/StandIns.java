@@ -52,6 +52,7 @@ public final class StandIns {
         put("window_broken", "gray_stained_glass_pane");
         put("glass_spandrel", "black_stained_glass");
         put("boarded_window", "spruce_planks");
+        put("barricade", "air");
         put("office_floor", "gray_wool");
         put("lobby_floor_white", "quartz_block");
         put("lobby_floor_dark", "polished_blackstone");

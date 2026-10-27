@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_sign_prepay": "zomboidcraft:block/city/gs_sign_prepay",
+    "particle": "zomboidcraft:block/city/gs_sign_prepay"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_sign_prepay"
+        },
+        "south": {
+          "texture": "#gs_sign_prepay",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_sign_prepay"
+        },
+        "west": {
+          "texture": "#gs_sign_prepay"
+        },
+        "up": {
+          "texture": "#gs_sign_prepay"
+        },
+        "down": {
+          "texture": "#gs_sign_prepay"
+        }
+      }
+    }
+  ]
+}

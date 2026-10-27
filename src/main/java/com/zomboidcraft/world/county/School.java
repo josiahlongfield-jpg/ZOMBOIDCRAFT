@@ -35,6 +35,8 @@ import java.util.SplittableRandom;
  */
 final class School {
     static final int Z0 = 12, ST = 5;
+    /** The foot of the high school's stair up to the roof, along the top floor's corridor. */
+    private static final int ROOF_STAIR = 8;
     private static final String[] DIRS = {"north", "east", "south", "west"};
 
     private record Room(int x0, int x1, int z0, int z1, boolean front, int f, String kind, String no) {
@@ -126,6 +128,10 @@ final class School {
         front();
         backAndSides();
         roof();
+        if (high) {
+            // on up from the top floor's corridor (two lanes of it, the lockers held back) to a hut on the roof
+            RoofHut.flight(p, rng, ROOF_STAIR, za + 1, top - ST, top, brick, "stairs_concrete", "north", "ext_rail_edge_dark");
+        }
     }
 
     // ------------------------------------------------------------------ helpers
@@ -635,7 +641,8 @@ final class School {
             }
         }
         int muralX = f == 0 && !high ? 25 : -100;
-        int stairEnd = high ? 7 : 0;
+        // clear of the stairs: up from the ground floor at the west end, on up to the roof from the top floor
+        int stairEnd = high ? (f == floors - 1 ? ROOF_STAIR + ST + 3 : 7) : 0;
         String banner = "sc_banner_" + key + "_";
         // lockers on the back wall; on the front wall too in the high school
         for (int pass = 0; pass < 2; pass++) {

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_frp_c": "zomboidcraft:block/city/gs_frp_c",
+    "particle": "zomboidcraft:block/city/gs_frp_c"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_frp_c",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_frp_c",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_frp_c",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_frp_c",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_frp_c",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_frp_c",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

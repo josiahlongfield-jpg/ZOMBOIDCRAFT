@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,9 +58,6 @@ public class RifleItem extends Item {
             return InteractionResult.FAIL;  // a hand on the wheel: only a handgun comes up while driving
         }
         player.startUsingItem(hand);
-        if (player instanceof ServerPlayer server) {
-            Guns.aim(server, player.getItemInHand(hand));
-        }
         return InteractionResult.CONSUME;
     }
 

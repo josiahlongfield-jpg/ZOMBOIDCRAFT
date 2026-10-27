@@ -9,8 +9,6 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 | weapon.pistol.shot_suppressed_distant | De_Lisle_Carbine_.45ACP_suppressed_55m_in_front_off_axis_clean_Single_shots_x_14.L (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.rifle.bolt | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.rifle.bolt | [Assault Rifle Reload](https://freesound.org/people/qubodup/sounds/815879/) | qubodup | CC0 1.0 |
-| weapon.bullet.ricochet | [ricochet.mp3](https://freesound.org/people/cedarstudios/sounds/148840/) | cedarstudios | CC0 1.0 |
-| weapon.bullet.ricochet | [Ricochet 2.wav](https://freesound.org/people/morganpurkis/sounds/392975/) | morganpurkis | CC0 1.0 |
 | weapon.melee.swing_heavy | [Weapon Swings - Variations](https://freesound.org/people/SecureSubset/sounds/784302/) | SecureSubset | CC0 1.0 |
 | weapon.melee.swing_heavy | [Swoosh](https://freesound.org/people/pasdepoisson/sounds/201216/) | pasdepoisson | CC0 1.0 |
 | weapon.melee.hit_blunt | [body_hit.wav](https://freesound.org/people/insanity54/sounds/276600/) | insanity54 | CC0 1.0 |
@@ -305,14 +303,51 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/jet/roar | [Idle F-22 Jet Plane.flac by qubodup](https://freesound.org/people/qubodup/sounds/187734/) | qubodup | Freesound, CC0 1.0 |
 | aircraft/jet/distant | [Afterburner (Close, Screamer, Quick Onset) by JSK_Productions](https://freesound.org/people/JSK_Productions/sounds/829068/) | JSK_Productions | Freesound, CC0 1.0 |
 | aircraft/heli/distant | AEROHeli_InsJ_Helicopter_Flyby_Close_03_Chinook (InspectorJ - 96 General Library) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| aircraft/heli/distant2 | [helicopter.wav by lezaarth](https://freesound.org/people/lezaarth/sounds/232818/) | lezaarth | Freesound, CC0 1.0 |
+| aircraft/heli/start, aircraft/heli/idle | [Helicopter interior recording by Sanderboah](https://freesound.org/people/Sanderboah/sounds/702748/) | Sanderboah | Freesound, CC0 1.0 |
+| aircraft/heli/rotor | [MILITARY ROTOR LOOP by UnderlinedDesigns](https://freesound.org/people/UnderlinedDesigns/sounds/172667/) | UnderlinedDesigns | Freesound, CC0 1.0 |
+| aircraft/warn/stall | [Airplane warning by OutofPhaze](https://freesound.org/people/OutofPhaze/sounds/412197/) | OutofPhaze | Freesound, CC0 1.0 |
+| aircraft/warn/stall2 | Beechcraft King Air 350 - t10 - VAR SFX - Landing Gear Warning Test - INTERIOR - AMBEO BLD (Pole Position Production - Beechcraft King Air 350i 2010) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
 | aircraft/jet/afterburner | [Afterburner sound.wav by StoneyJ](https://freesound.org/people/StoneyJ/sounds/104883/) | StoneyJ | Freesound, CC0 1.0 |
-| aircraft/heli/start | [R02-45-Helicopter Starting, Running.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479510/) | craigsmith | Freesound, CC0 1.0 |
-| aircraft/heli/rotor, aircraft/heli/turbine, aircraft/heli/shutdown | black_hawk_t16_ext_idle_turbine_rotors_off_left_Co100k (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| aircraft/heli/turbine, aircraft/heli/shutdown | black_hawk_t16_ext_idle_turbine_rotors_off_left_Co100k (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/wind | [AMBUndr_Subterranean Howling Wind Loop_KOLBYR_FREE SOUNDS by KolbyRFX](https://freesound.org/people/KolbyRFX/sounds/852822/) | KolbyRFX | Freesound, CC0 1.0 |
-| aircraft/warn/stall | Beechcraft Baron 58 - t12 - VAR SFX - Stall Warning - MS Decoded - RSM191 (Pole Position - Beechcraft Baron 58 1969) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
 | aircraft/warn/caution | [Airplane ding by Sadiquecat](https://freesound.org/people/Sadiquecat/sounds/845147/) | Sadiquecat | Freesound, CC0 1.0 |
 | aircraft/touchdown | Skids_Tarmac_t3_exterior_skidding_wet_tires_CSS5_handheld (Pole Position - Skids & Screeches Tarmac) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | aircraft/catapult | [G39-15-Steam Catapult.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/438632/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
+| world/siren | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
+
+## Bullet strikes
+
+Picked by Josiah Longfield on the Dead Air Bullet Strikes page, cut into single hits by tools/audio/build_impact_sounds.py. CC-BY recordings are used under Creative Commons Attribution with the credit given here. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.bullet.impact.ground | PM_BBI_Bullet_Impact_Dirt_3 (PMSFX - Bullet Bys &Impacts) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.impact.concrete | [Bullet_Impact_1 by toxicwafflezz](https://freesound.org/people/toxicwafflezz/sounds/150837/) | toxicwafflezz | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.brick | [Bullet_Impact_2 by toxicwafflezz](https://freesound.org/people/toxicwafflezz/sounds/150838/) | toxicwafflezz | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.wood | [bulletimpact_wood2.wav by NoiseCollector](https://freesound.org/people/NoiseCollector/sounds/237447/) | NoiseCollector | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.metal | [Bullet Hit Metal by coolguy244e](https://freesound.org/people/coolguy244e/sounds/267893/) | coolguy244e | Freesound, CC0 1.0 |
+| weapon.bullet.impact.metal | [bullet hits the car by BorekPL](https://freesound.org/people/BorekPL/sounds/399550/) | BorekPL | Freesound, CC0 1.0 |
+| weapon.bullet.impact.car | bullet_impact_metal_heavy_08 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| weapon.bullet.impact.car | Bullet Impact 16 - Light Version (Olivier Girardot - Hand Guns Sound Effects Pack) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.impact.glass | bullet_impact_concrete_brick_01 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| weapon.bullet.impact.soft | [bullet zip and hit.wav by TheLittleCrow](https://freesound.org/people/TheLittleCrow/sounds/496509/) | TheLittleCrow | Freesound, CC0 1.0 |
+| weapon.bullet.whizz | [ricochet.mp3](https://freesound.org/people/cedarstudios/sounds/148840/) | cedarstudios | Freesound, CC0 1.0 |
+| weapon.bullet.whizz | [Ricochet 2.wav](https://freesound.org/people/morganpurkis/sounds/392975/) | morganpurkis | Freesound, CC0 1.0 |
+| weapon.bullet.ricochet | [bullet ricochet.wav by aust_paul](https://freesound.org/people/aust_paul/sounds/30932/) | aust_paul | Freesound, CC0 1.0 |
+| weapon.bullet.impact.nearby | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
+| weapon.casing.shotgun | [empty shotgun shells/casings hitting ground bouncing by Metrolynn](https://freesound.org/people/Metrolynn/sounds/620929/) | Metrolynn | Freesound, CC0 1.0 |
+
+## Flybys
+
+Jets and helicopters crossing the map (world events), picked by Josiah Longfield on the Dead Air Aircraft page, lined up and faded by tools/audio/build_flyby_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| world.flyby.jet 1 | Jet,Fighter,FA-18C,Hornet,Medium Distant,Climb,Right to High,Crest and Hold,Kill Engine,191 (Airborne Sound - Attack Aircraft Maneuvers) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| world.flyby.jet 2 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.jet 3 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.heli 1 | Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040 (Pole Position - The Aircraft Ambient Library) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |

@@ -27,6 +27,8 @@ public class CarRenderState extends EntityRenderState {
     public float cockpitDark;
     /** The aircraft the local player sits in, whose screens show the flight live ({@link CockpitDisplays}); else null. */
     public com.zomboidcraft.world.cars.CarProp liveCockpit;
+    /** The aircraft itself, for its control surfaces; null for a car. */
+    public com.zomboidcraft.world.cars.CarProp aircraft;
     /** An aircraft: turned by its attitude about a point pivot metres up, rotors at rotor radians. */
     public boolean air;
     public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
