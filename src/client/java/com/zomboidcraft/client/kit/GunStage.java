@@ -122,14 +122,19 @@ final class GunStage {
         state.bobOffset = 2f * theta;
         AABB box = state.item.getModelBoundingBox();
         Vector3f lift = new Vector3f(0, 0.1f + (float) -box.minY + 0.0625f, 0);
+        // a tall model (a hammer, an axe, a bat stands on its handle) is laid on its side to fill the stage, and turns on
+        // its handle
+        boolean tall = box.getYsize() > Math.max(box.getXsize(), box.getZsize()) * 1.2;
         Quaternionf view = new Quaternionf().rotateX((float) Math.toRadians(pitch)).rotateZ((float) Math.PI);
+        if (tall) view.rotateZ((float) (-Math.PI / 2));
         Quaternionf turn = new Quaternionf(view).rotateY(theta);
         Vector3f middle = new Vector3f((float) (box.minX + box.maxX) / 2, (float) (box.minY + box.maxY) / 2, (float) (box.minZ + box.maxZ) / 2)
                 .add(lift);
         turn.transform(middle);
         Vector3f shift = middle.negate();
         float longest = (float) Math.max(box.getXsize(), Math.max(box.getYsize(), box.getZsize()));
-        float scale = Math.min((w - 24) / longest, h / longest * 2.2f) * 0.78f;
+        float scale = tall ? Math.min((w - 24) / (float) box.getYsize(), (h - 10) / (float) Math.max(box.getXsize(), box.getZsize())) * 0.85f
+                : Math.min((w - 24) / longest, h / longest * 2.2f) * 0.78f;
         g.entity(state, scale, shift, view, null, x0, y0, x0 + w, y0 + h);
         float cx = x0 + w / 2f, cy = y0 + h / 2f;
 
