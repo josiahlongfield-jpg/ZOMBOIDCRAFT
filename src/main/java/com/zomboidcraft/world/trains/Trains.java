@@ -428,7 +428,10 @@ public final class Trains {
             int i = line.nearestStop(pos.getX() + 0.5, pos.getZ() + 0.5, 48);
             if (i >= 0) {
                 Line.Stop st = line.stops.get(i);
-                double d = Math.abs(line.route.distance(st.s(), pos.getX(), pos.getZ()));
+                // and the line on the button's own level: the Glass Line's island at Mercy General lies
+                // right under the subway's platform, the same distance from both lines' tracks
+                double d = Math.abs(line.route.distance(st.s(), pos.getX(), pos.getZ()))
+                        + Math.abs(pos.getY() - line.route.y(st.s()));
                 if (d < bestD) {
                     bestD = d;
                     best = line;

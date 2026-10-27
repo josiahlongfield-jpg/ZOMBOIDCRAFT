@@ -90,6 +90,9 @@ public final class CountyGen {
                 // the railway's bed, its shoulders, embankments and cuttings
                 h = rails.ground(x, z, h, railFlag);
                 c.rail = railFlag[0];
+            } else if (rails != null && bridge) {
+                // the Glass Line's channel runs on under the bridges
+                h = rails.trench(x, z, h);
             }
             int top = (int) Math.floor(h);
             c.top = top;
@@ -122,7 +125,7 @@ public final class CountyGen {
             }
 
             if (bridge) {
-                deck(out, hit, x, z, top, rng);
+                deck(out, hit, x, z, top, rng, rails == null || !rails.overTube(x, z));
                 c.road = true;
             } else if (hit.road != null && in == null && hit.distance <= hit.road.kind.half + 1.5) {
                 road(out, hit, x, z, h, rng);
@@ -287,8 +290,8 @@ public final class CountyGen {
         return r < 0.3 ? "asphalt_crack" : r < 0.55 ? "asphalt_b" : r < 0.8 ? "asphalt_patch" : "asphalt_moss";
     }
 
-    /** A concrete bridge deck over water, with railings and a pier every so often. */
-    private void deck(ChunkSink out, Road.Hit hit, int x, int z, int ground, SplittableRandom rng) {
+    /** A concrete bridge deck over water, with railings and a pier every so often (not over the Glass Line's tubes). */
+    private void deck(ChunkSink out, Road.Hit hit, int x, int z, int ground, SplittableRandom rng, boolean piers) {
         int y = (int) Math.floor(hit.y);
         double s = Math.abs(hit.offset);
         int half = hit.road.kind.half;
@@ -299,7 +302,7 @@ public final class CountyGen {
         } else {
             out.set(x, y, z, hit.road.kind == Road.Kind.TRACK ? "minecraft:spruce_planks" : weathered(rng, 0.3));
         }
-        if (Math.floorMod((int) hit.along, 24) < 2 && s < half - 1) {
+        if (piers && Math.floorMod((int) hit.along, 24) < 2 && s < half - 1) {
             out.column(x, z, ground + 1, y - 2, "concrete_dark");
         }
     }
