@@ -6,6 +6,7 @@ import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
 import com.zomboidcraft.combat.WeaponSpecs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -15,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3f;
@@ -22,8 +24,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * How survivors carry and aim their weapons as other players see them: a rifle at the low ready or
- * shouldered, the big melee weapons in both hands. The gun arm takes a fixed angle (the weapon's item
+ * How survivors carry and aim their weapons as other players see them: a gun level at the chest or
+ * shouldered, always pointing where they look, the big melee weapons in both hands. The gun arm takes a fixed angle (the weapon's item
  * model is fitted to it, see tools/weapons/poses.py) turned by what the player is doing: looking about
  * while aiming, walking, swinging. The off arm then reaches for the weapon's support line (magazine well
  * and handguard, the end of a handle) wherever that left it, so both hands stay on the weapon.
@@ -36,6 +38,23 @@ public final class HoldPoses {
     private static final float HAND_X = 1f;
 
     private HoldPoses() {
+    }
+
+    /**
+     * Every tick: anyone holding a gun turns their whole body with their eyes instead of only the head, so the
+     * gun (turned with the head, see apply) stays in front of them and on the crosshair.
+     */
+    public static void faceLook(Minecraft client) {
+        if (client.level == null || !ZcConfig.get().combat.weaponHolds) {
+            return;
+        }
+        for (Player player : client.level.players()) {
+            if (player.getMainHandItem().getItem() instanceof RifleItem && !player.isPassenger()
+                    && !player.isSleeping() && !player.isFallFlying() && !player.isVisuallySwimming()) {
+                player.yBodyRot = player.yHeadRot;
+                player.yBodyRotO = player.yHeadRotO;
+            }
+        }
     }
 
     public static void apply(PlayerModel model, AvatarRenderState state) {
@@ -89,7 +108,8 @@ public final class HoldPoses {
                     default -> HoldPoseData.RIFLE_AIM_SUPPORT;
                 };
             } else {
-                gun = rot(bob(state), 0, 0).mul(rot(switch (item.type()) {
+                // at the ready too the gun points where they look, so a laser runs down the barrel to the crosshair
+                gun = rot(headX + bob(state), headY, 0).mul(rot(switch (item.type()) {
                     case PISTOL -> HoldPoseData.PISTOL_READY;
                     case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY;
