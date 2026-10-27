@@ -486,7 +486,7 @@ final class Camp {
                 }
             }
         }
-        b.stair(bw - 3, bd - 3, 1, 4, "north", "minecraft:smooth_stone");
+        b.stair(bw - 3, bd - 3, 1, 4, "north", "stairs_concrete");
         b.lights(1, 1, bw - 2, bd - 2, 3, 0);
         b.lights(1, 1, bw - 2, bd - 2, 7, 0);
         b.mess(1, 1, bw - 2, bd - 2, 1, 0.05 + hit * 0.05);

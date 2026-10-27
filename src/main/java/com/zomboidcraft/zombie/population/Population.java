@@ -66,8 +66,9 @@ public final class Population {
             builder -> builder.persistent(Pop.CODEC));
 
     private static final int SURVEY_EVERY = 10;
-    /** Chunks this far round a player (in chunks) get their dead. */
+    /** Chunks at least this far round a player (in chunks) get their dead; further when the crowd reaches further. */
     private static final int SEED_RADIUS = 8;
+    private static final int CROWD_EVERY = 20;
     /** Time spent placing dead in new chunks each tick. */
     private static final long SEED_BUDGET_NS = 2_500_000;
     private static final int FOLDS_PER_STEP = 32;
@@ -80,6 +81,8 @@ public final class Population {
     private static List<String> outfits;
 
     private static int lastRecords, lastReal;
+    /** The cap on real zombies now (autoCap moves it by the server's tick time); below 0 until the first survey. */
+    private static double cap = -1;
     private static long placed;
 
     private record Zone(Vec3 pos, double radius, long until) {
@@ -89,10 +92,12 @@ public final class Population {
     }
 
     public static void register() {
+        net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.clientboundPlay().register(CrowdPayload.TYPE, CrowdPayload.CODEC);
         ServerTickEvents.END_SERVER_TICK.register(Population::tick);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             QUEUE.clear();
             ZONES.clear();
+            cap = -1;
             Census.clear();
         });
     }
@@ -100,9 +105,9 @@ public final class Population {
     /** For /zc perf. */
     public static String stats() {
         ZcConfig.Population cfg = ZcConfig.get().population;
-        return String.format("population %s · records near players %,d · real %d of %d · placed this session %,d · chunks waiting %d"
-                        + " · places being counted %d", cfg.enabled ? "on" : "off", lastRecords, lastReal, cfg.realCap,
-                placed, QUEUE.size(), Census.pending());
+        return String.format("population %s · records near players %,d · real %d of %d%s · placed this session %,d · chunks waiting %d"
+                        + " · places being counted %d", cfg.enabled ? "on" : "off", lastRecords, lastReal, cap(cfg),
+                cfg.autoCap ? " (self-tuning)" : "", placed, QUEUE.size(), Census.pending());
     }
 
     /** A noise (Noise.emit, already scaled by hearing and weather): loud ones wake the records round it. */
@@ -125,6 +130,9 @@ public final class Population {
         place(level, cfg);
         if (server.getTickCount() % SURVEY_EVERY == 0) {
             survey(level, cfg);
+        }
+        if (cfg.crowd && server.getTickCount() % CROWD_EVERY == 5) {
+            crowd(level, cfg);
         }
     }
 
@@ -258,6 +266,90 @@ public final class Population {
         return level.getGameTime() / 24000;
     }
 
+    private static int seedRadius(ZcConfig.Population cfg) {
+        return Math.clamp((int) Math.ceil((cfg.crowd ? cfg.crowdRange : 0) / 16), SEED_RADIUS, 16);
+    }
+
+    // ---- the crowd: records out in the open round each player, for the client to draw as pictures
+
+    private static void crowd(ServerLevel level, ZcConfig.Population cfg) {
+        int reach = (int) Math.ceil(cfg.crowdRange / 16);
+        double min2 = cfg.crowdMinDistance * cfg.crowdMinDistance, street2 = cfg.streetRange * cfg.streetRange;
+        double max2 = cfg.crowdRange * cfg.crowdRange;
+        boolean room = lastReal < cap(cfg);
+        List<String> names = outfits();
+        List<String> general = ZombieLook.outfits();
+        for (ServerPlayer p : level.players()) {
+            int pcx = p.getBlockX() >> 4, pcz = p.getBlockZ() >> 4;
+            List<long[]> found = new ArrayList<>();
+            for (int dx = -reach; dx <= reach; dx++) {
+                for (int dz = -reach; dz <= reach; dz++) {
+                    LevelChunk chunk = level.getChunkSource().getChunkNow(pcx + dx, pcz + dz);
+                    Pop pop = chunk == null ? null : chunk.getAttached(POP);
+                    if (pop == null) {
+                        continue;
+                    }
+                    int bx = (pcx + dx) << 4, bz = (pcz + dz) << 4;
+                    for (int rec : pop.recs()) {
+                        if ((rec >> 17 & 1) != 0) {
+                            continue;   // indoors: out of sight until it's real
+                        }
+                        int x = bx + (rec & 15), z = bz + (rec >> 4 & 15);
+                        double ox = x + 0.5 - p.getX(), oz = z + 0.5 - p.getZ(), d2 = ox * ox + oz * oz;
+                        if (d2 < min2 || d2 > max2 || room && d2 <= street2) {
+                            continue;   // too near (it's real, or about to be) or too far
+                        }
+                        found.add(new long[] {(long) d2, x, z, y(rec), rec >>> 18 & 63});
+                    }
+                }
+            }
+            found.sort(java.util.Comparator.comparingLong(f -> f[0]));
+            int n = Math.min(found.size(), Math.max(0, cfg.crowdMax));
+            int baseX = p.getBlockX(), baseZ = p.getBlockZ();
+            short[] sx = new short[n], sz = new short[n], sy = new short[n];
+            byte[] so = new byte[n];
+            for (int i = 0; i < n; i++) {
+                long[] f = found.get(i);
+                sx[i] = (short) (f[1] - baseX);
+                sz[i] = (short) (f[2] - baseZ);
+                sy[i] = (short) f[3];
+                int o = (int) f[4];
+                if (o == 0) {
+                    // dressed by the place when it wakes; for the picture, an everyday outfit by where it stands
+                    String pick = general.get((int) Math.floorMod(f[1] * 31 + f[2] * 17, (long) general.size()));
+                    o = names.indexOf(pick) + 1;
+                }
+                so[i] = (byte) o;
+            }
+            net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p,
+                    new CrowdPayload(baseX, baseZ, names, sx, sz, sy, so));
+        }
+    }
+
+    // ---- how many can be real
+
+    private static int cap(ZcConfig.Population cfg) {
+        return cfg.autoCap && cap >= 0 ? (int) cap : cfg.realCap;
+    }
+
+    /**
+     * Twice a second: while the server's ticks run over the target the cap comes down, a twentieth at a time; while
+     * they run well under it and the cap is what's holding zombies back, it goes up a few at a time.
+     */
+    private static void tune(ServerLevel level, ZcConfig.Population cfg, int real) {
+        int lo = Math.max(1, Math.min(cfg.capMin, cfg.capMax)), hi = Math.max(lo, cfg.capMax);
+        if (cap < 0) {
+            cap = Math.clamp(cfg.realCap, lo, hi);
+        }
+        double ms = level.getServer().getAverageTickTimeNanos() / 1e6;
+        if (ms > cfg.tickTarget) {
+            cap -= Math.max(4, cap * 0.05);
+        } else if (ms < cfg.tickTarget * 0.75 && real >= cap - cfg.perStep) {
+            cap += 6;
+        }
+        cap = Math.clamp(cap, lo, hi);
+    }
+
     // ---- waking and folding back
 
     private static void survey(ServerLevel level, ZcConfig.Population cfg) {
@@ -277,7 +369,7 @@ public final class Population {
         Map<Long, LevelChunk> chunks = new LinkedHashMap<>();
         for (ServerPlayer p : players) {
             int pcx = p.getBlockX() >> 4, pcz = p.getBlockZ() >> 4;
-            for (int r = 0; r <= SEED_RADIUS; r++) {
+            for (int r = 0; r <= seedRadius(cfg); r++) {
                 // ring by ring, so the nearest chunks get their dead first
                 for (int dx = -r; dx <= r; dx++) {
                     for (int dz = -r; dz <= r; dz++) {
@@ -303,7 +395,8 @@ public final class Population {
                 z -> z.isAlive() && ZombieTypes.isWalker(z));
         int real = walkers.size() - fold(level, walkers, players, cfg);
         lastReal = real;
-        int room = Math.min(cfg.perStep, cfg.realCap - real);
+        tune(level, cfg, real);
+        int room = Math.min(cfg.perStep, cap(cfg) - real);
         int records = 0;
         List<Cand> cands = new ArrayList<>();
         for (LevelChunk chunk : chunks.values()) {
