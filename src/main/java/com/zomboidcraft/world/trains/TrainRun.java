@@ -32,6 +32,9 @@ public final class TrainRun {
     int quiet;
     double honkedAt = -1;
     int announced = -1;
+    /** Who's aboard as he last counted, and how long till he'll react again to riders, to zombies about, to being shot at. */
+    final java.util.Set<UUID> aboard = new java.util.HashSet<>();
+    int riderCooldown, zombieCooldown, shotCooldown, shots;
 
     public TrainRun(Line line, int index, double s) {
         this.line = line;
@@ -53,6 +56,7 @@ public final class TrainRun {
     }
 
     void tick(ServerLevel level, ZcConfig.Trains cfg) {
+        Otto.watch(level, this);
         Route route = line.route;
         if (phase == Phase.DWELL) {
             dwell(level, cfg);

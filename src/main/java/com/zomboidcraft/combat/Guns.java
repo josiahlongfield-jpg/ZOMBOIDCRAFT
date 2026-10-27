@@ -196,6 +196,7 @@ public final class Guns {
             Vec3 end = eye.add(dir.scale(stats.range));
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
+            com.zomboidcraft.world.trains.Trains.shot(level, player, eye, stop);    // OTTO minds being shot at
             // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
             Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
