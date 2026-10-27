@@ -545,6 +545,7 @@ final class TownSite extends Site {
         Kit.Lot sheriff = civicLot(cross, along(cross, gx, 40), -1, 20, 30);
         if (sheriff != null) {
             new Civic(sheriff.placer(out), rng).sheriff(20, 30);
+            kit.treeless.add(new int[] {sheriff.x0() - 7, sheriff.z0() - 7, sheriff.x0() + sheriff.sizeX() + 6, sheriff.z0() + sheriff.sizeZ() + 6});
         }
         Kit.Lot school = civicLot(cross, along(cross, gx, d - 30), -1, 50, 44);
         if (school != null) {
@@ -773,6 +774,7 @@ final class TownSite extends Site {
         Kit.Lot sheriff = civicLot(inE, along(inE, cx + outer + pastRing, cz), rng.nextBoolean() ? 1 : -1, 20, 32);
         if (sheriff != null) {
             new Civic(sheriff.placer(out), rng).sheriff(20, 32);
+            kit.treeless.add(new int[] {sheriff.x0() - 7, sheriff.z0() - 7, sheriff.x0() + sheriff.sizeX() + 6, sheriff.z0() + sheriff.sizeZ() + 6});
         }
         Kit.Lot fire = civicLot(inW, along(inW, cx - outer - pastRing, cz), rng.nextBoolean() ? 1 : -1, 19, 26);
         if (fire != null) {

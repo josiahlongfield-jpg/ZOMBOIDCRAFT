@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "drywall": "zomboidcraft:block/city/drywall",
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "sh_typewriter": "zomboidcraft:block/city/sh_typewriter",
+    "particle": "zomboidcraft:block/city/sh_typewriter"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_typewriter"
+        },
+        "south": {
+          "texture": "#sh_typewriter"
+        },
+        "east": {
+          "texture": "#sh_typewriter"
+        },
+        "west": {
+          "texture": "#sh_typewriter"
+        },
+        "up": {
+          "texture": "#sh_typewriter"
+        },
+        "down": {
+          "texture": "#sh_typewriter",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        9
+      ],
+      "to": [
+        13,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        11
+      ],
+      "to": [
+        11,
+        7,
+        11.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#drywall"
+        },
+        "south": {
+          "texture": "#drywall"
+        },
+        "east": {
+          "texture": "#drywall"
+        },
+        "west": {
+          "texture": "#drywall"
+        },
+        "up": {
+          "texture": "#drywall"
+        },
+        "down": {
+          "texture": "#drywall"
+        }
+      }
+    }
+  ]
+}

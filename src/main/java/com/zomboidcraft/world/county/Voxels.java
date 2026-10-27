@@ -110,6 +110,21 @@ public final class Voxels implements BlockSink {
         }
     }
 
+    /** Calls out for every block written anywhere, explicit air included (palette id 0). */
+    public void forEach(Visitor out) {
+        for (Map.Entry<Long, short[]> e : sections.entrySet()) {
+            long k = e.getKey();
+            int sx = (int) (k >> 42) << 11 >> 11, sz = (int) (k >> 21 & 0x1FFFFF) << 11 >> 11, sy = (int) (k & 0x1FFFFF);
+            short[] s = e.getValue();
+            long[] w = written.get(k);
+            for (int i = 0; i < 4096; i++) {
+                if ((w[i >> 6] >>> (i & 63) & 1) != 0) {
+                    out.visit((sx << 4) + (i & 15), (sy << 4) + MIN_Y + (i >> 8), (sz << 4) + (i >> 4 & 15), s[i]);
+                }
+            }
+        }
+    }
+
     public interface Visitor {
         void visit(int x, int y, int z, short id);
     }
