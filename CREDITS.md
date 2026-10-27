@@ -9,8 +9,6 @@ Weapon sounds are CC0 (public domain) recordings from [Freesound](https://freeso
 | weapon.pistol.shot_suppressed_distant | De_Lisle_Carbine_.45ACP_suppressed_55m_in_front_off_axis_clean_Single_shots_x_14.L (Pole Position Production - De Lisle Carbine .45ACP suppressed) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | weapon.rifle.bolt | [An M16 Rifle being reloaded while empty; full sequence](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/725397/) | serøutōnin--deprivəd | CC0 1.0 |
 | weapon.rifle.bolt | [Assault Rifle Reload](https://freesound.org/people/qubodup/sounds/815879/) | qubodup | CC0 1.0 |
-| weapon.bullet.ricochet | [ricochet.mp3](https://freesound.org/people/cedarstudios/sounds/148840/) | cedarstudios | CC0 1.0 |
-| weapon.bullet.ricochet | [Ricochet 2.wav](https://freesound.org/people/morganpurkis/sounds/392975/) | morganpurkis | CC0 1.0 |
 | weapon.melee.swing_heavy | [Weapon Swings - Variations](https://freesound.org/people/SecureSubset/sounds/784302/) | SecureSubset | CC0 1.0 |
 | weapon.melee.swing_heavy | [Swoosh](https://freesound.org/people/pasdepoisson/sounds/201216/) | pasdepoisson | CC0 1.0 |
 | weapon.melee.hit_blunt | [body_hit.wav](https://freesound.org/people/insanity54/sounds/276600/) | insanity54 | CC0 1.0 |
@@ -315,3 +313,23 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
 | amb/distant/4 | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
+
+## Bullet strikes
+
+Picked by Josiah Longfield on the Dead Air Bullet Strikes page, cut into single hits by tools/audio/build_impact_sounds.py. CC-BY recordings are used under Creative Commons Attribution with the credit given here. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.bullet.impact.ground | PM_BBI_Bullet_Impact_Dirt_3 (PMSFX - Bullet Bys &Impacts) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.impact.concrete | [Bullet_Impact_1 by toxicwafflezz](https://freesound.org/people/toxicwafflezz/sounds/150837/) | toxicwafflezz | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.brick | [Bullet_Impact_2 by toxicwafflezz](https://freesound.org/people/toxicwafflezz/sounds/150838/) | toxicwafflezz | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.wood | [bulletimpact_wood2.wav by NoiseCollector](https://freesound.org/people/NoiseCollector/sounds/237447/) | NoiseCollector | Freesound, CC-BY 3.0 |
+| weapon.bullet.impact.metal | [Bullet Hit Metal by coolguy244e](https://freesound.org/people/coolguy244e/sounds/267893/) | coolguy244e | Freesound, CC0 1.0 |
+| weapon.bullet.impact.metal | [bullet hits the car by BorekPL](https://freesound.org/people/BorekPL/sounds/399550/) | BorekPL | Freesound, CC0 1.0 |
+| weapon.bullet.impact.car | bullet_impact_metal_heavy_08 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| weapon.bullet.impact.car | Bullet Impact 16 - Light Version (Olivier Girardot - Hand Guns Sound Effects Pack) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.bullet.impact.glass | bullet_impact_concrete_brick_01 (Gamemaster Audio -  Bullet Impact Sounds) | Sonniss GameAudioGDC 2017 | Sonniss royalty-free |
+| weapon.bullet.impact.soft | [bullet zip and hit.wav by TheLittleCrow](https://freesound.org/people/TheLittleCrow/sounds/496509/) | TheLittleCrow | Freesound, CC0 1.0 |
+| weapon.bullet.ricochet | [bullet ricochet.wav by aust_paul](https://freesound.org/people/aust_paul/sounds/30932/) | aust_paul | Freesound, CC0 1.0 |
+| weapon.bullet.impact.nearby | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
+| weapon.casing.shotgun | [empty shotgun shells/casings hitting ground bouncing by Metrolynn](https://freesound.org/people/Metrolynn/sounds/620929/) | Metrolynn | Freesound, CC0 1.0 |
