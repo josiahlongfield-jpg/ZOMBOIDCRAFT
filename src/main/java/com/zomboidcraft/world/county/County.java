@@ -84,6 +84,15 @@ public final class County {
         layout = l;
     }
 
+    /** The planned county's train lines, the railway and the island's subway (none in the endless one). */
+    public List<Track> tracks() {
+        if (!planned()) {
+            return List.of();
+        }
+        Railway r = layout().railway;
+        return r == null ? List.of() : r.tracks;
+    }
+
     /** Every place in the planned county (none in the endless one). */
     public List<Place> allPlaces() {
         return planned() ? List.copyOf(layout().places) : List.of();

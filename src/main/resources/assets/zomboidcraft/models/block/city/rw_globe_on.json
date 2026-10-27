@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_globe_on": "zomboidcraft:block/city/rw_globe_on",
+    "rw_sub_iron": "zomboidcraft:block/city/rw_sub_iron",
+    "particle": "zomboidcraft:block/city/rw_globe_on"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_globe_on"
+        },
+        "south": {
+          "texture": "#rw_globe_on"
+        },
+        "east": {
+          "texture": "#rw_globe_on"
+        },
+        "west": {
+          "texture": "#rw_globe_on"
+        },
+        "up": {
+          "texture": "#rw_globe_on"
+        },
+        "down": {
+          "texture": "#rw_sub_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        7
+      ],
+      "to": [
+        9,
+        11,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_sub_iron"
+        },
+        "south": {
+          "texture": "#rw_sub_iron"
+        },
+        "east": {
+          "texture": "#rw_sub_iron"
+        },
+        "west": {
+          "texture": "#rw_sub_iron"
+        },
+        "up": {
+          "texture": "#rw_sub_iron"
+        },
+        "down": {
+          "texture": "#rw_sub_iron"
+        }
+      }
+    }
+  ]
+}

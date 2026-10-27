@@ -85,6 +85,19 @@ public final class Trains {
         for (int[] p : points) {
             pts.add(new double[] {p[0], p[1], p[2]});
         }
+        return lineExact(level, id, kind, name, pts, stops);
+    }
+
+    /**
+     * {@link #line} with points that needn't sit on whole blocks: the county lays its curves as
+     * points a few blocks apart along true arcs (and its grades as fractions), so the corners
+     * left between them are slight enough for the trains to take at speed.
+     */
+    public static Line lineExact(ServerLevel level, String id, Line.Kind kind, String name, List<double[]> points, List<StopSpec> stops) {
+        List<double[]> pts = new ArrayList<>();
+        for (double[] p : points) {
+            pts.add(new double[] {p[0], p[1], p[2]});
+        }
         Line old = SERVER.get(id);
         if (old != null && same(old.points, pts) && old.stops.size() == stops.size()) {
             return old;

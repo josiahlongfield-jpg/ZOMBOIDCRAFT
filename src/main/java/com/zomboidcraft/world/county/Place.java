@@ -23,6 +23,8 @@ public final class Place {
     public final int waterSide, quay;
     /** For a piece of the planned city's street grid, how it fits the grid; null for a place of its own. */
     public final Tile tile;
+    /** For a piece of the city, what the railway asks of it (blocks left open, a street it runs down); null if nothing. */
+    Railway.TileRails rails;
 
     /**
      * A piece of the planned city: the street grid runs on world lines every {@code pitch} blocks

@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_roof": "zomboidcraft:block/city/rw_roof",
+    "rw_soffit": "zomboidcraft:block/city/rw_soffit",
+    "rw_valance": "zomboidcraft:block/city/rw_valance",
+    "rw_wall_green": "zomboidcraft:block/city/rw_wall_green",
+    "particle": "zomboidcraft:block/city/rw_soffit"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_soffit",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_soffit",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_soffit",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_soffit",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_roof"
+        },
+        "down": {
+          "texture": "#rw_soffit"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_valance",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_valance"
+        },
+        "east": {
+          "texture": "#rw_wall_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_wall_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_wall_green"
+        },
+        "down": {
+          "texture": "#rw_wall_green"
+        }
+      }
+    }
+  ]
+}

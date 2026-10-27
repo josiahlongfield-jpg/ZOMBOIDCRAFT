@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_tile_broken": "zomboidcraft:block/city/rw_tile_broken",
+    "particle": "zomboidcraft:block/city/rw_tile_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_tile_broken",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_tile_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_tile_broken",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_tile_broken",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_tile_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_tile_broken",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

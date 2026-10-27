@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_el_paint": "zomboidcraft:block/city/rw_el_paint",
+    "rw_girder": "zomboidcraft:block/city/rw_girder",
+    "particle": "zomboidcraft:block/city/rw_girder"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_girder",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_girder",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_girder",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_girder",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_el_paint",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_el_paint",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

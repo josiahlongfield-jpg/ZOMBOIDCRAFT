@@ -83,6 +83,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.weather.WeatherDirector.register();
         com.zomboidcraft.world.gen.Worldgen.register();
         com.zomboidcraft.world.gen.CountyCommand.register();
+        com.zomboidcraft.world.gen.CountyRails.register();
         LOGGER.info("The dead walk.");
     }
 }

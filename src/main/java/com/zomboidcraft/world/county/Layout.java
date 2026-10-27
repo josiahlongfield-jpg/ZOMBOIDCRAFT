@@ -61,6 +61,8 @@ final class Layout {
     private final List<District> districts = new ArrayList<>();
     /** The inland cities' circles of street grid: {x, z, radius}. */
     private final List<int[]> inland = new ArrayList<>();
+    /** The railway and the subway, laid once the city's grid is known. */
+    Railway railway;
 
     Layout(County county) {
         this.county = county;
@@ -72,6 +74,8 @@ final class Layout {
         districts();
         fixed();
         city();
+        railway = new Railway(this, plan, terrain);
+        railway.markTiles(places);
         suburbs();
         country();
         for (Place p : places) {
@@ -79,6 +83,7 @@ final class Layout {
         }
         planRoads();
         links();
+        railway.crossRoads(roads);
         for (Road r : roads) {
             index(r);
         }
@@ -294,7 +299,7 @@ final class Layout {
                 return false;
             }
         }
-        return true;
+        return railway == null || railway.clear(p, margin);
     }
 
     /**
@@ -397,6 +402,26 @@ final class Layout {
 
     private boolean in(int i, int j) {
         return cityBlocks.contains(County.key(i, j));
+    }
+
+    /** True if the grid block (i, j) is the city's. */
+    boolean cityBlock(int i, int j) {
+        return in(i, j);
+    }
+
+    /** True if (x, z) is on a lot the city keeps clear, or on one of the places laid so far that isn't the city's. */
+    boolean reservedAt(double x, double z) {
+        for (int[] r : reserved) {
+            if (x >= r[0] - 20 && x <= r[2] + 20 && z >= r[1] - 20 && z <= r[3] + 20) {
+                return true;
+            }
+        }
+        for (Place p : places) {
+            if (p.tile == null && p.contains((int) Math.floor(x), (int) Math.floor(z), 20)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** A run of city blocks along one row, with the same neighbours above and below all along it. */

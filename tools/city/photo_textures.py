@@ -1101,6 +1101,8 @@ import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 import stadium  # noqa: E402
 stadium.register(sys.modules[__name__])
+import railway  # noqa: E402
+railway.register(sys.modules[__name__])
 
 
 def build(name):

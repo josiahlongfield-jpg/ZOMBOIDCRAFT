@@ -1,0 +1,212 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_galv": "zomboidcraft:block/city/rw_galv",
+    "rw_lights": "zomboidcraft:block/city/rw_lights",
+    "particle": "zomboidcraft:block/city/rw_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_galv"
+        },
+        "south": {
+          "texture": "#rw_galv"
+        },
+        "east": {
+          "texture": "#rw_galv"
+        },
+        "west": {
+          "texture": "#rw_galv"
+        },
+        "up": {
+          "texture": "#rw_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -4,
+        4,
+        5
+      ],
+      "to": [
+        20,
+        12,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#rw_galv",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#rw_lights"
+        },
+        "west": {
+          "texture": "#rw_lights"
+        },
+        "up": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            5,
+            16,
+            6.5
+          ]
+        },
+        "down": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            9.5,
+            16,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -3,
+        11,
+        3
+      ],
+      "to": [
+        3,
+        12,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_lights",
+          "uv": [
+            10,
+            4,
+            16,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            4,
+            6,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#rw_lights"
+        },
+        "west": {
+          "texture": "#rw_lights"
+        },
+        "up": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            3,
+            6,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            11,
+            6,
+            13
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        11,
+        3
+      ],
+      "to": [
+        19,
+        12,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_lights",
+          "uv": [
+            0,
+            4,
+            6,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#rw_lights",
+          "uv": [
+            10,
+            4,
+            16,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#rw_lights"
+        },
+        "west": {
+          "texture": "#rw_lights"
+        },
+        "up": {
+          "texture": "#rw_lights",
+          "uv": [
+            10,
+            3,
+            16,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#rw_lights",
+          "uv": [
+            10,
+            11,
+            16,
+            13
+          ]
+        }
+      }
+    }
+  ]
+}

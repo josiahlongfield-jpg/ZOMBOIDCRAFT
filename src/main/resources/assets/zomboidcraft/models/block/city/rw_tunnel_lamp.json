@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_bulb": "zomboidcraft:block/city/rw_bulb",
+    "rw_cage": "zomboidcraft:block/city/rw_cage",
+    "rw_el_paint": "zomboidcraft:block/city/rw_el_paint",
+    "particle": "zomboidcraft:block/city/rw_el_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        6,
+        14
+      ],
+      "to": [
+        11,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_el_paint"
+        },
+        "south": {
+          "texture": "#rw_el_paint",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_el_paint"
+        },
+        "west": {
+          "texture": "#rw_el_paint"
+        },
+        "up": {
+          "texture": "#rw_el_paint"
+        },
+        "down": {
+          "texture": "#rw_el_paint"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6.5,
+        9
+      ],
+      "to": [
+        10,
+        11.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_cage"
+        },
+        "south": {
+          "texture": "#rw_cage"
+        },
+        "east": {
+          "texture": "#rw_cage"
+        },
+        "west": {
+          "texture": "#rw_cage"
+        },
+        "up": {
+          "texture": "#rw_cage"
+        },
+        "down": {
+          "texture": "#rw_cage"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        7.3,
+        10
+      ],
+      "to": [
+        9.2,
+        10.7,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_bulb"
+        },
+        "south": {
+          "texture": "#rw_bulb"
+        },
+        "east": {
+          "texture": "#rw_bulb"
+        },
+        "west": {
+          "texture": "#rw_bulb"
+        },
+        "up": {
+          "texture": "#rw_bulb"
+        },
+        "down": {
+          "texture": "#rw_bulb"
+        }
+      }
+    }
+  ]
+}

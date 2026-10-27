@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_creosote": "zomboidcraft:block/city/rw_creosote",
+    "particle": "zomboidcraft:block/city/rw_creosote"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_creosote"
+        },
+        "south": {
+          "texture": "#rw_creosote"
+        },
+        "east": {
+          "texture": "#rw_creosote"
+        },
+        "west": {
+          "texture": "#rw_creosote"
+        },
+        "up": {
+          "texture": "#rw_creosote",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_creosote",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
