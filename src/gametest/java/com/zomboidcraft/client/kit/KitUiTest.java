@@ -560,7 +560,7 @@ public class KitUiTest implements FabricClientGameTest {
             p.getInventory().add(new ItemStack(ModItems.FIRE_AXE));
             for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
         });
-        ctx.waitTicks(10);
+        ctx.waitTicks(60);
         ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(20f)));
         ctx.waitTicks(3);
         ctx.takeScreenshot("sling-figure-axe");

@@ -118,6 +118,8 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.translate(0, 6.5f / 16f, out);
         // tall models (a bat on its handle) stand along y: either way the long side runs corner to corner
         float angle = !alongZ && box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
+        // a gun hangs muzzle up over the shoulder, stock down by the hip
+        if (alongZ) angle += 180;
         pose.mulPose(new org.joml.Matrix4f().rotationZ((float) Math.toRadians(angle)));
         pose.scale(-k, -k, k);
         if (alongZ) pose.mulPose(new org.joml.Matrix4f().rotationY((float) (Math.PI / 2)));
