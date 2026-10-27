@@ -86,6 +86,29 @@ public class TrainEntity extends Entity {
         return Trains.lines(level().isClientSide()).get(lineId());
     }
 
+    private double posesAt = Double.NaN;
+    private TrainCar.Pose[] poses;
+    private Line posesLine;
+
+    /** Every car's pose where the train is now, worked out once per move (the weather asks often). */
+    public TrainCar.Pose[] carPoses() {
+        Line line = line();
+        if (line == null) {
+            return null;
+        }
+        double now = s();
+        if (poses == null || posesLine != line || now != posesAt) {
+            TrainCar.Pose[] p = new TrainCar.Pose[line.cars];
+            for (int car = 0; car < line.cars; car++) {
+                p[car] = TrainCar.pose(line.route, now, car);
+            }
+            poses = p;
+            posesLine = line;
+            posesAt = now;
+        }
+        return poses;
+    }
+
     /** Distance along the line of the front car's middle: the server's run, or the client's own. */
     public double s() {
         if (run != null) {

@@ -280,7 +280,7 @@ public final class CarLights {
     }
 
     /** Whether a shader pack is drawing the world (asked of Iris, when it's installed). */
-    static boolean shaderPackOn() {
+    public static boolean shaderPackOn() {
         if (!irisAsked) {
             irisAsked = true;
             try {

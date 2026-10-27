@@ -1,6 +1,9 @@
 package com.zomboidcraft.world.trains;
 
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,6 +42,89 @@ public final class TrainPhysics {
         }
         return (float) Math.hypot(e.getX() - e.xo - carried[0], e.getZ() - e.zo - carried[1]);
     }
+
+    /**
+     * The top of the roof of a car over column (x, z), or NaN if no car is over it: the weather
+     * asks this so rain, puddles and mist treat a train car like a building.
+     */
+    public static double roofOver(Level level, double x, double z) {
+        List<TrainEntity> trains = TrainEntity.loaded(level.isClientSide());
+        if (trains.isEmpty()) {
+            return Double.NaN;
+        }
+        double best = Double.NaN;
+        for (TrainEntity t : trains) {
+            TrainCar.Pose[] poses = near(t, level, x, z);
+            if (poses == null) {
+                continue;
+            }
+            for (TrainCar.Pose p : poses) {
+                double dx = x - p.x(), dz = z - p.z(), c = Math.cos(p.yaw()), sn = Math.sin(p.yaw());
+                double lx = c * dx + sn * dz, lz = -sn * dx + c * dz;
+                if (Math.abs(lx) <= TrainCar.HALF_WIDTH + 0.05 && Math.abs(lz) <= TrainCar.PITCH / 2) {
+                    double top = p.y() + TrainCar.ROOF + 0.12;
+                    best = Double.isNaN(best) ? top : Math.max(best, top);
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Whether a point is inside a car, between its floor and ceiling and within its walls: indoors. */
+    public static boolean insideCar(Level level, double x, double y, double z) {
+        List<TrainEntity> trains = TrainEntity.loaded(level.isClientSide());
+        if (trains.isEmpty()) {
+            return false;
+        }
+        for (TrainEntity t : trains) {
+            TrainCar.Pose[] poses = near(t, level, x, z);
+            if (poses == null) {
+                continue;
+            }
+            for (TrainCar.Pose p : poses) {
+                double ly = y - p.y();
+                if (ly < -0.5 || ly > TrainCar.CEILING + 0.2) {
+                    continue;
+                }
+                double dx = x - p.x(), dz = z - p.z(), c = Math.cos(p.yaw()), sn = Math.sin(p.yaw());
+                double lx = c * dx + sn * dz, lz = -sn * dx + c * dz;
+                if (Math.abs(lx) <= TrainCar.HALF_WIDTH && Math.abs(lz) <= TrainCar.PITCH / 2) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** A train's car poses if (x, z) could be under it, else null. */
+    private static TrainCar.Pose[] near(TrainEntity t, Level level, double x, double z) {
+        Line line = t.line();
+        if (line == null || t.level() != level) {
+            return null;
+        }
+        double reach = line.cars * TrainCar.PITCH / 2 + 4, dx = x - t.getX(), dz = z - t.getZ();
+        if (dx * dx + dz * dz > reach * reach) {
+            return null;
+        }
+        return t.carPoses();
+    }
+
+    /**
+     * Light inside a car, for everything that asks the world (shader packs, the player's model,
+     * the weather): the sky is mostly shut out like indoors, and the car's own lights light it.
+     */
+    public static int brightness(Level level, LightLayer layer, BlockPos pos, int raw) {
+        if (layer == LightLayer.SKY ? raw <= INDOOR_SKY : raw >= CAR_LIGHT) {
+            return raw;
+        }
+        if (!insideCar(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) {
+            return raw;
+        }
+        return layer == LightLayer.SKY ? INDOOR_SKY : CAR_LIGHT;
+    }
+
+    /** Sky light let in through a car's windows, and the light of its own tubes. */
+    public static final int INDOOR_SKY = 5, CAR_LIGHT = 11;
 
     /** Whether this side moves this entity: your own player on your game, every non-player on the server. */
     public static boolean handles(Entity e) {

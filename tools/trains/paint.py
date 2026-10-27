@@ -9,6 +9,7 @@ graffiti, in the same worn-down palette as the rest of the world.
 import math
 import os
 import random
+import sys
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -252,9 +253,9 @@ def door(col, base, window, seed):
         d = ImageDraw.Draw(img)
         d.rectangle([0, 0, 1, T], fill=tuple(clamp(v * 0.6) for v in base) + (255,))
         d.rectangle([T - 2, 0, T, T], fill=(30, 30, 30, 255))   # the rubber seal where leaves meet
-        if half == 1:   # upper half: the window
-            d.rectangle([5, 3, T - 7, T - 6], fill=window)
-            d.rectangle([5, 3, T - 7, T - 6], outline=(40, 40, 40, 255))
+        if half == 1:   # upper half: the window, an open hole (drawn cutout) so you see straight through
+            d.rectangle([4, 2, T - 6, T - 5], outline=(40, 40, 40, 255))
+            d.rectangle([5, 3, T - 7, T - 6], fill=(0, 0, 0, 0))
         else:
             d.rectangle([5, 8, T - 7, 12], fill=(220, 190, 40, 255))  # a yellow "stand clear" sticker
         grime(img, seed + 10 + half, 40)
@@ -264,21 +265,22 @@ def door(col, base, window, seed):
 door(0, STEEL, (40, 54, 60, 255), 3000)
 door(2, GREEN, (34, 44, 40, 255), 3100)
 for c, crack in ((4, False), (5, True)):
-    img = Image.new('RGBA', (T, T), (120, 150, 160, 70))
+    # clear glass: barely tinted, a few specks and a faint grime line along the bottom edge
+    img = Image.new('RGBA', (T, T), (190, 215, 220, 22))
     d = ImageDraw.Draw(img)
     r = random.Random(3200 + c)
-    for _ in range(40):
+    for _ in range(14):
         x, y = r.randrange(T), r.randrange(T)
-        d.point((x, y), fill=(90, 96, 90, 120))
-    for y in range(T - 8, T):
+        d.point((x, y), fill=(120, 126, 120, 60))
+    for y in range(T - 3, T):
         for x in range(T):
-            img.putpixel((x, y), (70, 70, 64, 90 + (y - (T - 8)) * 8))
+            img.putpixel((x, y), (80, 80, 74, 40 + (y - (T - 3)) * 12))
     if crack:
         cx, cy = 18, 12
         for _ in range(7):
             a = r.random() * math.pi * 2
             ln = r.randrange(6, 16)
-            d.line([(cx, cy), (cx + math.cos(a) * ln, cy + math.sin(a) * ln)], fill=(230, 240, 240, 200))
+            d.line([(cx, cy), (cx + math.cos(a) * ln, cy + math.sin(a) * ln)], fill=(230, 240, 240, 140))
     put(img, c, 4)
 # headlight
 img, _ = tile(6, 4)
@@ -436,6 +438,11 @@ img = Image.new('RGBA', (T, T), (255, 246, 210, 255))
 put(img, 15, 5)
 
 os.makedirs(os.path.join(ROOT, 'entity', 'train'), exist_ok=True)
+# OTTO lives in the lower half of the atlas (tools/trains/otto.py paints him and writes his model)
+sys.path.insert(0, os.path.dirname(__file__))
+import otto  # noqa: E402
+otto.paint_into(atlas)
+otto.write_java()
 atlas.save(os.path.join(ROOT, 'entity', 'train', 'atlas.png'))
 
 # ---------------------------------------------------------------- the call button (block texture)

@@ -185,6 +185,7 @@ public final class Trains {
         TrainSounds.register();
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Lines.TYPE, TrainNet.Lines.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Riders.TYPE, TrainNet.Riders.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(TrainNet.OttoSay.TYPE, TrainNet.OttoSay.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Ride.TYPE, TrainNet.Ride.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Call.TYPE, TrainNet.Call.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.Ride.TYPE, (payload, context) -> {

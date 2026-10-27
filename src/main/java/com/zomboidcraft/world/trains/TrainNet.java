@@ -135,6 +135,18 @@ public final class TrainNet {
         }
     }
 
+    /** OTTO says a line: the voice clips to play one after another, from the train's speakers (train -1: the station's). */
+    public record OttoSay(int train, List<String> clips) implements CustomPacketPayload {
+        public static final Type<OttoSay> TYPE = new Type<>(ZomboidCraft.id("train_otto"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, OttoSay> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, OttoSay::train, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list(8)), OttoSay::clips, OttoSay::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     private TrainNet() {
     }
 }

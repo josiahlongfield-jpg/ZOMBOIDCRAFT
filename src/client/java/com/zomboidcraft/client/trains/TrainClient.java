@@ -42,11 +42,13 @@ public final class TrainClient {
         TrackRenderer.register();
         ClientPlayNetworking.registerGlobalReceiver(TrainNet.Lines.TYPE, (payload, context) -> context.client().execute(() -> Trains.received(payload)));
         ClientPlayNetworking.registerGlobalReceiver(TrainNet.Riders.TYPE, (payload, context) -> context.client().execute(() -> riders(payload)));
+        ClientPlayNetworking.registerGlobalReceiver(TrainNet.OttoSay.TYPE, (payload, context) -> context.client().execute(() -> OttoVoice.received(payload)));
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
             Trains.lines(true).clear();
             RIDERS.clear();
             LAST_LOCAL.clear();
             TrainPhysics.REMOTE_STEPS.clear();
+            OttoVoice.clear();
         }));
         ClientTickEvents.START_CLIENT_TICK.register(TrainClient::start);
         ClientTickEvents.END_CLIENT_TICK.register(TrainClient::end);
@@ -57,6 +59,7 @@ public final class TrainClient {
         if (client.level == null || client.isPaused()) {
             return;
         }
+        OttoVoice.tick(client);
         tick++;
         for (Entity e : client.level.entitiesForRendering()) {
             if (e instanceof TrainEntity train) {
