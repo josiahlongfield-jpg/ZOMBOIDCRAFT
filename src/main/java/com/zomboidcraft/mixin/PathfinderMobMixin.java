@@ -21,8 +21,10 @@ public abstract class PathfinderMobMixin {
     @Inject(method = "checkSpawnRules", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$notPerched(LevelAccessor level, EntitySpawnReason reason, CallbackInfoReturnable<Boolean> cir) {
         Mob self = (Mob) (Object) this;
-        if (reason == EntitySpawnReason.NATURAL && ZombieTypes.isWalker(self) && level instanceof ServerLevel server
-                && ZombieSpawner.perched(server, self.blockPosition())) {
+        // the world's population places the dead now (population); the night adds none of its own
+        if (reason == EntitySpawnReason.NATURAL && ZombieTypes.isWalker(self)
+                && (com.zomboidcraft.ZcConfig.get().population.enabled
+                        || level instanceof ServerLevel server && ZombieSpawner.perched(server, self.blockPosition()))) {
             cir.setReturnValue(false);
         }
     }
