@@ -340,6 +340,13 @@ public final class Guns {
         float size = (float) Math.min(2.5, (0.6 + stats.damage / 20) * (1 + 0.15 * (hit.count - 1)) * (hit.head ? 1.3 : 1));
         Impacts.flesh(level, target, at, hit.dir, size);
         level.playSound(null, at.x, at.y, at.z, ModSounds.BULLET_FLESH, SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
+        // the shooter alone hears their round whizz in as it sinks into a zombie, within a street or so
+        double whizz = ZcConfig.get().guns.hitWhizzRange;
+        if (ZombieTypes.isWalker(target) && player.getEyePosition().distanceToSqr(at) < whizz * whizz) {
+            player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
+                    net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.BULLET_WHIZZ), SoundSource.PLAYERS,
+                    at.x, at.y, at.z, 0.8f, 0.9f + player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
+        }
         if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
             Downed.crippleChance(target, 0.5);
         }
