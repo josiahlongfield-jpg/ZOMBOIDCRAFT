@@ -220,6 +220,7 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.waitTicks(5);
             buildTest(ctx, sp);
             wave2Test(ctx, sp);
+            safe(sp);
             swapTest(ctx, sp, false);
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
@@ -527,6 +528,16 @@ public class KitUiTest implements FabricClientGameTest {
         }
         ctx.runOnClient(mc -> mc.setCameraEntity(mc.player));
         sp.getServer().runCommand("kill @e[type=minecraft:armor_stand]");
+    }
+
+    /** Keeps the test survivor alive from here on: no zombie bites, no bleeding out, healed. */
+    private static void safe(TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.setInvulnerable(true);
+            p.setHealth(p.getMaxHealth());
+            s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), "kill @e[type=!player]");
+        });
     }
 
     /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
