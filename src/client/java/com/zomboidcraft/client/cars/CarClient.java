@@ -79,10 +79,12 @@ public final class CarClient {
     private static void tick(Minecraft client) {
         LocalPlayer player = client.player;
         if (player == null || client.level == null) {
+            com.zomboidcraft.world.cars.CarShelter.update(null, null);
             target = null;
             return;
         }
         CarProp inside = player.getVehicle() instanceof CarProp c ? c : null;
+        com.zomboidcraft.world.cars.CarShelter.update(client.level, player.position());
         target = client.gui.screen() != null ? null : inside != null ? insideTarget(player, inside) : doorTarget(client, player);
         HitResult hit = client.hitResult;
         CarProp car = inside != null || target != null ? null : lookedAt(client, hit);

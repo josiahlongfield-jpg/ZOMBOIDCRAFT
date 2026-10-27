@@ -118,6 +118,7 @@ final class GroundFog {
         float strength = (float) Math.min(0.6, 0.42 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
         // the speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into smooth haze
         double jitterU = Math.random(), jitterV = Math.random();
+        cabin = mc.player != null && mc.player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car ? car : null;
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),
                 (pose, out) -> {
                     for (int layer = 0; layer < layers; layer++) {
@@ -146,7 +147,7 @@ final class GroundFog {
                     continue;
                 }
                 float lo = Math.min(Math.min(ha, hb), Math.min(hc, hd)), hi = Math.max(Math.max(ha, hb), Math.max(hc, hd));
-                if (hi - lo > STEP) {
+                if (hi - lo > STEP || inCabin(originX + (i + 0.5) * CELL, originZ + (j + 0.5) * CELL)) {
                     continue;
                 }
                 corner(pose, out, eye, i, j, 0, 0, ha, lift, layer, alpha, ju, jv, LIGHT[a]);
@@ -155,6 +156,22 @@ final class GroundFog {
                 corner(pose, out, eye, i + 1, j, 1, 0, hb, lift, layer, alpha, ju, jv, LIGHT[b]);
             }
         }
+    }
+
+    /** The car you're riding in, if any: the mist that would drift through its cabin is left out. */
+    private static com.zomboidcraft.world.cars.CarProp cabin;
+
+    /** Whether a quad centred here would reach into that car's cabin: its footprint, plus half a quad's diagonal. */
+    private static boolean inCabin(double x, double z) {
+        com.zomboidcraft.world.cars.CarProp car = cabin;
+        com.zomboidcraft.world.cars.CarModels.Model m = car == null ? null : com.zomboidcraft.world.cars.CarModels.get(car.model());
+        if (m == null) {
+            return false;
+        }
+        double t = Math.toRadians(car.getYRot()), dx = x - car.getX(), dz = z - car.getZ();
+        double lx = dx * Math.cos(t) + dz * Math.sin(t), lz = dz * Math.cos(t) - dx * Math.sin(t);
+        double pad = CELL * 0.71;
+        return Math.abs(lx) < m.size[0] / 2 + pad && Math.abs(lz) < m.size[2] / 2 + pad;
     }
 
     /**
