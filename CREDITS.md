@@ -300,14 +300,18 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/jet/roar | [Idle F-22 Jet Plane.flac by qubodup](https://freesound.org/people/qubodup/sounds/187734/) | qubodup | Freesound, CC0 1.0 |
 | aircraft/jet/distant | [Afterburner (Close, Screamer, Quick Onset) by JSK_Productions](https://freesound.org/people/JSK_Productions/sounds/829068/) | JSK_Productions | Freesound, CC0 1.0 |
 | aircraft/heli/distant | AEROHeli_InsJ_Helicopter_Flyby_Close_03_Chinook (InspectorJ - 96 General Library) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| aircraft/heli/distant2 | [helicopter.wav by lezaarth](https://freesound.org/people/lezaarth/sounds/232818/) | lezaarth | Freesound, CC0 1.0 |
+| aircraft/heli/start, aircraft/heli/idle | [Helicopter interior recording by Sanderboah](https://freesound.org/people/Sanderboah/sounds/702748/) | Sanderboah | Freesound, CC0 1.0 |
+| aircraft/heli/rotor | [MILITARY ROTOR LOOP by UnderlinedDesigns](https://freesound.org/people/UnderlinedDesigns/sounds/172667/) | UnderlinedDesigns | Freesound, CC0 1.0 |
+| aircraft/warn/stall | [Airplane warning by OutofPhaze](https://freesound.org/people/OutofPhaze/sounds/412197/) | OutofPhaze | Freesound, CC0 1.0 |
+| aircraft/warn/stall2 | Beechcraft King Air 350 - t10 - VAR SFX - Landing Gear Warning Test - INTERIOR - AMBEO BLD (Pole Position Production - Beechcraft King Air 350i 2010) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
 | aircraft/jet/afterburner | [Afterburner sound.wav by StoneyJ](https://freesound.org/people/StoneyJ/sounds/104883/) | StoneyJ | Freesound, CC0 1.0 |
-| aircraft/heli/start | [R02-45-Helicopter Starting, Running.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479510/) | craigsmith | Freesound, CC0 1.0 |
-| aircraft/heli/rotor, aircraft/heli/turbine, aircraft/heli/shutdown | black_hawk_t16_ext_idle_turbine_rotors_off_left_Co100k (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| aircraft/heli/turbine, aircraft/heli/shutdown | black_hawk_t16_ext_idle_turbine_rotors_off_left_Co100k (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/wind | [AMBUndr_Subterranean Howling Wind Loop_KOLBYR_FREE SOUNDS by KolbyRFX](https://freesound.org/people/KolbyRFX/sounds/852822/) | KolbyRFX | Freesound, CC0 1.0 |
-| aircraft/warn/stall | Beechcraft Baron 58 - t12 - VAR SFX - Stall Warning - MS Decoded - RSM191 (Pole Position - Beechcraft Baron 58 1969) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
 | aircraft/warn/caution | [Airplane ding by Sadiquecat](https://freesound.org/people/Sadiquecat/sounds/845147/) | Sadiquecat | Freesound, CC0 1.0 |
 | aircraft/touchdown | Skids_Tarmac_t3_exterior_skidding_wet_tires_CSS5_handheld (Pole Position - Skids & Screeches Tarmac) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
 | aircraft/catapult | [G39-15-Steam Catapult.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/438632/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
+| amb/distant/4 | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |

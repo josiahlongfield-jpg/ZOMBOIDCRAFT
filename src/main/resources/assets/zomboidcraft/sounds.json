@@ -767,6 +767,10 @@
       {
         "name": "zomboidcraft:amb/distant/3",
         "attenuation_distance": 96
+      },
+      {
+        "name": "zomboidcraft:amb/distant/4",
+        "attenuation_distance": 96
       }
     ]
   },
@@ -1593,6 +1597,10 @@
       {
         "name": "zomboidcraft:aircraft/heli/distant",
         "attenuation_distance": 300
+      },
+      {
+        "name": "zomboidcraft:aircraft/heli/distant2",
+        "attenuation_distance": 300
       }
     ]
   },
@@ -1608,6 +1616,10 @@
     "sounds": [
       {
         "name": "zomboidcraft:aircraft/warn/stall",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "zomboidcraft:aircraft/warn/stall2",
         "attenuation_distance": 8
       }
     ]
@@ -1657,6 +1669,14 @@
       {
         "name": "zomboidcraft:aircraft/canopy",
         "attenuation_distance": 16
+      }
+    ]
+  },
+  "aircraft.heli.idle": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:aircraft/heli/idle",
+        "attenuation_distance": 48
       }
     ]
   }
