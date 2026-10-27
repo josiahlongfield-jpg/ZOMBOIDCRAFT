@@ -221,6 +221,7 @@ public class KitUiTest implements FabricClientGameTest {
             buildTest(ctx, sp);
             wave2Test(ctx, sp);
             safe(sp);
+            dragTest(ctx, sp);
             swapTest(ctx, sp, false);
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
@@ -528,6 +529,46 @@ public class KitUiTest implements FabricClientGameTest {
         }
         ctx.runOnClient(mc -> mc.setCameraEntity(mc.player));
         sp.getServer().runCommand("kill @e[type=minecraft:armor_stand]");
+    }
+
+    /**
+     * Drag and drop on the pack page with room to spare: bread dragged onto an empty pocket lands there on release;
+     * a rifle dragged onto an empty pocket goes back to the belt (no guns in pockets).
+     */
+    private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.getInventory().setItem(0, new ItemStack(Items.BREAD, 3));
+            p.getInventory().setItem(1, new ItemStack(ModItems.HUNTING_RIFLE));
+        });
+        ctx.waitTicks(5);
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(5);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.PACK);
+        });
+        ctx.waitTicks(3);
+        for (int belt : new int[]{36, 37}) {
+            String out = ctx.computeOnClient(mc -> {
+                if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+                KitScreen.Hot from = null, pocket = null;
+                for (KitScreen.Hot h : hots(k)) {
+                    if (h.slot() == belt) from = h;
+                    if (pocket == null && h.slot() >= 9 && h.slot() < 36 && h.card().isEmpty()) pocket = h;
+                }
+                if (from == null || pocket == null) return "no tiles: from " + from + " pocket " + pocket;
+                String what = from.card().toString();
+                mouse(k, from, pocket);
+                return what + " from " + belt + " onto pocket " + pocket.slot() + ": pocket now " + k.menu().slots.get(pocket.slot()).getItem()
+                        + ", belt now " + k.menu().slots.get(belt).getItem() + ", cursor " + k.menu().getCarried();
+            });
+            ctx.waitTicks(5);
+            LOG.info("ZCUI drag test: {}", out);
+        }
+        ctx.takeScreenshot("pack-after-drag");
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(3);
     }
 
     /** Keeps the test survivor alive from here on: no zombie bites, no bleeding out, healed. */
