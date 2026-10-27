@@ -26,8 +26,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * The bench's gun, big and turning: its own 3D model with every empty socket filled by a see-through green ghost of
- * the part that goes there, and a crosshair on each mount. Drawn through Minecraft's entity-in-GUI renderer as a
+ * The bench's weapon, big and turning: its own 3D model (any gun or melee weapon), a modular gun with every empty
+ * socket filled by a see-through green ghost of the part that goes there and a crosshair on each mount. Drawn through Minecraft's entity-in-GUI renderer as a
  * dropped item pinned in place, so the gun and its ghosts are one model with proper depth. Drag to turn it.
  */
 final class GunStage {

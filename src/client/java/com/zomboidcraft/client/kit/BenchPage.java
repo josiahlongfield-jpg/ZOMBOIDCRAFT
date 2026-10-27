@@ -117,9 +117,10 @@ final class BenchPage {
             tx += Math.round(w) + 12;
         }
 
-        // the weapon, big: a gun turns on the stage with its empty sockets as green ghosts
+        // the weapon, big and in 3D, turned by dragging: every gun and melee weapon, a modular gun with its empty sockets
+        // as green ghosts
         Attachments.Slot lit = trying.isEmpty() ? null : Attachments.slotOf(trying);
-        if (!(gun && Attachments.isModular(weapon) && stage.draw(g, weapon, x + 185, y + 92, 235, 104, mx, my, lit))) {
+        if (!stage.draw(g, weapon, x + 185, y + 92, 235, 104, mx, my, lit)) {
             g.fillGradient(x + 200, y + 182, x + 405, y + 196, 0x00000000, 0x33000000);
             KitDraw.item(g, weapon, x + 302 - 56, y + 86, 112);
         } else {
@@ -155,12 +156,12 @@ final class BenchPage {
         else condition(g, font, weapon, x + 440, y + 44, mx, my);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
-        if (tab == Tab.PARTS && gun) {
+        if (tab == Tab.PARTS && gun && Attachments.isModular(weapon)) {
             hx += KitDraw.hint(g, font, "LMB", "Fit a part / take one off", hx, hy);
-            hx += KitDraw.hint(g, font, "Drag", "Turn the gun", hx, hy);
         } else if (tab == Tab.CONDITION) {
             hx += KitDraw.hint(g, font, "LMB", "Repair with it", hx, hy);
         }
+        hx += KitDraw.hint(g, font, "Drag", gun ? "Turn the gun" : "Turn it", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 

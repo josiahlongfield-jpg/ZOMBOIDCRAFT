@@ -68,7 +68,8 @@ public class KitUiTest implements FabricClientGameTest {
                     "give @a minecraft:bread 5", "zc injure left_arm cut",
                     "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
                     "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
-                    "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8")) {
+                    "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8",
+                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver")) {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);
@@ -139,6 +140,24 @@ public class KitUiTest implements FabricClientGameTest {
                 click(ctx, tabs.get(3)[0], tabs.get(3)[1], 0);
                 ctx.takeScreenshot("bench");
                 log(ctx, "bench");
+                // every weapon carried goes on the 3D stage, guns without sockets and melee too
+                List<Integer> weapons = ctx.computeOnClient(mc -> {
+                    List<Integer> out = new ArrayList<>();
+                    if (mc.gui.screen() instanceof KitScreen<?> k) {
+                        for (int i : k.carried()) if (KitItems.weapon(k.menu().slots.get(i).getItem())) out.add(i);
+                    }
+                    return out;
+                });
+                for (int i : weapons) {
+                    String name = ctx.computeOnClient(mc -> {
+                        if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "?";
+                        k.bench.show(i);
+                        return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(k.menu().slots.get(i).getItem().getItem()).getPath();
+                    });
+                    ctx.waitTicks(2);
+                    LOG.info("ZCUI bench stage: {}", name);
+                    ctx.takeScreenshot("bench-" + name);
+                }
             }
 
             // close with E, then the pause menu and its Options button
