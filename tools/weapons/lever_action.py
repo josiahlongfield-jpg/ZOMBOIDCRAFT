@@ -58,7 +58,7 @@ def frame_point(x, y, z):
     return np.array([IN * x, BORE_Y + IN * y, Z0 + IN * z])
 
 
-HAND = frame_point(0.0, -0.75, 7.10)        # round the wrist, the fingers through the loop
+HAND = frame_point(0.0, -1.85, 7.10)        # under the wrist, the fingers through the loop (higher sat the hand inside the wood)
 SUPPORT = frame_point(0.0, -1.40, -6.00)    # the off hand under the forend
 PIVOT_POINT = frame_point(0.0, *LEVER_PIVOT)
 
