@@ -500,7 +500,8 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> mc.player.setXRot(10f));
         ctx.getInput().pressKey(InputConstants.KEY_F5);
         ctx.waitTicks(10);
-        LOG.info("ZCUI sling camera: {}", ctx.computeOnClient(mc -> String.valueOf(mc.options.getCameraType())));
+        String camera = ctx.computeOnClient(mc -> mc.options.getCameraType().name());
+        LOG.info("ZCUI sling camera: {}", camera);
         ctx.takeScreenshot("sling-back");
         ctx.runOnClient(mc -> mc.player.setYRot(mc.player.getYRot() + 50f));
         ctx.waitTicks(5);
