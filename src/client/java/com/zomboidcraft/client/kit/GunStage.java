@@ -33,7 +33,7 @@ import org.joml.Vector3f;
 final class GunStage {
     static final int GHOST = 0xFF4DFF6E;
 
-    record Mount(Attachments.Slot slot, Vector3f at, Identifier ghost) {
+    record Mount(Attachments.Slot slot, Vector3f at, @Nullable Identifier ghost) {
     }
 
     /** A mount as last drawn, in GUI pixels. */
@@ -62,8 +62,13 @@ final class GunStage {
                     var m = o.getAsJsonArray("mount");
                     String ghost = o.get("ghost").getAsString();
                     String name = ghost.substring(ghost.lastIndexOf('/') + 1);
+                    // a slot whose ghost has no item model gets its crosshair but no ghost, rather than the missing-model box
+                    Identifier model = ZomboidCraft.id("bench_ghost/" + name);
+                    boolean known = Minecraft.getInstance().getResourceManager()
+                            .getResource(ZomboidCraft.id("items/bench_ghost/" + name + ".json")).isPresent();
+                    if (!known) ZomboidCraft.LOGGER.warn("No bench ghost model for {} {} (items/bench_ghost/{}.json)", id, slot, name);
                     list.add(new Mount(slot, new Vector3f(m.get(0).getAsFloat(), m.get(1).getAsFloat(), m.get(2).getAsFloat()),
-                            ZomboidCraft.id("bench_ghost/" + name)));
+                            known ? model : null));
                 }
             } catch (Exception ex) {
                 ZomboidCraft.LOGGER.warn("Couldn't read the slot list for {}: {}", id, ex.toString());
@@ -101,7 +106,7 @@ final class GunStage {
         String id = Attachments.gunId(gun);
         List<Mount> mounts = id == null ? List.of() : mounts(id);
         for (Mount mount : mounts) {
-            if (Attachments.key(gun, mount.slot()) == null) {
+            if (Attachments.key(gun, mount.slot()) == null && mount.ghost() != null) {
                 ItemStack ghost = new ItemStack(Items.STICK);
                 ghost.set(DataComponents.ITEM_MODEL, mount.ghost());
                 mc.getItemModelResolver().appendItemLayers(state.item, ghost, ItemDisplayContext.NONE, mc.level, mc.player, 0);

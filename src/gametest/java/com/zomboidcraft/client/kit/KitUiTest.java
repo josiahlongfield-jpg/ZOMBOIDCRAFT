@@ -69,7 +69,7 @@ public class KitUiTest implements FabricClientGameTest {
                     "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
                     "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
                     "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8",
-                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver")) {
+                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg")) {
                 sp.getServer().runCommand(c);
             }
             ctx.waitTicks(20);
@@ -148,6 +148,14 @@ public class KitUiTest implements FabricClientGameTest {
                     }
                     return out;
                 });
+                String noGhost = ctx.computeOnClient(mc -> {
+                    List<String> out = new ArrayList<>();
+                    for (String gun : com.zomboidcraft.combat.GunSlotData.FITS.keySet()) {
+                        for (GunStage.Mount m : GunStage.mounts(gun)) if (m.ghost() == null) out.add(gun + "/" + m.slot());
+                    }
+                    return out.toString();
+                });
+                LOG.info("ZCUI bench slots without a ghost model: {}", noGhost);
                 for (int i : weapons) {
                     String name = ctx.computeOnClient(mc -> {
                         if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "?";
