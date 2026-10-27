@@ -20,6 +20,13 @@ public final class ZBodyAnimator {
     /** How long the stumble and the fall play for, and how long a fallen zombie takes to settle into its crawl. */
     private static final float STUMBLE_TIME = 1.7f, FALL_TIME = 1f, SETTLE_TIME = 1.6f;
     private static final int STUMBLE = 1, FALL = 2;
+    /**
+     * Walk speed over which a zombie on one leg hops instead of standing: it goes at about half speed, under a
+     * walker's threshold.
+     */
+    private static final float HOP_MOVING = 0.02f;
+    /** Preview units in a block, for moving the body along the ground. */
+    private static final float BLOCK = 16f / ZBodyLayer.K;
 
     /** What one zombie was doing last frame. */
     private static final class Track {
@@ -38,6 +45,9 @@ public final class ZBodyAnimator {
         int cuts = -1;
         int event;
         float eventStart;
+        /** On one leg: how far through the hop (0 to 1), and how much ground a hop covers, in blocks. */
+        float hop;
+        float hopStride = 0.4f;
     }
 
     /** What the renderer reads off a zombie each frame. */
@@ -117,7 +127,7 @@ public final class ZBodyAnimator {
             tr.cuts = f.cuts;
         }
 
-        boolean moving = f.walkSpeed > 0.08f;
+        boolean moving = f.walkSpeed > (legsGone == 1 ? HOP_MOVING : 0.08f);
         boolean looking = Math.abs(f.headYaw) > 10f;
         boolean noLegs = (f.legless || legsGone == 2) && (f.low || tr.event == FALL);
         boolean crawler = (f.crawler || noLegs) && (f.low || tr.event == FALL);
@@ -152,6 +162,12 @@ public final class ZBodyAnimator {
         float rate = 1.2f + (0.8f - 1.2f) * w[ZMove.CHASE] + (1.5f - 1.2f) * crawl;
         tr.gait += step * rate;
         tr.started = true;
+        if (legsGone == 1) {
+            // a hop covers the ground it would walk in about 0.78 s, a slow zombie's at least 0.3 of a block (the
+            // walk animation counts about four to a block, and moves at four times the blocks a tick)
+            tr.hopStride = Math.clamp(f.walkSpeed * 3.9f, 0.3f, 0.9f);
+            tr.hop = (tr.hop + step / 4f / tr.hopStride) % 1f;
+        }
 
         input.t = t;
         input.gait = tr.gait;
@@ -161,7 +177,13 @@ public final class ZBodyAnimator {
         input.legless = noLegs;
         input.goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
         input.reach = f.aggressive || attacking;
+        input.hop = tr.hop;
         move.pose(out, w, input);
+        if (w[ZMove.HOP] > 0.01f) {
+            // the zombie glides along at an even pace; its foot stays planted between hops, so hold the body back while
+            // it's down and let it catch up in the air
+            out.hz += w[ZMove.HOP] * (ZMove.hopAdvance(tr.hop) - tr.hop) * tr.hopStride * BLOCK;
+        }
 
         float tau = t - tr.eventStart;
         if (tr.event == STUMBLE && tau < STUMBLE_TIME && legsGone == 1 && !f.low) {

@@ -100,7 +100,9 @@ public final class CarClient {
             }
         }
         while (HORN.consumeClick()) {
-            if (inside != null) {
+            if (inside != null && inside.aircraft() && inside.seatOf(player) == 0) {
+                FlightClient.levelLock(inside);     // in a helicopter the same key holds height and hover
+            } else if (inside != null) {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.HORN, 0, 0, 0));
             }
         }

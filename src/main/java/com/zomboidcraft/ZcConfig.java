@@ -421,6 +421,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How big a player is while in a car (1 = full size): a little smaller so arms and legs stay inside the cabin. */
+        public double carRiderScale = 0.85;
     }
 
     public static class Weather {
@@ -516,12 +518,12 @@ public final class ZcConfig {
          */
         public boolean shoulderCam = true;
         /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
-        public double shoulderBack = 1.9;
-        public double shoulderSide = 0.6;
+        public double shoulderBack = 1.25;
+        public double shoulderSide = 0.5;
         public double shoulderUp = 0.15;
         /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
-        public double shoulderAimBack = 1.05;
-        public double shoulderAimSide = 0.5;
+        public double shoulderAimBack = 0.7;
+        public double shoulderAimSide = 0.42;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -917,6 +919,8 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** How often a glancing shot off something hard whines away as a ricochet (0 to 1). */
+        public double ricochetChance = 0.35;
         /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
         public boolean bulletHoles = true;
         public double bulletHoleSeconds = 90.0;
@@ -971,7 +975,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 1;
+    private static final int DEFAULTS = 2;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -981,6 +985,21 @@ public final class ZcConfig {
             }
             if (c.guns.suppressedPitch == 1.0) {
                 c.guns.suppressedPitch = 0.88;
+            }
+        }
+        if (c.defaultsVersion < 2) {
+            // 2026-10-27: the shoulder camera closer in (Josiah: "the player model needs to be closer")
+            if (c.look.shoulderBack == 1.9) {
+                c.look.shoulderBack = 1.25;
+            }
+            if (c.look.shoulderSide == 0.6) {
+                c.look.shoulderSide = 0.5;
+            }
+            if (c.look.shoulderAimBack == 1.05) {
+                c.look.shoulderAimBack = 0.7;
+            }
+            if (c.look.shoulderAimSide == 0.5) {
+                c.look.shoulderAimSide = 0.42;
             }
         }
         c.defaultsVersion = DEFAULTS;

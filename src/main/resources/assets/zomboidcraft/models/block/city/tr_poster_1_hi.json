@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_brass": "zomboidcraft:block/city/tr_brass",
+    "tr_poster_1_hi": "zomboidcraft:block/city/tr_poster_1_hi",
+    "particle": "zomboidcraft:block/city/tr_poster_1_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        13
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_poster_1_hi"
+        },
+        "south": {
+          "texture": "#tr_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_brass"
+        },
+        "west": {
+          "texture": "#tr_brass"
+        },
+        "up": {
+          "texture": "#tr_brass"
+        },
+        "down": {
+          "texture": "#tr_brass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

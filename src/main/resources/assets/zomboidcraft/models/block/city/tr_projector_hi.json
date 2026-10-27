@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_hammered": "zomboidcraft:block/city/tr_hammered",
+    "tr_lamphouse": "zomboidcraft:block/city/tr_lamphouse",
+    "tr_reel": "zomboidcraft:block/city/tr_reel",
+    "particle": "zomboidcraft:block/city/tr_lamphouse"
+  },
+  "elements": [
+    {
+      "from": [
+        10.5,
+        0,
+        9.5
+      ],
+      "to": [
+        13.5,
+        9,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_lamphouse"
+        },
+        "south": {
+          "texture": "#tr_lamphouse"
+        },
+        "east": {
+          "texture": "#tr_lamphouse"
+        },
+        "west": {
+          "texture": "#tr_lamphouse"
+        },
+        "up": {
+          "texture": "#tr_lamphouse"
+        },
+        "down": {
+          "texture": "#tr_lamphouse",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        9,
+        9
+      ],
+      "to": [
+        14,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_lamphouse"
+        },
+        "south": {
+          "texture": "#tr_lamphouse"
+        },
+        "east": {
+          "texture": "#tr_lamphouse"
+        },
+        "west": {
+          "texture": "#tr_lamphouse"
+        },
+        "up": {
+          "texture": "#tr_lamphouse"
+        },
+        "down": {
+          "texture": "#tr_lamphouse"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        0,
+        6
+      ],
+      "to": [
+        7.5,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_hammered"
+        },
+        "south": {
+          "texture": "#tr_hammered"
+        },
+        "east": {
+          "texture": "#tr_hammered"
+        },
+        "west": {
+          "texture": "#tr_hammered"
+        },
+        "up": {
+          "texture": "#tr_hammered"
+        },
+        "down": {
+          "texture": "#tr_hammered",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        2,
+        3
+      ],
+      "to": [
+        6.5,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_hammered"
+        },
+        "south": {
+          "texture": "#tr_hammered"
+        },
+        "east": {
+          "texture": "#tr_reel"
+        },
+        "west": {
+          "texture": "#tr_reel"
+        },
+        "up": {
+          "texture": "#tr_hammered"
+        },
+        "down": {
+          "texture": "#tr_hammered"
+        }
+      }
+    }
+  ]
+}

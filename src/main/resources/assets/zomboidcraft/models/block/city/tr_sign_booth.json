@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_sign_booth": "zomboidcraft:block/city/tr_sign_booth",
+    "particle": "zomboidcraft:block/city/tr_sign_booth"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_sign_booth"
+        },
+        "south": {
+          "texture": "#tr_sign_booth",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_sign_booth"
+        },
+        "west": {
+          "texture": "#tr_sign_booth"
+        },
+        "up": {
+          "texture": "#tr_sign_booth"
+        },
+        "down": {
+          "texture": "#tr_sign_booth"
+        }
+      }
+    }
+  ]
+}

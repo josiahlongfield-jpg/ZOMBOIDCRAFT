@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_sign_food": "zomboidcraft:block/city/tr_sign_food",
+    "particle": "zomboidcraft:block/city/tr_sign_food"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_sign_food"
+        },
+        "south": {
+          "texture": "#tr_sign_food",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_sign_food"
+        },
+        "west": {
+          "texture": "#tr_sign_food"
+        },
+        "up": {
+          "texture": "#tr_sign_food"
+        },
+        "down": {
+          "texture": "#tr_sign_food"
+        }
+      }
+    }
+  ]
+}

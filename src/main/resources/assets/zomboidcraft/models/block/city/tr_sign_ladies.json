@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_sign_ladies": "zomboidcraft:block/city/tr_sign_ladies",
+    "particle": "zomboidcraft:block/city/tr_sign_ladies"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_sign_ladies"
+        },
+        "south": {
+          "texture": "#tr_sign_ladies",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_sign_ladies"
+        },
+        "west": {
+          "texture": "#tr_sign_ladies"
+        },
+        "up": {
+          "texture": "#tr_sign_ladies"
+        },
+        "down": {
+          "texture": "#tr_sign_ladies"
+        }
+      }
+    }
+  ]
+}

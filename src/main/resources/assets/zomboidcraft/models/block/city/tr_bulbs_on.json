@@ -1,0 +1,173 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_bulb_on": "zomboidcraft:block/city/tr_bulb_on",
+    "tr_mq_metal": "zomboidcraft:block/city/tr_mq_metal",
+    "particle": "zomboidcraft:block/city/tr_mq_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        0
+      ],
+      "to": [
+        10,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_mq_metal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_mq_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_mq_metal"
+        },
+        "west": {
+          "texture": "#tr_mq_metal"
+        },
+        "up": {
+          "texture": "#tr_mq_metal"
+        },
+        "down": {
+          "texture": "#tr_mq_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.75,
+        2,
+        0.75
+      ],
+      "to": [
+        9.25,
+        4.5,
+        3.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_bulb_on"
+        },
+        "south": {
+          "texture": "#tr_bulb_on"
+        },
+        "east": {
+          "texture": "#tr_bulb_on"
+        },
+        "west": {
+          "texture": "#tr_bulb_on"
+        },
+        "up": {
+          "texture": "#tr_bulb_on"
+        },
+        "down": {
+          "texture": "#tr_bulb_on"
+        }
+      }
+    },
+    {
+      "from": [
+        6.75,
+        2,
+        4.75
+      ],
+      "to": [
+        9.25,
+        4.5,
+        7.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_bulb_on"
+        },
+        "south": {
+          "texture": "#tr_bulb_on"
+        },
+        "east": {
+          "texture": "#tr_bulb_on"
+        },
+        "west": {
+          "texture": "#tr_bulb_on"
+        },
+        "up": {
+          "texture": "#tr_bulb_on"
+        },
+        "down": {
+          "texture": "#tr_bulb_on"
+        }
+      }
+    },
+    {
+      "from": [
+        6.75,
+        2,
+        8.75
+      ],
+      "to": [
+        9.25,
+        4.5,
+        11.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_bulb_on"
+        },
+        "south": {
+          "texture": "#tr_bulb_on"
+        },
+        "east": {
+          "texture": "#tr_bulb_on"
+        },
+        "west": {
+          "texture": "#tr_bulb_on"
+        },
+        "up": {
+          "texture": "#tr_bulb_on"
+        },
+        "down": {
+          "texture": "#tr_bulb_on"
+        }
+      }
+    },
+    {
+      "from": [
+        6.75,
+        2,
+        12.75
+      ],
+      "to": [
+        9.25,
+        4.5,
+        15.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_bulb_on"
+        },
+        "south": {
+          "texture": "#tr_bulb_on"
+        },
+        "east": {
+          "texture": "#tr_bulb_on"
+        },
+        "west": {
+          "texture": "#tr_bulb_on"
+        },
+        "up": {
+          "texture": "#tr_bulb_on"
+        },
+        "down": {
+          "texture": "#tr_bulb_on"
+        }
+      }
+    }
+  ]
+}

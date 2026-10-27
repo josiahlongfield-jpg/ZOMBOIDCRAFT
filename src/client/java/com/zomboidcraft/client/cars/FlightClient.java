@@ -135,16 +135,30 @@ public final class FlightClient {
             turnBuffer = Mth.clamp(turnBuffer, -45, 45);
             return new Flight.Controls(0, 0, 0, 0, false, fwd, side, collective, turn);
         }
-        // mouse aim: pull and bank toward the aim point, rolling wings level once the nose is near it
+        // mouse aim, flown the way a pilot would: roll until the aim point is overhead, then pull to it;
+        // close to the nose, fine pitch and rudder put it on the aim with the wings near level
         Vector3f local = new Quaternionf(f.q).conjugate().transform(new Vector3f(aim));
         float off = (float) Math.toDegrees(Math.acos(Mth.clamp(local.z, -1, 1)));
-        float pitch = Mth.clamp(local.y * 4, -1, 1);
-        float yaw = Mth.clamp(-local.x * 4, -1, 1);
-        float hard = Mth.clamp(-local.x * 4, -1, 1);
-        float level = (float) -f.left().y * 2;
-        float roll = Mth.lerp(Mth.clamp(off / 10f, 0, 1), Mth.clamp(level, -1, 1), hard);
-        if (local.z < 0) {
-            pitch = 1;      // the aim's behind: pull round
+        float bank = f.bank();
+        float pitch, roll, yaw;
+        if (off < 8) {
+            pitch = Mth.clamp(local.y * 14, -1, 1);
+            yaw = Mth.clamp(-local.x * 14, -1, 1);
+            float wantBank = Mth.clamp(-local.x * 300, -25, 25);
+            roll = Mth.clamp((wantBank - bank) / 45, -1, 1);
+        } else {
+            // the roll that puts the aim straight above the canopy (right positive)
+            float over = (float) Math.toDegrees(Math.atan2(-local.x, local.y));
+            // (only part of the way for an aim just off the nose, so small turns stay shallow)
+            roll = Mth.clamp(over * Math.min(1, (off - 4) / 18) / 45, -1, 1);
+            // pull as it comes overhead, harder the further off it is
+            float lined = (float) Math.max(0, Math.cos(Math.toRadians(over)));
+            pitch = Mth.clamp((0.25f + off / 40f) * lined * lined, 0, 1);
+            if (local.y < 0 && Math.abs(over) > 150 && off < 25) {
+                pitch = Mth.clamp(local.y * 6, -0.5f, 0);   // a little below: push rather than roll over
+                roll = Mth.clamp(-bank / 45, -1, 1);
+            }
+            yaw = Mth.clamp(-local.x * 3, -1, 1) * 0.5f;
         }
         if (side != 0) {
             roll = side;    // A/D roll by hand
@@ -216,6 +230,21 @@ public final class FlightClient {
         Vec3 centre = car.getPosition(partialTick).add(0, car.pivot(), 0);
         out.position = centre.add(-dir.x * dist, -dir.y * dist + 3.5, -dir.z * dist);
         return true;
+    }
+
+    /** The helicopter's level lock, on or off (the horn key, in the pilot's seat); jets have none. */
+    static void levelLock(CarProp car) {
+        Flight f = car.flight();
+        if (f.kind != Flight.Kind.HELI) {
+            return;
+        }
+        f.levelLock = !f.levelLock;
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(f.levelLock
+                    ? "Level lock on: holds this height, and hovers with the cyclic centred"
+                    : "Level lock off"));
+        }
     }
 
     /**

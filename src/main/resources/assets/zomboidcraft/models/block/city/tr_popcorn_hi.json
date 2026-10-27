@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "tr_cart_red": "zomboidcraft:block/city/tr_cart_red",
+    "tr_popcorn_glass": "zomboidcraft:block/city/tr_popcorn_glass",
+    "particle": "zomboidcraft:block/city/tr_popcorn_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "south": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "east": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "west": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "up": {
+          "texture": "#tr_cart_red"
+        },
+        "down": {
+          "texture": "#home_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13,
+        3
+      ],
+      "to": [
+        14,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "south": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "east": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "west": {
+          "texture": "#tr_popcorn_glass"
+        },
+        "up": {
+          "texture": "#tr_cart_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        15.5,
+        2.5
+      ],
+      "to": [
+        14.5,
+        16,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

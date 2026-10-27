@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_frieze": "zomboidcraft:block/city/tr_frieze",
+    "particle": "zomboidcraft:block/city/tr_frieze"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_frieze",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_frieze",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_frieze",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_frieze",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_frieze",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_frieze",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
