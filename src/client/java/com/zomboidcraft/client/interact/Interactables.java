@@ -167,6 +167,9 @@ public final class Interactables {
      */
     public static void dot(float x, float y, float z, float tx, float ty, float tz, float size, boolean shaders,
                            PoseStack.Pose pose, VertexConsumer out) {
+        if (com.zomboidcraft.client.camera.CinematicView.clean()) {
+            return;  // filming: no dots anywhere, cars' own included
+        }
         float len = (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
         if (len < 0.05f) {
             return;
