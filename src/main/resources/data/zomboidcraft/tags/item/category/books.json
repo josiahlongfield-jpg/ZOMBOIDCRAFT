@@ -1,7 +1,13 @@
 {
   "replace": false,
   "values": [
-    "zomboidcraft:street_map",
-    "zomboidcraft:road_atlas"
+    {
+      "id": "zomboidcraft:street_map",
+      "required": false
+    },
+    {
+      "id": "zomboidcraft:road_atlas",
+      "required": false
+    }
   ]
 }

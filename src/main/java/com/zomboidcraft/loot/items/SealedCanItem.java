@@ -18,13 +18,12 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
 
 /**
  * A sealed can, Zomboid style: it keeps for ever, but there's nothing to eat until it's opened, and that takes a can
  * opener (or a knife, in a pinch: anything in zomboidcraft:can_openers). Opened, it's food like any other, leaves an
- * empty can, and goes off in a few days like leftovers.
+ * empty can (LootFood hands it back), and goes off in a few days like leftovers.
  */
 public class SealedCanItem extends Item {
     public static final TagKey<Item> OPENERS = TagKey.create(Registries.ITEM, ZomboidCraft.id("can_openers"));
@@ -58,7 +57,7 @@ public class SealedCanItem extends Item {
             if (now.isEmpty()) {
                 p.setItemInHand(hand, opened);
             } else if (!p.getInventory().add(opened)) {
-                p.drop(opened, false);
+                p.spawnAtLocation((net.minecraft.server.level.ServerLevel) p.level(), opened);
             }
             p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 0.5f, 1.6f);
         });
@@ -84,10 +83,6 @@ public class SealedCanItem extends Item {
         LootSpec.Food food = spec.food();
         opened.set(DataComponents.FOOD, new FoodProperties(food.hunger(), food.saturation(), food.is(LootSpec.Food.ALWAYS)));
         opened.set(DataComponents.CONSUMABLE, Consumables.DEFAULT_FOOD);
-        Item left = food.left() == null ? null : LootItems.item(food.left());
-        if (left != null) {
-            opened.set(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStack(left)));
-        }
         Spoil spoil = new Spoil(0f, now, Spoil.OUT, Spoil.OPEN_FRESH, Spoil.OPEN_ROT, true, true);
         opened.set(Spoil.TYPE, spoil);
         Spoil.name(opened, spoil);

@@ -153,7 +153,7 @@ ALCOHOL = {'canned_beer': 1, 'bottled_beer': 1, 'wine_bottle': 2, 'boxed_wine': 
 WAVE1 = ('Canned & dry food', 'Fresh, fridge & freezer', 'Snacks & sweets', 'Drinks', 'Medical', 'Hygiene & household')
 
 # leftovers that become their own items in wave 1 (junk wave rows, built now because the food needs them)
-REMAINDERS = {'can': 'empty_can', 'drinkcan': 'empty_soda_can', 'bottle': 'empty_bottle', 'jar': 'empty_jar',
+REMAINDERS = {'can': 'tin_can', 'drinkcan': 'empty_soda_can', 'bottle': 'glass_bottle', 'jar': 'empty_jar',
               'carton': None}
 
 

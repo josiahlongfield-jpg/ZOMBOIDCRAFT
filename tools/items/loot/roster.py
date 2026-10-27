@@ -422,7 +422,7 @@ matches | Box of Matches | C | 2 | 0.02 | pantry conv diner camp
 lighter | Disposable Lighter | C | 2 | 0.02 | conv night glove body
 brass_lighter | Brass Flip Lighter | S | 8 | 0.06 | night pawn glove body desk
 lighter_fluid | Lighter Fluid | C | 2 | 0.2 | conv garage
-road_flare | Road Flare | S | 4 | 0.2 | trunk.3 pcar firetruck station
+road_flare* | Road Flare | S | 4 | 0.2 | trunk.3 pcar firetruck station
 flare_gun | Flare Pistol | R | 25 | 0.8 | dock.3 carrier mil
 glow_stick | Glow Stick | C | 1 | 0.02 | kids camp mil
 firestarter | Fire Starter | S | 4 | 0.05 | camp sport mil
@@ -795,8 +795,8 @@ road_sign | Road Sign | C | 1 | 4.0 | build
 """
 
 ROSTER['Junk & scrap'] = """
-empty_can | Empty Can | C | 0 | 0.05 | trash.3 pantry
-empty_bottle | Empty Bottle | C | 0 | 0.3 | trash.3 pantry liq
+tin_can* | Empty Can | C | 0 | 0.05 | trash.3 pantry
+glass_bottle* | Empty Bottle | C | 0 | 0.3 | trash.3 pantry liq
 broken_glass | Broken Glass | C | 0 | 0.1 | trash
 newspaper_bundle | Bundle of Old Newspapers | C | 0 | 2.0 | attic garage trash
 cardboard | Flattened Cardboard | C | 0 | 0.3 | trash groc factory

@@ -39,7 +39,7 @@ public class PackItem extends Item {
             ItemStack out = new ItemStack(item, line.min() + random.nextInt(line.max() - line.min() + 1));
             got += out.getCount();
             if (!sp.getInventory().add(out)) {
-                sp.drop(out, false);
+                sp.spawnAtLocation((net.minecraft.server.level.ServerLevel) sp.level(), out);
             }
         }
         stack.consume(1, sp);

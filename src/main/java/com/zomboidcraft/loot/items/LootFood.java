@@ -34,6 +34,15 @@ public final class LootFood {
             SurvivalStats.set(sp, stats.withThirst(stats.thirst() + food.thirst()));
         }
         Spoil spoil = stack.get(Spoil.TYPE);
+        if (spoil != null && spoil.opened() && food.left() != null) {
+            net.minecraft.world.item.Item left = LootItems.item(food.left());
+            if (left != null) {
+                ItemStack can = new ItemStack(left);
+                if (!sp.getInventory().add(can)) {
+                    sp.spawnAtLocation((net.minecraft.server.level.ServerLevel) sp.level(), can);
+                }
+            }
+        }
         int state = spoil == null ? Spoil.FRESH : spoil.at(sp.level().getGameTime(), spoil.where()).state();
         if (state == Spoil.ROTTEN) {
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 600, 1));

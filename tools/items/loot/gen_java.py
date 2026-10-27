@@ -29,7 +29,7 @@ TABS = {
 }
 RAR = {'C': 'COMMON', 'S': 'SCARCE', 'R': 'RARE', 'P': 'PRIZED', 'G': 'GRAIL'}
 # the leftovers food needs, built in wave 1 although they're junk-wave rows
-EXTRA_WAVE1 = {'empty_can', 'empty_soda_can', 'empty_bottle', 'empty_jar', 'can_opener'}
+EXTRA_WAVE1 = {'empty_soda_can', 'empty_jar', 'can_opener'}
 EXTRA_ROWS = [
     dict(id='empty_soda_can', name='Empty Soda Can', cat='Junk & scrap', group='', rarity='C', value='0', kg='0.02',
          places=[('trash', 3)], exists=False),
@@ -98,7 +98,8 @@ public final class LootSpecs {{
         p.parent.mkdir(parents=True, exist_ok=True)
         # only items that exist in the game go in a tag (a missing id fails the tag); later waves add theirs
         live = [i for i, r in zip(ids, [x for x in rs if TABS[x['cat']] == tab]) if r['wave1'] or r['exists']]
-        p.write_text(json.dumps({'replace': False, 'values': live}, indent=2) + '\n')
+        # optional entries: an item another thread owns may not be in this build yet
+        p.write_text(json.dumps({'replace': False, 'values': [{'id': i, 'required': False} for i in live]}, indent=2) + '\n')
     print(f'{len(rs)} specs, {sum(r["wave1"] for r in rs)} registered in wave 1')
 
 
