@@ -184,6 +184,7 @@ public class KitUiTest implements FabricClientGameTest {
             wave2Test(ctx, sp);
             swapTest(ctx, sp, false);
             swapTest(ctx, sp, true);
+            swapSweep(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -359,6 +360,73 @@ public class KitUiTest implements FabricClientGameTest {
         LOG.info("ZCUI swap {}: fit {} -> server {} | take off {} | server {} | client {}", tag, fit, fitted, off, server, client);
         ctx.getInput().pressKey(InputConstants.KEY_E);
         ctx.waitTicks(5);
+    }
+
+    /**
+     * Every gun, wearing a backpack: fit one of each part it takes from the bench, take it off again, and check the
+     * part is back among the carried slots (so the spares list shows it) on both sides.
+     */
+    private static void swapSweep(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        List<String> bad = new ArrayList<>();
+        int checked = 0;
+        for (var gunEntry : com.zomboidcraft.combat.GunSlotData.FITS.entrySet()) {
+            String gun = gunEntry.getKey();
+            sp.getServer().runCommand("clear @a");
+            sp.getServer().runCommand("give @a zomboidcraft:hiking_backpack");
+            sp.getServer().runCommand("give @a zomboidcraft:" + gun);
+            for (var parts : gunEntry.getValue().values()) if (!parts.isEmpty()) sp.getServer().runCommand("give @a zomboidcraft:" + parts.get(0));
+            ctx.waitTicks(5);
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(5);
+            for (var socketEntry : gunEntry.getValue().entrySet()) {
+                if (socketEntry.getValue().isEmpty()) continue;
+                com.zomboidcraft.combat.Attachments.Slot socket = socketEntry.getKey();
+                String part = socketEntry.getValue().get(0);
+                String fit = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+                    int g = find(k, gun), dot = find(k, part);
+                    if (g < 0) return "no gun";
+                    if (!com.zomboidcraft.combat.Attachments.get(k.menu().slots.get(g).getItem(), socket).isEmpty()) return "";
+                    if (dot < 0) return "part not carried before fitting";
+                    k.button(com.zomboidcraft.combat.Bench.fitButton(dot, g, socket));
+                    return "";
+                });
+                ctx.waitTicks(4);
+                String off = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+                    int g = find(k, gun);
+                    if (g < 0) return "no gun";
+                    if (com.zomboidcraft.combat.Attachments.get(k.menu().slots.get(g).getItem(), socket).isEmpty()) return "nothing fitted";
+                    k.button(com.zomboidcraft.combat.Bench.takeOffButton(g, socket));
+                    return "";
+                });
+                ctx.waitTicks(6);
+                String client = ctx.computeOnClient(mc -> mc.gui.screen() instanceof KitScreen<?> k
+                        ? (find(k, part) >= 0 ? "" : "client lost it " + where(k.menu())) : "no kit");
+                String server = sp.getServer().computeOnServer(sv -> {
+                    var menu = sv.getPlayerList().getPlayers().get(0).inventoryMenu;
+                    for (int i = 0; i < menu.slots.size(); i++) {
+                        if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(menu.slots.get(i).getItem().getItem()).getPath().equals(part)) {
+                            return "";
+                        }
+                    }
+                    return "server lost it";
+                });
+                checked++;
+                String all = (fit + " " + off + " " + client + " " + server).trim();
+                if (!all.isEmpty()) bad.add(gun + "/" + socket + "/" + part + ": " + all);
+            }
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(3);
+        }
+        LOG.info("ZCUI swap sweep: {} parts checked, problems {}", checked, bad);
+    }
+
+    private static int find(KitScreen<?> k, String id) {
+        for (int i : k.carried()) {
+            if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(k.menu().slots.get(i).getItem().getItem()).getPath().equals(id)) return i;
+        }
+        return -1;
     }
 
     /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
