@@ -20,13 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - air_jet_start
-          - air_jet_idle,air_jet_roar
-          - air_jet_afterburner,air_jet_distant
-          - air_heli_rotor,air_heli_start
-          - air_heli_distant,air_wind
-          - air_warning,air_ground
-          - air_crash
+          - imp_ground,imp_concrete
+          - imp_brick,imp_wood
+          - imp_metal,imp_car
+          - imp_glass,imp_soft
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
