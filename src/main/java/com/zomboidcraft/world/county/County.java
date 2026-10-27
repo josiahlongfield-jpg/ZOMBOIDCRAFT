@@ -30,7 +30,7 @@ public final class County {
     private final Map<Long, Optional<Place>> candidates = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> places = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> cities = new ConcurrentHashMap<>();
-    private final Map<Long, Optional<Place>> stadiums = new ConcurrentHashMap<>();
+    private Optional<Place> stadium;
     private final Map<Long, List<Road>> roads = new ConcurrentHashMap<>();
     private final Map<Long, List<Road>> joins = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> hideouts = new ConcurrentHashMap<>();
@@ -148,23 +148,35 @@ public final class County {
     }
 
     /**
-     * A city's stadium, on a lot of its own a cell east or west of the downtown (whichever side
-     * is dry), pushed a little further out so the city's levelling and roads keep clear of it.
-     * Until the county plan places the island's landmarks, every city gets one.
+     * The county's one stadium, on a lot of its own a cell east or west of the downtown nearest
+     * the spawn (whichever side is dry), pushed a little further out so the city's levelling and
+     * roads keep clear of it. Until the county plan puts it on the island.
      */
-    private Optional<Place> stadium(int mx, int mz) {
-        return stadiums.computeIfAbsent(key(mx, mz), k -> city(mx, mz).map(c -> {
-            int side = rand(0x57AD1L, mx, mz) < 0.5 ? -1 : 1;
-            int dcx = Math.floorDiv(c.centreX(), CELL), dcz = Math.floorDiv(c.centreZ(), CELL);
-            for (int s : new int[] {side, -side}) {
-                int px = (dcx + s) * CELL + CELL / 2 + s * 40, pz = dcz * CELL + CELL / 2;
-                Place p = fit(PlaceType.LANDMARK, "stadium", px, pz, 400, 450, Noise.hash(seed, dcx + s, dcz));
-                if (p != null) {
-                    return p;
+    private synchronized Optional<Place> stadium() {
+        if (stadium == null) {
+            stadium = Optional.empty();
+            List<Place> downtowns = new ArrayList<>();
+            int reach = Math.floorDiv(8192, CELL * MACRO) + 1;
+            for (int mx = -reach; mx <= reach; mx++) {
+                for (int mz = -reach; mz <= reach; mz++) {
+                    city(mx, mz).ifPresent(downtowns::add);
                 }
             }
-            return null;
-        }));
+            downtowns.sort(Comparator.comparingDouble(c -> Math.hypot(c.centreX(), c.centreZ())));
+            for (Place c : downtowns) {
+                int dcx = Math.floorDiv(c.centreX(), CELL), dcz = Math.floorDiv(c.centreZ(), CELL);
+                int side = rand(0x57AD1L, dcx, dcz) < 0.5 ? -1 : 1;
+                for (int sd : new int[] {side, -side}) {
+                    int px = (dcx + sd) * CELL + CELL / 2 + sd * 40, pz = dcz * CELL + CELL / 2;
+                    Place p = fit(PlaceType.LANDMARK, "stadium", px, pz, 400, 450, Noise.hash(seed, dcx + sd, dcz));
+                    if (p != null) {
+                        stadium = Optional.of(p);
+                        return stadium;
+                    }
+                }
+            }
+        }
+        return stadium;
     }
 
     /** The downtown owning this cell, or the nearest downtown's distance (for suburbs). */
@@ -189,7 +201,7 @@ public final class County {
         if (c.isPresent() && Math.floorDiv(c.get().centreX(), CELL) == cx && Math.floorDiv(c.get().centreZ(), CELL) == cz) {
             return c.get();
         }
-        Optional<Place> st = stadium(mx, mz);
+        Optional<Place> st = stadium();
         if (st.isPresent() && Math.floorDiv(st.get().centreX(), CELL) == cx && Math.floorDiv(st.get().centreZ(), CELL) == cz) {
             return st.get();
         }
