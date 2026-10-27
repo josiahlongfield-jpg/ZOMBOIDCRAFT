@@ -56,6 +56,13 @@ public final class Flight {
      */
     public boolean trainee;
     public float skill = 1;
+    /**
+     * The helicopter's level lock (set by the pilot's game): holds the height it had when the collective was
+     * let go, and with the cyclic centred tilts against any drift until it hovers in place.
+     */
+    public boolean levelLock;
+    /** How far it has drifted above the held height, metres, while the lock is on. */
+    private float heightError;
     private int shake;
 
     public Flight(Kind kind) {
@@ -234,6 +241,14 @@ public final class Flight {
         rpm = engine ? Math.min(1, rpm + 1 / 200f) : Math.max(0, rpm - 1 / 300f);
         Vec3 u = up();
         float targetVy = c.collective() > 0 ? 7 : c.collective() < 0 ? -6 : grounded ? -1 : 0;
+        boolean holding = levelLock && !grounded && c.collective() == 0;
+        if (holding) {
+            // back to the held height, gently
+            heightError += (float) vel.y * DT;
+            targetVy = Mth.clamp(-heightError * 0.9f, -4, 4);
+        } else {
+            heightError = 0;
+        }
         float most = 1.7f * G * rpm * rpm;
         if (trainee && grounded) {
             most = Math.min(most, 0.96f * G);   // without the manual it never comes off the ground
@@ -255,6 +270,19 @@ public final class Flight {
 
         float wantPitch = c.cyclicFwd() > 0 ? -18 : c.cyclicFwd() < 0 ? 12 : 0;
         float wantRoll = c.cyclicSide() * 25;
+        if (levelLock && !grounded) {
+            // the lock flies the hover: with the cyclic centred it leans against the drift, ahead and sideways
+            double ahead = vel.x * -Math.sin(r) + vel.z * Math.cos(r), leftward = vel.dot(side);
+            if (c.cyclicFwd() == 0) {
+                wantPitch = (float) Mth.clamp(ahead * 1.6, -14, 14);
+            }
+            if (c.cyclicSide() == 0) {
+                wantRoll = (float) Mth.clamp(leftward * 2.2, -16, 16);
+            }
+            if (c.cyclicFwd() == 0 && c.cyclicSide() == 0 && hs < 3) {
+                acc = acc.subtract(flat.scale(0.6));   // and settles the last of it
+            }
+        }
         shake++;
         if (!grounded) {
             float wobble = (1 - skill) * 6;

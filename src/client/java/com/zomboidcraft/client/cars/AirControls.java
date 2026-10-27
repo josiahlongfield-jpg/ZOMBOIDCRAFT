@@ -38,8 +38,8 @@ final class AirControls {
             // Su-27: its own centre stick between the knees, the throttle on the left console
             "jet_gyrfalcon", new Rig(new float[]{-0.005f, 2.99f, 5.70f}, 0.27f, false, new float[]{0.41f, 2.98f, 5.52f}, 0.17f, false,
                     new float[]{-0.005f, 2.99f, 5.70f, 0.016f, 3.30f, 5.78f, 0.075f}),
-            // AH-64 back seat: the cyclic between the knees, the collective at the left hand
-            "heli_hornbill", new Rig(new float[]{0f, 2.02f, 3.40f}, 0.34f, false, new float[]{0.31f, 2.14f, 2.88f}, 0.36f, true, null));
+            // AH-64 front seat (flown from the front here): the cyclic between the knees, the collective at the left hand
+            "heli_hornbill", new Rig(new float[]{0f, 1.62f, 4.78f}, 0.34f, false, new float[]{0.33f, 1.76f, 4.28f}, 0.36f, true, null));
 
     /** How far the stick leans at full deflection, and the throttle's travel either side of the middle. */
     private static final float STICK = (float) Math.toRadians(14), LEVER = (float) Math.toRadians(28);

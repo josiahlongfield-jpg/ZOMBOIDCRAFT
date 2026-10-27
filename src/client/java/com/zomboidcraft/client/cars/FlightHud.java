@@ -209,6 +209,10 @@ final class FlightHud {
         float slip = (float) Mth.clamp(sideways / 6, -1, 1);
         g.fill(bx + Math.round(slip * 16) - 2, by + 1, bx + Math.round(slip * 16) + 3, by + 6, col);
         g.text(font, "SAFE", left, h - 70, col, false);
+        if (car.flight().levelLock) {
+            String lock = Math.hypot(local.x, local.z) < 1.5 ? "HOVER HOLD" : "ALT HOLD";
+            g.text(font, lock, cx - font.width(lock) / 2, h - 82, col, false);
+        }
         g.text(font, "FUEL " + Math.round(car.fuel() * 100) + "%", right - font.width("FUEL 100%"), h - 70, col, false);
     }
 

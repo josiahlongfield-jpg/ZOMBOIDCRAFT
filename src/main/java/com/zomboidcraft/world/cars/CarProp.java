@@ -1592,7 +1592,7 @@ public class CarProp extends Entity {
 
     private String flightHelp() {
         return helicopter()
-                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns. Alt looks round."
+                ? "Space climb, Ctrl sink, W/S nose down/up, A/D bank, mouse turns, H level lock (hover). Alt looks round."
                 : "Mouse flies, W/S throttle, A/D roll, Space brakes. Alt looks round.";
     }
 
