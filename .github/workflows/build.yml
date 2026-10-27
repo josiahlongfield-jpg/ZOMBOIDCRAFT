@@ -107,7 +107,9 @@ jobs:
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
           sleep 8
           echo 'zc train list' >&3
-          sleep 10
+          sleep 22  # it comes in to its platform about 25 s after the loop is laid, and stands there with its doors open
+          echo 'zc train list' >&3
+          sleep 2
           echo 'stop' >&3
           for i in $(seq 1 12); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 3>&-
@@ -116,7 +118,7 @@ jobs:
           grep -E 'zomboidcraft|test_rail|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
-          grep -q 'Laid test line test_rail' server.log && grep -E 'test_rail \(rail.*train 0 at' server.log
+          grep -q 'Laid test line test_rail' server.log && grep -E 'test_rail \(rail.*train 0 at' server.log && grep -E 'test_rail \(rail.*\(stopped\)' server.log
           [ "$(grep -c 'Dropped' server.log)" -ge 16 ]
           grep -q 'The dead walk' server.log && grep -q 'Done (' server.log && grep -q 'Summoned' server.log
           grep -E 'Rain (cover|falls through)' server.log

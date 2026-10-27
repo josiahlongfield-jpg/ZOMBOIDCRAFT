@@ -66,7 +66,7 @@ public final class TrainRun {
         if (target >= 0 && target != was && express) {
             Otto.express(level, this, line.stops.get(target));
         }
-        double dist = target < 0 ? Double.MAX_VALUE : route.ahead(s, line.frontAt(line.stops.get(target)));
+        double dist = target < 0 ? Double.MAX_VALUE : distTo(target);
         double want = cruise;
         if (target >= 0) {
             want = Math.min(want, Math.sqrt(2 * plan * Math.max(0, dist - 0.02)));
@@ -111,9 +111,17 @@ public final class TrainRun {
         Otto.running(level, this, cfg);
     }
 
+    /**
+     * How far ahead stop i is. The stop it's pulling in to stays its stop right to the end, even a
+     * hair past it, so it never gives up on a stop in the last block and runs on.
+     */
+    private double distTo(int i) {
+        double d = line.route.ahead(s, line.frontAt(line.stops.get(i)));
+        return i == target && d > line.route.length() - 8 ? 0 : d;
+    }
+
     /** The stop to head for: the nearest call ahead if anyone's called, otherwise the next stop. */
     private void pickTarget() {
-        Route route = line.route;
         int best = -1;
         double bestD = Double.MAX_VALUE;
         boolean calls = !line.calls.isEmpty();
@@ -121,8 +129,9 @@ public final class TrainRun {
             if (calls && !line.calls.contains(i)) {
                 continue;
             }
-            double d = route.ahead(s, line.frontAt(line.stops.get(i)));
-            if (d > 0.5 && d < bestD) {
+            double d = distTo(i);
+            // a stop it's only just left (or is standing at) isn't one to head for; the one it's coming in to is
+            if ((d > 0.5 || i == target) && d < bestD) {
                 bestD = d;
                 best = i;
             }
