@@ -1188,7 +1188,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 8;
+    private static final int DEFAULTS = 9;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1283,6 +1283,18 @@ public final class ZcConfig {
             c.spawning.enabled = false;
             if (c.zombies.doorHits == 12) {
                 c.zombies.doorHits = 120;
+            }
+        }
+        if (c.defaultsVersion < 9) {
+            // 2026-10-27 (Josiah): trains a bit slower, and OTTO talks more often between stops
+            if (c.trains.railSpeed == 13) {
+                c.trains.railSpeed = 10;
+            }
+            if (c.trains.subwaySpeed == 11) {
+                c.trains.subwaySpeed = 9;
+            }
+            if (c.trains.ottoChatter == 75) {
+                c.trains.ottoChatter = 45;
             }
         }
         c.defaultsVersion = DEFAULTS;
