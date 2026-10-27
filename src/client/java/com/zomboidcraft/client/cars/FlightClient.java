@@ -111,6 +111,12 @@ public final class FlightClient {
 
     /** The pilot's controls this tick. */
     private static Flight.Controls controls(CarProp car) {
+        Flight.Controls c = input(car);
+        AirControls.input(car, c);
+        return c;
+    }
+
+    private static Flight.Controls input(CarProp car) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.gui.screen() != null) {
