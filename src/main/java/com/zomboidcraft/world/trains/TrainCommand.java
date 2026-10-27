@@ -50,13 +50,10 @@ public final class TrainCommand {
 
     private static int test(CommandContext<CommandSourceStack> ctx, Line.Kind kind) {
         CommandSourceStack src = ctx.getSource();
-        if (!(src.getEntity() instanceof ServerPlayer player)) {
-            src.sendFailure(Component.literal("Run it as a player"));
-            return 0;
-        }
+        ServerPlayer player = src.getEntity() instanceof ServerPlayer p ? p : null;
         ServerLevel level = src.getLevel();
         // along the way you face (squared up to x or z), the near straight beside you with its platform
-        float yaw = player.getYRot();
+        float yaw = player != null ? player.getYRot() : 0;
         double fx = -Math.sin(Math.toRadians(yaw)), fz = Math.cos(Math.toRadians(yaw));
         int dx = 0, dz = 0;
         if (Math.abs(fx) > Math.abs(fz)) {
@@ -66,7 +63,7 @@ public final class TrainCommand {
         }
         int px = -dz, pz = dx;       // across, to your right
         int length = 160, width = 100;
-        BlockPos feet = player.blockPosition();
+        BlockPos feet = player != null ? player.blockPosition() : BlockPos.containing(src.getPosition());
         int y = feet.getY();
         // the near straight's centreline runs on a block edge 5 blocks to your left; the loop lies beyond it
         int ox = feet.getX() - dx * length / 2 - px * 5, oz = feet.getZ() - dz * length / 2 - pz * 5;
@@ -89,7 +86,9 @@ public final class TrainCommand {
         platform(level, ox + dx * length / 2, oz + dz * length / 2, dx, dz, px, pz, half, y, 1);
         platform(level, ox + dx * length / 2 - px * width, oz + dz * length / 2 - pz * width, dx, dz, px, pz, half, y, -1);
         // up onto the platform (it's a block above the ground you stood on)
-        player.teleportTo(level, player.getX(), y + 1.05, player.getZ(), java.util.Set.of(), player.getYRot(), player.getXRot(), false);
+        if (player != null) {
+            player.teleportTo(level, player.getX(), y + 1.05, player.getZ(), java.util.Set.of(), player.getYRot(), player.getXRot(), false);
+        }
         // the train comes in to your stop
         TrainRun run = line.trains.get(0);
         run.s = line.route.wrapS(line.frontAt(line.stops.get(0)) - 200);
