@@ -48,7 +48,7 @@ public final class WorldEvents {
     public static final SoundEvent EXPLOSION_FAR = register("world.explosion.far", 640f);
     /** Josiah's whole flyby recordings (tools/audio/build_flyby_sounds.py), one event each so everyone hears the same. */
     public static final SoundEvent[] FLYBY_JET = {register("world.flyby.jet.1", 800f), register("world.flyby.jet.2", 800f),
-            register("world.flyby.jet.3", 800f)};
+            register("world.flyby.jet.3", 800f), register("world.flyby.jet.4", 800f), register("world.flyby.jet.5", 800f)};
     public static final SoundEvent[] FLYBY_HELI = {register("world.flyby.heli.1", 800f)};
 
     /**
@@ -227,7 +227,8 @@ public final class WorldEvents {
      */
     private static int sound(Kind kind, RandomSource random) {
         if (kind == Kind.JET) {
-            return random.nextInt(10) < 6 ? 1 : 2 + random.nextInt(FLYBY_JET.length - 1);    // Josiah: the F/A-18 pass most often
+            // Josiah: the two F-16 passes most often, then the F/A-18, F-22 and MiG-15
+            return random.nextInt(10) < 7 ? 1 + random.nextInt(2) : 3 + random.nextInt(FLYBY_JET.length - 2);
         }
         return 1 + random.nextInt(FLYBY_HELI.length);
     }
