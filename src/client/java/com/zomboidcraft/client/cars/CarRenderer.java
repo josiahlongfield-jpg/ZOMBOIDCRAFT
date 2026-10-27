@@ -132,8 +132,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         float[] cabin = glow;
         java.util.BitSet panel = lamps != null && state.dash && state.lod == 0 ? lamps.panel() : null;
         CarModels.Model model = CarModels.get(state.model);
-        java.util.BitSet steering = state.lod == 0 ? CarSteering.of(car.mesh(), model) : null;
-        Turn steer = steering == null || state.wheelTurn == 0 ? null : steer(model.steering, state.wheelTurn);
+        // a car's steering wheel turns with the steering; an aircraft's own stick with the pilot's hand
+        java.util.BitSet steering = state.lod != 0 ? null : state.air
+                ? state.liveCockpit == null ? null : AirControls.meshStick(car.mesh(), state.model)
+                : CarSteering.of(car.mesh(), model);
+        Turn steer = steering == null ? null : state.air ? AirControls.meshTurn(state.liveCockpit, state.model)
+                : state.wheelTurn == 0 ? null : steer(model.steering, state.wheelTurn);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
             each(car, lids, wheels, rotors, (mesh, turn) -> {
                 if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null)) {
@@ -198,6 +202,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
         if (state.arms != CarHands.NONE && state.driverEye != null && model != null && model.steering != null) {
             CarArms.draw(poseStack, collector, light, state.driverEye, model.steering, state.wheelTurn, state.arms);
+        }
+        if (state.liveCockpit != null && state.lod == 0) {
+            // stick and throttle, and the pilot's hands on them
+            AirControls.draw(state.liveCockpit, state.model, CockpitDisplays.eye(state.model),
+                    state.inside && Minecraft.getInstance().player != null && state.liveCockpit.seatOf(Minecraft.getInstance().player) == 0, poseStack, collector, light);
         }
         poseStack.popPose();
     }
