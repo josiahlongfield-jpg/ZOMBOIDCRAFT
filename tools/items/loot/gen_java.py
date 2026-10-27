@@ -28,6 +28,10 @@ TABS = {
     'Junk & scrap': 'materials',
 }
 RAR = {'C': 'COMMON', 'S': 'SCARCE', 'R': 'RARE', 'P': 'PRIZED', 'G': 'GRAIL'}
+# categories in wave 2 (tools, materials, electronics, light, camping, car, kitchen kit); waves up to LIVE are in the game
+WAVE2 = ('Kitchen & cooking', 'Hand tools', 'Building & materials', 'Electrical & electronics', 'Light & fire',
+         'Outdoors, camping & farm', 'Vehicle & fuel')
+LIVE = 2
 # the leftovers food needs, built in wave 1 although they're junk-wave rows
 EXTRA_WAVE1 = {'empty_soda_can', 'empty_jar', 'can_opener'}
 EXTRA_ROWS = [
@@ -46,7 +50,8 @@ def stack(kg):
 def rows():
     out = roster.parse() + EXTRA_ROWS
     for r in out:
-        r['wave1'] = (r['cat'] in wave1.WAVE1 or r['id'] in EXTRA_WAVE1) and not r['exists']
+        r['wave'] = 1 if (r['cat'] in wave1.WAVE1 or r['id'] in EXTRA_WAVE1) else 2 if r['cat'] in WAVE2 else 3
+        r['live'] = r['wave'] <= LIVE and not r['exists']
     return out
 
 
@@ -61,7 +66,7 @@ def java_row(r):
         food = (f'new Food({f["hunger"]}, {f["sat"]}f, {f["thirst"]}f, {f["fresh"]}f, {f["rot"]}f, {bits}, '
                 f'{json.dumps(left) if left else "null"}, {wave1.ALCOHOL.get(r["id"], 0)})')
     return (f'        new LootSpec("{r["id"]}", "{TABS[r["cat"]]}", Rarity.{RAR[rar]}, {val}, {float(r["kg"])}, '
-            f'{stack(r["kg"])}, {"true" if r["wave1"] else "false"}, {food}),')
+            f'{stack(r["kg"])}, {"true" if r["live"] else "false"}, {food}),')
 
 
 def main():
@@ -87,7 +92,7 @@ public final class LootSpecs {{
     lang_path = RES / 'assets/zomboidcraft/lang/en_us.json'
     lang = json.loads(lang_path.read_text())
     for r in rs:
-        if r['wave1']:
+        if r['live']:
             lang[f'item.{NS}.{r["id"]}'] = r['name']
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
     tags = {}
@@ -97,10 +102,10 @@ public final class LootSpecs {{
         p = RES / f'data/zomboidcraft/tags/item/category/{tab}.json'
         p.parent.mkdir(parents=True, exist_ok=True)
         # only items that exist in the game go in a tag (a missing id fails the tag); later waves add theirs
-        live = [i for i, r in zip(ids, [x for x in rs if TABS[x['cat']] == tab]) if r['wave1'] or r['exists']]
+        live = [i for i, r in zip(ids, [x for x in rs if TABS[x['cat']] == tab]) if r['live'] or r['exists']]
         # optional entries: an item another thread owns may not be in this build yet
         p.write_text(json.dumps({'replace': False, 'values': [{'id': i, 'required': False} for i in live]}, indent=2) + '\n')
-    print(f'{len(rs)} specs, {sum(r["wave1"] for r in rs)} registered in wave 1')
+    print(f'{len(rs)} specs, {sum(r["live"] for r in rs)} registered (waves 1-{LIVE})')
 
 
 if __name__ == '__main__':

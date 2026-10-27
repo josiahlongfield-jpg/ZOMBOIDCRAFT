@@ -54,41 +54,6 @@
           ]
         },
         {
-          "type": "minecraft:item",
-          "name": "minecraft:bowl",
-          "weight": 8
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:string",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:stick",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
           "type": "minecraft:empty",
           "weight": 56
         },
@@ -110,7 +75,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rag",
-          "weight": 4,
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:electronics_scrap",
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -125,7 +105,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:empty_soda_can",
-          "weight": 12,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,7 +120,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:empty_jar",
-          "weight": 8,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",

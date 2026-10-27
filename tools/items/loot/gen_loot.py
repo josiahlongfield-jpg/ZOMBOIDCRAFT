@@ -31,6 +31,7 @@ from headgear import display_for  # noqa: E402
 import art as A  # noqa: E402
 import shapes as sh  # noqa: E402
 import gen_java  # noqa: E402
+import wave2  # noqa: E402
 
 NS = 'zomboidcraft'
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
@@ -319,6 +320,13 @@ DEF_LOOK = {
     'stem': A.flat('#5a4326'), 'leaf': A.skin('#4e7a2f'), 'stick': A.flat('#b08a5a', 0.1),
     'bristle': A.flat('#c8a050', 0.15), 'blade': A.chrome, 'food': A.meat(), 'cloth': A.fabric('#e8e3d8'),
     'icing': A.flat('#f2e8e0'), 'candle': A.flat('#e07a9a'),
+    # wave 2 parts
+    'wood': lambda f: P.wood(f), 'grip': A.plastic('#1e1f20'), 'red': A.flat('#a8281f'), 'lens': A.flat('#f0ecd0'),
+    'dark': A.plastic('#1a1a1a'), 'rubber': lambda f: P.rubber(f), 'keys': A.plastic('#5a5a5a'),
+    'grille': A.plastic('#1e1f20'), 'frame': A.plastic('#2a2a2a'), 'board': A.flat('#2f6a3a'),
+    'wax': A.flat('#efe6d0', 0.04), 'dial': A.flat('#efe6d0'), 'wire': A.steel, 'leather': lambda f: P.leather(f),
+    'stone': A.flat('#8a8a84', 0.12), 'wicker': A.flat('#a8804a', 0.15), 'white': A.flat('#efeae0'),
+    'head': A.flat('#2f6a3e'), 'bill': A.flat('#d8a020'), 'cardboard': A.cardboard,
 }
 
 
@@ -622,6 +630,7 @@ ITEMS = {
     'empty_jar': it(S(sh.jar, d=3.0, h=4.2, label=0), tint='#d8e4e0', cap='#9a9a92'),
     'can_opener': it(can_opener, handle=A.plastic('#a8281f'), metal=A.steel),
 }
+ITEMS.update(wave2.table(it))
 
 
 # ================================================================== output
@@ -681,7 +690,10 @@ def sheets(names):
 def tab_of(rows):
     """Sheet name per item: the roster category it's in, shortened."""
     short = {'Canned & dry food': 'dry', 'Fresh, fridge & freezer': 'fresh', 'Snacks & sweets': 'snacks',
-             'Drinks': 'drinks', 'Medical': 'medical', 'Hygiene & household': 'hygiene'}
+             'Drinks': 'drinks', 'Medical': 'medical', 'Hygiene & household': 'hygiene',
+             'Kitchen & cooking': 'kitchen', 'Hand tools': 'tools', 'Building & materials': 'materials',
+             'Electrical & electronics': 'electrical', 'Light & fire': 'light', 'Outdoors, camping & farm': 'camping',
+             'Vehicle & fuel': 'car'}
     return {r['id']: short.get(r['cat'], 'misc') for r in rows}
 
 
@@ -690,7 +702,7 @@ def main():
     ap.add_argument('--only', default='.')
     ap.add_argument('--out', default=None)
     a = ap.parse_args()
-    rows = [r for r in gen_java.rows() if r['wave1']]
+    rows = [r for r in gen_java.rows() if r['live']]
     missing = [r['id'] for r in rows if r['id'] not in ITEMS]
     if missing:
         raise SystemExit(f'no model for: {missing}')

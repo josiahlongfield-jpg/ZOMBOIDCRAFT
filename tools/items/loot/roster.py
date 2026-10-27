@@ -355,10 +355,10 @@ empty_sandbag* | Empty Sandbag | C | 1 | 0.2 | mil.3 build police fire
 tarp* | Tarp | C | 3 | 1.2 | garage hard camp build farm
 plastic_sheeting | Roll of Plastic Sheeting | C | 2 | 2.0 | hard build
 glass_pane | Pane of Glass | S | 3 | 4.0 | hard build
-barbed_wire | Roll of Barbed Wire | S | 6 | 8.0 | farm.3 mil
-fence_post | Fence Post | C | 1 | 4.0 | farm hard
+barbed_wire_roll | Roll of Barbed Wire | S | 6 | 8.0 | farm.3 mil
+fence_posts | Fence Post | C | 1 | 4.0 | farm hard
 cinder_block | Cinder Block | C | 1 | 16.0 | build farm
-propane_tank | Propane Tank | S | 10 | 15.0 | garage.2 hard camp farm diner
+propane_cylinder | Propane Cylinder | S | 10 | 15.0 | garage.2 hard camp farm diner
 gas_can | Gas Can | S | 6 | 1.2 | garage.3 trunk farm hard auto
 """
 

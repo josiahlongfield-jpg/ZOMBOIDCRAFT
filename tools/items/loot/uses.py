@@ -230,10 +230,10 @@ USES = {
     'tarp': 'Rain collector, roof patch, shelter.',
     'plastic_sheeting': 'Seals windows; rain collector.',
     'glass_pane': 'Replaces a broken window.',
-    'barbed_wire': 'Fences that slow and hurt zombies.',
-    'fence_post': 'Builds fences.',
+    'barbed_wire_roll': 'Fences that slow and hurt zombies.',
+    'fence_posts': 'Builds fences.',
     'cinder_block': 'Masonry walls; very strong barricades.',
-    'propane_tank': 'Fuels the propane torch and barbecues; explodes if shot.',
+    'propane_cylinder': 'Fuels the propane torch and barbecues; explodes if shot.',
     'gas_can': 'Carries petrol for cars and generators; molotov fuel.',
     # ------------------------------------------------------------ electrical & electronics
     'aa_battery': 'Powers flashlights, radios, NVGs.',

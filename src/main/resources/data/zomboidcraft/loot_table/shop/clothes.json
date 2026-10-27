@@ -115,21 +115,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:string",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:leather",
           "weight": 3,
           "functions": [
@@ -166,6 +151,21 @@
         {
           "type": "minecraft:empty",
           "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:thread_spool",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         }
       ]
     }

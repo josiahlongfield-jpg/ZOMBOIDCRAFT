@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "weight": 14,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -26,7 +26,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:book",
-          "weight": 5,
+          "weight": 10,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -41,17 +41,17 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:writable_book",
-          "weight": 3
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:map",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:ink_sac",
-          "weight": 3,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -66,36 +66,36 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:compass",
-          "weight": 1
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:digital_watch",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bandage",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:empty",
-          "weight": 12
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:street_map",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:road_atlas",
-          "weight": 1
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:two_way_radio",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -204,6 +204,61 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:kettle",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:mug",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tupperware",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:paper_towels",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:coffee_pot",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:adhesive_bandages",
           "weight": 4,
           "functions": [
@@ -274,12 +329,117 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:utility_knife",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:staple_gun",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:superglue",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:extension_cord",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:calculator",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wall_phone",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:answering_machine",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pager",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:circuit_board",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:penlight",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:aged_whiskey",
           "weight": 1
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:portable_defib",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:brick_phone",
           "weight": 1
         }
       ]

@@ -120,11 +120,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:lead",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:baseball_bat",
           "weight": 2
         },
@@ -591,6 +586,96 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:alarm_clock",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cassette_player",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:headphones",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:vcr",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:handheld_game",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:game_cartridge",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:instant_camera",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:film_roll",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:electronics_scrap",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:circuit_board",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:brass_lighter",
+          "weight": 4
         }
       ]
     },
@@ -637,6 +722,41 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:smg",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:lockpick_set",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_scanner",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:boombox",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:film_camera",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:camcorder",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:portable_tv",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:brick_phone",
+          "weight": 2
         }
       ]
     }
