@@ -39,8 +39,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         int[] inside = new int[0];
         float doors;
         int side;
-        boolean talking;
-        float headYaw;
+        boolean talking, eyesOff;
+        float headYaw, jaw;
         long seed;
     }
 
@@ -103,9 +103,25 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         state.doors = d * d * (3 - 2 * d);
         state.side = train.doorSide();
         state.talking = train.talking < 50;
-        // OTTO glances about; when he talks he looks straight down the train
-        double tt = (time + partialTick) / 20.0 + train.getId();
-        state.headYaw = state.talking ? (float) Math.sin(tt * 9) * 4 : (float) (Math.sin(tt * 0.45) * 50 + Math.sin(tt * 1.7) * 8);
+        // OTTO holds a dead stare down the train, and every few seconds snaps his head aside and back;
+        // talking, his jaw works and his head shakes a little. Now and then his eyes cut out.
+        double tt = (time + partialTick) / 20.0;
+        long beat = (long) Math.floor(tt / 2.5) + train.getId() * 7L;
+        long h = beat * 0x9E3779B97F4A7C15L;
+        float[] looks = {0, 0, 0, -38, 32, -14, 0, 21};
+        float target = looks[(int) ((h >>> 33) & 7)];
+        double into = tt / 2.5 - Math.floor(tt / 2.5);
+        float snap = (float) Math.min(1, into * 2.5 / 0.12);      // a twitch: there in about a tenth of a second
+        float prev = looks[(int) ((((beat - 1) * 0x9E3779B97F4A7C15L) >>> 33) & 7)];
+        state.headYaw = prev + (target - prev) * snap;
+        if (state.talking) {
+            state.headYaw = state.headYaw * 0.3f + (float) Math.sin(tt * 23) * 3;
+            state.jaw = (float) (Math.abs(Math.sin(tt * 13)) * 0.045 + Math.abs(Math.sin(tt * 31)) * 0.015);
+        } else {
+            state.jaw = 0;
+        }
+        long e = (time / 2 + train.getId() * 13L) * 0x632BE59BD9B4E019L;
+        state.eyesOff = ((e >>> 41) & 0xFF) < 5;
         state.seed = time;
     }
 
@@ -133,11 +149,11 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
             if (q.glass != glass) {
                 continue;
             }
-            if (q.part == TrainMesh.PART_TALK && !state.talking) {
+            if (q.part == TrainMesh.PART_EYES && state.eyesOff) {
                 continue;
             }
-            float ox = 0, oz = 0;
-            boolean head = q.part == TrainMesh.PART_HEAD || q.part == TrainMesh.PART_TALK;
+            float ox = 0, oz = 0, oy = q.part == TrainMesh.PART_JAW ? -state.jaw : 0;
+            boolean head = q.part == TrainMesh.PART_HEAD || q.part == TrainMesh.PART_JAW || q.part == TrainMesh.PART_EYES;
             if (q.part >= TrainMesh.PART_DOOR) {
                 TrainMesh.Leaf leaf = mesh.leaves.get(q.part - TrainMesh.PART_DOOR);
                 if (state.side == 0 || state.side == leaf.side()) {
@@ -153,7 +169,7 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
             }
             for (int k = 0; k < 4; k++) {
                 v[0] = q.p[k * 3] + ox;
-                v[1] = q.p[k * 3 + 1];
+                v[1] = q.p[k * 3 + 1] + oy;
                 v[2] = q.p[k * 3 + 2] + oz;
                 if (head && mesh.headPivot != null) {
                     turn(v, headCos, headSin, mesh.headPivot[0], mesh.headPivot[2]);

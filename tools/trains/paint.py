@@ -9,6 +9,7 @@ graffiti, in the same worn-down palette as the rest of the world.
 import math
 import os
 import random
+import sys
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -437,6 +438,11 @@ img = Image.new('RGBA', (T, T), (255, 246, 210, 255))
 put(img, 15, 5)
 
 os.makedirs(os.path.join(ROOT, 'entity', 'train'), exist_ok=True)
+# OTTO lives in the lower half of the atlas (tools/trains/otto.py paints him and writes his model)
+sys.path.insert(0, os.path.dirname(__file__))
+import otto  # noqa: E402
+otto.paint_into(atlas)
+otto.write_java()
 atlas.save(os.path.join(ROOT, 'entity', 'train', 'atlas.png'))
 
 # ---------------------------------------------------------------- the call button (block texture)

@@ -56,8 +56,8 @@ final class TrainMesh {
 
     /** How a quad is lit: by the world outside, by the car's own lights inside, or glowing itself. */
     static final byte OUTSIDE = 0, INSIDE = 1, GLOW = 2;
-    /** What moves it: nothing, a door leaf (PART_DOOR + leaf number), OTTO's head, OTTO's face when he talks. */
-    static final int STATIC = 0, PART_HEAD = 1, PART_TALK = 2, PART_DOOR = 100;
+    /** What moves it: nothing, a door leaf (PART_DOOR + leaf number), OTTO's head, his jaw, his eyes. */
+    static final int STATIC = 0, PART_HEAD = 1, PART_JAW = 3, PART_EYES = 4, PART_DOOR = 100;
 
     static final class Quad {
         final float[] p = new float[12];
@@ -74,8 +74,8 @@ final class TrainMesh {
 
     final List<Quad> quads = new ArrayList<>();
     final List<Leaf> leaves = new ArrayList<>();
-    /** OTTO's head pivot, in the car's frame (front car only). */
-    float[] headPivot;
+    /** OTTO's head pivot and jaw hinge, in the car's frame (front car only). */
+    float[] headPivot, jawPivot;
 
     private int seed;
     private int part = STATIC;
@@ -352,33 +352,34 @@ final class TrainMesh {
         box(-w + t, 0, c, -0.7, ceil, c + t, null, null, null, null, WALL_IN, WALL_IN);
         box(0.7, 0, c, w - t, ceil, c + t, null, null, null, null, WALL_IN, WALL_IN);
         box(-0.7, 0, c, 0.7, 1.1, c + t, null, null, null, null, WARNING, WALL_IN);
-        box(-0.7, 2.3, c, 0.7, ceil, c + t, null, null, null, null, HAZARD, WALL_IN);
-        glassZ(c + t / 2, -0.7, 0.7, 1.1, 2.3);
+        box(-0.7, 2.75, c, 0.7, ceil, c + t, null, null, null, null, HAZARD, WALL_IN);
+        glassZ(c + t / 2, -0.7, 0.7, 1.1, 2.75);
         // the console under the windscreen, and the cab floor
         box(-w + t, 0, TrainCar.HALF - 0.9, w - t, 1.0, TrainCar.HALF - t, OTTO_DARK, OTTO_DARK, null, OTTO_DARK, OTTO_DARK, OTTO_DARK);
         light = GLOW;
         box(-1.2, 1.0, TrainCar.HALF - 0.85, 1.2, 1.02, TrainCar.HALF - 0.3, null, null, null, OTTO_CHEST, null, null);
         light = INSIDE;
-        // OTTO: bolted to a pedestal, turned to face back down the train
+        // OTTO (tools/trains/otto.py): bolted to the floor at the controls, head wrenched round to the riders
         double ox = 0, oz = c + 1.0;
-        box(ox - 0.2, 0, oz - 0.2, ox + 0.2, 0.75, oz + 0.2, OTTO_DARK, OTTO_DARK, null, null, OTTO_DARK, OTTO_DARK);
-        box(ox - 0.38, 0.75, oz - 0.24, ox + 0.38, 1.6, oz + 0.24, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_CHEST, OTTO_SHELL);
-        // arms reaching back to the console
-        box(ox - 0.55, 0.9, oz - 0.1, ox - 0.38, 1.5, oz + 0.1, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);
-        box(ox + 0.38, 0.9, oz - 0.1, ox + 0.55, 1.5, oz + 0.1, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);
-        box(ox - 0.55, 0.9, oz + 0.1, ox - 0.4, 1.05, oz + 0.75, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);
-        box(ox + 0.4, 0.9, oz + 0.1, ox + 0.55, 1.05, oz + 0.75, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);
-        box(ox - 0.08, 1.6, oz - 0.08, ox + 0.08, 1.72, oz + 0.08, OTTO_DARK, OTTO_DARK, null, null, OTTO_DARK, OTTO_DARK);
-        // the head, which turns: a box with his visor face toward the riders, and an antenna
-        headPivot = new float[] {(float) ox, 2.0f, (float) oz};
-        part = PART_HEAD;
-        box(ox - 0.3, 1.72, oz - 0.27, ox + 0.3, 2.28, oz + 0.27, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, null, OTTO_SHELL);
-        box(ox - 0.02, 2.28, oz - 0.02, ox + 0.02, 2.6, oz + 0.02, OTTO_DARK, OTTO_DARK, null, OTTO_DARK, OTTO_DARK, OTTO_DARK);
-        light = GLOW;
-        box(ox - 0.26, 1.76, oz - 0.28, ox + 0.26, 2.24, oz - 0.27, null, null, null, null, OTTO_FACE, null);
-        box(ox - 0.04, 2.6, oz - 0.04, ox + 0.04, 2.66, oz + 0.04, LAMP, LAMP, null, LAMP, LAMP, LAMP);
-        part = PART_TALK;
-        box(ox - 0.26, 1.76, oz - 0.285, ox + 0.26, 2.24, oz - 0.281, null, null, null, null, OTTO_TALK, null);
+        float[] q = OttoModel.QUADS;
+        for (int i = 0; i + OttoModel.STRIDE <= q.length; i += OttoModel.STRIDE) {
+            Quad quad = new Quad();
+            for (int k = 0; k < 4; k++) {
+                quad.p[k * 3] = (float) (q[i + k * 3] + ox);
+                quad.p[k * 3 + 1] = q[i + k * 3 + 1];
+                quad.p[k * 3 + 2] = (float) (q[i + k * 3 + 2] + oz);
+                quad.uv[k * 2] = q[i + 12 + k * 2];
+                quad.uv[k * 2 + 1] = q[i + 12 + k * 2 + 1];
+            }
+            quad.nx = q[i + 20];
+            quad.ny = q[i + 21];
+            quad.nz = q[i + 22];
+            quad.part = (int) q[i + 23];
+            quad.light = (byte) q[i + 24];
+            quads.add(quad);
+        }
+        headPivot = new float[] {(float) ox + OttoModel.HEAD_PIVOT[0], OttoModel.HEAD_PIVOT[1], (float) oz + OttoModel.HEAD_PIVOT[2]};
+        jawPivot = new float[] {(float) ox + OttoModel.JAW_PIVOT[0], OttoModel.JAW_PIVOT[1], (float) oz + OttoModel.JAW_PIVOT[2]};
         part = STATIC;
         light = OUTSIDE;
     }
