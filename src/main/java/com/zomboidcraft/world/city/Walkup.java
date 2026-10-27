@@ -251,39 +251,118 @@ public final class Walkup {
     }
 
     /**
-     * Grated landings with railings at each floor, joined by steel stairs that all climb east along
-     * the outer edge, a floor over each other so each has a whole floor of headroom under the next
-     * (from a landing you walk back along it to the next flight's foot at its west end), down to a
-     * drop ladder that comes up through the first landing. The landings are walkway grating, its
-     * deck at the top of the block, so each is level with the floor inside its window and a steel
+     * Grated landings with railings at each floor, joined by steel stairs laid so that no flight
+     * runs under another closer than two floors: four clear blocks over every tread, so a jump up
+     * them never bumps a head. On a wide enough front ({@link #longEscape}) the landings run its
+     * whole length along the wall and each flight climbs two floors along the outer lane; on a
+     * narrow one ({@link #switchback}) the flights switch back and a landing is just its end. A
+     * drop ladder comes up through the first landing. The landings are walkway grating, its deck
+     * at the top of the block, so each is level with the floor inside its window and a steel
      * flight's top tread steps up onto it (a pixel-thin grate down at the block's foot left the
      * first step up off it a block and a half).
      */
     private void fireEscape(int roofY) {
+        if (w >= 2 * FLOOR + 5) {
+            longEscape();
+        } else {
+            switchback();
+        }
+    }
+
+    /**
+     * Landings the whole length (x0 .. x0 + 9) in the lane along the wall, a window opening onto
+     * each; in the outer lane one flight up from each odd floor's landing climbs east two floors,
+     * from its foot at the west end, past the next floor's landing (stepping off onto it or on up)
+     * to the one after's, then you walk back west along it to the next flight's foot.
+     */
+    private void longEscape() {
+        int x0 = 1 + rng.nextInt(w - 2 * FLOOR - 4);
+        int xe = x0 + 2 * FLOOR + 1;
+        for (int k = 1; k < floors; k++) {
+            int y = k * FLOOR;
+            for (int x = x0; x <= xe; x++) {
+                p.set(x, y, -1, "bunk_walkway");
+            }
+            // the outer lane only at its ends: the flights' feet and the drop ladder's head
+            p.set(x0, y, -2, "bunk_walkway");
+            p.set(xe, y, -2, "bunk_walkway");
+            if (!(k % 2 == 1 && k + 1 < floors)) {
+                p.set(x0, y + 1, -2, "railing[facing=south]");
+            }
+            p.set(xe, y + 1, -2, "railing[facing=south]");
+            for (int z = -2; z <= -1; z++) {
+                p.set(x0 - 1, y + 1, z, "railing[facing=east]");
+                p.set(xe + 1, y + 1, z, "railing[facing=west]");
+            }
+            p.set(x0 + 1, y + 1, 0, "air");
+            p.set(x0 + 1, y + 2, 0, "air");
+            // the flight up to here: the first half of one from the floor below an odd one, the
+            // second half of one from an even floor's
+            if (k > 1) {
+                int from = k % 2 == 0 ? x0 : x0 + FLOOR;
+                for (int s = 1; s <= FLOOR; s++) {
+                    p.set(from + s, y - FLOOR + s, -2, "steel_stairs[facing=east]");
+                }
+            }
+        }
+        // the drop ladder from the sidewalk up through the first landing, its rail open over it
+        p.fill(xe, 1, -2, xe, FLOOR, -2, "ladder[facing=south]");
+        p.set(xe, FLOOR + 1, -2, "air");
+    }
+
+    /**
+     * From the odd floors' landings the flights climb east along the outer lane, from the even
+     * floors' west along the inner one. Above the first floor a landing is just its end, where one
+     * flight arrives and the next leaves, the window there opened onto it; the first floor's runs
+     * the whole length, from the drop ladder that comes up through its east end to the foot of
+     * the first flight.
+     */
+    private void switchback() {
         int x0 = 1 + rng.nextInt(Math.max(1, w - 8));
         int x1 = x0 + FLOOR + 1;
         for (int k = 1; k < floors; k++) {
             int y = k * FLOOR;
+            boolean up = k + 1 < floors;
+            // the end this floor's landing is: odd floors' at the west, where the flight from the
+            // floor below arrives and the next leaves eastward, even floors' at the east
+            int e = k % 2 == 1 ? x0 : x1;
             for (int x = x0; x <= x1; x++) {
-                p.set(x, y, -1, "bunk_walkway");
-                p.set(x, y, -2, "bunk_walkway");
-                p.set(x, y + 1, -2, "railing[facing=south]");
+                if (k == 1 || x == e) {
+                    p.set(x, y, -1, "bunk_walkway");
+                    p.set(x, y, -2, "bunk_walkway");
+                    // the outer rail, open at the foot of the flight up the outer lane
+                    if (!(up && k % 2 == 1 && x == x0)) {
+                        p.set(x, y + 1, -2, "railing[facing=south]");
+                    }
+                }
             }
-            // the rail stops short of the foot of the flight up from here
-            if (k + 1 < floors) {
-                p.set(x0, y + 1, -2, "air");
+            // the rail round the end (both ends of the first floor's)
+            for (int z = -2; z <= -1; z++) {
+                if (k == 1 || e == x0) {
+                    p.set(x0 - 1, y + 1, z, "railing[facing=east]");
+                }
+                if (k == 1 || e == x1) {
+                    p.set(x1 + 1, y + 1, z, "railing[facing=west]");
+                }
             }
-            p.set(x0 - 1, y + 1, -1, "railing[facing=east]");
-            p.set(x0 - 1, y + 1, -2, "railing[facing=east]");
-            p.set(x1 + 1, y + 1, -1, "railing[facing=west]");
-            p.set(x1 + 1, y + 1, -2, "railing[facing=west]");
-            // a window opens onto each landing
-            p.set(x0 + 1, y + 1, 0, "air");
-            p.set(x0 + 1, y + 2, 0, "air");
+            // a window opens onto each landing, and in past what's behind it (bar a wall)
+            int wx = k == 1 ? x0 + 1 : e;
+            for (int yy = y + 1; yy <= y + 2; yy++) {
+                p.set(wx, yy, 0, "air");
+                String in = p.get(wx, yy, 1);
+                if (in != null && !in.contains("wall") && !in.contains("plaster")) {
+                    p.set(wx, yy, 1, "air");
+                }
+            }
             // the flight up from the landing below, its top tread in this landing's plane
             if (k > 1) {
+                boolean east = (k - 1) % 2 == 1;
                 for (int s = 1; s <= FLOOR; s++) {
-                    p.set(x0 + s, y - FLOOR + s, -2, "steel_stairs[facing=east]");
+                    if (east) {
+                        p.set(x0 + s, y - FLOOR + s, -2, "steel_stairs[facing=east]");
+                    } else {
+                        p.set(x1 - s, y - FLOOR + s, -1, "steel_stairs[facing=west]");
+                    }
                 }
             }
         }
