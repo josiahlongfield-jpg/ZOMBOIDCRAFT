@@ -23,13 +23,13 @@ public final class ZDetail {
     public static final int FULL = 0, MID = 1, LOW = 2, SIMPLE = 3;
 
     /** Squared distances to the camera within which levels 0 and 1 are drawn, this tick. */
-    private static double fullSq = 16 * 16, midSq = 40 * 40;
+    private static double fullSq = 16 * 16, midSq = 40 * 40, spriteSq = Double.MAX_VALUE;
     private static double[] dist = new double[256];
     /** How much the view is magnified (squared): 1 normally, the scope's power through one. */
     private static double zoomSq = 1;
 
     /** What was drawn since the last readout (main pass only): zombies at full, most and baked detail, and quads. */
-    private static final int[] drawn = new int[3];
+    private static final int[] drawn = new int[4];
     private static long quads;
     private static int readoutTicks;
 
@@ -70,15 +70,22 @@ public final class ZDetail {
                 // a second's worth, shared out over the frames drawn in it
                 double frames = Math.max(1, mc.getFps());
                 mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(String.format(
-                        "%d fps · zombies loaded %d · drawn full %d, most %d, baked %d · %,d pieces a frame",
+                        "%d fps · zombies loaded %d · drawn full %d, most %d, baked %d, pictures %d · %,d pieces a frame",
                         mc.getFps(), n, Math.round(drawn[0] / frames), Math.round(drawn[1] / frames),
-                        Math.round(drawn[2] / frames), Math.round(quads / frames))));
+                        Math.round(drawn[2] / frames), Math.round(drawn[3] / frames), Math.round(quads / frames))));
             }
             Arrays.fill(drawn, 0);
             quads = 0;
         }
         fullSq = Math.min(detail * detail, nth(n, perf.fullDetailZombies));
         midSq = Math.min(detail * detail * 6.25, nth(n, perf.midDetailZombies));
+        spriteSq = perf.spriteZombies ? Math.max(perf.spriteMinDistance * perf.spriteMinDistance, nth(n, perf.meshZombies))
+                : Double.MAX_VALUE;
+    }
+
+    /** Whether a zombie this far (squared) from the camera is drawn as a picture (ZSprites), in either pass. */
+    public static boolean sprite(double distanceSq) {
+        return distanceSq / zoomSq >= spriteSq;
     }
 
     /** Just past the k-th nearest: everything nearer is inside it. */
@@ -101,10 +108,10 @@ public final class ZDetail {
         return level;
     }
 
-    /** Counts one zombie drawn in the main pass (0 full, 1 most, 2 baked or less), for the stats readout. */
+    /** Counts one zombie drawn in the main pass (0 full, 1 most, 2 baked or less, 3 a picture), for the stats readout. */
     public static void drew(int level, int pieces) {
         if (!shadowPass()) {
-            drawn[Math.clamp(level, 0, 2)]++;
+            drawn[Math.clamp(level, 0, 3)]++;
             quads += pieces;
         }
     }

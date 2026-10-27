@@ -50,6 +50,9 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
             return;
         }
         int lod = ZDetail.level(state.distanceToCameraSq);
+        if (ZDetail.sprite(state.distanceToCameraSq) && sprite(poseStack, collector, light, state)) {
+            return;
+        }
         // counted here, not in ZBodyDraw, so the readout counts walking zombies and not corpses
         boolean baked = lod >= ZDetail.LOW && state.zlow != null;
         ZBodyMesh drawn = baked ? state.zlow : state.zbody;
@@ -59,6 +62,31 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         draw.draw(poseStack, collector, light, LivingEntityRenderer.getOverlayCoords(state, 0f), state.zbody,
                 state.zlow, state.zskin, state.zkit, state.zlowSkin, state.zeyes, state.zpose, state.cuts,
                 state.missingLimb, state.legless, state.variant, lod);
+    }
+
+    /**
+     * A far-off zombie as one picture (ZSprites), if it's whole and on its feet; false leaves it to the body.
+     */
+    private static boolean sprite(PoseStack poseStack, SubmitNodeCollector collector, int light, WalkerRenderState state) {
+        if (state.cuts != 0 || state.missingLimb != 0 || state.legless || state.crawler || state.deathTime > 0f
+                || state.zpose.lying || state.zpose.tilt != 0f) {
+            return false;
+        }
+        ZSprites.Sheet sheet = ZSprites.get(state.outfit, state.zlow, state.zlowSkin, state.zkit);
+        if (sheet == null) {
+            return false;
+        }
+        boolean moving = state.walkAnimationSpeed > 0.08f;
+        int frame = ZSprites.frame(moving, moving && state.isAggressive, state.walkAnimationPos, state.ageInTicks, state.variant);
+        int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
+        collector.submitCustomGeometry(poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(sheet.texture()),
+                (pose, out) -> {
+                    // the camera sits at the origin of the view: back through this pose it lands in the zombie's own space
+                    Vector3f cam = new Matrix4f(pose.pose()).invert().transformPosition(new Vector3f());
+                    ZSprites.card(sheet, frame, cam, pose, out, light, overlay);
+                });
+        ZDetail.drew(3, 1);
+        return true;
     }
 
     /**

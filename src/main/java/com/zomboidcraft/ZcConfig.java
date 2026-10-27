@@ -129,6 +129,13 @@ public final class ZcConfig {
          * every tick (they still hear and turn up the same). 0 turns it off.
          */
         public double idleThinkDistance = 32;
+        /**
+         * Zombies beyond the nearest meshZombies (and past spriteMinDistance) are drawn as a picture of their baked body
+         * turned to face you, one card instead of a few hundred pieces. Client side.
+         */
+        public boolean spriteZombies = true;
+        public int meshZombies = 40;
+        public double spriteMinDistance = 24;
         /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
         public boolean showStats = false;
     }
