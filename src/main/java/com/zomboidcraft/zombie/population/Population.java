@@ -98,6 +98,8 @@ public final class Population {
             QUEUE.clear();
             ZONES.clear();
             cap = -1;
+            islandPlaces = null;
+            islandCount = null;
             Census.clear();
         });
     }
@@ -173,11 +175,13 @@ public final class Population {
         if (!places.isEmpty()) {
             CountyGen gen = CountyChunkGenerator.gen(level.getSeed());
             for (int i = 0; i < places.size(); i++) {
-                Census.Count c = Census.get(gen, places.get(i), minY, maxY);
+                Place p = places.get(i);
+                boolean isle = county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2);
+                Census.Count c = isle ? island(county, gen, minY, maxY) : Census.get(gen, p, minY, maxY);
                 if (c == null) {
                     return false;
                 }
-                Budgets.Budget b = Budgets.of(places.get(i));
+                Budgets.Budget b = isle ? Budgets.ISLAND : Budgets.of(p);
                 double total = b.total() * cfg.density, in = c.indoor() < 1 ? 0 : total * b.indoors();
                 rin[i] = in == 0 ? 0 : in / c.indoor();
                 rout[i] = c.outdoor() < 1 ? 0 : (total - in) / c.outdoor();
@@ -324,6 +328,40 @@ public final class Population {
             net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p,
                     new CrowdPayload(baseX, baseZ, names, sx, sz, sy, so));
         }
+    }
+
+    // ---- Grayhaven island: one pool over every place on it
+
+    private static List<Place> islandPlaces;
+    private static Census.Count islandCount;
+
+    /** Every island place's floor space added up (null while any is still being counted). */
+    private static Census.Count island(County county, CountyGen gen, int minY, int maxY) {
+        if (islandCount != null) {
+            return islandCount;
+        }
+        if (islandPlaces == null) {
+            islandPlaces = county.allPlaces().stream()
+                    .filter(p -> county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2)).toList();
+        }
+        double in = 0, out = 0;
+        boolean all = true;
+        for (Place p : islandPlaces) {
+            Census.Count c = Census.get(gen, p, minY, maxY);   // asks for every one at once, so they're counted together
+            if (c == null) {
+                all = false;
+            } else {
+                in += c.indoor();
+                out += c.outdoor();
+            }
+        }
+        if (!all) {
+            return null;
+        }
+        islandCount = new Census.Count(in, out);
+        ZomboidCraft.LOGGER.info("Grayhaven island: {} places, {} indoor and {} outdoor spots for its {} dead",
+                islandPlaces.size(), (long) in, (long) out, Budgets.ISLAND.total());
+        return islandCount;
     }
 
     // ---- how many can be real
