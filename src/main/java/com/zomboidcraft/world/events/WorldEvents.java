@@ -48,7 +48,7 @@ public final class WorldEvents {
     public static final SoundEvent EXPLOSION_FAR = register("world.explosion.far", 640f);
     /** Josiah's whole flyby recordings (tools/audio/build_flyby_sounds.py), one event each so everyone hears the same. */
     public static final SoundEvent[] FLYBY_JET = {register("world.flyby.jet.1", 800f), register("world.flyby.jet.2", 800f),
-            register("world.flyby.jet.3", 800f)};
+            register("world.flyby.jet.3", 800f), register("world.flyby.jet.4", 800f), register("world.flyby.jet.5", 800f)};
     public static final SoundEvent[] FLYBY_HELI = {register("world.flyby.heli.1", 800f)};
 
     /**
@@ -110,6 +110,9 @@ public final class WorldEvents {
     /** A flyby's aircraft is only there while a player is within this many blocks of it (about the tracking range). */
     private static final double SHOW = 192;
     private static long next = -1;
+    /** When the siren last went off; it waits at least SIREN_GAP ticks (an hour) before it can again. */
+    private static long lastSiren = Long.MIN_VALUE / 2;
+    private static final long SIREN_GAP = 60 * 60 * 20;
 
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Event.TYPE, Event.CODEC);
@@ -133,6 +136,12 @@ public final class WorldEvents {
         if (cfg.worldEvents && now >= next && !level.players().isEmpty()) {
             next = now + gap(cfg, random);
             Kind kind = pick(random);
+            if (kind == Kind.SIREN && now - lastSiren < SIREN_GAP) {
+                kind = Kind.EXPLOSION;
+            }
+            if (kind == Kind.SIREN) {
+                lastSiren = now;
+            }
             start(level, kind, level.players().get(random.nextInt(level.players().size())));
         }
         for (var it = RUNNING.iterator(); it.hasNext(); ) {
@@ -161,7 +170,8 @@ public final class WorldEvents {
 
     private static Kind pick(RandomSource random) {
         int r = random.nextInt(100);
-        return r < 35 ? Kind.JET : r < 60 ? Kind.HELI : r < 80 ? Kind.EXPLOSION : Kind.SIREN;
+        // Josiah: the siren is rare (and an hour apart at least, see tick)
+        return r < 40 ? Kind.JET : r < 70 ? Kind.HELI : r < 94 ? Kind.EXPLOSION : Kind.SIREN;
     }
 
     /**
@@ -177,21 +187,30 @@ public final class WorldEvents {
         List<Event> wingmen = new ArrayList<>();
         if (kind == Kind.JET || kind == Kind.HELI) {
             boolean jet = kind == Kind.JET;
-            double speed = jet ? 110 + random.nextDouble() * 50 : 50 + random.nextDouble() * 20;
+            double speed = jet ? 75 + random.nextDouble() * 30 : 32 + random.nextDouble() * 12;   // jets 270-380 km/h, helicopters 115-160 (Josiah: slower)
             double reach = jet ? 1600 : 900;     // half the path: start and end well out of earshot
             double heading = random.nextDouble() * Math.PI * 2;
-            double side = (random.nextDouble() * 2 - 1) * (jet ? 180 : 120);
+            double side = (random.nextDouble() * 2 - 1) * (jet ? 90 : 120);   // Josiah 11:13: jets closer and lower, to show through the fog
             double dx = Math.cos(heading), dz = Math.sin(heading);
             // closest point to the player, then back along the line to the start
             double cx = p.x - dz * side, cz = p.z + dx * side;
-            double y = Math.min(level.getMaxY() - 8, ground + (jet ? 70 + random.nextDouble() * 60 : 35 + random.nextDouble() * 30));
+            double y = ground + (jet ? 35 + random.nextDouble() * 25 : 35 + random.nextDouble() * 30);
+            // ...but always over the tallest thing along the line near the player (towers downtown)
+            for (int k = -240; k <= 240; k += 12) {
+                y = Math.max(y, surface(level, cx + dx * k, cz + dz * k, 0) + 18);
+            }
+            y = Math.min(level.getMaxY() - 8, y);
             String model = jet ? JETS[random.nextInt(JETS.length)] : HELI;
             e = new Event(kind, cx - dx * reach, y, cz - dz * reach, dx * speed, 0, dz * speed, level.getGameTime(),
                     (int) (2 * reach / speed * 20), model, sound(kind, random));
-            // sometimes a few jets together: each further back and out to one side, a little higher, same type
-            int pack = jet && random.nextInt(3) == 0 ? 1 + random.nextInt(3) : 0;
+            // often a few together, same type, each 3 to 5 seconds behind the one before (Josiah: far enough
+            // back that every pass is its own Doppler sweep), a little out to one side and higher
+            // Josiah 11:37: 2 or 3 jets in a row most of the time, and a couple of helicopters together often too
+            int pack = random.nextInt(10) < (jet ? 7 : 6) ? (jet ? 1 + random.nextInt(2) : 1) : 0;
+            double back = 0;
             for (int i = 1; i <= pack; i++) {
-                double back = 28 * i, out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
+                back += speed * (3 + random.nextDouble() * 2);
+                double out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
                 wingmen.add(new Event(kind, e.x() - dx * back - dz * out, y + 4 * i, e.z() - dz * back + dx * out, e.vx(), 0, e.vz(),
                         e.start(), e.ticks() + (int) (back / speed * 20) + 1, model, sound(kind, random)));
             }
@@ -218,11 +237,16 @@ public final class WorldEvents {
         return e;
     }
 
-    /** A flyby's sound: one of the whole recordings most of the time, otherwise the far-off loop. */
+    /**
+     * A flyby's sound: one of the whole recordings, and nothing else (Josiah: one sound for each aircraft, so the
+     * far-off loop and the aircraft's own engines stay quiet for flybys).
+     */
     private static int sound(Kind kind, RandomSource random) {
-        int takes = kind == Kind.JET ? FLYBY_JET.length : FLYBY_HELI.length;
-        int pick = random.nextInt(takes + 1);
-        return pick == takes ? 0 : pick + 1;
+        if (kind == Kind.JET) {
+            // Josiah: the two F-16 passes most often, then the F/A-18, F-22 and MiG-15
+            return random.nextInt(10) < 7 ? 1 + random.nextInt(2) : 3 + random.nextInt(FLYBY_JET.length - 2);
+        }
+        return 1 + random.nextInt(FLYBY_HELI.length);
     }
 
     /** Ground height here if the chunk is loaded, otherwise the fallback. */

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_frp": "zomboidcraft:block/city/dn_frp",
+    "particle": "zomboidcraft:block/city/dn_frp"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_frp",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_frp",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_frp",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_frp",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_frp",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_frp",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

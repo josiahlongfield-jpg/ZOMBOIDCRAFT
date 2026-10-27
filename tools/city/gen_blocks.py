@@ -16,6 +16,7 @@ Shapes and models face north like the preview; blockstates turn them with y rota
 block's facing or axis means the same thing in game as in tools/city/mesh.py.
 """
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -365,7 +366,8 @@ def java_line(name, spec, tex_dir):
     nums = ", ".join(f"{v:g}" for v in shape)
     flag = " | ".join(flags) or "0"
     light = spec["flicker"]["light"] if "flicker" in spec else spec.get("light", 0)
-    line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f, {nums});'
+    # an empty shape (walk straight through) passes no boxes at all
+    line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f{", " + nums if nums else ""});'
     if "loot" in spec:
         line += f'\n        loot("{name}", "{spec["loot"]}");'
     return line
@@ -410,6 +412,10 @@ def axis_rule(blocks):
 def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
+    # the game refuses a resource path with anything else in it (capitals broke server start once)
+    bad = [n for n in blocks if not re.fullmatch(r"[a-z0-9_./-]+", n)]
+    if bad:
+        sys.exit(f"block names must be lower case a-z, 0-9, _ . / -: {bad[:8]}")
     axis_rule(blocks)
     # the prop packs' atlases come whole from tools/props/props.py, their LabPBR maps with them
     for p in (ROOT / "tools/props/tex").glob("*.png"):

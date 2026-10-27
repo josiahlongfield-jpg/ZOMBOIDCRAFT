@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_concrete": "zomboidcraft:block/city/rw_concrete",
+    "rw_street_bed": "zomboidcraft:block/city/rw_street_bed",
+    "particle": "zomboidcraft:block/city/rw_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_concrete",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_street_bed",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

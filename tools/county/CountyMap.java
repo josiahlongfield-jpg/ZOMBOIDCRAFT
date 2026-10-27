@@ -25,7 +25,7 @@ public final class CountyMap {
         int cx = args.length > 3 ? Integer.parseInt(args[2]) : 0, cz = args.length > 3 ? Integer.parseInt(args[3]) : 0;
         int scale = args.length > 4 ? Integer.parseInt(args[4]) : 4;
         int size = args.length > 5 ? Integer.parseInt(args[5]) : 1500;
-        County county = new County(seed);
+        County county = Boolean.getBoolean("county.endless") ? County.endless(seed) : new County(seed);
         Terrain t = county.terrain;
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         int x0 = cx - size * scale / 2, z0 = cz - size * scale / 2;
@@ -37,15 +37,17 @@ public final class CountyMap {
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
                 double x = x0 + i * scale, z = z0 + j * scale;
-                double h = county.ground(x, z, places);
-                double hn = county.ground(x + scale, z - scale, places);
+                // only what's near the pixel: the planned county has hundreds of places and roads
+                List<Place> here = county.placesNear((int) x - scale, (int) z - scale, (int) x + scale, (int) z + scale, County.SKIRT);
+                double h = county.ground(x, z, here);
+                double hn = county.ground(x + scale, z - scale, here);
                 Road.Hit hit = new Road.Hit();
-                for (Road r : roads) {
+                for (Road r : county.roadsNear((int) x, (int) z, (int) x, (int) z)) {
                     r.nearest(x, z, hit);
                 }
                 int rgb;
                 double shade = Math.max(-1, Math.min(1, (hn - h) * 0.35 / scale));
-                if (hit.road != null && hit.distance <= hit.road.kind.half + 1) {
+                if (hit.road != null && hit.distance <= Math.max(hit.road.kind.half + 1, scale * 0.6)) {
                     rgb = hit.road.kind == Road.Kind.HIGHWAY ? 0x2a2a2c : hit.road.kind == Road.Kind.COUNTY ? 0x4a4744 : 0x8a7350;
                 } else if (Terrain.isWater(h)) {
                     double depth = Math.min(1, (Terrain.WATER - h) / 14);
@@ -77,11 +79,15 @@ public final class CountyMap {
                 case MILITARY -> new Color(160, 160, 120);
                 case ROADSIDE -> new Color(220, 120, 200);
                 case HIDEOUT -> new Color(40, 90, 40);
+                case LANDMARK -> new Color(240, 240, 240);
             };
-            g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 110));
+            g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), p.tile != null ? 70 : 110));
             g.fillRect(px, pz, w, d);
             g.setColor(c);
             g.drawRect(px, pz, w, d);
+            if (p.tile != null && scale > 4) {
+                continue;  // the city's pieces: outlines only, unless zoomed right in
+            }
             String label = p.type.name().toLowerCase() + ": " + p.variant;
             g.setColor(new Color(0, 0, 0, 170));
             g.drawString(label, px + 1, pz - 3);

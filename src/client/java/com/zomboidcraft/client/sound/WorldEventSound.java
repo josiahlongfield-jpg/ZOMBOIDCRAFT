@@ -75,12 +75,19 @@ public final class WorldEventSound {
                 it.remove();
                 continue;
             }
+            if (e.kind() == WorldEvents.Kind.SIREN) {
+                // Josiah: the siren always sounds far off, wherever you are on the map, and everyone hears it
+                if (!p.played()[0] && t >= Math.min(d, 600) / WorldEvents.SOUND_SPEED) {
+                    p.played()[0] = true;
+                    mc.getSoundManager().play(new Distant(WorldEvents.SIREN, at));
+                }
+                continue;
+            }
             if (!p.played()[0] && t >= d / WorldEvents.SOUND_SPEED) {
                 p.played()[0] = true;
-                SoundEvent sound = e.kind() == WorldEvents.Kind.SIREN ? WorldEvents.SIREN
-                        : d > 150 ? WorldEvents.EXPLOSION_FAR : WorldEvents.EXPLOSION;
+                SoundEvent sound = d > 150 ? WorldEvents.EXPLOSION_FAR : WorldEvents.EXPLOSION;
                 if (d < sound.getRange(1)) {
-                    mc.getSoundManager().play(new Fixed(sound, at, e.kind() == WorldEvents.Kind.SIREN ? 1.0f : 1.6f));
+                    mc.getSoundManager().play(new Fixed(sound, at, 1.6f));
                 }
             }
         }
@@ -119,7 +126,7 @@ public final class WorldEventSound {
         long now = mc.level.getGameTime();
         for (Pending p : PENDING) {
             WorldEvents.Event e = p.event();
-            if (e.flyby() && e.sound() > 0 && e.at((now - e.start()) / 20.0).distanceToSqr(car.position()) < 40 * 40) {
+            if (e.flyby() && e.at((now - e.start()) / 20.0).distanceToSqr(car.position()) < 40 * 40) {
                 return true;
             }
         }
@@ -174,6 +181,54 @@ public final class WorldEventSound {
     }
 
     /** A siren or explosion, where it is; its loudness falls off with distance as the player moves. */
+    private static final class Distant extends AbstractTickableSoundInstance {
+        /** Josiah: the siren swells in from silence instead of starting at full volume. */
+        private static final float VOLUME = 0.6f;
+        private static final int FADE_IN = 160;
+        private final Vec3 source;
+        private int age;
+
+        Distant(SoundEvent event, Vec3 source) {
+            super(event, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());
+            this.source = source;
+            this.attenuation = SoundInstance.Attenuation.NONE;
+            this.volume = 0.001f;
+            place();
+        }
+
+        /** Always the same faint distance away, in the direction of where it really is. */
+        private void place() {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player == null) {
+                return;
+            }
+            Vec3 ear = mc.player.getEyePosition();
+            Vec3 dir = source.subtract(ear).multiply(1, 0, 1);
+            dir = dir.lengthSqr() < 1 ? new Vec3(1, 0, 0) : dir.normalize();
+            this.x = ear.x + dir.x * 64;
+            this.y = ear.y + 12;
+            this.z = ear.z + dir.z * 64;
+        }
+
+        @Override
+        public void tick() {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.level == null || mc.player == null || mc.level.dimension() != Level.OVERWORLD) {
+                stop();
+                return;
+            }
+            place();
+            float t = Math.min(1f, ++age / (float) FADE_IN);
+            this.volume = Math.max(0.001f, VOLUME * t * t);
+        }
+
+        @Override
+        public boolean canStartSilent() {
+            return true;
+        }
+    }
+
+    /** An explosion, where it is; its loudness falls off with distance as the player moves. */
     private static final class Fixed extends AbstractSoundInstance {
         Fixed(SoundEvent event, Vec3 at, float volume) {
             super(event, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());

@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "st_cone": "zomboidcraft:block/city/st_cone",
+    "particle": "zomboidcraft:block/city/home_plastic_black"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        1,
+        5.5
+      ],
+      "to": [
+        10.5,
+        5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_cone"
+        },
+        "south": {
+          "texture": "#st_cone"
+        },
+        "east": {
+          "texture": "#st_cone"
+        },
+        "west": {
+          "texture": "#st_cone"
+        },
+        "up": {
+          "texture": "#st_cone"
+        },
+        "down": {
+          "texture": "#st_cone"
+        }
+      }
+    },
+    {
+      "from": [
+        6.3,
+        5,
+        6.3
+      ],
+      "to": [
+        9.7,
+        9,
+        9.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_cone"
+        },
+        "south": {
+          "texture": "#st_cone"
+        },
+        "east": {
+          "texture": "#st_cone"
+        },
+        "west": {
+          "texture": "#st_cone"
+        },
+        "up": {
+          "texture": "#st_cone"
+        },
+        "down": {
+          "texture": "#st_cone"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        7
+      ],
+      "to": [
+        9,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_cone"
+        },
+        "south": {
+          "texture": "#st_cone"
+        },
+        "east": {
+          "texture": "#st_cone"
+        },
+        "west": {
+          "texture": "#st_cone"
+        },
+        "up": {
+          "texture": "#st_cone"
+        },
+        "down": {
+          "texture": "#st_cone"
+        }
+      }
+    }
+  ]
+}

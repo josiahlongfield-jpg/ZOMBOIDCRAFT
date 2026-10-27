@@ -120,6 +120,7 @@ public final class Guns {
             endReload(gun, st);
         }
         st.lastShot = now;
+        GunRaise.shot(player);
         if (auto) {
             st.autoNext = nextAuto(st.autoNext, now, stats);
         }
@@ -202,7 +203,7 @@ public final class Guns {
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
                 Pellet struck = pellet(target, hit, eye, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
-                Dismember.pellet(player, target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
+                Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
                     nearby = true;
                     nearbyImpact(level, player, hit.getLocation());
@@ -301,9 +302,10 @@ public final class Guns {
     private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
         Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
-        // a zombie's head and legs are where its body is drawn; anything else's go by height on its box
-        boolean head = !downed && (hit.part >= 0 ? hit.head() : at.y >= target.getEyeY() - 0.28);
-        boolean legs = !downed && (hit.part >= 0 ? hit.leg() : at.y < target.getY() + target.getBbHeight() * 0.35);
+        // a zombie's head and legs are where its body is drawn, standing or on the ground; anything else's go by height
+        // on its box, and not at all once it's down
+        boolean head = hit.part >= 0 ? hit.head() : !downed && at.y >= target.getEyeY() - 0.28;
+        boolean legs = hit.part >= 0 ? hit.leg() : !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
         float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
@@ -318,9 +320,10 @@ public final class Guns {
                                   ZcConfig.GunStats stats) {
         Vec3 at = hit.at;
         target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), hit.damage);
-        // buckshot up close knocks a zombie back hard; a single bullet barely moves it
-        double push = stats instanceof ZcConfig.ShotgunStats sg ? sg.knockback * Math.min(1, 1.5 * hit.count / pellets) : 0.12;
-        Shove.push(target, hit.dir.multiply(1, 0, 1).normalize(), push);
+        // a shot doesn't throw a zombie back: it flinches and its advance is checked for a split second, longer for a
+        // close load of buckshot; only a blunt blow knocks one back
+        Downed.flinch(target, stats instanceof ZcConfig.ShotgunStats sg
+                ? 5 + (int) Math.round(10 * sg.knockback * Math.min(1, 1.5 * hit.count / pellets)) : 5);
         // blood out along the shot, and splashed on the wall and floor behind (drawn by each client)
         float size = (float) Math.min(2.5, (0.6 + stats.damage / 20) * (1 + 0.15 * (hit.count - 1)) * (hit.head ? 1.3 : 1));
         Impacts.flesh(level, target, at, hit.dir, size);
@@ -331,9 +334,6 @@ public final class Guns {
             player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
                     net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.BULLET_WHIZZ), SoundSource.PLAYERS,
                     at.x, at.y, at.z, 0.8f, 0.9f + player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
-        }
-        if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
-            Downed.crippleChance(target, 0.5);
         }
     }
 

@@ -33,6 +33,8 @@ public final class ZcConfig {
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
+    /** How the dead fall and the bodies they leave, and how the living jerk when shot. */
+    public Corpses corpses = new Corpses();
     public Guns guns = new Guns();
     /** The M9-style pistol's own numbers (shared gun settings are in guns). */
     public GunStats pistol = GunStats.pistol();
@@ -73,6 +75,7 @@ public final class ZcConfig {
     public Building building = new Building();
     /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
     public Performance performance = new Performance();
+    public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
 
@@ -111,7 +114,12 @@ public final class ZcConfig {
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
-        public int midDetailZombies = 32;
+        public int midDetailZombies = 20;
+        /**
+         * Zombies past the nearest few are drawn from a baked body: the clothes painted on and only the pieces that
+         * change its outline kept 3D, about a tenth of the full one. Off draws them from the full body, thinned. Client side.
+         */
+        public boolean bakedZombies = true;
         /** Past this many blocks a zombie is drawn with its body and only the biggest pieces of clothing. Client side. */
         public double simpleZombieDistance = 40;
         /** Shader shadows (Photon's) are cast by the simple body, which looks the same in a shadow and costs far less. Client side. */
@@ -121,6 +129,53 @@ public final class ZcConfig {
          * every tick (they still hear and turn up the same). 0 turns it off.
          */
         public double idleThinkDistance = 32;
+        /**
+         * Zombies beyond the nearest meshZombies (and past spriteMinDistance) are drawn as a picture of their baked body
+         * turned to face you, one card instead of a few hundred pieces. Client side.
+         */
+        public boolean spriteZombies = true;
+        public int meshZombies = 40;
+        public double spriteMinDistance = 24;
+        /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
+        public boolean showStats = false;
+    }
+
+    /**
+     * The world's dead, placed once when the world is made (towns start full) and kept as light records until a player
+     * comes near: only those near someone are real, thinking zombies. Sizes per place are in Budgets.
+     */
+    public static class Population {
+        public boolean enabled = true;
+        /** Multiplies every place's count (Zomboid's population setting): 0.25 to 4. */
+        public double density = 1.0;
+        /** At most this many real zombies at once, shared by every player (where autoCap starts)... */
+        public int realCap = 250;
+        /** ...moved up while the server keeps its ticks under tickTarget ms and down when it doesn't, within these. */
+        public boolean autoCap = true;
+        public int capMin = 120;
+        public int capMax = 800;
+        public double tickTarget = 40;
+        /** Zombies out in the open become real within this many blocks of a player. */
+        public double streetRange = 96;
+        /** Zombies indoors become real within this many blocks of a player... */
+        public double indoorRange = 32;
+        /** ...and this many blocks up or down (about two floors), so a tower wakes floor by floor. */
+        public double indoorFloors = 9;
+        /** Real zombies left idle this far beyond those ranges go back to being records. */
+        public double foldMargin = 16;
+        /** How many become real in one go (twice a second), so a crowd arrives without a stall. */
+        public int perStep = 24;
+        /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
+        public double emptyHouses = 0.5;
+        /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
+        public int respawnDays = 0;
+        /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
+        public boolean crowd = true;
+        /** ...this far round each player (blocks; the server's view distance bounds it too)... */
+        public double crowdRange = 192;
+        /** ...at most this many, nearest first, and none nearer than this (those are real, or about to be). */
+        public int crowdMax = 3000;
+        public double crowdMinDistance = 40;
     }
 
     public static class Cases {
@@ -295,8 +350,8 @@ public final class ZcConfig {
     }
 
     public static class Zombies {
-        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix). */
-        public double sprinterChance = 0.05;
+        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix): about one in seven. */
+        public double sprinterChance = 0.15;
         /** Speed change for shamblers and sprinters, as a fraction of vanilla zombie speed. */
         public double shamblerSpeed = -0.3;
         public double sprinterSpeed = 0.25;
@@ -308,8 +363,17 @@ public final class ZcConfig {
         public double barricadeDamage = 1.0;
         /** Zombies on your trail pound shut doors until they break (they never open them). */
         public boolean bashDoors = true;
-        /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
-        public int doorHits = 12;
+        /**
+         * Hits a shut door takes before it gives way, shared by everyone pounding on it: one zombie hits about once a
+         * second, so alone it takes two minutes and ten of them about twelve seconds.
+         */
+        public int doorHits = 120;
+        /** The same for a window's glass. */
+        public int windowHits = 45;
+        /** Zombies climb in (and out) through windows whose glass is gone. */
+        public boolean climbWindows = true;
+        /** A zombie that can't get to you goes round to the nearest door or window to break in. */
+        public boolean seekWayIn = true;
         /** A walker screams when it first spots you. */
         public boolean alertScreams = true;
         /** Seconds before the same zombie can scream again. */
@@ -354,7 +418,8 @@ public final class ZcConfig {
     }
 
     public static class Spawning {
-        public boolean enabled = true;
+        /** The old steady spawner round each player; off since the world's population took over (population). */
+        public boolean enabled = false;
         public int intervalSeconds = 10;
         /** No new groups while this many zombies are within 64 blocks of a player. */
         public int nearbyCap = 24;
@@ -572,15 +637,21 @@ public final class ZcConfig {
          * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
          */
         public boolean shoulderCam = true;
+        /** Aiming a 4x scope over the shoulder looks through it in first person, and goes back after. */
+        public boolean scopeFromShoulder = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
-        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
-        public double shoulderBack = 1.25;
-        public double shoulderSide = 0.5;
-        public double shoulderUp = 0.15;
+        /**
+         * How far behind, to the side and above your eyes the shoulder camera sits (blocks), so you're left of the
+         * crosshair with the way ahead open and the camera looking down on you a little. Client side.
+         */
+        public double shoulderBack = 1.4;
+        public double shoulderSide = 0.9;
+        public double shoulderUp = 0.55;
         /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
-        public double shoulderAimBack = 0.7;
-        public double shoulderAimSide = 0.42;
+        public double shoulderAimBack = 0.75;
+        public double shoulderAimSide = 0.7;
+        public double shoulderAimUp = 0.35;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -597,6 +668,12 @@ public final class ZcConfig {
          * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
          */
         public double zombieBodyShots = 0.33;
+        /**
+         * Only a shot to the head kills a zombie: body and limb shots wear it down and take it apart, but one with
+         * every limb shot off still wriggles on the ground, and a crawler keeps coming, until it's shot in the head.
+         * Any bullet or bolt in the head finishes it. Blows, stomps, fire and explosions kill as before.
+         */
+        public boolean onlyHeadshotsKill = true;
         public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
@@ -644,6 +721,22 @@ public final class ZcConfig {
         public double crippleChance = 0.2;
     }
 
+    public static class Corpses {
+        /**
+         * A dead zombie falls the way it was going and the shot pushed it, and its body stays lying where it fell,
+         * missing whatever was shot off it (off: vanilla's tip-over and puff of smoke).
+         */
+        public boolean enabled = true;
+        /** Most bodies kept in a world while it's loaded; past this the oldest go. */
+        public int maxBodies = 300;
+        /** Minutes a body lies before it's gone (0 = it stays for good). */
+        public double minutes = 0;
+        /** Living zombies jerk and rock back where shots hit them. */
+        public boolean hitReactions = true;
+        /** How far off bodies are drawn, in blocks. Client side. */
+        public double drawDistance = 64;
+    }
+
     public static class Limbs {
         /** A bullet that hits an arm or a leg instead of the head can tear it off, where it was hit. */
         public boolean enabled = true;
@@ -675,6 +768,12 @@ public final class ZcConfig {
         public double otherGuns = 1.0;
         /** How fast a zombie hopping on one leg gets about, against walking (1 = as fast). */
         public double hopSpeed = 0.55;
+        /**
+         * How fast a zombie on the ground gets about with one arm left to drag itself, and with none (it wriggles
+         * along on its belly), against crawling on both (1 = as fast).
+         */
+        public double oneArmCrawl = 0.65;
+        public double wriggleSpeed = 0.3;
         /** Seconds a torn-off limb lies on the ground before it's gone. Client side. */
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
@@ -684,6 +783,37 @@ public final class ZcConfig {
          * toughness), and OFF when it goes.
          */
         public boolean showHits = false;
+        /**
+         * How many ticks behind the server a shooter sees zombies, on top of their ping (the game sends a zombie's
+         * moves every few ticks and glides it there over a few more): a shot is checked against where it was then.
+         */
+        public int lagTicks = 4;
+        /** A big enough hit to the head bursts it: a hunting rifle headshot, or a clean blast of buckshot up close. */
+        public boolean headBursts = true;
+        /**
+         * What one shot or blast must put into a head to burst it: its headshot damage (after buckshot falls off with
+         * range) times the gun's bursting below.
+         */
+        public double headBurst = 240;
+        /** Bursting per pellet of buckshot: three pellets in the head up close (a clean blast) do it, two don't. */
+        public double burstShotguns = 10.0;
+        /** Bursting for the bolt-action hunting rifle: every headshot does it. */
+        public double burstHuntingRifle = 4.0;
+        /** Bursting for the lever-action (0 = never; about 4 makes every headshot do it). */
+        public double burstLeverAction = 0;
+        /** Bursting for the .44 magnum (0 = never; about 5 makes every headshot do it). */
+        public double burstMagnum = 0;
+        /** Bursting for every other gun (0 = never). */
+        public double burstOtherGuns = 0;
+        /**
+         * Buckshot from point-blank range with most of the blast in the chest blows a hole right through it (with only
+         * headshots killing, it keeps coming).
+         */
+        public boolean chestHoles = true;
+        /** How close counts as point-blank for that, in blocks. */
+        public double chestHoleRange = 3.0;
+        /** The share of the blast's pellets that must go into the chest: more than this. */
+        public double chestHoleShare = 0.5;
 
         /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
         void retune() {
@@ -743,7 +873,7 @@ public final class ZcConfig {
         static GunStats pistol() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.5;
+            s.hipSpread = 1.5;
             s.aimSpread = 0.7;
             s.recoil = 0.9;
             s.shotNoise = 60.0;
@@ -798,7 +928,7 @@ public final class ZcConfig {
             GunStats s = new GunStats();
             s.damage = 22.0;
             s.headshotMultiplier = 3.0;
-            s.hipSpread = 3.2;
+            s.hipSpread = 1.9;
             s.aimSpread = 0.3;
             s.recoil = 1.9;
             s.shotNoise = 130.0;
@@ -828,7 +958,7 @@ public final class ZcConfig {
         static GunStats smg() {
             GunStats s = new GunStats();
             s.damage = 7.0;
-            s.hipSpread = 2.2;
+            s.hipSpread = 1.3;
             s.aimSpread = 0.6;
             s.recoil = 0.55;
             s.shotNoise = 75.0;
@@ -876,7 +1006,7 @@ public final class ZcConfig {
         CrossbowStats() {
             damage = 30.0;
             headshotMultiplier = 3.0;
-            hipSpread = 3.0;
+            hipSpread = 1.8;
             aimSpread = 0.2;
             recoil = 0.4;
             shotNoise = 8.0;
@@ -894,7 +1024,7 @@ public final class ZcConfig {
         public double pelletSpread = 2.5;
         /** Pellets hit full strength out to this many blocks, then weaken to a quarter at the gun's range. */
         public double falloffStart = 10.0;
-        /** How hard a close hit shoves a zombie back. */
+        /** How much a close hit checks a zombie's advance: its flinch lasts 5 ticks plus ten times this (it isn't thrown back). */
         public double knockback = 0.45;
 
         ShotgunStats() {
@@ -955,6 +1085,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            hipSpread = 1.8;        // Josiah 10-27: hip rings 40% tighter at rest
             suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
@@ -977,8 +1108,13 @@ public final class ZcConfig {
         /** Field of view looking through the 4x scope, as a share of normal. */
         public double scopeZoom = 0.25;
         /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
-        public double suppressedNoise = 0.3;
-        public double suppressedVolume = 1.0;
+        public double suppressedNoise = 0.1;
+        public double suppressedVolume = 0.7;
+        /**
+         * Seconds others see a gun stay raised (pointing where its carrier looks) after a shot, when they're in first
+         * person; over the shoulder it's always up.
+         */
+        public double raiseAfterShot = 3.0;
         /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
@@ -1020,12 +1156,19 @@ public final class ZcConfig {
          * How bright (a light level, 1 to 15) a gun light lights the space it's pointed at, a level less every eight
          * blocks off. Higher lights a wider patch round it. Client side.
          */
-        public int lightLevel = 11;
+        public int lightLevel = 13;
         /**
          * How many hidden lights a gun light uses (1 to 8): one where it lands and faint ones on the way there. More
          * light the floor and walls between better, but cost frames when you turn. Client side.
          */
         public int lightSources = 5;
+        /**
+         * Hidden lights spread round the middle one, where rays out across the light's spread land (0 to 24), so it
+         * lights the whole space in front of you rather than one patch. More cost frames when you turn. Client side.
+         */
+        public int lightRays = 14;
+        /** How far those rays spread from the middle, in degrees. Client side. */
+        public double lightSpread = 22;
         /** How wide a gun light's cone is, in degrees from its middle to its edge. Client side. */
         public double lightCone = 13;
         /** How strongly a gun light's pool and beam are drawn in the dark (0 = not at all). Client side. */
@@ -1045,7 +1188,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 2;
+    private static final int DEFAULTS = 8;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1070,6 +1213,76 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.5) {
                 c.look.shoulderAimSide = 0.42;
+            }
+        }
+        if (c.defaultsVersion < 3) {
+            // 2026-10-27: with the baked far-off bodies, fewer zombies need the costly middle detail
+            if (c.performance.midDetailZombies == 32) {
+                c.performance.midDetailZombies = 20;
+            }
+        }
+        if (c.defaultsVersion < 4) {
+            // 2026-10-27 (Josiah): suppressors for sneaking (zombies hear a third as far, 30% quieter), and the hip
+            // rings of the assault rifle, SMG, crossbow, M9 and lever action 40% tighter
+            if (c.guns.suppressedNoise == 0.3) {
+                c.guns.suppressedNoise = 0.1;
+            }
+            if (c.guns.suppressedVolume == 1.0) {
+                c.guns.suppressedVolume = 0.7;
+            }
+            if (c.guns.hipSpread == 3.0) {
+                c.guns.hipSpread = 1.8;
+            }
+            if (c.smg.hipSpread == 2.2) {
+                c.smg.hipSpread = 1.3;
+            }
+            if (c.crossbow.hipSpread == 3.0) {
+                c.crossbow.hipSpread = 1.8;
+            }
+            if (c.pistol.hipSpread == 2.5) {
+                c.pistol.hipSpread = 1.5;
+            }
+            if (c.leverAction.hipSpread == 3.2) {
+                c.leverAction.hipSpread = 1.9;
+            }
+        }
+        if (c.defaultsVersion < 5) {
+            // 2026-10-27 (Josiah): the shoulder camera up and further right, so you're left of the crosshair and the
+            // camera looks down on you a little
+            if (c.look.shoulderBack == 1.25) {
+                c.look.shoulderBack = 1.4;
+            }
+            if (c.look.shoulderSide == 0.5) {
+                c.look.shoulderSide = 0.9;
+            }
+            if (c.look.shoulderUp == 0.15) {
+                c.look.shoulderUp = 0.55;
+            }
+            if (c.look.shoulderAimBack == 0.7) {
+                c.look.shoulderAimBack = 0.75;
+            }
+            if (c.look.shoulderAimSide == 0.42) {
+                c.look.shoulderAimSide = 0.7;
+            }
+        }
+        if (c.defaultsVersion < 6) {
+            // 2026-10-27 (Josiah): the gun light brighter, now spread over the space in front (lightRays)
+            if (c.guns.lightLevel == 11) {
+                c.guns.lightLevel = 13;
+            }
+        }
+        if (c.defaultsVersion < 7) {
+            // 2026-10-27 (Josiah): more sprinters, one in seven instead of one in twenty
+            if (c.zombies.sprinterChance == 0.05) {
+                c.zombies.sprinterChance = 0.15;
+            }
+        }
+        if (c.defaultsVersion < 8) {
+            // 2026-10-27 (Josiah): the world's population replaces the steady spawner, and doors hold far longer, the
+            // more zombies on them the sooner they give
+            c.spawning.enabled = false;
+            if (c.zombies.doorHits == 12) {
+                c.zombies.doorHits = 120;
             }
         }
         c.defaultsVersion = DEFAULTS;

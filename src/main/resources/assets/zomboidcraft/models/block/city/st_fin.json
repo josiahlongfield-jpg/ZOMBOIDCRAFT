@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_precast_plain": "zomboidcraft:block/city/st_precast_plain",
+    "particle": "zomboidcraft:block/city/st_precast_plain"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        0
+      ],
+      "to": [
+        11,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_precast_plain",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_precast_plain",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_precast_plain"
+        },
+        "west": {
+          "texture": "#st_precast_plain"
+        },
+        "up": {
+          "texture": "#st_precast_plain",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_precast_plain",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

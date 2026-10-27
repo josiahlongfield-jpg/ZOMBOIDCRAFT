@@ -1,0 +1,134 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grille": "zomboidcraft:block/city/bunk_grille",
+    "st_duct": "zomboidcraft:block/city/st_duct",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_duct"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        0
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_duct",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_duct",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_duct"
+        },
+        "west": {
+          "texture": "#st_duct"
+        },
+        "up": {
+          "texture": "#st_duct"
+        },
+        "down": {
+          "texture": "#st_duct"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        -0.5,
+        4
+      ],
+      "to": [
+        12,
+        0.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grille",
+          "uv": [
+            4,
+            15.0,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_grille",
+          "uv": [
+            4,
+            15.0,
+            12,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#bunk_grille",
+          "uv": [
+            4,
+            15.0,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#bunk_grille",
+          "uv": [
+            4,
+            15.0,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#bunk_grille"
+        },
+        "down": {
+          "texture": "#bunk_grille"
+        }
+      }
+    }
+  ]
+}

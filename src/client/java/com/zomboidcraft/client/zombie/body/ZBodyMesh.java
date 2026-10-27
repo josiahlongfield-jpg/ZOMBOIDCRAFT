@@ -38,6 +38,11 @@ public final class ZBodyMesh {
 
     /** Which quads each pass draws, worked out once: body or clothes, by detail level, with or without legs. */
     private final int[][] lists = new int[16][];
+    /** The same body with its chest blown open ({@link ChestHole}), made the first time it's wanted. */
+    ZBodyMesh holed;
+    /** For a holed body: how far its clothes reach in front of the hole and behind it, and round its rims. */
+    float holeFront, holeBack;
+    float[] rimFront, rimBack;
 
     private ZBodyMesh(ByteBuffer b) {
         if (b.get() != 'Z' || b.get() != 'B' || b.get() != 'D' || b.get() != '1') {
@@ -73,6 +78,21 @@ public final class ZBodyMesh {
             }
             minEdge[q] = Math.min(edge(q, 0, 1), edge(q, 1, 2));
         }
+    }
+
+    /** A body from quads already worked out (ChestHole's holed copy). */
+    ZBodyMesh(ZBodyMesh from, int count, byte[] bone, byte[] flags, float[] pos, float[] normal, float[] uv,
+              float[] minEdge) {
+        bones = from.bones;
+        parent = from.parent;
+        rest = from.rest;
+        this.count = count;
+        this.bone = bone;
+        this.flags = flags;
+        this.pos = pos;
+        this.normal = normal;
+        this.uv = uv;
+        this.minEdge = minEdge;
     }
 
     private float edge(int q, int a, int c) {

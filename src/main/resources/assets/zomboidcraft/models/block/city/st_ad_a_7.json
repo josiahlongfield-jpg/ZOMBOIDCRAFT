@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_ad_a_7": "zomboidcraft:block/city/st_ad_a_7",
+    "st_pad": "zomboidcraft:block/city/st_pad",
+    "st_wallcap": "zomboidcraft:block/city/st_wallcap",
+    "particle": "zomboidcraft:block/city/st_ad_a_7"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_ad_a_7",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_pad",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_pad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_pad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_wallcap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_wallcap",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

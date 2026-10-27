@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_baffles_lamp_on": "zomboidcraft:block/city/dn_baffles_lamp_on",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        -2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_baffles_lamp_on",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        -2.5
+      ],
+      "to": [
+        16,
+        6,
+        -1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            15.0,
+            10,
+            16,
+            12
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            10,
+            1.0,
+            12
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            0,
+            16,
+            1.0
+          ]
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "uv": [
+            0,
+            15.0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

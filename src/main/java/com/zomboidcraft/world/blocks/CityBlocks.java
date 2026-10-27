@@ -172,6 +172,11 @@ public final class CityBlocks {
         // boards nailed over a doorway are the barricade players nail up themselves: pried off with
         // a hammer, knocked loose by zombies
         Block found = base.equals("barricade") ? ModBlocks.BARRICADE : BLOCKS.get(base);
+        if (found == null && base.startsWith(ZomboidCraft.MOD_ID + ":")) {
+            // the mod's own blocks by their full name (the railway's call buttons)
+            Identifier key = ZomboidCraft.id(base.substring(ZomboidCraft.MOD_ID.length() + 1));
+            found = BuiltInRegistries.BLOCK.containsKey(key) ? BuiltInRegistries.BLOCK.getValue(key) : null;
+        }
         if (found == null) {
             return null;
         }

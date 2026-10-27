@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_walkin": "zomboidcraft:block/city/dn_walkin",
+    "particle": "zomboidcraft:block/city/dn_walkin"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_walkin",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dn_walkin",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_walkin",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_walkin",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_walkin",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_walkin",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_poster_2": "zomboidcraft:block/city/dn_poster_2",
+    "particle": "zomboidcraft:block/city/dn_poster_2"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        15.6
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_poster_2"
+        },
+        "south": {
+          "texture": "#dn_poster_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_poster_2"
+        },
+        "west": {
+          "texture": "#dn_poster_2"
+        },
+        "up": {
+          "texture": "#dn_poster_2"
+        },
+        "down": {
+          "texture": "#dn_poster_2"
+        }
+      }
+    }
+  ]
+}

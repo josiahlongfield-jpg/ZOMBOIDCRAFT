@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "st_grille": "zomboidcraft:block/city/st_grille",
+    "particle": "zomboidcraft:block/city/st_grille"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        5,
+        7.5
+      ],
+      "to": [
+        9,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_grille"
+        },
+        "south": {
+          "texture": "#st_grille"
+        },
+        "east": {
+          "texture": "#st_grille"
+        },
+        "west": {
+          "texture": "#st_grille",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_grille",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_grille"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        7.5
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_grille"
+        },
+        "south": {
+          "texture": "#st_grille"
+        },
+        "east": {
+          "texture": "#st_grille",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_grille"
+        },
+        "up": {
+          "texture": "#st_grille",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_grille"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4.5,
+        6
+      ],
+      "to": [
+        9,
+        5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

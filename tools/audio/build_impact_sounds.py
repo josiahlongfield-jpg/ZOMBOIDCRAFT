@@ -103,6 +103,8 @@ def main():
             names.append({"name": f"zomboidcraft:{folder}/{i}", "attenuation_distance": rng})
         ours[event] = {"sounds": names}
         print(event, len(takes), "takes", [round(len(t) / RATE, 2) for t in takes])
+    # Josiah 08:14: the shooter hears the same fleshy hits on zombies they shoot, further off (Guns.hitEntity)
+    ours["weapon.bullet.whizz"] = {"sounds": [dict(s, attenuation_distance=48) for s in ours["weapon.bullet.impact.nearby"]["sounds"]]}
     sj.write_text(json.dumps(ours, indent=2) + "\n")
 
     path = ROOT / "CREDITS.md"

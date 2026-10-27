@@ -268,8 +268,8 @@ final class GunRigs {
                     true /* the rounds sit in a turning cylinder */,
                     false /* worked by a lever, its bolt riding back with it */,
                     false /* a crossbow: its string let go and drawn back, a bolt laid on the rail */,
-                    new float[] {8.0000f, 9.8004f, 9.4470f} /* an exposed hammer's pin (the slide is the hammer), or none */,
-                    32.0000f /* degrees the hammer turns back to cock */)),
+                    new float[] {8.0000f, 9.6365f, 9.4470f} /* an exposed hammer's pin (the slide is the hammer), or none */,
+                    22.0000f /* degrees the hammer turns back to cock */)),
             Map.entry("rimfire", new GunRig(
                     new float[] {0.2800f, -0.3600f, -0.5600f} /* hip: the grip in the hand camera (blocks) */,
                     new float[] {6.9290f, 7.6330f, -6.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,
@@ -440,8 +440,8 @@ final class GunRigs {
                     true /* the rounds sit in a turning cylinder */,
                     false /* worked by a lever, its bolt riding back with it */,
                     false /* a crossbow: its string let go and drawn back, a bolt laid on the rail */,
-                    new float[] {8.0000f, 9.9770f, 10.4366f} /* an exposed hammer's pin (the slide is the hammer), or none */,
-                    32.0000f /* degrees the hammer turns back to cock */)),
+                    new float[] {8.0000f, 9.7837f, 10.4366f} /* an exposed hammer's pin (the slide is the hammer), or none */,
+                    22.0000f /* degrees the hammer turns back to cock */)),
             Map.entry("lever_action", new GunRig(
                     new float[] {0.2800f, -0.3600f, -0.5600f} /* hip: the grip in the hand camera (blocks) */,
                     new float[] {7.2600f, 7.5970f, -6.0000f} /* hip: muzzle up, muzzle in, roll (degrees) */,

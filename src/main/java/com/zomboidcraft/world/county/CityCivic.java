@@ -743,9 +743,9 @@ final class CityCivic {
             }
         }
         if ((k & 1) == 0) {
-            b.stair(sx, a, y + 1, S, "north", "minecraft:smooth_stone");
+            b.stair(sx, a, y + 1, S, "north", "stairs_concrete");
         } else {
-            b.stair(sx + 1, a - S + 1, y + 1, S, "south", "minecraft:smooth_stone");
+            b.stair(sx + 1, a - S + 1, y + 1, S, "south", "stairs_concrete");
         }
         for (int z = a - S + 1; z <= a; z++) {
             if (chance() < 0.85) {

@@ -112,7 +112,7 @@ public final class Tower {
                     boolean frontBack = z == in || z == d - 1 - in;
                     int along = frontBack ? x - in : z - in;
                     int length = (frontBack ? w : d) - 2 * in;
-                    String skin = skin(y, k, slab, along, length);
+                    String skin = Placer.inWall(skin(y, k, slab, along, length), frontBack);
                     p.set(x, y, z, skin);
                     if (y >= LOBBY && (y - LOBBY) % FLOOR == 2 && skin.startsWith("window")) {
                         roomGlow(x, y, z, x == in ? 1 : x == w - 1 - in ? -1 : 0, z == in ? 1 : z == d - 1 - in ? -1 : 0);
@@ -145,7 +145,7 @@ public final class Tower {
         }
         // the entrance: two pairs of glass doors under a transom, a steel canopy over the sidewalk
         int mid = w / 2;
-        p.fill(mid - 2, 3, 0, mid + 1, 3, 0, "window");
+        p.fill(mid - 2, 3, 0, mid + 1, 3, 0, "window[axis=x]");
         Doors.pair(p, rng, mid - 2, 1, 0, Doors.SHOP, "south");
         Doors.pair(p, rng, mid, 1, 0, Doors.SHOP, "south");
         p.fill(mid - 3, 4, -3, mid + 2, 4, -1, "steel_mullion");
@@ -298,7 +298,7 @@ public final class Tower {
         int wallX = cx0 - 2;
         if (wallX - 4 > in) {
             for (int z = cz0; z < cz0 + CORE_D; z++) {
-                String wall = z % 3 == 0 ? "drywall" : "window";
+                String wall = z % 3 == 0 ? "drywall" : "window[axis=z]";
                 for (int yy = fy; yy < fy + 3; yy++) {
                     p.set(wallX, yy, z, wall);
                 }
@@ -498,8 +498,9 @@ public final class Tower {
                 for (int x = x0; x <= x1; x++) {
                     for (int z = z0; z <= z1; z++) {
                         boolean edge = x == x0 || z == z0 || x == x1 || z == z1;
-                        boolean slit = edge && (x + z) % 2 == 1 && yy == y + 1;
-                        p.set(x, yy, z, slit ? "window_lit" : edge ? "stone_trim" : "concrete_dark");
+                        boolean corner = (x == x0 || x == x1) && (z == z0 || z == z1);
+                        boolean slit = edge && !corner && (x + z) % 2 == 1 && yy == y + 1;
+                        p.set(x, yy, z, slit ? Placer.inWall("window_lit", z == z0 || z == z1) : edge ? "stone_trim" : "concrete_dark");
                     }
                 }
             }
@@ -519,8 +520,10 @@ public final class Tower {
     private void glowingBand(int roofY, int in) {
         for (int x = in; x < w - in; x++) {
             for (int z = in; z < d - in; z++) {
-                if (x == in || z == in || x == w - 1 - in || z == d - 1 - in) {
-                    p.set(x, roofY + 1, z, "window_lit");
+                boolean alongX = z == in || z == d - 1 - in, alongZ = x == in || x == w - 1 - in;
+                if (alongX || alongZ) {
+                    // stone at the corners, where a pane would show its edge to one street
+                    p.set(x, roofY + 1, z, alongX && alongZ ? trim() : Placer.inWall("window_lit", alongX));
                 }
             }
         }

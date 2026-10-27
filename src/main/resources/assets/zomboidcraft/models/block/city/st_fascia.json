@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_fascia": "zomboidcraft:block/city/st_fascia",
+    "particle": "zomboidcraft:block/city/st_fascia"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_fascia",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_fascia",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_fascia",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_fascia",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

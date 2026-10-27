@@ -20,5 +20,7 @@ public enum PlaceType {
      * Something hidden in the deep woods, far from every road: a survivalist's hatch over a
      * bunker. Planned on a layer of its own ({@link County#hideout}), never levelled or linked.
      */
-    HIDEOUT
+    HIDEOUT,
+    /** A city's landmark on a lot of its own: the stadium. */
+    LANDMARK
 }

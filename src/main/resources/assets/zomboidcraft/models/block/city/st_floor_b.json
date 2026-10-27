@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_panel": "zomboidcraft:block/city/concrete_panel",
+    "st_floor_b": "zomboidcraft:block/city/st_floor_b",
+    "particle": "zomboidcraft:block/city/concrete_panel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_panel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#concrete_panel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#concrete_panel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#concrete_panel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_floor_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#concrete_panel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

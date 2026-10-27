@@ -46,7 +46,7 @@ public final class Decay {
             "plaster_rose", "brick_buff", "brick_orange", "shop_paint_red", "shop_paint_navy", "shop_paint_teal",
             "shop_paint_black", "shop_paint_mustard", "shop_paint_green");
     private static final Set<String> WINDOWS = Set.of("window", "window_lit", "window_broken", "window_empty",
-            "boarded_window");
+            "boarded_window", "shutter");
     private static final Set<String> FLOORS = Set.of("office_floor", "lobby_floor_white", "lobby_floor_dark",
             "floor_concrete");
     private static final Set<String> LEDGES = Set.of("stone_trim", "sill", "roof", "awning", "concrete_dark",
@@ -190,8 +190,14 @@ public final class Decay {
 
     // ---------------------------------------------------------------- windows
 
+    /**
+     * Wears a window and stands it in its wall. The wall is the way its neighbours are wall or
+     * window on both sides; when that doesn't settle it (a corner, a wall two windows thick) the
+     * axis the builder gave it stays, and a bare one faces whichever side is open air.
+     */
     private void window(int x, int y, int z) {
-        String b = base(sink.get(x, y, z));
+        String there = sink.get(x, y, z);
+        String b = base(there);
         double r = rng.nextDouble();
         if (y <= 3 && !b.equals("window_lit") && r < 0.3) {
             b = "shutter";  // shops rolled their shutters down when it started
@@ -200,9 +206,19 @@ public final class Decay {
         } else if (b.equals("window_lit") && r < 0.25) {
             b = "window_broken";
         }
-        boolean alongX = wallish(x - 1, y, z) || wallish(x + 1, y, z);
-        boolean alongZ = wallish(x, y, z - 1) || wallish(x, y, z + 1);
-        String axis = alongX && !alongZ ? "x" : alongZ && !alongX ? "z" : air(x, y, z - 1) || air(x, y, z + 1) ? "x" : "z";
+        int nx = (wallish(x - 1, y, z) ? 1 : 0) + (wallish(x + 1, y, z) ? 1 : 0);
+        int nz = (wallish(x, y, z - 1) ? 1 : 0) + (wallish(x, y, z + 1) ? 1 : 0);
+        int at = there.indexOf("axis=");
+        String axis;
+        if (nx == 2 && nz < 2 || nx == 1 && nz == 0) {
+            axis = "x";
+        } else if (nz == 2 && nx < 2 || nz == 1 && nx == 0) {
+            axis = "z";
+        } else if (at >= 0) {
+            axis = there.substring(at + 5, at + 6);
+        } else {
+            axis = air(x, y, z - 1) || air(x, y, z + 1) ? "x" : "z";
+        }
         sink.set(x, y, z, b + "[axis=" + axis + "]");
     }
 

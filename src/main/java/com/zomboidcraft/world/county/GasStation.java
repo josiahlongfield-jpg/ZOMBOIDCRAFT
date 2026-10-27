@@ -713,6 +713,13 @@ final class GasStation {
 
     // ------------------------------------------------------------------ the country store's pumps
 
+    /** A canopy over its two islands on their slab, x0..x1 by z0..z1 (the truck stop's diesel). */
+    void forecourt(int x0, int x1, int z0, int z1) {
+        slab(q, x0 - 2, z0 - 2, x1 + 2, z1 + 2);
+        canopy(x0, x1, z0, z1);
+        islands(x0, x1, z0, z1);
+    }
+
     /** Two pumps on an island at (x, z) along x in front of a country store: old ones, or the brand's. */
     void storePumps(int x, int z) {
         boolean old = chance() < 0.65;

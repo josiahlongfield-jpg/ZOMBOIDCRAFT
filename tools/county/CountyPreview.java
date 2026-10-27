@@ -22,6 +22,8 @@ import java.util.Map;
  * Y0 up, so y = 0 in the dump is world y = Y0.
  *
  *   java -cp build/county CountyPreview OUT seed centreX centreZ radiusBlocks [y0] [height]
+ *
+ * The county is the planned one (the Grayhaven plan); -Dcounty.endless=true gives the old endless one.
  */
 public final class CountyPreview implements ChunkSink {
     private final int x0, z0, sx, sz, y0, h;
@@ -72,7 +74,7 @@ public final class CountyPreview implements ChunkSink {
         int c0x = Math.floorDiv(cx - r, 16), c1x = Math.floorDiv(cx + r, 16);
         int c0z = Math.floorDiv(cz - r, 16), c1z = Math.floorDiv(cz + r, 16);
         CountyPreview dump = new CountyPreview(c0x * 16, c0z * 16, (c1x - c0x + 1) * 16, (c1z - c0z + 1) * 16, y0, h);
-        CountyGen gen = new CountyGen(new County(seed), new PlaceCache(16));
+        CountyGen gen = new CountyGen(Boolean.getBoolean("county.endless") ? County.endless(seed) : new County(seed), new PlaceCache(16));
         long t = System.currentTimeMillis();
         for (int x = c0x; x <= c1x; x++) {
             for (int z = c0z; z <= c1z; z++) {

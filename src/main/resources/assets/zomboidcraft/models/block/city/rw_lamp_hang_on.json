@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_bulb_on": "zomboidcraft:block/city/rw_bulb_on",
+    "rw_enamel": "zomboidcraft:block/city/rw_enamel",
+    "rw_iron": "zomboidcraft:block/city/rw_iron",
+    "particle": "zomboidcraft:block/city/rw_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        9,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_iron"
+        },
+        "south": {
+          "texture": "#rw_iron"
+        },
+        "east": {
+          "texture": "#rw_iron"
+        },
+        "west": {
+          "texture": "#rw_iron"
+        },
+        "up": {
+          "texture": "#rw_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rw_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        4
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_enamel"
+        },
+        "south": {
+          "texture": "#rw_enamel"
+        },
+        "east": {
+          "texture": "#rw_enamel"
+        },
+        "west": {
+          "texture": "#rw_enamel"
+        },
+        "up": {
+          "texture": "#rw_enamel"
+        },
+        "down": {
+          "texture": "#rw_enamel"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        5,
+        6.5
+      ],
+      "to": [
+        9.5,
+        6,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_bulb_on"
+        },
+        "south": {
+          "texture": "#rw_bulb_on"
+        },
+        "east": {
+          "texture": "#rw_bulb_on"
+        },
+        "west": {
+          "texture": "#rw_bulb_on"
+        },
+        "up": {
+          "texture": "#rw_bulb_on"
+        },
+        "down": {
+          "texture": "#rw_bulb_on"
+        }
+      }
+    }
+  ]
+}

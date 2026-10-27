@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_big_i_5": "zomboidcraft:block/city/st_big_i_5",
+    "particle": "zomboidcraft:block/city/st_big_i_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_big_i_5"
+        },
+        "south": {
+          "texture": "#st_big_i_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_big_i_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_big_i_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_big_i_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_big_i_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

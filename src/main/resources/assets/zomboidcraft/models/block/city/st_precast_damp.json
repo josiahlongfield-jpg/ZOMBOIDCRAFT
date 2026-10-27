@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_precast_damp": "zomboidcraft:block/city/st_precast_damp",
+    "particle": "zomboidcraft:block/city/st_precast_damp"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_precast_damp",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_precast_damp",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_precast_damp",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_precast_damp",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_precast_damp",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_precast_damp",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

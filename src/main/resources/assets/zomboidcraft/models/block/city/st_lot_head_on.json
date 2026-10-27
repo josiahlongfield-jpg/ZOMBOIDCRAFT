@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "st_housing": "zomboidcraft:block/city/st_housing",
+    "st_lamp_on": "zomboidcraft:block/city/st_lamp_on",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        9,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        7
+      ],
+      "to": [
+        16,
+        9.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9.5,
+        3
+      ],
+      "to": [
+        7,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_housing"
+        },
+        "south": {
+          "texture": "#st_housing"
+        },
+        "east": {
+          "texture": "#st_housing"
+        },
+        "west": {
+          "texture": "#st_housing",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_housing"
+        },
+        "down": {
+          "texture": "#st_lamp_on"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9.5,
+        3
+      ],
+      "to": [
+        16,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_housing"
+        },
+        "south": {
+          "texture": "#st_housing"
+        },
+        "east": {
+          "texture": "#st_housing",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_housing"
+        },
+        "up": {
+          "texture": "#st_housing"
+        },
+        "down": {
+          "texture": "#st_lamp_on"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_dp_bulletin": "zomboidcraft:block/city/rw_dp_bulletin",
+    "rw_dp_trim": "zomboidcraft:block/city/rw_dp_trim",
+    "particle": "zomboidcraft:block/city/rw_dp_bulletin"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        15
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_dp_bulletin"
+        },
+        "south": {
+          "texture": "#rw_dp_trim",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_dp_trim"
+        },
+        "west": {
+          "texture": "#rw_dp_trim"
+        },
+        "up": {
+          "texture": "#rw_dp_trim"
+        },
+        "down": {
+          "texture": "#rw_dp_trim"
+        }
+      }
+    }
+  ]
+}

@@ -22,7 +22,9 @@ PEAK = 10.0     # WorldEventSound.PEAK
 FADE = 6.0
 # event: [(Sonniss id, where its loudest moment is (s), cut off after (s) or None)]
 EVENTS = {
-    "world.flyby.jet": [("bd9b93ee", 11.5, None), ("ce7962b6", 5.0, None), ("dee4b56e", 4.5, 20.0)],
+    # the two F-16 passes first: Josiah wants them the common ones (WorldEvents.sound)
+    "world.flyby.jet": [("0d2dc01b", 4.5, None), ("aac4a615", 14.0, 34.0),
+                        ("bd9b93ee", 11.5, None), ("ce7962b6", 5.0, None), ("dee4b56e", 4.5, 20.0)],
     "world.flyby.heli": [("76994416", 9.0, None)],
 }
 
@@ -63,7 +65,9 @@ def main():
             a *= 10 ** (-1 / 20) / max(np.abs(a).max(), 1e-6)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(RATE), "-ac", "1", "-i", "-",
                             "-c:a", "libvorbis", "-q:a", "5", str(out / f"{i}.ogg")], input=a.tobytes(), check=True)
-            names.append({"name": f"zomboidcraft:{folder}/{i}", "attenuation_distance": 800, "stream": True})
+            # not streamed: the game has only 8 streaming channels and the rain, wind and music loops can fill them,
+            # which left the flybys silent (Josiah 12:28); a 30 s mono take held in memory is about 2.6 MB
+            names.append({"name": f"zomboidcraft:{folder}/{i}", "attenuation_distance": 800})
             rows.append(f"| {event} {i} | {info['title']} ({info['pack']}) | {info['bundle']} | Sonniss royalty-free |")
             print(event, i, round(len(a) / RATE, 1), "s")
         # one event per take, so every player hears the same aircraft's take

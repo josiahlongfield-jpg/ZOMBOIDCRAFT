@@ -1800,8 +1800,7 @@
     "sounds": [
       {
         "name": "zomboidcraft:world/siren",
-        "attenuation_distance": 480,
-        "stream": true
+        "attenuation_distance": 480
       }
     ]
   },
@@ -1825,8 +1824,7 @@
     "sounds": [
       {
         "name": "zomboidcraft:world/flyby/jet/1",
-        "attenuation_distance": 800,
-        "stream": true
+        "attenuation_distance": 800
       }
     ]
   },
@@ -1834,8 +1832,7 @@
     "sounds": [
       {
         "name": "zomboidcraft:world/flyby/jet/2",
-        "attenuation_distance": 800,
-        "stream": true
+        "attenuation_distance": 800
       }
     ]
   },
@@ -1843,8 +1840,7 @@
     "sounds": [
       {
         "name": "zomboidcraft:world/flyby/jet/3",
-        "attenuation_distance": 800,
-        "stream": true
+        "attenuation_distance": 800
       }
     ]
   },
@@ -1852,19 +1848,34 @@
     "sounds": [
       {
         "name": "zomboidcraft:world/flyby/heli/1",
-        "attenuation_distance": 800,
-        "stream": true
+        "attenuation_distance": 800
       }
     ]
   },
   "weapon.bullet.whizz": {
     "sounds": [
       {
-        "name": "zomboidcraft:weapon/bullet/whizz/1",
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/1",
         "attenuation_distance": 48
       },
       {
-        "name": "zomboidcraft:weapon/bullet/whizz/2",
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/4",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
         "attenuation_distance": 48
       }
     ]
@@ -3031,5 +3042,37 @@
       }
     ],
     "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "weapon.bullet.head_burst": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/2",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/bullet/head_burst/3",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "world.flyby.jet.4": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/4",
+        "attenuation_distance": 800
+      }
+    ]
+  },
+  "world.flyby.jet.5": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/flyby/jet/5",
+        "attenuation_distance": 800
+      }
+    ]
   }
 }
