@@ -10,8 +10,12 @@ import net.minecraft.world.phys.Vec3;
 public class InvestigateNoiseGoal extends Goal {
     private final Zombie zombie;
     private final NoiseListener ears;
+    /** A new noise this close to where it's already heading doesn't need a new path; nor one within a second of the last. */
+    private static final double MOVED = 3;
+    private static final int REPATH_TICKS = 20;
+
     private Vec3 destination;
-    private int ticks;
+    private int ticks, pathedAt;
 
     public InvestigateNoiseGoal(Zombie zombie) {
         this.zombie = zombie;
@@ -34,6 +38,7 @@ public class InvestigateNoiseGoal extends Goal {
     public void start() {
         destination = ears.zomboidcraft$heardAt();
         ticks = 0;
+        pathedAt = 0;
         zombie.getNavigation().moveTo(destination.x, destination.y, destination.z, 1.0);
     }
 
@@ -41,8 +46,12 @@ public class InvestigateNoiseGoal extends Goal {
     public void tick() {
         ticks++;
         Vec3 latest = ears.zomboidcraft$heardAt();
-        if (latest != null && !latest.equals(destination)) {
+        if (latest != null && !latest.equals(destination) && ticks - pathedAt >= REPATH_TICKS
+                && (latest.distanceToSqr(destination) > MOVED * MOVED || zombie.getNavigation().isDone())) {
+            // a fresh path only when the noise is somewhere new: footsteps and banging come twice a second, and a
+            // crowd planning a path to each one is what slows a big horde down
             destination = latest;
+            pathedAt = ticks;
             zombie.getNavigation().moveTo(destination.x, destination.y, destination.z, 1.0);
         } else if (ticks % 40 == 0 && zombie.getNavigation().isDone()) {
             zombie.getNavigation().moveTo(destination.x, destination.y, destination.z, 1.0);

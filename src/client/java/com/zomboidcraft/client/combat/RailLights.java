@@ -80,6 +80,13 @@ public final class RailLights {
     /** From outside, where the laser and the light sit from a player's eye (x right, y up, z back). */
     private static final Vector3f LASER_OUTSIDE = new Vector3f(0.20f, -0.24f, -0.55f), LIGHT_OUTSIDE = new Vector3f(0.10f, -0.30f, -0.55f);
 
+    /**
+     * Where each player's laser and light were when their body was last posed (HoldPoses), from their feet in the
+     * world, and when (wall clock ns): what's used from outside while it's fresh.
+     */
+    private static final Map<Integer, Seen> SEEN = new HashMap<>();
+    private static final long SEEN_FRESH_NS = 250_000_000L;
+
     /** The light blocks each player's gun light has put in, and how bright each is. */
     private static final Map<UUID, Map<BlockPos, Integer>> LIT = new HashMap<>();
     /** Where each player's light went in the last frame drawn, for the light blocks. */
@@ -101,6 +108,28 @@ public final class RailLights {
     private record Held(Vec3 eye, Vec3 look, Vec3 laser, Vec3 light, Vec3 bore, float onTarget) {
     }
 
+    private record Seen(Vec3 laser, Vec3 light, long at) {
+    }
+
+    /**
+     * A player's body has just been posed holding a gun: its laser and light lenses, in the player model's pixels
+     * (y down, facing -z), are put into the world the way the renderer puts the model there.
+     */
+    static void seen(net.minecraft.client.renderer.entity.state.AvatarRenderState state, Vector3f laser, Vector3f light) {
+        SEEN.put(state.id, new Seen(fromFeet(state, laser), fromFeet(state, light), System.nanoTime()));
+    }
+
+    private static Vec3 fromFeet(net.minecraft.client.renderer.entity.state.AvatarRenderState state, Vector3f p) {
+        // LivingEntityRenderer: turn by the body, flip, scale 0.9375 (a player), up 1.501 blocks
+        float s = 0.9375f * state.scale;
+        Vector3f v = new Vector3f(-p.x / 16f * s, -(p.y / 16f - 1.501f) * s, p.z / 16f * s);
+        v.rotateY((float) Math.toRadians(180 - state.bodyRot));
+        if (state.hasPose(net.minecraft.world.entity.Pose.CROUCHING)) {
+            v.y -= 2 / 16f * state.scale;   // the crouch drops the whole model a little
+        }
+        return new Vec3(v.x, v.y, v.z);
+    }
+
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(RailLights::tick);
         LevelRenderEvents.COLLECT_SUBMITS.register(RailLights::draw);
@@ -113,6 +142,7 @@ public final class RailLights {
         if (level != litIn) {
             LIT.clear();            // the old copy of the world went with its lights
             LANDS.clear();
+            SEEN.clear();
             litIn = level;
         }
         if (level == null) {
@@ -275,6 +305,12 @@ public final class RailLights {
         }
         float partial = cam.cameraEntityPartialTicks;
         Vec3 eye = player.getEyePosition(partial), look = player.getViewVector(partial);
+        Seen seen = SEEN.get(player.getId());
+        if (seen != null && System.nanoTime() - seen.at() < SEEN_FRESH_NS) {
+            // the lenses where the gun is in the arms they're seen with, turned to what the player looks at
+            Vec3 feet = player.getPosition(partial);
+            return new Held(eye, look, feet.add(seen.laser()), feet.add(seen.light()), look, 1);
+        }
         Basis b = new Basis(look);
         return new Held(eye, look, b.at(eye, LASER_OUTSIDE, 1), b.at(eye, LIGHT_OUTSIDE, 1), look, 1);
     }
