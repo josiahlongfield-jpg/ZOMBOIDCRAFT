@@ -340,7 +340,10 @@ public final class Carry {
     private static void spill(ServerPlayer player, ItemStack stack) {
         player.getInventory().add(stack);
         if (!stack.isEmpty()) {
-            player.drop(stack, false);
+            net.minecraft.world.entity.item.ItemEntity dropped = new net.minecraft.world.entity.item.ItemEntity(player.level(),
+                    player.getX(), player.getEyeY() - 0.3, player.getZ(), stack.copyAndClear());
+            dropped.setPickUpDelay(40);
+            player.level().addFreshEntity(dropped);
         }
     }
 
