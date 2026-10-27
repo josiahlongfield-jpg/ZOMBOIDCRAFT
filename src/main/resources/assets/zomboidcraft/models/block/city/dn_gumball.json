@@ -1,0 +1,255 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_enamel_red": "zomboidcraft:block/city/dn_enamel_red",
+    "dn_gumball": {
+      "sprite": "zomboidcraft:block/city/dn_gumball",
+      "force_translucent": true
+    },
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/dn_enamel_red"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        0.8,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_red"
+        },
+        "south": {
+          "texture": "#dn_enamel_red"
+        },
+        "east": {
+          "texture": "#dn_enamel_red"
+        },
+        "west": {
+          "texture": "#dn_enamel_red"
+        },
+        "up": {
+          "texture": "#dn_enamel_red"
+        },
+        "down": {
+          "texture": "#dn_enamel_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        0.8,
+        7.4
+      ],
+      "to": [
+        8.6,
+        8,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        5
+      ],
+      "to": [
+        11,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_red"
+        },
+        "south": {
+          "texture": "#dn_enamel_red"
+        },
+        "east": {
+          "texture": "#dn_enamel_red"
+        },
+        "west": {
+          "texture": "#dn_enamel_red"
+        },
+        "up": {
+          "texture": "#dn_enamel_red"
+        },
+        "down": {
+          "texture": "#dn_enamel_red"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        11,
+        4.5
+      ],
+      "to": [
+        11.5,
+        17,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_gumball",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#dn_gumball",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#dn_gumball",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#dn_gumball",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#dn_gumball"
+        },
+        "down": {
+          "texture": "#dn_gumball"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        17,
+        6.5
+      ],
+      "to": [
+        9.5,
+        18,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            1
+          ]
+        },
+        "south": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            1
+          ]
+        },
+        "east": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            1
+          ]
+        },
+        "up": {
+          "texture": "#dn_enamel_red"
+        },
+        "down": {
+          "texture": "#dn_enamel_red"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        4.4
+      ],
+      "to": [
+        9,
+        10,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

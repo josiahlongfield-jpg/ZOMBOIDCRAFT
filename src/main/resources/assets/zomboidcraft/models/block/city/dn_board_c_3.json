@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_board_c_3": "zomboidcraft:block/city/dn_board_c_3",
+    "dn_mansard": "zomboidcraft:block/city/dn_mansard",
+    "particle": "zomboidcraft:block/city/dn_board_c_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_board_c_3"
+        },
+        "south": {
+          "texture": "#dn_mansard",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dn_mansard",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dn_mansard",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dn_mansard",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dn_mansard",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

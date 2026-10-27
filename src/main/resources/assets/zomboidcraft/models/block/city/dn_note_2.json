@@ -1,0 +1,66 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_note_2": "zomboidcraft:block/city/dn_note_2",
+    "home_white": "zomboidcraft:block/city/home_white",
+    "particle": "zomboidcraft:block/city/dn_note_2"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        21.6
+      ],
+      "to": [
+        14,
+        15,
+        22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_note_2"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white",
+          "uv": [
+            0,
+            1,
+            0.3999999999999986,
+            13
+          ]
+        },
+        "west": {
+          "texture": "#home_white",
+          "uv": [
+            15.600000000000001,
+            1,
+            16,
+            13
+          ]
+        },
+        "up": {
+          "texture": "#home_white",
+          "uv": [
+            2,
+            15.600000000000001,
+            14,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#home_white",
+          "uv": [
+            2,
+            0,
+            14,
+            0.3999999999999986
+          ]
+        }
+      }
+    }
+  ]
+}

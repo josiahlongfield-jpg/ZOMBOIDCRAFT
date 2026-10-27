@@ -1,0 +1,239 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dn_enamel_red": "zomboidcraft:block/city/dn_enamel_red",
+    "dn_trim_r": "zomboidcraft:block/city/dn_trim_r",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "sc_glass": {
+      "sprite": "zomboidcraft:block/city/sc_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/sc_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        -0.5,
+        3
+      ],
+      "to": [
+        14,
+        7,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_glass",
+          "uv": [
+            2,
+            8.5,
+            14,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#sc_glass",
+          "uv": [
+            2,
+            8.5,
+            14,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#sc_glass",
+          "uv": [
+            3,
+            8.5,
+            13,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#sc_glass",
+          "uv": [
+            3,
+            8.5,
+            13,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#sc_glass"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        -0.4,
+        4
+      ],
+      "to": [
+        7,
+        1.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            9,
+            14.100000000000001,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            3,
+            14.100000000000001,
+            7,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            8,
+            14.100000000000001,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            4,
+            14.100000000000001,
+            8,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#dn_trim_r"
+        },
+        "down": {
+          "texture": "#dn_trim_r"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        -0.4,
+        4
+      ],
+      "to": [
+        12,
+        1.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            4,
+            14.100000000000001,
+            8,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            8,
+            14.100000000000001,
+            12,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            8,
+            14.100000000000001,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#dn_enamel_red",
+          "uv": [
+            4,
+            14.100000000000001,
+            8,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#dn_enamel_red"
+        },
+        "down": {
+          "texture": "#dn_enamel_red"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        -0.4,
+        8.5
+      ],
+      "to": [
+        9,
+        1.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            7,
+            14.100000000000001,
+            11,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            5,
+            14.100000000000001,
+            9,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            4,
+            14.100000000000001,
+            7.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#dn_trim_r",
+          "uv": [
+            8.5,
+            14.100000000000001,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#dn_trim_r"
+        },
+        "down": {
+          "texture": "#dn_trim_r"
+        }
+      }
+    }
+  ]
+}
