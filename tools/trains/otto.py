@@ -209,7 +209,12 @@ def paint():
         for x in range(16):
             dd = math.hypot(x - 7.5, y - 7.5) / 8
             v = max(0, 1 - dd)
-            img.putpixel((x, y), (clamp(140 + 115 * v), clamp(8 + 200 * v ** 4), clamp(8 + 160 * v ** 6), 255))
+            if dd > 0.92:                                           # the socket's black rim
+                img.putpixel((x, y), (18, 6, 5, 255))
+            elif dd > 0.7:                                          # a dull red ring round the lens
+                img.putpixel((x, y), (120, 10, 6, 255))
+            else:
+                img.putpixel((x, y), (clamp(215 + 40 * v), clamp(10 + 150 * v ** 4), clamp(6 + 90 * v ** 6), 255))
     p.put(img, at)
     # the skull plate: bone-pale enamel, cracked, rust tears from the sockets, nose slit, cheek vents
     img, at = p.region('face', 64, 64)
@@ -438,7 +443,7 @@ def build():
     # the eyes, deep in their sockets
     st['part'], st['light'] = EYES, GLOW
     for sx in (-1, 1):
-        box(sx * 0.085 - 0.03, 2.245, -0.172, sx * 0.085 + 0.03, 2.28, -0.168, nz='eye')
+        box(sx * 0.085 - 0.03, 2.284, -0.173, sx * 0.085 + 0.03, 2.328, -0.168, nz=('eye', (0, 0, 1, 1)))
     st['part'], st['light'] = HEAD, INSIDE
     # the cap: crown, band and badge, and a cracked brim, knocked a little askew
     box(-0.21, 2.46, -0.2, 0.22, 2.56, 0.22, nx='cap', px='cap', py='cap', nz='cap', pz='cap', ny=D)

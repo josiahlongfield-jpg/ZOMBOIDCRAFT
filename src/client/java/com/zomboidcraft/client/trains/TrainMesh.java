@@ -66,6 +66,8 @@ final class TrainMesh {
         byte light;
         int part;
         boolean glass;
+        /** The lamp this is the tube of (-1: none), and the two lamps nearest it that light it (inside quads). */
+        int lamp = -1, near = -1, near2 = -1;
     }
 
     /** A door leaf: which side of the car it's on and which way it slides open (along z). */
@@ -76,9 +78,13 @@ final class TrainMesh {
     final List<Leaf> leaves = new ArrayList<>();
     /** OTTO's head pivot and jaw hinge, in the car's frame (front car only). */
     float[] headPivot, jawPivot;
+    /** The ceiling lamps, by where along the car they hang, and which one lights the cab (-1: no cab). */
+    final List<Float> lamps = new ArrayList<>();
+    int cabLamp = -1;
 
     private int seed;
     private int part = STATIC;
+    private int lamp = -1;
     private byte light = OUTSIDE;
 
     private static final Map<String, TrainMesh> CACHE = new HashMap<>();
@@ -182,12 +188,15 @@ final class TrainMesh {
         // ---- the inside
         light = INSIDE;
         box(-w + t, -0.05, -h + t, w - t, 0, h - t, null, null, null, FLOOR, null, null);
-        // ceiling with the light strip down the middle
-        box(-w + t, ceil - 0.02, -h + t, -0.5, ceil, h - t, null, null, CEILING, null, null, null);
-        box(0.5, ceil - 0.02, -h + t, w - t, ceil, h - t, null, null, CEILING, null, null, null);
-        light = GLOW;
-        box(-0.5, ceil - 0.06, -h + t, 0.5, ceil, h - t, null, null, LIGHT, null, null, null);
-        light = INSIDE;
+        // the ceiling, with a row of tube lamps down the middle (some of them failing: TrainRenderer flickers them)
+        box(-w + t, ceil - 0.02, -h + t, w - t, ceil, h - t, null, null, CEILING, null, null, null);
+        double lampsEnd = front ? TrainCar.CAB : h - t;
+        int lampCount = (int) Math.floor((lampsEnd + h - t) / 3.0);
+        double lampPitch = (lampsEnd + h - t) / lampCount;
+        for (int i = 0; i < lampCount; i++) {
+            double zc = -h + t + lampPitch * (i + 0.5);
+            lamp(zc - 1.15, zc + 1.15);
+        }
         // benches along the walls, with backs
         for (int side = -1; side <= 1; side += 2) {
             for (double[] run : TrainCar.seatRuns(front)) {
@@ -218,6 +227,7 @@ final class TrainMesh {
         if (front) {
             cab(subway);
         }
+        nearLamps(front);
         if (back) {
             // a rear cab window and tail lamps
             light = GLOW;
@@ -228,6 +238,53 @@ final class TrainMesh {
     }
 
     // ------------------------------------------------------------------ pieces
+
+    /** A tube lamp on the ceiling's centreline: a housing with a glowing diffuser underneath. */
+    private void lamp(double z0, double z1) {
+        double ceil = TrainCar.CEILING;
+        byte was = light;
+        light = INSIDE;
+        box(-0.45, ceil - 0.08, z0, 0.45, ceil - 0.02, z1, CEILING, CEILING, null, null, CEILING, CEILING);
+        light = GLOW;
+        lamp = lamps.size();
+        box(-0.38, ceil - 0.085, z0 + 0.06, 0.38, ceil - 0.08, z1 - 0.06, null, null, LIGHT, null, null, null);
+        lamp = -1;
+        light = was;
+        lamps.add((float) ((z0 + z1) / 2));
+    }
+
+    /** Which lamps light each inside quad: the cab's for anything in the cab, else the two nearest along the car. */
+    private void nearLamps(boolean front) {
+        for (Quad q : quads) {
+            if (q.light != INSIDE || lamps.isEmpty()) {
+                continue;
+            }
+            float z = (q.p[2] + q.p[5] + q.p[8] + q.p[11]) / 4;
+            if (front && cabLamp >= 0 && z > TrainCar.CAB) {
+                q.near = q.near2 = cabLamp;
+                continue;
+            }
+            float best = Float.MAX_VALUE, second = Float.MAX_VALUE;
+            for (int i = 0; i < lamps.size(); i++) {
+                if (i == cabLamp) {
+                    continue;
+                }
+                float d = Math.abs(lamps.get(i) - z);
+                if (d < best) {
+                    second = best;
+                    q.near2 = q.near;
+                    best = d;
+                    q.near = i;
+                } else if (d < second) {
+                    second = d;
+                    q.near2 = i;
+                }
+            }
+            if (q.near2 < 0) {
+                q.near2 = q.near;
+            }
+        }
+    }
 
     /** A run of side wall: outer face skinned, inner face panelled, top and bottom edges plain. */
     private void sideBox(int side, double x0, double x1, double y0, double y1, double z0, double z1, Mat out, Mat in) {
@@ -378,6 +435,9 @@ final class TrainMesh {
             quad.light = (byte) q[i + 24];
             quads.add(quad);
         }
+        // his own lamp, right over his head
+        cabLamp = lamps.size();
+        lamp(oz - 0.6, oz + 0.6);
         headPivot = new float[] {(float) ox + OttoModel.HEAD_PIVOT[0], OttoModel.HEAD_PIVOT[1], (float) oz + OttoModel.HEAD_PIVOT[2]};
         jawPivot = new float[] {(float) ox + OttoModel.JAW_PIVOT[0], OttoModel.JAW_PIVOT[1], (float) oz + OttoModel.JAW_PIVOT[2]};
         part = STATIC;
@@ -441,6 +501,7 @@ final class TrainMesh {
                 q.nz = nz;
                 q.light = light;
                 q.part = part;
+                q.lamp = lamp;
                 q.glass = mat.glass();
                 quads.add(q);
             }
