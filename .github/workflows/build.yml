@@ -107,7 +107,7 @@ jobs:
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
           sleep 8
           echo 'zc train list' >&3
-          sleep 22  # it comes in to its platform about 25 s after the loop is laid, and stands there with its doors open
+          sleep 32  # it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
           echo 'zc train list' >&3
           sleep 2
           echo 'stop' >&3
