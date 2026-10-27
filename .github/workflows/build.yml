@@ -148,7 +148,7 @@ jobs:
           rm -rf run/world
           mkdir -p build/county
           javac -d build/county src/main/java/com/zomboidcraft/world/city/*.java src/main/java/com/zomboidcraft/world/county/*.java tools/county/ListPlaces.java
-          java -cp build/county ListPlaces 12345 6000 | tee places.txt
+          java -cp build/county:src/main/resources ListPlaces 12345 6000 | tee places.txt
           printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
           grep level- run/server.properties
           trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
