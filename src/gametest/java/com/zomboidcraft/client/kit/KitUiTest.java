@@ -182,6 +182,8 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.waitTicks(5);
             buildTest(ctx, sp);
             wave2Test(ctx, sp);
+            swapTest(ctx, sp, false);
+            swapTest(ctx, sp, true);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -302,6 +304,73 @@ public class KitUiTest implements FabricClientGameTest {
         });
         ctx.waitTicks(10);
         ctx.takeScreenshot("wave2-builds");
+    }
+
+    /**
+     * Fits a red dot from the kit's bench and takes it off again, then says where it went on both sides: it should
+     * land in a carried slot and show in the spares list. With {@code full}, the pockets and belt are full first.
+     */
+    private static void swapTest(ClientGameTestContext ctx, TestSingleplayerContext sp, boolean full) {
+        String tag = full ? "full" : "room";
+        sp.getServer().runCommand("clear @a");
+        for (String c : List.of("give @a zomboidcraft:assault_rifle", "give @a zomboidcraft:red_dot_sight")) sp.getServer().runCommand(c);
+        if (full) sp.getServer().runCommand("give @a minecraft:dirt 2000");
+        ctx.waitTicks(10);
+        sp.getServer().runOnServer(s -> s.overworld().getEntitiesOfClass(ItemEntity.class, s.getPlayerList().getPlayers().get(0).getBoundingBox().inflate(6))
+                .forEach(e -> e.discard()));
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        String fit = ctx.computeOnClient(mc -> {
+            if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit: " + mc.gui.screen();
+            int gun = -1, dot = -1;
+            for (int i : k.carried()) {
+                ItemStack s = k.menu().slots.get(i).getItem();
+                if (s.is(ModItems.ASSAULT_RIFLE)) gun = i;
+                if (s.is(ModItems.RED_DOT_SIGHT)) dot = i;
+            }
+            if (gun < 0 || dot < 0) return "missing gun " + gun + " dot " + dot;
+            k.button(com.zomboidcraft.combat.Bench.fitButton(dot, gun, com.zomboidcraft.combat.Attachments.Slot.OPTIC));
+            return "gun " + gun + " dot " + dot;
+        });
+        ctx.waitTicks(10);
+        String fitted = sp.getServer().computeOnServer(s -> where(s.getPlayerList().getPlayers().get(0).inventoryMenu));
+        String off = ctx.computeOnClient(mc -> {
+            if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+            for (int i : k.carried()) {
+                if (k.menu().slots.get(i).getItem().is(ModItems.ASSAULT_RIFLE)) {
+                    k.button(com.zomboidcraft.combat.Bench.takeOffButton(i, com.zomboidcraft.combat.Attachments.Slot.OPTIC));
+                    return "took off from " + i + "; client now " + where(k.menu());
+                }
+            }
+            return "no gun";
+        });
+        ctx.waitTicks(10);
+        String server = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            return where(p.inventoryMenu) + " dropped=" + p.level().getEntitiesOfClass(ItemEntity.class, p.getBoundingBox().inflate(6)).stream()
+                    .filter(e -> !e.getItem().is(Items.DIRT)).map(e -> e.getItem().toString()).toList();
+        });
+        String client = ctx.computeOnClient(mc -> {
+            if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+            List<Integer> spares = new ArrayList<>();
+            for (int i : k.carried()) if (k.menu().slots.get(i).getItem().is(ModItems.RED_DOT_SIGHT)) spares.add(i);
+            return where(k.menu()) + " spares listed from " + spares;
+        });
+        LOG.info("ZCUI swap {}: fit {} -> server {} | take off {} | server {} | client {}", tag, fit, fitted, off, server, client);
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(5);
+    }
+
+    /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
+    private static String where(net.minecraft.world.inventory.AbstractContainerMenu menu) {
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < menu.slots.size(); i++) {
+            ItemStack s = menu.slots.get(i).getItem();
+            if (s.is(ModItems.RED_DOT_SIGHT)) out.append("dot@").append(i).append('(').append(menu.slots.get(i).getClass().getSimpleName()).append(") ");
+            if (s.is(ModItems.ASSAULT_RIFLE)) out.append("rifle@").append(i).append(" optic=")
+                    .append(com.zomboidcraft.combat.Attachments.get(s, com.zomboidcraft.combat.Attachments.Slot.OPTIC)).append(' ');
+        }
+        return out.toString();
     }
 
     private static String digProbe(MinecraftServer server) {
