@@ -51,6 +51,8 @@ public final class Noise {
                 player.setAttached(HEARD, new Heard((int) Math.round(radius * 10), ++heard));
             }
         }
+        // the dead still waiting as records in earshot come out to it too
+        com.zomboidcraft.zombie.population.Population.wake(level, pos, radius);
         double radiusSqr = radius * radius;
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, new AABB(pos, pos).inflate(radius))) {
             if (ZombieTypes.isWalker(zombie) && zombie.getTarget() == null

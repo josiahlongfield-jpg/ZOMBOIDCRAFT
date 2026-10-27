@@ -75,6 +75,7 @@ public final class ZcConfig {
     public Building building = new Building();
     /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
     public Performance performance = new Performance();
+    public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
 
@@ -130,6 +131,32 @@ public final class ZcConfig {
         public double idleThinkDistance = 32;
         /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
         public boolean showStats = false;
+    }
+
+    /**
+     * The world's dead, placed once when the world is made (towns start full) and kept as light records until a player
+     * comes near: only those near someone are real, thinking zombies. Sizes per place are in Budgets.
+     */
+    public static class Population {
+        public boolean enabled = true;
+        /** Multiplies every place's count (Zomboid's population setting): 0.25 to 4. */
+        public double density = 1.0;
+        /** At most this many real zombies at once, shared by every player. */
+        public int realCap = 250;
+        /** Zombies out in the open become real within this many blocks of a player. */
+        public double streetRange = 96;
+        /** Zombies indoors become real within this many blocks of a player... */
+        public double indoorRange = 32;
+        /** ...and this many blocks up or down (about two floors), so a tower wakes floor by floor. */
+        public double indoorFloors = 9;
+        /** Real zombies left idle this far beyond those ranges go back to being records. */
+        public double foldMargin = 16;
+        /** How many become real in one go (twice a second), so a crowd arrives without a stall. */
+        public int perStep = 24;
+        /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
+        public double emptyHouses = 0.5;
+        /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
+        public int respawnDays = 0;
     }
 
     public static class Cases {
@@ -317,8 +344,13 @@ public final class ZcConfig {
         public double barricadeDamage = 1.0;
         /** Zombies on your trail pound shut doors until they break (they never open them). */
         public boolean bashDoors = true;
-        /** Average hits a shut door takes before it gives way; one zombie hits about once a second. */
-        public int doorHits = 12;
+        /**
+         * Hits a shut door takes before it gives way, shared by everyone pounding on it: one zombie hits about once a
+         * second, so alone it takes two minutes and ten of them about twelve seconds.
+         */
+        public int doorHits = 120;
+        /** The same for a window's glass. */
+        public int windowHits = 45;
         /** A walker screams when it first spots you. */
         public boolean alertScreams = true;
         /** Seconds before the same zombie can scream again. */
@@ -363,7 +395,8 @@ public final class ZcConfig {
     }
 
     public static class Spawning {
-        public boolean enabled = true;
+        /** The old steady spawner round each player; off since the world's population took over (population). */
+        public boolean enabled = false;
         public int intervalSeconds = 10;
         /** No new groups while this many zombies are within 64 blocks of a player. */
         public int nearbyCap = 24;
@@ -1125,7 +1158,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 7;
+    private static final int DEFAULTS = 8;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1212,6 +1245,14 @@ public final class ZcConfig {
             // 2026-10-27 (Josiah): more sprinters, one in seven instead of one in twenty
             if (c.zombies.sprinterChance == 0.05) {
                 c.zombies.sprinterChance = 0.15;
+            }
+        }
+        if (c.defaultsVersion < 8) {
+            // 2026-10-27 (Josiah): the world's population replaces the steady spawner, and doors hold far longer, the
+            // more zombies on them the sooner they give
+            c.spawning.enabled = false;
+            if (c.zombies.doorHits == 12) {
+                c.zombies.doorHits = 120;
             }
         }
         c.defaultsVersion = DEFAULTS;

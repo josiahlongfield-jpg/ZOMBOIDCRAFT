@@ -120,6 +120,14 @@ public final class CountyChunkGenerator extends ChunkGenerator {
         return (int) Math.floor(county.ground(x, z, near));
     }
 
+    /**
+     * The first block above the ground (or the water) the world was made with, as WORLD_SURFACE_WG gives it; `near`
+     * is the places round the spot (placesNear with County.SKIRT), worked out once for a whole chunk.
+     */
+    public static int surface(County county, int x, int z, List<Place> near) {
+        return Math.max((int) Math.floor(county.ground(x, z, near)), Terrain.WATER - 1) + 1;
+    }
+
     @Override
     public int getBaseHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor level, RandomState random) {
         int g = ground(gen(random.seed()).county(), x, z);

@@ -123,7 +123,7 @@ public final class ZombieSpawner {
      * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
      * patients. Null leaves the zombie to the general mix.
      */
-    private static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
+    public static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
         if (onShip(level, pos)) {
             return random.nextInt(100) < 85 ? "soldier" : null;
         }

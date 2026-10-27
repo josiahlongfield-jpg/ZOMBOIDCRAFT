@@ -60,7 +60,8 @@ public final class PerfCommand {
         perf.showStats = !perf.showStats;
         ZcConfig.save();
         String readout = perf.showStats ? "Hotbar readout on (run /zc perf again to turn it off)" : "Hotbar readout off";
-        ctx.getSource().sendSuccess(() -> Component.literal(line + "\n" + readout), false);
+        String pop = com.zomboidcraft.zombie.population.Population.stats();
+        ctx.getSource().sendSuccess(() -> Component.literal(line + "\n" + pop + "\n" + readout), false);
         return walkers;
     }
 

@@ -29,7 +29,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Writes {@link com.zomboidcraft.world.county.CountyGen}'s blocks straight into a chunk's sections. */
-final class ChunkWriter implements ChunkSink {
+public final class ChunkWriter implements ChunkSink {
     private static final Map<String, BlockState> STATES = new ConcurrentHashMap<>();
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
 
@@ -47,7 +47,7 @@ final class ChunkWriter implements ChunkSink {
         this.maxY = chunk.getMinY() + chunk.getHeight() - 1;
     }
 
-    static BlockState resolve(String name) {
+    public static BlockState resolve(String name) {
         BlockState s = STATES.get(name);
         if (s == null) {
             BlockState real = name.equals("air") ? AIR : name.startsWith("minecraft:") || ZcConfig.get().world.cityStandIns
