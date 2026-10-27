@@ -203,7 +203,7 @@ public final class CombatClient {
                 (suppressed ? (float) stats.suppressedPitch : 1f) * (1f - vary / 2 + player.getRandom().nextFloat() * vary));
         // the case comes out with the shot, here, rather than when the server's tick gets to it
         if (!type.manual() && !type.opens && type != GunType.CROSSBOW) {
-            EarSound.play(com.zomboidcraft.ModSounds.CASING, SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+            EarSound.play(com.zomboidcraft.combat.ModSounds.CASING, SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
