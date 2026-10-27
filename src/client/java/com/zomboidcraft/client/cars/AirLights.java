@@ -2,23 +2,17 @@ package com.zomboidcraft.client.cars;
 
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.world.cars.CarProp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
-import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -34,10 +28,10 @@ import org.joml.Vector3f;
  * An aircraft's outside lights while its engines run: red and green navigation lights that flash (the
  * jets' wing tips, port red and starboard green; the helicopter's nose and tail), and the helicopter's
  * searchlight, a beam slanting down ahead of the nose that lights up the ground where it lands (L in the
- * pilot's seat switches it). Up close they're glows in the world; further off fog and haze would swallow
- * those, so each light you could see from where you stand (nothing solid in the way) is also drawn as a
- * point of light over the view, as a light in the night sky looks through mist, and the searchlight's
- * beam and the patch it lights are dotted in the same way.
+ * pilot's seat switches it). Up close they're soft glows where they are; further off, where fog and haze
+ * would swallow them, each one you could see from where you stand (nothing solid in the way) is drawn a few
+ * blocks in front of the camera on the line to it instead, scaled to look exactly as it would, so lights,
+ * beam and the lit patch carry through the murk the way lights in the night sky do.
  */
 final class AirLights {
     private static final float[] RED = {1f, 0.12f, 0.08f}, GREEN = {0.15f, 1f, 0.3f}, WHITE = {1f, 0.97f, 0.88f};
@@ -49,18 +43,17 @@ final class AirLights {
     /** The helicopter's searchlight under its nose, and the way it points: ahead and 30 degrees down. */
     private static final Vector3f SEARCH_AT = new Vector3f(0, 0.8f, 5.4f), SEARCH_DIR = new Vector3f(0, -0.5f, 0.866f);
     private static final double SEARCH_REACH = 140, NEAR = 256;
-    /** Past this far the world's glows fade out under the haze and the points over the view take over. */
-    private static final double HAZE_FROM = 18, HAZE_FULL = 40;
+    /**
+     * Past this far a light's glow fades out where it is and comes in drawn PROXY blocks in front of the camera
+     * instead, on the line to it, where fog and haze don't reach; never smaller than MIN_ANGLE across (radians).
+     */
+    private static final double HAZE_FROM = 16, HAZE_FULL = 32, PROXY = 6, MIN_ANGLE = 0.0022;
+    private static final Identifier POINT = ZomboidCraft.id("textures/effect/air_glow.png"), BEAM = ZomboidCraft.id("textures/effect/rail_glow.png");
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
     private record Light(float x, float y, float z, float[] rgb) {
     }
 
-    /** A light seen from the camera this frame, for the view: where, what colour, how strong, how big. */
-    private record Seen(Vec3 at, float[] rgb, float strength, int size) {
-    }
-
-    private static final List<Seen> SEEN = new ArrayList<>();
     /** The light blocks each helicopter's searchlight has put where it lands, client side only. */
     private static final Map<Integer, BlockPos> LIT = new HashMap<>();
     private static ClientLevel litIn;
@@ -70,7 +63,6 @@ final class AirLights {
 
     static void register() {
         LevelRenderEvents.COLLECT_SUBMITS.register(AirLights::world);
-        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, ZomboidCraft.id("air_lights"), AirLights::view);
         ClientTickEvents.END_CLIENT_TICK.register(AirLights::tick);
     }
 
@@ -94,19 +86,17 @@ final class AirLights {
         return new Vec3(pos.x + v.x, pos.y + pivot + v.y, pos.z + v.z);
     }
 
-    // ------------------------------------------------------------------ in the world, every frame
+    // ------------------------------------------------------------------ every frame
 
     private static void world(LevelRenderContext context) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         CameraRenderState cam = context.levelState().cameraRenderState;
-        SEEN.clear();
-        camPos = cam == null ? null : cam.pos;
         if (level == null || cam == null || cam.pos == null || mc.player == null) {
             return;
         }
         boolean shaders = CarLights.shaderPackOn();
-        CarLights.Quads quads = new CarLights.Quads(cam.pos, shaders);
+        CarLights.Quads points = new CarLights.Quads(cam.pos, shaders), beams = new CarLights.Quads(cam.pos, shaders);
         float partial = cam.cameraEntityPartialTicks;
         for (CarProp car : level.getEntitiesOfClass(CarProp.class, new AABB(cam.pos, cam.pos).inflate(NEAR), AirLights::lit)) {
             Quaternionf q = car.flight().qO.slerp(car.flight().q, partial, new Quaternionf());
@@ -115,27 +105,48 @@ final class AirLights {
             boolean own = car.hasPassenger(mc.player);
             for (Light light : LIGHTS.get(car.model())) {
                 Vec3 at = place(pos, q, pivot, light.x(), light.y(), light.z());
-                double d = at.distanceTo(cam.pos);
-                float near = (float) (1 - Math.clamp((d - HAZE_FROM) / (HAZE_FULL - HAZE_FROM), 0, 1));
-                if (near > 0.01f) {
-                    quads.spot(at, 0.18 + 0.4 * flash, quads.shade(light.rgb(), Math.min(1, 0.95f * flash * near + 0.08f)));
-                }
-                if (!own && near < 0.99f && clear(level, cam.pos, at, car)) {
-                    SEEN.add(new Seen(at, light.rgb(), flash * (1 - near), flash > 0.5f ? 2 : 1));
-                }
+                float k = flash > 0.5f ? 1f : 0.3f;
+                point(level, car, cam.pos, at, 0.09 + 0.07 * flash, light.rgb(), k, own, points);
             }
             if (searching(car)) {
-                search(level, car, q, pos, pivot, cam.pos, own, quads);
+                search(level, car, q, pos, pivot, cam.pos, own, points, beams);
             }
         }
-        if (quads.count > 0) {
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(shaders), quads::emit);
+        if (beams.count > 0) {
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(BEAM, shaders), beams::emit);
         }
+        if (points.count > 0) {
+            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(POINT, shaders), points::emit);
+        }
+    }
+
+    /**
+     * A light of half size half at at: a soft glow where it is while it's near; further off, where fog and haze
+     * would swallow it, the same glow drawn close in front of the camera along the line to it, sized to look
+     * as big as it would (never smaller than a few pixels), as long as nothing solid is in the way.
+     */
+    private static void point(ClientLevel level, CarProp car, Vec3 cam, Vec3 at, double half, float[] rgb, float strength, boolean own,
+                              CarLights.Quads quads) {
+        double d = at.distanceTo(cam);
+        float near = near(d);
+        if (near > 0.01f) {
+            quads.spot(at, half, quads.shade(rgb, strength * near));
+        }
+        if (own || near > 0.99f || !clear(level, cam, at, car)) {
+            return;
+        }
+        Vec3 dir = at.subtract(cam).scale(1 / d);
+        quads.spot(cam.add(dir.scale(PROXY)), PROXY * Math.max(half / d, MIN_ANGLE), quads.shade(rgb, strength * (1 - near)));
+    }
+
+    /** How much of a light is drawn where it really is (1) rather than in front of the camera (0), by distance. */
+    private static float near(double d) {
+        return (float) (1 - Math.clamp((d - HAZE_FROM) / (HAZE_FULL - HAZE_FROM), 0, 1));
     }
 
     /** The searchlight: its lamp, the beam down to where it lands, and a bright patch there. */
     private static void search(ClientLevel level, CarProp car, Quaternionf q, Vec3 pos, float pivot, Vec3 cam, boolean own,
-                               CarLights.Quads quads) {
+                               CarLights.Quads points, CarLights.Quads beams) {
         Vec3 lamp = place(pos, q, pivot, SEARCH_AT.x, SEARCH_AT.y, SEARCH_AT.z);
         Vector3f d = q.transform(new Vector3f(SEARCH_DIR));
         Vec3 dir = new Vec3(d.x, d.y, d.z);
@@ -144,35 +155,47 @@ final class AirLights {
         boolean lands = hit.getType() != HitResult.Type.MISS;
         double length = lands ? hit.getLocation().distanceTo(lamp) : SEARCH_REACH;
         float dark = CarLights.darkness(level, BlockPos.containing(lamp));
-        float strength = 0.16f + 0.14f * dark;
-        quads.spot(lamp, 0.45, quads.shade(WHITE, 1f));
-        quads.ribbon(lamp, lamp.add(dir.scale(length)), 14, s -> 0.12 + s * 0.09, s -> quads.shade(WHITE,
-                (float) (strength * Math.min(1, s / 1.5) * Math.exp(-s / 70) * Math.min(1, (length - s) / 1.5 + 0.1))));
-        Vec3 patch = null;
+        float strength = 0.22f + 0.18f * dark;
+        point(level, car, cam, lamp, 0.35, WHITE, 1f, own, points);
+        // the beam: a smooth cone of light; where it runs off into the haze it's drawn in front of the camera instead
+        int steps = 32;
+        Vec3[] here = new Vec3[steps + 1], proxy = new Vec3[steps + 1];
+        double[] wide = new double[steps + 1], proxyWide = new double[steps + 1];
+        int[] colour = new int[steps + 1], proxyColour = new int[steps + 1];
+        boolean far = false;
+        for (int i = 0; i <= steps; i++) {
+            double f = (double) i / steps, s = length * f * f;
+            Vec3 p = lamp.add(dir.scale(s));
+            double width = 0.14 + s * 0.08, dist = p.distanceTo(cam);
+            float k = (float) (strength * Math.min(1, s / 1.5) * Math.exp(-s / 80) * Math.min(1, (length - s) / 1.5 + 0.1));
+            float n = near(dist);
+            here[i] = p;
+            wide[i] = width;
+            colour[i] = beams.shade(WHITE, k * n);
+            boolean seen = !own && n < 0.99f && clear(level, cam, p, car);
+            far |= seen;
+            Vec3 toward = p.subtract(cam).scale(1 / Math.max(dist, 1e-3));
+            proxy[i] = cam.add(toward.scale(PROXY));
+            proxyWide[i] = PROXY * width / Math.max(dist, 1e-3);
+            proxyColour[i] = beams.shade(WHITE, seen ? k * (1 - n) : 0);
+        }
+        beams.strip(here, wide, colour);
+        if (far) {
+            beams.strip(proxy, proxyWide, proxyColour);
+        }
         if (lands) {
             Direction face = hit.getDirection();
             Vec3 normal = new Vec3(face.getStepX(), face.getStepY(), face.getStepZ());
-            patch = hit.getLocation().add(normal.scale(0.02));
+            Vec3 patch = hit.getLocation().add(normal.scale(0.02));
             double r = Math.max(1.5, length * 0.13);
-            quads.flat(patch, normal, r, quads.shade(WHITE, 0.3f + 0.25f * dark));
-            quads.flat(patch.add(normal.scale(0.01)), normal, r * 0.55, quads.shade(WHITE, 0.25f + 0.2f * dark));
-        }
-        if (own) {
-            return;
-        }
-        // from far off: the lamp's glare, the beam as a dotted streak, and the patch it lights
-        if (clear(level, cam, lamp, car)) {
-            SEEN.add(new Seen(lamp, WHITE, 1f, 3));
-        }
-        int steps = 24;
-        for (int i = 2; i < steps; i++) {
-            Vec3 p = lamp.add(dir.scale(length * i / steps));
-            if (p.distanceTo(cam) > HAZE_FROM && clear(level, cam, p, car)) {
-                SEEN.add(new Seen(p, WHITE, 0.35f * (1 - 0.6f * i / steps), 1));
+            float n = near(patch.distanceTo(cam));
+            beams.flat(patch, normal, r, beams.shade(WHITE, (0.35f + 0.3f * dark) * n));
+            if (!own && n < 0.99f && clear(level, cam, patch.add(normal.scale(0.4)), car)) {
+                double dist = patch.distanceTo(cam);
+                Vec3 toward = patch.subtract(cam).scale(1 / dist);
+                // seen from afar the lit patch is a soft smudge of light, flattened as the ground is
+                beams.flat(cam.add(toward.scale(PROXY)), normal, PROXY * r / dist, beams.shade(WHITE, (0.35f + 0.3f * dark) * (1 - n)));
             }
-        }
-        if (patch != null && patch.distanceTo(cam) > HAZE_FROM && clear(level, cam, patch.add(0, 0.3, 0), car)) {
-            SEEN.add(new Seen(patch, WHITE, 0.8f, 3));
         }
     }
 
@@ -185,52 +208,6 @@ final class AirLights {
         }
         Vec3 end = cam.add(to.scale((d - 0.4) / d));
         return level.clip(new ClipContext(cam, end, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, car)).getType() == HitResult.Type.MISS;
-    }
-
-    // ------------------------------------------------------------------ over the view, through the haze
-
-    private static void view(GuiGraphicsExtractor g, DeltaTracker delta) {
-        Minecraft mc = Minecraft.getInstance();
-        if (SEEN.isEmpty()) {
-            return;
-        }
-        Camera camera = mc.gameRenderer.mainCamera();
-        Vec3 from = camPos;
-        if (from == null) {
-            return;
-        }
-        int w = g.guiWidth(), h = g.guiHeight();
-        float scale = (float) (h / 2 / Math.tan(Math.toRadians(camera.getFov()) / 2));
-        for (Seen s : SEEN) {
-            float[] p = FlightHud.project(camera, s.at().subtract(from), scale, w / 2, h / 2);
-            if (p == null || p[0] < -8 || p[1] < -8 || p[0] > w + 8 || p[1] > h + 8) {
-                continue;
-            }
-            int x = Math.round(p[0]), y = Math.round(p[1]);
-            float k = Math.clamp(s.strength(), 0, 1);
-            int core = s.size();
-            dot(g, x, y, core + 3, s.rgb(), 0.12f * k);
-            dot(g, x, y, core + 1, s.rgb(), 0.35f * k);
-            dot(g, x, y, core - 1, mix(s.rgb()), 0.95f * k);
-        }
-    }
-
-    /** The camera's place in the last frame drawn, for the view's points. */
-    private static Vec3 camPos;
-
-    /** A square of light radius r (0 is a single pixel) round x, y. */
-    private static void dot(GuiGraphicsExtractor g, int x, int y, int r, float[] rgb, float alpha) {
-        if (alpha < 0.01f || r < 0) {
-            return;
-        }
-        int a = Math.clamp(Math.round(alpha * 255), 0, 255);
-        int colour = a << 24 | Math.round(rgb[0] * 255) << 16 | Math.round(rgb[1] * 255) << 8 | Math.round(rgb[2] * 255);
-        g.fill(x - r, y - r, x + r + 1, y + r + 1, colour);
-    }
-
-    /** A light's hot middle: its colour washed toward white. */
-    private static float[] mix(float[] rgb) {
-        return new float[]{0.45f + 0.55f * rgb[0], 0.45f + 0.55f * rgb[1], 0.45f + 0.55f * rgb[2]};
     }
 
     // ------------------------------------------------------------------ the searchlight's real light
