@@ -20,10 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - imp_ground,imp_concrete
-          - imp_brick,imp_wood
-          - imp_metal,imp_car
-          - imp_glass,imp_soft
+          - thr_throw,thr_bottle,thr_can
+          - thr_brick,thr_firecracker,thr_fuse
+          - thr_flare,thr_alarm,thr_molotov
+          - thr_grenade,thr_ring
+          - thr_blast
+          - thr_fire
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
