@@ -21,9 +21,90 @@ public final class Builders {
             case HIDEOUT -> new HatchSite(p, county, out).build();
         }
         if (out instanceof Voxels v) {
+            clearHeadroom(v);
+            fitHatches(v);
             clearGrass(v);
             clearTrees(v);
         }
+    }
+
+    /** The treads of a real flight (vanilla stairs are mostly roofs and eaves, so they're left be). */
+    static boolean tread(String b) {
+        return b != null && !b.startsWith("minecraft:") && (b.contains("stairs") || b.startsWith("tr_stair"));
+    }
+
+    /**
+     * A body's headroom over every flight, whatever the builder left there: nothing but air in
+     * the three blocks over a tread (bar the treads of a flight above), so a player or a zombie
+     * climbing never meets the floor above, a lamp or a shelf with their head. Without it a stair
+     * whose floor opening started a step late couldn't be climbed at all.
+     */
+    static void clearHeadroom(Voxels v) {
+        List<String> pal = v.palette();
+        List<int[]> treads = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            if (id != 0 && tread(pal.get(id))) {
+                treads.add(new int[] {x, y, z});
+            }
+        });
+        for (int[] t : treads) {
+            for (int k = 1; k <= 3; k++) {
+                String b = v.get(t[0], t[1] + k, t[2]);
+                if (b != null && !tread(b) && !b.contains("door")) {
+                    v.set(t[0], t[1] + k, t[2], "air");
+                }
+            }
+        }
+    }
+
+    /** Ladders a hatch can stand over (not a stepladder, a slide's or the monkey bars). */
+    private static final Set<String> LADDERS = Set.of("ladder", "bunk_ladder", "minecraft:ladder", "vessel_pilot_ladder");
+
+    /**
+     * Every hatch over a ladder hinges on the far side from it: open, its leaf stands against the
+     * opposite wall, clear of the ladder, so whoever climbs comes straight up through the hole (a
+     * leaf on the ladder's own wall stands proud of the rungs and stops a head). A vanilla
+     * trapdoor there becomes the wooden cellar hatch, which climbs like the ladder below it.
+     */
+    static void fitHatches(Voxels v) {
+        List<String> pal = v.palette();
+        List<int[]> hatches = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            String b = id == 0 ? null : pal.get(id);
+            if (b != null && b.contains("half=") && (b.contains("trapdoor") || b.startsWith("bunk_hatch"))) {
+                hatches.add(new int[] {x, y, z});
+            }
+        });
+        for (int[] h : hatches) {
+            String below = v.get(h[0], h[1] - 1, h[2]);
+            if (below == null || !LADDERS.contains(below.split("\\[")[0])) {
+                continue;
+            }
+            String side = prop(below, "facing");
+            String b = v.get(h[0], h[1], h[2]);
+            String name = b.split("\\[")[0];
+            if (name.startsWith("minecraft:")) {
+                name = "bunk_hatch_wood";
+            }
+            String open = prop(b, "open");
+            v.set(h[0], h[1], h[2], name + "[facing=" + OPPOSITE.getOrDefault(side, "north") + ",half=" + prop(b, "half")
+                    + ",open=" + (open == null ? "false" : open) + "]");
+        }
+    }
+
+    private static final Map<String, String> OPPOSITE = Map.of("north", "south", "south", "north", "east", "west", "west", "east");
+
+    /** A block state's property, or null. */
+    static String prop(String state, String key) {
+        int i = state.indexOf(key + "=");
+        if (i < 0) {
+            return null;
+        }
+        int j = i + key.length() + 1, k = j;
+        while (k < state.length() && state.charAt(k) != ',' && state.charAt(k) != ']') {
+            k++;
+        }
+        return state.substring(j, k);
     }
 
     /**

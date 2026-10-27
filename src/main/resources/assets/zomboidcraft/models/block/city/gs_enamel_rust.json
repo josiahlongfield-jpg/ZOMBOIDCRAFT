@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_enamel_rust": "zomboidcraft:block/city/gs_enamel_rust",
+    "particle": "zomboidcraft:block/city/gs_enamel_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_enamel_rust",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

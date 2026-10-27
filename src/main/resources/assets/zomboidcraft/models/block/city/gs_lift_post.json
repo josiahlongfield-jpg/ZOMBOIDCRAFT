@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_lift_red": "zomboidcraft:block/city/gs_lift_red",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/gs_lift_red"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        1,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_lift_red"
+        },
+        "south": {
+          "texture": "#gs_lift_red"
+        },
+        "east": {
+          "texture": "#gs_lift_red"
+        },
+        "west": {
+          "texture": "#gs_lift_red"
+        },
+        "up": {
+          "texture": "#gs_lift_red"
+        },
+        "down": {
+          "texture": "#gs_lift_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        1,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

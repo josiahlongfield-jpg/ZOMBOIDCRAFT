@@ -242,7 +242,8 @@ final class Bank {
             }
         }
         Doors.abandoned(p, rng, x1, F + 1, zt + 1, "fire_door", "east", Doors.hinge(rng));
-        p.set(x1 + 1, F, zt + 1, "stone_trim");
+        // two half steps up to the sill (a whole block's rise strands a zombie)
+        p.set(x1 + 1, F, zt + 1, "cv_step_stone[facing=west]");
         p.set(x1 + 1, F - 1, zt + 1, "stone_trim");
         p.set(x1 + 2, F - 1, zt + 1, "cv_step_stone[facing=west]");
         // the alarm lamp high on the side, still flashing red in some

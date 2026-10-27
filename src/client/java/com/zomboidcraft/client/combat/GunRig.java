@@ -44,6 +44,8 @@ import java.util.Map;
  *                     go in through a gate on the right, each swung in about its nose (magCentre)
  * @param crossbow     a crossbow: the handle is its string, let go flat across at the hinge's z by a shot and drawn back
  *                     to the latch to cock it; its bolt is laid on the rail ahead of the latch and slid back into it
+ * @param hammer       an exposed hammer's pin (item pixels), its slide piece being the hammer; empty for none
+ * @param hammerCock   how far the hammer turns back about its pin (x) to full cock (degrees)
  */
 record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, float[] charge,
               Map<String, float[]> sights, float handleTravel, float[] chargeTurn, float[] chargePush,
@@ -53,5 +55,5 @@ record GunRig(float[] hipGrip, float[] hipTurn, float hipScale, float[] magOut, 
               float[] magAxis,
               boolean locksBack, boolean cycles, boolean supportGrip, boolean pump, boolean wristGrip, boolean bolt,
               float[] hinge, float[] openAxis, float openAngle, float[] cylAxis, float chamberStep, boolean opens,
-              boolean cylinder, boolean lever, boolean crossbow) {
+              boolean cylinder, boolean lever, boolean crossbow, float[] hammer, float hammerCock) {
 }

@@ -1935,6 +1935,8 @@ def blocks():
     out = {}
 
     def add(name, boxes, title, sound, rotate="facing", decor=False, tex=None, light=None, loot=None, **extra):
+        if rotate == "axis" and boxes:
+            boxes = P.along_z(boxes)
         spec = {"model": "boxes", "boxes": boxes} if boxes else {"tex": tex}
         spec.update(title=title, sound=sound)
         if loot:

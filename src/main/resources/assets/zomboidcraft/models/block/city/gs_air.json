@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_air": "zomboidcraft:block/city/gs_air",
+    "gs_air_body": "zomboidcraft:block/city/gs_air_body",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/gs_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        5
+      ],
+      "to": [
+        12,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_air"
+        },
+        "south": {
+          "texture": "#gs_air_body"
+        },
+        "east": {
+          "texture": "#gs_air_body"
+        },
+        "west": {
+          "texture": "#gs_air_body"
+        },
+        "up": {
+          "texture": "#gs_air_body",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_air_body"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        9,
+        6
+      ],
+      "to": [
+        14,
+        13,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        7
+      ],
+      "to": [
+        4,
+        9,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber"
+        }
+      }
+    }
+  ]
+}

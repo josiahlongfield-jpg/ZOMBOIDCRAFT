@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "floor_concrete": "zomboidcraft:block/city/floor_concrete",
+    "gs_guard": "zomboidcraft:block/city/gs_guard",
+    "gs_island_nose": "zomboidcraft:block/city/gs_island_nose",
+    "gs_island_side": "zomboidcraft:block/city/gs_island_side",
+    "particle": "zomboidcraft:block/city/gs_island_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        12,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side"
+        },
+        "south": {
+          "texture": "#gs_island_side"
+        },
+        "east": {
+          "texture": "#gs_island_side"
+        },
+        "west": {
+          "texture": "#gs_island_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_island_nose"
+        },
+        "down": {
+          "texture": "#floor_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        3,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side"
+        },
+        "south": {
+          "texture": "#gs_island_side"
+        },
+        "east": {
+          "texture": "#gs_island_side"
+        },
+        "west": {
+          "texture": "#gs_island_side"
+        },
+        "up": {
+          "texture": "#gs_island_side"
+        },
+        "down": {
+          "texture": "#gs_island_side",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        6
+      ],
+      "to": [
+        15,
+        3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side"
+        },
+        "south": {
+          "texture": "#gs_island_side"
+        },
+        "east": {
+          "texture": "#gs_island_side"
+        },
+        "west": {
+          "texture": "#gs_island_side"
+        },
+        "up": {
+          "texture": "#gs_island_side"
+        },
+        "down": {
+          "texture": "#gs_island_side",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        6
+      ],
+      "to": [
+        8,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_guard"
+        },
+        "south": {
+          "texture": "#gs_guard"
+        },
+        "east": {
+          "texture": "#gs_guard"
+        },
+        "west": {
+          "texture": "#gs_guard"
+        },
+        "up": {
+          "texture": "#gs_guard"
+        },
+        "down": {
+          "texture": "#gs_guard"
+        }
+      }
+    }
+  ]
+}

@@ -94,15 +94,25 @@ public final class CountyCommand {
         return list.size();
     }
 
+    /** How far /zc goto looks, widening in turn (the widest takes a few seconds). */
+    private static final int[] GO_REACH = {6000, 24000, 64000};
+
     private static int go(CommandContext<CommandSourceStack> ctx, String type) {
         CommandSourceStack src = ctx.getSource();
         County county = county(src);
         if (county == null || src.getEntity() == null) {
             return 0;
         }
-        List<Place> list = nearest(county, src.getPosition(), type, 6000);
+        // rare kinds (a naval wharf, one port in eight) can be far off: look wider until one turns up
+        List<Place> list = List.of();
+        for (int r : GO_REACH) {
+            list = nearest(county, src.getPosition(), type, r);
+            if (!list.isEmpty()) {
+                break;
+            }
+        }
         if (list.isEmpty()) {
-            src.sendFailure(Component.literal("No " + type + " within 6000 blocks."));
+            src.sendFailure(Component.literal("No " + type + " within " + GO_REACH[GO_REACH.length - 1] + " blocks."));
             return 0;
         }
         Place p = list.get(0);

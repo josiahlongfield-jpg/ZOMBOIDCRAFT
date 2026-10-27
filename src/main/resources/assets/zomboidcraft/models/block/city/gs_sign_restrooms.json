@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_sign_restrooms": "zomboidcraft:block/city/gs_sign_restrooms",
+    "particle": "zomboidcraft:block/city/gs_sign_restrooms"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_sign_restrooms"
+        },
+        "south": {
+          "texture": "#gs_sign_restrooms",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_sign_restrooms"
+        },
+        "west": {
+          "texture": "#gs_sign_restrooms"
+        },
+        "up": {
+          "texture": "#gs_sign_restrooms"
+        },
+        "down": {
+          "texture": "#gs_sign_restrooms"
+        }
+      }
+    }
+  ]
+}

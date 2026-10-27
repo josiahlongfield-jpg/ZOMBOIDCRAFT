@@ -1,0 +1,178 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_phone": "zomboidcraft:block/city/gs_phone",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/gs_phone"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        8
+      ],
+      "to": [
+        13,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_phone"
+        },
+        "south": {
+          "texture": "#gs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        6
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        0,
+        6
+      ],
+      "to": [
+        2.5,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        6
+      ],
+      "to": [
+        14.5,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        4,
+        7
+      ],
+      "to": [
+        6,
+        8,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber"
+        }
+      }
+    }
+  ]
+}

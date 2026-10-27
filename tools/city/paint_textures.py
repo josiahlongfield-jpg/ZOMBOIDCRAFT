@@ -44,6 +44,33 @@ def rude_gaps(text, gone):
 
 # ---------------------------------------------------------------- noise and helpers
 
+def drawn_along(boxes):
+    """Which way a model runs as drawn: "x", "z" or None (by the boxes that span the block)."""
+    fx = sum(1 for b in boxes if b[0] <= 0.5 and b[3] >= 15.5 and b[5] - b[2] < 15)
+    fz = sum(1 for b in boxes if b[2] <= 0.5 and b[5] >= 15.5 and b[3] - b[0] < 15)
+    return "x" if fx > fz else "z" if fz > fx else None
+
+
+TURN_FACES = {"north": "west", "south": "east", "east": "north", "west": "south"}
+
+
+def along_z(boxes):
+    """RULE: a rotate="axis" model is drawn running along z (axis=z shows it as drawn, axis=x
+    turns it). One drawn along x comes back turned a quarter so a row placed with axis = the
+    row's direction joins up instead of standing as stubs across it."""
+    if drawn_along(boxes) != "x":
+        return boxes
+    out = []
+    for b in boxes:
+        x0, y0, z0, x1, y1, z1 = b[:6]
+        tex = b[6] if len(b) > 6 else None
+        if isinstance(tex, dict):
+            tex = {TURN_FACES.get(k, k): v for k, v in tex.items()}
+        nb = [z0, y0, 16 - x1, z1, y1, 16 - x0]
+        out.append(nb + ([tex] if len(b) > 6 else []) + list(b[7:]))
+    return out
+
+
 def tnoise(rng, cells, size=N):
     """Tileable value noise in [-1, 1]: a random periodic grid, bilinearly interpolated."""
     g = rng.random((cells, cells)) * 2 - 1

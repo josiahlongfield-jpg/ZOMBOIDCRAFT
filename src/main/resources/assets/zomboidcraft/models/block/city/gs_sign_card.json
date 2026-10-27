@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_sign_card": "zomboidcraft:block/city/gs_sign_card",
+    "particle": "zomboidcraft:block/city/gs_sign_card"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        4,
+        15.4
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_sign_card"
+        },
+        "south": {
+          "texture": "#gs_sign_card",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_sign_card"
+        },
+        "west": {
+          "texture": "#gs_sign_card"
+        },
+        "up": {
+          "texture": "#gs_sign_card"
+        },
+        "down": {
+          "texture": "#gs_sign_card"
+        }
+      }
+    }
+  ]
+}

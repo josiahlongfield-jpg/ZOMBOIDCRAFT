@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "drywall": "zomboidcraft:block/city/drywall",
+    "sh_cmu_tan": "zomboidcraft:block/city/sh_cmu_tan",
+    "particle": "zomboidcraft:block/city/drywall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#drywall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sh_cmu_tan",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sh_cmu_tan",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sh_cmu_tan",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sh_cmu_tan",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_cmu_tan",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

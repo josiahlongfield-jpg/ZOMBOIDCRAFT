@@ -28,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.ClipContext;
@@ -62,6 +63,9 @@ public final class Guns {
         long lastShot = -100;
         /** On full auto: when the next shot is due (game time, a fraction for rates between whole ticks). */
         double autoNext = -100;
+        /** How far the spread has bloomed open (degrees), as of game time bloomAt. */
+        double bloom;
+        long bloomAt;
         int reloadTick = -1;
         /** The gun being reloaded: putting it away (or swapping to another kind) stops the reload. */
         GunType reloading;
@@ -175,12 +179,11 @@ public final class Guns {
 
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
-        int aimLevel = Skills.level(player, Skill.AIMING);
-        double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
-                * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
-        if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
-            spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
-        }
+        // the spread the crosshair's ring shows: this shot lands inside it, then it blooms open a little more
+        st.bloom = bloomNow(st.bloom, (now - st.bloomAt) / 20.0, stats);
+        double spread = spread(player, gun, type, aiming, st.bloom);
+        st.bloom = bloomed(st.bloom, auto, stats);
+        st.bloomAt = now;
         Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
@@ -194,7 +197,7 @@ public final class Guns {
         // each pellet (one bullet, or a shotgun's buckshot) flies on its own; the hits on each target add up into
         // one blow, since a target only takes the first of several hits in the same moment
         int pellets = type.pellets();
-        double pelletSpread = stats instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+        double pelletSpread = pelletSpread(type);
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         boolean ricochet = false;
@@ -343,6 +346,38 @@ public final class Guns {
         right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();
         Vec3 up = right.cross(look).normalize();
         return look.add(right.scale(Math.cos(a) * Math.tan(r))).add(up.scale(Math.sin(a) * Math.tan(r))).normalize();
+    }
+
+    /**
+     * The cone a shot can go anywhere inside (degrees from the aim point, the whole of it): the gun's spread from the
+     * hip or on the sights, narrowed by attachments, the Aiming skill and its roll, widened on the move, plus how far
+     * it has bloomed. Buckshot spreads further round where this puts the shot ({@link #pelletSpread}). The crosshair
+     * draws the same number.
+     */
+    public static double spread(Player player, ItemStack gun, GunType type, boolean aiming, double bloom) {
+        ZcConfig.GunStats stats = type.stats();
+        int aimLevel = Skills.level(player, Skill.AIMING);
+        double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
+                * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
+        if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
+            spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
+        }
+        return spread + bloom * (aiming ? 0.5 : 1.0);
+    }
+
+    /** How far a shotgun's pellets fan out round the shot's line (degrees), 0 for single bullets. */
+    public static double pelletSpread(GunType type) {
+        return type.pellets() > 1 && type.stats() instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+    }
+
+    /** The bloom left after seconds without a shot: it closes back toward nothing. */
+    public static double bloomNow(double bloom, double seconds, ZcConfig.GunStats stats) {
+        return Math.max(0, bloom - stats.bloomRecover * Math.max(0, seconds));
+    }
+
+    /** The bloom just after a shot: a semi-auto shot kicks it open a little; full auto piles it up, to a limit. */
+    public static double bloomed(double bloom, boolean auto, ZcConfig.GunStats stats) {
+        return auto ? Math.max(bloom, Math.min(stats.autoBloomMax, bloom + stats.autoBloomPerShot)) : Math.min(Math.max(bloom, stats.autoBloomMax), bloom + stats.shotBloom);
     }
 
     /** The gun has a full-auto setting and is set to it. */

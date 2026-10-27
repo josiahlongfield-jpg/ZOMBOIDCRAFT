@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_pylon_g": "zomboidcraft:block/city/gs_pylon_g",
+    "particle": "zomboidcraft:block/city/gs_pylon_g"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_pylon_g"
+        },
+        "south": {
+          "texture": "#gs_pylon_g"
+        },
+        "east": {
+          "texture": "#gs_pylon_g"
+        },
+        "west": {
+          "texture": "#gs_pylon_g"
+        },
+        "up": {
+          "texture": "#gs_pylon_g",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_pylon_g",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

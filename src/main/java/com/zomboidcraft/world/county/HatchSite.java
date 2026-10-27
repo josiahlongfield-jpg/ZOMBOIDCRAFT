@@ -120,8 +120,8 @@ final class HatchSite extends Site {
         for (int y = 1; y < rise; y++) {
             bp.set(SX, y, SZ, "bunk_ladder[facing=south]");
         }
-        // the hatch's leaf hinges on the ladder's wall, so it opens back against it
-        bp.set(SX, rise, SZ, "bunk_hatch[facing=south,half=top,open=" + (state == Bunker.State.BREACHED) + "]");
+        // the hatch's leaf hinges on the far wall from the ladder, so it opens clear of the climb
+        bp.set(SX, rise, SZ, "bunk_hatch[facing=north,half=top,open=" + (state == Bunker.State.BREACHED) + "]");
         // the vent's grille, under the pipe that comes down through the earth (see clearing)
         bp.set(2, 3, -3, "bunk_vent[facing=west]");
 

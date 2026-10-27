@@ -1,0 +1,138 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "floor_concrete": "zomboidcraft:block/city/floor_concrete",
+    "gs_island_side": "zomboidcraft:block/city/gs_island_side",
+    "gs_island_top": "zomboidcraft:block/city/gs_island_top",
+    "gs_steel": "zomboidcraft:block/city/gs_steel",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/gs_island_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_island_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_island_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_island_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_island_top"
+        },
+        "down": {
+          "texture": "#floor_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        13,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_steel"
+        },
+        "south": {
+          "texture": "#gs_steel"
+        },
+        "east": {
+          "texture": "#gs_steel"
+        },
+        "west": {
+          "texture": "#gs_steel"
+        },
+        "up": {
+          "texture": "#gs_steel"
+        },
+        "down": {
+          "texture": "#gs_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        15,
+        2.5
+      ],
+      "to": [
+        13.5,
+        17,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.5,
+            0,
+            13.5,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.5,
+            0,
+            13.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.5,
+            0,
+            13.5,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.5,
+            0,
+            13.5,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}
