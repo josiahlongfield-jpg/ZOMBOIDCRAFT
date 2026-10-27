@@ -89,6 +89,17 @@ QUERIES = {
     # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
     # the weather's storm-tripped alarms: a looping car alarm and an electric burglar bell
+    # bullet strikes by surface (Josiah: the old hit sounded cartoonish); WEAPONS plays one per shot
+    "imp_ground": ["bullet impact dirt", "bullet hit ground", "bullet impact sand", "bullet impact grass", "bullet hitting dirt",
+                   "bullet impact gravel"],
+    "imp_concrete": ["bullet impact concrete", "bullet hit concrete", "bullet impact asphalt", "bullet hitting wall concrete",
+                     "bullet impact stone"],
+    "imp_brick": ["bullet impact brick", "bullet hit wall", "bullet impact plaster", "bullet impact tile", "bullet hits drywall"],
+    "imp_wood": ["bullet impact wood", "bullet hit wood", "bullet hitting wooden door", "bullet impact tree", "bullet wood splinter"],
+    "imp_metal": ["bullet impact metal", "bullet hit metal", "bullet hitting steel", "bullet impact sheet metal", "bullet ping metal"],
+    "imp_car": ["bullet hitting car", "bullet impact car door", "bullet hits vehicle", "bullet impact car body", "gunshot car metal"],
+    "imp_glass": ["bullet impact glass", "bullet through glass", "bullet hit window", "glass bullet hole", "window shot"],
+    "imp_soft": ["bullet impact fabric", "bullet hit cushion", "bullet impact upholstery", "bullet hit cloth", "bullet impact sandbag"],
     # flyable jets and the Apache-style helicopter (the aircraft thread's events)
     "air_jet_start": ["jet engine start", "jet engine startup", "turbine spool up", "apu start aircraft", "jet engine spool up",
                       "jet engine shutdown", "turbine spool down"],
