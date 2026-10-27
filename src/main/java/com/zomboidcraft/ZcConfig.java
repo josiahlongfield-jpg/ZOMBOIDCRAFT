@@ -78,7 +78,12 @@ public final class ZcConfig {
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
-        public int midDetailZombies = 32;
+        public int midDetailZombies = 20;
+        /**
+         * Zombies past the nearest few are drawn from a baked body: the clothes painted on and only the pieces that
+         * change its outline kept 3D, about a tenth of the full one. Off draws them from the full body, thinned. Client side.
+         */
+        public boolean bakedZombies = true;
         /** Past this many blocks a zombie is drawn with its body and only the biggest pieces of clothing. Client side. */
         public double simpleZombieDistance = 40;
         /** Shader shadows (Photon's) are cast by the simple body, which looks the same in a shadow and costs far less. Client side. */
@@ -1006,7 +1011,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 2;
+    private static final int DEFAULTS = 3;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1031,6 +1036,12 @@ public final class ZcConfig {
             }
             if (c.look.shoulderAimSide == 0.5) {
                 c.look.shoulderAimSide = 0.42;
+            }
+        }
+        if (c.defaultsVersion < 3) {
+            // 2026-10-27: with the baked far-off bodies, fewer zombies need the costly middle detail
+            if (c.performance.midDetailZombies == 32) {
+                c.performance.midDetailZombies = 20;
             }
         }
         c.defaultsVersion = DEFAULTS;

@@ -26,6 +26,9 @@ public class WalkerRenderState extends ZombieRenderState {
     /** The new body for this outfit, or null to draw the old model. */
     public ZBodyMesh zbody;
     public Identifier zskin;
+    /** The outfit's baked far-off body (clothes painted on, only the big pieces 3D) and its atlas, or null. */
+    public ZBodyMesh zlow;
+    public Identifier zlowSkin;
     public Identifier zkit;
     /** The new body's eye mask, or null when look.glowingEyes is off. */
     public Identifier zeyes;

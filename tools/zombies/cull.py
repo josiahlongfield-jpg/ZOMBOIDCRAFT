@@ -108,7 +108,7 @@ def hidden(quads):
 
 if __name__ == '__main__':
     total = kept = 0
-    for path in sorted(R.glob('*.bin')):
+    for path in sorted(p for p in R.glob('*.bin') if not p.stem.endswith('_low')):
         head, quads = read(path)
         gone = hidden(quads)
         rest = [q for k, q in enumerate(quads) if k not in gone]
