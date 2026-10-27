@@ -59,7 +59,9 @@ EVENTS = {
 }
 # Josiah: the WW2 air-raid siren wails over the world now and then (world.siren, one of the shared WorldEvents that
 # everyone hears together, from where they stand); it was first one of each player's own far-off sounds
-AMBIENT = {"world/siren": ("fs:578987", 0.0, None, 0.0, -1.0, None)}
+# Josiah 09:02: it always sounds far off, wherever it's heard: thinned to the middle band, echoing off the town
+AMBIENT = {"world/siren": ("fs:578987", 0.0, None, 0.0, -1.0,
+                           "highpass=f=300,lowpass=f=1800,aecho=0.8:0.75:190|430|800:0.45|0.3|0.18")}
 
 
 def load(path, filt):
