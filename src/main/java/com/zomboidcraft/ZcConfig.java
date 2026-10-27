@@ -637,8 +637,8 @@ public final class ZcConfig {
          * range) times the gun's bursting below.
          */
         public double headBurst = 240;
-        /** Bursting per pellet of buckshot: about three pellets in the head up close (a clean blast) does it. */
-        public double burstShotguns = 1.0;
+        /** Bursting per pellet of buckshot: three pellets in the head up close (a clean blast) do it, two don't. */
+        public double burstShotguns = 10.0;
         /** Bursting for the bolt-action hunting rifle: every headshot does it. */
         public double burstHuntingRifle = 4.0;
         /** Bursting for the lever-action (0 = never; about 4 makes every headshot do it). */
