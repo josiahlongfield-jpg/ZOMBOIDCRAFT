@@ -151,6 +151,8 @@ public final class CountyGen {
                 copyPlace(p, bx, bz, out, corridor);
             }
         }
+        // what the Glass Line passes on the bed (before the line, which wins wherever they'd meet)
+        county.wrecks.copy(bx, bz, out);
         if (rails != null) {
             int[] tops = new int[256];
             boolean[] road = new boolean[256], built = new boolean[256];

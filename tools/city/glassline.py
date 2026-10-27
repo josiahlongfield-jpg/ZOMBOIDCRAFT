@@ -292,8 +292,27 @@ def cable(seed):
     return t
 
 
+def coal(seed, top=False):
+    """Coal that went down with the barge: lumps heaped any old way, black with a dull glint on
+    their faces, and over the top a grey bloom of the harbour's silt and a fur of weed."""
+    t = F.plain(seed, (30, 30, 32), 0.12, 0.35)
+    rng = t.rng
+    for _ in range(90):
+        x, y, r = rng.uniform(0, N), rng.uniform(0, N), rng.uniform(1.8, 5.5)
+        c = rng.uniform(16, 46)
+        disc(t, x, y, r, col=(c, c, c + 3), dh=0.5 * r / 5.5)
+        disc(t, x - r * 0.35, y - r * 0.35, r * 0.3, col=(c + 48, c + 48, c + 54), smooth=0.85)
+        disc(t, x + r * 0.5, y + r * 0.5, r * 0.25, col=(8, 8, 9), dh=-0.2)
+    silt = np.clip(P.fbm(rng, ((8, 1.0), (16, 0.6), (32, 0.3))) * 2.0 - (0.2 if top else 0.6), 0, 1)
+    t.mix(silt, (92, 90, 80), 0.6 if top else 0.35)
+    weed(t, 0.5 if top else 0.25)
+    return t
+
+
 def textures():
     X = {}
+    X["gl_coal"] = lambda: coal(7820)
+    X["gl_coal_top"] = lambda: coal(7821, top=True)
     X["gl_glass"] = lambda: pane(7800)
     X["gl_glass_cracked"] = lambda: pane(7801, cracked=2)
     X["gl_glass_leak"] = lambda: pane(7802, cracked=1, leak=True)
@@ -422,6 +441,9 @@ def blocks():
     add("gl_lamp", tray + [housing] + rods, "Tube Light", "METAL", decor=True, shape=[[0, 9, 0.5, 16, 15, 8]],
         flicker={"light": 12, "on": {"gl_lamp": "gl_lamp_on"}})
     add("gl_lamp_off", tray + [housing] + rods, "Tube Light", "METAL", decor=True, shape=[[0, 9, 0.5, 16, 15, 8]])
+
+    # the coal the sunk barge spilled across the bed beside the line (Wrecks.java)
+    add("gl_coal", None, "Coal", "GRAVEL", rotate=None, tex={"side": "gl_coal", "up": "gl_coal_top", "down": "gl_coal"})
 
     # the escape signs, on a frame over the walkway, the arrow to the viewer's right (_r) or left
     for side in ("r", "l"):
