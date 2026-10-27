@@ -1,5 +1,6 @@
 package com.zomboidcraft.client.hud;
 
+import com.zomboidcraft.carry.QuickSlots;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -10,11 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2fStack;
 
 /**
- * The belt: bare squares along the bottom, one for every slot on it, empty or not, with the real item models in
- * them. It tucks away a few seconds after you last drew from it or put something on it.
+ * The quick slots: bare squares along the bottom, one for every slot what you wear gives you, empty or not, each
+ * named underneath, with the real item models in them. It tucks away a few seconds after you last drew from it or put something on it.
  */
 final class BeltHud {
-    private static final int BOX = 24, GAP = 5, BOTTOM = 10;
+    private static final int BOX = 24, GAP = 5, BOTTOM = 14;
     private static final float SHOW = 4f, NAME = 1.8f;
 
     private static final Hud.Fade fade = new Hud.Fade();
@@ -29,16 +30,22 @@ final class BeltHud {
         if (player == null) return;
         Inventory inventory = player.getInventory();
         int selected = inventory.getSelectedSlot();
+        if (!QuickSlots.open(player, selected) && inventory.getItem(selected).isEmpty()) {
+            // the slot you were on went away with what opened it (a belt taken off): back to your hands
+            inventory.setSelectedSlot(QuickSlots.HANDS);
+            selected = inventory.getSelectedSlot();
+        }
         watch(inventory, selected);
         float a = fade.update(Hud.peek || sinceUse < SHOW);
         float n = name.update(Hud.peek || sinceSwitch < NAME);
         if (a <= 0) return;
 
-        // every slot you have sits in the row, empty or not, so the one you want is always where you left it
+        // every slot you have sits in the row, empty or not, so the one you want is always where you left it; the
+        // ones what you wear doesn't give you stay out of it
         int[] shown = new int[last.length];
         int count = 0;
         for (int i = 0; i < last.length; i++) {
-            shown[count++] = i;
+            if (QuickSlots.open(player, i) || !inventory.getItem(i).isEmpty()) shown[count++] = i;
         }
         int width = count * BOX + (count - 1) * GAP;
         // tucking away: it fades and drops below the screen's edge, so the 3D items go with it
@@ -49,7 +56,7 @@ final class BeltHud {
         for (int k = 0; k < count; k++) {
             int slot = shown[k];
             float x = x0 + k * (BOX + GAP);
-            square(g, font, inventory.getItem(slot), slot, slot == selected, x, y0, a);
+            square(g, font, inventory.getItem(slot), slot, slot == selected, x, y0, a, QuickSlots.on(player));
         }
 
         ItemStack held = inventory.getItem(selected);
@@ -66,7 +73,7 @@ final class BeltHud {
     }
 
     private static void square(GuiGraphicsExtractor g, Font font, ItemStack stack, int slot, boolean selected,
-                               float x, float y, float a) {
+                               float x, float y, float a, boolean labels) {
         if (selected) Hud.sprite(g, Hud.id("square_selected"), x - 4, y - 4, BOX + 8, BOX + 8, Hud.alpha(0xFFFFFFFF, a));
         else Hud.sprite(g, Hud.id("square"), x, y, BOX, BOX, Hud.alpha(0xFFFFFFFF, a));
         Matrix3x2fStack pose = g.pose();
@@ -91,6 +98,11 @@ final class BeltHud {
         }
         Hud.caps(g, font, String.valueOf(slot + 1), x + 2, y + 1.5f,
                 Hud.alpha(selected ? 0xE6E0A85A : Hud.BONE_FAINT, a), 0, 0.7f);
+        if (labels) {
+            String label = QuickSlots.label(slot);
+            float lw = Hud.capsWidth(font, label, 0.6f, 0.55f);
+            Hud.caps(g, font, label, x + (BOX - lw) / 2f, y + BOX + 6, Hud.alpha(selected ? Hud.BONE : Hud.BONE_DIM, a), 0.6f, 0.55f);
+        }
     }
 
     /** Wakes the belt when the hands or the belt change. */

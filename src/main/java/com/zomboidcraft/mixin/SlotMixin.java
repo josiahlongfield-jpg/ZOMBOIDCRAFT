@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * The pocket limit, in every menu that shows the player's inventory: main slots past the pockets take nothing new,
  * and once empty they disappear. Weapons never go in a pocket. Whatever was already in them can still be taken out.
+ * The quick slots (the hotbar) follow {@link com.zomboidcraft.carry.QuickSlots} the same way.
  */
 @Mixin(Slot.class)
 public abstract class SlotMixin {
@@ -33,6 +34,10 @@ public abstract class SlotMixin {
         if (container instanceof Inventory inventory && (Carry.locked(inventory.player, getContainerSlot())
                 || Carry.weapon(stack) && Carry.pocket(inventory.player, getContainerSlot()))) {
             cir.setReturnValue(false);
+        } else if (container instanceof Inventory inventory && Inventory.isHotbarSlot(getContainerSlot())
+                && !com.zomboidcraft.carry.QuickSlots.fits(inventory.player, getContainerSlot(), stack)) {
+            // a quick slot only takes what would really go there, and only while you wear what opens it
+            cir.setReturnValue(false);
         }
     }
 
@@ -41,6 +46,9 @@ public abstract class SlotMixin {
         if (container instanceof Inventory inventory && Carry.locked(inventory.player, getContainerSlot())) {
             boolean client = inventory.player.level().isClientSide();
             cir.setReturnValue(hasItem() && (!client || CarrySlots.lockedShows.test((Slot) (Object) this)));
+        } else if (container instanceof Inventory inventory && Inventory.isHotbarSlot(getContainerSlot()) && !hasItem()
+                && !com.zomboidcraft.carry.QuickSlots.open(inventory.player, getContainerSlot())) {
+            cir.setReturnValue(false);
         }
     }
 }
