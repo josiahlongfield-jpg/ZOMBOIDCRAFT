@@ -191,7 +191,7 @@ final class AirLights {
 
     private static void view(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (SEEN.isEmpty() || mc.options.hideGui) {
+        if (SEEN.isEmpty()) {
             return;
         }
         Camera camera = mc.gameRenderer.mainCamera();
