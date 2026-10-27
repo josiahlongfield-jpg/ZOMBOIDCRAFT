@@ -142,7 +142,7 @@ public class KitUiTest implements FabricClientGameTest {
                     for (KitScreen.Hot h : hots(k)) {
                         if (h.slot() < 0 || h.slot() >= k.menu().slots.size() || !k.carried().contains(h.slot())) continue;
                         if (full == null && !h.card().isEmpty() && !KitItems.weapon(h.card())) full = h;
-                        if (empty == null && h.card().isEmpty() && h.slot() >= 36 && h.slot() < 45) empty = h;
+                        if (empty == null && h.card().isEmpty() && k.menu().slots.get(h.slot()).getClass() == net.minecraft.world.inventory.Slot.class) empty = h;
                     }
                     if (full == null || empty == null) return "no tiles: full " + full + " empty " + empty;
                     String what = k.menu().slots.get(full.slot()).getItem().toString();
@@ -474,6 +474,8 @@ public class KitUiTest implements FabricClientGameTest {
      */
     private static void slingTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("clear @a");
+        sp.getServer().runOnServer(s -> com.zomboidcraft.carry.Carry.gear(s.getPlayerList().getPlayers().get(0)).takeAll(x -> { }));
+        for (String c : List.of("time set noon", "weather clear", "effect clear @a", "kill @e[type=!player]")) sp.getServer().runCommand(c);
         sp.getServer().runCommand("give @a zomboidcraft:hiking_backpack");
         ctx.waitTicks(5);
         String report = sp.getServer().computeOnServer(s -> {
@@ -495,16 +497,19 @@ public class KitUiTest implements FabricClientGameTest {
         });
         LOG.info("ZCUI sling: {}", report);
         ctx.waitTicks(10);
-        ctx.runOnClient(mc -> {
-            mc.player.setXRot(10f);
-            mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
-        });
+        ctx.runOnClient(mc -> mc.player.setXRot(10f));
+        ctx.getInput().pressKey(InputConstants.KEY_F5);
         ctx.waitTicks(10);
+        LOG.info("ZCUI sling camera: {}", ctx.computeOnClient(mc -> String.valueOf(mc.options.getCameraType())));
         ctx.takeScreenshot("sling-back");
         ctx.runOnClient(mc -> mc.player.setYRot(mc.player.getYRot() + 50f));
         ctx.waitTicks(5);
         ctx.takeScreenshot("sling-back-side");
-        ctx.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
+        ctx.getInput().pressKey(InputConstants.KEY_F5);
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("sling-front");
+        ctx.getInput().pressKey(InputConstants.KEY_F5);
+        ctx.waitTicks(3);
     }
 
     /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
