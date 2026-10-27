@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.city;
 
 import com.zomboidcraft.world.county.Flats;
+import com.zomboidcraft.world.lifts.LiftBuild;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ import java.util.zip.GZIPInputStream;
  *
  * Here the shell is laid and fitted out: shops along the street behind the shop windows, a
  * lobby where it's an office block, open-plan office floors or flats off a corridor upstairs,
- * a stairwell (with two lifts in the big towers) from the street to a hut on the roof. A few
+ * a stairwell (with a working lift beside it in anything over 10 floors) from the street to a hut on the roof. A few
  * floors still have power from a generator somewhere and glow.
  *
  * Same conventions as {@link Tower}: front along local z = 0 facing north, a storey 4 blocks.
@@ -137,6 +138,8 @@ public final class PackTower {
     private final boolean[] powered;
     /** Cells the stair cores and corridors keep clear: [level][z * w + x]. */
     private final boolean[][] kept;
+    /** Per core: the first cell of the lift shaft added beside a single stair core (-1 for none; see {@link #liftBeside}). */
+    private final int[] sideLift;
 
     public PackTower(Placer p, SplittableRandom rng, Template t, boolean furnished) {
         this.p = p;
@@ -148,12 +151,17 @@ public final class PackTower {
             powered[k] = rng.nextDouble() < 0.12;
         }
         this.kept = new boolean[t.levels.length][t.w * t.d];
+        this.sideLift = new int[t.cores.length];
+        java.util.Arrays.fill(sideLift, -1);
     }
 
     public void build() {
         shell();
         for (int[] c : t.cores) {
             reserve(c);
+        }
+        for (int i = 0; i < t.cores.length; i++) {
+            sideLift[i] = liftBeside(t.cores[i]);
         }
         for (int k = 0; k < t.levels.length; k++) {
             lights(k);
@@ -167,8 +175,11 @@ public final class PackTower {
                 }
             }
         }
-        for (int[] c : t.cores) {
-            core(c);
+        for (int i = 0; i < t.cores.length; i++) {
+            core(t.cores[i]);
+            if (sideLift[i] >= 0) {
+                sideShaft(t.cores[i], sideLift[i]);
+            }
         }
     }
 
@@ -348,7 +359,7 @@ public final class PackTower {
         if (c[0] == DOUBLE) {
             stairwell(cx0 + 1, cz0, ys);
             stairwell(cx0 + 10, cz0, ys);
-            lifts(cx0 + 5, cz0, ys);
+            lifts(cx0 + 5, cz0, ys, c[3]);
         } else {
             stairwell(cx0 + 1, cz0, ys);
         }
@@ -428,15 +439,80 @@ public final class PackTower {
         }
     }
 
-    /** Two lift shafts (x0..x0+3, doors in the north wall), a plant floor behind them on every level. */
-    private void lifts(int x0, int cz0, List<Integer> ys) {
-        for (int y : ys) {
-            for (int yy = y + 1; yy <= y + 2; yy++) {
-                p.set(x0, yy, cz0, "elevator_door[facing=north]");
-                p.set(x0 + 2, yy, cz0, "elevator_door[facing=north]");
-            }
-            p.fill(x0, y, cz0 + 5, x0 + 3, y, cz0 + 8, "floor_concrete");
+    /**
+     * The lift shafts x0..x0+3 (doors in the north wall): the working lift in the two-wide one, the
+     * narrow one beside it carrying the risers, a plant floor behind them on every level. first is
+     * the level the core starts on (the street's is the lobby, numbered 1).
+     */
+    private void lifts(int x0, int cz0, List<Integer> ys, int first) {
+        int[] floors = new int[ys.size()];
+        for (int i = 0; i < floors.length; i++) {
+            floors[i] = ys.get(i);
+            p.fill(x0, floors[i], cz0 + 5, x0 + 3, floors[i], cz0 + 8, "floor_concrete");
         }
+        LiftBuild.shaft(p::set, x0 + 2, cz0 + 1, 2, 3, floors, first == 0 ? 0 : -1, first, floors[floors.length - 1] + 4);
+    }
+
+    /**
+     * Where a lift can go beside a single stair core in a building over 10 floors: a shaft two wide
+     * and three deep with its doors beside the stair door, east of the core or else west, on every
+     * level the core serves, with room in front. Reserves it and returns its first cell's x, or -1.
+     */
+    private int liftBeside(int[] c) {
+        if (c[0] != SINGLE || t.levels.length <= 10 || c[4] - c[3] < 2) {
+            return -1;
+        }
+        int cx0 = c[1], cz0 = c[2];
+        for (int x0 : new int[] {cx0 + 5, cx0 - 2}) {
+            int wall = x0 > cx0 ? x0 + 2 : x0 - 1;
+            int lo = Math.min(x0, wall), hi = Math.max(x0 + 1, wall);
+            boolean fits = lo >= 1 && hi < t.w - 1;
+            for (int k = c[3]; k <= c[4] && fits; k++) {
+                int y = level(k);
+                for (int x = lo; x <= hi && fits; x++) {
+                    for (int z = cz0 - 2; z <= cz0 + 4 && fits; z++) {
+                        fits = z >= 1 && z < t.d - 1 && !kept[k][z * t.w + x] && t.at(x, y, z) >= 2
+                                && t.inside(x, y + 1, z) && t.inside(x, y + 2, z);
+                    }
+                }
+            }
+            if (!fits) {
+                continue;
+            }
+            for (int k = c[3]; k <= c[4]; k++) {
+                for (int x = lo; x <= hi; x++) {
+                    for (int z = cz0 - 2; z <= cz0 + 4; z++) {
+                        kept[k][z * t.w + x] = true;
+                    }
+                }
+            }
+            return x0;
+        }
+        return -1;
+    }
+
+    /** The lift beside a single stair core: concrete walls round its shaft (sharing the core's), the lift in it. */
+    private void sideShaft(int[] c, int x0) {
+        int cz0 = c[2], wall = x0 > c[1] ? x0 + 2 : x0 - 1;
+        int y0 = level(c[3]), last = level(c[4]), top = last + 4;
+        for (int y = y0; y <= top; y++) {
+            for (int z = cz0; z <= cz0 + 4; z++) {
+                p.set(wall, y, z, "concrete_dark");
+            }
+            for (int x = x0; x <= x0 + 1; x++) {
+                p.set(x, y, cz0, "concrete_dark");
+                p.set(x, y, cz0 + 4, "concrete_dark");
+            }
+            for (int z = cz0; z <= cz0 + 4; z++) {
+                // the core's wall it shares, carried up as high as the shaft goes
+                p.set(x0 > c[1] ? x0 - 1 : x0 + 2, y, z, "concrete_dark");
+            }
+        }
+        int[] floors = new int[c[4] - c[3] + 1];
+        for (int k = c[3]; k <= c[4]; k++) {
+            floors[k - c[3]] = level(k);
+        }
+        LiftBuild.shaft(p::set, x0, cz0 + 1, 2, 3, floors, c[3] == 0 ? 0 : -1, c[3], top);
     }
 
     // ------------------------------------------------------------------ the ground floor

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,run=up": {
+      "model": "zomboidcraft:block/escalator_up"
+    },
+    "facing=north,run=down": {
+      "model": "zomboidcraft:block/escalator_down"
+    },
+    "facing=east,run=up": {
+      "model": "zomboidcraft:block/escalator_up",
+      "y": 90
+    },
+    "facing=east,run=down": {
+      "model": "zomboidcraft:block/escalator_down",
+      "y": 90
+    },
+    "facing=south,run=up": {
+      "model": "zomboidcraft:block/escalator_up",
+      "y": 180
+    },
+    "facing=south,run=down": {
+      "model": "zomboidcraft:block/escalator_down",
+      "y": 180
+    },
+    "facing=west,run=up": {
+      "model": "zomboidcraft:block/escalator_up",
+      "y": 270
+    },
+    "facing=west,run=down": {
+      "model": "zomboidcraft:block/escalator_down",
+      "y": 270
+    }
+  }
+}

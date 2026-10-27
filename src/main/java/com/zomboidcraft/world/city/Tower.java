@@ -1,14 +1,15 @@
 package com.zomboidcraft.world.city;
 
+import com.zomboidcraft.world.lifts.LiftBuild;
 import java.util.SplittableRandom;
 
 /**
  * A fully enterable office tower: a double-height lobby, stacked office floors around a core
- * with two fire stairwells and two lift shafts, an optional setback terrace, and a crown.
+ * with two fire stairwells and a working lift (beside a riser shaft), an optional setback terrace, and a crown.
  *
  * Local layout (front at z = 0): the facade is a ring one block thick; each floor is 4 blocks
  * (slab plus 3 of room). The 14 x 10 core sits in the middle of the footprint: stairwell A,
- * the two lifts (plant room behind), stairwell B. Stairs switch back inside each 3-wide
+ * the lift and the risers (plant room behind), stairwell B. Stairs switch back inside each 3-wide
  * stairwell, so every floor connects, up to a plant room on the roof.
  *
  * Styles change the skin, not the plan: a concrete grid, a glass curtain wall, stone piers in
@@ -377,15 +378,15 @@ public final class Tower {
                 }
             }
         }
-        // lift doors on every floor, plant rooms behind the lifts get a floor
+        // the working lift in the two-wide shaft, doors and a call button on every floor and its machine
+        // up in the plant room; the narrow shaft beside it carries the risers. Plant rooms behind get a floor.
+        int[] ys = new int[floors + 1];
         for (int level = 0; level <= floors; level++) {
             int y = floorY(level);
-            for (int yy = y + 1; yy <= y + 2; yy++) {
-                p.set(lift, yy, cz0, "elevator_door[facing=north]");
-                p.set(lift + 2, yy, cz0, "elevator_door[facing=north]");
-            }
+            ys[level] = y;
             p.fill(lift, y, back + 1, lift + 3, y, cz0 + CORE_D - 2, "floor_concrete");
         }
+        LiftBuild.shaft(p::set, lift + 2, cz0 + 1, 2, back - cz0 - 1, ys, 0, 0, top - 1);
         stairwell(cx0 + 1, roofY);
         stairwell(cx0 + 10, roofY);
         p.fill(cx0, top, cz0, cx0 + CORE_W - 1, top, cz0 + CORE_D - 1, "roof");

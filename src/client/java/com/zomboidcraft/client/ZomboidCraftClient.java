@@ -60,6 +60,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         SoundSliders.register();
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.trains.TrainClient.register();
+        com.zomboidcraft.client.lifts.LiftClient.register();
         com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
         com.zomboidcraft.client.sound.WorldEventSound.register();
