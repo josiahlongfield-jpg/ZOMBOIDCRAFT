@@ -956,6 +956,8 @@ public final class ZcConfig {
         public boolean muzzleSmoke = false;
         /** How often a glancing shot off something hard whines away as a ricochet (0 to 1). */
         public double ricochetChance = 0.35;
+        /** The shooter hears their round whizz into a zombie they hit within this many blocks (0: never). */
+        public double hitWhizzRange = 48;
         /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
         public boolean bulletHoles = true;
         public double bulletHoleSeconds = 90.0;
