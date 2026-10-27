@@ -7,6 +7,26 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== trains"
+sig net.minecraft.world.entity.Entity 'collide|void tick|baseTick|setOldPos|isLocalPlayer|absSnap|setPos|moveTo|snapTo|getYRot|setYRot|yRotO|isControlledByLocal|isLocalInstance'
+sig net.minecraft.world.entity.player.Player 'isLocalPlayer'
+javap -cp "$CP" -p net.minecraft.server.network.ServerGamePacketListenerImpl 2>&1 | grep -E 'noBlocksAround|aboveGroundTick|clientIsFloating|isPlayerCollidingWithAnythingNew'
+sig net.minecraft.server.level.ServerLevel 'isPositionEntityTicking|areEntitiesLoaded|getServer|isLoaded'
+sig net.minecraft.world.level.storage.LevelResource 'ROOT|static'
+sig net.minecraft.server.MinecraftServer 'getWorldPath|isFlightAllowed'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submit'
+sig net.minecraft.client.renderer.LevelRenderer 'getLightColor|getLightCoords'
+sig net.minecraft.client.renderer.rendertype.RenderTypes 'entityCutout|entitySolid|entityTranslucent|eyes'
+sig net.minecraft.world.level.block.HorizontalDirectionalBlock 'FACING|codec'
+sig net.minecraft.core.particles.ParticleTypes 'FLAME|DUST|LAVA|FIREWORK|SMOKE|CAMPFIRE'
+sig net.minecraft.core.particles.DustParticleOptions 'DustParticleOptions'
+sig net.minecraft.sounds.SoundEvents 'MINECART|NOTE_BLOCK|PISTON|FIREWORK_ROCKET_LAUNCH|IRON_DOOR'
+sig net.minecraft.client.resources.sounds.AbstractTickableSoundInstance '.'
+javap -cp "$CP" -p net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents 2>&1 | head
+sig net.minecraft.world.entity.Mob 'getMoveControl|getNavigation'
+sig net.minecraft.world.entity.ai.control.MoveControl 'setWantedPosition'
+classes 'fabric/api/networking/v1/PlayerLookup'
+sig net.fabricmc.fabric.api.networking.v1.PlayerLookup 'static'
 echo "===== cars2"
 sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
 sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'
