@@ -1,5 +1,6 @@
 import com.zomboidcraft.world.city.Decay;
 import com.zomboidcraft.world.city.PackTower;
+import com.zomboidcraft.world.city.Tower;
 import com.zomboidcraft.world.city.Placer;
 import com.zomboidcraft.world.county.Voxels;
 
@@ -38,9 +39,23 @@ public final class PackPreview {
         SplittableRandom rng = new SplittableRandom(seed);
         int x = 0, depth = 0;
         for (String n : names) {
+            if (n.startsWith("tower")) {
+                // a generated tower: tower:W:D:FLOORS[:style]
+                String[] a = n.split(":");
+                int tw = Integer.parseInt(a[1]), td = Integer.parseInt(a[2]), fl = Integer.parseInt(a[3]);
+                Placer pl = Placer.forLot(v, x, 0, 0, tw, td, 0);
+                Tower tt = new Tower(pl, rng, tw, td, fl, true, a.length > 4 ? Integer.parseInt(a[4]) : rng.nextInt(4), rng.nextInt(4));
+                tt.build();
+                System.err.println(n + " at x " + x + ".." + (x + tw - 1) + ", hotel " + tt.hotel());
+                x += tw + 4;
+                depth = Math.max(depth, td);
+                continue;
+            }
             PackTower.Template t = PackTower.all().stream().filter(tt -> tt.name().equals(n)).findFirst().orElseThrow();
             Placer pl = Placer.forLot(v, x, 0, 0, t.w(), t.d(), 0);
-            new PackTower(pl, rng, t, true).build();
+            PackTower pt = new PackTower(pl, rng, t, true);
+            pt.build();
+            System.err.println(n + ": " + pt.describe());
             if (decay) {
                 new Decay(v, rng.nextLong(), x - 1, x + t.w(), -1, t.d(), t.height() + 6).run();
             }

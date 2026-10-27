@@ -1107,6 +1107,8 @@ import unionstation  # noqa: E402
 unionstation.register(sys.modules[__name__])
 import transit  # noqa: E402
 transit.register(sys.modules[__name__])
+import fitout  # noqa: E402
+fitout.register(sys.modules[__name__])
 
 
 def build(name):

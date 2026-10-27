@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "of_plate": "zomboidcraft:block/city/of_plate",
+    "particle": "zomboidcraft:block/city/home_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2,
+        6
+      ],
+      "to": [
+        7,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_plate"
+        },
+        "south": {
+          "texture": "#of_plate"
+        },
+        "east": {
+          "texture": "#of_plate"
+        },
+        "west": {
+          "texture": "#of_plate"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        1,
+        6
+      ],
+      "to": [
+        12,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_plate"
+        },
+        "south": {
+          "texture": "#of_plate"
+        },
+        "east": {
+          "texture": "#of_plate"
+        },
+        "west": {
+          "texture": "#of_plate"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}
