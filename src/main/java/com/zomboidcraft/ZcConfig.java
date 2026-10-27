@@ -570,13 +570,13 @@ public final class ZcConfig {
          * How much a forearm (with the hand) takes before it tears off at the elbow, in gun damage: each hit adds the
          * bullet's or pellet's damage times its kind of gun's tearing below.
          */
-        public double forearm = 24;
+        public double forearm = 20;
         /** How much an upper arm takes before the whole arm tears off at the shoulder. */
-        public double arm = 34;
+        public double arm = 28;
         /** How much a shin (with the foot) takes before it tears off at the knee. */
-        public double shin = 28;
+        public double shin = 24;
         /** How much a thigh takes before the whole leg tears off at the hip. */
-        public double leg = 40;
+        public double leg = 34;
         /** Tearing per pellet of buckshot: a shotgun up close takes a limb off nearly every time. */
         public double shotguns = 2.0;
         /**
@@ -598,6 +598,22 @@ public final class ZcConfig {
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
         public int maxLimbs = 64;
+        /**
+         * Shows the shooter what each shot hit, over the hotbar: the part, how far a limb is to coming off (taken /
+         * toughness), and OFF when it goes.
+         */
+        public boolean showHits = false;
+
+        /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
+        void retune() {
+            if (forearm == 24 && arm == 34 && shin == 28 && leg == 40) {
+                Limbs fresh = new Limbs();
+                forearm = fresh.forearm;
+                arm = fresh.arm;
+                shin = fresh.shin;
+                leg = fresh.leg;
+            }
+        }
     }
 
     /**
@@ -934,6 +950,7 @@ public final class ZcConfig {
                 ZcConfig read = GSON.fromJson(reader, ZcConfig.class);
                 if (read != null) {
                     instance = read;
+                    instance.limbs.retune();
                 }
             } catch (IOException | RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Couldn't read {}, using defaults", FILE, e);
