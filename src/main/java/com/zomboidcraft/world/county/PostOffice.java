@@ -253,7 +253,9 @@ final class PostOffice {
                     for (int y = 0; y < F; y++) {
                         p.set(x, y, z, "floor_concrete");
                     }
-                    p.set(x, F, z, b.wall("floor_concrete", 3));
+                    // two steps up to the landing, half a block each (a block's rise strands a zombie)
+                    boolean inner = x > cx - 3 && x < cx + 2;
+                    p.set(x, F, z, inner && z == z0 - 2 ? "cv_step_stone[facing=south]" : b.wall("floor_concrete", 3));
                 }
                 for (int y = 0; y < F - 1; y++) {
                     p.set(x, y, z0 - 3, "floor_concrete");

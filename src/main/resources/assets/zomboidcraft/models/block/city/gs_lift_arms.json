@@ -1,0 +1,267 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_lift_red": "zomboidcraft:block/city/gs_lift_red",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/gs_lift_red"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        2,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_lift_red"
+        },
+        "south": {
+          "texture": "#gs_lift_red"
+        },
+        "east": {
+          "texture": "#gs_lift_red"
+        },
+        "west": {
+          "texture": "#gs_lift_red"
+        },
+        "up": {
+          "texture": "#gs_lift_red"
+        },
+        "down": {
+          "texture": "#gs_lift_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -6,
+        1,
+        6.5
+      ],
+      "to": [
+        22,
+        2.5,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            13.5,
+            16,
+            15
+          ]
+        },
+        "south": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            13.5,
+            16,
+            15
+          ]
+        },
+        "east": {
+          "texture": "#gs_lift_red"
+        },
+        "west": {
+          "texture": "#gs_lift_red"
+        },
+        "up": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            6.5,
+            16,
+            9.5
+          ]
+        },
+        "down": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            6.5,
+            16,
+            9.5
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        1,
+        -6
+      ],
+      "to": [
+        9.5,
+        2.5,
+        22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_lift_red"
+        },
+        "south": {
+          "texture": "#gs_lift_red"
+        },
+        "east": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            13.5,
+            16,
+            15
+          ]
+        },
+        "west": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            0,
+            13.5,
+            16,
+            15
+          ]
+        },
+        "up": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#gs_lift_red",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -6,
+        2.5,
+        6
+      ],
+      "to": [
+        -3,
+        3.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber",
+          "uv": [
+            13,
+            12.5,
+            16,
+            13.5
+          ]
+        },
+        "south": {
+          "texture": "#home_rubber",
+          "uv": [
+            0,
+            12.5,
+            3,
+            13.5
+          ]
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber",
+          "uv": [
+            0,
+            6,
+            3,
+            10
+          ]
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "uv": [
+            0,
+            6,
+            3,
+            10
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        19,
+        2.5,
+        6
+      ],
+      "to": [
+        22,
+        3.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber",
+          "uv": [
+            0,
+            12.5,
+            3,
+            13.5
+          ]
+        },
+        "south": {
+          "texture": "#home_rubber",
+          "uv": [
+            13,
+            12.5,
+            16,
+            13.5
+          ]
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber",
+          "uv": [
+            13,
+            6,
+            16,
+            10
+          ]
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "uv": [
+            13,
+            6,
+            16,
+            10
+          ]
+        }
+      }
+    }
+  ]
+}

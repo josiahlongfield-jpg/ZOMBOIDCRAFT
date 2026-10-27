@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_cool_full_lo_on": "zomboidcraft:block/city/gs_cool_full_lo_on",
+    "store_appliance": "zomboidcraft:block/city/store_appliance",
+    "particle": "zomboidcraft:block/city/gs_cool_full_lo_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_cool_full_lo_on",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#store_appliance",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#store_appliance",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#store_appliance",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#store_appliance",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#store_appliance",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

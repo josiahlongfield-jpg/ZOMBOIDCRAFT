@@ -1,0 +1,115 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "floor_concrete": "zomboidcraft:block/city/floor_concrete",
+    "gs_column_c": "zomboidcraft:block/city/gs_column_c",
+    "gs_guard": "zomboidcraft:block/city/gs_guard",
+    "gs_island_side": "zomboidcraft:block/city/gs_island_side",
+    "gs_island_top": "zomboidcraft:block/city/gs_island_top",
+    "particle": "zomboidcraft:block/city/gs_island_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_island_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_island_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_island_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_island_top"
+        },
+        "down": {
+          "texture": "#floor_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        13,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_guard"
+        },
+        "south": {
+          "texture": "#gs_guard"
+        },
+        "east": {
+          "texture": "#gs_guard"
+        },
+        "west": {
+          "texture": "#gs_guard"
+        },
+        "up": {
+          "texture": "#gs_guard"
+        },
+        "down": {
+          "texture": "#gs_guard"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_column_c"
+        },
+        "south": {
+          "texture": "#gs_column_c"
+        },
+        "east": {
+          "texture": "#gs_column_c"
+        },
+        "west": {
+          "texture": "#gs_column_c"
+        },
+        "up": {
+          "texture": "#gs_column_c",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_column_c"
+        }
+      }
+    }
+  ]
+}

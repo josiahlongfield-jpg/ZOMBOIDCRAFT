@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_neon_beer": "zomboidcraft:block/city/gs_neon_beer",
+    "particle": "zomboidcraft:block/city/gs_neon_beer"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_neon_beer",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_neon_beer"
+        },
+        "east": {
+          "texture": "#gs_neon_beer",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_neon_beer",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_neon_beer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_neon_beer",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

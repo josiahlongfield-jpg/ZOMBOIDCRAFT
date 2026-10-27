@@ -2448,6 +2448,7 @@ final class Carrier {
      */
     private void catwalks() {
         int y = GALLERY;
+        java.util.List<int[]> rails = new java.util.ArrayList<>();
         for (int x = 0; x < LEN; x++) {
             for (int z = Z0; z < Z0 + NZ; z++) {
                 if (plan(x, z) || lift(x, z) >= 0 || kind(x, y, z) != 0 || kind(x, y - 1, z) != 0) {
@@ -2467,10 +2468,16 @@ final class Carrier {
                         p.set(x, y - 1, z, "steel_girder");
                     }
                 } else if (d == 3) {
-                    boolean alongX = near(x, z + 1) || near(x, z - 1), alongZ = near(x + 1, z) || near(x - 1, z);
-                    p.set(x, y + 1, z, alongX && alongZ ? "vessel_rail_cross" : alongX ? "vessel_rail[axis=x]" : "vessel_rail[axis=z]");
+                    rails.add(new int[] {x, z});
                 }
             }
+        }
+        // the rail along the outer edge, once all the gratings are down: it runs the way the
+        // walk beside it runs (worked out mid-way, the gratings not yet laid on one side turned it)
+        for (int[] c : rails) {
+            int x = c[0], z = c[1];
+            boolean alongX = near(x, z + 1) || near(x, z - 1), alongZ = near(x + 1, z) || near(x - 1, z);
+            p.set(x, y + 1, z, alongX && alongZ ? "vessel_rail_cross" : alongX ? "vessel_rail[axis=x]" : "vessel_rail[axis=z]");
         }
         // steps up to the deck, rafts, guns and antennas along the sides
         for (int x = 10; x < LEN - 10; x++) {

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "floor_concrete": "zomboidcraft:block/city/floor_concrete",
+    "gs_island_side": "zomboidcraft:block/city/gs_island_side",
+    "gs_island_top": "zomboidcraft:block/city/gs_island_top",
+    "particle": "zomboidcraft:block/city/gs_island_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_island_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_island_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_island_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_island_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_island_top"
+        },
+        "down": {
+          "texture": "#floor_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

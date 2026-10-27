@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gs_counter_c": "zomboidcraft:block/city/gs_counter_c",
+    "gs_counter_c_candy": "zomboidcraft:block/city/gs_counter_c_candy",
+    "gs_laminate": "zomboidcraft:block/city/gs_laminate",
+    "particle": "zomboidcraft:block/city/gs_counter_c_candy"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_counter_c_candy"
+        },
+        "south": {
+          "texture": "#gs_counter_c",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_counter_c",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_counter_c",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_laminate"
+        },
+        "down": {
+          "texture": "#gs_counter_c",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gs_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gs_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gs_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gs_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gs_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gs_laminate"
+        }
+      }
+    }
+  ]
+}
