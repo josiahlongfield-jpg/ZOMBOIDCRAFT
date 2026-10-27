@@ -205,7 +205,7 @@ public final class WorldEvents {
                     (int) (2 * reach / speed * 20), model, sound(kind, random));
             // sometimes a few jets together, same type, each 3 to 5 seconds behind the one before (Josiah: far enough
             // back that every pass is its own Doppler sweep), a little out to one side and higher
-            int pack = jet && random.nextInt(3) == 0 ? 1 + random.nextInt(3) : 0;
+            int pack = jet && random.nextInt(10) < 7 ? 1 + random.nextInt(2) : 0;   // Josiah 11:37: 2 or 3 jets in a row most of the time
             double back = 0;
             for (int i = 1; i <= pack; i++) {
                 back += speed * (3 + random.nextDouble() * 2);
