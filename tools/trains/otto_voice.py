@@ -135,7 +135,7 @@ LINES = {
     ],
 }
 
-# The treatments; Josiah picked B, the full robot (2026-10-27).
+# The treatments; Josiah picked B, the full robot (2026-10-27), then asked for it clearer and louder: D.
 ROBOT = "afftfilt=real='hypot(re,im)':imag='0':win_size={win}:overlap=0.75"
 STYLES = {
     'A': ('en_US-joe-medium', "[0:a]aresample=44100,asplit=2[a][b];[a]" + ROBOT.format(win=1024) + ",volume=0.8[r];[b]volume=0.7[d];"
@@ -144,6 +144,12 @@ STYLES = {
     'B': ('en_US-joe-medium', "[0:a]aresample=44100,asetrate=44100*1.08,aresample=44100," + ROBOT.format(win=768) + ","
           "aeval='val(0)*(0.55+0.45*sin(2*PI*48*t))',highpass=f=180,lowpass=f=6000,acrusher=bits=9:mix=0.4:mode=log,"
           "aecho=0.8:0.35:25:0.15,loudnorm=I=-16:TP=-1.5"),
+    # D: B made easier to understand (Josiah 12:19 "a bit hard to understand"): the clean voice under a lighter robot
+    # layer, a shallow buzz, little crushing, louder
+    'D': ('en_US-joe-medium', "[0:a]aresample=44100,asetrate=44100*1.04,aresample=44100,asplit=2[a][b];[a]" + ROBOT.format(win=512)
+          + ",volume=0.5[r];[b]volume=1.0[d];[r][d]amix=inputs=2:normalize=0,aeval='val(0)*(0.85+0.15*sin(2*PI*48*t))',"
+          "highpass=f=140,lowpass=f=7500,acrusher=bits=12:mix=0.15:mode=log,aecho=0.8:0.3:20:0.1,"
+          "loudnorm=I=-14:TP=-2,acompressor=threshold=0.08:ratio=6:attack=3:release=80:makeup=6,alimiter=limit=0.94:level=false"),
     'C': ('en_US-norman-medium', "[0:a]aresample=44100,asplit=2[a][b];[a]" + ROBOT.format(win=1024) + ",volume=0.5[r];[b]volume=0.9[d];"
           "[r][d]amix=inputs=2:normalize=0,highpass=f=400,lowpass=f=3200,acrusher=bits=8:mix=0.25:mode=log,"
           "aecho=0.8:0.5:60:0.25,loudnorm=I=-16:TP=-1.5"),
@@ -158,7 +164,7 @@ def speak(model, text, wav):
     with tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False) as f:
         f.write(text + '\n')
     subprocess.run([sys.executable, '-m', 'piper', '-m', str(model), '-i', f.name, '-f', str(wav),
-                    '--noise-scale', '0.35', '--noise-w-scale', '0.3'], check=True, capture_output=True)
+                    '--noise-scale', '0.35', '--noise-w-scale', '0.3', '--length-scale', '1.08'], check=True, capture_output=True)
 
 
 def stutter(wav, out, rnd):
@@ -178,7 +184,7 @@ def stutter(wav, out, rnd):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--voices', required=True)
-    ap.add_argument('--style', default='B', choices=STYLES)
+    ap.add_argument('--style', default='D', choices=STYLES)
     args = ap.parse_args()
     voice, chain = STYLES[args.style]
     model = Path(args.voices) / (voice + '.onnx')
@@ -213,7 +219,7 @@ def main():
         wav = work / (cid + '.wav')
         speak(model, text, wav)
         src = wav
-        if not cid.startswith('stop_') and rnd.random() < 0.22:
+        if not cid.startswith('stop_') and rnd.random() < 0.1:
             glitched = work / (cid + '_g.wav')
             if stutter(wav, glitched, rnd):
                 src = glitched
@@ -225,7 +231,7 @@ def main():
     for key in [k for k in sounds if k.startswith('otto.')]:
         del sounds[key]
     for cid in clips:
-        sounds['otto.' + cid] = {'sounds': [{'name': 'zomboidcraft:otto/' + cid, 'attenuation_distance': 32}],
+        sounds['otto.' + cid] = {'sounds': [{'name': 'zomboidcraft:otto/' + cid, 'attenuation_distance': 48}],
                                  'subtitle': 'subtitles.zomboidcraft.otto'}
     SOUNDS.write_text(json.dumps(sounds, indent=2, ensure_ascii=False) + '\n')
 
