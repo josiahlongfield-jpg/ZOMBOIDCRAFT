@@ -555,6 +555,8 @@ final class TownSite extends Site {
                 // the playground behind the classrooms
                 int[] a = school.placer(out).world(4, 36), b = school.placer(out).world(10, 42);
                 kit.playground(Math.min(a[0], b[0]), Math.min(a[1], b[1]));
+                int[] c = school.placer(out).world(13, 37), e = school.placer(out).world(16, 40);
+                kit.sandbox(Math.min(c[0], e[0]), Math.min(c[1], e[1]), 4, 4);
             }
         }
         // the water tower over the back alleys

@@ -1,0 +1,221 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "sc_ball_red": "zomboidcraft:block/city/sc_ball_red",
+    "sc_glass": {
+      "sprite": "zomboidcraft:block/city/sc_glass",
+      "force_translucent": true
+    },
+    "sc_gold": "zomboidcraft:block/city/sc_gold",
+    "sc_trophies_hi_1": "zomboidcraft:block/city/sc_trophies_hi_1",
+    "particle": "zomboidcraft:block/city/sc_trophies_hi_1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_trophies_hi_1"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        6
+      ],
+      "to": [
+        16,
+        6.6,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        14,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_glass"
+        },
+        "south": {
+          "texture": "#sc_glass"
+        },
+        "east": {
+          "texture": "#sc_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_glass"
+        },
+        "down": {
+          "texture": "#sc_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        5.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6.6,
+        8
+      ],
+      "to": [
+        11,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_ball_red"
+        },
+        "south": {
+          "texture": "#sc_ball_red"
+        },
+        "east": {
+          "texture": "#sc_ball_red"
+        },
+        "west": {
+          "texture": "#sc_ball_red"
+        },
+        "up": {
+          "texture": "#sc_ball_red"
+        },
+        "down": {
+          "texture": "#sc_ball_red"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6.6,
+        9
+      ],
+      "to": [
+        3,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_gold"
+        },
+        "south": {
+          "texture": "#sc_gold"
+        },
+        "east": {
+          "texture": "#sc_gold"
+        },
+        "west": {
+          "texture": "#sc_gold"
+        },
+        "up": {
+          "texture": "#sc_gold"
+        },
+        "down": {
+          "texture": "#sc_gold"
+        }
+      }
+    }
+  ]
+}

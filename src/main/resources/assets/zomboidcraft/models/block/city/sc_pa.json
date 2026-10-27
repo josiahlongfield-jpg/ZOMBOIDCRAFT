@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_beige": "zomboidcraft:block/city/sc_beige",
+    "sc_pa": "zomboidcraft:block/city/sc_pa",
+    "particle": "zomboidcraft:block/city/sc_pa"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        5,
+        14
+      ],
+      "to": [
+        12,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pa"
+        },
+        "south": {
+          "texture": "#sc_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_beige"
+        },
+        "west": {
+          "texture": "#sc_beige"
+        },
+        "up": {
+          "texture": "#sc_beige"
+        },
+        "down": {
+          "texture": "#sc_beige"
+        }
+      }
+    }
+  ]
+}

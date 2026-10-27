@@ -112,7 +112,7 @@ public final class Builders {
             }
             String under = v.get(x, y - 1, z);
             if (under == null || SOIL.contains(under) || under.contains("planter") || under.contains("flower")
-                    || under.contains("soil") || under.contains("garden")) {
+                    || under.contains("soil") || under.contains("garden") || under.startsWith("sc_turf")) {
                 return;
             }
             gone.add(new int[] {x, y, z});

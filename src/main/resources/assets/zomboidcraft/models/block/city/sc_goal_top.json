@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_pipe_red": "zomboidcraft:block/city/sc_pipe_red",
+    "sc_pipe_yellow": "zomboidcraft:block/city/sc_pipe_yellow",
+    "particle": "zomboidcraft:block/city/sc_pipe_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_yellow"
+        },
+        "south": {
+          "texture": "#sc_pipe_yellow"
+        },
+        "east": {
+          "texture": "#sc_pipe_yellow"
+        },
+        "west": {
+          "texture": "#sc_pipe_yellow"
+        },
+        "up": {
+          "texture": "#sc_pipe_yellow"
+        },
+        "down": {
+          "texture": "#sc_pipe_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        8,
+        7.7
+      ],
+      "to": [
+        14,
+        11.5,
+        8.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    }
+  ]
+}
