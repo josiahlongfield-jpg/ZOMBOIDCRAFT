@@ -38,25 +38,16 @@ def mist(seed, n=64):
     return Image.fromarray(rgba)
 
 
-def ground_fog(seed, n=256):
-    """The ground mist's sheet: soft fog that repeats seamlessly, with gaps where it thins.
+def ground_fog(seed, n=128):
+    """The ground mist's speckle: every pixel white at a random strength, evenly spread.
 
-    Never fainter than about a third where it's there at all (times the sheet's own third, that
-    stays over the tenth a shader pack throws away); where it would thin past that it opens
-    into a gap instead, so the sheets wisp rather than fade.
+    Shader packs (Photon) drop every pixel fainter than about a tenth. The mist sheet's own
+    strength scales these, so where the mist is thin fewer of them clear the bar and where it's
+    thick most do: the thickness fades smoothly with no edge. The game shifts the speckle every
+    frame and the pack's frame blending melts it into haze.
     """
     rng = np.random.default_rng(seed)
-    f = np.fft.fftfreq(n)
-    fx, fy = np.meshgrid(f, f)
-    k = np.sqrt(fx * fx + fy * fy)
-    k[0, 0] = 1
-    spectrum = (rng.normal(size=(n, n)) + 1j * rng.normal(size=(n, n))) / k ** 1.9
-    spectrum[0, 0] = 0
-    spectrum[k > 0.08] *= 0.25  # mostly broad swirls, a little fine grain
-    noise = np.real(np.fft.ifft2(spectrum))
-    noise = (noise - noise.mean()) / noise.std()
-    v = np.clip((noise + 0.75) / 2.2, 0, 1)  # about four fifths covered
-    a = np.where(v > 0, 0.34 + 0.66 * v, 0)
+    a = rng.random((n, n)) * 0.97 + 0.03
     rgba = np.zeros((n, n, 4), np.uint8)
     rgba[..., :3] = 255
     rgba[..., 3] = (a * 255).astype(np.uint8)

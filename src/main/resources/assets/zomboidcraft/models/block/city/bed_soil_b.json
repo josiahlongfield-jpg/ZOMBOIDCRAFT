@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bed_soil_b": "zomboidcraft:block/city/bed_soil_b",
+    "particle": "zomboidcraft:block/city/bed_soil_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bed_soil_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bed_soil_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bed_soil_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bed_soil_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bed_soil_b"
+        },
+        "down": {
+          "texture": "#bed_soil_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

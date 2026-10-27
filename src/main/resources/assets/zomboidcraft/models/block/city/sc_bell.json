@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "sc_bell": "zomboidcraft:block/city/sc_bell",
+    "sc_red": "zomboidcraft:block/city/sc_red",
+    "particle": "zomboidcraft:block/city/sc_bell"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        14
+      ],
+      "to": [
+        13,
+        13,
+        15.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_bell"
+        },
+        "south": {
+          "texture": "#sc_red"
+        },
+        "east": {
+          "texture": "#sc_red"
+        },
+        "west": {
+          "texture": "#sc_red"
+        },
+        "up": {
+          "texture": "#sc_red"
+        },
+        "down": {
+          "texture": "#sc_red"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        7,
+        15.4
+      ],
+      "to": [
+        9,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey"
+        },
+        "south": {
+          "texture": "#bunk_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        7.5,
+        13.4
+      ],
+      "to": [
+        8.5,
+        8.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

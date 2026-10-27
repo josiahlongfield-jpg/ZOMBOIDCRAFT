@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_lobbycard_2": "zomboidcraft:block/city/tr_lobbycard_2",
+    "particle": "zomboidcraft:block/city/tr_lobbycard_2"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        15
+      ],
+      "to": [
+        13,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_lobbycard_2"
+        },
+        "south": {
+          "texture": "#tr_lobbycard_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_lobbycard_2"
+        },
+        "west": {
+          "texture": "#tr_lobbycard_2"
+        },
+        "up": {
+          "texture": "#tr_lobbycard_2"
+        },
+        "down": {
+          "texture": "#tr_lobbycard_2"
+        }
+      }
+    }
+  ]
+}

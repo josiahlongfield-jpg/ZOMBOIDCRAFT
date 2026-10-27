@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_wainscot": "zomboidcraft:block/city/tr_wainscot",
+    "particle": "zomboidcraft:block/city/tr_wainscot"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_wainscot",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_wainscot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_wainscot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_wainscot",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -118,6 +118,7 @@ final class Kit {
         }
     }
 
+    private static final String[] DIRS = {"north", "east", "south", "west"};
     final BlockSink out;
     final SplittableRandom rng;
     final int w, d;
@@ -127,6 +128,8 @@ final class Kit {
     final List<Lot> lots = new ArrayList<>();
     /** Ground kept clear of street trees so a front can be seen (a church's): {x0, z0, x1, z1}. */
     final List<int[]> treeless = new ArrayList<>();
+    /** The cars left so far, {x, z, longest}: trees stand clear of them. */
+    final List<double[]> parked = new ArrayList<>();
 
     Kit(BlockSink out, SplittableRandom rng, int w, int d) {
         this.out = out;
@@ -615,6 +618,7 @@ final class Kit {
 
     /** A car (or van, or truck) on the road at (x, z), yaw in Minecraft's degrees. */
     void car(double x, double z, float yaw, double minLength, double maxLength) {
+        parked.add(new double[] {x, z, maxLength});
         out.car(x, 1, z, yaw, minLength, maxLength, rng.nextLong());
     }
 
@@ -689,9 +693,237 @@ final class Kit {
                 || there.startsWith("weeds") || there.contains("bush");
     }
 
+    /**
+     * A tree at (x, z), if it has room: never on a road, a car park, a path or in a building, never
+     * through a car; on a sidewalk only in a pit dug for it. Beside roads and buildings it gets a
+     * tidy bed of soil round its trunk.
+     */
     void tree(Trees.Kind kind, int x, int z) {
-        if (inside(x, z)) {
-            Trees.grow(canopy(), kind, x, 1, z, rng);
+        boolean near = false;
+        for (int dx = -4; dx <= 4 && !near; dx++) {
+            for (int dz = -4; dz <= 4 && !near; dz++) {
+                byte u = use(x + dx, z + dz);
+                near = u == ROAD || u == WALK || u == PARK || u == BUILT || u == LOT;
+            }
+        }
+        Spot spot = new Spot() {
+            @Override
+            public String get(int x, int y, int z) {
+                return out.get(x, y, z);
+            }
+
+            @Override
+            public void set(int x, int y, int z, String block) {
+                if (inside(x, z)) {
+                    out.set(x, y, z, block);
+                }
+            }
+
+            @Override
+            public boolean pavement(int x, int z) {
+                return use(x, z) == WALK && !"curb".equals(out.get(x, 0, z));
+            }
+
+            @Override
+            public boolean hard(int x, int z) {
+                byte u = use(x, z);
+                return u < 0 || u == ROAD || u == PARK || u == BUILT || !soil(out.get(x, 0, z)) && u != WALK;
+            }
+
+            @Override
+            public boolean car(int x, int z) {
+                for (double[] c : parked) {
+                    if (Math.hypot(x + 0.5 - c[0], z + 0.5 - c[1]) < Math.min(c[2], 10) / 2 + 0.8) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        // where it was meant to go, or the nearest spot a block or two off that has room
+        for (int r = 0; r <= 2; r++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) == r && inside(x + dx, z + dz) && !treeless(x + dx, z + dz)
+                            && plant(spot, kind, x + dx, z + dz, near, rng)) {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /** Headroom under a crown wherever people walk or cars go: no leaf or limb lower over paving. */
+    static final int HEADROOM = 5;
+
+    /** Where a tree is planted: the blocks it grows among, and the ground under them. */
+    interface Spot {
+        String get(int x, int y, int z);
+
+        void set(int x, int y, int z, String block);
+
+        /** A sidewalk: a trunk may stand in it, in a pit. */
+        default boolean pavement(int x, int z) {
+            return false;
+        }
+
+        /** Road, car park, a floor: no trunk stands on it, nothing hangs low over it. */
+        boolean hard(int x, int z);
+
+        /** A car stands there. */
+        default boolean car(int x, int z) {
+            return false;
+        }
+    }
+
+    /** Ground a tree grows out of: the terrain under the place, grass, earth, a bed. */
+    static boolean soil(String ground) {
+        return ground == null || ground.equals("air") || ground.equals("minecraft:grass_block") || ground.equals("minecraft:dirt")
+                || ground.equals("minecraft:coarse_dirt") || ground.equals("minecraft:podzol") || ground.equals("minecraft:rooted_dirt")
+                || ground.equals("minecraft:moss_block") || ground.equals("minecraft:mud") || ground.startsWith("bed_soil")
+                || ground.equals("dirt_withered");
+    }
+
+    /**
+     * Grows the tree into a list first and plants it only if it fits: trunk and low limbs over
+     * soil (or the pit), no limb through anything built or through a car. A big tree that doesn't
+     * fit is tried as a sapling; if that doesn't fit either, nothing is planted. Leaves give way
+     * where they'd hang low over paving or a car, or meet something built.
+     */
+    static boolean plant(Spot s, Trees.Kind kind, int x, int z, boolean bed, SplittableRandom rng) {
+        boolean soil = soil(s.get(x, 0, z));
+        if (soil ? s.hard(x, z) : !s.pavement(x, z)) {
+            return false;
+        }
+        // in or beside a sidewalk the trunk gets a pit dug for it
+        boolean pit = !soil;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                pit |= s.pavement(x + dx, z + dz);
+            }
+        }
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (pit && !s.pavement(x + dx, z + dz) && (s.hard(x + dx, z + dz) || !soil(s.get(x + dx, 0, z + dz)))) {
+                    return false;
+                }
+                if (!soft(s.get(x + dx, 1, z + dz)) || s.car(x + dx, z + dz)) {
+                    return false;
+                }
+            }
+        }
+        // a few goes at the kind asked for (each grows another shape and size), then a sapling
+        Trees.Kind[] tries = kind == Trees.Kind.YOUNG || kind == Trees.Kind.BUSH ? new Trees.Kind[] {kind, kind}
+                : new Trees.Kind[] {kind, kind, kind, kind, Trees.Kind.YOUNG, Trees.Kind.YOUNG};
+        for (Trees.Kind k : tries) {
+            List<int[]> at = new ArrayList<>();
+            List<String> blocks = new ArrayList<>();
+            List<Boolean> wood = new ArrayList<>();
+            Trees.grow(new Trees.Canopy() {
+                @Override
+                public void wood(int x, int y, int z, String block) {
+                    at.add(new int[] {x, y, z});
+                    blocks.add(block);
+                    wood.add(true);
+                }
+
+                @Override
+                public void leaves(int x, int y, int z, String block) {
+                    at.add(new int[] {x, y, z});
+                    blocks.add(block);
+                    wood.add(false);
+                }
+            }, k, x, 1, z, rng);
+            // a low branch in the way is pruned, as a street tree's would be (a few); the trunk in
+            // the way means the tree doesn't fit
+            boolean fits = true;
+            int limbs = 0, pruned = 0;
+            boolean[] cut = new boolean[at.size()];
+            for (int i = 0; i < at.size() && fits; i++) {
+                int[] c = at.get(i);
+                if (!wood.get(i)) {
+                    continue;
+                }
+                boolean trunk = Math.abs(c[0] - x) <= 1 && Math.abs(c[2] - z) <= 1;
+                boolean limb = !trunk || blocks.get(i).contains("_limb_");
+                limbs += limb ? 1 : 0;
+                boolean inPit = pit && trunk;
+                boolean ok = soft(s.get(c[0], c[1], c[2]))
+                        && (c[1] >= HEADROOM || inPit || !s.hard(c[0], c[2]) && soil(s.get(c[0], 0, c[2])))
+                        && (c[1] > 3 || !s.car(c[0], c[2]));
+                if (!ok && limb) {
+                    cut[i] = true;
+                    pruned++;
+                } else {
+                    fits = ok;
+                }
+            }
+            if (!fits || pruned > 3 + limbs / 6) {
+                continue;
+            }
+            if (pit || bed) {
+                bed(s, x, z, pit, rng);
+            }
+            for (int i = 0; i < at.size(); i++) {
+                int[] c = at.get(i);
+                String there = s.get(c[0], c[1], c[2]);
+                if (wood.get(i)) {
+                    if (soft(there) && !cut[i]) {
+                        s.set(c[0], c[1], c[2], blocks.get(i));
+                    }
+                    continue;
+                }
+                boolean inPit = pit && Math.abs(c[0] - x) <= 1 && Math.abs(c[2] - z) <= 1;
+                boolean low = c[1] < HEADROOM && !inPit && (s.hard(c[0], c[2]) || !soil(s.get(c[0], 0, c[2])) || s.car(c[0], c[2]));
+                if ((there == null || there.equals("air")) && !low) {
+                    s.set(c[0], c[1], c[2], blocks.get(i));
+                }
+            }
+            if (pit && rng.nextDouble() < 0.45) {
+                // an iron grate over the pit, a piece or two gone
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        String there = s.get(x + dx, 1, z + dz);
+                        if ((dx != 0 || dz != 0) && (there == null || there.equals("air")) && rng.nextDouble() < 0.8) {
+                            s.set(x + dx, 1, z + dz, "grate");
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * The soil round a planted trunk, so it doesn't come straight up out of a lawn or the concrete:
+     * a round bed in grass; in a sidewalk, a square pit edged with old brick pavers.
+     */
+    private static void bed(Spot s, int x, int z, boolean pit, SplittableRandom rng) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                int bx = x + dx, bz = z + dz;
+                boolean ring = Math.abs(dx) == 2 || Math.abs(dz) == 2;
+                if (pit) {
+                    if (ring) {
+                        if (s.pavement(bx, bz) && soft(s.get(bx, 1, bz))) {
+                            s.set(bx, 0, bz, "pit_pavers");
+                        }
+                        continue;
+                    }
+                } else if (ring || Math.abs(dx) + Math.abs(dz) == 2 && rng.nextDouble() < 0.45
+                        || s.hard(bx, bz) || !soil(s.get(bx, 0, bz))) {
+                    continue;
+                }
+                s.set(bx, 0, bz, rng.nextDouble() < 0.6 ? "bed_soil" : "bed_soil_b");
+                String plant = s.get(bx, 1, bz);
+                if (plant != null && soft(plant) && !plant.contains("leaves")) {
+                    s.set(bx, 1, bz, "air");
+                    if (String.valueOf(s.get(bx, 2, bz)).endsWith("[half=upper]")) {
+                        s.set(bx, 2, bz, "air");
+                    }
+                }
+            }
         }
     }
 
@@ -935,42 +1167,101 @@ final class Kit {
         };
     }
 
-    /** A swing set, a slide and a climbing frame on bark chips. */
+    /**
+     * A playground on bark chips, seven by seven: the swing set along the north side (a swing
+     * snapped, one wound round the bar, one gone), the slide down the east side, the merry-go-round,
+     * the spring rider, the seesaw, the monkey bars along the south edge.
+     */
     void playground(int x, int z) {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                out.set(x + i, 0, z + j, rng.nextDouble() < 0.7 ? "minecraft:coarse_dirt" : "minecraft:rooted_dirt");
+                String edge = j == 0 ? "north" : j == 6 ? "south" : i == 0 ? "west" : i == 6 ? "east" : null;
+                out.set(x + i, 0, z + j, edge != null ? "sc_chips_edge[facing=" + edge + "]" : rng.nextDouble() < 0.3 ? "sc_chips_b" : "sc_chips");
+                for (int y = 1; y <= 3; y++) {
+                    out.set(x + i, y, z + j, "air");
+                }
             }
         }
+        // the swing set: the A-frames at each end, four bays under the bar
         for (int y = 1; y <= 3; y++) {
-            out.set(x, y, z + 1, "minecraft:iron_bars");
-            out.set(x + 4, y, z + 1, "minecraft:iron_bars");
+            out.set(x, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
+            out.set(x + 5, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
         }
-        for (int i = 0; i <= 4; i++) {
-            out.set(x + i, 4, z + 1, "minecraft:iron_chain[axis=x]");
-        }
-        for (int i : new int[] {1, 3}) {
-            out.set(x + i, 3, z + 1, "minecraft:iron_chain[axis=y]");
-            if (rng.nextDouble() < 0.7) {
-                out.set(x + i, 2, z + 1, "minecraft:iron_chain[axis=y]");
-                out.set(x + i, 1, z + 1, "minecraft:dark_oak_pressure_plate");
+        for (int i = 1; i <= 4; i++) {
+            double r = rng.nextDouble();
+            if (r < 0.6) {
+                out.set(x + i, 1, z + 1, "sc_swing_seat[axis=x]");
+                out.set(x + i, 2, z + 1, "sc_swing_chain[axis=x]");
+                out.set(x + i, 3, z + 1, "sc_swing_top[axis=x]");
+            } else if (r < 0.75) {
+                out.set(x + i, 1, z + 1, "sc_swing_snapped[axis=x]");
+                out.set(x + i, 2, z + 1, "sc_swing_chain[axis=x]");
+                out.set(x + i, 3, z + 1, "sc_swing_top[axis=x]");
+            } else if (r < 0.9) {
+                out.set(x + i, 3, z + 1, "sc_swing_wrapped[axis=x]");
+            } else {
+                out.set(x + i, 3, z + 1, "sc_swing_bar[axis=x]");
             }
         }
-        // the slide: a ladder up to a platform and a chute down
-        out.set(x + 5, 1, z + 4, "minecraft:iron_bars");
-        out.set(x + 5, 2, z + 4, "minecraft:iron_bars");
-        out.set(x + 5, 3, z + 4, "minecraft:red_concrete");
-        out.set(x + 5, 3, z + 5, "minecraft:smooth_quartz_slab[type=bottom]");
-        out.set(x + 5, 2, z + 6, "minecraft:smooth_quartz_stairs[facing=north]");
-        out.set(x + 5, 1, z + 6, "minecraft:smooth_quartz_slab[type=bottom]");
-        // monkey bars
+        // the slide: up the ladder at the north end, down the chute to the south
+        out.set(x + 6, 1, z + 1, "sc_slide_ladder[facing=south]");
+        out.set(x + 6, 2, z + 1, "sc_slide_ladder[facing=south]");
+        out.set(x + 6, 3, z + 1, "sc_slide_ladder_top[facing=south]");
+        out.set(x + 6, 1, z + 2, "sc_slide_post[facing=south]");
+        out.set(x + 6, 2, z + 2, "sc_slide_post[facing=south]");
+        out.set(x + 6, 3, z + 2, "sc_slide_deck[facing=south]");
+        out.set(x + 6, 2, z + 3, "sc_slide_hi[facing=south]");
+        out.set(x + 6, 1, z + 4, "sc_slide_lo[facing=south]");
+        out.set(x + 6, 1, z + 5, "sc_slide_out[facing=south]");
+        // the merry-go-round, the spring rider, the seesaw
         for (int i = 0; i < 4; i++) {
-            out.set(x + i, 3, z + 5, "minecraft:iron_bars");
+            out.set(x + 1 + i % 2, 1, z + 3 + i / 2, "sc_merry_" + i);
         }
-        out.set(x, 1, z + 5, "minecraft:iron_bars");
-        out.set(x, 2, z + 5, "minecraft:iron_bars");
-        out.set(x + 3, 1, z + 5, "minecraft:iron_bars");
-        out.set(x + 3, 2, z + 5, "minecraft:iron_bars");
+        out.set(x + 4, 1, z + 3, "sc_horse[facing=" + (rng.nextBoolean() ? "west" : "north") + "]");
+        for (int t = 0; t < 3; t++) {
+            out.set(x + 4, 1, z + 4 + t, "sc_seesaw_" + (rng.nextBoolean() ? t : 2 - t) + "[axis=z]");
+        }
+        // the monkey bars along the south edge
+        for (int i = 0; i <= 3; i++) {
+            boolean end = i == 0 || i == 3;
+            if (end) {
+                out.set(x + i, 1, z + 6, "sc_monkey_ladder[axis=x]");
+                out.set(x + i, 2, z + 6, "sc_monkey_ladder[axis=x]");
+            }
+            out.set(x + i, 3, z + 6, (end ? "sc_monkey_end" : "sc_monkey_bars") + "[axis=x]");
+        }
+        // what was left: a bucket, a backpack, the litter
+        if (rng.nextDouble() < 0.6) {
+            out.set(x + 3, 1, z + 3, "sc_bucket[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
+        if (rng.nextDouble() < 0.4) {
+            out.set(x + 5, 1, z + 5, "sc_pack_" + new String[] {"red", "blue", "green"}[rng.nextInt(3)] + "[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
+        if (rng.nextDouble() < 0.5) {
+            out.set(x + 1 + rng.nextInt(4), 1, z + 2, rng.nextBoolean() ? "paper" : "blood_splat");
+        }
+    }
+
+    /** A sandbox, its timber edge round it, a bucket and a spade left in it. */
+    void sandbox(int x, int z, int w, int d) {
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < d; j++) {
+                boolean n = j == 0, s = j == d - 1, west = i == 0, e = i == w - 1;
+                String b;
+                if ((n || s) && (west || e)) {
+                    b = "sc_sand_corner[facing=" + (n ? (west ? "north" : "east") : (e ? "south" : "west")) + "]";
+                } else if (n || s || west || e) {
+                    b = "sc_sand_edge[facing=" + (n ? "north" : s ? "south" : west ? "west" : "east") + "]";
+                } else {
+                    b = "sc_sand";
+                }
+                out.set(x + i, 0, z + j, b);
+                out.set(x + i, 1, z + j, "air");
+            }
+        }
+        if (w > 2 && d > 2) {
+            out.set(x + 1 + rng.nextInt(w - 2), 1, z + 1 + rng.nextInt(d - 2), "sc_bucket[facing=" + DIRS[rng.nextInt(4)] + "]");
+        }
     }
 
     /** A little white gazebo with a pyramid roof. */
@@ -998,7 +1289,7 @@ final class Kit {
         out.set(x + 2, 6, z + 2, "minecraft:lightning_rod");
     }
 
-    /** A cracked basketball court with two hoops. */
+    /** A cracked basketball court with two hoops on goosenecks, the chain nets rusted, one gone. */
     void court(int x, int z) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
@@ -1007,11 +1298,19 @@ final class Kit {
             }
         }
         for (int i : new int[] {0, 8}) {
-            out.set(x + i, 1, z + 3, "streetlight_pole");
-            out.set(x + i, 2, z + 3, "streetlight_pole");
-            out.set(x + i, 3, z + 3, "streetlight_pole");
-            out.set(x + i, 4, z + 3, "minecraft:white_concrete");
-            out.set(x + i + (i == 0 ? 1 : -1), 3, z + 3, "minecraft:iron_bars");
+            String f = i == 0 ? "east" : "west";
+            int bx = x + (i == 0 ? 1 : 7);
+            for (int y = 1; y <= 3; y++) {
+                out.set(x + i, y, z + 3, "sc_hoop_post");
+            }
+            out.set(x + i, 4, z + 3, "sc_hoop_neck[facing=" + f + "]");
+            out.set(bx, 4, z + 3, "sc_hoop_board[facing=" + f + "]");
+            if (rng.nextDouble() < 0.7) {
+                out.set(bx, 3, z + 3, "sc_hoop_net[facing=" + f + "]");
+            }
+        }
+        if (rng.nextDouble() < 0.5) {
+            out.set(x + 2 + rng.nextInt(5), 1, z + 1 + rng.nextInt(5), rng.nextBoolean() ? "sc_ball_orange" : "sc_ball_red");
         }
     }
 

@@ -1,0 +1,154 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_brass": "zomboidcraft:block/city/tr_brass",
+    "tr_carpet": "zomboidcraft:block/city/tr_carpet",
+    "tr_wainscot": "zomboidcraft:block/city/tr_wainscot",
+    "particle": "zomboidcraft:block/city/tr_wainscot"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_wainscot",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_wainscot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_carpet"
+        },
+        "down": {
+          "texture": "#tr_wainscot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_wainscot",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tr_wainscot"
+        },
+        "east": {
+          "texture": "#tr_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_carpet",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_wainscot"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        15.4
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tr_brass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_brass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_brass"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        7.4
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_brass"
+        },
+        "south": {
+          "texture": "#tr_brass"
+        },
+        "east": {
+          "texture": "#tr_brass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_brass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tr_brass"
+        }
+      }
+    }
+  ]
+}

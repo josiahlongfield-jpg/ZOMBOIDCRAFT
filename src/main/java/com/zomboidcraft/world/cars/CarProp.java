@@ -116,6 +116,8 @@ public class CarProp extends Entity {
     /** Where the key is ({@link CarKeys}), whether someone's hotwired it, and ticks left on a hotwiring and who's at it. */
     private int keyWhere;
     private boolean hotwired;
+    /** Whether a car's condition has been decided yet ({@link #carCondition}). */
+    private boolean worn;
     private int hotwireLeft = -1;
     private Entity hotwirer;
     /** The glovebox, filled the first time anyone opens it. */
@@ -195,6 +197,7 @@ public class CarProp extends Entity {
         }
         keyWhere = input.getIntOr("key", CarKeys.UNROLLED);
         hotwired = input.getIntOr("hotwired", 0) != 0;
+        worn = input.getIntOr("worn", 0) != 0;
         entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
         gloveSearched = input.getIntOr("glove_searched", 0) != 0;
         NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
@@ -222,6 +225,7 @@ public class CarProp extends Entity {
         ContainerHelper.saveAllItems(output, items);
         output.putInt("key", keyWhere);
         output.putInt("hotwired", hotwired ? 1 : 0);
+        output.putInt("worn", worn ? 1 : 0);
         output.putInt("lights", lightsOn() ? 1 : 0);
         output.putInt("glove_searched", gloveSearched ? 1 : 0);
         NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
@@ -562,8 +566,36 @@ public class CarProp extends Entity {
         rollKey();
         String how = keyWhere == CarKeys.IGNITION ? "The key's in the ignition: C to start it."
                 : CarKeys.carries(player, this) ? "You have the key: C to start it."
-                : hotwired ? "It's been hotwired: C to start it." : "No key: C to hotwire it.";
+                : hotwired ? "It's been hotwired: C to start it."
+                : "No key: C to hotwire it. The wiring looks " + wiring(carCondition()) + ".";
         return how + " L headlights, W/S drive, A/D steer, space handbrake, H horn.";
+    }
+
+    /**
+     * A car's condition, percent, decided the first time it matters from the state it was left in: a usable
+     * car 55-100, an abandoned one 15-60, a wreck 0-15. Aircraft keep their own (the flight code's).
+     */
+    public int carCondition() {
+        if (!aircraft() && !worn) {
+            worn = true;
+            java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits());
+            setCondition(switch (variant()) {
+                case "usable" -> 55 + rng.nextInt(46);
+                case "abandoned" -> 15 + rng.nextInt(46);
+                default -> rng.nextInt(16);
+            });
+        }
+        return condition();
+    }
+
+    /** The chance a hotwiring only sparks: hotwireFail in a car in perfect shape, up to hotwireWear more of the rest in a ruin. */
+    private double hotwireFail() {
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        return w.hotwireFail + (1 - w.hotwireFail) * w.hotwireWear * (1 - carCondition() / 100.0);
+    }
+
+    private static String wiring(int condition) {
+        return condition >= 80 ? "fine" : condition >= 55 ? "worn" : condition >= 30 ? "rough" : "like a rat's nest";
     }
 
     /** Decides where the key is, the first time it matters. */
@@ -635,7 +667,8 @@ public class CarProp extends Entity {
         if (!canStart(player)) {
             hotwireLeft = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
             hotwirer = player;
-            player.sendOverlayMessage(Component.literal("No key. You pull the panel off under the dash and find the wires..."));
+            player.sendOverlayMessage(Component.literal("No key. You pull the panel off under the dash: the wiring looks "
+                    + wiring(carCondition()) + "..."));
             return;
         }
         crank(server);
@@ -667,9 +700,10 @@ public class CarProp extends Entity {
             return;
         }
         hotwireLeft = -1;
-        if (random.nextDouble() < com.zomboidcraft.ZcConfig.get().world.hotwireFail) {
+        if (random.nextDouble() < hotwireFail()) {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
-            player.sendOverlayMessage(Component.literal("A spark, a cough, then nothing. C to try again."));
+            player.sendOverlayMessage(Component.literal(carCondition() < 55 ? "A spark, a cough, then nothing. The old wiring fights you: C to try again."
+                    : "A spark, a cough, then nothing. C to try again."));
             return;
         }
         hotwired = true;
@@ -750,8 +784,33 @@ public class CarProp extends Entity {
         return entityData.get(ALARM);
     }
 
+    /** Server side: ticks until an alarm clock wired into the alarm (building/Builder) sets it off; 0 when none is. */
+    private int rigLeft;
+
+    /** Wires a clock into the alarm: it goes off in {@code ticks}. Whether it took (a car with a good battery, not already rigged). */
+    public boolean rigAlarm(int ticks) {
+        if (!engineRuns() || rigLeft > 0) {
+            return false;
+        }
+        rigLeft = Math.max(1, ticks);
+        return true;
+    }
+
+    public boolean rigged() {
+        return rigLeft > 0;
+    }
+
+    /** The key's panic button pressed again: the alarm stops. */
+    public void stopAlarm() {
+        alarmLeft = 0;
+        entityData.set(ALARM, false);
+    }
+
     /** The alarm's whoop: the horn in a steady beat, and every zombie in earshot comes. Getting in stops it. */
     private void alarm(ServerLevel server) {
+        if (rigLeft > 0 && --rigLeft == 0) {
+            tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20);
+        }
         if (alarmLeft <= 0) {
             return;
         }

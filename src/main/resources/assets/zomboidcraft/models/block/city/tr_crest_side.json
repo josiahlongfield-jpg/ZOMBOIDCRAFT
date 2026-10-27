@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tr_gilt": "zomboidcraft:block/city/tr_gilt",
+    "tr_tc": "zomboidcraft:block/city/tr_tc",
+    "particle": "zomboidcraft:block/city/tr_tc"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_tc"
+        },
+        "south": {
+          "texture": "#tr_tc"
+        },
+        "east": {
+          "texture": "#tr_tc",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_tc",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_tc"
+        },
+        "down": {
+          "texture": "#tr_tc",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        7
+      ],
+      "to": [
+        16,
+        5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tr_gilt"
+        },
+        "south": {
+          "texture": "#tr_gilt"
+        },
+        "east": {
+          "texture": "#tr_gilt",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tr_gilt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tr_gilt"
+        },
+        "down": {
+          "texture": "#tr_gilt"
+        }
+      }
+    }
+  ]
+}

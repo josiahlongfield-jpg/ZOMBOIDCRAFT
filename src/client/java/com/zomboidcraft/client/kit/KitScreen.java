@@ -69,10 +69,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         }
     }
 
-    /** The page you were last on, so the screen opens where you left it. */
-    private static Page last = Page.CHARACTER;
-
-    Page page = last;
+    Page page = Page.CHARACTER;
     /** The page a key asked for, for the screen the server is about to open; null when a container opened it. */
     private static @Nullable Page requested;
     /** Shift was held for the click being handled. */
@@ -115,7 +112,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     private static void tick(Minecraft mc) {
         while (OPEN.consumeClick()) {
-            if (mc.gui.screen() == null) open(mc, last);
+            if (mc.gui.screen() == null) open(mc, Page.CHARACTER);
         }
         while (MAP_KEY.consumeClick()) {
             if (mc.gui.screen() == null) open(mc, Page.MAP);
@@ -142,14 +139,15 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory || player.hasInfiniteMaterials()) return vanilla;
-        open(mc, last);
+        open(mc, Page.CHARACTER);
         return null;
     }
 
     public KitScreen(M menu, Inventory inventory, Component title) {
         super(menu, inventory, title, W, H);
-        // a key asked for a page; searching a container opens on the pack, with that container showing
-        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : last;
+        // a key asked for a page (the kit key always asks for Character, wherever it was closed); searching a container
+        // opens on the pack, with that container showing
+        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : Page.CHARACTER;
         requested = null;
     }
 
@@ -212,7 +210,6 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         var options = minecraft.options;
         int wanted = window.calculateScale(options.guiScale().get(), options.forceUnicodeFont().get());
         if (window.getGuiScale() != wanted) window.setGuiScale(wanted);
-        last = page;
         super.removed();
     }
 

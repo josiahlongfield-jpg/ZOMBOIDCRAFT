@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_alpha_3": {
+      "sprite": "zomboidcraft:block/city/sc_alpha_3",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/sc_alpha_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        5,
+        15.6
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_alpha_3"
+        },
+        "south": {
+          "texture": "#sc_alpha_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_alpha_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_alpha_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_alpha_3"
+        },
+        "down": {
+          "texture": "#sc_alpha_3"
+        }
+      }
+    }
+  ]
+}

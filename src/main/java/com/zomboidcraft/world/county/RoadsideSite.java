@@ -864,7 +864,6 @@ final class RoadsideSite extends Site {
         int lw = lot.w(), ld = lot.d();
         int sw = Math.min(high ? 66 : 54, lw - 6), sd = 36;
         new Civic(q.shifted(2, 0, 0), rng).school(sw, sd, high);
-        new Civic(q, rng).flagpole(sw + 5, 6, 9);
         // the bus lot beside the school, the yellow buses that never left
         int bx = sw + 4;
         if (lw - bx > 14) {
@@ -875,13 +874,13 @@ final class RoadsideSite extends Site {
                 }
             }
         }
-        int backZ = sd + 2;
+        int backZ = sd + 7;  // the bleachers clear of the back wall
         if (high && ld - backZ > 30) {
             football(q, 4, backZ, Math.min(lw - 8, 60), ld - backZ - 2);
         } else if (ld - backZ > 12) {
-            int[] a = q.world(6, backZ + 2), c = q.world(18, backZ + 2);
-            kit.playground(Math.min(a[0], a[0]), Math.min(a[1], a[1]));
-            kit.court(c[0], c[1]);
+            int[] a = q.world(6, backZ + 2), b = q.world(12, backZ + 8), c = q.world(18, backZ + 2), e = q.world(26, backZ + 8);
+            kit.playground(Math.min(a[0], b[0]), Math.min(a[1], b[1]));
+            kit.court(Math.min(c[0], e[0]), Math.min(c[1], e[1]));
         }
         if (hit > 0.4) {
             evacuation(q, sw / 2 - 10, 2);
@@ -892,30 +891,59 @@ final class RoadsideSite extends Site {
     private void football(Placer q, int x0, int z0, int fw, int fd) {
         for (int x = x0; x < x0 + fw; x++) {
             for (int z = z0; z < z0 + fd; z++) {
-                boolean line = x == x0 || x == x0 + fw - 1 || z == z0 || z == z0 + fd - 1 || (x - x0) % 6 == 0;
-                q.set(x, 0, z, line && chance() < 0.85 ? "minecraft:white_concrete_powder" : chance() < 0.15 ? "minecraft:coarse_dirt" : "minecraft:grass_block");
-                q.set(x, 1, z, chance() < 0.25 ? "minecraft:short_grass" : "air");
+                boolean side = z == z0 || z == z0 + fd - 1, yard = x == x0 || x == x0 + fw - 1 || (x - x0) % 6 == 0;
+                // the mown bands growing out: rough in drifts, mud worn bare in the middle, weeds coming up
+                double wild = Math.sin(x * 0.31 + z * 0.17) + Math.sin(z * 0.43 - x * 0.12);
+                boolean rough = wild + chance() * 0.8 > 1.1;
+                String turf = rough ? "sc_turf_rough" : chance() < 0.1 ? "sc_turf_mud" : (x - x0) / 3 % 2 == 0 ? "sc_turf" : "sc_turf_d";
+                q.set(x, 0, z, rough && chance() < 0.5 ? turf : side ? "sc_turf_line[axis=x]" : yard ? "sc_turf_line[axis=z]" : turf);
+                double r = chance();
+                if (rough && r < 0.25) {
+                    int k = 1 + rng.nextInt(3);
+                    String dry = chance() < 0.5 ? "dry_" : "";
+                    q.set(x, 1, z, "gc_tall_" + dry + k + "_lower");
+                    q.set(x, 2, z, "gc_tall_" + dry + k + "_upper");
+                } else if (rough && r < 0.8 || r < 0.08) {
+                    q.set(x, 1, z, chance() < 0.4 ? "gc_grass_dry_" + (1 + rng.nextInt(6)) : "gc_grass_" + (1 + rng.nextInt(12)));
+                } else {
+                    q.set(x, 1, z, "air");
+                }
             }
         }
         int mid = z0 + fd / 2;
+        // the goalposts: the padded post, the crossbar, the uprights with their ribbons
         for (int x : new int[] {x0 + 1, x0 + fw - 2}) {
-            for (int y = 1; y <= 5; y++) {
-                q.set(x, y, mid, "minecraft:yellow_concrete");
-            }
-            for (int k = -2; k <= 2; k++) {
-                q.set(x, 3, mid + k, "minecraft:yellow_concrete");
-                q.set(x, 4, mid + (k < 0 ? -2 : 2), "minecraft:yellow_concrete");
-                q.set(x, 5, mid + (k < 0 ? -2 : 2), "minecraft:yellow_concrete");
+            q.set(x, 1, mid, "sc_goal_pad");
+            q.set(x, 2, mid, "sc_goal_post");
+            q.set(x, 3, mid, "sc_goal_mid[axis=z]");
+            q.set(x, 3, mid - 1, "sc_goal_bar[axis=z]");
+            q.set(x, 3, mid + 1, "sc_goal_bar[axis=z]");
+            q.set(x, 3, mid - 2, "sc_goal_end[facing=north]");
+            q.set(x, 3, mid + 2, "sc_goal_end[facing=south]");
+            for (int z : new int[] {mid - 2, mid + 2}) {
+                for (int y = 4; y <= 6; y++) {
+                    q.set(x, y, z, "sc_goal_post");
+                }
+                q.set(x, 7, z, "sc_goal_top");
             }
         }
         // bleachers: aluminium benches stepping up, on the side nearest the school
         for (int x = x0 + 6; x < x0 + fw - 6; x++) {
             for (int k = 0; k < 4; k++) {
-                q.set(x, 1 + k, z0 - 2 - k, chance() < 0.08 ? "air" : "minecraft:polished_andesite_slab[type=top]");
+                q.set(x, 1 + k, z0 - 2 - k, chance() < 0.06 ? "air" : "sc_bleacher_alu[facing=south]");
                 for (int y = 1; y <= k; y++) {
-                    q.set(x, y, z0 - 2 - k, "minecraft:iron_bars");
+                    q.set(x, y, z0 - 2 - k, "sc_bleacher_frame[facing=south]");
                 }
             }
+        }
+        // the scoreboard on its legs past the east end zone
+        int sx = x0 + fw + 2;
+        for (int y = 1; y <= 3; y++) {
+            q.set(sx, y, mid - 1, "truss_grey");
+            q.set(sx, y, mid + 1, "truss_grey");
+        }
+        for (int i = 0; i < 3; i++) {
+            q.set(sx, 4, mid - 1 + i, "sc_score_" + i + "[facing=west]");
         }
         for (int[] c : new int[][] {{x0 - 1, z0 - 1}, {x0 + fw, z0 - 1}, {x0 - 1, z0 + fd}, {x0 + fw, z0 + fd}}) {
             for (int y = 1; y <= 14; y++) {
@@ -941,8 +969,12 @@ final class RoadsideSite extends Site {
                 }
                 q.set(tx + i, 1, z + 2, i == 0 || i == 5 ? "pole_wood" : "air");
             }
-            q.set(tx + 2, 1, z + 3, "minecraft:white_bed[facing=north,part=foot]");
-            q.set(tx + 2, 1, z + 2, "minecraft:white_bed[facing=north,part=head]");
+            q.set(tx + 2, 1, z + 2, "sc_cot_head[facing=north]");
+            q.set(tx + 2, 1, z + 3, chance() < 0.5 ? "sc_cot_foot_b[facing=north]" : "sc_cot_foot[facing=north]");
+            if (chance() < 0.6) {
+                q.set(tx + 3, 1, z + 2, "sc_cot_head_b[facing=north]");
+                q.set(tx + 3, 1, z + 3, "sc_cot_foot[facing=north]");
+            }
         }
         q.set(x + 19, 1, z + 3, "sign_quarantine_0[facing=south]");
         q.vehicle(x + 10, 1, z + 8, 90, "ambulance,ambulance_van,police_suv", rng.nextLong());

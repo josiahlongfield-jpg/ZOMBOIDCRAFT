@@ -85,6 +85,11 @@ public final class ZMove {
         public boolean goneRight;
         /** On one leg: arms thrust ahead at what it is after, rather than out for balance. */
         public boolean reach;
+        /**
+         * On one leg and moving: how far through its hop it is, from the ground covered (0 to about 0.38 crouching to
+         * spring, off the ground to about 0.74, then landing).
+         */
+        public float hop;
     }
 
     private final Pose tmp = new Pose();
@@ -430,7 +435,7 @@ public final class ZMove {
     private void hop(Pose p, boolean moving, Input in) {
         float t = in.t, crouch, air, land;
         if (moving) {
-            float q = ((t + in.phase * 0.13f) / 0.78f) % 1f;
+            float q = in.hop;
             crouch = seg(q, 0f, 0.35f) * (1 - seg(q, 0.35f, 0.5f));
             air = seg(q, 0.38f, 0.52f) * (1 - seg(q, 0.6f, 0.74f));
             land = seg(q, 0.6f, 0.74f) * (1 - seg(q, 0.74f, 1f));
@@ -463,6 +468,14 @@ public final class ZMove {
 
     private static float smooth(float x) {
         return seg(x, 0f, 1f);
+    }
+
+    /**
+     * How far along one hop's ground the body is at phase q (0 to 1): it stays put while it crouches and lands, and
+     * covers the ground in the air.
+     */
+    public static float hopAdvance(float q) {
+        return seg(q, 0.4f, 0.72f);
     }
 
     /** Straight-line blend of two poses; the hips turn in the order of whichever is nearer. */

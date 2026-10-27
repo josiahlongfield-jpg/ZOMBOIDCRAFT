@@ -89,6 +89,23 @@ QUERIES = {
     # second ambience round, from Josiah's notes: heavier hail, more far-off animals, car and house alarms
     "amb_hail2": ["heavy hail on roof", "hailstorm intense", "hail on metal roof", "large hail"],
     # the weather's storm-tripped alarms: a looping car alarm and an electric burglar bell
+    # flyable jets and the Apache-style helicopter (the aircraft thread's events)
+    "air_jet_start": ["jet engine start", "jet engine startup", "turbine spool up", "apu start aircraft", "jet engine spool up",
+                      "jet engine shutdown", "turbine spool down"],
+    "air_jet_idle": ["jet engine idle", "turbine whine", "jet idle loop", "fighter jet idle", "jet engine running"],
+    "air_jet_roar": ["jet engine roar", "fighter jet engine", "jet engine loop", "jet thrust", "jet engine full power"],
+    "air_jet_afterburner": ["afterburner", "fighter jet afterburner", "jet takeoff afterburner", "military jet takeoff"],
+    "air_jet_distant": ["jet flyover", "fighter jet flyby", "jet passing overhead", "distant jet rumble", "military jet flyby"],
+    "air_heli_rotor": ["helicopter rotor", "helicopter loop", "helicopter blades", "helicopter hovering", "helicopter interior"],
+    "air_heli_start": ["helicopter start up", "helicopter startup", "helicopter engine start", "helicopter shut down",
+                       "helicopter landing", "helicopter take off"],
+    "air_heli_distant": ["helicopter flyby", "helicopter distant", "helicopter overhead", "military helicopter flyover"],
+    "air_wind": ["cockpit wind", "airflow wind loop", "wind rushing loop", "aircraft cabin wind", "wind noise speed"],
+    "air_warning": ["stall warning", "aircraft warning", "cockpit alarm", "master caution", "cockpit warning beep",
+                    "aircraft alarm horn"],
+    "air_ground": ["tire screech landing", "tyre chirp", "plane landing touchdown", "aircraft catapult", "steam catapult",
+                   "arresting cable", "aircraft carrier launch", "aircraft canopy", "hydraulic actuator motor"],
+    "air_crash": ["plane crash", "aircraft crash explosion", "huge explosion", "large explosion debris", "helicopter crash"],
     "amb_alarm_car": ["car alarm", "car alarm loop", "car alarm siren", "car alarm whoop", "car alarm going off",
                       "vehicle alarm", "car alarm distant", "car alarm street"],
     "amb_alarm_bell": ["burglar alarm bell", "alarm bell ringing", "electric bell ringing", "fire alarm bell",

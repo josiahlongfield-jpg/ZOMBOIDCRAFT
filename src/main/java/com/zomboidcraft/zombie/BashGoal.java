@@ -44,7 +44,12 @@ public class BashGoal extends Goal {
     }
 
     private boolean blocking(BlockState state) {
-        return door ? isShutDoor(state) : state.is(ModBlocks.BARRICADE) || state.is(com.zomboidcraft.building.BuildBlocks.METAL_SHEET);
+        return door ? isShutDoor(state) : bashable(state);
+    }
+
+    /** Boards, a metal sheet or a spiked log wall: built things it beats down. */
+    private static boolean bashable(BlockState state) {
+        return state.is(ModBlocks.BARRICADE) || com.zomboidcraft.building.BuildBlocks.bashDamage(state) != null;
     }
 
     private static boolean isShutDoor(BlockState state) {
@@ -117,7 +122,7 @@ public class BashGoal extends Goal {
     }
 
     /**
-     * A blow on boards or a sheet: each board, and the sheet, stands so many blows (ZcConfig building), kept on the
+     * A blow on boards, a sheet or a spiked wall: each board, and the sheet or wall, stands so many blows (ZcConfig building), kept on the
      * block in eighths so a few stragglers wear it down and a crowd gets through.
      */
     private void hitBarricade(ServerLevel level, BlockState state) {
@@ -125,9 +130,13 @@ public class BashGoal extends Goal {
         if (scale <= 0 || zombie.getRandom().nextDouble() > scale) {
             return;
         }
-        boolean sheet = state.is(com.zomboidcraft.building.BuildBlocks.METAL_SHEET);
-        var damage = sheet ? com.zomboidcraft.building.BuildBlocks.MetalSheet.DAMAGE : BarricadeBlock.DAMAGE;
-        int hits = sheet ? Math.max(1, ZcConfig.get().building.metalSheetHits) : BarricadeBlock.boardHits(state);
+        var piece = com.zomboidcraft.building.BuildBlocks.bashDamage(state);
+        boolean sheet = piece != null;
+        var damage = sheet ? piece : BarricadeBlock.DAMAGE;
+        int hits = sheet ? com.zomboidcraft.building.BuildBlocks.bashHits(state) : BarricadeBlock.boardHits(state);
+        if (state.is(com.zomboidcraft.building.BuildBlocks.SPIKED_WALL)) {
+            com.zomboidcraft.building.BuildBlocks.SpikedWall.spike(level, zombie);
+        }
         // eighths of the board per blow, carried over by chance so a 6-blow board takes about 6 blows
         double eighths = 8.0 / hits;
         int add = (int) eighths + (zombie.getRandom().nextDouble() < eighths - (int) eighths ? 1 : 0);
@@ -163,7 +172,7 @@ public class BashGoal extends Goal {
         for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-1, 0, -1), feet.offset(1, 1, 1))) {
             BlockState state = zombie.level().getBlockState(pos);
             boolean isDoor;
-            if (config.bashBarricades && (state.is(ModBlocks.BARRICADE) || state.is(com.zomboidcraft.building.BuildBlocks.METAL_SHEET))) {
+            if (config.bashBarricades && bashable(state)) {
                 isDoor = false;
             } else if (config.bashDoors && isShutDoor(state)) {
                 Vec3 toDoor = Vec3.atCenterOf(pos).subtract(here);

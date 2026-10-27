@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_cmu": "zomboidcraft:block/city/sc_cmu",
+    "sc_cmu_dado_a": "zomboidcraft:block/city/sc_cmu_dado_a",
+    "particle": "zomboidcraft:block/city/sc_cmu_dado_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_cmu_dado_a",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_cmu_dado_a",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_cmu_dado_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_cmu_dado_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_cmu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_cmu",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

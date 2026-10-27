@@ -22,7 +22,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
+import com.zomboidcraft.world.cars.CarProp;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +43,8 @@ public final class Placer {
     private static @Nullable BlockPos wrongAt;
     private static @Nullable BlockHitResult aimed;
     private static @Nullable String problem;
+    /** For a build on a car: the car looked at. */
+    private static @Nullable CarProp car;
     private static int said;
     /** Builds asked for since the game started (the UI test reads it). */
     public static int asked;
@@ -105,7 +109,21 @@ public final class Placer {
         spot = null;
         wrongAt = null;
         problem = null;
+        car = null;
         HitResult hit = mc.hitResult;
+        if (build.where == Build.Where.CAR) {
+            aimed = null;
+            if (hit instanceof EntityHitResult e && e.getEntity() instanceof CarProp c
+                    && c.getBoundingBox().distanceToSqr(player.getEyePosition()) <= Builder.REACH * Builder.REACH) {
+                car = c;
+                if (!c.engineRuns()) problem = "Its battery's dead: the alarm won't sound.";
+            } else {
+                problem = "Look at a parked car.";
+            }
+            String missing = build.missing(player);
+            if (missing != null) problem = missing;
+            return;
+        }
         aimed = hit instanceof BlockHitResult b && hit.getType() == HitResult.Type.BLOCK
                 && player.getEyePosition().distanceToSqr(hit.getLocation()) <= Builder.REACH * Builder.REACH ? b : null;
         if (aimed == null) {
@@ -128,7 +146,10 @@ public final class Placer {
         Build build = building;
         if (player == null || build == null || mc.level == null) return;
         look(mc, player, build);
-        if (problem == null && spot != null && aimed != null) {
+        if (problem == null && car != null) {
+            asked++;
+            ClientPlayNetworking.send(new Builder.Request(build.ordinal(), car.blockPosition(), 1, player.getDirection().get3DDataValue(), car.getId()));
+        } else if (problem == null && spot != null && aimed != null) {
             asked++;
             ClientPlayNetworking.send(new Builder.Request(build.ordinal(), aimed.getBlockPos(), aimed.getDirection().get3DDataValue(),
                     player.getDirection().get3DDataValue()));
@@ -146,7 +167,13 @@ public final class Placer {
         List<AABB> boxes;
         BlockPos at;
         int colour;
-        if (spot != null && spot.ok()) {
+        if (car != null) {
+            // the car's outline, lit: green when it'll take the clock, red when not
+            AABB b = car.getBoundingBox();
+            at = BlockPos.containing(b.minX, b.minY, b.minZ);
+            boxes = List.of(b.move(-at.getX(), -at.getY(), -at.getZ()).inflate(0.05));
+            colour = problem == null ? 0x80FFFFFF : 0x80FF5040;
+        } else if (spot != null && spot.ok()) {
             at = spot.pos();
             boxes = spot.state().getShape(mc.level, at).toAabbs();
             colour = 0xFFFFFFFF;

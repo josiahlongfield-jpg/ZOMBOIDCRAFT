@@ -345,6 +345,18 @@ public final class ZcConfig {
         public double rainBarrelFill = 0.5;
         /** Builds take this many times their usual time. */
         public double timeMultiplier = 1.0;
+        /** How far zombies hear a ringing alarm clock, in blocks, and how long it rings, in seconds. */
+        public double alarmClockNoise = 40;
+        public int alarmClockRingSeconds = 25;
+        /** How far a car key's panic button reaches, in blocks, and how long the alarm sounds, in seconds. */
+        public double keyFobRange = 40;
+        public int carAlarmSeconds = 40;
+        /** In-game days a planter takes from seed to ripe while kept watered, and days a watering lasts. */
+        public double planterGrowDays = 4;
+        public double planterWaterDays = 1;
+        /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
+        public int spikedWallHits = 24;
+        public float spikeDamage = 2f;
     }
 
     public static class Digging {
@@ -402,9 +414,13 @@ public final class ZcConfig {
         public double carKeyGlovebox = 0.3;
         public double carKeyZombie = 0.35;
         public double carKeyDrop = 0.3;
-        /** Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again. */
+        /**
+         * Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again in a car in
+         * perfect condition; hotwireWear is how much of the remaining chance a car at 0% adds (worse cars fail more).
+         */
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
+        public double hotwireWear = 0.8;
     }
 
     public static class Weather {
@@ -576,13 +592,13 @@ public final class ZcConfig {
          * How much a forearm (with the hand) takes before it tears off at the elbow, in gun damage: each hit adds the
          * bullet's or pellet's damage times its kind of gun's tearing below.
          */
-        public double forearm = 24;
+        public double forearm = 20;
         /** How much an upper arm takes before the whole arm tears off at the shoulder. */
-        public double arm = 34;
+        public double arm = 28;
         /** How much a shin (with the foot) takes before it tears off at the knee. */
-        public double shin = 28;
+        public double shin = 24;
         /** How much a thigh takes before the whole leg tears off at the hip. */
-        public double leg = 40;
+        public double leg = 34;
         /** Tearing per pellet of buckshot: a shotgun up close takes a limb off nearly every time. */
         public double shotguns = 2.0;
         /**
@@ -604,6 +620,22 @@ public final class ZcConfig {
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
         public int maxLimbs = 64;
+        /**
+         * Shows the shooter what each shot hit, over the hotbar: the part, how far a limb is to coming off (taken /
+         * toughness), and OFF when it goes.
+         */
+        public boolean showHits = false;
+
+        /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
+        void retune() {
+            if (forearm == 24 && arm == 34 && shin == 28 && leg == 40) {
+                Limbs fresh = new Limbs();
+                forearm = fresh.forearm;
+                arm = fresh.arm;
+                shin = fresh.shin;
+                leg = fresh.leg;
+            }
+        }
     }
 
     /**
@@ -634,7 +666,9 @@ public final class ZcConfig {
          * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
          * own: an SMG runs faster than an assault rifle.
          */
-        public double autoRpm = 700.0;
+        public double autoRpm = 600.0;
+        /** Multiplies the suppressed shot's pitch (below 1 deepens it). */
+        public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -734,7 +768,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 700
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
             return s;
         }
 
@@ -851,6 +885,7 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
         public boolean enabled = true;
@@ -930,6 +965,27 @@ public final class ZcConfig {
         public boolean glowWithShaders = false;
     }
 
+    /**
+     * Which round of changed defaults this file has had. A saved file keeps its old numbers, so when a default is
+     * changed on purpose, bump this and move the old default over in {@link #upgrade} (values someone set themselves
+     * are left alone).
+     */
+    public int defaultsVersion = 0;
+    private static final int DEFAULTS = 1;
+
+    private static void upgrade(ZcConfig c) {
+        if (c.defaultsVersion < 1) {
+            // 2026-10-27: the assault rifle 700 -> 600 a minute, its suppressed shot deeper
+            if (c.guns.autoRpm == 700.0) {
+                c.guns.autoRpm = 600.0;
+            }
+            if (c.guns.suppressedPitch == 1.0) {
+                c.guns.suppressedPitch = 0.88;
+            }
+        }
+        c.defaultsVersion = DEFAULTS;
+    }
+
     public static ZcConfig get() {
         return instance;
     }
@@ -940,11 +996,14 @@ public final class ZcConfig {
                 ZcConfig read = GSON.fromJson(reader, ZcConfig.class);
                 if (read != null) {
                     instance = read;
+                    upgrade(instance);
+                    instance.limbs.retune();
                 }
             } catch (IOException | RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Couldn't read {}, using defaults", FILE, e);
             }
         }
+        instance.defaultsVersion = Math.max(instance.defaultsVersion, DEFAULTS);
         // Writing back adds any settings that are new in this version.
         save();
     }

@@ -94,6 +94,9 @@ public final class CarClient {
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
+            } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
+                // not at a car, key in hand: its panic button
+                ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
             }
         }
         while (HORN.consumeClick()) {

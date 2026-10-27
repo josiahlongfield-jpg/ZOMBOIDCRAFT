@@ -804,6 +804,10 @@ OVERRIDE = {
     "dumpster": lambda: photo("green_metal_rust", span=2, offset=(0.6, 0.1), sat=0.6, bright=0.55),
     "cardboard": lambda: photo("Cardboard001", span=2, sat=0.55, bright=0.65),
     "dirt_withered": lambda: photo("withered_grass", span=2, sat=0.55, bright=0.6),
+    # the soil bed round a planted tree, leaves on it; the brick pavers edging a sidewalk's tree pit
+    "bed_soil": lambda: photo("Ground023", span=1.4, sat=0.75, bright=0.66, wet=0.5),
+    "bed_soil_b": lambda: photo("Ground023", span=1.4, offset=(0.62, 0.55), sat=0.7, bright=0.6, wet=0.6),
+    "pit_pavers": lambda: photo("Bricks094", span=0.9, sat=0.7, bright=0.72, height=1.2, wet=0.4),
     "burnt_ground": lambda: photo("burned_ground_01", span=2, sat=0.5, bright=0.6),
     "leaf_litter": leaf_litter,
     **{f"graffiti_{i}": (lambda i=i: graffiti(i)) for i in range(8)},
@@ -1083,6 +1087,12 @@ import bank  # noqa: E402
 bank.register(sys.modules[__name__])
 import firestation  # noqa: E402
 firestation.register(sys.modules[__name__])
+import sheriff  # noqa: E402
+sheriff.register(sys.modules[__name__])
+import school  # noqa: E402
+school.register(sys.modules[__name__])
+import theatre  # noqa: E402
+theatre.register(sys.modules[__name__])
 import nature  # noqa: E402
 nature.register(sys.modules[__name__])
 

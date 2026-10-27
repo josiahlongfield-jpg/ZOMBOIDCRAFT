@@ -522,9 +522,10 @@ final class TownSite extends Site {
         if (bank != null) {
             new Civic(bank.placer(out), rng).bank(13, Math.min(20, depth - 2));
         }
-        Kit.Lot theatre = civicLot(main, sCross * (0.45 + rng.nextDouble() * 0.2), -1, 15, depth);
+        // the theatre short of where the side street meets the alley behind, so it gets the block's whole depth
+        Kit.Lot theatre = civicLot(main, along(main, x2, gz) - 17 - rng.nextInt(6), -1, 15, depth);
         if (theatre != null) {
-            new Civic(theatre.placer(out), rng).theatre(15, depth - 2);
+            new Civic(theatre.placer(out), rng).theatre(15, theatre.d() - 2);
         }
         Kit.Lot post = civicLot(main, sCross - clear - 9, -1, 17, depth);
         if (post != null) {
@@ -545,6 +546,7 @@ final class TownSite extends Site {
         Kit.Lot sheriff = civicLot(cross, along(cross, gx, 40), -1, 20, 30);
         if (sheriff != null) {
             new Civic(sheriff.placer(out), rng).sheriff(20, 30);
+            kit.treeless.add(new int[] {sheriff.x0() - 7, sheriff.z0() - 7, sheriff.x0() + sheriff.sizeX() + 6, sheriff.z0() + sheriff.sizeZ() + 6});
         }
         Kit.Lot school = civicLot(cross, along(cross, gx, d - 30), -1, 50, 44);
         if (school != null) {
@@ -554,6 +556,8 @@ final class TownSite extends Site {
                 // the playground behind the classrooms
                 int[] a = school.placer(out).world(4, 36), b = school.placer(out).world(10, 42);
                 kit.playground(Math.min(a[0], b[0]), Math.min(a[1], b[1]));
+                int[] c = school.placer(out).world(13, 37), e = school.placer(out).world(16, 40);
+                kit.sandbox(Math.min(c[0], e[0]), Math.min(c[1], e[1]), 4, 4);
             }
         }
         // the water tower over the back alleys
@@ -735,7 +739,7 @@ final class TownSite extends Site {
         }
         Kit.Lot theatre = civicLot(sides[1], corner + ring * 0.5, outward[1], 15, depth);
         if (theatre != null) {
-            new Civic(theatre.placer(out), rng).theatre(15, depth - 2);
+            new Civic(theatre.placer(out), rng).theatre(15, theatre.d() - 2);
         }
         Kit.Lot townHall = civicLot(sides[2], corner + ring * 0.5, outward[2], 20, depth);
         if (townHall != null) {
@@ -773,6 +777,7 @@ final class TownSite extends Site {
         Kit.Lot sheriff = civicLot(inE, along(inE, cx + outer + pastRing, cz), rng.nextBoolean() ? 1 : -1, 20, 32);
         if (sheriff != null) {
             new Civic(sheriff.placer(out), rng).sheriff(20, 32);
+            kit.treeless.add(new int[] {sheriff.x0() - 7, sheriff.z0() - 7, sheriff.x0() + sheriff.sizeX() + 6, sheriff.z0() + sheriff.sizeZ() + 6});
         }
         Kit.Lot fire = civicLot(inW, along(inW, cx - outer - pastRing, cz), rng.nextBoolean() ? 1 : -1, 19, 26);
         if (fire != null) {
