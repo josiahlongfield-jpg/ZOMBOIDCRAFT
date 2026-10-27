@@ -15,7 +15,7 @@ import org.joml.Matrix3x2fStack;
  * named underneath, with the real item models in them. It tucks away a few seconds after you last drew from it or put something on it.
  */
 final class BeltHud {
-    private static final int BOX = 24, GAP = 5, BOTTOM = 10;
+    private static final int BOX = 24, GAP = 5, BOTTOM = 14;
     private static final float SHOW = 4f, NAME = 1.8f;
 
     private static final Hud.Fade fade = new Hud.Fade();
@@ -101,7 +101,7 @@ final class BeltHud {
         if (labels) {
             String label = QuickSlots.label(slot);
             float lw = Hud.capsWidth(font, label, 0.6f, 0.55f);
-            Hud.caps(g, font, label, x + (BOX - lw) / 2f, y + BOX + (selected ? 5 : 3), Hud.alpha(selected ? Hud.BONE : Hud.BONE_DIM, a), 0.6f, 0.55f);
+            Hud.caps(g, font, label, x + (BOX - lw) / 2f, y + BOX + 6, Hud.alpha(selected ? Hud.BONE : Hud.BONE_DIM, a), 0.6f, 0.55f);
         }
     }
 
