@@ -168,6 +168,19 @@ public final class Trains {
         return seen != null && seen.ride.train() >= 0 && player.level().getGameTime() - seen.tick < 40;
     }
 
+    /** A gunshot from where it left to where it stopped: OTTO notices one at him or through his cab's glass. */
+    public static void shot(ServerLevel level, ServerPlayer shooter, Vec3 from, Vec3 to) {
+        for (Line line : SERVER.values()) {
+            for (TrainRun run : line.trains) {
+                if (run.entity == null) {
+                    continue;
+                }
+                TrainCar.Pose front = run.pose(0);
+                Otto.shot(level, run, shooter, front.toLocal(from), front.toLocal(to), front);
+            }
+        }
+    }
+
     /** The players riding a train (by its entity id). */
     static List<ServerPlayer> riders(ServerLevel level, TrainEntity train) {
         List<ServerPlayer> out = new ArrayList<>();

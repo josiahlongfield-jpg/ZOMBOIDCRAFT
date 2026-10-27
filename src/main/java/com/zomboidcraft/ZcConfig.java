@@ -104,7 +104,7 @@ public final class ZcConfig {
         /** OTTO, the robot conductor, talks in chat to riders and people on the platform. */
         public boolean ottoTalks = true;
         /** Seconds between OTTO's remarks while running between stops. */
-        public int ottoChatter = 75;
+        public int ottoChatter = 45;
     }
 
     public static class Performance {
