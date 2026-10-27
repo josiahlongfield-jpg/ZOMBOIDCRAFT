@@ -26,14 +26,14 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * The bench's gun, big and turning: its own 3D model with every empty socket filled by a see-through green ghost of
- * the part that goes there, and a crosshair on each mount. Drawn through Minecraft's entity-in-GUI renderer as a
+ * The bench's weapon, big and turning: its own 3D model (any gun or melee weapon), a modular gun with every empty
+ * socket filled by a see-through green ghost of the part that goes there and a crosshair on each mount. Drawn through Minecraft's entity-in-GUI renderer as a
  * dropped item pinned in place, so the gun and its ghosts are one model with proper depth. Drag to turn it.
  */
 final class GunStage {
     static final int GHOST = 0xFF4DFF6E;
 
-    record Mount(Attachments.Slot slot, Vector3f at, Identifier ghost) {
+    record Mount(Attachments.Slot slot, Vector3f at, @Nullable Identifier ghost) {
     }
 
     /** A mount as last drawn, in GUI pixels. */
@@ -62,8 +62,13 @@ final class GunStage {
                     var m = o.getAsJsonArray("mount");
                     String ghost = o.get("ghost").getAsString();
                     String name = ghost.substring(ghost.lastIndexOf('/') + 1);
+                    // a slot whose ghost has no item model gets its crosshair but no ghost, rather than the missing-model box
+                    Identifier model = ZomboidCraft.id("bench_ghost/" + name);
+                    boolean known = Minecraft.getInstance().getResourceManager()
+                            .getResource(ZomboidCraft.id("items/bench_ghost/" + name + ".json")).isPresent();
+                    if (!known) ZomboidCraft.LOGGER.warn("No bench ghost model for {} {} (items/bench_ghost/{}.json)", id, slot, name);
                     list.add(new Mount(slot, new Vector3f(m.get(0).getAsFloat(), m.get(1).getAsFloat(), m.get(2).getAsFloat()),
-                            ZomboidCraft.id("bench_ghost/" + name)));
+                            known ? model : null));
                 }
             } catch (Exception ex) {
                 ZomboidCraft.LOGGER.warn("Couldn't read the slot list for {}: {}", id, ex.toString());
@@ -101,7 +106,7 @@ final class GunStage {
         String id = Attachments.gunId(gun);
         List<Mount> mounts = id == null ? List.of() : mounts(id);
         for (Mount mount : mounts) {
-            if (Attachments.key(gun, mount.slot()) == null) {
+            if (Attachments.key(gun, mount.slot()) == null && mount.ghost() != null) {
                 ItemStack ghost = new ItemStack(Items.STICK);
                 ghost.set(DataComponents.ITEM_MODEL, mount.ghost());
                 mc.getItemModelResolver().appendItemLayers(state.item, ghost, ItemDisplayContext.NONE, mc.level, mc.player, 0);
@@ -117,14 +122,19 @@ final class GunStage {
         state.bobOffset = 2f * theta;
         AABB box = state.item.getModelBoundingBox();
         Vector3f lift = new Vector3f(0, 0.1f + (float) -box.minY + 0.0625f, 0);
+        // a tall model (a hammer, an axe, a bat stands on its handle) is laid on its side to fill the stage, and turns on
+        // its handle
+        boolean tall = box.getYsize() > Math.max(box.getXsize(), box.getZsize()) * 1.2;
         Quaternionf view = new Quaternionf().rotateX((float) Math.toRadians(pitch)).rotateZ((float) Math.PI);
+        if (tall) view.rotateZ((float) (-Math.PI / 2));
         Quaternionf turn = new Quaternionf(view).rotateY(theta);
         Vector3f middle = new Vector3f((float) (box.minX + box.maxX) / 2, (float) (box.minY + box.maxY) / 2, (float) (box.minZ + box.maxZ) / 2)
                 .add(lift);
         turn.transform(middle);
         Vector3f shift = middle.negate();
         float longest = (float) Math.max(box.getXsize(), Math.max(box.getYsize(), box.getZsize()));
-        float scale = Math.min((w - 24) / longest, h / longest * 2.2f) * 0.78f;
+        float scale = tall ? Math.min((w - 24) / (float) box.getYsize(), (h - 10) / (float) Math.max(box.getXsize(), box.getZsize())) * 0.85f
+                : Math.min((w - 24) / longest, h / longest * 2.2f) * 0.78f;
         g.entity(state, scale, shift, view, null, x0, y0, x0 + w, y0 + h);
         float cx = x0 + w / 2f, cy = y0 + h / 2f;
 
