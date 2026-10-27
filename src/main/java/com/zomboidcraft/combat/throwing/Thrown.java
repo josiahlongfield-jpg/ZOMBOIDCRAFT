@@ -443,8 +443,12 @@ public class Thrown extends Entity {
                 dealt = damage * (1 - 0.7 * d / radius) * cover;
                 Vec3 push = mid.subtract(at).normalize().scale(0.9 * (1 - d / radius) * cover);
                 e.push(push.x, 0.3 * (1 - d / radius) * cover, push.z);
-                if (e instanceof Zombie zombie && d <= radius * 0.6 && cover == 1) {
-                    Downed.knockDown(zombie);
+                if (e instanceof Zombie zombie && cover == 1) {
+                    // limbs torn off by the blast (the characters thread's Dismember), then thrown down
+                    com.zomboidcraft.combat.Dismember.blast(zombie, at, 1 - d / radius, thrower instanceof ServerPlayer p ? p : null);
+                    if (d <= radius * 0.6) {
+                        Downed.knockDown(zombie);
+                    }
                 }
             } else if (d <= shrapnel && random.nextDouble() < 0.7 * (1 - (d - radius) / (shrapnel - radius))) {
                 dealt = shrapnelDamage * cover;
