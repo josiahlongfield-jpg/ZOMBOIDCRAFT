@@ -917,6 +917,8 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** How often a glancing shot off something hard whines away as a ricochet (0 to 1). */
+        public double ricochetChance = 0.35;
         /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
         public boolean bulletHoles = true;
         public double bulletHoleSeconds = 90.0;

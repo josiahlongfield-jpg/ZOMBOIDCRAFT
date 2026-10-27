@@ -237,10 +237,19 @@ public final class Guns {
                 Vec3 p = block.getLocation();
                 // a hole, a puff of the block's dust and chips off it (drawn by each client)
                 Impacts.block(level, block, dir, bs, pellets > 1 ? 0.6f : (float) Math.min(1.6, 0.6 + stats.damage / 20));
+                // the strike sounds of what it hit (once a blast, for buckshot); a glancing hit on something hard
+                // sometimes whines off it
                 if (!ricochet) {
                     ricochet = true;
-                    level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.7f,
-                            0.9f + player.getRandom().nextFloat() * 0.3f);
+                    Surface surface = Surface.of(bs);
+                    level.playSound(null, p.x, p.y, p.z, surface.impact(), SoundSource.PLAYERS, pellets > 1 ? 1f : 0.85f,
+                            0.92f + player.getRandom().nextFloat() * 0.16f);
+                    var face = block.getDirection();
+                    double glance = Math.abs(dir.x * face.getStepX() + dir.y * face.getStepY() + dir.z * face.getStepZ());
+                    if (surface.hard() && glance < 0.35 && player.getRandom().nextFloat() < config.ricochetChance) {
+                        level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.5f,
+                                0.9f + player.getRandom().nextFloat() * 0.3f);
+                    }
                 }
                 if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
                     level.destroyBlock(block.getBlockPos(), false, player);
