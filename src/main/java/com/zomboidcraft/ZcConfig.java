@@ -164,6 +164,13 @@ public final class ZcConfig {
         public double emptyHouses = 0.5;
         /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
         public int respawnDays = 0;
+        /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
+        public boolean crowd = true;
+        /** ...this far round each player (blocks; the server's view distance bounds it too)... */
+        public double crowdRange = 192;
+        /** ...at most this many, nearest first, and none nearer than this (those are real, or about to be). */
+        public int crowdMax = 3000;
+        public double crowdMinDistance = 40;
     }
 
     public static class Cases {

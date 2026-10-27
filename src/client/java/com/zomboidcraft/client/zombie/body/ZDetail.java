@@ -31,6 +31,8 @@ public final class ZDetail {
     /** What was drawn since the last readout (main pass only): zombies at full, most and baked detail, and quads. */
     private static final int[] drawn = new int[4];
     private static long quads;
+    /** Figures in the crowd past the real zombies (CrowdFx), last frame. */
+    private static int crowd;
     private static int readoutTicks;
 
     private static boolean irisAsked;
@@ -70,9 +72,9 @@ public final class ZDetail {
                 // a second's worth, shared out over the frames drawn in it
                 double frames = Math.max(1, mc.getFps());
                 mc.player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(String.format(
-                        "%d fps · zombies loaded %d · drawn full %d, most %d, baked %d, pictures %d · %,d pieces a frame",
+                        "%d fps · zombies loaded %d · drawn full %d, most %d, baked %d, pictures %d, crowd %d · %,d pieces a frame",
                         mc.getFps(), n, Math.round(drawn[0] / frames), Math.round(drawn[1] / frames),
-                        Math.round(drawn[2] / frames), Math.round(drawn[3] / frames), Math.round(quads / frames))));
+                        Math.round(drawn[2] / frames), Math.round(drawn[3] / frames), crowd, Math.round(quads / frames))));
             }
             Arrays.fill(drawn, 0);
             quads = 0;
@@ -114,6 +116,11 @@ public final class ZDetail {
             drawn[Math.clamp(level, 0, 3)]++;
             quads += pieces;
         }
+    }
+
+    /** How many crowd figures (CrowdFx) were drawn this frame, for the stats readout. */
+    public static void crowd(int figures) {
+        crowd = figures;
     }
 
     /** Whether a shader pack (through Iris) is drawing its shadow map right now; false without Iris. */
