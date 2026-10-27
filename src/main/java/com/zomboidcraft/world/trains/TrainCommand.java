@@ -101,7 +101,7 @@ public final class TrainCommand {
 
     /** The bed under the whole loop (6 wide), headroom cleared over it, and propped up where the ground's low. */
     private static void layBed(ServerLevel level, Line line, int y) {
-        BlockState bed = state("concrete_dark", Blocks.GRAY_CONCRETE);
+        BlockState bed = state("concrete_dark", Blocks.STONE);
         Route r = line.route;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (double s = 0; s < r.length(); s += 0.5) {
@@ -126,7 +126,7 @@ public final class TrainCommand {
     /** A platform along the straight at (cx, cz), on its outer side (side +1: toward +across), with two call buttons on its back wall. */
     private static void platform(ServerLevel level, int cx, int cz, int dx, int dz, int px, int pz, int half, int y, int side) {
         BlockState floor = state("floor_concrete_b", Blocks.SMOOTH_STONE);
-        BlockState wall = state("concrete_panel", Blocks.LIGHT_GRAY_CONCRETE);
+        BlockState wall = state("concrete_panel", Blocks.SMOOTH_STONE);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         // the platform covers the 4 columns from 2 to 6 off the centreline
         int ax = px * side, az = pz * side;

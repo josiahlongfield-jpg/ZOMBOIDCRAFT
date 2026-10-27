@@ -27,6 +27,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -315,10 +316,16 @@ public final class Trains {
                 Vec3 out = pose.toWorld(side * (TrainCar.HALF_WIDTH + 0.7), Math.max(local.y, -1), local.z);
                 Vec3 fling = pose.dirToWorld(new Vec3(side * 0.9, 0, 0.6)).add(0, 0.45, 0);
                 float damage = e instanceof Player ? (float) Math.max(4, run.speedPerSecond() * cfg.hitPlayerPerSpeed) : cfg.hitZombie;
-                e.setPos(out);
-                e.setDeltaMovement(fling);
-                e.hurtMarked = true;
                 e.hurtServer(level, level.damageSources().flyIntoWall(), damage);
+                if (e instanceof ServerPlayer p) {
+                    // a player's position is their own game's to say: move them there and tell it so
+                    p.teleportTo(level, out.x, out.y, out.z, java.util.Set.of(), p.getYRot(), p.getXRot(), false);
+                    p.setDeltaMovement(fling);
+                    p.connection.send(new ClientboundSetEntityMotionPacket(p));
+                } else {
+                    e.setPos(out);
+                    e.setDeltaMovement(fling);
+                }
                 level.playSound(null, out.x, out.y, out.z, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.HOSTILE, 1.2f, 0.6f);
                 Otto.bump(level, run);
             }
