@@ -6138,6 +6138,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rw_pier", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("rw_pier_cap", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("rw_platform", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("rw_platform_2", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("rw_platform_3", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("rw_platform_edge", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("rw_platform_half", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8, 16);
         s("rw_platform_base", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -6168,11 +6170,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rw_name_fort_1", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_fort_2", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_fort_3", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
-        s("rw_name_riverside_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
-        s("rw_name_riverside_1", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
     }
 
     private void part35() {
+        s("rw_name_riverside_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
+        s("rw_name_riverside_1", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_riverside_2", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_riverside_3", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_millbrook_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);

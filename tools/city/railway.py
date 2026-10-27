@@ -237,9 +237,11 @@ def concrete(seed, kind="pier"):
 
 # ---------------------------------------------------------------- the stations
 
-def platform(seed, edge=False):
+def platform(seed, edge=False, wear=0):
     """Broom-finished concrete: joints every half block, gum, cracks; at the edge the yellow
-    tactile strip and the white line (the track side is the top of the picture)."""
+    tactile strip and the white line (the track side is the top of the picture). wear 1 and 2
+    are the same slabs further gone (stains, a spalled patch, moss in the joints), laid at random
+    so the platform doesn't repeat block to block."""
     t = F.mat("Concrete034", (150, 148, 140), 0.6, span=2, seed=seed, smooth=0.18)
     rng = t.rng
     for y in range(N):
@@ -249,7 +251,16 @@ def platform(seed, edge=False):
     for _ in range(int(rng.integers(3, 8))):
         x, y = rng.uniform(2, N - 2, 2)
         disc(t, x, y, rng.uniform(0.6, 1.3), (70 + rng.integers(0, 30),) * 3, h=0.8)
-    t.crack(int(rng.integers(0, 3)), 0.2)
+    t.crack(int(rng.integers(0, 2)) + wear, 0.15, col=(84, 80, 72))
+    if wear >= 1:
+        for _ in range(2 + wear):
+            F.stain(t, rng.uniform(0, N), rng.uniform(0, N), rng.uniform(3, 7), col=(70, 62, 50), amount=0.25, tide=False)
+    if wear >= 2:
+        # a spalled patch showing the aggregate, moss along the joints
+        x, y = rng.uniform(8, N - 16, 2)
+        area(t, int(x), int(y), int(x) + int(rng.integers(5, 10)), int(y) + int(rng.integers(4, 8)), (118, 112, 100), dh=-0.3, smooth=0.1)
+        area(t, 0, 0, 2, N, (70, 86, 46), smooth=0.1, dh=-0.1)
+        area(t, 30, 0, 33, N, mul=0.85)
     if edge:
         area(t, 0, 0, N, 4, (196, 196, 190), smooth=0.3, dh=0.05)        # the coping's white line
         area(t, 0, 4, N, 22, (204, 166, 40), smooth=0.35)                 # the tactile strip
@@ -697,6 +708,8 @@ def textures():
     T["rw_pier_cap"] = lambda: concrete(7016, "cap")
     T["rw_concrete"] = lambda: concrete(7017, "base")
     T["rw_platform"] = lambda: platform(7020)
+    T["rw_platform_2"] = lambda: platform(7062, wear=1)
+    T["rw_platform_3"] = lambda: platform(7063, wear=2)
     T["rw_platform_edge"] = lambda: platform(7021, edge=True)
     T["rw_platform_face"] = lambda: platform_face(7022)
     T["rw_roof"] = lambda: roof(7023)
@@ -809,6 +822,9 @@ def blocks():
 
     # ---- the stations
     add("rw_platform", None, "Platform", "STONE", rotate=None, tex={"up": "rw_platform", "side": "rw_platform_face", "down": "rw_concrete"})
+    for k in (2, 3):
+        add(f"rw_platform_{k}", None, "Platform", "STONE", rotate=None,
+            tex={"up": f"rw_platform_{k}", "side": "rw_platform_face", "down": "rw_concrete"})
     add("rw_platform_edge", cube("rw_platform_face", "rw_platform_face", up="rw_platform_edge", down="rw_concrete"), "Platform Edge", "STONE")
     add("rw_platform_half", [[0, 0, 0, 16, 8, 16, {"up": "rw_platform", "side": "rw_platform_face", "down": "rw_concrete"}]],
         "Platform Step", "STONE", rotate=None)

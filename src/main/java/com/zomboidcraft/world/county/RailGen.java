@@ -322,7 +322,7 @@ final class RailGen {
         int x = c.x, z = c.z, Y = c.Y, da = c.da;
         double s = c.s;
         out.column(x, z, Math.min(c.top, c.bed) - 2, c.bed, "rw_platform_base");
-        out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : "rw_platform");
+        out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
         clear(out, x, z, Y + 1, Y + 6);
         litter(out, c, Y + 1, 0);
         int len = c.stop.to() - c.stop.from();
@@ -452,7 +452,7 @@ final class RailGen {
             }
             return;
         }
-        out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : "rw_platform");
+        out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
         clear(out, x, z, Y + 1, Y + 6);
         litter(out, c, Y + 1, 1);
         if (Math.abs(da) <= 24) {
@@ -550,7 +550,7 @@ final class RailGen {
         int top = stairStart(c, EL_STAIRS, 5, 13);
         boolean stairTop = la >= top && la <= top + 1;
         if (s < 6) {
-            out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : "rw_platform");
+            out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
             clear(out, x, z, Y + 1, Y + 5);
             litter(out, c, Y + 1, 1);
             if (s >= 5 && la % 8 == 0 && la <= 40) {
@@ -568,7 +568,7 @@ final class RailGen {
                 hungBoard(out, c, Y + 5);
             }
         } else {
-            out.set(x, Y, z, "rw_platform");
+            out.set(x, Y, z, paving(c));
             out.set(x, Y + 1, z, stairTop ? "air" : "rw_guard[facing=" + c.out() + "]");
             clear(out, x, z, Y + 2, Y + 5);
         }
@@ -591,7 +591,7 @@ final class RailGen {
             return;
         }
         if (k <= 1) {
-            out.set(x, Y, z, "rw_platform");
+            out.set(x, Y, z, paving(c));
             out.set(x, Y + 1, z, inner ? "air" : "rw_guard[facing=" + c.out() + "]");
             clear(out, x, z, Y + 2, Y + 4);
             return;
@@ -607,6 +607,12 @@ final class RailGen {
         if (step == rise / 2 && !inner) {
             out.column(x, z, STREET_TOP, h - 1, "rw_column");
         }
+    }
+
+    /** A platform's slab: the plain one mostly, the worn ones here and there. */
+    private String paving(Cut c) {
+        double r = roll(c, 0x9A7EL);
+        return r < 0.6 ? "rw_platform" : r < 0.85 ? "rw_platform_2" : "rw_platform_3";
     }
 
     /** A number in [0, 1) fixed for the column and what asks for it (salt). */
@@ -711,7 +717,7 @@ final class RailGen {
                 trackway(out, c);
             } else if (s < back) {
                 out.set(x, bed, z, "rw_tunnel");
-                out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : "rw_platform");
+                out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
                 clear(out, x, z, Y + 1, Y + 5);
                 out.set(x, Y + 6, z, "rw_tunnel");
                 litter(out, c, Y + 1, 2);
@@ -846,7 +852,7 @@ final class RailGen {
         }
         if (k == 0) {
             out.set(x, c.bed, z, "rw_tunnel");
-            out.set(x, Y, z, "rw_platform");
+            out.set(x, Y, z, paving(c));
             clear(out, x, z, Y + 1, Y + 5);
             out.set(x, Y + 6, z, "rw_tunnel");
             return true;
