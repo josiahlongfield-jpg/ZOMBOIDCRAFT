@@ -289,3 +289,25 @@ The grass clumps, plumed grass, reeds, seedlings, clover, weeds and fallen twigs
 ## Furniture and fittings
 
 tools/props/props.py turns 3D models into chunky blocks, repainted and worn for ZomboidCraft. The sources are the Kitchen 90's furniture pack, the Grocery Props Kit and the Vintage Office Cabinets Collection (bought by Josiah under their Royalty Free licences), and CC0 models from [Poly Haven](https://polyhaven.com) (public domain; thank you to the Poly Haven artists). The original model and texture files are not part of this repository or the mod jar.
+
+## Aircraft sounds
+
+Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, cut and looped by tools/audio/build_aircraft_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| aircraft/jet/start, aircraft/jet/idle, aircraft/jet/shutdown | [F16 fighter jet start up.aif by ikbenraar](https://freesound.org/people/ikbenraar/sounds/322178/) | ikbenraar | Freesound, CC0 1.0 |
+| aircraft/jet/roar | [Idle F-22 Jet Plane.flac by qubodup](https://freesound.org/people/qubodup/sounds/187734/) | qubodup | Freesound, CC0 1.0 |
+| aircraft/jet/distant | [Afterburner (Close, Screamer, Quick Onset) by JSK_Productions](https://freesound.org/people/JSK_Productions/sounds/829068/) | JSK_Productions | Freesound, CC0 1.0 |
+| aircraft/heli/distant | AEROHeli_InsJ_Helicopter_Flyby_Close_03_Chinook (InspectorJ - 96 General Library) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| aircraft/jet/afterburner | [Afterburner sound.wav by StoneyJ](https://freesound.org/people/StoneyJ/sounds/104883/) | StoneyJ | Freesound, CC0 1.0 |
+| aircraft/heli/start | [R02-45-Helicopter Starting, Running.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479510/) | craigsmith | Freesound, CC0 1.0 |
+| aircraft/heli/rotor, aircraft/heli/turbine, aircraft/heli/shutdown | black_hawk_t16_ext_idle_turbine_rotors_off_left_Co100k (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| aircraft/wind | [AMBUndr_Subterranean Howling Wind Loop_KOLBYR_FREE SOUNDS by KolbyRFX](https://freesound.org/people/KolbyRFX/sounds/852822/) | KolbyRFX | Freesound, CC0 1.0 |
+| aircraft/warn/stall | Beechcraft Baron 58 - t12 - VAR SFX - Stall Warning - MS Decoded - RSM191 (Pole Position - Beechcraft Baron 58 1969) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| aircraft/warn/caution | [Airplane ding by Sadiquecat](https://freesound.org/people/Sadiquecat/sounds/845147/) | Sadiquecat | Freesound, CC0 1.0 |
+| aircraft/touchdown | Skids_Tarmac_t3_exterior_skidding_wet_tires_CSS5_handheld (Pole Position - Skids & Screeches Tarmac) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| aircraft/catapult | [G39-15-Steam Catapult.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/438632/) | craigsmith | Freesound, CC0 1.0 |
+| aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
+| aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
