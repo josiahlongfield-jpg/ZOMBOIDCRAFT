@@ -627,55 +627,23 @@ public class KitUiTest implements FabricClientGameTest {
         public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
             g.fill(0, 0, width, height, 0xFF7A8490);
             var player = minecraft.player;
-            float body = player.yBodyRot, bodyO = player.yBodyRotO, head = player.yHeadRot, headO = player.yHeadRotO, yaw = player.getYRot(),
-                    yawO = player.yRotO, pitch = player.getXRot(), pitchO = player.xRotO;
-            player.yBodyRot = player.yBodyRotO = turn;
-            player.yHeadRot = player.yHeadRotO = turn;
-            player.setYRot(turn);
-            player.yRotO = turn;
-            player.setXRot(0);
-            player.xRotO = 0;
             try {
-                for (var m : net.minecraft.client.gui.screens.inventory.InventoryScreen.class.getDeclaredMethods()) {
-                    if (!m.getName().startsWith("extractEntityInInventory") || m.getName().contains("Follows")) continue;
-                    if (!logged) LOG.info("ZCUI back view method {}", m);
-                    Object[] args = new Object[m.getParameterCount()];
-                    int ints = 0;
-                    int[] box = {width / 2 - 90, 4, width / 2 + 90, height - 4};
-                    boolean quat = false, ok = true;
-                    for (int i = 0; i < args.length; i++) {
-                        Class<?> t = m.getParameterTypes()[i];
-                        if (t == int.class) args[i] = box[Math.min(3, ints++)];
-                        else if (t == float.class) args[i] = (height - 8) / player.getBbHeight() / 1.15f;
-                        else if (t.isInstance(g)) args[i] = g;
-                        else if (t == org.joml.Vector3f.class) args[i] = new org.joml.Vector3f(0, player.getBbHeight() / 2 + 0.0625f, 0);
-                        else if (t == org.joml.Quaternionf.class) {
-                            args[i] = quat ? null : new org.joml.Quaternionf().rotateZ((float) Math.PI);
-                            quat = true;
-                        } else if (t.isInstance(player)) args[i] = player;
-                        else ok = false;
-                    }
-                    if (!ok) {
-                        if (!logged) LOG.info("ZCUI back view: can't fill {}", m);
-                        continue;
-                    }
-                    m.setAccessible(true);
-                    m.invoke(null, args);
-                    break;
+                net.minecraft.client.renderer.entity.EntityRenderer renderer = minecraft.getEntityRenderDispatcher().getRenderer(player);
+                var state = (net.minecraft.client.renderer.entity.state.EntityRenderState) renderer.createRenderState(player, 1f);
+                if (state instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState living) {
+                    // body yaw 180 faces you, as the inventory draws it; 0 shows the back
+                    living.bodyRot = turn;
+                    living.yRot = 0;
+                    living.xRot = 0;
                 }
+                state.lightCoords = 0xF000F0;
+                float scale = (height - 10) / player.getBbHeight() / 1.1f;
+                g.entity(state, scale, new org.joml.Vector3f(0, player.getBbHeight() / 2, 0), new org.joml.Quaternionf().rotateZ((float) Math.PI), null,
+                        width / 2 - 120, 2, width / 2 + 120, height - 2);
             } catch (Throwable t) {
                 if (!logged) LOG.error("ZCUI back view failed", t);
-            } finally {
-                logged = true;
-                player.yBodyRot = body;
-                player.yBodyRotO = bodyO;
-                player.yHeadRot = head;
-                player.yHeadRotO = headO;
-                player.setYRot(yaw);
-                player.yRotO = yawO;
-                player.setXRot(pitch);
-                player.xRotO = pitchO;
             }
+            logged = true;
         }
     }
 
