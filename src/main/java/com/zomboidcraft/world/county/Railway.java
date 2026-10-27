@@ -51,7 +51,16 @@ final class Railway {
         final Map<Long, String> roles = new HashMap<>();
         /** Grid street stretches the railway runs down at street level: {0 for a line of constant x or 1 of z, line, from, to}. */
         final List<int[]> streets = new ArrayList<>();
+        /** Grid blocks (by {@link County#key}) that hold a street stop's station, beside its platform. */
+        final Map<Long, Station> stations = new HashMap<>();
     }
+
+    /**
+     * A town station wanted beside a street stop's platform: the stop's name key (as the kit's
+     * lettering has it), the world (x, z) of the platform's middle, the side of its block that faces
+     * the line (0 north, 1 east, 2 south, 3 west) and the street's half width there.
+     */
+    record Station(String key, int x, int z, int face, int street) {}
 
     private final Layout layout;
     private final Plan plan;
@@ -1234,6 +1243,14 @@ final class Railway {
                     tr.roles.put(e.getKey(), e.getValue());
                 }
             }
+            for (Map.Entry<Long, Station> e : stations().entrySet()) {
+                int i = (int) (e.getKey() >> 32), j = (int) (long) e.getKey();
+                double cx = (i + 0.5) * PITCH, cz = (j + 0.5) * PITCH;
+                if (cx >= p.x0 && cx <= p.x1 && cz >= p.z0 && cz <= p.z1) {
+                    tr = tr == null ? new TileRails() : tr;
+                    tr.stations.put(e.getKey(), e.getValue());
+                }
+            }
             for (int[] st : streets) {
                 boolean hit = st[0] == 0 ? st[1] >= p.x0 - EDGE && st[1] <= p.x1 + EDGE && st[3] >= p.z0 && st[2] <= p.z1
                         : st[1] >= p.z0 - EDGE && st[1] <= p.z1 + EDGE && st[3] >= p.x0 && st[2] <= p.x1;
@@ -1244,6 +1261,34 @@ final class Railway {
             }
             p.rails = tr;
         }
+    }
+
+    /**
+     * The stations the railway's street stops want, by the grid block beside each platform: the
+     * block the platform's side of the street opens onto, across the sidewalk from the stop's middle.
+     */
+    Map<Long, Station> stations() {
+        Map<Long, Station> out = new HashMap<>();
+        for (Track t : tracks) {
+            if (t.kind != Track.Kind.RAIL) {
+                continue;
+            }
+            for (Track.Stop st : t.stops) {
+                int m = st.middle();
+                if (t.street[m] == 0 || t.mode[m] != Track.GROUND) {
+                    continue;
+                }
+                // the platform's side: to the right of the way the trains run when side is 1
+                double px = -t.tz[m] * st.side(), pz = t.tx[m] * st.side();
+                int ax = Math.abs(px) >= Math.abs(pz) ? (int) Math.signum(px) : 0, az = ax == 0 ? (int) Math.signum(pz) : 0;
+                double bx = t.xs[m] + ax * (t.street[m] + 24), bz = t.zs[m] + az * (t.street[m] + 24);
+                int face = ax > 0 ? 3 : ax < 0 ? 1 : az > 0 ? 0 : 2;
+                String key = st.spot().startsWith("st-") ? st.spot().substring(3) : st.spot();
+                out.put(County.key(Math.floorDiv((int) Math.floor(bx), PITCH), Math.floorDiv((int) Math.floor(bz), PITCH)),
+                        new Station(key, (int) Math.floor(t.xs[m]), (int) Math.floor(t.zs[m]), face, t.street[m]));
+            }
+        }
+        return out;
     }
 
     /** How far (x, z) is from the nearest line (up to cap). */

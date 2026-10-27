@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_green": "zomboidcraft:block/city/tx_green",
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "tx_tvm_hi": "zomboidcraft:block/city/tx_tvm_hi",
+    "particle": "zomboidcraft:block/city/tx_tvm_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        4
+      ],
+      "to": [
+        15,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_tvm_hi"
+        },
+        "south": {
+          "texture": "#tx_steel_d",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_green"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        13,
+        2
+      ],
+      "to": [
+        15.5,
+        14.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_green"
+        },
+        "south": {
+          "texture": "#tx_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_green"
+        },
+        "west": {
+          "texture": "#tx_green"
+        },
+        "up": {
+          "texture": "#tx_green"
+        },
+        "down": {
+          "texture": "#tx_green"
+        }
+      }
+    }
+  ]
+}

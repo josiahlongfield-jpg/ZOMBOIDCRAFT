@@ -263281,6 +263281,3103 @@
    "sound": "WOOD",
    "rotate": "facing",
    "loot": "office"
+  },
+  "tx_column": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     16,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     16,
+     11,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_column_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     16,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     16,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     3.5,
+     0,
+     3.5,
+     12.5,
+     1.5,
+     12.5,
+     "tx_steel_d"
+    ],
+    [
+     4.5,
+     1.5,
+     4.5,
+     5.5,
+     2.2,
+     5.5,
+     "tx_steel_d"
+    ],
+    [
+     4.5,
+     1.5,
+     10.5,
+     5.5,
+     2.2,
+     11.5,
+     "tx_steel_d"
+    ],
+    [
+     10.5,
+     1.5,
+     4.5,
+     11.5,
+     2.2,
+     5.5,
+     "tx_steel_d"
+    ],
+    [
+     10.5,
+     1.5,
+     10.5,
+     11.5,
+     2.2,
+     11.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_column_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     14.5,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     14.5,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     3.5,
+     14.5,
+     3.5,
+     12.5,
+     16,
+     12.5,
+     "tx_steel_w"
+    ],
+    [
+     7.4,
+     10,
+     2,
+     8.6,
+     14.5,
+     14,
+     "tx_steel_w"
+    ],
+    [
+     2,
+     10,
+     7.4,
+     14,
+     14.5,
+     8.6,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_truss": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     13,
+     0,
+     9.5,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     2.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7.5,
+     2.5,
+     0,
+     8.5,
+     13,
+     16,
+     {
+      "east": "tx_truss_web",
+      "west": "tx_truss_web",
+      "up": "tx_steel_w",
+      "down": "tx_steel_w",
+      "north": "tx_steel_w",
+      "south": "tx_steel_w"
+     }
+    ]
+   ],
+   "title": "Roof Truss",
+   "sound": "METAL",
+   "rotate": "axis",
+   "render": "cutout"
+  },
+  "tx_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     13.5,
+     0,
+     12,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     13.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_roof": {
+   "tex": {
+    "up": "tx_membrane",
+    "down": "tx_slat_ceiling",
+    "side": "tx_fascia"
+   },
+   "title": "Roof",
+   "sound": "STONE"
+  },
+  "tx_roof_glass": {
+   "tex": {
+    "all": "tx_glass_roof"
+   },
+   "title": "Rooflight",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_parapet": {
+   "tex": {
+    "up": "tx_coping",
+    "down": "tx_fascia",
+    "side": "tx_fascia"
+   },
+   "title": "Parapet",
+   "sound": "METAL"
+  },
+  "tx_fascia": {
+   "tex": {
+    "all": "tx_fascia"
+   },
+   "title": "Fascia",
+   "sound": "METAL"
+  },
+  "tx_name_uptown_0": {
+   "tex": {
+    "north": "tx_name_uptown_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_1": {
+   "tex": {
+    "north": "tx_name_uptown_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_2": {
+   "tex": {
+    "north": "tx_name_uptown_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_3": {
+   "tex": {
+    "north": "tx_name_uptown_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_4": {
+   "tex": {
+    "north": "tx_name_uptown_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_5": {
+   "tex": {
+    "north": "tx_name_uptown_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_6": {
+   "tex": {
+    "north": "tx_name_uptown_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_7": {
+   "tex": {
+    "north": "tx_name_uptown_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_0": {
+   "tex": {
+    "north": "tx_name_riverside_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_1": {
+   "tex": {
+    "north": "tx_name_riverside_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_2": {
+   "tex": {
+    "north": "tx_name_riverside_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_3": {
+   "tex": {
+    "north": "tx_name_riverside_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_4": {
+   "tex": {
+    "north": "tx_name_riverside_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_5": {
+   "tex": {
+    "north": "tx_name_riverside_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_6": {
+   "tex": {
+    "north": "tx_name_riverside_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_7": {
+   "tex": {
+    "north": "tx_name_riverside_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_0": {
+   "tex": {
+    "north": "tx_name_foundry_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_1": {
+   "tex": {
+    "north": "tx_name_foundry_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_2": {
+   "tex": {
+    "north": "tx_name_foundry_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_3": {
+   "tex": {
+    "north": "tx_name_foundry_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_4": {
+   "tex": {
+    "north": "tx_name_foundry_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_5": {
+   "tex": {
+    "north": "tx_name_foundry_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_6": {
+   "tex": {
+    "north": "tx_name_foundry_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_7": {
+   "tex": {
+    "north": "tx_name_foundry_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_0": {
+   "tex": {
+    "north": "tx_name_southport_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_1": {
+   "tex": {
+    "north": "tx_name_southport_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_2": {
+   "tex": {
+    "north": "tx_name_southport_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_3": {
+   "tex": {
+    "north": "tx_name_southport_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_4": {
+   "tex": {
+    "north": "tx_name_southport_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_5": {
+   "tex": {
+    "north": "tx_name_southport_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_6": {
+   "tex": {
+    "north": "tx_name_southport_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_7": {
+   "tex": {
+    "north": "tx_name_southport_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_panel": {
+   "tex": {
+    "all": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_b": {
+   "tex": {
+    "all": "tx_panel_b"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_wall": {
+   "tex": {
+    "all": "tx_wall"
+   },
+   "title": "Plaster Wall",
+   "sound": "STONE"
+  },
+  "tx_granite": {
+   "tex": {
+    "all": "tx_granite"
+   },
+   "title": "Granite",
+   "sound": "STONE"
+  },
+  "tx_terrazzo": {
+   "tex": {
+    "all": "tx_terrazzo"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_terrazzo_b": {
+   "tex": {
+    "all": "tx_terrazzo_b"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_terrazzo_d": {
+   "tex": {
+    "all": "tx_terrazzo_d"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_panel_hi": {
+   "tex": {
+    "side": "tx_panel_hi",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_hi_s": {
+   "tex": {
+    "side": "tx_panel_hi_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_mid": {
+   "tex": {
+    "side": "tx_panel_mid",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_mid_s": {
+   "tex": {
+    "side": "tx_panel_mid_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_lo": {
+   "tex": {
+    "side": "tx_panel_lo",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_lo_s": {
+   "tex": {
+    "side": "tx_panel_lo_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_wall_base": {
+   "tex": {
+    "side": "tx_wall_base",
+    "up": "tx_wall",
+    "down": "tx_wall"
+   },
+   "title": "Plaster Wall",
+   "sound": "STONE"
+  },
+  "tx_glass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass",
+      "west": "tx_glass",
+      "north": "tx_glass",
+      "south": "tx_glass",
+      "up": "tx_glass",
+      "down": "tx_glass"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_t": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     1.5,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass",
+      "west": "tx_glass",
+      "north": "tx_glass",
+      "south": "tx_glass",
+      "up": "tx_glass",
+      "down": "tx_glass"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     6.5,
+     0,
+     1.5,
+     9.5,
+     1.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass_cracked",
+      "west": "tx_glass_cracked",
+      "north": "tx_glass_cracked",
+      "south": "tx_glass_cracked",
+      "up": "tx_glass_cracked",
+      "down": "tx_glass_cracked"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass_broken",
+      "west": "tx_glass_broken",
+      "north": "tx_glass_broken",
+      "south": "tx_glass_broken",
+      "up": "tx_glass_broken",
+      "down": "tx_glass_broken"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_frame": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     6.5,
+     0,
+     1.5,
+     9.5,
+     1.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall Frame",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_door": {
+   "door": "steel",
+   "tex": {
+    "top": "tx_door_top",
+    "bottom": "tx_door_bottom"
+   },
+   "title": "Glass Door"
+  },
+  "tx_canopy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_canopy_edge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     4,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     10,
+     0,
+     16,
+     14,
+     4,
+     {
+      "up": "tx_gutter",
+      "side": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     4,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Canopy Gutter",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     4.46,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     4.0,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.46,
+     0,
+     10,
+     5.26,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.0,
+     8,
+     10,
+     4.8,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     5.39,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     4.93,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     5.39,
+     0,
+     10,
+     6.1899999999999995,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.93,
+     8,
+     10,
+     5.7299999999999995,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     6.32,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     5.86,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     6.32,
+     0,
+     10,
+     7.12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     5.86,
+     8,
+     10,
+     6.66,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     7.25,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     6.79,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     7.25,
+     0,
+     10,
+     8.05,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     6.79,
+     8,
+     10,
+     7.59,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     8.180000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     7.720000000000001,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     8.180000000000001,
+     0,
+     10,
+     8.980000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     7.720000000000001,
+     8,
+     10,
+     8.520000000000001,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     9.110000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     8.65,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     9.110000000000001,
+     0,
+     10,
+     9.910000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     8.65,
+     8,
+     10,
+     9.450000000000001,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     10.040000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     9.58,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     10.040000000000001,
+     0,
+     10,
+     10.840000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     9.58,
+     8,
+     10,
+     10.38,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_bench": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     6,
+     3,
+     15,
+     7,
+     11,
+     {
+      "up": "tx_perf",
+      "down": "tx_perf",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     1,
+     7,
+     11,
+     15,
+     15,
+     12,
+     {
+      "north": "tx_perf",
+      "south": "tx_perf",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     7.4,
+     7,
+     4,
+     8.6,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     1,
+     7,
+     4,
+     2,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     14,
+     7,
+     4,
+     15,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     0,
+     6,
+     5,
+     6,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     11,
+     0,
+     6,
+     13,
+     6,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     2,
+     0,
+     5,
+     6,
+     0.6,
+     10,
+     "tx_steel_d"
+    ],
+    [
+     10,
+     0,
+     5,
+     14,
+     0.6,
+     10,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Station Bench",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "tx_tvm": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     16,
+     16,
+     {
+      "north": "tx_tvm_lo",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     5,
+     4.5,
+     2.6,
+     11,
+     6,
+     4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "cash"
+  },
+  "tx_tvm_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     13,
+     16,
+     {
+      "north": "tx_tvm_hi",
+      "side": "tx_steel_d",
+      "up": "tx_green",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0.5,
+     13,
+     2,
+     15.5,
+     14.2,
+     16,
+     "tx_green"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_tvm_smashed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     16,
+     16,
+     {
+      "north": "tx_tvm_lo_smashed",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_tvm_top_smashed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     13,
+     16,
+     {
+      "north": "tx_tvm_hi_smashed",
+      "side": "tx_steel_d",
+      "up": "tx_green",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0.5,
+     13,
+     2,
+     15.5,
+     14.2,
+     16,
+     "tx_green"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_validator": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     9,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     6,
+     0,
+     6,
+     10,
+     0.6,
+     10,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     9,
+     5,
+     11,
+     14,
+     10,
+     {
+      "north": "tx_validator",
+      "side": "tx_green",
+      "up": "tx_green",
+      "down": "tx_green",
+      "south": "tx_green"
+     }
+    ]
+   ],
+   "title": "Ticket Validator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_ticket_counter": {
+   "tex": {
+    "north": "tx_counter_front",
+    "south": "tx_wall",
+    "east": "tx_wall",
+    "west": "tx_wall",
+    "up": "tx_granite",
+    "down": "tx_wall"
+   },
+   "title": "Ticket Counter",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_ticket_window": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1.5,
+     16,
+     1,
+     16,
+     "tx_granite"
+    ],
+    [
+     5,
+     1,
+     2,
+     11,
+     1.4,
+     9,
+     "tx_brushed"
+    ],
+    [
+     0,
+     1,
+     9,
+     16,
+     15,
+     10,
+     {
+      "east": "tx_ticket_glass",
+      "west": "tx_ticket_glass",
+      "north": "tx_ticket_glass",
+      "south": "tx_ticket_glass",
+      "up": "tx_ticket_glass",
+      "down": "tx_ticket_glass"
+     }
+    ],
+    [
+     0,
+     1,
+     8.5,
+     1,
+     16,
+     10.5,
+     "tx_steel_d"
+    ],
+    [
+     15,
+     1,
+     8.5,
+     16,
+     16,
+     10.5,
+     "tx_steel_d"
+    ],
+    [
+     1,
+     15,
+     8.5,
+     15,
+     16,
+     10.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Ticket Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_bin": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     5,
+     12,
+     11,
+     11,
+     {
+      "side": "tx_bin",
+      "up": "tx_bin_top",
+      "down": "tx_brushed"
+     }
+    ],
+    [
+     5,
+     0,
+     4,
+     11,
+     11,
+     12,
+     {
+      "side": "tx_bin",
+      "up": "tx_bin_top",
+      "down": "tx_brushed"
+     }
+    ]
+   ],
+   "title": "Litter Bin",
+   "sound": "METAL",
+   "loot": "scraps"
+  },
+  "tx_pendant": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     8,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     6,
+     5,
+     11,
+     8,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     4,
+     3,
+     13,
+     6,
+     13,
+     {
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_lamp"
+     }
+    ]
+   ],
+   "title": "Pendant Light",
+   "sound": "METAL",
+   "decor": true,
+   "flicker": {
+    "light": 13,
+    "on": {
+     "tx_lamp": "tx_lamp_on"
+    }
+   }
+  },
+  "tx_board_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_6",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_7",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_map_uptown_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_sign_trains_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_trains_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_trains_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_trains_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_tickets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_tickets_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_tickets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_tickets_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_toilets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_toilets_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_toilets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_toilets_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_exit_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_exit_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_exit_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_exit_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_kiosk_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_kiosk_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_kiosk_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_kiosk_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
   }
  }
 }

@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_steel_w": "zomboidcraft:block/city/tx_steel_w",
+    "tx_truss_web": "zomboidcraft:block/city/tx_truss_web",
+    "particle": "zomboidcraft:block/city/tx_steel_w"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        13,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_w"
+        },
+        "west": {
+          "texture": "#tx_steel_w"
+        },
+        "up": {
+          "texture": "#tx_steel_w",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        0,
+        0
+      ],
+      "to": [
+        9.5,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_w"
+        },
+        "west": {
+          "texture": "#tx_steel_w"
+        },
+        "up": {
+          "texture": "#tx_steel_w"
+        },
+        "down": {
+          "texture": "#tx_steel_w",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        2.5,
+        0
+      ],
+      "to": [
+        8.5,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_w",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_steel_w",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_truss_web"
+        },
+        "west": {
+          "texture": "#tx_truss_web"
+        },
+        "up": {
+          "texture": "#tx_steel_w"
+        },
+        "down": {
+          "texture": "#tx_steel_w"
+        }
+      }
+    }
+  ]
+}

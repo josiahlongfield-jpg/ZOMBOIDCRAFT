@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_terrazzo_d": "zomboidcraft:block/city/tx_terrazzo_d",
+    "particle": "zomboidcraft:block/city/tx_terrazzo_d"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_terrazzo_d",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
