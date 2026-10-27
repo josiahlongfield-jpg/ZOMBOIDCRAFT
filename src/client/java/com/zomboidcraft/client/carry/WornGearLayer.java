@@ -20,10 +20,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 
 /**
  * Draws worn bags on a player: packs on the back, the plate carrier round the chest, the fanny pack at the front of
- * the belt. The bag's own item model is posed on the body, so it moves with it when crouching or swimming.
+ * the belt, and the weapon on the sling across the back. The item's own model is posed on the body, so it moves with
+ * it when crouching or swimming.
  */
 public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     /**
@@ -43,6 +45,9 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
 
+    /** How the slung weapon lies across the back, in degrees from level. */
+    private static final float SLING_ANGLE = 55f;
+
     private final ItemModelResolver items;
     private final ItemStackRenderState item = new ItemStackRenderState();
 
@@ -58,6 +63,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             return;
         }
         List<ItemStack> worn = player.getAttachedOrElse(Carry.WORN, List.of());
+        float packOut = 2f / 16f;
         for (int i = 0; i < Math.min(worn.size(), GearStore.SLING); i++) {
             ItemStack stack = worn.get(i);
             BagSpec spec = BagItem.spec(stack);
@@ -77,8 +83,42 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 pose.scale(-fit.sx(), -fit.sy(), fit.sz());
             }
             items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
+            if (i == GearStore.BACK) {
+                // how far out the pack's back face sits, for a slung weapon to lie over it
+                AABB box = item.getModelBoundingBox();
+                packOut = Math.max(packOut, fit.back() / 16f + (float) box.maxZ * fit.sz());
+            }
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
+        if (worn.size() > GearStore.SLING && !worn.get(GearStore.SLING).isEmpty()) {
+            sling(pose, collector, light, state, player, worn.get(GearStore.SLING), packOut);
+        }
+    }
+
+    /**
+     * The slung weapon, flat across the back from hip to shoulder (over the pack, if one is worn), sized to the body:
+     * a long gun about as long as the torso is tall and a half, melee a little shorter.
+     */
+    private void sling(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player, ItemStack stack,
+                       float packOut) {
+        items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
+        if (item.isEmpty()) return;
+        AABB box = item.getModelBoundingBox();
+        double longest = Math.max(box.getXsize(), box.getYsize());
+        if (longest <= 0) return;
+        boolean gun = stack.getItem() instanceof com.zomboidcraft.combat.RifleItem;
+        float k = (float) ((gun ? 18 : 14) / 16f / longest);
+        float out = packOut + (float) box.getZsize() * k / 2 + 0.2f / 16f;
+        pose.pushPose();
+        getParentModel().body.translateAndRotate(pose);
+        pose.translate(0, 6.5f / 16f, out);
+        // tall models (a bat on its handle) stand along y: either way the long side runs corner to corner
+        float angle = box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
+        pose.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(angle));
+        pose.scale(-k, -k, k);
+        pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
+        item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        pose.popPose();
     }
 }

@@ -133,6 +133,44 @@ public class KitUiTest implements FabricClientGameTest {
                 } else {
                     LOG.info("ZCUI no filled tile on the pack page");
                 }
+                ctx.waitTicks(3);
+                // drag and drop: a filled tile dragged onto an empty one lands there on release; dragged off into
+                // nothing it goes back
+                String drag = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+                    KitScreen.Hot full = null, empty = null;
+                    for (KitScreen.Hot h : hots(k)) {
+                        if (h.slot() < 0 || h.slot() >= k.menu().slots.size() || !k.carried().contains(h.slot())) continue;
+                        if (full == null && !h.card().isEmpty() && !KitItems.weapon(h.card())) full = h;
+                        if (empty == null && h.card().isEmpty() && h.slot() >= 36 && h.slot() < 45) empty = h;
+                    }
+                    if (full == null || empty == null) return "no tiles: full " + full + " empty " + empty;
+                    String what = k.menu().slots.get(full.slot()).getItem().toString();
+                    mouse(k, full, empty);
+                    String first = "dragged " + what + " from " + full.slot() + " to " + empty.slot() + ": now there "
+                            + k.menu().slots.get(empty.slot()).getItem() + ", left behind " + k.menu().slots.get(full.slot()).getItem()
+                            + ", cursor " + k.menu().getCarried();
+                    return first + "|" + full.slot() + "|" + empty.slot();
+                });
+                LOG.info("ZCUI drag onto a slot: {}", drag);
+                ctx.waitTicks(3);
+                String back = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
+                    for (KitScreen.Hot h : hots(k)) {
+                        if (h.slot() >= 0 && !h.card().isEmpty() && k.carried().contains(h.slot())) {
+                            String what = h.card().toString();
+                            k.mouseClicked(new MouseButtonEvent(h.x() + 2, h.y() + 2, new MouseButtonInfo(0, 0)), false);
+                            k.mouseDragged(new MouseButtonEvent(3, 3, new MouseButtonInfo(0, 0)), -h.x(), -h.y());
+                            String mid = k.menu().getCarried().toString();
+                            k.mouseReleased(new MouseButtonEvent(3, 3, new MouseButtonInfo(0, 0)));
+                            return "dragged " + what + " from " + h.slot() + " into nothing: cursor mid-drag " + mid + ", after "
+                                    + k.menu().getCarried() + ", slot now " + k.menu().slots.get(h.slot()).getItem();
+                        }
+                    }
+                    return "nothing to drag";
+                });
+                LOG.info("ZCUI drag into nothing: {}", back);
+                ctx.waitTicks(3);
             }
 
             // the bench, then a drag across the gun
@@ -550,6 +588,15 @@ public class KitUiTest implements FabricClientGameTest {
     }
 
     @SuppressWarnings("unchecked")
+    /** Presses on one hot spot, drags to another and lets go there, the way a hand on the mouse does. */
+    private static void mouse(KitScreen<?> k, KitScreen.Hot from, KitScreen.Hot to) {
+        double fx = from.x() + from.w() / 2.0, fy = from.y() + from.h() / 2.0, tx = to.x() + to.w() / 2.0, ty = to.y() + to.h() / 2.0;
+        k.mouseClicked(new MouseButtonEvent(fx, fy, new MouseButtonInfo(0, 0)), false);
+        k.mouseDragged(new MouseButtonEvent((fx + tx) / 2, (fy + ty) / 2, new MouseButtonInfo(0, 0)), (tx - fx) / 2, (ty - fy) / 2);
+        k.mouseDragged(new MouseButtonEvent(tx, ty, new MouseButtonInfo(0, 0)), (tx - fx) / 2, (ty - fy) / 2);
+        k.mouseReleased(new MouseButtonEvent(tx, ty, new MouseButtonInfo(0, 0)));
+    }
+
     static List<KitScreen.Hot> hots(KitScreen<?> k) {
         try {
             Field f = KitScreen.class.getDeclaredField("hots");
