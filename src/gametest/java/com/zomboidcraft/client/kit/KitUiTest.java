@@ -227,6 +227,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -579,6 +580,31 @@ public class KitUiTest implements FabricClientGameTest {
      * Drag and drop on the pack page with room to spare: bread dragged onto an empty pocket lands there on release;
      * a rifle dragged onto an empty pocket goes back to the belt (no guns in pockets).
      */
+    /** The spawn picker drawn with the real place list (the test world isn't a county, so it's opened by hand). */
+    private static void spawnPickerTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        var places = sp.getServer().computeOnServer(s -> com.zomboidcraft.spawn.SpawnPicker.places());
+        LOG.info("ZCUI spawn picker: {} places offered", places.size());
+        if (places.size() < 20) throw new AssertionError("spawn picker offers only " + places.size() + " places");
+        var open = new com.zomboidcraft.spawn.SpawnNet.Open(places,
+                List.of(new com.zomboidcraft.spawn.SpawnNet.Friend("00000000-0000-0000-0000-000000000000", "Sam", "Seabright")), false);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new SpawnScreen(open)));
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("spawn-picker");
+        // a click on the Riverside row picks it
+        int[] row = ctx.computeOnClient(mc -> {
+            SpawnScreen s = (SpawnScreen) mc.gui.screen();
+            return s.rowFor("riverside");
+        });
+        if (row != null) {
+            click(ctx, row[0] + 5, row[1] + 4, 0);
+            ctx.waitTicks(3);
+        }
+        String sel = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SpawnScreen s ? s.selected() : "closed");
+        LOG.info("ZCUI spawn picker: clicked Riverside row {} -> selected {}", row == null ? "missing" : row[0] + "," + row[1], sel);
+        ctx.takeScreenshot("spawn-picker-riverside");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
     /** The HUD belt with gaps in it: every slot shows in one row, empty ones too (peeked with Left Alt). */
     private static void beltHudTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runOnServer(s -> {

@@ -78,6 +78,16 @@ public final class ZcConfig {
     public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
+    public Start start = new Start();
+
+    public static class Start {
+        /** The spawn picker in a planned county world: choose a place, wake inside a building with no dead in it. */
+        public boolean picker = true;
+        /** Show it again after each death (death starts a new survivor). */
+        public boolean afterDeath = true;
+        /** Chunks looked through for a way in before settling for the best found. */
+        public int searchChunks = 48;
+    }
 
     public static class Trains {
         /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
