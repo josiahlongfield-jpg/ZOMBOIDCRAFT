@@ -203,20 +203,19 @@ def round38(m):
     """A .38 Special round as it sits home: its rim on the cylinder's back face (z 0), the case forward of it, the
     lead round nose out ahead."""
     b = Inch(m)
-    b.rod(0.0, 0.058, 0.218, 'brass', axis=2)
-    b.rod(-1.097, 0.0, 0.190, 'brass', axis=2)
-    b.rod(-1.40, -1.097, 0.178, 'lead', axis=2)
-    b.rod(-1.53, -1.40, 0.12, 'lead', axis=2)
-    b.rod(0.058, 0.064, 0.085, 'primer', axis=2)
+    b.round_rod(0.0, 0.058, 0.218, 'brass')
+    b.round_rod(-1.097, 0.0, 0.190, 'brass')
+    b.ogive(-1.097, -1.53, 0.178, 'lead')
+    b.round_rod(0.058, 0.064, 0.085, 'primer')
 
 
 def case38(m):
     """A fired .38 case: the rim and the case, its mouth open and sooted."""
     b = Inch(m)
-    b.rod(0.0, 0.058, 0.218, 'brass', axis=2)
-    b.rod(-1.097, 0.0, 0.190, 'brass', axis=2)
-    b.rod(-1.105, -1.097, 0.15, 'soot', axis=2)
-    b.rod(0.058, 0.064, 0.085, 'primer', axis=2)
+    b.round_rod(0.0, 0.058, 0.218, 'brass')
+    b.round_rod(-1.097, 0.0, 0.190, 'brass')
+    b.round_rod(-1.105, -1.097, 0.15, 'soot')
+    b.round_rod(0.058, 0.064, 0.085, 'primer')
 
 
 def round_look():
