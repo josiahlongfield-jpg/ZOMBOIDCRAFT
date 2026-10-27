@@ -1,0 +1,258 @@
+{
+ "_comment": "Places the spawn picker offers, in list order. Ids are county_plan.txt place ids; the picker takes x and z from the plan and leaves out any id the plan doesn't have. danger runs 1 (low) to 5 (extreme).",
+ "places": [
+  {
+   "id": "gh-cbd",
+   "name": "Downtown",
+   "kind": "District · Grayhaven Island",
+   "group": "Grayhaven Island",
+   "danger": 5,
+   "zombies": "Part of the 20,000 on the island",
+   "wake": "An office floor, a hotel room or a flat above a shop",
+   "loot": "The best, if you live to carry it out",
+   "note": "The heart of the island: the tallest towers in the county, the elevated railway overhead, and the densest horde anywhere."
+  },
+  {
+   "id": "gh-fin",
+   "name": "Financial District",
+   "kind": "District · Grayhaven Island",
+   "group": "Grayhaven Island",
+   "danger": 5,
+   "zombies": "Part of the 20,000 on the island",
+   "wake": "An office floor or a hotel room",
+   "loot": "Banks, offices, a few gun safes",
+   "note": "Bank towers, the stock exchange and glass plazas on the south of the island, with the railway threading between them."
+  },
+  {
+   "id": "gh-old",
+   "name": "Old Harbor",
+   "kind": "District · Grayhaven Island",
+   "group": "Grayhaven Island",
+   "danger": 5,
+   "zombies": "Part of the 20,000 on the island",
+   "wake": "A warehouse loft or a flat above a bar",
+   "loot": "Warehouses, ship chandlers, bars",
+   "note": "The old brick waterfront: warehouse lofts, wharves, the customs house and the ferry pier."
+  },
+  {
+   "id": "gh-mid",
+   "name": "Midtown",
+   "kind": "District · Grayhaven",
+   "group": "Grayhaven",
+   "danger": 4,
+   "zombies": "Thousands",
+   "wake": "A hotel room or an office",
+   "loot": "Hotels, theatres, department stores",
+   "note": "Mid-rise offices, hotels, a convention centre and the theatre row, where the interstates meet."
+  },
+  {
+   "id": "gh-up",
+   "name": "Uptown",
+   "kind": "District · Grayhaven",
+   "group": "Grayhaven",
+   "danger": 4,
+   "zombies": "Thousands",
+   "wake": "A high-rise flat",
+   "loot": "The hospital, the university, big stores",
+   "note": "Apartment towers, department stores, St. Mary’s Medical Center and the university."
+  },
+  {
+   "id": "gh-east",
+   "name": "Eastside",
+   "kind": "District · Grayhaven",
+   "group": "Grayhaven",
+   "danger": 4,
+   "zombies": "Thousands",
+   "wake": "A tenement flat",
+   "loot": "Bars, pawn shops, the port",
+   "note": "The docklands: tenements, dockside bars, a seamen’s mission and the union hall against the Megaport fence."
+  },
+  {
+   "id": "riverside",
+   "name": "Riverside",
+   "kind": "City",
+   "group": "Cities",
+   "danger": 3,
+   "zombies": "Hundreds, a few thousand downtown",
+   "wake": "A house or a flat above a shop",
+   "loot": "Hospital, courthouse, gun shop",
+   "note": "An old mill city on the Calder, with a brick downtown, a courthouse, a hospital and the railway bridge."
+  },
+  {
+   "id": "ashby",
+   "name": "Ashby",
+   "kind": "City · county seat",
+   "group": "Cities",
+   "danger": 3,
+   "zombies": "Hundreds, a few thousand downtown",
+   "wake": "A house or a flat above a shop",
+   "loot": "Sheriff’s office, hospital, school",
+   "note": "The inland county seat: a compact downtown, Ashby General Hospital, the sheriff’s office and the high school."
+  },
+  {
+   "id": "westgate",
+   "name": "Westgate",
+   "kind": "Suburb of Grayhaven",
+   "group": "Suburbs",
+   "danger": 3,
+   "zombies": "Hundreds",
+   "wake": "A row house",
+   "loot": "Corner stores, churches",
+   "note": "Row houses, corner stores and churches on a tight grid along the river."
+  },
+  {
+   "id": "northside",
+   "name": "Northside",
+   "kind": "Suburb of Grayhaven",
+   "group": "Suburbs",
+   "danger": 3,
+   "zombies": "Hundreds",
+   "wake": "A walk-up flat",
+   "loot": "Diners, the car plant",
+   "note": "Brick walk-ups and the old car plant, with laundromats and diners on every corner."
+  },
+  {
+   "id": "southport",
+   "name": "Southport",
+   "kind": "Suburb of Grayhaven",
+   "group": "Suburbs",
+   "danger": 3,
+   "zombies": "Hundreds",
+   "wake": "A row house",
+   "loot": "Rail yards, docks",
+   "note": "Workers’ row houses between the rail yards and the docks."
+  },
+  {
+   "id": "pinecrest",
+   "name": "Pinecrest Estates",
+   "kind": "Suburb",
+   "group": "Suburbs",
+   "danger": 2,
+   "zombies": "Hundreds, spread thin",
+   "wake": "A big family house",
+   "loot": "Garages, basements, the odd gun cabinet",
+   "note": "Cul-de-sacs and big lawns off the beltway, north of the wall."
+  },
+  {
+   "id": "ashby-hts",
+   "name": "Ashby Heights",
+   "kind": "Suburb of Ashby",
+   "group": "Suburbs",
+   "danger": 2,
+   "zombies": "Hundreds, spread thin",
+   "wake": "A family house",
+   "loot": "Garages and sheds",
+   "note": "Newer estates on the hill east of Ashby."
+  },
+  {
+   "id": "shadyacres",
+   "name": "Shady Acres",
+   "kind": "Trailer park",
+   "group": "Suburbs",
+   "danger": 2,
+   "zombies": "A few hundred",
+   "wake": "A trailer",
+   "loot": "Not much, but quiet",
+   "note": "A trailer park by the beltway, under the airport flight path."
+  },
+  {
+   "id": "seabright",
+   "name": "Seabright",
+   "kind": "Beach town",
+   "group": "Towns",
+   "danger": 2,
+   "zombies": "Hundreds",
+   "wake": "A motel room or a house",
+   "loot": "Motels, the boardwalk, surf shops",
+   "note": "A beach town with motels, surf shops, ice-cream parlours and a main street running down to the sand."
+  },
+  {
+   "id": "kingsbridge",
+   "name": "Kingsbridge",
+   "kind": "Town",
+   "group": "Towns",
+   "danger": 2,
+   "zombies": "Hundreds",
+   "wake": "A house",
+   "loot": "The mall, the high school",
+   "note": "A commuter town south of the airport, with a courthouse square, a mall and a high school."
+  },
+  {
+   "id": "millbrook",
+   "name": "Millbrook",
+   "kind": "Mill town",
+   "group": "Towns",
+   "danger": 2,
+   "zombies": "Hundreds",
+   "wake": "A worker’s house",
+   "loot": "Lumber yard, the mill",
+   "note": "A mill town below the dam, with a textile mill, rows of workers’ houses and a lumber yard."
+  },
+  {
+   "id": "fairview",
+   "name": "Fairview",
+   "kind": "Farm town",
+   "group": "Towns",
+   "danger": 2,
+   "zombies": "Hundreds",
+   "wake": "A farmhouse or a house in town",
+   "loot": "Feed store, tools, food",
+   "note": "The farm valley’s town, with a feed store, a grain elevator, a livestock auction and a fairground."
+  },
+  {
+   "id": "capemerrow",
+   "name": "Cape Merrow",
+   "kind": "Fishing village",
+   "group": "Rural",
+   "danger": 1,
+   "zombies": "Dozens",
+   "wake": "A cottage",
+   "loot": "Boats, fishing gear",
+   "note": "A fishing village on the cape, with boat sheds, net lofts, a chapel and a bait shop."
+  },
+  {
+   "id": "gullharbor",
+   "name": "Gull Harbor",
+   "kind": "Fishing harbour",
+   "group": "Rural",
+   "danger": 1,
+   "zombies": "Dozens",
+   "wake": "A cottage",
+   "loot": "The cannery",
+   "note": "A fishing harbour with trawlers, a cannery and a breakwater."
+  },
+  {
+   "id": "hollowcreek",
+   "name": "Hollow Creek",
+   "kind": "Hamlet",
+   "group": "Rural",
+   "danger": 1,
+   "zombies": "Dozens",
+   "wake": "A cottage",
+   "loot": "The general store",
+   "note": "A creekside hamlet with a covered bridge, a church and a general store."
+  },
+  {
+   "id": "dunmore",
+   "name": "Dunmore",
+   "kind": "Crossroads",
+   "group": "Rural",
+   "danger": 1,
+   "zombies": "Dozens",
+   "wake": "A farmhouse",
+   "loot": "The gas station",
+   "note": "A crossroads at the foot of the mountains, with a church, a gas station and a grain elevator."
+  },
+  {
+   "id": "timberline",
+   "name": "Timberline",
+   "kind": "Logging hamlet",
+   "group": "Rural",
+   "danger": 1,
+   "zombies": "A handful",
+   "wake": "A logging cabin",
+   "loot": "Ranger station, saws and axes",
+   "note": "A logging hamlet deep in the mountains, with a sawmill and a ranger station."
+  }
+ ]
+}
