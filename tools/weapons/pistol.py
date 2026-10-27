@@ -41,6 +41,8 @@ def frame_point(x, y, z):
 
 
 HAND = frame_point(0.0, -2.55, 6.05)        # middle of the shooting hand on the grip
+HAMMER_PIN = frame_point(0.0, -0.55, SLIDE_LEN + 0.08)     # low in the hammer: it turns back about this
+HAMMER_COCK = 40.0                                         # degrees it turns back to full cock
 
 
 def grip_axes():
@@ -128,8 +130,14 @@ def body(m):
         b.rod(-fw - 0.02, fw + 0.02, 0.05, steel, axis=0, at=(y, z))
     lz, ly = foot - down * 0.14 + back * 0.80                                # lanyard loop, left, at the heel
     b.box((-0.56, ly - 0.10, lz - 0.10), (-0.46, ly + 0.10, lz + 0.10), steel)
-    # ---- the hammer, down, its spur behind the slide
-    b.box((-0.20, -0.70, SLIDE_LEN), (0.20, 0.20, SLIDE_LEN + 0.16), steel)
+    # the hammer is drawn apart (hammer_piece) so first person can cock it and let it fall
+
+
+def hammer_piece(m):
+    """The hammer, down, its spur behind the slide: drawn apart from the body (the kit's slide; this pistol's slide
+    is its handle) so first person turns it back about its pin to cock it, and lets it fall on each shot."""
+    b = Inch(m, (0.0, BORE_Y, Z0))
+    b.box((-0.20, -0.70, SLIDE_LEN), (0.20, 0.20, SLIDE_LEN + 0.16), 'steel')
     b.seg((SLIDE_LEN + 0.10, 0.12), (SLIDE_LEN + 0.32, 0.42), 0.22, 0.34, 'spur', over=0.03)
 
 

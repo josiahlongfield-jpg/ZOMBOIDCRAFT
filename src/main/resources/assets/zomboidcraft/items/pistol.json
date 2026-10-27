@@ -31,6 +31,22 @@
       },
       {
        "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/mag_out/slide"
+       }
+      },
+      {
+       "type": "minecraft:select",
        "property": "minecraft:custom_model_data",
        "index": 1,
        "cases": [
@@ -219,6 +235,22 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/pistol/mag_in/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/mag_in/slide"
        }
       },
       {
@@ -435,6 +467,22 @@
        "fallback": {
         "type": "minecraft:model",
         "model": "zomboidcraft:item/weapon/pistol/charge/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/pistol/charge/slide"
        }
       },
       {
@@ -657,6 +705,22 @@
      },
      {
       "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/ads/slide"
+      }
+     },
+     {
+      "type": "minecraft:select",
       "property": "minecraft:custom_model_data",
       "index": 1,
       "cases": [
@@ -866,6 +930,22 @@
       "fallback": {
        "type": "minecraft:model",
        "model": "zomboidcraft:item/weapon/pistol/hip/charging_handle"
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/pistol/hip/slide"
       }
      },
      {
