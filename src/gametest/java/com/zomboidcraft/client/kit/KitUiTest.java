@@ -497,20 +497,36 @@ public class KitUiTest implements FabricClientGameTest {
         });
         LOG.info("ZCUI sling: {}", report);
         ctx.waitTicks(10);
-        ctx.runOnClient(mc -> mc.player.setXRot(10f));
-        ctx.getInput().pressKey(InputConstants.KEY_F5);
-        ctx.waitTicks(10);
-        String camera = ctx.computeOnClient(mc -> mc.options.getCameraType().name());
-        LOG.info("ZCUI sling camera: {}", camera);
-        ctx.takeScreenshot("sling-back");
-        ctx.runOnClient(mc -> mc.player.setYRot(mc.player.getYRot() + 50f));
-        ctx.waitTicks(5);
-        ctx.takeScreenshot("sling-back-side");
-        ctx.getInput().pressKey(InputConstants.KEY_F5);
-        ctx.waitTicks(5);
-        ctx.takeScreenshot("sling-front");
-        ctx.getInput().pressKey(InputConstants.KEY_F5);
-        ctx.waitTicks(3);
+        // a camera on a stand behind you, looking at your back (your own third-person views sit too close)
+        sp.getServer().runCommand("effect give @a minecraft:night_vision 60 0 true");
+        for (int[] view : new int[][]{{0, 26}, {40, 22}, {-150, 10}}) {
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                p.setYRot(0f);
+                p.setYHeadRot(0f);
+                p.setYBodyRot(0f);
+                s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), "kill @e[type=!player]");
+                float yaw = view[0];
+                double r = 2.6;
+                double cx = p.getX() + Math.sin(Math.toRadians(yaw)) * r, cz = p.getZ() - Math.cos(Math.toRadians(yaw)) * r;
+                s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), String.format(java.util.Locale.ROOT,
+                        "summon minecraft:armor_stand %.2f %.2f %.2f {Invisible:1b,NoGravity:1b,Tags:[\"cam\"],Rotation:[%.1ff,%d.0f]}",
+                        cx, p.getY() - 0.3, cz, yaw, view[1]));
+            });
+            ctx.waitTicks(5);
+            ctx.runOnClient(mc -> {
+                mc.player.setYRot(0f);
+                mc.player.yBodyRot = 0f;
+                mc.player.yHeadRot = 0f;
+                for (var e : mc.level.entitiesForRendering()) {
+                    if (e instanceof net.minecraft.world.entity.decoration.ArmorStand) mc.setCameraEntity(e);
+                }
+            });
+            ctx.waitTicks(3);
+            ctx.takeScreenshot("sling-view-" + (view[0] < 0 ? "front" : view[0]));
+        }
+        ctx.runOnClient(mc -> mc.setCameraEntity(mc.player));
+        sp.getServer().runCommand("kill @e[type=minecraft:armor_stand]");
     }
 
     /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
