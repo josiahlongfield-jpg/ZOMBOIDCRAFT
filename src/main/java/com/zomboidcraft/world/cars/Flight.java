@@ -268,7 +268,7 @@ public final class Flight {
         float hands = 0.7f + 0.3f * skill;
         org.joml.Vector3f nose = new org.joml.Vector3f((float) f.x, (float) f.y, (float) f.z);
         org.joml.Vector3f want = new org.joml.Vector3f(assist).normalize();
-        if (airTicks < 80 && want.y < 0.14f) {
+        if (airTicks < 80 && want.y < 0.14f && want.x * want.x + want.z * want.z > 1e-4f) {
             // just off the ground: keep climbing away whatever the aim, so it doesn't settle back onto the deck
             want.set(want.x, 0, want.z).normalize().mul(0.99f).add(0, 0.14f, 0).normalize();
         }
