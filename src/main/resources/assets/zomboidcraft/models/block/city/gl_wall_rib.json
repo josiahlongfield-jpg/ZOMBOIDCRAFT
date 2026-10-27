@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gl_glass": {
+      "sprite": "zomboidcraft:block/city/gl_glass",
+      "force_translucent": true
+    },
+    "gl_rib": "zomboidcraft:block/city/gl_rib",
+    "particle": "zomboidcraft:block/city/gl_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.5
+      ],
+      "to": [
+        16,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gl_glass",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#gl_glass",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        0
+      ],
+      "to": [
+        10,
+        16,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gl_rib",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gl_rib"
+        },
+        "east": {
+          "texture": "#gl_rib"
+        },
+        "west": {
+          "texture": "#gl_rib"
+        },
+        "up": {
+          "texture": "#gl_rib",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gl_rib",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

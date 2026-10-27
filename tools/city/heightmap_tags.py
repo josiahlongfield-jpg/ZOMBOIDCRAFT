@@ -18,8 +18,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 SPECS = ROOT / "src/main/java/com/zomboidcraft/world/blocks/CitySpecs.java"
 OUT = ROOT / "src/main/resources/data/zomboidcraft/tags/block/city_blocks_motion.json"
-# thin, but they're roofs: rain should drum on them and stay off whoever shelters underneath
-SHELTER = ("awning", "water_tank_top")
+# thin, but they're roofs: rain should drum on them and stay off whoever shelters underneath (and the
+# Glass Line's roof glass holds the harbour back: water flows through anything left out)
+SHELTER = ("awning", "water_tank_top", "gl_crown")
 LINE = re.compile(r'\s*s\("([a-z0-9_]+)", (\w+), ([\w |]+), \d+, SoundType\.\w+, [\d.]+f(?:, ([-\d., ]+))?\);')
 
 

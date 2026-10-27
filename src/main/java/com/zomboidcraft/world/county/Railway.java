@@ -87,6 +87,15 @@ final class Railway {
                 e.printStackTrace(System.out);
             }
         }
+        // the Glass Line's shuttle under the South Arm, from under the subway's Mercy General station
+        if (tracks.stream().anyMatch(t -> t.kind == Track.Kind.SUBWAY)) {
+            try {
+                tracks.add(GlassLine.build(terrain));
+            } catch (RuntimeException e) {
+                System.out.println("Couldn't lay the Glass Line: " + e);
+                e.printStackTrace(System.out);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ the city's grid
