@@ -115,7 +115,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.translate(0, 6.5f / 16f, out);
         // tall models (a bat on its handle) stand along y: either way the long side runs corner to corner
         float angle = box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
-        pose.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(angle));
+        pose.mulPose(new org.joml.Matrix4f().rotationZ((float) Math.toRadians(angle)));
         pose.scale(-k, -k, k);
         pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
         item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
