@@ -223,6 +223,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapTest(ctx, sp, false);
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
+            slingTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -465,6 +466,45 @@ public class KitUiTest implements FabricClientGameTest {
             if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(k.menu().slots.get(i).getItem().getItem()).getPath().equals(id)) return i;
         }
         return -1;
+    }
+
+    /**
+     * Weapons and pockets: with the belt full, a picked-up rifle goes on the sling and a pistol into the pack, never a
+     * pocket; then the slung rifle seen from behind, over the pack.
+     */
+    private static void slingTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runCommand("give @a zomboidcraft:hiking_backpack");
+        ctx.waitTicks(5);
+        String report = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, new ItemStack(Items.DIRT));
+            ItemStack rifle = new ItemStack(ModItems.HUNTING_RIFLE), pistol = new ItemStack(ModItems.PISTOL);
+            boolean r = p.getInventory().add(rifle), q = p.getInventory().add(pistol);
+            StringBuilder out = new StringBuilder("rifle taken=" + r + " pistol taken=" + q + " sling="
+                    + com.zomboidcraft.carry.Carry.gear(p).get(com.zomboidcraft.carry.GearStore.SLING));
+            for (int i = 9; i < 36; i++) if (!p.getInventory().getItem(i).isEmpty()) out.append(" POCKET ").append(i).append('=').append(p.getInventory().getItem(i));
+            for (int i = 0; i < p.inventoryMenu.slots.size(); i++) {
+                if (p.inventoryMenu.slots.get(i).getItem().is(ModItems.PISTOL)) out.append(" pistol in slot ").append(i).append(' ')
+                        .append(p.inventoryMenu.slots.get(i).getClass().getSimpleName());
+            }
+            out.append(" pocket takes a rifle=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(ModItems.ASSAULT_RIFLE)))
+                    .append(" pocket takes bread=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(Items.BREAD)));
+            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+            return out.toString();
+        });
+        LOG.info("ZCUI sling: {}", report);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            mc.player.setXRot(10f);
+            mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("sling-back");
+        ctx.runOnClient(mc -> mc.player.setYRot(mc.player.getYRot() + 50f));
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("sling-back-side");
+        ctx.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON));
     }
 
     /** Where the rifle and red dots are in a menu, and whether the rifle has its optic. */
