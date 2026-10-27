@@ -61,7 +61,11 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         int lod = ZDetail.level(state.distanceToCameraSq);
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
         ZBodyMesh low = state.zlow;
-        if (lod >= ZDetail.LOW && low != null) {
+        boolean baked = lod >= ZDetail.LOW && low != null;
+        ZBodyMesh drawn = baked ? low : mesh;
+        int bodyLod = baked ? ZDetail.FULL : lod, kitLod0 = baked ? (lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL) : lod;
+        ZDetail.drew(baked ? 2 : Math.min(lod, 2), drawn.quads(true, bodyLod, legless).length + drawn.quads(false, kitLod0, legless).length);
+        if (baked) {
             // the baked body: its own atlas already carries the skin's tint and the clothes painted over it
             int kitLod = lod == ZDetail.SIMPLE ? ZDetail.SIMPLE : ZDetail.FULL;
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(state.zlowSkin),
