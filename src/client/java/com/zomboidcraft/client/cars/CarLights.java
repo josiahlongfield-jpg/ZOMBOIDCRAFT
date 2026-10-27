@@ -264,7 +264,11 @@ public final class CarLights {
 
     /** Added light normally; with a shader pack, drawn the way beacon beams are, which the packs make glow. */
     static RenderType glowType(boolean shaders) {
-        return shaders ? RenderTypes.beaconBeam(GLOW, true) : RenderTypes.eyes(GLOW);
+        return glowType(GLOW, shaders);
+    }
+
+    static RenderType glowType(Identifier texture, boolean shaders) {
+        return shaders ? RenderTypes.beaconBeam(texture, true) : RenderTypes.eyes(texture);
     }
 
     /**
@@ -412,6 +416,23 @@ public final class CarLights {
                 lastL = l;
                 lastR = r;
                 lastC = c;
+            }
+        }
+
+        /** A soft strip through points, turned to face the camera, each point with its own half width and colour. */
+        void strip(Vec3[] p, double[] halfWidth, int[] colour) {
+            for (int i = 1; i < p.length; i++) {
+                Vec3 a = p[i - 1], b = p[i], line = b.subtract(a);
+                if (line.lengthSqr() < 1e-8) {
+                    continue;
+                }
+                Vec3 mid = a.add(b).scale(0.5), toCam = cam.subtract(mid);
+                Vec3 side = line.cross(toCam);
+                side = side.lengthSqr() < 1e-12 ? line.cross(new Vec3(0, 1, 0)).normalize() : side.normalize();
+                Vec3 wa = side.scale(halfWidth[i - 1]), wb = side.scale(halfWidth[i]);
+                double away = toCam.length();
+                Vec3 n = away > 1e-4 ? toCam.scale(1 / away) : new Vec3(0, 1, 0);
+                quad(a.subtract(wa), a.add(wa), b.add(wb), b.subtract(wb), 0, 0.5f, 1, 0.5f, 1, 0.5f, 0, 0.5f, colour[i - 1], colour[i], n);
             }
         }
 
