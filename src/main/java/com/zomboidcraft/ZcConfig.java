@@ -515,6 +515,8 @@ public final class ZcConfig {
          * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
          */
         public boolean shoulderCam = true;
+        /** Aiming a 4x scope over the shoulder looks through it in first person, and goes back after. */
+        public boolean scopeFromShoulder = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
         /**
@@ -927,6 +929,11 @@ public final class ZcConfig {
         /** A suppressor multiplies how far zombies hear the shot; the suppressed recordings play at this volume. */
         public double suppressedNoise = 0.1;
         public double suppressedVolume = 0.7;
+        /**
+         * Seconds others see a gun stay raised (pointing where its carrier looks) after a shot, when they're in first
+         * person; over the shoulder it's always up.
+         */
+        public double raiseAfterShot = 3.0;
         /** A foregrip multiplies the kick; a gun with its stock off kicks and wanders more. */
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;

@@ -2,6 +2,7 @@ package com.zomboidcraft.client.combat;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.GunRaise;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
@@ -24,8 +25,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * How survivors carry and aim their weapons as other players see them: a gun level at the chest or
- * shouldered, always pointing where they look, the big melee weapons in both hands. The gun arm takes a fixed angle (the weapon's item
+ * How survivors carry and aim their weapons as other players see them: a gun at the low ready, raised
+ * (pointing where they look: over the shoulder or just after a shot) or shouldered, the big melee weapons in
+ * both hands. The gun arm takes a fixed angle (the weapon's item
  * model is fitted to it, see tools/weapons/poses.py) turned by what the player is doing: looking about
  * while aiming, walking, swinging. The off arm then reaches for the weapon's support line (magazine well
  * and handguard, the end of a handle) wherever that left it, so both hands stay on the weapon.
@@ -41,15 +43,24 @@ public final class HoldPoses {
     }
 
     /**
-     * Every tick: anyone holding a gun turns their whole body with their eyes instead of only the head, so the
+     * Every tick: anyone holding a gun up turns their whole body with their eyes instead of only the head, so the
      * gun (turned with the head, see apply) stays in front of them and on the crosshair.
      */
+    /**
+     * A gun is up, pointing where its carrier looks: over the shoulder, or for a few seconds after a shot. Otherwise
+     * it's at the low ready. The item model (RaisedProperty) and the arms here must agree.
+     */
+    public static boolean raised(Player player) {
+        Minecraft mc = Minecraft.getInstance();
+        return player == mc.player ? CombatClient.raisedHere() : GunRaise.raised(player);
+    }
+
     public static void faceLook(Minecraft client) {
         if (client.level == null || !ZcConfig.get().combat.weaponHolds) {
             return;
         }
         for (Player player : client.level.players()) {
-            if (player.getMainHandItem().getItem() instanceof RifleItem && !player.isPassenger()
+            if (player.getMainHandItem().getItem() instanceof RifleItem && raised(player) && !player.isPassenger()
                     && !player.isSleeping() && !player.isFallFlying() && !player.isVisuallySwimming()) {
                 player.yBodyRot = player.yHeadRot;
                 player.yBodyRotO = player.yHeadRotO;
@@ -76,7 +87,9 @@ public final class HoldPoses {
         float headX = model.head.xRot, headY = model.head.yRot * mirror;
         if (stack.getItem() instanceof RifleItem item) {
             boolean aiming = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
-            lens = HoldPoseData.LENS.get(lensKey(item.type()) + (aiming ? "_aim" : "_ready"));
+            Minecraft mc = Minecraft.getInstance();
+            boolean up = !aiming && mc.level != null && mc.level.getEntity(state.id) instanceof Player p && raised(p);
+            lens = HoldPoseData.LENS.get(lensKey(item.type()) + (aiming ? "_aim" : up ? "_raised" : "_ready"));
             if (aiming) {
                 // the shouldered long gun, or the pistol out at arm's length, follows the eyes
                 gun = rot(headX, headY, 0).mul(rot(switch (item.type()) {
@@ -107,9 +120,39 @@ public final class HoldPoses {
                     case CROSSBOW -> HoldPoseData.CROSSBOW_AIM_SUPPORT;
                     default -> HoldPoseData.RIFLE_AIM_SUPPORT;
                 };
-            } else {
-                // at the ready too the gun points where they look, so a laser runs down the barrel to the crosshair
+            } else if (up) {
+                // raised, the gun points where they look, so a laser runs down the barrel to the crosshair
                 gun = rot(headX + bob(state), headY, 0).mul(rot(switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_RAISED;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED;
+                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED;
+                    case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED;
+                    case REVOLVER -> HoldPoseData.REVOLVER_RAISED;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED;
+                    case SMG -> HoldPoseData.SMG_RAISED;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_RAISED;
+                    case MAGNUM -> HoldPoseData.MAGNUM_RAISED;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_RAISED;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_RAISED;
+                    default -> HoldPoseData.RIFLE_RAISED;
+                }));
+                support = switch (item.type()) {
+                    case PISTOL -> HoldPoseData.PISTOL_RAISED_SUPPORT;
+                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED_SUPPORT;
+                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED_SUPPORT;
+                    case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED_SUPPORT;
+                    case REVOLVER -> HoldPoseData.REVOLVER_RAISED_SUPPORT;
+                    case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED_SUPPORT;
+                    case SMG -> HoldPoseData.SMG_RAISED_SUPPORT;
+                    case SAWN_OFF -> HoldPoseData.SAWN_OFF_RAISED_SUPPORT;
+                    case MAGNUM -> HoldPoseData.MAGNUM_RAISED_SUPPORT;
+                    case LEVER_ACTION -> HoldPoseData.LEVER_ACTION_RAISED_SUPPORT;
+                    case CROSSBOW -> HoldPoseData.CROSSBOW_RAISED_SUPPORT;
+                    default -> HoldPoseData.RIFLE_RAISED_SUPPORT;
+                };
+            } else {
+                // the low ready: muzzle down, not following the eyes
+                gun = rot(bob(state), 0, 0).mul(rot(switch (item.type()) {
                     case PISTOL -> HoldPoseData.PISTOL_READY;
                     case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
                     case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY;

@@ -7,487 +7,976 @@
    {
     "threshold": 1,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/mag_out/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/mag_out/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 1,
-       "cases": [
-        {
-         "when": "suppressor",
-         "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/mag_out/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:select",
-               "property": "minecraft:display_context",
-               "cases": [
-                {
-                 "when": [
-                  "firstperson_righthand",
-                  "firstperson_lefthand"
-                 ],
-                 "model": {
-                  "type": "minecraft:empty"
-                 }
-                }
-               ],
-               "fallback": {
-                "type": "minecraft:model",
-                "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash_quiet"
-               }
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+        "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
-        },
-        {
-         "when": "none",
-         "model": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
-           {
-            "threshold": 1,
-            "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
               {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
-               ],
+               "threshold": 1,
                "model": {
-                "type": "minecraft:empty"
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/muzzle_flash_quiet"
+                }
                }
               }
              ],
              "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash"
+              "type": "minecraft:empty"
              }
             }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
+           ]
           }
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+         },
          {
-          "threshold": 1,
+          "when": "none",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
             {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
-             ],
+             "threshold": 1,
              "model": {
-              "type": "minecraft:empty"
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/muzzle_flash"
+              }
              }
             }
            ],
            "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash"
+            "type": "minecraft:empty"
            }
           }
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
         }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/mag_out/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/mag_out/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/mag_out/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/mag_out/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       }
+      ]
+     }
     }
    },
    {
     "threshold": 2,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/mag_in/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/mag_in/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 1,
-       "cases": [
-        {
-         "when": "suppressor",
-         "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/mag_in/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:select",
-               "property": "minecraft:display_context",
-               "cases": [
-                {
-                 "when": [
-                  "firstperson_righthand",
-                  "firstperson_lefthand"
-                 ],
-                 "model": {
-                  "type": "minecraft:empty"
-                 }
-                }
-               ],
-               "fallback": {
-                "type": "minecraft:model",
-                "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash_quiet"
-               }
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+        "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
-        },
-        {
-         "when": "none",
-         "model": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
-           {
-            "threshold": 1,
-            "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
               {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
-               ],
+               "threshold": 1,
                "model": {
-                "type": "minecraft:empty"
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/muzzle_flash_quiet"
+                }
                }
               }
              ],
              "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash"
+              "type": "minecraft:empty"
              }
             }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
+           ]
           }
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+         },
          {
-          "threshold": 1,
+          "when": "none",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
             {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
-             ],
+             "threshold": 1,
              "model": {
-              "type": "minecraft:empty"
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/muzzle_flash"
+              }
              }
             }
            ],
            "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash"
+            "type": "minecraft:empty"
            }
           }
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
-        }
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 5,
-       "cases": [
-        {
-         "when": "mag",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
-         }
-        },
-        {
-         "when": "none",
-         "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
           "type": "minecraft:empty"
          }
         }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/mag_in/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/mag_in/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/mag_in/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/mag_in/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+        }
+       }
+      ]
+     }
     }
    },
    {
     "threshold": 3,
     "model": {
-     "type": "minecraft:composite",
-     "models": [
-      {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/charge/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
         "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/charge/charging_handle"
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 1,
-       "cases": [
-        {
-         "when": "suppressor",
-         "model": {
-          "type": "minecraft:composite",
-          "models": [
-           {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/charge/suppressor"
-           },
-           {
-            "type": "minecraft:range_dispatch",
-            "property": "minecraft:custom_model_data",
-            "index": 1,
-            "entries": [
-             {
-              "threshold": 1,
-              "model": {
-               "type": "minecraft:select",
-               "property": "minecraft:display_context",
-               "cases": [
-                {
-                 "when": [
-                  "firstperson_righthand",
-                  "firstperson_lefthand"
-                 ],
-                 "model": {
-                  "type": "minecraft:empty"
-                 }
-                }
-               ],
-               "fallback": {
-                "type": "minecraft:model",
-                "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash_quiet"
-               }
-              }
-             }
-            ],
-            "fallback": {
-             "type": "minecraft:empty"
-            }
-           }
-          ]
+        "model": "zomboidcraft:item/weapon/rimfire/raised_charge/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
          }
-        },
-        {
-         "when": "none",
-         "model": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
-           {
-            "threshold": 1,
-            "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_charge/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_charge/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
               {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
-               ],
+               "threshold": 1,
                "model": {
-                "type": "minecraft:empty"
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/raised_charge/muzzle_flash_quiet"
+                }
                }
               }
              ],
              "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash"
+              "type": "minecraft:empty"
              }
             }
-           }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
+           ]
           }
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+         },
          {
-          "threshold": 1,
+          "when": "none",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
             {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
-             ],
+             "threshold": 1,
              "model": {
-              "type": "minecraft:empty"
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/raised_charge/muzzle_flash"
+              }
              }
             }
            ],
            "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash"
+            "type": "minecraft:empty"
            }
           }
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
-        }
-       }
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:custom_model_data",
-       "index": 5,
-       "cases": [
-        {
-         "when": "mag",
-         "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
-         }
-        },
-        {
-         "when": "none",
-         "model": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/raised_charge/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
           "type": "minecraft:empty"
          }
         }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+        }
        }
-      }
-     ]
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/charge/body"
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/charge/charging_handle"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/charge/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/rimfire/charge/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+        }
+       }
+      ]
+     }
     }
    }
   ],
@@ -662,171 +1151,342 @@
     ]
    },
    "on_false": {
-    "type": "minecraft:composite",
-    "models": [
-     {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/rimfire/hip/body"
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:display_context",
-      "cases": [
-       {
-        "when": "firstperson_righthand",
-        "model": {
-         "type": "minecraft:empty"
-        }
-       }
-      ],
-      "fallback": {
+    "type": "minecraft:condition",
+    "property": "zomboidcraft:raised",
+    "on_true": {
+     "type": "minecraft:composite",
+     "models": [
+      {
        "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/hip/charging_handle"
-      }
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:custom_model_data",
-      "index": 1,
-      "cases": [
-       {
-        "when": "suppressor",
-        "model": {
-         "type": "minecraft:composite",
-         "models": [
-          {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/hip/suppressor"
-          },
-          {
-           "type": "minecraft:range_dispatch",
-           "property": "minecraft:custom_model_data",
-           "index": 1,
-           "entries": [
-            {
-             "threshold": 1,
-             "model": {
-              "type": "minecraft:select",
-              "property": "minecraft:display_context",
-              "cases": [
-               {
-                "when": [
-                 "firstperson_righthand",
-                 "firstperson_lefthand"
-                ],
-                "model": {
-                 "type": "minecraft:empty"
-                }
-               }
-              ],
-              "fallback": {
-               "type": "minecraft:model",
-               "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash_quiet"
-              }
-             }
-            }
-           ],
-           "fallback": {
-            "type": "minecraft:empty"
-           }
-          }
-         ]
+       "model": "zomboidcraft:item/weapon/rimfire/raised_hip/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
         }
-       },
-       {
-        "when": "none",
-        "model": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
-          {
-           "threshold": 1,
-           "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/raised_hip/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/raised_hip/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
              {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
-              ],
+              "threshold": 1,
               "model": {
-               "type": "minecraft:empty"
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/rimfire/raised_hip/muzzle_flash_quiet"
+               }
               }
              }
             ],
             "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash"
+             "type": "minecraft:empty"
             }
            }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
+          ]
          }
-        }
-       }
-      ],
-      "fallback": {
-       "type": "minecraft:range_dispatch",
-       "property": "minecraft:custom_model_data",
-       "index": 1,
-       "entries": [
+        },
         {
-         "threshold": 1,
+         "when": "none",
          "model": {
-          "type": "minecraft:select",
-          "property": "minecraft:display_context",
-          "cases": [
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
            {
-            "when": [
-             "firstperson_righthand",
-             "firstperson_lefthand"
-            ],
+            "threshold": 1,
             "model": {
-             "type": "minecraft:empty"
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/rimfire/raised_hip/muzzle_flash"
+             }
             }
            }
           ],
           "fallback": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash"
+           "type": "minecraft:empty"
           }
          }
         }
        ],
        "fallback": {
-        "type": "minecraft:empty"
-       }
-      }
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:custom_model_data",
-      "index": 5,
-      "cases": [
-       {
-        "when": "mag",
-        "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
-        }
-       },
-       {
-        "when": "none",
-        "model": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/raised_hip/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
          "type": "minecraft:empty"
         }
        }
-      ],
-      "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+       }
       }
-     }
-    ]
+     ]
+    },
+    "on_false": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/rimfire/hip/body"
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/hip/charging_handle"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/hip/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/hip/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+       }
+      }
+     ]
+    }
    }
   }
  }

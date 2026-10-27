@@ -120,6 +120,7 @@ public final class Guns {
             endReload(gun, st);
         }
         st.lastShot = now;
+        GunRaise.shot(player);
         if (auto) {
             st.autoNext = nextAuto(st.autoNext, now, stats);
         }

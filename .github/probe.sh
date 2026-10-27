@@ -7,6 +7,9 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== raised"
+sig net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty '.'
+sig net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties '.'
 echo "===== cars2"
 sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
 sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'
