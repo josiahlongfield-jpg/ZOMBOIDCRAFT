@@ -672,6 +672,13 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.waitTicks(20);
             ctx.takeScreenshot(duty ? "hud-belt-duty" : "hud-belt-plain");
             ctx.getInput().releaseKey(InputConstants.KEY_LALT);
+            // and worn: the belt round the waist, the pistol and machete hanging off it
+            for (float turn : new float[]{0f, 150f, 210f}) {
+                ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+                ctx.waitTicks(3);
+                ctx.takeScreenshot("belt-figure-" + (duty ? "duty-" : "plain-") + Math.round(turn));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
         }
         // with a plain belt, scrolling on from the second hip slot lands on the sling, not the empty holster place
         String scrolled = ctx.computeOnClient(mc -> {

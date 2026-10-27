@@ -45,6 +45,9 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
 
+    /** How far down the body a belt's bottom edge sits, less the 0.8 px its model is built below centre. */
+    private static final float BELT_DOWN = 11.7f - 0.8f;
+
     /** How the slung weapon lies across the back, in degrees from level. */
     private static final float SLING_ANGLE = 55f;
 
@@ -88,6 +91,16 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 AABB box = item.getModelBoundingBox();
                 packOut = Math.max(packOut, fit.back() / 16f + (float) box.maxZ * fit.sz());
             }
+            item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+            pose.popPose();
+        }
+        if (worn.size() > GearStore.BELT && !worn.get(GearStore.BELT).isEmpty()) {
+            // belt models are built at body scale round the waist (tools/items/gen_belts.py): just move them down to it
+            pose.pushPose();
+            getParentModel().body.translateAndRotate(pose);
+            pose.translate(0, BELT_DOWN / 16f, 0);
+            pose.scale(1f, -1f, -1f);
+            items.updateForLiving(item, worn.get(GearStore.BELT), ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
