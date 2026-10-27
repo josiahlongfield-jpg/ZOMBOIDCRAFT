@@ -25,6 +25,13 @@ final class RailGen {
             "ashby", "hollow", "kings", "seabright", "airport", "foundry", "southport", "stadium", "tower", "power", "waterfront", "mercy");
     /** Street level in the city: the top of the street's blocks. */
     private static final int STREET_TOP = Terrain.CITY + 1;
+    /**
+     * Union Station's ways in (see {@link UnionStation}): the el's bridge from its platform to the
+     * mezzanine's door runs on the samples BRIDGE_LO..BRIDGE_HI from the stop's middle (its rails
+     * one more each side) out to BRIDGE_END; the subway's passage from its platform to the station's
+     * hall on PASS_LO..PASS_HI (its walls one more each side) out to PASS_END, the lot's edge.
+     */
+    private static final int BRIDGE_LO = -2, BRIDGE_HI = 1, BRIDGE_END = 15, PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
 
     private final County county;
     private final List<Track> near = new ArrayList<>();
@@ -520,6 +527,9 @@ final class RailGen {
         if (station && s >= 7 && s < 9) {
             elStairs(out, c);
         }
+        if (station && s >= 7 && s < BRIDGE_END && unionRun(c, BRIDGE_LO, BRIDGE_HI, true)) {
+            unionBridge(out, c);
+        }
         // what holds it up
         int span = el ? 16 : wet ? 24 : 16;
         int k = Math.floorMod(c.i, span);
@@ -553,7 +563,8 @@ final class RailGen {
             out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
             clear(out, x, z, Y + 1, Y + 5);
             litter(out, c, Y + 1, 1);
-            if (s >= 5 && la % 8 == 0 && la <= 40) {
+            boolean mouth = unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
+            if (s >= 5 && la % 8 == 0 && la <= 40 && !mouth) {
                 out.column(x, z, Y + 1, Y + 5, "rw_post");
             } else if (s >= 5 && la % 8 == 4 && la <= 40) {
                 out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
@@ -567,9 +578,14 @@ final class RailGen {
             if (s >= 4 && s < 5) {
                 hungBoard(out, c, Y + 5);
             }
+            if (mouth && s >= 5 && (c.da == BRIDGE_LO + 1 || c.da == BRIDGE_LO + 2)) {
+                // over the way across to Union Station: down to the subway
+                out.set(x, Y + 5, z, "us_sign_subway_" + tile(c, c.da - BRIDGE_LO - 1, 2) + "[facing=" + c.in() + "]");
+            }
         } else {
             out.set(x, Y, z, paving(c));
-            out.set(x, Y + 1, z, stairTop ? "air" : "rw_guard[facing=" + c.out() + "]");
+            boolean open = stairTop || unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
+            out.set(x, Y + 1, z, open ? "air" : "rw_guard[facing=" + c.out() + "]");
             clear(out, x, z, Y + 2, Y + 5);
         }
         if (la <= 40 && s >= 2) {
@@ -597,8 +613,11 @@ final class RailGen {
             return;
         }
         int step = k - 1;                // 1.. down
-        int h = Y - step;                // this step's block (its top a block under the one before)
-        if (h < STREET_TOP) {
+        // this step's block, a block under the one before: the first level with the landing's
+        // slab, so its high half is flush with the landing and every rise is half a block, the
+        // last a half step over the sidewalk
+        int h = Y + 1 - step;
+        if (h <= STREET_TOP) {
             return;
         }
         out.set(x, h, z, "rw_stair_steel[facing=" + c.along(-sign) + "]");
@@ -607,6 +626,48 @@ final class RailGen {
         if (step == rise / 2 && !inner) {
             out.column(x, z, STREET_TOP, h - 1, "rw_column");
         }
+    }
+
+    private static boolean union(Cut c) {
+        return c.stop != null && c.stop.spot().equals("union");
+    }
+
+    /** True on Union Station's platform side within the samples lo..hi from its middle (and one more each side with sides). */
+    private static boolean unionRun(Cut c, int lo, int hi, boolean sides) {
+        int m = sides ? 1 : 0;
+        return union(c) && c.plat && c.da >= lo - m && c.da <= hi + m;
+    }
+
+    /**
+     * Union Station's bridge from the el's platform across the sidewalk to the mezzanine's door: a
+     * steel deck on plate girders, railed both sides with posts every three, under the platform's
+     * roof carried on across, on a column each side at the sidewalk's back.
+     */
+    private void unionBridge(ChunkSink out, Cut c) {
+        int x = c.x, z = c.z, Y = c.Y;
+        boolean side = !unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
+        String away = c.along(c.da > BRIDGE_HI ? 1 : -1);
+        out.set(x, c.bed, z, side ? "rw_girder" : "rw_deck");
+        if (side) {
+            out.set(x, c.bed - 1, z, "rw_girder");
+        }
+        out.set(x, Y, z, paving(c));
+        clear(out, x, z, Y + 1, Y + 5);
+        if (side) {
+            if ((int) c.s % 3 == 1) {
+                out.column(x, z, Y + 1, Y + 5, "rw_post");
+            } else {
+                out.set(x, Y + 1, z, "rw_guard[facing=" + away + "]");
+            }
+            if (c.s >= 12 && c.s < 13) {
+                out.set(x, STREET_TOP, z, "rw_column_base");
+                out.column(x, z, STREET_TOP + 1, c.bed - 3, "rw_column");
+                out.set(x, c.bed - 2, z, "rw_column_cap");
+            }
+        } else {
+            litter(out, c, Y + 1, 1);
+        }
+        out.set(x, Y + 6, z, side ? "rw_canopy_fascia[facing=" + away + "]" : "rw_canopy");
     }
 
     /** A platform's slab: the plain one mostly, the worn ones here and there. */
@@ -710,6 +771,11 @@ final class RailGen {
         boolean station = c.stop != null;
         int back = street + 1;   // the platform's back wall: under the curb
         if (station && c.plat) {
+            if (s >= back && s < PASS_END && unionRun(c, PASS_LO, PASS_HI, true)) {
+                unionPassage(out, c);
+                return;
+            }
+            boolean mouth = unionRun(c, PASS_LO, PASS_HI, false);
             if (s >= back - 1 && s < back + 3 && subwayStairs(out, c, back)) {
                 return;
             }
@@ -721,12 +787,16 @@ final class RailGen {
                 clear(out, x, z, Y + 1, Y + 5);
                 out.set(x, Y + 6, z, "rw_tunnel");
                 litter(out, c, Y + 1, 2);
-                if (s >= back - 1 && roll(c, 0x6A1L) < 0.07) {
+                if (s >= back - 1 && !mouth && roll(c, 0x6A1L) < 0.07) {
                     // tags on the tile, at arm's height
                     int g = (int) (roll(c, 0x6A2L) * 8);
                     out.set(x, Y + 1 + (int) (roll(c, 0x6A3L) * 2), z, "graffiti_" + g + "[facing=" + c.out() + "]");
                 }
                 stationFloor(out, c, back);
+                if (mouth && s >= back - 1 && (c.da == PASS_LO + 1 || c.da == PASS_LO + 2)) {
+                    // over the way through to Union Station: up to the trains
+                    out.set(x, Y + 5, z, "us_sign_trains_" + tile(c, c.da - PASS_LO - 1, 2) + "[facing=" + c.in() + "]");
+                }
             } else if (s < back + 1) {
                 wall(out, c, true);
             }
@@ -744,6 +814,32 @@ final class RailGen {
             }
         } else if (s < 5) {
             wall(out, c, station);
+        }
+    }
+
+    /**
+     * Union Station's passage from the subway's platform through its back wall and under the
+     * sidewalk to the lot's edge, where the station's own carries on to its hall: tiled walls,
+     * a lamp now and then.
+     */
+    private void unionPassage(ChunkSink out, Cut c) {
+        int x = c.x, z = c.z, Y = c.Y;
+        if (!unionRun(c, PASS_LO, PASS_HI, false)) {
+            out.column(x, z, c.bed - 1, Y + 6, "rw_tunnel");
+            for (int k = 0; k < 5; k++) {
+                boolean broken = roll(c, 0x7120L + k) < (k < 2 ? 0.24 : 0.16);
+                out.set(x, Y + k, z, (k < 2 ? "rw_tile_dado" : "rw_tile") + (broken ? "_broken" : ""));
+            }
+            return;
+        }
+        out.set(x, c.bed - 1, z, "rw_tunnel");
+        out.set(x, c.bed, z, "rw_tunnel");
+        out.set(x, Y, z, paving(c));
+        clear(out, x, z, Y + 1, Y + 4);
+        out.set(x, Y + 5, z, "rw_tunnel");
+        litter(out, c, Y + 1, 2);
+        if ((int) c.s % 4 == 1 && c.da == PASS_LO + 1) {
+            out.set(x, Y + 4, z, "rw_subway_lamp[axis=" + c.across() + "]");
         }
     }
 
@@ -787,7 +883,7 @@ final class RailGen {
         if (s >= back - 1 && la % 12 == 6 && !(la >= 24 && la <= 40)) {
             out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
         }
-        if (s >= back - 1 && la == 10) {
+        if (s >= back - 1 && la == 10 && !unionRun(c, PASS_LO, PASS_HI, false)) {
             out.set(x, Y + 2, z, "zomboidcraft:train_call_button[facing=" + c.in() + "]");
         }
         if (s >= back - 2 && s < back - 1 && la % 4 == 0) {

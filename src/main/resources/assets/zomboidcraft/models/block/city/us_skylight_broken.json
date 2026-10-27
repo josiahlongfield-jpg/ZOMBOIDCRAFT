@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "us_skylight_broken": {
+      "sprite": "zomboidcraft:block/city/us_skylight_broken",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/us_skylight_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_skylight_broken",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#us_skylight_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_skylight_broken",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#us_skylight_broken",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#us_skylight_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_skylight_broken",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

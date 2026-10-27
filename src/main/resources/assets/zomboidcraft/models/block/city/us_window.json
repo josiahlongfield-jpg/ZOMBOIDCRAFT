@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "us_bronze": "zomboidcraft:block/city/us_bronze",
+    "us_window": {
+      "sprite": "zomboidcraft:block/city/us_window",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/us_bronze"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        0
+      ],
+      "to": [
+        9,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_bronze",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#us_bronze",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_window"
+        },
+        "west": {
+          "texture": "#us_window"
+        },
+        "up": {
+          "texture": "#us_bronze",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_bronze",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
