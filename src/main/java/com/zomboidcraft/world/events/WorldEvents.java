@@ -110,6 +110,9 @@ public final class WorldEvents {
     /** A flyby's aircraft is only there while a player is within this many blocks of it (about the tracking range). */
     private static final double SHOW = 192;
     private static long next = -1;
+    /** When the siren last went off; it waits at least SIREN_GAP ticks (an hour) before it can again. */
+    private static long lastSiren = Long.MIN_VALUE / 2;
+    private static final long SIREN_GAP = 60 * 60 * 20;
 
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Event.TYPE, Event.CODEC);
@@ -133,6 +136,12 @@ public final class WorldEvents {
         if (cfg.worldEvents && now >= next && !level.players().isEmpty()) {
             next = now + gap(cfg, random);
             Kind kind = pick(random);
+            if (kind == Kind.SIREN && now - lastSiren < SIREN_GAP) {
+                kind = Kind.EXPLOSION;
+            }
+            if (kind == Kind.SIREN) {
+                lastSiren = now;
+            }
             start(level, kind, level.players().get(random.nextInt(level.players().size())));
         }
         for (var it = RUNNING.iterator(); it.hasNext(); ) {
@@ -161,7 +170,8 @@ public final class WorldEvents {
 
     private static Kind pick(RandomSource random) {
         int r = random.nextInt(100);
-        return r < 35 ? Kind.JET : r < 60 ? Kind.HELI : r < 80 ? Kind.EXPLOSION : Kind.SIREN;
+        // Josiah: the siren is rare (and an hour apart at least, see tick)
+        return r < 40 ? Kind.JET : r < 70 ? Kind.HELI : r < 94 ? Kind.EXPLOSION : Kind.SIREN;
     }
 
     /**
