@@ -1,0 +1,335 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_pipe_red": "zomboidcraft:block/city/sc_pipe_red",
+    "sc_tread": "zomboidcraft:block/city/sc_tread",
+    "particle": "zomboidcraft:block/city/sc_tread"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_tread",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_tread",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_tread",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_tread",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_tread"
+        },
+        "down": {
+          "texture": "#sc_tread",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        1.5,
+        1
+      ],
+      "to": [
+        3,
+        12,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        1.5,
+        13
+      ],
+      "to": [
+        3,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        1.5,
+        1
+      ],
+      "to": [
+        15,
+        12,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        1.5,
+        13
+      ],
+      "to": [
+        15,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        10,
+        3
+      ],
+      "to": [
+        3,
+        11.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        10,
+        3
+      ],
+      "to": [
+        15,
+        11.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        5.5,
+        3
+      ],
+      "to": [
+        3,
+        6.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        5.5,
+        3
+      ],
+      "to": [
+        15,
+        6.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        11.5,
+        1
+      ],
+      "to": [
+        15,
+        13,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_red"
+        },
+        "south": {
+          "texture": "#sc_pipe_red"
+        },
+        "east": {
+          "texture": "#sc_pipe_red"
+        },
+        "west": {
+          "texture": "#sc_pipe_red"
+        },
+        "up": {
+          "texture": "#sc_pipe_red"
+        },
+        "down": {
+          "texture": "#sc_pipe_red"
+        }
+      }
+    }
+  ]
+}

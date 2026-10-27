@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_trays": "zomboidcraft:block/city/sc_trays",
+    "particle": "zomboidcraft:block/city/sc_trays"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        14,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_trays"
+        },
+        "south": {
+          "texture": "#sc_trays"
+        },
+        "east": {
+          "texture": "#sc_trays"
+        },
+        "west": {
+          "texture": "#sc_trays"
+        },
+        "up": {
+          "texture": "#sc_trays"
+        },
+        "down": {
+          "texture": "#sc_trays",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

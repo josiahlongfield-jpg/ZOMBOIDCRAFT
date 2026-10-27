@@ -1,0 +1,118 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_sand": "zomboidcraft:block/city/sc_sand",
+    "sc_timber": "zomboidcraft:block/city/sc_timber",
+    "particle": "zomboidcraft:block/city/sc_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_sand"
+        },
+        "south": {
+          "texture": "#sc_sand",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_sand"
+        },
+        "up": {
+          "texture": "#sc_sand"
+        },
+        "down": {
+          "texture": "#sc_sand",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_timber"
+        },
+        "east": {
+          "texture": "#sc_timber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_timber",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        3,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_timber"
+        },
+        "south": {
+          "texture": "#sc_timber",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_timber"
+        },
+        "west": {
+          "texture": "#sc_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_timber",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_timber",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
