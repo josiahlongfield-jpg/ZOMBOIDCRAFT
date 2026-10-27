@@ -127,6 +127,8 @@ final class Kit {
     final List<Lot> lots = new ArrayList<>();
     /** Ground kept clear of street trees so a front can be seen (a church's): {x0, z0, x1, z1}. */
     final List<int[]> treeless = new ArrayList<>();
+    /** The cars left so far, {x, z, longest}: trees stand clear of them. */
+    final List<double[]> parked = new ArrayList<>();
 
     Kit(BlockSink out, SplittableRandom rng, int w, int d) {
         this.out = out;
@@ -615,6 +617,7 @@ final class Kit {
 
     /** A car (or van, or truck) on the road at (x, z), yaw in Minecraft's degrees. */
     void car(double x, double z, float yaw, double minLength, double maxLength) {
+        parked.add(new double[] {x, z, maxLength});
         out.car(x, 1, z, yaw, minLength, maxLength, rng.nextLong());
     }
 
@@ -689,9 +692,237 @@ final class Kit {
                 || there.startsWith("weeds") || there.contains("bush");
     }
 
+    /**
+     * A tree at (x, z), if it has room: never on a road, a car park, a path or in a building, never
+     * through a car; on a sidewalk only in a pit dug for it. Beside roads and buildings it gets a
+     * tidy bed of soil round its trunk.
+     */
     void tree(Trees.Kind kind, int x, int z) {
-        if (inside(x, z)) {
-            Trees.grow(canopy(), kind, x, 1, z, rng);
+        boolean near = false;
+        for (int dx = -4; dx <= 4 && !near; dx++) {
+            for (int dz = -4; dz <= 4 && !near; dz++) {
+                byte u = use(x + dx, z + dz);
+                near = u == ROAD || u == WALK || u == PARK || u == BUILT || u == LOT;
+            }
+        }
+        Spot spot = new Spot() {
+            @Override
+            public String get(int x, int y, int z) {
+                return out.get(x, y, z);
+            }
+
+            @Override
+            public void set(int x, int y, int z, String block) {
+                if (inside(x, z)) {
+                    out.set(x, y, z, block);
+                }
+            }
+
+            @Override
+            public boolean pavement(int x, int z) {
+                return use(x, z) == WALK && !"curb".equals(out.get(x, 0, z));
+            }
+
+            @Override
+            public boolean hard(int x, int z) {
+                byte u = use(x, z);
+                return u < 0 || u == ROAD || u == PARK || u == BUILT || !soil(out.get(x, 0, z)) && u != WALK;
+            }
+
+            @Override
+            public boolean car(int x, int z) {
+                for (double[] c : parked) {
+                    if (Math.hypot(x + 0.5 - c[0], z + 0.5 - c[1]) < Math.min(c[2], 10) / 2 + 0.8) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        // where it was meant to go, or the nearest spot a block or two off that has room
+        for (int r = 0; r <= 2; r++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) == r && inside(x + dx, z + dz) && !treeless(x + dx, z + dz)
+                            && plant(spot, kind, x + dx, z + dz, near, rng)) {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /** Headroom under a crown wherever people walk or cars go: no leaf or limb lower over paving. */
+    static final int HEADROOM = 5;
+
+    /** Where a tree is planted: the blocks it grows among, and the ground under them. */
+    interface Spot {
+        String get(int x, int y, int z);
+
+        void set(int x, int y, int z, String block);
+
+        /** A sidewalk: a trunk may stand in it, in a pit. */
+        default boolean pavement(int x, int z) {
+            return false;
+        }
+
+        /** Road, car park, a floor: no trunk stands on it, nothing hangs low over it. */
+        boolean hard(int x, int z);
+
+        /** A car stands there. */
+        default boolean car(int x, int z) {
+            return false;
+        }
+    }
+
+    /** Ground a tree grows out of: the terrain under the place, grass, earth, a bed. */
+    static boolean soil(String ground) {
+        return ground == null || ground.equals("air") || ground.equals("minecraft:grass_block") || ground.equals("minecraft:dirt")
+                || ground.equals("minecraft:coarse_dirt") || ground.equals("minecraft:podzol") || ground.equals("minecraft:rooted_dirt")
+                || ground.equals("minecraft:moss_block") || ground.equals("minecraft:mud") || ground.startsWith("bed_soil")
+                || ground.equals("dirt_withered");
+    }
+
+    /**
+     * Grows the tree into a list first and plants it only if it fits: trunk and low limbs over
+     * soil (or the pit), no limb through anything built or through a car. A big tree that doesn't
+     * fit is tried as a sapling; if that doesn't fit either, nothing is planted. Leaves give way
+     * where they'd hang low over paving or a car, or meet something built.
+     */
+    static boolean plant(Spot s, Trees.Kind kind, int x, int z, boolean bed, SplittableRandom rng) {
+        boolean soil = soil(s.get(x, 0, z));
+        if (soil ? s.hard(x, z) : !s.pavement(x, z)) {
+            return false;
+        }
+        // in or beside a sidewalk the trunk gets a pit dug for it
+        boolean pit = !soil;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                pit |= s.pavement(x + dx, z + dz);
+            }
+        }
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (pit && !s.pavement(x + dx, z + dz) && (s.hard(x + dx, z + dz) || !soil(s.get(x + dx, 0, z + dz)))) {
+                    return false;
+                }
+                if (!soft(s.get(x + dx, 1, z + dz)) || s.car(x + dx, z + dz)) {
+                    return false;
+                }
+            }
+        }
+        // a few goes at the kind asked for (each grows another shape and size), then a sapling
+        Trees.Kind[] tries = kind == Trees.Kind.YOUNG || kind == Trees.Kind.BUSH ? new Trees.Kind[] {kind, kind}
+                : new Trees.Kind[] {kind, kind, kind, kind, Trees.Kind.YOUNG, Trees.Kind.YOUNG};
+        for (Trees.Kind k : tries) {
+            List<int[]> at = new ArrayList<>();
+            List<String> blocks = new ArrayList<>();
+            List<Boolean> wood = new ArrayList<>();
+            Trees.grow(new Trees.Canopy() {
+                @Override
+                public void wood(int x, int y, int z, String block) {
+                    at.add(new int[] {x, y, z});
+                    blocks.add(block);
+                    wood.add(true);
+                }
+
+                @Override
+                public void leaves(int x, int y, int z, String block) {
+                    at.add(new int[] {x, y, z});
+                    blocks.add(block);
+                    wood.add(false);
+                }
+            }, k, x, 1, z, rng);
+            // a low branch in the way is pruned, as a street tree's would be (a few); the trunk in
+            // the way means the tree doesn't fit
+            boolean fits = true;
+            int limbs = 0, pruned = 0;
+            boolean[] cut = new boolean[at.size()];
+            for (int i = 0; i < at.size() && fits; i++) {
+                int[] c = at.get(i);
+                if (!wood.get(i)) {
+                    continue;
+                }
+                boolean trunk = Math.abs(c[0] - x) <= 1 && Math.abs(c[2] - z) <= 1;
+                boolean limb = !trunk || blocks.get(i).contains("_limb_");
+                limbs += limb ? 1 : 0;
+                boolean inPit = pit && trunk;
+                boolean ok = soft(s.get(c[0], c[1], c[2]))
+                        && (c[1] >= HEADROOM || inPit || !s.hard(c[0], c[2]) && soil(s.get(c[0], 0, c[2])))
+                        && (c[1] > 3 || !s.car(c[0], c[2]));
+                if (!ok && limb) {
+                    cut[i] = true;
+                    pruned++;
+                } else {
+                    fits = ok;
+                }
+            }
+            if (!fits || pruned > 3 + limbs / 6) {
+                continue;
+            }
+            if (pit || bed) {
+                bed(s, x, z, pit, rng);
+            }
+            for (int i = 0; i < at.size(); i++) {
+                int[] c = at.get(i);
+                String there = s.get(c[0], c[1], c[2]);
+                if (wood.get(i)) {
+                    if (soft(there) && !cut[i]) {
+                        s.set(c[0], c[1], c[2], blocks.get(i));
+                    }
+                    continue;
+                }
+                boolean inPit = pit && Math.abs(c[0] - x) <= 1 && Math.abs(c[2] - z) <= 1;
+                boolean low = c[1] < HEADROOM && !inPit && (s.hard(c[0], c[2]) || !soil(s.get(c[0], 0, c[2])) || s.car(c[0], c[2]));
+                if ((there == null || there.equals("air")) && !low) {
+                    s.set(c[0], c[1], c[2], blocks.get(i));
+                }
+            }
+            if (pit && rng.nextDouble() < 0.45) {
+                // an iron grate over the pit, a piece or two gone
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        String there = s.get(x + dx, 1, z + dz);
+                        if ((dx != 0 || dz != 0) && (there == null || there.equals("air")) && rng.nextDouble() < 0.8) {
+                            s.set(x + dx, 1, z + dz, "grate");
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * The soil round a planted trunk, so it doesn't come straight up out of a lawn or the concrete:
+     * a round bed in grass; in a sidewalk, a square pit edged with old brick pavers.
+     */
+    private static void bed(Spot s, int x, int z, boolean pit, SplittableRandom rng) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                int bx = x + dx, bz = z + dz;
+                boolean ring = Math.abs(dx) == 2 || Math.abs(dz) == 2;
+                if (pit) {
+                    if (ring) {
+                        if (s.pavement(bx, bz) && soft(s.get(bx, 1, bz))) {
+                            s.set(bx, 0, bz, "pit_pavers");
+                        }
+                        continue;
+                    }
+                } else if (ring || Math.abs(dx) + Math.abs(dz) == 2 && rng.nextDouble() < 0.45
+                        || s.hard(bx, bz) || !soil(s.get(bx, 0, bz))) {
+                    continue;
+                }
+                s.set(bx, 0, bz, rng.nextDouble() < 0.6 ? "bed_soil" : "bed_soil_b");
+                String plant = s.get(bx, 1, bz);
+                if (plant != null && soft(plant) && !plant.contains("leaves")) {
+                    s.set(bx, 1, bz, "air");
+                    if (String.valueOf(s.get(bx, 2, bz)).endsWith("[half=upper]")) {
+                        s.set(bx, 2, bz, "air");
+                    }
+                }
+            }
         }
     }
 

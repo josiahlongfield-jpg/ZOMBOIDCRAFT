@@ -890,9 +890,6 @@ final class DowntownSite extends Site {
                     out.set(x, 1, z, kit.pick("debris_chunk", "rubble_pile", "trash_bag[facing=north]", "cardboard_box", "tire[axis=x]"));
                 } else if (r < 0.014) {
                     out.set(x, 1, z, kit.pick("paper", "glass_shards", "blood_splat", "leaf_litter"));
-                } else if (r < 0.0155 && u == Kit.ROAD) {
-                    // a tree that came up through a crack in the road
-                    kit.tree(pick(new Trees.Kind[] {Trees.Kind.YOUNG, Trees.Kind.YOUNG, Trees.Kind.SICK, Trees.Kind.BUSH, Trees.Kind.MAPLE}), x, z);
                 }
             }
         }
@@ -913,7 +910,6 @@ final class DowntownSite extends Site {
                 if (kit.use(x, z) != Kit.WALK || out.get(x, 1, z) != null || chance() < 0.35) {
                     continue;
                 }
-                out.set(x, 0, z, "minecraft:coarse_dirt");
                 kit.tree(pick(new Trees.Kind[] {Trees.Kind.MAPLE, Trees.Kind.SYCAMORE, Trees.Kind.YOUNG, Trees.Kind.SICK, Trees.Kind.DEAD}), x, z);
             }
         }

@@ -1,0 +1,121 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "desk_laminate": "zomboidcraft:block/city/desk_laminate",
+    "sh_window_lo": {
+      "sprite": "zomboidcraft:block/city/sh_window_lo",
+      "force_translucent": true
+    },
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/sh_window_lo"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6.5
+      ],
+      "to": [
+        16,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_window_lo"
+        },
+        "south": {
+          "texture": "#sh_window_lo"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        1.5,
+        0
+      ],
+      "to": [
+        12,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#streetlight_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    }
+  ]
+}

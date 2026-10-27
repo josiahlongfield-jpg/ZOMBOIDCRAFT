@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sh_letters_b_0_6": "zomboidcraft:block/city/sh_letters_b_0_6",
+    "particle": "zomboidcraft:block/city/sh_letters_b_0_6"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_letters_b_0_6"
+        },
+        "south": {
+          "texture": "#sh_letters_b_0_6",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sh_letters_b_0_6",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sh_letters_b_0_6",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sh_letters_b_0_6",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_letters_b_0_6",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

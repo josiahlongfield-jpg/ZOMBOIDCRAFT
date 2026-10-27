@@ -215,10 +215,24 @@ final class Homes {
         return rng.nextDouble() < 0.2 ? "minecraft:coarse_dirt" : drive;
     }
 
+    /** A yard tree on its bed of soil, if it fits clear of the house, the drive and the car. */
     private void tree(Placer p, int x, int z, Trees.Kind kind) {
-        if (p.get(x, 0, z) == null || "minecraft:grass_block".equals(p.get(x, 0, z))) {
-            Trees.grow(Kit.canopy(p), kind, x, 1, z, rng);
-        }
+        Kit.plant(new Kit.Spot() {
+            @Override
+            public String get(int x, int y, int z) {
+                return p.get(x, y, z);
+            }
+
+            @Override
+            public void set(int x, int y, int z, String block) {
+                p.set(x, y, z, block);
+            }
+
+            @Override
+            public boolean hard(int x, int z) {
+                return !Kit.soil(p.get(x, 0, z));
+            }
+        }, kind, x, z, true, rng);
     }
 
     /** An empty lot: the house is long gone, or was never built. */
