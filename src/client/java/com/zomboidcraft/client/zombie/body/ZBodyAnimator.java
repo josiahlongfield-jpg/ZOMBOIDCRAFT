@@ -15,7 +15,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
  *
  * It also watches for limbs coming off: losing a leg plays the stumble into a hop, losing the
  * last one plays the fall into a crawl. Shots make the body jerk where they land (ZHit), and a
- * dead zombie falls the way the server says it went down (ZDeath).
+ * dead zombie falls the way the server says it went down (ZDeath). Beating on a door or a window
+ * and climbing in through one (Acts) turn the body square to it and draw it where it reaches.
  */
 public final class ZBodyAnimator {
     /** How fast one movement hands over to the next (weight per second). */
@@ -55,6 +56,10 @@ public final class ZBodyAnimator {
         float hopStride = 0.4f;
         /** Shots that landed on it lately, the newest last. */
         final List<Hit> hits = new ArrayList<>();
+        /** Breaking in, as last told: which way it faces, how far into it, and how far off the zombie its body is drawn. */
+        float actYaw, actTime, shiftX, shiftY, shiftZ;
+        /** The way its body was drawn facing last frame. */
+        float drawYaw;
         /** Dead: the pose it died in, the way it faced then, and how it goes down. */
         boolean dying;
         final ZMove.Pose deathFrom = new ZMove.Pose();
@@ -105,7 +110,17 @@ public final class ZBodyAnimator {
         public long death;
         /** Its body, for laying it on the ground when it's dead. */
         public ZBodyMesh mesh;
+        /**
+         * Breaking in (Acts): ZMove's BASH_DOOR, BASH_WIN or CLIMB, or 0; seconds into it (ZMove.Input.act); which
+         * way it faces (degrees of yaw); and how far off the zombie its body is drawn (blocks, in the world: east, up,
+         * south), square in front of what it's beating on or where the climb has it.
+         */
+        public int act;
+        public float actTime, actYaw, shiftX, shiftY, shiftZ;
     }
+
+    /** The way to draw its body facing (degrees of yaw): its own, turned square to what it's breaking in through. */
+    public float drawYaw;
 
     /** Dead: the way its body faces while it falls (degrees of yaw), for the renderer. */
     public float dyingYaw;
@@ -193,8 +208,18 @@ public final class ZBodyAnimator {
         boolean looking = Math.abs(f.headYaw) > 10f;
         boolean noLegs = (f.legless || legsGone == 2) && (f.low || tr.event == FALL);
         boolean crawler = (f.crawler || noLegs) && (f.low || tr.event == FALL);
+        if (f.act != 0) {
+            tr.actYaw = f.actYaw;
+            tr.actTime = f.actTime;
+            tr.shiftX = f.shiftX;
+            tr.shiftY = f.shiftY;
+            tr.shiftZ = f.shiftZ;
+        }
         int mode;
-        if (crawler) {
+        if (f.act == ZMove.CLIMB || f.act != 0 && !f.low && !crawler) {
+            // beating on it standing (a crawler claws at it as it is), or climbing through
+            mode = f.act;
+        } else if (crawler) {
             mode = attacking ? ZMove.CRAWL_GRAB : moving ? (f.aggressive ? ZMove.CRAWL_FAST : ZMove.CRAWL_SLOW)
                     : f.aggressive || looking ? ZMove.CRAWL_ALERT : ZMove.CRAWL_REST;
         } else if (f.low) {
@@ -242,7 +267,19 @@ public final class ZBodyAnimator {
         input.goneRight = (f.cuts & Dismember.RIGHT_LEG) != 0;
         input.reach = f.aggressive || attacking;
         input.hop = tr.hop;
+        input.act = tr.actTime;
         move.pose(out, w, input);
+        // square to what it's breaking in through, and drawn where it reaches it, as far as it's into it
+        float acting = Math.min(1f, w[ZMove.BASH_DOOR] + w[ZMove.BASH_WIN] + w[ZMove.CLIMB]);
+        drawYaw = f.bodyYaw;
+        if (acting > 0.001f) {
+            drawYaw += (((tr.actYaw - f.bodyYaw) % 360f + 540f) % 360f - 180f) * acting;
+            float r = (float) Math.toRadians(drawYaw), c = (float) Math.cos(r), sn = (float) Math.sin(r);
+            out.hx += acting * (tr.shiftX * c + tr.shiftZ * sn) * BLOCK;
+            out.hy += acting * tr.shiftY * BLOCK;
+            out.hz += acting * (-tr.shiftX * sn + tr.shiftZ * c) * BLOCK;
+        }
+        tr.drawYaw = drawYaw;
         if (w[ZMove.HOP] > 0.01f) {
             // the zombie glides along at an even pace; its foot stays planted between hops, so hold the body back while
             // it's down and let it catch up in the air
@@ -250,7 +287,9 @@ public final class ZBodyAnimator {
         }
 
         float tau = t - tr.eventStart;
-        if (tr.event == STUMBLE && tau < STUMBLE_TIME && legsGone == 1 && !f.low) {
+        if (acting > 0.5f) {
+            tr.event = 0;    // half through a window it carries on, whatever comes off
+        } else if (tr.event == STUMBLE && tau < STUMBLE_TIME && legsGone == 1 && !f.low) {
             move.stumble(out, tr.from, tau, input.goneRight);
         } else if (tr.event == FALL && tau < SETTLE_TIME && legsGone == 2) {
             // it falls forward from where it stood, then drags itself back into a crawler's usual place
@@ -263,7 +302,7 @@ public final class ZBodyAnimator {
             tr.event = 0;
         }
         // shots jerk it where they land
-        float yaw = (float) Math.toRadians(f.bodyYaw);
+        float yaw = (float) Math.toRadians(drawYaw);
         for (Hit h : tr.hits) {
             float age = (now - h.at) / 1e9f, scale = 1f / (float) Math.sqrt(Integer.bitCount(h.parts));
             for (int part = 0; part < 12; part++) {
@@ -291,7 +330,7 @@ public final class ZBodyAnimator {
         if (!tr.dying) {
             tr.dying = true;
             tr.deathFrom.copy(tr.last);
-            tr.deathYaw = f.bodyYaw;
+            tr.deathYaw = tr.started ? tr.drawYaw : f.bodyYaw;
         }
         long d = f.death;
         int stumps = ZBodyLayer.stumps(f.cuts, f.missingLimb);

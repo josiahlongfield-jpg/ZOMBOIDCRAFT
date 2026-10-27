@@ -8,8 +8,10 @@ HERE="$ROOT/tools/zombies/hitcaps"
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
 javac -d "$OUT" \
-    "$HERE"/*.java "$HERE"/stub/com/zomboidcraft/ZomboidCraft.java \
+    "$HERE"/*.java "$HERE"/stub/com/zomboidcraft/ZomboidCraft.java "$HERE"/stub/com/zomboidcraft/client/zombie/body/ZDetail.java \
     "$ROOT/src/client/java/com/zomboidcraft/client/zombie/body/ZMove.java" \
+    "$ROOT/src/client/java/com/zomboidcraft/client/zombie/body/ZBreak.java" \
+    "$ROOT/src/main/java/com/zomboidcraft/zombie/ClimbPath.java" \
     "$ROOT/src/client/java/com/zomboidcraft/client/zombie/body/ZBodyMesh.java" \
     "$ROOT/src/main/java/com/zomboidcraft/combat/BodyCaps.java"
 java -Xmx10g -cp "$OUT:$ROOT/src/main/resources" FitAll "$ROOT/src/main/java/com/zomboidcraft/combat/BodyCaps.java" "$@"

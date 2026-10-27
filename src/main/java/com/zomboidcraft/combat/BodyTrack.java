@@ -1,6 +1,8 @@
 package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.zombie.Acts;
+import com.zomboidcraft.zombie.ClimbPath;
 import com.zomboidcraft.zombie.ZombieTypes;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -10,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Each walker over the last second and a half, tick by tick: where it stood, which way its body faced and the pose
@@ -18,7 +21,9 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
  * over a few more, on top of the shooter's ping. So a running zombie is hit where it was drawn, not a step ahead.
  *
  * The pose is picked as the client's animator picks it ({@code ZBodyAnimator}): moving or not, after someone,
- * swinging, looking round, on the ground, crawling, on one leg. Server thread only.
+ * swinging, looking round, on the ground, crawling, on one leg, beating on a door or a window or climbing through
+ * one (Acts). Beating on something, its body is drawn square in front of it, so that's where it's kept. Server
+ * thread only.
  */
 final class BodyTrack {
     static final int SIZE = 32;
@@ -77,7 +82,12 @@ final class BodyTrack {
     static Frame now(Zombie zombie) {
         BodyTrack t = TRACKS.get(zombie);
         int pose = t == null || t.count == 0 ? BodyCaps.IDLE : t.poses[t.newest];
-        return new Frame(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.yBodyRot, pose, -1);
+        Acts.Act act = drawnActing(zombie);
+        if (act != null && act.kind() != Acts.CLIMB) {
+            Vec3 shift = Acts.bashShift(zombie.level(), act, zombie.getX(), zombie.getZ(), false);
+            return new Frame(zombie.getX() + shift.x, zombie.getY(), zombie.getZ() + shift.z, act.yaw(), pose, -1);
+        }
+        return new Frame(zombie.getX(), zombie.getY(), zombie.getZ(), act != null ? act.yaw() : zombie.yBodyRot, pose, -1);
     }
 
     /** What it's doing now, as one of the ways it can die (Deaths' kinds). */
@@ -85,6 +95,9 @@ final class BodyTrack {
         int pose = now(zombie).pose();
         if (pose >= BodyCaps.CRAWL_REST && pose < BodyCaps.HOP) {
             return Deaths.CRAWL;
+        }
+        if (pose >= BodyCaps.CLIMB + 3 && pose <= BodyCaps.CLIMB + 4) {
+            return Deaths.CRAWL;    // falling in head first, or face down on the floor
         }
         if (pose >= BodyCaps.ATTACK && pose < BodyCaps.DOWN) {
             return Deaths.LUNGE;
@@ -126,11 +139,32 @@ final class BodyTrack {
         ys[newest] = zombie.getY();
         zs[newest] = zombie.getZ();
         yaws[newest] = zombie.yBodyRot;
+        Acts.Act act = drawnActing(zombie);
+        if (act != null) {
+            yaws[newest] = act.yaw();
+            if (act.kind() != Acts.CLIMB) {
+                Vec3 shift = Acts.bashShift(zombie.level(), act, zombie.getX(), zombie.getZ(), false);
+                xs[newest] += shift.x;
+                zs[newest] += shift.z;
+            }
+        }
         poses[newest] = (byte) pose(zombie, (now - attackStart) / 20f);
+    }
+
+    /** Breaking in, drawn as such (ZBodyAnimator): standing up to it, on two legs or one; a crawler claws at it as it is. */
+    private static Acts.Act drawnActing(Zombie zombie) {
+        Acts.Act act = Acts.get(zombie);
+        return act != null && (act.kind() == Acts.CLIMB || !Downed.isLow(zombie)) ? act : null;
     }
 
     /** The pose the client draws it in (as ZBodyAnimator picks the movement), as a BodyCaps table. */
     private int pose(Zombie zombie, float attack) {
+        Acts.Act act = drawnActing(zombie);
+        if (act != null) {
+            return act.kind() == Acts.CLIMB
+                    ? BodyCaps.CLIMB + ClimbPath.step(Acts.climbTime(act, zombie.level().getGameTime()))
+                    : act.kind() == Acts.BASH_DOOR ? BodyCaps.BASH_DOOR : BodyCaps.BASH_WIN;
+        }
         int cuts = Dismember.cuts(zombie), legs = Dismember.legsGone(cuts);
         boolean low = Downed.isLow(zombie);
         boolean attacking = attack >= 0f && attack < 2f;

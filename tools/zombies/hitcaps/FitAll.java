@@ -43,6 +43,7 @@ public class FitAll {
         in.phase = 0.7f + f * 3f;
         in.look = s.mode() == ZMove.ALERT || s.mode() == ZMove.CRAWL_ALERT ? (float) Math.sin(f * 6.283f) * 0.9f : 0f;
         in.attack = s.a0() + f * (s.a1() - s.a0());
+        in.act = in.attack;
         in.legless = s.legless();
         in.goneRight = (s.cuts() & 80) != 0;
         in.reach = s.reach();
@@ -122,7 +123,18 @@ public class FitAll {
         new State("HOP", ZMove.HOP, 16, false, false, 0, 0),
         new State("HOP_REACH", ZMove.HOP, 16, false, true, 0, 0),
         new State("STAND1", ZMove.STAND1, 16, false, false, 0, 0),
-        new State("STAND1_REACH", ZMove.STAND1, 16, false, true, 0, 0)};
+        new State("STAND1_REACH", ZMove.STAND1, 16, false, true, 0, 0),
+        // beating on a door or a window: four blows, the last with both arms
+        new State("BASH_DOOR", ZMove.BASH_DOOR, 0, false, true, 0f, 4f),
+        new State("BASH_WIN", ZMove.BASH_WIN, 0, false, true, 0f, 4f),
+        // climbing in through a window, part by part (ClimbPath.STEPS)
+        new State("CLIMB_1", ZMove.CLIMB, 0, false, true, 1.1f, 2.25f),
+        new State("CLIMB_2", ZMove.CLIMB, 0, false, true, 2.25f, 3.0f),
+        new State("CLIMB_3", ZMove.CLIMB, 0, false, true, 3.0f, 4.1f),
+        new State("CLIMB_4", ZMove.CLIMB, 0, false, true, 4.1f, 4.9f),
+        new State("CLIMB_5", ZMove.CLIMB, 0, false, true, 4.9f, 6.5f),
+        new State("CLIMB_6", ZMove.CLIMB, 0, false, true, 6.5f, 7.3f),
+        new State("CLIMB_7", ZMove.CLIMB, 0, false, true, 7.3f, 7.9f)};
 
     public static void main(String[] args) throws Exception {
         java.nio.file.Path out = java.nio.file.Path.of(args[0]);
@@ -199,13 +211,16 @@ public class FitAll {
             public final class BodyCaps {
                 public static final int IDLE = 0, SHAMBLE = 1, ALERT = 2, CHASE = 3, ATTACK = 4, DOWN = 8, CRAWL_REST = 9,
                         CRAWL_SLOW = 10, CRAWL_FAST = 11, CRAWL_ALERT = 12, CRAWL_GRAB = 13, HOP = 15, HOP_REACH = 16,
-                        STAND1 = 17, STAND1_REACH = 18;
-                /** ATTACK is four tables, half a second of the swing each, and CRAWL_GRAB two, a second each. */
-                public static final int ATTACK_STEPS = 4, CRAWL_GRAB_STEPS = 2;
+                        STAND1 = 17, STAND1_REACH = 18, BASH_DOOR = 19, BASH_WIN = 20, CLIMB = 21;
+                /**
+                 * ATTACK is four tables, half a second of the swing each, CRAWL_GRAB two, a second each, and CLIMB one for each
+                 * part of the climb (ClimbPath.STEPS).
+                 */
+                public static final int ATTACK_STEPS = 4, CRAWL_GRAB_STEPS = 2, CLIMB_STEPS = 7;
 
                 /** A pose on one leg, drawn with the right leg gone: a zombie on its right leg is the mirror image. */
                 public static boolean oneLeg(int pose) {
-                    return pose >= HOP;
+                    return pose >= HOP && pose <= STAND1_REACH;
                 }
 
             """;

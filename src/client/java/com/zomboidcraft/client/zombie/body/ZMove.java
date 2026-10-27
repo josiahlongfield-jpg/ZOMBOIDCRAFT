@@ -12,17 +12,19 @@ package com.zomboidcraft.client.zombie.body;
  * forward. The hips use Y-X-Z Euler order standing and X-Y-Z lying down, like the preview.
  *
  * A zombie with a leg shot off hops on the one it has (limbs.js in the preview), stumbling onto its knee
- * first; with both gone it falls on its face and crawls.
+ * first; with both gone it falls on its face and crawls. Beating on a door or a window and climbing in through one
+ * are ZBreak's (breakin.js).
  */
 public final class ZMove {
     public static final int HIPS = 0, SPINE = 1, NECK = 2, HEAD = 3, SH_R = 4, EL_R = 5, WR_R = 6, SH_L = 7, EL_L = 8,
             WR_L = 9, HIP_R = 10, KN_R = 11, AN_R = 12, HIP_L = 13, KN_L = 14, AN_L = 15, BONES = 16;
     /**
-     * Standing modes, knocked flat on its back, the crawler's own (face down, also every legless zombie), and
-     * hopping or standing on one leg.
+     * Standing modes, knocked flat on its back, the crawler's own (face down, also every legless zombie), hopping or
+     * standing on one leg, and breaking in: beating on a door, on a window, and climbing in through one.
      */
     public static final int IDLE = 0, SHAMBLE = 1, ALERT = 2, CHASE = 3, ATTACK = 4, DOWN = 5, CRAWL_REST = 6,
-            CRAWL_SLOW = 7, CRAWL_FAST = 8, CRAWL_ALERT = 9, CRAWL_GRAB = 10, HOP = 11, STAND1 = 12, MODES = 13;
+            CRAWL_SLOW = 7, CRAWL_FAST = 8, CRAWL_ALERT = 9, CRAWL_GRAB = 10, HOP = 11, STAND1 = 12, BASH_DOOR = 13,
+            BASH_WIN = 14, CLIMB = 15, MODES = 16;
 
     private static final float PI = (float) Math.PI;
     // body A sizes (STYLES.A in the preview)
@@ -101,11 +103,17 @@ public final class ZMove {
         public float hop;
         /** No hands left (both arms shot off, or lost long ago): on the ground it can only wriggle. */
         public boolean armless;
+        /**
+         * Breaking in: beating on something, seconds into it with a blow landing at every whole second plus 0.55; or
+         * climbing through a window, seconds into the preview's climb (ClimbPath).
+         */
+        public float act;
     }
 
     private final Pose tmp = new Pose();
     private final Pose live = new Pose();
     private final One one = new One();
+    private final ZBreak brk = new ZBreak();
     /** The stumble's two holds for each missing leg: buckling toward the gone side, then down on its one knee. */
     private static final Pose[] BUCKLE = {new Pose(), new Pose()}, KNEEL = {new Pose(), new Pose()};
     /** What comes up fast in a fall: the arms to break it, and the head. */
@@ -232,6 +240,8 @@ public final class ZMove {
             case CRAWL_ALERT -> crawl(p, Crawl.ALERT, in.legless, in);
             case CRAWL_GRAB -> crawl(p, Crawl.GRAB, in.legless, in);
             case HOP, STAND1 -> hop(p, mode == HOP, in);
+            case BASH_DOOR, BASH_WIN -> brk.bang(p, in.act, in.phase, mode == BASH_WIN);
+            case CLIMB -> brk.climb(p, in.act, in.phase);
             default -> crawl(p, Crawl.REST, in.legless, in);
         }
     }
