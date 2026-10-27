@@ -182,13 +182,17 @@ public final class WorldEventSound {
 
     /** A siren or explosion, where it is; its loudness falls off with distance as the player moves. */
     private static final class Distant extends AbstractTickableSoundInstance {
+        /** Josiah: the siren swells in from silence instead of starting at full volume. */
+        private static final float VOLUME = 0.6f;
+        private static final int FADE_IN = 160;
         private final Vec3 source;
+        private int age;
 
         Distant(SoundEvent event, Vec3 source) {
             super(event, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());
             this.source = source;
             this.attenuation = SoundInstance.Attenuation.NONE;
-            this.volume = 0.6f;
+            this.volume = 0.001f;
             place();
         }
 
@@ -214,6 +218,13 @@ public final class WorldEventSound {
                 return;
             }
             place();
+            float t = Math.min(1f, ++age / (float) FADE_IN);
+            this.volume = Math.max(0.001f, VOLUME * t * t);
+        }
+
+        @Override
+        public boolean canStartSilent() {
+            return true;
         }
     }
 
