@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /**
  * Draws the new zombie: body A in its per-type skin, the worn 3D clothes from the outfit's atlas,
@@ -210,17 +212,13 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         // each bone's matrix with the pose stack's folded in, so a corner costs one transform instead of two
         float[] w = new float[a.length];
         Matrix4f bone = new Matrix4f(), stack = pose.pose();
+        Matrix3f normal = pose.normal();
+        Vector3f n = new Vector3f();
         for (int b = 0; b * 16 < a.length; b++) {
             stack.mul(bone.set(a, b * 16), bone).get(w, b * 16);
         }
-        for (int q = 0; q < m.count; q++) {
-            int f = m.flags[q];
-            if (((f & ZBodyMesh.BODY) != 0) != body || (hidden >> m.bone[q] & 1) != 0
-                    || ((f & ZBodyMesh.STUMP) != 0 && !legless)) {
-                continue;
-            }
-            if (!body && lod > ZDetail.FULL && ((f & ZBodyMesh.SMALL) != 0
-                    || (lod >= ZDetail.LOW && m.minEdge[q] < (lod == ZDetail.SIMPLE ? 2f : 1f)))) {
+        for (int q : m.quads(body, lod, legless)) {
+            if ((hidden >> m.bone[q] & 1) != 0) {
                 continue;
             }
             int o = m.bone[q] * 16;
@@ -228,11 +226,11 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
             float nx = a[o] * nx0 + a[o + 4] * ny0 + a[o + 8] * nz0;
             float ny = a[o + 1] * nx0 + a[o + 5] * ny0 + a[o + 9] * nz0;
             float nz = a[o + 2] * nx0 + a[o + 6] * ny0 + a[o + 10] * nz0;
-            float len = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+            // into view space once a quad, not once a corner
+            normal.transform(n.set(nx, ny, nz));
+            float len = n.length();
             if (len > 0f) {
-                nx /= len;
-                ny /= len;
-                nz /= len;
+                n.div(len);
             }
             float u0 = m.uv[q * 4], v0 = m.uv[q * 4 + 1], u1 = m.uv[q * 4 + 2], v1 = m.uv[q * 4 + 3];
             for (int c : ORDER) {
@@ -245,7 +243,7 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
                         .setUv(c == 1 || c == 2 ? u1 : u0, c >= 2 ? v1 : v0)
                         .setOverlay(overlay)
                         .setLight(light)
-                        .setNormal(pose, nx, ny, nz);
+                        .setNormal(n.x, n.y, n.z);
             }
         }
     }
