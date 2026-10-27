@@ -1,0 +1,245 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "desk_laminate": "zomboidcraft:block/city/desk_laminate",
+    "fs_brass": "zomboidcraft:block/city/fs_brass",
+    "fs_log_top": "zomboidcraft:block/city/fs_log_top",
+    "fs_register": "zomboidcraft:block/city/fs_register",
+    "particle": "zomboidcraft:block/city/desk_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        13,
+        0
+      ],
+      "to": [
+        16,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        13,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        1,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14.5,
+        0
+      ],
+      "to": [
+        16,
+        14.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fs_log_top"
+        },
+        "down": {
+          "texture": "#desk_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14.5,
+        3
+      ],
+      "to": [
+        13,
+        20,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_brass",
+          "uv": [
+            3,
+            0,
+            13,
+            5.5
+          ]
+        },
+        "south": {
+          "texture": "#fs_register",
+          "uv": [
+            3,
+            0,
+            13,
+            5.5
+          ]
+        },
+        "east": {
+          "texture": "#fs_brass",
+          "uv": [
+            8,
+            0,
+            13,
+            5.5
+          ]
+        },
+        "west": {
+          "texture": "#fs_brass",
+          "uv": [
+            3,
+            0,
+            8,
+            5.5
+          ]
+        },
+        "up": {
+          "texture": "#fs_brass"
+        },
+        "down": {
+          "texture": "#fs_brass"
+        }
+      }
+    }
+  ]
+}

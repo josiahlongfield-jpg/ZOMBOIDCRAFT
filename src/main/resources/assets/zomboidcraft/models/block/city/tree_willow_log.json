@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tree_willow_bark": "zomboidcraft:block/city/tree_willow_bark",
+    "tree_willow_rings": "zomboidcraft:block/city/tree_willow_rings",
+    "particle": "zomboidcraft:block/city/tree_willow_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_willow_bark",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tree_willow_bark",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tree_willow_bark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tree_willow_bark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tree_willow_rings",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tree_willow_rings",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

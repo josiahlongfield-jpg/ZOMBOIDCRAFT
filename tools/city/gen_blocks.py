@@ -39,6 +39,7 @@ DECOR = {"store_spill", "vines", "paper", "glass_shards", "blood_splat", "scorch
 SOUNDS = [  # first keyword in the block's name or textures wins
     (("window", "glass", "cabin"), "GLASS"),
     (("grass", "weeds", "vines", "ivy", "leaves", "leaf", "moss_carpet", "corn", "straw", "bale"), "GRASS"),
+    (("tree_",), "WOOD"),
     (("crate", "boards", "boarded", "wood", "desk", "tree_log", "cardboard", "paper", "siding", "barn"), "WOOD"),
     (("carpet", "office_floor", "cubicle", "sandbag", "trash_bag", "tarp", "camo", "hesco"), "WOOL"),
     (("dirt", "burnt_ground", "rubble"), "GRAVEL"),
@@ -111,6 +112,8 @@ def element(b):
     uvs = b[7] if len(b) > 7 else None
     faces = {}
     for f in DIRS:
+        if uvs is not None and f not in uvs:
+            continue  # a face the rest of the object covers (tools/props/props.py)
         face = {"texture": "#" + tex[f]}
         u0, v0, u1, v1 = AUTO_UV[f]((x0, y0, z0), (x1, y1, z1))
         if uvs:
@@ -264,7 +267,40 @@ def blockstate(name, spec):
                              for f, y in FACING_Y.items()}}
     if rot == "axis":
         return {"variants": {"axis=z": {"model": model}, "axis=x": {"model": model, "y": 90}}}
+    if spec.get("spin"):
+        # a tile that would line up block to block (leaves): each block turned its own way
+        return {"variants": {"": [dict({"model": model}, **({"x": x} if x else {}), **({"y": y} if y else {}))
+                                  for x in (0, 90, 180, 270) for y in (0, 90)]}}
     return {"variants": {"": {"model": model}}}
+
+
+BRANCH_TURNS = [("north", {}), ("south", {"y": 180}), ("east", {"y": 90}), ("west", {"y": 270}),
+                ("up", {"x": 270}), ("down", {"x": 90})]
+
+
+def branch_models(name, spec, tex_dir):
+    """A tree limb: its post (the spec's one box) and one arm reaching from it to the north face,
+    which the blockstate turns toward each neighbour the limb joins."""
+    core = spec["boxes"][0]
+    a, b, tex = core[0], core[3], core[6]
+    arm = dict(spec, boxes=[[a, a, 0, b, b, a, tex]])
+    return {name: model_json(name, spec, tex_dir), f"{name}_arm": model_json(name, arm, tex_dir)}
+
+
+def branch_blockstate(name):
+    parts = [{"apply": {"model": f"{NS}:block/city/{name}"}}]
+    for side, turn in BRANCH_TURNS:
+        parts.append({"when": {side: "true"}, "apply": dict({"model": f"{NS}:block/city/{name}_arm"}, **turn)})
+    return {"multipart": parts}
+
+
+def loot_json(name, spec):
+    """What a block drops: itself, unless the spec names another item (a tree's bark gives logs)
+    or nothing ("")."""
+    item = spec.get("drops", f"{NS}:{name}")
+    pools = [] if item == "" else [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": item}],
+                                   "conditions": [{"condition": "minecraft:survives_explosion"}]}]
+    return {"type": "minecraft:block", "pools": pools, "random_sequence": f"{NS}:blocks/{name}"}
 
 
 def has_alpha(tex_dir, names):
@@ -290,7 +326,7 @@ def java_line(name, spec, tex_dir):
         flag = "SEE_THROUGH" if has_alpha(tex_dir, textures(spec)) else "0"
         return f'        s("{name}", DOOR, {flag}, 0, SoundType.{s}, 3f);'
     model = spec.get("model", "cube")
-    kind = {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
+    kind = "BRANCH" if "branch" in spec else {"facing": "FACING", "axis": "AXIS"}.get(spec.get("rotate"), "PLAIN")
     decor = model == "cross" or spec.get("decor") or name in DECOR or name.startswith(DECOR_PREFIX)
     # partial shapes still hide what they cover (their shape is the occlusion shape); only
     # see-through pixels need the neighbours drawn behind them
@@ -304,12 +340,14 @@ def java_line(name, spec, tex_dir):
         flags.append("LOOT")
     if "flicker" in spec:
         flags.append("FLICKER")
+    if spec.get("offset"):
+        flags.append("OFFSET")
     if model == "cross":
         shape = [2, 0, 2, 14, 13, 14]
     else:
         shape = [v for b in boxes(spec) for v in b[:6]]
-        if name.startswith("ext_"):
-            # gutters, sills and aerials reach out of the block; their collision stays in it
+        if name.startswith(("ext_", "front_")):
+            # gutters, sills, aerials and cornices reach out of the block; their collision stays in it
             shape = [min(16, max(0, v)) for v in shape]
     s = sound(name, spec)
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
@@ -329,7 +367,7 @@ def write_json(path, obj):
 
 def title(name):
     if name.startswith("store_shelf_"):  # the shelf's name heads its loot screen: "Grocery Shelf"
-        return name[len("store_shelf_"):].replace("_", " ").title() + " Shelf"
+        return name[len("store_shelf_"):].removesuffix("_top").replace("_", " ").title() + " Shelf"
     if name.startswith("store_"):
         name = name[len("store_"):]
     words = ["weathered" if w == "b" else w for w in name.split("_")]
@@ -339,6 +377,9 @@ def title(name):
 def main():
     tex_dir = Path(sys.argv[1])
     blocks = json.loads((ROOT / "tools/city/blocks.json").read_text())["blocks"]
+    # the prop packs' atlases come whole from tools/props/props.py, their LabPBR maps with them
+    for p in (ROOT / "tools/props/tex").glob("*.png"):
+        shutil.copy(p, tex_dir / p.name)
     # start clean so renamed or dropped blocks don't linger (the old models name the old blocks)
     old = sorted({p.stem.split("_bottom_")[0].split("_top_")[0] for p in (ASSETS / "models/block/city").glob("*.json")})
     for d in (ASSETS / "models/block/city", ASSETS / "textures/block/city"):
@@ -383,6 +424,15 @@ def main():
             used.update(textures(spec))
             lines.append(java_line(name, spec, tex_dir))
             continue
+        if "branch" in spec:
+            for model, obj in branch_models(name, spec, tex_dir).items():
+                write_json(ASSETS / f"models/block/city/{model}.json", obj)
+            write_json(ASSETS / f"blockstates/{name}.json", branch_blockstate(name))
+            write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
+            write_json(DATA / f"loot_table/blocks/{name}.json", loot_json(name, spec))
+            used.update(textures(spec))
+            lines.append(java_line(name, spec, tex_dir))
+            continue
         write_json(ASSETS / f"models/block/city/{name}.json", model_json(name, spec, tex_dir))
         if "flicker" in spec:
             write_json(ASSETS / f"models/block/city/{name}_on.json", model_json(name, lit_spec(spec), tex_dir))
@@ -391,11 +441,7 @@ def main():
         else:
             write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})
-        write_json(DATA / f"loot_table/blocks/{name}.json", {
-            "type": "minecraft:block",
-            "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}"}],
-                       "conditions": [{"condition": "minecraft:survives_explosion"}]}],
-            "random_sequence": f"{NS}:blocks/{name}"})
+        write_json(DATA / f"loot_table/blocks/{name}.json", loot_json(name, spec))
         used.update(textures(spec))
         lines.append(java_line(name, spec, tex_dir))
 

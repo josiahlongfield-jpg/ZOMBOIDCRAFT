@@ -169,6 +169,7 @@ CUBE = {
     "mossy_cobblestone": ph("Rock064", (104, 114, 96), span=2),
     "cobbled_deepslate": ph("Rock064", (66, 66, 70), span=2),
     "deepslate_tiles": ph("roof_slates_03", (58, 58, 62), span=2, contrast=1.4),
+    "cracked_deepslate_tiles": ph("roof_slates_03", (52, 52, 56), span=2, contrast=1.6),
     "deepslate_bricks": ph("stone_brick_wall_001", (72, 72, 76)),
     "mud_bricks": city("brick_buff", (140, 112, 84)),
     "tuff_bricks": city("brick_buff", (104, 108, 100)),

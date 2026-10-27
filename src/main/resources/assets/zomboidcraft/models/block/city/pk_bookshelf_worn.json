@@ -1,0 +1,471 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_bookshelf_worn": "zomboidcraft:block/city/pk_bookshelf_worn",
+    "particle": "zomboidcraft:block/city/pk_bookshelf_worn"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            7.4375,
+            4.0625,
+            7.9375
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            4.1875,
+            7.4375,
+            8.1875,
+            7.9375
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            10.1875,
+            7.4375,
+            11.9375,
+            7.9375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            8.3125,
+            7.4375,
+            10.0625,
+            7.9375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            3.6875,
+            4.0625,
+            5.4375
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            10.0625,
+            0.0625,
+            14.0625,
+            1.8125
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        9
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            0.0625,
+            0.5625,
+            3.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.6875,
+            0.0625,
+            1.1875,
+            3.5625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            3.1875,
+            0.0625,
+            4.9375,
+            3.5625
+          ]
+        },
+        "west": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            1.3125,
+            0.0625,
+            3.0625,
+            3.5625
+          ],
+          "cullface": "west"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        2,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            5.0625,
+            0.0625,
+            5.5625,
+            3.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            5.6875,
+            0.0625,
+            6.1875,
+            3.5625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            8.1875,
+            0.0625,
+            9.9375,
+            3.5625
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            6.3125,
+            0.0625,
+            8.0625,
+            3.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        9
+      ],
+      "to": [
+        14,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            12.0625,
+            7.4375,
+            15.0625,
+            7.9375
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            8.0625,
+            3.0625,
+            8.5625
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            7.3125,
+            3.6875,
+            10.3125,
+            5.4375
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            4.1875,
+            3.6875,
+            7.1875,
+            5.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        9
+      ],
+      "to": [
+        14,
+        8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            3.1875,
+            8.0625,
+            6.1875,
+            8.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            6.3125,
+            8.0625,
+            9.3125,
+            8.5625
+          ]
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            3.1875,
+            8.6875,
+            6.1875,
+            8.9375
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            8.6875,
+            3.0625,
+            8.9375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        10
+      ],
+      "to": [
+        14,
+        8,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            6.3125,
+            8.6875,
+            9.3125,
+            8.9375
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            12.5625,
+            5.5625,
+            15.5625,
+            7.0625
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            9.4375,
+            5.5625,
+            12.4375,
+            7.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        9
+      ],
+      "to": [
+        14,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            9.4375,
+            8.6875,
+            12.4375,
+            8.9375
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            12.5625,
+            8.6875,
+            15.5625,
+            8.9375
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            5.5625,
+            3.0625,
+            7.3125
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            10.4375,
+            3.6875,
+            13.4375,
+            5.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        11,
+        9
+      ],
+      "to": [
+        14,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            3.1875,
+            9.0625,
+            6.1875,
+            9.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            6.3125,
+            9.0625,
+            9.3125,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            0.0625,
+            9.0625,
+            3.0625,
+            9.3125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13,
+        9
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            9.4375,
+            8.0625,
+            12.4375,
+            8.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            12.5625,
+            8.0625,
+            15.5625,
+            8.5625
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            6.3125,
+            5.5625,
+            9.3125,
+            7.3125
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn",
+          "uv": [
+            3.1875,
+            5.5625,
+            6.1875,
+            7.3125
+          ]
+        }
+      }
+    }
+  ]
+}

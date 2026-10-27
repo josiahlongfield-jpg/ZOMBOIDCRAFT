@@ -8,7 +8,13 @@ public enum Skill {
     SPRINTING("Sprinting"),
     SNEAKING("Sneaking"),
     AIMING("Aiming"),
-    MAINTENANCE("Maintenance");
+    MAINTENANCE("Maintenance"),
+    /** Knocking down brick, block and concrete with a sledgehammer (building/DigRules). */
+    MASONRY("Masonry"),
+    /** Cutting through steel with a propane torch (building/DigRules). */
+    METALWORKING("Metalworking"),
+    /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
+    PILOTING("Piloting");
 
     public static final int MAX_LEVEL = 10;
 

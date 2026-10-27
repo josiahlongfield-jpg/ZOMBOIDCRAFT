@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_linen": "zomboidcraft:block/city/ch_linen",
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_marble",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        1
+      ],
+      "to": [
+        16,
+        15.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_linen"
+        },
+        "south": {
+          "texture": "#ch_linen"
+        },
+        "east": {
+          "texture": "#ch_linen",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_linen",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_linen"
+        },
+        "down": {
+          "texture": "#ch_linen"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0.5
+      ],
+      "to": [
+        16,
+        15.5,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_linen",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_linen",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_linen"
+        },
+        "down": {
+          "texture": "#ch_linen"
+        }
+      }
+    }
+  ]
+}

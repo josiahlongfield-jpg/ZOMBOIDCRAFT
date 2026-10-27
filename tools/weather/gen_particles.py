@@ -19,26 +19,37 @@ def value_noise(rng, n, cells):
 
 
 def mist(seed, n=64):
-    """A wide, flat, ragged wisp of haze.
+    """A ragged puff of smoke or haze, used by the skyline's smoke plumes.
 
-    Shader packs (Photon) throw away every pixel of a particle fainter than about a tenth, so a
-    soft fade to the rim can't be drawn: what's left is a hard disc, or nothing at all. So the
-    wisp has no faint pixels. Its body is solid (the particle's own alpha makes it see-through),
-    and toward the rim it breaks up into scattered specks that thin out, which the pack's frame
-    blending smears back into a soft edge.
+    Shader packs (Photon) throw away every pixel fainter than about a tenth, so there's no soft
+    fade to the rim (it would draw as a hard disc) and no scattered specks (they draw as grain):
+    the puff is smooth inside and its outline is torn by noise, so the hard edge reads as a wisp.
     """
     rng = np.random.default_rng(seed)
     y, x = np.mgrid[0:n, 0:n] / (n - 1) * 2 - 1
-    r2 = x * x + (y * 2.4) ** 2  # flat: a bank lies along the ground
+    r2 = x * x + (y * 1.3) ** 2
     fall = np.clip(1 - np.sqrt(r2), 0, 1)
     tex = 0.5 * value_noise(rng, n, 3) + 0.3 * value_noise(rng, n, 5) + 0.2 * value_noise(rng, n, 9)
-    m = fall * (0.4 + 1.2 * tex)  # ragged: the noise eats into the shape
-    solid, edge = 0.62, 0.18
-    speck = np.clip((m - edge) / (solid - edge), 0, 1)
-    keep = (m >= solid) | (rng.random((n, n)) < speck ** 1.5)
-    a = np.where(keep, 0.6 + 0.4 * np.clip(tex * 1.4 - 0.2, 0, 1), 0)
+    m = fall * (0.4 + 1.2 * tex)
+    a = np.where(m > 0.25, 0.45 + 0.55 * np.clip((m - 0.25) / 0.6, 0, 1), 0)
     rgba = np.zeros((n, n, 4), np.uint8)
     rgba[..., :3] = 235
+    rgba[..., 3] = (a * 255).astype(np.uint8)
+    return Image.fromarray(rgba)
+
+
+def ground_fog(seed, n=128):
+    """The ground mist's speckle: every pixel white at a random strength, evenly spread.
+
+    Shader packs (Photon) drop every pixel fainter than about a tenth. The mist sheet's own
+    strength scales these, so where the mist is thin fewer of them clear the bar and where it's
+    thick most do: the thickness fades smoothly with no edge. The game shifts the speckle every
+    frame and the pack's frame blending melts it into haze.
+    """
+    rng = np.random.default_rng(seed)
+    a = rng.random((n, n)) * 0.97 + 0.03
+    rgba = np.zeros((n, n, 4), np.uint8)
+    rgba[..., :3] = 255
     rgba[..., 3] = (a * 255).astype(np.uint8)
     return Image.fromarray(rgba)
 
@@ -88,6 +99,9 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for i in range(4):
         mist(100 + i).save(OUT / f"mist_{i}.png")
+    effect = OUT.parent / "effect"
+    effect.mkdir(parents=True, exist_ok=True)
+    ground_fog(500).save(effect / "ground_fog.png")
     for i in range(3):
         glint(300 + i).save(OUT / f"glint_{i}.png")
     i = 0

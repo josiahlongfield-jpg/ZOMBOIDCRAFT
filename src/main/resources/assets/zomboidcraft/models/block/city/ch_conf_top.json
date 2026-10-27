@@ -1,0 +1,135 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_gilt": "zomboidcraft:block/city/ch_gilt",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -0.5,
+        4,
+        1
+      ],
+      "to": [
+        16.5,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak",
+          "uv": [
+            0,
+            10,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "uv": [
+            0,
+            10,
+            16,
+            12
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "uv": [
+            0,
+            1,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "uv": [
+            0,
+            0,
+            16,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        8
+      ],
+      "to": [
+        10,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_gilt"
+        },
+        "south": {
+          "texture": "#ch_gilt"
+        },
+        "east": {
+          "texture": "#ch_gilt"
+        },
+        "west": {
+          "texture": "#ch_gilt"
+        },
+        "up": {
+          "texture": "#ch_gilt"
+        },
+        "down": {
+          "texture": "#ch_gilt"
+        }
+      }
+    }
+  ]
+}

@@ -49,7 +49,7 @@ public final class CityBlocks {
 
     /** The table {@link CitySpecs} fills in; one call to {@link #s} per block. */
     abstract static class Specs {
-        static final int PLAIN = 0, FACING = 1, AXIS = 2, DOOR = 3, TRAPDOOR = 4;
+        static final int PLAIN = 0, FACING = 1, AXIS = 2, DOOR = 3, TRAPDOOR = 4, BRANCH = 5;
         /** Has see-through pixels, so it mustn't hide its neighbours' faces. */
         static final int SEE_THROUGH = 1;
         /** Plants and decals: no collision, breaks at once, other blocks can replace it. */
@@ -58,6 +58,8 @@ public final class CityBlocks {
         static final int LOOT = 4;
         /** A lamp on a dying circuit: its light comes and goes (see {@link Flicker}). */
         static final int FLICKER = 8;
+        /** Grass and seedlings: nudged about their block like vanilla grass, so a field isn't a grid. */
+        static final int OFFSET = 16;
 
         protected void s(String name, int kind, int flags, int light, SoundType sound, float strength, double... boxes) {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
@@ -71,6 +73,9 @@ public final class CityBlocks {
             }
             if ((flags & DECOR) != 0) {
                 properties.noCollision().replaceable();
+            }
+            if ((flags & OFFSET) != 0) {
+                properties.offsetType(BlockBehaviour.OffsetType.XZ);
             }
             boolean flicker = (flags & FLICKER) != 0;
             if (flicker) {
@@ -97,6 +102,8 @@ public final class CityBlocks {
                 case FACING -> loot ? new Fittings.Facing(properties, shape, (flags & DECOR) != 0)
                         : new CityBlock.Facing(properties, shape, (flags & DECOR) != 0);
                 case AXIS -> new CityBlock.Axis(properties, shape);
+                // a tree limb: its box is the post, as thick as the limb; arms grow from it
+                case BRANCH -> new CityBlock.Branch(properties, boxes[3] - boxes[0]);
                 default -> loot ? new Fittings.Plain(properties, shape) : new CityBlock(properties, shape);
             };
             BLOCKS.put(name, Registry.register(BuiltInRegistries.BLOCK, key, block));

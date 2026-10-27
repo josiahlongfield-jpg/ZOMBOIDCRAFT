@@ -531,6 +531,387 @@ def hatch(seed):
     B.rust_runs(t, 2, 0.35, 40)
     return F.wear(t, 0.25, 2)
 
+# ---- officers' country: the wardroom, the staterooms, the captain's cabin, the officers' head
+# (from the wardroom, stateroom and head photos in refs/ships/carrier-officer-spaces)
+
+CHERRY = (124, 56, 36)
+LAMINATE = (178, 140, 96)
+
+
+def laminate(seed, rgb=LAMINATE):
+    """A joiner bulkhead's wood-grain laminate, grain upright, a seam at each panel's edge, scuffed low down."""
+    t = F.wood(seed, "maple", rot=True)
+    F.tone(t, rgb, 0.8)
+    t.smooth[:] = 0.5
+    for x in (0, 31):
+        F.area(t, x, 0, x + 1, N, mul=0.62, dh=-0.2)
+    F.area(t, 0, 58, N, N, mul=0.84)
+    return F.wear(t, 0.2, 5, specks=0.003)
+
+
+def cherry(seed):
+    """The wardroom's cherry veneer on the pillars: deep red-brown under the lacquer, a moulding at the top."""
+    t = F.wood(seed, "walnut", rot=True)
+    F.tone(t, CHERRY, 1.1)
+    t.smooth[:] = 0.7
+    t.f0[:] = 30
+    F.area(t, 0, 0, N, 3, mul=1.2, dh=0.2)
+    F.area(t, 0, 3, N, 4, mul=0.6, dh=-0.1)
+    for x in (0, 63):
+        F.area(t, x, 0, x + 1, N, mul=0.7)
+    return F.wear(t, 0.12, 4, specks=0.002)
+
+
+def wall_cream(seed):
+    """The wardroom's walls: cream-painted joiner panels, a seam each half block, a little grubby."""
+    t = F.enamel(seed, (214, 200, 166))
+    t.smooth[:] = 0.4
+    F.area(t, 31, 0, 33, N, mul=0.85, dh=-0.15)
+    return F.wear(t, 0.15, 2, specks=0.003)
+
+
+def wainscot(seed):
+    """Below the chair rail: cherry panelling, the rail along the top, a kick strip, chairs' knocks."""
+    t = cherry(seed)
+    F.area(t, 0, 0, N, 5, mul=1.25, dh=0.3)
+    F.area(t, 0, 5, N, 6, mul=0.5, dh=-0.2)
+    for x0 in (3, 35):
+        F.sunk(t, x0, 12, x0 + 26, 54)
+    F.area(t, 0, 58, N, N, (40, 34, 30), dh=0.1)
+    return F.wear(t, 0.15, 6)
+
+
+def ceiling_tile(seed):
+    """Drop ceiling, two tiles a side to a block: fissured off-white fibre in white T-bars, a leak's brown ring."""
+    t = F.plain(seed, (222, 220, 210), 0.03, 0.1)
+    rng = t.rng
+    for _ in range(260):
+        x, y = int(rng.integers(0, N)), int(rng.integers(0, N))
+        F.area(t, x, y, x + int(rng.integers(1, 4)), y + 1, mul=0.82, dh=-0.1)
+    for k in (0, 32):
+        F.area(t, k, 0, k + 2, N, (238, 238, 234), dh=0.3, smooth=0.6)
+        F.area(t, 0, k, N, k + 2, (238, 238, 234), dh=0.3, smooth=0.6)
+    if rng.random() < 0.6:
+        F.stain(t, rng.uniform(6, 58), rng.uniform(6, 58), rng.uniform(5, 9), (150, 118, 66), 0.45)
+    return F.wear(t, 0.16, 0, specks=0.004)
+
+
+def troffer(seed, on):
+    """A fluorescent troffer's prismatic lens: lit, an even glare; dead, grey, flies dead in one corner."""
+    t = F.plain(seed, (240, 244, 240) if on else (172, 174, 168), 0.02, 0.6)
+    for y in range(2, 62, 3):
+        for x in range(2 + (y // 3) % 2, 62, 3):
+            F.area(t, x, y, x + 1, y + 1, mul=0.88 if on else 0.8)
+    if on:
+        t.emit[:] = 1.0
+    else:
+        t.speckle(0.02, (40, 36, 30), 0.6)
+        F.area(t, 2, 2, 14, 10, mul=0.75)
+    return t
+
+
+def tile_cream(seed):
+    """The wardroom's floor: big glossy cream tiles, four to a block, grey grout, scuffed dull in the walkways."""
+    t = F.plain(seed, (204, 184, 140), 0.035, 0.78)
+    t.f0[:] = 40
+    rng = t.rng
+    for i in range(2):
+        for j in range(2):
+            F.area(t, i * 32, j * 32, i * 32 + 32, j * 32 + 32, mul=0.95 + 0.08 * rng.random())
+    for k in (0, 32):
+        F.area(t, k, 0, k + 1, N, (150, 138, 116), dh=-0.25, smooth=0.2)
+        F.area(t, 0, k, N, k + 1, (150, 138, 116), dh=-0.25, smooth=0.2)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.smooth -= np.clip(P.fbm(rng) * 0.6, 0, 0.4)
+    return F.wear(t, 0.22, 6, specks=0.004)
+
+
+def carpet(seed):
+    """Stateroom carpet tile: dark navy loop pile flecked with grey, the tiles' seams."""
+    t = F.mat("Carpet003", (46, 52, 76), 0.6, seed=seed, smooth=0.05)
+    t.speckle(0.05, (110, 116, 130), 0.4)
+    F.area(t, 0, 0, N, 1, mul=0.7, dh=-0.1)
+    F.area(t, 0, 0, 1, N, mul=0.7, dh=-0.1)
+    return F.wear(t, 0.3, 0)
+
+
+def linen(seed, soiled=False):
+    """A white tablecloth: a fine weave, the creases it was folded in, a coffee ring; soiled, wine and worse."""
+    t = F.plain(seed, (232, 230, 222), 0.02, 0.15)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.97 + 0.03 * ((xx + yy) % 2))[..., None]
+    for k in (16, 48):
+        F.area(t, k, 0, k + 1, N, mul=0.9, dh=-0.05)
+        F.area(t, 0, k, N, k + 1, mul=0.92, dh=-0.05)
+    rng = t.rng
+    F.disc(t, rng.uniform(12, 52), rng.uniform(12, 52), 4, mul=0.8, ring=1)
+    if soiled:
+        F.stain(t, rng.uniform(0, N), rng.uniform(0, N), 6, (120, 30, 40), 0.6)
+        F.blood(t, rng.uniform(0, N), rng.uniform(0, N), 5, 0.7)
+    return F.wear(t, 0.25 if soiled else 0.15, 0, specks=0.004)
+
+
+STAR = ("..#..", "#####", ".###.", ".#.#.", "#...#")
+
+
+def star_cloth(seed):
+    """The wardroom chairs' covers: navy blue cloth scattered with small white stars, as in the photos."""
+    t = F.fabric("blue", seed)
+    F.tone(t, (30, 38, 70), 1.0)
+    for gy in range(0, N, 21):
+        for gx in range(0, N, 21):
+            ox = 10 if (gy // 21) % 2 else 2
+            x0, y0 = (gx + ox) % N, gy + 5
+            for r, row in enumerate(STAR):
+                for c, ch in enumerate(row):
+                    if ch == "#" and y0 + r < N:
+                        t.c[y0 + r, (x0 + c) % N] = (226, 226, 230)
+    return F.wear(t, 0.2, 0, specks=0.01)
+
+
+def ship_painting(seed, kind):
+    """An oil of a ship at sea in a gilt frame (made-up ships, no real hull numbers): a carrier in a grey
+    swell, a destroyer at sunset, two jets over a carrier at dawn."""
+    t = F.plain(seed, (40, 32, 24), 0.05, 0.3)
+    x0, y0, x1, y1 = 5, 9, 59, 47
+    sky = {"a": ((120, 132, 140), (160, 168, 170)), "b": ((200, 120, 80), (236, 186, 120)),
+           "c": ((150, 176, 200), (226, 210, 190))}[kind]
+    hz = 31
+    for y in range(y0, hz):
+        f = (y - y0) / (hz - y0)
+        F.area(t, x0, y, x1, y + 1, tuple(int(sky[0][i] + (sky[1][i] - sky[0][i]) * f) for i in range(3)))
+    sea = (52, 70, 76) if kind != "b" else (70, 60, 70)
+    for y in range(hz, y1):
+        F.area(t, x0, y, x1, y + 1, tuple(int(c * (1 - 0.3 * (y - hz) / (y1 - hz))) for c in sea))
+    rng = t.rng
+    for _ in range(40):
+        x, y = int(rng.integers(x0, x1 - 3)), int(rng.integers(hz + 2, y1 - 1))
+        F.area(t, x, y, x + int(rng.integers(1, 4)), y + 1, (200, 206, 204))
+    hull = (78, 82, 86) if kind != "b" else (40, 36, 40)
+    if kind in ("a", "c"):
+        s = 1.0 if kind == "a" else 0.6
+        cx = 32 if kind == "a" else 40
+        L = int(22 * s)
+        F.area(t, cx - L, hz - 2, cx + L, hz + 1, hull)
+        F.area(t, cx - L + 2, hz + 1, cx + L - 1, hz + 2, mul=0.7)
+        F.area(t, cx + int(6 * s), hz - int(7 * s), cx + int(10 * s), hz - 2, hull)
+        F.area(t, cx + int(7 * s), hz - int(10 * s), cx + int(8 * s), hz - int(7 * s), hull)
+        F.area(t, cx - L, hz + 1, cx + L, hz + 2, (220, 220, 214))
+    else:
+        cx = 30
+        F.area(t, cx - 16, hz - 2, cx + 18, hz + 1, hull)
+        for k in range(4):
+            F.area(t, cx + 18 + k, hz - 2 + k // 2, cx + 19 + k, hz + 1, hull)
+        F.area(t, cx - 6, hz - 6, cx + 6, hz - 2, hull)
+        F.area(t, cx - 3, hz - 9, cx + 3, hz - 6, hull)
+        F.area(t, cx - 1, hz - 13, cx, hz - 9, hull)
+        F.area(t, cx + 8, hz - 5, cx + 11, hz - 2, hull)
+        F.disc(t, 50, 18, 4, (250, 220, 150))
+    if kind == "c":
+        for jx, jy in ((16, 16), (24, 20)):
+            F.area(t, jx, jy, jx + 7, jy + 1, (50, 54, 60))
+            F.area(t, jx + 2, jy - 2, jx + 4, jy + 3, (50, 54, 60))
+    gilt = (176, 140, 70)
+    F.area(t, x0 - 4, y0 - 4, x1 + 4, y0, gilt, h=1.0, smooth=0.6, f0=200)
+    F.area(t, x0 - 4, y1, x1 + 4, y1 + 4, gilt, h=1.0, smooth=0.6, f0=200)
+    F.area(t, x0 - 4, y0, x0, y1, gilt, h=1.0, smooth=0.6, f0=200)
+    F.area(t, x1, y0, x1 + 4, y1, gilt, h=1.0, smooth=0.6, f0=200)
+    F.edges(t, x0 - 4, y0 - 4, x1 + 4, y1 + 4, light=1.25, dark=0.6)
+    F.edges(t, x0 - 1, y0 - 1, x1 + 1, y1 + 1, light=0.7, dark=1.2)
+    return F.wear(t, 0.2, 0)
+
+
+def brass(seed):
+    t = F.plain(seed, (184, 148, 78), 0.05, 0.8)
+    t.f0[:] = 220
+    return F.wear(t, 0.2, 0, specks=0.004)
+
+
+def shade_lit(seed):
+    """A cream shade with the bulb on behind it: a warm glow, brightest in the middle."""
+    t = F.lampshade(seed)
+    t.c = np.clip(t.c * 1.15 + np.array((30, 22, 6), np.float32), 0, 255)
+    yy = np.arange(N)[:, None] / N
+    t.emit[:] = (0.6 + 0.4 * np.sin(np.pi * yy)) * np.ones((1, N))
+    return t
+
+
+def stall(seed):
+    """The officers' head's stall panels: orange laminate, a stainless cap, kicked and scratched."""
+    t = F.plain(seed, (206, 86, 40), 0.03, 0.55)
+    F.area(t, 0, 0, N, 2, (192, 194, 194), f0=170, smooth=0.7, dh=0.2)
+    rng = t.rng
+    for _ in range(6):
+        x, y = int(rng.integers(4, 56)), int(rng.integers(10, 56))
+        F.area(t, x, y, x + int(rng.integers(3, 9)), y + 1, (230, 180, 150))
+    return F.wear(t, 0.2, 8, specks=0.003)
+
+
+def stall_door(seed, top):
+    """A stall door: the same orange, a chrome turn latch and an OCCUPIED slot, a coat hook up top."""
+    t = stall(seed)
+    if top:
+        F.area(t, 6, 10, 10, 14, (200, 202, 204), dh=0.3, f0=180)
+    else:
+        F.area(t, 50, 2, 58, 8, (200, 202, 204), dh=0.3, f0=180)
+        F.area(t, 52, 3, 56, 5, (40, 140, 60))
+        F.area(t, 0, 56, N, N, mul=0.8)
+    return t
+
+
+def black_top(seed, sink=False):
+    """The head's black counter, glossy and water-spotted; with sink, a round stainless bowl let into it."""
+    t = F.plain(seed, (26, 26, 28), 0.03, 0.85)
+    t.f0[:] = 40
+    if sink:
+        F.disc(t, 32, 30, 20, (178, 180, 180), f0=170, smooth=0.75)
+        F.disc(t, 32, 30, 18, (150, 152, 152), dh=-0.3)
+        F.disc(t, 32, 30, 2, (40, 40, 40), dh=-0.2)
+        F.disc(t, 32, 30, 20, mul=0.7, ring=1)
+    t.speckle(0.01, (150, 150, 150), 0.4)
+    return F.wear(t, 0.15, 3)
+
+
+def blanket_dark(seed):
+    """A charcoal wool blanket, the weave showing, pilled and a little dusty."""
+    t = F.plain(seed, (48, 50, 56), 0.08, 0.08)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.93 + 0.07 * ((xx // 2 + yy // 2) % 2))[..., None]
+    t.speckle(0.04, (90, 92, 98), 0.4)
+    F.area(t, 0, 4, N, 6, (70, 72, 80))
+    return F.wear(t, 0.25, 0, specks=0.01)
+
+
+def chessboard(seed):
+    """A chess board let into a dark table: maple and walnut squares in a walnut border."""
+    t = F.wood(seed, "dark")
+    for i in range(8):
+        for j in range(8):
+            F.area(t, 8 + i * 6, 8 + j * 6, 14 + i * 6, 14 + j * 6, (214, 186, 140) if (i + j) % 2 else (96, 50, 32),
+                   smooth=0.6)
+    F.edges(t, 7, 7, 57, 57, light=1.2, dark=0.6)
+    return F.wear(t, 0.15, 4)
+
+
+def cabin_door(seed, top):
+    """A stateroom door: grained laminate; a black name plate with the compartment number, a card holder
+    above it; at the bottom a louvre and a stainless kick plate, the lever handle at hand height."""
+    t = laminate(seed, (164, 124, 82))
+    if top:
+        F.area(t, 18, 20, 46, 30, (24, 24, 26), dh=0.2, smooth=0.7)
+        m = B.fit_text(CABINS[seed % len(CABINS)], BOLD, 7, 28, 10, seed)
+        F.paste(t, (m > 0.45).astype(np.float32), 18, 20, (230, 230, 226))
+        F.area(t, 22, 34, 42, 44, (226, 222, 210), dh=0.1)
+        F.edges(t, 21, 33, 43, 45, light=1.2, dark=0.7)
+    else:
+        F.area(t, 50, 4, 60, 7, (196, 198, 198), dh=0.4, f0=180)
+        F.disc(t, 52, 5.5, 2.2, (196, 198, 198), dh=0.4, f0=180)
+        for y in range(34, 50, 3):
+            F.area(t, 16, y, 48, y + 2, (40, 34, 28), dh=-0.2)
+        F.area(t, 0, 54, N, N, (184, 186, 186), f0=170, smooth=0.6, dh=0.1)
+    return t
+
+
+def drawers_lam(seed, rows=2):
+    """Built-in drawers in the laminate: the gaps, a recessed finger pull on each."""
+    t = laminate(seed, (170, 132, 88))
+    h = N // rows
+    for r in range(rows):
+        F.gap(t, 2, r * h + 1, 62, (r + 1) * h - 1)
+        F.area(t, 26, r * h + 6, 38, r * h + 9, (40, 34, 28), dh=-0.3)
+    return t
+
+
+def wardrobe_door(seed):
+    """A tall wardrobe locker in the laminate: the door's gap, vents up top, a chrome pull, a combination lock."""
+    t = laminate(seed, (170, 132, 88))
+    F.gap(t, 2, 1, 62, 63)
+    for y in range(6, 16, 3):
+        F.area(t, 14, y, 50, y + 1, (40, 34, 28), dh=-0.15)
+    F.area(t, 52, 28, 55, 44, (196, 198, 198), dh=0.3, f0=180)
+    F.disc(t, 53.5, 50, 3, (40, 40, 42), dh=0.3, smooth=0.8)
+    return t
+
+
+def mirror_cab(seed):
+    """A medicine cabinet's mirror door in a stainless frame, a toothpaste smear, the silver going at the edge."""
+    t = F.mirror(seed)
+    F.area(t, 0, 0, N, 3, (190, 192, 192), f0=180, dh=0.2)
+    F.area(t, 0, 61, N, N, (190, 192, 192), f0=180, dh=0.2)
+    F.area(t, 0, 0, 3, N, (190, 192, 192), f0=180, dh=0.2)
+    F.area(t, 61, 0, N, N, (190, 192, 192), f0=180, dh=0.2)
+    F.area(t, 3, 52, 30, 61, mul=0.7)
+    return t
+
+
+def steam_front(seed):
+    """The serving line's front: stainless, the louvres of the wells' heaters, a row of control knobs."""
+    t = stainless(seed)
+    for x in range(6, 58, 13):
+        F.disc(t, x + 3, 10, 2.5, (40, 40, 40), dh=0.3)
+    for y in range(26, 50, 4):
+        F.area(t, 8, y, 56, y + 2, (60, 62, 62), dh=-0.15)
+    F.area(t, 0, 58, N, N, mul=0.75)
+    return t
+
+
+def pans(seed):
+    """The serving line's wells from above: three stainless pans, what was left in them dried black and green."""
+    t = stainless(seed)
+    rng = t.rng
+    for i, x in enumerate((3, 23, 43)):
+        F.area(t, x, 6, x + 18, 58, (120, 122, 122), dh=-0.3)
+        F.area(t, x + 2, 8, x + 16, 56, ((70, 50, 30), (60, 70, 40), (90, 70, 40))[i], dh=-0.2, smooth=0.3)
+        t.speckle(0.02, (40, 90, 40), 0.5)
+        F.edges(t, x, 6, x + 18, 58, light=1.2, dark=0.6)
+    return F.wear(t, 0.3, 0)
+
+
+def crest(seed):
+    """The wardroom's plaque: a navy disc in a gilt rim, a fouled anchor and stars, WARDROOM round the top."""
+    t = F.plain(seed, (40, 32, 24), 0.05, 0.3)
+    F.disc(t, 32, 32, 30, (176, 140, 70), f0=200, smooth=0.6, dh=0.3)
+    F.disc(t, 32, 32, 26, (28, 36, 72), smooth=0.5)
+    gold = (210, 172, 90)
+    F.area(t, 31, 16, 33, 46, gold, dh=0.3)
+    F.area(t, 24, 20, 40, 22, gold, dh=0.3)
+    for k in range(9):
+        F.area(t, 22 + k, 44 - abs(k - 4) // 2, 23 + k, 46 - abs(k - 4) // 2, gold)
+        F.area(t, 33 + k, 42 + k // 3, 34 + k, 44 + k // 3, gold)
+        F.area(t, 31 - k, 42 + k // 3, 32 - k, 44 + k // 3, gold)
+    F.disc(t, 32, 14, 2.5, gold, ring=1)
+    for sx in (18, 46):
+        F.disc(t, sx, 30, 2, (230, 230, 230))
+    return F.wear(t, 0.15, 0)
+
+
+def mesh_bag(seed):
+    """A laundry bag: navy mesh, the clothes showing through, its drawstring."""
+    t = F.plain(seed, (60, 64, 80), 0.1, 0.1)
+    t.mix(np.clip(P.fbm(t.rng) + 0.3, 0, 1) * 0.5, (150, 140, 110), 1.0)
+    yy, xx = np.mgrid[0:N, 0:N]
+    grid = ((xx % 4) == 0) | ((yy % 4) == 0)
+    t.c[grid] = np.array((34, 38, 56), np.float32)
+    return F.wear(t, 0.3, 0)
+
+
+def desk_papers(seed):
+    """A desk flap's top: the blotter, a binder, a stack of message traffic, a coffee ring."""
+    t = laminate(seed, (164, 124, 82))
+    F.area(t, 6, 6, 44, 34, (40, 70, 60), smooth=0.2)
+    F.area(t, 10, 10, 30, 30, (232, 230, 220))
+    for y in range(13, 28, 3):
+        F.area(t, 12, y, 28, y + 1, (90, 90, 96))
+    F.area(t, 46, 8, 60, 36, (30, 50, 110), dh=0.2)
+    F.disc(t, 50, 48, 5, mul=0.7, ring=1)
+    return F.wear(t, 0.2, 3)
+
+
+def laundry_light(seed, on):
+    """A berth's reading light: a small frosted lens."""
+    return lens(seed, (250, 226, 170), on)
+
+
 SIGNS = {
     "fire": ("FIRE STATION", (176, 34, 28)), "repair": ("REPAIR|LOCKER", (176, 34, 28)),
     "escape": ("ESCAPE|TRUNK", (226, 222, 210)), "hearing": ("HEARING|PROTECTION|REQUIRED", (218, 178, 38)),
@@ -541,6 +922,7 @@ SIGNS = {
     "wardroom": ("WARDROOM", (226, 222, 210)), "chiefs": ("CHIEFS|MESS", (226, 222, 210)),
     "aimd": ("AVIONICS|SHOP", (226, 222, 210)), "post": ("POST|OFFICE", (226, 222, 210)),
 }
+CABINS = ("03-118-2-L", "03-122-4-L", "03-126-6-L", "03-130-2-L", "03-134-4-L", "03-138-6-L")
 LABELS = ("2-96-0-L", "2-118-2-L", "2-150-1-Q", "3-44-0-L", "3-132-2-M", "3-176-1-L", "4-60-0-M", "4-212-2-Q",
           "1-140-0-A", "1-188-1-A", "01-72-0-L", "02-120-1-C", "03-150-0-C", "07-160-0-C", "2-250-0-E", "3-290-1-A")
 
@@ -570,6 +952,23 @@ def textures():
         "fit_screen_on": lambda: screen(8111, True), "fit_screen_off": lambda: screen(8112, False),
         "fit_louvre": lambda: louvre(8116), "fit_hatch": lambda: hatch(8117),
         "fit_chart": lambda: chart(8113), "fit_drawers": lambda: drawers(8114), "fit_leather": lambda: vinyl(8115, (64, 44, 32)),
+        "fit_laminate": lambda: laminate(8200), "fit_cherry": lambda: cherry(8201), "fit_ceiling": lambda: ceiling_tile(8202),
+        "fit_troffer_on": lambda: troffer(8203, True), "fit_troffer_off": lambda: troffer(8204, False),
+        "fit_tile_cream": lambda: tile_cream(8205), "fit_carpet": lambda: carpet(8206), "fit_linen": lambda: linen(8207),
+        "fit_linen_soiled": lambda: linen(8208, True), "fit_stars": lambda: star_cloth(8209),
+        "fit_paint_a": lambda: ship_painting(8210, "a"), "fit_paint_b": lambda: ship_painting(8211, "b"),
+        "fit_paint_c": lambda: ship_painting(8212, "c"), "fit_brass": lambda: brass(8213), "fit_shade_on": lambda: shade_lit(8214),
+        "fit_stall": lambda: stall(8215), "fit_stall_door_top": lambda: stall_door(8216, True),
+        "fit_stall_door_bottom": lambda: stall_door(8217, False), "fit_black": lambda: black_top(8218),
+        "fit_black_sink": lambda: black_top(8219, True), "fit_blanket": lambda: blanket_dark(8220),
+        "fit_chessboard": lambda: chessboard(8221), "fit_cabin_door_top": lambda: cabin_door(8222, True),
+        "fit_cabin_door_bottom": lambda: cabin_door(8223, False), "fit_drawers_lam": lambda: drawers_lam(8224),
+        "fit_wardrobe": lambda: wardrobe_door(8225), "fit_mirror_cab": lambda: mirror_cab(8226),
+        "fit_steam_front": lambda: steam_front(8227), "fit_pans": lambda: pans(8228), "fit_crest": lambda: crest(8229),
+        "fit_mesh_bag": lambda: mesh_bag(8230), "fit_desk_papers": lambda: desk_papers(8231),
+        "fit_reading_on": lambda: lens(8232, (250, 226, 170), True), "fit_reading_off": lambda: lens(8233, (214, 208, 190), False),
+        "fit_drawers_lam3": lambda: drawers_lam(8234, 3), "fit_wall_cream": lambda: wall_cream(8235),
+        "fit_wainscot": lambda: wainscot(8236),
     }
     for i, (k, (text, col)) in enumerate(SIGNS.items()):
         T[f"fit_st_{k}"] = (lambda a, b, c: lambda: B.stencil_sign(a, b, c, 12))(8040 + i, text, col)
@@ -856,6 +1255,193 @@ def blocks():
     add("fit_hatch", [[1, 0, 15, 15, 16, 16, "fit_hatch"]], "Side Door")
 
     add("fit_line", [[0, 0, 0, 16, 0.25, 16, "fit_line"]], "Deck Line", rotate="axis")
+
+    # ---- officers' country (from the wardroom, stateroom and head photos)
+    under = {"side": "navy_deck_steel", "down": "navy_overhead"}
+    out["fit_tile_cream"] = {"tex": dict(under, up="fit_tile_cream"), "title": "Tile Floor", "sound": "STONE"}
+    out["fit_carpet"] = {"tex": dict(under, up="fit_carpet"), "title": "Carpet", "sound": "WOOL"}
+    out["fit_joiner"] = {"tex": "fit_laminate", "title": "Joiner Bulkhead", "sound": "WOOD"}
+    out["fit_pillar"] = {"tex": "fit_cherry", "title": "Pillar", "sound": "WOOD"}
+    out["fit_door_cabin"] = {"door": "wood", "tex": {"top": "fit_cabin_door_top", "bottom": "fit_cabin_door_bottom"},
+                             "title": "Stateroom Door"}
+    out["fit_door_stall"] = {"door": "wood", "tex": {"top": "fit_stall_door_top", "bottom": "fit_stall_door_bottom"},
+                             "title": "Stall Door"}
+    # the lining a stateroom's steel bulkheads get: the laminate on the face into the room, the steel's paint behind
+    add("fit_lining", [[0, 0, 0, 16, 16, 16, {"north": "fit_laminate", "side": "navy_wall", "up": "navy_wall",
+                                               "down": "navy_wall"}]], "Joiner Bulkhead", sound="WOOD", decor=False)
+
+    for name, face in (("fit_lining_cream", "fit_wall_cream"), ("fit_lining_wainscot", "fit_wainscot")):
+        add(name, [[0, 0, 0, 16, 16, 16, {"north": face, "side": "navy_wall", "up": "navy_wall", "down": "navy_wall"}]],
+            "Bulkhead", sound="WOOD", decor=False)
+
+    # the drop ceiling, a hand's breadth under the deck beams: tiles in their T-bars, a troffer, a downlight; a
+    # tile gone (the pipes over it showing), one down on the floor
+    tile = {"down": "fit_ceiling", "side": "fit_ceiling", "up": "bunk_grey"}
+    bar = "home_white"
+    add("fit_ceiling", [[0, 12, 0, 16, 12.6, 16, tile]], "Ceiling", sound="WOOD", rotate=None)
+    add("fit_ceiling_open", [[0, 12, 0, 8, 12.6, 16, tile], [8, 12, 0, 16, 12.6, 8, tile],
+                             [8, 12, 8, 16, 12.6, 8.4, bar], [8, 12, 8, 8.4, 12.6, 16, bar], [15.6, 12, 8.4, 16, 12.6, 16, bar],
+                             [8.4, 12, 15.6, 15.6, 12.6, 16, bar], [0, 13.5, 10.5, 16, 15.5, 12.5, "bunk_pipe_red"],
+                             [0, 14.5, 13, 16, 15.5, 15.5, "bunk_cables"], [11, 9, 12.5, 11.5, 12, 13, "bunk_cables"]],
+        "Ceiling", sound="WOOD")
+    add("fit_ceiling_fallen", [[1.5, 0, 2.5, 9.5, 0.6, 10.5, tile], [8.5, 0, 6, 14.5, 0.5, 13, tile],
+                               [4, 0.6, 7, 7, 0.9, 8, "fit_ceiling"]], "Fallen Ceiling Tile", sound="WOOD")
+    rim = [[0, 12, 0, 16, 12.6, 1, bar], [0, 12, 7, 16, 12.6, 8, bar], [0, 12, 1, 1, 12.6, 7, bar],
+           [15, 12, 1, 16, 12.6, 7, bar], [0, 12.6, 0, 16, 13.4, 8, "bunk_grey"], [0, 12, 8, 16, 12.6, 16, tile]]
+    lamp("fit_troffer", rim + [[1, 12.3, 1, 15, 12.6, 7, G]], "Ceiling Light", "axis", 14, G, "fit_troffer_on",
+         "fit_troffer_off", 12)
+    lamp("fit_downlight", [[0, 12, 0, 16, 12.6, 6, tile], [0, 12, 10, 16, 12.6, 16, tile], [0, 12, 6, 6, 12.6, 10, tile],
+                           [10, 12, 6, 16, 12.6, 10, tile], [6, 11.8, 6, 10, 12.1, 6.4, "fit_brass"],
+                           [6, 11.8, 9.6, 10, 12.1, 10, "fit_brass"], [6, 11.8, 6.4, 6.4, 12.1, 9.6, "fit_brass"],
+                           [9.6, 11.8, 6.4, 10, 12.1, 9.6, "fit_brass"], [6.4, 12.2, 6.4, 9.6, 12.6, 9.6, G]],
+         "Downlight", None, 11, G, "fit_shade_on", "bunk_glass_off", 9)
+
+    # on the bulkheads: the brass sconces over the wardroom's paintings, the paintings, the mess's plaque
+    lamp("fit_sconce", [[6.5, 5, 15, 9.5, 10, 16, "fit_brass"], [7.5, 7.5, 12, 8.5, 8.3, 15, "fit_brass"],
+                        [7.5, 8.3, 11.5, 8.5, 9.5, 12.5, "fit_brass"], [5, 9.5, 9, 11, 13.5, 15, G],
+                        [6, 13.5, 10, 10, 13.8, 14, "fit_brass"]],
+         "Wall Sconce", "facing", 11, G, "fit_shade_on", "home_shade", 9)
+    for k in "abc":
+        add(f"fit_painting_{k}", [[0.5, 2.5, 15, 15.5, 13.5, 16, {"north": f"fit_paint_{k}", "side": "fit_brass",
+                                                                   "up": "fit_brass", "down": "fit_brass"}]],
+            "Painting", sound="WOOD")
+    add("fit_crest", [[2.5, 2.5, 15, 13.5, 13.5, 16, {"north": "fit_crest", "side": "fit_brass", "up": "fit_brass",
+                                                       "down": "fit_brass"}]], "Wardroom Plaque", sound="WOOD")
+
+    # the wardroom: round tables under white cloths, the chairs in their star-pattern covers, the serving line
+    def table(cloth, things):
+        skirt = [[1, 0.6, 3, 15, 12.5, 13, cloth], [3, 0.6, 1, 13, 12.5, 15, cloth], [2, 0.6, 2, 14, 12.5, 14, cloth],
+                 [0.7, 11.2, 2.7, 15.3, 12.5, 13.3, cloth], [2.7, 11.2, 0.7, 13.3, 12.5, 15.3, cloth]]
+        return skirt + things
+    add("fit_round_table", table("fit_linen", [[10, 12.5, 4, 12, 16, 6, "home_carafe"], [4, 12.5, 9, 5.5, 14, 10.5, "home_mug"],
+                                               [9, 12.5, 10, 10.5, 14, 11.5, "home_mug"], [6.5, 12.5, 5, 8.5, 13.5, 6, "home_chrome"]]),
+        "Wardroom Table", sound="WOOL", decor=False, loot="drinks")
+    add("fit_round_table_mess", table("fit_linen_soiled", [[3, 12.5, 4, 8, 12.9, 9, "home_plates"],
+                                                           [9, 12.5, 9, 10.5, 13.3, 12, "home_mug"],
+                                                           [10, 12.5, 3, 13, 13.6, 6, "home_cardboard"],
+                                                           [5, 12.5, 10, 8, 12.8, 13, "home_sheet_blood"]]),
+        "Wardroom Table", sound="WOOL", decor=False, loot="basement_medicine")
+    legs = [[3.5, 0, 3.5, 4.5, 7, 4.5, "home_wood_dark"], [11.5, 0, 3.5, 12.5, 7, 4.5, "home_wood_dark"],
+            [3.5, 0, 11.5, 4.5, 7, 12.5, "home_wood_dark"], [11.5, 0, 11.5, 12.5, 7, 12.5, "home_wood_dark"]]
+    add("fit_chair_ward", legs + [[3, 7, 3, 13, 9.5, 13.5, "fit_stars"], [3, 9.5, 12, 13, 21, 14, "fit_stars"],
+                                  [3.5, 21, 12.2, 12.5, 21.6, 13.8, "fit_stars"]], "Wardroom Chair", sound="WOOL")
+    add("fit_chair_ward_tipped", [[3, 0, 2, 13, 2, 13.5, "fit_stars"], [3, 2, 11.5, 13, 12, 13.5, "fit_stars"],
+                                  [3.5, 2, 2.5, 4.5, 3, 9.5, "home_wood_dark"], [11.5, 2, 2.5, 12.5, 3, 9.5, "home_wood_dark"],
+                                  [3.5, 9, 13.5, 4.5, 16, 14.5, "home_wood_dark"], [11.5, 9, 13.5, 12.5, 16, 14.5, "home_wood_dark"]],
+        "Wardroom Chair", sound="WOOL")
+    glass = "bunk_glass_off"
+    add("fit_serving", [[0, 0, 2, 16, 13, 16, {"north": "fit_steam_front", "side": "fit_stainless", "up": "fit_pans",
+                                               "down": "fit_stainless"}],
+                        [0, 11.5, -1, 16, 12.3, 2, "fit_stainless"], [0, 10.5, -1, 16, 11.5, -0.4, "fit_stainless"],
+                        [1, 13, 8, 1.6, 20, 8.6, "fit_stainless"], [14.4, 13, 8, 15, 20, 8.6, "fit_stainless"],
+                        [0.5, 19.4, 4, 15.5, 19.8, 9, glass], [0.5, 15, 4, 15.5, 19.4, 4.4, glass]],
+        "Serving Line", decor=False, loot="kitchen")
+    add("fit_urn", [[4.5, -1.5, 4.5, 11.5, 7, 11.5, "fit_stainless"], [5, 7, 5, 11, 8, 11, "fit_stainless"],
+                    [7, 8, 7, 9, 9, 9, "home_plastic_black"], [7.5, -0.5, 3, 8.5, 0.5, 4.5, "home_chrome"],
+                    [5, -1.5, 3, 11, -1.2, 4.5, "home_chrome"]], "Coffee Urn")
+
+    # the staterooms: two-tier berths in the laminate (the head end against a bulkhead; facing runs head to foot),
+    # a reading light in each, drawers under the lower one; the fold-down desk with its shelves, the wardrobe,
+    # the little sink and its mirror cabinet
+    def berth(lo, head):
+        out_ = []
+        if lo:
+            out_ += [[0.5, 0, 0, 15.5, 4.5, 16, {"east": "fit_drawers_lam", "west": "fit_drawers_lam", "side": "fit_laminate",
+                                                  "up": "fit_laminate", "down": "fit_laminate"}],
+                     [1, 4.5, 0, 15, 7, 16, {"up": "home_mattress", "side": "home_mattress", "down": "fit_laminate"}]]
+            y = 7
+        else:
+            out_ += [[0.5, 1, 0, 15.5, 3, 16, "fit_laminate"], [1, 3, 0, 15, 5.5, 16, {"up": "home_mattress", "side": "home_mattress",
+                                                                                      "down": "fit_laminate"}],
+                     [0.2, 5.5, 2, 1, 8.5, 14, "fit_laminate"], [15, 5.5, 2, 15.8, 8.5, 14, "fit_laminate"]]
+            y = 5.5
+        if head:
+            out_ += [[0, 0, 15, 16, 16 if lo else 10, 16, "fit_laminate"], [1, y, 0, 15, y + 0.6, 11, "fit_blanket"],
+                     [2, y, 11, 14, y + 2, 15, "home_pillow"], [6, y + 3.5, 14.2, 10, y + 5, 15, G],
+                     [5.5, y + 5, 14, 10.5, y + 5.4, 15, "fit_brass"]]
+        else:
+            out_ += [[0, 0, 0, 16, 16 if lo else 10, 1, "fit_laminate"], [1, y, 1, 15, y + 0.6, 16, "fit_blanket"],
+                     [1, y + 0.6, 1, 15, y + 2.2, 5, "fit_blanket"]]
+            if lo:
+                out_ += [[15.2, 9, 1, 15.5, 16, 9, "navy_curtain_blue"], [15, 15.5, 1, 15.8, 16, 15, "home_chrome"]]
+        return out_
+    for tier in ("lo", "hi"):
+        lamp(f"fit_berth_{tier}_head", berth(tier == "lo", True), "Berth", "facing", 7, G, "fit_reading_on", "fit_reading_off")
+        add(f"fit_berth_{tier}_foot", berth(tier == "lo", False), "Berth", sound="WOOD", decor=False)
+        out[f"fit_berth_{tier}_head"]["decor"] = out[f"fit_berth_{tier}_head_on"]["decor"] = False
+        out[f"fit_berth_{tier}_head"]["loot"] = out[f"fit_berth_{tier}_head_on"]["loot"] = "home_wardrobe" if tier == "lo" else "home_nightstand"
+    out["fit_berth_lo_foot"]["loot"] = "clothes"
+    add("fit_secretary", [[0.5, 0, 4, 15.5, 11, 16, {"north": "fit_drawers_lam3", "side": "fit_laminate", "up": "fit_laminate",
+                                                    "down": "fit_laminate"}],
+                          [0.5, 11, 0, 15.5, 12, 16, {"up": "fit_desk_papers", "side": "fit_laminate", "down": "fit_laminate"}],
+                          [11, 12, 9, 13, 14.5, 11, "home_mug"], [2, 12, 12, 7, 13, 15, "home_books"]],
+        "Desk", sound="WOOD", decor=False, loot="office")
+    lamp("fit_shelves", [[0.5, 4, 8, 15.5, 16, 16, {"north": "fit_wardrobe", "side": "fit_laminate", "up": "fit_laminate",
+                                                    "down": "fit_laminate"}],
+                         [1, 0, 10, 15, 3.6, 15.5, "home_books"], [0.5, 0, 15.5, 15.5, 4, 16, "fit_laminate"],
+                         [2, 3.6, 9, 14, 4, 10, G]], "Desk Shelves", "facing", 8, G, "fit_reading_on", "fit_reading_off", 7)
+    for k in ("fit_shelves", "fit_shelves_on", "fit_shelves_flicker"):
+        out[k]["decor"] = False
+        out[k]["loot"] = "home_books"
+    add("fit_wardrobe_lo", [[1, 0, 2, 15, 16, 16, {"north": "fit_wardrobe", "side": "fit_laminate", "up": "fit_laminate",
+                                                   "down": "fit_laminate"}]], "Wardrobe", sound="WOOD", decor=False,
+        loot="home_wardrobe")
+    add("fit_wardrobe_hi", [[1, 0, 2, 15, 15, 16, {"north": "fit_drawers_lam", "side": "fit_laminate", "up": "fit_laminate",
+                                                   "down": "fit_laminate"}], [0.5, 15, 1.5, 15.5, 16, 16, "fit_laminate"]],
+        "Wardrobe", sound="WOOD", decor=False, loot="clothes")
+    add("fit_sink_cabin", [[2, 0, 6, 14, 12, 16, {"north": "fit_drawers_lam", "side": "fit_laminate", "up": "fit_laminate",
+                                                  "down": "fit_laminate"}],
+                           [1.5, 12, 5, 14.5, 13.5, 16, {"up": "fit_black_sink", "side": "fit_black", "down": "fit_black"}],
+                           [7.5, 13.5, 13.5, 8.5, 17, 14.5, "home_chrome"], [7.5, 16.2, 10.5, 8.5, 17, 14.5, "home_chrome"]],
+        "Sink", sound="WOOD", decor=False, loot="home_bathroom")
+    lamp("fit_medcab", [[2.5, 1, 12, 13.5, 12, 16, {"north": "fit_mirror_cab", "side": "fit_laminate", "up": "fit_laminate",
+                                                     "down": "fit_laminate"}], [2.5, 12.5, 13, 13.5, 13.5, 16, G]],
+         "Medicine Cabinet", "facing", 6, G, "fit_reading_on", "fit_reading_off")
+    for k in ("fit_medcab", "fit_medcab_on"):
+        out[k]["decor"] = False
+        out[k]["loot"] = "home_medicine"
+    for k in list(out):
+        if k.startswith(("fit_berth", "fit_shelves", "fit_medcab")):
+            out[k]["sound"] = "WOOD"
+    add("fit_laundry_bag", [[4, 0, 4, 12, 7, 12, "fit_mesh_bag"], [5, 7, 5, 11, 8.5, 11, "fit_mesh_bag"],
+                            [7.5, 8.5, 7.5, 8.5, 10, 8.5, "fit_mesh_bag"]], "Laundry Bag", sound="WOOL", loot="clothes")
+
+    # the captain's cabin: the chess table (a war in progress, red coats against blue)
+    pieces = []
+    red, blue = "home_red_steel", "home_fab_blue"
+    for i, (col, row, tall) in enumerate(((0, 0, 1), (1, 0, 0), (3, 0, 2), (4, 0, 2), (6, 0, 0), (0, 1, 0), (2, 1, 0),
+                                          (3, 2, 0), (5, 1, 0), (7, 1, 0), (5, 3, 1))):
+        x, z = 2 + col * 1.5 + 0.35, 2 + row * 1.5 + 0.35
+        pieces.append([x, 12, z, x + 0.8, 13.4 + 0.5 * tall, z + 0.8, red])
+    for i, (col, row, tall) in enumerate(((0, 7, 1), (2, 7, 0), (3, 7, 2), (4, 7, 2), (7, 7, 1), (1, 6, 0), (3, 6, 0),
+                                          (4, 5, 0), (6, 6, 0), (2, 4, 1))):
+        x, z = 2 + col * 1.5 + 0.35, 2 + row * 1.5 + 0.35
+        pieces.append([x, 12, z, x + 0.8, 13.4 + 0.5 * tall, z + 0.8, blue])
+    add("fit_chess", [[0.5, 11, 0.5, 15.5, 12, 15.5, {"up": "fit_chessboard", "side": "home_wood_dark", "down": "home_wood_dark"}],
+                      [6, 1, 6, 10, 11, 10, "home_wood_dark"], [3, 0, 3, 13, 1, 13, "home_wood_dark"]] + pieces,
+        "Chess Table", sound="WOOD", decor=False)
+
+    # the officers' head: orange stall panels on stainless posts, the stainless pans, the black counter and its
+    # bowls, the long mirror with its soap dispensers
+    # a stall is one block: the pan facing its door, the orange panel down its right-hand side on a
+    # stainless post at the front; fit_stall_top carries the panel up over it
+    pan = [[5.5, 0, 4, 10.5, 5, 11, "fit_stainless"], [4.5, 5, 1.5, 11.5, 7.5, 11, "fit_stainless"],
+           [6, 6.5, 3, 10, 7.6, 9, "home_toilet_water"], [4.2, 7.5, 1.2, 11.8, 8, 11, "home_plastic_black"],
+           [6.5, 5, 11, 9.5, 9, 14, "fit_stainless"], [7.5, 9, 13, 8.5, 16, 14, "home_chrome"],
+           [6, 13, 13, 10, 14, 15.5, "home_chrome"], [2, 7, 14, 3.5, 8.5, 16, "home_chrome"]]
+    add("fit_toilet_steel", pan, "Toilet", decor=False)
+    add("fit_toilet_stall", pan + [[15, 1.5, 1, 16, 16, 16, "fit_stall"], [14.6, 0, 0, 16, 16, 1, "fit_stainless"],
+                                   [15.2, 0, 8, 15.8, 1.5, 9, "fit_stainless"]], "Toilet", decor=False)
+    add("fit_stall_top", [[15, 0, 1, 16, 12, 16, "fit_stall"], [14.6, 0, 0, 16, 12.6, 1, "fit_stainless"],
+                          [14.8, 12, 1, 16, 12.6, 16, "fit_stainless"]], "Stall Panel", sound="WOOD", decor=False)
+    add("fit_vanity_black", [[0, 12, 2, 16, 13.5, 16, {"up": "fit_black_sink", "side": "fit_black", "down": "fit_black"}],
+                             [0, 9, 2, 16, 12, 3, "fit_black"], [4, 8, 5, 12, 12, 13, "fit_stainless"],
+                             [7.5, 13.5, 13, 8.5, 16, 14, "home_chrome"], [7.5, 15.2, 10, 8.5, 16, 14, "home_chrome"],
+                             [0.5, 0, 14, 1.5, 9, 15.5, "fit_stainless"], [14.5, 0, 14, 15.5, 9, 15.5, "fit_stainless"],
+                             [6, 0, 9, 10, 8, 10, "bunk_pipe_grey"]], "Washbasin", decor=False, loot="home_bathroom")
+    add("fit_mirror_long", [[0, 1, 15.5, 16, 12, 16, "home_mirror"], [0, 12, 15, 16, 12.6, 16, "fit_stainless"],
+                            [0, 0.4, 15, 16, 1, 16, "fit_stainless"], [11, 3, 13, 14, 8, 15.5, "fit_stainless"],
+                            [12, 2, 13.5, 13, 3, 14.5, "home_chrome"]], "Mirror", sound="GLASS")
 
     for k in SIGNS:
         add(f"fit_st_{k}", [[0, 0, 15.75, 16, 16, 16, f"fit_st_{k}"]], "Stencil")

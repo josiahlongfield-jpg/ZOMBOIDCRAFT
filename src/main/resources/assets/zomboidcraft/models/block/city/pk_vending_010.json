@@ -1,0 +1,214 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_vending_010": "zomboidcraft:block/city/pk_vending_010",
+    "particle": "zomboidcraft:block/city/pk_vending_010"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        6,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            2.0625,
+            0.0625,
+            3.5625,
+            3.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            3.6875,
+            0.0625,
+            5.1875,
+            3.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            8.6875,
+            0.0625,
+            11.9375,
+            3.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            5.3125,
+            0.0625,
+            8.5625,
+            3.0625
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            0.0625,
+            0.0625,
+            1.5625,
+            3.3125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            12.0625,
+            0.0625,
+            12.3125,
+            3.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            12.4375,
+            0.0625,
+            12.6875,
+            3.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            3.4375,
+            3.4375,
+            6.6875,
+            6.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            0.0625,
+            3.4375,
+            3.3125,
+            6.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            1.6875,
+            0.0625,
+            1.9375,
+            3.3125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        4
+      ],
+      "to": [
+        15,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            9.1875,
+            3.4375,
+            11.4375,
+            6.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            11.5625,
+            3.4375,
+            13.8125,
+            6.4375
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            6.8125,
+            3.4375,
+            9.0625,
+            6.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        9,
+        3
+      ],
+      "to": [
+        15,
+        12,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            0.0625,
+            6.5625,
+            2.3125,
+            7.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            4.8125,
+            6.5625,
+            7.0625,
+            6.8125
+          ]
+        },
+        "down": {
+          "texture": "#pk_vending_010",
+          "uv": [
+            2.4375,
+            6.5625,
+            4.6875,
+            6.8125
+          ]
+        }
+      }
+    }
+  ]
+}

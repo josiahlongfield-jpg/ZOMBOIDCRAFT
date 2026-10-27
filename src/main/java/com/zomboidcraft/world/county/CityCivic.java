@@ -47,6 +47,8 @@ final class CityCivic {
     /** The old city's courthouse, once the square is built: its frame and the room inside its walls. */
     Placer courthouse;
     int[] courtInterior;
+    /** The floor of the courthouse's basement, where a shelter's stair comes up. */
+    int courtFloor;
 
     CityCivic(Kit kit, double hit) {
         this.kit = kit;
@@ -153,16 +155,8 @@ final class CityCivic {
         }
     }
 
-    /** A street tree in its pit: a grate round the trunk, mostly maples and planes, some dead. */
+    /** A street tree in its pit (the kit digs it and edges it), mostly maples and planes, some dead. */
     private void treePit(int x, int z) {
-        out.set(x, 0, z, "minecraft:coarse_dirt");
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                if ((dx != 0 || dz != 0) && chance() < 0.7) {
-                    out.set(x + dx, 1, z + dz, "grate");
-                }
-            }
-        }
         double r = chance();
         kit.tree(r < 0.4 ? Trees.Kind.MAPLE : r < 0.7 ? Trees.Kind.SYCAMORE : r < 0.82 ? Trees.Kind.OAK : r < 0.92 ? Trees.Kind.SICK
                 : Trees.Kind.DEAD, x, z);
@@ -419,13 +413,14 @@ final class CityCivic {
             }
         }
         int cw = Math.min(34, x1 - x0 - 14), cd = Math.min(30, z1 - z0 - 20);
-        if (cw >= 16 && cd >= 12) {
+        if (cw >= 16 && cd >= 20) {
             int hx = cx - cw / 2, hz = cz - cd / 2 + 2;
             Placer hp = new Placer(out, hx, 0, hz - 4, 0);
             hp.fill(-1, 1, -1, cw, 8, cd + 4, "air");
             new Civic(hp, rng).courthouse(cw, cd + 4);
             courthouse = hp;
-            courtInterior = new int[] {1, 5, cw - 2, cd + 2};
+            courtInterior = Courthouse.cellar(cw, cd + 4);
+            courtFloor = Courthouse.BASE;
         }
         new Landmarks(world, rng).memorial(cx + 8, z1 - 5);
         for (int[] c : new int[][] {{x0 + 4, z0 + 4}, {x1 - 4, z0 + 4}, {x0 + 4, z1 - 4}, {x1 - 4, z1 - 4}}) {
@@ -700,7 +695,7 @@ final class CityCivic {
         if (pharmacy) {
             for (int x = a0; x <= a1; x++) {
                 p.set(x, y + 1, wallZ, "store_shelf_pharmacy[facing=" + face + "]");
-                p.set(x, y + 2, wallZ, "store_shelf_pharmacy[facing=" + face + "]");
+                p.set(x, y + 2, wallZ, "store_shelf_pharmacy_top[facing=" + face + "]");
             }
             for (int z = Math.min(r0, r1) + 1; z < Math.max(r0, r1); z++) {
                 p.set(a0, y + 1, z, "store_shelf_pharmacy[facing=east]");

@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_sign_school": {
+      "sprite": "zomboidcraft:block/city/sc_sign_school",
+      "force_translucent": true
+    },
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/streetlight_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        8.6
+      ],
+      "to": [
+        15,
+        16,
+        9.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_sign_school"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
 import com.zomboidcraft.world.city.Decay;
+import com.zomboidcraft.world.city.PackTower;
 import com.zomboidcraft.world.city.Placer;
 import com.zomboidcraft.world.city.ShopLights;
 import com.zomboidcraft.world.city.Tower;
@@ -155,8 +156,8 @@ final class DowntownSite extends Site {
         double r = g.nextDouble();
         Bunker.State state = r < 0.45 ? Bunker.State.SEALED : r < 0.7 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
         int[] in = civic.courtInterior;
-        if (Shelter.dig(civic.courthouse, g, state, in, 0, -28, new int[] {2, 2, w - 3, d - 3})) {
-            Shelter.plate(civic.courthouse, in[0], in[2], 4);
+        if (Shelter.dig(civic.courthouse, g, state, in, civic.courtFloor, -28 + civic.courtFloor, new int[] {2, 2, w - 3, d - 3})) {
+            Shelter.plate(civic.courthouse, in[0], in[2], 6);
         }
     }
 
@@ -376,6 +377,9 @@ final class DowntownSite extends Site {
     private void tower(Blk b, int side, int along, int tw, int td, int floors) {
         tw = Math.max(20, tw);
         td = Math.max(16, td);
+        if (chance() < 0.55 && packTower(b, side, along, tw, td, 0, Tower.height(floors), true)) {
+            return;
+        }
         Placer pl = lotOn(b, side, along, tw, td);
         Tower t = new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4));
         t.build();
@@ -384,11 +388,46 @@ final class DowntownSite extends Site {
         ruin(boxOn(b, side, along, tw, td), Tower.height(floors) + 12);
     }
 
+    /**
+     * One of the buildings from the pack Josiah bought ({@link PackTower}) in a lot tw along the
+     * street and td deep (set back from the street by set), as near height blocks tall as one
+     * fits; centred along the lot. False when none fits.
+     */
+    private boolean packTower(Blk b, int side, int along, int tw, int td, int set, int height, boolean office) {
+        PackTower.Template t = PackTower.pick(rng, tw, td, height, office);
+        if (t == null || p.level + t.height() > 316) {
+            return false;
+        }
+        int at = along + (tw - t.w()) / 2;
+        int[] box = boxOn(b, side, at, t.w(), t.d() + set);
+        if (!kit.free(box[0], box[1], box[2], box[3])) {
+            return false;
+        }
+        Placer pl = set > 0 ? lotOnSet(b, side, at, t.w(), t.d(), set) : lotOn(b, side, at, t.w(), t.d());
+        new PackTower(pl, rng, t, chance() < 0.85).build();
+        ruin(box, t.height() + 8);
+        return true;
+    }
+
     /** Walk-ups shoulder to shoulder along a side from along a0 to a1, depth back from the street. */
     private void frontage(Blk b, int side, int a0, int a1, int depth) {
         int a = a0;
+        // the pack's apartment blocks and corner shops can go deeper than a walk-up, up to half the block
+        int deep = Math.min(42, b.depth(side) / 2 - 1);
         while (a1 - a + 1 >= 9) {
             int space = a1 - a + 1;
+            if (chance() < 0.4) {
+                PackTower.Template t = PackTower.pick(rng, space, deep, (walkMin + walkMax) / 2 * Walkup.FLOOR + 6, false);
+                if (t != null) {
+                    int[] box = boxOn(b, side, a, t.w(), t.d());
+                    if (kit.free(box[0], box[1], box[2], box[3])) {
+                        new PackTower(lotOn(b, side, a, t.w(), t.d()), rng, t, true).build();
+                        ruin(box, t.height() + 6);
+                        a += t.w();
+                        continue;
+                    }
+                }
+            }
             int lw = space <= 18 ? space : 9 + rng.nextInt(9);
             if (space - lw < 9 && space - lw > 0) {
                 lw = space;  // no sliver left at the corner
@@ -545,7 +584,16 @@ final class DowntownSite extends Site {
         int len = b.len(front), dep = b.depth(front);
         double r = chance();
         if (r < 0.3 && len >= 30 && dep >= 34) {
-            // one big tower set back behind its own plaza
+            // one big tower set back behind its own plaza: the pack's landmarks when one fits
+            PackTower.Template big = PackTower.pick(rng, len, dep, maxFloors * Tower.FLOOR + 40, true);
+            if (big != null && chance() < 0.7) {
+                int set = Math.min(12, dep - big.d());
+                forecourt(boxOn(b, front, 0, len, set), front);
+                if (packTower(b, front, 0, len, big.d(), set, big.height(), true)) {
+                    backyard(b);
+                    return;
+                }
+            }
             int tw = Math.min(len - 6, 34 + rng.nextInt(12)), td = Math.min(dep - 12, 28 + rng.nextInt(12));
             int set = Math.min(12, dep - td);
             forecourt(boxOn(b, front, 0, len, set), front);
@@ -557,6 +605,11 @@ final class DowntownSite extends Site {
             civic.chandeliers(pl, tw, td, Tower.LOBBY);
             int[] box = boxOn(b, front, (len - tw) / 2, tw, td + set);
             ruin(box, Tower.height(floors) + 12);
+            backyard(b);
+            return;
+        }
+        if (r < 0.65 && len >= 40 && packTower(b, front, 0, len, Math.min(dep, 62), 0, Tower.height(floors(b.t)), true)) {
+            // one of the pack's office towers across the front of the block
             backyard(b);
             return;
         }
@@ -837,9 +890,6 @@ final class DowntownSite extends Site {
                     out.set(x, 1, z, kit.pick("debris_chunk", "rubble_pile", "trash_bag[facing=north]", "cardboard_box", "tire[axis=x]"));
                 } else if (r < 0.014) {
                     out.set(x, 1, z, kit.pick("paper", "glass_shards", "blood_splat", "leaf_litter"));
-                } else if (r < 0.0155 && u == Kit.ROAD) {
-                    // a tree that came up through a crack in the road
-                    kit.tree(pick(new Trees.Kind[] {Trees.Kind.YOUNG, Trees.Kind.YOUNG, Trees.Kind.SICK, Trees.Kind.BUSH, Trees.Kind.MAPLE}), x, z);
                 }
             }
         }
@@ -860,7 +910,6 @@ final class DowntownSite extends Site {
                 if (kit.use(x, z) != Kit.WALK || out.get(x, 1, z) != null || chance() < 0.35) {
                     continue;
                 }
-                out.set(x, 0, z, "minecraft:coarse_dirt");
                 kit.tree(pick(new Trees.Kind[] {Trees.Kind.MAPLE, Trees.Kind.SYCAMORE, Trees.Kind.YOUNG, Trees.Kind.SICK, Trees.Kind.DEAD}), x, z);
             }
         }

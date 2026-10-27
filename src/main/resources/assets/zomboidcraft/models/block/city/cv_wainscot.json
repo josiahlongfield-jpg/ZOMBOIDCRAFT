@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_plaster": "zomboidcraft:block/city/cv_plaster",
+    "cv_wainscot": "zomboidcraft:block/city/cv_wainscot",
+    "particle": "zomboidcraft:block/city/cv_wainscot"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_wainscot",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_wainscot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_plaster",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_plaster",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

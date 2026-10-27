@@ -1,0 +1,150 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "cv_panel_oak": "zomboidcraft:block/city/cv_panel_oak",
+    "paper": "zomboidcraft:block/city/paper",
+    "th_felt": "zomboidcraft:block/city/th_felt",
+    "particle": "zomboidcraft:block/city/cv_panel_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        13,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_panel_oak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_panel_oak"
+        },
+        "east": {
+          "texture": "#cv_panel_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_panel_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_panel_oak"
+        },
+        "down": {
+          "texture": "#cv_panel_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        0
+      ],
+      "to": [
+        16,
+        14.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#th_felt"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        1,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14.5,
+        4.5
+      ],
+      "to": [
+        8,
+        14.8,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#paper"
+        },
+        "south": {
+          "texture": "#paper"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper"
+        },
+        "down": {
+          "texture": "#paper"
+        }
+      }
+    }
+  ]
+}

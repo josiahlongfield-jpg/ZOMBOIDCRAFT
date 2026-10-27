@@ -31,6 +31,7 @@ public final class County {
     private final Map<Long, Optional<Place>> places = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> cities = new ConcurrentHashMap<>();
     private final Map<Long, List<Road>> roads = new ConcurrentHashMap<>();
+    private final Map<Long, List<Road>> joins = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> hideouts = new ConcurrentHashMap<>();
 
     public County(long seed) {
@@ -496,7 +497,137 @@ public final class County {
                 }
             }
         }
+        int span = CELL * MACRO;
+        for (int mx = Math.floorDiv(x0, span) - 1; mx <= Math.floorDiv(x1, span) + 1; mx++) {
+            for (int mz = Math.floorDiv(z0, span) - 1; mz <= Math.floorDiv(z1, span) + 1; mz++) {
+                for (Road r : joins(mx, mz)) {
+                    if (r.near(x0, z0, x1, z1)) {
+                        out.add(r);
+                    }
+                }
+            }
+        }
         return out;
+    }
+
+    /**
+     * The extra roads that make a macro region's places one network, and tie it to the regions east
+     * and south of it, so every town can be driven to from every other. The nearest-neighbour roads
+     * leave clusters that never meet: each cluster is joined to the nearest other one, longest bridges
+     * allowed, until one network is left.
+     */
+    private List<Road> joins(int mx, int mz) {
+        return joins.computeIfAbsent(key(mx, mz), k -> {
+            List<Road> out = new ArrayList<>();
+            List<Place> mine = macroPlaces(mx, mz);
+            if (mine.isEmpty()) {
+                return out;
+            }
+            Map<Place, Place> parent = new java.util.HashMap<>();
+            for (Place p : mine) {
+                parent.put(p, p);
+            }
+            for (int cx = mx * MACRO - 3; cx < mx * MACRO + MACRO + 3; cx++) {
+                for (int cz = mz * MACRO - 3; cz < mz * MACRO + MACRO + 3; cz++) {
+                    for (Road r : roads(cx, cz)) {
+                        if (parent.containsKey(r.from) && parent.containsKey(r.to)) {
+                            parent.put(root(parent, r.from), root(parent, r.to));
+                        }
+                    }
+                }
+            }
+            // grow one network from the first place: always add the shortest road that reaches a new cluster
+            while (true) {
+                Place r0 = root(parent, mine.get(0));
+                List<Place[]> pairs = new ArrayList<>();
+                for (Place a : mine) {
+                    if (root(parent, a) != r0) {
+                        continue;
+                    }
+                    for (Place b : mine) {
+                        if (root(parent, b) != r0) {
+                            pairs.add(new Place[] {a, b});
+                        }
+                    }
+                }
+                if (pairs.isEmpty()) {
+                    break;
+                }
+                pairs.sort(Comparator.comparingDouble(p -> dist(p[0], p[1])));
+                Road road = null;
+                for (int i = 0; i < Math.min(12, pairs.size()) && road == null; i++) {
+                    road = build(pairs.get(i)[0], pairs.get(i)[1], 900);
+                }
+                Place[] pick = pairs.get(0);
+                if (road != null) {
+                    out.add(road);
+                    pick = new Place[] {road.from, road.to};
+                }
+                // a cluster no road can reach (out on an island) is let go rather than looped on
+                parent.put(root(parent, pick[1]), r0);
+            }
+            // then one road to each of the regions east and south, unless one already crosses
+            for (int[] d : new int[][] {{1, 0}, {0, 1}}) {
+                List<Place> theirs = macroPlaces(mx + d[0], mz + d[1]);
+                if (theirs.isEmpty() || crosses(mx, mz, mine, theirs)) {
+                    continue;
+                }
+                List<Place[]> pairs = new ArrayList<>();
+                for (Place a : mine) {
+                    for (Place b : theirs) {
+                        pairs.add(new Place[] {a, b});
+                    }
+                }
+                pairs.sort(Comparator.comparingDouble(p -> dist(p[0], p[1])));
+                Road road = null;
+                for (int i = 0; i < Math.min(12, pairs.size()) && road == null; i++) {
+                    road = build(pairs.get(i)[0], pairs.get(i)[1], 900);
+                }
+                if (road != null) {
+                    out.add(road);
+                }
+            }
+            return out;
+        });
+    }
+
+    /** The places whose cells lie in a macro region. */
+    private List<Place> macroPlaces(int mx, int mz) {
+        List<Place> out = new ArrayList<>();
+        for (int cx = mx * MACRO; cx < mx * MACRO + MACRO; cx++) {
+            for (int cz = mz * MACRO; cz < mz * MACRO + MACRO; cz++) {
+                place(cx, cz).ifPresent(out::add);
+            }
+        }
+        return out;
+    }
+
+    /** Whether a nearest-neighbour road already runs between the two regions' places. */
+    private boolean crosses(int mx, int mz, List<Place> mine, List<Place> theirs) {
+        java.util.Set<Place> a = new java.util.HashSet<>(mine), b = new java.util.HashSet<>(theirs);
+        for (int cx = mx * MACRO - 3; cx < mx * MACRO + 2 * MACRO + 3; cx++) {
+            for (int cz = mz * MACRO - 3; cz < mz * MACRO + 2 * MACRO + 3; cz++) {
+                for (Road r : roads(cx, cz)) {
+                    if (a.contains(r.from) && b.contains(r.to) || a.contains(r.to) && b.contains(r.from)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static Place root(Map<Place, Place> parent, Place p) {
+        while (parent.get(p) != p) {
+            Place up = parent.get(parent.get(p));
+            parent.put(p, up);
+            p = up;
+        }
+        return p;
+    }
+
+    private static double dist(Place a, Place b) {
+        return Math.hypot(a.centreX() - b.centreX(), a.centreZ() - b.centreZ());
     }
 
     private record Cand(Place p, int cx, int cz, double dist) {}
@@ -557,7 +688,7 @@ public final class County {
                     continue;
                 }
                 if (linked(a, cx, cz, c.p) || linked(c.p, c.cx, c.cz, a)) {
-                    Road road = build(a, c.p);
+                    Road road = build(a, c.p, 260);
                     if (road != null) {
                         out.add(road);
                     }
@@ -571,7 +702,7 @@ public final class County {
         return t == PlaceType.DOWNTOWN || t == PlaceType.TOWN || t == PlaceType.PORT || t == PlaceType.MILITARY;
     }
 
-    private Road build(Place a, Place b) {
+    private Road build(Place a, Place b, int maxWater) {
         Road.Kind kind;
         double dist = Math.hypot(a.centreX() - b.centreX(), a.centreZ() - b.centreZ());
         if (major(a.type) && major(b.type) && dist > 600) {
@@ -627,7 +758,7 @@ public final class County {
             }
             ys[i] = Math.max(g, Terrain.WATER + 2);
         }
-        if (water > 260) {
+        if (water > maxWater) {
             return null;  // no causeways across lakes
         }
         // smooth the profile so it climbs gently, then pin the ends to the places' ground
@@ -649,7 +780,7 @@ public final class County {
             ys[i] = Terrain.lerp(ys[i], a.level, ta);
             ys[i] = Terrain.lerp(ys[i], b.level, tb);
         }
-        return new Road(kind, xs, zs, ys, rs);
+        return new Road(kind, xs, zs, ys, rs, a, b);
     }
 
     /** Midpoint displacement: a road that wanders a little instead of running dead straight. */

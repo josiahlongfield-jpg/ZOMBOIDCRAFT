@@ -7,19 +7,26 @@ import com.zomboidcraft.zombie.ZombieLook;
 import com.zomboidcraft.zombie.ZombieTypes;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +35,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -67,8 +76,12 @@ public final class Dismember {
     private static final int PARTS = 12, HEAD = 0;
     private static final int[] CUT_OF = {0, 0, 0, 0, SH_R, EL_R, SH_L, EL_L, HIP_R, KN_R, HIP_L, KN_L};
     private static final int[] MIRROR = {0, 2, 1, 3, 6, 7, 4, 5, 10, 11, 8, 9};
+    /** How far past its box a walker's body reaches (arms held out, lying flat, crawling), in blocks at scale 1. */
+    private static final double REACH = 1.0, REACH_UP = 0.3;
+    private static final String[] PART_NAMES = {"head", "chest", "chest", "hips", "right upper arm", "right forearm",
+            "left upper arm", "left forearm", "right thigh", "right shin", "left thigh", "left shin"};
 
-    private static final float[] STAND = {-0.019f, 1.621f, 0.162f, -0.058f, 1.809f, 0.231f, 0.187f,
+    private static final float[] STAND = {-0.019f, 1.621f, 0.162f, -0.058f, 1.809f, 0.231f, 0.200f,
             0.097f, 1.127f, 0.025f, 0.097f, 1.415f, 0.087f, 0.119f,
             -0.097f, 1.127f, 0.025f, -0.097f, 1.415f, 0.087f, 0.119f,
             -0.091f, 0.925f, 0.000f, 0.091f, 0.925f, 0.000f, 0.108f,
@@ -80,7 +93,7 @@ public final class Dismember {
             -0.112f, 0.454f, 0.029f, -0.120f, 0.041f, 0.042f, 0.085f,
             0.103f, 0.862f, 0.000f, 0.120f, 0.455f, 0.035f, 0.097f,
             0.120f, 0.455f, 0.035f, 0.132f, 0.043f, 0.037f, 0.085f};
-    private static final float[] WALK = {-0.020f, 1.566f, 0.243f, -0.061f, 1.732f, 0.354f, 0.187f,
+    private static final float[] WALK = {-0.020f, 1.566f, 0.243f, -0.061f, 1.732f, 0.354f, 0.200f,
             0.097f, 1.100f, 0.039f, 0.097f, 1.380f, 0.135f, 0.119f,
             -0.097f, 1.100f, 0.039f, -0.097f, 1.380f, 0.135f, 0.119f,
             -0.090f, 0.903f, 0.000f, 0.090f, 0.903f, -0.000f, 0.108f,
@@ -92,7 +105,7 @@ public final class Dismember {
             -0.093f, 0.449f, -0.008f, -0.085f, 0.079f, -0.102f, 0.085f,
             0.102f, 0.840f, -0.001f, 0.112f, 0.439f, -0.028f, 0.097f,
             0.112f, 0.439f, -0.028f, 0.118f, 0.040f, -0.080f, 0.085f};
-    private static final float[] CHASE = {-0.006f, 1.476f, 0.325f, -0.018f, 1.679f, 0.335f, 0.187f,
+    private static final float[] CHASE = {-0.006f, 1.476f, 0.325f, -0.018f, 1.679f, 0.335f, 0.200f,
             0.096f, 1.013f, 0.103f, 0.096f, 1.272f, 0.245f, 0.119f,
             -0.096f, 1.013f, 0.103f, -0.096f, 1.272f, 0.245f, 0.119f,
             -0.090f, 0.824f, 0.045f, 0.090f, 0.824f, 0.045f, 0.108f,
@@ -104,7 +117,7 @@ public final class Dismember {
             -0.093f, 0.405f, 0.081f, -0.082f, 0.097f, -0.014f, 0.085f,
             0.103f, 0.761f, 0.045f, 0.107f, 0.391f, 0.079f, 0.097f,
             0.107f, 0.391f, 0.079f, 0.087f, 0.048f, -0.000f, 0.085f};
-    private static final float[] CRAWL = {-0.013f, 0.304f, 0.280f, -0.033f, 0.500f, 0.329f, 0.187f,
+    private static final float[] CRAWL = {-0.013f, 0.304f, 0.280f, -0.033f, 0.500f, 0.329f, 0.200f,
             0.096f, 0.136f, -0.168f, 0.095f, 0.189f, 0.122f, 0.119f,
             -0.097f, 0.135f, -0.169f, -0.098f, 0.188f, 0.122f, 0.119f,
             -0.090f, 0.113f, -0.371f, 0.090f, 0.117f, -0.371f, 0.108f,
@@ -116,7 +129,7 @@ public final class Dismember {
             -0.154f, 0.069f, -0.835f, -0.183f, 0.179f, -1.247f, 0.085f,
             0.103f, 0.117f, -0.433f, 0.157f, 0.056f, -0.832f, 0.097f,
             0.157f, 0.056f, -0.832f, 0.172f, 0.194f, -1.236f, 0.085f};
-    private static final float[] DOWN = {0.000f, 0.121f, -0.357f, 0.000f, 0.222f, -0.534f, 0.187f,
+    private static final float[] DOWN = {0.000f, 0.121f, -0.357f, 0.000f, 0.222f, -0.534f, 0.200f,
             0.097f, 0.088f, 0.137f, 0.097f, 0.064f, -0.158f, 0.119f,
             -0.097f, 0.088f, 0.137f, -0.097f, 0.064f, -0.158f, 0.119f,
             -0.091f, 0.098f, 0.341f, 0.091f, 0.098f, 0.341f, 0.108f,
@@ -129,7 +142,7 @@ public final class Dismember {
             0.103f, 0.098f, 0.403f, 0.152f, 0.138f, 0.808f, 0.097f,
             0.152f, 0.138f, 0.808f, 0.202f, 0.116f, 1.225f, 0.085f};
     /** On its left leg, the right gone (a zombie on its right leg is the mirror image). */
-    private static final float[] HOP = {-0.177f, 1.564f, 0.250f, -0.208f, 1.746f, 0.335f, 0.187f,
+    private static final float[] HOP = {-0.177f, 1.564f, 0.250f, -0.208f, 1.746f, 0.335f, 0.200f,
             -0.002f, 1.114f, 0.046f, -0.048f, 1.385f, 0.152f, 0.119f,
             -0.193f, 1.085f, 0.039f, -0.239f, 1.356f, 0.145f, 0.119f,
             -0.165f, 0.899f, 0.000f, 0.017f, 0.910f, 0.000f, 0.108f,
@@ -141,7 +154,7 @@ public final class Dismember {
             -0.232f, 0.453f, 0.119f, -0.290f, 0.052f, 0.204f, 0.085f,
             0.033f, 0.849f, 0.000f, 0.023f, 0.473f, 0.146f, 0.097f,
             0.023f, 0.473f, 0.146f, 0.019f, 0.068f, 0.117f, 0.085f};
-    private static final float[] HOP_REACH = {-0.177f, 1.564f, 0.250f, -0.208f, 1.746f, 0.335f, 0.187f,
+    private static final float[] HOP_REACH = {-0.177f, 1.564f, 0.250f, -0.208f, 1.746f, 0.335f, 0.200f,
             -0.002f, 1.114f, 0.046f, -0.048f, 1.385f, 0.152f, 0.119f,
             -0.193f, 1.085f, 0.039f, -0.239f, 1.356f, 0.145f, 0.119f,
             -0.165f, 0.899f, 0.000f, 0.017f, 0.910f, 0.000f, 0.108f,
@@ -154,11 +167,16 @@ public final class Dismember {
             0.033f, 0.849f, 0.000f, 0.023f, 0.473f, 0.146f, 0.097f,
             0.023f, 0.473f, 0.146f, 0.019f, 0.068f, 0.117f, 0.085f};
 
-    /** What each limb has taken so far, by cut bit, and the last shot that struck it. Server thread only. */
+    /**
+     * What each limb has taken so far, by cut bit, and the last shot that struck it; the parts struck this tick and by
+     * whom, for the hits readout. Server thread only.
+     */
     private static final class Wounds {
         final float[] dealt = new float[8];
         Vec3 dir;
         GunType gun;
+        int struck;
+        ServerPlayer shooter;
     }
 
     private static final Map<Zombie, Wounds> WOUNDS = new WeakHashMap<>();
@@ -201,26 +219,96 @@ public final class Dismember {
     }
 
     /**
+     * What a shot along eye to stop (where it meets a block, or the end of its range) hits first. A walker is hit where
+     * its body is drawn, not by its box: the box is a thin post, and the arms reach out past it (all the way when they
+     * reach for you), as does most of a zombie lying or crawling. So a shot at an arm held out or a leg on the ground
+     * lands, and one through the box beside the body misses. Anything else is hit by its box, as vanilla does.
+     */
+    public static BodyHit shot(Entity shooter, Vec3 eye, Vec3 stop, Predicate<Entity> canHit) {
+        Vec3 line = stop.subtract(eye);
+        double range = line.length();
+        if (range < 1e-6) {
+            return null;
+        }
+        Vec3 dir = line.scale(1 / range);
+        BodyHit best = null;
+        double nearest = range;
+        for (Entity e : shooter.level().getEntities(shooter, new AABB(eye, stop).inflate(REACH + 1), canHit)) {
+            if (shooter.isPassenger() && e.getRootVehicle() == shooter.getRootVehicle()) {
+                continue;   // not whoever's riding with you
+            }
+            if (e instanceof Zombie zombie && ZombieTypes.isWalker(zombie)) {
+                double s = Math.max(0.1, zombie.getScale());
+                AABB reach = zombie.getBoundingBox().inflate(REACH * s, REACH_UP * s, REACH * s);
+                if (!reach.contains(eye) && reach.clip(eye, stop).isEmpty()) {
+                    continue;
+                }
+                Strike strike = strike(zombie, eye, dir);
+                if (strike != null && strike.distance() < nearest) {
+                    nearest = strike.distance();
+                    best = new BodyHit(zombie, eye.add(dir.scale(nearest)), strike.part());
+                }
+            } else {
+                AABB box = e.getBoundingBox().inflate(e.getPickRadius());
+                Optional<Vec3> at = box.contains(eye) ? Optional.of(eye) : box.clip(eye, stop);
+                if (at.isPresent() && eye.distanceTo(at.get()) < nearest) {
+                    nearest = eye.distanceTo(at.get());
+                    best = new BodyHit(e, at.get(), -1);
+                }
+            }
+        }
+        return best;
+    }
+
+    /**
+     * A shot's hit: what, where it went in, and on a walker the part of the body (head 0, torso 1 and 2, pelvis 3, then
+     * the arms and legs as in the tables), or -1 for anything else.
+     */
+    public static final class BodyHit extends EntityHitResult {
+        public final int part;
+
+        BodyHit(Entity entity, Vec3 at, int part) {
+            super(entity, at);
+            this.part = part;
+        }
+
+        /** It went into a walker's head. */
+        public boolean head() {
+            return part == HEAD;
+        }
+
+        /** It went into a walker's thigh or shin. */
+        public boolean leg() {
+            return part >= 8;
+        }
+    }
+
+    /**
      * One bullet or pellet striking a zombie (from the gun code, once per pellet that hit it).
      *
+     * @param shooter who fired it, for the hits readout
      * @param damage the hit's damage as dealt (with the gun's rolled power and buckshot falloff)
      * @param head the shot was counted a headshot: the head took it, not a limb
      * @param legs the shot was counted low (the gun deals 0.7 of its damage there; a limb takes all of it)
      */
-    public static void pellet(LivingEntity target, Vec3 eye, Vec3 dir, float damage, boolean head, boolean legs,
-                              GunType gun) {
+    public static void pellet(ServerPlayer shooter, LivingEntity target, Vec3 eye, Vec3 dir, float damage, boolean head,
+                              boolean legs, GunType gun) {
         ZcConfig.Limbs config = ZcConfig.get().limbs;
-        if (!config.enabled || head || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie)) {
+        if (!config.enabled || !(target instanceof Zombie zombie) || !ZombieTypes.isWalker(zombie)) {
             return;
         }
-        int part = part(zombie, eye, dir);
-        if (part < 0 || CUT_OF[part] == 0) {
+        int part = head ? HEAD : part(zombie, eye, dir);
+        if (part < 0) {
             return;
         }
         Wounds w = WOUNDS.computeIfAbsent(zombie, z -> new Wounds());
-        w.dealt[Integer.numberOfTrailingZeros(CUT_OF[part])] += (float) (damage / (legs ? 0.7 : 1.0) * tearing(gun, config));
-        w.dir = dir;
-        w.gun = gun;
+        w.struck |= 1 << part;
+        w.shooter = shooter;
+        if (CUT_OF[part] != 0) {
+            w.dealt[Integer.numberOfTrailingZeros(CUT_OF[part])] += (float) (damage / (legs ? 0.7 : 1.0) * tearing(gun, config));
+            w.dir = dir;
+            w.gun = gun;
+        }
         if (!SHOT.contains(zombie)) {
             SHOT.add(zombie);
         }
@@ -233,15 +321,54 @@ public final class Dismember {
             return;
         }
         ZcConfig.Limbs config = ZcConfig.get().limbs;
+        float[] took = w.dealt.clone();
+        int severed = 0;
         for (int cut : ORDER) {
             int i = Integer.numberOfTrailingZeros(cut);
             if ((cuts(zombie) & (cut | above(cut))) != 0) {
                 w.dealt[i] = 0f;
             } else if (w.dealt[i] >= toughness(cut, config)) {
                 w.dealt[i] = 0f;
+                severed |= cut;
                 sever(zombie, cut, partOf(cut), w.dir, w.gun);
             }
         }
+        if (config.showHits && w.shooter != null && w.struck != 0) {
+            w.shooter.sendOverlayMessage(readout(w.struck, took, severed, config));
+        }
+        w.struck = 0;
+    }
+
+    /** The hits readout: the parts a shot struck, how far along each limb is to coming off, and what came off. */
+    private static Component readout(int struck, float[] took, int severed, ZcConfig.Limbs config) {
+        Set<String> parts = new LinkedHashSet<>();
+        for (int cut : ORDER) {
+            if ((severed & cut) != 0) {
+                parts.add(cutName(cut) + " OFF");
+            }
+        }
+        for (int k = 0; k < PARTS; k++) {
+            int cut = CUT_OF[k];
+            if ((struck >> k & 1) == 0 || cut != 0 && (severed & (cut | above(cut))) != 0) {
+                continue;
+            }
+            parts.add(cut == 0 ? PART_NAMES[k] : String.format("%s %.0f/%.0f", PART_NAMES[k],
+                    took[Integer.numberOfTrailingZeros(cut)], toughness(cut, config)));
+        }
+        return Component.literal("Hit: " + String.join(", ", parts)).withStyle(ChatFormatting.GRAY);
+    }
+
+    private static String cutName(int cut) {
+        return switch (cut) {
+            case EL_R -> "right forearm";
+            case EL_L -> "left forearm";
+            case SH_R -> "right arm";
+            case SH_L -> "left arm";
+            case KN_R -> "right shin";
+            case KN_L -> "left shin";
+            case HIP_R -> "right leg";
+            default -> "left leg";
+        };
     }
 
     private static double tearing(GunType gun, ZcConfig.Limbs config) {
@@ -290,6 +417,7 @@ public final class Dismember {
         level.playSound(null, joint.x, joint.y, joint.z, ModSounds.BULLET_FLESH, SoundSource.HOSTILE, 1.2f,
                 0.55f + zombie.getRandom().nextFloat() * 0.1f);
         BLEEDING.add(new Bleed(zombie, part, level.getGameTime() + 120));
+        StuckBolts.shed(zombie, joint);     // any bolts in the limb fall out with it
         if (!zombie.isAlive()) {
             return;
         }
@@ -358,6 +486,21 @@ public final class Dismember {
      * Parts already gone don't stop it.
      */
     private static int part(Zombie zombie, Vec3 eye, Vec3 dir) {
+        Strike strike = strike(zombie, eye, dir);
+        return strike == null ? -1 : strike.part();
+    }
+
+    /**
+     * Where a shot went into the body: the part (head 0, torso 1 and 2, pelvis 3, then the arms and legs as in the
+     * tables), its capsule's ends and radius in the pose it was in, the point the shot went in at and the shot's
+     * heading, all in the zombie's own frame (x to its left, y up from its feet, z ahead) at scale 1; and how far
+     * from the eye it went in, in blocks.
+     */
+    public record Strike(int part, Vec3 a, Vec3 b, double radius, Vec3 at, Vec3 dir, double distance) {
+    }
+
+    /** The part a shot went into first and where (see {@link Strike}), or null if its line misses them all. */
+    public static Strike strike(Zombie zombie, Vec3 eye, Vec3 dir) {
         int cuts = cuts(zombie);
         boolean[] mirror = new boolean[1];
         float[] caps = pose(zombie, cuts, mirror);
@@ -368,24 +511,34 @@ public final class Dismember {
         double ox = eye.x - zombie.getX(), oy = eye.y - zombie.getY(), oz = eye.z - zombie.getZ();
         double px = (ox * lx + oz * lz) / scale, py = oy / scale, pz = (ox * fx + oz * fz) / scale;
         double dx = dir.x * lx + dir.z * lz, dy = dir.y, dz = dir.x * fx + dir.z * fz;
-        if (mirror[0]) {
-            px = -px;
-            dx = -dx;
-        }
-        int best = -1;
+        // a zombie hopping on its right leg is the left-leg table mirrored: look it up mirrored, answer unmirrored
+        double m = mirror[0] ? -1 : 1;
+        int best = -1, bestK = -1;
         double nearest = Double.MAX_VALUE;
         for (int k = 0; k < PARTS; k++) {
             int real = mirror[0] ? MIRROR[k] : k;
             if ((gone >> real & 1) != 0) {
                 continue;
             }
-            double t = enter(px, py, pz, dx, dy, dz, caps, k * 7);
+            double t = enter(px * m, py, pz, dx * m, dy, dz, caps, k * 7);
             if (t >= 0 && t < nearest) {
                 nearest = t;
                 best = real;
+                bestK = k;
             }
         }
-        return best;
+        if (best < 0) {
+            return null;
+        }
+        int o = bestK * 7;
+        return new Strike(best, new Vec3(caps[o] * m, caps[o + 1], caps[o + 2]),
+                new Vec3(caps[o + 3] * m, caps[o + 4], caps[o + 5]), caps[o + 6],
+                new Vec3(px + nearest * dx, py + nearest * dy, pz + nearest * dz), new Vec3(dx, dy, dz), nearest * scale);
+    }
+
+    /** The part isn't there any more: shot off, or lost before it rose. */
+    public static boolean gone(Zombie zombie, int part) {
+        return (goneParts(zombie, cuts(zombie)) >> part & 1) != 0;
     }
 
     /** The parts not there to hit: shot off, lost before it rose, or (with no legs at all) both legs. */

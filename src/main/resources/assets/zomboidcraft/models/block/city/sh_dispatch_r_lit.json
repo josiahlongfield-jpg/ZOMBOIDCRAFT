@@ -1,0 +1,323 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "desk_laminate": "zomboidcraft:block/city/desk_laminate",
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "sh_radio_panel_lit": "zomboidcraft:block/city/sh_radio_panel_lit",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/desk_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12.5,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        12.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        9
+      ],
+      "to": [
+        16,
+        26,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_radio_panel_lit",
+          "uv": [
+            0,
+            0,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            0,
+            0,
+            16,
+            12
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            0,
+            0,
+            7,
+            12
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            9,
+            0,
+            16,
+            12
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        12.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#desk_laminate"
+        },
+        "east": {
+          "texture": "#desk_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#desk_laminate"
+        },
+        "up": {
+          "texture": "#desk_laminate"
+        },
+        "down": {
+          "texture": "#desk_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        6,
+        14.6,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        4.2,
+        14.6,
+        4.2
+      ],
+      "to": [
+        4.8,
+        19,
+        4.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron",
+          "uv": [
+            11.2,
+            0,
+            11.8,
+            4.4
+          ]
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "uv": [
+            4.2,
+            0,
+            4.8,
+            4.4
+          ]
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "uv": [
+            11.2,
+            0,
+            11.8,
+            4.4
+          ]
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "uv": [
+            4.2,
+            0,
+            4.8,
+            4.4
+          ]
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        19,
+        3.5
+      ],
+      "to": [
+        5.5,
+        21,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            10.5,
+            0,
+            12.5,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            3.5,
+            0,
+            5.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            10.5,
+            0,
+            12.5,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            3.5,
+            0,
+            5.5,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    }
+  ]
+}

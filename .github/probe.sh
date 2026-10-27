@@ -7,6 +7,19 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== cars2"
+sig net.minecraft.client.KeyMapping 'MAP|static|click|set'
+sig net.minecraft.world.level.storage.ValueOutput 'child|list|store'
+sig net.minecraft.world.level.storage.ValueInput 'child|list|read'
+sig net.minecraft.client.player.AbstractClientPlayer 'Skin|skin'
+sig net.minecraft.world.entity.player.PlayerSkin '.'
+sig net.minecraft.world.level.storage.loot.LootTable 'getRandomItems|fill'
+sig net.minecraft.world.inventory.HopperMenu 'HopperMenu'
+sig net.minecraft.client.renderer.entity.player.AvatarRenderer 'getModel|public'
+sig net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer 'submit|render'
+sig net.minecraft.client.renderer.SubmitNodeCollector 'submitModelPart'
+exit 0
+
 echo "===== atlases"
 ALL_JARS=$(find ~/.gradle/caches/fabric-loom -name '*.jar' 2>/dev/null)
 for j in $ALL_JARS; do

@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.minecraft.client.KeyMapping;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
@@ -43,10 +44,15 @@ public final class CombatClient {
     public static final KeyMapping RAIL = new KeyMapping("key.zomboidcraft.rail", InputConstants.KEY_L, CATEGORY);
     public static final KeyMapping LASER = new KeyMapping("key.zomboidcraft.laser", InputConstants.KEY_J, CATEGORY);
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.zomboidcraft.fire_mode", InputConstants.KEY_X, CATEGORY);
+    public static final KeyMapping SHOULDER = new KeyMapping("key.zomboidcraft.shoulder", InputConstants.KEY_O, CATEGORY);
 
     private static long lastShot = -100;
-    /** Full auto: when the next shot is due, and the rounds this hold of the trigger can still fire. */
-    private static double autoNext = -100;
+    /**
+     * Full auto: when the next shot is due on the wall clock (milliseconds), and the rounds this hold of the trigger
+     * can still fire. Checked every frame, not every tick, so the shots come evenly spaced at any rate (on ticks,
+     * 800 a minute came out a tick, then two, then one...).
+     */
+    private static double autoNextMs = -1e18;
     private static int burstLeft = -1;
     /** Muzzle climb still to apply next tick, and how much of it eases back afterwards. */
     private static float kickPending;
@@ -58,8 +64,12 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(RAIL);
         KeyMappingHelper.registerKeyMapping(LASER);
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
+        KeyMappingHelper.registerKeyMapping(SHOULDER);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             ItemStack hand = player.getMainHandItem();
+            if (!com.zomboidcraft.world.cars.CarProp.mayUse(player, hand)) {
+                return true;    // driving: a hand on the wheel, nothing but a handgun
+            }
             if (GunType.isGun(hand)) {
                 if (clicks > 0 && ZcConfig.get().guns.enabled) {
                     pullTrigger(client, player, hand, false);
@@ -75,6 +85,22 @@ public final class CombatClient {
             return false;
         });
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
+        LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
+    }
+
+    /** Every frame: full auto keeps firing while the trigger's held, each shot as it falls due. */
+    private static void autoFire(Minecraft client) {
+        LocalPlayer player = client.player;
+        if (player == null || client.level == null) {
+            return;
+        }
+        ItemStack hand = player.getMainHandItem();
+        if (!client.options.keyAttack.isDown() || client.gui.screen() != null || client.isPaused()
+                || com.zomboidcraft.client.building.Placer.building() != null) {
+            burstLeft = -1;
+        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
+            pullTrigger(client, player, hand, true);
+        }
     }
 
     private static void tick(Minecraft client) {
@@ -91,7 +117,9 @@ public final class CombatClient {
             ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
         }
         while (RAIL.consumeClick()) {
-            if (GunType.isGun(player.getMainHandItem())) {
+            if (com.zomboidcraft.client.cars.CarClient.driving(player)) {
+                com.zomboidcraft.client.cars.CarClient.headlights();     // at the wheel the key works the headlights
+            } else if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RAIL));
             }
         }
@@ -106,13 +134,6 @@ public final class CombatClient {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }
-        // full auto keeps firing while the trigger's held
-        ItemStack hand = player.getMainHandItem();
-        if (!client.options.keyAttack.isDown() || client.gui.screen() != null) {
-            burstLeft = -1;
-        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
-            pullTrigger(client, player, hand, true);
-        }
         Integer grabbed = player.getAttached(Grabs.GRABBED);
         if (grabbed != null && grabbed > 0) {
             while (client.options.keyJump.consumeClick()) {
@@ -123,6 +144,9 @@ public final class CombatClient {
                 && player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL) < 10) {
             player.setSprinting(false);
         }
+        while (SHOULDER.consumeClick()) {
+            com.zomboidcraft.client.camera.ShoulderCam.swapShoulder();
+        }
         // a broken leg with no splint won't take a sprint
         if (player.isSprinting() && !player.isCreative() && com.zomboidcraft.survival.Injuries.cantSprint(player)) {
             player.setSprinting(false);
@@ -131,8 +155,8 @@ public final class CombatClient {
     }
 
     /**
-     * The trigger pulled (held: still held down on full auto). Full auto fires on its rate, a shot every tick and a
-     * half at 800 a minute, and stops when the rounds there were as the trigger went down are spent, without waiting
+     * The trigger pulled (held: still held down on full auto). Full auto fires on its rate, evenly spaced on the
+     * wall clock, and stops when the rounds there were as the trigger went down are spent, without waiting
      * on the server to say the magazine's empty.
      */
     private static void pullTrigger(Minecraft client, LocalPlayer player, ItemStack gun, boolean held) {
@@ -142,7 +166,8 @@ public final class CombatClient {
         GunType type = GunType.of(gun);
         ZcConfig.GunStats stats = type.stats();
         boolean auto = Guns.fullAuto(gun);
-        if (now >= lastShot && (auto ? now < autoNext - 0.5 : now - lastShot < type.fireDelay())) {
+        double ms = System.nanoTime() / 1e6;
+        if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay()) {
             return;
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -158,7 +183,10 @@ public final class CombatClient {
         }
         lastShot = now;
         if (auto) {
-            autoNext = Guns.nextAuto(autoNext, now, stats);
+            // a steady rate carries on from the shot that was due (so a late frame doesn't stretch the next gap), a
+            // fresh pull starts from now
+            double gap = 60000.0 / Math.max(60.0, stats.autoRpm);
+            autoNextMs = (ms - autoNextMs > gap ? ms : autoNextMs) + gap;
             burstLeft--;
         }
         boolean aiming = player.isUsingItem() && GunType.isGun(player.getUseItem());
@@ -168,8 +196,15 @@ public final class CombatClient {
         }
         boolean suppressed = Attachments.suppressed(gun);
         // at your ears, so it doesn't stay behind where you fired as you strafe
+        // on full auto the pitch barely varies, so the string of shots sounds even
+        float vary = auto ? 0.02f : 0.1f;
         EarSound.play(type.shot(suppressed, false), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1.4f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+                suppressed ? (float) config.suppressedVolume : 1.4f,
+                (suppressed ? (float) stats.suppressedPitch : 1f) * (1f - vary / 2 + player.getRandom().nextFloat() * vary));
+        // the case comes out with the shot, here, rather than when the server's tick gets to it
+        if (!type.manual() && !type.opens && type != GunType.CROSSBOW) {
+            EarSound.play(com.zomboidcraft.combat.ModSounds.CASING, SoundSource.PLAYERS, 0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+        }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
                 * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0));

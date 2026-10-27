@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_chain_net": "zomboidcraft:block/city/sc_chain_net",
+    "particle": "zomboidcraft:block/city/sc_chain_net"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        8,
+        3
+      ],
+      "to": [
+        11.5,
+        16,
+        3.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain_net"
+        },
+        "south": {
+          "texture": "#sc_chain_net"
+        },
+        "east": {
+          "texture": "#sc_chain_net"
+        },
+        "west": {
+          "texture": "#sc_chain_net"
+        },
+        "up": {
+          "texture": "#sc_chain_net",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain_net"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        8,
+        9.7
+      ],
+      "to": [
+        11.5,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain_net"
+        },
+        "south": {
+          "texture": "#sc_chain_net"
+        },
+        "east": {
+          "texture": "#sc_chain_net"
+        },
+        "west": {
+          "texture": "#sc_chain_net"
+        },
+        "up": {
+          "texture": "#sc_chain_net",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain_net"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        8,
+        3
+      ],
+      "to": [
+        4.8,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain_net"
+        },
+        "south": {
+          "texture": "#sc_chain_net"
+        },
+        "east": {
+          "texture": "#sc_chain_net"
+        },
+        "west": {
+          "texture": "#sc_chain_net"
+        },
+        "up": {
+          "texture": "#sc_chain_net",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain_net"
+        }
+      }
+    },
+    {
+      "from": [
+        11.2,
+        8,
+        3
+      ],
+      "to": [
+        11.5,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_chain_net"
+        },
+        "south": {
+          "texture": "#sc_chain_net"
+        },
+        "east": {
+          "texture": "#sc_chain_net"
+        },
+        "west": {
+          "texture": "#sc_chain_net"
+        },
+        "up": {
+          "texture": "#sc_chain_net",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_chain_net"
+        }
+      }
+    }
+  ]
+}

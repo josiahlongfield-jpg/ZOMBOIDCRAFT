@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "trade_flag_l": "zomboidcraft:block/city/trade_flag_l",
+    "particle": "zomboidcraft:block/city/trade_flag_l"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        0.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_flag_l",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_flag_l"
+        },
+        "east": {
+          "texture": "#trade_flag_l",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#trade_flag_l",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#trade_flag_l"
+        },
+        "down": {
+          "texture": "#trade_flag_l"
+        }
+      }
+    }
+  ]
+}

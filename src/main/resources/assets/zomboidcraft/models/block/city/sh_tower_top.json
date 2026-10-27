@@ -1,0 +1,347 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sh_beacon": "zomboidcraft:block/city/sh_beacon",
+    "sh_lattice": "zomboidcraft:block/city/sh_lattice",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/sh_lattice"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        2,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_lattice"
+        },
+        "south": {
+          "texture": "#sh_lattice"
+        },
+        "east": {
+          "texture": "#sh_lattice"
+        },
+        "west": {
+          "texture": "#sh_lattice"
+        },
+        "up": {
+          "texture": "#sh_lattice",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_lattice",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_lattice"
+        },
+        "south": {
+          "texture": "#sh_lattice"
+        },
+        "east": {
+          "texture": "#sh_lattice"
+        },
+        "west": {
+          "texture": "#sh_lattice"
+        },
+        "up": {
+          "texture": "#sh_lattice",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_lattice",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        0,
+        14
+      ],
+      "to": [
+        8.5,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_lattice"
+        },
+        "south": {
+          "texture": "#sh_lattice"
+        },
+        "east": {
+          "texture": "#sh_lattice"
+        },
+        "west": {
+          "texture": "#sh_lattice"
+        },
+        "up": {
+          "texture": "#sh_lattice",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_lattice",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        15.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_lattice"
+        },
+        "south": {
+          "texture": "#sh_lattice"
+        },
+        "east": {
+          "texture": "#sh_lattice"
+        },
+        "west": {
+          "texture": "#sh_lattice"
+        },
+        "up": {
+          "texture": "#sh_lattice",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_lattice"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        15,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_lattice"
+        },
+        "south": {
+          "texture": "#sh_lattice"
+        },
+        "east": {
+          "texture": "#sh_lattice"
+        },
+        "west": {
+          "texture": "#sh_lattice"
+        },
+        "up": {
+          "texture": "#sh_lattice",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sh_lattice"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        16,
+        3
+      ],
+      "to": [
+        3.6,
+        30,
+        3.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            12.4,
+            0,
+            13,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            3,
+            0,
+            3.6,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            12.4,
+            0,
+            13,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            3,
+            0,
+            3.6,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        16,
+        4
+      ],
+      "to": [
+        12.6,
+        26,
+        4.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            3.4000000000000004,
+            0,
+            4,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            12,
+            0,
+            12.6,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            11.4,
+            0,
+            12,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "uv": [
+            4,
+            0,
+            4.6,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        16,
+        6.5
+      ],
+      "to": [
+        9.5,
+        18,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sh_beacon",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#sh_beacon",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#sh_beacon",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#sh_beacon",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#sh_beacon"
+        },
+        "down": {
+          "texture": "#sh_beacon"
+        }
+      }
+    }
+  ]
+}

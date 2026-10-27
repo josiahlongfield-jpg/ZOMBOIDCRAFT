@@ -1,0 +1,1003 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_shelf_pharmacy_3_010": "zomboidcraft:block/city/pk_shelf_pharmacy_3_010",
+    "particle": "zomboidcraft:block/city/pk_shelf_pharmacy_3_010"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            4.3125,
+            5.5625,
+            8.3125,
+            6.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            8.4375,
+            5.5625,
+            12.4375,
+            6.3125
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            7.9375,
+            2.5625,
+            8.6875
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            12.5625,
+            5.5625,
+            15.0625,
+            6.3125
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            6.3125,
+            0.0625,
+            10.3125,
+            2.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        6
+      ],
+      "to": [
+        2,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            11.0625,
+            0.0625,
+            11.5625,
+            2.5625
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            11.6875,
+            0.0625,
+            12.1875,
+            2.5625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            2.9375,
+            2.5625,
+            5.4375
+          ]
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            12.3125,
+            0.0625,
+            14.8125,
+            2.5625
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            10.4375,
+            0.0625,
+            10.9375,
+            2.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        3,
+        6
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.3125,
+            2.9375,
+            3.8125,
+            5.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.9375,
+            2.9375,
+            4.4375,
+            5.4375
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            7.1875,
+            2.9375,
+            9.6875,
+            5.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            4.5625,
+            2.9375,
+            7.0625,
+            5.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.6875,
+            2.9375,
+            3.1875,
+            5.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        15
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            0.0625,
+            3.0625,
+            2.8125
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.1875,
+            0.0625,
+            6.1875,
+            2.8125
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            7.0625,
+            8.8125,
+            10.0625,
+            9.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        6
+      ],
+      "to": [
+        14,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            10.1875,
+            8.8125,
+            13.1875,
+            9.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            12.9375,
+            2.9375,
+            15.9375,
+            5.1875
+          ]
+        },
+        "down": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            9.8125,
+            2.9375,
+            12.8125,
+            5.1875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        6
+      ],
+      "to": [
+        12,
+        9,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.6875,
+            7.9375,
+            5.1875,
+            8.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            5.3125,
+            7.9375,
+            7.8125,
+            8.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            7.9375,
+            7.9375,
+            8.1875,
+            8.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            13.3125,
+            8.8125,
+            15.8125,
+            9.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        7
+      ],
+      "to": [
+        6,
+        9,
+        13
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            8.3125,
+            7.9375,
+            9.3125,
+            8.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            9.4375,
+            7.9375,
+            10.9375,
+            8.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.8125,
+            5.5625,
+            1.8125,
+            7.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        7,
+        7
+      ],
+      "to": [
+        12,
+        9,
+        13
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            11.0625,
+            7.9375,
+            11.5625,
+            8.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            13.3125,
+            7.9375,
+            14.8125,
+            8.4375
+          ]
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            11.6875,
+            7.9375,
+            13.1875,
+            8.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            1.9375,
+            5.5625,
+            2.4375,
+            7.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        7,
+        8
+      ],
+      "to": [
+        10,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            14.9375,
+            7.9375,
+            15.9375,
+            8.4375
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            8.8125,
+            1.0625,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.5625,
+            5.5625,
+            3.5625,
+            6.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        7,
+        8
+      ],
+      "to": [
+        14,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            1.1875,
+            8.8125,
+            1.6875,
+            9.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            1.8125,
+            8.8125,
+            2.3125,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.6875,
+            5.5625,
+            4.1875,
+            6.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        7,
+        13
+      ],
+      "to": [
+        9,
+        9,
+        15
+      ],
+      "faces": {
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.4375,
+            8.8125,
+            3.9375,
+            9.3125
+          ]
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.8125,
+            8.8125,
+            3.3125,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.4375,
+            8.8125,
+            2.6875,
+            9.3125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        14
+      ],
+      "to": [
+        8,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            4.0625,
+            8.8125,
+            5.5625,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            9.4375,
+            1.5625,
+            9.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        7,
+        14
+      ],
+      "to": [
+        14,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            5.6875,
+            8.8125,
+            6.9375,
+            9.3125
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            1.6875,
+            9.4375,
+            2.9375,
+            9.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        8,
+        7
+      ],
+      "to": [
+        13,
+        9,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.8125,
+            9.4375,
+            4.0625,
+            9.6875
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            4.1875,
+            9.4375,
+            4.4375,
+            9.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.4375,
+            9.4375,
+            3.6875,
+            9.6875
+          ]
+        },
+        "down": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.0625,
+            9.4375,
+            3.3125,
+            9.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        14
+      ],
+      "to": [
+        14,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            10.8125,
+            9.4375,
+            13.8125,
+            9.6875
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            7.6875,
+            9.4375,
+            10.6875,
+            9.6875
+          ]
+        },
+        "down": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            4.5625,
+            9.4375,
+            7.5625,
+            9.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        6
+      ],
+      "to": [
+        2,
+        14,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            14.5625,
+            9.4375,
+            15.0625,
+            9.6875
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            15.1875,
+            9.4375,
+            15.6875,
+            9.6875
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.4375,
+            9.8125,
+            0.6875,
+            10.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            9.8125,
+            0.3125,
+            10.0625
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            13.9375,
+            9.4375,
+            14.4375,
+            9.6875
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        13,
+        6
+      ],
+      "to": [
+        16,
+        14,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            1.4375,
+            9.8125,
+            1.9375,
+            10.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.0625,
+            9.8125,
+            2.5625,
+            10.0625
+          ]
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.0625,
+            9.8125,
+            3.3125,
+            10.0625
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            2.6875,
+            9.8125,
+            2.9375,
+            10.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.8125,
+            9.8125,
+            1.3125,
+            10.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        7
+      ],
+      "to": [
+        1,
+        14,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.4375,
+            9.8125,
+            3.6875,
+            10.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            6.1875,
+            9.8125,
+            8.4375,
+            10.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            3.8125,
+            9.8125,
+            6.0625,
+            10.0625
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.0625,
+            5.5625,
+            0.3125,
+            7.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        13,
+        7
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            8.5625,
+            9.8125,
+            8.8125,
+            10.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            11.3125,
+            9.8125,
+            13.5625,
+            10.0625
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            8.9375,
+            9.8125,
+            11.1875,
+            10.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            0.4375,
+            5.5625,
+            0.6875,
+            7.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13,
+        15
+      ],
+      "to": [
+        2,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            14.0625,
+            9.8125,
+            14.3125,
+            10.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            14.4375,
+            9.8125,
+            14.6875,
+            10.0625
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            13.6875,
+            9.8125,
+            13.9375,
+            10.0625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        13,
+        15
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            15.1875,
+            9.8125,
+            15.4375,
+            10.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            15.5625,
+            9.8125,
+            15.8125,
+            10.0625
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_shelf_pharmacy_3_010",
+          "uv": [
+            14.8125,
+            9.8125,
+            15.0625,
+            10.0625
+          ]
+        }
+      }
+    }
+  ]
+}

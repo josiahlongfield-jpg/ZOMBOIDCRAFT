@@ -257,7 +257,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_DRY;
             case MAGNUM -> ModSounds.MAGNUM_DRY;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
-            case CROSSBOW -> ModSounds.PISTOL_DRY;          // the trigger of an uncocked bow, just a click
+            case CROSSBOW -> ModSounds.CROSSBOW_DRY;        // the trigger of an uncocked bow, just a click
         };
     }
 
@@ -291,7 +291,7 @@ public enum GunType {
             case SAWN_OFF -> ModSounds.SAWN_OFF_SHELL_IN;
             case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
-            case CROSSBOW -> ModSounds.RIFLE_LOAD_ROUND;     // the bolt slid back into the latch
+            case CROSSBOW -> ModSounds.CROSSBOW_LOAD;        // the bolt slid back into the latch
         };
     }
 
@@ -319,6 +319,11 @@ public enum GunType {
     /** The empties pushed out as it opens (the ejector rod), or null where they just fall out with the opening. */
     public @Nullable SoundEvent eject() {
         return this == REVOLVER ? ModSounds.REVOLVER_EJECT : this == MAGNUM ? ModSounds.MAGNUM_EJECT : null;
+    }
+
+    /** The hammer thumbed back as it's brought up onto the sights, or null for a gun with no hammer to cock. */
+    public @Nullable SoundEvent hammer() {
+        return this == REVOLVER ? ModSounds.REVOLVER_COCK : this == MAGNUM ? ModSounds.MAGNUM_COCK : null;
     }
 
     /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */

@@ -67,6 +67,10 @@ public final class ZcConfig {
     public Radio radio = new Radio();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
+    /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
+    public Digging digging = new Digging();
+    /** What the Build page makes: how tough boards and sheets are, how loud a tripwire is, how fast a barrel fills. */
+    public Building building = new Building();
 
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
@@ -206,8 +210,6 @@ public final class ZcConfig {
         public double tier2FlawChance = 0.25;
         /** How much a flaw worsens the stat it hits (1.3 = 30% worse). */
         public double flawPenalty = 1.3;
-        /** Jam chance per shot of a rolled gun in new condition, before its roll (worn guns jam more on top). */
-        public double jamFloor = 0.003;
     }
 
     /** Weights: how often a found gun turns up in each of its finishes, against its others. */
@@ -331,6 +333,55 @@ public final class ZcConfig {
         public boolean reanimate = true;
     }
 
+    public static class Building {
+        /** Blows one board stands before it comes loose, and how many more each step of Carpentry adds (reinforced, heavy). */
+        public int boardHits = 6;
+        public int boardHitsPerStrength = 3;
+        /** Blows a metal sheet stands. */
+        public int metalSheetHits = 32;
+        /** How far zombies hear a tripwire rattle, in blocks. */
+        public double tripwireNoise = 14;
+        /** Chance each random tick in the rain that a rain barrel fills an eighth more (double in a storm). */
+        public double rainBarrelFill = 0.5;
+        /** Builds take this many times their usual time. */
+        public double timeMultiplier = 1.0;
+        /** How far zombies hear a ringing alarm clock, in blocks, and how long it rings, in seconds. */
+        public double alarmClockNoise = 40;
+        public int alarmClockRingSeconds = 25;
+        /** How far a car key's panic button reaches, in blocks, and how long the alarm sounds, in seconds. */
+        public double keyFobRange = 40;
+        public int carAlarmSeconds = 40;
+        /** In-game days a planter takes from seed to ripe while kept watered, and days a watering lasts. */
+        public double planterGrowDays = 4;
+        public double planterWaterDays = 1;
+        /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
+        public int spikedWallHits = 24;
+        public float spikeDamage = 2f;
+    }
+
+    public static class Digging {
+        /** Off, every block breaks the vanilla way and there's no floor. */
+        public boolean rules = true;
+        /** How deep under the natural ground you can dig, in blocks. Built places (basements, bunkers) don't count. */
+        public int floorDepth = 8;
+        /** The level a wall needs: wood with Carpentry, brick and concrete with Masonry, steel with Metalworking. */
+        public int carpentryLevel = 2;
+        public int masonryLevel = 2;
+        public int metalworkingLevel = 2;
+        /** How far zombies hear each kind of wall coming down, in blocks. */
+        public double woodNoise = 16;
+        public double masonryNoise = 36;
+        public double metalNoise = 14;
+        /** Endurance a wall costs to knock through (a sprint uses about 1 a second). */
+        public double woodEndurance = 8;
+        public double masonryEndurance = 14;
+        public double metalEndurance = 5;
+        /** Seconds to break a wall at its needed level; every level more takes 12% off. */
+        public double woodSeconds = 3;
+        public double masonrySeconds = 5;
+        public double metalSeconds = 6;
+    }
+
     public static class Progression {
         public double xpMultiplier = 1.0;
     }
@@ -349,6 +400,27 @@ public final class ZcConfig {
         public double carBurnt = 0.07;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
+        /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
+        public double jetTopSpeed = 300;
+        /** The helicopter's top speed in km/h. */
+        public double heliTopSpeed = 250;
+        /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
+        public boolean aircraftService = true;
+        /**
+         * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
+         * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
+         */
+        public double carKeyIgnition = 0.1;
+        public double carKeyGlovebox = 0.3;
+        public double carKeyZombie = 0.35;
+        public double carKeyDrop = 0.3;
+        /**
+         * Hotwiring: seconds fiddling under the dash, and the chance it only sparks and you start again in a car in
+         * perfect condition; hotwireWear is how much of the remaining chance a car at 0% adds (worse cars fail more).
+         */
+        public double hotwireSeconds = 8;
+        public double hotwireFail = 0.25;
+        public double hotwireWear = 0.8;
     }
 
     public static class Weather {
@@ -397,8 +469,8 @@ public final class ZcConfig {
         public boolean ghostPower = true;
         /** Scales the wait between ghost power surges (2 to 6 minutes); 0.5 is twice as often. Client side. */
         public double ghostPowerEvery = 1.0;
-        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. */
-        public boolean alarms = true;
+        /** Thunder and wind set off car alarms and shop alarms near you in storms, and the dead come to the noise. Off for now. */
+        public boolean stormAlarms = false;
         /** A light haze over the distance at all times: where it fully hides things, in blocks. 0 turns it off. */
         public int hazeDistance = 200;
         /** Strong storms throw real lightning that starts fires (never right on top of you). */
@@ -438,6 +510,18 @@ public final class ZcConfig {
         public boolean weaponCards = true;
         /** Size of the crosshair against the game's own (1 = vanilla). Client side. */
         public double crosshairScale = 0.5;
+        /**
+         * Third person (F5) is played over the shoulder: the camera close behind you and to one side, a crosshair on
+         * exactly what your shots and hands will hit, the shoulder swapped with O. Off gives Minecraft's own. Client side.
+         */
+        public boolean shoulderCam = true;
+        /** How far behind, to the side and above your eyes the shoulder camera sits (blocks). Client side. */
+        public double shoulderBack = 1.9;
+        public double shoulderSide = 0.6;
+        public double shoulderUp = 0.15;
+        /** Aiming a gun brings it in closer: how far behind and to the side then (blocks). Client side. */
+        public double shoulderAimBack = 1.05;
+        public double shoulderAimSide = 0.5;
         /** No crosshair while aiming down a gun's sights: the sight is the aim point. Client side. */
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
@@ -449,6 +533,12 @@ public final class ZcConfig {
         public boolean weaponHolds = true;
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
+        /**
+         * Zombies die like Zomboid's: a bullet anywhere but the head (on one still standing) does this much of its
+         * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
+         */
+        public double zombieBodyShots = 0.33;
+        public double zombieMelee = 0.5;
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
         /** Swinging, shoving and sprinting tire you; tired swings are slower and weaker. */
@@ -502,13 +592,13 @@ public final class ZcConfig {
          * How much a forearm (with the hand) takes before it tears off at the elbow, in gun damage: each hit adds the
          * bullet's or pellet's damage times its kind of gun's tearing below.
          */
-        public double forearm = 24;
+        public double forearm = 20;
         /** How much an upper arm takes before the whole arm tears off at the shoulder. */
-        public double arm = 34;
+        public double arm = 28;
         /** How much a shin (with the foot) takes before it tears off at the knee. */
-        public double shin = 28;
+        public double shin = 24;
         /** How much a thigh takes before the whole leg tears off at the hip. */
-        public double leg = 40;
+        public double leg = 34;
         /** Tearing per pellet of buckshot: a shotgun up close takes a limb off nearly every time. */
         public double shotguns = 2.0;
         /**
@@ -530,6 +620,22 @@ public final class ZcConfig {
         public double limbSeconds = 60;
         /** Most torn-off limbs lying about at once; the oldest go first. Client side. */
         public int maxLimbs = 64;
+        /**
+         * Shows the shooter what each shot hit, over the hotbar: the part, how far a limb is to coming off (taken /
+         * toughness), and OFF when it goes.
+         */
+        public boolean showHits = false;
+
+        /** The first toughness numbers (24, 34, 28, 40), left as they were, take the easier ones of 27 October. */
+        void retune() {
+            if (forearm == 24 && arm == 34 && shin == 28 && leg == 40) {
+                Limbs fresh = new Limbs();
+                forearm = fresh.forearm;
+                arm = fresh.arm;
+                shin = fresh.shin;
+                leg = fresh.leg;
+            }
+        }
     }
 
     /**
@@ -556,8 +662,13 @@ public final class ZcConfig {
         public int magazineSize = 30;
         /** The gun has a full-auto setting, switched with the fire mode key. */
         public boolean selectFire = false;
-        /** How fast it fires on full auto, in rounds a minute. */
-        public double autoRoundsPerMinute = 800.0;
+        /**
+         * How fast it fires on full auto, in rounds a minute, held steady shot to shot. Every automatic gun has its
+         * own: an SMG runs faster than an assault rifle.
+         */
+        public double autoRpm = 600.0;
+        /** Multiplies the suppressed shot's pitch (below 1 deepens it). */
+        public double suppressedPitch = 1.0;
         /** Multiplies the kick of each shot on full auto (the gun is held braced for it). */
         public double autoRecoil = 0.7;
 
@@ -657,7 +768,7 @@ public final class ZcConfig {
             s.range = 70.0;
             s.magazineSize = 30;
             s.selectFire = true;
-            s.autoRoundsPerMinute = 800.0;
+            s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
             return s;
         }
 
@@ -689,6 +800,8 @@ public final class ZcConfig {
     public static class CrossbowStats extends GunStats {
         /** Chance a bolt breaks when it hits something, rather than being left to pick up. */
         public double boltBreakChance = 0.2;
+        /** Bolts a zombie can carry standing in it before more just fall at its feet. */
+        public int maxStuckBolts = 6;
 
         CrossbowStats() {
             damage = 30.0;
@@ -772,11 +885,19 @@ public final class ZcConfig {
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
+            suppressedPitch = 0.88;     // Josiah 10-27: its suppressed shot a little deeper
         }
 
         public boolean enabled = true;
         /** Worn guns sometimes jam; clear them with the reload key. */
         public boolean jams = true;
+        /**
+         * Jam chance per shot of a gun in new condition, and how much is added at no condition left (rising with the
+         * square of the wear), both before its reliability roll. 0.001 and 0.015: about 1 magazine in 30 jams on a
+         * new gun, 1 in 8 at half condition, 1 in 3 nearly worn out.
+         */
+        public double jamNew = 0.001;
+        public double jamWorn = 0.015;
         /** Guns are modular: optics, muzzle devices, grips, lights, lasers and stocks go on and come off. */
         public boolean attachments = true;
         /** Multiply aimed spread with each optic mounted. */
@@ -796,6 +917,14 @@ public final class ZcConfig {
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
         public boolean muzzleSmoke = false;
+        /** Bullet holes, dust and chips where a shot hits a block, and how long the holes stay (seconds). Client side. */
+        public boolean bulletHoles = true;
+        public double bulletHoleSeconds = 90.0;
+        /** Blood sprays from a hit and splashes the wall or floor behind it; how long the splashes stay. Client side. */
+        public boolean bloodSplatter = true;
+        public double bloodSeconds = 120.0;
+        /** How many holes and splashes stay at once; the oldest go first. Client side. */
+        public int maxDecals = 300;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
@@ -836,6 +965,27 @@ public final class ZcConfig {
         public boolean glowWithShaders = false;
     }
 
+    /**
+     * Which round of changed defaults this file has had. A saved file keeps its old numbers, so when a default is
+     * changed on purpose, bump this and move the old default over in {@link #upgrade} (values someone set themselves
+     * are left alone).
+     */
+    public int defaultsVersion = 0;
+    private static final int DEFAULTS = 1;
+
+    private static void upgrade(ZcConfig c) {
+        if (c.defaultsVersion < 1) {
+            // 2026-10-27: the assault rifle 700 -> 600 a minute, its suppressed shot deeper
+            if (c.guns.autoRpm == 700.0) {
+                c.guns.autoRpm = 600.0;
+            }
+            if (c.guns.suppressedPitch == 1.0) {
+                c.guns.suppressedPitch = 0.88;
+            }
+        }
+        c.defaultsVersion = DEFAULTS;
+    }
+
     public static ZcConfig get() {
         return instance;
     }
@@ -846,11 +996,14 @@ public final class ZcConfig {
                 ZcConfig read = GSON.fromJson(reader, ZcConfig.class);
                 if (read != null) {
                     instance = read;
+                    upgrade(instance);
+                    instance.limbs.retune();
                 }
             } catch (IOException | RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Couldn't read {}, using defaults", FILE, e);
             }
         }
+        instance.defaultsVersion = Math.max(instance.defaultsVersion, DEFAULTS);
         // Writing back adds any settings that are new in this version.
         save();
     }

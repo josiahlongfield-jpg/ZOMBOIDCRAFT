@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_pipe_blue": "zomboidcraft:block/city/sc_pipe_blue",
+    "particle": "zomboidcraft:block/city/sc_pipe_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        6.75,
+        13,
+        0
+      ],
+      "to": [
+        9.25,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_pipe_blue",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_pipe_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_pipe_blue"
+        },
+        "west": {
+          "texture": "#sc_pipe_blue"
+        },
+        "up": {
+          "texture": "#sc_pipe_blue"
+        },
+        "down": {
+          "texture": "#sc_pipe_blue"
+        }
+      }
+    }
+  ]
+}

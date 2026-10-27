@@ -23,6 +23,7 @@ public final class Voxels implements BlockSink {
     /** Which sections were written at all, so explicit air (cleared rooms) carves the terrain. */
     private final Map<Long, long[]> written = new HashMap<>();
     public final List<Car> cars = new ArrayList<>();
+    private final CarSpacing spacing = new CarSpacing();
     /** Spots the builders marked: {@link BlockSink#mark}. */
     public final List<Mark> marks = new ArrayList<>();
     private int maxY = 0;
@@ -69,12 +70,28 @@ public final class Voxels implements BlockSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        cars.add(new Car(x, y, z, yaw, minLength, maxLength, seed, null));
+        add(new Car(x, y, z, yaw, minLength, maxLength, seed, null));
     }
 
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
-        cars.add(new Car(x, y, z, yaw, 0, 99, seed, models));
+        add(new Car(x, y, z, yaw, 0, 99, seed, models));
+    }
+
+    /**
+     * Keeps a car only if its body clears every one already here, pinned to the model it was
+     * checked as ("=id", which the chunk writer reads as that model alone).
+     */
+    private void add(Car car) {
+        CarSpacing.Bodies bodies = CarSpacing.bodies;
+        if (bodies == null) {
+            cars.add(car);
+            return;
+        }
+        String model = bodies.pick(car.minLength(), car.maxLength(), car.models(), car.seed());
+        if (model != null && spacing.claim(model, car.x(), car.y(), car.z(), car.yaw())) {
+            cars.add(new Car(car.x(), car.y(), car.z(), car.yaw(), 0, 99, car.seed(), "=" + model));
+        }
     }
 
     @Override
@@ -101,6 +118,21 @@ public final class Voxels implements BlockSink {
             if (s == null) {
                 continue;
             }
+            long[] w = written.get(k);
+            for (int i = 0; i < 4096; i++) {
+                if ((w[i >> 6] >>> (i & 63) & 1) != 0) {
+                    out.visit((sx << 4) + (i & 15), (sy << 4) + MIN_Y + (i >> 8), (sz << 4) + (i >> 4 & 15), s[i]);
+                }
+            }
+        }
+    }
+
+    /** Calls out for every block written anywhere, explicit air included (palette id 0). */
+    public void forEach(Visitor out) {
+        for (Map.Entry<Long, short[]> e : sections.entrySet()) {
+            long k = e.getKey();
+            int sx = (int) (k >> 42) << 11 >> 11, sz = (int) (k >> 21 & 0x1FFFFF) << 11 >> 11, sy = (int) (k & 0x1FFFFF);
+            short[] s = e.getValue();
             long[] w = written.get(k);
             for (int i = 0; i < 4096; i++) {
                 if ((w[i >> 6] >>> (i & 63) & 1) != 0) {

@@ -3,6 +3,7 @@
   "package": "com.zomboidcraft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockStateDigMixin",
     "CraftingMenuAccessor",
     "EnvironmentAttributeSystemMixin",
     "InventoryMenuMixin",
@@ -12,6 +13,7 @@
     "MenuInvoker",
     "MobAccessor",
     "MobMixin",
+    "PlayerRidingMixin",
     "NearestAttackableTargetGoalAccessor",
     "SlotMixin",
     "ZombieMixin"

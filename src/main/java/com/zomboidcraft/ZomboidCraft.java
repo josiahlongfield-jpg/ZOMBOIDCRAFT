@@ -26,10 +26,15 @@ public class ZomboidCraft implements ModInitializer {
         Skills.register();
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
+        com.zomboidcraft.building.BuildBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
+        com.zomboidcraft.world.cars.CarKeys.register();
         com.zomboidcraft.world.cars.CarSounds.register();
+        com.zomboidcraft.world.cars.AirSounds.register();
+        com.zomboidcraft.world.cars.AirReadiness.register();
+        com.zomboidcraft.world.cars.AirNet.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
@@ -43,6 +48,8 @@ public class ZomboidCraft implements ModInitializer {
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();
         com.zomboidcraft.barricade.Barricades.register();
+        com.zomboidcraft.building.DigRules.register();
+        com.zomboidcraft.building.Builder.register();
         SurvivalEvents.register();
         com.zomboidcraft.survival.Injuries.register();
         com.zomboidcraft.survival.TimedActions.register();
@@ -52,10 +59,12 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.combat.CombatNet.register();
+        com.zomboidcraft.combat.Impacts.register();
         com.zomboidcraft.world.map.MapNet.register();
         com.zomboidcraft.combat.Guns.register();
         com.zomboidcraft.combat.Downed.register();
         com.zomboidcraft.combat.Dismember.register();
+        com.zomboidcraft.combat.StuckBolts.register();
         com.zomboidcraft.combat.Stamina.register();
         com.zomboidcraft.combat.Grabs.register();
         com.zomboidcraft.combat.CombatEvents.register();

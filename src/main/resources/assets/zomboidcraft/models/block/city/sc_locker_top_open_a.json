@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_locker_hi_a_open": "zomboidcraft:block/city/sc_locker_hi_a_open",
+    "sc_locker_side_a": "zomboidcraft:block/city/sc_locker_side_a",
+    "particle": "zomboidcraft:block/city/sc_locker_hi_a_open"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_locker_hi_a_open"
+        },
+        "south": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        0,
+        4.8
+      ],
+      "to": [
+        11.1,
+        15.6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_locker_side_a"
+        },
+        "south": {
+          "texture": "#sc_locker_side_a"
+        },
+        "east": {
+          "texture": "#sc_locker_side_a"
+        },
+        "west": {
+          "texture": "#sc_locker_side_a"
+        },
+        "up": {
+          "texture": "#sc_locker_side_a"
+        },
+        "down": {
+          "texture": "#sc_locker_side_a",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -96,6 +96,12 @@ final class Interior {
     private final List<int[]> hearths = new ArrayList<>();
     private int[][][] winMask;
     private int doorX, backX = -1, garageZ = -1;
+    /** One floor of a bigger building ({@link Flats}): its windows are given, and it has no hearth, back door or attic. */
+    private boolean flat;
+    /** The windows a flat's building already has, as {x, z, side} on its outer walls. */
+    private List<int[]> fixedWindows;
+    /** The row of a window's lower pane: 2 in a house, 1 over a shop. */
+    private int sill = 2;
     /** The stairs: the first of their two columns (-1 for none) and the z of the bottom step. */
     private int sc0 = -1, sz0;
     /** The hall's clear columns, beside the stairs. */
@@ -147,6 +153,18 @@ final class Interior {
             case LOOTED -> 0.22;
             default -> 0.4;
         };
+    }
+
+    /**
+     * Makes this one flat of a bigger building, before {@link #plan()}: the building's own windows
+     * as {x, z, side} on the outer walls (their lower panes on row sill), and no hearth, back door
+     * or attic floor. Its front door is the way in from the stairs.
+     */
+    Interior asFlat(List<int[]> windows, int sill) {
+        this.flat = true;
+        this.fixedWindows = windows;
+        this.sill = sill;
+        return this;
     }
 
     int doorX() {
@@ -286,13 +304,17 @@ final class Interior {
         essentials();
         // through the lining at the front and back doors, and into the garage
         way(0, doorX, uz0, 0, true);
-        if (backX >= 0) {
+        if (backX >= 0 && !flat) {
             way(0, backX, uz1, 2, true);
         }
         if (garageEast) {
             garageDoor();
         }
-        placeWindows();
+        if (fixedWindows != null) {
+            fixedWindows();
+        } else {
+            placeWindows();
+        }
     }
 
     /**
@@ -753,6 +775,21 @@ final class Interior {
         }
     }
 
+    /** A flat's windows are its building's: furniture keeps clear of them all the same. */
+    private void fixedWindows() {
+        for (int[] w : fixedWindows) {
+            if (w[2] == 0 && w[0] == doorX) {
+                continue;  // the door takes its place
+            }
+            windows.add(new int[] {w[0], w[1], 0, w[2]});
+            int[] in = STEP[(w[2] + 2) & 3];
+            int rx = w[0] + in[0] * (lined ? 2 : 1), rz = w[1] + in[1] * (lined ? 2 : 1);
+            if (inside(rx, rz)) {
+                winMask[0][rx - x0][rz - z0] |= 1 << w[2];
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ build
 
     /** Lays the lining, partitions, doors, floors, ceilings and stairs, then furnishes. */
@@ -791,8 +828,8 @@ final class Interior {
             }
             niches(f);
         }
-        // the attic floor over the top storey: the ceiling seen from below
-        for (int x = x0 + 1; x < x1; x++) {
+        // the attic floor over the top storey: the ceiling seen from below (a flat's is the floor or roof above)
+        for (int x = x0 + 1; x < x1 && !flat; x++) {
             for (int z = z0 + 1; z < z1; z++) {
                 p.set(x, floors * H, z, "home_floor_oak");
             }
@@ -914,8 +951,8 @@ final class Interior {
             int[] in = STEP[(w[3] + 2) & 3];
             int x = w[0] + in[0], z = w[1] + in[1];
             int base = f * H;
-            p.set(x, base + 2, z, "air");
-            p.set(x, base + 3, z, "air");
+            p.set(x, base + sill, z, "air");
+            p.set(x, base + sill + 1, z, "air");
             Room r = near(f, x, z);
             if (cond == House.Condition.BOARDED || (cond == House.Condition.LOOTED || cond == House.Condition.RUIN)
                     && rng.nextDouble() < 0.3 || r == null) {
@@ -923,10 +960,10 @@ final class Interior {
             }
             String facing = "[facing=" + DIRS[w[3]] + "]";
             if (Set.of("kitchen", "bath", "bath_half", "den", "laundry", "hall").contains(r.kind)) {
-                p.set(x, base + 3, z, "home_blinds" + facing);
+                p.set(x, base + sill + 1, z, "home_blinds" + facing);
             } else {
-                p.set(x, base + 2, z, "home_curtains_" + drapes + facing);
-                p.set(x, base + 3, z, "home_curtains_" + drapes + "_top" + facing);
+                p.set(x, base + sill, z, "home_curtains_" + drapes + facing);
+                p.set(x, base + sill + 1, z, "home_curtains_" + drapes + "_top" + facing);
             }
         }
     }
@@ -1696,6 +1733,9 @@ final class Interior {
      * (or with stove) a wood stove and its pipe.
      */
     private void hearth(int f, Room r, boolean stove) {
+        if (flat) {
+            return;  // no chimney to take the smoke
+        }
         String low = stove ? "home_wood_stove" : "home_fireplace", up = stove ? "home_stove_pipe" : "home_chimney";
         // the end walls first, where the chimney can go up the gable outside; the front last, behind the porch
         boolean east = rng.nextBoolean();

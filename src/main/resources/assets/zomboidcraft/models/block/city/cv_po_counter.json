@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "cv_panel_oak": "zomboidcraft:block/city/cv_panel_oak",
+    "cv_wainscot": "zomboidcraft:block/city/cv_wainscot",
+    "particle": "zomboidcraft:block/city/cv_panel_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_panel_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_wainscot",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_wainscot",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_wainscot",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_wainscot",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_wainscot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_wainscot"
+        }
+      }
+    }
+  ]
+}

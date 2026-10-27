@@ -1,0 +1,70 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_beam": "zomboidcraft:block/city/ch_beam",
+    "ch_quilt_0": "zomboidcraft:block/city/ch_quilt_0",
+    "particle": "zomboidcraft:block/city/ch_quilt_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_quilt_0"
+        },
+        "south": {
+          "texture": "#ch_beam"
+        },
+        "east": {
+          "texture": "#ch_beam",
+          "uv": [
+            0,
+            0,
+            1.6000000000000014,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_beam",
+          "uv": [
+            14.399999999999999,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_beam",
+          "uv": [
+            0,
+            14.399999999999999,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_beam",
+          "uv": [
+            0,
+            0,
+            16,
+            1.6000000000000014
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

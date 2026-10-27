@@ -33,11 +33,25 @@ public final class Loot {
                 if (dead != null && "soldier".equals(dead.getAttached(ZombieLook.OUTFIT)) && random.nextFloat() < 0.015f) {
                     drops.add(new ItemStack(ModItems.BUNKER_MAP));
                 }
-            } else if (path.startsWith("shop/") && random.nextFloat() < 0.03f) {
-                // and so do the lockers and crates of the bases and the naval wharf
+                if (dead != null && "soldier".equals(dead.getAttached(ZombieLook.OUTFIT))) {
+                    // a pilot's or a crew chief's pocket
+                    maybe(random, drops, 0.004f, ModItems.ROTARY_WING_MANUAL, 1, 1);
+                    maybe(random, drops, 0.003f, ModItems.JET_FLIGHT_MANUAL, 1, 1);
+                    maybe(random, drops, 0.003f, ModItems.AIRCRAFT_WEAPONS_MANUAL, 1, 1);
+                }
+            } else if (path.startsWith("shop/")) {
                 Vec3 at = context.getOptional(LootContextParams.ORIGIN);
-                if (at != null && guarded(context.getLevel(), at)) {
+                boolean guarded = at != null && guarded(context.getLevel(), at);
+                if (guarded && random.nextFloat() < 0.03f) {
+                    // and so do the lockers and crates of the bases and the naval wharf
                     drops.add(new ItemStack(ModItems.BUNKER_MAP));
+                }
+                if (guarded) {
+                    addAircraftLoot(random, drops);
+                } else if (path.equals("shop/home_books") || path.equals("shop/office")) {
+                    // somebody's hobby: a flight manual on a bookshelf, rarely
+                    maybe(random, drops, 0.006f, ModItems.ROTARY_WING_MANUAL, 1, 1);
+                    maybe(random, drops, 0.003f, ModItems.JET_FLIGHT_MANUAL, 1, 1);
                 }
             }
         });
@@ -76,6 +90,16 @@ public final class Loot {
         if (random.nextFloat() < 0.25f) {
             drops.add(PotionContents.createItemStack(Items.POTION, Potions.WATER));
         }
+    }
+
+    /** The bases and the carrier keep what aircraft run on, and now and then the manuals that teach flying them. */
+    private static void addAircraftLoot(RandomSource random, List<ItemStack> drops) {
+        maybe(random, drops, 0.05f, ModItems.JET_FUEL, 1, 1);
+        maybe(random, drops, 0.05f, ModItems.AIRCRAFT_PARTS, 1, 2);
+        maybe(random, drops, 0.02f, ModItems.AIRCRAFT_BATTERY, 1, 1);
+        maybe(random, drops, 0.008f, ModItems.ROTARY_WING_MANUAL, 1, 1);
+        maybe(random, drops, 0.006f, ModItems.JET_FLIGHT_MANUAL, 1, 1);
+        maybe(random, drops, 0.005f, ModItems.AIRCRAFT_WEAPONS_MANUAL, 1, 1);
     }
 
     private static void addZombieLoot(RandomSource random, List<ItemStack> drops) {

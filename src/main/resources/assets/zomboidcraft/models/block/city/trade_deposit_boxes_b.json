@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "trade_deposit_b": "zomboidcraft:block/city/trade_deposit_b",
+    "particle": "zomboidcraft:block/city/trade_deposit_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_deposit_b"
+        },
+        "south": {
+          "texture": "#home_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

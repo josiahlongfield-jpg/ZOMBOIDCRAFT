@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_grave_face_3": "zomboidcraft:block/city/ch_grave_face_3",
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        5
+      ],
+      "to": [
+        15,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        7
+      ],
+      "to": [
+        13,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_grave_face_3"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.6,
+        11,
+        7
+      ],
+      "to": [
+        12.4,
+        12.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12.5,
+        7
+      ],
+      "to": [
+        11,
+        13.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        13.5,
+        7
+      ],
+      "to": [
+        9.5,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble"
+        },
+        "south": {
+          "texture": "#ch_marble"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#ch_marble"
+        },
+        "down": {
+          "texture": "#ch_marble"
+        }
+      }
+    }
+  ]
+}

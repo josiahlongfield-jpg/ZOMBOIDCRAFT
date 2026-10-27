@@ -1,0 +1,235 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_hydrant": "zomboidcraft:block/city/fs_hydrant",
+    "fs_red": "zomboidcraft:block/city/fs_red",
+    "particle": "zomboidcraft:block/city/fs_hydrant"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        4.5
+      ],
+      "to": [
+        11.5,
+        1.5,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_hydrant"
+        },
+        "south": {
+          "texture": "#fs_hydrant"
+        },
+        "east": {
+          "texture": "#fs_hydrant"
+        },
+        "west": {
+          "texture": "#fs_hydrant"
+        },
+        "up": {
+          "texture": "#fs_hydrant"
+        },
+        "down": {
+          "texture": "#fs_hydrant",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        1.5,
+        5.5
+      ],
+      "to": [
+        10.5,
+        10,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_hydrant"
+        },
+        "south": {
+          "texture": "#fs_hydrant"
+        },
+        "east": {
+          "texture": "#fs_hydrant"
+        },
+        "west": {
+          "texture": "#fs_hydrant"
+        },
+        "up": {
+          "texture": "#fs_hydrant"
+        },
+        "down": {
+          "texture": "#fs_hydrant"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        5,
+        6.5
+      ],
+      "to": [
+        12.5,
+        7.5,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_hydrant"
+        },
+        "south": {
+          "texture": "#fs_hydrant"
+        },
+        "east": {
+          "texture": "#fs_hydrant"
+        },
+        "west": {
+          "texture": "#fs_hydrant"
+        },
+        "up": {
+          "texture": "#fs_hydrant"
+        },
+        "down": {
+          "texture": "#fs_hydrant"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        5,
+        3.5
+      ],
+      "to": [
+        9.5,
+        7.5,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red"
+        },
+        "down": {
+          "texture": "#fs_red"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        10,
+        5
+      ],
+      "to": [
+        11,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_hydrant"
+        },
+        "south": {
+          "texture": "#fs_hydrant"
+        },
+        "east": {
+          "texture": "#fs_hydrant"
+        },
+        "west": {
+          "texture": "#fs_hydrant"
+        },
+        "up": {
+          "texture": "#fs_hydrant"
+        },
+        "down": {
+          "texture": "#fs_hydrant"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        6
+      ],
+      "to": [
+        10,
+        12.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_hydrant"
+        },
+        "south": {
+          "texture": "#fs_hydrant"
+        },
+        "east": {
+          "texture": "#fs_hydrant"
+        },
+        "west": {
+          "texture": "#fs_hydrant"
+        },
+        "up": {
+          "texture": "#fs_hydrant"
+        },
+        "down": {
+          "texture": "#fs_hydrant"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        12.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        13.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_red"
+        },
+        "south": {
+          "texture": "#fs_red"
+        },
+        "east": {
+          "texture": "#fs_red"
+        },
+        "west": {
+          "texture": "#fs_red"
+        },
+        "up": {
+          "texture": "#fs_red"
+        },
+        "down": {
+          "texture": "#fs_red"
+        }
+      }
+    }
+  ]
+}

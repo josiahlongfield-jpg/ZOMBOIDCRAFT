@@ -30,4 +30,6 @@ public class WalkerRenderState extends ZombieRenderState {
     /** The new body's eye mask, or null when look.glowingEyes is off. */
     public Identifier zeyes;
     public final ZMove.Pose zpose = new ZMove.Pose();
+    /** Crossbow bolts standing in it. */
+    public java.util.List<com.zomboidcraft.combat.StuckBolts.Bolt> bolts = java.util.List.of();
 }

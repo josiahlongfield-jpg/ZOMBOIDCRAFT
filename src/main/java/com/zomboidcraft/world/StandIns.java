@@ -125,6 +125,7 @@ public final class StandIns {
         put("floor_boards", "spruce_planks");
         for (String shelf : new String[] {"grocery", "pharmacy", "liquor", "hardware", "thrift", "pawn", "ammo", "empty"}) {
             put("store_shelf_" + shelf, "chiseled_bookshelf");
+            put("store_shelf_" + shelf + "_top", "chiseled_bookshelf");
         }
         put("store_cooler", "white_concrete");
         put("store_cooler_top", "glass");
@@ -185,6 +186,16 @@ public final class StandIns {
             props = new HashMap<>();
         } else {
             id = TABLE.get(name);
+            if (id == null && name.startsWith("tree_")) {
+                // the pack trees: leaves as leaves, trunks and limbs as logs, twigs left out
+                id = name.contains("_leaves") ? "oak_leaves[persistent=true]"
+                        : name.endsWith("_limb_3") || name.endsWith("_limb_5") ? "air" : "oak_log";
+            }
+            if (id == null && name.startsWith("gc_")) {
+                // the pack's ground cover: vanilla grass, tall grass in two halves, litter left out
+                id = name.startsWith("gc_tall") ? "tall_grass[half=" + (name.endsWith("_upper") ? "upper]" : "lower]")
+                        : name.startsWith("gc_grass") || name.startsWith("gc_sprig") ? "short_grass" : "air";
+            }
             if (id == null && (name.startsWith("sign_") || name.startsWith("blade_") || name.startsWith("neon_")
                     || name.startsWith("store_"))) {
                 return Blocks.AIR.defaultBlockState();  // shop signs and small fittings only come with the real blocks

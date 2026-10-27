@@ -44,13 +44,18 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.gear.NightVisionClient.register();
         com.zomboidcraft.client.gear.RadioClient.register();
         RailLights.register();
+        com.zomboidcraft.client.building.Placer.register();
         com.zomboidcraft.client.zombie.body.Gibs.register();
+        com.zomboidcraft.client.combat.ImpactFx.register();
+        com.zomboidcraft.client.camera.ShoulderCam.register();
         RifleView.register();
         AimSensitivity.register();
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
+        EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
         SoundSliders.register();
         com.zomboidcraft.client.cars.CarClient.register();
+        com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();

@@ -1,0 +1,62 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "zomboidcraft:block/city/tree_elm_limb_5_arm",
+        "x": 90
+      }
+    }
+  ]
+}

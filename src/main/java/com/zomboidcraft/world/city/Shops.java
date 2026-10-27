@@ -1,5 +1,7 @@
 package com.zomboidcraft.world.city;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.SplittableRandom;
@@ -66,6 +68,12 @@ public final class Shops {
     private final Type type;
     private final int w, d, left, right, back, partition, door;
     private final boolean pairDoor;
+    /** The last x the back rooms may use (a walk-up's stairwell takes the rest). */
+    private int lastBack;
+    /** The doors through the partition: the cells in front of them are kept clear. */
+    private final List<Integer> backDoors = new ArrayList<>();
+    /** For a shop fitted out elsewhere (no type): what racks its stock room, and the loot its fittings roll. */
+    private String stockShelf = "store_shelf_empty", stockTable = "scraps";
 
     public Shops(Placer p, SplittableRandom rng, Type type, int w, int d) {
         this.p = p;
@@ -79,6 +87,29 @@ public final class Shops {
         this.back = partition - 1;
         this.door = w / 2;
         this.pairDoor = w >= 12;
+        this.lastBack = right;
+    }
+
+    /** Keeps the back rooms west of x (a walk-up's stairwell takes the strip beyond it). */
+    public Shops backTo(int x) {
+        lastBack = x;
+        return this;
+    }
+
+    /**
+     * Only the back rooms (toilet, office, stock room behind a partition at d - 5) of a w by d shop
+     * whose floor is fitted out elsewhere, kept west of backTo; shelf racks the stock room and
+     * table is the loot its fittings roll.
+     */
+    public static void backRooms(Placer p, SplittableRandom rng, int w, int d, int backTo, String shelf, String table) {
+        Shops s = new Shops(p, rng, null, w, d).backTo(backTo);
+        s.stockShelf = shelf;
+        s.stockTable = table;
+        s.stockroom();
+        for (int x : s.backDoors) {
+            s.put(x, 1, s.back, "air");
+            s.put(x, 2, s.back, "air");
+        }
     }
 
     public void fitOut() {
@@ -97,6 +128,10 @@ public final class Shops {
             case LIQUOR -> liquor();
             case HARDWARE -> hardware();
         }
+        for (int x : backDoors) {
+            put(x, 1, back, "air");
+            put(x, 2, back, "air");
+        }
         mess();
     }
 
@@ -112,15 +147,85 @@ public final class Shops {
         p.fill(left, 0, 1, right, 0, partition - 1, f);
     }
 
+    /**
+     * Behind the partition across the back: a staff toilet and the manager's office where the
+     * shop is wide enough, each with its own door off the shop floor, and the stock room.
+     */
     private void stockroom() {
         for (int x = left; x <= right; x++) {
             for (int y = 1; y <= 3; y++) {
                 put(x, y, partition, "drywall");
             }
         }
-        Doors.abandoned(p, rng, left + 1, 1, partition, Doors.FLAT, "south", Doors.hinge(rng));
-        // racking down one side, boxes and crates stacked along the back
-        String stock = switch (type) {
+        int end = Math.min(right, lastBack), z0 = partition + 1, z1 = d - 2;
+        int x = left;
+        if (end - x + 1 >= 6) {
+            toilet(x, z0, z1);
+            wall(x + 2, z0, z1);
+            x += 3;
+        }
+        if (end - x + 1 >= 7) {
+            office(x, z0, z1);
+            wall(x + 3, z0, z1);
+            x += 4;
+        }
+        if (end >= x) {
+            stock(x, end, z0, z1);
+        } else if (end < left) {
+            backDoor(left + 1);  // straight through to the stairwell
+        }
+    }
+
+    private void wall(int x, int z0, int z1) {
+        for (int z = z0; z <= z1; z++) {
+            for (int y = 1; y <= 3; y++) {
+                put(x, y, z, "drywall");
+            }
+        }
+    }
+
+    private void backDoor(int x) {
+        Doors.abandoned(p, rng, x, 1, partition, Doors.FLAT, "south", Doors.hinge(rng));
+        backDoors.add(x);
+    }
+
+    /** The staff toilet: two wide, tiled, a toilet and a basin against the back wall. */
+    private void toilet(int x, int z0, int z1) {
+        p.fill(x, 0, z0, x + 1, 0, z1, "home_floor_tile");
+        backDoor(x + 1);
+        put(x, 1, z1, "home_toilet[facing=north]");
+        put(x + 1, 1, z1, "home_sink_white[facing=north]");
+        put(x + 1, 2, z1, "home_mirror[facing=south]");
+        put(x, 2, z0 + 1, "home_towel[facing=west]");
+        put(x, 1, z0, rng.nextDouble() < 0.5 ? "home_trash_can" : "home_bin_bags");
+        put(x, 3, z0 + 1, rng.nextDouble() < 0.06 ? "ceiling_light" : "ceiling_light_off");
+        if (rng.nextDouble() < 0.3) {
+            put(x + 1, 1, z0 + 1, rng.nextDouble() < 0.5 ? "home_blood_pool" : "paper");
+        }
+    }
+
+    /** The manager's office: the desk against the back wall, files, the safe, the calendar and the phone. */
+    private void office(int x, int z0, int z1) {
+        p.fill(x, 0, z0, x + 2, 0, z1, "home_floor_lino");
+        backDoor(x + 1);
+        put(x + 1, 1, z1, "home_desk[facing=north]");
+        put(x + 1, 1, z1 - 1, rng.nextDouble() < 0.3 ? "office_chair[facing=east]" : "office_chair[facing=south]");
+        put(x + 2, 1, z1, "filing_cabinet[facing=north]");
+        put(x + 2, 1, z1 - 1, "filing_cabinet[facing=west]");
+        put(x, 1, z1, "store_safe[facing=north]");
+        put(x, 2, z0, "home_calendar[facing=west]");
+        put(x + 2, 2, z0, "home_phone[facing=east]");
+        put(x + 1, 3, z0 + 1, rng.nextDouble() < 0.06 ? "ceiling_light" : "ceiling_light_off");
+        if (rng.nextDouble() < 0.5) {
+            put(x, 1, z0, "paper");
+        }
+    }
+
+    /** The stock room: racking down one wall, boxes and crates stacked along the back. */
+    private void stock(int x0, int x1, int z0, int z1) {
+        int in = x0 == left ? left + 1 : (x0 + x1 + 1) / 2;
+        backDoor(in);
+        String stock = type == null ? stockShelf : switch (type) {
             case PHARMACY -> "store_shelf_pharmacy";
             case GROCERY, DINER, PIZZA -> "store_shelf_grocery";
             case LIQUOR -> "store_shelf_liquor";
@@ -130,20 +235,22 @@ public final class Shops {
             case THRIFT -> "store_shelf_thrift";
             default -> "store_shelf_empty";
         };
-        for (int z = partition + 1; z <= d - 2; z++) {
-            stack(left, z, stock + "[facing=east]", 2);
+        boolean rack = in != x0;
+        for (int z = z0; z <= z1 && rack; z++) {
+            stack(x0, z, stock + "[facing=east]", 2);
         }
-        for (int x = left + 2; x <= right; x++) {
-            if (x == right) {
-                continue;  // keep the way to the back door clear
+        for (int x = x0 + (rack ? 2 : 0); x <= x1; x++) {
+            if (x == w - 2 || x == in) {
+                continue;  // keep the ways to the back door and in from the shop clear
             }
             if (rng.nextDouble() < 0.7) {
-                put(x, 1, d - 2, rng.nextDouble() < 0.6 ? "cardboard_box[facing=north]" : "crate");
+                put(x, 1, z1, rng.nextDouble() < 0.6 ? "cardboard_box[facing=north]" : "crate");
                 if (rng.nextDouble() < 0.4) {
-                    put(x, 2, d - 2, "crate");
+                    put(x, 2, z1, "crate");
                 }
             }
         }
+        put(in, 3, z0 + 1, rng.nextDouble() < 0.05 ? "ceiling_light" : "ceiling_light_off");
     }
 
     /** Clutter left by looters: stock across the floor, a box or two, now and then a toppled bay. */
@@ -191,7 +298,7 @@ public final class Shops {
         for (int x = left + 1; x <= right - 1; x++) {
             put(x, 1, back - 2, x == (left + right) / 2 ? "store_register[facing=south]" : "store_counter[facing=south]");
         }
-        aisles("store_shelf_pharmacy", 5, back - 4, right);
+        aisles("store_shelf_pharmacy", 5, back - 4, right - 1);
         for (int z = 3; z <= back - 4; z++) {
             stack(right, z, "store_shelf_pharmacy[facing=west]", 2);
         }
@@ -388,26 +495,43 @@ public final class Shops {
         aisles(shelf, z0, z1, maxX, left + 2);
     }
 
+    /**
+     * Double-sided gondolas: two bays back to back, stocked both ways, with a walk between pairs and
+     * one left free at maxX, so no bay faces a wall or the coolers; a shop too narrow for a pair gets
+     * one single-sided run.
+     */
     private void aisles(String shelf, int z0, int z1, int maxX, int firstX) {
-        for (int x = firstX; x <= maxX; x += 3) {
+        int x = firstX;
+        for (; x + 1 <= maxX - 1; x += 4) {
             for (int z = z0; z <= z1; z++) {
-                stack(x, z, shelf + "[facing=east]", 2);
+                stack(x, z, shelf + "[facing=west]", 2);
+                stack(x + 1, z, shelf + "[facing=east]", 2);
+            }
+        }
+        if (x == firstX && firstX <= maxX - 1) {
+            for (int z = z0; z <= z1; z++) {
+                stack(firstX, z, shelf + "[facing=east]", 2);
             }
         }
     }
 
-    /** One bay pulled over into the aisle beside it, its stock across the floor. */
+    /** One bay pulled over into the aisle it faces, its stock across the floor. */
     private void toppled(int z0, int z1) {
         if (rng.nextDouble() > 0.4 || z1 <= z0) {
             return;
         }
         int z = z0 + rng.nextInt(z1 - z0 + 1);
-        for (int x = left + 2; x <= right; x += 3) {
-            if (p.get(x, 1, z) != null && p.get(x, 1, z).startsWith("store_shelf") && air(x + 1, 1, z)) {
+        for (int x = left + 1; x < right; x++) {
+            String b = p.get(x, 1, z);
+            if (b == null || !b.startsWith("store_shelf")) {
+                continue;
+            }
+            int to = b.contains("facing=west") ? x - 1 : x + 1;
+            if (air(to, 1, z)) {
                 put(x, 1, z, "air");
                 put(x, 2, z, "air");
-                put(x + 1, 1, z, "store_shelf_fallen[facing=north]");
-                p.setIfAir(x + 1, 1, z + 1, "store_spill");
+                put(to, 1, z, "store_shelf_fallen[facing=north]");
+                p.setIfAir(to, 1, z + 1, "store_spill");
                 return;
             }
         }
@@ -468,6 +592,12 @@ public final class Shops {
         if (block.contains("register") || block.contains("safe")) {
             return "till";
         }
+        if (block.startsWith("filing_cabinet")) {
+            return "office";
+        }
+        if (type == null) {
+            return stockTable;
+        }
         if (block.contains("cooler") || block.contains("vending")) {
             return type == Type.LIQUOR ? "liquor" : "drinks";
         }
@@ -489,8 +619,14 @@ public final class Shops {
 
     private void stack(int x, int z, String block, int high) {
         for (int y = 1; y <= high; y++) {
-            put(x, y, z, block);
+            put(x, y, z, y > 1 && block.startsWith("store_shelf_") ? top(block) : block);
         }
+    }
+
+    /** "store_shelf_grocery[facing=east]" becomes "store_shelf_grocery_top[facing=east]": a bay's upper block. */
+    static String top(String block) {
+        int open = block.indexOf('[');
+        return open < 0 ? block + "_top" : block.substring(0, open) + "_top" + block.substring(open);
     }
 
     private boolean air(int x, int y, int z) {

@@ -26,16 +26,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -75,6 +73,8 @@ public final class Guns {
         ItemStack loading = ItemStack.EMPTY;
         /** When the pump or bolt is worked after a shot (game time), or -1; when its empty case lands. */
         long cycleAt = -1, caseAt = -1;
+        /** A revolver's hammer, thumbed back on the sights: down again with the next pull of the trigger. */
+        boolean hammerBack;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -89,19 +89,33 @@ public final class Guns {
 
     // ------------------------------------------------------------------ firing
 
+    /** Brought up onto the sights: a loaded revolver has its hammer thumbed back, once until the trigger drops it. */
+    public static void aim(ServerPlayer player, ItemStack gun) {
+        GunType type = GunType.of(gun);
+        net.minecraft.sounds.SoundEvent hammer = type == null ? null : type.hammer();
+        State st = state(player);
+        if (hammer == null || st.hammerBack || st.reloadTick >= 0
+                || gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() <= 0) {
+            return;
+        }
+        st.hammerBack = true;
+        sound(player, hammer);
+    }
+
     public static void fire(ServerPlayer player, boolean aiming) {
         ZcConfig.Guns config = ZcConfig.get().guns;
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
-        if (!config.enabled || type == null || player.isSpectator()) {
+        if (!config.enabled || type == null || player.isSpectator() || !com.zomboidcraft.world.cars.CarProp.mayUse(player, gun)) {
             return;
         }
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
         boolean auto = fullAuto(gun);
-        // full auto takes a tick's slack for shots the network bunched up; its rate still holds on average
-        if (auto ? now < st.autoNext - 1.0 : now - st.lastShot < type.fireDelay()) {
+        // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
+        // tick; the rate still holds on average
+        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay()) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -117,6 +131,7 @@ public final class Guns {
             endReload(gun, st);
         }
         st.lastShot = now;
+        st.hammerBack = false;
         if (auto) {
             st.autoNext = nextAuto(st.autoNext, now, stats);
         }
@@ -131,7 +146,7 @@ public final class Guns {
         }
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
-        double jam = (Rolls.get(gun) != null ? ZcConfig.get().rolls.jamFloor : 0) + 0.08 * wear * wear;
+        double jam = config.jamNew + config.jamWorn * wear * wear;
         if (config.jams && type.canJam() && player.getRandom().nextDouble() < jam * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
@@ -147,11 +162,13 @@ public final class Guns {
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
         level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1f, 0.95f + player.getRandom().nextFloat() * 0.1f);
+                suppressed ? (float) config.suppressedVolume : 1f,
+                (suppressed ? (float) stats.suppressedPitch : 1f) * (0.95f + player.getRandom().nextFloat() * 0.1f));
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
         } else if (!type.opens && type != GunType.CROSSBOW) {   // a double keeps its empties till it's opened
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
+            // the shooter's own client plays its case in time with the shot; the server's tick would bunch them
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), ModSounds.CASING, SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
         Noise.emit(level, player.position(), stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
@@ -183,20 +200,24 @@ public final class Guns {
         boolean ricochet = false;
         boolean bow = type == GunType.CROSSBOW;
         Vec3 boltAt = null;     // where a crossbow's bolt ends up: under what it hit, or stuck where it struck
+        Zombie boltIn = null;   // or the zombie it went into, to stay standing in it
+        Vec3 boltDir = null;
         for (int i = 0; i < pellets; i++) {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
-            EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, stop, new AABB(eye, stop).inflate(1.0),
-                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player,
-                    eye.distanceToSqr(stop));
+            // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
+            Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
+                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, eye, dir, stats, power);
+                Pellet struck = pellet(target, hit, eye, stats, power);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
-                Dismember.pellet(target, eye, dir, struck.damage(), struck.head(), struck.legs(), type);
+                Dismember.pellet(player, target, eye, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (bow) {
                     boltAt = target.position().add(0, 0.2, 0);
+                    boltIn = target instanceof Zombie hitZombie ? hitZombie : null;
+                    boltDir = dir;
                     level.playSound(null, target.getX(), target.getEyeY(), target.getZ(), ModSounds.CROSSBOW_HIT,
                             SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
                 }
@@ -205,8 +226,8 @@ public final class Guns {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
                 level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, 4, 0.03, 0.03, 0.03, 0.08);
-                level.playSound(null, p.x, p.y, p.z, ModSounds.CROSSBOW_HIT, SoundSource.PLAYERS, 0.8f,
-                        1.1f + player.getRandom().nextFloat() * 0.2f);
+                level.playSound(null, p.x, p.y, p.z, ModSounds.CROSSBOW_HIT_BLOCK, SoundSource.PLAYERS, 0.8f,
+                        0.9f + player.getRandom().nextFloat() * 0.2f);
                 boltAt = p.subtract(dir.scale(0.3));
                 if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
                     level.destroyBlock(block.getBlockPos(), false, player);
@@ -214,9 +235,8 @@ public final class Guns {
             } else if (block.getType() != HitResult.Type.MISS) {
                 BlockState bs = level.getBlockState(block.getBlockPos());
                 Vec3 p = block.getLocation();
-                level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, bs), p.x, p.y, p.z, pellets > 1 ? 3 : 8,
-                        0.05, 0.05, 0.05, 0.15);
-                level.sendParticles(ParticleTypes.SMOKE, p.x, p.y, p.z, pellets > 1 ? 1 : 2, 0.02, 0.02, 0.02, 0.01);
+                // a hole, a puff of the block's dust and chips off it (drawn by each client)
+                Impacts.block(level, block, dir, bs, pellets > 1 ? 0.6f : (float) Math.min(1.6, 0.6 + stats.damage / 20));
                 if (!ricochet) {
                     ricochet = true;
                     level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.7f,
@@ -227,13 +247,16 @@ public final class Guns {
                 }
             }
         }
-        hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
-        if (boltAt != null && stats instanceof ZcConfig.CrossbowStats cb && player.getRandom().nextDouble() >= cb.boltBreakChance) {
+        // the bolt stays in the zombie it hit (before the hit lands, so one it kills drops it with the body), or lies
+        // where it fell
+        if (boltAt != null && stats instanceof ZcConfig.CrossbowStats cb && player.getRandom().nextDouble() >= cb.boltBreakChance
+                && (boltIn == null || !StuckBolts.stick(boltIn, eye, boltDir))) {
             ItemEntity bolt = new ItemEntity(level, boltAt.x, boltAt.y, boltAt.z, new ItemStack(ModItems.CROSSBOW_BOLT));
             bolt.setDeltaMovement(Vec3.ZERO);
             bolt.setPickUpDelay(10);
             level.addFreshEntity(bolt);
         }
+        hits.forEach((target, hit) -> hitEntity(level, player, target, hit, pellets, stats));
         if (!hits.isEmpty()) {
             Skills.addXp(player, Skill.AIMING, 2);
         }
@@ -261,25 +284,28 @@ public final class Guns {
         }
     }
 
-    private record Pellet(float damage, boolean head, boolean legs, Vec3 at) {
+    /** damage is what it does to the target's health; tears what it does to the limb it struck (see Dismember). */
+    private record Pellet(float damage, float tears, boolean head, boolean legs, Vec3 at) {
     }
 
     /**
      * One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot;
      * power is the gun's rolled damage).
      */
-    private static Pellet pellet(LivingEntity target, Vec3 eye, Vec3 dir, ZcConfig.GunStats stats, float power) {
-        Vec3 at = target.getBoundingBox().inflate(0.1).clip(eye, eye.add(dir.scale(stats.range))).orElse(target.position());
+    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
+        Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
-        double headY = target.getEyeY() - 0.28;
-        boolean head = !downed && at.y >= headY;
-        boolean legs = !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
+        // a zombie's head and legs are where its body is drawn; anything else's go by height on its box
+        boolean head = !downed && (hit.part >= 0 ? hit.head() : at.y >= target.getEyeY() - 0.28);
+        boolean legs = !downed && (hit.part >= 0 ? hit.leg() : at.y < target.getY() + target.getBbHeight() * 0.35);
         float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));
         }
-        return new Pellet(damage, head, legs, at);
+        // body hits on a zombie slow it, it takes the head to kill one; a limb still tears at the bullet's full force
+        float body = !head && !downed && ZombieTypes.isWalker(target) ? (float) ZcConfig.get().combat.zombieBodyShots : 1f;
+        return new Pellet(damage * body, damage, head, legs, at);
     }
 
     private static void hitEntity(ServerLevel level, ServerPlayer player, LivingEntity target, Hit hit, int pellets,
@@ -289,8 +315,9 @@ public final class Guns {
         // buckshot up close knocks a zombie back hard; a single bullet barely moves it
         double push = stats instanceof ZcConfig.ShotgunStats sg ? sg.knockback * Math.min(1, 1.5 * hit.count / pellets) : 0.12;
         Shove.push(target, hit.dir.multiply(1, 0, 1).normalize(), push);
-        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
-                at.x, at.y, at.z, (hit.head ? 22 : 12) + 2 * (hit.count - 1), 0.12, 0.12, 0.12, 0.2);
+        // blood out along the shot, and splashed on the wall and floor behind (drawn by each client)
+        float size = (float) Math.min(2.5, (0.6 + stats.damage / 20) * (1 + 0.15 * (hit.count - 1)) * (hit.head ? 1.3 : 1));
+        Impacts.flesh(level, target, at, hit.dir, size);
         level.playSound(null, at.x, at.y, at.z, ModSounds.BULLET_FLESH, SoundSource.PLAYERS, 1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
         if (ZombieTypes.isWalker(target) && target.isAlive() && hit.legs) {
             Downed.crippleChance(target, 0.5);
@@ -320,7 +347,7 @@ public final class Guns {
      * pull of the trigger starts from now.
      */
     public static double nextAuto(double due, long now, ZcConfig.GunStats stats) {
-        double gap = 1200.0 / Math.max(60.0, stats.autoRoundsPerMinute);
+        double gap = 1200.0 / Math.max(60.0, stats.autoRpm);
         return (now - due > gap || now < due - 2 * gap ? now : due) + gap;
     }
 
@@ -433,6 +460,7 @@ public final class Guns {
         st.needsCharge = !type.opens && g.rounds() == 0;
         st.loadStopped = false;
         st.loading = gun;
+        st.hammerBack = false;      // let down before the gun's opened
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         if (type.opens) {
             // thrown open: the empties come out as the barrels drop

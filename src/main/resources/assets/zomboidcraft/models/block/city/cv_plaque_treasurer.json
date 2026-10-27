@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_plaque_treasurer": "zomboidcraft:block/city/cv_plaque_treasurer",
+    "particle": "zomboidcraft:block/city/cv_plaque_treasurer"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        15.4
+      ],
+      "to": [
+        13,
+        11.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_plaque_treasurer"
+        },
+        "south": {
+          "texture": "#cv_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    }
+  ]
+}

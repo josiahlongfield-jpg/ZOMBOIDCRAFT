@@ -14,5 +14,6 @@ public abstract class PlayerModelMixin {
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)V", at = @At("TAIL"))
     private void zomboidcraft$weaponHold(AvatarRenderState state, CallbackInfo ci) {
         HoldPoses.apply((PlayerModel) (Object) this, state);
+        com.zomboidcraft.client.cars.CarHands.pose((PlayerModel) (Object) this, state);
     }
 }

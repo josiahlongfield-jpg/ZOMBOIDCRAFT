@@ -1,0 +1,117 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_wood_dark": "zomboidcraft:block/city/home_wood_dark",
+    "trade_bar_mirror": "zomboidcraft:block/city/trade_bar_mirror",
+    "particle": "zomboidcraft:block/city/trade_bar_mirror"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_bar_mirror",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#trade_bar_mirror"
+        },
+        "east": {
+          "texture": "#trade_bar_mirror",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#trade_bar_mirror",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#trade_bar_mirror"
+        },
+        "down": {
+          "texture": "#trade_bar_mirror"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_dark"
+        },
+        "down": {
+          "texture": "#home_wood_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_wood_dark",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_wood_dark"
+        },
+        "east": {
+          "texture": "#home_wood_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_wood_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_wood_dark",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_wood_dark"
+        }
+      }
+    }
+  ]
+}

@@ -27,9 +27,13 @@ public final class Road {
     public final double[] xs, zs, ys;
     public final int minX, minZ, maxX, maxZ;
     public final long seed;
+    /** The places at its two ends. */
+    public final Place from, to;
 
-    Road(Kind kind, double[] xs, double[] zs, double[] ys, long seed) {
+    Road(Kind kind, double[] xs, double[] zs, double[] ys, long seed, Place from, Place to) {
         this.kind = kind;
+        this.from = from;
+        this.to = to;
         this.xs = xs;
         this.zs = zs;
         this.ys = ys;

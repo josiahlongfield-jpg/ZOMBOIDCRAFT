@@ -25,6 +25,7 @@ final class Bldg {
             Map.entry("concrete_panel", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("concrete_dark", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("stone_trim", new String[] {"b", "crack", "moss", "soot"}),
+            Map.entry("ch_ashlar", new String[] {"b", "crack", "moss", "soot"}),
             Map.entry("plaster_sage", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("plaster_cream", new String[] {"b", "crack", "moss", "soot", "stain"}),
             Map.entry("plaster_blue", new String[] {"b", "crack", "moss", "soot", "stain"}),
@@ -297,6 +298,47 @@ final class Bldg {
                 for (int z = z0 - over; z <= z1 + over; z++) {
                     tile(a0 + half, y + half, z, family + "_slab[type=bottom]");
                 }
+            }
+        }
+    }
+
+    /**
+     * A gable roof in the house kit's courses (tools/city/exterior.py; kind is "tin_galv",
+     * "brown" and the like) over x0..x1, z0..z1 from y, its ridge along z (or x), overhanging by
+     * over: the eave course with its gutter (now and then gone), the decking under each course
+     * inside the walls, the crest or ridge cap on top, moss and patches, the gable ends filled
+     * with gableWall.
+     */
+    void roofGable(int x0, int x1, int z0, int z1, int y, String kind, boolean ridgeAlongZ, String gableWall, int over) {
+        String k = "ext_roof_" + kind;
+        // a runs across the slopes, u along the ridge
+        int w0 = ridgeAlongZ ? x0 : z0, w1 = ridgeAlongZ ? x1 : z1, e0 = ridgeAlongZ ? z0 : x0, e1 = ridgeAlongZ ? z1 : x1;
+        int a0 = w0 - over, a1 = w1 + over, span = a1 - a0 + 1, half = span / 2;
+        String[] rise = ridgeAlongZ ? new String[] {"east", "west"} : new String[] {"south", "north"};
+        for (int i = 0; i < half; i++) {
+            boolean crest = i == half - 1 && span % 2 == 0;
+            for (int side = 0; side < 2; side++) {
+                int a = side == 0 ? a0 + i : a1 - i;
+                String f = "[facing=" + rise[side] + "]";
+                for (int u = e0 - over; u <= e1 + over; u++) {
+                    double r = rng.nextDouble();
+                    String piece = i == 0 ? k + (r < 0.1 + damage * 0.2 ? "_eave_bare" : "_eave")
+                            : crest ? k + "_crest" : k + (r < 0.12 ? "_moss" : r < 0.17 ? "_patch" : "");
+                    tile(ridgeAlongZ ? a : u, y + i, ridgeAlongZ ? u : a, piece + f);
+                    if (i > 0 && u > e0 && u < e1) {
+                        p.set(ridgeAlongZ ? a : u, y + i - 1, ridgeAlongZ ? u : a, "ext_roof_under" + f);
+                    }
+                }
+            }
+            for (int a = Math.max(w0, a0 + i + 1); a <= Math.min(w1, a1 - i - 1); a++) {
+                for (int u : new int[] {e0, e1}) {
+                    p.set(ridgeAlongZ ? a : u, y + i, ridgeAlongZ ? u : a, wall(gableWall, y + i));
+                }
+            }
+        }
+        if (span % 2 == 1) {
+            for (int u = e0 - over; u <= e1 + over; u++) {
+                tile(ridgeAlongZ ? a0 + half : u, y + half, ridgeAlongZ ? u : a0 + half, k + "_ridge[facing=" + (ridgeAlongZ ? "east" : "north") + "]");
             }
         }
     }

@@ -57,7 +57,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), HEALTH("Health", true), SKILLS("Skills", true),
+        CHARACTER("Character", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), HEALTH("Health", true), SKILLS("Skills", true),
         MAP("Map", true);
 
         final String label;
@@ -69,10 +69,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         }
     }
 
-    /** The page you were last on, so the screen opens where you left it. */
-    private static Page last = Page.CHARACTER;
-
-    Page page = last;
+    Page page = Page.CHARACTER;
     /** The page a key asked for, for the screen the server is about to open; null when a container opened it. */
     private static @Nullable Page requested;
     /** Shift was held for the click being handled. */
@@ -82,6 +79,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     final PackPage pack = new PackPage(this);
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
+    final BuildPage build = new BuildPage(this);
     final HealthPage health = new HealthPage(this);
     final SkillsPage skills = new SkillsPage(this);
     final MapPage map = new MapPage(this);
@@ -114,7 +112,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     private static void tick(Minecraft mc) {
         while (OPEN.consumeClick()) {
-            if (mc.gui.screen() == null) open(mc, last);
+            if (mc.gui.screen() == null) open(mc, Page.CHARACTER);
         }
         while (MAP_KEY.consumeClick()) {
             if (mc.gui.screen() == null) open(mc, Page.MAP);
@@ -141,14 +139,15 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory || player.hasInfiniteMaterials()) return vanilla;
-        open(mc, last);
+        open(mc, Page.CHARACTER);
         return null;
     }
 
     public KitScreen(M menu, Inventory inventory, Component title) {
         super(menu, inventory, title, W, H);
-        // a key asked for a page; searching a container opens on the pack, with that container showing
-        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : last;
+        // a key asked for a page (the kit key always asks for Character, wherever it was closed); searching a container
+        // opens on the pack, with that container showing
+        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : Page.CHARACTER;
         requested = null;
     }
 
@@ -211,7 +210,6 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         var options = minecraft.options;
         int wanted = window.calculateScale(options.guiScale().get(), options.forceUnicodeFont().get());
         if (window.getGuiScale() != wanted) window.setGuiScale(wanted);
-        last = page;
         super.removed();
     }
 
@@ -427,6 +425,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             case PACK -> pack.draw(g, x, y, mouseX, mouseY);
             case SUPPLIES -> supplies.draw(g, x, y, mouseX, mouseY);
             case BENCH -> bench.draw(g, x, y, mouseX, mouseY);
+            case BUILD -> build.draw(g, x, y, mouseX, mouseY);
             case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
             case SKILLS -> skills.draw(g, x, y, mouseX, mouseY);
             case MAP -> map.draw(g, x, y, mouseX, mouseY);

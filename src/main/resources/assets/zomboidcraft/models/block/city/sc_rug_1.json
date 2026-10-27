@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_rug_1": "zomboidcraft:block/city/sc_rug_1",
+    "particle": "zomboidcraft:block/city/sc_rug_1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_rug_1",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sc_rug_1",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_rug_1",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_rug_1",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_rug_1"
+        },
+        "down": {
+          "texture": "#sc_rug_1",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

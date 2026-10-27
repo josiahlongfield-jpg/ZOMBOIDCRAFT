@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fs_door_white_3": "zomboidcraft:block/city/fs_door_white_3",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/fs_door_white_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_door_white_3",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fs_door_white_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#streetlight_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#streetlight_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#streetlight_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#streetlight_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

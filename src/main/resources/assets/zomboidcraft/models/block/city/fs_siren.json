@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "fs_siren": "zomboidcraft:block/city/fs_siren",
+    "streetlight_metal": "zomboidcraft:block/city/streetlight_metal",
+    "particle": "zomboidcraft:block/city/cv_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        3
+      ],
+      "to": [
+        13,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_siren"
+        },
+        "south": {
+          "texture": "#fs_siren"
+        },
+        "east": {
+          "texture": "#fs_siren"
+        },
+        "west": {
+          "texture": "#fs_siren"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        5
+      ],
+      "to": [
+        11,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#streetlight_metal"
+        },
+        "south": {
+          "texture": "#streetlight_metal"
+        },
+        "east": {
+          "texture": "#streetlight_metal"
+        },
+        "west": {
+          "texture": "#streetlight_metal"
+        },
+        "up": {
+          "texture": "#streetlight_metal"
+        },
+        "down": {
+          "texture": "#streetlight_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        15,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    }
+  ]
+}

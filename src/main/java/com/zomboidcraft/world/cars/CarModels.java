@@ -29,6 +29,12 @@ public final class CarModels {
         public float[][] seats;
         /** Front axle to back axle, metres: how tight the car turns. */
         public float wheelbase;
+        /** The outside door handle each seat is got into by (null where there's none to show), in model space. */
+        public float[][] handles;
+        /** The steering wheel's rim: centre x, y, z, the normal toward the driver, radius; or null. */
+        public float[] steering;
+        /** The middle of the glovebox's lid, or null. */
+        public float[] glovebox;
         /**
          * The body's underside over each cell in centimetres, or null: a jet's wings stand clear
          * of the deck, so its hull leaves the room under them open to walk through.

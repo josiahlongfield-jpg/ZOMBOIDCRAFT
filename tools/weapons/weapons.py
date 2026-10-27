@@ -873,12 +873,16 @@ def revolver():
 
 
 def rimfire():
-    """The .22 rifle: open sights (a folding leaf and a gold bead), no rails or threads, its flush 10-round rotary
-    magazine, and the little charging handle (its handle) pulled back after a fresh magazine on an empty gun."""
+    """The .22 rifle: open sights (a folding leaf and a gold bead), no rails, a threaded crown for the pistol
+    suppressor (drawn as a slim .22 can), its flush 10-round rotary magazine, and the little charging handle (its
+    handle) pulled back after a fresh magazine on an empty gun."""
     look = RM.look()
     fp = RM.frame_point
-    parts = {'mag': kit.Part('mag', 'rimfire_magazine', '.22 Rifle Magazine', 'magazine', RM.magazine, look)}
-    slots = {'magazine': kit.Slot(fp(0, RM.WELL_Y, RM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
+    parts = {'suppressor': kit.Part('suppressor', 'pistol_suppressor', 'Pistol Suppressor', 'muzzle', RM.suppressor,
+                                    AT.LOOK, note='Much quieter shots'),
+             'mag': kit.Part('mag', 'rimfire_magazine', '.22 Rifle Magazine', 'magazine', RM.magazine, look)}
+    slots = {'muzzle': kit.Slot(fp(0, 0, RM.MUZZLE), 'axial', ['suppressor']),
+             'magazine': kit.Slot(fp(0, RM.WELL_Y, RM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
 
     def flash(m, muzzle):
         RM.flash(m, RM.MUZZLE)
@@ -888,13 +892,16 @@ def rimfire():
 
 
 def smg():
-    """The submachine gun: a drum rear sight and hooded post, no rails, its curved 30-round magazine, and the cocking
-    handle (its handle) up on the left of the tube, pulled back and slapped home after a fresh magazine on an empty
-    gun."""
+    """The submachine gun: a drum rear sight and hooded post, no rails, the pistol suppressor (drawn as a 9mm can on
+    the barrel's lugs), its curved 30-round magazine, and the cocking handle (its handle) up on the left of the tube,
+    pulled back and slapped home after a fresh magazine on an empty gun."""
     look = SM.look()
     fp = SM.frame_point
-    parts = {'mag': kit.Part('mag', 'smg_magazine', 'SMG Magazine', 'magazine', SM.magazine, look)}
-    slots = {'magazine': kit.Slot(fp(0, SM.WELL_Y, SM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
+    parts = {'suppressor': kit.Part('suppressor', 'pistol_suppressor', 'Pistol Suppressor', 'muzzle', SM.suppressor,
+                                    AT.LOOK, note='Much quieter shots'),
+             'mag': kit.Part('mag', 'smg_magazine', 'SMG Magazine', 'magazine', SM.magazine, look)}
+    slots = {'muzzle': kit.Slot(fp(0, 0, SM.MUZZLE), 'axial', ['suppressor']),
+             'magazine': kit.Slot(fp(0, SM.WELL_Y, SM.MAG_Z[0]), 'axial', ['mag'], default='mag')}
 
     def flash(m, muzzle):
         SM.flash(m, SM.MUZZLE)

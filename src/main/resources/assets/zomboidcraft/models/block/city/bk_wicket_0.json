@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_bronze": "zomboidcraft:block/city/bk_bronze",
+    "bk_marble_white": "zomboidcraft:block/city/bk_marble_white",
+    "bk_wicket_0": "zomboidcraft:block/city/bk_wicket_0",
+    "particle": "zomboidcraft:block/city/bk_wicket_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_wicket_0"
+        },
+        "south": {
+          "texture": "#bk_wicket_0"
+        },
+        "east": {
+          "texture": "#bk_bronze",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bk_bronze",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bk_bronze",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bk_bronze",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        2
+      ],
+      "to": [
+        12,
+        1,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_marble_white"
+        },
+        "south": {
+          "texture": "#bk_marble_white"
+        },
+        "east": {
+          "texture": "#bk_marble_white"
+        },
+        "west": {
+          "texture": "#bk_marble_white"
+        },
+        "up": {
+          "texture": "#bk_marble_white"
+        },
+        "down": {
+          "texture": "#bk_marble_white",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

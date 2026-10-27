@@ -40,7 +40,7 @@ public final class Alarms {
 
     /** Once a second: maybe a storm sets an alarm off near someone. */
     static void second(ServerLevel level, Weather w) {
-        if (!ZcConfig.get().weather.alarms) {
+        if (!ZcConfig.get().weather.stormAlarms) {
             return;
         }
         // thunder does it most; a hard gale now and then

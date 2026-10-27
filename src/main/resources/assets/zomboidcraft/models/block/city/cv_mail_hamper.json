@@ -1,0 +1,239 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_canvas": "zomboidcraft:block/city/cv_canvas",
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "cv_mailheap": "zomboidcraft:block/city/cv_mailheap",
+    "particle": "zomboidcraft:block/city/cv_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        2.5,
+        14,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        13.5
+      ],
+      "to": [
+        2.5,
+        14,
+        15.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        1
+      ],
+      "to": [
+        15.0,
+        14,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        13.5
+      ],
+      "to": [
+        15.0,
+        14,
+        15.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        2,
+        1.5
+      ],
+      "to": [
+        14.5,
+        13,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_canvas"
+        },
+        "south": {
+          "texture": "#cv_canvas"
+        },
+        "east": {
+          "texture": "#cv_canvas"
+        },
+        "west": {
+          "texture": "#cv_canvas"
+        },
+        "up": {
+          "texture": "#cv_mailheap"
+        },
+        "down": {
+          "texture": "#cv_canvas"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13,
+        1
+      ],
+      "to": [
+        15,
+        14,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13,
+        13.5
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    }
+  ]
+}

@@ -670,6 +670,22 @@ def blocks():
         rotate="axis")
     out["ext_porch_boards"] = {"tex": {"up": "ext_porch_boards", "down": "ext_porch_boards", "side": "ext_fascia"},
                                "title": "Porch Boards", "sound": "WOOD"}
+    # the back porches up a shop row (see Flats.porches): plank stairs, and a rail along one edge of a cell
+    # (facing = that edge) so the boards beside it can still be walked
+    tread = {"up": "ext_porch_boards", "down": "ext_porch_boards", "side": "ext_fascia"}
+    stairs = [[1, 6, 0, 15, 8, 16, tread], [1, 14, 0, 15, 16, 8, tread], [1.5, 0, 14, 14.5, 6, 15.5, "ext_fascia"],
+              [1.5, 8, 6, 14.5, 14, 7.5, "ext_fascia"]]
+    for x0 in (0, 15):
+        stairs += [[x0, 0, 0, x0 + 1, 16, 8, "ext_fascia"], [x0, 0, 8, x0 + 1, 8, 16, "ext_fascia"]]
+    add("ext_stairs_wood", stairs, "Porch Stairs", "WOOD")
+    edge = [[0, 13, 0, 16, 15, 3, post], [0, 1.5, 0.5, 16, 3, 2.5, post]]
+    for x in (1, 5, 9, 13):
+        edge.append([x, 3, 0.75, x + 1.5, 13, 2.25, post])
+    add("ext_rail_edge", edge, "Porch Railing", "WOOD")
+    # the same rail inside, round a walk-up's stairwell, in dark varnished wood
+    add("ext_rail_edge_dark", [[b[0], b[1], b[2], b[3], b[4], b[5], "home_wood_dark"] for b in edge], "Banister", "WOOD")
+    add("ext_rail_edge_broken", [[0, 1.5, 0.5, 16, 3, 2.5, post], [1, 3, 0.75, 2.5, 13, 2.25, post],
+                                 [0, 13, 0, 7, 15, 3, post], [9, 3, 0.75, 10.5, 8, 2.25, post]], "Porch Railing", "WOOD")
     add("ext_porch_light", [[5, 13, 5, 11, 16, 11, "ext_black_metal"], [5.5, 9, 5.5, 10.5, 13, 10.5, "ext_glass_dark"]],
         "Porch Light", "METAL", rotate=None)
     add("ext_porch_light_lit", [[5, 13, 5, 11, 16, 11, "ext_black_metal"], [5.5, 9, 5.5, 10.5, 13, 10.5, "lamp_glass"]],

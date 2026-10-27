@@ -1,0 +1,233 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_bookshelf_worn_010": "zomboidcraft:block/city/pk_bookshelf_worn_010",
+    "particle": "zomboidcraft:block/city/pk_bookshelf_worn_010"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        2,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            0.0625,
+            0.0625,
+            0.5625,
+            2.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            0.6875,
+            0.0625,
+            1.1875,
+            2.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            3.1875,
+            0.0625,
+            4.9375,
+            2.0625
+          ]
+        },
+        "west": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            1.3125,
+            0.0625,
+            3.0625,
+            2.0625
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            10.0625,
+            0.0625,
+            10.5625,
+            1.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            5.0625,
+            0.0625,
+            5.5625,
+            2.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            5.6875,
+            0.0625,
+            6.1875,
+            2.0625
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            8.1875,
+            0.0625,
+            9.9375,
+            2.0625
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            6.3125,
+            0.0625,
+            8.0625,
+            2.0625
+          ]
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            10.6875,
+            0.0625,
+            11.1875,
+            1.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        9
+      ],
+      "to": [
+        14,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            0.0625,
+            4.0625,
+            3.0625,
+            4.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            3.1875,
+            4.0625,
+            6.1875,
+            4.3125
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            0.0625,
+            2.1875,
+            3.0625,
+            3.9375
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            11.3125,
+            0.0625,
+            14.3125,
+            1.8125
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        9
+      ],
+      "to": [
+        14,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            9.4375,
+            2.1875,
+            12.4375,
+            2.6875
+          ]
+        },
+        "south": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            12.5625,
+            2.1875,
+            15.5625,
+            2.6875
+          ],
+          "cullface": "south"
+        },
+        "up": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            6.3125,
+            2.1875,
+            9.3125,
+            3.9375
+          ]
+        },
+        "down": {
+          "texture": "#pk_bookshelf_worn_010",
+          "uv": [
+            3.1875,
+            2.1875,
+            6.1875,
+            3.9375
+          ]
+        }
+      }
+    }
+  ]
+}

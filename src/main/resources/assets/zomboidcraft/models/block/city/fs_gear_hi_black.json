@@ -1,0 +1,279 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_iron": "zomboidcraft:block/city/cv_iron",
+    "fs_coat_black": "zomboidcraft:block/city/fs_coat_black",
+    "fs_helmet_black": "zomboidcraft:block/city/fs_helmet_black",
+    "fs_shield": "zomboidcraft:block/city/fs_shield",
+    "particle": "zomboidcraft:block/city/cv_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        1,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        11,
+        8
+      ],
+      "to": [
+        15,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        10
+      ],
+      "to": [
+        13,
+        10.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_coat_black"
+        },
+        "south": {
+          "texture": "#fs_coat_black"
+        },
+        "east": {
+          "texture": "#fs_coat_black"
+        },
+        "west": {
+          "texture": "#fs_coat_black"
+        },
+        "up": {
+          "texture": "#fs_coat_black"
+        },
+        "down": {
+          "texture": "#fs_coat_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10.5,
+        13
+      ],
+      "to": [
+        9,
+        11,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_iron"
+        },
+        "south": {
+          "texture": "#cv_iron"
+        },
+        "east": {
+          "texture": "#cv_iron"
+        },
+        "west": {
+          "texture": "#cv_iron"
+        },
+        "up": {
+          "texture": "#cv_iron"
+        },
+        "down": {
+          "texture": "#cv_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        12,
+        9
+      ],
+      "to": [
+        11.5,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_helmet_black"
+        },
+        "south": {
+          "texture": "#fs_helmet_black"
+        },
+        "east": {
+          "texture": "#fs_helmet_black"
+        },
+        "west": {
+          "texture": "#fs_helmet_black"
+        },
+        "up": {
+          "texture": "#fs_helmet_black"
+        },
+        "down": {
+          "texture": "#fs_helmet_black"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        12,
+        8
+      ],
+      "to": [
+        13,
+        12.8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_helmet_black"
+        },
+        "south": {
+          "texture": "#fs_helmet_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fs_helmet_black"
+        },
+        "west": {
+          "texture": "#fs_helmet_black"
+        },
+        "up": {
+          "texture": "#fs_helmet_black"
+        },
+        "down": {
+          "texture": "#fs_helmet_black"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12.5,
+        7.6
+      ],
+      "to": [
+        10,
+        15.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fs_shield"
+        },
+        "south": {
+          "texture": "#fs_helmet_black"
+        },
+        "east": {
+          "texture": "#fs_helmet_black"
+        },
+        "west": {
+          "texture": "#fs_helmet_black"
+        },
+        "up": {
+          "texture": "#fs_helmet_black"
+        },
+        "down": {
+          "texture": "#fs_helmet_black"
+        }
+      }
+    }
+  ]
+}

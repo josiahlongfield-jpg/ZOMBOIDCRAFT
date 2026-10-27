@@ -1,0 +1,284 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pk_planter": "zomboidcraft:block/city/pk_planter",
+    "particle": "zomboidcraft:block/city/pk_planter"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_planter",
+          "uv": [
+            6.3125,
+            3.5625,
+            10.3125,
+            4.0625
+          ]
+        },
+        "south": {
+          "texture": "#pk_planter",
+          "uv": [
+            10.4375,
+            3.5625,
+            14.4375,
+            4.0625
+          ]
+        },
+        "east": {
+          "texture": "#pk_planter",
+          "uv": [
+            2.1875,
+            4.9375,
+            4.1875,
+            5.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_planter",
+          "uv": [
+            0.0625,
+            4.9375,
+            2.0625,
+            5.4375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_planter",
+          "uv": [
+            4.1875,
+            0.0625,
+            8.1875,
+            2.0625
+          ]
+        },
+        "down": {
+          "texture": "#pk_planter",
+          "uv": [
+            0.0625,
+            0.0625,
+            4.0625,
+            2.0625
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        4
+      ],
+      "to": [
+        16,
+        7,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_planter",
+          "uv": [
+            9.5625,
+            0.0625,
+            13.5625,
+            1.3125
+          ]
+        },
+        "south": {
+          "texture": "#pk_planter",
+          "uv": [
+            0.0625,
+            2.1875,
+            4.0625,
+            3.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_planter",
+          "uv": [
+            4.8125,
+            2.1875,
+            5.3125,
+            3.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_planter",
+          "uv": [
+            4.1875,
+            2.1875,
+            4.6875,
+            3.4375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_planter",
+          "uv": [
+            4.3125,
+            4.9375,
+            8.3125,
+            5.4375
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        6
+      ],
+      "to": [
+        2,
+        7,
+        12
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_planter",
+          "uv": [
+            5.4375,
+            2.1875,
+            5.9375,
+            3.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_planter",
+          "uv": [
+            7.6875,
+            2.1875,
+            9.1875,
+            3.4375
+          ]
+        },
+        "west": {
+          "texture": "#pk_planter",
+          "uv": [
+            6.0625,
+            2.1875,
+            7.5625,
+            3.4375
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pk_planter",
+          "uv": [
+            8.3125,
+            0.0625,
+            8.8125,
+            1.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        2,
+        6
+      ],
+      "to": [
+        16,
+        7,
+        12
+      ],
+      "faces": {
+        "south": {
+          "texture": "#pk_planter",
+          "uv": [
+            9.3125,
+            2.1875,
+            9.8125,
+            3.4375
+          ]
+        },
+        "east": {
+          "texture": "#pk_planter",
+          "uv": [
+            11.5625,
+            2.1875,
+            13.0625,
+            3.4375
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pk_planter",
+          "uv": [
+            9.9375,
+            2.1875,
+            11.4375,
+            3.4375
+          ]
+        },
+        "up": {
+          "texture": "#pk_planter",
+          "uv": [
+            8.9375,
+            0.0625,
+            9.4375,
+            1.5625
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        10
+      ],
+      "to": [
+        14,
+        7,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pk_planter",
+          "uv": [
+            0.0625,
+            3.5625,
+            3.0625,
+            4.8125
+          ]
+        },
+        "south": {
+          "texture": "#pk_planter",
+          "uv": [
+            3.1875,
+            3.5625,
+            6.1875,
+            4.8125
+          ]
+        },
+        "up": {
+          "texture": "#pk_planter",
+          "uv": [
+            8.4375,
+            4.9375,
+            11.4375,
+            5.4375
+          ]
+        }
+      }
+    }
+  ]
+}

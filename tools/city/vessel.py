@@ -159,22 +159,26 @@ def house(seed, kind="plain"):
 
 
 def glass_pane(t, x0, y0, x1, y1, broken=False):
-    """Dark ship's glass with the sky's streak across it; broken, the dark behind and a crack web."""
-    F.area(t, x0, y0, x1, y1, (30, 38, 44), h=0.6, smooth=0.95, f0=40)
+    """Ship's glass, tinted dark and see-through, with the sky's streak across it and a crust of
+    salt; broken, a hole knocked through it and a crack web round the hole."""
+    F.area(t, x0, y0, x1, y1, (30, 38, 44), h=0.6, smooth=0.95, f0=40, alpha=72)
     yy, xx = np.mgrid[0:N, 0:N]
     streak = (np.abs((xx - x0) - (yy - y0) * 0.8 - (x1 - x0) * 0.3) < 4) & (xx >= x0) & (xx < x1) & (yy >= y0) & (yy < y1)
     t.c[streak] = t.c[streak] * 0.6 + np.array((96, 110, 120), np.float32) * 0.4
+    t.alpha[streak] = 104
     salt = B.patch_mask(t.rng, 0.15, 0.5, ((8, 1.0), (16, 0.6)))
     box = (xx >= x0) & (xx < x1) & (yy >= y0) & (yy < y1)
     t.mix(salt * box * 0.35, (150, 150, 140), 1.0)
+    t.alpha[box] = np.maximum(t.alpha[box], 72 + salt[box] * 110)
     if broken:
         hole = F.blob_mask(t.rng, (x0 + x1) / 2 + t.rng.uniform(-6, 6), (y0 + y1) / 2, (x1 - x0) * 0.3, 0.5, wrap=False)
         hole = hole * box
-        t.c[hole > 0.5] = (8, 8, 10)
-        t.smooth[hole > 0.5] = 0.1
         keep = t.c.copy(), t.h.copy()
         t.crack(8, 0.05, (190, 196, 200))
+        cracked = np.any(t.c != keep[0], axis=2) & box
         t.c[~box], t.h[~box] = keep[0][~box], keep[1][~box]
+        t.alpha[cracked] = 210
+        t.alpha[hole > 0.5] = 0
 
 
 def cabin_window(seed, broken=False):
@@ -197,7 +201,8 @@ def bridge_window(seed, broken=False):
     yy, xx = np.mgrid[0:N, 0:N]
     arc = np.abs(np.hypot(xx - 33, yy - 60) - 26) < 1.2
     t.c[arc & (yy < 58)] = t.c[arc & (yy < 58)] * 0.5 + 60
-    F.area(t, 32, 34, 34, 58, (24, 24, 26))
+    t.alpha[arc & (yy < 58) & (yy >= 6)] = np.maximum(t.alpha[arc & (yy < 58) & (yy >= 6)], 150)
+    F.area(t, 32, 34, 34, 58, (24, 24, 26), alpha=255)
     return t
 
 

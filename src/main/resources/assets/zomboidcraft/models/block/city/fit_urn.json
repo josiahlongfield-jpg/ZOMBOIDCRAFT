@@ -1,0 +1,243 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        -1.5,
+        4.5
+      ],
+      "to": [
+        11.5,
+        7,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "uv": [
+            4.5,
+            7.5,
+            11.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "uv": [
+            4.5,
+            7.5,
+            11.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#fit_stainless",
+          "uv": [
+            4.5,
+            7.5,
+            11.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fit_stainless",
+          "uv": [
+            4.5,
+            7.5,
+            11.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        7,
+        5
+      ],
+      "to": [
+        11,
+        8,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        8,
+        7
+      ],
+      "to": [
+        9,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        -0.5,
+        3
+      ],
+      "to": [
+        8.5,
+        0.5,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "uv": [
+            7.5,
+            15.0,
+            8.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "uv": [
+            7.5,
+            15.0,
+            8.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "uv": [
+            11.5,
+            15.0,
+            13,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "uv": [
+            3,
+            15.0,
+            4.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        -1.5,
+        3
+      ],
+      "to": [
+        11,
+        -1.2,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "uv": [
+            5,
+            15.7,
+            11,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "uv": [
+            5,
+            15.7,
+            11,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "uv": [
+            11.5,
+            15.7,
+            13,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "uv": [
+            3,
+            15.7,
+            4.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

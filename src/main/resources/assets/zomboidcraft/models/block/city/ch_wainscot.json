@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_beadboard": "zomboidcraft:block/city/ch_beadboard",
+    "ch_beam": "zomboidcraft:block/city/ch_beam",
+    "particle": "zomboidcraft:block/city/ch_beadboard"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_beadboard",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_beadboard",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ch_beadboard",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ch_beadboard",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ch_beam",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ch_beam",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

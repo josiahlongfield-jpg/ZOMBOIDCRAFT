@@ -7,6 +7,7 @@ import com.zomboidcraft.world.weather.WeatherView;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,21 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The weather you can see around you, made of particles so shader packs draw it too: mist banks
- * drifting with the wind when the fog is in, a low ground mist hanging in the streets at night,
- * litter blowing along when the wind gets up, and storms flickering over the skyline with the
- * thunder rolling in after.
+ * The weather you can see around you, drawn so shader packs show it too: the mist lying over the
+ * ground ({@link GroundFog}), litter blowing along when the wind gets up, and storms flickering
+ * over the skyline with the thunder rolling in after.
  *
  * Particles are only kept near you, and spawned in the open (by the heightmap) near your own
- * height, so the street fills with mist but rooms and rooftops far above don't.
+ * height, so the street gets them but rooms and rooftops far above don't.
  */
 public final class WeatherFx {
     private static final RandomSource RANDOM = RandomSource.create();
-    /** Puffs kept round you in full fog: enough to wall off the street, few enough to stay cheap. */
-    private static final int MIST_MAX = 160;
-    /** A puff's mean lifetime in ticks (MistParticle), to turn a head count into a spawn rate. */
-    private static final float MIST_LIFE = 370;
-    private static float mistDue, debrisDue;
+    private static float debrisDue;
     /** Ticks to the next flash; and a second flicker of the same stroke, when there is one. */
     private static int nextFlash = 200, flicker;
     private static float flickerStrength;
@@ -67,6 +63,7 @@ public final class WeatherFx {
             return glint;
         });
         ClientTickEvents.END_CLIENT_TICK.register(WeatherFx::tick);
+        LevelRenderEvents.COLLECT_SUBMITS.register(GroundFog::draw);
         // every bolt that lands near you, the server's real strikes too, lights up the street
         ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (entity instanceof LightningBolt && entity.getId() >= 0) {  // our own flashes set their own strength
@@ -104,6 +101,7 @@ public final class WeatherFx {
             FlashLights.forget();
             Water.forget();
             Glints.forget();
+            GroundFog.forget();
             GhostPower.forget();
             Skyline.forget();
             THUNDER.clear();
@@ -122,7 +120,8 @@ public final class WeatherFx {
         double yaw = Math.toRadians(w.windYaw());
         double windX = -Math.sin(yaw), windZ = Math.cos(yaw);
         if (c.mist && c.mistAmount > 0) {
-            mist(level, player, w, night, windX, windZ, (float) c.mistAmount);
+            // the mist is sheets of fog over the ground now (drawn every frame), not puffs
+            GroundFog.tick(level, player, w, night);
         }
         if (c.windDebris && w.wind() > 0.3f) {
             debris(level, player, w, windX, windZ);
@@ -216,30 +215,6 @@ public final class WeatherFx {
                     clap.volume(), clap.pitch(), false);
             return true;
         });
-    }
-
-    private static void mist(ClientLevel level, LocalPlayer player, Weather w, float night, double windX, double windZ, float amount) {
-        // fog banks, plus a thin mist that always lies in the streets, more of it at night
-        float ground = 0.30f + 0.12f * night + 0.08f * w.rain();
-        float thick = Math.max(w.fog(), ground);
-        mistDue += MIST_MAX * thick * amount / MIST_LIFE;
-        float drift = 0.008f + 0.05f * w.wind();
-        for (; mistDue >= 1; mistDue--) {
-            double angle = RANDOM.nextDouble() * Mth.TWO_PI;
-            double r = 6 + Math.sqrt(RANDOM.nextDouble()) * 34;
-            double x = player.getX() + Math.cos(angle) * r, z = player.getZ() + Math.sin(angle) * r;
-            int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
-            if (Math.abs(top - player.getY()) > 10) {
-                continue;  // a roof well above you, or a drop: keep the mist where you are
-            }
-            // ground mist hugs the street; a fog bank stands taller
-            // most of it lies low, washing over the street; the more fog, the more of it stands tall
-            boolean low = RANDOM.nextFloat() > w.fog();
-            double y = top + 0.1 + RANDOM.nextDouble() * (low ? 0.9 : 1.5 + 6 * w.fog());
-            float strength = (low ? 0.20f + 0.06f * night : 0.18f + 0.25f * w.fog()) * (0.8f + 0.2f * RANDOM.nextFloat());
-            double speed = drift * (0.6 + 0.8 * RANDOM.nextDouble());
-            level.addParticle(WeatherParticles.MIST, x, y, z, windX * speed, strength, windZ * speed);
-        }
     }
 
     private static void debris(ClientLevel level, LocalPlayer player, Weather w, double windX, double windZ) {

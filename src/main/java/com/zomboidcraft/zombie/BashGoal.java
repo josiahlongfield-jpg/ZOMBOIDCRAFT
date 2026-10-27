@@ -44,7 +44,12 @@ public class BashGoal extends Goal {
     }
 
     private boolean blocking(BlockState state) {
-        return door ? isShutDoor(state) : state.is(ModBlocks.BARRICADE);
+        return door ? isShutDoor(state) : bashable(state);
+    }
+
+    /** Boards, a metal sheet or a spiked log wall: built things it beats down. */
+    private static boolean bashable(BlockState state) {
+        return state.is(ModBlocks.BARRICADE) || com.zomboidcraft.building.BuildBlocks.bashDamage(state) != null;
     }
 
     private static boolean isShutDoor(BlockState state) {
@@ -94,7 +99,7 @@ public class BashGoal extends Goal {
             return;
         }
         BlockState state = level.getBlockState(block);
-        boolean steel = door && state.getSoundType() != SoundType.WOOD;
+        boolean steel = state.getSoundType() != SoundType.WOOD;
         level.playSound(null, block, steel ? SoundEvents.ZOMBIE_ATTACK_IRON_DOOR : SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR,
                 SoundSource.HOSTILE, 1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
         Noise.emit(level, center, BANG_NOISE);
@@ -116,19 +121,41 @@ public class BashGoal extends Goal {
         level.destroyBlockProgress(zombie.getId(), block, Math.min(9, hits * 10 / needed));
     }
 
+    /**
+     * A blow on boards, a sheet or a spiked wall: each board, and the sheet or wall, stands so many blows (ZcConfig building), kept on the
+     * block in eighths so a few stragglers wear it down and a crowd gets through.
+     */
     private void hitBarricade(ServerLevel level, BlockState state) {
-        if (zombie.getRandom().nextFloat() < BarricadeBlock.breakChance(state) * ZcConfig.get().zombies.barricadeDamage) {
-            int planks = state.getValue(BarricadeBlock.PLANKS);
+        double scale = ZcConfig.get().zombies.barricadeDamage;
+        if (scale <= 0 || zombie.getRandom().nextDouble() > scale) {
+            return;
+        }
+        var piece = com.zomboidcraft.building.BuildBlocks.bashDamage(state);
+        boolean sheet = piece != null;
+        var damage = sheet ? piece : BarricadeBlock.DAMAGE;
+        int hits = sheet ? com.zomboidcraft.building.BuildBlocks.bashHits(state) : BarricadeBlock.boardHits(state);
+        if (state.is(com.zomboidcraft.building.BuildBlocks.SPIKED_WALL)) {
+            com.zomboidcraft.building.BuildBlocks.SpikedWall.spike(level, zombie);
+        }
+        // eighths of the board per blow, carried over by chance so a 6-blow board takes about 6 blows
+        double eighths = 8.0 / hits;
+        int add = (int) eighths + (zombie.getRandom().nextDouble() < eighths - (int) eighths ? 1 : 0);
+        int now = state.getValue(damage) + add;
+        if (now >= 8) {
+            int planks = sheet ? 1 : state.getValue(BarricadeBlock.PLANKS);
             if (planks <= 1) {
                 level.destroyBlock(block, false);
-                level.playSound(null, block, SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 1f, 1f);
+                level.playSound(null, block, sheet ? SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR : SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR,
+                        SoundSource.HOSTILE, 1f, sheet ? 0.7f : 1f);
                 return;
             }
-            level.setBlockAndUpdate(block, state.setValue(BarricadeBlock.PLANKS, planks - 1));
-            state = level.getBlockState(block);
+            level.setBlockAndUpdate(block, state.setValue(BarricadeBlock.PLANKS, planks - 1).setValue(damage, 0));
+            level.playSound(null, block, SoundEvents.WOOD_BREAK, SoundSource.HOSTILE, 1f, 0.8f);
+            now = 0;
+        } else {
+            level.setBlockAndUpdate(block, state.setValue(damage, now));
         }
-        int planks = state.getValue(BarricadeBlock.PLANKS);
-        level.destroyBlockProgress(zombie.getId(), block, (BarricadeBlock.MAX_PLANKS - planks) * 2 + 1);
+        level.destroyBlockProgress(zombie.getId(), block, Math.min(9, now * 10 / 8));
     }
 
     /**
@@ -145,7 +172,7 @@ public class BashGoal extends Goal {
         for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-1, 0, -1), feet.offset(1, 1, 1))) {
             BlockState state = zombie.level().getBlockState(pos);
             boolean isDoor;
-            if (config.bashBarricades && state.is(ModBlocks.BARRICADE)) {
+            if (config.bashBarricades && bashable(state)) {
                 isDoor = false;
             } else if (config.bashDoors && isShutDoor(state)) {
                 Vec3 toDoor = Vec3.atCenterOf(pos).subtract(here);

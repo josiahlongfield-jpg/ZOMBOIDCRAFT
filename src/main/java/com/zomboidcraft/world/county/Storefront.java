@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.county;
 
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import com.zomboidcraft.world.city.ShopLights;
 import com.zomboidcraft.world.city.Shops;
@@ -48,12 +49,15 @@ final class Storefront {
     private static final String[] WOOD = {"siding_white", "siding_grey", "siding_red", "siding_brown", "barn_grey"};
     private static final String[] PAINT = {"shop_paint_red", "shop_paint_navy", "shop_paint_teal", "shop_paint_black",
             "shop_paint_mustard", "shop_paint_green"};
+    private static final String[] VITROLITE = {"front_vitrolite_black", "front_vitrolite_black", "front_vitrolite_green",
+            "front_vitrolite_cream"};
+    private static final String[] CORNICE = {"white", "white", "brown", "green", "black"};
+    private static final String[] YEARS = {"1884", "1891", "1896", "1902", "1909"};
     private static final String[] AWNINGS = {"awning", "awning_red", "awning_red", "awning_blue", "awning_maroon",
             "awning_yellow", "awning_teal"};
     /** Painted signs that last as ghost ads on a bare side wall. */
     private static final String[] GHOSTS = {"feed", "grain", "bait", "joes", "tonys", "route9", "furniture", "dime",
             "generalstore", "company"};
-    private static final String[] BEDS = {"red", "blue", "white", "gray", "brown", "green", "light_blue", "yellow"};
 
     static final int STOREY = 4;
 
@@ -64,6 +68,8 @@ final class Storefront {
     private final Style style;
     private final Trade trade;
     private final String wall, trim, paint;
+    /** A 1950s front's structural glass (null: plain concrete), an Italianate cornice's paint. */
+    private final String glass, cornicePaint;
     /** The building at the end of a row: its side walls are open to the street or a vacant lot. */
     boolean openWest, openEast;
     /** How much yard the lot has behind the building. */
@@ -84,9 +90,12 @@ final class Storefront {
             case MODERN -> r < 0.4 ? "brick_buff" : r < 0.7 ? PAINTED[rng.nextInt(PAINTED.length)] : "concrete_panel";
             default -> r < 0.82 ? BRICKS[rng.nextInt(BRICKS.length)] : PAINTED[rng.nextInt(PAINTED.length)];
         };
-        this.trim = wall.startsWith("siding") || wall.startsWith("barn") ? "minecraft:pale_oak_planks"
+        boolean frame = wall.startsWith("siding") || wall.startsWith("barn");
+        this.trim = frame ? (wall.equals("siding_brown") || wall.equals("barn_grey") ? "front_trim_brown" : "front_trim_white")
                 : rng.nextDouble() < 0.7 ? "stone_trim" : "brick_dark";
         this.paint = PAINT[rng.nextInt(PAINT.length)];
+        this.glass = rng.nextDouble() < 0.6 ? VITROLITE[rng.nextInt(VITROLITE.length)] : null;
+        this.cornicePaint = CORNICE[rng.nextInt(CORNICE.length)];
         b.damage = 0.55 + rng.nextDouble() * 0.35;
         b.boarded = rng.nextDouble() < 0.25 ? 0.5 : 0.08;
         b.soot = rng.nextDouble() < 0.12 ? 0.5 : 0;
@@ -124,12 +133,22 @@ final class Storefront {
         top(roofY);
         sides(roofY);
         back(roofY);
-        ground();
-        for (int k = 1; k < floors; k++) {
-            upstairs(k);
-        }
-        for (int k = 0; k < floors; k++) {
-            b.lights(0, 0, w - 1, d - 1, k * STOREY + STOREY - 1, k == 0 ? 0.05 : 0.02);
+        Trades trades = new Trades(p, rng, b, w, d);
+        boolean stairs = trade == Trade.HOTEL && floors > 1 && Trades.innerStair(w, d);
+        ground(trades, stairs);
+        b.lights(0, 0, w - 1, d - 1, STOREY - 1, 0.05);
+        if (stairs) {
+            // the hotel's stairs inside at the back, a floor of rooms off each landing
+            trades.hotelStairs(floors, STOREY, b.lit);
+        } else if (floors > 1) {
+            // a flat on each floor over the shop (rooms in a small hotel), up the porches at the back
+            int[] doors = new int[floors];
+            for (int k = 1; k < floors; k++) {
+                doors[k] = trade == Trade.HOTEL ? trades.rooms(k * STOREY, d - 1, STOREY)
+                        : Flats.floor(p, rng, w, d - 1, k * STOREY, 1, b.lit);
+                Doors.abandoned(p, rng, doors[k], k * STOREY + 1, d - 1, Doors.FLAT, "north", Doors.hinge(rng));
+            }
+            Flats.porches(p, rng, w, d, floors, STOREY, doors);
         }
         weather(roofY);
     }
@@ -140,8 +159,8 @@ final class Storefront {
         boolean pair = w >= 12;
         int door = w / 2;
         boolean modern = style == Style.MODERN, wood = style == Style.FALSE_FRONT;
-        String bulkhead = modern ? "concrete_dark" : wood ? "minecraft:spruce_planks" : paint;
-        String pier = modern ? "minecraft:cobbled_deepslate" : wood ? trim : wall.startsWith("brick") ? wall : trim;
+        String bulkhead = modern ? (glass != null ? glass : "concrete_dark") : wood ? "wood_panel" : paint;
+        String pier = modern ? (glass != null ? glass : "concrete_dark") : wood ? trim : wall.startsWith("brick") ? wall : trim;
         for (int x = 0; x < w; x++) {
             boolean end = x == 0 || x == w - 1;
             boolean isDoor = x == door || pair && x == door - 1;
@@ -166,7 +185,7 @@ final class Storefront {
         if (pair) {
             b.doors(door - 1, 1, 0, "shop_door", "north");
         } else {
-            b.door(door, 1, 0, wood ? "minecraft:spruce_door" : "shop_door", "north");
+            b.door(door, 1, 0, wood ? (trim.equals("front_trim_white") ? "ext_door_white" : "ext_door_oak") : "shop_door", "north");
         }
         // the piers stand proud of the glass, up to the sign band (and on up the front of a brick block)
         if (!modern) {
@@ -178,28 +197,43 @@ final class Storefront {
             p.set(0, 0, -1, "concrete_dark");
             p.set(w - 1, 0, -1, "concrete_dark");
         }
-        // the sign over the window, an awning under it, or both
+        // the sign over the window, an awning under it, or both; or a tin gallery over the sidewalk
         boolean sign = trade.sign != null && rng.nextDouble() < 0.85;
-        boolean awning = !modern && !wood && (!sign || rng.nextDouble() < 0.45);
+        boolean gallery = !modern && !wood && floors >= 2 && rng.nextDouble() < 0.22;
+        boolean awning = !modern && !wood && !gallery && (!sign || rng.nextDouble() < 0.45);
         if (wood) {
-            // a plank canopy over the boardwalk on two posts; the name goes up on the false front
+            // a plank canopy over the boardwalk on posts; the name goes up on the false front
             for (int x = 0; x < w; x++) {
-                p.set(x, 4, -1, "minecraft:spruce_slab[type=top]");
-                p.set(x, 4, -2, "minecraft:spruce_slab[type=top]");
-                p.set(x, 0, -1, "minecraft:spruce_planks");
-                p.set(x, 0, -2, "minecraft:spruce_planks");
+                p.set(x, 4, -1, "front_canopy_wood[facing=north]");
+                p.set(x, 4, -2, rng.nextDouble() < b.damage * 0.08 ? "air" : "front_canopy_wood_edge[facing=north]");
+                p.set(x, 0, -1, "ext_porch_boards");
+                p.set(x, 0, -2, "ext_porch_boards");
             }
-            for (int y = 1; y <= 3; y++) {
-                p.set(0, y, -2, "minecraft:spruce_fence");
-                p.set(w - 1, y, -2, "minecraft:spruce_fence");
-            }
+            posts(w >= 10, "ext_post_base", "ext_post", "ext_post");
         } else if (modern) {
-            for (int x = -1; x <= w; x++) {
-                p.set(x, 4, -1, "minecraft:smooth_stone_slab[type=top]");
-                p.set(x, 4, -2, "minecraft:smooth_stone_slab[type=top]");
+            // the aluminium canopy, hung on rods from the wall at its ends
+            String edge = "front_canopy_metal_edge_" + (rng.nextBoolean() ? "red" : "teal") + "[facing=north]";
+            for (int x = 0; x < w; x++) {
+                p.set(x, 4, -1, "front_canopy_metal[facing=north]");
+                p.set(x, 4, -2, edge);
             }
+            p.set(0, 5, -1, "front_canopy_rod[facing=north]");
+            p.set(w - 1, 5, -1, "front_canopy_rod[facing=north]");
             if (sign) {
                 Boards.fascia(p, rng, trade.sign, 1, 5, -1, w - 2);
+            }
+        } else if (gallery) {
+            // tin on a plate along the wall and a beam on fluted iron posts at the curb, the name on its edge
+            String tin = rng.nextDouble() < 0.6 ? "red" : "green";
+            for (int x = 0; x < w; x++) {
+                if (x > 0 && x < w - 1) {
+                    p.set(x, 4, -1, "front_gallery_" + tin + "[facing=north]");
+                }
+                p.set(x, 4, -2, "front_gallery_" + tin + "_edge[facing=north]");
+            }
+            posts(true, "front_gallery_post_base", "front_gallery_post", "front_gallery_post_top[facing=north]");
+            if (sign) {
+                Boards.fascia(p, rng, trade.sign, 1, 4, -3, w - 2);
             }
         } else if (sign && !Boards.fascia(p, rng, trade.sign, 1, 4, -1, w - 2)) {
             awning = true;
@@ -258,10 +292,30 @@ final class Storefront {
         }
     }
 
+    /**
+     * Posts at the curb (z = -2) carrying a canopy's beam: at the ends, and every four between when
+     * middle, kept out of the way in to the door.
+     */
+    private void posts(boolean middle, String base, String shaft, String top) {
+        int door = w / 2;
+        for (int x = 0; x < w; x++) {
+            boolean end = x == 0 || x == w - 1;
+            boolean between = middle && x % 4 == 0 && x > 1 && x < w - 2 && Math.abs(x - door) > 1 && x != door - 2;
+            if (!end && !between) {
+                continue;
+            }
+            p.set(x, 1, -2, base);
+            p.set(x, 2, -2, shaft);
+            p.set(x, 3, -2, top);
+        }
+    }
+
     /** The windows of an upper floor, with sills and lintels or hood moulds, maybe a bay window. */
     private void upperFront(int k) {
         int y0 = k * STOREY;
         boolean bay = style == Style.VICTORIAN && floors == 3 && k == 2 && w >= 9 && rng.nextDouble() < 0.5;
+        // stone lintels with a keystone standing proud over a brick block's windows
+        boolean hoods = trim.equals("stone_trim") && style == Style.VICTORIAN && (k + w) % 2 == 0;
         int c = w / 2;
         for (int x = 1; x < w - 1; x++) {
             boolean window = style == Style.ITALIANATE ? (x - 1) % 2 == 1 || w <= 6 : (x - 1) % 3 != 0;
@@ -270,9 +324,12 @@ final class Storefront {
             }
             b.window(x, y0 + 1, 0, "north", 2, "sill");
             if (style == Style.ITALIANATE) {
-                p.set(x, y0 + 3, -1, "minecraft:stone_brick_stairs[facing=south,half=top]");
+                p.set(x, y0 + 3, -1, "front_hood_arch[facing=north]");
             } else {
                 p.set(x, y0 + 3, 0, b.wall(trim, y0 + 3));
+                if (hoods) {
+                    p.set(x, y0 + 3, -1, "front_hood_flat[facing=north]");
+                }
             }
         }
         // a sill course in stone across the whole front
@@ -285,7 +342,7 @@ final class Storefront {
             for (int x = c - 2; x <= c + 2; x++) {
                 p.set(x, y0, -1, b.wall(trim, y0));
                 if (x != c - 2 && x != c + 2) {
-                    p.set(x, y0 - 1, -1, "minecraft:stone_brick_stairs[facing=south,half=top]");
+                    p.set(x, y0 - 1, -1, "front_bay_corbel[facing=north]");
                     p.set(x, y0 + 1, 0, "air");
                     p.set(x, y0 + 2, 0, "air");
                     p.set(x, y0 + 3, 0, "air");
@@ -307,46 +364,52 @@ final class Storefront {
         int c = w / 2;
         switch (style) {
             case VICTORIAN -> {
+                // a corbelled table of brick (stone on a painted front) under a moulded stone cornice
                 b.flat(0, 0, w - 1, d - 1, roofY, wall, 2, "stone_trim");
-                for (int x = -1; x <= w; x++) {
-                    p.set(x, roofY + 1, -1, b.wall("stone_trim", roofY + 1));
-                    if (x >= 1 && x <= w - 2 && x % 2 == 1 && p.get(x, roofY, -1) == null) {
-                        p.set(x, roofY, -1, "minecraft:dark_oak_stairs[facing=south,half=top]");
+                String corbel = "front_corbel_" + (wall.startsWith("brick_") ? wall.substring(6) : "stone") + "[facing=north]";
+                for (int x = 0; x < w; x++) {
+                    p.set(x, roofY + 1, -1, "front_cornice_stone[facing=north]");
+                    if (x >= 1 && x <= w - 2 && p.get(x, roofY, -1) == null) {
+                        p.set(x, roofY, -1, corbel);
                     }
                 }
                 if (w >= 7) {
+                    // the pediment, its year cut in the stone under it and a finial on top
                     for (int x = c - 1; x <= c + 1; x++) {
                         p.set(x, roofY + 3, 0, b.wall(wall, roofY + 3));
                     }
                     p.set(c, roofY + 4, 0, "stone_trim");
-                    p.set(c - 1, roofY + 4, 0, "minecraft:stone_brick_stairs[facing=east]");
-                    p.set(c + 1, roofY + 4, 0, "minecraft:stone_brick_stairs[facing=west]");
-                    p.set(c, roofY + 2, 0, "minecraft:chiseled_stone_bricks");
+                    p.set(c - 1, roofY + 4, 0, "front_pediment_l[facing=north]");
+                    p.set(c + 1, roofY + 4, 0, "front_pediment_r[facing=north]");
+                    p.set(c, roofY + 5, 0, "front_finial");
+                    p.set(c, roofY + 2, 0, "front_datestone_" + YEARS[rng.nextInt(YEARS.length)] + "[facing=north]");
                 }
             }
             case ITALIANATE -> {
+                // a deep cornice of painted boards on scroll brackets
                 b.flat(0, 0, w - 1, d - 1, roofY, wall, 1, null);
-                for (int x = -1; x <= w; x++) {
-                    p.set(x, roofY + 1, -1, "minecraft:dark_oak_planks");
-                    p.set(x, roofY + 1, -2, "minecraft:dark_oak_slab[type=top]");
-                    if (x >= 0 && x <= w - 1 && x % 2 == 0) {
-                        p.set(x, roofY, -1, "minecraft:dark_oak_stairs[facing=south,half=top]");
+                for (int x = 0; x < w; x++) {
+                    p.set(x, roofY + 1, -1, "front_cornice_wood_" + cornicePaint + "[facing=north]");
+                    if (x % 2 == 0 && p.get(x, roofY, -1) == null) {
+                        p.set(x, roofY, -1, "front_bracket_wood_" + cornicePaint + "[facing=north]");
                     }
                 }
             }
-            case MODERN -> b.flat(0, 0, w - 1, d - 1, roofY, wall, 2, "minecraft:smooth_stone_slab[type=bottom]");
+            case MODERN -> b.flat(0, 0, w - 1, d - 1, roofY, wall, 2, "front_coping_metal");
             case FALSE_FRONT -> {
-                String family = rng.nextBoolean() ? "minecraft:waxed_weathered_cut_copper" : "minecraft:spruce";
-                b.gable(0, w - 1, 1, d - 1, roofY + 1, family, true, wall, 1);
+                String[] kinds = {"tin_galv", "tin_galv", "tin_red", "tin_green", "brown", "charcoal"};
+                b.roofGable(0, w - 1, 1, d - 1, roofY + 1, kinds[rng.nextInt(kinds.length)], true, wall, 1);
                 int rise = (w + 1) / 2 + 1;
                 boolean stepped = rng.nextBoolean();
+                // a cap board along the top of a frame front, a stone cornice on a brick one
+                String cap = wall.startsWith("brick") ? "front_cornice_stone[facing=north]"
+                        : (trim.equals("front_trim_white") ? "front_cap_white" : "front_cap_brown") + "[facing=north]";
                 for (int x = 0; x < w; x++) {
                     int top = roofY + rise - (stepped && (x < 2 || x > w - 3) ? 1 : 0);
                     for (int y = roofY + 1; y <= top; y++) {
                         p.set(x, y, 0, b.wall(wall, y));
                     }
-                    p.set(x, top + 1, 0, "minecraft:spruce_slab[type=bottom]");
-                    p.set(x, top, -1, "minecraft:spruce_slab[type=top]");
+                    p.set(x, top, -1, cap);
                 }
                 // the name painted big across the false front
                 if (trade.sign != null) {
@@ -361,15 +424,16 @@ final class Storefront {
                 p.fill(x, roofY + 1, z, x + (w >= 9 ? 1 : 0), roofY + 1, z, "hvac");
             }
             if (rng.nextDouble() < 0.5) {
+                // a chimney stack on the party wall, its crown and flue pot on top
                 int x = rng.nextBoolean() ? 0 : w - 1, z = 2 + rng.nextInt(Math.max(1, d - 4));
-                p.fill(x, roofY + 1, z, x, roofY + 3, z, "minecraft:bricks");
-                p.set(x, roofY + 4, z, "minecraft:brick_wall");
+                String brick = wall.startsWith("brick") ? wall : "brick_red";
+                for (int y = roofY + 1; y <= roofY + 3; y++) {
+                    p.set(x, y, z, b.wall(brick, y));
+                }
+                p.set(x, roofY + 4, z, "ext_crown");
             }
             if (rng.nextDouble() < 0.3) {
-                int x = 1 + rng.nextInt(Math.max(1, w - 2)), z = d - 3;
-                p.set(x, roofY + 1, z, "minecraft:iron_bars");
-                p.set(x, roofY + 2, z, "minecraft:iron_bars");
-                p.set(x, roofY + 3, z, "minecraft:lightning_rod");
+                p.set(1 + rng.nextInt(Math.max(1, w - 2)), roofY + 1, d - 3, "ext_aerial[facing=" + (rng.nextBoolean() ? "north" : "east") + "]");
             }
         }
     }
@@ -413,36 +477,27 @@ final class Storefront {
         }
         for (int k = 1; k < floors; k++) {
             for (int x = 2; x < w - 1; x += 3) {
-                if (k == 1 && x >= 4 && x <= 6) {
-                    continue;
-                }
                 b.window(x, k * STOREY + 1, z, "south", 2, null);
             }
         }
-        if (floors >= 2 && w >= 8) {
-            // a wooden stair up the back to the flats over the shop
-            for (int i = 0; i < 4; i++) {
-                p.set(1 + i, 1 + i, d, "minecraft:spruce_stairs[facing=east]");
-                if (i > 0) {
-                    p.set(1 + i, i, d, "minecraft:spruce_fence");
-                }
-            }
-            for (int x = 5; x <= 6; x++) {
-                p.set(x, 4, d, "minecraft:spruce_slab[type=top]");
-                p.set(x, 4, d + 1, "minecraft:spruce_slab[type=top]");
-                p.set(x, 5, d + 1, "minecraft:spruce_fence");
-                for (int y = 1; y <= 3; y++) {
-                    p.set(x, y, d + 1, x == 6 ? "minecraft:spruce_fence" : "air");
-                }
-            }
-            p.set(4, 5, d + 1, "minecraft:spruce_fence");
-            b.door(6, 5, z, "flat_door", "south");
+        // the yard: old asphalt broken up by patches of dirt and weeds; rubbish, a dumpster, pallets
+        int[][] patches = new int[2 + rng.nextInt(3)][];
+        for (int i = 0; i < patches.length; i++) {
+            patches[i] = new int[] {rng.nextInt(w), d + rng.nextInt(Math.max(1, yard)), 1 + rng.nextInt(3)};
         }
-        // the yard: rubbish, a dumpster, pallets, someone's truck
         for (int zz = d; zz < d + yard; zz++) {
             for (int x = 0; x < w; x++) {
-                if (p.get(x, 0, zz) == null || p.get(x, 1, zz) == null) {
-                    p.set(x, 0, zz, rng.nextDouble() < 0.6 ? "minecraft:gravel" : rng.nextDouble() < 0.5 ? "minecraft:coarse_dirt" : "asphalt_crack");
+                if (p.get(x, 0, zz) != null && p.get(x, 1, zz) != null) {
+                    continue;
+                }
+                boolean dirt = false;
+                for (int[] c : patches) {
+                    int dx = x - c[0], dz = zz - c[1];
+                    dirt |= dx * dx + dz * dz <= c[2] * c[2] + rng.nextInt(2);
+                }
+                p.set(x, 0, zz, dirt ? "dirt_withered" : rng.nextDouble() < 0.4 ? "asphalt_crack" : "asphalt");
+                if (dirt && rng.nextDouble() < 0.35) {
+                    p.setIfAir(x, 1, zz, "weeds");
                 }
             }
         }
@@ -457,165 +512,21 @@ final class Storefront {
 
     // ------------------------------------------------------------------ inside
 
-    private void ground() {
+    private void ground(Trades trades, boolean stairs) {
         if (trade.fit != null) {
             new Shops(p, rng, trade.fit, w, d).fitOut();
             return;
         }
-        int r = w - 2, back = d - 2;
         switch (trade) {
-            case BANK -> {
-                b.floor(1, 1, r, back, 0, "lobby_floor_white");
-                int counter = d / 2;
-                for (int x = 1; x <= r; x++) {
-                    if (x == r) {
-                        b.door(x, 1, counter, "fire_door", "north");
-                        continue;
-                    }
-                    p.set(x, 1, counter, "store_counter[facing=north]");
-                    p.set(x, 2, counter, "store_teller_glass[axis=x]");
-                    p.set(x, 3, counter, "store_teller_glass[axis=x]");
-                }
-                p.set(2, 1, back, "store_safe[facing=north]");
-                p.set(3, 1, back, "store_safe[facing=north]");
-                p.set(r - 1, 1, counter + 2, "desk[facing=north]");
-                p.set(r - 1, 1, counter + 3, "office_chair[facing=north]");
-                for (int x = 2; x < r; x += 3) {
-                    p.set(x, 1, 3, "store_chair[facing=north]");
-                }
-                p.set(1, 1, 2, "planter");
-            }
-            case BARBER -> {
-                b.floor(1, 1, r, back, 0, "floor_checker");
-                for (int z = 3; z < back - 1; z += 3) {
-                    p.set(1, 1, z, "store_chair[facing=east]");
-                    p.set(1, 2, z, "minecraft:glass_pane");
-                    p.set(r, 1, z, "store_chair[facing=west]");
-                }
-                p.set(r, 1, 2, "store_register[facing=west]");
-                p.set(1, 1, back, "minecraft:cauldron");
-                p.set(2, 1, back, "store_counter[facing=north]");
-            }
-            case TAVERN -> {
-                b.floor(1, 1, r, back, 0, "floor_boards");
-                for (int z = 2; z < back - 1; z++) {
-                    p.set(r - 1, 1, z, "store_counter[facing=west]");
-                    p.set(r, 1, z, z % 3 == 0 ? "store_shelf_liquor[facing=west]" : "store_cooler[facing=west]");
-                    p.set(r - 2, 1, z, z % 2 == 0 ? "store_stool" : "air");
-                }
-                for (int z = 3; z < back - 1; z += 4) {
-                    p.set(2, 1, z, "store_table");
-                    p.set(2, 1, z + 1, "store_chair[facing=north]");
-                    p.set(3, 1, z, "store_chair[facing=west]");
-                }
-                // the pool table, its cloth long gone to mould
-                if (w >= 9 && d >= 14) {
-                    for (int z = back - 4; z <= back - 2; z++) {
-                        p.set(4, 1, z, "minecraft:dark_oak_planks");
-                        p.set(4, 2, z, "minecraft:green_carpet");
-                    }
-                }
-            }
-            case HOTEL -> {
-                b.floor(1, 1, r, back, 0, "lobby_floor_dark");
-                p.set(r, 1, 3, "reception_desk[facing=west]");
-                p.set(r, 1, 4, "reception_desk[facing=west]");
-                p.set(1, 1, 3, "minecraft:dark_oak_stairs[facing=east]");
-                p.set(1, 1, 4, "minecraft:dark_oak_stairs[facing=east]");
-                p.set(2, 1, 6, "planter");
-            }
-            case REALTY, VFW -> {
-                b.floor(1, 1, r, back, 0, trade == Trade.VFW ? "floor_boards" : "office_floor");
-                for (int x = 2; x < r; x += 3) {
-                    for (int z = 3; z < back - 1; z += 4) {
-                        p.set(x, 1, z, trade == Trade.VFW ? "store_table" : "desk[facing=north]");
-                        p.set(x, 1, z + 1, trade == Trade.VFW ? "store_chair[facing=north]" : "office_chair[facing=north]");
-                    }
-                }
-                p.set(r, 1, back, "filing_cabinet[facing=west]");
-                p.set(r, 1, back - 1, "filing_cabinet[facing=west]");
-            }
-            default -> {
-                // vacant: stripped to the boards, a ladder and paint tins from a refit that never finished
-                b.floor(1, 1, r, back, 0, "floor_concrete");
-                p.set(2, 1, back, "store_paint_cans");
-                p.set(r, 1, 3, "minecraft:ladder[facing=west]");
-            }
+            case BANK -> trades.bank();
+            case BARBER -> trades.barber();
+            case TAVERN -> trades.tavern();
+            case HOTEL -> trades.hotelLobby(stairs);
+            case REALTY -> trades.realty();
+            case VFW -> trades.vfw();
+            default -> trades.vacant();
         }
-        b.mess(1, 1, r, back, 1, 0.06);
-    }
-
-    /** A flat or an office over the shop. */
-    private void upstairs(int k) {
-        int y = k * STOREY + 1;
-        int r = w - 2, back = d - 2;
-        int mid = d / 2;
-        boolean office = trade == Trade.BANK || trade == Trade.REALTY || rng.nextDouble() < 0.3;
-        if (trade == Trade.HOTEL) {
-            hotelFloor(y, r, back, k + 1 < floors);
-            return;
-        }
-        for (int x = 1; x <= r; x++) {
-            for (int h = 0; h < 3; h++) {
-                p.set(x, y + h, mid, rng.nextDouble() < 0.15 ? "wallpaper_rotten" : rng.nextDouble() < 0.1 ? "drywall_peel" : "drywall");
-            }
-        }
-        b.door(w / 2, y, mid, "flat_door", "north");
-        if (office) {
-            for (int x = 2; x < r; x += 3) {
-                p.set(x, y, 2, "desk[facing=north]");
-                p.set(x, y, 3, rng.nextDouble() < 0.3 ? "office_chair_fallen[facing=east]" : "office_chair[facing=north]");
-            }
-            p.set(r, y, mid + 1, "filing_cabinet[facing=west]");
-            p.set(r, y, mid + 2, "filing_cabinet[facing=west]");
-        } else {
-            String colour = BEDS[rng.nextInt(BEDS.length)];
-            p.set(1, y, back - 1, "minecraft:" + colour + "_bed[facing=south,part=head]");
-            p.set(1, y, back - 2, "minecraft:" + colour + "_bed[facing=south,part=foot]");
-            p.set(2, y, back, "minecraft:barrel[facing=up,loot=clothes]");
-            for (int x = 1; x <= Math.min(r, 3); x++) {
-                p.set(x, y, mid - 1, "minecraft:dark_oak_stairs[facing=north]");
-            }
-            p.set(r, y, 2, "store_oven[facing=west]");
-            p.set(r, y, 3, "minecraft:barrel[facing=up,loot=kitchen]");
-            p.set(r - 2, y, 3, "store_table");
-            if (rng.nextDouble() < 0.5) {
-                p.set(r - 2, y, 2, "store_chair[facing=south]");
-            }
-        }
-        // the stair on to the next floor up
-        if (k + 1 < floors) {
-            b.stair(r, back, y, STOREY, "north", "minecraft:spruce");
-        }
-        b.mess(1, 1, r, back, y, 0.05);
-    }
-
-    private void hotelFloor(int y, int r, int back, boolean stairUp) {
-        // a corridor down the middle, rooms either side
-        int c = w / 2;
-        for (int z = 1; z <= back; z++) {
-            for (int h = 0; h < 3; h++) {
-                p.set(c - 1, y + h, z, "drywall");
-                p.set(c + 1, y + h, z, "drywall");
-            }
-        }
-        for (int z = 2; z < back; z += 4) {
-            b.door(c - 1, y, z, "flat_door", "east");
-            b.door(c + 1, y, z, "flat_door", "west");
-            String colour = BEDS[rng.nextInt(BEDS.length)];
-            if (c - 2 >= 1) {
-                p.set(1, y, z, "minecraft:" + colour + "_bed[facing=west,part=head]");
-                p.set(2, y, z, c - 2 >= 2 ? "minecraft:" + colour + "_bed[facing=west,part=foot]" : "air");
-            }
-            if (r >= c + 3) {
-                p.set(r, y, z, "minecraft:" + colour + "_bed[facing=east,part=head]");
-                p.set(r - 1, y, z, "minecraft:" + colour + "_bed[facing=east,part=foot]");
-            }
-        }
-        if (stairUp) {
-            b.stair(c, back, y, STOREY, "north", "minecraft:spruce");
-        }
-        b.mess(1, 1, r, back, y, 0.05);
+        b.mess(1, 1, w - 2, d - 2, 1, 0.06);
     }
 
     // ------------------------------------------------------------------ weathering

@@ -7,6 +7,7 @@ import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Cars;
+import com.zomboidcraft.world.county.CarSpacing;
 import com.zomboidcraft.world.county.ChunkSink;
 import java.util.EnumSet;
 import java.util.Map;
@@ -105,15 +106,55 @@ final class ChunkWriter implements ChunkSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        spawn(x, y, z, yaw, m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength, seed);
+        spawn(x, y, z, yaw, filter(minLength, maxLength, null), seed);
     }
 
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        spawn(x, y, z, yaw, filter(0, 99, models), seed);
+    }
+
+    /**
+     * The models a builder's car may be: any non-aircraft between the lengths when no names are
+     * given, else the named models or kinds, or exactly one model when pinned as "=id".
+     */
+    static java.util.function.Predicate<CarModels.Model> filter(double minLength, double maxLength, String models) {
+        if (models == null) {
+            return m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength;
+        }
+        if (models.startsWith("=")) {
+            String id = models.substring(1);
+            return m -> m.id.equals(id);
+        }
         // a builder may name a model twice to favour it; Set.of would throw on the repeat
         java.util.Set<String> names = new java.util.HashSet<>(java.util.Arrays.asList(models.split(",")));
-        spawn(x, y, z, yaw, m -> names.contains(m.id) || names.contains(m.kind), seed);
+        return m -> names.contains(m.id) || names.contains(m.kind);
     }
+
+    /** The car models' bodies, for {@link CarSpacing}: picked from the same seed and filter as {@link #spawn}. */
+    static final CarSpacing.Bodies BODIES = new CarSpacing.Bodies() {
+        @Override
+        public String pick(double minLength, double maxLength, String models, long seed) {
+            CarModels.Model m = CarModels.pick(new SplittableRandom(seed), filter(minLength, maxLength, models));
+            return m == null ? null : m.id;
+        }
+
+        @Override
+        public boolean covers(String model, double lx, double lz) {
+            return CarModels.get(model).heightAt(lx, lz) > 0.15f;
+        }
+
+        @Override
+        public double reach(String model) {
+            CarModels.Model m = CarModels.get(model);
+            return Math.hypot(m.size[0], m.size[2]) / 2;
+        }
+
+        @Override
+        public boolean tight(String model) {
+            return CarModels.get(model).jet();
+        }
+    };
 
     private void spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, long seed) {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
