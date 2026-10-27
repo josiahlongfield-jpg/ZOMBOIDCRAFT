@@ -67,11 +67,12 @@ public final class CockpitGlow {
     }
 
     /**
-     * Seconds since this aircraft's avionics came on (someone got in), or -1 while they're off. Only
-     * aircraft with cockpit lights, and only whole ones.
+     * Seconds since this aircraft's avionics came on (someone got in with the battery good), or -1 while
+     * they're off. Only aircraft with cockpit lights, and only whole ones.
      */
     static float powered(CarProp car, String model, String variant) {
-        boolean on = car.isVehicle() && ("usable".equals(variant) || "abandoned".equals(variant)) && get(model) != null;
+        // a flat battery leaves the cockpit dark
+        boolean on = car.isVehicle() && car.battery() && ("usable".equals(variant) || "abandoned".equals(variant)) && get(model) != null;
         if (!on) {
             POWER.remove(car);
             return -1;
@@ -92,31 +93,35 @@ public final class CockpitGlow {
     }
 
     /**
-     * Every lit triangle, each as a quad with its last corner doubled, a hair in front of the face it
-     * lights; age is seconds since the power came on, dark how dark it is round the aircraft (0 to 1).
+     * Each group's colour now (0 for dark): age is seconds since the power came on, dark how dark it
+     * is round the aircraft (0 to 1). The keys fade up, the screens flick on one after another, the
+     * head-up display last.
      */
-    static void draw(Glow glow, float age, float dark, boolean shaders, PoseStack.Pose pose, VertexConsumer out) {
+    static int[] colours(Glow glow, float age, float dark, boolean shaders) {
         int groups = glow.kinds().length;
         int[] colour = new int[groups];
-        boolean any = false;
         int screens = 0;
         for (int g = 0; g < groups; g++) {
             float strength = switch (glow.kinds()[g]) {
                 case KEYS -> Math.min(1, age / 0.8f) * (0.12f + 0.88f * dark);
-                case HUD -> booted(age - 0.6f - 0.3f * (groups - 1), g) * (0.5f + 0.4f * dark);
+                case HUD -> booted(age - 0.6f - 0.3f * (groups - 1), g) * (0.75f + 0.25f * dark);
                 default -> booted(age - 0.5f - 0.3f * screens++, g) * (0.8f + 0.2f * dark);
             };
             colour[g] = strength <= 0.01f ? 0 : CarLights.shade(WHITE, strength, shaders);
-            any |= colour[g] != 0;
         }
-        if (!any) {
-            return;
-        }
+        return colour;
+    }
+
+    /**
+     * Every lit triangle, each as a quad with its last corner doubled, a hair in front of the face it
+     * lights, in its group's colour; groups in live (drawn by {@link CockpitDisplays}) are left out.
+     */
+    static void draw(Glow glow, int[] colour, java.util.BitSet live, PoseStack.Pose pose, VertexConsumer out) {
         float[] p = glow.pos(), uv = glow.uv(), n = glow.normal();
         byte[] group = glow.group();
         for (int t = 0; t < group.length; t++) {
             int c = colour[group[t]];
-            if (c == 0) {
+            if (c == 0 || live != null && live.get(group[t])) {
                 continue;
             }
             float lift = glow.kinds()[group[t]] == KEYS ? 0.002f : 0.003f;

@@ -56,6 +56,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         boolean lit = state.lights || state.dash;
         state.dark = lit && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above()) : 0;
         state.cockpit = CockpitGlow.powered(car, state.model, state.variant);
+        state.liveCockpit = state.cockpit >= 0 && mc.player != null && car.hasPassenger(mc.player) ? car : null;
         state.cockpitDark = state.cockpit >= 0 && mc.level != null ? CarLights.darkness(mc.level, car.blockPosition().above(2)) : 0;
         state.shaders = (lit || state.cockpit >= 0) && CarLights.shaderPackOn();
         CarClient.Target target = CarClient.target(car);
@@ -157,10 +158,20 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             });
         }
         if (cockpit != null) {
-            float age = state.cockpit, dark = state.cockpitDark;
-            boolean shaders = state.shaders;
-            collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, shaders),
-                    (pose, out) -> CockpitGlow.draw(cockpit, age, dark, shaders, pose, out));
+            int[] colours = CockpitGlow.colours(cockpit, state.cockpit, state.cockpitDark, state.shaders);
+            // the aircraft you're in shows the flight live on its screens and its head-up display
+            CockpitDisplays.Set live = state.liveCockpit != null ? CockpitDisplays.of(state.model, cockpit) : null;
+            if (live != null) {
+                CockpitDisplays.paint(state.liveCockpit, live, state.attitude, CockpitDisplays.eye(state.model));
+                for (CockpitDisplays.Screen s : live.screens()) {
+                    int colour = colours[s.group];
+                    collector.submitCustomGeometry(poseStack, CockpitDisplays.type(s, state.shaders),
+                            (pose, out) -> CockpitDisplays.draw(s, colour, pose, out));
+                }
+            }
+            java.util.BitSet skip = live == null ? null : live.groups();
+            collector.submitCustomGeometry(poseStack, CockpitGlow.type(cockpit, state.shaders),
+                    (pose, out) -> CockpitGlow.draw(cockpit, colours, skip, pose, out));
         }
         // the camera, in the car's own frame, for the glow round each lamp and the green highlight
         double dx = camera.pos.x - state.x, dz = camera.pos.z - state.z, r = Math.toRadians(state.yaw);
