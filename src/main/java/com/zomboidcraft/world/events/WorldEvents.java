@@ -177,7 +177,7 @@ public final class WorldEvents {
         List<Event> wingmen = new ArrayList<>();
         if (kind == Kind.JET || kind == Kind.HELI) {
             boolean jet = kind == Kind.JET;
-            double speed = jet ? 75 + random.nextDouble() * 30 : 50 + random.nextDouble() * 20;   // jets 270-380 km/h (Josiah: a bit slower)
+            double speed = jet ? 75 + random.nextDouble() * 30 : 32 + random.nextDouble() * 12;   // jets 270-380 km/h, helicopters 115-160 (Josiah: slower)
             double reach = jet ? 1600 : 900;     // half the path: start and end well out of earshot
             double heading = random.nextDouble() * Math.PI * 2;
             double side = (random.nextDouble() * 2 - 1) * (jet ? 180 : 120);
