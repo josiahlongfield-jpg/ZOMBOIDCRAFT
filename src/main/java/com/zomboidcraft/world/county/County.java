@@ -42,6 +42,8 @@ public final class County {
     private final Map<Long, List<Road>> roads = new ConcurrentHashMap<>();
     private final Map<Long, List<Road>> joins = new ConcurrentHashMap<>();
     private final Map<Long, Optional<Place>> hideouts = new ConcurrentHashMap<>();
+    /** The wrecks on the South Arm's bed beside the Glass Line (none without it). */
+    final Wrecks wrecks = new Wrecks(this);
 
     /** The planned county. */
     public County(long seed) {
