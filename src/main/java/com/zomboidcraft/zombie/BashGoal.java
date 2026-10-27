@@ -53,14 +53,69 @@ public class BashGoal extends Goal {
         return glass ? isWindow(state) : door ? isShutDoor(state) : bashable(state);
     }
 
-    /** Glass in a window or a shop front (not a lamp): it breaks under enough blows. */
+    /** Glass in a window or a shop front (not a lamp), or a broken one with shards still in: it gives under enough blows. */
     private static boolean isWindow(BlockState state) {
-        return state.getSoundType() == SoundType.GLASS && state.getLightEmission() == 0 && !state.isAir();
+        return broken(state) != null;
+    }
+
+    private static final java.util.Map<net.minecraft.world.level.block.Block, java.util.Optional<net.minecraft.world.level.block.Block>>
+            NEXT = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * What a window becomes when it gives: glass (or lit) to its _broken block, broken to its _empty one (an open frame
+     * a zombie can climb through), plain glass to nothing. Null for anything that isn't a window, or one already open.
+     */
+    static @Nullable BlockState broken(BlockState state) {
+        net.minecraft.world.level.block.Block next = NEXT.computeIfAbsent(state.getBlock(), BashGoal::nextBlock).orElse(null);
+        if (next == null) {
+            return null;
+        }
+        BlockState out = next.defaultBlockState();
+        for (net.minecraft.world.level.block.state.properties.Property<?> property : state.getProperties()) {
+            out = copy(state, out, property);
+        }
+        return out;
+    }
+
+    private static <T extends Comparable<T>> BlockState copy(BlockState from, BlockState to,
+            net.minecraft.world.level.block.state.properties.Property<T> property) {
+        return to.hasProperty(property) ? to.setValue(property, from.getValue(property)) : to;
+    }
+
+    private static java.util.Optional<net.minecraft.world.level.block.Block> nextBlock(net.minecraft.world.level.block.Block block) {
+        net.minecraft.resources.Identifier id = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block);
+        String n = id.getPath();
+        if (!id.getNamespace().equals("zomboidcraft")) {
+            BlockState s = block.defaultBlockState();
+            // vanilla glass and panes break clean away
+            return s.getSoundType() == SoundType.GLASS && s.getLightEmission() == 0
+                    ? java.util.Optional.of(net.minecraft.world.level.block.Blocks.AIR) : java.util.Optional.empty();
+        }
+        String to;
+        if (n.contains("_glass_") || n.contains("_lit_")) {
+            to = n.replace("_glass_", "_broken_").replace("_lit_", "_broken_");      // ext_win_*_glass_hi
+        } else if (n.contains("_broken")) {
+            to = n.replace("_broken", "_empty");                                    // window_broken, ext_win_*_broken_hi
+        } else if (n.endsWith("_lit")) {
+            to = n.substring(0, n.length() - 4) + "_broken";                         // window_lit, ch_win_*_lit
+        } else {
+            to = n + "_broken";                                                      // window, navy_window, dn_win_*, ch_win_*
+        }
+        if (!n.contains("win") || to.equals(n)) {
+            return java.util.Optional.empty();
+        }
+        net.minecraft.resources.Identifier next = net.minecraft.resources.Identifier.fromNamespaceAndPath("zomboidcraft", to);
+        return net.minecraft.core.registries.BuiltInRegistries.BLOCK.containsKey(next)
+                ? java.util.Optional.of(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(next)) : java.util.Optional.empty();
     }
 
     /** Boards, a metal sheet or a spiked log wall: built things it beats down. */
     private static boolean bashable(BlockState state) {
         return state.is(ModBlocks.BARRICADE) || com.zomboidcraft.building.BuildBlocks.bashDamage(state) != null;
+    }
+
+    private static String blockPath(BlockState state) {
+        return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
     }
 
     private static boolean isShutDoor(BlockState state) {
@@ -128,7 +183,9 @@ public class BashGoal extends Goal {
      */
     private void hitDoor(ServerLevel level, BlockState state) {
         ZcConfig.Zombies config = ZcConfig.get().zombies;
-        int needed = Math.max(1, glass ? config.windowHits : config.doorHits);
+        // a broken window only has its shards to knock out: a third of the blows
+        int needed = Math.max(1, glass ? (blockPath(state).contains("_broken") ? config.windowHits / 3 : config.windowHits)
+                : config.doorHits);
         // a door is two blocks: its blows are kept on the lower half
         BlockPos at = !glass && state.hasProperty(DoorBlock.HALF)
                 && state.getValue(DoorBlock.HALF) == net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER
@@ -146,6 +203,12 @@ public class BashGoal extends Goal {
         dent[1] = now;
         if (dent[0] >= needed) {
             dents.remove(at.asLong());
+            BlockState next = glass ? broken(state) : null;
+            if (next != null && !next.isAir()) {
+                level.setBlockAndUpdate(block, next);
+                level.playSound(null, block, SoundEvents.GLASS_BREAK, SoundSource.HOSTILE, 1f, 1f);
+                return;
+            }
             level.destroyBlock(block, false);
             level.playSound(null, block, glass ? SoundEvents.GLASS_BREAK : SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR,
                     SoundSource.HOSTILE, 1f, 1f);
