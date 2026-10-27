@@ -884,10 +884,10 @@ public class CarProp extends Entity {
             // the seat turns with the airframe about its middle, the eyes staying upright above it
             float pivot = pivot();
             org.joml.Vector3f at = flight().q.transform(new org.joml.Vector3f(seat[0], seat[1] - pivot, seat[2]));
-            return new Vec3(at.x, at.y + pivot - 1.02, at.z);
+            return new Vec3(at.x, at.y + pivot - 1.02 * riderScale(passenger), at.z);
         }
-        // a player's eyes are 1.02 above where they hang from a vehicle
-        return world(seat[0], seat[1] - 1.02, seat[2]);
+        // a player's eyes are 1.02 above where they hang from a vehicle (less when they're shrunk to fit it)
+        return world(seat[0], seat[1] - 1.02 * riderScale(passenger), seat[2]);
     }
 
     /** Riders turn with the car, and can look round but not right behind them. */
@@ -921,9 +921,37 @@ public class CarProp extends Entity {
         passenger.setYHeadRot(passenger.getYRot());
     }
 
+    private static float riderScale(Entity passenger) {
+        return passenger instanceof LivingEntity living ? living.getScale() : 1f;
+    }
+
+    private static final net.minecraft.resources.Identifier RIDER_SCALE = ZomboidCraft.id("car_rider_scale");
+
+    /**
+     * Riders are shrunk a little to fit the cabin (world.carRiderScale), so no knees or elbows poke out
+     * through the doors, and grow back as they get out. Aircraft seats are left as they are.
+     */
+    private void fit(Entity passenger, boolean in) {
+        if (level().isClientSide() || !(passenger instanceof Player player)) {
+            return;
+        }
+        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+        if (scale == null) {
+            return;
+        }
+        double to = com.zomboidcraft.ZcConfig.get().world.carRiderScale;
+        if (in && !aircraft() && to > 0 && to != 1) {
+            scale.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(RIDER_SCALE, to - 1,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        } else if (scale.getModifier(RIDER_SCALE) != null) {
+            scale.removeModifier(RIDER_SCALE);
+        }
+    }
+
     @Override
     protected void addPassenger(Entity passenger) {
         boolean first = getPassengers().isEmpty();
+        fit(passenger, true);
         super.addPassenger(passenger);
         int i = getPassengers().indexOf(passenger);
         if (!level().isClientSide() && i >= 0 && i < 8) {
@@ -958,6 +986,7 @@ public class CarProp extends Entity {
             int packed = entityData.get(SEATS), low = packed & ((1 << (4 * i)) - 1);
             entityData.set(SEATS, low | (i < 7 ? (packed >>> (4 * (i + 1))) << (4 * i) : 0));
         }
+        fit(passenger, false);
         super.removePassenger(passenger);
         if (level() instanceof ServerLevel server && !isRemoved()) {
             door(server);
