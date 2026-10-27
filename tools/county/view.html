@@ -90,7 +90,7 @@ const MAIN = program(`
   in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec3 vBL; in vec4 vSun;
   uniform sampler2D tex; uniform highp sampler2DShadow shadow; uniform sampler2D emis;
   uniform vec3 eye, sunDir, sky, haze; uniform float fogD, sunI, cutout, glow;
-  uniform int dark; uniform int baked; uniform float amb; uniform vec3 tPos, tDir; uniform int torch;
+  uniform int dark; uniform int baked; uniform float amb; uniform vec3 tPos, tDir; uniform int torch, blend;
   uniform vec4 lPos[24]; uniform vec3 lCol[24]; uniform int nl;
   out vec4 col;
   void main() {
@@ -135,7 +135,7 @@ const MAIN = program(`
     float d = length(vW - eye);
     float f = 1.0 - exp(-pow(d * fogD, 2.0));
     c = mix(c, pow(haze, vec3(2.2)), f);
-    col = vec4(pow(c, vec3(1.0 / 2.2)), 1.0);
+    col = vec4(pow(c, vec3(1.0 / 2.2)), blend == 1 ? t.a : 1.0);
   }`);
 const DEPTH = program(`
   in vec3 pos; in vec2 uv; uniform mat4 sunMat; uniform float unit, uvScale; out vec2 vUV;
@@ -163,7 +163,7 @@ const PH_SCENE = PHOTON && program(`
   in vec3 vW; in vec3 vN; in vec2 vUV; in float vAO; in vec3 vBL; in vec4 vSun; in vec4 vSky;
   uniform sampler2D tex, nmap, orm, emis; uniform highp sampler2DShadow shadow, skyShadow;
   uniform vec3 eye, sunDir, sunCol, warm; uniform float cutout, glow, hasN, skyTexel;
-  uniform int dark, hand, rain; uniform vec3 tPos;
+  uniform int dark, hand, rain, blend; uniform vec3 tPos;
   uniform vec4 lPos[${NLP}]; uniform vec3 lCol[${NLP}]; uniform int nl;
   out vec4 col;
   const float PI = 3.14159265;
@@ -260,7 +260,8 @@ const PH_SCENE = PHOTON && program(`
       c += (dif * max(dot(n, l), 0.0) * PI + ggx(n, v, l, rough, f0) * PI) * warm * w * 8.0;
     }
     c += pow(texture(emis, vUV).rgb, vec3(2.2)) * glow * (dark == 1 ? 30.0 : 12.0);
-    col = vec4(c, length(vW - eye));
+    // a blended part (glass, water) hands its alpha to the blend; the distance under it stays
+    col = vec4(c, blend == 1 ? t.a : length(vW - eye));
   }`);
 const PH_QUAD_VS = `in vec3 pos; out vec2 v; void main() { v = pos.xy * 0.5 + 0.5; gl_Position = vec4(pos.xy, 0.9999, 1.0); }`;
 // Photon's sky: deep blue overhead, pale at the horizon, a glow round the sun, a layer of cumulus
@@ -447,6 +448,12 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
 
   gl.useProgram(PH_SCENE);
   const u = (n) => gl.getUniformLocation(PH_SCENE, n);
+  // glass and water: drawn after everything else, blended over it, not hiding what's behind them
+  const setBlend = (on) => {
+    gl.uniform1i(u('blend'), on ? 1 : 0);
+    if (on) { gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE); gl.depthMask(false); }
+    else { gl.disable(gl.BLEND); gl.depthMask(true); }
+  };
   gl.uniformMatrix4fv(u('view'), false, view); gl.uniformMatrix4fv(u('proj'), false, proj);
   gl.uniformMatrix4fv(u('sunMat'), false, sunMat); gl.uniformMatrix4fv(u('skyMat'), false, skyMat);
   gl.uniform1f(u('unit'), unit); gl.uniform3fv(u('eye'), eye); gl.uniform3fv(u('sunDir'), sunDir);
@@ -474,8 +481,9 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 230, 0, 255]));
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, depthTex);
   gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, skyTex);
-  for (const p of parts) {
+  for (const p of [...parts.filter((q) => !q.blend), ...parts.filter((q) => q.blend)]) {
     if (!p.tex) continue;
+    setBlend(p.blend);
     gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, p.emis || black);
     gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, p.nmap || black);
     gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D, p.orm || flat);
@@ -485,6 +493,7 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     gl.bindVertexArray(p.vao);
     gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);
   }
+  setBlend(false);
 
   // bloom: a chain of halvings, then back up, each level adding the blurred one below
   gl.disable(gl.DEPTH_TEST);
@@ -562,7 +571,8 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     const ib = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(buf, V * 18, I), gl.STATIC_DRAW);
-    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.alpha ? 0.5 : 0.0, uvScale: e.uvScale || 1,
+    return { vao, count: I, tex: await loadTex(`${DIR}/${e.tex}.png`), cutout: e.blend ? 0.02 : e.alpha ? 0.5 : 0.0,
+             blend: !!e.blend, uvScale: e.uvScale || 1,
              emis: e.emissive ? await loadTex(`${DIR}/${e.tex}_e.png`) : null,
              nmap: PHOTON ? await loadTex(`${DIR}/${e.tex}_n.png`) : null,
              orm: PHOTON ? await loadTex(`${DIR}/${e.tex}_orm.png`) : null };
@@ -598,7 +608,7 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     gl.uniform1f(gl.getUniformLocation(DEPTH, 'unit'), index.unit || 16);
     gl.activeTexture(gl.TEXTURE0);
     for (const p of parts) {
-      if (!p.tex) continue;
+      if (!p.tex || p.blend) continue;
       gl.bindTexture(gl.TEXTURE_2D, p.tex);
       gl.uniform1f(gl.getUniformLocation(DEPTH, 'cutout'), p.cutout);
       gl.uniform1f(gl.getUniformLocation(DEPTH, 'uvScale'), p.uvScale);
@@ -635,6 +645,12 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   // scene
   gl.useProgram(MAIN);
   const u = (n) => gl.getUniformLocation(MAIN, n);
+  // glass and water: drawn after everything else, blended over it, not hiding what's behind them
+  const setBlend = (on) => {
+    gl.uniform1i(u('blend'), on ? 1 : 0);
+    if (on) { gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE); gl.depthMask(false); }
+    else { gl.disable(gl.BLEND); gl.depthMask(true); }
+  };
   gl.uniformMatrix4fv(u('view'), false, view);
   gl.uniformMatrix4fv(u('proj'), false, proj);
   gl.uniformMatrix4fv(u('sunMat'), false, sunMat); gl.uniform1f(u('unit'), index.unit || 16);
@@ -664,8 +680,9 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, depthTex);
   gl.activeTexture(gl.TEXTURE0);
-  for (const p of parts) {
+  for (const p of [...parts.filter((q) => !q.blend), ...parts.filter((q) => q.blend)]) {
     if (!p.tex) continue;
+    setBlend(p.blend);
     gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, p.emis || black);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, p.tex);
@@ -674,6 +691,7 @@ function photon({ parts, index, eye, view, proj, fwd, centre, sunDir, sunMat, de
     gl.bindVertexArray(p.vao);
     gl.drawElements(gl.TRIANGLES, p.count, gl.UNSIGNED_INT, 0);
   }
+  setBlend(false);
   gl.finish();
   window.DONE = true;
 })();

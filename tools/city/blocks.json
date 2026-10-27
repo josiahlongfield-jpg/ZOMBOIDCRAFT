@@ -268689,6 +268689,1662 @@
    "title": "Help Point",
    "sound": "METAL",
    "rotate": "facing"
+  },
+  "gl_keel": {
+   "tex": {
+    "side": "gl_keel",
+    "up": "gl_keel_top",
+    "down": "gl_keel_top"
+   },
+   "title": "Tube Footing",
+   "sound": "STONE"
+  },
+  "gl_sill": {
+   "tex": {
+    "north": "gl_sill_out",
+    "up": "gl_grating",
+    "down": "gl_keel_top",
+    "side": "tx_steel_d"
+   },
+   "title": "Tube Sill",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "gl_walk": {
+   "tex": {
+    "up": "gl_walk_top",
+    "south": "gl_walk_face",
+    "down": "gl_keel_top",
+    "side": "gl_keel_top"
+   },
+   "title": "Tube Walkway",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "gl_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_leak": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo_leak": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_lo_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     7.4,
+     12.6,
+     3.5,
+     8.6,
+     13.4,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_patch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     1,
+     1,
+     1.5,
+     15,
+     15,
+     2.5,
+     {
+      "south": "gl_plywood",
+      "north": "gl_plywood",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2.5
+    ]
+   ]
+  },
+  "gl_wall_tarp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     1.6,
+     16,
+     16,
+     2.0,
+     {
+      "east": "gl_tarp",
+      "west": "gl_tarp",
+      "north": "gl_tarp",
+      "south": "gl_tarp",
+      "up": "gl_tarp",
+      "down": "gl_tarp"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2.0
+    ]
+   ]
+  },
+  "gl_chamfer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     6,
+     4.5,
+     -3.3137000000000008,
+     10,
+     9,
+     19.3137,
+     "gl_rib",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_patch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     1,
+     5.5,
+     -1.3137000000000008,
+     15,
+     6.5,
+     17.3137,
+     {
+      "down": "gl_plywood",
+      "up": "gl_plywood",
+      "side": "tx_steel_d"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_crown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown",
+      "west": "gl_glass_crown",
+      "north": "gl_glass_crown",
+      "south": "gl_glass_crown",
+      "up": "gl_glass_crown",
+      "down": "gl_glass_crown"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_crown_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown_cracked",
+      "west": "gl_glass_crown_cracked",
+      "north": "gl_glass_crown_cracked",
+      "south": "gl_glass_crown_cracked",
+      "up": "gl_glass_crown_cracked",
+      "down": "gl_glass_crown_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_crown_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown",
+      "west": "gl_glass_crown",
+      "north": "gl_glass_crown",
+      "south": "gl_glass_crown",
+      "up": "gl_glass_crown",
+      "down": "gl_glass_crown"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     12,
+     0,
+     10,
+     16,
+     16,
+     "gl_rib"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_tray": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ]
+   ],
+   "title": "Cable Tray",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     15,
+     6
+    ]
+   ]
+  },
+  "gl_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ],
+    [
+     0,
+     9,
+     1.5,
+     16,
+     11.5,
+     8,
+     {
+      "down": "gl_lamp",
+      "up": "tx_steel_d",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     3,
+     11.5,
+     3.5,
+     4,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     12,
+     11.5,
+     3.5,
+     13,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Light",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     9,
+     0.5,
+     16,
+     15,
+     8
+    ]
+   ],
+   "flicker": {
+    "light": 12,
+    "on": {
+     "gl_lamp": "gl_lamp_on"
+    }
+   }
+  },
+  "gl_lamp_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ],
+    [
+     0,
+     9,
+     1.5,
+     16,
+     11.5,
+     8,
+     {
+      "down": "gl_lamp",
+      "up": "tx_steel_d",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     3,
+     11.5,
+     3.5,
+     4,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     12,
+     11.5,
+     3.5,
+     13,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Light",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     9,
+     0.5,
+     16,
+     15,
+     8
+    ]
+   ]
+  },
+  "gl_wall_exit_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     2,
+     4,
+     3.5,
+     14,
+     10,
+     4.5,
+     {
+      "south": "gl_exit_r",
+      "north": "tx_steel_d",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_exit_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     2,
+     4,
+     3.5,
+     14,
+     10,
+     4.5,
+     {
+      "south": "gl_exit_l",
+      "north": "tx_steel_d",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
   }
  }
 }
