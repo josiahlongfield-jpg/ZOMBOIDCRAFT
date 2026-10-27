@@ -312,7 +312,7 @@ Jets and helicopter, picked by Josiah Longfield on the Dead Air Aircraft page, c
 | aircraft/hook | black_hawk_t44_var_sfx_parking_brake_MKH418S (Pole Position - Black Hawk UH-60M) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
 | aircraft/crash | [R30-01-Large Explosions with Debris.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483292/) | craigsmith | Freesound, CC0 1.0 |
 | aircraft/canopy | [R02-48-Jet Fighter Canopy Closing.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/479492/) | craigsmith | Freesound, CC0 1.0 |
-| amb/distant/4 | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
+| world/siren | [Alarm horn attention bombardier aircraft nuclear ww2 raid siren by Nimlos](https://freesound.org/people/Nimlos/sounds/578987/) | Nimlos | Freesound, CC0 1.0 |
 
 ## Bullet strikes
 
@@ -333,3 +333,14 @@ Picked by Josiah Longfield on the Dead Air Bullet Strikes page, cut into single 
 | weapon.bullet.ricochet | [bullet ricochet.wav by aust_paul](https://freesound.org/people/aust_paul/sounds/30932/) | aust_paul | Freesound, CC0 1.0 |
 | weapon.bullet.impact.nearby | [VisceralBulletImpacts.wav by u1769092](https://freesound.org/people/u1769092/sounds/423301/) | u1769092 | Freesound, CC0 1.0 |
 | weapon.casing.shotgun | [empty shotgun shells/casings hitting ground bouncing by Metrolynn](https://freesound.org/people/Metrolynn/sounds/620929/) | Metrolynn | Freesound, CC0 1.0 |
+
+## Flybys
+
+Jets and helicopters crossing the map (world events), picked by Josiah Longfield on the Dead Air Aircraft page, lined up and faded by tools/audio/build_flyby_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| world.flyby.jet 1 | Jet,Fighter,FA-18C,Hornet,Medium Distant,Climb,Right to High,Crest and Hold,Kill Engine,191 (Airborne Sound - Attack Aircraft Maneuvers) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| world.flyby.jet 2 | Jet,Fighter,F-22,Raptor,By,Slow,Crackle (Airborne Sound - Variety 1 Sound Effects) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.jet 3 | MiG15UTI_Ext_Flyby_100m_XY (Bert Foley - MiG-15 UTI) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| world.flyby.heli 1 | Helicopter - Military - FLY - By - Overhead - ORTF - MKH8040 (Pole Position - The Aircraft Ambient Library) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |

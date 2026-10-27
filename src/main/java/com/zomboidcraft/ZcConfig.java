@@ -424,6 +424,10 @@ public final class ZcConfig {
         public double heliTopSpeed = 250;
         /** Aircraft are found with little fuel, a flat battery and worn out, and burn fuel as they fly; off = ready to fly. */
         public boolean aircraftService = true;
+        /** Air-raid sirens, far-off explosions and jets and helicopters crossing the map, heard by everyone (WorldEvents). */
+        public boolean worldEvents = true;
+        /** About how many minutes between those events. */
+        public double worldEventMinutes = 10;
         /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
