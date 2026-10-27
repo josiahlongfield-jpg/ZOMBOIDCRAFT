@@ -1017,7 +1017,8 @@ final class Railway {
         }
         smoothModes(mode, Track.GROUND, 24);
         smoothModes(mode, Track.VIADUCT, 10);
-        Track track = new Track(id, name, spec.kind, xs, zs, ys, mode, street, spec.kind == Track.Kind.SUBWAY ? 12 : 24);
+        // reach: how far out the line lays anything (the subway as far as Union Station's passage under the sidewalk)
+        Track track = new Track(id, name, spec.kind, xs, zs, ys, mode, street, spec.kind == Track.Kind.SUBWAY ? 16 : 24);
         // the stops in the order the trains reach them
         platforms.sort((a, b) -> Integer.compare(a[1], b[1]));
         for (int[] pl : platforms) {

@@ -1103,6 +1103,8 @@ import stadium  # noqa: E402
 stadium.register(sys.modules[__name__])
 import railway  # noqa: E402
 railway.register(sys.modules[__name__])
+import unionstation  # noqa: E402
+unionstation.register(sys.modules[__name__])
 
 
 def build(name):

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "us_marble_b": "zomboidcraft:block/city/us_marble_b",
+    "particle": "zomboidcraft:block/city/us_marble_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_marble_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#us_marble_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_marble_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#us_marble_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#us_marble_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_marble_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

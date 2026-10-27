@@ -28,6 +28,64 @@ public final class Builders {
             clearDoorways(v);
             clearGrass(v);
             clearTrees(v);
+            if (p.type != PlaceType.LANDMARK && county != null) {
+                clearFrontage(p, county, v);
+            }
+        }
+    }
+
+    /** How far out from a landmark's lot the street keeps no tree: its sidewalks and the near lane. */
+    static final int FRONTAGE = 10;
+
+    /**
+     * A landmark stands clear: the street trees of the places round it (a downtown piece's
+     * sidewalk pits) are left out within {@link #FRONTAGE} of its lot, whole, trunk and crown,
+     * so the station's front and the bridge to the el aren't lost behind a row of maples. Each
+     * leaf or limb goes with the trunk nearest it, so a tree further off keeps all its crown.
+     */
+    static void clearFrontage(Place p, County county, Voxels v) {
+        List<int[]> boxes = new ArrayList<>();
+        for (Place o : county.placesNear(p.x0, p.z0, p.x1, p.z1, FRONTAGE)) {
+            if (o.type == PlaceType.LANDMARK && o != p) {
+                boxes.add(new int[] {o.x0 - FRONTAGE - p.x0, o.z0 - FRONTAGE - p.z0, o.x1 + FRONTAGE - p.x0, o.z1 + FRONTAGE - p.z0});
+            }
+        }
+        if (boxes.isEmpty()) {
+            return;
+        }
+        List<String> pal = v.palette();
+        List<int[]> trunks = new ArrayList<>();
+        List<int[]> wood = new ArrayList<>();
+        v.forEach((x, y, z, id) -> {
+            if (id == 0 || y < 1 || !pal.get(id).startsWith("tree_")) {
+                return;
+            }
+            wood.add(new int[] {x, y, z});
+            String b = pal.get(id), under = v.get(x, y - 1, z);
+            if (!b.contains("_leaves") && !b.contains("_limb") && (under == null || !under.startsWith("tree_"))) {
+                boolean gone = false;
+                for (int[] r : boxes) {
+                    gone |= x >= r[0] && x <= r[2] && z >= r[1] && z <= r[3];
+                }
+                trunks.add(new int[] {x, z, gone ? 1 : 0});
+            }
+        });
+        if (trunks.stream().noneMatch(t -> t[2] == 1)) {
+            return;
+        }
+        for (int[] c : wood) {
+            int[] best = null;
+            double near = 81;
+            for (int[] t : trunks) {
+                double dx = t[0] - c[0], dz = t[1] - c[2], dd = dx * dx + dz * dz;
+                if (dd < near) {
+                    near = dd;
+                    best = t;
+                }
+            }
+            if (best != null && best[2] == 1) {
+                v.set(c[0], c[1], c[2], "air");
+            }
         }
     }
 

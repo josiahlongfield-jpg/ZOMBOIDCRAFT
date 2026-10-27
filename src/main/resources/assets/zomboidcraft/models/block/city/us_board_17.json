@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "us_board_17": "zomboidcraft:block/city/us_board_17",
+    "us_flap_back": "zomboidcraft:block/city/us_flap_back",
+    "particle": "zomboidcraft:block/city/us_board_17"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_board_17"
+        },
+        "south": {
+          "texture": "#us_flap_back",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_flap_back",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#us_flap_back",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#us_flap_back",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_flap_back",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

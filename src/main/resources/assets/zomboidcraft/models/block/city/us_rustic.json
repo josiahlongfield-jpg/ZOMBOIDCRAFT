@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "us_rustic": "zomboidcraft:block/city/us_rustic",
+    "particle": "zomboidcraft:block/city/us_rustic"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_rustic",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#us_rustic",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_rustic",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#us_rustic",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#us_rustic",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_rustic",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

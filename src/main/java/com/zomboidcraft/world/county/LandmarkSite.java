@@ -3,12 +3,15 @@ package com.zomboidcraft.world.county;
 import com.zomboidcraft.world.city.BlockSink;
 
 /**
- * A city landmark on a lot of its own. For now the one kind:
+ * A city landmark on a lot of its own:
  * <ul>
  * <li>stadium: Grayhaven Stadium ({@link Stadium}) in the middle of its plaza, an avenue in from
  * each side to its gates, the parking lots round it in rows under their light poles, still half
  * full of the cars people drove to the shelter, the ones that got no further left across the
  * avenues.</li>
+ * <li>union_station: Grayhaven Union Station ({@link UnionStation}), the railway's terminal and the
+ * change to the subway, its front to the street the subway runs under and its side to the el,
+ * the bridge to the el's platform and the passage to the subway's (RailGen) coming in to it.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -21,6 +24,11 @@ final class LandmarkSite extends Site {
 
     @Override
     void build() {
+        if (variant("union_station")) {
+            // the lot runs along the el's street on its west: the front to the south, x = 0 the strip by the el
+            new UnionStation(lot(0, 0, w, d, 2), rng).build();
+            return;
+        }
         kit = new Kit(out, rng, w, d);
         stadium();
     }
