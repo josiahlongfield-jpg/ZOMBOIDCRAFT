@@ -120,7 +120,10 @@ public final class FarFlybys {
                 f.car.setLook(e.model(), "usable");
             }
             CarProp car = f.car;
-            car.flyby(at, e.velocity(), e.kind() == WorldEvents.Kind.JET && (e.start() & 3) == 0);
+            // keep last tick's attitude to turn smoothly from (an air strike banks and dives)
+            org.joml.Quaternionf was = new org.joml.Quaternionf(car.flight().q);
+            e.place(car, (now - e.start()) / 20.0);
+            car.flight().qO.set(was);
             car.rotorO = car.rotor;
             car.rotor += car.flight().rotorTurns() * Math.PI * 2 * 0.05;
             // past PROXY anything solid in the loaded world between here and there hides it (closer, the depth test does)

@@ -409,3 +409,12 @@ Layered, pitched and filtered by tools/audio/build_harvestman_sounds.py; its cli
 | creature.harvestman.tap | Tallons_Concrete_Gallop-3-Step (Joshua Reinhardt - Ultimate Creature Footstep and Movement Library) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
 | creature.harvestman.death, creature.harvestman.leg_off | CREAMnstr_Designed Sea Beast Creature Pain Intense Yell Long 04_ESM_HC4 (Epic Stock Media - Humanoid Creatures Vol 4 - Monstrous and Undead Creature Vocalization Sound Sets) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
 | creature.harvestman.hurt | Monster_Struggle_Grunt_240 (SoundBits -  Screams & Shouts 2 - Monsters) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+
+## Air strikes
+
+The jets' cannon and the Apache's chain gun on their strike runs (world events), built by tools/audio/build_strike_sounds.py from one real 30 mm cannon shot. The bombs use the world explosion sounds. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| world.strike.cannon | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 52 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| world.strike.chaingun | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 10.4 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |

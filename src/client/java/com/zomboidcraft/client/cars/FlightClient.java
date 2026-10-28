@@ -47,6 +47,7 @@ public final class FlightClient {
         FlightHud.register();
         FarFlybys.register();     // before the lights, which light the far ones it draws
         AirLights.register();
+        AirStrikeFx.register();
         com.zomboidcraft.client.interact.Interactables.finder(FlightClient::cockpitDot);
     }
 

@@ -1691,13 +1691,18 @@ public class CarProp extends Entity {
      * (or in afterburner), so everyone's game draws it flying and plays its engines as for any aircraft.
      */
     public void flyby(Vec3 at, Vec3 velocity, boolean afterburner) {
+        double horizontal = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+        float yaw = (float) Math.toDegrees(Math.atan2(-velocity.x, velocity.z));
+        float nose = helicopter() ? -7 : (float) Math.toDegrees(Math.atan2(velocity.y, horizontal));
+        flyby(at, velocity, yaw, nose, 0, afterburner);
+    }
+
+    /** The same, its attitude given outright (an air strike's dive, turns and the helicopter's hover, WorldEvents.Event.place). */
+    public void flyby(Vec3 at, Vec3 velocity, float yaw, float nose, float bank, boolean afterburner) {
         flyby = true;
         noPhysics = true;
         Flight f = flight();
-        double horizontal = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-        float yaw = (float) Math.toDegrees(Math.atan2(-velocity.x, velocity.z));
-        float nose = f.kind == Flight.Kind.HELI ? -7 : (float) Math.toDegrees(Math.atan2(velocity.y, horizontal));
-        f.set(yaw, nose, 0);
+        f.set(yaw, nose, bank);
         f.vel = velocity;
         f.grounded = false;
         f.rpm = 1;
