@@ -78,6 +78,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();
+        com.zomboidcraft.creature.Harvestmen.register();
         com.zomboidcraft.combat.StuckBolts.register();
         com.zomboidcraft.combat.Stamina.register();
         com.zomboidcraft.combat.GunRaise.register();
