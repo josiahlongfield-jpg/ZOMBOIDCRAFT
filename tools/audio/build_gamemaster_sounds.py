@@ -101,7 +101,8 @@ PICKS = {
 # Heavier or harsher than the take on its own: played lower (pitch < 1) and, for the sawn-off, with a touch of drive
 EXTRA = {"weapon.magnum.shot": {"pitch": 0.88}, "weapon.sawn_off.shot": {"pitch": 0.94}}
 DRIVE = {"weapon.sawn_off.shot": "acrusher=level_in=1.6:level_out=0.7:bits=10:mix=0.25:mode=log,"}
-# Far-off shots made from the near one: muffled, echoing off buildings, quieter
+# Far-off shots made from the near one: muffled and quieter, smeared by close reflections. Every reflection is under
+# 60 ms so it blurs into the one report; longer echoes (once 140/330/610 ms) were heard as the shot firing three times
 DISTANT = {"weapon.rifle.shot_distant": "weapon.rifle.shot", "weapon.pistol.shot_distant": "weapon.pistol.shot",
            "weapon.hunting_rifle.shot_distant": "weapon.hunting_rifle.shot",
            "weapon.hunting_rifle.shot_suppressed_distant": "weapon.hunting_rifle.shot_suppressed",
@@ -109,7 +110,7 @@ DISTANT = {"weapon.rifle.shot_distant": "weapon.rifle.shot", "weapon.pistol.shot
            "weapon.rimfire.shot_distant": "weapon.rimfire.shot", "weapon.smg.shot_distant": "weapon.smg.shot",
            "weapon.sawn_off.shot_distant": "weapon.sawn_off.shot", "weapon.magnum.shot_distant": "weapon.magnum.shot",
            "weapon.lever_action.shot_distant": "weapon.lever_action.shot"}
-DISTANT_AF = "lowpass=f=1100,aecho=0.8:0.6:140|330|610:0.4|0.28|0.16,apad=pad_dur=0.8"
+DISTANT_AF = "lowpass=f=1100,aecho=0.8:0.7:17|29|43|58:0.32|0.25|0.18|0.12,apad=pad_dur=0.8"
 # The SMG and .22 picks are single shots cut from an automatic string (50-90 ms, no room): each gets its own recording's
 # tail, as the pack means them to be played, so a shot rings out instead of ticking (tail level in dB)
 TAILS = {"weapon.smg.shot": ("gun", "gun_submachine_auto_shot_00_tail_only_01", 0.0),
