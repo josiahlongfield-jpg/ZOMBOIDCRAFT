@@ -351,7 +351,11 @@ public final class Shops {
             put(x0, 1, z, caseBlock + "[facing=west]");
             put(x1, 1, z, caseBlock + "[facing=east]");
         }
-        put((x0 + x1) / 2, 1, back - 1, "store_register[facing=north]");
+        int till = (x0 + x1) / 2;
+        while (backDoors.contains(till)) {
+            till++;  // never in front of a back room's door
+        }
+        put(till, 1, back - 1, "store_register[facing=north]");
         // a big shop keeps more stock behind the counter: shelving islands, with room to walk
         for (int x = x0 + 3; x <= x1 - 3; x += 3) {
             for (int z = z0 + 3; z <= back - 4; z++) {

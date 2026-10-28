@@ -222,6 +222,10 @@ final class Layout {
             // the trains run through the station's top floor; the subway passes its front
             return lot(s, PlaceType.LANDMARK, "union_station", 2, 2, h);
         }
+        if (s.id().equals("mall")) {
+            // the galleria: four blocks along the front, three deep, the car park and decks round it
+            return lot(s, PlaceType.LANDMARK, "mall", 4, 3, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);

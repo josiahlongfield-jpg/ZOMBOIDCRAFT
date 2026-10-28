@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_fascia": "zomboidcraft:block/city/ml_fascia",
+    "ml_pylon_0_on": "zomboidcraft:block/city/ml_pylon_0_on",
+    "particle": "zomboidcraft:block/city/ml_pylon_0_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_pylon_0_on"
+        },
+        "south": {
+          "texture": "#ml_fascia",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_fascia",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_fascia",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
