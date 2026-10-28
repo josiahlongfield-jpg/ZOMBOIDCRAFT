@@ -529,9 +529,11 @@ public final class HarvestmanMind {
         }
     }
 
+    /** Is it at p: within r along its surface, and on the same face (not just under or over it)? */
     private boolean near(Vec3 p, double r) {
         Vec3 to = p.subtract(h.centre());
-        return to.subtract(h.up().scale(to.dot(h.up()))).length() < r;
+        double off = to.dot(h.up());
+        return off < HarvestmanEntity.REACH_UP && off > -HarvestmanEntity.REACH_OFF && to.subtract(h.up().scale(off)).length() < r;
     }
 
     // stalking: from the dark, out of their sight, keeping its distance; it freezes when looked at, and slips away if

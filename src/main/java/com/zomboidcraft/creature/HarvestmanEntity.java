@@ -111,6 +111,13 @@ public class HarvestmanEntity extends Mob {
     Vec3 surf = new Vec3(0, 1, 0);
     private Vec3 pivotAt, pivotFrom, pivotTo;
     private double pivotT = -1;
+    /** The way it's making for a wall (to get up to a ceiling, or down off one), and until when. */
+    private Vec3 wallDir, wallFace;
+    /**
+     * A goal is on the face it holds when it's no more than this far out from its body (a spot a block off the face,
+     * a body lying under it) nor this far beyond it on the far side of the face; otherwise it's on another face.
+     */
+    static final double REACH_OFF = 2.8, REACH_UP = 0.8;
     private Vec3 lastPos = Vec3.ZERO;
     private int stuck;
     int stuckTicks;
@@ -284,7 +291,7 @@ public class HarvestmanEntity extends Mob {
         double dt = 0.05;
         Vec3 c = centre();
         // nothing under it any more (moved, or what it held was broken away): it finds a hold again, or falls
-        if (!attached || !dropping && pivotT < 0 && cast(c, c.subtract(surf.scale(STAND + 1.6))).getType() == HitResult.Type.MISS) {
+        if (!attached || !dropping && pivotT < 0 && cast(c, c.subtract(surf.scale(STAND + 3.5))).getType() == HitResult.Type.MISS) {
             attach(c);
         }
         // on a ceiling and wanting the floor: it lets go and drops
@@ -306,6 +313,21 @@ public class HarvestmanEntity extends Mob {
             if (dist > 1e-3) {
                 dir = t.scale(1 / dist);
             }
+        }
+        // what it wants is out across from the face it holds (a ceiling over its floor, the floor under its ceiling): it
+        // makes for the nearest wall. (Something behind its face, over an edge, it gets to by going round the edge.)
+        if (!surf.equals(wallFace)) {
+            wallDir = null;     // on a new face: it looks again
+        }
+        double off = goal == null ? 0 : goal.subtract(c).dot(surf);
+        if (goal != null && off > REACH_UP && (dist < 3 || wallDir != null)) {
+            Vec3 w = wallward(c, dist > 1e-3 ? dir : fwd);
+            if (w != null) {
+                dir = w;
+                dist = Math.max(dist, 4);
+            }
+        } else {
+            wallDir = null;
         }
         dir = dir.subtract(surf.scale(dir.dot(surf)));
         dir = dir.lengthSqr() < 1e-6 ? fwd : dir.normalize();
@@ -402,6 +424,35 @@ public class HarvestmanEntity extends Mob {
         lastPos = position();
     }
 
+    /**
+     * The way to the nearest wall across the face it holds (leaning toward the way it would go anyway), kept until it's
+     * on another face so it doesn't dither; null with none in sight.
+     */
+    private Vec3 wallward(Vec3 c, Vec3 lean) {
+        if (wallDir != null) {
+            return wallDir;
+        }
+        Vec3 a = Math.abs(surf.y) < 0.9 ? new Vec3(0, 1, 0) : new Vec3(1, 0, 0);
+        Vec3 e1 = a.subtract(surf.scale(a.dot(surf))).normalize(), e2 = surf.cross(e1);
+        Vec3 best = null;
+        double bestScore = 1e9;
+        for (int k = 0; k < 8; k++) {
+            double ang = k * Math.PI / 4;
+            Vec3 d = e1.scale(Math.cos(ang)).add(e2.scale(Math.sin(ang)));
+            BlockHitResult hit = cast(c, c.add(d.scale(16)));
+            if (hit.getType() != HitResult.Type.MISS && normal(hit).dot(d) < -0.5) {
+                double score = hit.getLocation().distanceTo(c) - 3 * d.dot(lean);
+                if (score < bestScore) {
+                    bestScore = score;
+                    best = d;
+                }
+            }
+        }
+        wallDir = best;
+        wallFace = surf;
+        return best;
+    }
+
     /** How far its body wants to be off its surface now: lower under a low ceiling, here or just ahead (a doorway). */
     private double height(Vec3 c, Vec3 dir) {
         double want = pose() == FEED || pose() == HOLD ? FEEDING : Mth.lerp(HarvestmanLegs.floorness(surf), CLING, STAND);
@@ -421,6 +472,14 @@ public class HarvestmanEntity extends Mob {
     private void attach(Vec3 c) {
         double best = STAND + 1.6;
         Vec3 face = null;
+        // still in reach of the face it held (stepping down a ledge): it keeps it
+        if (attached) {
+            BlockHitResult held = cast(c, c.subtract(surf.scale(STAND + 3.5)));
+            if (held.getType() != HitResult.Type.MISS && normal(held).equals(surf)) {
+                pivotT = -1;
+                return;
+            }
+        }
         for (Direction d : Direction.values()) {
             Vec3 n = new Vec3(d.getStepX(), d.getStepY(), d.getStepZ());
             BlockHitResult hit = cast(c, c.subtract(n.scale(STAND + 1.6)));
@@ -463,18 +522,23 @@ public class HarvestmanEntity extends Mob {
         if (wrap.getType() != HitResult.Type.MISS && held.getType() != HitResult.Type.MISS && normal(wrap).dot(dir) > 0.5
                 && !(wantFloor && onFloor && goal != null && goal.y < c.y - 6 && floorBelow(next, 14))) {
             Vec3 n1 = normal(wrap), pf = held.getLocation(), pw = wrap.getLocation();
-            // the edge: where the two faces meet, beside it
-            pivotAt = c.subtract(surf.scale(surf.dot(c.subtract(pf)))).subtract(n1.scale(n1.dot(c.subtract(pw))));
+            // the edge: where the two faces meet, beside it; it swings round a line just past it, so it ends up over the
+            // new face, not balanced on the corner
+            pivotAt = c.subtract(surf.scale(surf.dot(c.subtract(pf)))).subtract(n1.scale(n1.dot(c.subtract(pw))))
+                    .subtract(surf.scale(0.3));
             pivotFrom = surf;
             pivotTo = n1;
             pivotT = 0;
             return pivotAt.add(surf.scale(want));
         }
         // off a floor's edge on purpose, when what it wants is below and there's ground to land on
-        if (onFloor && goal != null && goal.y < c.y - 1.5 && floorBelow(next, 16)) {
+        // (it springs out clear of the edge, so its whole body drops past it)
+        Vec3 out = next.add(dir.scale(1.4));
+        if (onFloor && goal != null && goal.y < c.y - 1.5 && floorBelow(out, 16) && fits(out, dir)) {
             dropping = true;
+            fwd = dir;
             level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.6f, 0.9f);
-            return next;
+            return out;
         }
         return null;
     }

@@ -174,6 +174,15 @@ public final class HarvestmanLegs {
             n = normal(hit);
         } else {
             hit = cast(level, e, P0.add(up.scale(1.5)), P0.subtract(up.scale(2.5)));
+            Vec3 under = fr.o().subtract(up.scale(h + 0.6));
+            if (hit.getType() == HitResult.Type.MISS) {
+                // past an outer edge: the point hooks round on to the face under the edge
+                hit = cast(level, e, P0.subtract(up.scale(0.6)), under);
+            }
+            if (hit.getType() == HitResult.Type.MISS) {
+                // over the top of what it's climbing: it reaches down and in for the face beyond
+                hit = cast(level, e, P0.add(up.scale(1.0)), fr.o().subtract(up.scale(h)));
+            }
             found = hit.getType() != HitResult.Type.MISS;
             p = found ? hit.getLocation() : P0;
             n = found ? normal(hit) : up;
