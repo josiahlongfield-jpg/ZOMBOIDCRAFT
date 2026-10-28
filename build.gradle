@@ -51,6 +51,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+// every thread's blocks together pass the plain zip format's 65535 entries: the jar is written as zip64
+tasks.withType(Zip).configureEach {
+    zip64 = true
+}
+
 // In-game UI test (./gradlew runClientGameTest -Puitest): opens the kit screen in a real client and clicks it.
 if (project.hasProperty('uitest')) {
     fabricApi {
