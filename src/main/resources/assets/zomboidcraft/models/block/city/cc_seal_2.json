@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_seal_2": "zomboidcraft:block/city/cc_seal_2",
+    "particle": "zomboidcraft:block/city/cc_seal_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_seal_2"
+        },
+        "south": {
+          "texture": "#cc_seal_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_seal_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_seal_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_seal_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_seal_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

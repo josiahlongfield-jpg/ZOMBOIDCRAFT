@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_corten": "zomboidcraft:block/city/cc_corten",
+    "particle": "zomboidcraft:block/city/cc_corten"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_corten"
+        },
+        "south": {
+          "texture": "#cc_corten"
+        },
+        "east": {
+          "texture": "#cc_corten",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_corten",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_corten",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_corten",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

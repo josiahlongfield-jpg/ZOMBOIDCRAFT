@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_name_hall_4": {
+      "sprite": "zomboidcraft:block/city/cc_name_hall_4",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/cc_name_hall_4"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_name_hall_4"
+        },
+        "south": {
+          "texture": "#cc_name_hall_4",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_name_hall_4",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_name_hall_4",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_name_hall_4",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_name_hall_4",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

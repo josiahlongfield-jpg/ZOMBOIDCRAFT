@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_name_plaza_8": "zomboidcraft:block/city/cc_name_plaza_8",
+    "particle": "zomboidcraft:block/city/cc_name_plaza_8"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_name_plaza_8"
+        },
+        "south": {
+          "texture": "#cc_name_plaza_8",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_name_plaza_8",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_name_plaza_8",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_name_plaza_8",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_name_plaza_8",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

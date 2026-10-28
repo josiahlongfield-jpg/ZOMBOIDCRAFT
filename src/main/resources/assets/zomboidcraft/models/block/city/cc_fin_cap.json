@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_precast": "zomboidcraft:block/city/cc_precast",
+    "cc_precast_b": "zomboidcraft:block/city/cc_precast_b",
+    "particle": "zomboidcraft:block/city/cc_precast"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        3
+      ],
+      "to": [
+        10,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast"
+        },
+        "down": {
+          "texture": "#cc_precast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        8
+      ],
+      "to": [
+        10,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast"
+        },
+        "down": {
+          "texture": "#cc_precast"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        2
+      ],
+      "to": [
+        11,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast_b"
+        },
+        "south": {
+          "texture": "#cc_precast_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast_b"
+        },
+        "west": {
+          "texture": "#cc_precast_b"
+        },
+        "up": {
+          "texture": "#cc_precast_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_precast_b"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_proclamation": "zomboidcraft:block/city/cc_proclamation",
+    "particle": "zomboidcraft:block/city/cc_proclamation"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.7
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_proclamation"
+        },
+        "south": {
+          "texture": "#cc_proclamation",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_proclamation",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_proclamation",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_proclamation",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_proclamation",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_sgn_cashier_0": "zomboidcraft:block/city/cc_sgn_cashier_0",
+    "particle": "zomboidcraft:block/city/cc_sgn_cashier_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_sgn_cashier_0"
+        },
+        "south": {
+          "texture": "#cc_sgn_cashier_0",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_sgn_cashier_0",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_sgn_cashier_0",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_sgn_cashier_0",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_sgn_cashier_0",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
