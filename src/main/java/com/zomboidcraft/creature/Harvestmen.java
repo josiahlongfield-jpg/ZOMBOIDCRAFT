@@ -133,8 +133,13 @@ public final class Harvestmen {
             ctx.getSource().sendFailure(Component.literal("No Harvestman here (/zc harvestman makes one)"));
             return 0;
         }
-        near.mind.force(plan);
-        ctx.getSource().sendSuccess(() -> Component.literal("The nearest Harvestman will " + name + " next"), false);
+        String why = near.mind.force(ctx.getSource().getLevel(), plan);
+        if (why != null) {
+            ctx.getSource().sendFailure(Component.literal("The nearest Harvestman can't " + name + ": " + why));
+            return 0;
+        }
+        String doing = near.mind.doing();
+        ctx.getSource().sendSuccess(() -> Component.literal("The nearest Harvestman is " + doing), false);
         return 1;
     }
 
