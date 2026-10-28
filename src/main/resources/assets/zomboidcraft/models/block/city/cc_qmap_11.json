@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_qmap_11": "zomboidcraft:block/city/cc_qmap_11",
+    "particle": "zomboidcraft:block/city/cc_qmap_11"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_qmap_11"
+        },
+        "south": {
+          "texture": "#cc_qmap_11",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_qmap_11",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_qmap_11",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_qmap_11",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_qmap_11",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

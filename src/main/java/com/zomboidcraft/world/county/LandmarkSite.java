@@ -21,6 +21,8 @@ import com.zomboidcraft.world.city.Placer;
  * ambulance bay, the white ward tower over it, the service wing and the staff lot behind.</li>
  * <li>university: Grayhaven State University ({@link University}), its halls round the quad
  * behind the gate, Old Main's clock tower closing the south end, the dorm tower by the gate.</li>
+ * <li>civic: the Grayhaven Civic Center ({@link CivicCentre}), City Hall's tower behind its plaza
+ * and reflecting pool, the council chamber's drum beside it, the relief station's tents.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -51,6 +53,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("university")) {
             new University(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("civic")) {
+            new CivicCentre(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         kit = new Kit(out, rng, w, d);

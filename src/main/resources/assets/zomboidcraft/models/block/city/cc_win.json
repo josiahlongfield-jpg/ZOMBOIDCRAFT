@@ -1,0 +1,321 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_glass": {
+      "sprite": "zomboidcraft:block/city/cc_glass",
+      "force_translucent": true
+    },
+    "cc_precast": "zomboidcraft:block/city/cc_precast",
+    "cc_precast_b": "zomboidcraft:block/city/cc_precast_b",
+    "cc_spandrel": "zomboidcraft:block/city/cc_spandrel",
+    "particle": "zomboidcraft:block/city/cc_precast"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        0.75,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_precast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_precast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15.25,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_precast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        15,
+        0
+      ],
+      "to": [
+        15.25,
+        16,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cc_precast"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_precast"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        0,
+        0
+      ],
+      "to": [
+        15.25,
+        1.5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cc_precast_b"
+        },
+        "east": {
+          "texture": "#cc_precast_b"
+        },
+        "west": {
+          "texture": "#cc_precast_b"
+        },
+        "up": {
+          "texture": "#cc_precast_b"
+        },
+        "down": {
+          "texture": "#cc_precast_b",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        1.5,
+        5.6
+      ],
+      "to": [
+        15.25,
+        2.2,
+        6.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_spandrel"
+        },
+        "south": {
+          "texture": "#cc_spandrel"
+        },
+        "east": {
+          "texture": "#cc_spandrel"
+        },
+        "west": {
+          "texture": "#cc_spandrel"
+        },
+        "up": {
+          "texture": "#cc_spandrel"
+        },
+        "down": {
+          "texture": "#cc_spandrel"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        14.4,
+        5.6
+      ],
+      "to": [
+        15.25,
+        15,
+        6.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_spandrel"
+        },
+        "south": {
+          "texture": "#cc_spandrel"
+        },
+        "east": {
+          "texture": "#cc_spandrel"
+        },
+        "west": {
+          "texture": "#cc_spandrel"
+        },
+        "up": {
+          "texture": "#cc_spandrel"
+        },
+        "down": {
+          "texture": "#cc_spandrel"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        2.2,
+        6
+      ],
+      "to": [
+        15.25,
+        14.4,
+        6.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_glass"
+        },
+        "south": {
+          "texture": "#cc_glass"
+        },
+        "east": {
+          "texture": "#cc_glass"
+        },
+        "west": {
+          "texture": "#cc_glass"
+        },
+        "up": {
+          "texture": "#cc_glass"
+        },
+        "down": {
+          "texture": "#cc_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        0,
+        6
+      ],
+      "to": [
+        15.25,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast"
+        },
+        "down": {
+          "texture": "#cc_precast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.75,
+        15,
+        6
+      ],
+      "to": [
+        15.25,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_precast"
+        },
+        "south": {
+          "texture": "#cc_precast",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_precast"
+        },
+        "west": {
+          "texture": "#cc_precast"
+        },
+        "up": {
+          "texture": "#cc_precast",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_precast"
+        }
+      }
+    }
+  ]
+}

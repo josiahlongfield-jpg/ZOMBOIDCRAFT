@@ -299262,6 +299262,4435 @@
      8.5
     ]
    ]
+  },
+  "cc_plaza": {
+   "tex": {
+    "up": "cc_plaza",
+    "side": "cc_plaza_band",
+    "down": "floor_concrete"
+   },
+   "title": "Granite Paving",
+   "sound": "STONE"
+  },
+  "cc_plaza_b": {
+   "tex": {
+    "up": "cc_plaza_b",
+    "side": "cc_plaza_band",
+    "down": "floor_concrete"
+   },
+   "title": "Granite Paving",
+   "sound": "STONE"
+  },
+  "cc_plaza_band": {
+   "tex": {
+    "up": "cc_plaza_band",
+    "side": "cc_plaza_band",
+    "down": "floor_concrete"
+   },
+   "title": "Granite Paving",
+   "sound": "STONE"
+  },
+  "cc_coping": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16,
+     {
+      "up": "cc_plaza_band",
+      "side": "cc_plaza_band",
+      "down": "floor_concrete"
+     }
+    ]
+   ],
+   "title": "Granite Coping",
+   "sound": "STONE",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16
+    ]
+   ]
+  },
+  "cc_precast": {
+   "tex": {
+    "all": "cc_precast"
+   },
+   "title": "Precast Concrete",
+   "sound": "STONE"
+  },
+  "cc_precast_b": {
+   "tex": {
+    "all": "cc_precast_b"
+   },
+   "title": "Precast Concrete",
+   "sound": "STONE"
+  },
+  "cc_spandrel": {
+   "tex": {
+    "all": "cc_spandrel"
+   },
+   "title": "Spandrel Panel",
+   "sound": "METAL"
+  },
+  "cc_travertine": {
+   "tex": {
+    "all": "cc_travertine"
+   },
+   "title": "Travertine",
+   "sound": "STONE"
+  },
+  "cc_corten": {
+   "tex": {
+    "all": "cc_corten"
+   },
+   "title": "Weathering Steel",
+   "sound": "METAL"
+  },
+  "cc_corten_plate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     6,
+     16,
+     16,
+     10,
+     "cc_corten"
+    ]
+   ],
+   "title": "Weathering Steel",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     6,
+     16,
+     16,
+     10
+    ]
+   ]
+  },
+  "cc_fin": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     3,
+     10,
+     16,
+     16,
+     "cc_precast"
+    ]
+   ],
+   "title": "Precast Fin",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     6,
+     0,
+     3,
+     10,
+     16,
+     16
+    ]
+   ]
+  },
+  "cc_fin_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     3,
+     10,
+     8,
+     16,
+     "cc_precast"
+    ],
+    [
+     6,
+     8,
+     8,
+     10,
+     13,
+     16,
+     "cc_precast"
+    ],
+    [
+     5,
+     13,
+     2,
+     11,
+     16,
+     16,
+     "cc_precast_b"
+    ]
+   ],
+   "title": "Precast Fin",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     6,
+     0,
+     3,
+     10,
+     16,
+     16
+    ]
+   ]
+  },
+  "cc_win": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     0.75,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     15.25,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     0,
+     15.25,
+     16,
+     6,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     0,
+     0,
+     15.25,
+     1.5,
+     6,
+     "cc_precast_b"
+    ],
+    [
+     0.75,
+     1.5,
+     5.6,
+     15.25,
+     2.2,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     14.4,
+     5.6,
+     15.25,
+     15,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     2.2,
+     6,
+     15.25,
+     14.4,
+     6.2,
+     "cc_glass"
+    ],
+    [
+     0.75,
+     0,
+     6,
+     15.25,
+     1.5,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     6,
+     15.25,
+     16,
+     16,
+     "cc_precast"
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cc_win_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     0.75,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     15.25,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     0,
+     15.25,
+     16,
+     6,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     0,
+     0,
+     15.25,
+     1.5,
+     6,
+     "cc_precast_b"
+    ],
+    [
+     0.75,
+     1.5,
+     5.6,
+     15.25,
+     2.2,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     14.4,
+     5.6,
+     15.25,
+     15,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     2.2,
+     6,
+     15.25,
+     14.4,
+     6.2,
+     "cc_glass_lit"
+    ],
+    [
+     0.75,
+     0,
+     6,
+     15.25,
+     1.5,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     6,
+     15.25,
+     16,
+     16,
+     "cc_precast"
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "light": 8,
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cc_win_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     0.75,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     15.25,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     0,
+     15.25,
+     16,
+     6,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     0,
+     0,
+     15.25,
+     1.5,
+     6,
+     "cc_precast_b"
+    ],
+    [
+     0.75,
+     1.5,
+     5.6,
+     15.25,
+     2.2,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     14.4,
+     5.6,
+     15.25,
+     15,
+     6.6,
+     "cc_spandrel"
+    ],
+    [
+     0.75,
+     2.2,
+     6,
+     15.25,
+     14.4,
+     6.2,
+     "cc_glass_broken"
+    ],
+    [
+     0.75,
+     0,
+     6,
+     15.25,
+     1.5,
+     16,
+     "cc_precast"
+    ],
+    [
+     0.75,
+     15,
+     6,
+     15.25,
+     16,
+     16,
+     "cc_precast"
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cc_flag_city": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     0,
+     7.25,
+     8.75,
+     16,
+     8.75,
+     "cv_brass"
+    ],
+    [
+     6,
+     0,
+     6,
+     10,
+     1.5,
+     10,
+     "cv_brass"
+    ],
+    [
+     8.75,
+     2,
+     7.5,
+     16,
+     15.5,
+     8.5,
+     "cc_flag_city"
+    ]
+   ],
+   "title": "Flag",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cc_flag_city_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     0,
+     7.25,
+     8.75,
+     8,
+     8.75,
+     "cv_brass"
+    ],
+    [
+     8.75,
+     0,
+     7.5,
+     16,
+     6,
+     8.5,
+     "cc_flag_city"
+    ],
+    [
+     6.5,
+     8,
+     6.5,
+     9.5,
+     11,
+     9.5,
+     "cv_brass"
+    ],
+    [
+     5,
+     10.5,
+     7.5,
+     11,
+     12,
+     8.5,
+     "cv_brass"
+    ]
+   ],
+   "title": "Flag",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cc_pole_state_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     0,
+     7.25,
+     8.75,
+     13,
+     8.75,
+     "ext_trim_white"
+    ],
+    [
+     6.5,
+     13,
+     6.5,
+     9.5,
+     16,
+     9.5,
+     "cv_brass"
+    ],
+    [
+     8.75,
+     1,
+     7.6,
+     32,
+     12.5,
+     8.4,
+     "cv_flag_state"
+    ]
+   ],
+   "title": "Flagpole",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cc_pole_city_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     0,
+     7.25,
+     8.75,
+     13,
+     8.75,
+     "ext_trim_white"
+    ],
+    [
+     6.5,
+     13,
+     6.5,
+     9.5,
+     16,
+     9.5,
+     "cv_brass"
+    ],
+    [
+     8.75,
+     1,
+     7.6,
+     32,
+     12.5,
+     8.4,
+     "cc_flag_city"
+    ]
+   ],
+   "title": "Flagpole",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "cc_ticket": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9,
+     "hs_steel"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11,
+     "hs_steel"
+    ],
+    [
+     5,
+     10,
+     6,
+     11,
+     15,
+     10,
+     "dn_vinyl_r"
+    ],
+    [
+     6.5,
+     11,
+     5.4,
+     9.5,
+     12,
+     6,
+     "home_white"
+    ]
+   ],
+   "title": "Take a Number",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     15,
+     11
+    ]
+   ]
+  },
+  "cc_serving": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     2,
+     13,
+     15,
+     14,
+     16,
+     {
+      "north": "cc_serving",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     7.5,
+     14,
+     14,
+     8.5,
+     16,
+     15,
+     "hs_steel"
+    ]
+   ],
+   "title": "Now Serving",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_serving_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     2,
+     13,
+     15,
+     14,
+     16,
+     {
+      "north": "cc_serving_on",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     7.5,
+     14,
+     14,
+     8.5,
+     16,
+     15,
+     "hs_steel"
+    ]
+   ],
+   "title": "Now Serving",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 6
+  },
+  "cc_detector_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     3,
+     2.5,
+     16,
+     13,
+     {
+      "all": "home_plastic_black",
+      "north": "bunk_grey"
+     }
+    ],
+    [
+     13.5,
+     0,
+     3,
+     16,
+     16,
+     13,
+     {
+      "all": "home_plastic_black",
+      "north": "bunk_grey"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     2.5,
+     1,
+     14,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     0,
+     2,
+     16,
+     1,
+     14,
+     "bunk_grey"
+    ]
+   ],
+   "title": "Metal Detector",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3,
+     2.5,
+     16,
+     13
+    ],
+    [
+     13.5,
+     0,
+     3,
+     16,
+     16,
+     13
+    ]
+   ]
+  },
+  "cc_detector_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     3,
+     2.5,
+     13,
+     13,
+     "home_plastic_black"
+    ],
+    [
+     13.5,
+     0,
+     3,
+     16,
+     13,
+     13,
+     "home_plastic_black"
+    ],
+    [
+     0,
+     13,
+     3,
+     16,
+     16,
+     13,
+     "bunk_grey"
+    ],
+    [
+     6,
+     13.5,
+     2.6,
+     10,
+     15.5,
+     3,
+     "dn_vinyl_r"
+    ]
+   ],
+   "title": "Metal Detector",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3,
+     2.5,
+     13,
+     13
+    ],
+    [
+     13.5,
+     0,
+     3,
+     16,
+     13,
+     13
+    ],
+    [
+     0,
+     13,
+     3,
+     16,
+     16,
+     13
+    ]
+   ]
+  },
+  "cc_xray": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     9,
+     15,
+     "bunk_grey"
+    ],
+    [
+     0,
+     9,
+     3,
+     16,
+     10,
+     13,
+     "home_plastic_black"
+    ],
+    [
+     3,
+     10,
+     2,
+     13,
+     16,
+     14,
+     {
+      "north": "hs_screen",
+      "side": "bunk_grey",
+      "up": "bunk_grey",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     3,
+     10,
+     1.6,
+     13,
+     15.5,
+     2,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Baggage X-Ray",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cc_model": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     9,
+     15,
+     {
+      "north": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     0,
+     9,
+     0,
+     16,
+     10,
+     16,
+     {
+      "up": "cc_model",
+      "side": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     2,
+     10,
+     2,
+     5,
+     14.0,
+     5,
+     "home_white"
+    ],
+    [
+     10,
+     10,
+     4,
+     13,
+     17.0,
+     7,
+     "home_white"
+    ],
+    [
+     4,
+     10,
+     10,
+     7,
+     12.5,
+     13,
+     "home_white"
+    ],
+    [
+     12,
+     10,
+     12,
+     15,
+     14.5,
+     15,
+     "home_white"
+    ],
+    [
+     0.2,
+     10,
+     0.2,
+     15.8,
+     16,
+     15.8,
+     "tx_glass"
+    ]
+   ],
+   "title": "City Model",
+   "sound": "WOOD",
+   "render": "translucent"
+  },
+  "cc_model_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     9,
+     15,
+     {
+      "north": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     0,
+     9,
+     0,
+     16,
+     10,
+     16,
+     {
+      "up": "cc_model",
+      "side": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     10,
+     4,
+     6,
+     15.5,
+     7,
+     "home_white"
+    ],
+    [
+     9,
+     10,
+     2,
+     12,
+     13.0,
+     5,
+     "home_white"
+    ],
+    [
+     11,
+     10,
+     10,
+     14,
+     18.0,
+     13,
+     "home_white"
+    ],
+    [
+     2,
+     10,
+     12,
+     5,
+     13.5,
+     15,
+     "home_white"
+    ],
+    [
+     0.2,
+     10,
+     0.2,
+     15.8,
+     16,
+     15.8,
+     "tx_glass"
+    ]
+   ],
+   "title": "City Model",
+   "sound": "WOOD",
+   "render": "translucent"
+  },
+  "cc_seal_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_0",
+      "south": "cc_seal_0",
+      "side": "cc_seal_0",
+      "up": "cc_seal_0",
+      "down": "cc_seal_0"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_1",
+      "south": "cc_seal_1",
+      "side": "cc_seal_1",
+      "up": "cc_seal_1",
+      "down": "cc_seal_1"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_2",
+      "south": "cc_seal_2",
+      "side": "cc_seal_2",
+      "up": "cc_seal_2",
+      "down": "cc_seal_2"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_3",
+      "south": "cc_seal_3",
+      "side": "cc_seal_3",
+      "up": "cc_seal_3",
+      "down": "cc_seal_3"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_4",
+      "south": "cc_seal_4",
+      "side": "cc_seal_4",
+      "up": "cc_seal_4",
+      "down": "cc_seal_4"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_5",
+      "south": "cc_seal_5",
+      "side": "cc_seal_5",
+      "up": "cc_seal_5",
+      "down": "cc_seal_5"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_6",
+      "south": "cc_seal_6",
+      "side": "cc_seal_6",
+      "up": "cc_seal_6",
+      "down": "cc_seal_6"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_7",
+      "south": "cc_seal_7",
+      "side": "cc_seal_7",
+      "up": "cc_seal_7",
+      "down": "cc_seal_7"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_seal_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_seal_8",
+      "south": "cc_seal_8",
+      "side": "cc_seal_8",
+      "up": "cc_seal_8",
+      "down": "cc_seal_8"
+     }
+    ]
+   ],
+   "title": "City Seal",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_0",
+      "south": "cc_name_hall_0",
+      "side": "cc_name_hall_0",
+      "up": "cc_name_hall_0",
+      "down": "cc_name_hall_0"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_1",
+      "south": "cc_name_hall_1",
+      "side": "cc_name_hall_1",
+      "up": "cc_name_hall_1",
+      "down": "cc_name_hall_1"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_2",
+      "south": "cc_name_hall_2",
+      "side": "cc_name_hall_2",
+      "up": "cc_name_hall_2",
+      "down": "cc_name_hall_2"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_3",
+      "south": "cc_name_hall_3",
+      "side": "cc_name_hall_3",
+      "up": "cc_name_hall_3",
+      "down": "cc_name_hall_3"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_4",
+      "south": "cc_name_hall_4",
+      "side": "cc_name_hall_4",
+      "up": "cc_name_hall_4",
+      "down": "cc_name_hall_4"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_5",
+      "south": "cc_name_hall_5",
+      "side": "cc_name_hall_5",
+      "up": "cc_name_hall_5",
+      "down": "cc_name_hall_5"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_6",
+      "south": "cc_name_hall_6",
+      "side": "cc_name_hall_6",
+      "up": "cc_name_hall_6",
+      "down": "cc_name_hall_6"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_7",
+      "south": "cc_name_hall_7",
+      "side": "cc_name_hall_7",
+      "up": "cc_name_hall_7",
+      "down": "cc_name_hall_7"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_8",
+      "south": "cc_name_hall_8",
+      "side": "cc_name_hall_8",
+      "up": "cc_name_hall_8",
+      "down": "cc_name_hall_8"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_9",
+      "south": "cc_name_hall_9",
+      "side": "cc_name_hall_9",
+      "up": "cc_name_hall_9",
+      "down": "cc_name_hall_9"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_10",
+      "south": "cc_name_hall_10",
+      "side": "cc_name_hall_10",
+      "up": "cc_name_hall_10",
+      "down": "cc_name_hall_10"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_11",
+      "south": "cc_name_hall_11",
+      "side": "cc_name_hall_11",
+      "up": "cc_name_hall_11",
+      "down": "cc_name_hall_11"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_12",
+      "south": "cc_name_hall_12",
+      "side": "cc_name_hall_12",
+      "up": "cc_name_hall_12",
+      "down": "cc_name_hall_12"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_13": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_13",
+      "south": "cc_name_hall_13",
+      "side": "cc_name_hall_13",
+      "up": "cc_name_hall_13",
+      "down": "cc_name_hall_13"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_14": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_14",
+      "south": "cc_name_hall_14",
+      "side": "cc_name_hall_14",
+      "up": "cc_name_hall_14",
+      "down": "cc_name_hall_14"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_hall_15": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_hall_15",
+      "south": "cc_name_hall_15",
+      "side": "cc_name_hall_15",
+      "up": "cc_name_hall_15",
+      "down": "cc_name_hall_15"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_0",
+      "south": "cc_name_council_0",
+      "side": "cc_name_council_0",
+      "up": "cc_name_council_0",
+      "down": "cc_name_council_0"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_1",
+      "south": "cc_name_council_1",
+      "side": "cc_name_council_1",
+      "up": "cc_name_council_1",
+      "down": "cc_name_council_1"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_2",
+      "south": "cc_name_council_2",
+      "side": "cc_name_council_2",
+      "up": "cc_name_council_2",
+      "down": "cc_name_council_2"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_3",
+      "south": "cc_name_council_3",
+      "side": "cc_name_council_3",
+      "up": "cc_name_council_3",
+      "down": "cc_name_council_3"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_4",
+      "south": "cc_name_council_4",
+      "side": "cc_name_council_4",
+      "up": "cc_name_council_4",
+      "down": "cc_name_council_4"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_5",
+      "south": "cc_name_council_5",
+      "side": "cc_name_council_5",
+      "up": "cc_name_council_5",
+      "down": "cc_name_council_5"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_6",
+      "south": "cc_name_council_6",
+      "side": "cc_name_council_6",
+      "up": "cc_name_council_6",
+      "down": "cc_name_council_6"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_7",
+      "south": "cc_name_council_7",
+      "side": "cc_name_council_7",
+      "up": "cc_name_council_7",
+      "down": "cc_name_council_7"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_8",
+      "south": "cc_name_council_8",
+      "side": "cc_name_council_8",
+      "up": "cc_name_council_8",
+      "down": "cc_name_council_8"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_council_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_council_9",
+      "south": "cc_name_council_9",
+      "side": "cc_name_council_9",
+      "up": "cc_name_council_9",
+      "down": "cc_name_council_9"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_0",
+      "south": "cc_name_plaza_0",
+      "side": "cc_name_plaza_0",
+      "up": "cc_name_plaza_0",
+      "down": "cc_name_plaza_0"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_1",
+      "south": "cc_name_plaza_1",
+      "side": "cc_name_plaza_1",
+      "up": "cc_name_plaza_1",
+      "down": "cc_name_plaza_1"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_2",
+      "south": "cc_name_plaza_2",
+      "side": "cc_name_plaza_2",
+      "up": "cc_name_plaza_2",
+      "down": "cc_name_plaza_2"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_3",
+      "south": "cc_name_plaza_3",
+      "side": "cc_name_plaza_3",
+      "up": "cc_name_plaza_3",
+      "down": "cc_name_plaza_3"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_4",
+      "south": "cc_name_plaza_4",
+      "side": "cc_name_plaza_4",
+      "up": "cc_name_plaza_4",
+      "down": "cc_name_plaza_4"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_5",
+      "south": "cc_name_plaza_5",
+      "side": "cc_name_plaza_5",
+      "up": "cc_name_plaza_5",
+      "down": "cc_name_plaza_5"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_6",
+      "south": "cc_name_plaza_6",
+      "side": "cc_name_plaza_6",
+      "up": "cc_name_plaza_6",
+      "down": "cc_name_plaza_6"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_7",
+      "south": "cc_name_plaza_7",
+      "side": "cc_name_plaza_7",
+      "up": "cc_name_plaza_7",
+      "down": "cc_name_plaza_7"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_8",
+      "south": "cc_name_plaza_8",
+      "side": "cc_name_plaza_8",
+      "up": "cc_name_plaza_8",
+      "down": "cc_name_plaza_8"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_9",
+      "south": "cc_name_plaza_9",
+      "side": "cc_name_plaza_9",
+      "up": "cc_name_plaza_9",
+      "down": "cc_name_plaza_9"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_10",
+      "south": "cc_name_plaza_10",
+      "side": "cc_name_plaza_10",
+      "up": "cc_name_plaza_10",
+      "down": "cc_name_plaza_10"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_name_plaza_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.0,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_name_plaza_11",
+      "south": "cc_name_plaza_11",
+      "side": "cc_name_plaza_11",
+      "up": "cc_name_plaza_11",
+      "down": "cc_name_plaza_11"
+     }
+    ]
+   ],
+   "title": "Lettering",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_clerk_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_clerk_0",
+      "south": "cc_sgn_clerk_0",
+      "side": "cc_sgn_clerk_0",
+      "up": "cc_sgn_clerk_0",
+      "down": "cc_sgn_clerk_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_clerk_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_clerk_1",
+      "south": "cc_sgn_clerk_1",
+      "side": "cc_sgn_clerk_1",
+      "up": "cc_sgn_clerk_1",
+      "down": "cc_sgn_clerk_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_tax_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_tax_0",
+      "south": "cc_sgn_tax_0",
+      "side": "cc_sgn_tax_0",
+      "up": "cc_sgn_tax_0",
+      "down": "cc_sgn_tax_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_tax_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_tax_1",
+      "south": "cc_sgn_tax_1",
+      "side": "cc_sgn_tax_1",
+      "up": "cc_sgn_tax_1",
+      "down": "cc_sgn_tax_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_cashier_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_cashier_0",
+      "south": "cc_sgn_cashier_0",
+      "side": "cc_sgn_cashier_0",
+      "up": "cc_sgn_cashier_0",
+      "down": "cc_sgn_cashier_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_cashier_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_cashier_1",
+      "south": "cc_sgn_cashier_1",
+      "side": "cc_sgn_cashier_1",
+      "up": "cc_sgn_cashier_1",
+      "down": "cc_sgn_cashier_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_info_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_info_0",
+      "south": "cc_sgn_info_0",
+      "side": "cc_sgn_info_0",
+      "up": "cc_sgn_info_0",
+      "down": "cc_sgn_info_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_info_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_info_1",
+      "south": "cc_sgn_info_1",
+      "side": "cc_sgn_info_1",
+      "up": "cc_sgn_info_1",
+      "down": "cc_sgn_info_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_security_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_security_0",
+      "south": "cc_sgn_security_0",
+      "side": "cc_sgn_security_0",
+      "up": "cc_sgn_security_0",
+      "down": "cc_sgn_security_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_security_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_security_1",
+      "south": "cc_sgn_security_1",
+      "side": "cc_sgn_security_1",
+      "up": "cc_sgn_security_1",
+      "down": "cc_sgn_security_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_mail_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_mail_0",
+      "south": "cc_sgn_mail_0",
+      "side": "cc_sgn_mail_0",
+      "up": "cc_sgn_mail_0",
+      "down": "cc_sgn_mail_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_mail_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_mail_1",
+      "south": "cc_sgn_mail_1",
+      "side": "cc_sgn_mail_1",
+      "up": "cc_sgn_mail_1",
+      "down": "cc_sgn_mail_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_permits_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_permits_0",
+      "south": "cc_sgn_permits_0",
+      "side": "cc_sgn_permits_0",
+      "up": "cc_sgn_permits_0",
+      "down": "cc_sgn_permits_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_permits_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_permits_1",
+      "south": "cc_sgn_permits_1",
+      "side": "cc_sgn_permits_1",
+      "up": "cc_sgn_permits_1",
+      "down": "cc_sgn_permits_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_assessor_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_assessor_0",
+      "south": "cc_sgn_assessor_0",
+      "side": "cc_sgn_assessor_0",
+      "up": "cc_sgn_assessor_0",
+      "down": "cc_sgn_assessor_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_assessor_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_assessor_1",
+      "south": "cc_sgn_assessor_1",
+      "side": "cc_sgn_assessor_1",
+      "up": "cc_sgn_assessor_1",
+      "down": "cc_sgn_assessor_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_records_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_records_0",
+      "south": "cc_sgn_records_0",
+      "side": "cc_sgn_records_0",
+      "up": "cc_sgn_records_0",
+      "down": "cc_sgn_records_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_records_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_records_1",
+      "south": "cc_sgn_records_1",
+      "side": "cc_sgn_records_1",
+      "up": "cc_sgn_records_1",
+      "down": "cc_sgn_records_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_works_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_works_0",
+      "south": "cc_sgn_works_0",
+      "side": "cc_sgn_works_0",
+      "up": "cc_sgn_works_0",
+      "down": "cc_sgn_works_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_works_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_works_1",
+      "south": "cc_sgn_works_1",
+      "side": "cc_sgn_works_1",
+      "up": "cc_sgn_works_1",
+      "down": "cc_sgn_works_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_planning_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_planning_0",
+      "south": "cc_sgn_planning_0",
+      "side": "cc_sgn_planning_0",
+      "up": "cc_sgn_planning_0",
+      "down": "cc_sgn_planning_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_planning_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_planning_1",
+      "south": "cc_sgn_planning_1",
+      "side": "cc_sgn_planning_1",
+      "up": "cc_sgn_planning_1",
+      "down": "cc_sgn_planning_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_data_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_data_0",
+      "south": "cc_sgn_data_0",
+      "side": "cc_sgn_data_0",
+      "up": "cc_sgn_data_0",
+      "down": "cc_sgn_data_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_data_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_data_1",
+      "south": "cc_sgn_data_1",
+      "side": "cc_sgn_data_1",
+      "up": "cc_sgn_data_1",
+      "down": "cc_sgn_data_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_cafeteria_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_cafeteria_0",
+      "south": "cc_sgn_cafeteria_0",
+      "side": "cc_sgn_cafeteria_0",
+      "up": "cc_sgn_cafeteria_0",
+      "down": "cc_sgn_cafeteria_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_cafeteria_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_cafeteria_1",
+      "south": "cc_sgn_cafeteria_1",
+      "side": "cc_sgn_cafeteria_1",
+      "up": "cc_sgn_cafeteria_1",
+      "down": "cc_sgn_cafeteria_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_personnel_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_personnel_0",
+      "south": "cc_sgn_personnel_0",
+      "side": "cc_sgn_personnel_0",
+      "up": "cc_sgn_personnel_0",
+      "down": "cc_sgn_personnel_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_personnel_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_personnel_1",
+      "south": "cc_sgn_personnel_1",
+      "side": "cc_sgn_personnel_1",
+      "up": "cc_sgn_personnel_1",
+      "down": "cc_sgn_personnel_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_attorney_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_attorney_0",
+      "south": "cc_sgn_attorney_0",
+      "side": "cc_sgn_attorney_0",
+      "up": "cc_sgn_attorney_0",
+      "down": "cc_sgn_attorney_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_attorney_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_attorney_1",
+      "south": "cc_sgn_attorney_1",
+      "side": "cc_sgn_attorney_1",
+      "up": "cc_sgn_attorney_1",
+      "down": "cc_sgn_attorney_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_mayor_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_mayor_0",
+      "south": "cc_sgn_mayor_0",
+      "side": "cc_sgn_mayor_0",
+      "up": "cc_sgn_mayor_0",
+      "down": "cc_sgn_mayor_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_mayor_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_mayor_1",
+      "south": "cc_sgn_mayor_1",
+      "side": "cc_sgn_mayor_1",
+      "up": "cc_sgn_mayor_1",
+      "down": "cc_sgn_mayor_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_eoc_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_eoc_0",
+      "south": "cc_sgn_eoc_0",
+      "side": "cc_sgn_eoc_0",
+      "up": "cc_sgn_eoc_0",
+      "down": "cc_sgn_eoc_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_eoc_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_eoc_1",
+      "south": "cc_sgn_eoc_1",
+      "side": "cc_sgn_eoc_1",
+      "up": "cc_sgn_eoc_1",
+      "down": "cc_sgn_eoc_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_council_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_council_0",
+      "south": "cc_sgn_council_0",
+      "side": "cc_sgn_council_0",
+      "up": "cc_sgn_council_0",
+      "down": "cc_sgn_council_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_council_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_council_1",
+      "south": "cc_sgn_council_1",
+      "side": "cc_sgn_council_1",
+      "up": "cc_sgn_council_1",
+      "down": "cc_sgn_council_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_relief_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_relief_0",
+      "south": "cc_sgn_relief_0",
+      "side": "cc_sgn_relief_0",
+      "up": "cc_sgn_relief_0",
+      "down": "cc_sgn_relief_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_relief_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_relief_1",
+      "south": "cc_sgn_relief_1",
+      "side": "cc_sgn_relief_1",
+      "up": "cc_sgn_relief_1",
+      "down": "cc_sgn_relief_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_register_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_register_0",
+      "south": "cc_sgn_register_0",
+      "side": "cc_sgn_register_0",
+      "up": "cc_sgn_register_0",
+      "down": "cc_sgn_register_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_register_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_register_1",
+      "south": "cc_sgn_register_1",
+      "side": "cc_sgn_register_1",
+      "up": "cc_sgn_register_1",
+      "down": "cc_sgn_register_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_water_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_water_0",
+      "south": "cc_sgn_water_0",
+      "side": "cc_sgn_water_0",
+      "up": "cc_sgn_water_0",
+      "down": "cc_sgn_water_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_water_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_water_1",
+      "south": "cc_sgn_water_1",
+      "side": "cc_sgn_water_1",
+      "up": "cc_sgn_water_1",
+      "down": "cc_sgn_water_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_aid_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_aid_0",
+      "south": "cc_sgn_aid_0",
+      "side": "cc_sgn_aid_0",
+      "up": "cc_sgn_aid_0",
+      "down": "cc_sgn_aid_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_aid_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_aid_1",
+      "south": "cc_sgn_aid_1",
+      "side": "cc_sgn_aid_1",
+      "up": "cc_sgn_aid_1",
+      "down": "cc_sgn_aid_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_staff_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_staff_0",
+      "south": "cc_sgn_staff_0",
+      "side": "cc_sgn_staff_0",
+      "up": "cc_sgn_staff_0",
+      "down": "cc_sgn_staff_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_sgn_staff_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_sgn_staff_1",
+      "south": "cc_sgn_staff_1",
+      "side": "cc_sgn_staff_1",
+      "up": "cc_sgn_staff_1",
+      "down": "cc_sgn_staff_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_0",
+      "south": "cc_vote_0",
+      "side": "cc_vote_0",
+      "up": "cc_vote_0",
+      "down": "cc_vote_0"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_0",
+      "south": "cc_missing_0",
+      "side": "cc_missing_0",
+      "up": "cc_missing_0",
+      "down": "cc_missing_0"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_1",
+      "south": "cc_vote_1",
+      "side": "cc_vote_1",
+      "up": "cc_vote_1",
+      "down": "cc_vote_1"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_1",
+      "south": "cc_missing_1",
+      "side": "cc_missing_1",
+      "up": "cc_missing_1",
+      "down": "cc_missing_1"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_2",
+      "south": "cc_vote_2",
+      "side": "cc_vote_2",
+      "up": "cc_vote_2",
+      "down": "cc_vote_2"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_2",
+      "south": "cc_missing_2",
+      "side": "cc_missing_2",
+      "up": "cc_missing_2",
+      "down": "cc_missing_2"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_3",
+      "south": "cc_vote_3",
+      "side": "cc_vote_3",
+      "up": "cc_vote_3",
+      "down": "cc_vote_3"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_3",
+      "south": "cc_missing_3",
+      "side": "cc_missing_3",
+      "up": "cc_missing_3",
+      "down": "cc_missing_3"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_4",
+      "south": "cc_vote_4",
+      "side": "cc_vote_4",
+      "up": "cc_vote_4",
+      "down": "cc_vote_4"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_4",
+      "south": "cc_missing_4",
+      "side": "cc_missing_4",
+      "up": "cc_missing_4",
+      "down": "cc_missing_4"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_5",
+      "south": "cc_vote_5",
+      "side": "cc_vote_5",
+      "up": "cc_vote_5",
+      "down": "cc_vote_5"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_5",
+      "south": "cc_missing_5",
+      "side": "cc_missing_5",
+      "up": "cc_missing_5",
+      "down": "cc_missing_5"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_6",
+      "south": "cc_vote_6",
+      "side": "cc_vote_6",
+      "up": "cc_vote_6",
+      "down": "cc_vote_6"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_6",
+      "south": "cc_missing_6",
+      "side": "cc_missing_6",
+      "up": "cc_missing_6",
+      "down": "cc_missing_6"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_vote_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_vote_7",
+      "south": "cc_vote_7",
+      "side": "cc_vote_7",
+      "up": "cc_vote_7",
+      "down": "cc_vote_7"
+     }
+    ]
+   ],
+   "title": "Vote Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 4
+  },
+  "cc_missing_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_missing_7",
+      "south": "cc_missing_7",
+      "side": "cc_missing_7",
+      "up": "cc_missing_7",
+      "down": "cc_missing_7"
+     }
+    ]
+   ],
+   "title": "Missing Posters",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_0",
+      "south": "cc_qmap_0",
+      "side": "cc_qmap_0",
+      "up": "cc_qmap_0",
+      "down": "cc_qmap_0"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_1",
+      "south": "cc_qmap_1",
+      "side": "cc_qmap_1",
+      "up": "cc_qmap_1",
+      "down": "cc_qmap_1"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_2",
+      "south": "cc_qmap_2",
+      "side": "cc_qmap_2",
+      "up": "cc_qmap_2",
+      "down": "cc_qmap_2"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_3",
+      "south": "cc_qmap_3",
+      "side": "cc_qmap_3",
+      "up": "cc_qmap_3",
+      "down": "cc_qmap_3"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_4",
+      "south": "cc_qmap_4",
+      "side": "cc_qmap_4",
+      "up": "cc_qmap_4",
+      "down": "cc_qmap_4"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_5",
+      "south": "cc_qmap_5",
+      "side": "cc_qmap_5",
+      "up": "cc_qmap_5",
+      "down": "cc_qmap_5"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_6",
+      "south": "cc_qmap_6",
+      "side": "cc_qmap_6",
+      "up": "cc_qmap_6",
+      "down": "cc_qmap_6"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_7",
+      "south": "cc_qmap_7",
+      "side": "cc_qmap_7",
+      "up": "cc_qmap_7",
+      "down": "cc_qmap_7"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_8",
+      "south": "cc_qmap_8",
+      "side": "cc_qmap_8",
+      "up": "cc_qmap_8",
+      "down": "cc_qmap_8"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_9",
+      "south": "cc_qmap_9",
+      "side": "cc_qmap_9",
+      "up": "cc_qmap_9",
+      "down": "cc_qmap_9"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_10",
+      "south": "cc_qmap_10",
+      "side": "cc_qmap_10",
+      "up": "cc_qmap_10",
+      "down": "cc_qmap_10"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_qmap_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.4,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_qmap_11",
+      "south": "cc_qmap_11",
+      "side": "cc_qmap_11",
+      "up": "cc_qmap_11",
+      "down": "cc_qmap_11"
+     }
+    ]
+   ],
+   "title": "Quarantine Map",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_0",
+      "south": "cc_banner_0",
+      "side": "cc_banner_0",
+      "up": "cc_banner_0",
+      "down": "cc_banner_0"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_1",
+      "south": "cc_banner_1",
+      "side": "cc_banner_1",
+      "up": "cc_banner_1",
+      "down": "cc_banner_1"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_2",
+      "south": "cc_banner_2",
+      "side": "cc_banner_2",
+      "up": "cc_banner_2",
+      "down": "cc_banner_2"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_3",
+      "south": "cc_banner_3",
+      "side": "cc_banner_3",
+      "up": "cc_banner_3",
+      "down": "cc_banner_3"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_4",
+      "south": "cc_banner_4",
+      "side": "cc_banner_4",
+      "up": "cc_banner_4",
+      "down": "cc_banner_4"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_banner_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_banner_5",
+      "south": "cc_banner_5",
+      "side": "cc_banner_5",
+      "up": "cc_banner_5",
+      "down": "cc_banner_5"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_mayor_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_mayor_0",
+      "south": "cc_spray_mayor_0",
+      "side": "cc_spray_mayor_0",
+      "up": "cc_spray_mayor_0",
+      "down": "cc_spray_mayor_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_mayor_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_mayor_1",
+      "south": "cc_spray_mayor_1",
+      "side": "cc_spray_mayor_1",
+      "up": "cc_spray_mayor_1",
+      "down": "cc_spray_mayor_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_mayor_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_mayor_2",
+      "south": "cc_spray_mayor_2",
+      "side": "cc_spray_mayor_2",
+      "up": "cc_spray_mayor_2",
+      "down": "cc_spray_mayor_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_lied_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_lied_0",
+      "south": "cc_spray_lied_0",
+      "side": "cc_spray_lied_0",
+      "up": "cc_spray_lied_0",
+      "down": "cc_spray_lied_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_lied_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_lied_1",
+      "south": "cc_spray_lied_1",
+      "side": "cc_spray_lied_1",
+      "up": "cc_spray_lied_1",
+      "down": "cc_spray_lied_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_lied_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_lied_2",
+      "south": "cc_spray_lied_2",
+      "side": "cc_spray_lied_2",
+      "up": "cc_spray_lied_2",
+      "down": "cc_spray_lied_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_coming_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_coming_0",
+      "south": "cc_spray_coming_0",
+      "side": "cc_spray_coming_0",
+      "up": "cc_spray_coming_0",
+      "down": "cc_spray_coming_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_coming_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_coming_1",
+      "south": "cc_spray_coming_1",
+      "side": "cc_spray_coming_1",
+      "up": "cc_spray_coming_1",
+      "down": "cc_spray_coming_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_spray_coming_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_spray_coming_2",
+      "south": "cc_spray_coming_2",
+      "side": "cc_spray_coming_2",
+      "up": "cc_spray_coming_2",
+      "down": "cc_spray_coming_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_proclamation": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.7,
+     16,
+     16,
+     16,
+     {
+      "north": "cc_proclamation",
+      "south": "cc_proclamation",
+      "side": "cc_proclamation",
+      "up": "cc_proclamation",
+      "down": "cc_proclamation"
+     }
+    ]
+   ],
+   "title": "Proclamation",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cc_plaque": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     3,
+     14.6,
+     13,
+     13,
+     16,
+     "cc_plaque"
+    ]
+   ],
+   "title": "Plaque",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
   }
  }
 }

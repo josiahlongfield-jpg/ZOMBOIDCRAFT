@@ -6,9 +6,9 @@ import static com.zomboidcraft.world.county.University.LEC_Z0;
 import static com.zomboidcraft.world.county.University.LEC_Z1;
 
 /**
- * Pruitt Lecture Hall, down the quad's west side south of the library: two raked auditoriums side
+ * Wells Lecture Hall, down the quad's west side south of the library: two raked auditoriums side
  * by side behind a glass lobby the height of the building, the concrete fins of their blind walls
- * down the sides, PRUITT LECTURE HALL along the lobby's fascia. Each hall has its stage at the
+ * down the sides, WELLS LECTURE HALL along the lobby's fascia. Each hall has its stage at the
  * lobby end under the chalkboards and the lectern, the tiers of seats climbing away to the west to
  * the back aisle and the projection booth; a passage at ground level between them out to the west
  * walk, the restrooms at the lobby's south end.

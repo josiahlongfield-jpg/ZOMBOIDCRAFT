@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_vote_5": "zomboidcraft:block/city/cc_vote_5",
+    "particle": "zomboidcraft:block/city/cc_vote_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_vote_5"
+        },
+        "south": {
+          "texture": "#cc_vote_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_vote_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_vote_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_vote_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_vote_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
