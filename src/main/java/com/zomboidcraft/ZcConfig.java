@@ -90,14 +90,14 @@ public final class ZcConfig {
     }
 
     public static class Trains {
-        /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
-        public double railSpeed = 10;
-        public double subwaySpeed = 9;
+        /** Cruising speeds in blocks a second (30 is about 108 km/h). */
+        public double railSpeed = 30;
+        public double subwaySpeed = 28;
         /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
-        public double acceleration = 0.6;
-        public double braking = 0.75;
+        public double acceleration = 1.5;
+        public double braking = 1.8;
         /** How hard a curve may be taken (sideways blocks/s/s): lower slows trains more on bends. */
-        public double curveGrip = 1.1;
+        public double curveGrip = 2.0;
         /** Seconds the doors stay open at a stop before they close by themselves. */
         public int doorSeconds = 30;
         /** Cars in each train. */
@@ -107,8 +107,8 @@ public final class ZcConfig {
         public int railTrains = 0;
         public int subwayTrains = 0;
         public double railSpacing = 1500;
-        /** How much faster a train runs on its way to a call button (curves still slow it). */
-        public double expressSpeed = 2.5;
+        /** How much faster a train runs on its way to a call button (curves still slow it), never past 40 blocks a second. */
+        public double expressSpeed = 1.3;
         public double subwaySpacing = 900;
         /** Earshot of the flare (railway) and the buzzer (subway) a call button sets off, once, for zombies. */
         public double flareNoise = 72;
@@ -1234,7 +1234,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 11;
+    private static final int DEFAULTS = 12;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1357,6 +1357,27 @@ public final class ZcConfig {
             }
             if (c.trains.subwayTrains == 1) {
                 c.trains.subwayTrains = 0;
+            }
+        }
+        if (c.defaultsVersion < 12) {
+            // 2026-10-28 (Josiah): the trips between stops took far too long; both lines about three times faster
+            if (c.trains.railSpeed == 10) {
+                c.trains.railSpeed = 30;
+            }
+            if (c.trains.subwaySpeed == 9) {
+                c.trains.subwaySpeed = 28;
+            }
+            if (c.trains.acceleration == 0.6) {
+                c.trains.acceleration = 1.5;
+            }
+            if (c.trains.braking == 0.75) {
+                c.trains.braking = 1.8;
+            }
+            if (c.trains.curveGrip == 1.1) {
+                c.trains.curveGrip = 2.0;
+            }
+            if (c.trains.expressSpeed == 2.5) {
+                c.trains.expressSpeed = 1.3;
             }
         }
         c.defaultsVersion = DEFAULTS;
