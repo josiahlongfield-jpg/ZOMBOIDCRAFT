@@ -549,6 +549,21 @@ public final class ZcConfig {
         /** About how many minutes between those events. */
         public double worldEventMinutes = 10;
         /**
+         * Air strikes among those events (Josiah 2026-10-28): a jet strafing or bombing a crowd of zombies, or the
+         * Apache circling a horde shooting them; zombies caught die, players right there are hurt, blocks never.
+         */
+        public boolean airStrikes = true;
+        /** The share of the events that are air strikes, when there's a crowd of at least airStrikeCrowd zombies near. */
+        public double airStrikeShare = 0.35;
+        public int airStrikeCrowd = 4;
+        /** Shells a second: the jets' rotary cannon and the Apache's chain gun. */
+        public double strikeCannonRate = 50;
+        public double strikeChainGunRate = 10;
+        /** A bomb kills zombies within strikeBombKill blocks and hurts players within strikeBombHurt, up to strikeBombDamage. */
+        public double strikeBombKill = 9;
+        public double strikeBombHurt = 7;
+        public double strikeBombDamage = 30;
+        /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
          */
