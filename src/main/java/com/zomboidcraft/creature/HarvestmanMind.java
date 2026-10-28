@@ -81,6 +81,8 @@ public final class HarvestmanMind {
     int seen, grabs, escapes, feeds, stage = 1;
     /** Its den; where it was made. */
     BlockPos lair;
+    /** The heap of scrap it's working while it grows a leg back. */
+    private BlockPos heap;
     /** Its identity in HarvestmanDirector's records, and which copy of it this is. */
     String hid = "";
     int gen;
@@ -854,7 +856,11 @@ public final class HarvestmanMind {
                 h.goal = home != null ? home.add(0, 2, 0) : null;
             }
         } else if (h.goal == null || near(h.goal, 1.5) || planTicks > 20 * 90) {
-            carried = null;     // laid down where they'll walk in on it
+            // laid down where they'll walk in on it: hung up, slumped in a doorway or sat facing the way in
+            if (carried instanceof Corpse body && !body.isRemoved()) {
+                HarvestmanDens.setOut(level, body, h.centre(), t != null ? t.position() : null, 0.35f);
+            }
+            carried = null;
             end();
             start(HIDE, spot(HIDE, 16), 2.5);
         }
@@ -885,8 +891,15 @@ public final class HarvestmanMind {
             h.heal((float) (HarvestmanEntity.MAX_HEALTH / (24000.0 / 20)));
         }
         int lost = h.lost();
-        if (lost != 0 && planTicks % 24000 == 0) {
+        if (lost != 0) {
+            workScrap(level);
+        }
+        if (lost != 0 && planTicks > 0 && planTicks % 24000 == 0) {
             h.regrow(Integer.numberOfTrailingZeros(lost));
+            if (heap != null) {
+                HarvestmanDens.use(level, heap);
+                heap = null;
+            }
         }
         if (planTicks % 200 == 0 && h.getRandom().nextFloat() < 0.3f) {
             level.playSound(null, h.getX(), h.getY(), h.getZ(), HarvestmanSounds.CLICK, SoundSource.HOSTILE, 0.5f, 0.7f);
@@ -894,6 +907,39 @@ public final class HarvestmanMind {
         // up when something calls it: its target close, starving, or healed
         if (planTicks % 100 == 0 && (lost == 0 && h.getHealth() >= h.getMaxHealth() * 0.95 || target(level) != null && h.getRandom().nextFloat() < 0.3f)) {
             end();
+        }
+    }
+
+    /**
+     * Growing a leg back: it goes to a heap of scrap in its den and works it, rearing and stabbing down into it, the
+     * steel clanging and sparking, now and then dragging a sheet of it screeching across the floor.
+     */
+    private void workScrap(ServerLevel level) {
+        if (heap == null || planTicks % 200 == 0) {
+            heap = HarvestmanDens.scrap(level, lair, 7);
+        }
+        if (heap == null) {
+            h.rearWant = 0;
+            return;
+        }
+        Vec3 at = Vec3.atCenterOf(heap);
+        h.look = at;
+        Vec3 flat = h.centre().subtract(at).multiply(1, 0, 1);
+        if (flat.lengthSqr() > 2.6 * 2.6) {
+            h.goal = at.add(flat.normalize().scale(1.8)).add(0, 1, 0);
+            h.goalSpeed = 1.2;
+            h.rearWant = 0;
+            return;
+        }
+        int beat = planTicks % 50;
+        h.rearWant = beat < 18 ? 0.5 : 0;
+        if (beat == 22) {
+            HarvestmanDens.work(level, heap);
+            level.playSound(null, at.x, at.y, at.z, HarvestmanSounds.CLANG, SoundSource.HOSTILE, 0.7f,
+                    0.7f + h.getRandom().nextFloat() * 0.3f);
+        }
+        if (planTicks % 260 == 130) {
+            level.playSound(null, at.x, at.y, at.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.6f, 0.8f);
         }
     }
 

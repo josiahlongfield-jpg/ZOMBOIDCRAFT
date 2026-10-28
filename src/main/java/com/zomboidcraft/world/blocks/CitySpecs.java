@@ -9847,5 +9847,23 @@ final class CitySpecs extends CityBlocks.Specs {
         s("om_spray_keep_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.8, 16, 16, 16);
         s("om_spray_keep_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.8, 16, 16, 16);
         s("om_spray_keep_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("hd_heap", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12, 16);
+        s("hd_heap_b", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 11, 16);
+        s("hd_heap_tall", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("hd_heap_low", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 1, 15, 3, 15);
+        s("hd_nest", FACING, SEE_THROUGH, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 5, 16);
+        s("hd_nest_b", FACING, SEE_THROUGH, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 5, 16);
+        s("hd_debris", FACING, SEE_THROUGH | DECOR, 0, SoundType.GRAVEL, 0f);
+        s("hd_debris_b", FACING, SEE_THROUGH | DECOR, 0, SoundType.GRAVEL, 0f);
+        s("hd_bones", FACING, SEE_THROUGH | DECOR, 0, SoundType.GRAVEL, 0f);
+        s("hd_drag", AXIS, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f);
+        s("hd_gouges_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f);
+        s("hd_gouges_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f);
+        s("hd_gouges_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f);
+        s("hd_cable", PLAIN, DECOR, 0, SoundType.CHAIN, 0f);
+        s("hd_cable_top", PLAIN, DECOR, 0, SoundType.CHAIN, 0f);
+        s("hd_cable_end", PLAIN, DECOR, 0, SoundType.CHAIN, 0f);
+        s("hd_cocoon", FACING, 0, 0, SoundType.WOOL, 1f, 4, 0, 4.5, 12, 16, 11.5);
+        s("hd_cocoon_top", FACING, 0, 0, SoundType.WOOL, 1f, 4, 0, 4.5, 12, 15, 11.5);
     }
 }

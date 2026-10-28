@@ -50,6 +50,7 @@ public final class Harvestmen {
                         .then(Commands.literal("harvestman")
                                 .executes(Harvestmen::spawn)
                                 .then(Commands.literal("clear").executes(Harvestmen::clear))
+                                .then(Commands.literal("den").executes(Harvestmen::den))
                                 .then(Commands.literal("info").executes(Harvestmen::info))
                                 .then(Commands.literal("target")
                                         .then(Commands.literal("clear").executes(ctx -> target(ctx, null)))
@@ -65,14 +66,7 @@ public final class Harvestmen {
     private static int spawn(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         ServerLevel level = (ServerLevel) player.level();
-        // six blocks ahead (less if a wall is nearer), dropped onto the floor there
-        Vec3 eye = player.getEyePosition(), look = player.getLookAngle();
-        Vec3 flat = new Vec3(look.x, 0, look.z);
-        flat = flat.lengthSqr() < 1e-4 ? new Vec3(0, 0, 1) : flat.normalize();
-        var ahead = level.clip(new ClipContext(eye, eye.add(flat.scale(6)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-        Vec3 at = ahead.getType() == HitResult.Type.MISS ? eye.add(flat.scale(6)) : ahead.getLocation().subtract(flat.scale(1.5));
-        var down = level.clip(new ClipContext(at, at.add(0, -12, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-        Vec3 floor = down.getType() == HitResult.Type.MISS ? player.position() : down.getLocation();
+        Vec3 floor = ahead(player);
         HarvestmanEntity h = HARVESTMAN.create(level, EntitySpawnReason.COMMAND);
         if (h == null) {
             return 0;
@@ -82,6 +76,32 @@ public final class Harvestmen {
         ctx.getSource().sendSuccess(() -> Component.literal("A Harvestman is in front of you; its den is here. "
                 + "/zc harvestman do <plan> steers it, target <player> sets who it hunts, clear removes them all"), false);
         return 1;
+    }
+
+    /** A den built six blocks ahead (the room round it torn out, scrap, nest, bodies), its Harvestman resting in it. */
+    private static int den(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        HarvestmanEntity h = HarvestmanDirector.makeDen((ServerLevel) player.level(), ahead(player), player.position());
+        if (h == null) {
+            ctx.getSource().sendFailure(Component.literal("Couldn't make a den there"));
+            return 0;
+        }
+        h.loseLegQuietly(h.getRandom().nextInt(4));
+        ctx.getSource().sendSuccess(() -> Component.literal("A Harvestman's den is in front of you. Its Harvestman is resting in it "
+                + "with a leg gone, working the scrap to grow it back"), false);
+        return 1;
+    }
+
+    /** The floor six blocks ahead (less if a wall is nearer). */
+    private static Vec3 ahead(ServerPlayer player) {
+        ServerLevel level = (ServerLevel) player.level();
+        Vec3 eye = player.getEyePosition(), look = player.getLookAngle();
+        Vec3 flat = new Vec3(look.x, 0, look.z);
+        flat = flat.lengthSqr() < 1e-4 ? new Vec3(0, 0, 1) : flat.normalize();
+        var ahead = level.clip(new ClipContext(eye, eye.add(flat.scale(6)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        Vec3 at = ahead.getType() == HitResult.Type.MISS ? eye.add(flat.scale(6)) : ahead.getLocation().subtract(flat.scale(1.5));
+        var down = level.clip(new ClipContext(at, at.add(0, -12, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        return down.getType() == HitResult.Type.MISS ? player.position() : down.getLocation();
     }
 
     private static List<HarvestmanEntity> all(CommandContext<CommandSourceStack> ctx) {
