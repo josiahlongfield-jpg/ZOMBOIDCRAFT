@@ -107,6 +107,8 @@ public final class ZcConfig {
         public int railTrains = 0;
         public int subwayTrains = 0;
         public double railSpacing = 1500;
+        /** How much faster a train runs on its way to a call button (curves still slow it). */
+        public double expressSpeed = 2.5;
         public double subwaySpacing = 900;
         /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
         public double flareNoise = 72;
