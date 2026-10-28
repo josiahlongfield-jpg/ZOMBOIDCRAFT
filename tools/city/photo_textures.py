@@ -1123,6 +1123,8 @@ import museum  # noqa: E402
 museum.register(sys.modules[__name__])
 import arena  # noqa: E402
 arena.register(sys.modules[__name__])
+import ballpark  # noqa: E402
+ballpark.register(sys.modules[__name__])
 
 
 def build(name):

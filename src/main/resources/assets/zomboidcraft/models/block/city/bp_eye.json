@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_eye": "zomboidcraft:block/city/bp_eye",
+    "particle": "zomboidcraft:block/city/bp_eye"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_eye",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bp_eye",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_eye",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_eye",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bp_eye",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_eye",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

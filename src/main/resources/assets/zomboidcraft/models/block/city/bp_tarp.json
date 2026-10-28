@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_tarp": "zomboidcraft:block/city/bp_tarp",
+    "particle": "zomboidcraft:block/city/bp_tarp"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_tarp",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bp_tarp",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_tarp"
+        },
+        "west": {
+          "texture": "#bp_tarp"
+        },
+        "up": {
+          "texture": "#bp_tarp"
+        },
+        "down": {
+          "texture": "#bp_tarp",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        0
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_tarp",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bp_tarp",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_tarp"
+        },
+        "west": {
+          "texture": "#bp_tarp"
+        },
+        "up": {
+          "texture": "#bp_tarp"
+        },
+        "down": {
+          "texture": "#bp_tarp"
+        }
+      }
+    }
+  ]
+}
