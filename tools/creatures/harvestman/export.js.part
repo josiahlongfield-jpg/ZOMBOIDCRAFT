@@ -1,0 +1,20 @@
+window.__probe = (() => { try {
+  // the game model: the rigid meshes in their own frames, and the scythes and beard (built per frame in the preview)
+  // fixed in their hunting pose, in the body's frame
+  const dyn = new Mesh(), r = harvestman({ x: 0, z: 0, yaw: 0, feeding: false, t: 0, motion: 'still', feet: null, noCables: true }, dyn);
+  const body = r.parts.find(q => q[0] === 'body')[1];
+  const tris = (m, xf) => { const out = [];
+    for (const ch of m.chunks) { const v = ch.v;
+      for (let k = 0; k < ch.ix.length; k++) { const b = ch.ix[k] * VS;
+        let p = [v[b], v[b + 1], v[b + 2]], n = [v[b + 3], v[b + 4], v[b + 5]];
+        if (xf) { const d = sub(p, xf.o); p = [0, 1, 2].map(a => dot(d, ap(xf.R, AX[a]))); n = [0, 1, 2].map(a => dot(n, ap(xf.R, AX[a]))); }
+        const ao = v[b + 13], glow = v[b + 12];
+        out.push(+p[0].toFixed(4), +p[1].toFixed(4), +p[2].toFixed(4), +n[0].toFixed(3), +n[1].toFixed(3), +n[2].toFixed(3),
+          +(v[b + 6] * ao).toFixed(3), +(v[b + 7] * ao).toFixed(3), +(v[b + 8] * ao).toFixed(3), glow > 0.03 ? 1 : 0);
+      } } return out; };
+  const S0 = LEGS[0].b + LEGS[0].c, S1 = LEGS[1].b + LEGS[1].c;
+  const parts = { body: tris(buildBody()).concat(tris(dyn, body)), thighF: tris(buildLeg(LEGS[0].a, 0.1, 0.085, 0.15, 11, 'thigh')), thighR: tris(buildLeg(LEGS[1].a, 0.1, 0.085, 0.15, 37, 'thigh')),
+    lowF: tris(curveLeg(buildLeg(S0, 0.085, 0.055, 0.13, 23, 'tars'), S0)), lowR: tris(curveLeg(buildLeg(S1, 0.085, 0.055, 0.13, 51, 'tars'), S1)) };
+  window.__exp = { parts, legs: LEGS.map(L => ({ hip: L.hip, a: L.a, lc: L.lc, restA: L.restA, restR: L.restR })), names: r.parts.map(q => q[0]), bodyO: body.o };
+  return Object.entries(parts).map(([k, v]) => k + ' ' + v.length / 30 + ' tris').join(', ') + ' | parts ' + window.__exp.names.join(',') + ' | bodyO ' + body.o.map(x => x.toFixed(2)) + ' | legs ' + JSON.stringify(window.__exp.legs);
+} catch (e) { return 'ERR ' + e.message + e.stack; } })();
