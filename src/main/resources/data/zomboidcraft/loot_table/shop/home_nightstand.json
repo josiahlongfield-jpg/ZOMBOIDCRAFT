@@ -11,12 +11,12 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:book",
-          "weight": 5
+          "weight": 30
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "weight": 3,
+          "weight": 18,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -30,23 +30,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:candle",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:torch",
-          "weight": 3,
+          "weight": 18,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -61,17 +46,17 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:clock",
-          "weight": 1
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:digital_watch",
-          "weight": 3
+          "weight": 18
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bandage",
-          "weight": 2,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -85,24 +70,13 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_potion",
-              "id": "minecraft:healing"
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:glass_bottle",
-          "weight": 2
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:gold_nugget",
-          "weight": 2,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -117,7 +91,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pistol",
-          "weight": 1,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -132,7 +106,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pistol_ammo",
-          "weight": 2,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -146,12 +120,72 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 10
+          "weight": 60
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:alarm_clock",
-          "weight": 4
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fancy_chocolates",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hip_flask",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sleeping_pills",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:antidepressants",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pocket_knife",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:candle",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:lighter",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:brass_lighter",
+          "weight": 2
         }
       ]
     },
@@ -177,6 +211,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:magnum",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:beta_blockers",
           "weight": 1
         }
       ]

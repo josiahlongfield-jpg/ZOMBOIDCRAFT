@@ -63,8 +63,14 @@ final class WatchHud {
         return Math.round(TOP + 74 * SCALE + 6);
     }
 
-    /** For now a watch anywhere on you counts: in your hands, on your belt or in a pocket. */
+    /** A watch on your wrist; with the quick slots off, a watch anywhere on you counts. */
     private static boolean wearing(LocalPlayer player) {
+        if (com.zomboidcraft.carry.QuickSlots.wrist(com.zomboidcraft.carry.Carry.gear(player).get(com.zomboidcraft.carry.GearStore.WRIST))) {
+            return true;
+        }
+        if (com.zomboidcraft.carry.QuickSlots.on(player)) {
+            return false;
+        }
         Inventory inventory = player.getInventory();
         for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
             if (inventory.getItem(i).is(ModItems.DIGITAL_WATCH)) return true;

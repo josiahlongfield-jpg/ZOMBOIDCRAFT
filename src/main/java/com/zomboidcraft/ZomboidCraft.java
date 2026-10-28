@@ -45,7 +45,10 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Repairs.register();
         com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();
+        com.zomboidcraft.loot.items.LootItems.register();
+        com.zomboidcraft.loot.items.LootHooks.register();
         com.zomboidcraft.carry.Carry.register();
+        com.zomboidcraft.spawn.SpawnPicker.register();
         com.zomboidcraft.gear.Headgear.register();
         com.zomboidcraft.gear.Radios.register();
         com.zomboidcraft.loot.Nearby.register();
@@ -66,6 +69,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
+        Cinematic.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Impacts.register();
         com.zomboidcraft.world.map.MapNet.register();

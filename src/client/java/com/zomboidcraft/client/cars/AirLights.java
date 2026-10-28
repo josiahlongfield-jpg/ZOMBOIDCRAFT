@@ -111,7 +111,15 @@ final class AirLights {
         CarLights.Quads points = new CarLights.Quads(cam.pos, false), beams = new CarLights.Quads(cam.pos, shaders);
         solid = shaders;
         float partial = cam.cameraEntityPartialTicks;
-        for (CarProp car : level.getEntitiesOfClass(CarProp.class, new AABB(cam.pos, cam.pos).inflate(NEAR), AirLights::lit)) {
+        // the aircraft here, and the far-off flybys drawn closer in (FarFlybys), whose lights stand in for the real ones'
+        java.util.List<CarProp> cars = new java.util.ArrayList<>(level.getEntitiesOfClass(CarProp.class, new AABB(cam.pos, cam.pos).inflate(NEAR),
+                car -> lit(car) && !FarFlybys.covers(car)));
+        for (CarProp far : FarFlybys.shown()) {
+            if (lit(far)) {
+                cars.add(far);
+            }
+        }
+        for (CarProp car : cars) {
             Quaternionf q = car.flight().qO.slerp(car.flight().q, partial, new Quaternionf());
             Vec3 pos = car.getPosition(partial);
             float pivot = car.pivot(), flash = flash(car);

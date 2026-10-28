@@ -243,10 +243,8 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
             }
             if (stack.getCount() == before.getCount()) {
                 if (index >= firstGear + GearStore.SIZE) {
+                    CarrySlots.quick(this, player, stack, -1);
                     CarrySlots.move(this, stack, carriedStart, carriedEnd);
-                    if (stack.getCount() == before.getCount()) {
-                        CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
-                    }
                 } else {
                     CarrySlots.move(this, stack, bagsStart, bagsEnd);
                     CarrySlots.move(this, stack, carriedStart, carriedEnd);
@@ -258,8 +256,9 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
                 CarrySlots.move(this, stack, sourceStart(selected), sourceEnd(selected));
             }
             if (stack.getCount() == before.getCount()) {
-                // a long gun or melee weapon goes on the sling first, then into a bag
-                CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
+                // a weapon moves up to a better quick slot (a rifle in your hands onto the sling), then into a bag
+                int quick = InventoryMenu.USE_ROW_SLOT_START;
+                CarrySlots.quick(this, player, stack, index >= quick ? index - quick : -1);
             }
             if (stack.getCount() == before.getCount()) {
                 wearOrStow(stack, bagsStart, bagsEnd);
@@ -296,9 +295,9 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
     private void toYou(ItemStack stack, int bagsStart, int bagsEnd, int carriedStart, int carriedEnd) {
         int count = stack.getCount();
         if (com.zomboidcraft.carry.Carry.weapon(stack)) {
-            // a weapon goes to hand: the belt, then the sling, then a bag (never a pocket)
-            CarrySlots.move(this, stack, InventoryMenu.USE_ROW_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
-            if (!stack.isEmpty()) CarrySlots.move(this, stack, firstGear + GearStore.SLING, firstGear + GearStore.SLING + 1);
+            // a weapon goes to its quick slot (holster, sheath, sling, hip, hands), then a bag (never a pocket)
+            CarrySlots.quick(this, player, stack, -1);
+            if (!stack.isEmpty()) CarrySlots.move(this, stack, InventoryMenu.USE_ROW_SLOT_START, InventoryMenu.USE_ROW_SLOT_END);
             if (!stack.isEmpty()) CarrySlots.move(this, stack, bagsStart, bagsEnd);
             return;
         }
@@ -311,7 +310,7 @@ public class NearbyMenu extends AbstractContainerMenu implements Carry.Bags {
     /** A bag goes on its gear slot when that's free; anything else goes into worn bags. */
     private void wearOrStow(ItemStack stack, int bagsStart, int bagsEnd) {
         BagSpec spec = BagItem.spec(stack);
-        int gearSlot = spec == null ? -1 : GearStore.slotFor(spec.wear());
+        int gearSlot = spec == null ? com.zomboidcraft.carry.QuickSlots.gearSlot(stack) : GearStore.slotFor(spec.wear());
         if (gearSlot >= 0) {
             CarrySlots.move(this, stack, firstGear + gearSlot, firstGear + gearSlot + 1);
         } else {

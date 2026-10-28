@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_pool_glass": {
+      "sprite": "zomboidcraft:block/city/of_pool_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/of_pool_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_pool_glass",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_pool_glass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_pool_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_pool_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_pool_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_pool_glass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

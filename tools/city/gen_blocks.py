@@ -80,7 +80,9 @@ def boxes(spec):
         return [[0, 0, 0, 16, 8, 16, {f: spec["tex"] for f in DIRS}]]
     # a box's texture is one name for every face, or a dict of faces like a cube's tex; an inked
     # box (tools/city/ink.py) adds an eighth item, each face's own rectangle on its atlas
-    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}] + b[7:8]
+    # a ninth item turns the box about a point: {"axis": "x"|"y"|"z", "angle": 45 or 22.5 (or minus),
+    # "origin": [8, 8, 8]}, with None for the eighth when the box isn't inked
+    return [b[:6] + [{f: (b[6] if isinstance(b[6], str) else face_tex({"tex": b[6]}, f)) for f in DIRS}] + b[7:9]
             for b in spec["boxes"]]
 
 
@@ -111,6 +113,7 @@ def fit(a0, a1):
 def element(b):
     x0, y0, z0, x1, y1, z1, tex = b[:7]
     uvs = b[7] if len(b) > 7 else None
+    rot = b[8] if len(b) > 8 else None
     faces = {}
     for f in DIRS:
         if uvs is not None and f not in uvs:
@@ -124,10 +127,13 @@ def element(b):
             face["uv"] = [u0, v0, u1, v1]
         edge = {"north": z0 == 0, "south": z1 == 16, "west": x0 == 0, "east": x1 == 16,
                 "down": y0 == 0, "up": y1 == 16}[f]
-        if edge:
+        if edge and not rot:
             face["cullface"] = f
         faces[f] = face
-    return {"from": [x0, y0, z0], "to": [x1, y1, z1], "faces": faces}
+    el = {"from": [x0, y0, z0], "to": [x1, y1, z1], "faces": faces}
+    if rot:
+        el["rotation"] = {"origin": rot.get("origin", [8, 8, 8]), "axis": rot["axis"], "angle": rot["angle"]}
+    return el
 
 
 def sprite(t, tex_dir):

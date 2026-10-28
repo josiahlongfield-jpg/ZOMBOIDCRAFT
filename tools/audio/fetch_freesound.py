@@ -156,6 +156,21 @@ QUERIES = {
     "car_stall": ["car engine failing to start", "car won't start", "engine stall sputter"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
+    # throwables (WEAPONS, Josiah approved 2026-10-27): weapon.throw.* events
+    "thr_throw": ["throw whoosh", "object throw", "throwing whoosh", "arm throw swish", "toss object"],
+    "thr_bottle": ["bottle smash", "glass bottle break", "beer bottle smash", "bottle shatter", "bottle break ground"],
+    "thr_can": ["can clatter", "tin can drop", "empty can bounce", "can kick", "metal can rolling"],
+    "thr_brick": ["brick drop", "brick thud", "rock thrown impact", "stone drop ground", "brick hit concrete"],
+    "thr_firecracker": ["firecracker", "firecrackers string", "firework banger", "cherry bomb", "firecracker pop"],
+    "thr_fuse": ["fuse burning", "lit fuse", "fuse sizzle", "dynamite fuse", "sparkler burning"],
+    "thr_flare": ["road flare", "flare burning", "flare ignite", "magnesium burn", "emergency flare", "flare strike"],
+    "thr_alarm": ["alarm clock ticking", "clock tick", "alarm clock ring", "bell alarm clock", "mechanical alarm clock"],
+    "thr_molotov": ["molotov", "molotov cocktail", "fire whoosh ignite", "petrol ignite", "gasoline fire burst", "fireball whoosh"],
+    "thr_grenade": ["grenade pin", "pin pull", "grenade spoon", "smoke grenade", "smoke canister hiss", "flashbang", "stun grenade"],
+    "thr_ring": ["tinnitus", "ear ringing", "high pitch ringing", "ringing ears explosion"],
+    "thr_blast": ["grenade explosion", "explosion close", "explosion", "big explosion", "distant explosion", "explosion far",
+                  "explosion rumble", "explosion debris"],
+    "thr_fire": ["fire burning", "fire crackle", "burning fire loop", "flames burning", "gasoline fire", "bonfire crackle"],
 }
 PER_QUERY = 6
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}

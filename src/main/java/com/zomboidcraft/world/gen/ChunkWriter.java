@@ -107,12 +107,14 @@ public final class ChunkWriter implements ChunkSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        spawn(x, y, z, yaw, filter(minLength, maxLength, null), seed);
+        spawn(x, y, z, yaw, filter(minLength, maxLength, null), null, seed);
     }
 
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
-        spawn(x, y, z, yaw, filter(0, 99, models), seed);
+        // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)
+        int at = models.indexOf('@');
+        spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed);
     }
 
     /**
@@ -157,7 +159,7 @@ public final class ChunkWriter implements ChunkSink {
         }
     };
 
-    private void spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, long seed) {
+    private void spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, String variant, long seed) {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
             return;
         }
@@ -180,7 +182,7 @@ public final class ChunkWriter implements ChunkSink {
                 ground = y - 1 + shape.max(Direction.Axis.Y);
             }
         }
-        car.setLook(model.id, Cars.pickVariant(rng));
+        car.setLook(model.id, variant != null ? variant : Cars.pickVariant(rng));
         car.snapTo(x, ground, z, yaw, 0f);
         proto.addEntity(car);
         int base = (int) Math.ceil(ground - 0.05);

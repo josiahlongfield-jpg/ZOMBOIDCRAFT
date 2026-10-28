@@ -42,12 +42,20 @@ public final class Carry {
             builder -> builder.initializer(() -> 0f).syncWith(ByteBufCodecs.FLOAT, AttachmentSyncPredicate.targetOnly()));
 
     /**
-     * What everyone can see you wearing (back, vest, waist, sling), synced to every client for drawing on the body.
-     * Plain copies of the bags, so what's inside a bag stays with its owner; the slung weapon as it is.
+     * What everyone can see you wearing, synced to every client for drawing on the body: the gear slots in order, then
+     * what hangs in the Back, Holster and Sheath quick slots while it isn't in your hands ({@link #WORN_BACK} on).
+     * Plain copies of the bags, so what's inside a bag stays with its owner; the carried weapons as they are.
      */
     public static final AttachmentType<List<ItemStack>> WORN = AttachmentRegistry.create(
             ZomboidCraft.id("worn"),
             builder -> builder.initializer(List::of).syncWith(ItemStack.OPTIONAL_LIST_STREAM_CODEC, AttachmentSyncPredicate.all()));
+
+    public static final int WORN_BACK = GearStore.SIZE, WORN_HOLSTER = GearStore.SIZE + 1, WORN_SHEATH = GearStore.SIZE + 2;
+    private static final int WORN_SIZE = GearStore.SIZE + 3;
+
+    /** Set once a survivor has had their starting belt; a new life after death gets another. */
+    public static final AttachmentType<Boolean> STARTED = AttachmentRegistry.create(
+            ZomboidCraft.id("kit_started"), builder -> builder.persistent(com.mojang.serialization.Codec.BOOL));
 
     private static final Identifier HEAVY = ZomboidCraft.id("heavy_load");
     private static int ticks;
@@ -64,16 +72,17 @@ public final class Carry {
     }
 
     /**
-     * Puts a picked-up bag straight on when its place is free: back, vest or waist, or the off hand for a duffel.
-     * Empties the stack and returns true when it went on.
+     * Puts a picked-up bag straight on when its place is free: back, vest or waist, or the off hand for a duffel. A
+     * belt, holster, sheath or watch goes on the same way. Empties the stack and returns true when it went on.
      */
     public static boolean wear(Player player, ItemStack stack) {
         BagSpec spec = BagItem.spec(stack);
-        if (spec == null || player.level().isClientSide() || !ZcConfig.get().carry.autoWear || player.hasInfiniteMaterials()) {
+        int worn = QuickSlots.gearSlot(stack);
+        if (spec == null && worn < 0 || player.level().isClientSide() || !ZcConfig.get().carry.autoWear || player.hasInfiniteMaterials()) {
             return false;
         }
         Inventory inventory = player.getInventory();
-        int gearSlot = GearStore.slotFor(spec.wear());
+        int gearSlot = spec == null ? worn : GearStore.slotFor(spec.wear());
         if (gearSlot >= 0 && gear(player).get(gearSlot).isEmpty()) {
             gear(player).items.set(gearSlot, stack.copyAndClear());
         } else if (gearSlot < 0 && inventory.getItem(Inventory.SLOT_OFFHAND).isEmpty()) {
@@ -106,7 +115,7 @@ public final class Carry {
         return stack.getItem() instanceof com.zomboidcraft.combat.RifleItem || stack.getItem() instanceof com.zomboidcraft.combat.MeleeWeaponItem;
     }
 
-    /** What the sling takes across your back: every gun bar a handgun, and melee weapons. */
+    /** What the sling (the Back quick slot) takes across your back: every gun bar a handgun, and melee weapons. */
     public static boolean slings(ItemStack stack) {
         com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(stack);
         return weapon(stack) && type != com.zomboidcraft.combat.GunType.PISTOL && type != com.zomboidcraft.combat.GunType.REVOLVER
@@ -119,24 +128,37 @@ public final class Carry {
     }
 
     /**
-     * Takes a weapon you pick up, keeping it out of your pockets: a free belt slot, then the sling if it goes there,
-     * then your bags. Returns true if any of it went somewhere (the stack is emptied).
+     * Takes a weapon you pick up, keeping it out of your pockets: the quick slot it fits best (holster, sheath, sling,
+     * hip, hands), then your bags. Returns true if any of it went somewhere (the stack is emptied).
      */
     public static boolean takeWeapon(Player player, ItemStack stack) {
         Inventory inventory = player.getInventory();
-        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-            if (inventory.getItem(i).isEmpty()) {
-                inventory.setItem(i, stack.copyAndClear());
-                return true;
-            }
+        int slot = QuickSlots.on(player) ? QuickSlots.place(player, stack) : -1;
+        for (int i = 0; slot < 0 && !QuickSlots.on(player) && i < Inventory.getSelectionSize(); i++) {
+            if (inventory.getItem(i).isEmpty()) slot = i;
         }
-        if (slings(stack) && gear(player).get(GearStore.SLING).isEmpty()) {
-            gear(player).items.set(GearStore.SLING, stack.copyAndClear());
-            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), WEAR_SOUND,
-                    SoundSource.PLAYERS, 0.8f, 1.05f + player.getRandom().nextFloat() * 0.1f);
+        if (slot >= 0) {
+            inventory.setItem(slot, stack.copyAndClear());
+            if (slot != QuickSlots.HANDS) {
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), WEAR_SOUND,
+                        SoundSource.PLAYERS, 0.8f, 1.05f + player.getRandom().nextFloat() * 0.1f);
+            }
             return true;
         }
         return stow(player, stack);
+    }
+
+    /** Puts something that isn't a weapon in a free pouch or hip slot, once pockets and bags are full. */
+    public static boolean quick(Player player, ItemStack stack) {
+        if (stack.isEmpty() || !QuickSlots.on(player)) {
+            return false;
+        }
+        int slot = QuickSlots.place(player, stack);
+        if (slot < 0) {
+            return false;
+        }
+        player.getInventory().setItem(slot, stack.copyAndClear());
+        return true;
     }
 
     // ---------------------------------------------------------------- bags
@@ -233,6 +255,7 @@ public final class Carry {
             if (ticks % 10 != 0) {
                 continue;
             }
+            kit(player);
             // a gun case or ammo can found shut is filled the first time someone has it; a found gun's finish is
             // rolled, and a weapon that didn't come out of a loot table gets its tier
             Inventory inventory = player.getInventory();
@@ -244,6 +267,7 @@ public final class Carry {
                     inventory.setChanged();
                 }
             }
+            com.zomboidcraft.loot.items.LootHooks.tick(player);
             boolean on = ZcConfig.get().carry.weight && !player.isCreative() && !player.isSpectator();
             float ratio = on ? Math.round(load(player) / capacity() * 100f) / 100f : 0f;
             if (player.getAttachedOrElse(LOAD, 0f) != ratio) {
@@ -269,25 +293,89 @@ public final class Carry {
         }
     }
 
+    /**
+     * The quick slots' upkeep: the starting belt, a weapon from an old save's sling, and anything sitting in a quick
+     * slot that no longer fits (you took the belt off, say) moved somewhere it does, or dropped at your feet.
+     */
+    private static void kit(ServerPlayer player) {
+        if (player.isSpectator()) {
+            return;     // still choosing where to wake up
+        }
+        GearStore gear = gear(player);
+        Inventory inventory = player.getInventory();
+        if (!player.hasAttached(STARTED)) {
+            player.setAttached(STARTED, true);
+            if (gear.get(GearStore.BELT).isEmpty() && !player.isCreative()) {
+                gear.items.set(GearStore.BELT, new ItemStack(com.zomboidcraft.ModItems.LEATHER_BELT));
+            }
+            // a watch you were already carrying goes on your wrist
+            for (int i = 0; i < inventory.getContainerSize() && gear.get(GearStore.WRIST).isEmpty(); i++) {
+                if (QuickSlots.wrist(inventory.getItem(i))) {
+                    gear.items.set(GearStore.WRIST, inventory.removeItemNoUpdate(i));
+                    inventory.setChanged();
+                }
+            }
+        }
+        if (!gear.fromSling.isEmpty()) {
+            ItemStack slung = gear.fromSling;
+            gear.fromSling = ItemStack.EMPTY;
+            if (inventory.getItem(QuickSlots.BACK).isEmpty()) {
+                inventory.setItem(QuickSlots.BACK, slung);
+            } else {
+                spill(player, slung);
+            }
+        }
+        if (!QuickSlots.on(player)) {
+            return;
+        }
+        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
+            if (!stack.isEmpty() && !QuickSlots.fits(player, i, stack)) {
+                inventory.setItem(i, ItemStack.EMPTY);
+                spill(player, stack);
+            }
+        }
+    }
+
+    /** Finds a stack a place on you the usual way (weapons to quick slots and bags, the rest to pockets and bags), or drops it. */
+    private static void spill(ServerPlayer player, ItemStack stack) {
+        player.getInventory().add(stack);
+        if (!stack.isEmpty()) {
+            net.minecraft.world.entity.item.ItemEntity dropped = new net.minecraft.world.entity.item.ItemEntity(player.level(),
+                    player.getX(), player.getEyeY() - 0.3, player.getZ(), stack.copyAndClear());
+            dropped.setPickUpDelay(40);
+            player.level().addFreshEntity(dropped);
+        }
+    }
+
+    /** What hangs in a quick slot for others to see: nothing while it's in your hands, or if it doesn't belong there. */
+    private static ItemStack hanging(ServerPlayer player, int slot, java.util.function.Predicate<ItemStack> belongs) {
+        Inventory inventory = player.getInventory();
+        ItemStack stack = inventory.getItem(slot);
+        return inventory.getSelectedSlot() == slot || stack.isEmpty() || !belongs.test(stack) ? ItemStack.EMPTY : stack.copyWithCount(1);
+    }
+
     /** Updates what others see you wearing when it changes. */
     private static void showWorn(ServerPlayer player) {
         GearStore gear = gear(player);
-        List<ItemStack> shown = player.getAttachedOrElse(WORN, List.of());
-        boolean same = shown.size() == GearStore.SIZE;
-        for (int i = 0; same && i < GearStore.SIZE; i++) {
-            same = i == GearStore.SLING ? ItemStack.isSameItemSameComponents(shown.get(i), gear.get(i))
-                    : shown.get(i).getItem() == gear.get(i).getItem() && shown.get(i).isEmpty() == gear.get(i).isEmpty();
-        }
-        if (same) {
-            return;
-        }
-        List<ItemStack> now = new ArrayList<>();
+        List<ItemStack> now = new ArrayList<>(WORN_SIZE);
         for (int i = 0; i < GearStore.SIZE; i++) {
             ItemStack stack = gear.get(i);
-            // the slung weapon keeps its parts and finish, so it looks the same on your back
-            now.add(stack.isEmpty() ? ItemStack.EMPTY : i == GearStore.SLING ? stack.copyWithCount(1) : new ItemStack(stack.getItem()));
+            now.add(stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem()));
         }
-        player.setAttached(WORN, List.copyOf(now));
+        // carried weapons keep their parts and finish, so they look the same on you
+        now.add(hanging(player, QuickSlots.BACK, Carry::slings));
+        now.add(hanging(player, QuickSlots.HOLSTER, QuickSlots::handgun));
+        now.add(hanging(player, QuickSlots.SHEATH, s -> s.is(QuickSlots.KNIVES) || s.is(QuickSlots.MACHETES)));
+        List<ItemStack> shown = player.getAttachedOrElse(WORN, List.of());
+        boolean same = shown.size() == WORN_SIZE;
+        for (int i = 0; same && i < WORN_SIZE; i++) {
+            same = i >= GearStore.SIZE ? ItemStack.isSameItemSameComponents(shown.get(i), now.get(i))
+                    : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty();
+        }
+        if (!same) {
+            player.setAttached(WORN, List.copyOf(now));
+        }
     }
 
     private static void slow(ServerPlayer player, double amount) {

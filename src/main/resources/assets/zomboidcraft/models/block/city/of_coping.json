@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "floor_concrete": "zomboidcraft:block/city/floor_concrete",
+    "of_coping": "zomboidcraft:block/city/of_coping",
+    "of_pool_tile": "zomboidcraft:block/city/of_pool_tile",
+    "particle": "zomboidcraft:block/city/of_pool_tile"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_pool_tile",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_pool_tile",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_pool_tile",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_pool_tile",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_coping",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#floor_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

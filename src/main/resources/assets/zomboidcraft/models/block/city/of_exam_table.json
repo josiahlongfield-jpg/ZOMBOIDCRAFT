@@ -1,0 +1,173 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_drw_white": "zomboidcraft:block/city/home_drw_white",
+    "home_white": "zomboidcraft:block/city/home_white",
+    "of_exam_paper": "zomboidcraft:block/city/of_exam_paper",
+    "of_vinyl_teal": "zomboidcraft:block/city/of_vinyl_teal",
+    "particle": "zomboidcraft:block/city/home_drw_white"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_drw_white"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white"
+        },
+        "up": {
+          "texture": "#home_white"
+        },
+        "down": {
+          "texture": "#home_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        7,
+        0.5
+      ],
+      "to": [
+        15.5,
+        9,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_vinyl_teal"
+        },
+        "south": {
+          "texture": "#of_vinyl_teal"
+        },
+        "east": {
+          "texture": "#of_vinyl_teal"
+        },
+        "west": {
+          "texture": "#of_vinyl_teal"
+        },
+        "up": {
+          "texture": "#of_vinyl_teal"
+        },
+        "down": {
+          "texture": "#of_vinyl_teal"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        1
+      ],
+      "to": [
+        13,
+        9.3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_exam_paper"
+        },
+        "south": {
+          "texture": "#of_exam_paper"
+        },
+        "east": {
+          "texture": "#of_exam_paper"
+        },
+        "west": {
+          "texture": "#of_exam_paper"
+        },
+        "up": {
+          "texture": "#of_exam_paper"
+        },
+        "down": {
+          "texture": "#of_exam_paper"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        12
+      ],
+      "to": [
+        14,
+        12,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_vinyl_teal"
+        },
+        "south": {
+          "texture": "#of_vinyl_teal"
+        },
+        "east": {
+          "texture": "#of_vinyl_teal"
+        },
+        "west": {
+          "texture": "#of_vinyl_teal"
+        },
+        "up": {
+          "texture": "#of_vinyl_teal"
+        },
+        "down": {
+          "texture": "#of_vinyl_teal"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        12,
+        14.5
+      ],
+      "to": [
+        13.5,
+        13.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_exam_paper"
+        },
+        "south": {
+          "texture": "#of_exam_paper"
+        },
+        "east": {
+          "texture": "#of_exam_paper"
+        },
+        "west": {
+          "texture": "#of_exam_paper"
+        },
+        "up": {
+          "texture": "#of_exam_paper"
+        },
+        "down": {
+          "texture": "#of_exam_paper"
+        }
+      }
+    }
+  ]
+}

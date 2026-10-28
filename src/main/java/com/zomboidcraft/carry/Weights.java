@@ -25,6 +25,14 @@ public final class Weights {
 
     static {
         mod("bandage", 0.05);
+        mod("leather_belt", 0.25);
+        mod("tool_belt", 0.6);
+        mod("duty_belt", 0.7);
+        mod("hip_holster", 0.25);
+        mod("shoulder_holster", 0.4);
+        mod("thigh_holster", 0.45);
+        mod("knife_sheath", 0.1);
+        mod("machete_sheath", 0.3);
         mod("nails", 0.01);
         mod("duct_tape", 0.15);
         mod("wood_glue", 0.2);
@@ -120,6 +128,10 @@ public final class Weights {
         Double exact = EXACT.get(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
         if (exact != null) {
             return exact;
+        }
+        double loot = com.zomboidcraft.loot.items.ItemInfo.kg(stack);
+        if (loot >= 0) {
+            return loot;
         }
         if (stack.is(ItemTags.SWORDS)) return 1.2;
         if (stack.is(ItemTags.AXES)) return 1.8;

@@ -104,9 +104,11 @@ public final class Builders {
 
     /**
      * A body's headroom over every flight, whatever the builder left there: nothing but air in
-     * the three blocks over a tread (bar the treads of a flight above), so a player or a zombie
-     * climbing never meets the floor above, a lamp or a shelf with their head. Without it a stair
-     * whose floor opening started a step late couldn't be climbed at all.
+     * the four blocks over a tread (bar the treads of a flight above), so a player or a zombie
+     * climbing, even jumping up it, never meets the floor above, a lamp or a shelf with their
+     * head. Without it a stair whose floor opening started a step late couldn't be climbed at all.
+     * A roof four over a tread with only sky over it is lifted a block (a curb round the opening)
+     * rather than holed; a floor there is opened, the stairwell a step longer.
      */
     static void clearHeadroom(Voxels v) {
         List<String> pal = v.palette();
@@ -117,10 +119,13 @@ public final class Builders {
             }
         });
         for (int[] t : treads) {
-            for (int k = 1; k <= 3; k++) {
+            for (int k = 1; k <= HEADROOM; k++) {
                 String b = v.get(t[0], t[1] + k, t[2]);
                 // a banister up the flight's edge stays: it stands at the side, clear of heads
                 if (b != null && !tread(b) && !b.contains("door") && !b.contains("rail_edge") && !b.contains("banister")) {
+                    if (k == HEADROOM && b.contains("roof") && v.get(t[0], t[1] + k + 1, t[2]) == null && sky(v, t[0], t[1] + k + 1, t[2])) {
+                        v.set(t[0], t[1] + k + 1, t[2], b);
+                    }
                     v.set(t[0], t[1] + k, t[2], "air");
                 }
             }
@@ -141,6 +146,20 @@ public final class Builders {
                 v.set(fx, t[1] + 2, fz, "air");
             }
         }
+    }
+
+    /** Clear blocks over every tread. */
+    static final int HEADROOM = 4;
+
+    /** Nothing but air (or foliage) from y up to the top of what's built. */
+    private static boolean sky(Voxels v, int x, int y, int z) {
+        for (int yy = y; yy <= v.maxY(); yy++) {
+            String b = v.get(x, yy, z);
+            if (b != null && !b.startsWith("tree_") && !b.contains("leaves") && !b.contains("vine")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

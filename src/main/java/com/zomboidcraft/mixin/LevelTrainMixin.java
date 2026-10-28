@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * On your game, a train car's roof counts as the top of the world where it stands, like a building's:
  * rain stops on it, and nothing that asks "is it raining here" (rain, puddles, splashes, drops on
- * your face, the mist) reaches inside.
+ * your face, the mist) reaches inside. A car's roof does the same ({@link com.zomboidcraft.world.cars.CarShelter}).
  */
 @Mixin(Level.class)
 public abstract class LevelTrainMixin {
@@ -23,6 +23,10 @@ public abstract class LevelTrainMixin {
             return;
         }
         double roof = TrainPhysics.roofOver(self, x + 0.5, z + 0.5);
+        double car = com.zomboidcraft.world.cars.CarShelter.roofOver(self, x, z);
+        if (Double.isNaN(roof) || car > roof) {
+            roof = car;
+        }
         if (!Double.isNaN(roof)) {
             int top = Mth.ceil(roof);
             if (top > cir.getReturnValueI()) {

@@ -25,7 +25,7 @@ public final class CarrySlots {
         return !player.level().isClientSide() || clientShows.test(slot);
     }
 
-    /** Back, vest, waist and sling. */
+    /** Back, vest and waist bags, and the belt, holster, sheath and watch. */
     public static final class GearSlot extends Slot {
         private final Player player;
         public final int gear;
@@ -38,8 +38,8 @@ public final class CarrySlots {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            if (gear == GearStore.SLING) {
-                return Carry.slings(stack);
+            if (gear >= GearStore.BELT) {
+                return QuickSlots.gearSlot(stack) == gear;
             }
             BagSpec spec = BagItem.spec(stack);
             return spec != null && GearStore.slotFor(spec.wear()) == gear;
@@ -126,6 +126,23 @@ public final class CarrySlots {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Moves a weapon into the quick slots that suit it best (holster, sheath, sling, hip, hands), stopping at the one
+     * it's already in (pass -1 when it isn't in one). Menus here share the inventory menu's hotbar indices.
+     */
+    public static void quick(AbstractContainerMenu menu, Player player, ItemStack stack, int current) {
+        if (!Carry.weapon(stack) || !QuickSlots.on(player)) {
+            return;
+        }
+        for (int q : QuickSlots.order(stack)) {
+            if (q == current || stack.isEmpty()) {
+                return;
+            }
+            int index = net.minecraft.world.inventory.InventoryMenu.USE_ROW_SLOT_START + q;
+            move(menu, stack, index, index + 1);
         }
     }
 

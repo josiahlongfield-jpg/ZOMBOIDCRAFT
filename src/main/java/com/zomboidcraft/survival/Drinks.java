@@ -10,6 +10,7 @@ import net.minecraft.world.item.alchemy.Potions;
 /** How much thirst each consumable restores. */
 public final class Drinks {
     public static void onConsumed(Player player, ItemStack stack) {
+        com.zomboidcraft.loot.items.LootFood.onConsumed(player, stack);
         float value = thirstValue(stack);
         if (value > 0) {
             SurvivalStats stats = SurvivalStats.get(player);
@@ -18,6 +19,8 @@ public final class Drinks {
     }
 
     public static float thirstValue(ItemStack stack) {
+        Float loot = com.zomboidcraft.loot.items.LootFood.thirst(stack);
+        if (loot != null) return Math.max(0f, loot);
         if (stack.is(Items.POTION)) {
             PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
             return contents != null && contents.is(Potions.WATER) ? 40f : 20f;

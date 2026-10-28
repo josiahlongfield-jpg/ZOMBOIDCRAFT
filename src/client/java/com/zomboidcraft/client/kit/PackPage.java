@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.carry.BagContainer;
 import com.zomboidcraft.carry.BagSpec;
 import com.zomboidcraft.carry.Carry;
+import com.zomboidcraft.carry.QuickSlots;
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.Weights;
 import com.zomboidcraft.client.sound.UiSounds;
@@ -166,14 +167,21 @@ final class PackPage {
             grid(g, font, pockets, 9, x, py + 9, LW, 26, mx, my, -1);
         }
 
-        // the belt and the off hand
+        // the quick slots you have, and the off hand
         int by = y + 260;
-        KitDraw.heading(g, font, "Belt & hands", x, by, LW - 40, false);
-        KitDraw.textRight(g, font, "1-9", x + LW, by - 1, KitDraw.FAINT, 0.85f);
+        KitDraw.heading(g, font, "Quick slots", x, by, LW - 40, false);
         List<Integer> belt = new ArrayList<>();
-        for (int i = InventoryMenu.USE_ROW_SLOT_START; i < InventoryMenu.USE_ROW_SLOT_END; i++) belt.add(i);
+        for (int i = InventoryMenu.USE_ROW_SLOT_START; i < InventoryMenu.USE_ROW_SLOT_END; i++) {
+            if (QuickSlots.open(player, i - InventoryMenu.USE_ROW_SLOT_START) || menu.slots.get(i).hasItem()) belt.add(i);
+        }
         int held = InventoryMenu.USE_ROW_SLOT_START + player.getInventory().getSelectedSlot();
         grid(g, font, belt, 9, x, by + 9, 9 * (MAX_TILE + 2), 26, mx, my, held);
+        int t = size(belt.size(), 9, 9 * (MAX_TILE + 2), 26);
+        for (int k = 0; k < belt.size(); k++) {
+            int quick = belt.get(k) - InventoryMenu.USE_ROW_SLOT_START;
+            // the key in the corner says which number draws it
+            KitDraw.caps(g, font, String.valueOf(quick + 1), x + k * (t + 2) + t - 5, by + 11, KitDraw.FAINT, 0.55f);
+        }
         int ox = x + LW - MAX_TILE;
         tile(g, font, InventoryMenu.SHIELD_SLOT, ox, by + 9, MAX_TILE, mx, my, false);
         KitDraw.capsCentred(g, font, "Off", ox + MAX_TILE / 2f, by + 9 + MAX_TILE + 2, KitDraw.FAINT, 0.6f);

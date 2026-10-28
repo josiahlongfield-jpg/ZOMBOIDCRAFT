@@ -18,6 +18,12 @@ public abstract class ClientLevelTrainMixin {
     public int getBrightness(LightLayer layer, BlockPos pos) {
         Level self = (Level) (Object) this;
         int raw = self.getLightEngine().getLayerListener(layer).getLightValue(pos);
-        return TrainPhysics.brightness(self, layer, pos, raw);
+        int light = TrainPhysics.brightness(self, layer, pos, raw);
+        // in a car's cabin too the sky's shut out, so shader packs keep their rain and fog outside
+        if (layer == LightLayer.SKY && light > TrainPhysics.INDOOR_SKY
+                && com.zomboidcraft.world.cars.CarShelter.inside(self, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) {
+            return TrainPhysics.INDOOR_SKY;
+        }
+        return light;
     }
 }
