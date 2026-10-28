@@ -337,22 +337,137 @@ public final class AirStrikes {
         return path;
     }
 
+    /** A gun dive's walk along the street (blocks), how long the cannon fires and holds the dive before it (s). */
+    private static final double LINE = 48, FIRE = 1.6, TRACK = 1.4;
+    /** How hard it pushes over into the dive and pulls out of it (g), and the climb away (degrees). */
+    private static final double PUSH = 1.2, PULL = 3.5, CLIMB = 25;
+
     /**
-     * A strafing run: in low down the street at the crowd, the cannon walking its shells through it from 300
-     * blocks out to 90, just over the rooftops past it, then up and away.
+     * A strafing run (Josiah 11:34): a gun dive straight down the street at the crowd, the cannon opening up with
+     * the nose on the near end of the line and the pilot easing it up so the shells walk straight along it to
+     * the far end, then a hard pull out just over the rooftops and up and away.
      */
     private static Run strafe(ServerLevel level, Vec3 target, Vec3 dir, String model, long now, double delay, RandomSource random) {
-        double speed = 85 + random.nextDouble() * 12;
-        float[] path = lowPass(level, target, dir, speed, 16 + random.nextDouble() * 6, 8);
+        double speed = 85 + random.nextDouble() * 12, dive = 17 + random.nextDouble() * 6;
+        double bottom = Math.max(16 + random.nextDouble() * 6, lift(level, target, dir, FLAT, LEVEL, -160, 200, 8));
+        double[] fire = new double[1];
+        float[] path = gunDive(level, target, dir, speed, Math.toRadians(dive), bottom, fire);
         WorldEvents.Event e = event(WorldEvents.Kind.STRAFE, path, model, now, delay);
         Run run = new Run(e, target, dir);
-        run.fireFrom = run.when(-300);
-        run.fireTo = run.when(-90);
+        run.fireFrom = Math.round(delay / STEP) * STEP + fire[0];
+        run.fireTo = run.fireFrom + FIRE;
         double side = (random.nextDouble() * 2 - 1) * 3;
         Vec3 across = new Vec3(-dir.z, 0, dir.x);
-        run.lineFrom = target.add(dir.scale(-24)).add(across.scale(side)).add(0, 0.5, 0);
-        run.lineTo = target.add(dir.scale(24)).add(across.scale(-side)).add(0, 0.5, 0);
+        run.lineFrom = target.add(dir.scale(-LINE / 2)).add(across.scale(side)).add(0, 0.5, 0);
+        run.lineTo = target.add(dir.scale(LINE / 2)).add(across.scale(-side)).add(0, 0.5, 0);
         return run;
+    }
+
+    /**
+     * A gun dive's path, flown at speed: level in high, pushed over into a dive (radians) aimed at the near end
+     * of the line, held, then eased up while firing so the nose walks LINE blocks along it in FIRE seconds, and
+     * a hard pull out that bottoms out bottom blocks over the target and climbs away. fire[0] gets when (seconds
+     * into the path) the cannon opens up.
+     */
+    private static float[] gunDive(ServerLevel level, Vec3 target, Vec3 dir, double speed, double dive, double bottom,
+            double[] fire) {
+        double dt = 0.05;
+        // the height it opens fire from: the higher, the faster the nose sweeps the ground for the same easing up,
+        // so try heights until the pull out after the walk bottoms out where it should
+        double hs = 70;
+        List<double[]> ahead = List.of();
+        for (int k = 0; k < 8; k++) {
+            ahead = walkAndPull(speed, dive, hs, dt);
+            double low = Double.MAX_VALUE;
+            for (double[] p : ahead) {
+                low = Math.min(low, p[1]);
+            }
+            hs = Math.clamp(hs + bottom - low, 30, 160);
+        }
+        // the nose is on the line's near end when it opens up
+        double u0 = -LINE / 2 - hs / Math.tan(dive);
+        List<double[]> back = new ArrayList<>();
+        double u = u0, h = hs, d = dive;
+        back.add(new double[] {u, h});
+        for (double t = 0; t < TRACK; t += dt) {
+            u -= speed * Math.cos(d) * dt;
+            h += speed * Math.sin(d) * dt;
+            back.add(new double[] {u, h});
+        }
+        double push = G * PUSH / speed;
+        while (d > 0) {
+            d = Math.max(0, d - push * dt);
+            u -= speed * Math.cos(d) * dt;
+            h += speed * Math.sin(d) * dt;
+            back.add(new double[] {u, h});
+        }
+        while (u > -REACH) {
+            u -= speed * dt;
+            back.add(new double[] {u, h});
+        }
+        List<double[]> all = new ArrayList<>(back.reversed());
+        for (int i = 1; i < ahead.size(); i++) {
+            double[] p = ahead.get(i);
+            all.add(new double[] {p[0] + u0, p[1]});
+        }
+        // a point every STEP, one of them right where the firing starts
+        int every = (int) Math.round(STEP / dt), opens = back.size() - 1, first = opens % every;
+        int n = (all.size() - 1 - first) / every + 1;
+        float[] path = new float[n * 4];
+        float yaw = (float) Math.toDegrees(Math.atan2(-dir.x, dir.z));
+        for (int i = 0; i < n; i++) {
+            double[] p = all.get(first + i * every);
+            Vec3 at = target.add(dir.scale(p[0]));
+            path[i * 4] = (float) at.x;
+            path[i * 4 + 1] = (float) Math.min(target.y + p[1], level.getMaxY() - 8);
+            path[i * 4 + 2] = (float) at.z;
+            path[i * 4 + 3] = yaw;
+        }
+        fire[0] = (opens - first) * dt;
+        clear(level, path, WING, 8, 2);
+        return path;
+    }
+
+    /**
+     * From where the cannon opens up (u 0, hs high, diving at dive radians): easing the nose up just fast enough
+     * to walk the aim LINE blocks in FIRE seconds, then the pull out and the climb away, out to REACH past the
+     * target and beyond. Points (u, height) every dt seconds.
+     */
+    private static List<double[]> walkAndPull(double speed, double dive, double hs, double dt) {
+        // how fast to ease up: the aim (where the nose line meets the ground) only moves as the dive shallows
+        double lo = 0, hi = (dive - 0.03) / FIRE;
+        for (int k = 0; k < 30; k++) {
+            double q = (lo + hi) / 2;
+            double u = 0, h = hs, d = dive;
+            for (double t = 0; t < FIRE; t += dt) {
+                d -= q * dt;
+                u += speed * Math.cos(d) * dt;
+                h -= speed * Math.sin(d) * dt;
+            }
+            double swept = h <= 0 ? Double.MAX_VALUE : u + h / Math.tan(d) - hs / Math.tan(dive);
+            if (swept > LINE) {
+                hi = q;
+            } else {
+                lo = q;
+            }
+        }
+        double q = lo, pull = G * PULL / speed, climb = -Math.toRadians(CLIMB);
+        List<double[]> out = new ArrayList<>();
+        double u = 0, h = hs, d = dive, top = hs + 160;
+        out.add(new double[] {u, h});
+        for (double t = 0; u < REACH + 600; t += dt) {
+            if (t < FIRE) {
+                d -= q * dt;
+            } else if (h < top) {
+                d = Math.max(climb, d - pull * dt);
+            } else {
+                d = Math.min(0, d + pull * 0.4 * dt);
+            }
+            u += speed * Math.cos(d) * dt;
+            h -= speed * Math.sin(d) * dt;
+            out.add(new double[] {u, h});
+        }
+        return out;
     }
 
     /**
@@ -490,18 +605,6 @@ public final class AirStrikes {
             this.event = event;
             this.target = target;
             this.dir = dir;
-        }
-
-        /** When the aircraft first passes this far along its run, past the target (negative: still coming in). */
-        double when(double along) {
-            float[] path = event.path();
-            for (int i = 0; i < path.length / 4; i++) {
-                double u = (path[i * 4] - target.x) * dir.x + (path[i * 4 + 2] - target.z) * dir.z;
-                if (u >= along) {
-                    return i * STEP;
-                }
-            }
-            return -1;
         }
 
         /**
