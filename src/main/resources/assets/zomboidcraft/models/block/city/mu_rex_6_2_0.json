@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_bone": "zomboidcraft:block/city/mu_bone",
+    "particle": "zomboidcraft:block/city/mu_bone"
+  },
+  "elements": [
+    {
+      "from": [
+        9.7,
+        14.5,
+        11.9
+      ],
+      "to": [
+        15.9,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    },
+    {
+      "from": [
+        12.3,
+        9.5,
+        12.1
+      ],
+      "to": [
+        16,
+        15.3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    },
+    {
+      "from": [
+        14.9,
+        4.5,
+        12.3
+      ],
+      "to": [
+        16,
+        9.9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_parkmap_5": "zomboidcraft:block/city/mu_parkmap_5",
+    "particle": "zomboidcraft:block/city/mu_parkmap_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_parkmap_5"
+        },
+        "south": {
+          "texture": "#mu_parkmap_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_parkmap_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_parkmap_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_parkmap_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_parkmap_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

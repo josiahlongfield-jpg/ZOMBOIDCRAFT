@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_bone": "zomboidcraft:block/city/mu_bone",
+    "particle": "zomboidcraft:block/city/mu_bone"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        8.5,
+        11.5
+      ],
+      "to": [
+        11.5,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    },
+    {
+      "from": [
+        7.1,
+        3.5,
+        11.7
+      ],
+      "to": [
+        13.7,
+        10.1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    },
+    {
+      "from": [
+        9.7,
+        0,
+        11.9
+      ],
+      "to": [
+        15.9,
+        4.7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1119,6 +1119,8 @@ import university  # noqa: E402
 university.register(sys.modules[__name__])
 import civiccentre  # noqa: E402
 civiccentre.register(sys.modules[__name__])
+import museum  # noqa: E402
+museum.register(sys.modules[__name__])
 
 
 def build(name):

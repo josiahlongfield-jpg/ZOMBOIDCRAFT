@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_white_iron": "zomboidcraft:block/city/mu_white_iron",
+    "particle": "zomboidcraft:block/city/mu_white_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_white_iron"
+        },
+        "south": {
+          "texture": "#mu_white_iron"
+        },
+        "east": {
+          "texture": "#mu_white_iron"
+        },
+        "west": {
+          "texture": "#mu_white_iron"
+        },
+        "up": {
+          "texture": "#mu_white_iron",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_white_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        1.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_white_iron"
+        },
+        "south": {
+          "texture": "#mu_white_iron"
+        },
+        "east": {
+          "texture": "#mu_white_iron"
+        },
+        "west": {
+          "texture": "#mu_white_iron"
+        },
+        "up": {
+          "texture": "#mu_white_iron"
+        },
+        "down": {
+          "texture": "#mu_white_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

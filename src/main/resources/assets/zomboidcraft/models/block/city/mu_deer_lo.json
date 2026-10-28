@@ -1,0 +1,231 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_white": "zomboidcraft:block/city/home_white",
+    "mu_fur_deer": "zomboidcraft:block/city/mu_fur_deer",
+    "particle": "zomboidcraft:block/city/mu_fur_deer"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        3
+      ],
+      "to": [
+        6.5,
+        10,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        0,
+        3
+      ],
+      "to": [
+        11,
+        10,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        12
+      ],
+      "to": [
+        6.5,
+        10,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        0,
+        12
+      ],
+      "to": [
+        11,
+        10,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        9,
+        2
+      ],
+      "to": [
+        11.5,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_fur_deer"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        13,
+        15
+      ],
+      "to": [
+        9,
+        15,
+        16.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_white"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white",
+          "uv": [
+            0,
+            1,
+            1.5,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#home_white",
+          "uv": [
+            14.5,
+            1,
+            16,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#home_white",
+          "uv": [
+            7,
+            14.5,
+            9,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#home_white",
+          "uv": [
+            7,
+            0,
+            9,
+            1.5
+          ]
+        }
+      }
+    }
+  ]
+}

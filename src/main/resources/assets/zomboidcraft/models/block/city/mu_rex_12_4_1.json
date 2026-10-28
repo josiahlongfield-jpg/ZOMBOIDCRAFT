@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_bone": "zomboidcraft:block/city/mu_bone",
+    "mu_leather": "zomboidcraft:block/city/mu_leather",
+    "particle": "zomboidcraft:block/city/mu_bone"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        14,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_bone",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_bone",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone"
+        },
+        "east": {
+          "texture": "#mu_bone",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        0.8
+      ],
+      "to": [
+        6,
+        14,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_leather"
+        },
+        "south": {
+          "texture": "#mu_leather"
+        },
+        "east": {
+          "texture": "#mu_leather"
+        },
+        "west": {
+          "texture": "#mu_leather",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_leather"
+        },
+        "down": {
+          "texture": "#mu_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        2,
+        2.8
+      ],
+      "to": [
+        16,
+        7,
+        13.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_leather"
+        },
+        "south": {
+          "texture": "#mu_leather"
+        },
+        "east": {
+          "texture": "#mu_leather",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_leather"
+        },
+        "up": {
+          "texture": "#mu_leather"
+        },
+        "down": {
+          "texture": "#mu_leather"
+        }
+      }
+    }
+  ]
+}
