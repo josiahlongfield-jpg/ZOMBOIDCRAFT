@@ -1,0 +1,248 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_glass_on": "zomboidcraft:block/city/bunk_glass_on",
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "hs_cart_grey": "zomboidcraft:block/city/hs_cart_grey",
+    "hs_counter": "zomboidcraft:block/city/hs_counter",
+    "hs_enamel": "zomboidcraft:block/city/hs_enamel",
+    "hs_enamel_white": "zomboidcraft:block/city/hs_enamel_white",
+    "particle": "zomboidcraft:block/city/hs_cart_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_cart_grey"
+        },
+        "south": {
+          "texture": "#hs_enamel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_enamel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_counter"
+        },
+        "down": {
+          "texture": "#bunk_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        1.5
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_counter"
+        },
+        "south": {
+          "texture": "#hs_counter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_counter",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_counter",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_counter"
+        },
+        "down": {
+          "texture": "#hs_counter"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        11,
+        6
+      ],
+      "to": [
+        5,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        15,
+        5
+      ],
+      "to": [
+        4.5,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        11,
+        7
+      ],
+      "to": [
+        13,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_enamel_white"
+        },
+        "south": {
+          "texture": "#hs_enamel_white"
+        },
+        "east": {
+          "texture": "#hs_enamel_white"
+        },
+        "west": {
+          "texture": "#hs_enamel_white"
+        },
+        "up": {
+          "texture": "#hs_enamel_white"
+        },
+        "down": {
+          "texture": "#hs_enamel_white"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        14,
+        8
+      ],
+      "to": [
+        12,
+        14.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        11
+      ],
+      "to": [
+        7,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_glass_on"
+        },
+        "south": {
+          "texture": "#bunk_glass_on"
+        },
+        "east": {
+          "texture": "#bunk_glass_on"
+        },
+        "west": {
+          "texture": "#bunk_glass_on"
+        },
+        "up": {
+          "texture": "#bunk_glass_on"
+        },
+        "down": {
+          "texture": "#bunk_glass_on"
+        }
+      }
+    }
+  ]
+}

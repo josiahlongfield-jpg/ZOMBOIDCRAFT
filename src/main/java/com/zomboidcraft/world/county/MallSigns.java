@@ -17,7 +17,7 @@ final class MallSigns {
      * the wall, tile 0 at its viewer's left (high x facing north, low x facing south, high z
      * facing east, low z facing west).
      */
-    private static int[] at(int x0, int z0, int cols, int c, String facing) {
+    static int[] at(int x0, int z0, int cols, int c, String facing) {
         return switch (facing) {
             case "north" -> new int[] {x0 + cols - 1 - c, z0};
             case "south" -> new int[] {x0 + c, z0};

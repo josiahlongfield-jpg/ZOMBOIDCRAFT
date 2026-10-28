@@ -226,6 +226,12 @@ final class Layout {
             // the galleria: four blocks along the front, three deep, the car park and decks round it
             return lot(s, PlaceType.LANDMARK, "mall", 4, 3, h);
         }
+        if (s.id().equals("mercy")) {
+            // Mercy General: two blocks square, nudged off the street the subway runs under so its
+            // Mercy General platform stays under the street in front (the Glass Line deeper still)
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "mercy", 2880, -320, s.flags(), s.name()),
+                    PlaceType.LANDMARK, "mercy", 2, 2, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);

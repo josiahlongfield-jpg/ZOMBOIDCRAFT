@@ -17,6 +17,8 @@ import com.zomboidcraft.world.city.Placer;
  * terminal past that.</li>
  * <li>mall: Grayhaven Mall ({@link Mall}), the island's galleria between its two department
  * stores, with its car park and parking decks.</li>
+ * <li>mercy: Mercy General Hospital ({@link Hospital}), the brick podium with the ER and its
+ * ambulance bay, the white ward tower over it, the service wing and the staff lot behind.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -39,6 +41,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("mall")) {
             mall();
+            return;
+        }
+        if (variant("mercy")) {
+            new Hospital(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         kit = new Kit(out, rng, w, d);
