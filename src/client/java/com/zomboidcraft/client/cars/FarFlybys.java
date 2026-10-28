@@ -46,6 +46,8 @@ public final class FarFlybys {
 
     private static final List<Far> FLYING = new ArrayList<>();
     private static ClientLevel in;
+    /** Ids for the stand-ins, counting down from far below anything the server hands out. */
+    private static int nextId = -1_000_000;
 
     private FarFlybys() {
     }
@@ -113,6 +115,8 @@ public final class FarFlybys {
                 if (f.car == null) {
                     continue;
                 }
+                // never added to the level, so it has no id; the per-aircraft maps (cockpit lights, surfaces...) hash by it
+                f.car.setId(nextId--);
                 f.car.setLook(e.model(), "usable");
             }
             CarProp car = f.car;
