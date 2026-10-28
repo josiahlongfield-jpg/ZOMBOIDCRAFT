@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_chroma": "zomboidcraft:block/city/tv_chroma",
+    "particle": "zomboidcraft:block/city/tv_chroma"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_chroma",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tv_chroma",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_chroma",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_chroma",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_chroma",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_chroma",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_server_lid": "zomboidcraft:block/city/bunk_server_lid",
+    "bunk_server_side": "zomboidcraft:block/city/bunk_server_side",
+    "tv_rack": "zomboidcraft:block/city/tv_rack",
+    "particle": "zomboidcraft:block/city/tv_rack"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_rack"
+        },
+        "south": {
+          "texture": "#bunk_server_side"
+        },
+        "east": {
+          "texture": "#bunk_server_side"
+        },
+        "west": {
+          "texture": "#bunk_server_side"
+        },
+        "up": {
+          "texture": "#bunk_server_lid",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bunk_server_side",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

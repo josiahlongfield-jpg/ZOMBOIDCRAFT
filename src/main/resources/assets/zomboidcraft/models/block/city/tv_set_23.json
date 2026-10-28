@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_set_23": "zomboidcraft:block/city/tv_set_23",
+    "particle": "zomboidcraft:block/city/tv_set_23"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_set_23"
+        },
+        "south": {
+          "texture": "#tv_set_23",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_set_23",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_set_23",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_set_23",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_set_23",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
