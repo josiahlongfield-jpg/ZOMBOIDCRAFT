@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_pipe_red": "zomboidcraft:block/city/bunk_pipe_red",
+    "bunk_tank": "zomboidcraft:block/city/bunk_tank",
+    "fit_louvre": "zomboidcraft:block/city/fit_louvre",
+    "pw_drum": "zomboidcraft:block/city/pw_drum",
+    "particle": "zomboidcraft:block/city/fit_louvre"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        12,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_louvre"
+        },
+        "south": {
+          "texture": "#pw_drum"
+        },
+        "east": {
+          "texture": "#pw_drum"
+        },
+        "west": {
+          "texture": "#pw_drum"
+        },
+        "up": {
+          "texture": "#pw_drum"
+        },
+        "down": {
+          "texture": "#pw_drum",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        4
+      ],
+      "to": [
+        15,
+        15,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_tank"
+        },
+        "south": {
+          "texture": "#bunk_tank"
+        },
+        "east": {
+          "texture": "#bunk_tank"
+        },
+        "west": {
+          "texture": "#bunk_tank"
+        },
+        "up": {
+          "texture": "#bunk_tank"
+        },
+        "down": {
+          "texture": "#bunk_tank",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        9
+      ],
+      "to": [
+        15,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_pipe_red"
+        },
+        "south": {
+          "texture": "#bunk_pipe_red"
+        },
+        "east": {
+          "texture": "#bunk_pipe_red"
+        },
+        "west": {
+          "texture": "#bunk_pipe_red"
+        },
+        "up": {
+          "texture": "#bunk_pipe_red"
+        },
+        "down": {
+          "texture": "#bunk_pipe_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

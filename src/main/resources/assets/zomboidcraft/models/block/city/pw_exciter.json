@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_louvre": "zomboidcraft:block/city/fit_louvre",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "pw_gen": "zomboidcraft:block/city/pw_gen",
+    "pw_tg": "zomboidcraft:block/city/pw_tg",
+    "particle": "zomboidcraft:block/city/pw_tg"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        2,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_tg"
+        },
+        "south": {
+          "texture": "#pw_tg"
+        },
+        "east": {
+          "texture": "#pw_tg"
+        },
+        "west": {
+          "texture": "#pw_tg"
+        },
+        "up": {
+          "texture": "#pw_tg"
+        },
+        "down": {
+          "texture": "#pw_tg",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        1
+      ],
+      "to": [
+        13,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_louvre"
+        },
+        "south": {
+          "texture": "#pw_gen"
+        },
+        "east": {
+          "texture": "#pw_gen"
+        },
+        "west": {
+          "texture": "#pw_gen"
+        },
+        "up": {
+          "texture": "#pw_gen"
+        },
+        "down": {
+          "texture": "#pw_gen"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "to": [
+        10,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

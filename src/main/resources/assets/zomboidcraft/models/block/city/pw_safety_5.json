@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_safety_5": "zomboidcraft:block/city/pw_safety_5",
+    "particle": "zomboidcraft:block/city/pw_safety_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_safety_5"
+        },
+        "south": {
+          "texture": "#pw_safety_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_safety_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_safety_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_safety_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_safety_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

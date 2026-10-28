@@ -1,0 +1,103 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_louvre": "zomboidcraft:block/city/fit_louvre",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "pw_dozer": "zomboidcraft:block/city/pw_dozer",
+    "particle": "zomboidcraft:block/city/fit_louvre"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        4,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_louvre",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_dozer",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_dozer",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_dozer",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_dozer"
+        },
+        "down": {
+          "texture": "#pw_dozer"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        4
+      ],
+      "to": [
+        9,
+        20,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            7,
+            0,
+            10,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            6,
+            0,
+            9,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            9,
+            0,
+            12,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            4,
+            0,
+            7,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

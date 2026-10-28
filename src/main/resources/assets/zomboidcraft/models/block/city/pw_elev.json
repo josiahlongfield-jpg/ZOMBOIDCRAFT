@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "pw_duct": "zomboidcraft:block/city/pw_duct",
+    "pw_machine": "zomboidcraft:block/city/pw_machine",
+    "particle": "zomboidcraft:block/city/pw_machine"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_machine"
+        },
+        "south": {
+          "texture": "#pw_duct"
+        },
+        "east": {
+          "texture": "#pw_duct"
+        },
+        "west": {
+          "texture": "#pw_duct"
+        },
+        "up": {
+          "texture": "#pw_duct",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_duct",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        0.5
+      ],
+      "to": [
+        12,
+        12,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

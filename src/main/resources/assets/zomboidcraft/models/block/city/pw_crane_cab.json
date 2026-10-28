@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_crane": "zomboidcraft:block/city/pw_crane",
+    "pw_sash": {
+      "sprite": "zomboidcraft:block/city/pw_sash",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/pw_sash"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_sash"
+        },
+        "south": {
+          "texture": "#pw_crane"
+        },
+        "east": {
+          "texture": "#pw_sash"
+        },
+        "west": {
+          "texture": "#pw_sash"
+        },
+        "up": {
+          "texture": "#pw_crane"
+        },
+        "down": {
+          "texture": "#pw_crane",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_crane",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_crane",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_crane",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_crane",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_crane",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_crane"
+        }
+      }
+    }
+  ]
+}

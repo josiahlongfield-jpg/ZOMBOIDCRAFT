@@ -1127,6 +1127,8 @@ import ballpark  # noqa: E402
 ballpark.register(sys.modules[__name__])
 import broadcast  # noqa: E402
 broadcast.register(sys.modules[__name__])
+import power  # noqa: E402
+power.register(sys.modules[__name__])
 
 
 

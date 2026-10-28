@@ -1,0 +1,125 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "brick_red": "zomboidcraft:block/city/brick_red",
+    "pw_arch_2": "zomboidcraft:block/city/pw_arch_2",
+    "pw_archg_2": {
+      "sprite": "zomboidcraft:block/city/pw_archg_2",
+      "force_translucent": true
+    },
+    "pw_tg": "zomboidcraft:block/city/pw_tg",
+    "particle": "zomboidcraft:block/city/pw_arch_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_arch_2",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_arch_2"
+        },
+        "east": {
+          "texture": "#brick_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#brick_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#brick_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#brick_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_archg_2"
+        },
+        "south": {
+          "texture": "#pw_archg_2"
+        },
+        "east": {
+          "texture": "#pw_tg",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_tg",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_tg",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_tg",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_arch_2"
+        },
+        "south": {
+          "texture": "#pw_arch_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#brick_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#brick_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#brick_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#brick_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
