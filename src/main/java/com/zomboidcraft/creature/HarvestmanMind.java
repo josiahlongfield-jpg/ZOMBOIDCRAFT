@@ -38,6 +38,12 @@ public final class HarvestmanMind {
     public static final int IDLE = 0, WANDER = 1, PERCH = 2, CEILING = 3, HIDE = 4, LISTEN = 5, INVESTIGATE = 6,
             STALK = 7, AMBUSH = 8, STRIKE = 9, DRAG = 10, FEED = 11, FLEE = 12, LAIR = 13, REST = 14, ZOMBIE = 15,
             GLIMPSE = 16, LEAVE_BODY = 17, TRAVEL = 18;
+    /**
+     * How fast it can go when it wants to (blocks a second): closing on prey, vanishing once seen, getting away hurt;
+     * faster than a sprinting player when the prey runs; the lunge itself. It creeps everywhere else.
+     */
+    static final double BURST = 7.5, SPRINT = 9.5, LUNGE = 11;
+
     public static final String[] PLANS = {"idle", "wander", "perch", "ceiling", "hide", "listen", "investigate", "stalk",
             "ambush", "strike", "drag", "feed", "flee", "lair", "rest", "zombie", "glimpse", "leave_body", "travel"};
     /** What a plan is, said plainly (/zc harvestman info). */
@@ -612,7 +618,7 @@ public final class HarvestmanMind {
         if (prey == null) {
             return;
         }
-        start(prey instanceof Zombie ? ZOMBIE : STRIKE, prey.position(), 4.6);
+        start(prey instanceof Zombie ? ZOMBIE : STRIKE, prey.position(), BURST);
         quarry = prey;
         h.wantFloor = true;
         if (prey instanceof Player) {
@@ -632,7 +638,8 @@ public final class HarvestmanMind {
         switch (phase) {
             case 0 -> {
                 h.goal = quarry.position();
-                h.goalSpeed = 4.6;
+                // it closes fast, and faster still on prey that runs
+                h.goalSpeed = quarry.isSprinting() ? SPRINT : BURST;
                 if (d < 3.4) {
                     phase = 1;
                     phaseTicks = 0;
@@ -655,7 +662,7 @@ public final class HarvestmanMind {
             }
             case 2 -> {
                 h.goal = head.add(head.subtract(h.centre()).normalize().scale(1.2));
-                h.goalSpeed = 7.5;
+                h.goalSpeed = LUNGE;
                 if (d < 1.5 && quarry instanceof LivingEntity le && h.grab(level, le)) {
                     grabs++;
                     bold = Math.min(1, bold + 0.03);
@@ -745,7 +752,7 @@ public final class HarvestmanMind {
                 level.playSound(null, h.getX(), h.getY(), h.getZ(), HarvestmanSounds.CLICK, SoundSource.HOSTILE, 0.8f, 0.8f);
             }
             end();
-            start(HIDE, hideFrom(level, t), 3.5);
+            start(HIDE, hideFrom(level, t), BURST);    // gone in a blink
         }
         if (planTicks > 20 * 30) {
             end();
@@ -854,7 +861,7 @@ public final class HarvestmanMind {
         // a hard burst while it isn't holding anything sends it off
         if (h.held() == null && hurtRecent > 60 && plan != FLEE && plan != STRIKE) {
             end();
-            start(FLEE, by instanceof Player p ? hideFrom(level, p) : spot(HIDE, 16), 3.8);
+            start(FLEE, by instanceof Player p ? hideFrom(level, p) : spot(HIDE, 16), SPRINT);
             level.playSound(null, h.getX(), h.getY(), h.getZ(), HarvestmanSounds.HURT, SoundSource.HOSTILE, 1.4f, 1f);
         }
     }
@@ -866,14 +873,14 @@ public final class HarvestmanMind {
         }
         end();
         Vec3 to = lair != null ? Vec3.atCenterOf(lair) : spot(HIDE, 20);
-        start(FLEE, to, 3.2);
+        start(FLEE, to, BURST);
     }
 
     void lostPrey(ServerLevel level) {
         escapes++;
         bold = Math.max(0.1, bold - 0.05);
         end();
-        start(HIDE, spot(HIDE, 16), 3.2);
+        start(HIDE, spot(HIDE, 16), BURST);
     }
 
     void fed(ServerLevel level, Entity what) {

@@ -346,9 +346,13 @@ public class HarvestmanEntity extends Mob {
                 dir = t.scale(1 / dist);
             }
         }
-        double top = goal == null ? 0 : Math.min(goalSpeed * mind.speedScale(), Math.sqrt(2 * 3 * Math.max(0, dist - 0.3)));
-        speed = speed < top ? Math.min(top, speed + ACCEL * mind.accelScale() * dt) : Math.max(top, speed - BRAKE * dt);
-        BlockHitResult ahead = cast(c, c.add(dir.scale(1.6)));
+        // at a burst it gets up to speed and stops again in a few strides, its points biting in
+        boolean burst = goal != null && goalSpeed > 5 || speed > 5;
+        double stop = burst ? 12 : 3;
+        double top = goal == null ? 0 : Math.min(goalSpeed * mind.speedScale(), Math.sqrt(2 * stop * Math.max(0, dist - 0.3)));
+        speed = speed < top ? Math.min(top, speed + ACCEL * mind.accelScale() * (burst ? 2.5 : 1) * dt)
+                : Math.max(top, speed - (burst ? 14 : BRAKE) * dt);
+        BlockHitResult ahead = cast(c, c.add(dir.scale(Math.max(1.6, speed * 0.3))));
         if (ahead.getType() != HitResult.Type.MISS && !(wantFloor && normal(ahead).y > 0.5)) {
             dir = dir.add(up.scale(1.4)).normalize();
         }
@@ -395,7 +399,7 @@ public class HarvestmanEntity extends Mob {
         f = f.normalize();
         if (want.lengthSqr() > 1e-6) {
             want = want.normalize();
-            double a = Math.acos(Mth.clamp(f.dot(want), -1, 1)), max = TURN_RATE * mind.speedScale() * dt;
+            double a = Math.acos(Mth.clamp(f.dot(want), -1, 1)), max = TURN_RATE * mind.speedScale() * (speed > 5 ? 2.5 : 1) * dt;
             f = a <= max ? want : slerp(f, want, max / a);
         }
         fwd = f.subtract(up.scale(f.dot(up))).normalize();

@@ -52,6 +52,11 @@ public final class HarvestmanLegs {
         return new HarvestmanBody.Frame(centre, up.cross(fwd), up, fwd);
     }
 
+    /** Its stride: longer the faster it goes, so at a burst it bounds rather than scuttles. */
+    private double stride() {
+        return Mth.clamp(STRIDE + 0.25 * (spd - 3), STRIDE, 4.2);
+    }
+
     /** How fast it's going along its surface (blocks a second). */
     public double speed() {
         return spd;
@@ -142,7 +147,7 @@ public final class HarvestmanLegs {
         Vec3 up = fr.y();
         double s = HarvestmanBody.side(li);
         HarvestmanBody.Leg L = HarvestmanBody.leg(li);
-        double cyc = (spd + 1.5 * Math.abs(turn)) / STRIDE, sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
+        double cyc = (spd + 1.5 * Math.abs(turn)) / stride(), sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
         double r0 = L.restR() * Mth.lerp(floorness(up), CLING_SPREAD, 1), dmin = L.lc() - L.a() + 0.45;
         double r = Math.max(r0, Math.sqrt(Math.max(0, dmin * dmin - h * h)) + 0.65);
         Vec3 H = fr.hip(li);
@@ -153,8 +158,9 @@ public final class HarvestmanLegs {
             off = hu.add(flat.scale(Math.cos(ta))).add(sd.scale(Math.sin(ta)));
         }
         Vec3 lead = vel.scale(st);
-        if (lead.length() > 0.95) {
-            lead = norm(lead).scale(0.95);
+        double reach = Mth.clamp(0.95 + 0.12 * (spd - 3), 0.95, 1.7);
+        if (lead.length() > reach) {
+            lead = norm(lead).scale(reach);
         }
         Vec3 P0 = fr.o().add(off).add(lead);
         Vec3 d = P0.subtract(H);
@@ -195,7 +201,7 @@ public final class HarvestmanLegs {
 
     private void stepFeet(double dt, HarvestmanBody.Frame fr, double h, double rear, int lost, Level level, Entity e, RandomSource random) {
         Vec3 up = fr.y();
-        double cyc = (spd + 1.5 * Math.abs(turn)) / STRIDE, sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
+        double cyc = (spd + 1.5 * Math.abs(turn)) / stride(), sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
         for (int li = 0; li < 4; li++) {
             target(li, fr, h, level, e);
         }
@@ -235,7 +241,7 @@ public final class HarvestmanLegs {
             boolean due = moving && Math.floor(b) > Math.floor(a);
             double far = feet[i].distanceTo(targets[i]);
             if (due && far > 0.15 || far > 2.3 || cramped(i, fr) && far > 0.3 && active == 0) {
-                lift(i, Mth.clamp(sf / Math.max(cyc * hurry, 0.05), 0.26, 0.75), false, spd);
+                lift(i, Mth.clamp(sf / Math.max(cyc * hurry, 0.05), spd > 5 ? 0.13 : 0.26, 0.75), false, spd);
                 active++;
             }
         }
