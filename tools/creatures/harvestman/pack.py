@@ -6,14 +6,14 @@ Writes src/main/resources/assets/zomboidcraft/creatures/harvestman.zhm, deflated
   int levels, per level: int parts, per part: name (short length + utf-8), int triangles,
   then per vertex: float x y z, byte nx ny nz (x127), byte r g b (sRGB x255), byte flags (1 = glows).
 Big-endian, as Java's DataInputStream reads it. The preview draws both sides of every triangle, so each one is
-wound here to face the way its normals point (counter-clockwise from the front), and the game can cull back faces. Each part is in its own frame: the body's (z forward, y up),
+wound here to face the way its normals point (counter-clockwise from the front), and the game can cull back faces. Each part is in its own frame: the body's (z forward, y up; the arms and beard hunting, and closed in the feeding grip),
 a thigh's (x from hip to knee) or a lower leg's (x along the straight line from knee to point, bowing toward +y).
 """
 import json, struct, sys, zlib, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '../../../src/main/resources/assets/zomboidcraft/creatures/harvestman.zhm')
-ORDER = ['body', 'thighF', 'thighR', 'lowF', 'lowR']
+ORDER = ['body', 'armsHunt', 'armsFeed', 'thighF', 'thighR', 'lowF', 'lowR']
 
 
 def level(data):

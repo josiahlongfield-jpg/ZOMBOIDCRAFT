@@ -15,5 +15,9 @@ public abstract class PlayerRidingMixin {
         if (((Player) (Object) this).getVehicle() instanceof CarProp car && car.aircraft()) {
             cir.setReturnValue(false);
         }
+        // held by a Harvestman, sneaking won't get you out: struggle (jump) or be shot free
+        if (((Player) (Object) this).getVehicle() instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+            cir.setReturnValue(false);
+        }
     }
 }

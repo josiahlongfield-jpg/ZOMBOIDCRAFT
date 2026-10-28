@@ -208,6 +208,9 @@ public final class Dismember {
         BodyHit best = null;
         double nearest = range;
         for (Entity e : shooter.level().getEntities(shooter, new AABB(eye, stop).inflate(REACH + MOVED), canHit)) {
+            if (e instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+                continue;   // its own pass, below
+            }
             if (shooter.isPassenger() && e.getRootVehicle() == shooter.getRootVehicle()) {
                 continue;   // not whoever's riding with you
             }
@@ -240,6 +243,22 @@ public final class Dismember {
                     best = new BodyHit(e, at.get(), -1);
                 }
             }
+        }
+        // a Harvestman is hit where its hull, belly and legs are (they reach well past its box)
+        com.zomboidcraft.creature.HarvestmanEntity hm = null;
+        com.zomboidcraft.creature.HarvestmanBody.Strike hs = null;
+        for (com.zomboidcraft.creature.HarvestmanEntity h : shooter.level().getEntitiesOfClass(
+                com.zomboidcraft.creature.HarvestmanEntity.class, new AABB(eye, stop).inflate(6), canHit::test)) {
+            com.zomboidcraft.creature.HarvestmanBody.Strike s = h.strike(eye, dir, nearest);
+            if (s != null && s.distance() < nearest) {
+                nearest = s.distance();
+                hm = h;
+                hs = s;
+            }
+        }
+        if (hm != null) {
+            hm.struck(hs);
+            return new BodyHit(hm, hs.at(), -1);
         }
         return best;
     }

@@ -51,6 +51,7 @@ public final class Noise {
                 player.setAttached(HEARD, new Heard((int) Math.round(radius * 10), ++heard));
             }
         }
+        com.zomboidcraft.creature.HarvestmanDirector.noise(level, pos, radius);
         // the dead still waiting as records in earshot come out to it too
         com.zomboidcraft.zombie.population.Population.wake(level, pos, radius);
         double radiusSqr = radius * radius;

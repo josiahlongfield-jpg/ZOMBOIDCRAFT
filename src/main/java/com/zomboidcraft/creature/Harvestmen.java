@@ -7,9 +7,11 @@ import com.zomboidcraft.ZomboidCraft;
 import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -26,18 +28,22 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The Harvestman's entity type, and its test command: {@code /zc harvestman} puts one a few blocks in front of you,
- * {@code /zc harvestman clear} takes them all away, {@code /zc harvestman do <plan>} makes the nearest take up a plan
- * (wander, perch, ceiling, hide, stalk) and {@code /zc harvestman info} says what each one is doing.
+ * The Harvestman's entity type, and its commands (operators): {@code /zc harvestman} puts one a few blocks in front of
+ * you; {@code clear} takes them all away; {@code info} says how many there are, who is hunted and what each is doing;
+ * {@code do <plan>} makes the nearest take up a plan; {@code target <player>} sets who is hunted ({@code target clear}
+ * ends the hunt).
  */
 public final class Harvestmen {
     private static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("harvestman"));
     public static final EntityType<HarvestmanEntity> HARVESTMAN = Registry.register(BuiltInRegistries.ENTITY_TYPE, KEY,
             EntityType.Builder.<HarvestmanEntity>of(HarvestmanEntity::new, MobCategory.MISC)
-                    .sized(1.2f, 0.8f).clientTrackingRange(10).updateInterval(1).fireImmune().noLootTable()
+                    .sized(1.2f, 0.8f).eyeHeight(0.4f).clientTrackingRange(10).updateInterval(1).fireImmune().noLootTable()
                     .build(KEY));
 
     public static void register() {
+        FabricDefaultAttributeRegistry.register(HARVESTMAN, HarvestmanEntity.attributes());
+        HarvestmanSounds.register();
+        HarvestmanDirector.register();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -45,10 +51,14 @@ public final class Harvestmen {
                                 .executes(Harvestmen::spawn)
                                 .then(Commands.literal("clear").executes(Harvestmen::clear))
                                 .then(Commands.literal("info").executes(Harvestmen::info))
+                                .then(Commands.literal("target")
+                                        .then(Commands.literal("clear").executes(ctx -> target(ctx, null)))
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(ctx -> target(ctx, EntityArgument.getPlayer(ctx, "player")))))
                                 .then(Commands.literal("do")
                                         .then(Commands.argument("plan", StringArgumentType.word())
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(
-                                                        Arrays.asList(HarvestmanEntity.PLANS).subList(1, HarvestmanEntity.PLANS.length), b))
+                                                        Arrays.asList(HarvestmanMind.PLANS).subList(1, HarvestmanMind.PLANS.length), b))
                                                 .executes(ctx -> force(ctx, StringArgumentType.getString(ctx, "plan"))))))));
     }
 
@@ -67,9 +77,10 @@ public final class Harvestmen {
         if (h == null) {
             return 0;
         }
-        h.snapTo(floor.x, floor.y + 1.2, floor.z, player.getYRot() + 180f, 0f);
+        h.snapTo(floor.x, floor.y + HarvestmanEntity.STAND - HarvestmanEntity.MID, floor.z, player.getYRot() + 180f, 0f);
         level.addFreshEntity(h);
-        ctx.getSource().sendSuccess(() -> Component.literal("A Harvestman is in front of you. /zc harvestman do <plan> to steer it, /zc harvestman clear to remove it"), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("A Harvestman is in front of you; its den is here. "
+                + "/zc harvestman do <plan> steers it, target <player> sets who it hunts, clear removes them all"), false);
         return 1;
     }
 
@@ -86,33 +97,35 @@ public final class Harvestmen {
 
     private static int clear(CommandContext<CommandSourceStack> ctx) {
         List<HarvestmanEntity> all = all(ctx);
+        HarvestmanDirector.forgetAll();
         all.forEach(Entity::discard);
-        ctx.getSource().sendSuccess(() -> Component.literal("Removed " + all.size() + " Harvestm" + (all.size() == 1 ? "an" : "en")), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Removed " + all.size() + " Harvestm" + (all.size() == 1 ? "an" : "en")
+                + " and forgot every den and hunt"), false);
         return all.size();
     }
 
     private static int info(CommandContext<CommandSourceStack> ctx) {
-        List<HarvestmanEntity> all = all(ctx);
-        Vec3 from = ctx.getSource().getPosition();
-        StringBuilder b = new StringBuilder(all.size() + " in this world");
-        for (HarvestmanEntity h : all) {
-            b.append(String.format("\n%.0f blocks away at %d %d %d: %s", h.position().distanceTo(from),
-                    h.getBlockX(), h.getBlockY(), h.getBlockZ(), h.planName()));
-        }
-        ctx.getSource().sendSuccess(() -> Component.literal(b.toString()), false);
-        return all.size();
+        String report = HarvestmanDirector.report(ctx.getSource().getServer());
+        ctx.getSource().sendSuccess(() -> Component.literal(report), false);
+        return 1;
+    }
+
+    private static int target(CommandContext<CommandSourceStack> ctx, ServerPlayer who) {
+        String said = HarvestmanDirector.setTarget(ctx.getSource().getServer(), who);
+        ctx.getSource().sendSuccess(() -> Component.literal(said), false);
+        return 1;
     }
 
     private static int force(CommandContext<CommandSourceStack> ctx, String name) {
-        int plan = Arrays.asList(HarvestmanEntity.PLANS).indexOf(name);
+        int plan = Arrays.asList(HarvestmanMind.PLANS).indexOf(name);
         if (plan < 1) {
-            ctx.getSource().sendFailure(Component.literal("Plans: wander, perch, ceiling, hide, stalk"));
+            ctx.getSource().sendFailure(Component.literal("Plans: " + String.join(", ", Arrays.asList(HarvestmanMind.PLANS).subList(1, HarvestmanMind.PLANS.length))));
             return 0;
         }
         Vec3 from = ctx.getSource().getPosition();
         HarvestmanEntity near = null;
         for (HarvestmanEntity h : all(ctx)) {
-            if (near == null || h.position().distanceToSqr(from) < near.position().distanceToSqr(from)) {
+            if (h.isAlive() && (near == null || h.position().distanceToSqr(from) < near.position().distanceToSqr(from))) {
                 near = h;
             }
         }
@@ -120,7 +133,7 @@ public final class Harvestmen {
             ctx.getSource().sendFailure(Component.literal("No Harvestman here (/zc harvestman makes one)"));
             return 0;
         }
-        near.force(plan);
+        near.mind.force(plan);
         ctx.getSource().sendSuccess(() -> Component.literal("The nearest Harvestman will " + name + " next"), false);
         return 1;
     }

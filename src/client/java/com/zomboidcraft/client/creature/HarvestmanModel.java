@@ -10,11 +10,12 @@ import java.util.zip.InflaterInputStream;
 
 /**
  * The Harvestman's model, from assets/zomboidcraft/creatures/harvestman.zhm (packed from the approved preview by
- * tools/creatures/harvestman): its legs' sizes, and the body, thighs and lower legs at two levels of detail. Each part is
+ * tools/creatures/harvestman): its legs' sizes, and the body, its scythe arms and beard (hunting, and closed in the
+ * feeding grip), thighs and lower legs at two levels of detail. Each part is
  * plain triangles in its own frame, coloured per corner (shading baked in), some of them glowing (the red seams).
  */
 public final class HarvestmanModel {
-    public static final int BODY = 0, THIGH_F = 1, THIGH_R = 2, LOW_F = 3, LOW_R = 4;
+    public static final int BODY = 0, ARMS_HUNT = 1, ARMS_FEED = 2, THIGH_F = 3, THIGH_R = 4, LOW_F = 5, LOW_R = 6;
 
     /** One leg pair's sizes (the left one; the right mirrors it). */
     public static final class Leg {
@@ -39,6 +40,8 @@ public final class HarvestmanModel {
         public final int[] colour;
         /** Per triangle: it glows (drawn at full light). */
         public final boolean[] glow;
+        /** Per corner: it's red (the seams and the core), which it can darken to hide. */
+        public final boolean[] red;
 
         Part(DataInputStream in) throws IOException {
             byte[] nb = new byte[in.readShort()];
@@ -49,6 +52,7 @@ public final class HarvestmanModel {
             normal = new float[corners * 3];
             colour = new int[corners];
             glow = new boolean[tris];
+            red = new boolean[corners];
             for (int c = 0; c < corners; c++) {
                 pos[c * 3] = in.readFloat();
                 pos[c * 3 + 1] = in.readFloat();
@@ -65,6 +69,7 @@ public final class HarvestmanModel {
                 normal[c * 3 + 2] = nz;
                 int r = in.readUnsignedByte(), g = in.readUnsignedByte(), b = in.readUnsignedByte();
                 colour[c] = 0xFF000000 | r << 16 | g << 8 | b;
+                red[c] = r > 30 && r > g * 1.8 && r > b * 1.8;
                 if (in.readUnsignedByte() != 0) {
                     glow[c / 3] = true;
                 }

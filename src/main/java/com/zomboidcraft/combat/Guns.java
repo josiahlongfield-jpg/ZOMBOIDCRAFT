@@ -352,6 +352,9 @@ public final class Guns {
                                   ZcConfig.GunStats stats) {
         Vec3 at = hit.at;
         target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), hit.damage);
+        if (target instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+            return;     // it rings off the plates or bleeds red from the core itself (see HarvestmanEntity.hurtServer)
+        }
         // a shot doesn't throw a zombie back: it flinches and its advance is checked for a split second, longer for a
         // close load of buckshot; only a blunt blow knocks one back
         Downed.flinch(target, stats instanceof ZcConfig.ShotgunStats sg
