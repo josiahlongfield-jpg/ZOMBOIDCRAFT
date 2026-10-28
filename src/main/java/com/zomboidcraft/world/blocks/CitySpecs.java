@@ -7762,9 +7762,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("un_map_3", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 7.5, 16, 16, 8.5);
         s("un_map_4", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 7.5, 16, 16, 8.5);
         s("un_map_5", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 7.5, 16, 16, 8.5);
-    }
-
-    private void part42() {
         s("cc_plaza", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cc_plaza_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cc_plaza_band", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
