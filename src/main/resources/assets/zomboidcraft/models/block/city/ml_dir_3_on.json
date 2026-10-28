@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_dir_3_on": "zomboidcraft:block/city/ml_dir_3_on",
+    "ml_fascia": "zomboidcraft:block/city/ml_fascia",
+    "particle": "zomboidcraft:block/city/ml_dir_3_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_dir_3_on"
+        },
+        "south": {
+          "texture": "#ml_fascia"
+        },
+        "east": {
+          "texture": "#ml_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_fascia",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_fascia"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        6.5
+      ],
+      "to": [
+        9,
+        6,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_fascia"
+        },
+        "south": {
+          "texture": "#ml_fascia"
+        },
+        "east": {
+          "texture": "#ml_fascia"
+        },
+        "west": {
+          "texture": "#ml_fascia"
+        },
+        "up": {
+          "texture": "#ml_fascia"
+        },
+        "down": {
+          "texture": "#ml_fascia",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

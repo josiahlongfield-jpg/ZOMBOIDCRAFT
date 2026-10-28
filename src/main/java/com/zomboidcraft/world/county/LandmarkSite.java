@@ -15,6 +15,8 @@ import com.zomboidcraft.world.city.Placer;
  * passage to the subway's platform, RailGen's, coming in to it), the train hall ({@link UnionHall})
  * beside it over the el's old street, the el running through its top floor, and the bus and taxi
  * terminal past that.</li>
+ * <li>mall: Grayhaven Mall ({@link Mall}), the island's galleria between its two department
+ * stores, with its car park and parking decks.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -35,8 +37,23 @@ final class LandmarkSite extends Site {
             new UnionHall(q, rng, w, d, head.power()).build();
             return;
         }
+        if (variant("mall")) {
+            mall();
+            return;
+        }
         kit = new Kit(out, rng, w, d);
         stadium();
+    }
+
+    /** Grayhaven Mall ({@link Mall}) on its lot, the ground round it paved. */
+    private void mall() {
+        for (int x = 0; x < w; x++) {
+            for (int z = 0; z < d; z++) {
+                boolean walk = x < 4 || z < 4 || x >= w - 4 || z >= d - 4;
+                out.set(x, 0, z, walk ? (chance() < 0.1 ? "sidewalk_cracked" : "sidewalk") : chance() < 0.2 ? "asphalt_crack" : "asphalt");
+            }
+        }
+        new Mall(lot(0, 0, w, d, 0), rng, w, d).build();
     }
 
     /** The parking rows: twenty from aisle to aisle, a band of stalls six deep each side of it, three wide. */

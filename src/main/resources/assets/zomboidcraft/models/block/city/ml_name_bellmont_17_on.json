@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_name_bellmont_17_on": {
+      "sprite": "zomboidcraft:block/city/ml_name_bellmont_17_on",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/ml_name_bellmont_17_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_name_bellmont_17_on"
+        },
+        "south": {
+          "texture": "#ml_name_bellmont_17_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_name_bellmont_17_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_name_bellmont_17_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_name_bellmont_17_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_name_bellmont_17_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_glass_roof": {
+      "sprite": "zomboidcraft:block/city/tx_glass_roof",
+      "force_translucent": true
+    },
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "particle": "zomboidcraft:block/city/tx_glass_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.5,
+        -3.3137000000000008
+      ],
+      "to": [
+        16,
+        8.5,
+        19.3137
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass_roof"
+        },
+        "south": {
+          "texture": "#tx_glass_roof"
+        },
+        "east": {
+          "texture": "#tx_glass_roof",
+          "uv": [
+            0,
+            7.5,
+            16,
+            8.5
+          ]
+        },
+        "west": {
+          "texture": "#tx_glass_roof",
+          "uv": [
+            0,
+            7.5,
+            16,
+            8.5
+          ]
+        },
+        "up": {
+          "texture": "#tx_glass_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tx_glass_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        -3.3137000000000008
+      ],
+      "to": [
+        1.2,
+        9,
+        19.3137
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            7,
+            16,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            7,
+            16,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            0,
+            1.2,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            0,
+            1.2,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        14.8,
+        7,
+        -3.3137000000000008
+      ],
+      "to": [
+        16,
+        9,
+        19.3137
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            7,
+            16,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            0,
+            7,
+            16,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            14.8,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "uv": [
+            14.8,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_steel_d"
+        },
+        "down": {
+          "texture": "#tx_steel_d",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

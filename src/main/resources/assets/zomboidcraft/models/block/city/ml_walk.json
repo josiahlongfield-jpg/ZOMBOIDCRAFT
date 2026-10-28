@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_fascia": "zomboidcraft:block/city/ml_fascia",
+    "ml_soffit": "zomboidcraft:block/city/ml_soffit",
+    "tx_terrazzo": "zomboidcraft:block/city/tx_terrazzo",
+    "particle": "zomboidcraft:block/city/ml_fascia"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_fascia",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ml_fascia",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_fascia",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_fascia",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_terrazzo",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_soffit",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

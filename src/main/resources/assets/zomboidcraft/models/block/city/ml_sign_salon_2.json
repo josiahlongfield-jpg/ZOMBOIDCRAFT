@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_sign_salon_2": {
+      "sprite": "zomboidcraft:block/city/ml_sign_salon_2",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/ml_sign_salon_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_sign_salon_2"
+        },
+        "south": {
+          "texture": "#ml_sign_salon_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_sign_salon_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_sign_salon_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_sign_salon_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_sign_salon_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
