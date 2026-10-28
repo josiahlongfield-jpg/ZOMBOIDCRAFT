@@ -159,7 +159,7 @@ final class AirStrikeFx {
             pose.translate(at.x - cam.pos.x, at.y - cam.pos.y, at.z - cam.pos.z);
             // the model's nose is +z: turn it to the way it's falling
             float yaw = (float) Math.atan2(v.x, v.z), pitch = (float) Math.atan2(-v.y, Math.sqrt(v.x * v.x + v.z * v.z));
-            pose.mulPose(new org.joml.Quaternionf().rotationY(yaw).rotateX(pitch));
+            pose.mulPose(new org.joml.Matrix4f().rotationY(yaw).rotateX(pitch));
             pose.scale(2.2f, 2.2f, 2.2f);
             state.submit(pose, context.submitNodeCollector(), light, OverlayTexture.NO_OVERLAY, 0);
             pose.popPose();
