@@ -9564,6 +9564,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("pw_banner_4", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.6, 16, 16, 16);
         s("pw_safety_5", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15.4, 16, 16, 16);
         s("pw_banner_5", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.6, 16, 16, 16);
+    }
+
+    private void part53() {
         s("pw_sgn_turbine_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_turbine_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_boiler_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
@@ -9608,9 +9611,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("pw_sgn_men_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_danger_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_danger_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
-    }
-
-    private void part53() {
         s("pw_sgn_keepout_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_keepout_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("pw_sgn_hats_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
