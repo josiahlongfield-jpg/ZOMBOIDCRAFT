@@ -158,9 +158,9 @@ public final class HarvestmanLegs {
             off = hu.add(flat.scale(Math.cos(ta))).add(sd.scale(Math.sin(ta)));
         }
         Vec3 lead = vel.scale(st);
-        double reach = Mth.clamp(0.95 + 0.12 * (spd - 3), 0.95, 1.7);
-        if (lead.length() > reach) {
-            lead = norm(lead).scale(reach);
+        double leadMax = Mth.clamp(0.95 + 0.12 * (spd - 3), 0.95, 1.7);
+        if (lead.length() > leadMax) {
+            lead = norm(lead).scale(leadMax);
         }
         Vec3 P0 = fr.o().add(off).add(lead);
         Vec3 d = P0.subtract(H);
