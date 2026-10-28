@@ -1131,6 +1131,8 @@ import power  # noqa: E402
 power.register(sys.modules[__name__])
 import market  # noqa: E402
 market.register(sys.modules[__name__])
+import waterfront  # noqa: E402
+waterfront.register(sys.modules[__name__])
 
 
 

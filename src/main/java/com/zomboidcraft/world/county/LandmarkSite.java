@@ -36,6 +36,8 @@ import com.zomboidcraft.world.city.Placer;
  * coal plant, the turbine hall's front to the west street the subway runs under.</li>
  * <li>market: the Old Market ({@link Market}), the granite market house with its dome between two
  * cobbled lanes and the brick rows of shops either side.</li>
+ * <li>waterfront: the Waterfront ({@link Waterfront}), the seawall promenade, the ferry terminal and
+ * its ferry, the pier of shops with the carousel at its end, and the marina.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -93,6 +95,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("market")) {
             new Market(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("waterfront")) {
+            new Waterfront(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         if (variant("tower")) {
