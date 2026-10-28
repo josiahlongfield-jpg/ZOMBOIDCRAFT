@@ -11,7 +11,7 @@ import java.util.zip.InflaterInputStream;
 /**
  * The Harvestman's model, from assets/zomboidcraft/creatures/harvestman.zhm (packed from the approved preview by
  * tools/creatures/harvestman): its legs' sizes, and the body, its scythe arms and beard (hunting, and closed in the
- * feeding grip), thighs and lower legs at two levels of detail. Each part is
+ * feeding grip), thighs and lower legs at three levels of detail. Each part is
  * plain triangles in its own frame, coloured per corner (shading baked in), some of them glowing (the red seams).
  */
 public final class HarvestmanModel {
@@ -82,7 +82,7 @@ public final class HarvestmanModel {
     }
 
     public final Leg[] legs;
-    /** [level][part]: level 0 near, 1 far. */
+    /** [level][part]: level 0 near, then middle and far (older files: near and far). */
     public final Part[][] levels;
 
     private static HarvestmanModel loaded;

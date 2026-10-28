@@ -27,17 +27,20 @@ import org.joml.Vector3f;
  * off lying where they fell. The model's colours are baked into its corners (on a plain white texture). Its red seams
  * and core glow, darkened as far as it chooses to hide (black while it roams and hunts, lit when it feeds), and pulse
  * while it feeds; its six small eyes always glow. Red-tinted for a moment when hit. Past about twenty blocks it's drawn
- * from the lighter model.
+ * from lighter models
+ * (near, middle, far; each about a fifth to a twelfth of the preview mesh), and its shadow always from the far one.
  */
 public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, HarvestmanRenderer.State> {
     private static final Identifier WHITE = ZomboidCraft.id("textures/entity/harvestman/white.png");
     private static final int FULL_BRIGHT = 0xF000F0;
-    private static final double FAR = 20;
+    /** Past these it's drawn from the middle and then the far model (tools/creatures/harvestman/lod.py). */
+    private static final double MID = 8, FAR = 20;
     /** What its red goes to when it hides: the black of its plates. */
     private static final int DARK_R = 14, DARK_G = 12, DARK_B = 12;
 
     public static class State extends EntityRenderState {
-        boolean ready, far, feedArms, hurt;
+        boolean ready, feedArms, hurt;
+        int lod;
         int lost;
         float camo, pulse;
         /** Body, then thigh and lower leg for each leg, relative to where the entity is drawn. */
@@ -97,7 +100,7 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
             state.flying.add(new Matrix4f(f.at));
             state.flyingLeg.add(f.leg);
         }
-        state.far = state.distanceToCameraSq > FAR * FAR;
+        state.lod = state.distanceToCameraSq > FAR * FAR ? 2 : state.distanceToCameraSq > MID * MID ? 1 : 0;
     }
 
     @Override
@@ -105,7 +108,10 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
         if (!state.ready) {
             return;
         }
-        HarvestmanModel.Part[] level = HarvestmanModel.get().levels[state.far ? 1 : 0];
+        HarvestmanModel.Part[][] levels = HarvestmanModel.get().levels;
+        // a shader pack's shadows only need its outline: the far model
+        int lod = com.zomboidcraft.client.zombie.body.ZDetail.shadowPass() ? 2 : state.lod;
+        HarvestmanModel.Part[] level = levels[Math.min(lod, levels.length - 1)];
         int light = state.lightCoords, overlay = OverlayTexture.pack(0, state.hurt ? 3 : 10);
         float camo = state.camo, pulse = state.pulse;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(WHITE), (pose, out) -> {
