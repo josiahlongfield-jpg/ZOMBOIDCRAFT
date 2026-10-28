@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_enamel_white": "zomboidcraft:block/city/hs_enamel_white",
+    "hs_sheet": "zomboidcraft:block/city/hs_sheet",
+    "particle": "zomboidcraft:block/city/hs_enamel_white"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        2
+      ],
+      "to": [
+        12,
+        6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_enamel_white"
+        },
+        "south": {
+          "texture": "#hs_enamel_white"
+        },
+        "east": {
+          "texture": "#hs_enamel_white"
+        },
+        "west": {
+          "texture": "#hs_enamel_white"
+        },
+        "up": {
+          "texture": "#hs_enamel_white"
+        },
+        "down": {
+          "texture": "#hs_enamel_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        0
+      ],
+      "to": [
+        15,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_enamel_white",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hs_enamel_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel_white"
+        },
+        "west": {
+          "texture": "#hs_enamel_white"
+        },
+        "up": {
+          "texture": "#hs_enamel_white"
+        },
+        "down": {
+          "texture": "#hs_enamel_white"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        0
+      ],
+      "to": [
+        14,
+        8.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_sheet",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hs_sheet",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_sheet"
+        },
+        "west": {
+          "texture": "#hs_sheet"
+        },
+        "up": {
+          "texture": "#hs_sheet"
+        },
+        "down": {
+          "texture": "#hs_sheet"
+        }
+      }
+    }
+  ]
+}

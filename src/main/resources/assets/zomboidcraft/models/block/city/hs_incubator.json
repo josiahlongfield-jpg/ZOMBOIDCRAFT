@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_cart_grey": "zomboidcraft:block/city/hs_cart_grey",
+    "hs_enamel": "zomboidcraft:block/city/hs_enamel",
+    "hs_sheet": "zomboidcraft:block/city/hs_sheet",
+    "tx_glass": {
+      "sprite": "zomboidcraft:block/city/tx_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/hs_cart_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        7,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_cart_grey"
+        },
+        "south": {
+          "texture": "#hs_enamel"
+        },
+        "east": {
+          "texture": "#hs_enamel"
+        },
+        "west": {
+          "texture": "#hs_enamel"
+        },
+        "up": {
+          "texture": "#hs_enamel"
+        },
+        "down": {
+          "texture": "#hs_enamel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        2
+      ],
+      "to": [
+        14,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_enamel"
+        },
+        "south": {
+          "texture": "#hs_enamel"
+        },
+        "east": {
+          "texture": "#hs_enamel"
+        },
+        "west": {
+          "texture": "#hs_enamel"
+        },
+        "up": {
+          "texture": "#hs_enamel"
+        },
+        "down": {
+          "texture": "#hs_enamel"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        8,
+        2.5
+      ],
+      "to": [
+        13.5,
+        14,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass"
+        },
+        "south": {
+          "texture": "#tx_glass"
+        },
+        "east": {
+          "texture": "#tx_glass"
+        },
+        "west": {
+          "texture": "#tx_glass"
+        },
+        "up": {
+          "texture": "#tx_glass"
+        },
+        "down": {
+          "texture": "#tx_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        5
+      ],
+      "to": [
+        11,
+        9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_sheet"
+        },
+        "south": {
+          "texture": "#hs_sheet"
+        },
+        "east": {
+          "texture": "#hs_sheet"
+        },
+        "west": {
+          "texture": "#hs_sheet"
+        },
+        "up": {
+          "texture": "#hs_sheet"
+        },
+        "down": {
+          "texture": "#hs_sheet"
+        }
+      }
+    }
+  ]
+}

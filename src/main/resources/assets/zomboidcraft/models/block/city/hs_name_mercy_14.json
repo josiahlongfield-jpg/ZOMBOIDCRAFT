@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_name_mercy_14": {
+      "sprite": "zomboidcraft:block/city/hs_name_mercy_14",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/hs_name_mercy_14"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_name_mercy_14"
+        },
+        "south": {
+          "texture": "#hs_name_mercy_14",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_name_mercy_14",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_name_mercy_14",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_name_mercy_14",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_name_mercy_14",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "hs_morgue": "zomboidcraft:block/city/hs_morgue",
+    "hs_sheet_body": "zomboidcraft:block/city/hs_sheet_body",
+    "particle": "zomboidcraft:block/city/hs_morgue"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_morgue"
+        },
+        "south": {
+          "texture": "#hs_morgue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_morgue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_morgue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_morgue",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_morgue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        0
+      ],
+      "to": [
+        15,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        0
+      ],
+      "to": [
+        14,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_sheet_body",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hs_sheet_body"
+        },
+        "east": {
+          "texture": "#hs_sheet_body"
+        },
+        "west": {
+          "texture": "#hs_sheet_body"
+        },
+        "up": {
+          "texture": "#hs_sheet_body"
+        },
+        "down": {
+          "texture": "#hs_sheet_body"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        10,
+        2
+      ],
+      "to": [
+        12,
+        11,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_sheet_body"
+        },
+        "south": {
+          "texture": "#hs_sheet_body"
+        },
+        "east": {
+          "texture": "#hs_sheet_body"
+        },
+        "west": {
+          "texture": "#hs_sheet_body"
+        },
+        "up": {
+          "texture": "#hs_sheet_body"
+        },
+        "down": {
+          "texture": "#hs_sheet_body"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        4,
+        0
+      ],
+      "to": [
+        1,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        4,
+        0
+      ],
+      "to": [
+        15.5,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

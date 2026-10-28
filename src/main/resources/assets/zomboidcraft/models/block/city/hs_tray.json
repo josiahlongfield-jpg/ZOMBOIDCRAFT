@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_blood_pool": "zomboidcraft:block/city/home_blood_pool",
+    "home_plastic_beige": "zomboidcraft:block/city/home_plastic_beige",
+    "home_white": "zomboidcraft:block/city/home_white",
+    "particle": "zomboidcraft:block/city/home_plastic_beige"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        0.6,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_beige"
+        },
+        "south": {
+          "texture": "#home_plastic_beige"
+        },
+        "east": {
+          "texture": "#home_plastic_beige"
+        },
+        "west": {
+          "texture": "#home_plastic_beige"
+        },
+        "up": {
+          "texture": "#home_plastic_beige"
+        },
+        "down": {
+          "texture": "#home_plastic_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0.6,
+        5
+      ],
+      "to": [
+        7,
+        1.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_white"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white"
+        },
+        "up": {
+          "texture": "#home_white"
+        },
+        "down": {
+          "texture": "#home_white"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0.6,
+        7
+      ],
+      "to": [
+        11,
+        1,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_blood_pool"
+        },
+        "south": {
+          "texture": "#home_blood_pool"
+        },
+        "east": {
+          "texture": "#home_blood_pool"
+        },
+        "west": {
+          "texture": "#home_blood_pool"
+        },
+        "up": {
+          "texture": "#home_blood_pool"
+        },
+        "down": {
+          "texture": "#home_blood_pool"
+        }
+      }
+    }
+  ]
+}

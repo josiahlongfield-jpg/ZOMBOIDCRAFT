@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_spandrel": "zomboidcraft:block/city/hs_spandrel",
+    "particle": "zomboidcraft:block/city/hs_spandrel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_spandrel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hs_spandrel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_spandrel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_spandrel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_spandrel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_spandrel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
