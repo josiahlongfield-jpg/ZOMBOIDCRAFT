@@ -508,7 +508,10 @@ public final class Floors {
             furnish(rs);
             cardioRow();
             for (int i = 0; i < 6; i++) {
-                if (!(i % 3 == 1 ? zone(4, 5, 9, this::mats) : zone(4, 7, 11, this::freeWeights))) {
+                // on a slim floor the weights may take in the walkway beside them
+                Zone z = i % 3 == 1 ? this::mats : this::freeWeights;
+                int min = 4, cells = i % 3 == 1 ? 5 : 7, max = i % 3 == 1 ? 9 : 11;
+                if (!zone(min, cells, max, z) && !zone(min, cells, max, true, z)) {
                     break;
                 }
             }
@@ -523,7 +526,12 @@ public final class Floors {
 
         /** Fills the biggest clear patch left (min to max across) with fill, a cell of floor kept round it. */
         boolean zone(int min, int minCells, int max, Zone fill) {
-            int[] b = f.biggest(v -> v == Floorplan.OPEN, minCells, min, max, max);
+            return zone(min, minCells, max, false, fill);
+        }
+
+        /** As above; overWalk lets the patch take in the walkway too (place() keeps the way through). */
+        boolean zone(int min, int minCells, int max, boolean overWalk, Zone fill) {
+            int[] b = f.biggest(v -> v == Floorplan.OPEN || overWalk && v == Floorplan.WALK, minCells, min, max, max);
             if (b == null) {
                 return false;
             }
@@ -761,10 +769,13 @@ public final class Floors {
         void hotelSpa() {
             // the pool hall: a raised pool in the middle, loungers round it, treatment rooms and the gym off it
             f.corridor(3, false);
-            List<Room> rs = new ArrayList<>(coreThen(10, new String[] {"showers", "showers", "spa", "store", "reception"}, "spa", "linen"));
+            // the pool hall first, so the rooms take what's left
+            if (!zone(6, 9, 16, this::pool)) {
+                zone(5, 7, 16, true, this::pool);
+            }
+            List<Room> rs = new ArrayList<>(coreThen(6, new String[] {"showers", "showers", "spa", "store", "reception"}, "spa", "linen"));
             rs.addAll(windows(4, 5, 8, "spa", "spa"));
             furnish(rs);
-            zone(6, 9, 16, this::pool);
             release();
             cardioRow();
             dotOpen(new String[] {"of_lounger[facing=%s]", "pk_houseplant[facing=%s]", "of_lounger[facing=%s]"}, 0.04);
@@ -793,9 +804,12 @@ public final class Floors {
         void nightclub() {
             // the sky club: booths at the glass, the dance floor under the mirror ball, the DJ, the bar on the core
             f.corridor(2, false);
-            List<Room> rs = new ArrayList<>(coreThen(6, new String[] {"wc", "wc", "store", "office"}, "store"));
+            List<Room> rs = new ArrayList<>(coreThen(4, new String[] {"wc", "wc", "store", "office"}, "store"));
             furnish(rs);
-            zone(7, 9, 15, this::danceFloor);
+            // the dance floor as big as the floor allows: a slim top floor still gets one
+            if (!zone(7, 9, 15, this::danceFloor) && !zone(6, 7, 15, this::danceFloor) && !zone(5, 6, 15, this::danceFloor)) {
+                zone(5, 6, 15, true, this::danceFloor);  // the floor takes in the walkway
+            }
             release();
             backBar();
             groups(4, 5, 7, i -> 0, pick("brown", "blue"));
@@ -845,7 +859,7 @@ public final class Floors {
             furnish(rs);
             // the great room: sitting groups, the dining table, the piano, a bar, the pool table
             String sofa = pick("brown", "blue", "floral");
-            groups(16, 5, 9, i -> switch (i % 5) {
+            groups(16, 4, 9, i -> switch (i % 5) {
                 case 0, 3 -> 0;
                 case 1 -> 1;
                 case 2 -> 2;
@@ -1771,6 +1785,22 @@ public final class Floors {
 
         // ---- the state it was left in
 
+        /** Litter you can walk over. */
+        boolean flat(String b) {
+            return b.startsWith("glass") || b.startsWith("bunk_casings") || b.startsWith("home_blood") || b.startsWith("bunk_s")
+                    || b.startsWith("moss") || b.startsWith("bunk_grit");
+        }
+
+        boolean byDoor(int x, int z) {
+            for (int s = 0; s < 4; s++) {
+                int[] n = Floorplan.step(x, z, s);
+                if (f.at(n[0], n[1]) == Floorplan.DOOR) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void aftermath() {
             double junk = switch (state) {
                 case ABANDONED -> 0.01;
@@ -1792,7 +1822,11 @@ public final class Floors {
                             && !b.startsWith("bunk_s") && !b.startsWith("moss")) {
                         continue;  // only flat litter in the corridor
                     }
-                    f.set(x, 1, z, b);
+                    if (flat(b)) {
+                        f.set(x, 1, z, b);
+                    } else if (!byDoor(x, z)) {
+                        f.place(x, z, b, null);  // a bag or a box never cuts a room off or blocks a door
+                    }
                 }
             }
             if (state == State.BARRICADED) {

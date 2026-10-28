@@ -513,8 +513,9 @@ public final class Tower {
      */
     private void poolDeck(int roofY, int in) {
         int y = roofY;
-        int mid = w / 2, px0 = mid - 4, px1 = mid + 3;
-        int out = 6, pz0 = in - out, pz1 = Math.min(in + 9, cz0 - 3);
+        // a lap pool along the front, glass-bottomed, its far side hanging out past the parapet
+        int px0 = in + 3, px1 = w - 4 - in;
+        int pz0 = in - Math.min(3, in), pz1 = Math.min(in + 5, cz0 - 2);
         // the deck: boards on the roof, the glass rail on the parapet
         for (int x = 1 + in; x < w - 1 - in; x++) {
             for (int z = 1 + in; z < d - 1 - in; z++) {
@@ -534,7 +535,7 @@ public final class Tower {
                 }
             }
         }
-        if (pz1 < in + 3) {
+        if (pz1 < in + 2 || px1 - px0 < 9) {
             return;  // no room in front of the core: a deck without the pool
         }
         // the pool: two deep, its rim the coping in on the roof and glass out over the street
@@ -542,7 +543,7 @@ public final class Tower {
             for (int z = pz0; z <= pz1; z++) {
                 boolean outside = z < in;
                 boolean rim = x == px0 || x == px1 || z == pz0 || z == pz1;
-                p.set(x, y, z, outside ? "of_pool_glass" : "of_pool_tile");
+                p.set(x, y, z, "of_pool_glass");  // glass all under: the penthouse looks up through it
                 p.set(x, y + 1, z, rim ? (outside ? "of_pool_glass" : "of_pool_tile") : "minecraft:water");
                 p.set(x, y + 2, z, rim ? (outside ? "of_pool_glass" : "of_coping") : "minecraft:water");
                 if (outside) {
@@ -555,13 +556,20 @@ public final class Tower {
             p.set(x, y + 1, in, "minecraft:water");
             p.set(x, y + 2, in, "minecraft:water");
         }
-        // two beams under the hanging end, back into the roof slab
-        for (int z = pz0; z < in + 2; z++) {
-            p.set(px0, y - 1, z, "fit_girder[axis=z]");
-            p.set(px1, y - 1, z, "fit_girder[axis=z]");
+        // beams under the hanging side every few blocks, back into the roof slab
+        for (int x = px0; x <= px1; x += Math.max(1, (px1 - px0) / Math.max(1, (px1 - px0) / 4))) {
+            for (int z = pz0; z < in + 2; z++) {
+                p.set(x, y - 1, z, "fit_girder[axis=z]");
+            }
         }
         p.set(px0 + 1, y + 1, pz1 + 1, "of_pool_ladder[facing=south]");
-        // loungers either side of the pool, facing the view
+        p.set(px1 - 1, y + 1, pz1 + 1, "of_pool_ladder[facing=south]");
+        // loungers along the deck behind the pool and at its ends, facing the view
+        for (int x = px0 + 3; x <= px1 - 3; x += 2) {
+            if (!inCore(x, pz1 + 2) && !inCore(x, pz1 + 1)) {
+                p.set(x, y + 1, pz1 + 2, "of_lounger[facing=north]");
+            }
+        }
         for (int z = in + 1; z <= pz1; z += 2) {
             p.set(px0 - 2, y + 1, z, "of_lounger[facing=north]");
             p.set(px1 + 2, y + 1, z, "of_lounger[facing=north]");
@@ -602,7 +610,7 @@ public final class Tower {
 
     /** Stone tiers stepping in above the roof, with a spire and a warning light on top. */
     private void steppedCrown(int roofY, int in) {
-        int y = roofY + 3;
+        int y = roofY + FLOOR + 2;  // on the plant room's roof, clear of the stair under it
         int x0 = in + 2, z0 = in + 2, x1 = w - 3 - in, z1 = d - 3 - in;
         while (x1 - x0 >= 4 && z1 - z0 >= 4) {
             int tier = 3 + rng.nextInt(3);
