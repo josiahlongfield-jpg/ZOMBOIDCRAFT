@@ -79,6 +79,16 @@ final class Census {
         return c;
     }
 
+    /** The place's count if it's done, without asking for one. */
+    static Count peek(Place p) {
+        return DONE.get(key(p));
+    }
+
+    /** How many places have been counted, so callers can tell when sums over them are out of date. */
+    static int done() {
+        return DONE.size();
+    }
+
     static int pending() {
         return RUNNING.size();
     }
