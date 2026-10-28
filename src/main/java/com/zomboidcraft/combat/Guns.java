@@ -194,14 +194,32 @@ public final class Guns {
         for (int i = 0; i < pellets; i++) {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
+            // a bullet goes on through glass (see GlassShots): look on past each pane it meets, up to a few
+            java.util.List<BlockHitResult> panes = new java.util.ArrayList<>();
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+            while (!bow && block.getType() != HitResult.Type.MISS && panes.size() < 6
+                    && GlassShots.isGlass(level.getBlockState(block.getBlockPos()))) {
+                panes.add(block);
+                Vec3 on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+                block = level.clip(new ClipContext(on, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+            }
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
             com.zomboidcraft.world.trains.Trains.shot(level, player, eye, stop);    // OTTO minds being shot at
             // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
             Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
+            // the panes it went through on the way (only those before whoever it hit), each taking some out of it
+            double reached = hit != null ? hit.getLocation().distanceTo(eye) : Double.MAX_VALUE;
+            float spent = 1f;
+            for (BlockHitResult pane : panes) {
+                if (pane.getLocation().distanceTo(eye) < reached) {
+                    GlassShots.shot(level, player, pane, dir, level.getBlockState(pane.getBlockPos()), !ricochet);
+                    ricochet = true;
+                    spent *= GlassShots.THROUGH;
+                }
+            }
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, hit, eye, stats, power);
+                Pellet struck = pellet(target, hit, eye, stats, power * spent);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
@@ -248,9 +266,6 @@ public final class Guns {
                         level.playSound(null, p.x, p.y, p.z, ModSounds.BULLET_RICOCHET, SoundSource.PLAYERS, 0.5f,
                                 0.9f + player.getRandom().nextFloat() * 0.3f);
                     }
-                }
-                if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
-                    level.destroyBlock(block.getBlockPos(), false, player);
                 }
             }
         }
