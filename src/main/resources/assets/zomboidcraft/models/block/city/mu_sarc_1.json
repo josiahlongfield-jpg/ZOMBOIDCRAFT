@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "mu_coffin_lo": "zomboidcraft:block/city/mu_coffin_lo",
+    "mu_gold": "zomboidcraft:block/city/mu_gold",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_marble",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#mu_coffin_lo"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        0
+      ],
+      "to": [
+        14,
+        11,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_coffin_lo"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        9
+      ],
+      "to": [
+        11,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    }
+  ]
+}

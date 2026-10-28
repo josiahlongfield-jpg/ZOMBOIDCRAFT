@@ -1,0 +1,243 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "mu_case_glass": {
+      "sprite": "zomboidcraft:block/city/mu_case_glass",
+      "force_translucent": true
+    },
+    "mu_dio_rock": "zomboidcraft:block/city/mu_dio_rock",
+    "mu_top_minerals": "zomboidcraft:block/city/mu_top_minerals",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        8,
+        0.5
+      ],
+      "to": [
+        15.5,
+        9,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_case_glass"
+        },
+        "south": {
+          "texture": "#mu_case_glass"
+        },
+        "east": {
+          "texture": "#mu_case_glass"
+        },
+        "west": {
+          "texture": "#mu_case_glass"
+        },
+        "up": {
+          "texture": "#mu_case_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_case_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        15.6,
+        0.8
+      ],
+      "to": [
+        15.2,
+        16,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        4
+      ],
+      "to": [
+        7,
+        13,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_minerals"
+        },
+        "south": {
+          "texture": "#mu_top_minerals"
+        },
+        "east": {
+          "texture": "#mu_top_minerals"
+        },
+        "west": {
+          "texture": "#mu_top_minerals"
+        },
+        "up": {
+          "texture": "#mu_top_minerals"
+        },
+        "down": {
+          "texture": "#mu_top_minerals"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        6
+      ],
+      "to": [
+        12,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_dio_rock"
+        },
+        "south": {
+          "texture": "#mu_dio_rock"
+        },
+        "east": {
+          "texture": "#mu_dio_rock"
+        },
+        "west": {
+          "texture": "#mu_dio_rock"
+        },
+        "up": {
+          "texture": "#mu_dio_rock"
+        },
+        "down": {
+          "texture": "#mu_dio_rock"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        10
+      ],
+      "to": [
+        8,
+        11,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_minerals"
+        },
+        "south": {
+          "texture": "#mu_top_minerals"
+        },
+        "east": {
+          "texture": "#mu_top_minerals"
+        },
+        "west": {
+          "texture": "#mu_top_minerals"
+        },
+        "up": {
+          "texture": "#mu_top_minerals"
+        },
+        "down": {
+          "texture": "#mu_top_minerals"
+        }
+      }
+    }
+  ]
+}

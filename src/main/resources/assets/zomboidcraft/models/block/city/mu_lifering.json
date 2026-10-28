@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_lifering": "zomboidcraft:block/city/mu_lifering",
+    "particle": "zomboidcraft:block/city/mu_lifering"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        15
+      ],
+      "to": [
+        13,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_lifering"
+        },
+        "south": {
+          "texture": "#mu_lifering",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_lifering"
+        },
+        "west": {
+          "texture": "#mu_lifering"
+        },
+        "up": {
+          "texture": "#mu_lifering"
+        },
+        "down": {
+          "texture": "#mu_lifering"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        11,
+        15
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_lifering"
+        },
+        "south": {
+          "texture": "#mu_lifering",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_lifering"
+        },
+        "west": {
+          "texture": "#mu_lifering"
+        },
+        "up": {
+          "texture": "#mu_lifering"
+        },
+        "down": {
+          "texture": "#mu_lifering"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        15
+      ],
+      "to": [
+        5,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_lifering"
+        },
+        "south": {
+          "texture": "#mu_lifering",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_lifering"
+        },
+        "west": {
+          "texture": "#mu_lifering"
+        },
+        "up": {
+          "texture": "#mu_lifering"
+        },
+        "down": {
+          "texture": "#mu_lifering"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        5,
+        15
+      ],
+      "to": [
+        13,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_lifering"
+        },
+        "south": {
+          "texture": "#mu_lifering",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_lifering"
+        },
+        "west": {
+          "texture": "#mu_lifering"
+        },
+        "up": {
+          "texture": "#mu_lifering"
+        },
+        "down": {
+          "texture": "#mu_lifering"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_rose_7": "zomboidcraft:block/city/mu_rose_7",
+    "us_marble_a": "zomboidcraft:block/city/us_marble_a",
+    "particle": "zomboidcraft:block/city/us_marble_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#us_marble_a",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#us_marble_a",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#us_marble_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#us_marble_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_rose_7",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#us_marble_a",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

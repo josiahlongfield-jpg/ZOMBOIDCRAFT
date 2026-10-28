@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "mu_case_glass": {
+      "sprite": "zomboidcraft:block/city/mu_case_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/mu_case_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        0,
+        0
+      ],
+      "to": [
+        8.4,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_case_glass",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_case_glass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_case_glass"
+        },
+        "west": {
+          "texture": "#mu_case_glass"
+        },
+        "up": {
+          "texture": "#mu_case_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_case_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        0
+      ],
+      "to": [
+        9,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass"
+        },
+        "down": {
+          "texture": "#cv_brass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        0
+      ],
+      "to": [
+        9,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_brass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    }
+  ]
+}

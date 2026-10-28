@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_gravel": "zomboidcraft:block/city/mu_gravel",
+    "mu_gravel_b": "zomboidcraft:block/city/mu_gravel_b",
+    "particle": "zomboidcraft:block/city/mu_gravel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gravel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_gravel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_gravel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_gravel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_gravel_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_gravel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

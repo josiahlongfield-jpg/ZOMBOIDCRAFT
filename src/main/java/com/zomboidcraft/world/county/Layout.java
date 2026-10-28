@@ -241,6 +241,10 @@ final class Layout {
             // the Civic Center: City Hall, the council chamber and the plaza, two blocks square
             return lot(s, PlaceType.LANDMARK, "civic", 2, 2, h);
         }
+        if (s.id().equals("park")) {
+            // City Park and the museum along its north side, three blocks square
+            return lot(s, PlaceType.LANDMARK, "park", 3, 3, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);

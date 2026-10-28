@@ -23,6 +23,9 @@ import com.zomboidcraft.world.city.Placer;
  * behind the gate, Old Main's clock tower closing the south end, the dorm tower by the gate.</li>
  * <li>civic: the Grayhaven Civic Center ({@link CivicCentre}), City Hall's tower behind its plaza
  * and reflecting pool, the council chamber's drum beside it, the relief station's tents.</li>
+ * <li>park: Grayhaven City Park ({@link CityPark}) with the Grayhaven Museum ({@link Museum}) along
+ * its north side: the lake and its island, the boathouse, the bandstand and the camp round it, the
+ * palm house, the trenches in the far corner.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -60,6 +63,10 @@ final class LandmarkSite extends Site {
             return;
         }
         kit = new Kit(out, rng, w, d);
+        if (variant("park")) {
+            new CityPark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
         stadium();
     }
 
