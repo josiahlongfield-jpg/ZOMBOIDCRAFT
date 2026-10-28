@@ -594,7 +594,7 @@ public final class ZcConfig {
         /** Fog rolling in and out on its own over any weather, from clear to a thick bank; 0 turns it off, 0.5 halves it. */
         public double rollingFog = 1.0;
         /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
-        public boolean mist = true;
+        public boolean mist = false;
         /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
         public double mistAmount = 1.0;
         /** Lightning flickering over the skyline in storms, the odd bolt between the towers, thunder after. Client side. */
@@ -1234,7 +1234,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 12;
+    private static final int DEFAULTS = 13;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1379,6 +1379,10 @@ public final class ZcConfig {
             if (c.trains.expressSpeed == 2.5) {
                 c.trains.expressSpeed = 1.3;
             }
+        }
+        if (c.defaultsVersion < 13) {
+            // 2026-10-28 (Josiah): the ground mist cost too much under Photon in heavy fog; off unless turned back on
+            c.weather.mist = false;
         }
         c.defaultsVersion = DEFAULTS;
     }
