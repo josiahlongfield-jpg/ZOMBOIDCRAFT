@@ -47,6 +47,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part39();
         part40();
         part41();
+        part42();
     }
 
     private void part0() {
@@ -7515,9 +7516,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("un_carrel", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 10, 4, 16, 11, 16, 0, 0, 4, 1.5, 16, 16, 14.5, 0, 4, 16, 16, 16, 0, 0, 14.5, 16, 16, 16, 1.5, 13, 12, 14.5, 14, 14.5, 3, 11, 8, 9, 11.6, 12);
         loot("un_carrel", "office");
         s("un_table", FACING, 0, 0, SoundType.WOOD, 1f, 0, 11, 0, 16, 12.5, 16, 1, 0, 1, 3, 11, 3, 13, 0, 1, 15, 11, 3, 1, 0, 13, 3, 11, 15, 13, 0, 13, 15, 11, 15);
-    }
-
-    private void part41() {
         s("un_table_lamp", FACING, 0, 0, SoundType.WOOD, 1f, 0, 11, 0, 16, 12.5, 16, 1, 0, 1, 3, 11, 3, 13, 0, 1, 15, 11, 3, 1, 0, 13, 3, 11, 15, 13, 0, 13, 15, 11, 15, 6, 12.5, 6, 10, 13, 10, 7.5, 13, 7.5, 8.5, 15, 8.5, 5, 15, 6.5, 11, 16, 9.5);
         s("un_table_lamp_on", FACING, 0, 9, SoundType.WOOD, 1f, 0, 11, 0, 16, 12.5, 16, 1, 0, 1, 3, 11, 3, 13, 0, 1, 15, 11, 3, 1, 0, 13, 3, 11, 15, 13, 0, 13, 15, 11, 15, 6, 12.5, 6, 10, 13, 10, 7.5, 13, 7.5, 8.5, 15, 8.5, 5, 15, 6.5, 11, 16, 9.5);
         s("un_circ", FACING, LOOT, 0, SoundType.WOOD, 1f, 0, 0, 2, 16, 14, 16, 0, 14, 1, 16, 15.5, 16, 0, 0, 1, 16, 2, 2);
@@ -7718,6 +7716,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("un_sgn_bio_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("un_sgn_bio_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("un_sgn_physics_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
+    }
+
+    private void part42() {
         s("un_sgn_physics_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("un_sgn_faculty_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("un_sgn_faculty_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
