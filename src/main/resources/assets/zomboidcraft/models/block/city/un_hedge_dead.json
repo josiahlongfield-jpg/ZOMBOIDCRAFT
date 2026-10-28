@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_hedge_dead": "zomboidcraft:block/city/un_hedge_dead",
+    "particle": "zomboidcraft:block/city/un_hedge_dead"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_hedge_dead",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#un_hedge_dead",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_hedge_dead",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_hedge_dead",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_hedge_dead"
+        },
+        "down": {
+          "texture": "#un_hedge_dead",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        4
+      ],
+      "to": [
+        6,
+        14,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_hedge_dead"
+        },
+        "south": {
+          "texture": "#un_hedge_dead"
+        },
+        "east": {
+          "texture": "#un_hedge_dead"
+        },
+        "west": {
+          "texture": "#un_hedge_dead"
+        },
+        "up": {
+          "texture": "#un_hedge_dead"
+        },
+        "down": {
+          "texture": "#un_hedge_dead"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        10,
+        9
+      ],
+      "to": [
+        13,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_hedge_dead"
+        },
+        "south": {
+          "texture": "#un_hedge_dead"
+        },
+        "east": {
+          "texture": "#un_hedge_dead"
+        },
+        "west": {
+          "texture": "#un_hedge_dead"
+        },
+        "up": {
+          "texture": "#un_hedge_dead"
+        },
+        "down": {
+          "texture": "#un_hedge_dead"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_name_oldmain_3": "zomboidcraft:block/city/un_name_oldmain_3",
+    "particle": "zomboidcraft:block/city/un_name_oldmain_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_name_oldmain_3"
+        },
+        "south": {
+          "texture": "#un_name_oldmain_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_name_oldmain_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_name_oldmain_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_name_oldmain_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_name_oldmain_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

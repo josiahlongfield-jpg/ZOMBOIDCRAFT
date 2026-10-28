@@ -1115,6 +1115,8 @@ import mall  # noqa: E402
 mall.register(sys.modules[__name__])
 import hospital  # noqa: E402
 hospital.register(sys.modules[__name__])
+import university  # noqa: E402
+university.register(sys.modules[__name__])
 
 
 def build(name):

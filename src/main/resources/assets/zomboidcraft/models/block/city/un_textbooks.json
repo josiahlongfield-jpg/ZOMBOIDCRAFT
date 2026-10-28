@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_oak": "zomboidcraft:block/city/home_oak",
+    "un_textbooks": "zomboidcraft:block/city/un_textbooks",
+    "particle": "zomboidcraft:block/city/un_textbooks"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_textbooks"
+        },
+        "south": {
+          "texture": "#home_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_oak",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
