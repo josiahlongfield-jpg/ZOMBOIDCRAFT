@@ -62,6 +62,26 @@ KEEP_ON_FARM = {'minecraft:potato', 'minecraft:carrot', 'minecraft:beetroot', 'm
 # the stand-ins happened to have
 MIN_SHARE = {'shop/hardware': 0.7, 'shop/home_tools': 0.6, 'shop/home_garage': 0.5, 'car/work': 0.5,
              'car/trunk': 0.3, 'shop/storage': 0.4, 'shop/farm': 0.4, 'shop/kitchen': 0.4, 'shop/pawn': 0.3}
+# worn gear the UI thread registers (ModItems/Weights, not the roster): table -> (id, rarity, weight)
+GEAR = {
+    'shop/clothes': [('leather_belt', 'C', 6)], 'shop/home_wardrobe': [('leather_belt', 'C', 4)],
+    'shop/home_dresser': [('leather_belt', 'C', 4)], 'shop/thrift': [('leather_belt', 'C', 4)],
+    'shop/laundromat': [('leather_belt', 'C', 2)],
+    'shop/hardware': [('tool_belt', 'C', 6)], 'shop/home_garage': [('tool_belt', 'S', 3), ('machete_sheath', 'R', 1)],
+    'shop/home_tools': [('tool_belt', 'S', 4)], 'car/work': [('tool_belt', 'C', 4)],
+    'shop/police': [('duty_belt', 'C', 6), ('hip_holster', 'S', 4), ('shoulder_holster', 'R', 2)],
+    'car/police': [('duty_belt', 'S', 3), ('hip_holster', 'S', 2)],
+    'car/swat': [('duty_belt', 'S', 3), ('thigh_holster', 'R', 2)],
+    'shop/guns': [('hip_holster', 'S', 4), ('shoulder_holster', 'S', 3), ('thigh_holster', 'R', 1)],
+    'shop/home_guns': [('hip_holster', 'S', 3), ('shoulder_holster', 'R', 1)],
+    'shop/basement_guns': [('hip_holster', 'S', 2), ('thigh_holster', 'R', 2)],
+    'shop/pawn': [('shoulder_holster', 'R', 1), ('knife_sheath', 'S', 1)],
+    'shop/kitchen': [('knife_sheath', 'R', 1)], 'shop/basement_supplies': [('knife_sheath', 'S', 2)],
+    'car/trunk': [('knife_sheath', 'R', 1)],
+    'shop/farm': [('machete_sheath', 'S', 3)], 'shop/storage': [('machete_sheath', 'R', 1)],
+}
+# roster rows the worn gear above stands in for
+NOT_PLACED = {'hunting_knife_sheath'}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
 
 
@@ -77,11 +97,13 @@ def stock(table, rows):
     out = {}
     for r in rows:
         w = sum(pw * tags[t] for t, pw in r['places'] if t in tags)
-        if w:
+        if w and r['id'] not in NOT_PLACED:
             out[r['id']] = (r, w * RW[r['rarity'][0]])
     for iid in EXTRA.get(table, ()):
         r = next(x for x in rows if x['id'] == iid)
         out.setdefault(iid, (r, 2))
+    for iid, rar, w in GEAR.get(table, ()):
+        out[iid] = (dict(id=iid, rarity=rar, kg=1.0), w * RW[rar])
     return list(out.values())
 
 
@@ -90,7 +112,7 @@ def main():
     ap.add_argument('--dry', action='store_true')
     a = ap.parse_args()
     rows = [r for r in gen_java.rows() if r['live']]
-    mine = {f'{NS}:{r["id"]}' for r in rows}
+    mine = {f'{NS}:{r["id"]}' for r in rows} | {f'{NS}:{i}' for g in GEAR.values() for i, _r, _w in g}
     for path in sorted(TABLES.glob('*/*.json')):
         table = f'{path.parent.name}/{path.stem}'
         if path.parent.name not in ('shop', 'car'):
