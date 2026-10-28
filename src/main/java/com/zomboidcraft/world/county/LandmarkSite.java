@@ -30,6 +30,8 @@ import com.zomboidcraft.world.city.Placer;
  * street, the shelter's cots on the plywood over the ice, the plazas at the ends.</li>
  * <li>ballpark: Grayhaven Ballpark ({@link Ballpark}), the Skippers' brick park, home in the
  * north-east corner and the outfield toward the water, the field the Guard's landing zone.</li>
+ * <li>tower: the Grayhaven Broadcast Center ({@link Broadcast}), WGHV Channel 6's studios and its
+ * lattice tower, the front to the south street the subway runs under.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -77,6 +79,11 @@ final class LandmarkSite extends Site {
         }
         if (variant("ballpark")) {
             new Ballpark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("tower")) {
+            // drawn with its front to the south street, where the subway's stop comes up
+            new Broadcast(lot(0, 0, w, d, 2), rng, w, d).build();
             return;
         }
         stadium();

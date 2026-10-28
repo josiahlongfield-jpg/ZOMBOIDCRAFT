@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_white": "zomboidcraft:block/city/tv_white",
+    "particle": "zomboidcraft:block/city/tv_white"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_white"
+        },
+        "south": {
+          "texture": "#tv_white"
+        },
+        "east": {
+          "texture": "#tv_white"
+        },
+        "west": {
+          "texture": "#tv_white"
+        },
+        "up": {
+          "texture": "#tv_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        4
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_white"
+        },
+        "south": {
+          "texture": "#tv_white"
+        },
+        "east": {
+          "texture": "#tv_white"
+        },
+        "west": {
+          "texture": "#tv_white"
+        },
+        "up": {
+          "texture": "#tv_white"
+        },
+        "down": {
+          "texture": "#tv_white"
+        }
+      }
+    }
+  ]
+}

@@ -254,6 +254,10 @@ final class Layout {
             // Grayhaven Ballpark: three blocks square by the west shore, the outfield toward the water
             return lot(s, PlaceType.LANDMARK, "ballpark", 3, 3, h);
         }
+        if (s.id().equals("tower")) {
+            // the Broadcast Center: two blocks square, its front to the street the subway runs under
+            return lot(s, PlaceType.LANDMARK, "tower", 2, 2, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);
