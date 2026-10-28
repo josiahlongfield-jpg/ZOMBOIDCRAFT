@@ -147,6 +147,63 @@ def rag(f):
 MOLOTOV_LOOK = {'glass': glass, 'label': label, 'rag': rag}
 
 
+
+# ---------------------------------------------------------------- glass bottle and brick
+
+def glass_bottle(m):
+    """An empty beer bottle (refs/items/drinks photo 07 for the shape): a straight body, a round shoulder into a
+    long neck and a thick lip, brown glass with a paper label. The empties drinks leave behind."""
+    r = 3.0 * CM
+    body = 13.0 * CM
+    rod_y(m, 0.0, 0.4, r - 0.15, 'amber')
+    rod_y(m, 0.4, body, r, 'amber')
+    rod_y(m, 4.0 * CM, 10.0 * CM, r + 0.04, 'beer_label')
+    neck_r = 1.25 * CM
+    lathe(m, body, body + 4.0 * CM, lambda t: neck_r + (r - neck_r) * math.cos(t * math.pi / 2) ** 1.2, 'amber', 5)
+    top = body + 4.0 * CM + 6.0 * CM
+    rod_y(m, body + 3.8 * CM, top, neck_r, 'amber')
+    rod_y(m, top - 1.0 * CM, top, neck_r + 0.2, 'amber')
+
+
+def amber(f):
+    """Brown bottle glass, a pale highlight streak up one side."""
+    c = P.plain(f, '#5a3312', 0.04)
+    streak = (np.abs(f.uv[..., 0] - 0.35) < 0.12) & (f.n[1] == 0)
+    return np.where(streak[..., None], P.mix(c, P.col('#d9b98a'), 0.45), c)
+
+
+def beer_label(f):
+    """A plain made-up beer label: cream with a red oval band and a line of print."""
+    c = P.plain(f, '#e8dfc4', 0.05)
+    v = f.uv[..., 1] / max(f.uv[..., 1].max(), 1e-3)
+    c = np.where((np.abs(v - 0.45) < 0.2)[..., None], P.plain(f, '#a3241d', 0.05), c)
+    print_ = (np.abs(v - 0.82) < 0.04)
+    return np.where(print_[..., None], P.mix(c, P.col('#2a2420'), 0.6), c)
+
+
+BRICK = (20.3 * CM, 5.7 * CM, 9.2 * CM)      # a standard American brick, laid flat
+
+
+def brick(m):
+    """A red building brick (the brick walls in refs/roadside/diner-brick): a standard size block with its
+    three cored holes through it top to bottom."""
+    L, H, W = BRICK
+    m.box((-L / 2, 0, -W / 2), (L / 2, H, W / 2), 'brick')
+    for x in (-L / 3, 0, L / 3):
+        for y0, y1 in ((H - 0.02, H + 0.01), (-0.01, 0.02)):
+            m.box((x - 1.2 * CM, y0, -1.6 * CM), (x + 1.2 * CM, y1, 1.6 * CM), 'hole')
+
+
+def brick_paint(f):
+    c = P.plain(f, '#9c4a32', 0.14)
+    c = P.mix(c, P.col('#6e3424'), np.clip((f.noise(1.6, 31, 3) - 0.45) * 2, 0, 1) * 0.5)
+    return P.mix(c, P.col('#b98a6a'), np.clip((f.noise(4.0, 32, 2) - 0.7) * 3, 0, 1) * 0.4)
+
+
+BOTTLE_LOOK = {'amber': amber, 'beer_label': beer_label}
+BRICK_LOOK = {'brick': brick_paint, 'hole': lambda f: P.plain(f, '#2a1610', 0.05)}
+
+
 # ---------------------------------------------------------------- the list, and writing them
 
 class Throwable:
@@ -158,6 +215,8 @@ class Throwable:
 THROWABLES = [
     Throwable('frag_grenade', frag_grenade, FRAG_LOOK, 1101, 11.0),
     Throwable('molotov', molotov, MOLOTOV_LOOK, 1102, 34.0),
+    Throwable('glass_bottle', glass_bottle, BOTTLE_LOOK, 1103, 23.0),
+    Throwable('brick', brick, BRICK_LOOK, 1104, 20.3),
 ]
 
 
