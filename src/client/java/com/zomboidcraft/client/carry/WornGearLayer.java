@@ -94,13 +94,15 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
-        if (worn.size() > GearStore.BELT && !worn.get(GearStore.BELT).isEmpty()) {
-            // belt models are built at body scale round the waist (tools/items/gen_belts.py): just move them down to it
+        // the belt, holster and sheath are built at body scale round the waist (tools/items/gen_belts.py,
+        // gen_holsters.py): they only need moving down to it
+        for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
+            if (worn.get(i).isEmpty()) continue;
             pose.pushPose();
             getParentModel().body.translateAndRotate(pose);
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
-            items.updateForLiving(item, worn.get(GearStore.BELT), ItemDisplayContext.NONE, player);
+            items.updateForLiving(item, worn.get(i), ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
@@ -129,7 +131,8 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         float k = (float) ((side < 0 ? 6.5f : 7.5f) / 16f / length);
         pose.pushPose();
         getParentModel().body.translateAndRotate(pose);
-        pose.translate(side * 4.7f / 16f, 11.5f / 16f, 0.2f / 16f);
+        // the handgun sits down in the hip holster's shell (gen_holsters.py), its grip out of the top
+        pose.translate(side < 0 ? -5.1f / 16f : 4.7f / 16f, 11.5f / 16f, (side < 0 ? -0.4f : 0.2f) / 16f);
         pose.scale(-k, -k, k);
         // guns point their muzzle down the thigh; a blade's tip hangs down
         if (alongZ) {
