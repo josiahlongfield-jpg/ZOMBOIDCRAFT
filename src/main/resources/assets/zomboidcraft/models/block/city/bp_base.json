@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_canvas": "zomboidcraft:block/city/bp_canvas",
+    "particle": "zomboidcraft:block/city/bp_canvas"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_canvas"
+        },
+        "south": {
+          "texture": "#bp_canvas"
+        },
+        "east": {
+          "texture": "#bp_canvas"
+        },
+        "west": {
+          "texture": "#bp_canvas"
+        },
+        "up": {
+          "texture": "#bp_canvas"
+        },
+        "down": {
+          "texture": "#bp_canvas",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

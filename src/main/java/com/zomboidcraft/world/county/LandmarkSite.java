@@ -28,6 +28,8 @@ import com.zomboidcraft.world.city.Placer;
  * palm house, the trenches in the far corner.</li>
  * <li>arena: Harbor Arena ({@link Arena}), the Gulls' hockey arena, its floor sunk under the
  * street, the shelter's cots on the plywood over the ice, the plazas at the ends.</li>
+ * <li>ballpark: Grayhaven Ballpark ({@link Ballpark}), the Skippers' brick park, home in the
+ * north-east corner and the outfield toward the water, the field the Guard's landing zone.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -71,6 +73,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("arena")) {
             new Arena(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("ballpark")) {
+            new Ballpark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
             return;
         }
         stadium();
