@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_board_stay_5": "zomboidcraft:block/city/un_board_stay_5",
+    "particle": "zomboidcraft:block/city/un_board_stay_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_board_stay_5"
+        },
+        "south": {
+          "texture": "#un_board_stay_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_board_stay_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_board_stay_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_board_stay_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_board_stay_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

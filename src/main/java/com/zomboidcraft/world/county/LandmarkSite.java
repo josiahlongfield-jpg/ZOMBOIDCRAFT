@@ -19,6 +19,8 @@ import com.zomboidcraft.world.city.Placer;
  * stores, with its car park and parking decks.</li>
  * <li>mercy: Mercy General Hospital ({@link Hospital}), the brick podium with the ER and its
  * ambulance bay, the white ward tower over it, the service wing and the staff lot behind.</li>
+ * <li>university: Grayhaven State University ({@link University}), its halls round the quad
+ * behind the gate, Old Main's clock tower closing the south end, the dorm tower by the gate.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -45,6 +47,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("mercy")) {
             new Hospital(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("university")) {
+            new University(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         kit = new Kit(out, rng, w, d);

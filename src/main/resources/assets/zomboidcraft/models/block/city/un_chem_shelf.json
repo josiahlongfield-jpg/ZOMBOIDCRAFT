@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_enamel": "zomboidcraft:block/city/hs_enamel",
+    "un_chem": "zomboidcraft:block/city/un_chem",
+    "particle": "zomboidcraft:block/city/un_chem"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_chem"
+        },
+        "south": {
+          "texture": "#hs_enamel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_enamel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_enamel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_enamel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
