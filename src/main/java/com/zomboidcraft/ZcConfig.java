@@ -118,6 +118,9 @@ public final class ZcConfig {
         public boolean ottoTalks = true;
         /** Seconds between OTTO's remarks while running between stops. */
         public int ottoChatter = 45;
+        /** Zombies ride the trains: share of trains that start with some aboard, and most a train carries. */
+        public double zombieRiderChance = 0.6;
+        public int zombieRidersMax = 6;
     }
 
     public static class Performance {

@@ -40,6 +40,8 @@ public final class TrainRun {
     double haltAt;
     /** How long this stand at a stop (or a halt) is, all told. */
     int dwellTotal;
+    /** Zombies riding while nobody's near enough to see them (they're made real as players come close). */
+    public int passengers;
     /** Seconds the doors stay open after a stop button halt. */
     static final int HALT_SECONDS = 12;
 
@@ -180,6 +182,7 @@ public final class TrainRun {
         halting = false;
         dwell = dwellTotal = cfg.doorSeconds * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
         boolean called = line.calls.remove(Integer.valueOf(atStop));
+        Zombies.stopped(level, this);
         Beacons.answered(line, atStop);
         Otto.arrived(level, this, stop, called);
         TrainSounds.chime(level, this);
