@@ -107,11 +107,10 @@ def main():
     for event, (files, rng) in EVENTS.items():
         ours[event] = {"sounds": [{"name": f"zomboidcraft:aircraft/{f}", "attenuation_distance": rng} for f in files]}
     ours["amb.distant"]["sounds"] = [s for s in ours["amb.distant"]["sounds"] if not s["name"].endswith("amb/distant/4")]
-    # the shared world events (WorldEvents): the siren, and the explosions reuse the crash and the far-off blast
+    # the shared world events (WorldEvents): the siren
     # not streamed, like the flybys: the 8 streaming channels can all be taken by the rain, wind and music loops
     ours["world.siren"] = {"sounds": [{"name": "zomboidcraft:world/siren", "attenuation_distance": 480}]}
-    ours["world.explosion"] = {"sounds": [{"name": "zomboidcraft:aircraft/crash", "attenuation_distance": 192}]}
-    ours["world.explosion.far"] = {"sounds": [{"name": "zomboidcraft:amb/distant/1", "attenuation_distance": 640}]}
+    # world.explosion and world.explosion.far are Josiah's picks now (build_throw_sounds.py)
     sj.write_text(json.dumps(ours, indent=2) + "\n")
 
     path = ROOT / "CREDITS.md"

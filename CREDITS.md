@@ -357,3 +357,33 @@ Jets and helicopters crossing the map (world events), picked by Josiah Longfield
 Spoken with the Piper text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl) using the
 "joe" voice (en_US-joe-medium, dataset licence CC0, https://huggingface.co/rhasspy/piper-voices),
 then given a robot and train-speaker treatment with ffmpeg. Made by tools/trains/otto_voice.py.
+
+## Throwables
+
+Picked by Josiah Longfield on the Dead Air Throwables page, cut by tools/audio/build_throw_sounds.py. The Sonniss and Gamemaster originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.throw.swing | foley_jump_movement_throw_06 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.throw.bottle_smash | Bluezone_BC0274_glass_impact_break_small_014 (BluezoneCorp - Broken Glass) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.throw.can_clatter | [Spray Can Rattle 170428_1483.wav by megashroom](https://freesound.org/people/megashroom/sounds/390334/) | megashroom | Freesound, CC0 1.0 |
+| weapon.throw.brick_thud | Brick_bricks_shuffle_impact_several_many_moving_laying_cement_hit_fall_10 (Matt Script - You Me & Debris) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| weapon.throw.brick_thud | Bluezone_BC0297_stone_impact_steel_bar_01_010 (BluezoneCorp - Stone Impact) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.throw.brick_thud | Bluezone_BC0297_stone_impact_hammer_015 (BluezoneCorp - Stone Impact) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.throw.firecracker | [Firecracker - Multiple String.wav by iliyabylich04](https://freesound.org/people/iliyabylich04/sounds/651328/) | iliyabylich04 | Freesound, CC0 1.0 |
+| weapon.throw.fuse | [firecracker sparkler ignite, burn, fizzle out3.flac by kyles](https://freesound.org/people/kyles/sounds/637527/) | kyles | Freesound, CC0 1.0 |
+| weapon.throw.flare_strike, weapon.throw.flare_hiss | [road flare ignite burns.wav by frankelmedico](https://freesound.org/people/frankelmedico/sounds/348767/) | frankelmedico | Freesound, CC0 1.0 |
+| weapon.throw.alarm_tick | [Clock.Windup.Bell.Antique.wav by jessepash](https://freesound.org/people/jessepash/sounds/139958/) | jessepash | Freesound, CC0 1.0 |
+| weapon.throw.alarm_ring | [alarm clock.wav by jackjames_tomknevitt](https://freesound.org/people/jackjames_tomknevitt/sounds/209536/) | jackjames_tomknevitt | Freesound, CC0 1.0 |
+| weapon.throw.alarm_ring | [2018 07 alarm clock.flac by arseniiv](https://freesound.org/people/arseniiv/sounds/459701/) | arseniiv | Freesound, CC0 1.0 |
+| weapon.throw.molotov_burst | [Lighting a Fire by plasterbrain](https://freesound.org/people/plasterbrain/sounds/534702/) | plasterbrain | Freesound, CC0 1.0 |
+| weapon.throw.smoke_pop | [R27-34-Fuse Burning.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483320/) | craigsmith | Freesound, CC0 1.0 |
+| weapon.throw.flashbang | [Cherry Bomb Explodes, Normal Speed by CHallSmith](https://freesound.org/people/CHallSmith/sounds/870713/) | CHallSmith | Freesound, CC0 1.0 |
+| weapon.throw.blast, world.explosion | [Pipe Bomb by modusmogulus](https://freesound.org/people/modusmogulus/sounds/737321/) | modusmogulus | Freesound, CC0 1.0 |
+| weapon.throw.blast, world.explosion | explosion_large_07 (Gamemaster Audio - Guns, Bullets and Explosions) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| weapon.throw.blast_far | explosion_far_distant_02 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.throw.blast_far | FarExplosion03 (Stefano Cremona - Explosions) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.throw.fire_burn | [Fire Burning Loop by midimagician](https://freesound.org/people/midimagician/sounds/249418/) | midimagician | Freesound, CC0 1.0 |
+| world.explosion.far | [Muffled Distant Explosion by NenadSimic](https://freesound.org/people/NenadSimic/sounds/149966/) | NenadSimic | Freesound, CC0 1.0 |
+| world.explosion.far | [Big Far Explosion by unfa](https://freesound.org/people/unfa/sounds/156500/) | unfa | Freesound, CC0 1.0 |
+| world.explosion.far | [Distant Explosion by Mr_KeybOred](https://freesound.org/people/Mr_KeybOred/sounds/372086/) | Mr_KeybOred | Freesound, CC0 1.0 |
