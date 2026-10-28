@@ -26,6 +26,8 @@ import com.zomboidcraft.world.city.Placer;
  * <li>park: Grayhaven City Park ({@link CityPark}) with the Grayhaven Museum ({@link Museum}) along
  * its north side: the lake and its island, the boathouse, the bandstand and the camp round it, the
  * palm house, the trenches in the far corner.</li>
+ * <li>arena: Harbor Arena ({@link Arena}), the Gulls' hockey arena, its floor sunk under the
+ * street, the shelter's cots on the plywood over the ice, the plazas at the ends.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -65,6 +67,10 @@ final class LandmarkSite extends Site {
         kit = new Kit(out, rng, w, d);
         if (variant("park")) {
             new CityPark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("arena")) {
+            new Arena(lot(0, 0, w, d, 0), rng, w, d, kit).build();
             return;
         }
         stadium();

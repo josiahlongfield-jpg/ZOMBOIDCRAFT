@@ -349,8 +349,8 @@ final class CityPark extends Grounds {
         }
         for (int dz = -3; dz <= 3; dz += 2) {
             if (empty(BX - 1, 2, BZ + dz)) {
-                set(BX - 1, 2, BZ + dz, "sc_cot_head[facing=east]");
-                set(BX, 2, BZ + dz, "sc_cot_foot[facing=east]");
+                set(BX - 1, 2, BZ + dz, "sc_cot_head[facing=west]");
+                set(BX, 2, BZ + dz, "sc_cot_foot[facing=west]");
             }
         }
         sign("bandstand", BX - 1, 5, BZ - 6, "south");
