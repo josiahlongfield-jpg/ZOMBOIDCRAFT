@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_flags": "zomboidcraft:block/city/om_flags",
+    "om_granite": "zomboidcraft:block/city/om_granite",
+    "particle": "zomboidcraft:block/city/om_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_flags",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

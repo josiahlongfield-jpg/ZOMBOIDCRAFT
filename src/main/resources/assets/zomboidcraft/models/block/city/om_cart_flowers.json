@@ -1,0 +1,276 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "om_crate_plain": "zomboidcraft:block/city/om_crate_plain",
+    "om_flowers": "zomboidcraft:block/city/om_flowers",
+    "om_wheel": "zomboidcraft:block/city/om_wheel",
+    "particle": "zomboidcraft:block/city/om_crate_plain"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        5,
+        2
+      ],
+      "to": [
+        15,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate_plain"
+        },
+        "south": {
+          "texture": "#om_crate_plain"
+        },
+        "east": {
+          "texture": "#om_crate_plain"
+        },
+        "west": {
+          "texture": "#om_crate_plain"
+        },
+        "up": {
+          "texture": "#om_crate_plain"
+        },
+        "down": {
+          "texture": "#om_crate_plain"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        1,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_wheel"
+        },
+        "south": {
+          "texture": "#om_wheel"
+        },
+        "east": {
+          "texture": "#om_wheel"
+        },
+        "west": {
+          "texture": "#om_wheel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_wheel"
+        },
+        "down": {
+          "texture": "#om_wheel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_wheel"
+        },
+        "south": {
+          "texture": "#om_wheel"
+        },
+        "east": {
+          "texture": "#om_wheel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_wheel"
+        },
+        "up": {
+          "texture": "#om_wheel"
+        },
+        "down": {
+          "texture": "#om_wheel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        14
+      ],
+      "to": [
+        4,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        9,
+        14
+      ],
+      "to": [
+        13,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        12
+      ],
+      "to": [
+        4,
+        5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        12
+      ],
+      "to": [
+        13,
+        5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        11,
+        3
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate_plain"
+        },
+        "south": {
+          "texture": "#om_crate_plain"
+        },
+        "east": {
+          "texture": "#om_crate_plain"
+        },
+        "west": {
+          "texture": "#om_crate_plain"
+        },
+        "up": {
+          "texture": "#om_flowers"
+        },
+        "down": {
+          "texture": "#om_crate_plain"
+        }
+      }
+    }
+  ]
+}

@@ -1129,6 +1129,8 @@ import broadcast  # noqa: E402
 broadcast.register(sys.modules[__name__])
 import power  # noqa: E402
 power.register(sys.modules[__name__])
+import market  # noqa: E402
+market.register(sys.modules[__name__])
 
 
 

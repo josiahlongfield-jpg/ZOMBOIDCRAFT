@@ -135,9 +135,10 @@ public final class Flats {
                 rail(p, rng, z == walk ? lo : a - 1, py + 1, z, "west", worn);
                 rail(p, rng, z == walk ? hi : a + 6, py + 1, z, "east", worn);
             }
-            // a lamp on the wall by the door, now and then still lit
+            // a lamp on the wall by the door, now and then still lit, high over the walk (at head
+            // height it closes the one-board walk to anyone squeezing past the rail)
             if (!roof && rng.nextDouble() < 0.5 && door + 1 <= hi) {
-                p.set(door + 1, py + 2, walk, (rng.nextDouble() < 0.15 ? "ext_sconce_lit" : "ext_sconce") + "[facing=south]");
+                p.set(door + 1, py + 3, walk, (rng.nextDouble() < 0.15 ? "ext_sconce_lit" : "ext_sconce") + "[facing=south]");
             }
         }
         // the two posts the porches hang from, at the far corners, up from the yard to the top rail

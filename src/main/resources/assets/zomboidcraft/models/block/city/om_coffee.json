@@ -1,0 +1,115 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "om_beans": "zomboidcraft:block/city/om_beans",
+    "om_burlap": "zomboidcraft:block/city/om_burlap",
+    "om_front_red": "zomboidcraft:block/city/om_front_red",
+    "om_marble": "zomboidcraft:block/city/om_marble",
+    "particle": "zomboidcraft:block/city/om_front_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_red"
+        },
+        "south": {
+          "texture": "#om_front_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_marble"
+        },
+        "down": {
+          "texture": "#om_front_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        6
+      ],
+      "to": [
+        6,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_red"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        14,
+        4
+      ],
+      "to": [
+        14,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_beans"
+        },
+        "south": {
+          "texture": "#om_burlap"
+        },
+        "east": {
+          "texture": "#om_burlap"
+        },
+        "west": {
+          "texture": "#om_burlap"
+        },
+        "up": {
+          "texture": "#om_beans",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_burlap"
+        }
+      }
+    }
+  ]
+}

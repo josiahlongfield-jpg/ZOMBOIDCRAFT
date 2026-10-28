@@ -367572,6 +367572,7610 @@
    "sound": "WOOL",
    "rotate": "facing",
    "decor": true
+  },
+  "om_granite": {
+   "tex": {
+    "all": "om_granite"
+   },
+   "title": "Granite",
+   "sound": "STONE"
+  },
+  "om_granite_b": {
+   "tex": {
+    "all": "om_granite_b"
+   },
+   "title": "Granite",
+   "sound": "STONE"
+  },
+  "om_granite_moss": {
+   "tex": {
+    "all": "om_granite_moss"
+   },
+   "title": "Granite",
+   "sound": "STONE"
+  },
+  "om_sash": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_sash",
+      "south": "om_sash",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "om_sash_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_sash_broken",
+      "south": "om_sash_broken",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "om_sash_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_sash_lit",
+      "south": "om_sash_lit",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "light": 5,
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "om_fan_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_0",
+      "south": "om_fan_0",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_0",
+      "south": "om_fang_0",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_0",
+      "south": "om_fan_0",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_1",
+      "south": "om_fan_1",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_1",
+      "south": "om_fang_1",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_1",
+      "south": "om_fan_1",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_2",
+      "south": "om_fan_2",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_2",
+      "south": "om_fang_2",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_2",
+      "south": "om_fan_2",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_3",
+      "south": "om_fan_3",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_3",
+      "south": "om_fang_3",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_3",
+      "south": "om_fan_3",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_4",
+      "south": "om_fan_4",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_4",
+      "south": "om_fang_4",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_4",
+      "south": "om_fan_4",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_5",
+      "south": "om_fan_5",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_5",
+      "south": "om_fang_5",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_5",
+      "south": "om_fan_5",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_6",
+      "south": "om_fan_6",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_6",
+      "south": "om_fang_6",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_6",
+      "south": "om_fan_6",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_7",
+      "south": "om_fan_7",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_7",
+      "south": "om_fang_7",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_7",
+      "south": "om_fan_7",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_8",
+      "south": "om_fan_8",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_8",
+      "south": "om_fang_8",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_8",
+      "south": "om_fan_8",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_fan_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     7,
+     {
+      "north": "om_fan_9",
+      "south": "om_fan_9",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ],
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "om_fang_9",
+      "south": "om_fang_9",
+      "side": "om_front_cream",
+      "up": "om_front_cream",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     16,
+     16,
+     {
+      "north": "om_fan_9",
+      "south": "om_fan_9",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Fanlight",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_name_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_0",
+      "south": "om_name_0",
+      "side": "om_name_0",
+      "up": "om_name_0",
+      "down": "om_name_0"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_1",
+      "south": "om_name_1",
+      "side": "om_name_1",
+      "up": "om_name_1",
+      "down": "om_name_1"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_2",
+      "south": "om_name_2",
+      "side": "om_name_2",
+      "up": "om_name_2",
+      "down": "om_name_2"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_3",
+      "south": "om_name_3",
+      "side": "om_name_3",
+      "up": "om_name_3",
+      "down": "om_name_3"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_4",
+      "south": "om_name_4",
+      "side": "om_name_4",
+      "up": "om_name_4",
+      "down": "om_name_4"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_5",
+      "south": "om_name_5",
+      "side": "om_name_5",
+      "up": "om_name_5",
+      "down": "om_name_5"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_6",
+      "south": "om_name_6",
+      "side": "om_name_6",
+      "up": "om_name_6",
+      "down": "om_name_6"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_7",
+      "south": "om_name_7",
+      "side": "om_name_7",
+      "up": "om_name_7",
+      "down": "om_name_7"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_8",
+      "south": "om_name_8",
+      "side": "om_name_8",
+      "up": "om_name_8",
+      "down": "om_name_8"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_9",
+      "south": "om_name_9",
+      "side": "om_name_9",
+      "up": "om_name_9",
+      "down": "om_name_9"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_10",
+      "south": "om_name_10",
+      "side": "om_name_10",
+      "up": "om_name_10",
+      "down": "om_name_10"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_11",
+      "south": "om_name_11",
+      "side": "om_name_11",
+      "up": "om_name_11",
+      "down": "om_name_11"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_12",
+      "south": "om_name_12",
+      "side": "om_name_12",
+      "up": "om_name_12",
+      "down": "om_name_12"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_13": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_13",
+      "south": "om_name_13",
+      "side": "om_name_13",
+      "up": "om_name_13",
+      "down": "om_name_13"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_14": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_14",
+      "south": "om_name_14",
+      "side": "om_name_14",
+      "up": "om_name_14",
+      "down": "om_name_14"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_15": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_15",
+      "south": "om_name_15",
+      "side": "om_name_15",
+      "up": "om_name_15",
+      "down": "om_name_15"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_16",
+      "south": "om_name_16",
+      "side": "om_name_16",
+      "up": "om_name_16",
+      "down": "om_name_16"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_17": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_17",
+      "south": "om_name_17",
+      "side": "om_name_17",
+      "up": "om_name_17",
+      "down": "om_name_17"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_18": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_18",
+      "south": "om_name_18",
+      "side": "om_name_18",
+      "up": "om_name_18",
+      "down": "om_name_18"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_19": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_19",
+      "south": "om_name_19",
+      "side": "om_name_19",
+      "up": "om_name_19",
+      "down": "om_name_19"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_20",
+      "south": "om_name_20",
+      "side": "om_name_20",
+      "up": "om_name_20",
+      "down": "om_name_20"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_name_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_name_21",
+      "south": "om_name_21",
+      "side": "om_name_21",
+      "up": "om_name_21",
+      "down": "om_name_21"
+     }
+    ]
+   ],
+   "title": "Carved Letters",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_date_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_0",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_1",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_2",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_3",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_4",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_5",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_6",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_date_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "om_date_7",
+      "south": "om_granite",
+      "side": "om_granite",
+      "up": "om_granite",
+      "down": "om_granite"
+     }
+    ]
+   ],
+   "title": "Carved Stone",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_rake_l_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     -2,
+     4,
+     2,
+     0,
+     "om_granite"
+    ],
+    [
+     4,
+     0,
+     0,
+     16,
+     4,
+     16,
+     "om_granite"
+    ],
+    [
+     4,
+     2,
+     -2,
+     8,
+     4,
+     0,
+     "om_granite"
+    ],
+    [
+     8,
+     0,
+     0,
+     16,
+     6,
+     16,
+     "om_granite"
+    ],
+    [
+     8,
+     4,
+     -2,
+     12,
+     6,
+     0,
+     "om_granite"
+    ],
+    [
+     12,
+     0,
+     0,
+     16,
+     8,
+     16,
+     "om_granite"
+    ],
+    [
+     12,
+     6,
+     -2,
+     16,
+     8,
+     0,
+     "om_granite"
+    ]
+   ],
+   "title": "Raking Cornice",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_rake_l_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10,
+     16,
+     "om_granite"
+    ],
+    [
+     0,
+     8,
+     -2,
+     4,
+     10,
+     0,
+     "om_granite"
+    ],
+    [
+     4,
+     0,
+     0,
+     16,
+     12,
+     16,
+     "om_granite"
+    ],
+    [
+     4,
+     10,
+     -2,
+     8,
+     12,
+     0,
+     "om_granite"
+    ],
+    [
+     8,
+     0,
+     0,
+     16,
+     14,
+     16,
+     "om_granite"
+    ],
+    [
+     8,
+     12,
+     -2,
+     12,
+     14,
+     0,
+     "om_granite"
+    ],
+    [
+     12,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "om_granite"
+    ],
+    [
+     12,
+     14,
+     -2,
+     16,
+     16,
+     0,
+     "om_granite"
+    ]
+   ],
+   "title": "Raking Cornice",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_rake_r_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16,
+     "om_granite"
+    ],
+    [
+     12,
+     0,
+     -2,
+     16,
+     2,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     12,
+     4,
+     16,
+     "om_granite"
+    ],
+    [
+     8,
+     2,
+     -2,
+     12,
+     4,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     8,
+     6,
+     16,
+     "om_granite"
+    ],
+    [
+     4,
+     4,
+     -2,
+     8,
+     6,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     4,
+     8,
+     16,
+     "om_granite"
+    ],
+    [
+     0,
+     6,
+     -2,
+     4,
+     8,
+     0,
+     "om_granite"
+    ]
+   ],
+   "title": "Raking Cornice",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_rake_r_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10,
+     16,
+     "om_granite"
+    ],
+    [
+     12,
+     8,
+     -2,
+     16,
+     10,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     12,
+     12,
+     16,
+     "om_granite"
+    ],
+    [
+     8,
+     10,
+     -2,
+     12,
+     12,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     8,
+     14,
+     16,
+     "om_granite"
+    ],
+    [
+     4,
+     12,
+     -2,
+     8,
+     14,
+     0,
+     "om_granite"
+    ],
+    [
+     0,
+     0,
+     0,
+     4,
+     16,
+     16,
+     "om_granite"
+    ],
+    [
+     0,
+     14,
+     -2,
+     4,
+     16,
+     0,
+     "om_granite"
+    ]
+   ],
+   "title": "Raking Cornice",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "om_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "cv_oak"
+    ]
+   ],
+   "title": "Stall Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10
+    ]
+   ]
+  },
+  "om_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     11,
+     0,
+     10,
+     16,
+     16,
+     "cv_oak"
+    ]
+   ],
+   "title": "Stall Beam",
+   "sound": "WOOD",
+   "rotate": "axis",
+   "shape": [
+    [
+     6,
+     11,
+     0,
+     10,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_board_fish_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_fish_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_fish_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_fish_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_fish_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_fish_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_meat_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_meat_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_meat_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_meat_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_meat_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_meat_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_cheese_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_cheese_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_cheese_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_cheese_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_cheese_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_cheese_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_bread_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_bread_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_bread_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_bread_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_bread_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_bread_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_produce_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_produce_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_produce_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_produce_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_produce_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_produce_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_greens_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_greens_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_greens_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_greens_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_greens_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_greens_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_spice_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_spice_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_spice_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_spice_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_spice_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_spice_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_candy_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_candy_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_candy_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_candy_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_candy_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_candy_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_coffee_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_coffee_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_coffee_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_coffee_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_coffee_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_coffee_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_oyster_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_oyster_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_oyster_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_oyster_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_oyster_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_oyster_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_flowers_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_flowers_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_flowers_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_flowers_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_flowers_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_flowers_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_deli_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_deli_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_deli_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_deli_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_deli_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_deli_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_poultry_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_poultry_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_poultry_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_poultry_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_poultry_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_poultry_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_nuts_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_nuts_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_nuts_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_nuts_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_nuts_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_nuts_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_pickles_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_pickles_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_pickles_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_pickles_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_pickles_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_pickles_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_donuts_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_donuts_0",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_donuts_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_donuts_1",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_board_donuts_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9,
+     {
+      "north": "om_board_donuts_2",
+      "south": "cv_oak",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     3,
+     13,
+     7.6,
+     4,
+     16,
+     8.4,
+     "home_chrome"
+    ],
+    [
+     12,
+     13,
+     7.6,
+     13,
+     16,
+     8.4,
+     "home_chrome"
+    ]
+   ],
+   "title": "Stall Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     1,
+     7,
+     16,
+     13,
+     9
+    ]
+   ]
+  },
+  "om_fish": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     12,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_front_blue",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     12,
+     1,
+     16,
+     13,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_fish",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     13,
+     6,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_fish",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     14,
+     11,
+     16,
+     15,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_fish",
+      "down": "om_front_blue"
+     }
+    ]
+   ],
+   "title": "Fish Counter",
+   "sound": "STONE",
+   "loot": "food",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     16
+    ]
+   ]
+  },
+  "om_fish_rot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     12,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_front_blue",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     12,
+     1,
+     16,
+     13,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_rot",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     13,
+     6,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_rot",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     14,
+     11,
+     16,
+     15,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_ice_rot",
+      "down": "om_front_blue"
+     }
+    ]
+   ],
+   "title": "Fish Counter",
+   "sound": "STONE",
+   "loot": "scraps",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     16
+    ]
+   ]
+  },
+  "om_oyster": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     12,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_front_blue",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     12,
+     1,
+     16,
+     13,
+     16,
+     {
+      "north": "om_front_blue",
+      "side": "om_front_blue",
+      "up": "om_oysters",
+      "down": "om_front_blue"
+     }
+    ],
+    [
+     0,
+     13,
+     0,
+     16,
+     14,
+     4,
+     {
+      "north": "om_marble",
+      "side": "om_marble",
+      "up": "om_marble",
+      "down": "om_marble"
+     }
+    ]
+   ],
+   "title": "Oyster Bar",
+   "sound": "STONE",
+   "loot": "food",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     14,
+     16
+    ]
+   ]
+  },
+  "om_meat_case": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     9,
+     16,
+     {
+      "north": "om_front_red",
+      "side": "om_front_red",
+      "up": "om_marble",
+      "down": "om_front_red"
+     }
+    ],
+    [
+     1,
+     9,
+     2,
+     15,
+     10,
+     15,
+     {
+      "north": "om_cuts",
+      "side": "om_cuts",
+      "up": "om_cuts",
+      "down": "om_cuts"
+     }
+    ],
+    [
+     0,
+     9,
+     1,
+     16,
+     16,
+     16,
+     "cc_glass"
+    ],
+    [
+     0,
+     15.5,
+     1,
+     16,
+     16,
+     16,
+     "painted_steel"
+    ]
+   ],
+   "title": "Meat Case",
+   "sound": "GLASS",
+   "loot": "home_fridge",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_cheese": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_cream",
+      "side": "om_front_cream",
+      "up": "om_marble",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     2,
+     14,
+     3,
+     8,
+     16,
+     9,
+     "om_cheese"
+    ],
+    [
+     9,
+     14,
+     4,
+     14,
+     15.5,
+     9,
+     "om_cheese"
+    ],
+    [
+     4,
+     14,
+     10,
+     12,
+     15,
+     15,
+     "om_cheese"
+    ]
+   ],
+   "title": "Cheese Counter",
+   "sound": "WOOD",
+   "loot": "food",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_bread": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     {
+      "north": "om_bread",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Bread Rack",
+   "sound": "WOOD",
+   "loot": "food",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_produce_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     0,
+     16,
+     9,
+     6,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_a",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     6,
+     16,
+     11,
+     11,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_a",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     11,
+     16,
+     13,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_a",
+      "down": "om_crate_plain"
+     }
+    ]
+   ],
+   "title": "Produce Stand",
+   "sound": "WOOD",
+   "loot": "grocery",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_produce_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     0,
+     16,
+     9,
+     6,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_b",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     6,
+     16,
+     11,
+     11,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_b",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     11,
+     16,
+     13,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_b",
+      "down": "om_crate_plain"
+     }
+    ]
+   ],
+   "title": "Produce Stand",
+   "sound": "WOOD",
+   "loot": "grocery",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_produce_rot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     0,
+     16,
+     9,
+     6,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_rot",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     6,
+     16,
+     11,
+     11,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_rot",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     7,
+     11,
+     16,
+     13,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate_plain",
+      "up": "om_fruit_rot",
+      "down": "om_crate_plain"
+     }
+    ]
+   ],
+   "title": "Produce Stand",
+   "sound": "WOOD",
+   "loot": "scraps",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_spice": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     7,
+     10,
+     7,
+     {
+      "north": "om_burlap",
+      "side": "om_burlap",
+      "up": "om_spice_red",
+      "down": "om_burlap"
+     }
+    ],
+    [
+     9,
+     0,
+     1,
+     15,
+     11,
+     7,
+     {
+      "north": "om_burlap",
+      "side": "om_burlap",
+      "up": "om_spice_gold",
+      "down": "om_burlap"
+     }
+    ],
+    [
+     1,
+     0,
+     9,
+     7,
+     12,
+     15,
+     {
+      "north": "om_burlap",
+      "side": "om_burlap",
+      "up": "om_beans",
+      "down": "om_burlap"
+     }
+    ],
+    [
+     9,
+     0,
+     9,
+     15,
+     10,
+     15,
+     {
+      "north": "om_burlap",
+      "side": "om_burlap",
+      "up": "om_spice_red",
+      "down": "om_burlap"
+     }
+    ]
+   ],
+   "title": "Spice Sacks",
+   "sound": "WOOL",
+   "loot": "kitchen",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     12,
+     15
+    ]
+   ]
+  },
+  "om_candy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_cream",
+      "side": "om_front_cream",
+      "up": "om_marble",
+      "down": "om_front_cream"
+     }
+    ],
+    [
+     1,
+     14,
+     4,
+     5,
+     16,
+     8,
+     {
+      "north": "om_jars",
+      "side": "om_jars",
+      "up": "cc_glass",
+      "down": "om_jars"
+     }
+    ],
+    [
+     6,
+     14,
+     4,
+     10,
+     16,
+     8,
+     {
+      "north": "om_jars",
+      "side": "om_jars",
+      "up": "cc_glass",
+      "down": "om_jars"
+     }
+    ],
+    [
+     11,
+     14,
+     4,
+     15,
+     16,
+     8,
+     {
+      "north": "om_jars",
+      "side": "om_jars",
+      "up": "cc_glass",
+      "down": "om_jars"
+     }
+    ]
+   ],
+   "title": "Candy Counter",
+   "sound": "WOOD",
+   "loot": "theatre_candy",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "translucent"
+  },
+  "om_coffee": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_red",
+      "side": "om_front_red",
+      "up": "om_marble",
+      "down": "om_front_red"
+     }
+    ],
+    [
+     2,
+     14,
+     6,
+     6,
+     16,
+     10,
+     {
+      "north": "om_front_red",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     8,
+     14,
+     4,
+     14,
+     16,
+     12,
+     {
+      "north": "om_beans",
+      "side": "om_burlap",
+      "up": "om_beans",
+      "down": "om_burlap"
+     }
+    ]
+   ],
+   "title": "Coffee Counter",
+   "sound": "WOOD",
+   "loot": "drinks",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_flowers": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     7,
+     6,
+     7,
+     "home_chrome"
+    ],
+    [
+     9,
+     0,
+     1,
+     15,
+     7,
+     7,
+     "home_chrome"
+    ],
+    [
+     1,
+     0,
+     9,
+     7,
+     5,
+     15,
+     "home_chrome"
+    ],
+    [
+     9,
+     0,
+     9,
+     15,
+     6,
+     15,
+     "home_chrome"
+    ],
+    [
+     0,
+     6,
+     0,
+     8,
+     10,
+     8,
+     {
+      "north": "om_flowers",
+      "side": "om_flowers",
+      "up": "om_flowers",
+      "down": "om_flowers"
+     }
+    ],
+    [
+     8,
+     7,
+     0,
+     16,
+     11,
+     8,
+     {
+      "north": "om_flowers",
+      "side": "om_flowers",
+      "up": "om_flowers",
+      "down": "om_flowers"
+     }
+    ],
+    [
+     0,
+     5,
+     8,
+     8,
+     9,
+     16,
+     {
+      "north": "om_flowers",
+      "side": "om_flowers",
+      "up": "om_flowers",
+      "down": "om_flowers"
+     }
+    ],
+    [
+     8,
+     6,
+     8,
+     16,
+     10,
+     16,
+     {
+      "north": "om_flowers",
+      "side": "om_flowers",
+      "up": "om_flowers",
+      "down": "om_flowers"
+     }
+    ]
+   ],
+   "title": "Flower Buckets",
+   "sound": "GRASS",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "om_counter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "om_front_green",
+      "side": "om_front_green",
+      "up": "om_marble",
+      "down": "om_front_green"
+     }
+    ]
+   ],
+   "title": "Stall Counter",
+   "sound": "WOOD",
+   "loot": "storage",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_block": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     3,
+     15,
+     "cv_oak"
+    ],
+    [
+     2,
+     3,
+     2,
+     14,
+     6,
+     14,
+     "cv_oak"
+    ],
+    [
+     1,
+     6,
+     1,
+     15,
+     14,
+     15,
+     {
+      "side": "om_endgrain",
+      "up": "om_endgrain",
+      "down": "om_endgrain"
+     }
+    ]
+   ],
+   "title": "Butcher Block",
+   "sound": "WOOD",
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     14,
+     15
+    ]
+   ]
+  },
+  "om_hooks": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     15,
+     7,
+     16,
+     16,
+     9,
+     "painted_steel"
+    ],
+    [
+     7.5,
+     12,
+     7.5,
+     8.5,
+     15,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     12,
+     11,
+     "om_carcass"
+    ],
+    [
+     6,
+     -6,
+     6,
+     10,
+     0,
+     10,
+     "om_carcass"
+    ]
+   ],
+   "title": "Meat Hooks",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ]
+  },
+  "om_hooks_empty": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     15,
+     7,
+     16,
+     16,
+     9,
+     "painted_steel"
+    ],
+    [
+     3.5,
+     11,
+     7.5,
+     4.5,
+     15,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     11.5,
+     12,
+     7.5,
+     12.5,
+     15,
+     8.5,
+     "home_chrome"
+    ]
+   ],
+   "title": "Meat Hooks",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     11,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "om_scale": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     10,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     4,
+     4,
+     7,
+     12,
+     10,
+     9,
+     {
+      "north": "fit_gauges",
+      "side": "home_chrome",
+      "up": "home_chrome",
+      "down": "home_chrome"
+     }
+    ],
+    [
+     7.5,
+     2,
+     7.5,
+     8.5,
+     4,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     2,
+     13,
+     "home_chrome"
+    ]
+   ],
+   "title": "Hanging Scale",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13
+    ]
+   ]
+  },
+  "om_crates": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "north": "om_crate",
+      "side": "om_crate",
+      "up": "om_crate",
+      "down": "om_crate"
+     }
+    ],
+    [
+     1,
+     8,
+     1,
+     15,
+     16,
+     15,
+     {
+      "north": "om_crate",
+      "side": "om_crate",
+      "up": "om_fruit_rot",
+      "down": "om_crate"
+     }
+    ]
+   ],
+   "title": "Produce Crates",
+   "sound": "WOOD",
+   "loot": "grocery",
+   "rotate": "facing"
+  },
+  "om_sacks": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     6,
+     16,
+     "om_burlap"
+    ],
+    [
+     1,
+     6,
+     1,
+     15,
+     11,
+     15,
+     "om_burlap"
+    ],
+    [
+     3,
+     11,
+     2,
+     13,
+     14,
+     9,
+     "om_burlap"
+    ]
+   ],
+   "title": "Sacks",
+   "sound": "WOOL",
+   "loot": "basement_food",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     14,
+     16
+    ]
+   ]
+  },
+  "om_pickles": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     14,
+     14,
+     {
+      "side": "cv_oak",
+      "up": "om_fruit_b",
+      "down": "cv_oak"
+     }
+    ],
+    [
+     1.6,
+     3,
+     1.6,
+     14.4,
+     4,
+     14.4,
+     "painted_steel"
+    ],
+    [
+     1.6,
+     10,
+     1.6,
+     14.4,
+     11,
+     14.4,
+     "painted_steel"
+    ]
+   ],
+   "title": "Pickle Barrel",
+   "sound": "WOOD",
+   "loot": "home_pantry",
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     14,
+     14
+    ]
+   ]
+  },
+  "om_chalk_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     15,
+     15,
+     16,
+     {
+      "north": "om_chalk_0",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Price Slate",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_chalk_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     15,
+     15,
+     16,
+     {
+      "north": "om_chalk_1",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Price Slate",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_chalk_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     15,
+     15,
+     16,
+     {
+      "north": "om_chalk_2",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Price Slate",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_chalk_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     15,
+     15,
+     16,
+     {
+      "north": "om_chalk_3",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Price Slate",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_cobble": {
+   "tex": {
+    "up": "om_cobble",
+    "side": "om_granite",
+    "down": "om_granite"
+   },
+   "title": "Granite Setts",
+   "sound": "STONE"
+  },
+  "om_cobble_b": {
+   "tex": {
+    "up": "om_cobble_b",
+    "side": "om_granite",
+    "down": "om_granite"
+   },
+   "title": "Granite Setts",
+   "sound": "STONE"
+  },
+  "om_cobble_moss": {
+   "tex": {
+    "up": "om_cobble_moss",
+    "side": "om_granite",
+    "down": "om_granite"
+   },
+   "title": "Granite Setts",
+   "sound": "STONE"
+  },
+  "om_flags": {
+   "tex": {
+    "up": "om_flags",
+    "side": "om_granite",
+    "down": "om_granite"
+   },
+   "title": "Bluestone",
+   "sound": "STONE"
+  },
+  "om_flags_b": {
+   "tex": {
+    "up": "om_flags_b",
+    "side": "om_granite",
+    "down": "om_granite"
+   },
+   "title": "Bluestone",
+   "sound": "STONE"
+  },
+  "om_cart_fruit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     5,
+     2,
+     15,
+     11,
+     14,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     0,
+     4,
+     1,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     15,
+     0,
+     4,
+     16,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     3,
+     9,
+     14,
+     4,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     12,
+     9,
+     14,
+     13,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     3,
+     0,
+     12,
+     4,
+     5,
+     13,
+     "cv_oak"
+    ],
+    [
+     12,
+     0,
+     12,
+     13,
+     5,
+     13,
+     "cv_oak"
+    ],
+    [
+     2,
+     11,
+     3,
+     14,
+     13,
+     13,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_fruit_a",
+      "down": "om_crate_plain"
+     }
+    ]
+   ],
+   "title": "Pushcart",
+   "sound": "WOOD",
+   "loot": "grocery",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_cart_flowers": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     5,
+     2,
+     15,
+     11,
+     14,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     0,
+     4,
+     1,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     15,
+     0,
+     4,
+     16,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     3,
+     9,
+     14,
+     4,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     12,
+     9,
+     14,
+     13,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     3,
+     0,
+     12,
+     4,
+     5,
+     13,
+     "cv_oak"
+    ],
+    [
+     12,
+     0,
+     12,
+     13,
+     5,
+     13,
+     "cv_oak"
+    ],
+    [
+     2,
+     11,
+     3,
+     14,
+     13,
+     13,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_flowers",
+      "down": "om_crate_plain"
+     }
+    ]
+   ],
+   "title": "Pushcart",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_cart_empty": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     5,
+     2,
+     15,
+     11,
+     14,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     0,
+     4,
+     1,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     15,
+     0,
+     4,
+     16,
+     10,
+     13,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     3,
+     9,
+     14,
+     4,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     12,
+     9,
+     14,
+     13,
+     10,
+     16,
+     "cv_oak"
+    ],
+    [
+     3,
+     0,
+     12,
+     4,
+     5,
+     13,
+     "cv_oak"
+    ],
+    [
+     12,
+     0,
+     12,
+     13,
+     5,
+     13,
+     "cv_oak"
+    ]
+   ],
+   "title": "Pushcart",
+   "sound": "WOOD",
+   "loot": "scraps",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     16
+    ]
+   ]
+  },
+  "om_cart_tipped": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     15,
+     6,
+     14,
+     {
+      "north": "om_crate_plain",
+      "side": "om_crate_plain",
+      "up": "om_crate_plain",
+      "down": "om_crate_plain"
+     }
+    ],
+    [
+     0,
+     6,
+     2,
+     16,
+     7,
+     11,
+     {
+      "all": "om_wheel"
+     }
+    ],
+    [
+     2,
+     0,
+     14,
+     14,
+     1,
+     16,
+     "om_fruit_rot"
+    ],
+    [
+     12,
+     0,
+     0,
+     13,
+     1,
+     3,
+     "cv_oak"
+    ]
+   ],
+   "title": "Pushcart",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     7,
+     14
+    ]
+   ]
+  },
+  "om_umb_pole": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "home_chrome"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Umbrella Pole",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "om_umb_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9,
+     "home_chrome"
+    ],
+    [
+     -12,
+     8,
+     -12,
+     28,
+     10,
+     28,
+     "om_canvas_red"
+    ],
+    [
+     -6,
+     10,
+     -6,
+     22,
+     12,
+     22,
+     "om_canvas_red"
+    ],
+    [
+     2,
+     12,
+     2,
+     14,
+     13,
+     14,
+     "om_canvas_red"
+    ],
+    [
+     7,
+     13,
+     7,
+     9,
+     15,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Market Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9
+    ]
+   ]
+  },
+  "om_umb_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9,
+     "home_chrome"
+    ],
+    [
+     -12,
+     8,
+     -12,
+     28,
+     10,
+     28,
+     "om_canvas_green"
+    ],
+    [
+     -6,
+     10,
+     -6,
+     22,
+     12,
+     22,
+     "om_canvas_green"
+    ],
+    [
+     2,
+     12,
+     2,
+     14,
+     13,
+     14,
+     "om_canvas_green"
+    ],
+    [
+     7,
+     13,
+     7,
+     9,
+     15,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Market Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9
+    ]
+   ]
+  },
+  "om_umb_cream": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9,
+     "home_chrome"
+    ],
+    [
+     -12,
+     8,
+     -12,
+     28,
+     10,
+     28,
+     "om_canvas_cream"
+    ],
+    [
+     -6,
+     10,
+     -6,
+     22,
+     12,
+     22,
+     "om_canvas_cream"
+    ],
+    [
+     2,
+     12,
+     2,
+     14,
+     13,
+     14,
+     "om_canvas_cream"
+    ],
+    [
+     7,
+     13,
+     7,
+     9,
+     15,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Market Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     10,
+     9
+    ]
+   ]
+  },
+  "om_lights": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     14.6,
+     0,
+     8.4,
+     15.2,
+     16,
+     "home_plastic_black"
+    ],
+    [
+     7.5,
+     13.6,
+     3.5,
+     8.5,
+     14.6,
+     4.5,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     11.8,
+     3.2,
+     9,
+     13.6,
+     4.8,
+     "om_bulb"
+    ],
+    [
+     7.5,
+     13.6,
+     11.5,
+     8.5,
+     14.6,
+     12.5,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     11.8,
+     11.2,
+     9,
+     13.6,
+     12.8,
+     "om_bulb"
+    ]
+   ],
+   "title": "String Lights",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "decor": true
+  },
+  "om_lights_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     14.6,
+     0,
+     8.4,
+     15.2,
+     16,
+     "home_plastic_black"
+    ],
+    [
+     7.5,
+     13.6,
+     3.5,
+     8.5,
+     14.6,
+     4.5,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     11.8,
+     3.2,
+     9,
+     13.6,
+     4.8,
+     "om_bulb_on"
+    ],
+    [
+     7.5,
+     13.6,
+     11.5,
+     8.5,
+     14.6,
+     12.5,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     11.8,
+     11.2,
+     9,
+     13.6,
+     12.8,
+     "om_bulb_on"
+    ]
+   ],
+   "title": "String Lights",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "decor": true,
+   "light": 7
+  },
+  "om_planter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10,
+     16,
+     "om_granite"
+    ],
+    [
+     1,
+     10,
+     1,
+     15,
+     11,
+     15,
+     "om_flowers"
+    ]
+   ],
+   "title": "Granite Planter",
+   "sound": "STONE",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "om_bollard": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     12,
+     11,
+     "om_granite"
+    ],
+    [
+     6,
+     12,
+     6,
+     10,
+     14,
+     10,
+     "om_granite"
+    ]
+   ],
+   "title": "Granite Bollard",
+   "sound": "STONE",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ]
+  },
+  "om_barter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     12,
+     16,
+     {
+      "north": "om_front_green",
+      "side": "om_front_green",
+      "up": "om_marble",
+      "down": "om_front_green"
+     }
+    ],
+    [
+     0,
+     12,
+     7.5,
+     16,
+     16,
+     8.5,
+     {
+      "all": "om_wire"
+     }
+    ],
+    [
+     0,
+     12,
+     7,
+     16,
+     13,
+     9,
+     "painted_steel"
+    ]
+   ],
+   "title": "Barter Counter",
+   "sound": "WOOD",
+   "loot": "food",
+   "rotate": "facing",
+   "render": "cutout",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_wire_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     0,
+     8.5,
+     16,
+     16,
+     {
+      "all": "om_wire"
+     }
+    ]
+   ],
+   "title": "Chicken Wire",
+   "sound": "METAL",
+   "rotate": "axis",
+   "render": "cutout",
+   "shape": [
+    [
+     7.5,
+     0,
+     0,
+     8.5,
+     16,
+     16
+    ]
+   ]
+  },
+  "om_prices_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_0",
+      "south": "om_prices_0",
+      "side": "om_prices_0",
+      "up": "om_prices_0",
+      "down": "om_prices_0"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_0",
+      "south": "om_banner_0",
+      "side": "om_banner_0",
+      "up": "om_banner_0",
+      "down": "om_banner_0"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_prices_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_1",
+      "south": "om_prices_1",
+      "side": "om_prices_1",
+      "up": "om_prices_1",
+      "down": "om_prices_1"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_1",
+      "south": "om_banner_1",
+      "side": "om_banner_1",
+      "up": "om_banner_1",
+      "down": "om_banner_1"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_prices_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_2",
+      "south": "om_prices_2",
+      "side": "om_prices_2",
+      "up": "om_prices_2",
+      "down": "om_prices_2"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_2",
+      "south": "om_banner_2",
+      "side": "om_banner_2",
+      "up": "om_banner_2",
+      "down": "om_banner_2"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_prices_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_3",
+      "south": "om_prices_3",
+      "side": "om_prices_3",
+      "up": "om_prices_3",
+      "down": "om_prices_3"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_3",
+      "south": "om_banner_3",
+      "side": "om_banner_3",
+      "up": "om_banner_3",
+      "down": "om_banner_3"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_prices_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_4",
+      "south": "om_prices_4",
+      "side": "om_prices_4",
+      "up": "om_prices_4",
+      "down": "om_prices_4"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_4",
+      "south": "om_banner_4",
+      "side": "om_banner_4",
+      "up": "om_banner_4",
+      "down": "om_banner_4"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_prices_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.3,
+     16,
+     16,
+     16,
+     {
+      "north": "om_prices_5",
+      "south": "om_prices_5",
+      "side": "om_prices_5",
+      "up": "om_prices_5",
+      "down": "om_prices_5"
+     }
+    ]
+   ],
+   "title": "Barter Board",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_banner_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "om_banner_5",
+      "south": "om_banner_5",
+      "side": "om_banner_5",
+      "up": "om_banner_5",
+      "down": "om_banner_5"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_hall_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_hall_0",
+      "south": "om_sgn_hall_0",
+      "side": "om_sgn_hall_0",
+      "up": "om_sgn_hall_0",
+      "down": "om_sgn_hall_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_hall_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_hall_1",
+      "south": "om_sgn_hall_1",
+      "side": "om_sgn_hall_1",
+      "up": "om_sgn_hall_1",
+      "down": "om_sgn_hall_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_long_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_long_0",
+      "south": "om_sgn_long_0",
+      "side": "om_sgn_long_0",
+      "up": "om_sgn_long_0",
+      "down": "om_sgn_long_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_long_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_long_1",
+      "south": "om_sgn_long_1",
+      "side": "om_sgn_long_1",
+      "up": "om_sgn_long_1",
+      "down": "om_sgn_long_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_master_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_master_0",
+      "south": "om_sgn_master_0",
+      "side": "om_sgn_master_0",
+      "up": "om_sgn_master_0",
+      "down": "om_sgn_master_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_master_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_master_1",
+      "south": "om_sgn_master_1",
+      "side": "om_sgn_master_1",
+      "up": "om_sgn_master_1",
+      "down": "om_sgn_master_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_rest_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_rest_0",
+      "south": "om_sgn_rest_0",
+      "side": "om_sgn_rest_0",
+      "up": "om_sgn_rest_0",
+      "down": "om_sgn_rest_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_rest_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_rest_1",
+      "south": "om_sgn_rest_1",
+      "side": "om_sgn_rest_1",
+      "up": "om_sgn_rest_1",
+      "down": "om_sgn_rest_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_up_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_up_0",
+      "south": "om_sgn_up_0",
+      "side": "om_sgn_up_0",
+      "up": "om_sgn_up_0",
+      "down": "om_sgn_up_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_up_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_up_1",
+      "south": "om_sgn_up_1",
+      "side": "om_sgn_up_1",
+      "up": "om_sgn_up_1",
+      "down": "om_sgn_up_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_noguns_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_noguns_0",
+      "south": "om_sgn_noguns_0",
+      "side": "om_sgn_noguns_0",
+      "up": "om_sgn_noguns_0",
+      "down": "om_sgn_noguns_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_noguns_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_noguns_1",
+      "south": "om_sgn_noguns_1",
+      "side": "om_sgn_noguns_1",
+      "up": "om_sgn_noguns_1",
+      "down": "om_sgn_noguns_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_loading_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_loading_0",
+      "south": "om_sgn_loading_0",
+      "side": "om_sgn_loading_0",
+      "up": "om_sgn_loading_0",
+      "down": "om_sgn_loading_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_loading_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_loading_1",
+      "south": "om_sgn_loading_1",
+      "side": "om_sgn_loading_1",
+      "up": "om_sgn_loading_1",
+      "down": "om_sgn_loading_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_noparking_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_noparking_0",
+      "south": "om_sgn_noparking_0",
+      "side": "om_sgn_noparking_0",
+      "up": "om_sgn_noparking_0",
+      "down": "om_sgn_noparking_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_sgn_noparking_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "om_sgn_noparking_1",
+      "south": "om_sgn_noparking_1",
+      "side": "om_sgn_noparking_1",
+      "up": "om_sgn_noparking_1",
+      "down": "om_sgn_noparking_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_trade_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_trade_0",
+      "south": "om_spray_trade_0",
+      "side": "om_spray_trade_0",
+      "up": "om_spray_trade_0",
+      "down": "om_spray_trade_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_trade_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_trade_1",
+      "south": "om_spray_trade_1",
+      "side": "om_spray_trade_1",
+      "up": "om_spray_trade_1",
+      "down": "om_spray_trade_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_trade_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_trade_2",
+      "south": "om_spray_trade_2",
+      "side": "om_spray_trade_2",
+      "up": "om_spray_trade_2",
+      "down": "om_spray_trade_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_trade_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_trade_3",
+      "south": "om_spray_trade_3",
+      "side": "om_spray_trade_3",
+      "up": "om_spray_trade_3",
+      "down": "om_spray_trade_3"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_food_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_food_0",
+      "south": "om_spray_food_0",
+      "side": "om_spray_food_0",
+      "up": "om_spray_food_0",
+      "down": "om_spray_food_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_food_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_food_1",
+      "south": "om_spray_food_1",
+      "side": "om_spray_food_1",
+      "up": "om_spray_food_1",
+      "down": "om_spray_food_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_food_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_food_2",
+      "south": "om_spray_food_2",
+      "side": "om_spray_food_2",
+      "up": "om_spray_food_2",
+      "down": "om_spray_food_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_rats_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_rats_0",
+      "south": "om_spray_rats_0",
+      "side": "om_spray_rats_0",
+      "up": "om_spray_rats_0",
+      "down": "om_spray_rats_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_rats_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_rats_1",
+      "south": "om_spray_rats_1",
+      "side": "om_spray_rats_1",
+      "up": "om_spray_rats_1",
+      "down": "om_spray_rats_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_keep_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_keep_0",
+      "south": "om_spray_keep_0",
+      "side": "om_spray_keep_0",
+      "up": "om_spray_keep_0",
+      "down": "om_spray_keep_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_keep_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_keep_1",
+      "south": "om_spray_keep_1",
+      "side": "om_spray_keep_1",
+      "up": "om_spray_keep_1",
+      "down": "om_spray_keep_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_keep_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_keep_2",
+      "south": "om_spray_keep_2",
+      "side": "om_spray_keep_2",
+      "up": "om_spray_keep_2",
+      "down": "om_spray_keep_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "om_spray_keep_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "om_spray_keep_3",
+      "south": "om_spray_keep_3",
+      "side": "om_spray_keep_3",
+      "up": "om_spray_keep_3",
+      "down": "om_spray_keep_3"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
   }
  }
 }
