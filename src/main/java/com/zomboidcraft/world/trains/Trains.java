@@ -396,16 +396,19 @@ public final class Trains {
     private static void afterTick(MinecraftServer s) {
         ServerLevel level = s.overworld();
         Beacons.tick(level);
-        if (level.getGameTime() % 20 == 3 && !level.players().isEmpty()) {
+        if (level.getGameTime() % 5 == 3 && !level.players().isEmpty()) {
             // the station maps' live reading
             for (Line line : SERVER.values()) {
                 double[] at = new double[line.trains.size()];
+                float[] speed = new float[at.length];
                 boolean[] called = new boolean[at.length];
                 for (int i = 0; i < at.length; i++) {
-                    at[i] = line.trains.get(i).s;
-                    called[i] = line.trains.get(i).express;
+                    TrainRun run = line.trains.get(i);
+                    at[i] = run.s;
+                    speed[i] = run.phase == TrainRun.Phase.DWELL ? 0 : (float) run.v;
+                    called[i] = run.express;
                 }
-                TrainNet.Positions p = new TrainNet.Positions(line.id, at, called);
+                TrainNet.Positions p = new TrainNet.Positions(line.id, at, speed, called);
                 for (ServerPlayer player : level.players()) {
                     ServerPlayNetworking.send(player, p);
                 }

@@ -80,7 +80,7 @@ public final class TrainRun {
             Otto.express(level, this, line.stops.get(target));
         }
         if (express) {
-            cruise = Math.max(cruise, Math.min(cruise * cfg.expressSpeed, 2.0));    // called: flat out to whoever rang, 40 b/s at most
+            cruise = Math.max(cruise, Math.min(cruise * cfg.expressSpeed, 4.0));    // called: flat out to whoever rang, 80 b/s at most
         }
         double dist = target < 0 ? Double.MAX_VALUE : distTo(target);
         // a stop button: pull up short, braking harder than for a station
