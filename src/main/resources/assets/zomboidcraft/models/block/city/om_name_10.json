@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_name_10": {
+      "sprite": "zomboidcraft:block/city/om_name_10",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/om_name_10"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_name_10"
+        },
+        "south": {
+          "texture": "#om_name_10",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_name_10",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_name_10",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_name_10",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_name_10",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

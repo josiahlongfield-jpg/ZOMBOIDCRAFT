@@ -1,0 +1,152 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_crate": "zomboidcraft:block/city/om_crate",
+    "om_crate_plain": "zomboidcraft:block/city/om_crate_plain",
+    "om_fruit_b": "zomboidcraft:block/city/om_fruit_b",
+    "particle": "zomboidcraft:block/city/om_crate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_crate_plain",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_crate_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_crate_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_crate_plain"
+        },
+        "down": {
+          "texture": "#om_crate_plain",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_crate_plain"
+        },
+        "east": {
+          "texture": "#om_crate_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_crate_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_fruit_b"
+        },
+        "down": {
+          "texture": "#om_crate_plain"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        6
+      ],
+      "to": [
+        16,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate"
+        },
+        "south": {
+          "texture": "#om_crate_plain"
+        },
+        "east": {
+          "texture": "#om_crate_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_crate_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_fruit_b"
+        },
+        "down": {
+          "texture": "#om_crate_plain"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        11
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate"
+        },
+        "south": {
+          "texture": "#om_crate_plain",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_crate_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_crate_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_fruit_b"
+        },
+        "down": {
+          "texture": "#om_crate_plain"
+        }
+      }
+    }
+  ]
+}

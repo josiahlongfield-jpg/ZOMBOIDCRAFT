@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_front_cream": "zomboidcraft:block/city/om_front_cream",
+    "om_sash_broken": {
+      "sprite": "zomboidcraft:block/city/om_sash_broken",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/om_sash_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_sash_broken"
+        },
+        "south": {
+          "texture": "#om_sash_broken"
+        },
+        "east": {
+          "texture": "#om_front_cream",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_cream",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_front_cream",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_front_cream",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

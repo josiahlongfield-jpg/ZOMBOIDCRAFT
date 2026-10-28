@@ -1,0 +1,150 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_glass": {
+      "sprite": "zomboidcraft:block/city/cc_glass",
+      "force_translucent": true
+    },
+    "om_front_cream": "zomboidcraft:block/city/om_front_cream",
+    "om_jars": "zomboidcraft:block/city/om_jars",
+    "om_marble": "zomboidcraft:block/city/om_marble",
+    "particle": "zomboidcraft:block/city/om_front_cream"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_cream"
+        },
+        "south": {
+          "texture": "#om_front_cream",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_cream",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_cream",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_marble"
+        },
+        "down": {
+          "texture": "#om_front_cream",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        14,
+        4
+      ],
+      "to": [
+        5,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_jars"
+        },
+        "south": {
+          "texture": "#om_jars"
+        },
+        "east": {
+          "texture": "#om_jars"
+        },
+        "west": {
+          "texture": "#om_jars"
+        },
+        "up": {
+          "texture": "#cc_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_jars"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        4
+      ],
+      "to": [
+        10,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_jars"
+        },
+        "south": {
+          "texture": "#om_jars"
+        },
+        "east": {
+          "texture": "#om_jars"
+        },
+        "west": {
+          "texture": "#om_jars"
+        },
+        "up": {
+          "texture": "#cc_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_jars"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        14,
+        4
+      ],
+      "to": [
+        15,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_jars"
+        },
+        "south": {
+          "texture": "#om_jars"
+        },
+        "east": {
+          "texture": "#om_jars"
+        },
+        "west": {
+          "texture": "#om_jars"
+        },
+        "up": {
+          "texture": "#cc_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_jars"
+        }
+      }
+    }
+  ]
+}

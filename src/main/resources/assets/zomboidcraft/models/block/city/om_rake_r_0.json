@@ -1,0 +1,381 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_granite": "zomboidcraft:block/city/om_granite",
+    "particle": "zomboidcraft:block/city/om_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        -2
+      ],
+      "to": [
+        16,
+        2,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite"
+        },
+        "south": {
+          "texture": "#om_granite"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "uv": [
+            14,
+            14,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            14,
+            2,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#om_granite",
+          "uv": [
+            12,
+            0,
+            16,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#om_granite",
+          "uv": [
+            12,
+            14,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        12,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        2,
+        -2
+      ],
+      "to": [
+        12,
+        4,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite"
+        },
+        "south": {
+          "texture": "#om_granite"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "uv": [
+            14,
+            12,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            12,
+            2,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#om_granite",
+          "uv": [
+            8,
+            0,
+            12,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#om_granite",
+          "uv": [
+            8,
+            14,
+            12,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        8,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        -2
+      ],
+      "to": [
+        8,
+        6,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite"
+        },
+        "south": {
+          "texture": "#om_granite"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "uv": [
+            14,
+            10,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            10,
+            2,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#om_granite",
+          "uv": [
+            4,
+            0,
+            8,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#om_granite",
+          "uv": [
+            4,
+            14,
+            8,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        4,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        -2
+      ],
+      "to": [
+        4,
+        8,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite"
+        },
+        "south": {
+          "texture": "#om_granite"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "uv": [
+            14,
+            8,
+            16,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            8,
+            2,
+            10
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            0,
+            4,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#om_granite",
+          "uv": [
+            0,
+            14,
+            4,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}
