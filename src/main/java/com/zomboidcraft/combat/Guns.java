@@ -195,12 +195,21 @@ public final class Guns {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
             // a bullet goes on through glass (see GlassShots): look on past each pane it meets, up to a few
+            // and in at a parked car's window and out the far side of it (see CarGlass)
             java.util.List<BlockHitResult> panes = new java.util.ArrayList<>();
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-            while (!bow && block.getType() != HitResult.Type.MISS && panes.size() < 6
-                    && GlassShots.isGlass(level.getBlockState(block.getBlockPos()))) {
-                panes.add(block);
-                Vec3 on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+            Vec3 from = eye;
+            for (int pass = 0; !bow && block.getType() != HitResult.Type.MISS && pass < 8; pass++) {
+                BlockState bs = level.getBlockState(block.getBlockPos());
+                Vec3 on;
+                if (panes.size() < 6 && GlassShots.isGlass(bs)) {
+                    panes.add(block);
+                    on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+                } else if (!bs.is(com.zomboidcraft.world.cars.Cars.HULL)
+                        || (on = com.zomboidcraft.world.cars.CarGlass.throughHull(level, block, from, dir)) == null) {
+                    break;
+                }
+                from = on;
                 block = level.clip(new ClipContext(on, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
             }
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
@@ -214,6 +223,14 @@ public final class Guns {
             for (BlockHitResult pane : panes) {
                 if (pane.getLocation().distanceTo(eye) < reached) {
                     GlassShots.shot(level, player, pane, dir, level.getBlockState(pane.getBlockPos()), !ricochet);
+                    ricochet = true;
+                    spent *= GlassShots.THROUGH;
+                }
+            }
+            // and the car windows it went through, each holed where it went in
+            if (!bow) {
+                for (var c : com.zomboidcraft.world.cars.CarGlass.along(level, eye, hit != null ? hit.getLocation() : stop)) {
+                    c.car().shootWindow(level, c.window(), c.u(), c.v(), c.at(), !ricochet);
                     ricochet = true;
                     spent *= GlassShots.THROUGH;
                 }

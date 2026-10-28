@@ -66,6 +66,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The windows are smashed in: clients leave the glass out, and zombies can reach whoever's inside. */
     private static final EntityDataAccessor<Boolean> SMASHED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** Each window's state and the holes and cracks in it ({@link CarGlass.Panes#encode}); empty until first set. */
+    private static final EntityDataAccessor<String> GLASS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** Which seat each rider has: four bits per rider in passenger order, the seat's index plus one. */
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
@@ -109,8 +111,15 @@ public class CarProp extends Entity {
     private Entity lastDriver;
     private int catchAt = -1, doorShutAt = -1, hornFreeAt;
     private double lastSpeed, speedBefore;
-    /** How much more bashing the windows take before they give, in zombie damage. -1 until first set. */
+    /** How much more bashing the windows take before they give, in zombie damage. -1 until first set (old saves). */
     private float windows = -1;
+    /** Server side: how much more bashing each window takes, in zombie damage; null until first set. */
+    private float[] glassLeft;
+    /** The windows as last read from GLASS, and the text they were read from. */
+    private CarGlass.Panes panes;
+    private String panesFrom;
+    /** On each computer, for drawing: how far each window is wound down, 0 to 1, last tick and this one. */
+    public float[] woundO = new float[0], wound = new float[0];
     /** The seat the next rider to get in takes (server), or -1 for the nearest free one. */
     private int nextSeat = -1;
     /** Where the key is ({@link CarKeys}), whether someone's hotwired it, and ticks left on a hotwiring and who's at it. */
@@ -148,6 +157,7 @@ public class CarProp extends Entity {
         entityData.set(MODEL, model);
         entityData.set(VARIANT, variant);
         flight = null;
+        panes = null;
         setBoundingBox(makeBoundingBox(position()));
     }
 
@@ -166,6 +176,7 @@ public class CarProp extends Entity {
         builder.define(OPEN, false);
         builder.define(ENGINE, false);
         builder.define(SMASHED, false);
+        builder.define(GLASS, "");
         builder.define(SEATS, 0);
         builder.define(ALARM, false);
         builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
@@ -189,7 +200,27 @@ public class CarProp extends Entity {
         entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
         entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
-        entityData.set(SMASHED, windows <= 0);
+        entityData.set(GLASS, input.getStringOr("glass", ""));
+        String left = input.getStringOr("glass_left", "");
+        glassLeft = null;
+        if (!left.isEmpty()) {
+            String[] parts = left.split(",");
+            glassLeft = new float[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                try {
+                    glassLeft[i] = Float.parseFloat(parts[i]);
+                } catch (NumberFormatException e) {
+                    glassLeft[i] = 1;
+                }
+            }
+        }
+        if (entityData.get(GLASS).isEmpty() && windows <= 0 && windowsWhole() > 0) {
+            // an old save's car with its windows smashed in: every one of them gone
+            CarGlass.Panes p = panes();
+            java.util.Arrays.fill(p.state, CarGlass.SHATTERED);
+            setPanes(p);
+        }
+        entityData.set(SMASHED, panes().size() > 0 ? panes().allShattered() : windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
         for (int i = 0; i < items.size(); i++) {
@@ -218,6 +249,14 @@ public class CarProp extends Entity {
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
+        output.putString("glass", entityData.get(GLASS));
+        if (glassLeft != null) {
+            StringBuilder left = new StringBuilder();
+            for (int i = 0; i < glassLeft.length; i++) {
+                left.append(i > 0 ? "," : "").append(glassLeft[i]);
+            }
+            output.putString("glass_left", left.toString());
+        }
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
             items.set(i, boot.getItem(i));
@@ -468,17 +507,105 @@ public class CarProp extends Entity {
         };
     }
 
-    /** Whether someone sits safe behind a car's glass: in a car whose windows are still in. */
-    public static boolean shielded(Entity entity) {
-        return entity.getVehicle() instanceof CarProp car && !car.smashed();
+    /** Whether someone sits safe behind a car's glass from what's at from: the window nearest it is still in and up. */
+    public static boolean shielded(Entity entity, Entity from) {
+        return entity.getVehicle() instanceof CarProp car && !car.reachable(entity, from);
+    }
+
+    /** Which of the windows something outside (in the world) would bash at, or null where the car has none. */
+    public CarGlass.Window windowFacing(Vec3 at) {
+        return CarGlass.facing(CarGlass.windows(CarModels.get(model()), variantIndex()), toLocal(at));
     }
 
     /**
-     * A mob's blow at someone inside lands on the glass instead, like a zombie on a door, until the
-     * windows give; after that blows get through. Returns whether the blow reaches the rider.
+     * Whether a mob at from can get at a rider: through the window nearest it, when that's down or broken out
+     * and the rider sits close enough to it to be reached (a zombie at a bus's back window can't get the driver).
      */
-    public boolean blowAtRider(Entity attacker, float amount) {
-        if (!(level() instanceof ServerLevel server) || smashed()) {
+    public boolean reachable(Entity rider, Entity from) {
+        CarGlass.Window[] whole = CarGlass.windows(CarModels.get(model()), 0);
+        if (whole.length == 0) {
+            return smashed();
+        }
+        CarGlass.Window w = CarGlass.facing(whole, toLocal(from.getEyePosition()));
+        return w != null && !panes().closed(w.index()) && toLocal(rider.getEyePosition()).distanceTo(w.centre()) < 1.6;
+    }
+
+    /** How much bashing a window of this kind takes when whole, in zombie damage. */
+    private float glassWhole(CarGlass.Window w) {
+        float share = switch (w.kind()) {
+            case CarGlass.WINDSCREEN -> 1.25f;
+            case CarGlass.REAR -> 0.8f;
+            default -> 0.6f;
+        };
+        return Math.max(4f, windowsWhole() * share);
+    }
+
+    private float[] glassLeft(CarGlass.Window[] ws) {
+        if (glassLeft == null || glassLeft.length != ws.length) {
+            glassLeft = new float[ws.length];
+            for (CarGlass.Window w : ws) {
+                if (w != null) {
+                    glassLeft[w.index()] = glassWhole(w) * (1 - (float) panes().bulletHoles(w.index()) / w.holes());
+                }
+            }
+        }
+        return glassLeft;
+    }
+
+    /**
+     * A mob's blow at someone inside lands on the window nearest it instead, like a zombie on a door, cracking it,
+     * until it gives; then blows through it get at whoever sits by it. Returns whether the blow reaches the rider.
+     */
+    public boolean blowAtRider(Entity rider, Entity attacker, float amount) {
+        if (!(level() instanceof ServerLevel server)) {
+            return true;
+        }
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (ws.length == 0) {
+            return oldBlow(server, attacker, amount);   // an aircraft's canopy: all one piece
+        }
+        if (reachable(rider, attacker)) {
+            return true;
+        }
+        CarGlass.Window open = CarGlass.facing(CarGlass.windows(CarModels.get(model()), 0), toLocal(attacker.getEyePosition()));
+        if (open == null || !panes().closed(open.index()) || ws[open.index()] == null) {
+            return false;   // flailing at an opening they can't reach through from there
+        }
+        CarGlass.Window w = ws[open.index()];
+        float[] left = glassLeft(ws);
+        float whole = glassWhole(w), was = left[w.index()];
+        left[w.index()] -= amount;
+        CarGlass.Panes p = panes();
+        if (left[w.index()] > 0) {
+            // a crack where it struck, at each third of the way to giving (never more than three to a window)
+            if (Math.floor(was / whole * 3) != Math.floor(left[w.index()] / whole * 3)
+                    && p.marks.get(w.index()).stream().filter(CarGlass.Mark::crack).count() < 3) {
+                Vec3 at = toLocal(attacker.getEyePosition()).subtract(w.centre());
+                float u = (float) Mth.clamp(at.dot(w.a()) / w.a().lengthSqr(), -0.7, 0.7);
+                float v = (float) Mth.clamp(at.dot(w.b()) / w.b().lengthSqr(), -0.7, 0.7);
+                if (!w.on(u, v)) {
+                    u *= 0.4f;
+                    v *= 0.4f;
+                }
+                p.marks.get(w.index()).add(new CarGlass.Mark(u, v, true));
+                setPanes(p);
+            }
+            server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_HIT, SoundSource.HOSTILE,
+                    1f, 0.7f + random.nextFloat() * 0.2f);
+            return false;
+        }
+        shatter(server, w);
+        for (Entity r : getPassengers()) {
+            if (r instanceof Player player && toLocal(r.getEyePosition()).distanceTo(w.centre()) < 1.6) {
+                player.sendOverlayMessage(Component.literal("They've smashed the window in!"));
+            }
+        }
+        return false;
+    }
+
+    /** The windows all as one, for what has no windows of its own listed (an aircraft's canopy). */
+    private boolean oldBlow(ServerLevel server, Entity attacker, float amount) {
+        if (smashed()) {
             return true;
         }
         if (windows < 0) {
@@ -494,12 +621,119 @@ public class CarProp extends Entity {
         server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_BREAK, SoundSource.HOSTILE,
                 1.2f, 0.8f + random.nextFloat() * 0.2f);
         Noise.emit(server, position(), 16);
-        for (Entity rider : getPassengers()) {
-            if (rider instanceof Player player) {
-                player.sendOverlayMessage(Component.literal("They've smashed the windows in!"));
+        return false;
+    }
+
+    /** A window gives: glass everywhere, a crash heard down the street. */
+    private void shatter(ServerLevel server, CarGlass.Window w) {
+        CarGlass.Panes p = panes();
+        p.state[w.index()] = CarGlass.SHATTERED;
+        setPanes(p);
+        Vec3 at = toWorld(new float[]{(float) w.centre().x, (float) w.centre().y, (float) w.centre().z});
+        server.playSound(null, at.x, at.y, at.z, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1.2f, 0.8f + random.nextFloat() * 0.2f);
+        server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
+                net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 24, 0.3, 0.2, 0.3, 0.1);
+        Noise.emit(server, position(), 16);
+    }
+
+    /**
+     * A bullet goes through a window at (u, v) on it: a hole there, and it shatters if that's one more than it takes.
+     * Returns whether it shattered.
+     */
+    public boolean shootWindow(ServerLevel server, int index, float u, float v, Vec3 at, boolean sound) {
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (index < 0 || index >= ws.length || ws[index] == null || !panes().closed(index)) {
+            return false;
+        }
+        server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
+                net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 6, 0.04, 0.04, 0.04, 0.06);
+        if (sound) {
+            server.playSound(null, at.x, at.y, at.z, com.zomboidcraft.combat.Surface.GLASS.impact(), SoundSource.PLAYERS, 0.9f,
+                    0.92f + random.nextFloat() * 0.16f);
+        }
+        CarGlass.Window w = ws[index];
+        CarGlass.Panes p = panes();
+        p.marks.get(index).add(new CarGlass.Mark(u, v, false));
+        float[] left = glassLeft(ws);
+        left[index] -= glassWhole(w) / w.holes();
+        if (p.bulletHoles(index) >= w.holes() || left[index] <= 0) {
+            shatter(server, w);
+            return true;
+        }
+        setPanes(p);
+        return false;
+    }
+
+    /** Winds a side window down, or back up (not one that's shattered). Returns whether it moved. */
+    public boolean windWindow(int index) {
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (index < 0 || index >= ws.length || ws[index] == null || !ws[index].winds() || !(level() instanceof ServerLevel server)) {
+            return false;
+        }
+        CarGlass.Panes p = panes();
+        if (p.state[index] == CarGlass.SHATTERED) {
+            return false;
+        }
+        p.state[index] = p.state[index] == CarGlass.UP ? CarGlass.DOWN : CarGlass.UP;
+        setPanes(p);
+        Vec3 at = toWorld(new float[]{(float) ws[index].centre().x, (float) ws[index].centre().y, (float) ws[index].centre().z});
+        server.playSound(null, at.x, at.y, at.z, SoundEvents.SPYGLASS_USE, SoundSource.NEUTRAL, 0.6f, p.state[index] == CarGlass.UP ? 0.7f : 0.55f);
+        return true;
+    }
+
+    /** The windows as they are now (each computer reads them from the car's synced text). */
+    public CarGlass.Panes panes() {
+        String text = entityData.get(GLASS);
+        if (panes == null || !text.equals(panesFrom)) {
+            CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+            panes = CarGlass.Panes.decode(text, ws.length);
+            panesFrom = text;
+            if (text.isEmpty()) {
+                // as the car was made: its look's broken-out windows are gone already
+                for (int i = 0; i < ws.length; i++) {
+                    if (ws[i] == null) {
+                        panes.state[i] = CarGlass.SHATTERED;
+                    }
+                }
             }
         }
-        return false;
+        return panes;
+    }
+
+    private void setPanes(CarGlass.Panes p) {
+        String text = p.encode();
+        panes = p;
+        panesFrom = text;
+        entityData.set(GLASS, text);
+        entityData.set(SMASHED, p.size() > 0 && p.allShattered());
+    }
+
+    /** Each computer winds its picture of the windows toward where they are: about two seconds top to bottom. */
+    private void wind() {
+        CarGlass.Panes p = panes();
+        if (wound.length != p.size()) {
+            woundO = new float[p.size()];
+            wound = new float[p.size()];
+            for (int i = 0; i < wound.length; i++) {
+                wound[i] = woundO[i] = p.state[i] == CarGlass.DOWN ? 1 : 0;
+            }
+            return;
+        }
+        for (int i = 0; i < wound.length; i++) {
+            woundO[i] = wound[i];
+            float to = p.state[i] == CarGlass.DOWN ? 1 : 0;
+            wound[i] = to > wound[i] ? Math.min(to, wound[i] + 0.025f) : Math.max(to, wound[i] - 0.025f);
+        }
+    }
+
+    /** Which of the model's looks this car has, as an index into its per-look data. */
+    public int variantIndex() {
+        return CarModels.variants().indexOf(variant());
+    }
+
+    /** A point in the world in the model's own space. */
+    public Vec3 toLocal(Vec3 point) {
+        return local(point.subtract(position()));
     }
 
     /**
@@ -1070,6 +1304,9 @@ public class CarProp extends Entity {
         if (MODEL.equals(accessor)) {
             setBoundingBox(makeBoundingBox(position()));
         }
+        if (MODEL.equals(accessor) || VARIANT.equals(accessor)) {
+            panes = null;   // read the windows again for the model and look they belong to
+        }
     }
 
     @Override
@@ -1081,6 +1318,9 @@ public class CarProp extends Entity {
         lidOpenO = lidOpen;
         rolledO = rolled;
         steerO = steer;
+        if (level().isClientSide()) {
+            wind();
+        }
         if (isLocalInstanceAuthoritative() && getControllingPassenger() instanceof Player driver) {
             getInterpolation().cancel();
             if (aircraft()) {

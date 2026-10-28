@@ -47,7 +47,7 @@ public final class Cars {
         // a mob's blow at someone in a car lands on its windows until they give
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
                 !(entity.getVehicle() instanceof CarProp car && source.getEntity() instanceof Mob attacker
-                        && !attacker.isPassengerOfSameVehicle(entity)) || car.blowAtRider(attacker, amount));
+                        && !attacker.isPassengerOfSameVehicle(entity)) || car.blowAtRider(entity, attacker, amount));
     }
 
     /** A hull block from a code packing its four quarter heights (0-4 each) in base 5, north-west first. */

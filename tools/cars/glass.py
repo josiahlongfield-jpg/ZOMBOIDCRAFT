@@ -1,7 +1,7 @@
 """
 A car's windows for the game, one per glass pane of the model: where each is (a flat rectangle the
-bullets are tested against and the holes are drawn on), what kind it is, and how many bullet holes it
-takes before it shatters. pack.py adds them to models.json per variant (a variant's crumpled body or
+bullets are tested against and the holes are drawn on), what kind it is, how many bullet holes it
+takes before it shatters, and its outline on that rectangle. pack.py adds them to models.json per variant (a variant's crumpled body or
 hanging door moves its glass; its broken panes are null), with each mesh's glass triangles' window, so
 the game can leave out a shattered window or wind one down.
 
@@ -57,8 +57,36 @@ def windows(car, b, centre):
         nr = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
         area = float(np.linalg.norm(nr, axis=1).sum() / 2)
         k_ = kind(c, n)
-        out.append([round(float(x), 3) for x in (*c, *n, *ha, *hb)] + [k_, holes(k_, area)])
+        # its outline on the rectangle (u, v from -1 to 1 along the half axes): side windows are seldom square
+        uv = np.stack([(V - c) @ ha / max(ha @ ha, 1e-9), (V - c) @ hb / max(hb @ hb, 1e-9)], 1)
+        ring = [round(float(x), 2) for p in outline(uv) for x in p]
+        out.append([round(float(x), 3) for x in (*c, *n, *ha, *hb)] + [k_, holes(k_, area)] + ring)
     return out
+
+
+def outline(pts, most=10):
+    """The convex outline of points (counter-clockwise), cut down to at most this many corners."""
+    pts = sorted(set((round(float(x), 3), round(float(y), 3)) for x, y in pts))
+    if len(pts) < 3:
+        return [(-1, -1), (1, -1), (1, 1), (-1, 1)]
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lower, upper = [], []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+    for p in reversed(pts):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+    hull = lower[:-1] + upper[:-1]
+    while len(hull) > most:
+        # drop the corner that cuts off least
+        k = min(range(len(hull)), key=lambda i: abs(cross(hull[i - 1], hull[i], hull[(i + 1) % len(hull)])))
+        hull.pop(k)
+    return hull
 
 
 def glass_tris(b, meshes):
