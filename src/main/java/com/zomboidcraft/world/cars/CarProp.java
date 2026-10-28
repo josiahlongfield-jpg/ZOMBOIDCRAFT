@@ -731,11 +731,6 @@ public class CarProp extends Entity {
         return CarModels.variants().indexOf(variant());
     }
 
-    /** A point in the world in the model's own space. */
-    public Vec3 toLocal(Vec3 point) {
-        return local(point.subtract(position()));
-    }
-
     /**
      * Nothing living but the riders gets inside an occupied car's outline: a mob that steps over
      * the edge is put back outside it, at the nearest side, so zombies crowd round and bash the

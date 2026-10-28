@@ -26,6 +26,10 @@ final class CarGlassDraw {
     private static final float LIFT = 0.004f;
     /** Half the width of a bullet hole's cracks and of a blow's, on the glass (metres). */
     private static final float HOLE = 0.12f, CRACK = 0.2f;
+    /** How far in from a mark's cell its corners sample (keeps clear of the next cell), in u; twice it in v. */
+    private static final float INSET = 2f / 1024;
+    /** The solid patch of the texture a glass edge is drawn with, and how wide the edge is (metres). */
+    private static final float EDGE_U = 1022f / 1024, EDGE_V = 510f / 512, EDGE = 0.005f;
 
     /** One window's frame for drawing: unit down its glass and across it, how far down its sill is and its drop. */
     record Frame(Vec3 down, Vec3 side, double sill, double drop, double reach) {
@@ -163,8 +167,55 @@ final class CarGlassDraw {
                 for (int c = 0; c < 4; c++) {
                     quad[c] = new float[]{(float) q[c].x, (float) q[c].y, (float) q[c].z};
                 }
-                float[] quv = {u0, v0, u0 + 0.25f, v0, u0 + 0.25f, v0 + 0.5f, u0, v0 + 0.5f};
+                float e = INSET;
+                float[] quv = {u0 + e, v0 + e * 2, u0 + 0.25f - e, v0 + e * 2, u0 + 0.25f - e, v0 + 0.5f - e * 2, u0 + e, v0 + 0.5f - e * 2};
                 bothQuad(quad, quv, win.normal(), turn, pose, out, light);
+            }
+            if (win.winds() && set.wound(w) > 0.02f) {
+                topEdge(win, fr, dropped, turn, pose, out, light);
+            }
+        }
+    }
+
+    /**
+     * The top edge of a side window's glass as it winds down: the thin pale line along the door you'd see in a real
+     * car, telling you how far it's open.
+     */
+    private static void topEdge(CarGlass.Window w, Frame fr, double dropped, CarRenderer.Turn turn, PoseStack.Pose pose,
+                                VertexConsumer out, int light) {
+        float[] r = w.ring();
+        int n = r.length / 2;
+        float[] uv = {EDGE_U, EDGE_V, EDGE_U, EDGE_V, EDGE_U, EDGE_V, EDGE_U, EDGE_V};
+        for (int i = 0; i < n; i++) {
+            Vec3 a = w.at(r[i * 2], r[i * 2 + 1]), b = w.at(r[(i + 1) % n * 2], r[(i + 1) % n * 2 + 1]);
+            Vec3 along = b.subtract(a);
+            if (along.lengthSqr() < 1e-6) {
+                continue;
+            }
+            Vec3 in = along.cross(w.normal()).normalize();
+            if (in.dot(a.add(b).scale(0.5).subtract(w.centre())) > 0) {
+                in = in.scale(-1);      // toward the middle of the glass
+            }
+            if (in.dot(fr.down()) < 0.5) {
+                continue;               // only the edges along its top
+            }
+            Vec3 shift = fr.down().scale(dropped);
+            float[][] quad = new float[4][];
+            Vec3[] q = {a.add(shift), b.add(shift), b.add(shift).add(in.scale(EDGE)), a.add(shift).add(in.scale(EDGE))};
+            boolean shown = false;
+            for (int c = 0; c < 4; c++) {
+                quad[c] = new float[]{(float) q[c].x, (float) q[c].y, (float) q[c].z};
+                double below = q[c].subtract(w.centre()).dot(fr.down());
+                shown |= below < fr.sill() - 0.005;
+                if (below > fr.sill()) {
+                    Vec3 back = fr.down().scale(fr.sill() - below);
+                    quad[c][0] += (float) back.x;
+                    quad[c][1] += (float) back.y;
+                    quad[c][2] += (float) back.z;
+                }
+            }
+            if (shown) {
+                bothQuad(quad, uv, w.normal(), turn, pose, out, light);
             }
         }
     }
