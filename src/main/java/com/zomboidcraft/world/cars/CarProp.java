@@ -1712,6 +1712,8 @@ public class CarProp extends Entity {
         setYRot(yaw);
         setXRot(-nose);
         setDeltaMovement(velocity.scale(Flight.DT));
+        // how far the nose rides above the way it's going (the leading-edge flaps droop with it)
+        f.aoa = velocity.lengthSqr() < 1 ? 0 : (float) Math.atan2(-velocity.dot(f.up()), Math.max(0.1, velocity.dot(f.forward())));
         entityData.set(ENGINE, true);
         entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
         entityData.set(AIR_RPM, f.rpm);
