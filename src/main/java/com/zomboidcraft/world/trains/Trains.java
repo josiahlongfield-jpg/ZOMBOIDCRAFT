@@ -151,7 +151,13 @@ public final class Trains {
 
     private static void startTrains(Line line, Line old) {
         ZcConfig.Trains cfg = ZcConfig.get().trains;
-        int n = Math.max(1, line.kind == Line.Kind.SUBWAY ? cfg.subwayTrains : cfg.railTrains);
+        boolean subway = line.kind == Line.Kind.SUBWAY;
+        int n = subway ? cfg.subwayTrains : cfg.railTrains;
+        if (n <= 0) {
+            // spread along the line: a long loop gets as many as keep the wait at a stop short
+            n = (int) Math.round(line.route.length() / Math.max(200, subway ? cfg.subwaySpacing : cfg.railSpacing));
+        }
+        n = Math.max(1, Math.min(n, (int) (line.route.length() / 150)));
         for (int i = 0; i < n; i++) {
             double s = old != null && i < old.trains.size() ? old.trains.get(i).s : line.route.length() * i / n;
             TrainRun run = new TrainRun(line, i, s);
@@ -233,6 +239,7 @@ public final class Trains {
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Lines.TYPE, TrainNet.Lines.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Riders.TYPE, TrainNet.Riders.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.OttoSay.TYPE, TrainNet.OttoSay.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(TrainNet.Positions.TYPE, TrainNet.Positions.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Ride.TYPE, TrainNet.Ride.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Call.TYPE, TrainNet.Call.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.StopRequest.TYPE, TrainNet.StopRequest.CODEC);
@@ -389,6 +396,21 @@ public final class Trains {
     private static void afterTick(MinecraftServer s) {
         ServerLevel level = s.overworld();
         Beacons.tick(level);
+        if (level.getGameTime() % 20 == 3 && !level.players().isEmpty()) {
+            // the station maps' live reading
+            for (Line line : SERVER.values()) {
+                double[] at = new double[line.trains.size()];
+                boolean[] called = new boolean[at.length];
+                for (int i = 0; i < at.length; i++) {
+                    at[i] = line.trains.get(i).s;
+                    called[i] = line.trains.get(i).express;
+                }
+                TrainNet.Positions p = new TrainNet.Positions(line.id, at, called);
+                for (ServerPlayer player : level.players()) {
+                    ServerPlayNetworking.send(player, p);
+                }
+            }
+        }
         for (Line line : SERVER.values()) {
             for (TrainRun run : line.trains) {
                 Entity e = run.entity == null ? null : level.getEntity(run.entity);

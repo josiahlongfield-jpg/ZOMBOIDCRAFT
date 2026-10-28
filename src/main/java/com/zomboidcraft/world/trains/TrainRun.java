@@ -79,6 +79,9 @@ public final class TrainRun {
         if (target >= 0 && target != was && express) {
             Otto.express(level, this, line.stops.get(target));
         }
+        if (express) {
+            cruise *= Math.max(1, cfg.expressSpeed);    // called: flat out to whoever rang
+        }
         double dist = target < 0 ? Double.MAX_VALUE : distTo(target);
         // a stop button: pull up short, braking harder than for a station
         boolean haltFirst = false;

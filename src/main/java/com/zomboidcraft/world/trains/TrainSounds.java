@@ -19,6 +19,7 @@ public final class TrainSounds {
     public static final SoundEvent OTTO = register("train.otto", 24f);
     public static final SoundEvent ROLLING = register("train.rolling", 48f);
     public static final SoundEvent FLARE = register("train.flare", 96f);
+    public static final SoundEvent BUZZER = register("train.buzzer", 64f);
 
     static void register() {
         // loading the class registers the sounds
