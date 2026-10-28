@@ -45,6 +45,11 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
 
+    /** Worn pieces with a body-scale model so far; the rest aren't drawn on you until theirs is made. */
+    private static final java.util.Set<net.minecraft.world.item.Item> BODY_SCALE = java.util.Set.of(
+            com.zomboidcraft.ModItems.LEATHER_BELT, com.zomboidcraft.ModItems.TOOL_BELT, com.zomboidcraft.ModItems.DUTY_BELT,
+            com.zomboidcraft.ModItems.HIP_HOLSTER);
+
     /** How far down the body a belt's bottom edge sits, less the 0.8 px its model is built below centre. */
     private static final float BELT_DOWN = 11.7f - 0.8f;
 
@@ -97,7 +102,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         // the belt, holster and sheath are built at body scale round the waist (tools/items/gen_belts.py,
         // gen_holsters.py): they only need moving down to it
         for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
-            if (worn.get(i).isEmpty()) continue;
+            if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
             pose.pushPose();
             getParentModel().body.translateAndRotate(pose);
             pose.translate(0, BELT_DOWN / 16f, 0);
