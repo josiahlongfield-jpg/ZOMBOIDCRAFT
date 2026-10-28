@@ -59,6 +59,15 @@ public class Corpse extends Entity {
         laidAt = zombie.level().getGameTime();
     }
 
+    /** Dresses a body that never walked in this world (a Harvestman's den): its outfit, what's missing, its fall. */
+    void dress(String outfit, int limbs, long death, int variant) {
+        entityData.set(OUTFIT, outfit);
+        entityData.set(LIMBS, limbs);
+        entityData.set(DEATH_LO, (int) death);
+        entityData.set(DEATH_HI, (int) (death >>> 32));
+        entityData.set(VARIANT, variant);
+    }
+
     public String outfit() {
         return entityData.get(OUTFIT);
     }

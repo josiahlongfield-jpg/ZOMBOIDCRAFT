@@ -113,6 +113,7 @@ public final class Hud {
         WeaponHud.render(g, delta);
         SkillTape.render(g);
         GrabHud.render(g);
+        HeldHud.render(g);
         if (active()) {
             ActionHud.render(g);
             SensesHud.render(g);

@@ -1,7 +1,9 @@
 package com.zomboidcraft.client.creature;
 
+import com.zomboidcraft.creature.HarvestmanBody;
 import com.zomboidcraft.creature.HarvestmanEntity;
-import net.minecraft.core.Direction;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -13,35 +15,43 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * One Harvestman's legs, worked out live on each client from where its body goes: the same rules as the approved
- * preview (the test room's stepFeet and the leg IK). Each foot finds a spot on whatever block face is under it, the feet
- * lift in a wave as it walks and swing to land a little ahead, and standing still any foot left out of place is tidied
- * in, one at a time. The knees rise up and out over their feet, and a foot planted closer than the folded leg reaches
- * slides out along its surface. Render thread only.
+ * One Harvestman as this client draws it: the body where the entity is, eased and riding on its pose (reared up, jolted
+ * by a hit, bowed to feed, sprawled dead), and each leg bent from its hip to the foot the server planted (the feet come
+ * in each tick and are drawn as far behind as the body is). A leg shot off at the knee leaves its thigh hanging and
+ * twitching, and its lower half flies off and lies where it lands. Render thread only.
  */
 public final class HarvestmanRig {
-    private static final double STRIDE = 2.2, CLING_SPREAD = 1.85, PITCH = 0.1;
-    /** A wave: left rear, left front, right rear, right front. */
-    private static final double[] GAIT_OFF = {0.25, 0, 0.75, 0.5};
-
-    private static final class Step {
-        Vec3 p0, n0, p1, n1;
-        double u, dur, lift;
-        boolean fixed;
-    }
+    /** How many ticks behind the server the body is drawn (its position eases in over a few ticks). */
+    private static final int DELAY = 2;
 
     /** Part matrices from the model's frames to the entity's drawn position: body, then thigh and lower leg per leg. */
     public final Matrix4f body = new Matrix4f();
     public final Matrix4f[] thigh = new Matrix4f[4], shin = new Matrix4f[4];
+    public int lost;
+    public float camo = 1, glowPulse;
+    public boolean feedArms;
 
-    private final Vec3[] feet = new Vec3[4], footN = new Vec3[4];
-    private final Step[] steps = new Step[4];
-    private final double[] lift = new double[4];
-    private final Vec3[] targets = new Vec3[4], targetN = new Vec3[4];
-    private Vec3 up = new Vec3(0, 1, 0), fwd = new Vec3(0, 0, 1), last, vel = Vec3.ZERO;
-    private double spd, turn, phase, prevPhase, h = HarvestmanEntity.STAND, still, fid = 2.5, t;
+    /** A lower leg shot off: where it is, how it's moving, and how long it has lain. */
+    public static final class Flying {
+        public final Matrix4f at = new Matrix4f();
+        Vec3 pos, vel;
+        final Quaternionf turn = new Quaternionf();
+        final Vector3f spin = new Vector3f();
+        double age;
+        boolean down;
+        public final int leg;
+        public float fade = 1;
+
+        Flying(int leg) {
+            this.leg = leg;
+        }
+    }
+
+    public final List<Flying> flying = new ArrayList<>();
+
+    private double t, jolt, rear, pitch = 0.1, deadRoll;
+    private int flinchesSeen = -1, lostSeen = -1;
     private long lastNanos;
-    private final java.util.Random random = new java.util.Random();
 
     public HarvestmanRig() {
         for (int i = 0; i < 4; i++) {
@@ -50,115 +60,149 @@ public final class HarvestmanRig {
         }
     }
 
-    // ------------------------------------------------------------------------------------------------ the frame
-
-    private static Vec3 at(Vec3 o, Vec3 x, Vec3 y, Vec3 z, double px, double py, double pz) {
-        return o.add(x.scale(px)).add(y.scale(py)).add(z.scale(pz));
-    }
-
-    private static double floorness(Vec3 up) {
-        double x = Mth.clamp((up.y - 0.55) / 0.4, 0, 1);
-        return x * x * (3 - 2 * x);
-    }
-
     private static Vec3 norm(Vec3 v) {
         double l = v.length();
         return l < 1e-9 ? v : v.scale(1 / l);
     }
 
-    // the flat frame (up from the surface, nose along its heading) and the body frame riding on it
-    private Vec3 fo, fx, fy, fz, bo, bx, by, bz;
-
     /**
-     * Brings the legs up to now and works out every part's matrix.
+     * Brings it up to now and works out every part's matrix.
      *
-     * @param centre the body's centre, as drawn this frame
+     * @param centre the body's centre as drawn this frame
      * @param drawnAt the entity's drawn position (what the matrices are relative to)
-     * @param q how it lies, as drawn this frame (model to world)
+     * @param q how it lies as drawn this frame (model to world)
      */
-    public void update(HarvestmanEntity e, Level level, HarvestmanModel model, Vec3 centre, Vec3 drawnAt, Quaternionf q) {
+    public void update(HarvestmanEntity e, Level level, Vec3 centre, Vec3 drawnAt, Quaternionf q, float partialTick) {
         long now = System.nanoTime();
         double dt = lastNanos == 0 ? 0 : Math.min(0.1, (now - lastNanos) / 1e9);
         lastNanos = now;
         t += dt;
-        Vector3f yv = q.transform(new Vector3f(0, 1, 0)), zv = q.transform(new Vector3f(0, 0, 1));
-        Vec3 nUp = norm(new Vec3(yv.x, yv.y, yv.z)), nFwd = norm(new Vec3(zv.x, zv.y, zv.z));
-        // how fast it's going along its surface, and how fast it's turning
-        boolean jumped = last == null || last.distanceToSqr(centre) > 16;
-        if (dt > 1e-4 && !jumped) {
-            Vec3 v = centre.subtract(last).scale(1 / dt);
-            vel = vel.lerp(v, 1 - Math.exp(-dt * 6));
-            Vec3 a = fwd.subtract(nUp.scale(fwd.dot(nUp)));
-            double tr = Math.atan2(a.cross(nFwd).dot(nUp), a.dot(nFwd)) / dt;
-            turn = Mth.lerp(1 - Math.exp(-dt * 8), turn, Mth.clamp(tr, -4, 4));
+        Vector3f xv = q.transform(new Vector3f(1, 0, 0)), yv = q.transform(new Vector3f(0, 1, 0)), zv = q.transform(new Vector3f(0, 0, 1));
+        Vec3 fx = norm(new Vec3(xv.x, xv.y, xv.z)), up = norm(new Vec3(yv.x, yv.y, yv.z)), fz = norm(new Vec3(zv.x, zv.y, zv.z));
+        int pose = e.pose();
+        boolean dead = pose == HarvestmanEntity.DEAD, feeding = pose == HarvestmanEntity.FEED, holding = pose == HarvestmanEntity.HOLD;
+        feedArms = feeding || holding;
+        // a hit jolts it
+        if (flinchesSeen >= 0 && e.flinches() != flinchesSeen) {
+            jolt = 1;
         }
-        last = centre;
-        up = nUp;
-        fwd = nFwd;
-        Vec3 flatV = vel.subtract(up.scale(vel.dot(up)));
-        spd = flatV.length();
-        still = spd > 0.05 ? 0 : still + dt;
-        phase += (spd * dt + Math.abs(turn) * dt * 1.5) / STRIDE;
-        h = Mth.lerp(1 - Math.exp(-dt * 5), h, e.lift());
+        flinchesSeen = e.flinches();
+        jolt = Math.max(0, jolt - dt * 2.4);
+        double j = Math.sin(Math.min(1, jolt) * Math.PI);
+        rear = Mth.lerp(1 - Math.exp(-dt * 10), rear, e.rear());
+        double pitchWant = dead ? 0.05 : feedArms ? 0.0 : 0.1 - 0.42 * rear - 0.14 * j;
+        pitch = Mth.lerp(1 - Math.exp(-dt * 8), pitch, pitchWant);
+        deadRoll = Mth.lerp(1 - Math.exp(-dt * 1.5), deadRoll, dead ? 0.22 : 0);
+        camo = (float) Mth.lerp(1 - Math.exp(-dt * 6), camo, e.camo());
+        glowPulse = feeding ? (float) (0.6 + 0.4 * Math.sin(t * 7.5)) : 1f;
 
-        fy = up;
-        fz = fwd;
-        fx = up.cross(fwd);
-        double dip = 0, roll = 0, pitch = 0;
+        // the feet as the server planted them, as far behind as the body is drawn
+        Vec3[] feet = new Vec3[4];
+        for (int i = 0; i < 4; i++) {
+            Vec3 a = e.feetSeen[i][(e.feetSeenAt - DELAY - 1) & 3], b = e.feetSeen[i][(e.feetSeenAt - DELAY) & 3];
+            feet[i] = a != null && b != null ? a.lerp(b, partialTick) : e.foot(i);
+        }
+        // the body: risen as it rears, dipped by a jolt, bobbing as it walks or works at what it holds
+        boolean walking = !dead && e.position().distanceToSqr(new Vec3(e.xo, e.yo, e.zo)) > 0.0004;
+        double bob = dead ? 0 : feeding ? 0.02 * Math.sin(t * 7.5) : walking ? 0.05 * Math.sin(t * 3.4) : 0.03 * Math.sin(t * 1.2);
+        double sway = dead ? 0 : 0.02 * Math.sin(t * 0.8);
+        Vec3 o = centre.add(up.scale(bob + 0.28 * rear - 0.28 * j));
+        Vec3[] ax = axes(fx, up, fz, pitch + (walking ? 0.025 * Math.sin(t * 1.7) : 0), sway * 0.5, sway + deadRoll);
+        HarvestmanBody.Frame frame = new HarvestmanBody.Frame(o, ax[0], ax[1], ax[2]);
+        set(body, o, ax[0], ax[1], ax[2], drawnAt);
+
+        int nowLost = e.lost();
         for (int li = 0; li < 4; li++) {
-            double l = lift[li], s = li < 2 ? -1 : 1;
-            dip += l;
-            roll += s * l;
-            if ((li & 1) == 0) {
-                pitch -= l;
+            HarvestmanBody.Bent b;
+            if ((nowLost >> li & 1) != 0) {
+                b = HarvestmanEntity.dangle(frame, up, li);
+                // the stump twitches
+                Vec3 tw = up.scale(0.12 * Math.sin(t * 9 + li * 2) * (dead ? 0 : 1));
+                b = new HarvestmanBody.Bent(b.hip(), b.knee().add(tw), b.knee().add(tw), b.n());
+            } else {
+                b = HarvestmanBody.bend(frame, up, li, feet[li], up);
+            }
+            Vec3 tx = norm(b.knee().subtract(b.hip())), sx = norm(b.tip().subtract(b.knee()));
+            if (tx.lengthSqr() < 0.5) {
+                tx = fx;
+            }
+            if (sx.lengthSqr() < 0.5) {
+                sx = tx;
+            }
+            set(thigh[li], b.hip(), tx, b.n().cross(tx), b.n(), drawnAt);
+            // just shot off: the lower leg flies from where it was
+            if (lostSeen >= 0 && (nowLost >> li & 1) != 0 && (lostSeen >> li & 1) == 0) {
+                Flying f = new Flying(li);
+                f.pos = b.knee();
+                Matrix4f m = new Matrix4f(shin[li]);
+                f.turn.setFromNormalized(m);
+                Vec3 out = norm(b.knee().subtract(centre));
+                f.vel = out.scale(3 + e.getRandom().nextDouble() * 2).add(0, 3.5, 0);
+                f.spin.set((float) e.getRandom().nextGaussian() * 6, (float) e.getRandom().nextGaussian() * 6, (float) e.getRandom().nextGaussian() * 6);
+                flying.add(f);
+            }
+            if ((nowLost >> li & 1) == 0) {
+                set(shin[li], b.knee(), sx, b.n().cross(sx), b.n(), drawnAt);
             }
         }
-        fo = centre;
-        bo = centre.subtract(up.scale(0.03 * dip));
-        bodyAxes(PITCH + 0.035 * pitch, 0, 0.045 * roll);
+        lostSeen = nowLost;
+        lost = nowLost;
+        fly(level, e, dt, drawnAt);
+    }
 
-        HarvestmanModel.Leg[] legs = model.legs;
-        if (feet[0] == null || jumped) {
-            for (int li = 0; li < 4; li++) {
-                target(li, legs, level, e);
-                feet[li] = targets[li];
-                footN[li] = targetN[li];
-                steps[li] = null;
-                lift[li] = 0;
+    /** The flying lower legs fall, tumble, land, lie a minute and fade. */
+    private void fly(Level level, HarvestmanEntity e, double dt, Vec3 drawnAt) {
+        for (int k = flying.size() - 1; k >= 0; k--) {
+            Flying f = flying.get(k);
+            f.age += dt;
+            if (!f.down) {
+                Vec3 next = f.pos.add(f.vel.scale(dt));
+                BlockHitResult hit = level.clip(new ClipContext(f.pos, next.add(0, -0.15, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, e));
+                if (hit.getType() != HitResult.Type.MISS) {
+                    // it lands and lies along the floor
+                    f.pos = hit.getLocation().add(0, 0.12, 0);
+                    f.down = true;
+                    Vector3f along = f.turn.transform(new Vector3f(1, 0, 0));
+                    Vec3 flat = norm(new Vec3(along.x, 0, along.z));
+                    if (flat.lengthSqr() < 0.5) {
+                        flat = new Vec3(1, 0, 0);
+                    }
+                    Vec3 side = new Vec3(0, 1, 0).cross(flat);
+                    // lying on its side, the bow along the floor
+                    f.turn.setFromNormalized(new org.joml.Matrix3f(
+                            new Vector3f((float) flat.x, (float) flat.y, (float) flat.z),
+                            new Vector3f((float) side.x, (float) side.y, (float) side.z),
+                            new Vector3f(0, 1, 0)));
+                } else {
+                    f.pos = next;
+                    f.vel = f.vel.add(0, -12 * dt, 0);
+                    f.turn.rotateXYZ(f.spin.x * (float) dt, f.spin.y * (float) dt, f.spin.z * (float) dt);
+                }
             }
-            prevPhase = phase;
-        } else if (dt > 1e-4) {
-            stepFeet(dt, legs, level, e);
-        }
-
-        // the body sways and bobs a little, and its legs hang from it
-        boolean walking = spd > 0.1;
-        double bob = walking ? 0.05 * Math.sin(t * 3.4) : 0.03 * Math.sin(t * 1.2), sway = 0.02 * Math.sin(t * 0.8);
-        bo = bo.add(up.scale(bob));
-        bodyAxes(PITCH + 0.035 * pitch + (walking ? 0.025 * Math.sin(t * 1.7) : 0), sway * 0.5, 0.045 * roll + sway);
-        set(body, bo, bx, by, bz, drawnAt);
-        for (int li = 0; li < 4; li++) {
-            leg(li, legs[li & 1], drawnAt);
+            if (f.age > 60) {
+                f.fade = (float) Math.max(0, 1 - (f.age - 60) / 3);
+            }
+            if (f.age > 63 || f.pos.distanceToSqr(e.position()) > 64 * 64) {
+                flying.remove(k);
+                continue;
+            }
+            Vector3f x = f.turn.transform(new Vector3f(1, 0, 0)), y = f.turn.transform(new Vector3f(0, 1, 0)), z = f.turn.transform(new Vector3f(0, 0, 1));
+            set(f.at, f.pos, new Vec3(x.x, x.y, x.z), new Vec3(y.x, y.y, y.z), new Vec3(z.x, z.y, z.z), drawnAt);
         }
     }
 
-    /** The body frame: the flat frame turned by a yaw, a pitch (nose down) and a roll, as the preview's rot(). */
-    private void bodyAxes(double pitch, double yaw, double roll) {
-        // R = R0 * ry(yaw) * rx(pitch) * rz(roll), applied to the flat frame's axes
+    /** The body's axes: the flat frame turned by a yaw, a pitch (nose down) and a roll, as the preview's rot(). */
+    private static Vec3[] axes(Vec3 fx, Vec3 fy, Vec3 fz, double pitch, double yaw, double roll) {
         double cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll);
-        // columns of ry*rx*rz in the flat frame
         double[][] m = {
                 {cy * cr + sy * sp * sr, -cy * sr + sy * sp * cr, sy * cp},
                 {cp * sr, cp * cr, -sp},
                 {-sy * cr + cy * sp * sr, sy * sr + cy * sp * cr, cy * cp}};
-        bx = fx.scale(m[0][0]).add(fy.scale(m[1][0])).add(fz.scale(m[2][0]));
-        by = fx.scale(m[0][1]).add(fy.scale(m[1][1])).add(fz.scale(m[2][1]));
-        bz = fx.scale(m[0][2]).add(fy.scale(m[1][2])).add(fz.scale(m[2][2]));
-    }
-
-    private Vec3 hip(int li, HarvestmanModel.Leg L) {
-        double s = li < 2 ? -1 : 1;
-        return at(bo, bx, by, bz, s * L.hipX, L.hipY, L.hipZ);
+        Vec3[] out = new Vec3[3];
+        for (int c = 0; c < 3; c++) {
+            out[c] = fx.scale(m[0][c]).add(fy.scale(m[1][c])).add(fz.scale(m[2][c]));
+        }
+        return out;
     }
 
     private static void set(Matrix4f m, Vec3 o, Vec3 x, Vec3 y, Vec3 z, Vec3 drawnAt) {
@@ -168,195 +212,48 @@ public final class HarvestmanRig {
                 (float) (o.x - drawnAt.x), (float) (o.y - drawnAt.y), (float) (o.z - drawnAt.z), 1f);
     }
 
-    // ------------------------------------------------------------------------------------------------ feet
+    // ------------------------------------------------------------------------------------------------ its eyes
 
-    private BlockHitResult cast(Level level, HarvestmanEntity e, Vec3 from, Vec3 to) {
-        return level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, e));
-    }
+    /** Three small red eyes down each side of its front, in the body's frame: centre and size. */
+    public static final float[][] EYES;
 
-    private static Vec3 normal(BlockHitResult hit) {
-        Direction d = hit.getDirection();
-        return new Vec3(d.getStepX(), d.getStepY(), d.getStepZ());
-    }
-
-    /**
-     * Where a foot wants to be: out from its hip at its resting angle, far enough out that the folded leg still reaches
-     * when the body sinks, a little ahead along the way it moves and round the way it turns; landed on whatever block
-     * face is there (along the line from the hip, or else straight down), and pushed further out past anything right by
-     * the hip.
-     */
-    private void target(int li, HarvestmanModel.Leg[] legs, Level level, HarvestmanEntity e) {
-        double s = li < 2 ? -1 : 1;
-        HarvestmanModel.Leg L = legs[li & 1];
-        double cyc = (spd + 1.5 * Math.abs(turn)) / STRIDE, sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
-        double r0 = L.restR * Mth.lerp(floorness(up), CLING_SPREAD, 1), dmin = L.lc - L.a + 0.45;
-        double r = Math.max(r0, Math.sqrt(Math.max(0, dmin * dmin - h * h)) + 0.65);
-        Vec3 H = hip(li, L);
-        Vec3 off = fx.scale(s * Math.sin(L.restA) * r).add(fy.scale(-h)).add(fz.scale(Math.cos(L.restA) * r));
-        double st = cyc > 0.02 ? (1 - sf) / (2 * cyc) : 0, ta = Mth.clamp(turn * st, -0.45, 0.45);
-        if (Math.abs(ta) > 1e-4) {
-            Vec3 hu = up.scale(off.dot(up)), flat = off.subtract(hu), sd = up.cross(flat);
-            off = hu.add(flat.scale(Math.cos(ta))).add(sd.scale(Math.sin(ta)));
-        }
-        Vec3 lead = vel.scale(st);
-        if (lead.length() > 0.95) {
-            lead = norm(lead).scale(0.95);
-        }
-        Vec3 P0 = fo.add(off).add(lead);
-        Vec3 d = P0.subtract(H);
-        double len = Math.max(1e-3, d.length());
-        BlockHitResult hit = cast(level, e, H, H.add(d.scale(1.4)));
-        Vec3 p, n;
-        if (hit.getType() != HitResult.Type.MISS) {
-            p = hit.getLocation();
-            n = normal(hit);
-        } else {
-            hit = cast(level, e, P0.add(up.scale(1.5)), P0.subtract(up.scale(2.5)));
-            p = hit.getType() != HitResult.Type.MISS ? hit.getLocation() : P0;
-            n = hit.getType() != HitResult.Type.MISS ? normal(hit) : up;
-        }
-        double reach = L.lc - L.a + 0.3;
-        if (p.distanceTo(H) < reach) {
-            BlockHitResult h2 = cast(level, e, P0.add(up.scale(1.5)), P0.subtract(up.scale(2.5)));
-            if (h2.getType() != HitResult.Type.MISS && h2.getLocation().distanceTo(H) > p.distanceTo(H)) {
-                p = h2.getLocation();
-                n = normal(h2);
-            }
-        }
-        for (int k = 1; k <= 4 && p.distanceTo(H) < reach; k++) {
-            Vec3 dd = P0.subtract(fo), dh = norm(dd.subtract(up.scale(dd.dot(up)))), P1 = P0.add(dh.scale(0.4 * k));
-            BlockHitResult h3 = cast(level, e, P1.add(up.scale(1.5)), P1.subtract(up.scale(2.5)));
-            if (h3.getType() != HitResult.Type.MISS && h3.getLocation().distanceTo(H) > p.distanceTo(H)) {
-                p = h3.getLocation();
-                n = normal(h3);
-            }
-        }
-        targets[li] = p;
-        targetN[li] = n;
-    }
-
-    private boolean cramped(int li, HarvestmanModel.Leg[] legs) {
-        HarvestmanModel.Leg L = legs[li & 1];
-        return feet[li].distanceTo(hip(li, L)) < L.lc - L.a + 0.3;
-    }
-
-    private void stepFeet(double dt, HarvestmanModel.Leg[] legs, Level level, HarvestmanEntity e) {
-        double cyc = (spd + 1.5 * Math.abs(turn)) / STRIDE, sf = Mth.clamp(0.3 + 0.12 * spd / 1.8, 0.3, 0.42);
-        for (int li = 0; li < 4; li++) {
-            target(li, legs, level, e);
-        }
-        int active = 0;
-        for (int i = 0; i < 4; i++) {
-            Step st = steps[i];
-            if (st == null) {
-                continue;
-            }
-            st.u += dt / st.dur;
-            if (!st.fixed && st.u < 0.85) {
-                st.p1 = targets[i];
-                st.n1 = targetN[i];
-            }
-            double u = Math.min(1, st.u), ease = u * u * (3 - 2 * u);
-            Vec3 nm = norm(st.n0.add(st.n1).add(up.scale(2)));
-            feet[i] = st.p0.lerp(st.p1, ease).add(nm.scale(Math.pow(Math.sin(Math.PI * u), 0.8) * st.lift));
-            footN[i] = norm(st.n0.lerp(st.n1, ease));
-            lift[i] = Math.sin(Math.PI * u);
-            if (st.u >= 1) {
-                feet[i] = st.p1;
-                footN[i] = st.n1;
-                steps[i] = null;
-                lift[i] = 0;
-            } else {
-                active++;
-            }
-        }
-        boolean moving = cyc > 0.05;
-        for (int i = 0; i < 4; i++) {
-            if (steps[i] != null) {
-                continue;
-            }
-            double a = prevPhase + GAIT_OFF[i], b = phase + GAIT_OFF[i];
-            boolean due = moving && Math.floor(b) > Math.floor(a);
-            double far = feet[i].distanceTo(targets[i]);
-            if (due && far > 0.15 || far > 2.3 || cramped(i, legs) && far > 0.3 && active == 0) {
-                lift(i, Mth.clamp(sf / Math.max(cyc, 0.05), 0.26, 0.75), false);
-                active++;
-            }
-        }
-        prevPhase = phase;
-        // standing: tidy the stance one foot at a time, and now and then a leg lifts and stabs back down where it was
-        if (!moving && active == 0) {
-            int worst = -1;
-            double wd = 0.35;
-            for (int i = 0; i < 4; i++) {
-                double d = feet[i].distanceTo(targets[i]);
-                if (d > wd || cramped(i, legs) && d > 0.2 && worst < 0) {
-                    wd = Math.max(d, wd);
-                    worst = i;
-                }
-            }
-            if (worst >= 0) {
-                lift(worst, 0.5, false);
-            } else if (still > 1.2) {
-                fid -= dt;
-                if (fid <= 0) {
-                    lift(random.nextInt(4), 0.75, true);
-                    fid = 2.5 + random.nextDouble() * 3.5;
-                }
+    static {
+        double[][] row = {{0.83, 1.22, 0.032}, {0.875, 1.02, 0.026}, {0.915, 1.18, 0.021}};
+        EYES = new float[6][];
+        int k = 0;
+        for (int side = -1; side <= 1; side += 2) {
+            for (double[] r : row) {
+                double[] p = shell(side * r[1], r[0], 0.075);
+                EYES[k++] = new float[] {(float) p[0], (float) p[1], (float) p[2], (float) r[2]};
             }
         }
     }
 
-    private void lift(int i, double dur, boolean fixed) {
-        Step st = new Step();
-        st.p0 = feet[i];
-        st.n0 = footN[i];
-        st.p1 = fixed ? feet[i] : targets[i];
-        st.n1 = fixed ? footN[i] : targetN[i];
-        st.dur = dur;
-        st.lift = fixed ? 0.8 : 0.55 + 0.25 * Math.min(1, spd / 1.6);
-        st.fixed = fixed;
-        steps[i] = st;
+    /** A point on the hull (the preview's b7Pt), off it along its normal by off. */
+    private static double[] shell(double a, double s, double off) {
+        double[] p = b7(a, s), e1 = b7(a, s + 1e-3), e0 = b7(a, s - 1e-3), a1 = b7(a + 1e-3, s), a0 = b7(a - 1e-3, s);
+        double[] ds = {e1[0] - e0[0], e1[1] - e0[1], e1[2] - e0[2]}, da = {a1[0] - a0[0], a1[1] - a0[1], a1[2] - a0[2]};
+        double[] n = {ds[1] * da[2] - ds[2] * da[1], ds[2] * da[0] - ds[0] * da[2], ds[0] * da[1] - ds[1] * da[0]};
+        double l = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+        double cy = centreLine(s), cz = -1.55 + 2.5 * s;
+        if ((p[0]) * n[0] + (p[1] - cy) * n[1] + (p[2] - cz) * n[2] < 0) {
+            l = -l;
+        }
+        return new double[] {p[0] + n[0] / l * off, p[1] + n[1] / l * off, p[2] + n[2] / l * off};
     }
 
-    // ------------------------------------------------------------------------------------------------ legs
+    private static double centreLine(double s) {
+        double k = Mth.clamp((s - 0.42) / 0.58, 0, 1);
+        return 0.1 + 0.55 * Math.pow(1 - s, 2.2) - 0.5 * k * k * (3 - 2 * k);
+    }
 
-    /**
-     * A leg from hip to foot: the knee bends toward a pole up and out over the foot (the thigh is short against the long
-     * lower leg, so it always leans back from the foot; pushed out over it, it leans out from the hull instead of in
-     * across it), and a foot closer than the folded leg reaches slides out along its surface.
-     */
-    private void leg(int li, HarvestmanModel.Leg L, Vec3 drawnAt) {
-        Vec3 H = hip(li, L), F = feet[li];
-        double dmin = L.lc - L.a + 0.2;
-        if (F.distanceTo(H) < dmin) {
-            Vec3 sn = footN[li];
-            double hh = H.subtract(F).dot(sn);
-            Vec3 Hp = H.subtract(sn.scale(hh));
-            double r = Math.sqrt(Math.max(0, dmin * dmin - hh * hh));
-            Vec3 dr = F.subtract(Hp);
-            if (dr.length() < 1e-3) {
-                Vec3 ho = H.subtract(bo);
-                dr = ho.subtract(sn.scale(ho.dot(sn)));
-            }
-            F = Hp.add(norm(dr).scale(r));
+    private static double[] b7(double a, double s) {
+        s = Mth.clamp(s, 0, 1);
+        double e = s < 0.5 ? Math.pow(Math.max(0, s / 0.5), 0.7) : Math.pow(Math.max(0, 1 - (s - 0.5) / 0.5), 0.85);
+        double W = 0.52 * e, T = 0.26 * e, Bt = 0.22 * e, c = centreLine(s), z = -1.55 + 2.5 * s, sa = Math.sin(a), ca = Math.cos(a);
+        if (ca >= 0) {
+            return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.75), c + T * Math.pow(ca, 0.7), z};
         }
-        Vec3 ho = H.subtract(bo), fo2 = F.subtract(bo), fh = fo2.subtract(up.scale(fo2.dot(up)));
-        Vec3 out = fh.length() > 0.05 ? norm(fh) : norm(ho.subtract(up.scale(ho.dot(up))));
-        Vec3 dn = norm(F.subtract(H)), p0 = norm(up.scale(0.4).add(out));
-        Vec3 pole = p0.subtract(dn.scale(p0.dot(dn))).add(up.subtract(dn.scale(up.dot(dn))).scale(0.6));
-        // two bones bent toward the pole
-        double a = L.a, b = L.lc;
-        Vec3 d = F.subtract(H);
-        double dl = Mth.clamp(d.length(), Math.abs(a - b) + 0.02, a + b - 0.02);
-        double cb = Mth.clamp((a * a + dl * dl - b * b) / (2 * a * dl), -1, 1), sb = Math.sqrt(1 - cb * cb);
-        Vec3 bp = pole.subtract(dn.scale(pole.dot(dn)));
-        bp = bp.length() > 1e-4 ? norm(bp) : norm(dn.cross(new Vec3(0.3, 0.9, 0.2)));
-        Vec3 K = H.add(dn.scale(a * cb)).add(bp.scale(a * sb));
-        Vec3 P = K.add(norm(H.add(dn.scale(dl)).subtract(K)).scale(b));
-        Vec3 n = norm(dn.cross(bp));
-        Vec3 tx = norm(K.subtract(H)), sx = norm(P.subtract(K));
-        set(thigh[li], H, tx, n.cross(tx), n, drawnAt);
-        set(shin[li], K, sx, n.cross(sx), n, drawnAt);
+        return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.8), c - Bt * Math.pow(-ca, 0.85), z};
     }
 }
