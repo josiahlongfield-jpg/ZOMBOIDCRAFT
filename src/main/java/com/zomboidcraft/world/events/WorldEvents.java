@@ -57,13 +57,16 @@ public final class WorldEvents {
      * it starts on and how long it lasts. The aircraft's model and sound are only for a flyby: sound is which of
      * the whole flyby recordings everyone hears it as (world.flyby.jet.N / heli.N, from 1), or 0 for the far-off
      * loop bent by the Doppler shift in game until the aircraft is near and its own engines take over.
-     * An air strike flies a path instead of the line: where it is and which way its nose points every
-     * {@link #STEP} seconds (x, y, z, yaw, over and over), smoothed between; a line's path is empty.
+     * An air strike flies a path instead of the line: where it is and how it's flying every {@link #STEP}
+     * seconds (x, y, z, yaw, nose, bank, over and over; the yaw carried on round rather than wrapped, the nose NaN
+     * where it's left to the way it's going), smoothed between; a line's path is empty.
      */
     public record Event(Kind kind, double x, double y, double z, double vx, double vy, double vz, long start, int ticks,
             String model, int sound, float[] path) implements CustomPacketPayload {
         /** Seconds between a path's points. */
         public static final double STEP = 0.25;
+        /** Numbers a path's point takes. */
+        public static final int STRIDE = 6;
         public static final float[] LINE = new float[0];
         public static final Type<Event> TYPE = new Type<>(ZomboidCraft.id("world_event"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Event> CODEC = StreamCodec.of((buf, e) -> {
@@ -113,13 +116,14 @@ public final class WorldEvents {
             return new Vec3(spline(t, 0, true), spline(t, 1, true), spline(t, 2, true));
         }
 
-        /** The path's value c (0-2 x y z) at t, through its points (Catmull-Rom), or how fast it's changing. */
+        /** The path's value c (x y z yaw nose bank) at t, through its points (Catmull-Rom), or how fast it's changing. */
         private double spline(double t, int c, boolean rate) {
-            int n = path.length / 4;
+            int n = path.length / STRIDE;
             double s = Math.clamp(t / STEP, 0, n - 1);
             int i = Math.min((int) s, n - 2);
             double f = s - i;
-            double a = path[Math.max(i - 1, 0) * 4 + c], b = path[i * 4 + c], d = path[(i + 1) * 4 + c], e = path[Math.min(i + 2, n - 1) * 4 + c];
+            double a = path[Math.max(i - 1, 0) * STRIDE + c], b = path[i * STRIDE + c], d = path[(i + 1) * STRIDE + c],
+                    e = path[Math.min(i + 2, n - 1) * STRIDE + c];
             if (rate) {
                 return 0.5 * ((d - a) + 2 * (2 * a - 5 * b + 4 * d - e) * f + 3 * (-a + 3 * b - 3 * d + e) * f * f) / STEP;
             }
@@ -131,11 +135,7 @@ public final class WorldEvents {
             if (path.length == 0) {
                 return (float) Math.toDegrees(Math.atan2(-vx, vz));
             }
-            int n = path.length / 4;
-            double s = Math.clamp(t / STEP, 0, n - 1);
-            int i = Math.min((int) s, n - 2);
-            float a = path[i * 4 + 3], b = path[(i + 1) * 4 + 3];
-            return a + net.minecraft.util.Mth.wrapDegrees(b - a) * (float) (s - i);
+            return (float) spline(t, 3, false);
         }
 
         public boolean flyby() {
@@ -161,8 +161,13 @@ public final class WorldEvents {
                 car.flyby(at, v, afterburner());
                 return;
             }
-            Vec3 a = velocity(t + 0.25).subtract(velocity(t - 0.25)).scale(2);
             float yaw = yaw(t);
+            if (!Float.isNaN(path[4])) {
+                // a jet's strike: flown, so how it's flying is in the path
+                car.flyby(at, v, yaw, (float) spline(t, 4, false), (float) spline(t, 5, false), afterburner());
+                return;
+            }
+            Vec3 a = velocity(t + 0.25).subtract(velocity(t - 0.25)).scale(2);
             double rad = Math.toRadians(yaw), h = Math.sqrt(v.x * v.x + v.z * v.z);
             Vec3 ahead = new Vec3(-Math.sin(rad), 0, Math.cos(rad)), right = new Vec3(-Math.cos(rad), 0, -Math.sin(rad));
             float bank = (float) Math.clamp(Math.toDegrees(Math.atan2(a.dot(right), 9.81)), -70, 70);

@@ -153,18 +153,21 @@ public final class AirStrikes {
         switch (kind) {
             case STRAFE -> {
                 String model = WorldEvents.jet(random);
-                runs.add(strafe(level, target, dir, model, now, 0, random));
+                // each breaks away one way or the other after its run, a pair splitting (Josiah 20:19)
+                int side = random.nextBoolean() ? 1 : -1;
+                runs.add(strafe(level, target, dir, model, now, 0, side, random));
                 if (random.nextInt(10) < 4) {
                     // a wingman a few seconds behind down the same street, its shells walked a little to one side
-                    runs.add(strafe(level, target, dir, model, now, 4 + random.nextDouble() * 3, random));
+                    runs.add(strafe(level, target, dir, model, now, 4 + random.nextDouble() * 3, -side, random));
                 }
             }
             case BOMB -> {
                 String model = WorldEvents.jet(random);
-                runs.add(bomb(level, target, dir, model, now, 0, 0, random));
+                int side = random.nextBoolean() ? 1 : -1;
+                runs.add(bomb(level, target, dir, model, now, 0, 0, side, random));
                 if (random.nextInt(10) < 5) {
-                    runs.add(bomb(level, target, dir, model, now, 2.5 + random.nextDouble() * 1.5,
-                            (random.nextBoolean() ? 1 : -1) * 5, random));
+                    // the wingman's stick beside the leader's, and it breaks the other way
+                    runs.add(bomb(level, target, dir, model, now, 2.5 + random.nextDouble() * 1.5, -side * 5, -side, random));
                 }
             }
             default -> runs.add(hunt(level, target, dir, now, random));
@@ -259,10 +262,10 @@ public final class AirStrikes {
      * and easing back down after, so it never flies into a building.
      */
     private static void clear(ServerLevel level, float[] path, double half, double margin, double ease) {
-        int n = path.length / 4;
+        int k = WorldEvents.Event.STRIDE, n = path.length / k;
         double[] need = new double[n];
         for (int i = 0; i < n; i++) {
-            double x = path[i * 4], y = path[i * 4 + 1], z = path[i * 4 + 2];
+            double x = path[i * k], y = path[i * k + 1], z = path[i * k + 2];
             double highest = Double.NEGATIVE_INFINITY;
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dz = -1; dz <= 1; dz++) {
@@ -274,12 +277,12 @@ public final class AirStrikes {
         int window = (int) Math.round(ease / STEP);
         for (int i = 0; i < n; i++) {
             double raise = 0;
-            for (int k = Math.max(0, i - window); k <= Math.min(n - 1, i + window); k++) {
+            for (int j = Math.max(0, i - window); j <= Math.min(n - 1, i + window); j++) {
                 // full height over the obstacle itself, eased in and out either side of it
-                double f = 1 - Math.abs(k - i) / (double) (window + 1);
-                raise = Math.max(raise, need[k] * Math.min(1, f * 1.6));
+                double f = 1 - Math.abs(j - i) / (double) (window + 1);
+                raise = Math.max(raise, need[j] * Math.min(1, f * 1.6));
             }
-            path[i * 4 + 1] = (float) Math.min(path[i * 4 + 1] + raise, level.getMaxY() - 4);
+            path[i * k + 1] = (float) Math.min(path[i * k + 1] + raise, level.getMaxY() - 4);
         }
     }
 
@@ -303,189 +306,64 @@ public final class AirStrikes {
     /** The event for a path flown by model, starting delay seconds from now (a wingman's, behind the leader). */
     private static WorldEvents.Event event(WorldEvents.Kind kind, float[] path, String model, long now, double delay) {
         // a few still points at the start hold it where it comes in until its time
-        int wait = (int) Math.round(delay / STEP);
-        float[] held = new float[path.length + wait * 4];
+        int k = WorldEvents.Event.STRIDE, wait = (int) Math.round(delay / STEP);
+        float[] held = new float[path.length + wait * k];
         for (int i = 0; i < wait; i++) {
-            System.arraycopy(path, 0, held, i * 4, 4);
+            System.arraycopy(path, 0, held, i * k, k);
         }
-        System.arraycopy(path, 0, held, wait * 4, path.length);
-        int ticks = (int) Math.ceil((held.length / 4 - 1) * STEP * 20);
+        System.arraycopy(path, 0, held, wait * k, path.length);
+        int ticks = (int) Math.ceil((held.length / k - 1) * STEP * 20);
         return new WorldEvents.Event(kind, held[0], held[1], held[2], 0, 0, 0, now, ticks, model, 0, held);
     }
 
     /**
-     * A jet's low pass (Josiah 09:47: low, close over the rooftops, so the whole run can be seen): straight down
-     * the line it picked, in from a few hundred blocks up, down to just over the roofs (never under low above the
-     * target's street) by 450 blocks out, hugging them across the target and up and away from 200 past it.
+     * A strafing run (StrikeFlight.strafe): in a little higher than the old low pass on a mild dive at the crowd
+     * down the street, the nose eased up to walk the shells along it, bottoming out just over the rooftops, then
+     * the pull up and the break to side.
      */
-    private static float[] lowPass(ServerLevel level, Vec3 target, Vec3 dir, double speed, double low, double margin) {
-        double gap = speed * STEP;
-        int n = (int) (2 * REACH / gap) + 1;
-        float[] path = new float[n * 4];
-        float yaw = (float) Math.toDegrees(Math.atan2(-dir.x, dir.z));
-        for (int i = 0; i < n; i++) {
-            double u = -REACH + i * gap;
-            double up = u < -1000 ? 70 : u < -450 ? low + (70 - low) * (-450 - u) / 550 : u < 200 ? low
-                    : u < 900 ? low + (120 - low) * (u - 200) / 700 : 120 + 100 * (u - 900) / 900;
-            Vec3 p = target.add(dir.scale(u));
-            path[i * 4] = (float) p.x;
-            path[i * 4 + 1] = (float) Math.min(target.y + up, level.getMaxY() - 8);
-            path[i * 4 + 2] = (float) p.z;
-            path[i * 4 + 3] = yaw;
-        }
-        clear(level, path, WING, margin, 2);
-        return path;
-    }
-
-    /** A gun dive's walk along the street (blocks), how long the cannon fires and holds the dive before it (s). */
-    private static final double LINE = 48, FIRE = 1.6, TRACK = 1.4;
-    /** How hard it pushes over into the dive and pulls out of it (g), and the climb away (degrees). */
-    private static final double PUSH = 1.2, PULL = 3.5, CLIMB = 25;
-
-    /**
-     * A strafing run (Josiah 11:34): a gun dive straight down the street at the crowd, the cannon opening up with
-     * the nose on the near end of the line and the pilot easing it up so the shells walk straight along it to
-     * the far end, then a hard pull out just over the rooftops and up and away.
-     */
-    private static Run strafe(ServerLevel level, Vec3 target, Vec3 dir, String model, long now, double delay, RandomSource random) {
-        double speed = 85 + random.nextDouble() * 12, dive = 17 + random.nextDouble() * 6;
-        double bottom = Math.max(16 + random.nextDouble() * 6, lift(level, target, dir, FLAT, LEVEL, -160, 200, 8));
-        double[] fire = new double[1];
-        float[] path = gunDive(level, target, dir, speed, Math.toRadians(dive), bottom, fire);
+    private static Run strafe(ServerLevel level, Vec3 target, Vec3 dir, String model, long now, double delay, int side,
+            RandomSource random) {
+        double speed = 85 + random.nextDouble() * 12;
+        double low = Math.max(16 + random.nextDouble() * 6, lift(level, target, dir, FLAT, LEVEL, -300, 250, 8));
+        StrikeFlight.Plan plan = StrikeFlight.strafe(level, target, dir, speed, Math.toRadians(14 + random.nextDouble() * 3), low,
+                low + 92 + random.nextDouble() * 15, side, Math.toRadians(65 + random.nextDouble() * 13),
+                Math.toRadians(60 + random.nextDouble() * 35));
+        float[] path = plan.path();
+        clear(level, path, WING, 8, 2);
         WorldEvents.Event e = event(WorldEvents.Kind.STRAFE, path, model, now, delay);
         Run run = new Run(e, target, dir);
-        run.fireFrom = Math.round(delay / STEP) * STEP + fire[0];
-        run.fireTo = run.fireFrom + FIRE;
-        double side = (random.nextDouble() * 2 - 1) * 3;
+        double held = Math.round(delay / STEP) * STEP;
+        run.fireFrom = held + plan.fireFrom();
+        run.fireTo = held + plan.fireTo();
+        double offset = (random.nextDouble() * 2 - 1) * 3;
         Vec3 across = new Vec3(-dir.z, 0, dir.x);
-        run.lineFrom = target.add(dir.scale(-LINE / 2)).add(across.scale(side)).add(0, 0.5, 0);
-        run.lineTo = target.add(dir.scale(LINE / 2)).add(across.scale(-side)).add(0, 0.5, 0);
+        run.lineFrom = target.add(dir.scale(-StrikeFlight.LINE / 2)).add(across.scale(offset)).add(0, 0.5, 0);
+        run.lineTo = target.add(dir.scale(StrikeFlight.LINE / 2)).add(across.scale(-offset)).add(0, 0.5, 0);
         return run;
     }
 
     /**
-     * A gun dive's path, flown at speed: level in high, pushed over into a dive (radians) aimed at the near end
-     * of the line, held, then eased up while firing so the nose walks LINE blocks along it in FIRE seconds, and
-     * a hard pull out that bottoms out bottom blocks over the target and climbs away. fire[0] gets when (seconds
-     * into the path) the cannon opens up.
-     */
-    private static float[] gunDive(ServerLevel level, Vec3 target, Vec3 dir, double speed, double dive, double bottom,
-            double[] fire) {
-        double dt = 0.05;
-        // the height it opens fire from: the higher, the faster the nose sweeps the ground for the same easing up,
-        // so try heights until the pull out after the walk bottoms out where it should
-        double hs = 70;
-        List<double[]> ahead = List.of();
-        for (int k = 0; k < 8; k++) {
-            ahead = walkAndPull(speed, dive, hs, dt);
-            double low = Double.MAX_VALUE;
-            for (double[] p : ahead) {
-                low = Math.min(low, p[1]);
-            }
-            hs = Math.clamp(hs + bottom - low, 30, 160);
-        }
-        // the nose is on the line's near end when it opens up
-        double u0 = -LINE / 2 - hs / Math.tan(dive);
-        List<double[]> back = new ArrayList<>();
-        double u = u0, h = hs, d = dive;
-        back.add(new double[] {u, h});
-        for (double t = 0; t < TRACK; t += dt) {
-            u -= speed * Math.cos(d) * dt;
-            h += speed * Math.sin(d) * dt;
-            back.add(new double[] {u, h});
-        }
-        double push = G * PUSH / speed;
-        while (d > 0) {
-            d = Math.max(0, d - push * dt);
-            u -= speed * Math.cos(d) * dt;
-            h += speed * Math.sin(d) * dt;
-            back.add(new double[] {u, h});
-        }
-        while (u > -REACH) {
-            u -= speed * dt;
-            back.add(new double[] {u, h});
-        }
-        List<double[]> all = new ArrayList<>(back.reversed());
-        for (int i = 1; i < ahead.size(); i++) {
-            double[] p = ahead.get(i);
-            all.add(new double[] {p[0] + u0, p[1]});
-        }
-        // a point every STEP, one of them right where the firing starts
-        int every = (int) Math.round(STEP / dt), opens = back.size() - 1, first = opens % every;
-        int n = (all.size() - 1 - first) / every + 1;
-        float[] path = new float[n * 4];
-        float yaw = (float) Math.toDegrees(Math.atan2(-dir.x, dir.z));
-        for (int i = 0; i < n; i++) {
-            double[] p = all.get(first + i * every);
-            Vec3 at = target.add(dir.scale(p[0]));
-            path[i * 4] = (float) at.x;
-            path[i * 4 + 1] = (float) Math.min(target.y + p[1], level.getMaxY() - 8);
-            path[i * 4 + 2] = (float) at.z;
-            path[i * 4 + 3] = yaw;
-        }
-        fire[0] = (opens - first) * dt;
-        clear(level, path, WING, 8, 2);
-        return path;
-    }
-
-    /**
-     * From where the cannon opens up (u 0, hs high, diving at dive radians): easing the nose up just fast enough
-     * to walk the aim LINE blocks in FIRE seconds, then the pull out and the climb away, out to REACH past the
-     * target and beyond. Points (u, height) every dt seconds.
-     */
-    private static List<double[]> walkAndPull(double speed, double dive, double hs, double dt) {
-        // how fast to ease up: the aim (where the nose line meets the ground) only moves as the dive shallows
-        double lo = 0, hi = (dive - 0.03) / FIRE;
-        for (int k = 0; k < 30; k++) {
-            double q = (lo + hi) / 2;
-            double u = 0, h = hs, d = dive;
-            for (double t = 0; t < FIRE; t += dt) {
-                d -= q * dt;
-                u += speed * Math.cos(d) * dt;
-                h -= speed * Math.sin(d) * dt;
-            }
-            double swept = h <= 0 ? Double.MAX_VALUE : u + h / Math.tan(d) - hs / Math.tan(dive);
-            if (swept > LINE) {
-                hi = q;
-            } else {
-                lo = q;
-            }
-        }
-        double q = lo, pull = G * PULL / speed, climb = -Math.toRadians(CLIMB);
-        List<double[]> out = new ArrayList<>();
-        double u = 0, h = hs, d = dive, top = hs + 160;
-        out.add(new double[] {u, h});
-        for (double t = 0; u < REACH + 600; t += dt) {
-            if (t < FIRE) {
-                d -= q * dt;
-            } else if (h < top) {
-                d = Math.max(climb, d - pull * dt);
-            } else {
-                d = Math.min(0, d + pull * 0.4 * dt);
-            }
-            u += speed * Math.cos(d) * dt;
-            h -= speed * Math.sin(d) * dt;
-            out.add(new double[] {u, h});
-        }
-        return out;
-    }
-
-    /**
-     * A bombing run: low and level down the street across the crowd, letting a stick of four to six bombs go
-     * just early enough that they fall on a line through it, a few blocks apart; a second jet drops its own
-     * beside the first's.
+     * A bombing run (StrikeFlight.bomb): in on a gentle dive, rounded out to level just over the roofs, a stick of
+     * four to six bombs let go so they fall on a line through the crowd a few blocks apart, then the pull up and
+     * the break to side; a wingman's lands beside the first's.
      */
     private static Run bomb(ServerLevel level, Vec3 target, Vec3 dir, String model, long now, double delay, double offset,
-            RandomSource random) {
+            int side, RandomSource random) {
         double speed = 78 + random.nextDouble() * 12;
         Vec3 aim = target.add(new Vec3(-dir.z, 0, dir.x).scale(offset));
-        float[] path = lowPass(level, aim, dir, speed, 24 + random.nextDouble() * 6, 9);
+        double low = Math.max(24 + random.nextDouble() * 6, lift(level, aim, dir, FLAT, LEVEL, -450, 250, 9));
+        int count = 4 + random.nextInt(3);
+        StrikeFlight.Plan plan = StrikeFlight.bomb(level, aim, dir, speed, Math.toRadians(8 + random.nextDouble() * 2), low,
+                low + 75 + random.nextDouble() * 15, side, Math.toRadians(62 + random.nextDouble() * 14),
+                Math.toRadians(60 + random.nextDouble() * 35), count);
+        float[] path = plan.path();
+        clear(level, path, WING, 9, 2);
         WorldEvents.Event e = event(WorldEvents.Kind.BOMB, path, model, now, delay);
         Run run = new Run(e, aim, dir);
-        int n = 4 + random.nextInt(3);
-        run.release = new double[n];
-        for (int i = 0; i < n; i++) {
-            run.release[i] = run.release((i - (n - 1) / 2.0) * 7);
+        double held = Math.round(delay / STEP) * STEP;
+        run.release = new double[count];
+        for (int i = 0; i < count; i++) {
+            run.release[i] = held + plan.release()[i];
         }
         return run;
     }
@@ -566,12 +444,19 @@ public final class AirStrikes {
             points.add(p);
             yaws.add(lastYaw + net.minecraft.util.Mth.wrapDegrees(outYaw - lastYaw) * (float) Math.min(1, t / 4));
         }
-        float[] path = new float[points.size() * 4];
+        int k = WorldEvents.Event.STRIDE;
+        float[] path = new float[points.size() * k];
+        float yaw = yaws.getFirst();
         for (int i = 0; i < points.size(); i++) {
-            path[i * 4] = (float) points.get(i).x;
-            path[i * 4 + 1] = (float) Math.min(points.get(i).y, level.getMaxY() - 8);
-            path[i * 4 + 2] = (float) points.get(i).z;
-            path[i * 4 + 3] = yaws.get(i);
+            // carried on round rather than wrapped, so it turns smoothly between points
+            yaw += net.minecraft.util.Mth.wrapDegrees(yaws.get(i) - yaw);
+            path[i * k] = (float) points.get(i).x;
+            path[i * k + 1] = (float) Math.min(points.get(i).y, level.getMaxY() - 8);
+            path[i * k + 2] = (float) points.get(i).z;
+            path[i * k + 3] = yaw;
+            // its nose and lean are left to how it's flying (WorldEvents.Event.place)
+            path[i * k + 4] = Float.NaN;
+            path[i * k + 5] = Float.NaN;
         }
         // up over anything in the way of its rotor, and back down between the buildings after
         clear(level, path, ROTOR, 5, 2.5);
@@ -605,25 +490,6 @@ public final class AirStrikes {
             this.event = event;
             this.target = target;
             this.dir = dir;
-        }
-
-        /**
-         * When to let a bomb go for it to land this far along the run past the target: from wherever the jet is
-         * then, at whatever height, it falls for as long as that height takes and carries on forward meanwhile.
-         */
-        double release(double land) {
-            for (int i = 0; i < event.path().length / 4; i++) {
-                double time = i * STEP;
-                Vec3 at = event.at(time), v = event.velocity(time);
-                double h = Math.max(0, at.y - 1.5 - target.y);
-                // h = -vy t + g t^2 / 2
-                double fall = (v.y + Math.sqrt(v.y * v.y + 2 * G * h)) / G;
-                double u = (at.x - target.x) * dir.x + (at.z - target.z) * dir.z + (v.x * dir.x + v.z * dir.z) * fall;
-                if (u >= land) {
-                    return time;
-                }
-            }
-            return -1;
         }
 
         void tick(ServerLevel level, double t) {
