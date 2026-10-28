@@ -154,7 +154,13 @@ public final class Trains {
         int n = Math.max(1, line.kind == Line.Kind.SUBWAY ? cfg.subwayTrains : cfg.railTrains);
         for (int i = 0; i < n; i++) {
             double s = old != null && i < old.trains.size() ? old.trains.get(i).s : line.route.length() * i / n;
-            line.trains.add(new TrainRun(line, i, s));
+            TrainRun run = new TrainRun(line, i, s);
+            if (old != null && i < old.trains.size()) {
+                run.passengers = old.trains.get(i).passengers;
+            } else if (Math.random() < cfg.zombieRiderChance) {
+                run.passengers = 1 + (int) (Math.random() * Math.max(1, cfg.zombieRidersMax));
+            }
+            line.trains.add(run);
         }
     }
 
@@ -389,6 +395,7 @@ public final class Trains {
                 if (e instanceof TrainEntity train) {
                     sendRiders(level, run, train);
                     Zombies.steer(level, run, train);
+                    Zombies.riders(level, run, train);
                 }
             }
         }
@@ -523,6 +530,9 @@ public final class Trains {
             JsonArray trains = new JsonArray();
             l.trains.forEach(t -> trains.add(t.s));
             o.add("trains", trains);
+            JsonArray passengers = new JsonArray();
+            l.trains.forEach(t -> passengers.add(t.passengers));
+            o.add("passengers", passengers);
             lines.add(o);
         }
         root.add("lines", lines);
@@ -565,6 +575,12 @@ public final class Trains {
                     JsonArray t = o.getAsJsonArray("trains");
                     for (int i = 0; i < Math.min(t.size(), line.trains.size()); i++) {
                         line.trains.get(i).s = line.route.wrapS(t.get(i).getAsDouble());
+                    }
+                }
+                if (o.has("passengers")) {
+                    JsonArray p = o.getAsJsonArray("passengers");
+                    for (int i = 0; i < Math.min(p.size(), line.trains.size()); i++) {
+                        line.trains.get(i).passengers = p.get(i).getAsInt();
                     }
                 }
                 SERVER.put(line.id, line);
