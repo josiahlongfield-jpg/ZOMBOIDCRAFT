@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ar_resurf": "zomboidcraft:block/city/ar_resurf",
+    "home_white": "zomboidcraft:block/city/home_white",
+    "particle": "zomboidcraft:block/city/ar_resurf"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_resurf",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ar_resurf"
+        },
+        "east": {
+          "texture": "#ar_resurf",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_resurf",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ar_resurf"
+        },
+        "down": {
+          "texture": "#ar_resurf",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_resurf",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ar_resurf"
+        },
+        "east": {
+          "texture": "#ar_resurf",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_resurf"
+        },
+        "up": {
+          "texture": "#ar_resurf"
+        },
+        "down": {
+          "texture": "#ar_resurf"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        8
+      ],
+      "to": [
+        1,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_white"
+        },
+        "south": {
+          "texture": "#home_white"
+        },
+        "east": {
+          "texture": "#home_white"
+        },
+        "west": {
+          "texture": "#home_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_white"
+        },
+        "down": {
+          "texture": "#home_white"
+        }
+      }
+    }
+  ]
+}

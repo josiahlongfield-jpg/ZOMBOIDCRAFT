@@ -245,6 +245,11 @@ final class Layout {
             // City Park and the museum along its north side, three blocks square
             return lot(s, PlaceType.LANDMARK, "park", 3, 3, h);
         }
+        if (s.id().equals("arena")) {
+            // Harbor Arena: three blocks along the shore, two deep, nudged west off the water
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "arena", 3640, -480, s.flags(), s.name()),
+                    PlaceType.LANDMARK, "arena", 3, 2, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);
