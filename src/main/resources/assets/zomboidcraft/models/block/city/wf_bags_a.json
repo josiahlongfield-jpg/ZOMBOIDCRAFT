@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_bags_a": "zomboidcraft:block/city/wf_bags_a",
+    "particle": "zomboidcraft:block/city/wf_bags_a"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_bags_a"
+        },
+        "south": {
+          "texture": "#wf_bags_a"
+        },
+        "east": {
+          "texture": "#wf_bags_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_bags_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_bags_a"
+        },
+        "down": {
+          "texture": "#wf_bags_a",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        2
+      ],
+      "to": [
+        14,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_bags_a"
+        },
+        "south": {
+          "texture": "#wf_bags_a"
+        },
+        "east": {
+          "texture": "#wf_bags_a"
+        },
+        "west": {
+          "texture": "#wf_bags_a"
+        },
+        "up": {
+          "texture": "#wf_bags_a"
+        },
+        "down": {
+          "texture": "#wf_bags_a"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        4
+      ],
+      "to": [
+        11,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_bags_a"
+        },
+        "south": {
+          "texture": "#wf_bags_a"
+        },
+        "east": {
+          "texture": "#wf_bags_a"
+        },
+        "west": {
+          "texture": "#wf_bags_a"
+        },
+        "up": {
+          "texture": "#wf_bags_a"
+        },
+        "down": {
+          "texture": "#wf_bags_a"
+        }
+      }
+    }
+  ]
+}

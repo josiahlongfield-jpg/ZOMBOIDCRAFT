@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_shingle_b": "zomboidcraft:block/city/wf_shingle_b",
+    "particle": "zomboidcraft:block/city/wf_shingle_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_shingle_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#wf_shingle_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wf_shingle_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_shingle_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_shingle_b",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_shingle_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

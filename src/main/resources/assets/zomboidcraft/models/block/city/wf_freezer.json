@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_glass": {
+      "sprite": "zomboidcraft:block/city/cc_glass",
+      "force_translucent": true
+    },
+    "hs_counter": "zomboidcraft:block/city/hs_counter",
+    "wf_freezer": "zomboidcraft:block/city/wf_freezer",
+    "particle": "zomboidcraft:block/city/hs_counter"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_counter"
+        },
+        "south": {
+          "texture": "#hs_counter",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_counter",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_counter",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_freezer"
+        },
+        "down": {
+          "texture": "#hs_counter",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        2
+      ],
+      "to": [
+        16,
+        15,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_glass"
+        },
+        "south": {
+          "texture": "#cc_glass"
+        },
+        "east": {
+          "texture": "#cc_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_glass"
+        },
+        "down": {
+          "texture": "#cc_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14.5,
+        2
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_glass"
+        },
+        "south": {
+          "texture": "#cc_glass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_glass"
+        },
+        "down": {
+          "texture": "#cc_glass"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_creosote": "zomboidcraft:block/city/wf_creosote",
+    "wf_net": "zomboidcraft:block/city/wf_net",
+    "particle": "zomboidcraft:block/city/wf_net"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_net",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#wf_creosote"
+        },
+        "east": {
+          "texture": "#wf_creosote",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_creosote",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_creosote"
+        },
+        "down": {
+          "texture": "#wf_creosote",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_net"
+        },
+        "south": {
+          "texture": "#wf_creosote",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wf_creosote",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_creosote",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_creosote"
+        },
+        "down": {
+          "texture": "#wf_creosote",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        7,
+        2
+      ],
+      "to": [
+        15,
+        14,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_net"
+        },
+        "south": {
+          "texture": "#wf_creosote"
+        },
+        "east": {
+          "texture": "#wf_creosote"
+        },
+        "west": {
+          "texture": "#wf_creosote"
+        },
+        "up": {
+          "texture": "#wf_creosote"
+        },
+        "down": {
+          "texture": "#wf_creosote"
+        }
+      }
+    }
+  ]
+}

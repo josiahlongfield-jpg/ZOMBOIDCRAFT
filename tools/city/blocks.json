@@ -375176,6 +375176,5200 @@
    "sound": "WOOL",
    "rotate": "facing",
    "decor": true
+  },
+  "wf_pavers": {
+   "tex": {
+    "up": "wf_pavers",
+    "side": "wf_wall",
+    "down": "wf_wall"
+   },
+   "title": "Brick Pavers",
+   "sound": "STONE"
+  },
+  "wf_pavers_b": {
+   "tex": {
+    "up": "wf_pavers_b",
+    "side": "wf_wall",
+    "down": "wf_wall"
+   },
+   "title": "Brick Pavers",
+   "sound": "STONE"
+  },
+  "wf_pavers_moss": {
+   "tex": {
+    "up": "wf_pavers_moss",
+    "side": "wf_wall",
+    "down": "wf_wall"
+   },
+   "title": "Brick Pavers",
+   "sound": "STONE"
+  },
+  "wf_cap": {
+   "tex": {
+    "up": "wf_cap",
+    "side": "wf_wall",
+    "down": "wf_wall"
+   },
+   "title": "Coping Stone",
+   "sound": "STONE"
+  },
+  "wf_wall": {
+   "tex": {
+    "all": "wf_wall"
+   },
+   "title": "Seawall",
+   "sound": "STONE"
+  },
+  "wf_wall_slime": {
+   "tex": {
+    "all": "wf_wall_slime"
+   },
+   "title": "Seawall",
+   "sound": "STONE"
+  },
+  "wf_rail_iron": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     1,
+     16,
+     15,
+     3,
+     "wf_iron"
+    ],
+    [
+     0,
+     3,
+     1.5,
+     16,
+     4,
+     2.5,
+     "wf_iron"
+    ],
+    [
+     7,
+     0,
+     0.5,
+     9,
+     15,
+     3.5,
+     "wf_iron"
+    ],
+    [
+     7.2,
+     15,
+     1.2,
+     8.8,
+     16.5,
+     2.8,
+     "wf_iron"
+    ],
+    [
+     3,
+     4,
+     1.6,
+     3.8,
+     14,
+     2.4,
+     "wf_iron"
+    ],
+    [
+     12,
+     4,
+     1.6,
+     12.8,
+     14,
+     2.4,
+     "wf_iron"
+    ]
+   ],
+   "title": "Iron Railing",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "wf_fender": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     13,
+     13,
+     16,
+     16,
+     "wf_rubber"
+    ],
+    [
+     4,
+     0,
+     12,
+     12,
+     16,
+     13,
+     "wf_rubber"
+    ]
+   ],
+   "title": "Fender",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     3,
+     0,
+     12,
+     13,
+     16,
+     16
+    ]
+   ]
+  },
+  "wf_telescope": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     9,
+     10,
+     "painted_steel"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11,
+     "painted_steel"
+    ],
+    [
+     4,
+     9,
+     5,
+     12,
+     13,
+     12,
+     {
+      "north": "painted_steel",
+      "side": "painted_steel",
+      "up": "painted_steel",
+      "down": "painted_steel"
+     }
+    ],
+    [
+     5,
+     10,
+     1,
+     7.5,
+     12.5,
+     5,
+     "home_plastic_black"
+    ],
+    [
+     8.5,
+     10,
+     1,
+     11,
+     12.5,
+     5,
+     "home_plastic_black"
+    ],
+    [
+     6.5,
+     13,
+     7,
+     9.5,
+     14,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Coin Telescope",
+   "sound": "METAL",
+   "loot": "scraps",
+   "rotate": "facing",
+   "shape": [
+    [
+     4,
+     0,
+     1,
+     12,
+     14,
+     12
+    ]
+   ]
+  },
+  "wf_ring_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "wf_white"
+    ],
+    [
+     3,
+     4,
+     4.5,
+     13,
+     6,
+     5.5,
+     "ship_lifebuoy"
+    ],
+    [
+     3,
+     12,
+     4.5,
+     13,
+     14,
+     5.5,
+     "ship_lifebuoy"
+    ],
+    [
+     3,
+     6,
+     4.5,
+     5,
+     12,
+     5.5,
+     "ship_lifebuoy"
+    ],
+    [
+     11,
+     6,
+     4.5,
+     13,
+     12,
+     5.5,
+     "ship_lifebuoy"
+    ]
+   ],
+   "title": "Life Ring",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10
+    ]
+   ]
+  },
+  "wf_buoy_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     9,
+     12,
+     "wf_buoy_red"
+    ],
+    [
+     5,
+     9,
+     5,
+     11,
+     15,
+     11,
+     "wf_buoy_red"
+    ],
+    [
+     7,
+     15,
+     7,
+     9,
+     18,
+     9,
+     "wf_iron"
+    ]
+   ],
+   "title": "Channel Buoy",
+   "sound": "METAL",
+   "shape": [
+    [
+     4,
+     0,
+     4,
+     12,
+     15,
+     12
+    ]
+   ]
+  },
+  "wf_buoy_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     9,
+     12,
+     "wf_buoy_green"
+    ],
+    [
+     5,
+     9,
+     5,
+     11,
+     15,
+     11,
+     "wf_buoy_green"
+    ],
+    [
+     7,
+     15,
+     7,
+     9,
+     18,
+     9,
+     "wf_iron"
+    ]
+   ],
+   "title": "Channel Buoy",
+   "sound": "METAL",
+   "shape": [
+    [
+     4,
+     0,
+     4,
+     12,
+     15,
+     12
+    ]
+   ]
+  },
+  "wf_pots": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     8,
+     {
+      "north": "wf_net",
+      "side": "wf_creosote",
+      "up": "wf_creosote",
+      "down": "wf_creosote"
+     }
+    ],
+    [
+     0,
+     0,
+     8,
+     16,
+     7,
+     16,
+     {
+      "north": "wf_net",
+      "side": "wf_creosote",
+      "up": "wf_creosote",
+      "down": "wf_creosote"
+     }
+    ],
+    [
+     1,
+     7,
+     2,
+     15,
+     14,
+     14,
+     {
+      "north": "wf_net",
+      "side": "wf_creosote",
+      "up": "wf_creosote",
+      "down": "wf_creosote"
+     }
+    ]
+   ],
+   "title": "Lobster Pots",
+   "sound": "WOOD",
+   "loot": "scraps",
+   "rotate": "facing",
+   "render": "cutout",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     14,
+     16
+    ]
+   ]
+  },
+  "wf_coil": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     3,
+     14,
+     "wf_rope"
+    ],
+    [
+     4,
+     3,
+     4,
+     12,
+     5,
+     12,
+     "wf_rope"
+    ]
+   ],
+   "title": "Coiled Rope",
+   "sound": "WOOL",
+   "decor": true
+  },
+  "wf_deck": {
+   "tex": {
+    "up": "wf_deck",
+    "side": "wf_creosote",
+    "down": "wf_creosote"
+   },
+   "title": "Pier Decking",
+   "sound": "WOOD"
+  },
+  "wf_deck_b": {
+   "tex": {
+    "up": "wf_deck_b",
+    "side": "wf_creosote",
+    "down": "wf_creosote"
+   },
+   "title": "Pier Decking",
+   "sound": "WOOD"
+  },
+  "wf_pile": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12,
+     "wf_creosote"
+    ]
+   ],
+   "title": "Pile",
+   "sound": "WOOD",
+   "shape": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12
+    ]
+   ]
+  },
+  "wf_pile_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     12,
+     12,
+     "wf_creosote"
+    ],
+    [
+     3.5,
+     12,
+     3.5,
+     12.5,
+     13,
+     12.5,
+     "wf_iron"
+    ],
+    [
+     6,
+     13,
+     6,
+     10,
+     15,
+     10,
+     "wf_creosote"
+    ]
+   ],
+   "title": "Pile",
+   "sound": "WOOD",
+   "shape": [
+    [
+     4,
+     0,
+     4,
+     12,
+     15,
+     12
+    ]
+   ]
+  },
+  "wf_stringer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     10,
+     0,
+     12,
+     16,
+     16,
+     "wf_creosote"
+    ],
+    [
+     7,
+     4,
+     0,
+     9,
+     10,
+     16,
+     "wf_creosote"
+    ]
+   ],
+   "title": "Stringer",
+   "sound": "WOOD",
+   "rotate": "axis",
+   "shape": [
+    [
+     4,
+     4,
+     0,
+     12,
+     16,
+     16
+    ]
+   ]
+  },
+  "wf_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     13,
+     0,
+     16,
+     15.5,
+     3,
+     "wf_white"
+    ],
+    [
+     0,
+     6,
+     0.5,
+     16,
+     7.5,
+     2.5,
+     "wf_white"
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     15.5,
+     3,
+     "wf_white"
+    ],
+    [
+     1.5,
+     7.5,
+     1,
+     2.5,
+     13,
+     2,
+     "wf_white"
+    ],
+    [
+     13.5,
+     7.5,
+     1,
+     14.5,
+     13,
+     2,
+     "wf_white"
+    ]
+   ],
+   "title": "Pier Railing",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     3
+    ]
+   ]
+  },
+  "wf_float": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4,
+     0,
+     16,
+     7,
+     16,
+     {
+      "up": "wf_deck",
+      "side": "wf_creosote",
+      "down": "wf_creosote"
+     }
+    ],
+    [
+     1,
+     0,
+     1,
+     7,
+     4,
+     15,
+     "wf_float_drum"
+    ],
+    [
+     9,
+     0,
+     1,
+     15,
+     4,
+     15,
+     "wf_float_drum"
+    ],
+    [
+     0,
+     7,
+     0,
+     16,
+     8,
+     1,
+     "wf_rubber"
+    ]
+   ],
+   "title": "Floating Dock",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16
+    ]
+   ]
+  },
+  "wf_cleat": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     6,
+     13,
+     1,
+     10,
+     "home_chrome"
+    ],
+    [
+     6,
+     1,
+     7,
+     10,
+     3,
+     9,
+     "home_chrome"
+    ],
+    [
+     2,
+     3,
+     7,
+     14,
+     4,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Cleat",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "wf_gangway": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     8,
+     15,
+     8,
+     16,
+     {
+      "north": "wf_alu",
+      "side": "wf_alu",
+      "up": "wf_alu",
+      "down": "wf_alu"
+     }
+    ],
+    [
+     1,
+     8,
+     0,
+     15,
+     16,
+     8,
+     {
+      "north": "wf_alu",
+      "side": "wf_alu",
+      "up": "wf_alu",
+      "down": "wf_alu"
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     1,
+     16,
+     16,
+     "wf_alu"
+    ],
+    [
+     15,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "wf_alu"
+    ]
+   ],
+   "title": "Gangway Stairs",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     8,
+     15,
+     8,
+     16
+    ],
+    [
+     1,
+     0,
+     0,
+     15,
+     16,
+     8
+    ]
+   ]
+  },
+  "wf_steel": {
+   "tex": {
+    "all": "wf_steel"
+   },
+   "title": "Steel",
+   "sound": "METAL"
+  },
+  "wf_panel": {
+   "tex": {
+    "all": "wf_panel"
+   },
+   "title": "Cladding",
+   "sound": "METAL"
+  },
+  "wf_panel_b": {
+   "tex": {
+    "all": "wf_panel_b"
+   },
+   "title": "Cladding",
+   "sound": "METAL"
+  },
+  "wf_glass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_glass",
+      "south": "wf_glass",
+      "side": "wf_steel",
+      "up": "wf_steel",
+      "down": "wf_steel"
+     }
+    ]
+   ],
+   "title": "Curtain Wall",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_glass_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_glass_broken",
+      "south": "wf_glass_broken",
+      "side": "wf_steel",
+      "up": "wf_steel",
+      "down": "wf_steel"
+     }
+    ]
+   ],
+   "title": "Curtain Wall",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_glass_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_glass_lit",
+      "south": "wf_glass_lit",
+      "side": "wf_steel",
+      "up": "wf_steel",
+      "down": "wf_steel"
+     }
+    ]
+   ],
+   "title": "Curtain Wall",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "light": 6,
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_name_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_0",
+      "south": "wf_name_0",
+      "side": "wf_name_0",
+      "up": "wf_name_0",
+      "down": "wf_name_0"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_1",
+      "south": "wf_name_1",
+      "side": "wf_name_1",
+      "up": "wf_name_1",
+      "down": "wf_name_1"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_2",
+      "south": "wf_name_2",
+      "side": "wf_name_2",
+      "up": "wf_name_2",
+      "down": "wf_name_2"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_3",
+      "south": "wf_name_3",
+      "side": "wf_name_3",
+      "up": "wf_name_3",
+      "down": "wf_name_3"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_4",
+      "south": "wf_name_4",
+      "side": "wf_name_4",
+      "up": "wf_name_4",
+      "down": "wf_name_4"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_5",
+      "south": "wf_name_5",
+      "side": "wf_name_5",
+      "up": "wf_name_5",
+      "down": "wf_name_5"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_6",
+      "south": "wf_name_6",
+      "side": "wf_name_6",
+      "up": "wf_name_6",
+      "down": "wf_name_6"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_7",
+      "south": "wf_name_7",
+      "side": "wf_name_7",
+      "up": "wf_name_7",
+      "down": "wf_name_7"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_8",
+      "south": "wf_name_8",
+      "side": "wf_name_8",
+      "up": "wf_name_8",
+      "down": "wf_name_8"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_9",
+      "south": "wf_name_9",
+      "side": "wf_name_9",
+      "up": "wf_name_9",
+      "down": "wf_name_9"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_10",
+      "south": "wf_name_10",
+      "side": "wf_name_10",
+      "up": "wf_name_10",
+      "down": "wf_name_10"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_11",
+      "south": "wf_name_11",
+      "side": "wf_name_11",
+      "up": "wf_name_11",
+      "down": "wf_name_11"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_12",
+      "south": "wf_name_12",
+      "side": "wf_name_12",
+      "up": "wf_name_12",
+      "down": "wf_name_12"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_name_13": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_name_13",
+      "south": "wf_name_13",
+      "side": "wf_name_13",
+      "up": "wf_name_13",
+      "down": "wf_name_13"
+     }
+    ]
+   ],
+   "title": "Letters",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_ferry_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_ferry_0",
+      "south": "wf_ferry_0",
+      "side": "wf_ferry_0",
+      "up": "wf_ferry_0",
+      "down": "wf_ferry_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_ferry_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_ferry_1",
+      "south": "wf_ferry_1",
+      "side": "wf_ferry_1",
+      "up": "wf_ferry_1",
+      "down": "wf_ferry_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_ferry_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_ferry_2",
+      "south": "wf_ferry_2",
+      "side": "wf_ferry_2",
+      "up": "wf_ferry_2",
+      "down": "wf_ferry_2"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_0",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_1",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_2",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_3",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_4",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_5",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_6",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_dep_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_dep_7",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_0",
+      "south": "wf_evac_0",
+      "side": "wf_evac_0",
+      "up": "wf_evac_0",
+      "down": "wf_evac_0"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_1",
+      "south": "wf_evac_1",
+      "side": "wf_evac_1",
+      "up": "wf_evac_1",
+      "down": "wf_evac_1"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_2",
+      "south": "wf_evac_2",
+      "side": "wf_evac_2",
+      "up": "wf_evac_2",
+      "down": "wf_evac_2"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_3",
+      "south": "wf_evac_3",
+      "side": "wf_evac_3",
+      "up": "wf_evac_3",
+      "down": "wf_evac_3"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_4",
+      "south": "wf_evac_4",
+      "side": "wf_evac_4",
+      "up": "wf_evac_4",
+      "down": "wf_evac_4"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_evac_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_evac_5",
+      "south": "wf_evac_5",
+      "side": "wf_evac_5",
+      "up": "wf_evac_5",
+      "down": "wf_evac_5"
+     }
+    ]
+   ],
+   "title": "Banner",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_ticket": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     6,
+     16,
+     11,
+     16,
+     {
+      "north": "wf_panel",
+      "side": "wf_panel",
+      "up": "hs_counter",
+      "down": "wf_panel"
+     }
+    ],
+    [
+     0,
+     11,
+     6,
+     16,
+     16,
+     7,
+     "cc_glass"
+    ],
+    [
+     6,
+     11,
+     5.5,
+     10,
+     11.5,
+     7,
+     "home_chrome"
+    ],
+    [
+     2,
+     11,
+     10,
+     6,
+     13,
+     13,
+     {
+      "north": "home_plastic_black",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Ticket Window",
+   "sound": "GLASS",
+   "loot": "desk",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     6,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "wf_seats": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     6,
+     3,
+     16,
+     7.5,
+     12,
+     "wf_steel"
+    ],
+    [
+     0,
+     7.5,
+     11,
+     16,
+     16,
+     12.5,
+     "wf_steel"
+    ],
+    [
+     1,
+     0,
+     6,
+     3,
+     6,
+     9,
+     "home_chrome"
+    ],
+    [
+     13,
+     0,
+     6,
+     15,
+     6,
+     9,
+     "home_chrome"
+    ],
+    [
+     7.5,
+     7.5,
+     3,
+     8.5,
+     10,
+     12,
+     "home_chrome"
+    ]
+   ],
+   "title": "Terminal Seats",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3,
+     16,
+     16,
+     12.5
+    ]
+   ]
+  },
+  "wf_turnstile": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     4,
+     13,
+     12,
+     {
+      "north": "painted_steel",
+      "side": "painted_steel",
+      "up": "home_chrome",
+      "down": "painted_steel"
+     }
+    ],
+    [
+     4,
+     9,
+     7.5,
+     12,
+     10,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     4,
+     10,
+     3.5,
+     5,
+     11,
+     12.5,
+     "home_chrome"
+    ],
+    [
+     12,
+     0,
+     4,
+     16,
+     13,
+     12,
+     {
+      "north": "painted_steel",
+      "side": "painted_steel",
+      "up": "home_chrome",
+      "down": "painted_steel"
+     }
+    ]
+   ],
+   "title": "Turnstile",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     13,
+     12
+    ]
+   ]
+  },
+  "wf_queue": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     0,
+     9,
+     1,
+     3,
+     "home_plastic_black"
+    ],
+    [
+     7.5,
+     1,
+     1,
+     8.5,
+     14,
+     2,
+     "home_chrome"
+    ],
+    [
+     7,
+     14,
+     0.5,
+     9,
+     15,
+     2.5,
+     "home_chrome"
+    ],
+    [
+     7.8,
+     12,
+     2,
+     8.2,
+     13.5,
+     16,
+     "wf_steel"
+    ]
+   ],
+   "title": "Queue Barrier",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     7,
+     0,
+     0,
+     9,
+     15,
+     3
+    ]
+   ]
+  },
+  "wf_queue_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     1,
+     10,
+     "home_plastic_black"
+    ],
+    [
+     7.5,
+     1,
+     7.5,
+     8.5,
+     14,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     7,
+     14,
+     7,
+     9,
+     15,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Queue Post",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     15,
+     9
+    ]
+   ]
+  },
+  "wf_bags_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     7,
+     15,
+     {
+      "north": "wf_bags_a",
+      "side": "wf_bags_a",
+      "up": "wf_bags_a",
+      "down": "wf_bags_a"
+     }
+    ],
+    [
+     2,
+     7,
+     2,
+     14,
+     12,
+     12,
+     {
+      "north": "wf_bags_a",
+      "side": "wf_bags_a",
+      "up": "wf_bags_a",
+      "down": "wf_bags_a"
+     }
+    ],
+    [
+     4,
+     12,
+     4,
+     11,
+     15,
+     10,
+     {
+      "north": "wf_bags_a",
+      "side": "wf_bags_a",
+      "up": "wf_bags_a",
+      "down": "wf_bags_a"
+     }
+    ]
+   ],
+   "title": "Luggage",
+   "sound": "WOOL",
+   "loot": "bag",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     15
+    ]
+   ]
+  },
+  "wf_bags_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     7,
+     15,
+     {
+      "north": "wf_bags_b",
+      "side": "wf_bags_b",
+      "up": "wf_bags_b",
+      "down": "wf_bags_b"
+     }
+    ],
+    [
+     2,
+     7,
+     2,
+     14,
+     12,
+     12,
+     {
+      "north": "wf_bags_b",
+      "side": "wf_bags_b",
+      "up": "wf_bags_b",
+      "down": "wf_bags_b"
+     }
+    ],
+    [
+     4,
+     12,
+     4,
+     11,
+     15,
+     10,
+     {
+      "north": "wf_bags_b",
+      "side": "wf_bags_b",
+      "up": "wf_bags_b",
+      "down": "wf_bags_b"
+     }
+    ]
+   ],
+   "title": "Luggage",
+   "sound": "WOOL",
+   "loot": "bag",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     15
+    ]
+   ]
+  },
+  "wf_bags_c": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     7,
+     15,
+     {
+      "north": "wf_bags_c",
+      "side": "wf_bags_c",
+      "up": "wf_bags_c",
+      "down": "wf_bags_c"
+     }
+    ],
+    [
+     2,
+     7,
+     2,
+     14,
+     12,
+     12,
+     {
+      "north": "wf_bags_c",
+      "side": "wf_bags_c",
+      "up": "wf_bags_c",
+      "down": "wf_bags_c"
+     }
+    ],
+    [
+     4,
+     12,
+     4,
+     11,
+     15,
+     10,
+     {
+      "north": "wf_bags_c",
+      "side": "wf_bags_c",
+      "up": "wf_bags_c",
+      "down": "wf_bags_c"
+     }
+    ]
+   ],
+   "title": "Luggage",
+   "sound": "WOOL",
+   "loot": "clothes",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     15
+    ]
+   ]
+  },
+  "wf_shingle": {
+   "tex": {
+    "all": "wf_shingle"
+   },
+   "title": "Shingles",
+   "sound": "WOOD"
+  },
+  "wf_shingle_b": {
+   "tex": {
+    "all": "wf_shingle_b"
+   },
+   "title": "Shingles",
+   "sound": "WOOD"
+  },
+  "wf_clap": {
+   "tex": {
+    "all": "wf_clap"
+   },
+   "title": "Clapboard",
+   "sound": "WOOD"
+  },
+  "wf_trim": {
+   "tex": {
+    "all": "wf_white"
+   },
+   "title": "Trim",
+   "sound": "WOOD"
+  },
+  "wf_window": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_window",
+      "south": "wf_window",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_freezer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2,
+     16,
+     12,
+     16,
+     {
+      "north": "hs_counter",
+      "side": "hs_counter",
+      "up": "wf_freezer",
+      "down": "hs_counter"
+     }
+    ],
+    [
+     0,
+     12,
+     2,
+     16,
+     15,
+     3,
+     "cc_glass"
+    ],
+    [
+     0,
+     14.5,
+     2,
+     16,
+     15,
+     16,
+     "cc_glass"
+    ]
+   ],
+   "title": "Ice Cream Freezer",
+   "sound": "METAL",
+   "loot": "home_fridge",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     15,
+     16
+    ]
+   ]
+  },
+  "wf_taffy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     4,
+     14,
+     8,
+     14,
+     {
+      "north": "painted_steel",
+      "side": "painted_steel",
+      "up": "painted_steel",
+      "down": "painted_steel"
+     }
+    ],
+    [
+     7,
+     8,
+     8,
+     9,
+     14,
+     10,
+     "home_chrome"
+    ],
+    [
+     3,
+     12,
+     8,
+     13,
+     13,
+     10,
+     "home_chrome"
+    ],
+    [
+     3,
+     9,
+     7,
+     6,
+     12,
+     11,
+     "wf_taffy_pink"
+    ],
+    [
+     10,
+     9,
+     7,
+     13,
+     12,
+     11,
+     "wf_taffy_pink"
+    ]
+   ],
+   "title": "Taffy Puller",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     4,
+     14,
+     14,
+     14
+    ]
+   ]
+  },
+  "wf_tees": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_tees",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "T-Shirt Wall",
+   "sound": "WOOL",
+   "loot": "clothes",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_gifts": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_gifts",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Gift Shelves",
+   "sound": "WOOD",
+   "loot": "storage",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "wf_menu_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.5,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_menu_0",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Menu Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_menu_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.5,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_menu_1",
+      "side": "cv_oak",
+      "up": "cv_oak",
+      "down": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Menu Board",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_clams_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_clams_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_clams_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_clams_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_clams_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_clams_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_clams_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_clams_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_taffy_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_taffy_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_taffy_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_taffy_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_taffy_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_taffy_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_taffy_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_taffy_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_gifts_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_gifts_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_gifts_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_gifts_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_gifts_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_gifts_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_gifts_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_gifts_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_arcade_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_arcade_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_arcade_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_arcade_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_arcade_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_arcade_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_arcade_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_arcade_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_chowder_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_chowder_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_chowder_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_chowder_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_chowder_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_chowder_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_chowder_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_chowder_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_scoops_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_scoops_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_scoops_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_scoops_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_scoops_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_scoops_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_scoops_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_scoops_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_tees_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_tees_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_tees_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_tees_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_tees_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_tees_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_tees_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_tees_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_surf_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_surf_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_surf_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_surf_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_surf_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_surf_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_surf_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_surf_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_bait_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_bait_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_bait_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_bait_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_bait_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_bait_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_bait_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_bait_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_master_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_master_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_master_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_master_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_master_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_master_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_shop_master_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_shop_master_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Shop Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_pier_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_0",
+      "south": "wf_pier_0",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_pier_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_1",
+      "south": "wf_pier_1",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_pier_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_2",
+      "south": "wf_pier_2",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_pier_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_3",
+      "south": "wf_pier_3",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_pier_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_4",
+      "south": "wf_pier_4",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_pier_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "wf_pier_5",
+      "south": "wf_pier_5",
+      "side": "wf_white",
+      "up": "wf_white",
+      "down": "wf_white"
+     }
+    ]
+   ],
+   "title": "Pier Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "wf_ride_floor": {
+   "tex": {
+    "up": "wf_ride_floor",
+    "side": "wf_gilt",
+    "down": "wf_creosote"
+   },
+   "title": "Carousel Platform",
+   "sound": "WOOD"
+  },
+  "wf_brass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "wf_gilt"
+    ]
+   ],
+   "title": "Brass Pole",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_horse_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "wf_gilt"
+    ],
+    [
+     5,
+     6,
+     3,
+     11,
+     11,
+     13,
+     "wf_coat_white"
+    ],
+    [
+     5.5,
+     9,
+     0,
+     10.5,
+     13,
+     4,
+     "wf_coat_white"
+    ],
+    [
+     6,
+     12,
+     -2,
+     10,
+     16,
+     2,
+     "wf_coat_white"
+    ],
+    [
+     6.5,
+     13,
+     -4,
+     9.5,
+     15,
+     -2,
+     "wf_coat_white"
+    ],
+    [
+     7,
+     16,
+     -1,
+     9,
+     18,
+     2,
+     "wf_saddle_red"
+    ],
+    [
+     5,
+     11,
+     5,
+     11,
+     12,
+     10,
+     "wf_saddle_red"
+    ],
+    [
+     5.5,
+     1,
+     3,
+     7,
+     7,
+     5,
+     "wf_coat_white"
+    ],
+    [
+     9,
+     2,
+     2,
+     10.5,
+     7,
+     4,
+     "wf_coat_white"
+    ],
+    [
+     5.5,
+     2,
+     11,
+     7,
+     7,
+     13,
+     "wf_coat_white"
+    ],
+    [
+     9,
+     1,
+     12,
+     10.5,
+     7,
+     14,
+     "wf_coat_white"
+    ],
+    [
+     7,
+     7,
+     13,
+     9,
+     10,
+     16,
+     "wf_gilt"
+    ]
+   ],
+   "title": "Carousel Horse",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     0,
+     11,
+     16,
+     14
+    ]
+   ]
+  },
+  "wf_horse_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "wf_gilt"
+    ],
+    [
+     5,
+     6,
+     3,
+     11,
+     11,
+     13,
+     "wf_coat_black"
+    ],
+    [
+     5.5,
+     9,
+     0,
+     10.5,
+     13,
+     4,
+     "wf_coat_black"
+    ],
+    [
+     6,
+     12,
+     -2,
+     10,
+     16,
+     2,
+     "wf_coat_black"
+    ],
+    [
+     6.5,
+     13,
+     -4,
+     9.5,
+     15,
+     -2,
+     "wf_coat_black"
+    ],
+    [
+     7,
+     16,
+     -1,
+     9,
+     18,
+     2,
+     "wf_saddle_blue"
+    ],
+    [
+     5,
+     11,
+     5,
+     11,
+     12,
+     10,
+     "wf_saddle_blue"
+    ],
+    [
+     5.5,
+     1,
+     3,
+     7,
+     7,
+     5,
+     "wf_coat_black"
+    ],
+    [
+     9,
+     2,
+     2,
+     10.5,
+     7,
+     4,
+     "wf_coat_black"
+    ],
+    [
+     5.5,
+     2,
+     11,
+     7,
+     7,
+     13,
+     "wf_coat_black"
+    ],
+    [
+     9,
+     1,
+     12,
+     10.5,
+     7,
+     14,
+     "wf_coat_black"
+    ],
+    [
+     7,
+     7,
+     13,
+     9,
+     10,
+     16,
+     "wf_gilt"
+    ]
+   ],
+   "title": "Carousel Horse",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     0,
+     11,
+     16,
+     14
+    ]
+   ]
+  },
+  "wf_horse_c": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "wf_gilt"
+    ],
+    [
+     5,
+     6,
+     3,
+     11,
+     11,
+     13,
+     "wf_coat_grey"
+    ],
+    [
+     5.5,
+     9,
+     0,
+     10.5,
+     13,
+     4,
+     "wf_coat_grey"
+    ],
+    [
+     6,
+     12,
+     -2,
+     10,
+     16,
+     2,
+     "wf_coat_grey"
+    ],
+    [
+     6.5,
+     13,
+     -4,
+     9.5,
+     15,
+     -2,
+     "wf_coat_grey"
+    ],
+    [
+     7,
+     16,
+     -1,
+     9,
+     18,
+     2,
+     "wf_saddle_red"
+    ],
+    [
+     5,
+     11,
+     5,
+     11,
+     12,
+     10,
+     "wf_saddle_red"
+    ],
+    [
+     5.5,
+     1,
+     3,
+     7,
+     7,
+     5,
+     "wf_coat_grey"
+    ],
+    [
+     9,
+     2,
+     2,
+     10.5,
+     7,
+     4,
+     "wf_coat_grey"
+    ],
+    [
+     5.5,
+     2,
+     11,
+     7,
+     7,
+     13,
+     "wf_coat_grey"
+    ],
+    [
+     9,
+     1,
+     12,
+     10.5,
+     7,
+     14,
+     "wf_coat_grey"
+    ],
+    [
+     7,
+     7,
+     13,
+     9,
+     10,
+     16,
+     "wf_gilt"
+    ]
+   ],
+   "title": "Carousel Horse",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     0,
+     11,
+     16,
+     14
+    ]
+   ]
+  },
+  "wf_canopy_a": {
+   "tex": {
+    "all": "wf_canopy_a"
+   },
+   "title": "Canopy",
+   "sound": "WOOL"
+  },
+  "wf_canopy_b": {
+   "tex": {
+    "all": "wf_canopy_b"
+   },
+   "title": "Canopy",
+   "sound": "WOOL"
+  },
+  "wf_drum": {
+   "tex": {
+    "side": "wf_drum",
+    "up": "wf_gilt",
+    "down": "wf_gilt"
+   },
+   "title": "Carousel Drum",
+   "sound": "WOOD"
+  },
+  "wf_crest": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     4,
+     13,
+     "wf_gilt"
+    ],
+    [
+     5,
+     4,
+     5,
+     11,
+     9,
+     11,
+     "wf_canopy_a"
+    ],
+    [
+     7,
+     9,
+     7,
+     9,
+     16,
+     9,
+     "wf_gilt"
+    ]
+   ],
+   "title": "Carousel Crest",
+   "sound": "METAL",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13
+    ]
+   ]
+  },
+  "wf_pump": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     5,
+     13,
+     15,
+     11,
+     {
+      "north": "wf_pump",
+      "side": "vessel_hull_grey",
+      "up": "vessel_hull_grey",
+      "down": "vessel_hull_grey"
+     }
+    ],
+    [
+     4,
+     15,
+     6,
+     12,
+     16,
+     10,
+     "painted_steel"
+    ],
+    [
+     13,
+     5,
+     7,
+     15,
+     11,
+     9,
+     "home_plastic_black"
+    ],
+    [
+     14,
+     3,
+     7.5,
+     15,
+     5,
+     8.5,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Marine Fuel Pump",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3,
+     0,
+     5,
+     15,
+     16,
+     11
+    ]
+   ]
+  },
+  "wf_rack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     0,
+     10,
+     2,
+     16,
+     "wf_steel"
+    ],
+    [
+     7,
+     2,
+     0,
+     9,
+     3,
+     16,
+     "wf_steel"
+    ]
+   ],
+   "title": "Boat Rack",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     6,
+     0,
+     0,
+     10,
+     3,
+     16
+    ]
+   ]
+  },
+  "wf_cover": {
+   "tex": {
+    "all": "wf_cover"
+   },
+   "title": "Boat Cover",
+   "sound": "WOOL"
+  },
+  "wf_outboard": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     4,
+     0,
+     11,
+     14,
+     8,
+     {
+      "north": "home_plastic_black",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     6.5,
+     0,
+     2,
+     9.5,
+     4,
+     6,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     -4,
+     3,
+     9,
+     0,
+     5,
+     "home_chrome"
+    ],
+    [
+     7.5,
+     10,
+     8,
+     8.5,
+     11,
+     14,
+     "home_chrome"
+    ]
+   ],
+   "title": "Outboard Motor",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     0,
+     11,
+     14,
+     8
+    ]
+   ]
+  },
+  "wf_mast": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9,
+     "wf_alu"
+    ]
+   ],
+   "title": "Mast",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "wf_boom": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     2,
+     0,
+     9,
+     4,
+     16,
+     "wf_alu"
+    ],
+    [
+     6,
+     4,
+     0,
+     10,
+     7,
+     16,
+     "wf_sail"
+    ]
+   ],
+   "title": "Boom",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     6,
+     2,
+     0,
+     10,
+     7,
+     16
+    ]
+   ]
+  },
+  "wf_windshield": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     8,
+     9,
+     "cc_glass"
+    ],
+    [
+     0,
+     8,
+     7,
+     16,
+     9,
+     9,
+     "home_chrome"
+    ]
+   ],
+   "title": "Windshield",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     7,
+     16,
+     9,
+     9
+    ]
+   ]
+  },
+  "wf_sgn_tickets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_tickets_0",
+      "south": "wf_sgn_tickets_0",
+      "side": "wf_sgn_tickets_0",
+      "up": "wf_sgn_tickets_0",
+      "down": "wf_sgn_tickets_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_tickets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_tickets_1",
+      "south": "wf_sgn_tickets_1",
+      "side": "wf_sgn_tickets_1",
+      "up": "wf_sgn_tickets_1",
+      "down": "wf_sgn_tickets_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_gate_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_gate_0",
+      "south": "wf_sgn_gate_0",
+      "side": "wf_sgn_gate_0",
+      "up": "wf_sgn_gate_0",
+      "down": "wf_sgn_gate_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_gate_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_gate_1",
+      "south": "wf_sgn_gate_1",
+      "side": "wf_sgn_gate_1",
+      "up": "wf_sgn_gate_1",
+      "down": "wf_sgn_gate_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_wait_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_wait_0",
+      "south": "wf_sgn_wait_0",
+      "side": "wf_sgn_wait_0",
+      "up": "wf_sgn_wait_0",
+      "down": "wf_sgn_wait_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_wait_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_wait_1",
+      "south": "wf_sgn_wait_1",
+      "side": "wf_sgn_wait_1",
+      "up": "wf_sgn_wait_1",
+      "down": "wf_sgn_wait_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_rest_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_rest_0",
+      "south": "wf_sgn_rest_0",
+      "side": "wf_sgn_rest_0",
+      "up": "wf_sgn_rest_0",
+      "down": "wf_sgn_rest_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_rest_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_rest_1",
+      "south": "wf_sgn_rest_1",
+      "side": "wf_sgn_rest_1",
+      "up": "wf_sgn_rest_1",
+      "down": "wf_sgn_rest_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nowake_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nowake_0",
+      "south": "wf_sgn_nowake_0",
+      "side": "wf_sgn_nowake_0",
+      "up": "wf_sgn_nowake_0",
+      "down": "wf_sgn_nowake_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nowake_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nowake_1",
+      "south": "wf_sgn_nowake_1",
+      "side": "wf_sgn_nowake_1",
+      "up": "wf_sgn_nowake_1",
+      "down": "wf_sgn_nowake_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_marina_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_marina_0",
+      "south": "wf_sgn_marina_0",
+      "side": "wf_sgn_marina_0",
+      "up": "wf_sgn_marina_0",
+      "down": "wf_sgn_marina_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_marina_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_marina_1",
+      "south": "wf_sgn_marina_1",
+      "side": "wf_sgn_marina_1",
+      "up": "wf_sgn_marina_1",
+      "down": "wf_sgn_marina_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_fuel_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_fuel_0",
+      "south": "wf_sgn_fuel_0",
+      "side": "wf_sgn_fuel_0",
+      "up": "wf_sgn_fuel_0",
+      "down": "wf_sgn_fuel_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_fuel_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_fuel_1",
+      "south": "wf_sgn_fuel_1",
+      "side": "wf_sgn_fuel_1",
+      "up": "wf_sgn_fuel_1",
+      "down": "wf_sgn_fuel_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nodive_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nodive_0",
+      "south": "wf_sgn_nodive_0",
+      "side": "wf_sgn_nodive_0",
+      "up": "wf_sgn_nodive_0",
+      "down": "wf_sgn_nodive_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nodive_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nodive_1",
+      "south": "wf_sgn_nodive_1",
+      "side": "wf_sgn_nodive_1",
+      "up": "wf_sgn_nodive_1",
+      "down": "wf_sgn_nodive_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nofish_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nofish_0",
+      "south": "wf_sgn_nofish_0",
+      "side": "wf_sgn_nofish_0",
+      "up": "wf_sgn_nofish_0",
+      "down": "wf_sgn_nofish_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_nofish_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_nofish_1",
+      "south": "wf_sgn_nofish_1",
+      "side": "wf_sgn_nofish_1",
+      "up": "wf_sgn_nofish_1",
+      "down": "wf_sgn_nofish_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_line_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_line_0",
+      "south": "wf_sgn_line_0",
+      "side": "wf_sgn_line_0",
+      "up": "wf_sgn_line_0",
+      "down": "wf_sgn_line_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_line_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_line_1",
+      "south": "wf_sgn_line_1",
+      "side": "wf_sgn_line_1",
+      "up": "wf_sgn_line_1",
+      "down": "wf_sgn_line_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_family_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_family_0",
+      "south": "wf_sgn_family_0",
+      "side": "wf_sgn_family_0",
+      "up": "wf_sgn_family_0",
+      "down": "wf_sgn_family_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_family_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_family_1",
+      "south": "wf_sgn_family_1",
+      "side": "wf_sgn_family_1",
+      "up": "wf_sgn_family_1",
+      "down": "wf_sgn_family_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_staff_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_staff_0",
+      "south": "wf_sgn_staff_0",
+      "side": "wf_sgn_staff_0",
+      "up": "wf_sgn_staff_0",
+      "down": "wf_sgn_staff_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_staff_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_staff_1",
+      "south": "wf_sgn_staff_1",
+      "side": "wf_sgn_staff_1",
+      "up": "wf_sgn_staff_1",
+      "down": "wf_sgn_staff_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_storage_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_storage_0",
+      "south": "wf_sgn_storage_0",
+      "side": "wf_sgn_storage_0",
+      "up": "wf_sgn_storage_0",
+      "down": "wf_sgn_storage_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_sgn_storage_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_sgn_storage_1",
+      "south": "wf_sgn_storage_1",
+      "side": "wf_sgn_storage_1",
+      "up": "wf_sgn_storage_1",
+      "down": "wf_sgn_storage_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_nomore_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_nomore_0",
+      "south": "wf_spray_nomore_0",
+      "side": "wf_spray_nomore_0",
+      "up": "wf_spray_nomore_0",
+      "down": "wf_spray_nomore_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_nomore_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_nomore_1",
+      "south": "wf_spray_nomore_1",
+      "side": "wf_spray_nomore_1",
+      "up": "wf_spray_nomore_1",
+      "down": "wf_spray_nomore_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_nomore_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_nomore_2",
+      "south": "wf_spray_nomore_2",
+      "side": "wf_spray_nomore_2",
+      "up": "wf_spray_nomore_2",
+      "down": "wf_spray_nomore_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_nomore_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_nomore_3",
+      "south": "wf_spray_nomore_3",
+      "side": "wf_spray_nomore_3",
+      "up": "wf_spray_nomore_3",
+      "down": "wf_spray_nomore_3"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_gone_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_gone_0",
+      "south": "wf_spray_gone_0",
+      "side": "wf_spray_gone_0",
+      "up": "wf_spray_gone_0",
+      "down": "wf_spray_gone_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_gone_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_gone_1",
+      "south": "wf_spray_gone_1",
+      "side": "wf_spray_gone_1",
+      "up": "wf_spray_gone_1",
+      "down": "wf_spray_gone_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_gone_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_gone_2",
+      "south": "wf_spray_gone_2",
+      "side": "wf_spray_gone_2",
+      "up": "wf_spray_gone_2",
+      "down": "wf_spray_gone_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_gone_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_gone_3",
+      "south": "wf_spray_gone_3",
+      "side": "wf_spray_gone_3",
+      "up": "wf_spray_gone_3",
+      "down": "wf_spray_gone_3"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_swim_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_swim_0",
+      "south": "wf_spray_swim_0",
+      "side": "wf_spray_swim_0",
+      "up": "wf_spray_swim_0",
+      "down": "wf_spray_swim_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_swim_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_swim_1",
+      "south": "wf_spray_swim_1",
+      "side": "wf_spray_swim_1",
+      "up": "wf_spray_swim_1",
+      "down": "wf_spray_swim_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_swim_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_swim_2",
+      "south": "wf_spray_swim_2",
+      "side": "wf_spray_swim_2",
+      "up": "wf_spray_swim_2",
+      "down": "wf_spray_swim_2"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_help_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_help_0",
+      "south": "wf_spray_help_0",
+      "side": "wf_spray_help_0",
+      "up": "wf_spray_help_0",
+      "down": "wf_spray_help_0"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "wf_spray_help_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.8,
+     16,
+     16,
+     16,
+     {
+      "north": "wf_spray_help_1",
+      "south": "wf_spray_help_1",
+      "side": "wf_spray_help_1",
+      "up": "wf_spray_help_1",
+      "down": "wf_spray_help_1"
+     }
+    ]
+   ],
+   "title": "Graffiti",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
   }
  }
 }

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_alu": "zomboidcraft:block/city/wf_alu",
+    "particle": "zomboidcraft:block/city/wf_alu"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_alu"
+        },
+        "south": {
+          "texture": "#wf_alu"
+        },
+        "east": {
+          "texture": "#wf_alu"
+        },
+        "west": {
+          "texture": "#wf_alu"
+        },
+        "up": {
+          "texture": "#wf_alu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_alu",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
