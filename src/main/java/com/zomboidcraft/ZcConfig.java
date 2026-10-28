@@ -90,14 +90,14 @@ public final class ZcConfig {
     }
 
     public static class Trains {
-        /** Cruising speeds in blocks a second (30 is about 108 km/h). */
-        public double railSpeed = 30;
-        public double subwaySpeed = 28;
+        /** Cruising speeds in blocks a second (60 is about 216 km/h). */
+        public double railSpeed = 60;
+        public double subwaySpeed = 56;
         /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
-        public double acceleration = 1.5;
-        public double braking = 1.8;
+        public double acceleration = 3;
+        public double braking = 3.5;
         /** How hard a curve may be taken (sideways blocks/s/s): lower slows trains more on bends. */
-        public double curveGrip = 2.0;
+        public double curveGrip = 4.0;
         /** Seconds the doors stay open at a stop before they close by themselves. */
         public int doorSeconds = 30;
         /** Cars in each train. */
@@ -107,7 +107,7 @@ public final class ZcConfig {
         public int railTrains = 0;
         public int subwayTrains = 0;
         public double railSpacing = 1500;
-        /** How much faster a train runs on its way to a call button (curves still slow it), never past 40 blocks a second. */
+        /** How much faster a train runs on its way to a call button (curves still slow it), never past 80 blocks a second. */
         public double expressSpeed = 1.3;
         public double subwaySpacing = 900;
         /** Earshot of the flare (railway) and the buzzer (subway) a call button sets off, once, for zombies. */
@@ -1234,7 +1234,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 12;
+    private static final int DEFAULTS = 13;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1378,6 +1378,24 @@ public final class ZcConfig {
             }
             if (c.trains.expressSpeed == 2.5) {
                 c.trains.expressSpeed = 1.3;
+            }
+        }
+        if (c.defaultsVersion < 13) {
+            // 2026-10-28 (Josiah): double the train speed again
+            if (c.trains.railSpeed == 30) {
+                c.trains.railSpeed = 60;
+            }
+            if (c.trains.subwaySpeed == 28) {
+                c.trains.subwaySpeed = 56;
+            }
+            if (c.trains.acceleration == 1.5) {
+                c.trains.acceleration = 3;
+            }
+            if (c.trains.braking == 1.8) {
+                c.trains.braking = 3.5;
+            }
+            if (c.trains.curveGrip == 2.0) {
+                c.trains.curveGrip = 4.0;
             }
         }
         c.defaultsVersion = DEFAULTS;
