@@ -193,15 +193,19 @@ public final class Trains {
         return seen != null && seen.ride.train() >= 0 && player.level().getGameTime() - seen.tick < 40;
     }
 
-    /** A rider pressed a stop button: the train they're on pulls up where it can and opens up. */
-    private static void requestStop(ServerLevel level, int trainId, ServerPlayer by) {
+    /** A rider pressed a stop button: the train they're on pulls up where it can and opens up (or, close, shuts its doors). */
+    private static void requestStop(ServerLevel level, int trainId, boolean close, ServerPlayer by) {
         if (by.isSpectator() || !(level.getEntity(trainId) instanceof TrainEntity train) || !riders(level, train).contains(by)) {
             return;
         }
         for (Line line : SERVER.values()) {
             for (TrainRun run : line.trains) {
                 if (train.getUUID().equals(run.entity)) {
-                    run.requestStop(level, by);
+                    if (close) {
+                        run.closeDoors(level, by);
+                    } else {
+                        run.requestStop(level, by);
+                    }
                     return;
                 }
             }
@@ -245,7 +249,7 @@ public final class Trains {
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.StopRequest.TYPE, TrainNet.StopRequest.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.StopRequest.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
-            player.level().getServer().execute(() -> requestStop((ServerLevel) player.level(), payload.train(), player));
+            player.level().getServer().execute(() -> requestStop((ServerLevel) player.level(), payload.train(), payload.close(), player));
         });
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.Ride.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();

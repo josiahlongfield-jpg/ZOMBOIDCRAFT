@@ -166,11 +166,11 @@ public final class TrainNet {
         }
     }
 
-    /** A stop button pressed inside a train (its entity id): stop and let me off. */
-    public record StopRequest(int train) implements CustomPacketPayload {
+    /** A button pressed inside a train (its entity id): stop and let me off, or (close) shut the doors and go. */
+    public record StopRequest(int train, boolean close) implements CustomPacketPayload {
         public static final Type<StopRequest> TYPE = new Type<>(ZomboidCraft.id("train_stop_request"));
         public static final StreamCodec<RegistryFriendlyByteBuf, StopRequest> CODEC = StreamCodec.composite(
-                ByteBufCodecs.VAR_INT, StopRequest::train, StopRequest::new);
+                ByteBufCodecs.VAR_INT, StopRequest::train, ByteBufCodecs.BOOL, StopRequest::close, StopRequest::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
