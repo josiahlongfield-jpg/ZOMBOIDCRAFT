@@ -254,6 +254,16 @@ public final class TrainRun {
         Otto.stopRequested(level, this, by);
     }
 
+    /** Somebody aboard pressed close doors: at a stop with the doors open, the closing warning now and away. */
+    void closeDoors(ServerLevel level, net.minecraft.server.level.ServerPlayer by) {
+        if (phase != Phase.DWELL || dwell <= DOOR_CLOSE + LEAVE + 71 || dwellTotal - dwell < DOOR_OPEN) {
+            return;
+        }
+        dwell = DOOR_CLOSE + LEAVE + 71;
+        held = HOLD_MAX;    // and no holding for the spacing either: they asked to go
+        Otto.doorsShut(level, this, by);
+    }
+
     /** Pulled up for a stop button, between stations: both sides open. */
     private void halt(ServerLevel level) {
         phase = Phase.DWELL;

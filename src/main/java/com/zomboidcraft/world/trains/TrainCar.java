@@ -24,8 +24,18 @@ public final class TrainCar {
     public static final double CAB = 8.9;
     /** The stop-request buttons, on the grab pole beside each door, both sides (car frame: x, y, z of the button's face). */
     public static final double[][] STOP_BUTTONS = stopButtons();
+    /** The close-doors buttons, just above each stop button on the same pole. */
+    public static final double[][] CLOSE_BUTTONS = closeButtons();
     /** How near a look has to pass a button's middle to press it. */
     public static final double BUTTON_RADIUS = 0.22;
+
+    private static double[][] closeButtons() {
+        double[][] out = new double[STOP_BUTTONS.length][];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = new double[] {STOP_BUTTONS[i][0], STOP_BUTTONS[i][1] + 0.34, STOP_BUTTONS[i][2]};
+        }
+        return out;
+    }
 
     private static double[][] stopButtons() {
         double[][] out = new double[DOORS.length * 2][];
