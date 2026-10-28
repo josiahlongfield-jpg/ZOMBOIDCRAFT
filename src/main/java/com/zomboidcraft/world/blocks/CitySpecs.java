@@ -59,6 +59,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part51();
         part52();
         part53();
+        part54();
     }
 
     private void part0() {
@@ -9829,6 +9830,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("om_sgn_loading_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("om_sgn_loading_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("om_sgn_noparking_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
+    }
+
+    private void part54() {
         s("om_sgn_noparking_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("om_spray_trade_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.8, 16, 16, 16);
         s("om_spray_trade_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.8, 16, 16, 16);
