@@ -54,7 +54,8 @@ final class AirStrikeFx {
 
     private static final List<Shot> SHOTS = new ArrayList<>();
     private static final List<Falling> BOMBS = new ArrayList<>();
-    private static final ItemStack BOMB = bomb();
+    /** Made on the first draw: item components aren't bound yet while the client entrypoints run. */
+    private static ItemStack bomb;
     private static ClientLevel in;
 
     private AirStrikeFx() {
@@ -145,13 +146,16 @@ final class AirStrikeFx {
                     shaders ? RenderTypes.lightning() : CarLights.glowType(BEAM, false), glow::emit);
         }
         float partial = cam.cameraEntityPartialTicks;
+        if (bomb == null && !BOMBS.isEmpty()) {
+            bomb = bomb();
+        }
         for (Falling b : BOMBS) {
             Vec3 at = b.posO.add(b.pos.subtract(b.posO).scale(partial)), v = b.velO.add(b.vel.subtract(b.velO).scale(partial));
             if (at.distanceToSqr(cam.pos) > 400 * 400) {
                 continue;
             }
             ItemStackRenderState state = new ItemStackRenderState();
-            mc.getItemModelResolver().updateForTopItem(state, BOMB, ItemDisplayContext.NONE, level, mc.player, 0);
+            mc.getItemModelResolver().updateForTopItem(state, bomb, ItemDisplayContext.NONE, level, mc.player, 0);
             BlockPos pos = BlockPos.containing(at);
             int light = level.getBrightness(LightLayer.BLOCK, pos) << 4 | level.getBrightness(LightLayer.SKY, pos) << 20;
             PoseStack pose = context.poseStack();
