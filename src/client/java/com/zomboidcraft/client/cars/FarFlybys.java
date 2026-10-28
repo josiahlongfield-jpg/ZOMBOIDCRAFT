@@ -46,8 +46,11 @@ public final class FarFlybys {
 
     private static final List<Far> FLYING = new ArrayList<>();
     private static ClientLevel in;
-    /** Ids for the stand-ins, counting down from far below anything the server hands out. */
-    private static int nextId = -1_000_000;
+    /**
+     * Ids for the stand-ins, counting down from far above anything the server hands out (26.3 counts a negative
+     * id as never assigned, and throws when it's asked for one).
+     */
+    private static int nextId = Integer.MAX_VALUE - 1;
 
     private FarFlybys() {
     }
