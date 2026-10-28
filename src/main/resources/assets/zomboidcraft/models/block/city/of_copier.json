@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_beige": "zomboidcraft:block/city/home_plastic_beige",
+    "of_copier_front": "zomboidcraft:block/city/of_copier_front",
+    "of_copier_top": "zomboidcraft:block/city/of_copier_top",
+    "particle": "zomboidcraft:block/city/of_copier_front"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_copier_front"
+        },
+        "south": {
+          "texture": "#home_plastic_beige"
+        },
+        "east": {
+          "texture": "#home_plastic_beige"
+        },
+        "west": {
+          "texture": "#home_plastic_beige"
+        },
+        "up": {
+          "texture": "#of_copier_top"
+        },
+        "down": {
+          "texture": "#home_plastic_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        12,
+        2
+      ],
+      "to": [
+        13,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_beige"
+        },
+        "south": {
+          "texture": "#home_plastic_beige"
+        },
+        "east": {
+          "texture": "#home_plastic_beige"
+        },
+        "west": {
+          "texture": "#home_plastic_beige"
+        },
+        "up": {
+          "texture": "#home_plastic_beige"
+        },
+        "down": {
+          "texture": "#home_plastic_beige"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        6,
+        4
+      ],
+      "to": [
+        16,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_beige"
+        },
+        "south": {
+          "texture": "#home_plastic_beige"
+        },
+        "east": {
+          "texture": "#home_plastic_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_plastic_beige"
+        },
+        "up": {
+          "texture": "#home_plastic_beige"
+        },
+        "down": {
+          "texture": "#home_plastic_beige"
+        }
+      }
+    }
+  ]
+}

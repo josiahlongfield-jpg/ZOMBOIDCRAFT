@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "of_whiteboard": "zomboidcraft:block/city/of_whiteboard",
+    "particle": "zomboidcraft:block/city/of_whiteboard"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        4,
+        15.2
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_whiteboard"
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3.5,
+        13.8
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    }
+  ]
+}

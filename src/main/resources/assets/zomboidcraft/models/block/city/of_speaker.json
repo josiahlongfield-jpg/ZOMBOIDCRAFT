@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "of_dj_front": "zomboidcraft:block/city/of_dj_front",
+    "of_speaker": "zomboidcraft:block/city/of_speaker",
+    "particle": "zomboidcraft:block/city/of_speaker"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        2
+      ],
+      "to": [
+        14.5,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_speaker"
+        },
+        "south": {
+          "texture": "#of_dj_front"
+        },
+        "east": {
+          "texture": "#of_dj_front"
+        },
+        "west": {
+          "texture": "#of_dj_front"
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_dj_front",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
