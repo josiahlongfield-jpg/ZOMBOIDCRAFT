@@ -254,6 +254,66 @@ def exam_paper(seed):
     return t
 
 
+def teak(seed, deck=False):
+    """Weathered teak: grey-gold boards, the gaps between them dark (decking runs them the long way)."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (150, 118, 82), 0.9)
+    step = 8 if deck else 16
+    for x in range(0, N, step):
+        area(t, x, 0, x + 1, N, mul=0.4, dh=-0.3)
+    if deck:
+        for y in (12, 40):
+            area(t, 0, y, N, y + 1, mul=0.7, dh=-0.1)
+    t.grime(0.1)
+    return t
+
+
+def cushion(seed, rgb):
+    """Outdoor cushion canvas: a fine weave, piped seams round the edge."""
+    t = F.plain(seed, rgb, 0.04, 0.2)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c[(xx + yy) % 2 == 0] *= 0.95
+    t.frame(2, tuple(int(c * 0.82) for c in rgb), h=0.8)
+    t.grime(0.06)
+    return t
+
+
+def art(seed, cols):
+    """A big abstract canvas in a thin black frame: soft colour fields, a few hard bars."""
+    t = F.plain(seed, cols[0], 0.03, 0.3)
+    area(t, 4, 6, 60, 30, cols[1], smooth=0.3)
+    area(t, 4, 34, 40, 58, cols[2])
+    area(t, 44, 34, 60, 58, cols[3])
+    area(t, 10, 26, 54, 28, (24, 22, 20))
+    t.frame(2, (16, 16, 18), h=0.95, smooth=0.6)
+    return t
+
+
+def screen(seed):
+    """A cinema screen: matte white, the black masking border."""
+    t = F.plain(seed, (226, 226, 222), 0.02, 0.1)
+    t.frame(4, (14, 14, 16), h=0.9)
+    return t
+
+
+def ember(seed):
+    """A fire pit's bed: black lava rock glowing orange in the cracks."""
+    t = F.plain(seed, (30, 26, 24), 0.12, 0.2)
+    t.speckle(0.18, (240, 120, 30), 0.9, 0.05)
+    t.speckle(0.06, (255, 200, 80), 0.9, 0.05)
+    return t
+
+
+def grate(seed):
+    """A grill's top: steel bars over the dark firebox, grease on them."""
+    t = F.plain(seed, (24, 22, 22), 0.05, 0.3)
+    for x in range(3, N, 5):
+        area(t, x, 2, x + 2, N - 2, (150, 150, 152), dh=0.3, smooth=0.6, f0=60)
+    t.frame(2, (120, 120, 124), h=0.9)
+    t.grime(0.2, (30, 20, 10))
+    return t
+
+
 def textures():
     T = {}
     T["of_rubber"] = lambda: rubber(9901)
@@ -277,6 +337,15 @@ def textures():
     T["of_vinyl_teal"] = lambda: vinyl(9950, (60, 128, 132))
     T["of_vinyl_black"] = lambda: vinyl(9951, (36, 36, 40))
     T["of_exam_paper"] = lambda: exam_paper(9952)
+    T["of_teak"] = lambda: teak(9960)
+    T["of_deck"] = lambda: teak(9961, deck=True)
+    T["of_cushion"] = lambda: cushion(9962, (214, 206, 188))
+    T["of_cushion_navy"] = lambda: cushion(9963, (44, 56, 82))
+    T["of_art_a"] = lambda: art(9964, ((222, 214, 196), (196, 88, 52), (40, 62, 92), (210, 172, 70)))
+    T["of_art_b"] = lambda: art(9965, ((30, 34, 40), (120, 150, 160), (200, 196, 180), (150, 40, 44)))
+    T["of_screen"] = lambda: screen(9966)
+    T["of_ember"] = lambda: ember(9967)
+    T["of_grate"] = lambda: grate(9968)
     return T
 
 
@@ -392,6 +461,50 @@ def blocks():
                           [3, 9, 1, 13, 9.3, 15, {"up": "of_exam_paper", "side": "of_exam_paper"}],
                           [2, 9, 12, 14, 12, 15.5, "of_vinyl_teal"], [2.5, 12, 14.5, 13.5, 13.5, 15.5, {"side": "of_exam_paper", "up": "of_exam_paper"}]],
         "Exam Couch", "WOOL")
+    # ---- the penthouse and its terrace
+    tk, cu, cn = "of_teak", "of_cushion", "of_cushion_navy"
+    add("of_deck", None, "Teak Decking", "WOOD", rotate=None, tex={"up": "of_deck", "side": "of_teak", "down": "floor_concrete"})
+    # outdoor sofa: sits facing north, its back against z = 16
+    add("of_out_sofa", [[0.5, 0, 1, 15.5, 4, 15, tk], [1, 4, 1, 15, 6.5, 13, cu], [0.5, 4, 13, 15.5, 12, 15.5, cu], [0, 0, 1, 1.5, 8, 16, tk],
+                        [14.5, 0, 1, 16, 8, 16, tk], [3, 6.5, 11, 7, 10, 13, cn], [9, 6.5, 11, 13, 10, 13, cn]], "Outdoor Sofa", "WOOL")
+    add("of_daybed", [[0, 0, 0, 16, 4, 16, tk], [0.5, 4, 0.5, 15.5, 7, 15.5, cu], [0, 4, 14, 16, 13, 16, tk], [2, 7, 11, 7, 10, 14, cn],
+                      [9, 7, 11, 14, 10, 14, cn], [0, 13, 0, 1, 16, 1, tk], [15, 13, 0, 16, 16, 1, tk], [0, 15, 0, 16, 16, 16, cu]], "Daybed", "WOOL")
+    add("of_patio_table", [[0, 11, 0, 16, 12, 16, {"up": "of_deck", "side": tk, "down": tk}], [1, 0, 1, 3, 11, 3, tk], [13, 0, 1, 15, 11, 3, tk],
+                           [1, 0, 13, 3, 11, 15, tk], [13, 0, 13, 15, 11, 15, tk]], "Patio Table", "WOOD", rotate="axis")
+    add("of_patio_chair", [[3, 0, 2, 4.5, 7, 3.5, tk], [11.5, 0, 2, 13, 7, 3.5, tk], [3, 0, 12, 4.5, 15, 13.5, tk], [11.5, 0, 12, 13, 15, 13.5, tk],
+                           [3, 6, 2, 13, 7, 13.5, {"up": "of_deck", "side": tk}], [3.5, 7, 2.5, 12.5, 8, 12, cu], [3, 9, 12.5, 13, 15, 13.5, tk]],
+        "Patio Chair", "WOOD")
+    add("of_fire_pit", [[2, 0, 2, 14, 5, 14, "pt_stone_rough"], [1, 4, 1, 15, 5, 15, "stone_trim"], [3, 5, 3, 13, 5.5, 13, "of_ember"]],
+        "Fire Pit", "STONE", rotate=None, light=11)
+    add("of_bbq", [[1, 0, 3, 15, 9, 14, face(steel, steel)], [1, 9, 3, 15, 10, 14, {"up": "of_grate", "side": steel}], [1, 10, 11, 15, 15, 14, chrome],
+                   [15, 8, 4, 16, 9, 13, steel], [0, 8, 4, 1, 9, 13, steel], [4, 6, 2, 12, 7, 3, chrome]], "Outdoor Grill", "METAL", loot="storage")
+    add("of_out_counter", [[0, 0, 1, 16, 14, 16, {"north": "home_drw_white", "side": steel, "up": steel}], [0, 14, 0, 16, 15, 16, "marble_white"]],
+        "Outdoor Kitchen", "STONE", loot="storage")
+    add("of_parasol_pole", [[7.5, 0, 7.5, 8.5, 16, 8.5, chrome], [5, 0, 5, 11, 1, 11, steel]], "Parasol", "METAL", rotate=None, decor=True)
+    add("of_parasol_top", [[7.5, 0, 7.5, 8.5, 6, 8.5, chrome], [0, 4, 0, 16, 5, 16, cu], [3, 5, 3, 13, 6, 13, cu], [6, 6, 6, 10, 7, 10, cu]],
+        "Parasol", "WOOL", rotate=None, decor=True)
+    add("of_tree_pot", [[3, 0, 3, 13, 9, 13, "home_terracotta"], [3.5, 8.6, 3.5, 12.5, 9, 12.5, "leaf_litter"], [7, 9, 7, 9, 16, 9, "pole_wood"]],
+        "Olive Tree", "STONE", rotate=None)
+    add("of_tree_crown", [[7, 0, 7, 9, 5, 9, "pole_wood"], [2, 3, 2, 14, 12, 14, "gc_leaves_2"], [4, 12, 4, 12, 15, 12, "gc_leaves_2"],
+                          [0, 5, 4, 3, 10, 11, "gc_leaves_3"], [13, 5, 5, 16, 10, 12, "gc_leaves_3"]], "Olive Tree", "GRASS", rotate=None, render="cutout")
+    add("of_pergola_post", [[6, 0, 6, 10, 16, 10, tk]], "Pergola Post", "WOOD", rotate=None)
+    add("of_pergola_beam", [[0, 10, 6, 16, 16, 10, tk], [2, 14, 0, 4, 16, 16, tk], [7, 14, 0, 9, 16, 16, tk], [12, 14, 0, 14, 16, 16, tk]],
+        "Pergola", "WOOD", rotate="axis")
+    add("of_telescope", [[7, 0, 7, 9, 9, 9, black], [4, 0, 7.5, 7, 1, 8.5, black], [9, 0, 7.5, 12, 1, 8.5, black], [7.5, 0, 9, 8.5, 1, 12, black],
+                         [6, 9, 2, 10, 12, 14, "fit_brass"], [6.5, 9.5, 0.5, 9.5, 11.5, 2, black], [7, 12, 10, 9, 13.5, 13, black]], "Telescope", "METAL")
+    lac = "home_plastic_black"
+    keys = {"north": "home_piano_keys", "side": lac, "up": "home_piano_keys", "down": lac}
+    add("of_grand_piano_l", [[0, 8, 0, 16, 12, 16, lac], [1, 0, 1, 3, 8, 3, lac], [1, 0, 13, 3, 8, 15, lac], [0, 7, -2, 16, 9, 0, keys],
+                             [2, 12, 3, 16, 13, 15, lac], [14, 12, 3, 15, 16, 4, lac], [6, 0, 0, 10, 5, 1, "fit_brass"]], "Grand Piano", "WOOD")
+    add("of_grand_piano_r", [[0, 8, 0, 10, 12, 12, lac], [8, 0, 9, 10, 8, 11, lac], [0, 7, -2, 6, 9, 0, keys], [0, 12, 3, 9, 13, 11, lac]],
+        "Grand Piano", "WOOD")
+    add("of_art_a", [[0, 2, 15.2, 16, 16, 16, face("of_art_a", black)]], "Painting", "WOOD", decor=True)
+    add("of_art_b", [[0, 2, 15.2, 16, 16, 16, face("of_art_b", black)]], "Painting", "WOOD", decor=True)
+    add("of_sculpture", [[4, 0, 4, 12, 9, 12, "marble_white"], [5.5, 9, 7, 8, 16, 9.5, "bk_bronze"], [7, 12, 6, 11, 15, 10, "bk_bronze"],
+                         [9, 9, 6.5, 10.5, 13, 9, "bk_bronze"]], "Sculpture", "STONE")
+    add("of_screen", [[0, 0, 15.2, 16, 16, 16, face("of_screen", black)]], "Cinema Screen", "WOOL", decor=True)
+    add("of_island", [[0, 0, 1, 16, 14, 15, face("home_drw_white", "home_white")], [0, 14, 0, 16, 15, 16, "marble_white"]], "Kitchen Island", "STONE",
+        loot="storage")
     return out
 
 

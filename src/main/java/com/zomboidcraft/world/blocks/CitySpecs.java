@@ -6630,5 +6630,30 @@ final class CitySpecs extends CityBlocks.Specs {
         s("of_whiteboard", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 4, 15.2, 16, 15, 16, 0, 3.5, 13.8, 16, 4, 16);
         s("of_dental_chair", FACING, 0, 0, SoundType.METAL, 2f, 6, 0, 6, 10, 4, 10, 4, 0, 4, 12, 0.8, 12, 4, 4, 2, 12, 6.5, 12, 4, 6.5, 10, 12, 9, 15, 5, 9, 13, 11, 13, 16, 4, 5.5, 0, 12, 6.5, 2, 13, 0, 13, 14, 15, 14, 8, 14.5, 12, 14, 15.5, 13, 6, 13.5, 11, 9, 15, 13, 13, 8, 3, 16, 8.6, 8);
         s("of_exam_table", FACING, 0, 0, SoundType.WOOL, 1f, 1, 0, 1, 15, 7, 15, 0.5, 7, 0.5, 15.5, 9, 15.5, 3, 9, 1, 13, 9.3, 15, 2, 9, 12, 14, 12, 15.5, 2.5, 12, 14.5, 13.5, 13.5, 15.5);
+        s("of_deck", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("of_out_sofa", FACING, 0, 0, SoundType.WOOL, 1f, 0.5, 0, 1, 15.5, 4, 15, 1, 4, 1, 15, 6.5, 13, 0.5, 4, 13, 15.5, 12, 15.5, 0, 0, 1, 1.5, 8, 16, 14.5, 0, 1, 16, 8, 16, 3, 6.5, 11, 7, 10, 13, 9, 6.5, 11, 13, 10, 13);
+        s("of_daybed", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 4, 16, 0.5, 4, 0.5, 15.5, 7, 15.5, 0, 4, 14, 16, 13, 16, 2, 7, 11, 7, 10, 14, 9, 7, 11, 14, 10, 14, 0, 13, 0, 1, 16, 1, 15, 13, 0, 16, 16, 1, 0, 15, 0, 16, 16, 16);
+        s("of_patio_table", AXIS, 0, 0, SoundType.WOOD, 1f, 0, 11, 0, 16, 12, 16, 1, 0, 1, 3, 11, 3, 13, 0, 1, 15, 11, 3, 1, 0, 13, 3, 11, 15, 13, 0, 13, 15, 11, 15);
+        s("of_patio_chair", FACING, 0, 0, SoundType.WOOD, 1f, 3, 0, 2, 4.5, 7, 3.5, 11.5, 0, 2, 13, 7, 3.5, 3, 0, 12, 4.5, 15, 13.5, 11.5, 0, 12, 13, 15, 13.5, 3, 6, 2, 13, 7, 13.5, 3.5, 7, 2.5, 12.5, 8, 12, 3, 9, 12.5, 13, 15, 13.5);
+        s("of_fire_pit", PLAIN, 0, 11, SoundType.STONE, 2f, 2, 0, 2, 14, 5, 14, 1, 4, 1, 15, 5, 15, 3, 5, 3, 13, 5.5, 13);
+        s("of_bbq", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 9, 14, 1, 9, 3, 15, 10, 14, 1, 10, 11, 15, 15, 14, 15, 8, 4, 16, 9, 13, 0, 8, 4, 1, 9, 13, 4, 6, 2, 12, 7, 3);
+        loot("of_bbq", "storage");
+        s("of_out_counter", FACING, LOOT, 0, SoundType.STONE, 2f, 0, 0, 1, 16, 14, 16, 0, 14, 0, 16, 15, 16);
+        loot("of_out_counter", "storage");
+        s("of_parasol_pole", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7.5, 0, 7.5, 8.5, 16, 8.5, 5, 0, 5, 11, 1, 11);
+        s("of_parasol_top", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 7.5, 0, 7.5, 8.5, 6, 8.5, 0, 4, 0, 16, 5, 16, 3, 5, 3, 13, 6, 13, 6, 6, 6, 10, 7, 10);
+        s("of_tree_pot", PLAIN, SEE_THROUGH, 0, SoundType.STONE, 2f, 3, 0, 3, 13, 9, 13, 3.5, 8.6, 3.5, 12.5, 9, 12.5, 7, 9, 7, 9, 16, 9);
+        s("of_tree_crown", PLAIN, SEE_THROUGH, 0, SoundType.GRASS, 1f, 7, 0, 7, 9, 5, 9, 2, 3, 2, 14, 12, 14, 4, 12, 4, 12, 15, 12, 0, 5, 4, 3, 10, 11, 13, 5, 5, 16, 10, 12);
+        s("of_pergola_post", PLAIN, 0, 0, SoundType.WOOD, 1f, 6, 0, 6, 10, 16, 10);
+        s("of_pergola_beam", AXIS, 0, 0, SoundType.WOOD, 1f, 0, 10, 6, 16, 16, 10, 2, 14, 0, 4, 16, 16, 7, 14, 0, 9, 16, 16, 12, 14, 0, 14, 16, 16);
+        s("of_telescope", FACING, 0, 0, SoundType.METAL, 2f, 7, 0, 7, 9, 9, 9, 4, 0, 7.5, 7, 1, 8.5, 9, 0, 7.5, 12, 1, 8.5, 7.5, 0, 9, 8.5, 1, 12, 6, 9, 2, 10, 12, 14, 6.5, 9.5, 0.5, 9.5, 11.5, 2, 7, 12, 10, 9, 13.5, 13);
+        s("of_grand_piano_l", FACING, 0, 0, SoundType.WOOD, 1f, 0, 8, 0, 16, 12, 16, 1, 0, 1, 3, 8, 3, 1, 0, 13, 3, 8, 15, 0, 7, -2, 16, 9, 0, 2, 12, 3, 16, 13, 15, 14, 12, 3, 15, 16, 4, 6, 0, 0, 10, 5, 1);
+        s("of_grand_piano_r", FACING, 0, 0, SoundType.WOOD, 1f, 0, 8, 0, 10, 12, 12, 8, 0, 9, 10, 8, 11, 0, 7, -2, 6, 9, 0, 0, 12, 3, 9, 13, 11);
+        s("of_art_a", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 2, 15.2, 16, 16, 16);
+        s("of_art_b", FACING, DECOR, 0, SoundType.WOOD, 0f, 0, 2, 15.2, 16, 16, 16);
+        s("of_sculpture", FACING, 0, 0, SoundType.STONE, 2f, 4, 0, 4, 12, 9, 12, 5.5, 9, 7, 8, 16, 9.5, 7, 12, 6, 11, 15, 10, 9, 9, 6.5, 10.5, 13, 9);
+        s("of_screen", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.2, 16, 16, 16);
+        s("of_island", FACING, LOOT, 0, SoundType.STONE, 2f, 0, 0, 1, 16, 14, 15, 0, 14, 0, 16, 15, 16);
+        loot("of_island", "storage");
     }
 }

@@ -852,20 +852,30 @@ public final class Floors {
         }
 
         void penthouse() {
-            // one home: the great room is open from the lift to the glass
-            f.corridor(8, false);
-            List<Room> rs = new ArrayList<>(core(4, "wc", "kitchen", "store", "linen"));
-            rs.addAll(windows(6, 6, 10, "penthouse_bed", "penthouse_lounge", "library", "penthouse_bed", "exec"));
+            // one home: the great room open from the lift to the glass, the private rooms round it
+            // a slim top floor (stepped in for the terrace) keeps its rooms shallow by the glass
+            boolean slim = f.deepest() < 8;
+            f.corridor(slim ? 3 : 8, false);
+            if (slim) {
+                f.band = 3;
+            }
+            List<Room> rs = new ArrayList<>(core(4, "ph_kitchen", "ph_wine", "wc", "linen"));
+            // the master suite takes the biggest stretch of glass, then the cinema, the library, guest rooms
+            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master", "ph_cinema", "library", "penthouse_bed"),
+                    wall, true, slim ? 4 : 6));
             furnish(rs);
-            // the great room: sitting groups, the dining table, the piano, a bar, the pool table
+            // the great room: sitting groups under chandeliers, the long dining table, the grand
+            // piano by the glass, the bar, sculpture on plinths between
             String sofa = pick("brown", "blue", "floral");
-            groups(16, 4, 9, i -> switch (i % 5) {
+            byGlass(sofa);
+            groups(16, 4, 9, i -> switch (i % 6) {
                 case 0, 3 -> 0;
                 case 1 -> 1;
-                case 2 -> 2;
-                default -> 3;
+                case 2 -> 4;
+                case 4 -> 3;
+                default -> 5;
             }, sofa);
-            f.floors("home_floor_parquet", "home_floor_parquet");
+            f.floors("marble_white", "marble_white");
         }
 
         void dorm() {
@@ -1017,6 +1027,8 @@ public final class Floors {
                     case 0 -> sitting(x0, z0, x1, z1, sofa);
                     case 1 -> dining(x0, z0, x1, z1);
                     case 2 -> piano(x0, z0, x1, z1);
+                    case 4 -> grandPiano(x0, z0, x1, z1);
+                    case 5 -> gallery(x0, z0, x1, z1);
                     default -> bar(x0, z0, x1, z1);
                 }
                 for (int z = b[1]; z <= b[3]; z++) {
@@ -1077,6 +1089,99 @@ public final class Floors {
             }
             f.place(x0, z1, "home_armchair_brown[facing=north]", null);
             f.place(x1, z1, "home_armchair_brown[facing=north]", null);
+        }
+
+        /**
+         * The great room along the outside wall (the glass, once the facade is up), every seven blocks or so: a sofa looking out over a
+         * coffee table with armchairs either side, the grand piano, a dining table for six, a
+         * sculpture; a chandelier over each. What's left behind them is the way round.
+         */
+        void byGlass(String sofa) {
+            List<int[]> spots = new ArrayList<>();
+            for (int[] c : f.openCells()) {
+                int side = -1, n = 0;
+                for (int s = 0; s < 4; s++) {
+                    int[] o = Floorplan.step(c[0], c[1], s);
+                    if (!f.in(o[0], o[1]) || f.at(o[0], o[1]) == Floorplan.SHELL) {
+                        side = s;
+                        n++;
+                    }
+                }
+                if (n == 1) {
+                    spots.add(new int[] {c[0], c[1], side});
+                }
+            }
+            spots.sort((a, b) -> a[2] != b[2] ? a[2] - b[2] : (a[2] % 2 == 0 ? a[0] - b[0] : a[1] - b[1]));
+            int last = Integer.MIN_VALUE, lastSide = -1, i = rng.nextInt(4);
+            for (int[] c : spots) {
+                int along = c[2] % 2 == 0 ? c[0] : c[1];
+                if (c[2] == lastSide && along - last < 7) {
+                    continue;
+                }
+                int x = c[0], z = c[1], s = c[2];
+                int[] back = Floorplan.step(x, z, s + 2), back2 = Floorplan.step(back[0], back[1], s + 2);
+                if (f.at(back[0], back[1]) != Floorplan.OPEN || f.at(back2[0], back2[1]) != Floorplan.OPEN) {
+                    continue;
+                }
+                last = along;
+                lastSide = s;
+                switch (i++ % 4) {
+                    case 0, 2 -> viewSofa(x, z, s, sofa);
+                    case 1 -> {
+                        // the piano side on to the glass, its bench to the room
+                        if (f.place(x, z, "of_grand_piano_l[facing=" + Floorplan.face(s + 2) + "]", null)) {
+                            int[] r = Floorplan.step(x, z, s + 3);
+                            f.place(r[0], r[1], "of_grand_piano_r[facing=" + Floorplan.face(s + 2) + "]", null);
+                            f.place(back[0], back[1], "home_chair[facing=" + Floorplan.face(s) + "]", null);
+                        }
+                    }
+                    default -> {
+                        f.place(x, z, "of_sculpture[facing=" + Floorplan.face(s + 2) + "]", null);
+                        int[] l = Floorplan.step(x, z, s + 1), r = Floorplan.step(x, z, s + 3);
+                        f.place(l[0], l[1], pick("pk_houseplant", "pk_planter") + "[facing=north]", null);
+                        f.place(r[0], r[1], "home_floor_lamp", null);
+                    }
+                }
+                f.set(back[0], f.rows, back[1], "tr_chandelier");
+            }
+        }
+
+        /** A sofa looking out of the glass at s, the coffee table before it, armchairs at its ends. */
+        void viewSofa(int x, int z, int s, String sofa) {
+            String look = Floorplan.face(s);
+            int[] m = Floorplan.step(x, z, s + 2);
+            int[] l = Floorplan.step(m[0], m[1], s + 3), r = Floorplan.step(m[0], m[1], s + 1);
+            if (!f.place(m[0], m[1], "home_sofa_" + sofa + "_m[facing=" + look + "]", null)) {
+                return;
+            }
+            f.place(l[0], l[1], "home_sofa_" + sofa + "_l[facing=" + look + "]", null);
+            f.place(r[0], r[1], "home_sofa_" + sofa + "_r[facing=" + look + "]", null);
+            f.place(x, z, "pk_coffee_table[facing=north]", null);
+            int[] al = Floorplan.step(x, z, s + 3), ar = Floorplan.step(x, z, s + 1);
+            f.place(al[0], al[1], "home_armchair_" + sofa + "[facing=" + Floorplan.face(s + 1) + "]", null);
+            f.place(ar[0], ar[1], "home_armchair_" + sofa + "[facing=" + Floorplan.face(s + 3) + "]", null);
+        }
+
+        /** A grand piano with its bench, a chandelier over it, two armchairs to listen from. */
+        void grandPiano(int x0, int z0, int x1, int z1) {
+            int cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+            if (f.place(cx, cz, "of_grand_piano_l[facing=south]", null)) {
+                f.place(cx - 1, cz, "of_grand_piano_r[facing=south]", null);
+                f.place(cx, cz + 1, "home_chair[facing=north]", null);
+                f.set(cx, f.rows, cz, "tr_chandelier");
+            }
+            f.place(x0, z0, "home_armchair_brown[facing=south]", null);
+            f.place(x1, z0, "home_armchair_brown[facing=south]", null);
+        }
+
+        /** Sculpture on plinths in the open, a bench to look at them from, a chandelier. */
+        void gallery(int x0, int z0, int x1, int z1) {
+            int cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+            f.place(x0, z0, "of_sculpture[facing=south]", null);
+            f.place(x1, z1, "of_sculpture[facing=north]", null);
+            f.place(cx, cz, "cv_hall_bench[facing=north]", null);
+            f.place(x1, z0, pick("pk_houseplant", "pk_planter") + "[facing=north]", null);
+            f.set(cx, f.rows, cz, "tr_chandelier");
         }
 
         /** A short bar with the stools in front, the drinks shelf behind. */
@@ -1320,6 +1425,10 @@ public final class Floors {
                 case "hotel_room" -> k.hotelRoom(false);
                 case "hotel_suite" -> k.hotelRoom(true);
                 case "penthouse_bed" -> k.hotelRoom(true);
+                case "ph_master" -> k.master();
+                case "ph_cinema" -> k.cinema();
+                case "ph_wine" -> k.wine();
+                case "ph_kitchen" -> k.homeKitchen();
                 case "penthouse_lounge" -> k.lounge();
                 case "linen" -> k.linen();
                 case "vending" -> k.vending();
@@ -1672,8 +1781,70 @@ public final class Floors {
                 wall("home_vanity[facing=%s]", false);
                 hang(rng.nextBoolean() ? "fit_painting_a[facing=%s]" : "fit_painting_b[facing=%s]");
                 if (state == State.LOOTED) {
-                    scatter(1, "home_clothes_pile", "trade_luggage_cart[facing=%s]");
+                    // clothes thrown down; the luggage cart left by a wall, not across the way
+                    scatter(1, "home_clothes_pile");
+                    if (rng.nextBoolean()) {
+                        wall("trade_luggage_cart[facing=%s]", false);
+                    }
                 }
+            }
+
+            /**
+             * The master suite: a king bed (two pushed together) between nightstands, the
+             * freestanding tub and the vanity at one end, the dressing wall of wardrobes, a chaise
+             * by the glass, paintings.
+             */
+            void master() {
+                String bed = pick("home_bed_rose", "home_bed_quilt", "home_bed_blue");
+                bed(bed);
+                bed(bed);
+                wall("home_tub_l[facing=%s]", false);
+                several(2, false, "pk_nightstand[facing=%s]");
+                wall("home_vanity[facing=%s]", false);
+                several(3, true, "home_wardrobe[facing=%s]");
+                wall("home_dresser[facing=%s]", false);
+                several(2, false, "home_armchair_floral[facing=%s]", "home_floor_lamp");
+                hang("of_art_a[facing=%s]");
+                hang("fit_mirror_long[facing=%s]");
+                scatter(state == State.LOOTED ? 2 : 0, "home_clothes_pile", "home_towel[facing=%s]");
+            }
+
+            /** The screening room: the screen on the far wall, rows of sofas facing it. */
+            void cinema() {
+                int s = r.dside;
+                int[] in = Floorplan.step(0, 0, s);
+                for (int z = r.z0; z <= r.z1; z++) {
+                    for (int x = r.x0; x <= r.x1; x++) {
+                        int nx = x + in[0], nz = z + in[1];
+                        boolean far = nx < r.x0 || nx > r.x1 || nz < r.z0 || nz > r.z1;
+                        if (!far) {
+                            continue;
+                        }
+                        f.set(x, 2, z, "of_screen[facing=" + Floorplan.face(s + 2) + "]");
+                        for (int row = 2; row <= 4; row += 2) {
+                            int sx = x - in[0] * row, sz = z - in[1] * row;
+                            if (sx > r.x0 && sx < r.x1 || sz > r.z0 && sz < r.z1) {
+                                f.place(sx, sz, "home_sofa_blue_m[facing=" + Floorplan.face(s) + "]", null);
+                            }
+                        }
+                    }
+                }
+                several(2, false, "home_floor_lamp", "home_lamp_table[facing=%s]");
+                wall("trade_back_bar[facing=%s]", true);
+            }
+
+            /** The wine room: racks floor to ceiling all round, a tasting table. */
+            void wine() {
+                several(Math.max(4, r.area() / 2), true, "cellar_wine_rack[facing=%s]");
+                table("pk_coffee_table[facing=north]", "pk_bar_chair[facing=%s]", false);
+            }
+
+            /** The penthouse kitchen: counters and the range round the walls, a marble island with stools. */
+            void homeKitchen() {
+                wall("home_fridge[facing=%s]", true);
+                several(3 + rng.nextInt(2), false, "home_counter_white[facing=%s]", "home_sink_white[facing=%s]", "home_stove[facing=%s]");
+                table("of_island[facing=north]", "pk_bar_chair[facing=%s]", true);
+                scatter(1, "pk_trash_can[facing=%s]");
             }
 
             void lounge() {

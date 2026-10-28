@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "of_cushion": "zomboidcraft:block/city/of_cushion",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        7.5
+      ],
+      "to": [
+        8.5,
+        6,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_cushion",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_cushion",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_cushion",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_cushion"
+        },
+        "down": {
+          "texture": "#of_cushion"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        3
+      ],
+      "to": [
+        13,
+        6,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion"
+        },
+        "south": {
+          "texture": "#of_cushion"
+        },
+        "east": {
+          "texture": "#of_cushion"
+        },
+        "west": {
+          "texture": "#of_cushion"
+        },
+        "up": {
+          "texture": "#of_cushion"
+        },
+        "down": {
+          "texture": "#of_cushion"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        6
+      ],
+      "to": [
+        10,
+        7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion"
+        },
+        "south": {
+          "texture": "#of_cushion"
+        },
+        "east": {
+          "texture": "#of_cushion"
+        },
+        "west": {
+          "texture": "#of_cushion"
+        },
+        "up": {
+          "texture": "#of_cushion"
+        },
+        "down": {
+          "texture": "#of_cushion"
+        }
+      }
+    }
+  ]
+}

@@ -271664,6 +271664,992 @@
    "title": "Exam Couch",
    "sound": "WOOL",
    "rotate": "facing"
+  },
+  "of_deck": {
+   "tex": {
+    "up": "of_deck",
+    "side": "of_teak",
+    "down": "floor_concrete"
+   },
+   "title": "Teak Decking",
+   "sound": "WOOD"
+  },
+  "of_out_sofa": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.5,
+     0,
+     1,
+     15.5,
+     4,
+     15,
+     "of_teak"
+    ],
+    [
+     1,
+     4,
+     1,
+     15,
+     6.5,
+     13,
+     "of_cushion"
+    ],
+    [
+     0.5,
+     4,
+     13,
+     15.5,
+     12,
+     15.5,
+     "of_cushion"
+    ],
+    [
+     0,
+     0,
+     1,
+     1.5,
+     8,
+     16,
+     "of_teak"
+    ],
+    [
+     14.5,
+     0,
+     1,
+     16,
+     8,
+     16,
+     "of_teak"
+    ],
+    [
+     3,
+     6.5,
+     11,
+     7,
+     10,
+     13,
+     "of_cushion_navy"
+    ],
+    [
+     9,
+     6.5,
+     11,
+     13,
+     10,
+     13,
+     "of_cushion_navy"
+    ]
+   ],
+   "title": "Outdoor Sofa",
+   "sound": "WOOL",
+   "rotate": "facing"
+  },
+  "of_daybed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     4,
+     16,
+     "of_teak"
+    ],
+    [
+     0.5,
+     4,
+     0.5,
+     15.5,
+     7,
+     15.5,
+     "of_cushion"
+    ],
+    [
+     0,
+     4,
+     14,
+     16,
+     13,
+     16,
+     "of_teak"
+    ],
+    [
+     2,
+     7,
+     11,
+     7,
+     10,
+     14,
+     "of_cushion_navy"
+    ],
+    [
+     9,
+     7,
+     11,
+     14,
+     10,
+     14,
+     "of_cushion_navy"
+    ],
+    [
+     0,
+     13,
+     0,
+     1,
+     16,
+     1,
+     "of_teak"
+    ],
+    [
+     15,
+     13,
+     0,
+     16,
+     16,
+     1,
+     "of_teak"
+    ],
+    [
+     0,
+     15,
+     0,
+     16,
+     16,
+     16,
+     "of_cushion"
+    ]
+   ],
+   "title": "Daybed",
+   "sound": "WOOL",
+   "rotate": "facing"
+  },
+  "of_patio_table": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     11,
+     0,
+     16,
+     12,
+     16,
+     {
+      "up": "of_deck",
+      "side": "of_teak",
+      "down": "of_teak"
+     }
+    ],
+    [
+     1,
+     0,
+     1,
+     3,
+     11,
+     3,
+     "of_teak"
+    ],
+    [
+     13,
+     0,
+     1,
+     15,
+     11,
+     3,
+     "of_teak"
+    ],
+    [
+     1,
+     0,
+     13,
+     3,
+     11,
+     15,
+     "of_teak"
+    ],
+    [
+     13,
+     0,
+     13,
+     15,
+     11,
+     15,
+     "of_teak"
+    ]
+   ],
+   "title": "Patio Table",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "of_patio_chair": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     2,
+     4.5,
+     7,
+     3.5,
+     "of_teak"
+    ],
+    [
+     11.5,
+     0,
+     2,
+     13,
+     7,
+     3.5,
+     "of_teak"
+    ],
+    [
+     3,
+     0,
+     12,
+     4.5,
+     15,
+     13.5,
+     "of_teak"
+    ],
+    [
+     11.5,
+     0,
+     12,
+     13,
+     15,
+     13.5,
+     "of_teak"
+    ],
+    [
+     3,
+     6,
+     2,
+     13,
+     7,
+     13.5,
+     {
+      "up": "of_deck",
+      "side": "of_teak"
+     }
+    ],
+    [
+     3.5,
+     7,
+     2.5,
+     12.5,
+     8,
+     12,
+     "of_cushion"
+    ],
+    [
+     3,
+     9,
+     12.5,
+     13,
+     15,
+     13.5,
+     "of_teak"
+    ]
+   ],
+   "title": "Patio Chair",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "of_fire_pit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     5,
+     14,
+     "pt_stone_rough"
+    ],
+    [
+     1,
+     4,
+     1,
+     15,
+     5,
+     15,
+     "stone_trim"
+    ],
+    [
+     3,
+     5,
+     3,
+     13,
+     5.5,
+     13,
+     "of_ember"
+    ]
+   ],
+   "title": "Fire Pit",
+   "sound": "STONE",
+   "light": 11
+  },
+  "of_bbq": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     3,
+     15,
+     9,
+     14,
+     {
+      "north": "home_steel",
+      "side": "home_steel",
+      "up": "home_steel",
+      "down": "home_steel"
+     }
+    ],
+    [
+     1,
+     9,
+     3,
+     15,
+     10,
+     14,
+     {
+      "up": "of_grate",
+      "side": "home_steel"
+     }
+    ],
+    [
+     1,
+     10,
+     11,
+     15,
+     15,
+     14,
+     "home_chrome"
+    ],
+    [
+     15,
+     8,
+     4,
+     16,
+     9,
+     13,
+     "home_steel"
+    ],
+    [
+     0,
+     8,
+     4,
+     1,
+     9,
+     13,
+     "home_steel"
+    ],
+    [
+     4,
+     6,
+     2,
+     12,
+     7,
+     3,
+     "home_chrome"
+    ]
+   ],
+   "title": "Outdoor Grill",
+   "sound": "METAL",
+   "loot": "storage",
+   "rotate": "facing"
+  },
+  "of_out_counter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     16,
+     {
+      "north": "home_drw_white",
+      "side": "home_steel",
+      "up": "home_steel"
+     }
+    ],
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     "marble_white"
+    ]
+   ],
+   "title": "Outdoor Kitchen",
+   "sound": "STONE",
+   "loot": "storage",
+   "rotate": "facing"
+  },
+  "of_parasol_pole": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11,
+     "home_steel"
+    ]
+   ],
+   "title": "Parasol",
+   "sound": "METAL",
+   "decor": true
+  },
+  "of_parasol_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     7.5,
+     8.5,
+     6,
+     8.5,
+     "home_chrome"
+    ],
+    [
+     0,
+     4,
+     0,
+     16,
+     5,
+     16,
+     "of_cushion"
+    ],
+    [
+     3,
+     5,
+     3,
+     13,
+     6,
+     13,
+     "of_cushion"
+    ],
+    [
+     6,
+     6,
+     6,
+     10,
+     7,
+     10,
+     "of_cushion"
+    ]
+   ],
+   "title": "Parasol",
+   "sound": "WOOL",
+   "decor": true
+  },
+  "of_tree_pot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     9,
+     13,
+     "home_terracotta"
+    ],
+    [
+     3.5,
+     8.6,
+     3.5,
+     12.5,
+     9,
+     12.5,
+     "leaf_litter"
+    ],
+    [
+     7,
+     9,
+     7,
+     9,
+     16,
+     9,
+     "pole_wood"
+    ]
+   ],
+   "title": "Olive Tree",
+   "sound": "STONE"
+  },
+  "of_tree_crown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     5,
+     9,
+     "pole_wood"
+    ],
+    [
+     2,
+     3,
+     2,
+     14,
+     12,
+     14,
+     "gc_leaves_2"
+    ],
+    [
+     4,
+     12,
+     4,
+     12,
+     15,
+     12,
+     "gc_leaves_2"
+    ],
+    [
+     0,
+     5,
+     4,
+     3,
+     10,
+     11,
+     "gc_leaves_3"
+    ],
+    [
+     13,
+     5,
+     5,
+     16,
+     10,
+     12,
+     "gc_leaves_3"
+    ]
+   ],
+   "title": "Olive Tree",
+   "sound": "GRASS",
+   "render": "cutout"
+  },
+  "of_pergola_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "of_teak"
+    ]
+   ],
+   "title": "Pergola Post",
+   "sound": "WOOD"
+  },
+  "of_pergola_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10,
+     6,
+     16,
+     16,
+     10,
+     "of_teak"
+    ],
+    [
+     2,
+     14,
+     0,
+     4,
+     16,
+     16,
+     "of_teak"
+    ],
+    [
+     7,
+     14,
+     0,
+     9,
+     16,
+     16,
+     "of_teak"
+    ],
+    [
+     12,
+     14,
+     0,
+     14,
+     16,
+     16,
+     "of_teak"
+    ]
+   ],
+   "title": "Pergola",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "of_telescope": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     9,
+     9,
+     "home_plastic_black"
+    ],
+    [
+     4,
+     0,
+     7.5,
+     7,
+     1,
+     8.5,
+     "home_plastic_black"
+    ],
+    [
+     9,
+     0,
+     7.5,
+     12,
+     1,
+     8.5,
+     "home_plastic_black"
+    ],
+    [
+     7.5,
+     0,
+     9,
+     8.5,
+     1,
+     12,
+     "home_plastic_black"
+    ],
+    [
+     6,
+     9,
+     2,
+     10,
+     12,
+     14,
+     "fit_brass"
+    ],
+    [
+     6.5,
+     9.5,
+     0.5,
+     9.5,
+     11.5,
+     2,
+     "home_plastic_black"
+    ],
+    [
+     7,
+     12,
+     10,
+     9,
+     13.5,
+     13,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Telescope",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "of_grand_piano_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     8,
+     0,
+     16,
+     12,
+     16,
+     "home_plastic_black"
+    ],
+    [
+     1,
+     0,
+     1,
+     3,
+     8,
+     3,
+     "home_plastic_black"
+    ],
+    [
+     1,
+     0,
+     13,
+     3,
+     8,
+     15,
+     "home_plastic_black"
+    ],
+    [
+     0,
+     7,
+     -2,
+     16,
+     9,
+     0,
+     {
+      "north": "home_piano_keys",
+      "side": "home_plastic_black",
+      "up": "home_piano_keys",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     2,
+     12,
+     3,
+     16,
+     13,
+     15,
+     "home_plastic_black"
+    ],
+    [
+     14,
+     12,
+     3,
+     15,
+     16,
+     4,
+     "home_plastic_black"
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     5,
+     1,
+     "fit_brass"
+    ]
+   ],
+   "title": "Grand Piano",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "of_grand_piano_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     8,
+     0,
+     10,
+     12,
+     12,
+     "home_plastic_black"
+    ],
+    [
+     8,
+     0,
+     9,
+     10,
+     8,
+     11,
+     "home_plastic_black"
+    ],
+    [
+     0,
+     7,
+     -2,
+     6,
+     9,
+     0,
+     {
+      "north": "home_piano_keys",
+      "side": "home_plastic_black",
+      "up": "home_piano_keys",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     0,
+     12,
+     3,
+     9,
+     13,
+     11,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Grand Piano",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "of_art_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     2,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "of_art_a",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Painting",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "of_art_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     2,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "of_art_b",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Painting",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "of_sculpture": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     9,
+     12,
+     "marble_white"
+    ],
+    [
+     5.5,
+     9,
+     7,
+     8,
+     16,
+     9.5,
+     "bk_bronze"
+    ],
+    [
+     7,
+     12,
+     6,
+     11,
+     15,
+     10,
+     "bk_bronze"
+    ],
+    [
+     9,
+     9,
+     6.5,
+     10.5,
+     13,
+     9,
+     "bk_bronze"
+    ]
+   ],
+   "title": "Sculpture",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "of_screen": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "of_screen",
+      "side": "home_plastic_black",
+      "up": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Cinema Screen",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "of_island": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     14,
+     15,
+     {
+      "north": "home_drw_white",
+      "side": "home_white",
+      "up": "home_white",
+      "down": "home_white"
+     }
+    ],
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     "marble_white"
+    ]
+   ],
+   "title": "Kitchen Island",
+   "sound": "STONE",
+   "loot": "storage",
+   "rotate": "facing"
   }
  }
 }
