@@ -13,8 +13,12 @@ public class CarRenderState extends EntityRenderState {
     public float steer;
     /** The local player is sitting in this car, looking out of it. */
     public boolean inside;
-    /** Zombies have smashed the windows in: no glass. */
+    /** Every window's shattered: no glass. */
     public boolean smashed;
+    /** The windows one by one ({@link CarGlassDraw}): which look's windows, how each is, how far each is wound down. */
+    public int look = -1;
+    public com.zomboidcraft.world.cars.CarGlass.Panes panes;
+    public float[] wound = new float[0];
     /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
     public int lod;
     /** The headlights (and tail lights) are switched on; the engine's running, so the dash is lit; the brake or reversing lights. */

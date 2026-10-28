@@ -1168,6 +1168,15 @@ public final class ZcConfig {
         public double bloodSeconds = 120.0;
         /** How many holes and splashes stay at once; the oldest go first. Client side. */
         public int maxDecals = 300;
+        /**
+         * Bullets go through glass (a little spent) and leave holes in it; this many holes and it shatters: small
+         * and leaded panes, a house window, big panes (ship, roof), shop and office plate glass, glass bricks.
+         */
+        public int glassHolesSmall = 2;
+        public int glassHolesWindow = 3;
+        public int glassHolesLarge = 4;
+        public int glassHolesShop = 5;
+        public int glassHolesBlock = 6;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
