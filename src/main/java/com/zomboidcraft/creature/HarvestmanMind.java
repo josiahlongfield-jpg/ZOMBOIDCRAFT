@@ -122,12 +122,65 @@ public final class HarvestmanMind {
     }
 
     /** Makes it take up a plan next (a /zc harvestman test); hunting plans go after the nearest player. */
-    public void force(int plan) {
+    /** Has it take up a plan next (the director: back to its den, rest, go after its target). */
+    void queue(int plan) {
         forced = plan;
-        forcedHunt = plan == STRIKE || plan == STALK || plan == AMBUSH || plan == GLIMPSE;
         h.goal = null;
         wait = 0;
         end();
+    }
+
+    /**
+     * Makes it take up a plan now (/zc harvestman do). Returns null when it has, or why it can't from where it is.
+     */
+    public String force(ServerLevel level, int plan) {
+        forcedHunt = plan == STRIKE || plan == STALK || plan == AMBUSH || plan == GLIMPSE || plan == LEAVE_BODY
+                || plan == TRAVEL;
+        h.goal = null;
+        wait = 0;
+        end();
+        Player near = level.getNearestPlayer(h, 48);
+        if (near != null && near.isSpectator()) {
+            near = null;
+        }
+        switch (plan) {
+            case DRAG, FEED -> {
+                if (h.held() == null) {
+                    return "it only drags and feeds once a strike has caught someone (try do strike)";
+                }
+            }
+            case STRIKE, STALK, AMBUSH, GLIMPSE -> {
+                if (near == null) {
+                    return "there's no player within 48 blocks";
+                }
+            }
+            case TRAVEL -> {
+                return "it travels on its own when its target is more than 56 blocks away";
+            }
+            case LISTEN, INVESTIGATE -> {
+                // as if it heard the nearest player
+                if (near != null) {
+                    heard = near.position();
+                    heardAt = level.getGameTime();
+                    alert = 1;
+                }
+            }
+            default -> {
+            }
+        }
+        forced = plan;
+        choose(level);
+        if (this.plan != IDLE) {
+            return null;
+        }
+        return switch (plan) {
+            case CEILING -> "there's no ceiling within reach to climb to (it needs a roof over it)";
+            case PERCH -> "there's no wall rising above it nearby";
+            case ZOMBIE -> "there's no zombie within 32 blocks";
+            case LEAVE_BODY -> "it needs a body (corpse) within 24 blocks and someone to leave it for";
+            case INVESTIGATE, LISTEN -> "there's nobody near for it to hear";
+            default -> "it can't find anywhere to do that from here";
+        };
     }
 
     // ------------------------------------------------------------------------------------------------ how it moves now
@@ -295,7 +348,11 @@ public final class HarvestmanMind {
         Vec3 c = h.centre();
         ServerPlayer target = target(level);
         int next = forced >= 0 ? forced : -1;
+        boolean wasForced = next >= 0;
         forced = -1;
+        if (!wasForced) {
+            forcedHunt = false;
+        }
         if (next < 0) {
             next = pick(level, target);
         }
@@ -322,7 +379,10 @@ public final class HarvestmanMind {
             }
             case INVESTIGATE -> start(INVESTIGATE, heard, 1.8);
             default -> {
-                Vec3 g = spot(next, 16);
+                Vec3 g = spot(next, wasForced ? 28 : 16);
+                if (g == null && wasForced) {
+                    g = spot(next, 28);
+                }
                 if (g == null) {
                     wait = 20;
                     return;
@@ -469,9 +529,11 @@ public final class HarvestmanMind {
         }
     }
 
+    /** Is it at p: within r along its surface, and on the same face (not just under or over it)? */
     private boolean near(Vec3 p, double r) {
         Vec3 to = p.subtract(h.centre());
-        return to.subtract(h.up().scale(to.dot(h.up()))).length() < r;
+        double off = to.dot(h.up());
+        return off < HarvestmanEntity.REACH_UP && off > -HarvestmanEntity.REACH_OFF && to.subtract(h.up().scale(off)).length() < r;
     }
 
     // stalking: from the dark, out of their sight, keeping its distance; it freezes when looked at, and slips away if
@@ -763,6 +825,9 @@ public final class HarvestmanMind {
     private void startLeaveBody(ServerLevel level, ServerPlayer target) {
         Corpse body = nearCorpse(level, 24);
         Vec3 home = target != null ? HarvestmanDirector.favourite(target, level) : null;
+        if (home == null && forcedHunt && target != null) {
+            home = target.position();
+        }
         if (body == null || home == null) {
             return;
         }

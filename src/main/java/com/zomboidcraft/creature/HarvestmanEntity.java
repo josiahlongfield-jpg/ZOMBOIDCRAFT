@@ -31,6 +31,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -85,7 +86,6 @@ public class HarvestmanEntity extends Mob {
     /** How long a feed takes to kill; jumps it takes to struggle free; damage that makes it drop what it holds. */
     public static final int FEED_TICKS = 200, STRUGGLE = 14;
     public static final double SHAKE_OFF = 120;
-    private static final double FEEL = 4.5;
     private static final double TURN_RATE = 1.9, ACCEL = 1.8, BRAKE = 2.6;
     /** Where what it holds has its head: under the point of its body, gripped by the beard. */
     private static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
@@ -106,7 +106,18 @@ public class HarvestmanEntity extends Mob {
     double goalSpeed, speed, fall, rear, rearWant;
     /** It wants to be on the floor (to strike or feed): it lets go of a ceiling, and comes down walls. */
     boolean wantFloor;
-    private boolean dropping;
+    private boolean dropping, attached;
+    /** The block face it holds (straight off it), and an outer edge it's swinging round (pivotT 0..1, -1 when not). */
+    Vec3 surf = new Vec3(0, 1, 0);
+    private Vec3 pivotAt, pivotFrom, pivotTo;
+    private double pivotT = -1;
+    /** The way it's making for a wall (to get up to a ceiling, or down off one), and until when. */
+    private Vec3 wallDir, wallFace;
+    /**
+     * A goal is on the face it holds when it's no more than this far out from its body (a spot a block off the face,
+     * a body lying under it) nor this far beyond it on the far side of the face; otherwise it's on another face.
+     */
+    static final double REACH_OFF = 2.8, REACH_UP = 0.8;
     private Vec3 lastPos = Vec3.ZERO;
     private int stuck;
     int stuckTicks;
@@ -270,105 +281,128 @@ public class HarvestmanEntity extends Mob {
     }
 
     /**
-     * One tick of crawling: feel round for surfaces, lean the body's up toward the nearest of them, hold it its
-     * height off the one it's on, and slide along it toward the goal; a wall ahead is climbed, and with nothing
-     * anywhere near (or letting go of a ceiling) it falls.
+     * One tick of crawling. It holds on to one block face at a time (surf: floor, wall or ceiling), its body its height
+     * off it, and slides along it toward the goal. A face ahead (a wall, or the ceiling at the top of a wall) it climbs on
+     * to; past an outer edge it swings round on to the face beyond, steps down off a low ledge, or drops off a floor's
+     * edge when it means to go down; otherwise it stops there. It only ever moves where its body fits and enough of its
+     * legs can plant a point on something solid. With nothing to hold (or letting go of a ceiling) it falls.
      */
     private void crawl(ServerLevel level) {
         double dt = 0.05;
         Vec3 c = centre();
-        Vec3 sum = Vec3.ZERO, nearN = null, nearP = null;
-        double near = 1e9;
-        for (Vec3 d : HarvestmanMind.DIRS) {
-            BlockHitResult hit = cast(c, c.add(d.scale(FEEL)));
-            if (hit.getType() == HitResult.Type.MISS) {
-                continue;
-            }
-            double dist = hit.getLocation().distanceTo(c), w = 1 - dist / FEEL;
-            Vec3 n = normal(hit);
-            // wanting the floor, it pays the floor more mind than the walls and ceiling
-            if (wantFloor) {
-                w *= n.y > 0.5 ? 2.5 : n.y < -0.5 ? 0.15 : 0.6;
-            }
-            sum = sum.add(n.scale(w * w));
-            if (dist < near) {
-                near = dist;
-                nearN = n;
-                nearP = hit.getLocation();
-            }
+        // nothing under it any more (moved, or what it held was broken away): it finds a hold again, or falls
+        if (!attached || !dropping && pivotT < 0 && cast(c, c.subtract(surf.scale(STAND + 3.5))).getType() == HitResult.Type.MISS) {
+            attach(c);
         }
         // on a ceiling and wanting the floor: it lets go and drops
-        if (wantFloor && up.y < -0.5 && !dropping && cast(c, c.add(0, -12, 0)).getType() != HitResult.Type.MISS) {
+        if (wantFloor && surf.y < -0.5 && !dropping && cast(c, c.add(0, -12, 0)).getType() != HitResult.Type.MISS) {
             dropping = true;
+            pivotT = -1;
             level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.8f, 1.2f);
         }
-        if (dropping || nearN == null) {
-            fall = Math.min(fall + 0.08, 3.5);
-            up = slerp(up, new Vec3(0, 1, 0), 6 * dt);
-            Vec3 step = new Vec3(0, -fall, 0);
-            BlockHitResult floor = cast(c, c.add(0, -fall - STAND, 0));
-            if (floor.getType() != HitResult.Type.MISS) {
-                double room = c.y - floor.getLocation().y - STAND;
-                if (room <= fall) {
-                    // landed: on its feet, braced
-                    step = new Vec3(0, -Math.max(0, room), 0);
-                    dropping = false;
-                    fall = 0;
-                    up = new Vec3(0, 1, 0);
-                    level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.TAP, SoundSource.HOSTILE, 1f, 0.6f);
-                }
-            }
-            setPos(position().add(step));
-            face(dt, look != null ? look.subtract(c) : fwd);
+        if (dropping) {
+            fall(level, c, dt);
             return;
         }
-        fall = 0;
-        up = slerp(up, sum.lengthSqr() > 1e-6 ? sum.normalize() : nearN, 4 * dt);
-        BlockHitResult below = cast(c, c.subtract(up.scale(6))), above = cast(c, c.add(up.scale(6)));
-        double base = below.getType() == HitResult.Type.MISS ? near : below.getLocation().distanceTo(c);
-        Vec3 away = below.getType() == HitResult.Type.MISS ? c.subtract(nearP).normalize() : up;
-        double want = pose() == FEED || pose() == HOLD ? FEEDING : Mth.lerp(HarvestmanLegs.floorness(up), CLING, STAND);
-        want -= 0.6 * mind.crouch();
-        if (above.getType() != HitResult.Type.MISS) {
-            double gap = base + above.getLocation().distanceTo(c);
-            want = Math.min(want, Math.max(CROUCH, gap - 0.8));
-        }
-        // a leg or two gone, it sags
-        want = Math.max(CROUCH, want - 0.25 * Integer.bitCount(lost()));
-        entityData.set(LIFT, (float) want);
         Vec3 dir = fwd;
         double dist = 0;
         if (goal != null) {
             Vec3 to = goal.subtract(c);
-            Vec3 t = to.subtract(up.scale(to.dot(up)));
+            Vec3 t = to.subtract(surf.scale(to.dot(surf)));
             dist = t.length();
             if (dist > 1e-3) {
                 dir = t.scale(1 / dist);
             }
         }
+        // what it wants is out across from the face it holds (a ceiling over its floor, the floor under its ceiling): it
+        // makes for the nearest wall. (Something behind its face, over an edge, it gets to by going round the edge.)
+        if (!surf.equals(wallFace)) {
+            wallDir = null;     // on a new face: it looks again
+        }
+        double off = goal == null ? 0 : goal.subtract(c).dot(surf);
+        if (goal != null && off > REACH_UP && (dist < 3 || wallDir != null)) {
+            Vec3 w = wallward(c, dist > 1e-3 ? dir : fwd);
+            if (w != null) {
+                dir = w;
+                dist = Math.max(dist, 4);
+            }
+        } else {
+            wallDir = null;
+        }
+        dir = dir.subtract(surf.scale(dir.dot(surf)));
+        dir = dir.lengthSqr() < 1e-6 ? fwd : dir.normalize();
+        double want = height(c, dir);
+        entityData.set(LIFT, (float) want);
         // at a burst it gets up to speed and stops again in a few strides, its points biting in
         boolean burst = goal != null && goalSpeed > 5 || speed > 5;
         double stop = burst ? 12 : 3;
         double top = goal == null ? 0 : Math.min(goalSpeed * mind.speedScale(), Math.sqrt(2 * stop * Math.max(0, dist - 0.3)));
         speed = speed < top ? Math.min(top, speed + ACCEL * mind.accelScale() * (burst ? 2.5 : 1) * dt)
                 : Math.max(top, speed - (burst ? 14 : BRAKE) * dt);
-        BlockHitResult ahead = cast(c, c.add(dir.scale(Math.max(1.6, speed * 0.3))));
-        if (ahead.getType() != HitResult.Type.MISS && !(wantFloor && normal(ahead).y > 0.5)) {
-            dir = dir.add(up.scale(1.4)).normalize();
-        }
-        Vec3 step = dir.scale(speed * dt).add(away.scale((want - base) * Math.min(1, 5 * dt)));
-        if (step.lengthSqr() > 1e-8) {
-            BlockHitResult hit = cast(c, c.add(step.normalize().scale(step.length() + 0.6)));
-            if (hit.getType() != HitResult.Type.MISS) {
-                double room = hit.getLocation().distanceTo(c) - 0.6;
-                step = step.normalize().scale(Math.max(0, Math.min(step.length(), room)));
+        boolean blocked = false;
+        Vec3 next;
+        if (pivotT >= 0) {
+            // swinging round an outer edge, its body arcing over it
+            pivotT = Math.min(1, pivotT + Math.max(0.6, speed) * dt / (want * Math.PI / 2));
+            Vec3 n = slerp(pivotFrom, pivotTo, pivotT);
+            next = pivotAt.add(n.scale(want));
+            if (pivotT >= 1) {
+                surf = pivotTo;
+                pivotT = -1;
+            }
+        } else {
+            // a face across its way: it climbs on to it (wanting the floor, it won't go up a wall)
+            if (speed > 0.01) {
+                double cling = CLING;
+                BlockHitResult ahead = cast(c, c.add(dir.scale(cling + 0.25 + speed * dt)));
+                if (ahead.getType() != HitResult.Type.MISS) {
+                    Vec3 n = normal(ahead);
+                    if (n.dot(dir) > -0.5 && n.dot(dir) < 0 && n.dot(surf) < 0.5) {
+                        // a wall at a slant: it slides along it
+                        Vec3 along = dir.subtract(n.scale(dir.dot(n)));
+                        if (along.lengthSqr() > 1e-4) {
+                            dir = along.normalize();
+                        }
+                    } else if (n.dot(dir) <= -0.5 && n.dot(surf) < 0.5) {
+                        if (!(wantFloor && surf.y > 0.5) && fits(c, fwd)) {
+                            surf = n;
+                            speed *= 0.6;
+                            level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.35f, 1.3f);
+                        } else {
+                            blocked = true;
+                        }
+                    }
+                }
+            }
+            next = blocked ? c : c.add(dir.scale(speed * dt));
+            BlockHitResult under = cast(next.add(surf.scale(0.4)), next.subtract(surf.scale(want + 1.6)));
+            if (under.getType() == HitResult.Type.MISS) {
+                next = overEdge(level, c, next, dir, want);
+                if (next == null) {
+                    next = c;
+                    blocked = true;
+                } else if (dropping) {
+                    setPos(next.subtract(0, MID, 0));
+                    return;
+                }
+            } else {
+                // held its height off what's under it (rising over a step, sinking into a dip), never jerking
+                double h = under.getLocation().subtract(next).dot(surf.scale(-1));
+                next = next.add(surf.scale(Mth.clamp((want - h) * Math.min(1, 6 * dt), -0.3, 0.3)));
             }
         }
-        Vec3 next = c.add(step);
-        if (near < 0.55) {
-            next = next.add(nearN.scale(0.55 - near));
+        // only where its body fits and its legs find holds
+        if (pivotT < 0 && next != c) {
+            HarvestmanBody.Frame at = HarvestmanLegs.flat(next, surf, fwd.subtract(surf.scale(fwd.dot(surf))).normalize());
+            int legsLeft = 4 - Integer.bitCount(lost());
+            if (!fits(next, at.z()) || legs.support(this, at, want, lost()) < Math.max(2, legsLeft - 1)) {
+                next = c;
+                blocked = true;
+                speed = 0;
+            }
         }
         setPos(next.subtract(0, MID, 0));
+        up = slerp(up, pivotT >= 0 ? slerp(pivotFrom, pivotTo, pivotT) : surf, 8 * dt);
         if (look != null && (speed < 0.3 || mind.watching())) {
             face(dt, look.subtract(c));
         } else if (speed > 0.05) {
@@ -376,9 +410,10 @@ public class HarvestmanEntity extends Mob {
         } else {
             face(dt, fwd);
         }
-        if (goal != null && speed > 0.3 && position().distanceToSqr(lastPos) < 0.0004) {
+        // got nowhere for two seconds: it gives up on that goal (and the mind picks again)
+        if (goal != null && (blocked || speed > 0.3 && position().distanceToSqr(lastPos) < 0.0004)) {
             stuckTicks++;
-            if (++stuck > 60) {
+            if (++stuck > 40) {
                 goal = null;
                 stuck = 0;
             }
@@ -387,6 +422,164 @@ public class HarvestmanEntity extends Mob {
             stuckTicks = 0;
         }
         lastPos = position();
+    }
+
+    /**
+     * The way to the nearest wall across the face it holds (leaning toward the way it would go anyway), kept until it's
+     * on another face so it doesn't dither; null with none in sight.
+     */
+    private Vec3 wallward(Vec3 c, Vec3 lean) {
+        if (wallDir != null) {
+            return wallDir;
+        }
+        Vec3 a = Math.abs(surf.y) < 0.9 ? new Vec3(0, 1, 0) : new Vec3(1, 0, 0);
+        Vec3 e1 = a.subtract(surf.scale(a.dot(surf))).normalize(), e2 = surf.cross(e1);
+        Vec3 best = null;
+        double bestScore = 1e9;
+        for (int k = 0; k < 8; k++) {
+            double ang = k * Math.PI / 4;
+            Vec3 d = e1.scale(Math.cos(ang)).add(e2.scale(Math.sin(ang)));
+            BlockHitResult hit = cast(c, c.add(d.scale(16)));
+            if (hit.getType() != HitResult.Type.MISS && normal(hit).dot(d) < -0.5) {
+                double score = hit.getLocation().distanceTo(c) - 3 * d.dot(lean);
+                if (score < bestScore) {
+                    bestScore = score;
+                    best = d;
+                }
+            }
+        }
+        wallDir = best;
+        wallFace = surf;
+        return best;
+    }
+
+    /** How far its body wants to be off its surface now: lower under a low ceiling, here or just ahead (a doorway). */
+    private double height(Vec3 c, Vec3 dir) {
+        double want = pose() == FEED || pose() == HOLD ? FEEDING : Mth.lerp(HarvestmanLegs.floorness(surf), CLING, STAND);
+        want -= 0.6 * mind.crouch();
+        for (Vec3 p : new Vec3[] {c, c.add(dir.scale(1.6))}) {
+            BlockHitResult below = cast(p, p.subtract(surf.scale(6))), above = cast(p, p.add(surf.scale(6)));
+            if (above.getType() != HitResult.Type.MISS && below.getType() != HitResult.Type.MISS) {
+                double gap = below.getLocation().distanceTo(p) + above.getLocation().distanceTo(p);
+                want = Math.min(want, Math.max(CROUCH, gap - 0.8));
+            }
+        }
+        // a leg or two gone, it sags
+        return Math.max(CROUCH, want - 0.25 * Integer.bitCount(lost()));
+    }
+
+    /** Finds the face it's holding (the nearest of the six around it), or falls if there's none in reach. */
+    private void attach(Vec3 c) {
+        double best = STAND + 1.6;
+        Vec3 face = null;
+        // still in reach of the face it held (stepping down a ledge): it keeps it
+        if (attached) {
+            BlockHitResult held = cast(c, c.subtract(surf.scale(STAND + 3.5)));
+            if (held.getType() != HitResult.Type.MISS && normal(held).equals(surf)) {
+                pivotT = -1;
+                return;
+            }
+        }
+        for (Direction d : Direction.values()) {
+            Vec3 n = new Vec3(d.getStepX(), d.getStepY(), d.getStepZ());
+            BlockHitResult hit = cast(c, c.subtract(n.scale(STAND + 1.6)));
+            if (hit.getType() != HitResult.Type.MISS && normal(hit).equals(n)) {
+                double dd = hit.getLocation().distanceTo(c) - (n.y > 0.5 ? 0.6 : 0);  // the floor first, when it's near
+                if (dd < best) {
+                    best = dd;
+                    face = n;
+                }
+            }
+        }
+        attached = true;
+        pivotT = -1;
+        if (face == null) {
+            dropping = true;
+        } else {
+            surf = face;
+            up = face;
+        }
+    }
+
+    /**
+     * Its centre has gone past the edge of the face it holds: the face round the edge, a low step down, or a drop off a
+     * floor when it means to go down. Returns where it goes this tick (dropping set for a drop), or null to stay put.
+     */
+    private Vec3 overEdge(ServerLevel level, Vec3 c, Vec3 next, Vec3 dir, double want) {
+        boolean onFloor = surf.y > 0.5;
+        if (onFloor) {
+            // a ledge of a block or three: it just steps down
+            BlockHitResult down = cast(next, next.subtract(0, want + 3.2, 0));
+            if (down.getType() != HitResult.Type.MISS && normal(down).y > 0.5) {
+                double h = next.y - down.getLocation().y;
+                return next.add(0, Mth.clamp(want - h, -0.3, 0.3), 0);
+            }
+        }
+        // the face round the edge: back under it, facing the way it was going
+        Vec3 low = next.subtract(surf.scale(want + 0.3));
+        BlockHitResult wrap = cast(low, low.subtract(dir.scale(2.2)));
+        BlockHitResult held = cast(c, c.subtract(surf.scale(want + 1.6)));
+        if (wrap.getType() != HitResult.Type.MISS && held.getType() != HitResult.Type.MISS && normal(wrap).dot(dir) > 0.5
+                && !(wantFloor && onFloor && goal != null && goal.y < c.y - 6 && floorBelow(next, 14))) {
+            Vec3 n1 = normal(wrap), pf = held.getLocation(), pw = wrap.getLocation();
+            // the edge: where the two faces meet, beside it; it swings round a line just past it, so it ends up over the
+            // new face, not balanced on the corner
+            pivotAt = c.subtract(surf.scale(surf.dot(c.subtract(pf)))).subtract(n1.scale(n1.dot(c.subtract(pw))))
+                    .subtract(surf.scale(0.3));
+            pivotFrom = surf;
+            pivotTo = n1;
+            pivotT = 0;
+            return pivotAt.add(surf.scale(want));
+        }
+        // off a floor's edge on purpose, when what it wants is below and there's ground to land on
+        // (it springs out clear of the edge, so its whole body drops past it)
+        Vec3 out = next.add(dir.scale(1.4));
+        if (onFloor && goal != null && goal.y < c.y - 1.5 && floorBelow(out, 16) && fits(out, dir)) {
+            dropping = true;
+            fwd = dir;
+            level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.6f, 0.9f);
+            return out;
+        }
+        return null;
+    }
+
+    private boolean floorBelow(Vec3 p, double depth) {
+        BlockHitResult hit = cast(p, p.subtract(0, depth, 0));
+        return hit.getType() != HitResult.Type.MISS && normal(hit).y > 0.5;
+    }
+
+    /** Would its hull fit here, nose along fwd? (three boxes down its length) */
+    private boolean fits(Vec3 c, Vec3 fwd) {
+        for (double z : new double[] {0.5, -0.3, -1.1}) {
+            Vec3 p = c.add(fwd.scale(z));
+            if (!level().noCollision(this, new AABB(p.x - 0.36, p.y - 0.36, p.z - 0.36, p.x + 0.36, p.y + 0.36, p.z + 0.36))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Falling: straight down, righting itself, until it lands on its feet on a floor. */
+    private void fall(ServerLevel level, Vec3 c, double dt) {
+        fall = Math.min(fall + 0.08, 3.5);
+        up = slerp(up, new Vec3(0, 1, 0), 6 * dt);
+        Vec3 step = new Vec3(0, -fall, 0);
+        BlockHitResult floor = cast(c, c.add(0, -fall - STAND, 0));
+        if (floor.getType() != HitResult.Type.MISS) {
+            double room = c.y - floor.getLocation().y - STAND;
+            if (room <= fall) {
+                // landed: on its feet, braced
+                step = new Vec3(0, -Math.max(0, room), 0);
+                dropping = false;
+                fall = 0;
+                surf = new Vec3(0, 1, 0);
+                up = surf;
+                pivotT = -1;
+                level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.TAP, SoundSource.HOSTILE, 1f, 0.6f);
+            }
+        }
+        setPos(position().add(step));
+        face(dt, look != null ? look.subtract(c) : fwd);
     }
 
     /** Turns it toward dir within the surface, no faster than it can, and syncs how it lies. */

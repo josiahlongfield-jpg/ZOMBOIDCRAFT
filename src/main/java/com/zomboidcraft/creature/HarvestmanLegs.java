@@ -33,6 +33,8 @@ public final class HarvestmanLegs {
     public final double[] lift = new double[4];
     private final Step[] steps = new Step[4];
     private final Vec3[] targets = new Vec3[4], targetN = new Vec3[4];
+    /** Whether each foot's spot is on something solid (a point never comes down on thin air). */
+    private final boolean[] solid = new boolean[4];
     private double phase, prevPhase, still, fid = 2.5;
     private Vec3 lastCentre, lastFwd, vel = Vec3.ZERO;
     private double spd, turn;
@@ -166,13 +168,24 @@ public final class HarvestmanLegs {
         Vec3 d = P0.subtract(H);
         BlockHitResult hit = cast(level, e, H, H.add(d.scale(1.4)));
         Vec3 p, n;
-        if (hit.getType() != HitResult.Type.MISS) {
+        boolean found = hit.getType() != HitResult.Type.MISS;
+        if (found) {
             p = hit.getLocation();
             n = normal(hit);
         } else {
             hit = cast(level, e, P0.add(up.scale(1.5)), P0.subtract(up.scale(2.5)));
-            p = hit.getType() != HitResult.Type.MISS ? hit.getLocation() : P0;
-            n = hit.getType() != HitResult.Type.MISS ? normal(hit) : up;
+            Vec3 under = fr.o().subtract(up.scale(h + 0.6));
+            if (hit.getType() == HitResult.Type.MISS) {
+                // past an outer edge: the point hooks round on to the face under the edge
+                hit = cast(level, e, P0.subtract(up.scale(0.6)), under);
+            }
+            if (hit.getType() == HitResult.Type.MISS) {
+                // over the top of what it's climbing: it reaches down and in for the face beyond
+                hit = cast(level, e, P0.add(up.scale(1.0)), fr.o().subtract(up.scale(h)));
+            }
+            found = hit.getType() != HitResult.Type.MISS;
+            p = found ? hit.getLocation() : P0;
+            n = found ? normal(hit) : up;
         }
         double reach = L.lc() - L.a() + 0.3;
         if (p.distanceTo(H) < reach) {
@@ -192,6 +205,24 @@ public final class HarvestmanLegs {
         }
         targets[li] = p;
         targetN[li] = n;
+        solid[li] = found && p.distanceTo(H) <= L.a() + L.lc() - 0.05;
+    }
+
+    /**
+     * How many of its legs (those it still has) could plant a point on something solid if its body stood in this
+     * frame, held h off its surface. Its crawl only goes where enough of them can.
+     */
+    public int support(Entity e, HarvestmanBody.Frame fr, double h, int lost) {
+        int n = 0;
+        for (int li = 0; li < 4; li++) {
+            if ((lost >> li & 1) == 0) {
+                target(li, fr, h, e.level(), e);
+                if (solid[li]) {
+                    n++;
+                }
+            }
+        }
+        return n;
     }
 
     private boolean cramped(int li, HarvestmanBody.Frame fr) {
@@ -212,7 +243,7 @@ public final class HarvestmanLegs {
                 continue;
             }
             st.u += dt / st.dur;
-            if (!st.fixed && st.u < 0.85) {
+            if (!st.fixed && st.u < 0.85 && solid[i]) {
                 st.p1 = targets[i];
                 st.n1 = targetN[i];
             }
@@ -240,6 +271,9 @@ public final class HarvestmanLegs {
             double a = prevPhase * hurry + GAIT_OFF[i], b = phase * hurry + GAIT_OFF[i];
             boolean due = moving && Math.floor(b) > Math.floor(a);
             double far = feet[i].distanceTo(targets[i]);
+            if (!solid[i]) {
+                continue;       // nothing there to stand on: the point stays where it holds
+            }
             if (due && far > 0.15 || far > 2.3 || cramped(i, fr) && far > 0.3 && active == 0) {
                 lift(i, Mth.clamp(sf / Math.max(cyc * hurry, 0.05), spd > 5 ? 0.13 : 0.26, 0.75), false, spd);
                 active++;
@@ -253,7 +287,7 @@ public final class HarvestmanLegs {
                 if ((lost >> i & 1) != 0 || rear > 0.3 && (i & 1) == 0) {
                     continue;
                 }
-                double d = feet[i].distanceTo(targets[i]);
+                double d = solid[i] ? feet[i].distanceTo(targets[i]) : 0;
                 if (d > wd || cramped(i, fr) && d > 0.2 && worst < 0) {
                     wd = Math.max(d, wd);
                     worst = i;

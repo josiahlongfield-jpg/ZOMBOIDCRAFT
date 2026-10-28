@@ -426,7 +426,7 @@ public final class HarvestmanDirector {
             HarvestmanEntity h = LOADED.get(r.id);
             if (h != null && h.isAlive() && h.centre().distanceToSqr(den) > 30 * 30 && h.mind.plan != HarvestmanMind.LAIR
                     && h.held() == null) {
-                h.mind.force(HarvestmanMind.LAIR);
+                h.mind.queue(HarvestmanMind.LAIR);
             } else if (h == null && r.away != null && !r.homeward) {
                 r.homeward = true;
             }
@@ -512,7 +512,7 @@ public final class HarvestmanDirector {
         furnish(level, lair);
         HarvestmanEntity h = materialize(level, r, den.add(0, HarvestmanEntity.STAND - HarvestmanEntity.MID, 0));
         if (h != null) {
-            h.mind.force(HarvestmanMind.REST);
+            h.mind.queue(HarvestmanMind.REST);
         }
         ZomboidCraft.LOGGER.info("A Harvestman made its den at {}", lair.toShortString());
     }
@@ -666,7 +666,7 @@ public final class HarvestmanDirector {
         graceUntil = 0;
         HarvestmanEntity h = LOADED.get(hunter);
         if (h != null && h.held() == null) {
-            h.mind.force(HarvestmanMind.STALK);
+            h.mind.queue(HarvestmanMind.STALK);
             h.mind.forced = -1;
         }
         return "A Harvestman is hunting " + who.getName().getString() + " now.";
