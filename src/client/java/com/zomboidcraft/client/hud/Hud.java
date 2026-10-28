@@ -146,6 +146,12 @@ public final class Hud {
 
     /** Letter-spaced capitals, the way the stencilled labels read. Returns the width drawn. */
     public static float caps(GuiGraphicsExtractor g, Font font, String s, float x, float y, int color, float spacing, float scale) {
+        return caps(g, font, s, x, y, color, spacing, scale, true);
+    }
+
+    /** As above; dark ink on a light ground goes without the drop shadow, which only smudges it there. */
+    public static float caps(GuiGraphicsExtractor g, Font font, String s, float x, float y, int color, float spacing, float scale,
+                             boolean shadow) {
         s = s.toUpperCase();
         if (ARGB.alpha(color) < 5) return capsWidth(font, s, spacing, scale);
         Matrix3x2fStack pose = g.pose();
@@ -155,7 +161,7 @@ public final class Hud {
         float cx = 0;
         for (int i = 0; i < s.length(); i++) {
             Component c = text(s.substring(i, i + 1));
-            g.text(font, c, Math.round(cx), 0, color, true);
+            g.text(font, c, Math.round(cx), 0, color, shadow);
             cx += font.width(c) + spacing;
         }
         pose.popMatrix();
