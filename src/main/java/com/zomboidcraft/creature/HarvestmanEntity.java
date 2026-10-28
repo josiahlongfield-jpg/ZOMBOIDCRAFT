@@ -548,11 +548,6 @@ public class HarvestmanEntity extends Mob {
     }
 
     @Override
-    public void knockback(double strength, double x, double z) {
-        // nothing moves it
-    }
-
-    @Override
     protected void tickDeath() {
         // it doesn't vanish: it lies where it fell, legs splayed, for a long while
         deathTime = Math.min(deathTime + 1, 100_000);
@@ -710,7 +705,9 @@ public class HarvestmanEntity extends Mob {
                 push = new Vec3(push.x, 0, push.z);
                 push = push.lengthSqr() < 1e-4 ? fwd.scale(0.6) : push.normalize().scale(0.6);
                 le.setDeltaMovement(push.x, 0.3, push.z);
-                le.hurtMarked = true;
+                if (le instanceof ServerPlayer sp) {
+                    sp.connection.send(new net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket(sp));
+                }
             }
             mind.lostPrey(level);
             return;
@@ -742,11 +739,6 @@ public class HarvestmanEntity extends Mob {
     @Override
     protected boolean canAddPassenger(Entity passenger) {
         return passenger == held && getPassengers().isEmpty();
-    }
-
-    @Override
-    public boolean shouldRiderSit() {
-        return false;
     }
 
     @Override

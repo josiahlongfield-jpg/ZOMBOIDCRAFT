@@ -882,7 +882,7 @@ public final class HarvestmanMind {
         if (what instanceof Player && feeds % 2 == 0 && stage < 5) {
             stage++;    // it grows
         }
-        if (what instanceof Player p) {
+        if (what instanceof ServerPlayer p) {
             HarvestmanDirector.killed(level, h, p);
         }
         end();
