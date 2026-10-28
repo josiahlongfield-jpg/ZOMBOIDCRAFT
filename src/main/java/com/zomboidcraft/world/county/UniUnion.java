@@ -6,8 +6,8 @@ import static com.zomboidcraft.world.county.University.UNI_Z0;
 import static com.zomboidcraft.world.county.University.UNI_Z1;
 
 /**
- * The Garvey Student Union, down the quad's east side south of the science hall: two tall floors
- * of orange brick, glass along the ground floor's front, GARVEY STUDENT UNION over the doors. A
+ * The Student Union, down the quad's east side south of the science hall: two tall floors
+ * of orange brick, glass along the ground floor's front, STUDENT UNION over the doors. A
  * concourse runs down the front inside the glass between the stairs; off it the bookstore, the
  * cafeteria with its kitchen behind the serving line, the game room; upstairs the ballroom, the
  * lounge over the concourse, the student offices and the campus radio station at the south end.

@@ -7,8 +7,8 @@ import static com.zomboidcraft.world.county.University.SCI_Z0;
 import static com.zomboidcraft.world.county.University.SCI_Z1;
 
 /**
- * Corwin Science Hall, down the quad's east side: four floors of buff brick with ribbon windows
- * and stone bands at the floors, CORWIN SCIENCE HALL in bronze over the doors, the greenhouse on
+ * Prescott Science Hall, down the quad's east side: four floors of buff brick with ribbon windows
+ * and stone bands at the floors, PRESCOTT SCIENCE HALL in bronze over the doors, the greenhouse on
  * the roof. A corridor runs the length of every floor between the fire stairs at its ends, labs
  * and classrooms either side: physics and the workshop on the ground floor with the entry hall,
  * chemistry over it, biology over that, the research floor at the top.
