@@ -1,0 +1,360 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_scrap": "zomboidcraft:block/city/hd_scrap",
+    "hd_scrap_b": "zomboidcraft:block/city/hd_scrap_b",
+    "hd_sheet": "zomboidcraft:block/city/hd_sheet",
+    "hd_sheet_b": "zomboidcraft:block/city/hd_sheet_b",
+    "hd_tangle": "zomboidcraft:block/city/hd_tangle",
+    "particle": "zomboidcraft:block/city/hd_scrap"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hd_scrap",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hd_scrap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hd_scrap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        5,
+        2
+      ],
+      "to": [
+        14,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap_b"
+        },
+        "south": {
+          "texture": "#hd_scrap_b"
+        },
+        "east": {
+          "texture": "#hd_scrap_b"
+        },
+        "west": {
+          "texture": "#hd_scrap_b"
+        },
+        "up": {
+          "texture": "#hd_scrap_b"
+        },
+        "down": {
+          "texture": "#hd_scrap_b"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        1
+      ],
+      "to": [
+        15,
+        5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_sheet"
+        },
+        "south": {
+          "texture": "#hd_sheet"
+        },
+        "east": {
+          "texture": "#hd_sheet"
+        },
+        "west": {
+          "texture": "#hd_sheet"
+        },
+        "up": {
+          "texture": "#hd_sheet"
+        },
+        "down": {
+          "texture": "#hd_sheet"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        3,
+        7,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_sheet_b"
+        },
+        "south": {
+          "texture": "#hd_sheet_b"
+        },
+        "east": {
+          "texture": "#hd_sheet_b"
+        },
+        "west": {
+          "texture": "#hd_sheet_b"
+        },
+        "up": {
+          "texture": "#hd_sheet_b"
+        },
+        "down": {
+          "texture": "#hd_sheet_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        6
+      ],
+      "to": [
+        9,
+        13,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap"
+        },
+        "south": {
+          "texture": "#hd_scrap"
+        },
+        "east": {
+          "texture": "#hd_scrap"
+        },
+        "west": {
+          "texture": "#hd_scrap"
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        4
+      ],
+      "to": [
+        11,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap"
+        },
+        "south": {
+          "texture": "#hd_scrap"
+        },
+        "east": {
+          "texture": "#hd_scrap"
+        },
+        "west": {
+          "texture": "#hd_scrap"
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2,
+        0
+      ],
+      "to": [
+        7.5,
+        3.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap_b"
+        },
+        "south": {
+          "texture": "#hd_scrap_b"
+        },
+        "east": {
+          "texture": "#hd_scrap_b"
+        },
+        "west": {
+          "texture": "#hd_scrap_b"
+        },
+        "up": {
+          "texture": "#hd_scrap_b"
+        },
+        "down": {
+          "texture": "#hd_scrap_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        8
+      ],
+      "to": [
+        16,
+        14,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle"
+        },
+        "south": {
+          "texture": "#hd_tangle"
+        },
+        "east": {
+          "texture": "#hd_tangle"
+        },
+        "west": {
+          "texture": "#hd_tangle"
+        },
+        "up": {
+          "texture": "#hd_tangle"
+        },
+        "down": {
+          "texture": "#hd_tangle"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        8
+      ],
+      "to": [
+        16,
+        13,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle"
+        },
+        "south": {
+          "texture": "#hd_tangle"
+        },
+        "east": {
+          "texture": "#hd_tangle"
+        },
+        "west": {
+          "texture": "#hd_tangle"
+        },
+        "up": {
+          "texture": "#hd_tangle"
+        },
+        "down": {
+          "texture": "#hd_tangle"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    }
+  ]
+}

@@ -8,8 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZomboidCraft;
-import com.zomboidcraft.zombie.Corpses;
-import com.zomboidcraft.zombie.ZombieLook;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -503,18 +501,24 @@ public final class HarvestmanDirector {
         if (den == null) {
             return;
         }
+        nextLair = level.getGameTime() + 20 * 60 * 10;
+        makeDen(level, den, p.position());
+    }
+
+    /** A new Harvestman and its den on the floor at den, built for someone coming in from `from`; it rests there. */
+    static HarvestmanEntity makeDen(ServerLevel level, Vec3 den, Vec3 from) {
         BlockPos lair = BlockPos.containing(den);
         Record r = new Record();
         r.id = UUID.randomUUID().toString();
         r.lair = lair;
         RECORDS.put(r.id, r);
-        nextLair = level.getGameTime() + 20 * 60 * 10;
-        furnish(level, lair);
+        furnish(level, lair, from);
         HarvestmanEntity h = materialize(level, r, den.add(0, HarvestmanEntity.STAND - HarvestmanEntity.MID, 0));
         if (h != null) {
             h.mind.queue(HarvestmanMind.REST);
         }
         ZomboidCraft.LOGGER.info("A Harvestman made its den at {}", lair.toShortString());
+        return h;
     }
 
     /** A dark floor 14-40 blocks from them that they can't see from where they stand. */
@@ -549,23 +553,14 @@ public final class HarvestmanDirector {
         return best;
     }
 
-    /** Its den: the bodies it has dragged in, and now and then something one of them carried. */
-    private static void furnish(ServerLevel level, BlockPos lair) {
+    /**
+     * Its den: the room torn clear, scrap heaped round the walls and a nest in the middle, the bodies it has dragged in
+     * hung up or set round the walls facing the way in (HarvestmanDens), and now and then something one of them carried.
+     */
+    private static void furnish(ServerLevel level, BlockPos lair, Vec3 from) {
         RandomSource rnd = level.getRandom();
-        List<String> outfits = ZombieLook.outfits();
-        int bodies = 3 + rnd.nextInt(4);
-        for (int i = 0; i < bodies; i++) {
-            double a = rnd.nextDouble() * Math.PI * 2, r = 1.5 + rnd.nextDouble() * 2.5;
-            Vec3 top = Vec3.atBottomCenterOf(lair).add(Math.cos(a) * r, 1.5, Math.sin(a) * r);
-            BlockHitResult down = level.clip(new ClipContext(top, top.add(0, -4, 0), ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.NONE, net.minecraft.world.phys.shapes.CollisionContext.empty()));
-            if (down.getType() == HitResult.Type.MISS) {
-                continue;
-            }
-            // drained and torn: most are missing something
-            int limbs = rnd.nextFloat() < 0.6f ? 1 << rnd.nextInt(8) : 0;
-            Corpses.lay(level, down.getLocation(), rnd.nextFloat() * 360f, outfits.get(rnd.nextInt(outfits.size())), limbs, true);
-        }
+        HarvestmanDens.carve(level, lair, from);
+        HarvestmanDens.bodies(level, lair, from, 3 + rnd.nextInt(4));
         if (rnd.nextFloat() < 0.3f) {
             Vec3 p = Vec3.atBottomCenterOf(lair).add(rnd.nextDouble() - 0.5, 0.2, rnd.nextDouble() - 0.5);
             ItemEntity map = new ItemEntity(level, p.x, p.y, p.z, new ItemStack(ModItems.BUNKER_MAP));

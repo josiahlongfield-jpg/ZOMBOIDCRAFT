@@ -1131,6 +1131,8 @@ import power  # noqa: E402
 power.register(sys.modules[__name__])
 import market  # noqa: E402
 market.register(sys.modules[__name__])
+import harvestman_den  # noqa: E402
+harvestman_den.register(sys.modules[__name__])
 
 
 
