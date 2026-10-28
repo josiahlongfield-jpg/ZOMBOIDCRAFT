@@ -103,9 +103,11 @@ public final class ZcConfig {
         /** Cars in each train. */
         public int railCars = 3;
         public int subwayCars = 3;
-        /** Trains running each line. */
-        public int railTrains = 1;
-        public int subwayTrains = 1;
+        /** Trains running each line; 0 spreads them along it, one every railSpacing / subwaySpacing blocks of track. */
+        public int railTrains = 0;
+        public int subwayTrains = 0;
+        public double railSpacing = 1500;
+        public double subwaySpacing = 900;
         /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
         public double flareNoise = 72;
         public double sirenNoise = 64;
@@ -1230,7 +1232,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 10;
+    private static final int DEFAULTS = 11;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1343,6 +1345,16 @@ public final class ZcConfig {
             // 2026-10-27 (Josiah): shorter railway trains, three cars with OTTO's
             if (c.trains.railCars == 4) {
                 c.trains.railCars = 3;
+            }
+        }
+        if (c.defaultsVersion < 11) {
+            // 2026-10-28 (Josiah waited ages at a stop): one train on the long county loop came round about every
+            // half hour; now a train every 1500 blocks of railway (900 of subway)
+            if (c.trains.railTrains == 1) {
+                c.trains.railTrains = 0;
+            }
+            if (c.trains.subwayTrains == 1) {
+                c.trains.subwayTrains = 0;
             }
         }
         c.defaultsVersion = DEFAULTS;

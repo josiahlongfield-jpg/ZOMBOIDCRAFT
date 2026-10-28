@@ -151,7 +151,13 @@ public final class Trains {
 
     private static void startTrains(Line line, Line old) {
         ZcConfig.Trains cfg = ZcConfig.get().trains;
-        int n = Math.max(1, line.kind == Line.Kind.SUBWAY ? cfg.subwayTrains : cfg.railTrains);
+        boolean subway = line.kind == Line.Kind.SUBWAY;
+        int n = subway ? cfg.subwayTrains : cfg.railTrains;
+        if (n <= 0) {
+            // spread along the line: a long loop gets as many as keep the wait at a stop short
+            n = (int) Math.round(line.route.length() / Math.max(200, subway ? cfg.subwaySpacing : cfg.railSpacing));
+        }
+        n = Math.max(1, Math.min(n, (int) (line.route.length() / 150)));
         for (int i = 0; i < n; i++) {
             double s = old != null && i < old.trains.size() ? old.trains.get(i).s : line.route.length() * i / n;
             TrainRun run = new TrainRun(line, i, s);
