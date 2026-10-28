@@ -119,6 +119,9 @@ public class HarvestmanEntity extends Mob {
      */
     static final double REACH_OFF = 2.8, REACH_UP = 0.8;
     private Vec3 lastPos = Vec3.ZERO;
+    /** Its way round walls to the goal, and where it's making for along it this tick. */
+    final HarvestmanRoute route = new HarvestmanRoute();
+    private Vec3 aim;
     private int stuck;
     int stuckTicks;
 
@@ -304,10 +307,12 @@ public class HarvestmanEntity extends Mob {
             fall(level, c, dt);
             return;
         }
+        // the way round what's in between: where it makes for now along its route (the goal itself when it's in the clear)
+        aim = route.aim(level, c.subtract(surf.scale(height(c, fwd) - 0.5)), surf, goal, stuck);
         Vec3 dir = fwd;
         double dist = 0;
-        if (goal != null) {
-            Vec3 to = goal.subtract(c);
+        if (aim != null) {
+            Vec3 to = aim.subtract(c);
             Vec3 t = to.subtract(surf.scale(to.dot(surf)));
             dist = t.length();
             if (dist > 1e-3) {
@@ -319,8 +324,8 @@ public class HarvestmanEntity extends Mob {
         if (!surf.equals(wallFace)) {
             wallDir = null;     // on a new face: it looks again
         }
-        double off = goal == null ? 0 : goal.subtract(c).dot(surf);
-        if (goal != null && off > REACH_UP && (dist < 3 || wallDir != null)) {
+        double off = aim == null ? 0 : aim.subtract(c).dot(surf);
+        if (aim != null && off > REACH_UP && (dist < 3 || wallDir != null)) {
             Vec3 w = wallward(c, dist > 1e-3 ? dir : fwd);
             if (w != null) {
                 dir = w;
@@ -336,7 +341,8 @@ public class HarvestmanEntity extends Mob {
         // at a burst it gets up to speed and stops again in a few strides, its points biting in
         boolean burst = goal != null && goalSpeed > 5 || speed > 5;
         double stop = burst ? 12 : 3;
-        double top = goal == null ? 0 : Math.min(goalSpeed * mind.speedScale(), Math.sqrt(2 * stop * Math.max(0, dist - 0.3)));
+        double cap = route.slow ? 0.7 : goalSpeed * mind.speedScale();
+        double top = goal == null ? 0 : Math.min(cap, Math.sqrt(2 * stop * Math.max(0, dist - 0.3)));
         speed = speed < top ? Math.min(top, speed + ACCEL * mind.accelScale() * (burst ? 2.5 : 1) * dt)
                 : Math.max(top, speed - (burst ? 14 : BRAKE) * dt);
         boolean blocked = false;
@@ -364,7 +370,9 @@ public class HarvestmanEntity extends Mob {
                             dir = along.normalize();
                         }
                     } else if (n.dot(dir) <= -0.5 && n.dot(surf) < 0.5) {
-                        if (!(wantFloor && surf.y > 0.5) && fits(c, fwd)) {
+                        if (route.stay) {
+                            // its route goes on along this face (under a lintel, through a gap): it carries on
+                        } else if (!(wantFloor && surf.y > 0.5) && fits(c, fwd)) {
                             surf = n;
                             speed *= 0.6;
                             level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.35f, 1.3f);
@@ -395,10 +403,25 @@ public class HarvestmanEntity extends Mob {
         if (pivotT < 0 && next != c) {
             HarvestmanBody.Frame at = HarvestmanLegs.flat(next, surf, fwd.subtract(surf.scale(fwd.dot(surf))).normalize());
             int legsLeft = 4 - Integer.bitCount(lost());
-            if (!fits(next, at.z()) || legs.support(this, at, want, lost()) < Math.max(2, legsLeft - 1)) {
+            int support = legs.support(this, at, want, lost());
+            if (!fits(next, at.z()) || support < Math.max(2, legsLeft - 1)) {
                 next = c;
                 blocked = true;
                 speed = 0;
+                // creeping up to an outer edge its legs can't plant past: it swings round on to the face beyond now
+                Vec3 p = c.add(dir.scale(0.6));
+                if (support < Math.max(2, legsLeft - 1)
+                        && cast(p.add(surf.scale(0.4)), p.subtract(surf.scale(want + 1.6))).getType() == HitResult.Type.MISS) {
+                    Vec3 r = overEdge(level, c, p, dir, want);
+                    if (r != null && dropping) {
+                        setPos(r.subtract(0, MID, 0));
+                        return;
+                    }
+                    if (r != null && pivotT == 0) {
+                        next = r;
+                        blocked = false;
+                    }
+                }
             }
         }
         setPos(next.subtract(0, MID, 0));
@@ -464,6 +487,22 @@ public class HarvestmanEntity extends Mob {
                 want = Math.min(want, Math.max(CROUCH, gap - 0.8));
             }
         }
+        // a low gap coming up (a doorway's lintel), felt for down by its feet so it ducks before it gets there, and over
+        // its tail while that's still under one
+        BlockHitResult base = cast(c, c.subtract(surf.scale(6)));
+        if (base.getType() != HitResult.Type.MISS) {
+            Vec3 b = base.getLocation().add(surf.scale(0.3));
+            for (double k : new double[] {0.9, 1.8, 2.7, -0.7, -1.5}) {
+                Vec3 p = b.add((k > 0 ? dir : fwd).scale(k));
+                if (cast(b, p).getType() != HitResult.Type.MISS) {
+                    continue;
+                }
+                BlockHitResult over = cast(p, p.add(surf.scale(6)));
+                if (over.getType() != HitResult.Type.MISS) {
+                    want = Math.min(want, Math.max(CROUCH, over.getLocation().distanceTo(p) + 0.3 - 0.8));
+                }
+            }
+        }
         // a leg or two gone, it sags
         return Math.max(CROUCH, want - 0.25 * Integer.bitCount(lost()));
     }
@@ -520,7 +559,7 @@ public class HarvestmanEntity extends Mob {
         BlockHitResult wrap = cast(low, low.subtract(dir.scale(2.2)));
         BlockHitResult held = cast(c, c.subtract(surf.scale(want + 1.6)));
         if (wrap.getType() != HitResult.Type.MISS && held.getType() != HitResult.Type.MISS && normal(wrap).dot(dir) > 0.5
-                && !(wantFloor && onFloor && goal != null && goal.y < c.y - 6 && floorBelow(next, 14))) {
+                && !(wantFloor && onFloor && aim != null && aim.y < c.y - 6 && floorBelow(next, 14))) {
             Vec3 n1 = normal(wrap), pf = held.getLocation(), pw = wrap.getLocation();
             // the edge: where the two faces meet, beside it; it swings round a line just past it, so it ends up over the
             // new face, not balanced on the corner
@@ -534,7 +573,7 @@ public class HarvestmanEntity extends Mob {
         // off a floor's edge on purpose, when what it wants is below and there's ground to land on
         // (it springs out clear of the edge, so its whole body drops past it)
         Vec3 out = next.add(dir.scale(1.4));
-        if (onFloor && goal != null && goal.y < c.y - 1.5 && floorBelow(out, 16) && fits(out, dir)) {
+        if (onFloor && aim != null && aim.y < c.y - 1.5 && floorBelow(out, 16) && fits(out, dir)) {
             dropping = true;
             fwd = dir;
             level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.6f, 0.9f);
@@ -592,10 +631,15 @@ public class HarvestmanEntity extends Mob {
         f = f.normalize();
         if (want.lengthSqr() > 1e-6) {
             want = want.normalize();
-            double a = Math.acos(Mth.clamp(f.dot(want), -1, 1)), max = TURN_RATE * mind.speedScale() * (speed > 5 ? 2.5 : 1) * dt;
+            double a = Math.acos(Mth.clamp(f.dot(want), -1, 1)),
+                    max = TURN_RATE * mind.speedScale() * (speed > 5 ? 2.5 : route.slow ? 2 : 1) * dt;
             f = a <= max ? want : slerp(f, want, max / a);
         }
-        fwd = f.subtract(up.scale(f.dot(up))).normalize();
+        Vec3 nf = f.subtract(up.scale(f.dot(up))).normalize();
+        // it only turns where its body has the room to (its tail doesn't swing into a wall)
+        if (pivotT >= 0 || dropping || fits(centre(), nf) || !fits(centre(), fwd)) {
+            fwd = nf;
+        }
         Vec3 x = up.cross(fwd).normalize();
         Vector3f cx = new Vector3f((float) x.x, (float) x.y, (float) x.z), cy = new Vector3f((float) up.x, (float) up.y, (float) up.z);
         Vector3f cz = new Vector3f().set(cx).cross(cy);
