@@ -226,6 +226,8 @@ public class KitUiTest implements FabricClientGameTest {
             swapTest(ctx, sp, true);
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
+            beltHudTest(ctx, sp);
+            spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
     }
@@ -471,8 +473,8 @@ public class KitUiTest implements FabricClientGameTest {
     }
 
     /**
-     * Weapons and pockets: with the belt full, a picked-up rifle goes on the sling and a pistol into the pack, never a
-     * pocket; then the slung rifle seen from behind, over the pack.
+     * Weapons and the quick slots: a picked-up rifle goes on the sling (Back), a pistol into the holster and a knife into
+     * its sheath, never a pocket; a slot only takes what fits it. Then the slung rifle seen from behind, over the pack.
      */
     private static void slingTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("clear @a");
@@ -482,22 +484,58 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(5);
         String report = sp.getServer().computeOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);
-            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, new ItemStack(Items.DIRT));
-            ItemStack rifle = new ItemStack(ModItems.HUNTING_RIFLE), pistol = new ItemStack(ModItems.PISTOL);
-            boolean r = p.getInventory().add(rifle), q = p.getInventory().add(pistol);
-            StringBuilder out = new StringBuilder("rifle taken=" + r + " pistol taken=" + q + " sling="
-                    + com.zomboidcraft.carry.Carry.gear(p).get(com.zomboidcraft.carry.GearStore.SLING));
-            for (int i = 9; i < 36; i++) if (!p.getInventory().getItem(i).isEmpty()) out.append(" POCKET ").append(i).append('=').append(p.getInventory().getItem(i));
-            for (int i = 0; i < p.inventoryMenu.slots.size(); i++) {
-                if (p.inventoryMenu.slots.get(i).getItem().is(ModItems.PISTOL)) out.append(" pistol in slot ").append(i).append(' ')
-                        .append(p.inventoryMenu.slots.get(i).getClass().getSimpleName());
-            }
-            out.append(" pocket takes a rifle=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(ModItems.ASSAULT_RIFLE)))
-                    .append(" pocket takes bread=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(Items.BREAD)));
+            var gear = new com.zomboidcraft.carry.GearContainer(p);
+            gear.setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(ModItems.LEATHER_BELT));
+            gear.setItem(com.zomboidcraft.carry.GearStore.HOLSTER, new ItemStack(ModItems.HIP_HOLSTER));
+            gear.setItem(com.zomboidcraft.carry.GearStore.SHEATH, new ItemStack(ModItems.KNIFE_SHEATH));
             for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+            p.getInventory().add(new ItemStack(ModItems.HUNTING_RIFLE));
+            p.getInventory().add(new ItemStack(ModItems.PISTOL));
+            p.getInventory().add(new ItemStack(ModItems.KITCHEN_KNIFE));
+            p.getInventory().add(new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(Items.BREAD, 2));
+            StringBuilder out = new StringBuilder("quick slots:");
+            for (int i = 0; i < 9; i++) out.append(' ').append(i + 1).append('=').append(p.getInventory().getItem(i));
+            for (int i = 9; i < 36; i++) if (!p.getInventory().getItem(i).isEmpty()) out.append(" POCKET ").append(i).append('=').append(p.getInventory().getItem(i));
+            out.append(" pocket takes a rifle=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(ModItems.ASSAULT_RIFLE)))
+                    .append(" pocket takes bread=").append(p.inventoryMenu.slots.get(9).mayPlace(new ItemStack(Items.BREAD)))
+                    .append(" back takes dirt=").append(p.inventoryMenu.slots.get(36 + 5).mayPlace(new ItemStack(Items.DIRT)))
+                    .append(" holster takes a rifle=").append(p.inventoryMenu.slots.get(36 + 3).mayPlace(new ItemStack(ModItems.ASSAULT_RIFLE)))
+                    .append(" pouch open (leather belt)=").append(com.zomboidcraft.carry.QuickSlots.open(p, 6));
+            boolean ok = p.getInventory().getItem(5).is(ModItems.HUNTING_RIFLE) && p.getInventory().getItem(3).is(ModItems.PISTOL)
+                    && p.getInventory().getItem(4).is(ModItems.KITCHEN_KNIFE) && p.getInventory().getItem(1).is(ModItems.HAMMER);
+            out.append(ok ? " ROUTED OK" : " ROUTED WRONG");
+            p.getInventory().setItem(1, ItemStack.EMPTY);
+            p.getInventory().setSelectedSlot(0);
             return out.toString();
         });
         LOG.info("ZCUI sling: {}", report);
+        if (report.contains("ROUTED WRONG")) throw new AssertionError("quick slot routing: " + report);
+        // taking the belt off: the hip holster and sheath stop working, and what was in them moves off the belt
+        String spilled = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.getInventory().setItem(2, new ItemStack(ModItems.CROWBAR));
+            return "belt off, before: hip=" + p.getInventory().getItem(2);
+        });
+        sp.getServer().runOnServer(s -> new com.zomboidcraft.carry.GearContainer(s.getPlayerList().getPlayers().get(0))
+                .setItem(com.zomboidcraft.carry.GearStore.BELT, ItemStack.EMPTY));
+        ctx.waitTicks(25);
+        spilled += sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            StringBuilder out = new StringBuilder(" after:");
+            for (int i = 0; i < 9; i++) out.append(' ').append(i + 1).append('=').append(p.getInventory().getItem(i));
+            out.append(" hip open=").append(com.zomboidcraft.carry.QuickSlots.open(p, 1));
+            // and the belt back on for the pictures
+            new com.zomboidcraft.carry.GearContainer(p).setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(ModItems.LEATHER_BELT));
+            for (int i = 0; i < 36; i++) {
+                ItemStack st = p.getInventory().getItem(i);
+                if (i != 5 && (st.is(ModItems.PISTOL) || st.is(ModItems.KITCHEN_KNIFE) || st.is(ModItems.CROWBAR))) p.getInventory().setItem(i, ItemStack.EMPTY);
+            }
+            p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+            p.getInventory().setItem(4, new ItemStack(ModItems.KITCHEN_KNIFE));
+            return out.toString();
+        });
+        LOG.info("ZCUI quick slots spill: {}", spilled);
         ctx.waitTicks(10);
         // a camera on a stand behind you, looking at your back (your own third-person views sit too close)
         sp.getServer().runCommand("effect give @a minecraft:night_vision 60 0 true");
@@ -556,11 +594,18 @@ public class KitUiTest implements FabricClientGameTest {
         });
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);
-            for (int i = 0; i < 9; i++) p.getInventory().setItem(i, new ItemStack(Items.DIRT));
-            p.getInventory().add(new ItemStack(ModItems.FIRE_AXE));
             for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+            p.getInventory().add(new ItemStack(ModItems.FIRE_AXE));
         });
         ctx.waitTicks(60);
+        String gearNow = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var g = com.zomboidcraft.carry.Carry.gear(p);
+            return g.get(0) + ", " + g.get(1) + ", " + g.get(2) + ", " + g.get(3) + " back slot " + p.getInventory().getItem(5)
+                    + " worn " + p.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of());
+        });
+        String wornClient = ctx.computeOnClient(mc -> String.valueOf(mc.player.getAttachedOrElse(com.zomboidcraft.carry.Carry.WORN, List.of())));
+        LOG.info("ZCUI sling axe: server gear {} client worn {}", gearNow, wornClient);
         ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(20f)));
         ctx.waitTicks(3);
         ctx.takeScreenshot("sling-figure-axe");
@@ -571,12 +616,92 @@ public class KitUiTest implements FabricClientGameTest {
      * Drag and drop on the pack page with room to spare: bread dragged onto an empty pocket lands there on release;
      * a rifle dragged onto an empty pocket goes back to the belt (no guns in pockets).
      */
+    /** The spawn picker drawn with the real place list (the test world isn't a county, so it's opened by hand). */
+    private static void spawnPickerTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        var places = sp.getServer().computeOnServer(s -> com.zomboidcraft.spawn.SpawnPicker.places());
+        LOG.info("ZCUI spawn picker: {} places offered", places.size());
+        if (places.size() < 20) throw new AssertionError("spawn picker offers only " + places.size() + " places");
+        var open = new com.zomboidcraft.spawn.SpawnNet.Open(places,
+                List.of(new com.zomboidcraft.spawn.SpawnNet.Friend("00000000-0000-0000-0000-000000000000", "Sam", "Seabright")), false);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new SpawnScreen(open)));
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("spawn-picker");
+        // a click on the Riverside row picks it
+        int[] row = ctx.computeOnClient(mc -> {
+            SpawnScreen s = (SpawnScreen) mc.gui.screen();
+            return s.rowFor("riverside");
+        });
+        if (row != null) {
+            click(ctx, row[0] + 5, row[1] + 4, 0);
+            ctx.waitTicks(3);
+        }
+        String sel = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SpawnScreen s ? s.selected() : "closed");
+        LOG.info("ZCUI spawn picker: clicked Riverside row {} -> selected {}", row == null ? "missing" : row[0] + "," + row[1], sel);
+        ctx.takeScreenshot("spawn-picker-riverside");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /**
+     * The HUD's quick slots in one row, empty ones too (peeked with Left Alt): a full duty kit shows all eight, a plain
+     * belt only hands, hip, hip and back. Scrolling skips the slots you don't have.
+     */
+    private static void beltHudTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        for (boolean duty : new boolean[]{true, false}) {
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(duty ? ModItems.DUTY_BELT : ModItems.LEATHER_BELT));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HOLSTER, duty ? new ItemStack(ModItems.HIP_HOLSTER) : ItemStack.EMPTY);
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHEATH, duty ? new ItemStack(ModItems.MACHETE_SHEATH) : ItemStack.EMPTY);
+                for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+                p.getInventory().setItem(0, new ItemStack(ModItems.CROWBAR));
+                p.getInventory().setItem(1, new ItemStack(ModItems.HAMMER));
+                if (duty) {
+                    p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+                    p.getInventory().setItem(4, new ItemStack(ModItems.MACHETE));
+                    p.getInventory().setItem(6, new ItemStack(ModItems.BANDAGE, 3));
+                }
+                p.getInventory().setItem(5, new ItemStack(ModItems.HUNTING_RIFLE));
+            });
+            ctx.waitTicks(5);
+            ctx.runOnClient(mc -> {
+                mc.gui.setScreen(null);
+                mc.player.getInventory().setSelectedSlot(0);
+            });
+            ctx.getInput().holdKey(InputConstants.KEY_LALT);
+            ctx.waitTicks(20);
+            ctx.takeScreenshot(duty ? "hud-belt-duty" : "hud-belt-plain");
+            ctx.getInput().releaseKey(InputConstants.KEY_LALT);
+            // and worn: the belt round the waist, the pistol and machete hanging off it
+            for (float turn : new float[]{0f, 150f, 210f}) {
+                ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+                ctx.waitTicks(3);
+                ctx.takeScreenshot("belt-figure-" + (duty ? "duty-" : "plain-") + Math.round(turn));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        }
+        // with a plain belt, scrolling on from the second hip slot lands on the sling, not the empty holster place
+        String scrolled = ctx.computeOnClient(mc -> {
+            var inv = mc.player.getInventory();
+            inv.setSelectedSlot(2);
+            inv.setSelectedSlot(3);
+            int forward = inv.getSelectedSlot();
+            inv.setSelectedSlot(4);
+            int back = inv.getSelectedSlot();
+            inv.setSelectedSlot(6);
+            int key = inv.getSelectedSlot();
+            inv.setSelectedSlot(0);
+            return "from 3 forward -> " + (forward + 1) + ", from there back -> " + (back + 1) + ", key 7 -> " + (key + 1);
+        });
+        LOG.info("ZCUI quick slot scroll: {}", scrolled);
+    }
+
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("clear @a");
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);
             p.getInventory().setItem(0, new ItemStack(Items.BREAD, 3));
-            p.getInventory().setItem(1, new ItemStack(ModItems.HUNTING_RIFLE));
+            p.getInventory().setItem(5, new ItemStack(ModItems.HUNTING_RIFLE));
         });
         ctx.waitTicks(5);
         ctx.getInput().pressKey(InputConstants.KEY_E);
@@ -585,7 +710,7 @@ public class KitUiTest implements FabricClientGameTest {
             if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.PACK);
         });
         ctx.waitTicks(3);
-        for (int belt : new int[]{36, 37}) {
+        for (int belt : new int[]{36, 41}) {
             String out = ctx.computeOnClient(mc -> {
                 if (!(mc.gui.screen() instanceof KitScreen<?> k)) return "no kit";
                 KitScreen.Hot from = null, pocket = null;
@@ -636,6 +761,12 @@ public class KitUiTest implements FabricClientGameTest {
         BackView(float turn) {
             super(net.minecraft.network.chat.Component.literal("back"));
             this.turn = turn;
+        }
+
+        // a pause screen stops the integrated server ticking, and with it the worn-gear sync
+        @Override
+        public boolean isPauseScreen() {
+            return false;
         }
 
         @Override

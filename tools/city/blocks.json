@@ -263281,6 +263281,7079 @@
    "sound": "WOOD",
    "rotate": "facing",
    "loot": "office"
+  },
+  "tx_column": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     16,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     16,
+     11,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_column_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     16,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     16,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     3.5,
+     0,
+     3.5,
+     12.5,
+     1.5,
+     12.5,
+     "tx_steel_d"
+    ],
+    [
+     4.5,
+     1.5,
+     4.5,
+     5.5,
+     2.2,
+     5.5,
+     "tx_steel_d"
+    ],
+    [
+     4.5,
+     1.5,
+     10.5,
+     5.5,
+     2.2,
+     11.5,
+     "tx_steel_d"
+    ],
+    [
+     10.5,
+     1.5,
+     4.5,
+     11.5,
+     2.2,
+     5.5,
+     "tx_steel_d"
+    ],
+    [
+     10.5,
+     1.5,
+     10.5,
+     11.5,
+     2.2,
+     11.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_column_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     6,
+     11,
+     14.5,
+     10,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     0,
+     5,
+     10,
+     14.5,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     3.5,
+     14.5,
+     3.5,
+     12.5,
+     16,
+     12.5,
+     "tx_steel_w"
+    ],
+    [
+     7.4,
+     10,
+     2,
+     8.6,
+     14.5,
+     14,
+     "tx_steel_w"
+    ],
+    [
+     2,
+     10,
+     7.4,
+     14,
+     14.5,
+     8.6,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Column",
+   "sound": "METAL"
+  },
+  "tx_truss": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     13,
+     0,
+     9.5,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     2.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7.5,
+     2.5,
+     0,
+     8.5,
+     13,
+     16,
+     {
+      "east": "tx_truss_web",
+      "west": "tx_truss_web",
+      "up": "tx_steel_w",
+      "down": "tx_steel_w",
+      "north": "tx_steel_w",
+      "south": "tx_steel_w"
+     }
+    ]
+   ],
+   "title": "Roof Truss",
+   "sound": "METAL",
+   "rotate": "axis",
+   "render": "cutout"
+  },
+  "tx_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     13.5,
+     0,
+     12,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     13.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_roof": {
+   "tex": {
+    "up": "tx_membrane",
+    "down": "tx_slat_ceiling",
+    "side": "tx_fascia"
+   },
+   "title": "Roof",
+   "sound": "STONE"
+  },
+  "tx_roof_glass": {
+   "tex": {
+    "all": "tx_glass_roof"
+   },
+   "title": "Rooflight",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_parapet": {
+   "tex": {
+    "up": "tx_coping",
+    "down": "tx_fascia",
+    "side": "tx_fascia"
+   },
+   "title": "Parapet",
+   "sound": "METAL"
+  },
+  "tx_fascia": {
+   "tex": {
+    "all": "tx_fascia"
+   },
+   "title": "Fascia",
+   "sound": "METAL"
+  },
+  "tx_name_uptown_0": {
+   "tex": {
+    "north": "tx_name_uptown_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_1": {
+   "tex": {
+    "north": "tx_name_uptown_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_2": {
+   "tex": {
+    "north": "tx_name_uptown_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_3": {
+   "tex": {
+    "north": "tx_name_uptown_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_4": {
+   "tex": {
+    "north": "tx_name_uptown_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_5": {
+   "tex": {
+    "north": "tx_name_uptown_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_6": {
+   "tex": {
+    "north": "tx_name_uptown_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_uptown_7": {
+   "tex": {
+    "north": "tx_name_uptown_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_0": {
+   "tex": {
+    "north": "tx_name_riverside_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_1": {
+   "tex": {
+    "north": "tx_name_riverside_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_2": {
+   "tex": {
+    "north": "tx_name_riverside_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_3": {
+   "tex": {
+    "north": "tx_name_riverside_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_4": {
+   "tex": {
+    "north": "tx_name_riverside_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_5": {
+   "tex": {
+    "north": "tx_name_riverside_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_6": {
+   "tex": {
+    "north": "tx_name_riverside_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_riverside_7": {
+   "tex": {
+    "north": "tx_name_riverside_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_0": {
+   "tex": {
+    "north": "tx_name_foundry_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_1": {
+   "tex": {
+    "north": "tx_name_foundry_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_2": {
+   "tex": {
+    "north": "tx_name_foundry_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_3": {
+   "tex": {
+    "north": "tx_name_foundry_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_4": {
+   "tex": {
+    "north": "tx_name_foundry_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_5": {
+   "tex": {
+    "north": "tx_name_foundry_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_6": {
+   "tex": {
+    "north": "tx_name_foundry_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_foundry_7": {
+   "tex": {
+    "north": "tx_name_foundry_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_0": {
+   "tex": {
+    "north": "tx_name_southport_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_1": {
+   "tex": {
+    "north": "tx_name_southport_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_2": {
+   "tex": {
+    "north": "tx_name_southport_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_3": {
+   "tex": {
+    "north": "tx_name_southport_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_4": {
+   "tex": {
+    "north": "tx_name_southport_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_5": {
+   "tex": {
+    "north": "tx_name_southport_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_6": {
+   "tex": {
+    "north": "tx_name_southport_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_southport_7": {
+   "tex": {
+    "north": "tx_name_southport_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_0": {
+   "tex": {
+    "north": "tx_name_union_0",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_1": {
+   "tex": {
+    "north": "tx_name_union_1",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_2": {
+   "tex": {
+    "north": "tx_name_union_2",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_3": {
+   "tex": {
+    "north": "tx_name_union_3",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_4": {
+   "tex": {
+    "north": "tx_name_union_4",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_5": {
+   "tex": {
+    "north": "tx_name_union_5",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_6": {
+   "tex": {
+    "north": "tx_name_union_6",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_name_union_7": {
+   "tex": {
+    "north": "tx_name_union_7",
+    "south": "tx_fascia",
+    "east": "tx_fascia",
+    "west": "tx_fascia",
+    "up": "tx_coping",
+    "down": "tx_fascia"
+   },
+   "title": "Station Name",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_panel": {
+   "tex": {
+    "all": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_b": {
+   "tex": {
+    "all": "tx_panel_b"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_wall": {
+   "tex": {
+    "all": "tx_wall"
+   },
+   "title": "Plaster Wall",
+   "sound": "STONE"
+  },
+  "tx_granite": {
+   "tex": {
+    "all": "tx_granite"
+   },
+   "title": "Granite",
+   "sound": "STONE"
+  },
+  "tx_terrazzo": {
+   "tex": {
+    "all": "tx_terrazzo"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_terrazzo_b": {
+   "tex": {
+    "all": "tx_terrazzo_b"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_terrazzo_d": {
+   "tex": {
+    "all": "tx_terrazzo_d"
+   },
+   "title": "Terrazzo",
+   "sound": "STONE"
+  },
+  "tx_panel_hi": {
+   "tex": {
+    "side": "tx_panel_hi",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_hi_s": {
+   "tex": {
+    "side": "tx_panel_hi_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_mid": {
+   "tex": {
+    "side": "tx_panel_mid",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_mid_s": {
+   "tex": {
+    "side": "tx_panel_mid_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_lo": {
+   "tex": {
+    "side": "tx_panel_lo",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_panel_lo_s": {
+   "tex": {
+    "side": "tx_panel_lo_s",
+    "up": "tx_panel",
+    "down": "tx_panel"
+   },
+   "title": "Cladding Panel",
+   "sound": "STONE"
+  },
+  "tx_wall_base": {
+   "tex": {
+    "side": "tx_wall_base",
+    "up": "tx_wall",
+    "down": "tx_wall"
+   },
+   "title": "Plaster Wall",
+   "sound": "STONE"
+  },
+  "tx_glass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass",
+      "west": "tx_glass",
+      "north": "tx_glass",
+      "south": "tx_glass",
+      "up": "tx_glass",
+      "down": "tx_glass"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_t": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     1.5,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass",
+      "west": "tx_glass",
+      "north": "tx_glass",
+      "south": "tx_glass",
+      "up": "tx_glass",
+      "down": "tx_glass"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     6.5,
+     0,
+     1.5,
+     9.5,
+     1.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass_cracked",
+      "west": "tx_glass_cracked",
+      "north": "tx_glass_cracked",
+      "south": "tx_glass_cracked",
+      "up": "tx_glass_cracked",
+      "down": "tx_glass_cracked"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     1.5,
+     8.5,
+     16,
+     16,
+     {
+      "east": "tx_glass_broken",
+      "west": "tx_glass_broken",
+      "north": "tx_glass_broken",
+      "south": "tx_glass_broken",
+      "up": "tx_glass_broken",
+      "down": "tx_glass_broken"
+     }
+    ],
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_glass_frame": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     6.5,
+     0,
+     1.5,
+     9.5,
+     1.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Wall Frame",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_door": {
+   "door": "steel",
+   "tex": {
+    "top": "tx_door_top",
+    "bottom": "tx_door_bottom"
+   },
+   "title": "Glass Door"
+  },
+  "tx_canopy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_canopy_edge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     4,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     10,
+     0,
+     16,
+     14,
+     4,
+     {
+      "up": "tx_gutter",
+      "side": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     4,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Canopy Gutter",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     4.46,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     4.0,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.46,
+     0,
+     10,
+     5.26,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.0,
+     8,
+     10,
+     4.8,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     5.39,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     4.93,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     5.39,
+     0,
+     10,
+     6.1899999999999995,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     4.93,
+     8,
+     10,
+     5.7299999999999995,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     6.32,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     5.86,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     6.32,
+     0,
+     10,
+     7.12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     5.86,
+     8,
+     10,
+     6.66,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     7.25,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     6.79,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     7.25,
+     0,
+     10,
+     8.05,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     6.79,
+     8,
+     10,
+     7.59,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     8.180000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     7.720000000000001,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     8.180000000000001,
+     0,
+     10,
+     8.980000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     7.720000000000001,
+     8,
+     10,
+     8.520000000000001,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     9.110000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     8.65,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     9.110000000000001,
+     0,
+     10,
+     9.910000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     8.65,
+     8,
+     10,
+     9.450000000000001,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_canopy_arm_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     13,
+     16,
+     {
+      "up": "tx_canopy_glass",
+      "down": "tx_canopy_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     11,
+     0,
+     1.5,
+     13.5,
+     16,
+     "tx_steel_d"
+    ],
+    [
+     1.5,
+     11.5,
+     0,
+     16,
+     13,
+     1.5,
+     "tx_steel_d"
+    ],
+    [
+     7,
+     10.040000000000001,
+     0,
+     9,
+     12,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     9.58,
+     8,
+     9,
+     12,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     10.040000000000001,
+     0,
+     10,
+     10.840000000000002,
+     8,
+     "tx_steel_w"
+    ],
+    [
+     6,
+     9.58,
+     8,
+     10,
+     10.38,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Canopy",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_bench": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     6,
+     3,
+     15,
+     7,
+     11,
+     {
+      "up": "tx_perf",
+      "down": "tx_perf",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     1,
+     7,
+     11,
+     15,
+     15,
+     12,
+     {
+      "north": "tx_perf",
+      "south": "tx_perf",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     7.4,
+     7,
+     4,
+     8.6,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     1,
+     7,
+     4,
+     2,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     14,
+     7,
+     4,
+     15,
+     10.5,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     0,
+     6,
+     5,
+     6,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     11,
+     0,
+     6,
+     13,
+     6,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     2,
+     0,
+     5,
+     6,
+     0.6,
+     10,
+     "tx_steel_d"
+    ],
+    [
+     10,
+     0,
+     5,
+     14,
+     0.6,
+     10,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Station Bench",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "tx_tvm": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     16,
+     16,
+     {
+      "north": "tx_tvm_lo",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     5,
+     4.5,
+     2.6,
+     11,
+     6,
+     4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "cash"
+  },
+  "tx_tvm_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     13,
+     16,
+     {
+      "north": "tx_tvm_hi",
+      "side": "tx_steel_d",
+      "up": "tx_green",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0.5,
+     13,
+     2,
+     15.5,
+     14.2,
+     16,
+     "tx_green"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_tvm_smashed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     16,
+     16,
+     {
+      "north": "tx_tvm_lo_smashed",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_tvm_top_smashed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     4,
+     15,
+     13,
+     16,
+     {
+      "north": "tx_tvm_hi_smashed",
+      "side": "tx_steel_d",
+      "up": "tx_green",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     0.5,
+     13,
+     2,
+     15.5,
+     14.2,
+     16,
+     "tx_green"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_validator": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     9,
+     9,
+     "tx_steel_d"
+    ],
+    [
+     6,
+     0,
+     6,
+     10,
+     0.6,
+     10,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     9,
+     5,
+     11,
+     14,
+     10,
+     {
+      "north": "tx_validator",
+      "side": "tx_green",
+      "up": "tx_green",
+      "down": "tx_green",
+      "south": "tx_green"
+     }
+    ]
+   ],
+   "title": "Ticket Validator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_ticket_counter": {
+   "tex": {
+    "north": "tx_counter_front",
+    "south": "tx_wall",
+    "east": "tx_wall",
+    "west": "tx_wall",
+    "up": "tx_granite",
+    "down": "tx_wall"
+   },
+   "title": "Ticket Counter",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_ticket_window": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1.5,
+     16,
+     1,
+     16,
+     "tx_granite"
+    ],
+    [
+     5,
+     1,
+     2,
+     11,
+     1.4,
+     9,
+     "tx_brushed"
+    ],
+    [
+     0,
+     1,
+     9,
+     16,
+     15,
+     10,
+     {
+      "east": "tx_ticket_glass",
+      "west": "tx_ticket_glass",
+      "north": "tx_ticket_glass",
+      "south": "tx_ticket_glass",
+      "up": "tx_ticket_glass",
+      "down": "tx_ticket_glass"
+     }
+    ],
+    [
+     0,
+     1,
+     8.5,
+     1,
+     16,
+     10.5,
+     "tx_steel_d"
+    ],
+    [
+     15,
+     1,
+     8.5,
+     16,
+     16,
+     10.5,
+     "tx_steel_d"
+    ],
+    [
+     1,
+     15,
+     8.5,
+     15,
+     16,
+     10.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Ticket Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent"
+  },
+  "tx_bin": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     5,
+     12,
+     11,
+     11,
+     {
+      "side": "tx_bin",
+      "up": "tx_bin_top",
+      "down": "tx_brushed"
+     }
+    ],
+    [
+     5,
+     0,
+     4,
+     11,
+     11,
+     12,
+     {
+      "side": "tx_bin",
+      "up": "tx_bin_top",
+      "down": "tx_brushed"
+     }
+    ]
+   ],
+   "title": "Litter Bin",
+   "sound": "METAL",
+   "loot": "scraps"
+  },
+  "tx_pendant": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     8,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     6,
+     5,
+     11,
+     8,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     4,
+     3,
+     13,
+     6,
+     13,
+     {
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_lamp"
+     }
+    ]
+   ],
+   "title": "Pendant Light",
+   "sound": "METAL",
+   "decor": true,
+   "flicker": {
+    "light": 13,
+    "on": {
+     "tx_lamp": "tx_lamp_on"
+    }
+   }
+  },
+  "tx_pendant_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     8,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "tx_steel_d"
+    ],
+    [
+     5,
+     6,
+     5,
+     11,
+     8,
+     11,
+     "tx_steel_d"
+    ],
+    [
+     3,
+     4,
+     3,
+     13,
+     6,
+     13,
+     {
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_lamp"
+     }
+    ]
+   ],
+   "title": "Pendant Light",
+   "sound": "METAL",
+   "decor": true
+  },
+  "tx_board_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_6",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_board_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_board_7",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Departures Board",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_map_uptown_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_uptown_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_uptown_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_riverside_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_riverside_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_foundry_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_foundry_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_southport_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_southport_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_0",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_1",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_2",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_3",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_4",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_map_union_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "tx_map_union_5",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Network Map",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "tx_sign_trains_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_trains_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_trains_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_trains_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_tickets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_tickets_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_tickets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_tickets_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_toilets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_toilets_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_toilets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_toilets_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_exit_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_exit_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_exit_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_exit_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_kiosk_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_kiosk_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_kiosk_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_kiosk_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_subway_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_subway_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_subway_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_subway_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_buses_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_buses_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_buses_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_buses_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_platforms_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_platforms_0",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_sign_platforms_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4.5,
+     7.5,
+     16,
+     11.5,
+     8.5,
+     {
+      "north": "tx_sign_platforms_1",
+      "south": "tx_green",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     11.5,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_tree_base": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     16,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     16,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     1.2,
+     13,
+     "tx_steel_d"
+    ],
+    [
+     4,
+     1.2,
+     4,
+     12,
+     2.4,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     4.8,
+     2.4,
+     4.8,
+     11.2,
+     3.4,
+     11.2,
+     "tx_steel_w"
+    ],
+    [
+     3.6,
+     1.2,
+     3.6,
+     4.6,
+     1.8,
+     4.6,
+     "tx_steel_d"
+    ],
+    [
+     3.6,
+     1.2,
+     11.4,
+     4.6,
+     1.8,
+     12.4,
+     "tx_steel_d"
+    ],
+    [
+     11.4,
+     1.2,
+     3.6,
+     12.4,
+     1.8,
+     4.6,
+     "tx_steel_d"
+    ],
+    [
+     11.4,
+     1.2,
+     11.4,
+     12.4,
+     1.8,
+     12.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL"
+  },
+  "tx_tree": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     16,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     16,
+     10.5,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL"
+  },
+  "tx_tree_fork": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6.5,
+     10.5,
+     6,
+     9.5,
+     "tx_steel_w"
+    ],
+    [
+     6.5,
+     0,
+     5.5,
+     9.5,
+     6,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     4.5,
+     6,
+     5.5,
+     11.5,
+     10,
+     10.5,
+     "tx_steel_w"
+    ],
+    [
+     5.5,
+     6,
+     4.5,
+     10.5,
+     10,
+     11.5,
+     "tx_steel_w"
+    ],
+    [
+     5,
+     10,
+     5,
+     11,
+     11,
+     11,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     8.15,
+     5.6,
+     9.6,
+     11.35,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.65,
+     4.0,
+     9.6,
+     12.85,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.15,
+     2.4,
+     9.6,
+     14.35,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     12.65,
+     0.8,
+     9.6,
+     15.85,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     14.15,
+     -0.8,
+     9.6,
+     17.35,
+     2.4,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     8.15,
+     7.2,
+     9.6,
+     11.35,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.65,
+     8.8,
+     9.6,
+     12.85,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.15,
+     10.4,
+     9.6,
+     14.35,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     12.65,
+     12.0,
+     9.6,
+     15.85,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     14.15,
+     13.6,
+     9.6,
+     17.35,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.15,
+     6.4,
+     8.8,
+     11.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.65,
+     6.4,
+     7.2,
+     12.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     11.15,
+     6.4,
+     5.6,
+     14.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.65,
+     6.4,
+     4.0,
+     15.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     14.15,
+     6.4,
+     2.4,
+     17.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.15,
+     6.4,
+     10.4,
+     11.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.65,
+     6.4,
+     12.0,
+     12.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     11.15,
+     6.4,
+     13.6,
+     14.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.65,
+     6.4,
+     15.2,
+     15.85,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     14.15,
+     6.4,
+     16.8,
+     17.35,
+     9.6,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.1,
+     5.6,
+     10.4,
+     11.3,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.5,
+     4.0,
+     12.0,
+     12.7,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.9,
+     2.4,
+     13.6,
+     14.1,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.3,
+     0.8,
+     15.2,
+     15.5,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.7,
+     -0.8,
+     16.8,
+     16.9,
+     2.4,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     8.1,
+     7.2,
+     10.4,
+     11.3,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     9.5,
+     8.8,
+     12.0,
+     12.7,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.9,
+     10.4,
+     13.6,
+     14.1,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.3,
+     12.0,
+     15.2,
+     15.5,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.7,
+     13.6,
+     16.8,
+     16.9,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.1,
+     7.2,
+     8.8,
+     11.3,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.5,
+     8.8,
+     7.2,
+     12.7,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     10.9,
+     10.4,
+     5.6,
+     14.1,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.3,
+     12.0,
+     4.0,
+     15.5,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     13.7,
+     13.6,
+     2.4,
+     16.9,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     8.1,
+     5.6,
+     8.8,
+     11.3,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     9.5,
+     4.0,
+     7.2,
+     12.7,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     10.9,
+     2.4,
+     5.6,
+     14.1,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     12.3,
+     0.8,
+     4.0,
+     15.5,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     -0.8,
+     13.7,
+     -0.8,
+     2.4,
+     16.9,
+     2.4,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree",
+   "sound": "METAL",
+   "render": "cutout"
+  },
+  "tx_branch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.4,
+     -0.1,
+     13.4,
+     9.6,
+     3.1,
+     16.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     1.9,
+     11.4,
+     9.6,
+     5.1,
+     14.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     3.9,
+     9.4,
+     9.6,
+     7.1,
+     12.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     5.9,
+     7.4,
+     9.6,
+     9.1,
+     10.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     7.9,
+     5.4,
+     9.6,
+     11.1,
+     8.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     9.9,
+     3.4,
+     9.6,
+     13.1,
+     6.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     11.9,
+     1.4,
+     9.6,
+     15.1,
+     4.6,
+     "tx_steel_w"
+    ],
+    [
+     6.4,
+     13.9,
+     -0.6,
+     9.6,
+     17.1,
+     2.6,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_branch_d": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.8,
+     -0.8,
+     13.6,
+     2.4,
+     2.4,
+     16.8,
+     "tx_steel_w"
+    ],
+    [
+     0.8,
+     0.8,
+     12.0,
+     4.0,
+     4.0,
+     15.2,
+     "tx_steel_w"
+    ],
+    [
+     2.4,
+     2.4,
+     10.4,
+     5.6,
+     5.6,
+     13.6,
+     "tx_steel_w"
+    ],
+    [
+     4.0,
+     4.0,
+     8.8,
+     7.2,
+     7.2,
+     12.0,
+     "tx_steel_w"
+    ],
+    [
+     5.6,
+     5.6,
+     7.2,
+     8.8,
+     8.8,
+     10.4,
+     "tx_steel_w"
+    ],
+    [
+     7.2,
+     7.2,
+     5.6,
+     10.4,
+     10.4,
+     8.8,
+     "tx_steel_w"
+    ],
+    [
+     8.8,
+     8.8,
+     4.0,
+     12.0,
+     12.0,
+     7.2,
+     "tx_steel_w"
+    ],
+    [
+     10.4,
+     10.4,
+     2.4,
+     13.6,
+     13.6,
+     5.6,
+     "tx_steel_w"
+    ],
+    [
+     12.0,
+     12.0,
+     0.8,
+     15.2,
+     15.2,
+     4.0,
+     "tx_steel_w"
+    ],
+    [
+     13.6,
+     13.6,
+     -0.8,
+     16.8,
+     16.8,
+     2.4,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Steel Tree Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_vault": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     15,
+     7.6,
+     16,
+     15.6,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_vault_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass_cracked",
+      "down": "tx_vault_glass_cracked",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     15,
+     7.6,
+     16,
+     15.6,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_vault_frame": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0,
+     1.2,
+     16,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     1.2,
+     12.5,
+     0,
+     16,
+     16,
+     1.2,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Roof Frame",
+   "sound": "METAL",
+   "render": "cutout"
+  },
+  "tx_vault_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     4,
+     11,
+     0,
+     12,
+     14,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     11,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ]
+   ],
+   "title": "Glass Roof Beam",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_vault_node": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     15,
+     16,
+     {
+      "up": "tx_vault_glass",
+      "down": "tx_vault_glass",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     4,
+     11,
+     0,
+     12,
+     14,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     7,
+     2.5,
+     0,
+     9,
+     11,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     4,
+     0,
+     0,
+     12,
+     2.5,
+     16,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     11,
+     4,
+     16,
+     14,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     2.5,
+     7,
+     16,
+     11,
+     9,
+     "tx_steel_w"
+    ],
+    [
+     0,
+     0,
+     4,
+     16,
+     2.5,
+     12,
+     "tx_steel_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     3,
+     13,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Glass Roof Beam",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "tx_paver": {
+   "tex": {
+    "all": "tx_paver"
+   },
+   "title": "Paving",
+   "sound": "STONE"
+  },
+  "tx_paver_b": {
+   "tex": {
+    "all": "tx_paver_b"
+   },
+   "title": "Paving",
+   "sound": "STONE"
+  },
+  "tx_concrete": {
+   "tex": {
+    "all": "tx_concrete"
+   },
+   "title": "Concrete",
+   "sound": "STONE"
+  },
+  "tx_edge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "tx_edge_top",
+      "north": "tx_edge_face",
+      "side": "tx_concrete",
+      "down": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Platform Edge",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "tx_esc_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "tx_esc_tread",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "tx_esc_tread",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ]
+   ],
+   "title": "Escalator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_esc_side_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.8,
+     -8,
+     12,
+     1.6,
+     7,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     7,
+     12,
+     2.0,
+     11.4,
+     16,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     -8,
+     12,
+     2.6,
+     -6,
+     16,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     -4,
+     8,
+     1.6,
+     11,
+     12,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     11,
+     8,
+     2.0,
+     15.4,
+     12,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     -4,
+     8,
+     2.6,
+     -2,
+     12,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     0,
+     4,
+     1.6,
+     15,
+     8,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     15,
+     4,
+     2.0,
+     19.4,
+     8,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     0,
+     4,
+     2.6,
+     2,
+     8,
+     "tx_brushed"
+    ],
+    [
+     0.8,
+     4,
+     0,
+     1.6,
+     19,
+     4,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     19,
+     0,
+     2.0,
+     23.4,
+     4,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     4,
+     0,
+     2.6,
+     6,
+     4,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_newel_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.8,
+     0,
+     4,
+     1.6,
+     13,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     0.4,
+     13,
+     2.5,
+     2.0,
+     15,
+     16,
+     "tx_rubber"
+    ],
+    [
+     0.4,
+     4,
+     0.5,
+     2.0,
+     15,
+     2.5,
+     "tx_rubber"
+    ],
+    [
+     0.10000000000000003,
+     0,
+     2,
+     2.3,
+     3,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_side_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.4,
+     -8,
+     12,
+     15.2,
+     7,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     7,
+     12,
+     15.6,
+     11.4,
+     16,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     -8,
+     12,
+     15.6,
+     -6,
+     16,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     -4,
+     8,
+     15.2,
+     11,
+     12,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     11,
+     8,
+     15.6,
+     15.4,
+     12,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     -4,
+     8,
+     15.6,
+     -2,
+     12,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     0,
+     4,
+     15.2,
+     15,
+     8,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     15,
+     4,
+     15.6,
+     19.4,
+     8,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     0,
+     4,
+     15.6,
+     2,
+     8,
+     "tx_brushed"
+    ],
+    [
+     14.4,
+     4,
+     0,
+     15.2,
+     19,
+     4,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     19,
+     0,
+     15.6,
+     23.4,
+     4,
+     "tx_rubber"
+    ],
+    [
+     13.4,
+     4,
+     0,
+     15.6,
+     6,
+     4,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_esc_newel_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.4,
+     0,
+     4,
+     15.2,
+     13,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     14.0,
+     13,
+     2.5,
+     15.6,
+     15,
+     16,
+     "tx_rubber"
+    ],
+    [
+     14.0,
+     4,
+     0.5,
+     15.6,
+     15,
+     2.5,
+     "tx_rubber"
+    ],
+    [
+     13.7,
+     0,
+     2,
+     15.9,
+     3,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Escalator Balustrade",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "tx_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "up": "tx_step_top",
+      "side": "tx_granite",
+      "down": "tx_granite"
+     }
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     8,
+     {
+      "up": "tx_step_top",
+      "side": "tx_granite",
+      "down": "tx_granite"
+     }
+    ]
+   ],
+   "title": "Granite Steps",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "tx_esc_plate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "tx_esc_comb",
+      "side": "tx_esc_riser",
+      "down": "tx_esc_riser"
+     }
+    ]
+   ],
+   "title": "Escalator Landing",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "tx_glass_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     0,
+     0,
+     8.5,
+     14.5,
+     16,
+     {
+      "east": "tx_esc_glass",
+      "west": "tx_esc_glass",
+      "north": "tx_esc_glass",
+      "south": "tx_esc_glass",
+      "up": "tx_esc_glass",
+      "down": "tx_esc_glass"
+     }
+    ],
+    [
+     6.8,
+     14.5,
+     0,
+     9.2,
+     16,
+     16,
+     "tx_brushed"
+    ],
+    [
+     6.8,
+     0,
+     0,
+     9.2,
+     1.5,
+     16,
+     "tx_brushed"
+    ]
+   ],
+   "title": "Glass Balustrade",
+   "sound": "GLASS",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_gate": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     1,
+     11,
+     15,
+     15,
+     {
+      "east": "tx_gate_side",
+      "west": "tx_gate_side",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_gate_top",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     4.4,
+     6,
+     3,
+     5,
+     13,
+     13,
+     {
+      "east": "tx_paddle",
+      "west": "tx_paddle",
+      "north": "tx_paddle",
+      "south": "tx_paddle",
+      "up": "tx_paddle",
+      "down": "tx_paddle"
+     }
+    ],
+    [
+     11,
+     6,
+     3,
+     11.6,
+     13,
+     13,
+     {
+      "east": "tx_paddle",
+      "west": "tx_paddle",
+      "north": "tx_paddle",
+      "south": "tx_paddle",
+      "up": "tx_paddle",
+      "down": "tx_paddle"
+     }
+    ],
+    [
+     5.5,
+     15,
+     2,
+     10.5,
+     15.4,
+     14,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Fare Gate",
+   "sound": "METAL",
+   "rotate": "axis",
+   "render": "translucent"
+  },
+  "tx_clock": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     2,
+     1,
+     9.5,
+     14,
+     15,
+     {
+      "east": "tx_clock",
+      "west": "tx_clock",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     6.5,
+     1,
+     2,
+     9.5,
+     15,
+     14,
+     {
+      "east": "tx_clock",
+      "west": "tx_clock",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Station Clock",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_rod": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     0,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Hanger",
+   "sound": "METAL",
+   "decor": true
+  },
+  "tx_platnum_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     1,
+     1,
+     9,
+     15,
+     15,
+     {
+      "east": "tx_platnum_1",
+      "west": "tx_platnum_1",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Platform Sign",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_platnum_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     1,
+     1,
+     9,
+     15,
+     15,
+     {
+      "east": "tx_platnum_2",
+      "west": "tx_platnum_2",
+      "north": "tx_steel_d",
+      "south": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ],
+    [
+     7.6,
+     15,
+     7.6,
+     8.4,
+     16,
+     8.4,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Platform Sign",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "tx_ceiling": {
+   "tex": {
+    "down": "tx_baffle",
+    "up": "tx_concrete",
+    "side": "tx_concrete"
+   },
+   "title": "Metal Ceiling",
+   "sound": "METAL"
+  },
+  "tx_ceiling_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "tx_strip",
+      "up": "tx_concrete",
+      "side": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Ceiling Light",
+   "sound": "METAL",
+   "rotate": "axis",
+   "flicker": {
+    "light": 12,
+    "on": {
+     "tx_strip": "tx_strip_on"
+    }
+   }
+  },
+  "tx_ceiling_lamp_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "tx_strip",
+      "up": "tx_concrete",
+      "side": "tx_concrete"
+     }
+    ]
+   ],
+   "title": "Ceiling Light",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "tx_help": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     6,
+     11.5,
+     16,
+     10,
+     {
+      "north": "tx_help",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d",
+      "south": "tx_green"
+     }
+    ]
+   ],
+   "title": "Help Point",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "gl_keel": {
+   "tex": {
+    "side": "gl_keel",
+    "up": "gl_keel_top",
+    "down": "gl_keel_top"
+   },
+   "title": "Tube Footing",
+   "sound": "STONE"
+  },
+  "gl_sill": {
+   "tex": {
+    "north": "gl_sill_out",
+    "up": "gl_grating",
+    "down": "gl_keel_top",
+    "side": "tx_steel_d"
+   },
+   "title": "Tube Sill",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "gl_walk": {
+   "tex": {
+    "up": "gl_walk_top",
+    "south": "gl_walk_face",
+    "down": "gl_keel_top",
+    "side": "gl_keel_top"
+   },
+   "title": "Tube Walkway",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "gl_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_leak": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "gl_wall_lo_leak": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ]
+   ]
+  },
+  "gl_wall_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_lo_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       14.5
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       14.5
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.5,
+     2.5,
+     "gl_teal"
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     7.4,
+     12.6,
+     3.5,
+     8.6,
+     13.4,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     13,
+     4.5,
+     16,
+     14.2,
+     5.7
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_patch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     1,
+     1,
+     1.5,
+     15,
+     15,
+     2.5,
+     {
+      "south": "gl_plywood",
+      "north": "gl_plywood",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2.5
+    ]
+   ]
+  },
+  "gl_wall_tarp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass_leak",
+      "west": "gl_glass_leak",
+      "north": "gl_glass_leak",
+      "south": "gl_glass_leak",
+      "up": "gl_glass_leak",
+      "down": "gl_glass_leak"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     1.6,
+     16,
+     16,
+     2.0,
+     {
+      "east": "gl_tarp",
+      "west": "gl_tarp",
+      "north": "gl_tarp",
+      "south": "gl_tarp",
+      "up": "gl_tarp",
+      "down": "gl_tarp"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2.0
+    ]
+   ]
+  },
+  "gl_chamfer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     6,
+     4.5,
+     -3.3137000000000008,
+     10,
+     9,
+     19.3137,
+     "gl_rib",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_chamfer_patch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     7.5,
+     -3.3137000000000008,
+     16,
+     8.5,
+     19.3137,
+     {
+      "east": "gl_glass_cracked",
+      "west": "gl_glass_cracked",
+      "north": "gl_glass_cracked",
+      "south": "gl_glass_cracked",
+      "up": "gl_glass_cracked",
+      "down": "gl_glass_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     },
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     1,
+     5.5,
+     -1.3137000000000008,
+     15,
+     6.5,
+     17.3137,
+     {
+      "down": "gl_plywood",
+      "up": "gl_plywood",
+      "side": "tx_steel_d"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Patched Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     4,
+     0,
+     16,
+     16,
+     4
+    ],
+    [
+     0,
+     8,
+     4,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     16,
+     12
+    ]
+   ]
+  },
+  "gl_crown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown",
+      "west": "gl_glass_crown",
+      "north": "gl_glass_crown",
+      "south": "gl_glass_crown",
+      "up": "gl_glass_crown",
+      "down": "gl_glass_crown"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_crown_cracked": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown_cracked",
+      "west": "gl_glass_crown_cracked",
+      "north": "gl_glass_crown_cracked",
+      "south": "gl_glass_crown_cracked",
+      "up": "gl_glass_crown_cracked",
+      "down": "gl_glass_crown_cracked"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_crown_rib": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     16,
+     {
+      "east": "gl_glass_crown",
+      "west": "gl_glass_crown",
+      "north": "gl_glass_crown",
+      "south": "gl_glass_crown",
+      "up": "gl_glass_crown",
+      "down": "gl_glass_crown"
+     },
+     {
+      "up": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     12,
+     0,
+     10,
+     16,
+     16,
+     "gl_rib"
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     14.5,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gl_tray": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ]
+   ],
+   "title": "Cable Tray",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     15,
+     6
+    ]
+   ]
+  },
+  "gl_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ],
+    [
+     0,
+     9,
+     1.5,
+     16,
+     11.5,
+     8,
+     {
+      "down": "gl_lamp",
+      "up": "tx_steel_d",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     3,
+     11.5,
+     3.5,
+     4,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     12,
+     11.5,
+     3.5,
+     13,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Light",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     9,
+     0.5,
+     16,
+     15,
+     8
+    ]
+   ],
+   "flicker": {
+    "light": 12,
+    "on": {
+     "gl_lamp": "gl_lamp_on"
+    }
+   }
+  },
+  "gl_lamp_off": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12.5,
+     0.5,
+     16,
+     13,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     0.5,
+     16,
+     15,
+     1,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     5.5,
+     16,
+     15,
+     6,
+     "tx_steel_d"
+    ],
+    [
+     0,
+     13,
+     1.3,
+     16,
+     14.3,
+     2.6,
+     "gl_cable"
+    ],
+    [
+     0,
+     13,
+     2.8,
+     16,
+     14.0,
+     4.0,
+     "gl_cable"
+    ],
+    [
+     0,
+     14.0,
+     2.0,
+     16,
+     15.0,
+     3.2,
+     "gl_cable"
+    ],
+    [
+     0,
+     9,
+     1.5,
+     16,
+     11.5,
+     8,
+     {
+      "down": "gl_lamp",
+      "up": "tx_steel_d",
+      "side": "tx_steel_d"
+     }
+    ],
+    [
+     3,
+     11.5,
+     3.5,
+     4,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ],
+    [
+     12,
+     11.5,
+     3.5,
+     13,
+     12.5,
+     4.5,
+     "tx_steel_d"
+    ]
+   ],
+   "title": "Tube Light",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     0,
+     9,
+     0.5,
+     16,
+     15,
+     8
+    ]
+   ]
+  },
+  "gl_coal": {
+   "tex": {
+    "side": "gl_coal",
+    "up": "gl_coal_top",
+    "down": "gl_coal"
+   },
+   "title": "Coal",
+   "sound": "GRAVEL"
+  },
+  "gl_wall_exit_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     2,
+     4,
+     3.5,
+     14,
+     10,
+     4.5,
+     {
+      "south": "gl_exit_r",
+      "north": "tx_steel_d",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
+  },
+  "gl_wall_exit_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     16,
+     16,
+     1.5,
+     {
+      "east": "gl_glass",
+      "west": "gl_glass",
+      "north": "gl_glass",
+      "south": "gl_glass",
+      "up": "gl_glass",
+      "down": "gl_glass"
+     },
+     {
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5,
+     "gl_rib"
+    ],
+    [
+     2,
+     4,
+     3.5,
+     14,
+     10,
+     4.5,
+     {
+      "south": "gl_exit_l",
+      "north": "tx_steel_d",
+      "side": "tx_steel_d",
+      "up": "tx_steel_d",
+      "down": "tx_steel_d"
+     }
+    ]
+   ],
+   "title": "Tube Glass",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     6,
+     0,
+     0,
+     10,
+     16,
+     3.5
+    ]
+   ]
   }
  }
 }

@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_glass_roof": {
+      "sprite": "zomboidcraft:block/city/tx_glass_roof",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/tx_glass_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass_roof",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_glass_roof",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_glass_roof",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_glass_roof",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_glass_roof",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_glass_roof",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -421,11 +421,17 @@ d.line([(0, 16), (T, 16)], fill=(200, 40, 40, 255), width=3)
 for x in (4, 14, 26):
     d.ellipse([x - 2, 14, x + 2, 18], fill=(250, 250, 250, 255), outline=(30, 30, 30, 255))
 put(img, 12, 5)
-img, _ = tile(13, 5)                         # emergency handle
-noise_fill(img, (196, 188, 166), 10, 6100)
+img, _ = tile(13, 5)                         # stop button: a yellow plate, a big red button, STOP under it (shown whole)
+noise_fill(img, (226, 186, 40), 8, 6100)
 d = ImageDraw.Draw(img)
-d.rectangle([10, 6, 22, 26], fill=(200, 30, 30, 255))
-d.rectangle([13, 12, 19, 20], fill=(240, 230, 220, 255))
+d.rectangle([0, 0, T - 1, T - 1], outline=(30, 28, 24, 255), width=2)
+d.ellipse([7, 3, 24, 20], fill=(70, 12, 10, 255))
+d.ellipse([8, 4, 23, 19], fill=(214, 28, 22, 255))
+d.ellipse([11, 6, 17, 11], fill=(250, 110, 96, 255))
+for i, rows in enumerate(["###.###..#..###", "#....#..#.#.#.#", "###..#..#.#.###", "..#..#..#.#.#..", "###..#...#..#.."]):
+    for j, ch in enumerate(rows):
+        if ch == '#':
+            d.point((8 + j, 23 + i), fill=(24, 22, 20, 255))
 put(img, 13, 5)
 img, _ = tile(14, 5)                         # hazard stripes
 for y in range(T):

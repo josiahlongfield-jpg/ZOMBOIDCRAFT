@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_esc_comb": "zomboidcraft:block/city/tx_esc_comb",
+    "tx_esc_riser": "zomboidcraft:block/city/tx_esc_riser",
+    "particle": "zomboidcraft:block/city/tx_esc_riser"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_esc_riser",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_esc_riser",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_esc_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_esc_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_esc_comb",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_esc_riser",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

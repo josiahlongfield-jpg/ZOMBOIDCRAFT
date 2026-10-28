@@ -21,7 +21,7 @@ import net.minecraft.world.item.component.Consumable;
 import org.joml.Matrix3x2fStack;
 
 /**
- * The quick-use wheel: hold Z and the belt's nine slots fan out round the crosshair. The mouse points instead of
+ * The quick-use wheel: hold Z and the quick slots you have fan out round the crosshair. The mouse points instead of
  * turning you; let go and a weapon or tool goes to your hands, while a bandage, splint, food or drink is used there and
  * then (as a timed action on the server). Right-click while it's up to put it away.
  */
@@ -29,7 +29,15 @@ public final class QuickWheel {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(com.zomboidcraft.ZomboidCraft.id("wheel"));
     public static final KeyMapping WHEEL = new KeyMapping("key.zomboidcraft.wheel", InputConstants.KEY_Z, CATEGORY);
 
-    private static final int SLOTS = Inventory.getSelectionSize();
+    /** The quick slots on the wheel: the ones you have, or that still hold something. */
+    private static int[] slots(LocalPlayer player) {
+        int[] all = new int[Inventory.getSelectionSize()];
+        int n = 0;
+        for (int i = 0; i < all.length; i++) {
+            if (com.zomboidcraft.carry.QuickSlots.open(player, i) || !player.getInventory().getItem(i).isEmpty()) all[n++] = i;
+        }
+        return java.util.Arrays.copyOf(all, n);
+    }
     private static final float RADIUS = 62, BOX = 28, REACH = 60, DEAD = 12;
 
     private static boolean open;
@@ -78,16 +86,17 @@ public final class QuickWheel {
         }
         if (!down) {
             open = false;
-            int slot = pointed();
-            if (slot >= 0) pick(player, slot);
+            int[] slots = slots(player);
+            int k = pointed(slots.length);
+            if (k >= 0) pick(player, slots[k]);
         }
     }
 
-    /** The slot under the pointer, or -1 in the middle. */
-    private static int pointed() {
-        if (px * px + py * py < DEAD * DEAD) return -1;
+    /** Which of the wheel's n places is under the pointer, or -1 in the middle. */
+    private static int pointed(int n) {
+        if (n == 0 || px * px + py * py < DEAD * DEAD) return -1;
         double angle = Math.atan2(py, px) + Math.PI / 2;
-        return Math.floorMod((int) Math.round(angle / (2 * Math.PI / SLOTS)), SLOTS);
+        return Math.floorMod((int) Math.round(angle / (2 * Math.PI / n)), n);
     }
 
     private static void pick(LocalPlayer player, int slot) {
@@ -134,11 +143,14 @@ public final class QuickWheel {
         Font font = mc.font;
         float cx = g.guiWidth() / 2f, cy = g.guiHeight() / 2f;
         g.fill(0, 0, g.guiWidth(), g.guiHeight(), Hud.alpha(0x8C07080A, a));
-        int pointed = open ? pointed() : -1;
+        int[] slots = slots(player);
+        int pointedAt = open ? pointed(slots.length) : -1;
+        int pointed = pointedAt < 0 ? -1 : slots[pointedAt];
         Inventory inventory = player.getInventory();
         int held = inventory.getSelectedSlot();
-        for (int i = 0; i < SLOTS; i++) {
-            double angle = -Math.PI / 2 + i * 2 * Math.PI / SLOTS;
+        for (int k = 0; k < slots.length; k++) {
+            int i = slots[k];
+            double angle = -Math.PI / 2 + k * 2 * Math.PI / slots.length;
             boolean on = i == pointed;
             float size = on ? BOX + 4 : BOX;
             float x = cx + (float) Math.cos(angle) * RADIUS * (0.7f + 0.3f * a) - size / 2;

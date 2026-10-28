@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
@@ -87,8 +88,13 @@ final class TrackRenderer {
         BlockPos at = BlockPos.containing(x0, y0 + 0.5, z0);
         int light = level.getBrightness(LightLayer.BLOCK, at) << 4 | level.getBrightness(LightLayer.SKY, at) << 20;
         float ex = (float) eye.x, ey = (float) eye.y, ez = (float) eye.z;
+        // street-running track (the county lays it in a street bed, flush with the road): rails set into the
+        // asphalt, no sleepers
+        boolean street = BuiltInRegistries.BLOCK.getKey(level.getBlockState(BlockPos.containing(x0, y0 - 0.5, z0)).getBlock())
+                .getPath().equals("rw_street_bed");
+        float lift = street ? 0.02f : SLEEPER_H;
         // sleepers, every half block
-        for (double k = 0.25; k < ds; k += 0.5) {
+        for (double k = 0.25; k < ds && !street; k += 0.5) {
             double cx = x0 + ux * k, cz = z0 + uz * k, cy = y0 + (y1 - y0) * k / ds;
             boolean concrete = ((int) Math.floor((s + k) * 2) * 7919 & 15) < 2;
             TrainMesh.Mat m = concrete ? TrainMesh.SLEEPER_CONCRETE : TrainMesh.SLEEPER;
@@ -97,7 +103,7 @@ final class TrackRenderer {
         // the two rails
         for (int side = -1; side <= 1; side += 2) {
             double px0 = x0 + ax0 * GAUGE * side, pz0 = z0 + az0 * GAUGE * side, px1 = x1 + ax1 * GAUGE * side, pz1 = z1 + az1 * GAUGE * side;
-            rail(out, pose, light, px0 - ex, y0 + SLEEPER_H - ey, pz0 - ez, px1 - ex, y1 + SLEEPER_H - ey, pz1 - ez, ax0, az0, ax1, az1);
+            rail(out, pose, light, px0 - ex, y0 + lift - ey, pz0 - ez, px1 - ex, y1 + lift - ey, pz1 - ez, ax0, az0, ax1, az1);
         }
     }
 

@@ -26,12 +26,12 @@ final class RailGen {
     /** Street level in the city: the top of the street's blocks. */
     private static final int STREET_TOP = Terrain.CITY + 1;
     /**
-     * Union Station's ways in (see {@link UnionStation}): the el's bridge from its platform to the
-     * mezzanine's door runs on the samples BRIDGE_LO..BRIDGE_HI from the stop's middle (its rails
-     * one more each side) out to BRIDGE_END; the subway's passage from its platform to the station's
-     * hall on PASS_LO..PASS_HI (its walls one more each side) out to PASS_END, the lot's edge.
+     * Union Station's way in from the subway (see {@link UnionStation}): the passage from its
+     * platform to the station's hall on the samples PASS_LO..PASS_HI from the stop's middle (its
+     * walls one more each side) out to PASS_END, the lot's edge. The el runs through the station's
+     * own train hall ({@link UnionHall}), which builds everything there but the bed.
      */
-    private static final int BRIDGE_LO = -2, BRIDGE_HI = 1, BRIDGE_END = 15, PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
+    private static final int PASS_LO = -12, PASS_HI = -9, PASS_END = 14;
     /**
      * A depot's lot ({@link DepotSite}) runs DEPOT_REACH samples either way of its stop's middle
      * behind the platform, its canopy DEPOT_CANOPY.
@@ -109,6 +109,7 @@ final class RailGen {
      */
     double ground(int x, int z, double h, boolean[] rail) {
         rail[0] = false;
+        h = trench(x, z, h);
         for (Track t : near) {
             if (t.kind == Track.Kind.SUBWAY || !at(t, x, z)) {
                 continue;
@@ -139,6 +140,48 @@ final class RailGen {
         return h;
     }
 
+    /**
+     * The channel dredged for the Glass Line's tubes: the harbour's bed taken down to the tubes'
+     * rock fill across them and a little either side, its sides sloping back up to the bed as it
+     * lay. Only where the water was (ashore the tubes are buried). Bridges' columns ask too.
+     */
+    double trench(int x, int z, double h) {
+        if (!Terrain.isWater(h)) {
+            return h;
+        }
+        for (Track t : near) {
+            if (!t.tubed || !at(t, x, z) || t.mode[hit.i] != Track.TUBE) {
+                continue;
+            }
+            double target = bedTop(t.ys[hit.i]) - 3 + 0.5, s = hit.distance;
+            if (s <= 6.5) {
+                h = Math.min(h, target);
+            } else {
+                double side = Math.max(0, h - target) * 1.5;
+                if (s < 6.5 + side) {
+                    h = Math.min(h, Terrain.lerp(target, h, (s - 6.5) / side));
+                }
+            }
+        }
+        return h;
+    }
+
+    /** True if (x, z) is over the Glass Line's tubes, or close beside them: no piers there. */
+    boolean overTube(int x, int z) {
+        for (Track t : near) {
+            if (t.tubed && at(t, x, z) && t.mode[hit.i] == Track.TUBE && hit.distance < 9) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** The whole-block bed top for a bed at y: the ballast's quarter blocks round up to a whole one past three. */
+    static int bedTop(double y) {
+        int whole = (int) Math.floor(y), quarter = (int) Math.round((y - whole) * 4);
+        return whole + (quarter == 4 ? 1 : 0);
+    }
+
     /** Finds the nearest point of t to the column's middle: true (with {@link #hit} set) if it's within reach. */
     private boolean at(Track t, int x, int z) {
         int[] cand = t.candidates(x, z);
@@ -167,8 +210,12 @@ final class RailGen {
                 switch (t.mode[c.i]) {
                     case Track.TUNNEL -> tunnel(out, c);
                     case Track.VIADUCT -> viaduct(out, c);
+                    case Track.TUBE -> tube(out, c);
                     default -> ground(out, c);
                 }
+            }
+            if (!t.islands.isEmpty()) {
+                islands(out, t, bx, bz, cols);
             }
             crossings(out, t, bx, bz, cols);
         }
@@ -204,9 +251,8 @@ final class RailGen {
             o = h.offset;
             s = Math.abs(o);
             y = t.ys[i];
-            int whole = (int) Math.floor(y), quarter = (int) Math.round((y - whole) * 4);
-            Y = whole + (quarter == 4 ? 1 : 0);
-            q = quarter == 4 ? 0 : quarter;
+            Y = bedTop(y);
+            q = (int) Math.round((y - Math.floor(y)) * 4) % 4;
             bed = Y - 1;
             tx = t.tx[i];
             tz = t.tz[i];
@@ -519,19 +565,19 @@ final class RailGen {
                 out.set(x, Y + 4, z, "rw_lamp_hang");
             }
             if (s >= 4 && s < 5) {
-                hungBoard(out, c, Y + 4);
+                hungBoard(out, c, Y + 4, 17);
             }
         }
     }
 
-    /** A name board hung under a canopy, at |da| 17..20 (four boards). */
-    private void hungBoard(ChunkSink out, Cut c, int y) {
+    /** A name board hung under a canopy, at |da| lo..lo + 3 (four boards). */
+    private void hungBoard(ChunkSink out, Cut c, int y, int lo) {
         String key = key(c.stop);
         int la = Math.abs(c.da);
-        if (key == null || la < 17 || la > 20) {
+        if (key == null || la < lo || la > lo + 3) {
             return;
         }
-        int k = c.da > 0 ? c.da - 17 : c.da + 20;
+        int k = c.da > 0 ? c.da - lo : c.da + lo + 3;
         out.set(c.x, y, c.z, "rw_name_" + key + "_" + tile(c, k, 4) + "[facing=" + c.in() + "]");
     }
 
@@ -540,6 +586,15 @@ final class RailGen {
     private void viaduct(ChunkSink out, Cut c) {
         int x = c.x, z = c.z, Y = c.Y, bed = c.bed;
         double s = c.s;
+        if (c.t.hall.get(c.i)) {
+            // through Union Station's train hall: only the bed on the station's deck, the trains' room over it
+            if (s < 2) {
+                ballast(out, c, "rw_ballast");
+                out.set(x, bed - 1, z, "rw_deck");
+                clear(out, x, z, Y + (c.q > 0 ? 1 : 0), Y + 6);
+            }
+            return;
+        }
         int street = c.t.street[c.i];
         boolean el = street > 0;
         boolean wet = c.top < Terrain.WATER;
@@ -568,9 +623,6 @@ final class RailGen {
         if (station && s >= 7 && s < 9) {
             elStairs(out, c);
         }
-        if (station && s >= 7 && s < BRIDGE_END && unionRun(c, BRIDGE_LO, BRIDGE_HI, true)) {
-            unionBridge(out, c);
-        }
         // what holds it up
         int span = el ? 16 : wet ? 24 : 16;
         int k = Math.floorMod(c.i, span);
@@ -584,7 +636,7 @@ final class RailGen {
                 }
             }
         } else if (wet) {
-            if ((k == 0 || k == 1) && s < 4.5) {
+            if ((k == 0 || k == 1) && s < 4.5 && !overTube(x, z)) {
                 out.column(x, z, Math.min(c.top, Terrain.WATER - 1) - 2, bed - 3, "rw_pier");
                 out.set(x, bed - 2, z, "rw_pier_cap");
             }
@@ -604,8 +656,7 @@ final class RailGen {
             out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
             clear(out, x, z, Y + 1, Y + 5);
             litter(out, c, Y + 1, 1);
-            boolean mouth = unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-            if (s >= 5 && la % 8 == 0 && la <= 40 && !mouth) {
+            if (s >= 5 && la % 8 == 0 && la <= 40) {
                 out.column(x, z, Y + 1, Y + 5, "rw_post");
             } else if (s >= 5 && la % 8 == 4 && la <= 40) {
                 out.set(x, Y + 1, z, "rw_bench[facing=" + c.in() + "]");
@@ -617,16 +668,11 @@ final class RailGen {
                 out.set(x, Y + 5, z, "rw_lamp_hang");
             }
             if (s >= 4 && s < 5) {
-                hungBoard(out, c, Y + 5);
-            }
-            if (mouth && s >= 5 && (c.da == BRIDGE_LO + 1 || c.da == BRIDGE_LO + 2)) {
-                // over the way across to Union Station: down to the subway
-                out.set(x, Y + 5, z, "us_sign_subway_" + tile(c, c.da - BRIDGE_LO - 1, 2) + "[facing=" + c.in() + "]");
+                hungBoard(out, c, Y + 5, 17);
             }
         } else {
             out.set(x, Y, z, paving(c));
-            boolean open = stairTop || unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-            out.set(x, Y + 1, z, open ? "air" : "rw_guard[facing=" + c.out() + "]");
+            out.set(x, Y + 1, z, stairTop ? "air" : "rw_guard[facing=" + c.out() + "]");
             clear(out, x, z, Y + 2, Y + 5);
         }
         if (la <= 40 && s >= 2) {
@@ -677,38 +723,6 @@ final class RailGen {
     private static boolean unionRun(Cut c, int lo, int hi, boolean sides) {
         int m = sides ? 1 : 0;
         return union(c) && c.plat && c.da >= lo - m && c.da <= hi + m;
-    }
-
-    /**
-     * Union Station's bridge from the el's platform across the sidewalk to the mezzanine's door: a
-     * steel deck on plate girders, railed both sides with posts every three, under the platform's
-     * roof carried on across, on a column each side at the sidewalk's back.
-     */
-    private void unionBridge(ChunkSink out, Cut c) {
-        int x = c.x, z = c.z, Y = c.Y;
-        boolean side = !unionRun(c, BRIDGE_LO, BRIDGE_HI, false);
-        String away = c.along(c.da > BRIDGE_HI ? 1 : -1);
-        out.set(x, c.bed, z, side ? "rw_girder" : "rw_deck");
-        if (side) {
-            out.set(x, c.bed - 1, z, "rw_girder");
-        }
-        out.set(x, Y, z, paving(c));
-        clear(out, x, z, Y + 1, Y + 5);
-        if (side) {
-            if ((int) c.s % 3 == 1) {
-                out.column(x, z, Y + 1, Y + 5, "rw_post");
-            } else {
-                out.set(x, Y + 1, z, "rw_guard[facing=" + away + "]");
-            }
-            if (c.s >= 12 && c.s < 13) {
-                out.set(x, STREET_TOP, z, "rw_column_base");
-                out.column(x, z, STREET_TOP + 1, c.bed - 3, "rw_column");
-                out.set(x, c.bed - 2, z, "rw_column_cap");
-            }
-        } else {
-            litter(out, c, Y + 1, 1);
-        }
-        out.set(x, Y + 6, z, side ? "rw_canopy_fascia[facing=" + away + "]" : "rw_canopy");
     }
 
     /** A platform's slab: the plain one mostly, the worn ones here and there. */
@@ -811,6 +825,10 @@ final class RailGen {
         int street = Math.max(5, c.t.street[c.i]);
         boolean station = c.stop != null;
         int back = street + 1;   // the platform's back wall: under the curb
+        if (station && c.plat && !c.t.islands.isEmpty()) {
+            islandTunnel(out, c);
+            return;
+        }
         if (station && c.plat) {
             if (s >= back && s < PASS_END && unionRun(c, PASS_LO, PASS_HI, true)) {
                 unionPassage(out, c);
@@ -1044,6 +1062,507 @@ final class RailGen {
             clear(out, x, z, h + 1, STREET_TOP + 3);
         }
         return true;
+    }
+
+    // ------------------------------------------------------------------ the Glass Line
+
+    /**
+     * Where a column falls across one of the Glass Line's bores: -1 beside its middle (either
+     * side), counting out to -5 the glass wall's column and -6 the gap between the two bores.
+     */
+    private static int rank(double o) {
+        int k = (int) Math.floor(o);
+        return k < 0 ? k : -1 - k;
+    }
+
+    /**
+     * The Glass Line under the water: its glass tube on the concrete raft the pair sits on, in
+     * the channel dredged for them (see {@link #trench}), built of tools/city/glassline.py's gl_
+     * blocks. Across the bore: the raft over a rock fill, the ballast and the track in the
+     * middle, the walkways along the walls at the cars' floor, the glass walls on their sills
+     * turning in at 45 degrees to the roof glass, a white steel ring every fourth block, the
+     * cable trays and the strip lights along the roof's corners, escape signs now and then. It
+     * runs ashore into the tunnel through a concrete portal; at Eastside Quay the island
+     * platform's glass hall stands between the bores ({@link #islandHall}).
+     */
+    private void tube(ChunkSink out, Cut c) {
+        int m = rank(c.o);
+        if (m < -6) {
+            return;
+        }
+        if (c.stop != null && c.plat && m <= -3) {
+            islandHall(out, c, m);
+            return;
+        }
+        int x = c.x, z = c.z, Y = c.Y, bed = c.bed;
+        if (portal(c)) {
+            portal(out, c, m);
+            return;
+        }
+        String f = "[facing=" + c.out() + "]";
+        boolean rib = Math.floorMod(c.i, 4) == 0;
+        // where the grade steps the tube up a block on a curve, a wall column can stand beside
+        // the next one in a block higher: its glass then turns in a block higher too
+        int up = (m == -5 || m == -4) && stepsUp(c, m) ? 1 : 0;
+        out.set(x, bed - 2, z, "minecraft:gravel");
+        out.set(x, bed - 1, z, "gl_keel");
+        switch (m) {
+            case -6 -> out.set(x, bed, z, "gl_keel");
+            case -5 -> {
+                out.set(x, bed, z, "gl_keel");
+                out.set(x, Y, z, "gl_sill" + f);
+                out.set(x, Y + 1, z, pane(c, "gl_wall_lo", rib, 0x61A1L) + f);
+                out.set(x, Y + 2, z, (Math.floorMod(c.i, 96) == 0 ? "gl_wall_exit_" + ((c.o < 0) == (c.t.tubeWay(c.i) > 0) ? "r" : "l")
+                        : pane(c, "gl_wall", rib, 0x61A2L)) + f);
+                if (up > 0) {
+                    out.set(x, Y + 3, z, pane(c, "gl_wall", rib, 0x61A7L) + f);
+                }
+                out.set(x, Y + 3 + up, z, pane(c, "gl_chamfer", rib, 0x61A3L) + f);
+            }
+            case -4 -> {
+                out.set(x, bed, z, "gl_keel");
+                out.set(x, Y, z, "gl_walk" + f);
+                clear(out, x, z, Y + 1, Y + 3);
+                if (up > 0) {
+                    out.set(x, Y + 4, z, pane(c, "gl_wall", rib, 0x61A8L) + f);
+                }
+                out.set(x, Y + 4 + up, z, pane(c, "gl_chamfer", rib, 0x61A4L) + f);
+            }
+            case -3 -> {
+                ballast(out, c, "rw_ballast");
+                clear(out, x, z, Y + (c.q > 0 ? 1 : 0), Y + 3);
+                out.set(x, Y + 4, z, light(c) + f);
+                out.set(x, Y + 5, z, pane(c, "gl_chamfer", rib, 0x61A5L) + f);
+            }
+            default -> {
+                ballast(out, c, "rw_ballast");
+                clear(out, x, z, Y + (c.q > 0 ? 1 : 0), Y + 4);
+                out.set(x, Y + 5, z, pane(c, "gl_crown", rib, 0x61A6L) + f);
+            }
+        }
+    }
+
+    /** True if a column next to this one, a block further in across the bore, has its bed a block higher. */
+    private boolean stepsUp(Cut c, int m) {
+        for (int k = 0; k < 4; k++) {
+            int nx = c.x + (k == 0 ? 1 : k == 1 ? -1 : 0), nz = c.z + (k == 2 ? 1 : k == 3 ? -1 : 0);
+            if (at(c.t, nx, nz) && c.t.mode[hit.i] == Track.TUBE && rank(hit.offset) == m + 1 && bedTop(c.t.ys[hit.i]) > c.Y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * A pane of the tube as forty years and the end of the world left it: a steel ring where
+     * one falls, else mostly sound, some cracked, a few weeping where a seal gave, the worst
+     * boarded over with plywood or taped under a tarp.
+     */
+    private String pane(Cut c, String base, boolean rib, long salt) {
+        if (rib) {
+            return base + "_rib";
+        }
+        double r = roll(c, salt);
+        return switch (base) {
+            case "gl_wall" -> r < 0.05 ? "gl_wall_cracked" : r < 0.065 ? "gl_wall_leak" : r < 0.075 ? "gl_wall_patch" : r < 0.085 ? "gl_wall_tarp" : base;
+            case "gl_wall_lo" -> r < 0.05 ? "gl_wall_lo_cracked" : r < 0.065 ? "gl_wall_lo_leak" : base;
+            case "gl_chamfer" -> r < 0.04 ? "gl_chamfer_cracked" : r < 0.05 ? "gl_chamfer_patch" : base;
+            default -> r < 0.05 ? base + "_cracked" : base;
+        };
+    }
+
+    /** The roof corner's fitting: a strip light two blocks long every eight (a third of them dead), the cable tray between. */
+    private String light(Cut c) {
+        int k = Math.floorMod(c.i, 8);
+        if (k != 2 && k != 3) {
+            return "gl_tray";
+        }
+        double r = Noise.unit(Noise.hash(county.seed ^ 0x6A4DL, Math.floorDiv(c.i, 8), c.o > 0 ? 1 : 0));
+        return r < 0.3 ? "gl_lamp_off" : "gl_lamp";
+    }
+
+    /** True in the last two samples of a tube before it runs ashore into the tunnel: its concrete portal. */
+    private static boolean portal(Cut c) {
+        for (int d = -2; d <= 2; d++) {
+            if (c.t.mode[c.t.wrap(c.i + d)] != Track.TUBE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The portal where a tube meets the tunnel: a collar of concrete round the bore with the
+     * tube's own room through it (no more, so on a curve, where the collar's edge runs slantwise
+     * across the bore, nowhere opens on the water past the glass).
+     */
+    private void portal(ChunkSink out, Cut c, int m) {
+        int x = c.x, z = c.z, Y = c.Y, bed = c.bed;
+        if (m <= -5) {
+            out.column(x, z, bed - 1, Y + 7, "rw_tunnel");
+        } else if (m == -4) {
+            out.column(x, z, bed - 1, Y, "rw_tunnel");
+            clear(out, x, z, Y + 1, Y + 3);
+            out.column(x, z, Y + 4, Y + 7, "rw_tunnel");
+        } else {
+            out.set(x, bed - 1, z, "rw_tunnel");
+            out.set(x, bed, z, "rw_track_slab");
+            clear(out, x, z, Y, Y + 4);
+            out.column(x, z, Y + 5, Y + 7, "rw_tunnel");
+        }
+    }
+
+    /**
+     * Eastside Quay's island platform under the water: a hall of glass between the bores, its
+     * roof two blocks over theirs, granite pavers on the raft, the yellow-lined edges, pendant
+     * lamps, benches back to back down the middle and the call buttons on a post; a concrete
+     * bulkhead closes each end. The glass stair up to the pier stands in its middle ({@link #quay}).
+     */
+    private void islandHall(ChunkSink out, Cut c, int m) {
+        int x = c.x, z = c.z, Y = c.Y, la = Math.abs(c.da);
+        int half = (c.stop.to() - c.stop.from()) / 2;
+        boolean rib = Math.floorMod(c.i, 4) == 0;
+        out.set(x, c.bed - 2, z, "minecraft:gravel");
+        out.set(x, c.bed - 1, z, "gl_keel");
+        out.set(x, c.bed, z, "gl_keel");
+        if (la >= half) {
+            // the bulkhead at the hall's end, the platform's edge kept clear of the cars
+            if (m == -3) {
+                out.set(x, Y, z, "rw_tunnel");
+                clear(out, x, z, Y + 1, Y + 4);
+                out.column(x, z, Y + 5, Y + 7, "rw_tunnel");
+            } else {
+                out.column(x, z, Y, Y + 7, "rw_tunnel");
+            }
+            return;
+        }
+        out.set(x, Y, z, m == -3 ? "tx_edge[facing=" + c.in() + "]" : roll(c, 0x61B1L) < 0.7 ? "tx_paver" : "tx_paver_b");
+        clear(out, x, z, Y + 1, Y + 6);
+        if (m == -3) {
+            // over the edge the hall's glass meets the bore's roof
+            out.set(x, Y + 6, z, pane(c, "gl_wall", rib, 0x61B2L) + "[facing=" + c.in() + "]");
+        }
+        out.set(x, Y + 7, z, pane(c, "gl_crown", rib, 0x61B3L) + "[facing=" + c.out() + "]");
+        litter(out, c, Y + 1, 2);
+        String in = "[facing=" + c.in() + "]";
+        if (m == -4 && la % 6 == 3) {
+            out.set(x, Y + 6, z, roll(c, 0x61B4L) < 0.3 ? "tx_pendant_off" : "tx_pendant");
+        }
+        if (m == -6 && (la == 30 || la == 42)) {
+            out.set(x, Y + 1, z, "tx_bench" + in);
+        } else if (m == -6 && c.da == 24) {
+            out.set(x, Y + 1, z, "tx_bin");
+        } else if (m == -6 && la == 36) {
+            out.column(x, z, Y + 1, Y + 6, "rw_post");
+        } else if (m == -5 && la == 36) {
+            out.set(x, Y + 2, z, "zomboidcraft:train_call_button" + in);
+        }
+    }
+
+    /**
+     * The Glass Line's island platform under Mercy General, in the tunnel a flight under the
+     * subway's: the tracks either side, steel columns down its middle under girders across the
+     * roof, lamps, benches facing the tracks, the call buttons on the columns; the station's name
+     * in the tile of the walls across the tracks. The stairs up to the subway's platform rise from
+     * its middle ({@link #mercy}).
+     */
+    private void islandTunnel(ChunkSink out, Cut c) {
+        int x = c.x, z = c.z, Y = c.Y, la = Math.abs(c.da);
+        double s = c.s;
+        if (s < 2) {
+            trackway(out, c);
+            bentRoof(out, c);
+            return;
+        }
+        out.set(x, c.bed - 1, z, "rw_tunnel");
+        out.set(x, c.bed, z, "rw_tunnel");
+        out.set(x, Y, z, s < 3 ? "rw_platform_edge[facing=" + c.in() + "]" : paving(c));
+        clear(out, x, z, Y + 1, Y + 5);
+        out.set(x, Y + 6, z, "rw_tunnel");
+        litter(out, c, Y + 1, 2);
+        bentRoof(out, c);
+        boolean stairs = la >= 12 && la <= 26;
+        String in = "[facing=" + c.in() + "]";
+        if (s >= 5 && Math.floorMod(c.da, 2 * BENT) == 0 && !stairs) {
+            String f = "[facing=" + c.along(1) + "]";
+            out.set(x, Y + 1, z, "rw_subway_column_base" + f);
+            out.column(x, z, Y + 2, Y + 4, "rw_subway_column" + f);
+            out.set(x, Y + 5, z, "rw_subway_column_cap" + f);
+        } else if (s >= 4 && Math.floorMod(c.da, BENT) == 0) {
+            out.set(x, Y + 5, z, "rw_subway_beam[axis=" + c.across() + "]");
+        }
+        if (s >= 4 && s < 5 && la == 10) {
+            out.set(x, Y + 2, z, "zomboidcraft:train_call_button" + in);
+        } else if (s >= 4 && s < 5 && la % 12 == 6 && !stairs) {
+            out.set(x, Y + 1, z, "rw_bench" + in);
+        }
+        if (s >= 3 && s < 4 && la % 4 == 0 && Math.floorMod(c.da, BENT) != 0 && !stairs) {
+            out.set(x, Y + 5, z, "rw_subway_lamp[axis=" + c.axis() + "]");
+        }
+    }
+
+    /** What the Glass Line's stations build round their island platforms, column by column of the chunk. */
+    private void islands(ChunkSink out, Track t, int bx, int bz, Columns cols) {
+        for (Track.Island isl : t.islands) {
+            if (Math.abs(isl.x() - bx - 8) > 72 || Math.abs(isl.z() - bz - 8) > 72) {
+                continue;
+            }
+            for (int k = 0; k < 256; k++) {
+                int x = bx + (k & 15), z = bz + (k >> 4);
+                double u = isl.along(x + 0.5, z + 0.5), v = isl.across(x + 0.5, z + 0.5);
+                if (isl.key().equals("mercy")) {
+                    mercy(out, isl, x, z, u, v);
+                } else {
+                    quay(out, isl, x, z, u, v, cols.top[k]);
+                }
+            }
+        }
+    }
+
+    /** The subway's platform's floor under Mercy General (and its bed a block under). */
+    private static final int SUBWAY_FLOOR = Railway.SUBWAY_Y;
+
+    /**
+     * Mercy General's stairs from the Glass Line's island platform up to the subway's platform
+     * overhead, one at each end, two wide: glass either side in the Glass Line's hall, tiled
+     * walls up through the rock, coming up through the subway platform's floor inside a glass
+     * balustrade by its back wall. A SUBWAY sign hangs over each foot.
+     */
+    private void mercy(ChunkSink out, Track.Island isl, int x, int z, double u, double v) {
+        int Y = isl.y(), vi = (int) Math.floor(v);
+        if (vi < -1 || vi > 2) {
+            return;
+        }
+        String along = Math.abs(isl.ax()) >= Math.abs(isl.az()) ? "x" : "z", across = along.equals("x") ? "z" : "x";
+        for (int sg = -1; sg <= 1; sg += 2) {
+            int j = (int) Math.floor(sg * u) - 14;   // 0 the foot, 1..10 the steps
+            if (j < 0 || j > 10) {
+                continue;
+            }
+            String climb = dir(isl.ax() * sg, isl.az() * sg);
+            String back = dir(-isl.ax() * sg, -isl.az() * sg);
+            int h = Y + j;
+            if (vi == 0 || vi == 1) {
+                if (j == 0) {
+                    out.set(x, Y + 5, z, "tx_sign_subway_" + (sg > 0 ? vi : 1 - vi) + "[facing=" + back + "]");
+                    continue;
+                }
+                out.column(x, z, Y + 1, h - 1, "rw_tile");
+                out.set(x, h, z, "rw_stair[facing=" + climb + "]");
+                // four clear over every step (a jump up them never bumps a head), up through the
+                // hall's beams and roof into the rock
+                if (h + 5 >= SUBWAY_FLOOR - 1) {
+                    // through the subway platform's floor
+                    clear(out, x, z, h + 1, SUBWAY_FLOOR + 4);
+                } else {
+                    clear(out, x, z, h + 1, h + 4);
+                    if (h + 5 > Y + 6) {
+                        out.set(x, h + 5, z, "rw_tunnel");
+                    }
+                }
+                if (j == 3) {
+                    out.set(x, SUBWAY_FLOOR + 1, z, "tx_glass_rail[axis=" + across + "]");
+                }
+                continue;
+            }
+            if (j == 0) {
+                continue;
+            }
+            // the sides: glass in the hall, tile up through the rock to the subway's floor
+            out.column(x, z, Y + 1, Y + 5, "tx_glass[axis=" + along + "]");
+            out.column(x, z, Y + 6, Math.min(h + 5, SUBWAY_FLOOR - 2), "rw_tile");
+            if (vi == 2 && j >= 4 && j <= 9 && !subwayBent(x, z)) {
+                out.set(x, SUBWAY_FLOOR + 1, z, "tx_glass_rail[axis=" + along + "]");
+            }
+        }
+    }
+
+    /** True where one of the subway's station columns stands (they keep the stairs' balustrade's place). */
+    private boolean subwayBent(int x, int z) {
+        for (Track t : county.tracks()) {
+            if (t.kind != Track.Kind.SUBWAY || t.tubed || !at(t, x, z)) {
+                continue;
+            }
+            Track.Stop st = stop(t, hit.i);
+            if (st != null && hit.distance >= 3 && hit.distance < 4 && Math.floorMod(hit.i - st.middle(), BENT) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** The pier's deck and the pavilion's floor: level with the quay's paving. */
+    private static final int PIER = Terrain.CITY;
+    /** Where Eastside Quay's stair starts, along the island from its middle. */
+    private static final int QUAY_FOOT = -9;
+
+    /**
+     * Eastside Quay's way up: a granite stair in a glass box rising from the middle of the hall
+     * up through the water to a glass pavilion on a pier over the tubes, and the jetty from its
+     * door to the quay.
+     */
+    private void quay(ChunkSink out, Track.Island isl, int x, int z, double u, double v, int top) {
+        int Y = isl.y(), ui = (int) Math.floor(u), vi = (int) Math.floor(v);
+        String along = Math.abs(isl.ax()) >= Math.abs(isl.az()) ? "x" : "z", across = along.equals("x") ? "z" : "x";
+        String up = dir(isl.ax(), isl.az()), right = dir(-isl.az(), isl.ax()), left = dir(isl.az(), -isl.ax());
+        int j = ui - QUAY_FOOT;
+        if (j >= 0 && j <= 19 && vi >= -2 && vi <= 1) {
+            quayStair(out, x, z, Y, j, vi, vi < 0 ? left : right, along, up, dir(-isl.ax(), -isl.az()));
+        }
+        if (ui >= 1 && ui <= 16 && vi >= -5 && vi <= 4) {
+            pavilion(out, x, z, ui, vi, j, along, across, right);
+        }
+        // the pavilion's steel: crossbeams under its ends on legs either side of the tubes, beams along its sides
+        if ((ui == 1 || ui == 16) && vi >= -13 && vi <= 12) {
+            out.set(x, PIER - 1, z, "tx_beam[axis=" + across + "]");
+            if (vi == -13 || vi == 12) {
+                out.column(x, z, top + 1, PIER - 2, "tx_column");
+            }
+        } else if (ui > 1 && ui < 16 && (vi == -5 || vi == 4 || vi == -13 || vi == 12)) {
+            out.set(x, PIER - 1, z, "tx_beam[axis=" + along + "]");
+        }
+        // the glass canopy over the door on its arms from the wall's columns, the sign hung under it
+        if (ui >= 6 && ui <= 11 && vi >= 5 && vi <= 7) {
+            int k = vi - 4;
+            out.set(x, PIER + 5, z, k == 3 ? "tx_canopy_edge[facing=" + right + "]"
+                    : ui == 6 || ui == 11 ? "tx_canopy_arm_" + (k == 1 ? 0 : 6) + "[facing=" + right + "]" : "tx_canopy");
+            if (vi == 6 && (ui == 8 || ui == 9)) {
+                out.set(x, PIER + 4, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
+            }
+        }
+        // the jetty from the door to the quay, on piles clear of the tubes
+        if (ui >= 7 && ui <= 10 && vi >= 5 && vi <= 40) {
+            boolean edge = ui == 7 || ui == 10;
+            if (top < Terrain.WATER) {
+                out.set(x, PIER, z, "rw_grate");
+                clear(out, x, z, PIER + 1, PIER + 2);
+                if (edge) {
+                    out.set(x, PIER + 1, z, "railing[facing=" + (ui == 7 ? dir(-isl.ax(), -isl.az()) : up) + "]");
+                    if (vi >= 13 && vi % 6 == 1) {
+                        out.column(x, z, top + 1, PIER - 1, "tx_column");
+                    }
+                }
+            } else {
+                // ashore: on to the quay at the deck's level, through its railing
+                boolean landing = false;
+                for (int d = 1; d <= 3; d++) {
+                    int px = x - d * (int) Math.round(-isl.az()), pz = z - d * (int) Math.round(isl.ax());
+                    landing |= Terrain.isWater(county.terrain.height(px + 0.5, pz + 0.5));
+                }
+                if (landing) {
+                    if (top < PIER) {
+                        out.column(x, z, top + 1, PIER, "sidewalk");
+                    }
+                    clear(out, x, z, Math.max(top, PIER) + 1, Math.max(top, PIER) + 3);
+                }
+            }
+        }
+    }
+
+    /**
+     * A column of Eastside Quay's stair (j steps from its foot) or of the glass box round it (vi
+     * -2 and 1, facing out to their sides): in the hall granite under the steps and glass over
+     * the stringers; above it the box's glass walls and its sloping glass roof under the water.
+     */
+    private void quayStair(ChunkSink out, int x, int z, int Y, int j, int vi, String side, String along, String up, String down) {
+        int step = Y + 1 + j;
+        int hall = Y + 6;     // the hall's air goes up to here, its roof glass a block over
+        if (vi == -1 || vi == 0) {
+            for (int y = Y + 1; y < step; y++) {
+                out.set(x, y, z, y <= hall ? "tx_granite" : "gl_keel");
+            }
+            out.set(x, step, z, "tx_step[facing=" + up + "]");
+            // four clear over every step, the box's sloping roof a block over that
+            clear(out, x, z, step + 1, Math.min(step + 4, PIER + 4));
+            if (step + 5 > hall + 1 && step + 5 < PIER) {
+                out.set(x, step + 5, z, "gl_chamfer[facing=" + down + "]");
+            }
+            return;
+        }
+        String f = "[facing=" + side + "]";
+        for (int y = Y + 1; y <= hall; y++) {
+            out.set(x, y, z, y <= step ? "tx_granite" : "tx_glass[axis=" + along + "]");
+        }
+        if (step + 1 <= hall + 1 && hall + 1 <= step + 4) {
+            out.set(x, hall + 1, z, "gl_wall" + f);
+        }
+        for (int y = Math.max(hall + 2, step + 1); y <= Math.min(step + 5, PIER - 1); y++) {
+            out.set(x, y, z, "gl_wall" + f);
+        }
+    }
+
+    /**
+     * Eastside Quay's pavilion on its pier over the tubes: a terrazzo floor with the stair
+     * coming up through it inside a glass balustrade, glass walls on steel columns, the doors to
+     * the jetty, a flat roof with a rooflight, ticket machines, validators, a bench and a bin.
+     */
+    private void pavilion(ChunkSink out, int x, int z, int ui, int vi, int j, String along, String across, String right) {
+        boolean stair = vi == -1 || vi == 0;
+        boolean ends = ui == 1 || ui == 16, sides = vi == -5 || vi == 4;
+        long h = Noise.hash(county.seed ^ 0x9A71L, x, z);
+        double r = Noise.unit(h);
+        // the floor, open where the stair comes up
+        if (!(stair && j >= 15 && j <= 19)) {
+            boolean mat = vi >= 3 && (ui == 8 || ui == 9);
+            out.set(x, PIER, z, mat ? "tx_terrazzo_d" : r < 0.75 ? "tx_terrazzo" : "tx_terrazzo_b");
+        }
+        // the roof (four clear over the stair's top step), its rooflight and the parapet round it
+        boolean light = ui >= 4 && ui <= 13 && vi >= -3 && vi <= 2;
+        out.set(x, PIER + 5, z, light ? "tx_roof_glass" : "tx_roof");
+        if (ends || sides) {
+            out.set(x, PIER + 6, z, "tx_parapet");
+        }
+        if (ends && sides || sides && (ui == 6 || ui == 11) || ends && vi == 0) {
+            out.set(x, PIER + 1, z, "tx_column_base");
+            out.column(x, z, PIER + 2, PIER + 3, "tx_column");
+            out.set(x, PIER + 4, z, "tx_column_cap");
+            return;
+        }
+        if (ends || sides) {
+            String axis = sides ? along : across;
+            if (vi == 4 && (ui == 8 || ui == 9)) {
+                // the doors out to the jetty, one hanging open
+                String props = "[facing=" + right + ",hinge=" + (ui == 8 ? "right" : "left") + ",open=" + (ui == 8) ;
+                out.set(x, PIER + 1, z, "tx_door" + props + ",half=lower]");
+                out.set(x, PIER + 2, z, "tx_door" + props + ",half=upper]");
+                out.set(x, PIER + 3, z, "tx_glass_t[axis=" + axis + "]");
+                out.set(x, PIER + 4, z, "tx_glass[axis=" + axis + "]");
+                return;
+            }
+            for (int y = PIER + 1; y <= PIER + 4; y++) {
+                double g = Noise.unit(Noise.hash(county.seed ^ 0x9A72L + y, x, z));
+                out.set(x, y, z, (g < 0.08 ? "tx_glass_broken" : g < 0.18 ? "tx_glass_cracked" : g < 0.22 ? "tx_glass_frame"
+                        : y == PIER + 1 ? "tx_glass_t" : "tx_glass") + "[axis=" + axis + "]");
+            }
+            return;
+        }
+        clear(out, x, z, PIER + 1, PIER + 4);
+        if (stair && j >= 15 && j <= 18) {
+            return;
+        }
+        // the balustrade round the opening
+        if (stair && j == 14) {
+            out.set(x, PIER + 1, z, "tx_glass_rail[axis=" + across + "]");
+        } else if ((vi == -2 || vi == 1) && j >= 14 && j <= 18) {
+            out.set(x, PIER + 1, z, "tx_glass_rail[axis=" + along + "]");
+        } else if (vi == -4 && (ui == 3 || ui == 4)) {
+            out.set(x, PIER + 1, z, ui == 3 && r < 0.4 ? "tx_tvm_smashed[facing=" + right + "]" : "tx_tvm[facing=" + right + "]");
+            out.set(x, PIER + 2, z, ui == 3 && r < 0.4 ? "tx_tvm_top_smashed[facing=" + right + "]" : "tx_tvm_top[facing=" + right + "]");
+        } else if (vi == -4 && ui == 14) {
+            out.set(x, PIER + 1, z, "tx_bench[facing=" + right + "]");
+        } else if (vi == 3 && ui == 2) {
+            out.set(x, PIER + 1, z, "tx_bin");
+        } else if ((vi == -3 || vi == 2) && ui == 12) {
+            out.set(x, PIER + 1, z, "tx_validator[facing=" + right + "]");
+        } else if (r < 0.06) {
+            out.set(x, PIER + 1, z, r < 0.025 ? "paper" : r < 0.04 ? "glass_shards" : r < 0.05 ? "blood_splat" : "gc_leaves_1[facing=north]");
+        }
+        if (vi == 2 && (ui == 8 || ui == 9)) {
+            // over the way in: down to the trains
+            out.set(x, PIER + 4, z, "tx_sign_subway_" + (ui == 8 ? 0 : 1) + "[facing=" + right + "]");
+        } else if ((ui == 4 || ui == 13) && (vi == -3 || vi == 2)) {
+            out.set(x, PIER + 4, z, r < 0.3 ? "tx_pendant_off" : "tx_pendant");
+        }
     }
 
     // ------------------------------------------------------------------ level crossings

@@ -135,6 +135,18 @@ public final class TrainNet {
         }
     }
 
+    /** A stop button pressed inside a train (its entity id): stop and let me off. */
+    public record StopRequest(int train) implements CustomPacketPayload {
+        public static final Type<StopRequest> TYPE = new Type<>(ZomboidCraft.id("train_stop_request"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, StopRequest> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, StopRequest::train, StopRequest::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     /** OTTO says a line: the voice clips to play one after another, from the train's speakers (train -1: the station's). */
     public record OttoSay(int train, List<String> clips) implements CustomPacketPayload {
         public static final Type<OttoSay> TYPE = new Type<>(ZomboidCraft.id("train_otto"));

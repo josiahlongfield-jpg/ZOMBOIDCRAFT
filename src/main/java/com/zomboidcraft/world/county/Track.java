@@ -21,6 +21,8 @@ public final class Track {
     static final byte VIADUCT = 1;
     /** Under the streets. */
     static final byte TUNNEL = 2;
+    /** Under the water in the Glass Line's see-through tubes (RailGen.tube), in a channel dredged for them. */
+    static final byte TUBE = 3;
 
     /** Samples are this far apart along the loop. */
     static final double STEP = 1;
@@ -60,6 +62,17 @@ public final class Track {
     public final List<int[]> crossings = new ArrayList<>();
     /** The stops (by index) with a depot behind the platform (Layout, DepotSite): no fence or shelter there, the canopy instead. */
     final java.util.BitSet depots = new java.util.BitSet();
+    /** The samples inside Union Station's train hall (UnionHall): the station builds round the bed there. */
+    final java.util.BitSet hall = new java.util.BitSet();
+    /**
+     * The island platforms between a line and itself (the Glass Line's two tracks run 12 apart):
+     * what the stations build round them, beyond each track's own side of the platform.
+     */
+    final List<Island> islands = new ArrayList<>();
+    /** Per sample in a tube: +1 if the nearer way out is the way trains run, -1 if it's back (the escape signs' arrows). */
+    private byte[] tubeWay;
+    /** Some of the line runs in the Glass Line's tubes (a channel is dredged for them). */
+    final boolean tubed;
     private final Map<Long, int[]> cells = new HashMap<>();
     private final int reach;
 
@@ -84,6 +97,11 @@ public final class Track {
         }
         stopAt = new short[n];
         java.util.Arrays.fill(stopAt, (short) -1);
+        boolean tube = false;
+        for (byte m : mode) {
+            tube |= m == TUBE;
+        }
+        tubed = tube;
         Map<Long, List<Integer>> build = new HashMap<>();
         for (int i = 0; i < n; i++) {
             for (int cx = Math.floorDiv((int) Math.floor(xs[i]) - reach, CELL); cx <= Math.floorDiv((int) Math.floor(xs[i]) + reach, CELL); cx++) {
@@ -107,6 +125,54 @@ public final class Track {
     /** The samples within reach of the cell holding (x, z), or null. */
     int[] candidates(int x, int z) {
         return cells.get(County.key(Math.floorDiv(x, CELL), Math.floorDiv(z, CELL)));
+    }
+
+    /**
+     * An island platform: the middle of its centreline (x, z), the way it runs (ax, az: the way
+     * one of its tracks runs), its half length, the bed top beside it, and what's built there
+     * (the stations' own keys: "mercy" the stairs up to the subway, "quay" the glass stair up to
+     * the pier).
+     */
+    record Island(String key, double x, double z, double ax, double az, int half, int y) {
+        /** (x, z)'s place along the island from its middle, and across it (positive to the right of the way it runs). */
+        double along(double px, double pz) {
+            return (px - x) * ax + (pz - z) * az;
+        }
+
+        double across(double px, double pz) {
+            return -(px - x) * az + (pz - z) * ax;
+        }
+    }
+
+    /** In a tube: +1 if the nearer way out of it is ahead, -1 if it's behind (0 out of the tubes). */
+    int tubeWay(int i) {
+        if (tubeWay == null) {
+            byte[] w = new byte[n];
+            int[] ahead = new int[n], behind = new int[n];
+            int far = 1 << 20;
+            // samples to the tube's end each way, round the loop twice so a run over the seam counts
+            int run = far;
+            for (int k = 2 * n - 1; k >= 0; k--) {
+                int j = k % n;
+                run = mode[j] == TUBE ? Math.min(run + 1, far) : 0;
+                if (k < n) {
+                    ahead[j] = run;
+                }
+            }
+            run = far;
+            for (int k = 0; k < 2 * n; k++) {
+                int j = k % n;
+                run = mode[j] == TUBE ? Math.min(run + 1, far) : 0;
+                if (k >= n) {
+                    behind[j] = run;
+                }
+            }
+            for (int j = 0; j < n; j++) {
+                w[j] = (byte) (mode[j] != TUBE ? 0 : ahead[j] <= behind[j] ? 1 : -1);
+            }
+            tubeWay = w;
+        }
+        return tubeWay[i];
     }
 
     /** Finds the nearest sample among the candidates to the column's middle. */

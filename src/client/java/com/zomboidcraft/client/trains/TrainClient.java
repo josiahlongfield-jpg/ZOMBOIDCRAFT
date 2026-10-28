@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,6 +51,8 @@ public final class TrainClient {
         }));
         ClientTickEvents.START_CLIENT_TICK.register(TrainClient::start);
         ClientTickEvents.END_CLIENT_TICK.register(TrainClient::end);
+        com.zomboidcraft.client.interact.Interactables.finder(TrainClient::stopSpot);
+        com.zomboidcraft.client.interact.Interactables.blocks(state -> state.is(Trains.CALL_BUTTON));
     }
 
     /** Before the world ticks: every train runs on, so whoever rides it moves with it this same tick. */
@@ -88,7 +89,6 @@ public final class TrainClient {
             wasRiding = false;
         }
         placeRiders(client);
-        hint(client, player);
     }
 
     private static void riders(TrainNet.Riders p) {
@@ -134,8 +134,13 @@ public final class TrainClient {
         }
     }
 
-    /** The interact key pressed: on a call button, call the train. Returns whether it was one. */
+    /** The interact key pressed: on a stop button aboard, ask to get off; on a call button, call the train. Returns whether it was one. */
     public static boolean interact(Minecraft client, HitResult hit) {
+        int train = stopButton(client.player);
+        if (train >= 0) {
+            ClientPlayNetworking.send(new TrainNet.StopRequest(train));
+            return true;
+        }
         if (hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
                 && client.level.getBlockState(block.getBlockPos()).is(Trains.CALL_BUTTON)) {
             ClientPlayNetworking.send(new TrainNet.Call(block.getBlockPos()));
@@ -144,13 +149,46 @@ public final class TrainClient {
         return false;
     }
 
-    private static void hint(Minecraft client, LocalPlayer player) {
-        HitResult hit = client.hitResult;
-        if (tick % 20 == 0 && client.gui.screen() == null && hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
-                && client.level.getBlockState(block.getBlockPos()).is(Trains.CALL_BUTTON)) {
-            player.sendOverlayMessage(Component.literal("[").append(com.zomboidcraft.client.cars.CarClient.INTERACT.getTranslatedKeyMessage())
-                    .append("] Call the train (it will be heard)"));
+    /** The train whose stop button the player's looking at, close enough to press, from aboard it (its entity id), or -1. */
+    private static int stopButton(LocalPlayer player) {
+        Button found = stopButtonAt(player);
+        return found == null ? -1 : found.train();
+    }
+
+    /** The stop button's green dot, while you're looking at one close enough to press. */
+    private static com.zomboidcraft.client.interact.Interactables.Spot stopSpot(Minecraft client, LocalPlayer player) {
+        Button found = stopButtonAt(player);
+        return found == null ? null : new com.zomboidcraft.client.interact.Interactables.Spot(found.at(), 0);
+    }
+
+    /** A stop button: its train's entity id, and where it is in the world. */
+    private record Button(int train, Vec3 at) {
+    }
+
+    /** The stop button looked at from aboard, or null. */
+    private static Button stopButtonAt(LocalPlayer player) {
+        TrainEntity train = player == null ? null : ((TrainRider) player).zomboidcraft$train();
+        Line line = train == null ? null : train.line();
+        if (line == null) {
+            return null;
         }
+        Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
+        for (int car = 0; car < line.cars; car++) {
+            TrainCar.Pose pose = TrainCar.pose(line.route, train.s(), car);
+            Vec3 e = pose.toLocal(eye);
+            if (Math.abs(e.z) > TrainCar.HALF + 1 || Math.abs(e.x) > TrainCar.HALF_WIDTH + 1) {
+                continue;
+            }
+            Vec3 d = pose.dirToLocal(look);
+            for (double[] b : TrainCar.STOP_BUTTONS) {
+                Vec3 c = new Vec3(b[0], b[1], b[2]);
+                double t = c.subtract(e).dot(d);
+                if (t > 0 && t < 3 && e.add(d.scale(t)).distanceTo(c) < TrainCar.BUTTON_RADIUS) {
+                    return new Button(train.getId(), pose.toWorld(c.x, c.y, c.z));
+                }
+            }
+        }
+        return null;
     }
 
     private TrainClient() {

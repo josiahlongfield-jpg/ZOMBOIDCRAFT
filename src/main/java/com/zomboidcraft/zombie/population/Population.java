@@ -65,6 +65,12 @@ public final class Population {
     public static final AttachmentType<Pop> POP = AttachmentRegistry.create(ZomboidCraft.id("population"),
             builder -> builder.persistent(Pop.CODEC));
 
+    /** Where survivors woke up (block positions): the dead are never placed in the building round one. */
+    public static final AttachmentType<List<Long>> CLEAR = AttachmentRegistry.create(ZomboidCraft.id("clear_zones"),
+            builder -> builder.persistent(Codec.LONG.listOf()).initializer(List::of));
+    /** How far round a waking spot is kept clear: across the building, and a few floors up and down. */
+    private static final int CLEAR_REACH = 14, CLEAR_BELOW = 4, CLEAR_ABOVE = 10;
+
     private static final int SURVEY_EVERY = 10;
     /** Chunks at least this far round a player (in chunks) get their dead; further when the crowd reaches further. */
     private static final int SEED_RADIUS = 8;
@@ -98,6 +104,8 @@ public final class Population {
             QUEUE.clear();
             ZONES.clear();
             cap = -1;
+            islandPlaces = null;
+            islandCount = null;
             Census.clear();
         });
     }
@@ -173,11 +181,13 @@ public final class Population {
         if (!places.isEmpty()) {
             CountyGen gen = CountyChunkGenerator.gen(level.getSeed());
             for (int i = 0; i < places.size(); i++) {
-                Census.Count c = Census.get(gen, places.get(i), minY, maxY);
+                Place p = places.get(i);
+                boolean isle = county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2);
+                Census.Count c = isle ? island(county, gen, minY, maxY) : Census.get(gen, p, minY, maxY);
                 if (c == null) {
                     return false;
                 }
-                Budgets.Budget b = Budgets.of(places.get(i));
+                Budgets.Budget b = isle ? Budgets.ISLAND : Budgets.of(p);
                 double total = b.total() * cfg.density, in = c.indoor() < 1 ? 0 : total * b.indoors();
                 rin[i] = in == 0 ? 0 : in / c.indoor();
                 rout[i] = c.outdoor() < 1 ? 0 : (total - in) / c.outdoor();
@@ -198,8 +208,12 @@ public final class Population {
         double empty = Math.min(0.95, Math.max(0, cfg.emptyHouses));
         int[][] out = {new int[32]};
         int[] n = {0};
+        List<BlockPos> clear = clearNear(level, bx, bz);
         Spots.scan(blocks, bx, bz, minY, maxY, ground, (lx, y, lz, indoor) -> {
             int x = bx + lx, z = bz + lz;
+            if (!clear.isEmpty() && cleared(clear, x, y, z)) {
+                return;
+            }
             double rate = -1;
             for (int i = 0; i < places.size(); i++) {
                 Place p = places.get(i);
@@ -240,6 +254,67 @@ public final class Population {
         chunk.setAttached(POP, new Pop(recs, given, day(level)));
         placed += recs.length - (old == null ? 0 : old.recs().length);
         return true;
+    }
+
+    // ---- spots kept clear
+
+    /**
+     * Keeps the building round a spot free of the dead, now and for good: the zombies there go, its records go, and
+     * chunks given their dead later leave it out. Used where a survivor wakes up.
+     */
+    public static void keepClear(ServerLevel level, BlockPos pos) {
+        List<Long> zones = new ArrayList<>(level.getAttachedOrElse(CLEAR, List.of()));
+        zones.add(pos.asLong());
+        while (zones.size() > 256) {
+            zones.remove(0);
+        }
+        level.setAttached(CLEAR, List.copyOf(zones));
+        List<BlockPos> one = List.of(pos);
+        for (int cx = (pos.getX() - CLEAR_REACH) >> 4; cx <= (pos.getX() + CLEAR_REACH) >> 4; cx++) {
+            for (int cz = (pos.getZ() - CLEAR_REACH) >> 4; cz <= (pos.getZ() + CLEAR_REACH) >> 4; cz++) {
+                LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+                Pop pop = chunk == null ? null : chunk.getAttached(POP);
+                if (pop == null) {
+                    continue;
+                }
+                int bx = cx << 4, bz = cz << 4;
+                int[] kept = Arrays.stream(pop.recs()).filter(r -> !cleared(one, bx + (r & 15), y(r), bz + (r >> 4 & 15))).toArray();
+                if (kept.length != pop.recs().length) {
+                    chunk.setAttached(POP, new Pop(kept, pop.given(), pop.day()));
+                }
+            }
+        }
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(pos).inflate(CLEAR_REACH, (CLEAR_ABOVE + CLEAR_BELOW) / 2.0, CLEAR_REACH)
+                .move(0, (CLEAR_ABOVE - CLEAR_BELOW) / 2.0, 0);
+        for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, box)) {
+            zombie.discard();
+        }
+    }
+
+    private static List<BlockPos> clearNear(ServerLevel level, int bx, int bz) {
+        List<Long> zones = level.getAttachedOrElse(CLEAR, List.of());
+        if (zones.isEmpty()) {
+            return List.of();
+        }
+        List<BlockPos> near = new ArrayList<>();
+        for (long l : zones) {
+            BlockPos p = BlockPos.of(l);
+            if (p.getX() + CLEAR_REACH >= bx && p.getX() - CLEAR_REACH <= bx + 15 && p.getZ() + CLEAR_REACH >= bz
+                    && p.getZ() - CLEAR_REACH <= bz + 15) {
+                near.add(p);
+            }
+        }
+        return near;
+    }
+
+    private static boolean cleared(List<BlockPos> zones, int x, int y, int z) {
+        for (BlockPos p : zones) {
+            int dx = x - p.getX(), dz = z - p.getZ(), dy = y - p.getY();
+            if (dx * dx + dz * dz <= CLEAR_REACH * CLEAR_REACH && dy >= -CLEAR_BELOW && dy <= CLEAR_ABOVE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Whether the house standing on this spot is one the family got out of: a 12-block lot, the same every time. */
@@ -324,6 +399,40 @@ public final class Population {
             net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p,
                     new CrowdPayload(baseX, baseZ, names, sx, sz, sy, so));
         }
+    }
+
+    // ---- Grayhaven island: one pool over every place on it
+
+    private static List<Place> islandPlaces;
+    private static Census.Count islandCount;
+
+    /** Every island place's floor space added up (null while any is still being counted). */
+    private static Census.Count island(County county, CountyGen gen, int minY, int maxY) {
+        if (islandCount != null) {
+            return islandCount;
+        }
+        if (islandPlaces == null) {
+            islandPlaces = county.allPlaces().stream()
+                    .filter(p -> county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2)).toList();
+        }
+        double in = 0, out = 0;
+        boolean all = true;
+        for (Place p : islandPlaces) {
+            Census.Count c = Census.get(gen, p, minY, maxY);   // asks for every one at once, so they're counted together
+            if (c == null) {
+                all = false;
+            } else {
+                in += c.indoor();
+                out += c.outdoor();
+            }
+        }
+        if (!all) {
+            return null;
+        }
+        islandCount = new Census.Count(in, out);
+        ZomboidCraft.LOGGER.info("Grayhaven island: {} places, {} indoor and {} outdoor spots for its {} dead",
+                islandPlaces.size(), (long) in, (long) out, Budgets.ISLAND.total());
+        return islandCount;
     }
 
     // ---- how many can be real

@@ -35,6 +35,13 @@ public final class TrainRun {
     /** Who's aboard as he last counted, and how long till he'll react again to riders, to zombies about, to being shot at. */
     final java.util.Set<UUID> aboard = new java.util.HashSet<>();
     int riderCooldown, zombieCooldown, shotCooldown, shots;
+    /** A stop button's been pressed: pull up at haltAt (wherever that is) and open both sides. */
+    boolean halting;
+    double haltAt;
+    /** How long this stand at a stop (or a halt) is, all told. */
+    int dwellTotal;
+    /** Seconds the doors stay open after a stop button halt. */
+    static final int HALT_SECONDS = 12;
 
     public TrainRun(Line line, int index, double s) {
         this.line = line;
@@ -71,8 +78,22 @@ public final class TrainRun {
             Otto.express(level, this, line.stops.get(target));
         }
         double dist = target < 0 ? Double.MAX_VALUE : distTo(target);
+        // a stop button: pull up short, braking harder than for a station
+        boolean haltFirst = false;
+        if (halting) {
+            double hd = route.ahead(s, haltAt);
+            if (hd > route.length() - 8) {
+                hd = 0;
+            }
+            if (hd < dist) {
+                dist = hd;
+                haltFirst = true;
+                plan = brake * 1.6;
+                brake *= 2;
+            }
+        }
         double want = cruise;
-        if (target >= 0) {
+        if (target >= 0 || haltFirst) {
             want = Math.min(want, Math.sqrt(2 * plan * Math.max(0, dist - 0.02)));
             if (dist > 0.03) {
                 want = Math.max(want, Math.min(0.02, dist * 0.25));   // creep the last bit rather than stall short
@@ -105,6 +126,11 @@ public final class TrainRun {
         v = Math.max(0, v + a);
         if (v == 0 && a < 0) {
             a = 0;
+        }
+        if (haltFirst && (dist <= v + 0.01 && v < 0.08 || dist < 0.03)) {
+            s = route.wrapS(haltAt);
+            halt(level);
+            return;
         }
         if (target >= 0 && (dist <= v + 0.01 && v < 0.08 || dist < 0.03)) {
             s = line.frontAt(line.stops.get(target));
@@ -151,7 +177,8 @@ public final class TrainRun {
         atStop = target;
         Line.Stop stop = line.stops.get(atStop);
         doorSide = stop.side();
-        dwell = cfg.doorSeconds * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
+        halting = false;
+        dwell = dwellTotal = cfg.doorSeconds * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
         boolean called = line.calls.remove(Integer.valueOf(atStop));
         Beacons.answered(line, atStop);
         Otto.arrived(level, this, stop, called);
@@ -160,21 +187,56 @@ public final class TrainRun {
 
     static final int DOOR_OPEN = 20, DOOR_CLOSE = 30, LEAVE = 30;
 
+    /**
+     * Somebody aboard pressed a stop button. On the move: pull up as soon as it can (hard braking)
+     * and open both sides for a bit. Standing with the doors closing: open them back up a while.
+     */
+    void requestStop(ServerLevel level, net.minecraft.server.level.ServerPlayer by) {
+        if (phase == Phase.DWELL) {
+            if (dwell < DOOR_CLOSE + LEAVE + 100) {
+                dwell = DOOR_CLOSE + LEAVE + 100;
+                TrainSounds.doors(level, this, true);
+                Otto.doorsHeld(level, this, by);
+            }
+            return;
+        }
+        if (halting) {
+            return;
+        }
+        ZcConfig.Trains cfg = ZcConfig.get().trains;
+        double plan = Math.max(0.05, cfg.braking) / 400 * 1.6;
+        halting = true;
+        haltAt = line.route.wrapS(s + Math.max(1.5, v * v / (2 * plan) + v * 10));
+        Otto.stopRequested(level, this, by);
+    }
+
+    /** Pulled up for a stop button, between stations: both sides open. */
+    private void halt(ServerLevel level) {
+        phase = Phase.DWELL;
+        v = 0;
+        a = 0;
+        halting = false;
+        atStop = -1;
+        doorSide = 0;
+        dwell = dwellTotal = HALT_SECONDS * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
+        Otto.halted(level, this);
+        TrainSounds.chime(level, this);
+    }
+
     private void dwell(ServerLevel level, ZcConfig.Trains cfg) {
         // somebody's calling from up the line: cut the stop short
         if (!line.calls.isEmpty() && !line.calls.contains(atStop) && dwell > DOOR_CLOSE + LEAVE + 100) {
             dwell = DOOR_CLOSE + LEAVE + 100;
             Otto.cutShort(level, this);
         }
-        int total = cfg.doorSeconds * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
-        int elapsed = total - dwell;
+        int elapsed = dwellTotal - dwell;
         if (elapsed == 2) {
             TrainSounds.doors(level, this, true);
         }
         if (elapsed < DOOR_OPEN) {
             doors = Math.min(1, doors + 1f / DOOR_OPEN);
         } else if (dwell > DOOR_CLOSE + LEAVE) {
-            doors = 1;
+            doors = Math.min(1, doors + 1f / DOOR_OPEN);    // (opens back up if a button held them)
             if (dwell == DOOR_CLOSE + LEAVE + 70) {
                 Otto.closing(level, this);
                 TrainSounds.chime(level, this);

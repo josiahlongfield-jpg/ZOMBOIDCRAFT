@@ -1,0 +1,218 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_brushed": "zomboidcraft:block/city/tx_brushed",
+    "tx_granite": "zomboidcraft:block/city/tx_granite",
+    "tx_steel_d": "zomboidcraft:block/city/tx_steel_d",
+    "tx_ticket_glass": {
+      "sprite": "zomboidcraft:block/city/tx_ticket_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/tx_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1.5
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_granite"
+        },
+        "south": {
+          "texture": "#tx_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_granite"
+        },
+        "down": {
+          "texture": "#tx_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        1,
+        2
+      ],
+      "to": [
+        11,
+        1.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_brushed"
+        },
+        "south": {
+          "texture": "#tx_brushed"
+        },
+        "east": {
+          "texture": "#tx_brushed"
+        },
+        "west": {
+          "texture": "#tx_brushed"
+        },
+        "up": {
+          "texture": "#tx_brushed"
+        },
+        "down": {
+          "texture": "#tx_brushed"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        9
+      ],
+      "to": [
+        16,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_ticket_glass"
+        },
+        "south": {
+          "texture": "#tx_ticket_glass"
+        },
+        "east": {
+          "texture": "#tx_ticket_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_ticket_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_ticket_glass"
+        },
+        "down": {
+          "texture": "#tx_ticket_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        8.5
+      ],
+      "to": [
+        1,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        1,
+        8.5
+      ],
+      "to": [
+        16,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        15,
+        8.5
+      ],
+      "to": [
+        15,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_steel_d"
+        },
+        "south": {
+          "texture": "#tx_steel_d"
+        },
+        "east": {
+          "texture": "#tx_steel_d"
+        },
+        "west": {
+          "texture": "#tx_steel_d"
+        },
+        "up": {
+          "texture": "#tx_steel_d",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_steel_d"
+        }
+      }
+    }
+  ]
+}

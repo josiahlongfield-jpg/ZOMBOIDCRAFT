@@ -95,7 +95,8 @@ public final class Ambience {
 
     /** How much of a roof is over you: five columns round your head, each looked up until something solid. */
     private static float roofed(ClientLevel level, BlockPos eye) {
-        if (com.zomboidcraft.world.trains.TrainPhysics.insideCar(level, eye.getX() + 0.5, eye.getY() + 0.5, eye.getZ() + 0.5)) {
+        if (com.zomboidcraft.world.trains.TrainPhysics.insideCar(level, eye.getX() + 0.5, eye.getY() + 0.5, eye.getZ() + 0.5)
+                || com.zomboidcraft.world.cars.CarShelter.inside(level, eye.getX() + 0.5, eye.getY() + 0.5, eye.getZ() + 0.5)) {
             return 1;
         }
         int covered = 0;

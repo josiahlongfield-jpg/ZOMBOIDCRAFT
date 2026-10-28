@@ -17,10 +17,15 @@ public final class Budgets {
     public static final double WILD_ROAD = 5;
     public static final double WILD_OFF_ROAD = 0.7;
 
+    /**
+     * Grayhaven island, the county's biggest landmark: one pool shared by every place on it, whatever its type,
+     * over all their floor space together (Population.island), so a skyscraper gets its share and a park its few.
+     */
+    public static final Budget ISLAND = new Budget(20000, 0.85);
+
     public static Budget of(Place p) {
         String v = p.variant;
         return switch (p.type.name()) {
-            // Grayhaven island city (20,000) goes here once the landscape thread's County.onIsland is in
             case "DOWNTOWN" -> new Budget(switch (v) {
                 case "metro" -> 3000;
                 case "city" -> 2000;
