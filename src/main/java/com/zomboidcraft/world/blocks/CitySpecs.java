@@ -55,6 +55,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part47();
         part48();
         part49();
+        part50();
     }
 
     private void part0() {
@@ -8589,6 +8590,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ar_sb_ring_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_sb_ring_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_sb_house", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+    }
+
+    private void part49() {
         s("ar_stand_grill_0", FACING, 0, 4, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_stand_grill_1", FACING, 0, 4, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_stand_grill_2", FACING, 0, 4, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
@@ -8630,9 +8634,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ar_ribbon_a_10", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_ribbon_a_11", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_ribbon_a_12", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
-    }
-
-    private void part49() {
         s("ar_ribbon_a_13", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_ribbon_a_14", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("ar_ribbon_a_15", FACING, 0, 6, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
@@ -8839,6 +8840,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ar_resurf_1_1_1", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 10, 14, 0, 10, 0, 16, 14, 12);
         s("ar_resurf_2_0_0", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 6, 2, 14, 16, 16, 14, 6, 4, 16, 12, 16, 6, 0, 0, 16, 12, 6);
         s("ar_resurf_2_0_1", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 6, 0, 14, 16, 14, 14, 6, 0, 16, 12, 12, 6, 0, 10, 16, 12, 16);
+    }
+
+    private void part50() {
         s("ar_resurf_2_1_0", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 0, 2, 14, 10, 16, 0, 10, 4, 10, 14, 16, 8, 8, 14, 10, 14, 16, 4, 14, 10, 12, 15, 16, 10, 14, 6, 11, 16, 8);
         s("ar_resurf_2_1_1", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 14, 10, 14, 0, 10, 0, 10, 14, 12, 8, 8, 0, 10, 14, 2, 4, 14, 0, 12, 15, 6, 10, 14, 8, 11, 16, 10);
         s("ar_resurf_3_0_0", PLAIN, DECOR, 0, SoundType.METAL, 0f, 0, 6, 4, 12, 12, 16, 2, 12, 10, 8, 16, 16, 10, 12, 4, 12, 16, 6, 12, 2, 2, 16, 12, 16, 8, 0, 3, 16, 2, 16, 0, 0, 0, 2, 12, 6);
