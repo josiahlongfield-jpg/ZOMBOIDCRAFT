@@ -110,10 +110,10 @@ public final class ZcConfig {
         /** How much faster a train runs on its way to a call button (curves still slow it). */
         public double expressSpeed = 2.5;
         public double subwaySpacing = 900;
-        /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
+        /** Earshot of the flare (railway) and the buzzer (subway) a call button sets off, once, for zombies. */
         public double flareNoise = 72;
         public double sirenNoise = 64;
-        /** How long one flare burns, in seconds; another goes up if the train still hasn't come. */
+        /** How long the flare burns, in seconds. */
         public int flareSeconds = 45;
         /** Damage a moving train does to a zombie it hits, and to a player per block-a-second of speed. */
         public float hitZombie = 40;
