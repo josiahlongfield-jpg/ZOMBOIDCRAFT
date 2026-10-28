@@ -32,6 +32,8 @@ import com.zomboidcraft.world.city.Placer;
  * north-east corner and the outfield toward the water, the field the Guard's landing zone.</li>
  * <li>tower: the Grayhaven Broadcast Center ({@link Broadcast}), WGHV Channel 6's studios and its
  * lattice tower, the front to the south street the subway runs under.</li>
+ * <li>power: Harbor Point Generating Station ({@link PowerStation}), Grayhaven Light &amp; Power's
+ * coal plant, the turbine hall's front to the west street the subway runs under.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -79,6 +81,12 @@ final class LandmarkSite extends Site {
         }
         if (variant("ballpark")) {
             new Ballpark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("power")) {
+            // drawn with its front to the west street, where the subway's stop comes up: the lot's
+            // frame turned a quarter, its width the lot's depth
+            new PowerStation(lot(0, 0, d, w, 3), rng, d, w).build();
             return;
         }
         if (variant("tower")) {

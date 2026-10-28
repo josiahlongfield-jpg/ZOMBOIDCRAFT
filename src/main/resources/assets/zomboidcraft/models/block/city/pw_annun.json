@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_annun": "zomboidcraft:block/city/pw_annun",
+    "pw_panel": "zomboidcraft:block/city/pw_panel",
+    "particle": "zomboidcraft:block/city/pw_annun"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_annun"
+        },
+        "south": {
+          "texture": "#pw_panel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_panel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_panel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_panel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_panel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

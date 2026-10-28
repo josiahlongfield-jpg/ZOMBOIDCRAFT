@@ -1,0 +1,218 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gl_coal_top": "zomboidcraft:block/city/gl_coal_top",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "pw_belt_coal": "zomboidcraft:block/city/pw_belt_coal",
+    "particle": "zomboidcraft:block/city/home_plastic_black"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        5,
+        0
+      ],
+      "to": [
+        15,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#pw_belt_coal"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        0
+      ],
+      "to": [
+        1,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        3,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        0
+      ],
+      "to": [
+        12,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gl_coal_top",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gl_coal_top",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gl_coal_top"
+        },
+        "west": {
+          "texture": "#gl_coal_top"
+        },
+        "up": {
+          "texture": "#gl_coal_top"
+        },
+        "down": {
+          "texture": "#gl_coal_top"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        1,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

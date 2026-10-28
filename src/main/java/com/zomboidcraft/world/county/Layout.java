@@ -258,6 +258,12 @@ final class Layout {
             // the Broadcast Center: two blocks square, its front to the street the subway runs under
             return lot(s, PlaceType.LANDMARK, "tower", 2, 2, h);
         }
+        if (s.id().equals("power")) {
+            // Harbor Point Generating Station: three blocks along the subway's street, two deep, nudged
+            // west so the street the subway runs under is its front
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "power", 3800, s.z(), s.flags(), s.name()),
+                    PlaceType.LANDMARK, "power", 3, 2, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);

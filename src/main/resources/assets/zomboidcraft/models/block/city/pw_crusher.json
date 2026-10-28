@@ -1,0 +1,138 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_drum": "zomboidcraft:block/city/pw_drum",
+    "pw_duct": "zomboidcraft:block/city/pw_duct",
+    "pw_machine": "zomboidcraft:block/city/pw_machine",
+    "pw_tg": "zomboidcraft:block/city/pw_tg",
+    "particle": "zomboidcraft:block/city/pw_machine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_machine",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_tg",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_tg",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_tg",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_tg"
+        },
+        "down": {
+          "texture": "#pw_tg",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_duct"
+        },
+        "south": {
+          "texture": "#pw_duct"
+        },
+        "east": {
+          "texture": "#pw_duct"
+        },
+        "west": {
+          "texture": "#pw_duct"
+        },
+        "up": {
+          "texture": "#pw_duct",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_duct"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        -2
+      ],
+      "to": [
+        11,
+        9,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_drum"
+        },
+        "south": {
+          "texture": "#pw_drum"
+        },
+        "east": {
+          "texture": "#pw_drum",
+          "uv": [
+            14,
+            7,
+            16,
+            13
+          ]
+        },
+        "west": {
+          "texture": "#pw_drum",
+          "uv": [
+            0,
+            7,
+            2,
+            13
+          ]
+        },
+        "up": {
+          "texture": "#pw_drum",
+          "uv": [
+            5,
+            0,
+            11,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#pw_drum",
+          "uv": [
+            5,
+            14,
+            11,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_sash_lit": {
+      "sprite": "zomboidcraft:block/city/pw_sash_lit",
+      "force_translucent": true
+    },
+    "pw_tg": "zomboidcraft:block/city/pw_tg",
+    "particle": "zomboidcraft:block/city/pw_sash_lit"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_sash_lit"
+        },
+        "south": {
+          "texture": "#pw_sash_lit"
+        },
+        "east": {
+          "texture": "#pw_tg",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_tg",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_tg",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_tg",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

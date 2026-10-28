@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "pw_porcelain": "zomboidcraft:block/city/pw_porcelain",
+    "particle": "zomboidcraft:block/city/pw_porcelain"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_porcelain"
+        },
+        "south": {
+          "texture": "#pw_porcelain"
+        },
+        "east": {
+          "texture": "#pw_porcelain"
+        },
+        "west": {
+          "texture": "#pw_porcelain"
+        },
+        "up": {
+          "texture": "#pw_porcelain"
+        },
+        "down": {
+          "texture": "#pw_porcelain",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        5
+      ],
+      "to": [
+        11,
+        3.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_porcelain"
+        },
+        "south": {
+          "texture": "#pw_porcelain"
+        },
+        "east": {
+          "texture": "#pw_porcelain"
+        },
+        "west": {
+          "texture": "#pw_porcelain"
+        },
+        "up": {
+          "texture": "#pw_porcelain"
+        },
+        "down": {
+          "texture": "#pw_porcelain"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        5,
+        5
+      ],
+      "to": [
+        11,
+        6.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_porcelain"
+        },
+        "south": {
+          "texture": "#pw_porcelain"
+        },
+        "east": {
+          "texture": "#pw_porcelain"
+        },
+        "west": {
+          "texture": "#pw_porcelain"
+        },
+        "up": {
+          "texture": "#pw_porcelain"
+        },
+        "down": {
+          "texture": "#pw_porcelain"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        7
+      ],
+      "to": [
+        9,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}
