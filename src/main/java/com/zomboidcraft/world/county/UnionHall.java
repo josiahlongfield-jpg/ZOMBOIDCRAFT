@@ -463,9 +463,10 @@ final class UnionHall {
             // the closed end at the platform's level, over the foot
             set(x, PLAT + 1, foot, "tx_glass_rail[axis=x]");
             if (x == e0 || x == e0 + 1) {
-                String hand = (x == e0 + 1) == (s > 0) ? "l" : "r";
+                String hand = (x == e0 + 1) == (s > 0) ? "l" : "r", footHand = hand.equals("l") ? "r" : "l";
                 set(x, 0, foot, "tx_esc_plate[facing=" + up + "]");
-                set(x, 1, foot, "tx_esc_newel_" + hand + "[facing=" + down + "]");
+                // turned to face down the hall, so the other hand keeps it on the outside edge
+                set(x, 1, foot, "tx_esc_newel_" + footHand + "[facing=" + down + "]");
                 set(x, PLAT, top, "tx_esc_plate[facing=" + down + "]");
                 set(x, PLAT + 1, top, "tx_esc_newel_" + hand + "[facing=" + up + "]");
             }
