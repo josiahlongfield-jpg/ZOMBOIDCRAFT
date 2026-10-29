@@ -67,6 +67,11 @@ public final class CarModels {
         public boolean jet() {
             return "jet".equals(kind);
         }
+
+        /** The marina's boats: afloat at their lines (y = 0 is the keel), searched but never sat in or driven. */
+        public boolean boat() {
+            return "boat".equals(kind);
+        }
     }
 
     private static final class Index {
