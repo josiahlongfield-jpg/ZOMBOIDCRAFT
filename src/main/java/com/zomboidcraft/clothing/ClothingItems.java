@@ -41,7 +41,11 @@ public final class ClothingItems {
             "cargo_pants", "camo_pants", "slacks", "sweatpants", "shorts", "skirt", "overalls", "scrubs_pants",
             "leather_chaps", "running_shoes", "dress_shoes", "cowboy_boots", "hiking_boots", "rubber_boots",
             "combat_boots", "slippers", "leather_gloves", "winter_gloves", "rubber_gloves", "tactical_gloves",
-            "scarf", "necktie");
+            "scarf", "necktie",
+            // batch 5: uniforms, armour and aircrew
+            "flight_deck_jersey", "police_jacket", "fire_coat", "field_jacket", "ghillie_suit", "ww2_flight_jacket",
+            "fur_coat", "bespoke_suit", "poncho", "flak_vest", "police_vest", "survival_vest",
+            "fire_gloves", "fire_pants", "g_suit");
 
     private static final List<Item> ITEMS = new ArrayList<>();
 
