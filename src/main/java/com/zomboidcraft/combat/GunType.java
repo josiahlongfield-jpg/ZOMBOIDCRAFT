@@ -42,7 +42,19 @@ public enum GunType {
     // bolt laid on the rail and slid back into it
     CROSSBOW("crossbow", "crossbow", 40, 10, 0, 0),
     // the assault rifle's reload with a heavier twenty-round .308 magazine
-    BATTLE_RIFLE("battle_rifle", ".308", 16, 22, 25, 34, 18);
+    BATTLE_RIFLE("battle_rifle", ".308", 16, 22, 25, 34, 18),
+    // the pistol's reload, smaller
+    POCKET_PISTOL("pocket_pistol", ".380 ACP", 12, 16, 18, 24, 12),
+    // the pistol's reload with a longer magazine
+    MACHINE_PISTOL("machine_pistol", "9mm", 12, 16, 18, 24, 12),
+    // the assault rifle's reload; the can is built in
+    SUPPRESSED_RIFLE("suppressed_rifle", "5.56mm", 16, 22, 25, 34, 18),
+    // the hunting rifle's magazine and bolt
+    PRECISION_RIFLE("precision_rifle", ".308", 16, 22, 25, 41, 18, 16, 7),
+    // the same, with a heavier magazine seated more slowly
+    HEAVY_SNIPER("heavy_sniper", ".50 BMG", 18, 24, 28, 44, 20, 16, 7),
+    // six 40mm rounds pushed in one at a time; it fires a grenade round (Thrown) rather than a bullet
+    GRENADE_LAUNCHER("grenade_launcher", "40mm", 10, 14, 0, 0);
 
     private final String id;
     private final String caliber;
@@ -166,6 +178,12 @@ public enum GunType {
             case LEVER_ACTION -> ModItems.LEVER_ACTION;
             case CROSSBOW -> ModItems.CROSSBOW;
             case BATTLE_RIFLE -> ModItems.BATTLE_RIFLE;
+            case POCKET_PISTOL -> ModItems.POCKET_PISTOL;
+            case MACHINE_PISTOL -> ModItems.MACHINE_PISTOL;
+            case SUPPRESSED_RIFLE -> ModItems.SUPPRESSED_RIFLE;
+            case PRECISION_RIFLE -> ModItems.PRECISION_RIFLE;
+            case HEAVY_SNIPER -> ModItems.HEAVY_SNIPER;
+            case GRENADE_LAUNCHER -> ModItems.GRENADE_LAUNCHER;
         };
     }
 
@@ -179,6 +197,12 @@ public enum GunType {
             case RIMFIRE -> ModItems.RIMFIRE_MAGAZINE;
             case SMG -> ModItems.SMG_MAGAZINE;
             case BATTLE_RIFLE -> ModItems.BATTLE_RIFLE_MAGAZINE;
+            case POCKET_PISTOL -> ModItems.POCKET_PISTOL_MAGAZINE;
+            case MACHINE_PISTOL -> ModItems.MACHINE_PISTOL_MAGAZINE;
+            case SUPPRESSED_RIFLE -> ModItems.RIFLE_MAGAZINE;
+            case PRECISION_RIFLE -> ModItems.PRECISION_RIFLE_MAGAZINE;
+            case HEAVY_SNIPER -> ModItems.HEAVY_SNIPER_MAGAZINE;
+            case GRENADE_LAUNCHER -> null;
         };
     }
 
@@ -194,6 +218,12 @@ public enum GunType {
             case LEVER_ACTION -> ModItems.LEVER_AMMO;
             case CROSSBOW -> ModItems.CROSSBOW_BOLT;
             case BATTLE_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
+            case POCKET_PISTOL -> ModItems.POCKET_AMMO;
+            case MACHINE_PISTOL -> ModItems.PISTOL_AMMO;
+            case SUPPRESSED_RIFLE -> ModItems.RIFLE_AMMO;
+            case PRECISION_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
+            case HEAVY_SNIPER -> ModItems.HEAVY_AMMO;
+            case GRENADE_LAUNCHER -> ModItems.GRENADE_ROUND;
         };
     }
 
@@ -217,6 +247,12 @@ public enum GunType {
             case LEVER_ACTION -> ZcConfig.get().leverAction;
             case CROSSBOW -> ZcConfig.get().crossbow;
             case BATTLE_RIFLE -> ZcConfig.get().battleRifle;
+            case POCKET_PISTOL -> ZcConfig.get().pocketPistol;
+            case MACHINE_PISTOL -> ZcConfig.get().machinePistol;
+            case SUPPRESSED_RIFLE -> ZcConfig.get().suppressedRifle;
+            case PRECISION_RIFLE -> ZcConfig.get().precisionRifle;
+            case HEAVY_SNIPER -> ZcConfig.get().heavySniper;
+            case GRENADE_LAUNCHER -> ZcConfig.get().grenadeLauncher;
         };
     }
 
@@ -250,6 +286,12 @@ public enum GunType {
             // the hunting rifle's .308 recordings: the same round, heavier than the 5.56
             case BATTLE_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
+            case POCKET_PISTOL, MACHINE_PISTOL -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.PISTOL_SHOT_DISTANT : ModSounds.PISTOL_SHOT;
+            case SUPPRESSED_RIFLE -> distant ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_SUPPRESSED;
+            case PRECISION_RIFLE, HEAVY_SNIPER -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
+            case GRENADE_LAUNCHER -> distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
         };
     }
 
@@ -268,6 +310,10 @@ public enum GunType {
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
             case CROSSBOW -> ModSounds.CROSSBOW_DRY;        // the trigger of an uncocked bow, just a click
             case BATTLE_RIFLE -> ModSounds.RIFLE_DRY;
+            case POCKET_PISTOL, MACHINE_PISTOL -> ModSounds.PISTOL_DRY;
+            case SUPPRESSED_RIFLE -> ModSounds.RIFLE_DRY;
+            case PRECISION_RIFLE, HEAVY_SNIPER -> ModSounds.HUNTING_RIFLE_DRY;
+            case GRENADE_LAUNCHER -> ModSounds.SHOTGUN_DRY;
         };
     }
 
@@ -275,6 +321,8 @@ public enum GunType {
     public SoundEvent magOut() {
         return switch (this) {
             case PISTOL -> ModSounds.PISTOL_MAG_OUT;
+            case POCKET_PISTOL, MACHINE_PISTOL -> ModSounds.PISTOL_MAG_OUT;
+            case PRECISION_RIFLE, HEAVY_SNIPER -> ModSounds.HUNTING_RIFLE_MAG_OUT;
             case HUNTING_RIFLE -> ModSounds.HUNTING_RIFLE_MAG_OUT;
             case DOUBLE_BARREL -> ModSounds.DOUBLE_BARREL_OPEN;
             case REVOLVER -> ModSounds.REVOLVER_OPEN;
@@ -303,6 +351,10 @@ public enum GunType {
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
             case CROSSBOW -> ModSounds.CROSSBOW_LOAD;        // the bolt slid back into the latch
             case BATTLE_RIFLE -> ModSounds.RIFLE_MAG_IN;
+            case POCKET_PISTOL, MACHINE_PISTOL -> ModSounds.PISTOL_MAG_IN;
+            case SUPPRESSED_RIFLE -> ModSounds.RIFLE_MAG_IN;
+            case PRECISION_RIFLE, HEAVY_SNIPER -> ModSounds.HUNTING_RIFLE_MAG_IN;
+            case GRENADE_LAUNCHER -> ModSounds.SHOTGUN_SHELL_IN;
         };
     }
 
@@ -325,6 +377,10 @@ public enum GunType {
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_LEVER;
             case CROSSBOW -> ModSounds.CROSSBOW_COCK;
             case BATTLE_RIFLE -> ModSounds.RIFLE_BOLT;
+            case POCKET_PISTOL, MACHINE_PISTOL -> ModSounds.PISTOL_SLIDE;
+            case SUPPRESSED_RIFLE -> ModSounds.RIFLE_BOLT;
+            case PRECISION_RIFLE, HEAVY_SNIPER -> ModSounds.HUNTING_RIFLE_BOLT;
+            case GRENADE_LAUNCHER -> ModSounds.SHOTGUN_PUMP;
         };
     }
 
@@ -340,7 +396,12 @@ public enum GunType {
 
     /** What it fires, said loosely: shells for a shotgun, rounds for the rest. */
     public String rounds() {
-        return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : this == CROSSBOW ? "bolts" : "rounds";
+        return ammo() == ModItems.SHOTGUN_SHELL ? "shells" : this == CROSSBOW ? "bolts" : this == GRENADE_LAUNCHER ? "grenades" : "rounds";
+    }
+
+    /** Carried in a holster rather than slung: the pistols and revolvers. */
+    public boolean handgun() {
+        return this == PISTOL || this == REVOLVER || this == MAGNUM || this == POCKET_PISTOL || this == MACHINE_PISTOL;
     }
 
     /** The gun a stack is, or null if it isn't one. */

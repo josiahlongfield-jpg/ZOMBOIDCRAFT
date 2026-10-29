@@ -5,24 +5,28 @@
   {
    "slot": "optic",
    "mount": [
-    8.0,
-    9.35,
-    12.528
+    7.91,
+    8.974,
+    11.951
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_optic",
    "fits": [
     "zomboidcraft:red_dot_sight",
     "zomboidcraft:holo_sight",
-    "zomboidcraft:scope_4x"
+    "zomboidcraft:mini_red_dot",
+    "zomboidcraft:compact_red_dot",
+    "zomboidcraft:scope_4x",
+    "zomboidcraft:combat_scope",
+    "zomboidcraft:rifle_scope"
    ],
-   "default": null
+   "default": "zomboidcraft:compact_red_dot"
   },
   {
    "slot": "muzzle",
    "mount": [
-    8.0,
-    8.366,
-    -0.253
+    7.91,
+    8.37,
+    -1.4
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_muzzle",
    "fits": [
@@ -33,35 +37,41 @@
   {
    "slot": "underbarrel",
    "mount": [
-    8.0,
-    7.383,
-    6.137
+    7.91,
+    7.6,
+    8.4
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_underbarrel",
    "fits": [
-    "zomboidcraft:foregrip"
+    "zomboidcraft:foregrip",
+    "zomboidcraft:angled_grip",
+    "zomboidcraft:stubby_grip",
+    "zomboidcraft:skeleton_grip",
+    "zomboidcraft:tactical_grip",
+    "zomboidcraft:underbarrel_launcher"
    ],
    "default": null
   },
   {
    "slot": "side_rail",
    "mount": [
-    7.017,
-    8.366,
-    4.171
+    7.15,
+    8.45,
+    7.6
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_side_rail",
    "fits": [
-    "zomboidcraft:weapon_light"
+    "zomboidcraft:weapon_light",
+    "zomboidcraft:compact_light"
    ],
    "default": null
   },
   {
    "slot": "stock",
    "mount": [
-    8.0,
-    8.366,
-    16.183
+    7.9,
+    8.4,
+    17.6
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_stock",
    "fits": [
@@ -72,9 +82,9 @@
   {
    "slot": "magazine",
    "mount": [
-    8.0,
-    7.096,
-    10.726
+    7.9,
+    7.0,
+    11.6
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_magazine",
    "fits": [
@@ -85,13 +95,26 @@
   {
    "slot": "right_rail",
    "mount": [
-    8.983,
-    8.366,
-    4.171
+    8.68,
+    8.45,
+    7.6
    ],
    "ghost": "zomboidcraft:weapon/ghost/assault_rifle_right_rail",
    "fits": [
     "zomboidcraft:laser_sight"
+   ],
+   "default": null
+  },
+  {
+   "slot": "magnifier",
+   "mount": [
+    7.91,
+    8.974,
+    16.1
+   ],
+   "ghost": "zomboidcraft:weapon/ghost/assault_rifle_magnifier",
+   "fits": [
+    "zomboidcraft:magnifier"
    ],
    "default": null
   }

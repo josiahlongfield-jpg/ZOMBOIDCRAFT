@@ -232,6 +232,17 @@ def build_fire_axe(m):
     m.seg((-3.5, 21.0), (-4.35, 20.6), 0.5, 0.3, 'steel')
 
 
+def build_tomahawk(m):
+    """A one-handed tomahawk: a slim haft and a small bearded head with a short spike behind (drawn as the bought
+    mesh; this block model sets its size and hold)."""
+    m.rod(-3.6, -3.1, 0.5, 'wood')
+    m.rod(-3.1, 10.6, 0.38, 'wood')
+    m.box([-0.55, 9.4, -0.45], [0.55, 11.6, 0.45], 'head')
+    for x0, x1, y0, y1, t in [(0.55, 1.4, 9.5, 11.5, 0.6), (1.4, 2.2, 9.0, 11.7, 0.4), (2.2, 2.8, 8.6, 11.9, 0.22)]:
+        m.box([x0, y0, -t / 2], [x1, y1, t / 2], 'head')
+    m.box([-1.9, 10.2, -0.2], [-0.55, 10.9, 0.2], 'steel')
+
+
 def build_sledgehammer(m):
     m.rod(-4.4, -4.0, 0.58, 'rubber')
     m.rod(-4.0, 3.0, 0.53, 'rubber')
@@ -408,6 +419,9 @@ WEAPONS = [
     (Weapon('fire_axe', 'Fire Axe', 'axe', 13.0, 0.8, 3.2, 0.6, 420, 13, 0.35, two_handed=True, sound='blade',
             skill='BLADE'), build_fire_axe,
      dict(wood=lambda f: P.wood(f, '#c79c66', '#8c6339'), head=axe_head(4.25), steel=bright_steel(0.6))),
+    (Weapon('tomahawk', 'Tomahawk', 'axe', 10.0, 1.1, 3.0, 0.45, 350, 9, 0.25, sound='blade', skill='BLADE'),
+     build_tomahawk,
+     dict(wood=lambda f: P.wood(f, '#8a6a48', '#5a3f28'), head=axe_head(2.8), steel=bright_steel(0.6))),
     (Weapon('sledgehammer', 'Sledgehammer', 'heavy_blunt', 16.0, 0.6, 3.3, 1.2, 600, 17, 0.8, two_handed=True),
      build_sledgehammer,
      dict(rubber=lambda f: P.rubber(f, '#121212', 0.3), glass=P.fibreglass, forged=rusty_steel(0.3, 0.45),
@@ -439,6 +453,10 @@ MELEE_PBR = {
     'rimfire_ammo': dict(carton='card'),
     'lever_ammo': dict(carton='card'),
     'magnum_ammo': dict(carton='card'),
+    'pocket_ammo': dict(carton='card'),
+    'heavy_ammo': dict(carton='card'),
+    'grenade_round': dict(carton='card'),
+    'tomahawk': dict(wood='varnish', head='painted', steel='steel'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
 
@@ -767,7 +785,7 @@ def assault_rifle():
     slots = {
         'optic': kit.Slot(fp(0, RF.RAIL, 2.6), 'top', ['red_dot', 'holo', 'scope_4x']),
         'muzzle': kit.Slot(fp(0, 0, RF.MUZZLE), 'axial', ['suppressor']),
-        'underbarrel': kit.Slot(fp(0, -RF.RAIL, -5.2), 'bottom', ['foregrip']),
+        'underbarrel': kit.Slot(fp(0, -RF.RAIL, -5.2), 'bottom', ['foregrip', 'launcher']),
         # the light on the left rail and the laser on the right, so both go on at once
         'side_rail': kit.Slot(fp(-RF.RAIL, 0, -7.6), 'left', ['light']),
         'right_rail': kit.Slot(fp(RF.RAIL, 0, -7.6), 'right', ['laser']),
@@ -792,6 +810,57 @@ def battle_rifle():
     gun = assault_rifle()
     gun.name, gun.title, gun.seed = 'battle_rifle', 'Battle Rifle', 557
     gun.parts['mag'] = kit.Part('mag', 'battle_rifle_magazine', 'Battle Rifle Magazine', 'magazine', RF.magazine,
+                                gun.parts['mag'].look)
+    return gun
+
+
+def pocket_pistol():
+    """The .380 pocket pistol (the bought pack's gun 9): built on the pistol's frame so its hands and sights line up,
+    drawn as its own (smaller) bought mesh, with no threads or rail, and its own 7-round magazine."""
+    gun = pistol()
+    gun.name, gun.title, gun.seed = 'pocket_pistol', 'Pocket Pistol', 951
+    gun.parts = {'mag': kit.Part('mag', 'pocket_pistol_magazine', 'Pocket Pistol Magazine', 'magazine', PI.magazine,
+                                 gun.parts['mag'].look)}
+    gun.slots = {'magazine': gun.slots['magazine']}
+    return gun
+
+
+def machine_pistol():
+    """The 9mm machine pistol (the bought pack's gun 7): the pistol's frame, slots and attachments, its own 20-round
+    magazine, and full auto."""
+    gun = pistol()
+    gun.name, gun.title, gun.seed = 'machine_pistol', 'Machine Pistol', 953
+    gun.parts['mag'] = kit.Part('mag', 'machine_pistol_magazine', 'Machine Pistol Magazine', 'magazine', PI.magazine,
+                                gun.parts['mag'].look)
+    return gun
+
+
+def suppressed_rifle():
+    """The suppressed rifle (the bought pack's rifle 6): the assault rifle's frame and magazines, its can built in, so
+    there's no muzzle slot."""
+    gun = assault_rifle()
+    gun.name, gun.title, gun.seed = 'suppressed_rifle', 'Suppressed Rifle', 955
+    del gun.slots['muzzle']
+    del gun.parts['suppressor']
+    return gun
+
+
+def precision_rifle():
+    """The bolt-action precision rifle (the bought pack's sniper 12): the hunting rifle's frame, bolt and slots, its own
+    10-round .308 magazine."""
+    gun = hunting_rifle()
+    gun.name, gun.title, gun.seed = 'precision_rifle', 'Precision Rifle', 957
+    gun.parts['mag'] = kit.Part('mag', 'precision_rifle_magazine', 'Precision Rifle Magazine', 'magazine', HR.magazine,
+                                gun.parts['mag'].look)
+    return gun
+
+
+def heavy_sniper():
+    """The .50 heavy sniper (the bought M200-style rifle): the hunting rifle's frame, bolt and slots, its own 7-round
+    .50 magazine."""
+    gun = hunting_rifle()
+    gun.name, gun.title, gun.seed = 'heavy_sniper', 'Heavy Sniper Rifle', 959
+    gun.parts['mag'] = kit.Part('mag', 'heavy_sniper_magazine', 'Heavy Sniper Magazine', 'magazine', HR.magazine,
                                 gun.parts['mag'].look)
     return gun
 
@@ -835,6 +904,14 @@ def shotgun():
 
     return kit.Gun('shotgun', 'Pump Shotgun', SG.body, SG.look(), SG.HAND, {}, {},
                    aperture=fp(0, SG.SIGHT, SG.RCVR_LEN - 0.6), flash=flash, handle=SG.forend, seed=913, flash_size=1.3)
+
+
+def grenade_launcher():
+    """The six-shot 40mm grenade launcher (the bought pack's gun 14): built on the pump's frame so its hands and loading
+    port line up, drawn as its own bought mesh; loaded a round at a time and fired without working anything."""
+    gun = shotgun()
+    gun.name, gun.title, gun.seed = 'grenade_launcher', 'Grenade Launcher', 961
+    return gun
 
 
 def hunting_rifle():
@@ -1213,9 +1290,18 @@ MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
 # the sight, so its window fills a good part of the view. Inches from the sight point to the eye (the back
 # face's distance plus the eye relief the sight was shaped for), and the scale they're drawn at. Through the
 # scope the gun isn't drawn at all: the game draws the scope picture over the screen.
-ADS_EYE = {'red_dot': 0.85 + AT.RED_DOT_EYE, 'holo': 0.20 + AT.HOLO_EYE}
+# Every optic is a bought mesh (tools/meshguns/attachments.json): the eye sits a little behind its back end. The
+# magnified ones the game draws its own picture for (CombatHud) hide the gun, as does the magnifier.
+HIDDEN_WHEN_AIMING = tuple(k for k, a in AT.MESHES.items() if a.get('hidden')) + ('magnified',)
+
+
+def _eye(key):
+    b = AT.BOUNDS[AT.MESHES[key]['mesh']]
+    return (b[1][2] - b[2][2]) / IN + (4.0 if key == 'pistol_scope' else 1.6)     # a pistol scope's long eye relief
+
+
+ADS_EYE = {k: _eye(k) for k, a in AT.MESHES.items() if a['slot'] == 'optic' and a['mesh'] and not a.get('hidden')}
 ADS_SCALE = 1.2
-HIDDEN_WHEN_AIMING = ('scope_4x',)
 
 
 def ads_eyes(gun, fp):
@@ -1446,12 +1532,19 @@ def main():
     aimed(br, g, RIFLE_FP)
     line, _ = kit.write_gun(br, ASSETS, g - br.hand, gun_displays(g, holds, RIFLE_FP), lang, ads_eyes(br, RIFLE_FP))
     summary.append(line)
+    sr = suppressed_rifle()
+    line, _ = kit.write_gun(sr, ASSETS, g - sr.hand, gun_displays(g, holds, RIFLE_FP), lang, ads_eyes(sr, RIFLE_FP))
+    summary.append(line)
     pistol_gun = pistol()
     gp = centred_grip(pistol_gun)
     pistol_hold = pistol_holds()
     line, _ = kit.write_gun(pistol_gun, ASSETS, gp - pistol_gun.hand, gun_displays(gp, pistol_hold, PISTOL_FP), lang,
                             ads_eyes(pistol_gun, PISTOL_FP))
     summary.append(line)
+    extra_pistols = [pocket_pistol(), machine_pistol()]
+    for pg in extra_pistols:
+        line, _ = kit.write_gun(pg, ASSETS, gp - pg.hand, gun_displays(gp, pistol_hold, PISTOL_FP), lang, ads_eyes(pg, PISTOL_FP))
+        summary.append(line)
     sg = shotgun()
     _Pm, gs = rifle_frame()
     sg_hold = shotgun_holds()
@@ -1459,12 +1552,20 @@ def main():
     line, _ = kit.write_gun(sg, ASSETS, gs - sg.hand, gun_displays(gs, sg_hold, SHOTGUN_FP), lang, ads_eyes(sg, SHOTGUN_FP))
     summary.append(line)
     write_shells(gs - sg.hand, lang)
+    glr = grenade_launcher()
+    line, _ = kit.write_gun(glr, ASSETS, gs - glr.hand, gun_displays(gs, sg_hold, SHOTGUN_FP), lang, ads_eyes(glr, SHOTGUN_FP))
+    summary.append(line)
+    write_loose_round('grenade_launcher', SG.shell, SG.look(), SG.frame_point(*SG.LOOSE_SHELL), gs - glr.hand, 962)
     hr = hunting_rifle()
     _Pm, gh = rifle_frame()
     hr_hold = hunting_holds()
     aimed(hr, gh, HUNTING_FP)
     line, _ = kit.write_gun(hr, ASSETS, gh - hr.hand, gun_displays(gh, hr_hold, HUNTING_FP), lang, ads_eyes(hr, HUNTING_FP))
     summary.append(line)
+    extra_bolts = [precision_rifle(), heavy_sniper()]
+    for bg in extra_bolts:
+        line, _ = kit.write_gun(bg, ASSETS, gh - bg.hand, gun_displays(gh, hr_hold, HUNTING_FP), lang, ads_eyes(bg, HUNTING_FP))
+        summary.append(line)
     db = double_barrel()
     _Pm, gd = rifle_frame()
     db_hold = double_holds()
@@ -1528,17 +1629,20 @@ def main():
     # (IN units each) and a block is 39.37 of them, 16 units across
     true_size = 16 / 39.37 / IN
     part_display = lambda m: small_display(m, (20, 60, 0), (true_size, true_size * 1.7))
-    kit.write_part_items(list(rifle.parts.values()), ASSETS, part_display, lang)
-    # the light and laser are the rifle's own items (drawn compact on the pistol); the rest are the pistol's
-    own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
+    # every attachment's own item (skin.py draws each as its mesh), and the pistol's suppressor
+    kit.write_part_items([kit.Part(a.key, a.item, a.title, a.slot, a.build, a.look, a.sight, a.note) for a in AT.ALL],
+                         ASSETS, part_display, lang)
+    own = [p for p in pistol_gun.parts.values() if p.item == 'pistol_suppressor']
     kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
+    kit.write_part_items([rifle.parts['stock']], ASSETS, part_display, lang)
     kit.write_part_items([hr.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
-    kit.write_part_items([rm.parts['mag'], sm.parts['mag'], xb.parts['bolt'], br.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
+    kit.write_part_items([rm.parts['mag'], sm.parts['mag'], xb.parts['bolt'], br.parts['mag']]
+                         + [x.parts['mag'] for x in extra_pistols + extra_bolts], ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb, br])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb, br, sr, glr] + extra_pistols + extra_bolts)
     rigs = [(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
             (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
             (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
@@ -1551,11 +1655,17 @@ def main():
             (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
             (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
             (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx)),
-            (br, g, holds, RIFLE_FP, rifle_points(br, g))]
+            (br, g, holds, RIFLE_FP, rifle_points(br, g)),
+            (sr, g, holds, RIFLE_FP, rifle_points(sr, g)),
+            (glr, gs, sg_hold, SHOTGUN_FP, shotgun_points(glr, gs))]
+    rigs += [(pg, gp, pistol_hold, PISTOL_FP, pistol_points(pg, gp)) for pg in extra_pistols]
+    rigs += [(bg, gh, hr_hold, HUNTING_FP, hunting_points(bg, gh)) for bg in extra_bolts]
     write_rigs_java(rigs)
     # the laser's and light's lenses in each gun's build frame, so other players see the beams leave the gun
     lens_names = ['rifle', 'pistol', 'shotgun', 'hunting', 'double_barrel', 'revolver', 'rimfire', 'smg',
-                  'sawn_off', 'magnum', 'lever_action', 'crossbow', 'battle_rifle']
+                  'sawn_off', 'magnum', 'lever_action', 'crossbow', 'battle_rifle', 'suppressed_rifle', 'grenade_launcher',
+                  'pocket_pistol',
+                  'machine_pistol', 'precision_rifle', 'heavy_sniper']
     lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
     # where the off hand goes in a reload, so other players see it: the magazine's foot (a tube gun's port, the
@@ -1569,7 +1679,10 @@ def main():
                                       ('revolver_ammo', '.38 Special Rounds', '#2f4a63', 561),
                                       ('rimfire_ammo', '.22 LR Rounds', '#7a6a2a', 562),
                                       ('magnum_ammo', '.44 Magnum Rounds', '#5b2a4a', 563),
-                                      ('lever_ammo', '.30-30 Rounds', '#7a3b1e', 564)):
+                                      ('lever_ammo', '.30-30 Rounds', '#7a3b1e', 564),
+                                      ('pocket_ammo', '.380 ACP Rounds', '#3e5a4a', 565),
+                                      ('heavy_ammo', '.50 BMG Rounds', '#2e2e2e', 566),
+                                      ('grenade_round', '40mm Grenades', '#56602f', 567)):
         box = M.Model(name)
         build_ammo_box(box)
         lo, hi = box.bounds()
@@ -1590,6 +1703,7 @@ def main():
                                 (mh, mG, mkeys), lenses, reloads)
     for name in kit.mesh_skins():       # ammo and parts with a bought mesh, which no gun or melee pass rewrites
         kit.mesh_skin(name, ASSETS)
+    kit._meshskin().apply_items(str(ASSETS / 'items'))     # every attachment's, magazine's and stock's own item
     print('\n'.join(summary))
     if preview:
         write_preview(preview)
@@ -1780,7 +1894,10 @@ def mag_points(gun, shift):
 
 
 def lens_point(gun, key, lens, shift):
-    """Where a rail part's beam starts (the laser's or the light's lens), from its own inches."""
+    """Where a rail part's beam starts (the laser's or the light's lens), from its own inches; the muzzle on a gun
+    that takes no such part (the pocket pistol)."""
+    if key not in gun.parts:
+        return kit.flash_tip(gun) + shift
     R, t = gun.mount(key)
     return R @ (IN * np.asarray(lens, float)) + t + shift
 

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/hunting_rifle/mag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/hunting_rifle/mag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "pbr_hunting_rifle",
+   "part": "mag"
+  }
  }
 }

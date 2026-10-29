@@ -46,16 +46,16 @@ public enum Rarity {
 
     public static Rarity of(GunType type) {
         return switch (type) {
-            case PISTOL, SHOTGUN, RIMFIRE, LEVER_ACTION -> COMMON;
+            case PISTOL, SHOTGUN, RIMFIRE, LEVER_ACTION, POCKET_PISTOL -> COMMON;
             case REVOLVER, DOUBLE_BARREL, HUNTING_RIFLE, SAWN_OFF, CROSSBOW -> SCARCE;
-            case ASSAULT_RIFLE, MAGNUM, BATTLE_RIFLE -> RARE;
-            case SMG -> PRIZED;
+            case ASSAULT_RIFLE, MAGNUM, BATTLE_RIFLE, PRECISION_RIFLE -> RARE;
+            case SMG, MACHINE_PISTOL, SUPPRESSED_RIFLE, HEAVY_SNIPER, GRENADE_LAUNCHER -> PRIZED;
         };
     }
 
     public static Rarity of(WeaponSpecs.WeaponSpec spec) {
         return switch (spec.name()) {
-            case "machete", "fire_axe", "sledgehammer", "spiked_bat" -> SCARCE;
+            case "machete", "fire_axe", "sledgehammer", "spiked_bat", "tomahawk" -> SCARCE;
             case "katana" -> RARE;
             default -> COMMON;
         };

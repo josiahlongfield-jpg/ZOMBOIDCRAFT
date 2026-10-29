@@ -103,6 +103,10 @@ public final class Guns {
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
+        if (launcherOn(gun)) {
+            fireLauncher(player, gun, st, now, aiming);
+            return;
+        }
         boolean auto = fullAuto(gun);
         // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
         // tick; the rate still holds on average
@@ -173,6 +177,11 @@ public final class Guns {
         Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
+        if (type == GunType.GRENADE_LAUNCHER) {
+            // a 40mm round lobbed on its own arc, bursting where it lands (combat/throwing/Thrown)
+            com.zomboidcraft.combat.throwing.Thrown.fire(level, player, new ItemStack(ModItems.GRENADE_ROUND), muzzle, aim);
+            return;
+        }
         if (config.muzzleSmoke && type != GunType.CROSSBOW) {
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
             if (!suppressed) {
@@ -496,6 +505,8 @@ public final class Guns {
                 * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
+        } else if (aiming && player.isCrouching() && Attachments.hasBipod(gun)) {
+            spread *= ZcConfig.get().guns.bipodSpread;
         }
         return spread + bloom * (aiming ? 0.5 : 1.0);
     }
@@ -529,7 +540,7 @@ public final class Guns {
     /** The gun has a full-auto setting and is set to it. */
     public static boolean fullAuto(ItemStack gun) {
         GunType type = GunType.of(gun);
-        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false);
+        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
     }
 
     /**
@@ -541,18 +552,87 @@ public final class Guns {
         return (now - due > gap || now < due - 2 * gap ? now : due) + gap;
     }
 
-    /** Switches a select-fire gun between semi and full auto, with the selector's click. */
+    /**
+     * Switches a select-fire gun between semi and full auto, with the selector's click; with an underbarrel grenade
+     * launcher on, the launcher is the next setting round.
+     */
     public static void toggleFireMode(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
-        if (type == null || !type.stats().selectFire) {
+        boolean launcher = type != null && Attachments.hasLauncher(gun);
+        if (type == null || !type.stats().selectFire && !launcher) {
             return;
         }
-        boolean auto = !gun.getOrDefault(GunState.FULL_AUTO, false);
-        gun.set(GunState.FULL_AUTO, auto);
+        String mode;
+        if (launcherOn(gun)) {
+            gun.set(GunState.LAUNCHER_ON, false);
+            gun.set(GunState.FULL_AUTO, false);
+            mode = "Semi-auto";
+        } else if (type.stats().selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
+            gun.set(GunState.FULL_AUTO, true);
+            mode = "Full auto";
+        } else if (launcher) {
+            gun.set(GunState.LAUNCHER_ON, true);
+            mode = gun.getOrDefault(GunState.LAUNCHER_LOADED, false) ? "Grenade launcher" : "Grenade launcher (empty: R to load)";
+        } else {
+            gun.set(GunState.FULL_AUTO, false);
+            mode = "Semi-auto";
+        }
         player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
-                SoundSource.PLAYERS, 0.3f, auto ? 1.5f : 1.3f);
-        player.sendOverlayMessage(Component.literal(auto ? "Full auto" : "Semi-auto"));
+                SoundSource.PLAYERS, 0.3f, mode.equals("Full auto") ? 1.5f : mode.equals("Semi-auto") ? 1.3f : 1.1f);
+        player.sendOverlayMessage(Component.literal(mode));
+    }
+
+    /** The trigger works the underbarrel grenade launcher. */
+    public static boolean launcherOn(ItemStack gun) {
+        return gun.getOrDefault(GunState.LAUNCHER_ON, false) && Attachments.hasLauncher(gun);
+    }
+
+    /** The underbarrel launcher's one round goes, lobbed like the six-shot's (combat/throwing/Thrown.fire). */
+    private static void fireLauncher(ServerPlayer player, ItemStack gun, State st, long now, boolean aiming) {
+        if (now - st.lastShot < 10 || st.reloadTick >= 0) {
+            return;
+        }
+        st.lastShot = now;
+        ServerLevel level = (ServerLevel) player.level();
+        if (!gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SHOTGUN_DRY, SoundSource.PLAYERS, 0.8f, 0.8f);
+            player.sendOverlayMessage(Component.literal("Launcher empty: press R to load a 40mm grenade.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        gun.set(GunState.LAUNCHER_LOADED, false);
+        GunRaise.shot(player);
+        Vec3 look = player.getLookAngle();
+        Vec3 aim = jitter(look, aiming ? 0.6 : 2.0, player);
+        Vec3 muzzle = player.getEyePosition().add(look.scale(0.9)).add(0, aiming ? -0.2 : -0.35, 0);
+        com.zomboidcraft.combat.throwing.Thrown.fire(level, player, new ItemStack(ModItems.GRENADE_ROUND), muzzle, aim);
+        level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SHOTGUN_SHOT, SoundSource.PLAYERS, 1f, 0.6f);
+        Noise.emit(level, player.position(), ZcConfig.get().grenadeLauncher.shotNoise);
+    }
+
+    /** Pushes a 40mm round into the underbarrel launcher. */
+    private static void loadLauncher(ServerPlayer player, ItemStack gun) {
+        if (gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+            player.sendOverlayMessage(Component.literal("The launcher is loaded.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        Inventory inv = player.getInventory();
+        int at = -1;
+        for (int i = 0; i < inv.getContainerSize() && at < 0; i++) {
+            if (inv.getItem(i).is(ModItems.GRENADE_ROUND)) {
+                at = i;
+            }
+        }
+        if (at < 0 && !player.hasInfiniteMaterials()) {
+            player.sendOverlayMessage(Component.literal("No 40mm grenades.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        if (at >= 0 && !player.hasInfiniteMaterials()) {
+            inv.getItem(at).shrink(1);
+        }
+        gun.set(GunState.LAUNCHER_LOADED, true);
+        sound(player, ModSounds.SHOTGUN_SHELL_IN);
+        player.sendOverlayMessage(Component.literal("Launcher loaded"));
     }
 
     // ------------------------------------------------------------------ light and laser
@@ -586,6 +666,10 @@ public final class Guns {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
         if (type == null) {
+            return;
+        }
+        if (launcherOn(gun)) {
+            loadLauncher(player, gun);
             return;
         }
         State st = state(player);

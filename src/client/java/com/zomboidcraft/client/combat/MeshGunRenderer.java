@@ -1,6 +1,7 @@
 package com.zomboidcraft.client.combat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,11 +27,15 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     private final String id;
     private final String part;
     private final List<Float> offset;
+    private final float roll, pitch, scale;
 
-    private MeshGunRenderer(String id, String part, List<Float> offset) {
+    private MeshGunRenderer(String id, String part, List<Float> offset, float roll, float pitch, float scale) {
         this.id = id;
         this.part = part;
         this.offset = offset;
+        this.roll = roll;
+        this.pitch = pitch;
+        this.scale = scale;
     }
 
     public static void register() {
@@ -39,12 +44,23 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
 
     @Override
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
-        if (offset.isEmpty()) {
+        if (offset.isEmpty() && roll == 0 && pitch == 0 && scale == 1) {
             MeshGuns.draw(id, part, pose, out, light);
             return;
         }
         pose.pushPose();
-        pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
+        if (!offset.isEmpty()) {
+            pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
+        }
+        if (roll != 0) {
+            pose.mulPose(Axis.ZP.rotationDegrees(roll));
+        }
+        if (pitch != 0) {
+            pose.mulPose(Axis.XP.rotationDegrees(pitch));
+        }
+        if (scale != 1) {
+            pose.scale(scale, scale, scale);
+        }
         MeshGuns.draw(id, part, pose, out, light);
         pose.popPose();
     }
@@ -56,17 +72,29 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         if (b == null) {
             b = new float[] {0.2f, -0.1f, -0.6f, 0.8f, 1.0f, 1.6f};
         }
+        // an attachment's mesh sits round its clamp at the origin: moved to its mount (its turn is left out)
+        float dx = offset.isEmpty() ? 0 : offset.get(0) / 16, dy = offset.isEmpty() ? 0 : offset.get(1) / 16,
+                dz = offset.isEmpty() ? 0 : offset.get(2) / 16;
         for (int i = 0; i < 8; i++) {
-            out.accept(new Vector3f(b[(i & 1) * 3], b[1 + (i >> 1 & 1) * 3], b[2 + (i >> 2 & 1) * 3]));
+            out.accept(new Vector3f(b[(i & 1) * 3] + dx, b[1 + (i >> 1 & 1) * 3] + dy, b[2 + (i >> 2 & 1) * 3] + dz));
         }
     }
 
-    /** offset: item pixels to move the part by, for a piece our block gun draws somewhere else (a revolver's cylinder swung out). */
-    public record Unbaked(String id, String part, List<Float> offset) implements SpecialModelRenderer.Unbaked<Void> {
+    /**
+     * offset: item pixels to move the part by, for a piece our block gun draws somewhere else (a revolver's cylinder
+     * swung out), or an attachment's mount point on the gun (attachment meshes are packed with their clamp at the
+     * origin). Then roll (degrees about z: 90 puts a top-rail part on the left rail, 180 under the barrel), pitch
+     * (degrees about x: a flip-up sight folded flat) and scale.
+     */
+    public record Unbaked(String id, String part, List<Float> offset, float roll, float pitch, float scale)
+            implements SpecialModelRenderer.Unbaked<Void> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
                 Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part),
-                Codec.FLOAT.listOf(3, 3).optionalFieldOf("offset", List.of()).forGetter(Unbaked::offset)
+                Codec.FLOAT.listOf(3, 3).optionalFieldOf("offset", List.of()).forGetter(Unbaked::offset),
+                Codec.FLOAT.optionalFieldOf("roll", 0f).forGetter(Unbaked::roll),
+                Codec.FLOAT.optionalFieldOf("pitch", 0f).forGetter(Unbaked::pitch),
+                Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(Unbaked::scale)
         ).apply(i, Unbaked::new));
 
         @Override
@@ -76,7 +104,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
 
         @Override
         public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
-            return new MeshGunRenderer(id, part, offset);
+            return new MeshGunRenderer(id, part, offset, roll, pitch, scale);
         }
     }
 }

@@ -1,10 +1,4 @@
-{"assault_rifle": {"mesh": "pbr_assault_rifle", "keep": ["irons_up", "irons_folded"]},
- "smg": "pbr_smg",
- "pistol": {"mesh": "pbr_pistol", "keep": ["mag"]},
- "magnum": "pbr_magnum",
- "shotgun": "pbr_shotgun",
- "hunting_rifle": {"mesh": "pbr_hunting_rifle", "keep": ["mag"]},
- "machete": "pbr_machete",
- "crossbow": {"mesh": "pbr_crossbow", "parts": {"bolt": "pbr_crossbow_bolt", "loose_shell": "pbr_crossbow_bolt"}},
+{"machete": "pbr_machete",
  "crossbow_bolt": {"models": {"part/crossbow_bolt": "pbr_bolt"}},
- "battle_rifle": {"mesh": "pbr_battle_rifle", "keep": ["irons_up", "irons_folded"]}}
+ "tomahawk": "pbr_tomahawk",
+ "frag_grenade": {"models": {"zomboidcraft:item/throwable/frag_grenade": "pbr_frag_grenade"}}}

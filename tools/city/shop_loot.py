@@ -366,14 +366,32 @@ for _name, _extra in {"guns": [(f"{ZC}:smg", 1), (f"{ZC}:magnum", 1)], "pawn": [
                       "farm": [(f"{ZC}:rimfire", 3), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 2), (f"{ZC}:crossbow", 1)]}.items():
     RARE[_name] = RARE.get(_name, []) + _extra
 
-# weapons wave two (the bought guns, Josiah 2026-10-29): the .308 battle rifle where rifles are sold or hoarded
+# weapons wave two (the bought guns, Josiah 2026-10-29): the .308 battle rifle and the precision rifle where rifles are
+# sold or hoarded, the .380 pocket pistol wherever handguns were kept, the machine pistol, the suppressed rifle and the
+# .50 heavy sniper rare finds
 WAVE_TWO = {
-    "guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.1, .6)), (f"{ZC}:battle_rifle_magazine", 2, 1, 1)],
-    "basement_guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.05, .5)), (f"{ZC}:battle_rifle_magazine", 1, 1, 1, rounds(20))],
+    "guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.1, .6)), (f"{ZC}:battle_rifle_magazine", 2, 1, 1),
+             (f"{ZC}:pocket_pistol", 2, 1, 1, worn(.1, .7)), (f"{ZC}:pocket_pistol_magazine", 3, 1, 1),
+             (f"{ZC}:pocket_ammo", 8, 5, 30), (f"{ZC}:machine_pistol_magazine", 1, 1, 1),
+             (f"{ZC}:precision_rifle", 1, 1, 1, worn(.1, .6)), (f"{ZC}:precision_rifle_magazine", 2, 1, 1),
+             (f"{ZC}:heavy_ammo", 2, 2, 8), (f"{ZC}:underbarrel_launcher", 1, 1, 1), (f"{ZC}:grenade_round", 1, 1, 2)],
+    "pawn": [(f"{ZC}:pocket_pistol", 2, 1, 1, worn(.2, .8)), (f"{ZC}:pocket_ammo", 2, 5, 20)],
+    "hardware": [(f"{ZC}:tomahawk", 1, 1, 1, worn(0, .5))],
+    "home_guns": [(f"{ZC}:pocket_pistol", 2, 1, 1, worn(.1, .6)), (f"{ZC}:pocket_ammo", 4, 5, 24),
+                  (f"{ZC}:precision_rifle", 1, 1, 1, worn(.1, .6))],
+    "basement_guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.05, .5)), (f"{ZC}:battle_rifle_magazine", 1, 1, 1, rounds(20)),
+                      (f"{ZC}:precision_rifle", 1, 1, 1, worn(.05, .5)), (f"{ZC}:precision_rifle_magazine", 1, 1, 1),
+                      (f"{ZC}:heavy_sniper_magazine", 1, 1, 1), (f"{ZC}:heavy_ammo", 2, 2, 10),
+                      (f"{ZC}:grenade_round", 1, 1, 3)],
 }
 for _name, _extra in WAVE_TWO.items():
     TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
-for _name, _extra in {"guns": [(f"{ZC}:battle_rifle", 1)], "basement_guns": [(f"{ZC}:battle_rifle", 1)]}.items():
+for _name, _extra in {"guns": [(f"{ZC}:battle_rifle", 1), (f"{ZC}:machine_pistol", 1), (f"{ZC}:suppressed_rifle", 1),
+                               (f"{ZC}:heavy_sniper", 1)],
+                      "basement_guns": [(f"{ZC}:battle_rifle", 1), (f"{ZC}:machine_pistol", 1), (f"{ZC}:suppressed_rifle", 1),
+                                        (f"{ZC}:heavy_sniper", 1), (f"{ZC}:grenade_launcher", 1)],
+                      "home_nightstand": [(f"{ZC}:pocket_pistol", 1)], "home_garage": [(f"{ZC}:tomahawk", 1)],
+                      "farm": [(f"{ZC}:tomahawk", 1)]}.items():
     RARE[_name] = RARE.get(_name, []) + _extra
 
 def entry(item, weight, lo, hi, *functions):

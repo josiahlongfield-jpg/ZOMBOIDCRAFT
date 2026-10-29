@@ -520,9 +520,9 @@ public final class Dismember {
             return config.shotguns;
         }
         return switch (gun) {
-            case PISTOL, REVOLVER, MAGNUM, SMG, RIMFIRE -> config.handguns;
-            case ASSAULT_RIFLE, BATTLE_RIFLE -> config.rifles;
-            case HUNTING_RIFLE, LEVER_ACTION -> config.huntingRifles;
+            case PISTOL, REVOLVER, MAGNUM, SMG, RIMFIRE, POCKET_PISTOL, MACHINE_PISTOL -> config.handguns;
+            case ASSAULT_RIFLE, BATTLE_RIFLE, SUPPRESSED_RIFLE -> config.rifles;
+            case HUNTING_RIFLE, LEVER_ACTION, PRECISION_RIFLE, HEAVY_SNIPER -> config.huntingRifles;
             case CROSSBOW -> config.crossbows;
             default -> config.otherGuns;
         };
@@ -534,7 +534,7 @@ public final class Dismember {
             return config.burstShotguns;
         }
         return switch (gun) {
-            case HUNTING_RIFLE, BATTLE_RIFLE -> config.burstHuntingRifle;
+            case HUNTING_RIFLE, BATTLE_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> config.burstHuntingRifle;
             case LEVER_ACTION -> config.burstLeverAction;
             case MAGNUM -> config.burstMagnum;
             default -> config.burstOtherGuns;
@@ -547,8 +547,8 @@ public final class Dismember {
             return 3;
         }
         return switch (gun) {
-            case HUNTING_RIFLE, LEVER_ACTION, BATTLE_RIFLE -> 2;
-            case ASSAULT_RIFLE, MAGNUM -> 1;
+            case HUNTING_RIFLE, LEVER_ACTION, BATTLE_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> 2;
+            case ASSAULT_RIFLE, MAGNUM, SUPPRESSED_RIFLE -> 1;
             default -> 0;
         };
     }

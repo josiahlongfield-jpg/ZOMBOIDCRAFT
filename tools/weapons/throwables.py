@@ -385,6 +385,7 @@ def main():
                ASSETS / f'models/item/throwable/{th.key}.json')
         M.dump({'model': {'type': 'minecraft:model', 'model': f'{NS}:item/throwable/{th.key}'}},
                ASSETS / f'items/{th.key}.json')
+        kit.mesh_skin(th.key, ASSETS)       # a bought mesh in its place, if it has one (tools/meshguns/skins.json)
         print(f'{th.key}: {len(m.parts)} boxes, {T}px')
 
 

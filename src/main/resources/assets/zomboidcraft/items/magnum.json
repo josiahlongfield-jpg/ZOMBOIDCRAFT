@@ -2,7 +2,7 @@
  "model": {
   "type": "minecraft:select",
   "property": "minecraft:custom_model_data",
-  "index": 8,
+  "index": 9,
   "cases": [
    {
     "when": "nickel",
@@ -45,12 +45,7 @@
             "model": {
              "type": "zomboidcraft:mesh",
              "id": "pbr_magnum",
-             "part": "handle",
-             "offset": [
-              -1.209,
-              -0.338,
-              0.0
-             ]
+             "part": "handle"
             }
            }
           },
@@ -73,6 +68,90 @@
              "id": "pbr_magnum",
              "part": "slide"
             }
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_out/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_out/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_out/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_out/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
          ]
@@ -106,12 +185,7 @@
             "model": {
              "type": "zomboidcraft:mesh",
              "id": "pbr_magnum",
-             "part": "handle",
-             "offset": [
-              -1.209,
-              -0.338,
-              0.0
-             ]
+             "part": "handle"
             }
            }
           },
@@ -134,6 +208,90 @@
              "id": "pbr_magnum",
              "part": "slide"
             }
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_out/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_out/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_out/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_out/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
          ]
@@ -174,12 +332,7 @@
             "model": {
              "type": "zomboidcraft:mesh",
              "id": "pbr_magnum",
-             "part": "handle",
-             "offset": [
-              -1.209,
-              -0.338,
-              0.0
-             ]
+             "part": "handle"
             }
            }
           },
@@ -202,6 +355,90 @@
              "id": "pbr_magnum",
              "part": "slide"
             }
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_in/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_in/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_in/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_mag_in/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
          ]
@@ -235,12 +472,7 @@
             "model": {
              "type": "zomboidcraft:mesh",
              "id": "pbr_magnum",
-             "part": "handle",
-             "offset": [
-              -1.209,
-              -0.338,
-              0.0
-             ]
+             "part": "handle"
             }
            }
           },
@@ -263,6 +495,90 @@
              "id": "pbr_magnum",
              "part": "slide"
             }
+           }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_in/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_in/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_in/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/mag_in/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
          ]
@@ -327,6 +643,90 @@
              "part": "slide"
             }
            }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_charge/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_charge/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_charge/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/raised_charge/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
           }
          ]
         },
@@ -383,6 +783,90 @@
              "part": "slide"
             }
            }
+          },
+          {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 0,
+           "cases": [
+            {
+             "when": "pistol_scope",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/charge/pistol_scope",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_pistol_scope",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "mini_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/charge/mini_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_mini_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "compact_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/charge/compact_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "own_compact_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "red_dot",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/magnum/nickel/charge/red_dot",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_red_dot",
+               "part": "body",
+               "offset": [
+                8.01,
+                10.079,
+                7.165
+               ]
+              }
+             }
+            },
+            {
+             "when": "none",
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
           }
          ]
         }
@@ -393,60 +877,443 @@
       "type": "minecraft:condition",
       "property": "minecraft:using_item",
       "on_true": {
-       "type": "minecraft:composite",
-       "models": [
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
         {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/magnum/nickel/ads/body",
+         "when": "pistol_scope",
          "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_magnum",
-          "part": "body"
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_pistol_scope/body",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_magnum",
+             "part": "body"
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_pistol_scope/charging_handle",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "handle"
+             }
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_pistol_scope/slide",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "slide"
+             }
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_pistol_scope/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          ]
          }
         },
         {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
+         "when": "mini_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_mini_dot/body",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_magnum",
+             "part": "body"
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_mini_dot/charging_handle",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "handle"
+             }
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_mini_dot/slide",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "slide"
+             }
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_mini_dot/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
            }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/magnum/nickel/ads/charging_handle",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "pbr_magnum",
-           "part": "handle"
-          }
+          ]
          }
         },
         {
-         "type": "minecraft:select",
-         "property": "minecraft:display_context",
-         "cases": [
-          {
-           "when": "firstperson_righthand",
-           "model": {
-            "type": "minecraft:empty"
+         "when": "compact_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_compact_dot/body",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_magnum",
+             "part": "body"
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_compact_dot/charging_handle",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "handle"
+             }
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_compact_dot/slide",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "slide"
+             }
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_compact_dot/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
            }
-          }
-         ],
-         "fallback": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/magnum/nickel/ads/slide",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "pbr_magnum",
-           "part": "slide"
-          }
+          ]
+         }
+        },
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_red_dot/body",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_magnum",
+             "part": "body"
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_red_dot/charging_handle",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "handle"
+             }
+            }
+           },
+           {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": "firstperson_righthand",
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads_red_dot/slide",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "pbr_magnum",
+              "part": "slide"
+             }
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/nickel/ads_red_dot/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          ]
          }
         }
-       ]
+       ],
+       "fallback": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/nickel/ads/body",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_magnum",
+           "part": "body"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/nickel/ads/charging_handle",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "handle"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/nickel/ads/slide",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "slide"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 0,
+          "cases": [
+           {
+            "when": "pistol_scope",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads/pistol_scope",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_pistol_scope",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "mini_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads/mini_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_mini_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "compact_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads/compact_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "red_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/ads/red_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_red_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "none",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        ]
+       }
       },
       "on_false": {
        "type": "minecraft:condition",
@@ -504,6 +1371,90 @@
             "part": "slide"
            }
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 0,
+          "cases": [
+           {
+            "when": "pistol_scope",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/raised_hip/pistol_scope",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_pistol_scope",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "mini_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/raised_hip/mini_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_mini_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "compact_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/raised_hip/compact_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "red_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/raised_hip/red_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_red_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "none",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
          }
         ]
        },
@@ -560,6 +1511,90 @@
             "part": "slide"
            }
           }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 0,
+          "cases": [
+           {
+            "when": "pistol_scope",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/hip/pistol_scope",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_pistol_scope",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "mini_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/hip/mini_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_mini_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "compact_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/hip/compact_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "red_dot",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/magnum/nickel/hip/red_dot",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_red_dot",
+              "part": "body",
+              "offset": [
+               8.01,
+               10.079,
+               7.165
+              ]
+             }
+            }
+           },
+           {
+            "when": "none",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
          }
         ]
        }
@@ -607,12 +1642,7 @@
           "model": {
            "type": "zomboidcraft:mesh",
            "id": "pbr_magnum",
-           "part": "handle",
-           "offset": [
-            -1.209,
-            -0.338,
-            0.0
-           ]
+           "part": "handle"
           }
          }
         },
@@ -635,6 +1665,90 @@
            "id": "pbr_magnum",
            "part": "slide"
           }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_out/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_out/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_out/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_out/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
          }
         }
        ]
@@ -668,12 +1782,7 @@
           "model": {
            "type": "zomboidcraft:mesh",
            "id": "pbr_magnum",
-           "part": "handle",
-           "offset": [
-            -1.209,
-            -0.338,
-            0.0
-           ]
+           "part": "handle"
           }
          }
         },
@@ -696,6 +1805,90 @@
            "id": "pbr_magnum",
            "part": "slide"
           }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_out/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_out/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_out/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_out/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
          }
         }
        ]
@@ -736,12 +1929,7 @@
           "model": {
            "type": "zomboidcraft:mesh",
            "id": "pbr_magnum",
-           "part": "handle",
-           "offset": [
-            -1.209,
-            -0.338,
-            0.0
-           ]
+           "part": "handle"
           }
          }
         },
@@ -764,6 +1952,90 @@
            "id": "pbr_magnum",
            "part": "slide"
           }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_in/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_in/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_in/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_mag_in/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
          }
         }
        ]
@@ -797,12 +2069,7 @@
           "model": {
            "type": "zomboidcraft:mesh",
            "id": "pbr_magnum",
-           "part": "handle",
-           "offset": [
-            -1.209,
-            -0.338,
-            0.0
-           ]
+           "part": "handle"
           }
          }
         },
@@ -825,6 +2092,90 @@
            "id": "pbr_magnum",
            "part": "slide"
           }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_in/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_in/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_in/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/mag_in/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
          }
         }
        ]
@@ -889,6 +2240,90 @@
            "part": "slide"
           }
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_charge/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_charge/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_charge/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/raised_charge/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
         }
        ]
       },
@@ -945,6 +2380,90 @@
            "part": "slide"
           }
          }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 0,
+         "cases": [
+          {
+           "when": "pistol_scope",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/charge/pistol_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_pistol_scope",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "mini_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/charge/mini_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_mini_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "compact_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/charge/compact_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "red_dot",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/magnum/charge/red_dot",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_red_dot",
+             "part": "body",
+             "offset": [
+              8.01,
+              10.079,
+              7.165
+             ]
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
         }
        ]
       }
@@ -955,60 +2474,443 @@
     "type": "minecraft:condition",
     "property": "minecraft:using_item",
     "on_true": {
-     "type": "minecraft:composite",
-     "models": [
+     "type": "minecraft:select",
+     "property": "minecraft:custom_model_data",
+     "index": 0,
+     "cases": [
       {
-       "type": "minecraft:special",
-       "base": "zomboidcraft:item/weapon/magnum/ads/body",
+       "when": "pistol_scope",
        "model": {
-        "type": "zomboidcraft:mesh",
-        "id": "pbr_magnum",
-        "part": "body"
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_pistol_scope/body",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_magnum",
+           "part": "body"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_pistol_scope/charging_handle",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "handle"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_pistol_scope/slide",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "slide"
+           }
+          }
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_pistol_scope/pistol_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_pistol_scope",
+           "part": "body",
+           "offset": [
+            8.01,
+            10.079,
+            7.165
+           ]
+          }
+         }
+        ]
        }
       },
       {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
+       "when": "mini_dot",
+       "model": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_mini_dot/body",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_magnum",
+           "part": "body"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_mini_dot/charging_handle",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "handle"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_mini_dot/slide",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "slide"
+           }
+          }
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_mini_dot/mini_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_mini_dot",
+           "part": "body",
+           "offset": [
+            8.01,
+            10.079,
+            7.165
+           ]
+          }
          }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:special",
-        "base": "zomboidcraft:item/weapon/magnum/ads/charging_handle",
-        "model": {
-         "type": "zomboidcraft:mesh",
-         "id": "pbr_magnum",
-         "part": "handle"
-        }
+        ]
        }
       },
       {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
+       "when": "compact_dot",
+       "model": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_compact_dot/body",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_magnum",
+           "part": "body"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_compact_dot/charging_handle",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "handle"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_compact_dot/slide",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "slide"
+           }
+          }
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_compact_dot/compact_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_compact_dot",
+           "part": "body",
+           "offset": [
+            8.01,
+            10.079,
+            7.165
+           ]
+          }
          }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:special",
-        "base": "zomboidcraft:item/weapon/magnum/ads/slide",
-        "model": {
-         "type": "zomboidcraft:mesh",
-         "id": "pbr_magnum",
-         "part": "slide"
-        }
+        ]
+       }
+      },
+      {
+       "when": "red_dot",
+       "model": {
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_red_dot/body",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_magnum",
+           "part": "body"
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_red_dot/charging_handle",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "handle"
+           }
+          }
+         },
+         {
+          "type": "minecraft:select",
+          "property": "minecraft:display_context",
+          "cases": [
+           {
+            "when": "firstperson_righthand",
+            "model": {
+             "type": "minecraft:empty"
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads_red_dot/slide",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_magnum",
+            "part": "slide"
+           }
+          }
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/magnum/ads_red_dot/red_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_red_dot",
+           "part": "body",
+           "offset": [
+            8.01,
+            10.079,
+            7.165
+           ]
+          }
+         }
+        ]
        }
       }
-     ]
+     ],
+     "fallback": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/magnum/ads/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_magnum",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/magnum/ads/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_magnum",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/magnum/ads/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_magnum",
+          "part": "slide"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "pistol_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads/pistol_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_pistol_scope",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/ads/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     }
     },
     "on_false": {
      "type": "minecraft:condition",
@@ -1066,6 +2968,90 @@
           "part": "slide"
          }
         }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "pistol_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/raised_hip/pistol_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_pistol_scope",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/raised_hip/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/raised_hip/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/raised_hip/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
        }
       ]
      },
@@ -1121,6 +3107,90 @@
           "id": "pbr_magnum",
           "part": "slide"
          }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "pistol_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/hip/pistol_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_pistol_scope",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/hip/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/hip/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/magnum/hip/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.01,
+             10.079,
+             7.165
+            ]
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
         }
        }
       ]

@@ -33,6 +33,7 @@ public final class WeaponSpecs {
         new WeaponSpec("machete", Kind.LONG_BLADE, 9.0f, 1.2f, 3.1f, 0.3f, 300, 8f, 0.12f, false, Sound.BLADE, Skill.BLADE),
         new WeaponSpec("katana", Kind.LONG_BLADE, 12.0f, 1.1f, 3.3f, 0.3f, 360, 8f, 0.12f, true, Sound.BLADE, Skill.BLADE),
         new WeaponSpec("fire_axe", Kind.AXE, 13.0f, 0.8f, 3.2f, 0.6f, 420, 13f, 0.35f, true, Sound.BLADE, Skill.BLADE),
+        new WeaponSpec("tomahawk", Kind.AXE, 10.0f, 1.1f, 3.0f, 0.45f, 350, 9f, 0.25f, false, Sound.BLADE, Skill.BLADE),
         new WeaponSpec("sledgehammer", Kind.HEAVY_BLUNT, 16.0f, 0.6f, 3.3f, 1.2f, 600, 17f, 0.8f, true, Sound.BLUNT, Skill.BLUNT));
 
     private WeaponSpecs() {

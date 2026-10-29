@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/holo"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/holo",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "att_holo",
+   "part": "body",
+   "offset": [
+    8.08,
+    6.848,
+    8.226
+   ]
+  }
  }
 }

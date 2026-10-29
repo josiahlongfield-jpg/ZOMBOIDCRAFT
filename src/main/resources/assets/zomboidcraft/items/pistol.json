@@ -59,7 +59,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -74,8 +74,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -189,8 +200,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -212,8 +252,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -279,7 +318,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -294,8 +333,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/mag_out/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/mag_out/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -409,8 +459,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/mag_out/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/mag_out/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/mag_out/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -432,8 +511,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/mag_out/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -506,7 +584,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -521,8 +599,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -636,8 +725,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -659,8 +777,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_pistol",
+            "part": "mag"
+           }
           }
          },
          {
@@ -671,8 +794,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "mag"
+         }
         }
        },
        {
@@ -683,8 +811,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -750,7 +877,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -765,8 +892,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/mag_in/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/mag_in/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -880,8 +1018,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/mag_in/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/mag_in/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/mag_in/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -903,8 +1070,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_pistol",
+            "part": "mag"
+           }
           }
          },
          {
@@ -915,8 +1087,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "mag"
+         }
         }
        },
        {
@@ -927,8 +1104,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/mag_in/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -1001,7 +1177,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -1016,8 +1192,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/raised_charge/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/raised_charge/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -1131,8 +1318,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_charge/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_charge/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_charge/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -1154,8 +1370,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_pistol",
+            "part": "mag"
+           }
           }
          },
          {
@@ -1166,8 +1387,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1178,8 +1404,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/raised_charge/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -1245,7 +1470,7 @@
          "model": {
           "type": "zomboidcraft:mesh",
           "id": "pbr_pistol",
-          "part": "slide"
+          "part": "handle"
          }
         }
        },
@@ -1260,8 +1485,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/pistol/charge/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/charge/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               8.0,
+               9.91,
+               4.6
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -1375,8 +1611,37 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/charge/light"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/charge/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
+          }
+         },
+         {
+          "when": "rail_light",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/charge/rail_light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rail_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          },
          {
@@ -1398,8 +1663,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_pistol",
+            "part": "mag"
+           }
           }
          },
          {
@@ -1410,8 +1680,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1422,8 +1697,7 @@
          {
           "when": "laser",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/charge/laser"
+           "type": "minecraft:empty"
           }
          },
          {
@@ -1495,7 +1769,7 @@
        "model": {
         "type": "zomboidcraft:mesh",
         "id": "pbr_pistol",
-        "part": "slide"
+        "part": "handle"
        }
       }
      },
@@ -1510,8 +1784,19 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/pistol/ads/suppressor"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/ads/suppressor",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_suppressor",
+            "part": "body",
+            "offset": [
+             8.0,
+             9.91,
+             4.6
+            ],
+            "scale": 0.6
+           }
           },
           {
            "type": "minecraft:range_dispatch",
@@ -1625,8 +1910,37 @@
        {
         "when": "light",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/ads/light"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/ads/light",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "att_light",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.98,
+           5.9
+          ],
+          "roll": 180
+         }
+        }
+       },
+       {
+        "when": "rail_light",
+        "model": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/ads/rail_light",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_rail_light",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.98,
+           5.9
+          ],
+          "roll": 180
+         }
         }
        },
        {
@@ -1648,8 +1962,13 @@
        {
         "when": "mag",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/ads/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/ads/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1660,8 +1979,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/pistol/ads/mag"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/pistol/ads/mag",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_pistol",
+        "part": "mag"
+       }
       }
      },
      {
@@ -1672,8 +1996,7 @@
        {
         "when": "laser",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/ads/laser"
+         "type": "minecraft:empty"
         }
        },
        {
@@ -1742,7 +2065,7 @@
         "model": {
          "type": "zomboidcraft:mesh",
          "id": "pbr_pistol",
-         "part": "slide"
+         "part": "handle"
         }
        }
       },
@@ -1757,8 +2080,19 @@
           "type": "minecraft:composite",
           "models": [
            {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/pistol/raised_hip/suppressor"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/raised_hip/suppressor",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_suppressor",
+             "part": "body",
+             "offset": [
+              8.0,
+              9.91,
+              4.6
+             ],
+             "scale": 0.6
+            }
            },
            {
             "type": "minecraft:range_dispatch",
@@ -1872,8 +2206,37 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/raised_hip/light"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/raised_hip/light",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_light",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.98,
+            5.9
+           ],
+           "roll": 180
+          }
+         }
+        },
+        {
+         "when": "rail_light",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/raised_hip/rail_light",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_rail_light",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.98,
+            5.9
+           ],
+           "roll": 180
+          }
          }
         },
         {
@@ -1895,8 +2258,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/raised_hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/raised_hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_pistol",
+           "part": "mag"
+          }
          }
         },
         {
@@ -1907,8 +2275,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "mag"
+        }
        }
       },
       {
@@ -1919,8 +2292,7 @@
         {
          "when": "laser",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/raised_hip/laser"
+          "type": "minecraft:empty"
          }
         },
         {
@@ -1986,7 +2358,7 @@
         "model": {
          "type": "zomboidcraft:mesh",
          "id": "pbr_pistol",
-         "part": "slide"
+         "part": "handle"
         }
        }
       },
@@ -2001,8 +2373,19 @@
           "type": "minecraft:composite",
           "models": [
            {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/pistol/hip/suppressor"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/hip/suppressor",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_suppressor",
+             "part": "body",
+             "offset": [
+              8.0,
+              9.91,
+              4.6
+             ],
+             "scale": 0.6
+            }
            },
            {
             "type": "minecraft:range_dispatch",
@@ -2116,8 +2499,37 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/hip/light"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/hip/light",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_light",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.98,
+            5.9
+           ],
+           "roll": 180
+          }
+         }
+        },
+        {
+         "when": "rail_light",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/hip/rail_light",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_rail_light",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.98,
+            5.9
+           ],
+           "roll": 180
+          }
          }
         },
         {
@@ -2139,8 +2551,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_pistol",
+           "part": "mag"
+          }
          }
         },
         {
@@ -2151,8 +2568,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "mag"
+        }
        }
       },
       {
@@ -2163,8 +2585,7 @@
         {
          "when": "laser",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/pistol/hip/laser"
+          "type": "minecraft:empty"
          }
         },
         {

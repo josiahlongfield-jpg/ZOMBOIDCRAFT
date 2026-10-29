@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/red_dot"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/red_dot",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "att_red_dot",
+   "part": "body",
+   "offset": [
+    8.037,
+    6.687,
+    8.201
+   ]
+  }
  }
 }

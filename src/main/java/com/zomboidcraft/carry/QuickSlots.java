@@ -144,7 +144,7 @@ public final class QuickSlots {
 
     public static boolean handgun(ItemStack stack) {
         GunType type = GunType.of(stack);
-        return Carry.weapon(stack) && (type == GunType.PISTOL || type == GunType.REVOLVER || type == GunType.MAGNUM);
+        return Carry.weapon(stack) && type != null && type.handgun();
     }
 
     /**

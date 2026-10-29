@@ -442,3 +442,23 @@ Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-p
 | pbr_crossbow_bolt, pbr_bolt (crossbow bolts) | Arrow (PBR Weapons Pack) | CGTrader | Royalty Free |
 | pbr_machete (the machete) | Knife (PBR Weapons Pack) | CGTrader | Royalty Free |
 | pbr_battle_rifle (the battle rifle) | Automatic Rifle 01, scope and grip left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_suppressed_rifle (the suppressed rifle) | Automatic Rifle 05, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_machine_pistol (the machine pistol) | Automatic Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_pocket_pistol (the pocket pistol) | Gun 02 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_precision_rifle (the precision rifle) | Sniper Rifle, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_grenade_launcher (the grenade launcher) | Grenade Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_tomahawk (the tomahawk) | Axe (PBR Weapons Pack) | CGTrader | Royalty Free |
+| heavy_sniper_mesh (the heavy sniper) | M200 rifle model (m200-rifle-cheytac-intervention pack), scope, bipod and monopod left off | bought by Josiah | Royalty Free |
+| pbr_frag_grenade (the frag grenade) | Grenade (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_combat_scope, own_combat_grip (the combat scope, skeleton grip) | scope and grip off Automatic Rifle 01 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_launcher, own_launcher_grip (the underbarrel launcher, tactical grip) | launcher off Automatic Rifle 02, grip off Grenade Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_compact_dot, own_rail_light (the compact red dot and light) | sight and light off Automatic Rifle 03 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_rifle_optic, own_rifle_suppressor, own_compact_suppressor (the rifle scope and suppressors) | scope and suppressor off Automatic Rifle 05 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_pistol_scope (the pistol scope) | scope off Gun 03 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_precision_scope, own_precision_bipod | scope and bipod off Sniper Rifle (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_hunting_scope, own_hunting_bipod, own_sniper_suppressor | scope, bipod and suppressor off Sniper Rifle 02 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_crossbow_scope (the crossbow scope) | scope off Crossbow (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_long_scope, own_long_bipod (the long range scope, heavy sniper bipod) | scope and bipod off the M200 rifle model | bought by Josiah | Royalty Free |
+| att_holo, att_red_dot, att_prism_4x, att_mini_dot, att_magnifier (sights) | holographic sight, tube red dot, 4x prism, mini red dot and 3x magnifier from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
+| att_foregrip, att_angled_grip, att_stubby_grip, att_light (grips and the weapon light) | vertical, angled and stubby grips and the weapon light from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
+| att_irons_front_up/down, att_irons_rear_up/down (flip-up iron sights) | flip-up iron sights from the gun attachments pack | bought by Josiah | Royalty Free |

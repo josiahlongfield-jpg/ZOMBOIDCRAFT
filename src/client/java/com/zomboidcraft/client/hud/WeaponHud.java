@@ -113,7 +113,11 @@ final class WeaponHud {
 
     private static String caliber(ItemStack gun) {
         GunType type = GunType.of(gun);
-        String sights = Attachments.scoped(gun) ? "Scope" : "Iron sights";
+        ItemStack optic = Attachments.get(gun, Attachments.Slot.OPTIC);
+        String sights = optic.isEmpty() ? "Iron sights" : optic.getHoverName().getString();
+        if (Attachments.magnified(gun)) {
+            sights += " + magnifier";
+        }
         return type == null ? sights : type.caliber() + " · " + sights;
     }
 

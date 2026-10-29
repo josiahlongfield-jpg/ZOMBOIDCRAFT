@@ -53,6 +53,16 @@ public record GunState(boolean mag, int rounds, boolean jammed) {
             ZomboidCraft.id("full_auto"), DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
 
+    /** The trigger works the underbarrel grenade launcher rather than the rifle (the fire mode key). */
+    public static final DataComponentType<Boolean> LAUNCHER_ON = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("launcher_on"), DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
+
+    /** A 40mm round is loaded in the underbarrel grenade launcher. */
+    public static final DataComponentType<Boolean> LAUNCHER_LOADED = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("launcher_loaded"), DataComponentType.<Boolean>builder()
+                    .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
+
     public GunState withRounds(int rounds) {
         return new GunState(mag, rounds, jammed);
     }

@@ -11,24 +11,26 @@ import java.util.Map;
 public final class GunSlotData {
     public static final Map<String, Map<Attachments.Slot, List<String>>> FITS = Map.ofEntries(
         Map.entry("assault_rifle", Map.ofEntries(
-                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope")),
                 Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
-                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip")),
-                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
+                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip", "angled_grip", "stubby_grip", "skeleton_grip", "tactical_grip", "underbarrel_launcher")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "compact_light")),
                 Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")),
-                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")),
+                Map.entry(Attachments.Slot.MAGNIFIER, List.of("magnifier")))),
         Map.entry("pistol", Map.ofEntries(
                 Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
-                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "compact_light")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("pistol_magazine")),
                 Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
         Map.entry("shotgun", Map.ofEntries(
 )),
         Map.entry("hunting_rifle", Map.ofEntries(
-                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
-                Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("hunting_rifle_magazine")))),
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope", "precision_scope", "hunting_scope", "long_range_scope")),
+                Map.entry(Attachments.Slot.MUZZLE, List.of("sniper_suppressor", "rifle_suppressor")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("hunting_rifle_magazine")),
+                Map.entry(Attachments.Slot.BIPOD, List.of("bipod")))),
         Map.entry("double_barrel", Map.ofEntries(
 )),
         Map.entry("revolver", Map.ofEntries(
@@ -42,52 +44,109 @@ public final class GunSlotData {
         Map.entry("sawn_off", Map.ofEntries(
 )),
         Map.entry("magnum", Map.ofEntries(
-)),
+                Map.entry(Attachments.Slot.OPTIC, List.of("pistol_scope", "mini_red_dot", "compact_red_dot", "red_dot_sight")))),
         Map.entry("lever_action", Map.ofEntries(
 )),
         Map.entry("crossbow", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "crossbow_scope")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("crossbow_bolt")))),
         Map.entry("battle_rifle", Map.ofEntries(
-                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope")),
                 Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
-                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip")),
-                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
+                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip", "angled_grip", "stubby_grip", "skeleton_grip", "tactical_grip", "underbarrel_launcher")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "compact_light")),
                 Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("battle_rifle_magazine")),
-                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))));
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")),
+                Map.entry(Attachments.Slot.MAGNIFIER, List.of("magnifier")))),
+        Map.entry("suppressed_rifle", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope")),
+                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip", "angled_grip", "stubby_grip", "skeleton_grip", "tactical_grip", "underbarrel_launcher")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "compact_light")),
+                Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("rifle_magazine")),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
+        Map.entry("grenade_launcher", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x")),
+                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip", "angled_grip", "stubby_grip", "skeleton_grip", "tactical_grip")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light", "compact_light")),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))),
+        Map.entry("pocket_pistol", Map.ofEntries(
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("pocket_pistol_magazine")))),
+        Map.entry("machine_pistol", Map.ofEntries(
+                Map.entry(Attachments.Slot.MUZZLE, List.of("pistol_suppressor")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("machine_pistol_magazine")))),
+        Map.entry("precision_rifle", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope", "precision_scope", "hunting_scope", "long_range_scope")),
+                Map.entry(Attachments.Slot.MUZZLE, List.of("sniper_suppressor", "rifle_suppressor")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("precision_rifle_magazine")),
+                Map.entry(Attachments.Slot.BIPOD, List.of("bipod")))),
+        Map.entry("heavy_sniper", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope", "precision_scope", "hunting_scope", "long_range_scope")),
+                Map.entry(Attachments.Slot.MUZZLE, List.of("sniper_suppressor", "rifle_suppressor")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("heavy_sniper_magazine")),
+                Map.entry(Attachments.Slot.BIPOD, List.of("bipod")))));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
-        Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
+        Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "compact_red_dot"), Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
         Map.entry("pistol", Map.ofEntries()),
         Map.entry("shotgun", Map.ofEntries()),
-        Map.entry("hunting_rifle", Map.ofEntries()),
+        Map.entry("hunting_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "hunting_scope"), Map.entry(Attachments.Slot.MUZZLE, "sniper_suppressor"), Map.entry(Attachments.Slot.BIPOD, "bipod"))),
         Map.entry("double_barrel", Map.ofEntries()),
         Map.entry("revolver", Map.ofEntries()),
         Map.entry("rimfire", Map.ofEntries()),
         Map.entry("smg", Map.ofEntries()),
         Map.entry("sawn_off", Map.ofEntries()),
-        Map.entry("magnum", Map.ofEntries()),
+        Map.entry("magnum", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "pistol_scope"))),
         Map.entry("lever_action", Map.ofEntries()),
-        Map.entry("crossbow", Map.ofEntries()),
-        Map.entry("battle_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))));
+        Map.entry("crossbow", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "crossbow_scope"))),
+        Map.entry("battle_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "combat_scope"), Map.entry(Attachments.Slot.UNDERBARREL, "skeleton_grip"), Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
+        Map.entry("suppressed_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "rifle_scope"), Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
+        Map.entry("grenade_launcher", Map.ofEntries(Map.entry(Attachments.Slot.UNDERBARREL, "tactical_grip"))),
+        Map.entry("pocket_pistol", Map.ofEntries()),
+        Map.entry("machine_pistol", Map.ofEntries()),
+        Map.entry("precision_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "precision_scope"), Map.entry(Attachments.Slot.BIPOD, "bipod"))),
+        Map.entry("heavy_sniper", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "long_range_scope"), Map.entry(Attachments.Slot.BIPOD, "bipod"))));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),
         Map.entry("holo_sight", "holo"),
+        Map.entry("mini_red_dot", "mini_dot"),
+        Map.entry("compact_red_dot", "compact_dot"),
         Map.entry("scope_4x", "scope_4x"),
+        Map.entry("combat_scope", "combat_scope"),
+        Map.entry("rifle_scope", "rifle_optic"),
+        Map.entry("magnifier", "magnifier"),
         Map.entry("rifle_suppressor", "suppressor"),
         Map.entry("foregrip", "foregrip"),
+        Map.entry("angled_grip", "angled_grip"),
+        Map.entry("stubby_grip", "stubby_grip"),
+        Map.entry("skeleton_grip", "combat_grip"),
+        Map.entry("tactical_grip", "vertical_grip"),
+        Map.entry("underbarrel_launcher", "launcher"),
         Map.entry("weapon_light", "light"),
+        Map.entry("compact_light", "rail_light"),
         Map.entry("laser_sight", "laser"),
         Map.entry("rifle_stock", "stock"),
         Map.entry("rifle_magazine", "mag"),
         Map.entry("pistol_suppressor", "suppressor"),
         Map.entry("pistol_magazine", "mag"),
+        Map.entry("precision_scope", "precision_scope"),
+        Map.entry("hunting_scope", "hunting_scope"),
+        Map.entry("long_range_scope", "long_scope"),
+        Map.entry("sniper_suppressor", "sniper_suppressor"),
+        Map.entry("bipod", "bipod"),
         Map.entry("hunting_rifle_magazine", "mag"),
         Map.entry("rimfire_magazine", "mag"),
         Map.entry("smg_magazine", "mag"),
+        Map.entry("pistol_scope", "pistol_scope"),
+        Map.entry("crossbow_scope", "crossbow_scope"),
         Map.entry("crossbow_bolt", "bolt"),
-        Map.entry("battle_rifle_magazine", "mag"));
+        Map.entry("battle_rifle_magazine", "mag"),
+        Map.entry("pocket_pistol_magazine", "mag"),
+        Map.entry("machine_pistol_magazine", "mag"),
+        Map.entry("precision_rifle_magazine", "mag"),
+        Map.entry("heavy_sniper_magazine", "mag"));
 
     private GunSlotData() {
     }

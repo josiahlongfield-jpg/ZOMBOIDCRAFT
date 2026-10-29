@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/stock"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/stock",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "pbr_assault_rifle",
+   "part": "stock",
+   "offset": [
+    0.093,
+    0.784,
+    -11.778
+   ]
+  }
  }
 }

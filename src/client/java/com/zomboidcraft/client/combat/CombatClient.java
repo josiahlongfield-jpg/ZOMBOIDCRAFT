@@ -247,6 +247,18 @@ public final class CombatClient {
         if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay()) {
             return;
         }
+        if (Guns.launcherOn(gun)) {
+            // the underbarrel launcher: one round, one pull; the server answers with the thump or the dry click
+            if (!held && now - lastShot >= 10) {
+                lastShot = now;
+                ClientPlayNetworking.send(new CombatNet.Fire(player.isUsingItem() && GunType.isGun(player.getUseItem())));
+                if (gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+                    kickPending += 3f;
+                    recoverLeft += 1.5f;
+                }
+            }
+            return;
+        }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         // a tube gun being loaded goes off at once when there's a shell chambered (step 1; 1.5 is onto an empty one);
         // a gun open to load has to be shut first
@@ -288,7 +300,8 @@ public final class CombatClient {
         }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
-                * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0));
+                * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0)
+                * (aiming && player.isCrouching() && Attachments.hasBipod(gun) ? config.bipodRecoil : 1.0));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);

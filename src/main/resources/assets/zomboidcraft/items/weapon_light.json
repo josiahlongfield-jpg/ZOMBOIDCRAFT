@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/light"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/light",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "att_light",
+   "part": "body",
+   "offset": [
+    8.023,
+    7.593,
+    7.877
+   ]
+  }
  }
 }

@@ -77,6 +77,7 @@ public class AttachmentItem extends Item {
             case MAGAZINE -> "Magazine";
             case BIPOD -> "Bipod";
             case RIGHT_RAIL -> "Right rail";
+            case MAGNIFIER -> "Magnifier";
         };
     }
 }

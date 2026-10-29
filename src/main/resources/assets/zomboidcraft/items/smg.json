@@ -53,8 +53,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/raised_mag_out/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/raised_mag_out/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -206,8 +217,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/mag_out/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/mag_out/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -366,8 +388,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/raised_mag_in/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/raised_mag_in/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -553,8 +586,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/mag_in/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/mag_in/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -747,8 +791,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/raised_charge/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/raised_charge/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -934,8 +989,19 @@
            "type": "minecraft:composite",
            "models": [
             {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/smg/charge/suppressor"
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/smg/charge/suppressor",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "own_compact_suppressor",
+              "part": "body",
+              "offset": [
+               7.99,
+               8.35,
+               2.9
+              ],
+              "scale": 0.6
+             }
             },
             {
              "type": "minecraft:range_dispatch",
@@ -1127,8 +1193,19 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/smg/ads/suppressor"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/smg/ads/suppressor",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_suppressor",
+            "part": "body",
+            "offset": [
+             7.99,
+             8.35,
+             2.9
+            ],
+            "scale": 0.6
+           }
           },
           {
            "type": "minecraft:range_dispatch",
@@ -1317,8 +1394,19 @@
           "type": "minecraft:composite",
           "models": [
            {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/smg/raised_hip/suppressor"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/smg/raised_hip/suppressor",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_suppressor",
+             "part": "body",
+             "offset": [
+              7.99,
+              8.35,
+              2.9
+             ],
+             "scale": 0.6
+            }
            },
            {
             "type": "minecraft:range_dispatch",
@@ -1504,8 +1592,19 @@
           "type": "minecraft:composite",
           "models": [
            {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/smg/hip/suppressor"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/smg/hip/suppressor",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_compact_suppressor",
+             "part": "body",
+             "offset": [
+              7.99,
+              8.35,
+              2.9
+             ],
+             "scale": 0.6
+            }
            },
            {
             "type": "minecraft:range_dispatch",

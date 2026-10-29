@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/smg_magazine"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/smg_magazine",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "pbr_smg",
+   "part": "mag",
+   "offset": [
+    0.006,
+    5.412,
+    -1.288
+   ]
+  }
  }
 }

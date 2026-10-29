@@ -214,6 +214,12 @@ final class KitItems {
                 case LEVER_ACTION -> "Lever-action carbine";
                 case CROSSBOW -> "Compound crossbow";
                 case BATTLE_RIFLE -> "Battle rifle";
+                case POCKET_PISTOL -> "Pocket pistol";
+                case MACHINE_PISTOL -> "Machine pistol";
+                case SUPPRESSED_RIFLE -> "Suppressed rifle";
+                case PRECISION_RIFLE -> "Bolt-action precision rifle";
+                case HEAVY_SNIPER -> "Heavy sniper rifle";
+                case GRENADE_LAUNCHER -> "Six-shot grenade launcher";
             };
             return what + ", " + t.caliber();
         }

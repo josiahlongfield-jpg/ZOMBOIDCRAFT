@@ -20,7 +20,9 @@ public enum ThrowKind {
     MOLOTOV("molotov", 0.9, 0.0, false, false),
     SMOKE("smoke_grenade", 0.85, 0.25, false, false),
     FLASHBANG("flashbang", 0.85, 0.25, true, false),
-    FRAG("frag_grenade", 0.85, 0.25, true, false);
+    FRAG("frag_grenade", 0.85, 0.25, true, false),
+    // a 40mm round from a grenade launcher (not thrown by hand: see Thrown.fire), bursting on impact once armed
+    GRENADE_ROUND("grenade_round", 1.0, 0.0, false, false);
 
     public final String id;
     public final double speed, bounce;
@@ -62,7 +64,7 @@ public enum ThrowKind {
             case MOLOTOV -> c.molotovNoise;
             case SMOKE -> c.smokeNoise;
             case FLASHBANG -> c.flashbangNoise;
-            case FRAG -> c.fragNoise;
+            case FRAG, GRENADE_ROUND -> c.fragNoise;
         };
     }
 
