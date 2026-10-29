@@ -625,6 +625,7 @@ final class HarvestmanTricks {
                 h.rearWant = 0.6;
                 shownD = d;
                 level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.CALL, SoundSource.HOSTILE, 1.2f, 0.8f);
+                h.rage(t.getEyePosition(), true);
             } else if (m.planTicks > 20 * 40 || d > 72) {
                 m.end();
             }

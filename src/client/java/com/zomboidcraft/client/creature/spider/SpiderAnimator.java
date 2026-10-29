@@ -13,7 +13,7 @@ import org.joml.Vector3f;
  * walk forward, back and to either side and its run, blended by which way and how fast its body is really going, their
  * feet kept in step and played as fast as the ground goes past; turning on the spot when it swings round without
  * walking; a slow working loop while it feeds. Over that, one move played through and faded out: a strike when it
- * rears to lunge, its rage when it rears with its lights on (showing itself), a flinch when it's hit, being thrown back
+ * rears to lunge, its rage whenever it rages at someone, a flinch when it's hit, being thrown back
  * when it's shot in the eyes, and its death, held at the end.
  */
 public final class SpiderAnimator {
@@ -39,7 +39,7 @@ public final class SpiderAnimator {
     private String act;
     private float actT, actRate = 1, actPeak = 1;
     private boolean actHold;
-    private int flinchSeen = -1, recoilSeen = -1;
+    private int flinchSeen = -1, recoilSeen = -1, rageSeen = -1;
     private float rearWas;
     private int poseWas = -1;
     private boolean hitAlt;
@@ -207,13 +207,15 @@ public final class SpiderAnimator {
             act = null;
         }
         poseWas = pose;
+        // its rage, when it rages at someone (to show it's seen them, before it strikes, hurt, at random)
+        if (rageSeen >= 0 && e.rages() != rageSeen) {
+            play("Rage_1", 161f / 30 / (HarvestmanEntity.RAGE_TICKS / 20f), 1, false);
+        }
+        rageSeen = e.rages();
         float rear = e.rear();
-        if (pose == HarvestmanEntity.HUNT && rear > 0.45f && rearWas <= 0.45f && !actHold) {
-            if (camo < 0.4f) {
-                play("Rage_1", 1, 1, false);
-            } else {
-                play(e.getRandom().nextBoolean() ? "Attack_6" : "Attack_7", 1.25f, 1, false);
-            }
+        boolean raging = "Rage_1".equals(act);
+        if (pose == HarvestmanEntity.HUNT && rear > 0.45f && rearWas <= 0.45f && !actHold && !raging) {
+            play(e.getRandom().nextBoolean() ? "Attack_6" : "Attack_7", 1.25f, 1, false);
         }
         rearWas = rear;
         if (recoilSeen >= 0 && e.recoils() != recoilSeen) {
