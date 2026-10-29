@@ -59,7 +59,7 @@ public final class MeshGuns {
     }
 
     /** Draws one part of a gun with the pose at the item model's corner (one unit a block, as a block model draws). */
-    static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
+    public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
         Gun gun = get(id);
         Part p = gun == null ? null : gun.parts().get(part);
         if (p == null || p.triangles() == 0) {
