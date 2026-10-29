@@ -74,10 +74,17 @@ public final class Injuries {
         }
     }
 
-    /** A zombie's scratch or bite on the part it reached. Returns where. */
-    public static Region zombieWound(ServerPlayer player, boolean bite) {
+    /**
+     * A zombie's scratch or bite on the part it reached. Returns where, or null when the clothes over that part
+     * stopped it (see clothing/Clothes).
+     */
+    public static @org.jetbrains.annotations.Nullable Region zombieWound(ServerPlayer player, boolean bite) {
         RandomSource random = player.getRandom();
         Region where = Body.zombieTarget(random);
+        com.zomboidcraft.clothing.Clothes.Totals worn = com.zomboidcraft.clothing.Clothes.totals(player);
+        if (random.nextFloat() < (bite ? worn.bite() : worn.scratch()).getOrDefault(where, 0f)) {
+            return null;
+        }
         Wound wound = bite ? Wound.BITE : random.nextFloat() < 0.25f ? Wound.LACERATION : Wound.SCRATCH;
         Body.set(player, Body.get(player).wound(where, wound, true));
         return where;
