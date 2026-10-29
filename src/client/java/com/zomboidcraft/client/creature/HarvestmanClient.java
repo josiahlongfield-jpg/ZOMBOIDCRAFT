@@ -10,13 +10,14 @@ import net.minecraft.util.Mth;
 
 /**
  * The Harvestman on the client: its renderer, its presence (HarvestmanPresence: its hum, your unease when it's watching
- * you, the animals going quiet), and your view while it holds you (a hard, uneven shake as its scythes
+ * you, the animals going quiet), the glimpses of it only the hunted get (HarvestmanPhantoms), and your view while it holds you (a hard, uneven shake as its scythes
  * grip and shift, and a slow sickening roll as it feeds).
  */
 public final class HarvestmanClient {
     public static void register() {
         EntityRendererRegistry.register(Harvestmen.HARVESTMAN, HarvestmanRenderer::new);
         HarvestmanPresence.register();
+        HarvestmanPhantoms.register();
         CameraRig.register(5, (camera, entity, partialTick, out) -> {
             Minecraft mc = Minecraft.getInstance();
             if (entity != mc.player || mc.options.getCameraType() != CameraType.FIRST_PERSON

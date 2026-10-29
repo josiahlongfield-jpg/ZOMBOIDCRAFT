@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -36,7 +38,12 @@ final class HarvestmanSigns {
     private final HarvestmanEntity h;
     private int ticks, nextLight = 200, nextSnack = 1200, marks, knockIn = -1;
     private boolean wasSlow;
-    private Vec3 lastMark, knockAt;
+    private Vec3 lastMark, knockAt, lastScore;
+    /**
+     * Scoring a trail as it goes (HarvestmanMind sets it: on its way home to its den, or to a ceiling it means to wait
+     * on): gouges in the walls along its way every few blocks, that lead whoever follows them there.
+     */
+    boolean trail;
 
     HarvestmanSigns(HarvestmanEntity h) {
         this.h = h;
@@ -50,6 +57,11 @@ final class HarvestmanSigns {
             level.playSound(null, knockAt.x, knockAt.y, knockAt.z, HarvestmanSounds.TAP, SoundSource.HOSTILE, 1.1f, 0.7f);
         }
         dragMarks(level);
+        if (trail && ticks % 5 == 0) {
+            trailMark(level);
+        } else if (!trail) {
+            lastScore = null;
+        }
         boolean slow = h.route.slow;
         if (slow && !wasSlow && h.getRandom().nextFloat() < 0.5f) {
             gouge(level);
@@ -67,6 +79,9 @@ final class HarvestmanSigns {
                 nextLight = 20 * (8 + h.getRandom().nextInt(10));
             }
         }
+        if (ticks % 100 == 50) {
+            pocket(level);
+        }
         if (--nextSnack <= 0) {
             nextSnack = 20 * 60;
             snack(level, m);
@@ -75,6 +90,7 @@ final class HarvestmanSigns {
 
     private static boolean roaming(int plan) {
         return plan == HarvestmanMind.STALK || plan == HarvestmanMind.AMBUSH || plan == HarvestmanMind.HIDE
+                || plan == HarvestmanMind.SHADOW || plan == HarvestmanMind.SPLIT || plan == HarvestmanMind.HORDE
                 || plan == HarvestmanMind.PERCH || plan == HarvestmanMind.CEILING || plan == HarvestmanMind.WANDER
                 || plan == HarvestmanMind.INVESTIGATE || plan == HarvestmanMind.LISTEN || plan == HarvestmanMind.IDLE;
     }
@@ -208,6 +224,32 @@ final class HarvestmanSigns {
         }
     }
 
+    /** One mark of a trail: gouges in a wall beside it, every five or six blocks of its way. */
+    private void trailMark(ServerLevel level) {
+        if (h.up().y < 0.5 || h.held() != null) {
+            return;
+        }
+        Vec3 c = h.centre();
+        Vec3 here = new Vec3(c.x, c.y - h.lift(), c.z);
+        if (lastScore != null && lastScore.distanceToSqr(here) < 5.5 * 5.5) {
+            return;
+        }
+        BlockPos floor = BlockPos.containing(here.x, here.y + 0.3, here.z);
+        for (int k = 0; k < 14; k++) {
+            BlockPos q = floor.offset(h.getRandom().nextInt(5) - 2, h.getRandom().nextInt(2), h.getRandom().nextInt(5) - 2);
+            if (!level.isEmptyBlock(q)) {
+                continue;
+            }
+            Direction wall = wallBeside(level, q);
+            BlockState s = CityBlocks.resolve("hd_gouges_" + h.getRandom().nextInt(3));
+            if (wall != null && s != null) {
+                level.setBlock(q, s.setValue(CityBlock.Facing.FACING, wall.getOpposite()), 3);
+                lastScore = here;
+                return;
+            }
+        }
+    }
+
     private static Direction wallBeside(ServerLevel level, BlockPos c) {
         for (Direction d : Direction.Plane.HORIZONTAL) {
             BlockPos w = c.relative(d);
@@ -275,6 +317,37 @@ final class HarvestmanSigns {
         }
         z.discard();
         m.hunger = Math.max(0, m.hunger - 0.06);
+    }
+
+    /**
+     * Something left lying about near the one it hunts (dropped, or put down and forgotten), picked up while nobody's
+     * looking: it'll turn up on their doorstep some night (HarvestmanNights).
+     */
+    private void pocket(ServerLevel level) {
+        HarvestmanMind m = h.mind;
+        if (h.held() != null || m.watched() || !(m.quarry instanceof ServerPlayer t) || t != m.target(level)
+                || t.distanceToSqr(h) > 40 * 40 || h.getRandom().nextFloat() > 0.5f) {
+            return;
+        }
+        Vec3 c = h.centre();
+        Vec3 under = c.subtract(h.up().scale(h.lift()));
+        for (ItemEntity e : level.getEntitiesOfClass(ItemEntity.class, new AABB(under, under).inflate(3.5))) {
+            if (!e.isAlive() || HarvestmanNights.leftIt(e) || e.getItem().isEmpty()) {
+                continue;
+            }
+            boolean seen = false;
+            for (Player p : level.players()) {
+                if (!p.isSpectator() && HarvestmanMind.lookingAt(p, e.position().add(0, 0.2, 0))) {
+                    seen = true;
+                    break;
+                }
+            }
+            if (!seen && HarvestmanNights.pocket(t, e.getItem())) {
+                e.discard();
+                level.playSound(null, e.getX(), e.getY(), e.getZ(), HarvestmanSounds.TAP, SoundSource.HOSTILE, 0.3f, 1.3f);
+                return;
+            }
+        }
     }
 
     // ------------------------------------------------------------------------------------------------ its tricks
