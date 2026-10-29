@@ -679,7 +679,7 @@ def blocks():
     for fam, (half, tex) in MEMBERS.items():
         for k in range(STEPS):
             for sfx, o in (FINE if fam == "cr_stay" else OFFSETS):
-                spec = {"model": "boxes", "boxes": member(k, half, tex, o), "title": "Steel Member", "sound": "METAL",
+                spec = {"model": "boxes", "boxes": member(k, half, tex, o), "title": "Steel Member", "sound": "METAL", "rotate": "facing",
                         "shape": [[8 - min(half, 4), 8 - min(half, 4), 8 - min(half, 4), 8 + min(half, 4), 8 + min(half, 4), 8 + min(half, 4)]]}
                 if "lattice" in fam:
                     spec["render"] = "cutout"
