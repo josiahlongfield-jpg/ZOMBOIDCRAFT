@@ -65,7 +65,7 @@ The street cars, vans, trucks and buses are from the [American Cars 80s Pack](ht
 
 The aircraft on the carrier are three models bought on CGTrader and used under its Royalty Free licence: [Lockheed Martin F-22 Raptor](https://www.cgtrader.com/3d-models/aircraft/military-aircraft/lockheed-martin-f-22-raptor-73212c3c-8419-4d38-81b5-443f1ca23646) (the Corvid), "Sukhoi Su-27 with interior" (the Gyrfalcon) and "Apache AH64D Low" (the Hornbill helicopter). tools/cars/aircraft.py repainted them with made-up markings, weathered and damaged them, and packs them into the mod (tools/cars/cockpit_glow.py adds their cockpit lighting and the made-up screen pages, packed the same way); the original files are not part of this repository and may not be redistributed or used to train AI models.
 
-The Warthog (the scout with the minigun) is a model Josiah Longfield supplied for his own copy of the mod. tools/cars/warthog_bake.py cuts it down and bakes its detail into one texture, and tools/cars/warthog.py weathers and packs it (scrambled); the original files are not part of this repository.
+The mod can also load vehicles kept on the player's own computer (config/zomboidcraft/vehicles), which it does not ship: tools/cars/warthog_bake.py and tools/cars/warthog.py make one from a model a player supplies. Neither that model nor anything made from it is part of this repository or the mod.
 
 ## Characters
 

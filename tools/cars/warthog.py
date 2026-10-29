@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Packs the Warthog (the four-wheeled scout with a three-barrel minigun on the back) into the mod.
 
-    python3 tools/cars/warthog.py BAKE_DIR [--preview OUT_DIR]
+    python3 tools/cars/warthog.py BAKE_DIR OUT_DIR [--preview DIR]
 
 BAKE_DIR is what tools/cars/warthog_bake.py wrote from the source model (low.npz, atlas.png). The source
-is a game rip Josiah gave the project for his own copy of the mod: it never goes in this repository, only
-the packed, scrambled warthog.zcar does.
+is a game model Josiah gave the project for his own copy of the mod, not ours to publish: neither it nor
+what's made from it goes in this repository or the jar. This writes OUT_DIR/warthog.zcar and warthog.json
+(its models.json row), which go in config/zomboidcraft/vehicles/ on each computer that's to have it
+(CarModels.LOCAL).
 
 The vehicle file is the cars' format (see pack.py) at version 4, which adds after the wheels:
     int turret parts, then per part: byte kind (0 turns about the upright axis, 1 tilts, 2 spins),
@@ -167,7 +169,7 @@ def write_mesh(buf, T, UV, glass, centre):
     buf.write(np.concatenate([Q.view('>u2'), U], 1).astype('>u2').tobytes())
 
 
-def build(bake, preview=None):
+def build(bake, out, preview=None):
     P, UV, part, mat = load(bake)
     atlas = np.asarray(Image.open(os.path.join(bake, 'atlas.png')).convert('RGB'), float)
     H, W = atlas.shape[:2]
@@ -225,7 +227,8 @@ def build(bake, preview=None):
             img.save(os.path.join(preview, f'{ID}_{state}.jpg'), quality=90)
         print(f'  {state}: {keep.sum()} triangles, texture {len(jpg) // 1024} KB', flush=True)
     blob = scramble(zlib.compress(buf.getvalue(), 9), ID)
-    with open(os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/cars', ID + '.zcar'), 'wb') as f:
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, ID + '.zcar'), 'wb') as f:
         f.write(blob)
     # collision: the hull and wheels at rest, the gun left out (it swings, and you stand up behind it)
     rest = P[(part != 1) & (part != 2) & (part != 3)] - centre
@@ -245,20 +248,17 @@ def build(bake, preview=None):
            'gunner': 2,
            'turret': {'yaw': rel(YAW[0]), 'pitch': rel(PITCH[0]), 'muzzle': rel(MUZZLE),
                       'rest': round(float(np.degrees(np.arctan2(SPIN[1][1], SPIN[1][2]))), 2), 'up': 50, 'down': 22}}
-    idx = os.path.join(ROOT, 'src/main/resources/data/zomboidcraft/zc_cars/models.json')
-    with open(idx) as f:
-        data = json.load(f)
-    data['models'] = sorted([m for m in data['models'] if m['id'] != ID] + [row], key=lambda m: m['id'])
-    with open(idx, 'w') as f:
-        json.dump(data, f, separators=(',', ':'))
+    with open(os.path.join(out, ID + '.json'), 'w') as f:
+        json.dump(row, f, separators=(',', ':'))
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('bake')
+    ap.add_argument('out')
     ap.add_argument('--preview')
     a = ap.parse_args()
-    build(a.bake, a.preview)
+    build(a.bake, a.out, a.preview)
 
 
 if __name__ == '__main__':

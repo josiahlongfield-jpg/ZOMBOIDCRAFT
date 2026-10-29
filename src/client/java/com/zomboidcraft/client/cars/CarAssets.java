@@ -183,8 +183,13 @@ public final class CarAssets {
 
     private static Map<String, Variant> read(String model) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("cars/" + model + ".zcar"))) {
-            data = in.readAllBytes();
+        java.nio.file.Path local = com.zomboidcraft.world.cars.CarModels.LOCAL.resolve(model + ".zcar");
+        if (java.nio.file.Files.isRegularFile(local)) {
+            data = java.nio.file.Files.readAllBytes(local);     // a vehicle kept on this computer, not in the mod
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("cars/" + model + ".zcar"))) {
+                data = in.readAllBytes();
+            }
         }
         unscramble(data, model);
         Map<String, Variant> out = new HashMap<>();

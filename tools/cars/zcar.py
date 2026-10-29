@@ -57,8 +57,8 @@ def _mesh(b, at):
     return (T, UV, g), at
 
 
-def read(model_id):
-    with open(os.path.join(CARS, model_id + '.zcar'), 'rb') as f:
+def read(model_id, path=None):
+    with open(path or os.path.join(CARS, model_id + '.zcar'), 'rb') as f:
         b = zlib.decompress(unscramble(f.read(), model_id))
     version = struct.unpack_from('>i', b, 4)[0]
     assert b[:4] == b'ZCAR' and version in (3, 4)
