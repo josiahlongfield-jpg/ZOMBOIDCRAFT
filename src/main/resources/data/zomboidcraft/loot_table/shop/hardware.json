@@ -254,6 +254,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:tomahawk",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0,
+                "max": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:coffee_thermos",
           "weight": 2
         },
@@ -996,21 +1011,6 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:tool_belt",
           "weight": 24
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:tomahawk",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0,
-                "max": 0.5
-              }
-            }
-          ]
         }
       ]
     },
