@@ -684,7 +684,7 @@ final class MilitarySite extends Site {
             for (int z = 4; z < bd - 2; z++) {
                 for (int y = 1; y <= 3; y++) {
                     double r = chance();
-                    s.set(x, y, z, r < 0.4 ? "crate" : r < 0.6 ? "cardboard_box" : r < 0.7 ? "minecraft:barrel[facing=up,loot=storage]" : "air");
+                    s.set(x, y, z, r < 0.4 ? "crate" : r < 0.6 ? "cardboard_box" : r < 0.7 ? "fm_drum[loot=storage]" : "air");
                 }
                 s.set(x, 4, z, "steel_olive");
             }
