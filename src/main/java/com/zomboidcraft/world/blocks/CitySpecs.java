@@ -12890,5 +12890,30 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bulk_dirt_3", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 12, 16);
         s("by_stand", FACING, 0, 0, SoundType.METAL, 2f, 6, 0, 1, 10, 16, 10);
         s("by_keel", AXIS, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 13, 15);
+        s("rs_paper_a0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_a1", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_a2", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_b0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_b1", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_b2", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_c0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_c1", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_c2", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_d0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_d1", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_d2", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_e0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_e1", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_e2", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_curl_a", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_paper_curl_b", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_ply", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_frame", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("rs_batten", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 5.5);
+        s("rs_stringer", FACING, 0, 0, SoundType.WOOD, 1f, 0, 2.5, 0, 16, 13.5, 2.2);
+        s("rs_brace", FACING, 0, 0, SoundType.WOOD, 1f, 5, 0, 0, 11, 16, 16);
+        s("rs_walk", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1, 16, 0, 1, 0, 16, 15.4, 1.4);
+        s("rs_lamp", FACING, 0, 0, SoundType.METAL, 2f, 5, 1, 2, 11, 15, 16);
+        s("rs_lamp_lit", FACING, DECOR, 12, SoundType.METAL, 0f, 5, 1, 2, 11, 15, 16);
     }
 }

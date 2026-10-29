@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rs_paper_e0": "zomboidcraft:block/city/rs_paper_e0",
+    "rs_ply": "zomboidcraft:block/city/rs_ply",
+    "particle": "zomboidcraft:block/city/rs_paper_e0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_paper_e0",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rs_ply",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rs_ply",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rs_ply",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rs_ply",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rs_ply",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

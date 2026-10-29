@@ -413,7 +413,7 @@ final class SuburbSite extends Site {
             if (!kit.inside(x + i, z) || kit.use(x + i, z) == Kit.ROAD) {
                 continue;
             }
-            out.set(x + i, 1, z, rng.nextDouble() < 0.15 ? "minecraft:spruce_fence" : "mailbox[facing=south]");
+            out.set(x + i, 1, z, rng.nextDouble() < 0.15 ? "fm_post" : "mailbox[facing=south]");
             kit.claim(x + i, z, x + i, z, Kit.BUILT);
         }
     }

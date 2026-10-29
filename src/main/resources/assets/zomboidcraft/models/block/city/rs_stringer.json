@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rs_timber": "zomboidcraft:block/city/rs_timber",
+    "particle": "zomboidcraft:block/city/rs_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2.5,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rs_timber"
+        },
+        "east": {
+          "texture": "#rs_timber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rs_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rs_timber"
+        },
+        "down": {
+          "texture": "#rs_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        0
+      ],
+      "to": [
+        16,
+        13.5,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rs_timber"
+        },
+        "east": {
+          "texture": "#rs_timber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rs_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rs_timber"
+        },
+        "down": {
+          "texture": "#rs_timber"
+        }
+      }
+    }
+  ]
+}
