@@ -200,21 +200,6 @@
           "weight": 1
         },
         {
-          "type": "minecraft:item",
-          "name": "minecraft:gunpowder",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
           "type": "minecraft:empty",
           "weight": 4
         },
@@ -454,7 +439,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hip_holster",
-          "weight": 4
+          "weight": 8
         }
       ]
     },

@@ -289,7 +289,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
+          "name": "zomboidcraft:crossbow_bolt",
           "weight": 24,
           "functions": [
             {
@@ -304,7 +304,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bow",
+          "name": "zomboidcraft:crossbow",
           "weight": 8,
           "functions": [
             {
@@ -319,7 +319,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:crossbow",
+          "name": "zomboidcraft:crossbow",
           "weight": 8,
           "functions": [
             {
@@ -334,7 +334,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_sword",
+          "name": "zomboidcraft:machete",
           "weight": 4,
           "functions": [
             {
@@ -374,7 +374,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_helmet",
+          "name": "zomboidcraft:combat_helmet",
           "weight": 4,
           "functions": [
             {
@@ -383,36 +383,6 @@
                 "type": "minecraft:uniform",
                 "min": 0.25,
                 "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:shield",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gunpowder",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
               }
             }
           ]
@@ -652,22 +622,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_aiming",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mag_hunting",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:paracord",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hip_holster",
-          "weight": 8
+          "weight": 16
         }
       ]
     },

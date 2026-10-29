@@ -74,11 +74,16 @@ REPLACED = {f'minecraft:{n}' for n in (
     # ours do these: bottles, rags/sheets/thread, maps, notebooks, seeds and produce, buckets, shears, binoculars...
     'glass_bottle', 'white_wool', 'light_gray_wool', 'gray_wool', 'blue_wool', 'brown_wool', 'black_wool', 'map',
     'writable_book', 'wheat', 'wheat_seeds', 'pumpkin_seeds', 'melon_seeds', 'beetroot_seeds', 'water_bucket',
-    'bucket', 'shears', 'spyglass', 'bone', 'painting', 'leather')}
+    'bucket', 'shears', 'spyglass', 'bone', 'painting', 'leather', 'shield', 'gunpowder')}
 # an entry another thread customised (a named note, a marked map, a set count of something special) is theirs, not a
 # stand-in, even when it's a stand-in item
 CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore', 'minecraft:set_custom_data',
           'minecraft:exploration_map', 'minecraft:copy_components'}
+# vanilla weapons and helmets the mod already has its own of: the entry keeps its weight and rolls, as ours
+SWAP = {f'minecraft:{a}': f'{NS}:{b}' for a, b in (
+    ('iron_sword', 'machete'), ('iron_axe', 'fire_axe'), ('iron_pickaxe', 'crowbar'), ('stone_hoe', 'shovel'),
+    ('iron_hoe', 'shovel'), ('bow', 'crossbow'), ('crossbow', 'crossbow'), ('arrow', 'crossbow_bolt'),
+    ('iron_helmet', 'combat_helmet'), ('golden_helmet', 'combat_helmet'))}
 KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
@@ -153,6 +158,8 @@ def main():
             keep = []
             for e in pool.get('entries', []):
                 name = e.get('name')
+                if name in SWAP:
+                    e['name'] = name = SWAP[name]
                 custom = any(fn.get('function') in CUSTOM for fn in e.get('functions', ()))
                 if name in mine or (name in drop and not custom):
                     if name in drop:
