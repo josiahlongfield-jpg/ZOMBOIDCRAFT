@@ -44,7 +44,7 @@ public final class ClothingItems {
             "scarf", "necktie",
             // batch 5: uniforms, armour and aircrew
             "flight_deck_jersey", "police_jacket", "fire_coat", "field_jacket", "ghillie_suit", "ww2_flight_jacket",
-            "fur_coat", "bespoke_suit", "poncho", "flak_vest", "police_vest", "plate_carrier", "survival_vest",
+            "fur_coat", "bespoke_suit", "poncho", "flak_vest", "police_vest", "survival_vest",
             "fire_gloves", "fire_pants", "g_suit");
 
     private static final List<Item> ITEMS = new ArrayList<>();

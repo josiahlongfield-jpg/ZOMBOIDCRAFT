@@ -92,7 +92,6 @@ final class WornParts {
             Map.entry("poncho", List.of("body")),
             Map.entry("flak_vest", List.of("body")),
             Map.entry("police_vest", List.of("body")),
-            Map.entry("plate_carrier", List.of("body")),
             Map.entry("survival_vest", List.of("body")),
             Map.entry("fire_gloves", List.of("left_arm", "right_arm")),
             Map.entry("fire_pants", List.of("body", "left_leg", "right_leg")),

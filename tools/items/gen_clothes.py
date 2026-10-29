@@ -1933,21 +1933,7 @@ def build_police_vest(g):
     g.front('body', d, -2.4, 0.9, -1.6, 2.0, 'badge', t=0.12)
 
 
-def build_plate_carrier(g):
-    d = VEST_D
-    g.box('body', (-3.6, 0.6, -2 - d - 0.5), (3.6, 9.0, -2 - d + 0.6), 'cordura')    # front plate bag
-    g.box('body', (-3.6, 0.6, 2 + d - 0.6), (3.6, 9.4, 2 + d + 0.5), 'cordura')      # back plate bag
-    for s in (-1, 1):
-        x0, x1 = (-3.4, -1.6) if s < 0 else (1.6, 3.4)
-        g.box('body', (x0, -0.4, -2 - d), (x1, 0.8, 2 + d), 'padding')               # padded shoulders
-        g.box('body', (s * 3.2 + (-0.8 if s < 0 else 0), 5.4, -2 - d + 0.4), (s * 3.2 + (0 if s < 0 else 0.8) + s * 1.3, 9.0, 2 + d - 0.4), 'cordura')   # cummerbund
-    molle(g, 'body', d + 0.5, -3.4, 1.0, 3.4, 4.6, 'web')
-    molle(g, 'body', d + 0.5, -3.4, 1.0, 3.4, 8.6, 'web', back=True)
-    for x in (-3.0, -1.0, 1.0):                                                       # three-mag shingle
-        pouch(g, 'body', d + 0.5, x, 5.0, x + 1.8, 9.2, 'cordura', 'flap', t=0.9)
-    g.front('body', d + 0.64, 1.4, 1.0, 3.4, 4.0, 'cordura', t=0.4)                    # admin pouch
-    g.front('body', d + 0.64, -3.4, 1.2, -1.2, 2.0, 'velcro', t=0.08)                  # patch panel
-    g.back('body', d + 0.5, -0.8, 0.4, 0.8, 1.2, 'web', t=0.4)                         # drag handle
+# plate_carrier is left out: it is already a carry vest (ModItems.PLATE_CARRIER, a BagItem with its own model)
 
 
 def build_survival_vest(g):
@@ -2035,8 +2021,6 @@ KIT = {
                                         zip=metal(), flap=cloth('#484c32'), eyelet=metal('brass')), 0.55),
     'police_vest': (build_police_vest, dict(carrier=cloth('#1e2026', weave=0.1), velcro=cloth('#2a2c32', stitch=None),
                                             stencil=stencil('#1e2026', '#bfb8a4'), pen=flat('#1d2d5a'), badge=metal('brass')), 0.45),
-    'plate_carrier': (build_plate_carrier, dict(cordura=cloth('#7a6a4c', weave=0.12), padding=cloth('#6e6044'),
-                                                web=cloth('#6a5c40', stitch=None), flap=cloth('#6e6044'), velcro=cloth('#5e5238')), 0.55),
     'survival_vest': (build_survival_vest, dict(mesh=mesh('#4e5436'), nylon=cloth('#545a3c'), flap=cloth('#4a5034'), zip=metal(),
                                                 aerial=rubber('#1a1a1a'), sheath=leather('#2e2418'), grip=rubber('#1a1a1a'),
                                                 web=cloth('#3e4430')), 0.5),
