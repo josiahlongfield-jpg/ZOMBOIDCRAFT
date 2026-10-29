@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/police_badge"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/police_badge",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/police_badge",
+   "part": "body"
+  }
  }
 }

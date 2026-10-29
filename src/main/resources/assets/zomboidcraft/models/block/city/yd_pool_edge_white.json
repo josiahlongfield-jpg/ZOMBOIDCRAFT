@@ -1,0 +1,431 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "yd_pool_ledge": "zomboidcraft:block/city/yd_pool_ledge",
+    "yd_pool_liner": "zomboidcraft:block/city/yd_pool_liner",
+    "yd_pool_water": "zomboidcraft:block/city/yd_pool_water",
+    "yd_pool_white": "zomboidcraft:block/city/yd_pool_white",
+    "particle": "zomboidcraft:block/city/yd_pool_white"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.0
+      ],
+      "to": [
+        16,
+        19,
+        0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_pool_white",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_white",
+          "uv": [
+            15.4,
+            0,
+            16.0,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_white",
+          "uv": [
+            0.0,
+            0,
+            0.6,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_white"
+        },
+        "down": {
+          "texture": "#yd_pool_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0.5,
+        0.6
+      ],
+      "to": [
+        16,
+        18.6,
+        0.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            15.2,
+            0,
+            15.4,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0.6,
+            0,
+            0.8,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        19,
+        -1.0
+      ],
+      "to": [
+        16,
+        19.6,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6000000000000014
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.8,
+            0,
+            16,
+            0.6000000000000014
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.2,
+            0.6000000000000014
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            16,
+            3.2
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            12.8,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        -1.6
+      ],
+      "to": [
+        9,
+        19,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            14.399999999999999,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            1.6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            7,
+            0,
+            9,
+            1.6
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            7,
+            14.399999999999999,
+            9,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.6,
+        18.4,
+        -1.8
+      ],
+      "to": [
+        9.4,
+        19.6,
+        0.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.6,
+            0,
+            9.4,
+            1.2000000000000028
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.6,
+            0,
+            9.4,
+            1.2000000000000028
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            13.799999999999999,
+            0,
+            16,
+            1.2000000000000028
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            2.2,
+            1.2000000000000028
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.6,
+            0,
+            9.4,
+            2.2
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.6,
+            13.799999999999999,
+            9.4,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -0.6
+      ],
+      "to": [
+        16,
+        1.2,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge"
+        },
+        "south": {
+          "texture": "#yd_pool_ledge"
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            15.399999999999999,
+            14.8,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            14.8,
+            0.6,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            15.399999999999999,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0.8
+      ],
+      "to": [
+        16,
+        15.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    }
+  ]
+}

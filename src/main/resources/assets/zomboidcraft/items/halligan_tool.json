@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/halligan_tool"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/halligan_tool",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/halligan_tool",
+   "part": "body"
+  }
  }
 }

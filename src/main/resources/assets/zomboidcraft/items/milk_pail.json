@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/milk_pail"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/milk_pail",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/milk_pail",
+   "part": "body"
+  }
  }
 }

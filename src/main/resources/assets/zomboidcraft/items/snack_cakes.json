@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/snack_cakes"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/snack_cakes",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/snack_cakes",
+   "part": "body"
+  }
  }
 }

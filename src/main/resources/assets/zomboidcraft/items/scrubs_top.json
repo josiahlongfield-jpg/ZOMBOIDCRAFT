@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/scrubs_top"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/scrubs_top",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/scrubs_top",
+    "part": "loot"
+   }
   }
  }
 }

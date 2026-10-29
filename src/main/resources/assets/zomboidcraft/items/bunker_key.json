@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bunker_key"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bunker_key",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bunker_key",
+   "part": "body"
+  }
  }
 }

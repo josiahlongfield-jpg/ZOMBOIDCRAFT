@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/butter"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/butter",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/butter",
+   "part": "body"
+  }
  }
 }

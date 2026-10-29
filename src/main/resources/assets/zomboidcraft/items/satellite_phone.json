@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/satellite_phone"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/satellite_phone",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/satellite_phone",
+   "part": "body"
+  }
  }
 }

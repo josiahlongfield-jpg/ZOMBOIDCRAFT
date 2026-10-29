@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/necktie"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/necktie",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/necktie",
+    "part": "loot"
+   }
   }
  }
 }

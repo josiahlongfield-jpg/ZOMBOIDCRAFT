@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/coin_collection"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/coin_collection",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/coin_collection",
+   "part": "body"
+  }
  }
 }

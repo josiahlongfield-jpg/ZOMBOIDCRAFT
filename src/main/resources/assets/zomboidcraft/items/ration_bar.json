@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/ration_bar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/ration_bar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/ration_bar",
+   "part": "body"
+  }
  }
 }

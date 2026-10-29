@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/skateboard"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/skateboard",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/skateboard",
+   "part": "body"
+  }
  }
 }

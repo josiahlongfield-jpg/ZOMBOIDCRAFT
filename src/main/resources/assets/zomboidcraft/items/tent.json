@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/tent"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/tent",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/tent",
+   "part": "body"
+  }
  }
 }

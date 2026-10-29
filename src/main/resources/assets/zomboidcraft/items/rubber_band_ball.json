@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rubber_band_ball"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rubber_band_ball",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rubber_band_ball",
+   "part": "body"
+  }
  }
 }

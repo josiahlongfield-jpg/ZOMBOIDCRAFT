@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/lantern_battery"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/lantern_battery",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/lantern_battery",
+   "part": "body"
+  }
  }
 }

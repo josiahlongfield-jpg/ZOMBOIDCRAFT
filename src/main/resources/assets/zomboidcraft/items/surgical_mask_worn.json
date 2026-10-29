@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/surgical_mask_worn"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/surgical_mask_worn",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/surgical_mask_worn",
+    "part": "loot"
+   }
   }
  }
 }

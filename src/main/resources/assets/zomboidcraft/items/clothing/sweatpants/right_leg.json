@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/sweatpants/right_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/sweatpants/right_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/sweatpants",
+   "part": "right_leg"
+  }
  }
 }

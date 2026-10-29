@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/baseball_glove"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/baseball_glove",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/baseball_glove",
+   "part": "body"
+  }
  }
 }

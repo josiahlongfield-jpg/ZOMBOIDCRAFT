@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bulk_dirt": "zomboidcraft:block/city/bulk_dirt",
+    "particle": "zomboidcraft:block/city/bulk_dirt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bulk_dirt",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bulk_dirt",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bulk_dirt",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bulk_dirt",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bulk_dirt"
+        },
+        "down": {
+          "texture": "#bulk_dirt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

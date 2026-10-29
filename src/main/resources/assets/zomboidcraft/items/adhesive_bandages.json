@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/adhesive_bandages"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/adhesive_bandages",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/adhesive_bandages",
+   "part": "body"
+  }
  }
 }

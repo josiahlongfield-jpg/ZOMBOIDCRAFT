@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/answering_machine"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/answering_machine",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/answering_machine",
+   "part": "body"
+  }
  }
 }

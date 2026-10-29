@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/light_bulb"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/light_bulb",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/light_bulb",
+   "part": "body"
+  }
  }
 }

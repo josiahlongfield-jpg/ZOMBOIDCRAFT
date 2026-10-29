@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/bespoke_suit/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/bespoke_suit/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/bespoke_suit",
+   "part": "body"
+  }
  }
 }

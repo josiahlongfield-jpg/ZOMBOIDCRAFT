@@ -1377,27 +1377,25 @@ final class Kit {
         }
     }
 
-    /** A wooden privacy fence two blocks high with posts every three, boards fallen here and there. */
-    static void privacyFence(Placer p, SplittableRandom rng, int x0, int z0, int x1, int z1) {
-        boolean alongX = z0 == z1;
+    /**
+     * A six-foot board fence in a lot's frame (the yd_privacy kit: cedar, grey or brown), a post every
+     * three, the odd top course gone or a board kicked through.
+     */
+    static void privacyFence(Placer p, SplittableRandom rng, int x0, int z0, int x1, int z1, String wood) {
+        String axis = "[axis=" + (z0 == z1 ? "x" : "z") + "]";
         int n = 0;
         for (int x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
             for (int z = Math.min(z0, z1); z <= Math.max(z0, z1); z++) {
-                boolean post = n++ % 3 == 0;
-                if (post) {
-                    p.set(x, 1, z, "minecraft:spruce_fence");
-                    p.set(x, 2, z, "minecraft:spruce_fence");
+                if (n++ % 3 == 0) {
+                    p.set(x, 1, z, "yd_privacy_post_" + wood + axis);
+                    p.set(x, 2, z, "yd_privacy_post_top_" + wood + axis);
                     continue;
                 }
                 double r = rng.nextDouble();
-                if (r < 0.06) {
-                    p.set(x, 1, z, "fence_boards[axis=" + (alongX ? "x" : "z") + "]");
-                    continue;  // top board gone
-                } else if (r < 0.1) {
-                    continue;  // kicked through
+                p.set(x, 1, z, "yd_privacy_" + wood + (r < 0.08 ? "_broken" : "") + axis);
+                if (r >= 0.04) {
+                    p.set(x, 2, z, "yd_privacy_top_" + wood + (r < 0.14 ? "_broken" : "") + axis);
                 }
-                p.set(x, 1, z, "fence_boards[axis=" + (alongX ? "x" : "z") + "]");
-                p.set(x, 2, z, "fence_boards[axis=" + (alongX ? "x" : "z") + "]");
             }
         }
     }

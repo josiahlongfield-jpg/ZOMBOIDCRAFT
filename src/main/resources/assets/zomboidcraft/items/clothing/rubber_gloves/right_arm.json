@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/rubber_gloves/right_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/rubber_gloves/right_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/rubber_gloves",
+   "part": "right_arm"
+  }
  }
 }

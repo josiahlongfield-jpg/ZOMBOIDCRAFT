@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cigarette_butts"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cigarette_butts",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cigarette_butts",
+   "part": "body"
+  }
  }
 }

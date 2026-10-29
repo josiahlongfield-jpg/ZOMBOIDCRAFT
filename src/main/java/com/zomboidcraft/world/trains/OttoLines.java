@@ -9,6 +9,7 @@ final class OttoLines {
     static final String[][] CLOSING = {{"otto.closing_0"}, {"otto.closing_1"}, {"otto.closing_2"}, {"otto.closing_3"}};
     static final String[][] CHATTER = {{"otto.chatter_0"}, {"otto.chatter_1"}, {"otto.chatter_2"}, {"otto.chatter_3"}, {"otto.chatter_4"}, {"otto.chatter_5"}, {"otto.chatter_6"}, {"otto.chatter_7"}, {"otto.chatter_8"}, {"otto.chatter_9"}, {"otto.chatter_10"}, {"otto.chatter_11"}, {"otto.chatter_12"}, {"otto.chatter_13"}};
     static final String[][] JOB = {{"otto.job_0"}, {"otto.job_1"}, {"otto.job_2"}, {"otto.job_3"}, {"otto.job_4"}, {"otto.job_5"}, {"otto.job_6"}, {"otto.job_7"}, {"otto.job_8"}, {"otto.job_9"}};
+    static final String[][] GREET = {{"otto.greet_0"}};
     static final String[][] BOARD = {{"otto.board_0"}, {"otto.board_1"}, {"otto.board_2"}, {"otto.board_3"}, {"otto.board_4"}};
     static final String[][] ALIGHT = {{"otto.alight_0"}, {"otto.alight_1"}, {"otto.alight_2"}, {"otto.alight_3"}};
     static final String[][] JUMPED = {{"otto.jumped_0"}, {"otto.jumped_1"}, {"otto.jumped_2"}};

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/hoodie"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hoodie",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hoodie",
+    "part": "loot"
+   }
   }
  }
 }

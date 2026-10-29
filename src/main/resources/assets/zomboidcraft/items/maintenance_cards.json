@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/maintenance_cards"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/maintenance_cards",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/maintenance_cards",
+   "part": "body"
+  }
  }
 }

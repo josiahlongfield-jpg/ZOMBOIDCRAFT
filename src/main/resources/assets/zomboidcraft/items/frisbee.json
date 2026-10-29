@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/frisbee"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/frisbee",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/frisbee",
+   "part": "body"
+  }
  }
 }

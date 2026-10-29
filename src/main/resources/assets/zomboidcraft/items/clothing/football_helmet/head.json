@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/football_helmet/head"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/football_helmet/head",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/football_helmet",
+   "part": "head"
+  }
  }
 }

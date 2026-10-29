@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/fire_pants"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/fire_pants",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/fire_pants",
+    "part": "loot"
+   }
   }
  }
 }

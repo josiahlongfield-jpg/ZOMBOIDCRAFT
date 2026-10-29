@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/safe_combination"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/safe_combination",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/safe_combination",
+   "part": "body"
+  }
  }
 }

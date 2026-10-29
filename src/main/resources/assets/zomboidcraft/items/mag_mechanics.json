@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mag_mechanics"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mag_mechanics",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mag_mechanics",
+   "part": "body"
+  }
  }
 }

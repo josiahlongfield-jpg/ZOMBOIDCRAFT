@@ -437,8 +437,8 @@ def rookie_card(m):
 
 def baseball(m, mat='white'):
     sh.ball(m, 1.45, mat)
-    m.box([-1.0, 2.6, -0.05], [1.0, 2.62, 0.05], 'red')
-    m.box([-0.05, 2.6, -0.8], [0.05, 2.62, 0.8], 'red')
+    m.box([-1.0, 2.86, -0.05], [1.0, 2.94, 0.05], 'red')      # stitching over the top
+    m.box([-0.05, 2.86, -0.8], [0.05, 2.94, 0.8], 'red')
 
 
 def signed_ball(m):

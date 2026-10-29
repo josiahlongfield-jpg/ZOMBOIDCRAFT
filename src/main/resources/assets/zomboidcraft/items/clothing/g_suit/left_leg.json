@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/g_suit/left_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/g_suit/left_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/g_suit",
+   "part": "left_leg"
+  }
  }
 }

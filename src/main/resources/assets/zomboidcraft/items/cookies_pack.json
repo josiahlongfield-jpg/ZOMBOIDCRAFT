@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cookies_pack"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cookies_pack",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cookies_pack",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/tourniquet"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/tourniquet",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/tourniquet",
+   "part": "body"
+  }
  }
 }

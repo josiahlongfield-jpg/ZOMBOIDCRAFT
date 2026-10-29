@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/hi_vis_vest/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/hi_vis_vest/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/hi_vis_vest",
+   "part": "body"
+  }
  }
 }

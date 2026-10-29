@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sealed_console"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sealed_console",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sealed_console",
+   "part": "body"
+  }
  }
 }

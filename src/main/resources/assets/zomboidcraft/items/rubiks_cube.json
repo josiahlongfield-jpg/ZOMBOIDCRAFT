@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rubiks_cube"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rubiks_cube",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rubiks_cube",
+   "part": "body"
+  }
  }
 }

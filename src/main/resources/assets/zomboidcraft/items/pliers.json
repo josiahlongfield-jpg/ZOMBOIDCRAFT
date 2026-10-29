@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pliers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pliers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pliers",
+   "part": "body"
+  }
  }
 }

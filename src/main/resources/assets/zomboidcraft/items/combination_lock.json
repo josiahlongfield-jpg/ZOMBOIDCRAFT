@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/combination_lock"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/combination_lock",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/combination_lock",
+   "part": "body"
+  }
  }
 }

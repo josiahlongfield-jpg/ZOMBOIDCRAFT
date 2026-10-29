@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rope"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rope",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rope",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/vcr"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/vcr",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/vcr",
+   "part": "body"
+  }
  }
 }

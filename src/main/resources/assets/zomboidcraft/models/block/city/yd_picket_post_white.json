@@ -1,0 +1,311 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "yd_picket_white": "zomboidcraft:block/city/yd_picket_white",
+    "yd_picket_white_h": "zomboidcraft:block/city/yd_picket_white_h",
+    "particle": "zomboidcraft:block/city/yd_picket_white"
+  },
+  "elements": [
+    {
+      "from": [
+        6.4,
+        0,
+        6.4
+      ],
+      "to": [
+        9.6,
+        16.5,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.4,
+            0,
+            9.6,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.4,
+            0,
+            9.6,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.4,
+            0,
+            9.6,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.4,
+            0,
+            9.6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_picket_white"
+        },
+        "down": {
+          "texture": "#yd_picket_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        16.5,
+        6
+      ],
+      "to": [
+        10,
+        17.3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6,
+            0,
+            10,
+            0.8000000000000007
+          ]
+        },
+        "south": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6,
+            0,
+            10,
+            0.8000000000000007
+          ]
+        },
+        "east": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6,
+            0,
+            10,
+            0.8000000000000007
+          ]
+        },
+        "west": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6,
+            0,
+            10,
+            0.8000000000000007
+          ]
+        },
+        "up": {
+          "texture": "#yd_picket_white"
+        },
+        "down": {
+          "texture": "#yd_picket_white"
+        }
+      }
+    },
+    {
+      "from": [
+        6.9,
+        17.3,
+        6.9
+      ],
+      "to": [
+        9.1,
+        17.9,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.9,
+            0,
+            9.1,
+            0.5999999999999979
+          ]
+        },
+        "south": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.9,
+            0,
+            9.1,
+            0.5999999999999979
+          ]
+        },
+        "east": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.9,
+            0,
+            9.1,
+            0.5999999999999979
+          ]
+        },
+        "west": {
+          "texture": "#yd_picket_white",
+          "uv": [
+            6.9,
+            0,
+            9.1,
+            0.5999999999999979
+          ]
+        },
+        "up": {
+          "texture": "#yd_picket_white"
+        },
+        "down": {
+          "texture": "#yd_picket_white"
+        }
+      }
+    },
+    {
+      "from": [
+        7.7,
+        3,
+        9.6
+      ],
+      "to": [
+        9.1,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white_h"
+        },
+        "south": {
+          "texture": "#yd_picket_white_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_picket_white_h"
+        },
+        "west": {
+          "texture": "#yd_picket_white_h"
+        },
+        "up": {
+          "texture": "#yd_picket_white_h"
+        },
+        "down": {
+          "texture": "#yd_picket_white_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.7,
+        3,
+        0
+      ],
+      "to": [
+        9.1,
+        5,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_picket_white_h"
+        },
+        "east": {
+          "texture": "#yd_picket_white_h"
+        },
+        "west": {
+          "texture": "#yd_picket_white_h"
+        },
+        "up": {
+          "texture": "#yd_picket_white_h"
+        },
+        "down": {
+          "texture": "#yd_picket_white_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.7,
+        10.5,
+        9.6
+      ],
+      "to": [
+        9.1,
+        12.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white_h"
+        },
+        "south": {
+          "texture": "#yd_picket_white_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_picket_white_h"
+        },
+        "west": {
+          "texture": "#yd_picket_white_h"
+        },
+        "up": {
+          "texture": "#yd_picket_white_h"
+        },
+        "down": {
+          "texture": "#yd_picket_white_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.7,
+        10.5,
+        0
+      ],
+      "to": [
+        9.1,
+        12.5,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_picket_white_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_picket_white_h"
+        },
+        "east": {
+          "texture": "#yd_picket_white_h"
+        },
+        "west": {
+          "texture": "#yd_picket_white_h"
+        },
+        "up": {
+          "texture": "#yd_picket_white_h"
+        },
+        "down": {
+          "texture": "#yd_picket_white_h"
+        }
+      }
+    }
+  ]
+}

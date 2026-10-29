@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/circular_saw"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/circular_saw",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/circular_saw",
+   "part": "body"
+  }
  }
 }

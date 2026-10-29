@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/hoodie/left_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/hoodie/left_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/hoodie",
+   "part": "left_arm"
+  }
  }
 }

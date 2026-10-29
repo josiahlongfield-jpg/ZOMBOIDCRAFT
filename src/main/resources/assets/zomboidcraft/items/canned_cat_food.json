@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_cat_food"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_cat_food",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_cat_food",
+   "part": "body"
+  }
  }
 }

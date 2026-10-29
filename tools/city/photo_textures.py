@@ -1145,6 +1145,12 @@ import dress  # noqa: E402
 dress.register(sys.modules[__name__])
 import farm  # noqa: E402
 farm.register(sys.modules[__name__])
+import yard  # noqa: E402
+yard.register(sys.modules[__name__])
+import housekit  # noqa: E402
+housekit.register(sys.modules[__name__])
+import ports  # noqa: E402
+ports.register(sys.modules[__name__])
 
 
 

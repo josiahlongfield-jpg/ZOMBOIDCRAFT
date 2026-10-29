@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/coffee_pot"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/coffee_pot",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/coffee_pot",
+   "part": "body"
+  }
  }
 }

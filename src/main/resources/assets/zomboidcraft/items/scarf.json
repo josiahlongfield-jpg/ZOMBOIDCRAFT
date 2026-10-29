@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/scarf"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/scarf",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/scarf",
+    "part": "loot"
+   }
   }
  }
 }

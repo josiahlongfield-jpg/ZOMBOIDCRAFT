@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pipe_offcut"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pipe_offcut",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pipe_offcut",
+   "part": "body"
+  }
  }
 }

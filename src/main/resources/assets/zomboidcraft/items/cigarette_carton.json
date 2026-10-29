@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cigarette_carton"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cigarette_carton",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cigarette_carton",
+   "part": "body"
+  }
  }
 }

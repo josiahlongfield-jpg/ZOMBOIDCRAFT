@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bait"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bait",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bait",
+   "part": "body"
+  }
  }
 }

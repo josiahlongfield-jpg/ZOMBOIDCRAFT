@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/stamp_collection"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/stamp_collection",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/stamp_collection",
+   "part": "body"
+  }
  }
 }

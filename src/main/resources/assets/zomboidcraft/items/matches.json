@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/matches"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/matches",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/matches",
+   "part": "body"
+  }
  }
 }

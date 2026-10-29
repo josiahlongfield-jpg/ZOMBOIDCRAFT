@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/paper_towels"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/paper_towels",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/paper_towels",
+   "part": "body"
+  }
  }
 }

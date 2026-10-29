@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/coat_hanger"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/coat_hanger",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/coat_hanger",
+   "part": "body"
+  }
  }
 }

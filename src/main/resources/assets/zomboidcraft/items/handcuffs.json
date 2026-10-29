@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/handcuffs"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/handcuffs",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/handcuffs",
+   "part": "body"
+  }
  }
 }

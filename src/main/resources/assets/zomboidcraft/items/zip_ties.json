@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/zip_ties"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/zip_ties",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/zip_ties",
+   "part": "body"
+  }
  }
 }

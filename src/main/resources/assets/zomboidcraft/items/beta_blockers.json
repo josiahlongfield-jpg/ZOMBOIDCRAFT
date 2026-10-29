@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/beta_blockers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/beta_blockers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/beta_blockers",
+   "part": "body"
+  }
  }
 }

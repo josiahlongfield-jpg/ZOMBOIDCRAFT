@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/jumper_cables"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/jumper_cables",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/jumper_cables",
+   "part": "body"
+  }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/sunglasses"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/sunglasses",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/sunglasses",
+    "part": "loot"
+   }
   }
  }
 }

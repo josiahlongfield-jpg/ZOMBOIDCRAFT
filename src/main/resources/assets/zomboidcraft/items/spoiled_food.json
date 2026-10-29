@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/spoiled_food"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/spoiled_food",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/spoiled_food",
+   "part": "body"
+  }
  }
 }

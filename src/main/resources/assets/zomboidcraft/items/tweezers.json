@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/tweezers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/tweezers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/tweezers",
+   "part": "body"
+  }
  }
 }

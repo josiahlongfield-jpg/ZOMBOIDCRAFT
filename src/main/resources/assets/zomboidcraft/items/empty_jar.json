@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/empty_jar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/empty_jar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/empty_jar",
+   "part": "body"
+  }
  }
 }

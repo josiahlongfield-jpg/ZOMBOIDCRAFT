@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/balaclava"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/balaclava",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/balaclava",
+    "part": "loot"
+   }
   }
  }
 }

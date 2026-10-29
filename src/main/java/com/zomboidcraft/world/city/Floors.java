@@ -4,6 +4,7 @@ import com.zomboidcraft.world.city.Floorplan.Room;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.SplittableRandom;
 
 /**
@@ -339,6 +340,20 @@ public final class Floors {
             this.wall = state == State.BURNT && !w0.startsWith("concrete") && rng.nextBoolean() && w0.startsWith("home_wall") ? w0 + "_worn" : w0;
             String[] carpets = {"office_floor", "office_floor", "fit_carpet", "home_floor_carpet_blue", "home_floor_carpet_brown", "home_floor_carpet_green"};
             this.carpet = carpets[rng.nextInt(carpets.length)];
+            f.airy = airy(type);
+        }
+
+        /**
+         * Floors laid out open plan: no corridor ring, only a few rooms on the windows (glass
+         * walled) so the floor reads as one big space out to the view. Bedrooms, flats, the
+         * separate firms of a suites floor and the plant stay cut up into rooms.
+         */
+        static boolean airy(Type t) {
+            return switch (t) {
+                case OPEN_OFFICE, CELLULAR, LAW, CALL_CENTRE, NEWSROOM, COMPUTERS, CAFETERIA, GYM, EXECUTIVE, MEDICAL, DENTAL, GOVERNMENT, RADIO,
+                        HOTEL_SERVICE, HOTEL_DINING, HOTEL_SPA, NIGHTCLUB -> true;
+                default -> false;
+            };
         }
 
         void run() {
@@ -418,11 +433,27 @@ public final class Floors {
                     return i < first.length ? first[i++] : tail[j++ % tail.length];
                 }
             };
-            return f.rooms(true, 7, 4, 7, k, wall, true, max);
+            // open plan: only the rooms the floor can't do without, the rest of the inner floor left
+            // open, and the rooms people work in walled in glass
+            List<Room> rs = f.rooms(true, 7, 4, 7, k, wall, true, f.airy ? Math.min(max, first.length) : max);
+            if (f.airy) {
+                for (Room r : rs) {
+                    r.glass = Set.of("office", "meeting", "board", "exec", "library", "reception", "day_room", "studio").contains(r.kind);
+                }
+            }
+            return rs;
         }
 
         List<Room> windows(int max, int min, int size, String... kinds) {
-            return f.rooms(false, f.band, min, size, cycle(kinds), wall, true, max);
+            if (!f.airy) {
+                return f.rooms(false, f.band, min, size, cycle(kinds), wall, true, max);
+            }
+            // open plan: a handful of glass rooms on the windows, the rest of the glass left to the floor
+            List<Room> rs = f.rooms(false, f.band, min, size, cycle(kinds), wall, true, Math.min(max, 3 + rng.nextInt(2)));
+            for (Room r : rs) {
+                r.glass = true;
+            }
+            return rs;
         }
 
         void furnish(List<Room> rs) {
@@ -461,7 +492,7 @@ public final class Floors {
                     : new String[] {"meeting", "files", "office", "copy"}));
             rs.addAll(windows(60, 3, 4, law ? new String[] {"office", "office", "office", "exec"} : new String[] {"office", "office", "office", "meeting"}));
             for (Room r : rs) {
-                r.glass = !law && r.kind.equals("meeting");
+                r.glass |= !law && r.kind.equals("meeting");
             }
             furnish(rs);
             deskPods();
@@ -647,6 +678,10 @@ public final class Floors {
                     "copy"));
             rs.addAll(windows(60, 5, 8, "exec", "exec", "board", "office"));
             furnish(rs);
+            // the open floor a lounge: sofas looking out of the glass, sitting groups between
+            String sofa = pick("brown", "blue");
+            byGlass(sofa);
+            groups(6, 5, 7, i -> 0, sofa);
             dotOpen(new String[] {"pk_houseplant[facing=%s]", "home_armchair_brown[facing=%s]", "home_floor_lamp", "fit_painting_a[facing=%s]"}, 0.02);
             f.floors("home_floor_carpet_brown", "home_floor_parquet");
         }
@@ -690,7 +725,7 @@ public final class Floors {
             List<Room> rs = new ArrayList<>(core(5, "wc", "kitchen", "server", "library", "store"));
             rs.addAll(windows(8, 4, 6, "studio", "studio", "office", "meeting"));
             for (Room r : rs) {
-                r.glass = r.kind.equals("studio");
+                r.glass |= r.kind.equals("studio");
             }
             furnish(rs);
             deskPods();
@@ -897,10 +932,11 @@ public final class Floors {
             if (slim) {
                 f.band = 3;
             }
-            List<Room> rs = new ArrayList<>(core(4, "ph_kitchen", "ph_wine", "wc", "linen"));
-            // the master suite takes the biggest stretch of glass, then the cinema, the library, guest rooms
-            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master", "ph_cinema", "library", "penthouse_bed"),
-                    wall, true, slim ? 4 : 6));
+            // open plan: the powder room and the wine store by the core, the master suite (and on a
+            // deep floor one guest room) on the glass, everything else one great room out to the view
+            f.airy = true;
+            List<Room> rs = new ArrayList<>(core(2, "wc", "ph_wine"));
+            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master"), wall, true, slim ? 1 : 2));
             furnish(rs);
             // the great room: sitting groups under chandeliers, the long dining table, the grand
             // piano by the glass, the bar, sculpture on plinths between

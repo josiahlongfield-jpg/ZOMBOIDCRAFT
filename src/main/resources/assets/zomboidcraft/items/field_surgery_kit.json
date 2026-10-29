@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/field_surgery_kit"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/field_surgery_kit",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/field_surgery_kit",
+   "part": "body"
+  }
  }
 }

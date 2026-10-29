@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/binoculars"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/binoculars",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/binoculars",
+   "part": "body"
+  }
  }
 }

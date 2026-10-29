@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rare_comic"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rare_comic",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rare_comic",
+   "part": "body"
+  }
  }
 }

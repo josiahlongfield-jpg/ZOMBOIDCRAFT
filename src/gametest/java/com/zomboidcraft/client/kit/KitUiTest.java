@@ -762,6 +762,17 @@ public class KitUiTest implements FabricClientGameTest {
                     ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.made()));
             ctx.takeScreenshot("map-" + names[v]);
         }
+        // the far-out levels again, now the close tiles drawn for downtown have gone into them
+        float[][] again = {{3100, -1500, 0.09f}, {3350, -1250, 0.03f}};
+        String[] againNames = {"island-detail", "county-detail"};
+        for (int v = 0; v < again.length; v++) {
+            float[] view = again[v];
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.map.look(view[0], view[1], view[2]);
+            });
+            ctx.waitTicks(400);
+            ctx.takeScreenshot("map-" + againNames[v]);
+        }
         ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of()));
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }

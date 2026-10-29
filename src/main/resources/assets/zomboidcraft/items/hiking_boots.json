@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/hiking_boots"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hiking_boots",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hiking_boots",
+    "part": "loot"
+   }
   }
  }
 }

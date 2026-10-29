@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/antibiotic_cream"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/antibiotic_cream",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/antibiotic_cream",
+   "part": "body"
+  }
  }
 }

@@ -24,6 +24,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent))
 import paint_textures as P  # noqa: E402
 import furniture as F  # noqa: E402
+import yard  # noqa: E402
 
 N = P.N
 HERE = Path(__file__).parent
@@ -495,13 +496,14 @@ def textures():
     T["ext_gutter"] = lambda: gutter(4314)
     T["ext_gutter_top"] = lambda: gutter_top(4315)
     T["ext_roof_deck"] = lambda: roof_deck(4316)
-    T["ext_fascia"] = lambda: paint(4317, WHITE, 0.22)
-    T["ext_trim_white"] = lambda: paint(4318, WHITE, 0.18, vertical=True)
+    # white paintwork from the photo set, the same as the yard's pickets (yard.white_paint)
+    T["ext_fascia"] = lambda: yard.white_paint(4317)
+    T["ext_trim_white"] = lambda: yard.upright(yard.white_paint(4318))
     T["ext_trim_brown"] = lambda: paint(4319, (78, 58, 42), 0.12, vertical=True)
     T["ext_alu"] = lambda: F.steel(4320, (176, 178, 176))
     T["ext_porch_ceiling"] = lambda: porch_ceiling(4321)
     T["ext_porch_boards"] = lambda: porch_boards(4322)
-    T["ext_post"] = lambda: paint(4323, WHITE, 0.3, vertical=True)
+    T["ext_post"] = lambda: yard.upright(yard.white_paint(4323))
     for i, (c, rgb) in enumerate(SHUTTERS.items()):
         T[f"ext_louvre_{c}"] = lambda rgb=rgb, i=i: louvres(4330 + i, rgb)
         T[f"ext_paint_{c}"] = lambda rgb=rgb, i=i: paint(4335 + i, rgb, 0.15, vertical=True)
@@ -682,7 +684,7 @@ def blocks():
     add("ext_rail_broken", [[7, 1.5, 0, 9, 3, 16, post], [7.25, 3, 1, 8.75, 13, 2.5, post],
                             [6.5, 13, 0, 9.5, 15, 6, post], [7.25, 3, 9, 8.75, 8, 10.5, post]], "Porch Railing", "WOOD",
         rotate="axis")
-    out["ext_porch_boards"] = {"tex": {"up": "ext_porch_boards", "down": "ext_porch_boards", "side": "ext_fascia"},
+    out["ext_porch_boards"] = {"tex": {"up": "ext_porch_boards", "down": "ext_porch_boards", "side": "hk_porch_skirt"},
                                "title": "Porch Boards", "sound": "WOOD"}
     # the back porches up a shop row (see Flats.porches): plank stairs, and a rail along one edge of a cell
     # (facing = that edge) so the boards beside it can still be walked

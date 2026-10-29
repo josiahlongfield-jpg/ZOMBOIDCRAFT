@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/scba_tank"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/scba_tank",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/scba_tank",
+   "part": "body"
+  }
  }
 }

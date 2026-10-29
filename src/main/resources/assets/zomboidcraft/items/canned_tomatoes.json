@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_tomatoes"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_tomatoes",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_tomatoes",
+   "part": "body"
+  }
  }
 }

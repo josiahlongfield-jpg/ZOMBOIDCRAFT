@@ -74,8 +74,9 @@ final class Round {
 
     /**
      * A roof of rings from y up, a block a ring, the first with its outside at radius r: each ring's
-     * courses step in half a block (profile letter s) or a whole one (m), and the top inside the last
-     * ring is flat. Returns the y above the roof.
+     * courses step in half a block (profile letter s), a whole one (m) or two (l, a fuel tank's low
+     * cone; r the same with the eave's handrail), and the top inside the last ring is flat. Returns
+     * the y above the roof.
      */
     static int roof(Placer p, double cx, double cz, double r, String profile, int y, String mat) {
         double rr = r;
@@ -86,7 +87,7 @@ final class Round {
                 p.set(c.x(), y + k, c.z(), "rd_" + mat + "_" + s + "_" + c.suffix() + "[facing=" + c.facing() + "]");
                 rim.add(key(c.x(), c.z()));
             }
-            rr -= s == 's' ? 0.5 : 1;
+            rr -= s == 's' ? 0.5 : s == 'm' ? 1 : 2;
             if (k == profile.length() - 1) {
                 int x0 = (int) Math.floor(cx - rr), x1 = (int) Math.ceil(cx + rr);
                 int z0 = (int) Math.floor(cz - rr), z1 = (int) Math.ceil(cz + rr);

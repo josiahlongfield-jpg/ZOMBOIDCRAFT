@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/turtleneck"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/turtleneck",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/turtleneck",
+    "part": "loot"
+   }
   }
  }
 }

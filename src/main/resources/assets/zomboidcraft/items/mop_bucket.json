@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mop_bucket"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mop_bucket",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mop_bucket",
+   "part": "body"
+  }
  }
 }

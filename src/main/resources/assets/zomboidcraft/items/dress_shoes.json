@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/dress_shoes"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/dress_shoes",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/dress_shoes",
+    "part": "loot"
+   }
   }
  }
 }

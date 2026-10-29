@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/candy_box"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/candy_box",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/candy_box",
+   "part": "body"
+  }
  }
 }

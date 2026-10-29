@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/screwdriver_set"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/screwdriver_set",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/screwdriver_set",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/field_jacket/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/field_jacket/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/field_jacket",
+   "part": "body"
+  }
  }
 }

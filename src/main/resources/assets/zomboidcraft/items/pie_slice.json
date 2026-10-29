@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pie_slice"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pie_slice",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pie_slice",
+   "part": "body"
+  }
  }
 }

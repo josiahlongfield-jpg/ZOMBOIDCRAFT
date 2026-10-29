@@ -1,0 +1,56 @@
+<!doctype html><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const out = {};
+try {
+  const g = await new Promise((res, rej) => new GLTFLoader().load('spider.glb', res, undefined, rej));
+  const root = g.scene; let T = null; root.traverse(o => { if (o.isSkinnedMesh) T = o; });
+  const sk = T.skeleton; sk.pose(); root.updateMatrixWorld(true);
+  // the bind pose as it stands in the world (the bones' parents turn the pack's z-up into y-up)
+  const pi = sk.bones.findIndex(b => b.name === 'def_pelvis');
+  const Bw = sk.bones[pi].matrixWorld.clone().multiply(sk.boneInverses[pi]);   // bind space -> world
+  const toWorld = Bw.clone().multiply(T.bindMatrix);                           // mesh-local vertex -> world, at bind
+  const W = n => new THREE.Vector3().setFromMatrixPosition(sk.bones.find(b => b.name === n).matrixWorld);
+  const head = W('def_head'), pelvis = W('def_pelvis'), lA = W('def_leg_A_1L'), rA = W('def_leg_A_1R');
+  const box = new THREE.Box3(), pos = T.geometry.attributes.position, v = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i += 7) box.expandByPoint(v.fromBufferAttribute(pos, i).applyMatrix4(toWorld));
+  out.box = [box.min.toArray(), box.max.toArray()]; out.head = head.toArray(); out.pelvis = pelvis.toArray();
+  // out space: metres, +y up, +z toward the head, +x its left, feet on y = 0, pelvis over the origin
+  const up = new THREE.Vector3(0, 1, 0), fwd = head.clone().sub(pelvis); fwd.y = 0; fwd.normalize();
+  const left = up.clone().cross(fwd);
+  const s = (box.max.y - box.min.y) > 20 ? 0.01 : 1;
+  const R = new THREE.Matrix4().makeBasis(left, up, fwd).invert();
+  const A = new THREE.Matrix4().makeScale(s, s, s).multiply(R).multiply(new THREE.Matrix4().makeTranslation(-pelvis.x, -box.min.y, -pelvis.z));
+  const Ainv = A.clone().invert();
+  out.scale = s; out.leftIsL = left.dot(lA.clone().sub(rA)) > 0;
+  const meshToOut = A.clone().multiply(toWorld), outToMesh = meshToOut.clone().invert();
+  out.meshToOut = meshToOut.elements;
+  out.bones = sk.bones.map(b => ({ name: b.name, parent: sk.bones.indexOf(b.parent) }));
+  // each bone's inverse bind in out space
+  // each bone's inverse bind, from out space (bind pose) to the bone
+  out.inv = sk.bones.map((b, i) => A.clone().multiply(sk.boneInverses[i]).multiply(T.bindMatrix).multiply(outToMesh).elements);
+  const mixer = new THREE.AnimationMixer(root), FPS = 30;
+  { // check: at bind, G*K is the identity
+    const m = A.clone().multiply(sk.bones[5].matrixWorld).multiply(Ainv).multiply(new THREE.Matrix4().fromArray(out.inv[5])).elements; out.check = m.map(x => +x.toFixed(3)); }
+  out.clips = [];
+  for (const clip of g.animations) {
+    mixer.stopAllAction(); const act = mixer.clipAction(clip); act.reset().play();
+    const N = Math.max(1, Math.round(clip.duration * FPS)), arr = new Float32Array((N + 1) * sk.bones.length * 12);
+    let k = 0;
+    for (let f = 0; f <= N; f++) {
+      mixer.setTime(Math.min(clip.duration, f / FPS)); root.updateMatrixWorld(true);
+      for (const b of sk.bones) {
+        const m = A.clone().multiply(b.matrixWorld).multiply(Ainv).elements;   // column-major
+        // 3x4 row-major
+        arr[k++] = m[0]; arr[k++] = m[4]; arr[k++] = m[8]; arr[k++] = m[12];
+        arr[k++] = m[1]; arr[k++] = m[5]; arr[k++] = m[9]; arr[k++] = m[13];
+        arr[k++] = m[2]; arr[k++] = m[6]; arr[k++] = m[10]; arr[k++] = m[14];
+      }
+    }
+    const bytes = new Uint8Array(arr.buffer); let str = ''; for (let i = 0; i < bytes.length; i += 0x8000) str += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    out.clips.push({ name: clip.name, duration: clip.duration, frames: N + 1, data: btoa(str) });
+  }
+} catch (e) { out.err = String(e) + e.stack; }
+window.OUT = out; document.title = 'done';
+</script>

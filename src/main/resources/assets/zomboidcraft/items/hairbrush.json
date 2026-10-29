@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/hairbrush"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/hairbrush",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/hairbrush",
+   "part": "body"
+  }
  }
 }

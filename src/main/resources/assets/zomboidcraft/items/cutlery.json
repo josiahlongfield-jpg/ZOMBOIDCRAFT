@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cutlery"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cutlery",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cutlery",
+   "part": "body"
+  }
  }
 }

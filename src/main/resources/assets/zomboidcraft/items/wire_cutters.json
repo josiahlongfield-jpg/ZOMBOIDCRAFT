@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/wire_cutters"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/wire_cutters",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/wire_cutters",
+   "part": "body"
+  }
  }
 }

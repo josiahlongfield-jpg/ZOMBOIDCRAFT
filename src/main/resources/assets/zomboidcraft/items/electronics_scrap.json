@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/electronics_scrap"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/electronics_scrap",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/electronics_scrap",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cocoa_mix"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cocoa_mix",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cocoa_mix",
+   "part": "body"
+  }
  }
 }

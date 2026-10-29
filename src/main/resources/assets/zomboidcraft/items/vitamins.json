@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/vitamins"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/vitamins",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/vitamins",
+   "part": "body"
+  }
  }
 }

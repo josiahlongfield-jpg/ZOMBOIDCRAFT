@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/toilet_paper"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/toilet_paper",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/toilet_paper",
+   "part": "body"
+  }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/trucker_cap"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/trucker_cap",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/trucker_cap",
+    "part": "loot"
+   }
   }
  }
 }

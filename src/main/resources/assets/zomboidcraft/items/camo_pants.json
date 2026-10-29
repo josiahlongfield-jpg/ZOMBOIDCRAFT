@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/camo_pants"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/camo_pants",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/camo_pants",
+    "part": "loot"
+   }
   }
  }
 }

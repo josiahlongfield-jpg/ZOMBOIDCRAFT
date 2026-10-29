@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/medal"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/medal",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/medal",
+   "part": "body"
+  }
  }
 }

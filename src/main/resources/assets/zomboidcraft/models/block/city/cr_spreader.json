@@ -1,0 +1,210 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_grey": "zomboidcraft:block/city/cr_plate_grey",
+    "cr_plate_yellow": "zomboidcraft:block/city/cr_plate_yellow",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "tire": "zomboidcraft:block/city/tire",
+    "particle": "zomboidcraft:block/city/cr_plate_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        6,
+        0
+      ],
+      "to": [
+        11,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cr_plate_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cr_plate_yellow"
+        },
+        "west": {
+          "texture": "#cr_plate_yellow"
+        },
+        "up": {
+          "texture": "#cr_plate_yellow"
+        },
+        "down": {
+          "texture": "#cr_plate_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        7,
+        0
+      ],
+      "to": [
+        5,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cr_plate_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cr_plate_grey"
+        },
+        "west": {
+          "texture": "#cr_plate_grey"
+        },
+        "up": {
+          "texture": "#cr_plate_grey"
+        },
+        "down": {
+          "texture": "#cr_plate_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        7,
+        0
+      ],
+      "to": [
+        13,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cr_plate_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cr_plate_grey"
+        },
+        "west": {
+          "texture": "#cr_plate_grey"
+        },
+        "up": {
+          "texture": "#cr_plate_grey"
+        },
+        "down": {
+          "texture": "#cr_plate_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        2
+      ],
+      "to": [
+        10,
+        13.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        6.4,
+        13.5,
+        2
+      ],
+      "to": [
+        6.8,
+        14.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire"
+        }
+      }
+    },
+    {
+      "from": [
+        9.2,
+        13.5,
+        2
+      ],
+      "to": [
+        9.6,
+        14.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire"
+        }
+      }
+    }
+  ]
+}

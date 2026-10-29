@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/skillbook_piloting"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/skillbook_piloting",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/skillbook_piloting",
+   "part": "body"
+  }
  }
 }

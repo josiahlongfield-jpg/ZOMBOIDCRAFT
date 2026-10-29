@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "yd_pool_water": "zomboidcraft:block/city/yd_pool_water",
+    "particle": "zomboidcraft:block/city/home_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        2.4,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        2.2,
+        3.5
+      ],
+      "to": [
+        12.5,
+        2.8,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        1,
+        5
+      ],
+      "to": [
+        11,
+        2.3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water"
+        },
+        "east": {
+          "texture": "#yd_pool_water"
+        },
+        "west": {
+          "texture": "#yd_pool_water"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    }
+  ]
+}

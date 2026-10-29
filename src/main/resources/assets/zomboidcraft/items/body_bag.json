@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/body_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/body_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/body_bag",
+   "part": "body"
+  }
  }
 }

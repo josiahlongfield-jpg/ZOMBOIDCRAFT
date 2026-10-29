@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/handheld_game"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/handheld_game",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/handheld_game",
+   "part": "body"
+  }
  }
 }

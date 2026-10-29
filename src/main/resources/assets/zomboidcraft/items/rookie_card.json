@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rookie_card"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rookie_card",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rookie_card",
+   "part": "body"
+  }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/poncho"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/poncho",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/poncho",
+    "part": "loot"
+   }
   }
  }
 }

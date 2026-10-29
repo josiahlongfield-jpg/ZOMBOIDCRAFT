@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fast_food_wrapper"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fast_food_wrapper",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fast_food_wrapper",
+   "part": "body"
+  }
  }
 }

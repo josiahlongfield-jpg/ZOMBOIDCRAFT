@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/skillbook_sneaking"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/skillbook_sneaking",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/skillbook_sneaking",
+   "part": "body"
+  }
  }
 }

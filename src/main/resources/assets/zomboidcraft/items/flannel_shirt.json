@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/flannel_shirt"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/flannel_shirt",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/flannel_shirt",
+    "part": "loot"
+   }
   }
  }
 }

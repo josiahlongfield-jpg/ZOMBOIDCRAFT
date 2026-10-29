@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/paint_can"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/paint_can",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/paint_can",
+   "part": "body"
+  }
  }
 }

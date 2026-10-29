@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/entrenching_tool"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/entrenching_tool",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/entrenching_tool",
+   "part": "body"
+  }
  }
 }

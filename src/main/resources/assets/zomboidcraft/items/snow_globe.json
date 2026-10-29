@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/snow_globe"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/snow_globe",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/snow_globe",
+   "part": "body"
+  }
  }
 }

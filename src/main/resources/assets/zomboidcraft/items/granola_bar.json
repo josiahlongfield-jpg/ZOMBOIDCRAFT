@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/granola_bar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/granola_bar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/granola_bar",
+   "part": "body"
+  }
  }
 }

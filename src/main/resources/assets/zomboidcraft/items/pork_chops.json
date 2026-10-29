@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pork_chops"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pork_chops",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pork_chops",
+   "part": "body"
+  }
  }
 }

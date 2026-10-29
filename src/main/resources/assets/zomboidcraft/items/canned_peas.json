@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_peas"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_peas",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_peas",
+   "part": "body"
+  }
  }
 }

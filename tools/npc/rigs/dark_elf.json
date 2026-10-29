@@ -1,0 +1,16 @@
+{
+  "_doc": "Bones for tools/npc/rig.py, in the packed model's space (metres, feet at y=0, facing +z, +x is her left). Each bone turns about its pivot; 'seg' is the line its flesh lies along (for weights). 'only' limits which vertices may take it: xmin = |x| at least, ymax/ymin = height, rmax = distance from seg. Order matters: parents first; the Java animator (NpcPose) uses these indices.",
+  "bones": [
+    {"name": "hips",       "parent": -1, "pivot": [0, 0.95, 0],      "seg": [[0, 0.78, 0], [0, 1.05, 0]]},
+    {"name": "chest",      "parent": 0,  "pivot": [0, 1.08, 0],      "seg": [[0, 1.05, 0], [0, 1.45, 0]]},
+    {"name": "head",       "parent": 1,  "pivot": [0, 1.50, 0],      "seg": [[0, 1.53, 0.02], [0, 1.80, 0.02]], "only": {"ymin": 1.47}},
+    {"name": "l_arm",      "parent": 1,  "pivot": [0.17, 1.40, 0],   "seg": [[0.19, 1.38, 0], [0.30, 1.20, -0.05]], "only": {"xmin": 0.17, "rmax": 0.10}},
+    {"name": "l_forearm",  "parent": 3,  "pivot": [0.33, 1.21, 0],   "seg": [[0.30, 1.20, -0.05], [0.41, 1.08, -0.07], [0.47, 1.04, -0.06], [0.57, 1.01, -0.10]], "only": {"xmin": 0.17, "rmax": 0.08}},
+    {"name": "r_arm",      "parent": 1,  "pivot": [-0.17, 1.40, 0],  "seg": [[-0.19, 1.38, 0], [-0.30, 1.20, -0.05]], "only": {"xmin": 0.17, "rmax": 0.10}},
+    {"name": "r_forearm",  "parent": 5,  "pivot": [-0.33, 1.21, 0],  "seg": [[-0.30, 1.20, -0.05], [-0.41, 1.08, -0.07], [-0.47, 1.04, -0.06], [-0.57, 1.01, -0.10]], "only": {"xmin": 0.17, "rmax": 0.08}},
+    {"name": "l_thigh",    "parent": 0,  "pivot": [0.10, 0.93, 0],   "seg": [[0.10, 0.90, 0], [0.20, 0.50, 0]], "only": {"ymax": 1.0}},
+    {"name": "l_shin",     "parent": 7,  "pivot": [0.20, 0.50, 0],   "seg": [[0.20, 0.50, 0], [0.31, 0.04, 0.02]], "only": {"ymax": 0.75}},
+    {"name": "r_thigh",    "parent": 0,  "pivot": [-0.10, 0.93, 0],  "seg": [[-0.10, 0.90, 0], [-0.20, 0.50, 0]], "only": {"ymax": 1.0}},
+    {"name": "r_shin",     "parent": 9,  "pivot": [-0.20, 0.50, 0],  "seg": [[-0.20, 0.50, 0], [-0.31, 0.04, 0.02]], "only": {"ymax": 0.75}}
+  ]
+}

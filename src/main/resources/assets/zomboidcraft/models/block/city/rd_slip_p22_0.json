@@ -1,0 +1,87 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "tk_slip": "zomboidcraft:block/city/tk_slip",
+    "particle": "zomboidcraft:block/city/tk_slip"
+  },
+  "elements": [
+    {
+      "from": [
+        0.061,
+        0,
+        15.391
+      ],
+      "to": [
+        22.061,
+        16,
+        18.391
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tk_slip",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#tk_slip",
+          "uv": [
+            0,
+            0,
+            2.9999999999999982,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#tk_slip",
+          "uv": [
+            13.000000000000002,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            13.000000000000002,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            2.9999999999999982
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.061,
+          8,
+          15.391
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    }
+  ]
+}

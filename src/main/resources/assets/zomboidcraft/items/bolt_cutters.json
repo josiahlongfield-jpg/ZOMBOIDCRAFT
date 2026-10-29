@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bolt_cutters"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bolt_cutters",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bolt_cutters",
+   "part": "body"
+  }
  }
 }

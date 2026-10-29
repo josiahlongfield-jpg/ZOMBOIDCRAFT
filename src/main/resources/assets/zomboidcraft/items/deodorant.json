@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/deodorant"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/deodorant",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/deodorant",
+   "part": "body"
+  }
  }
 }

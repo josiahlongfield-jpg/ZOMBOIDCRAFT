@@ -1,0 +1,295 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hk_soil": "zomboidcraft:block/city/hk_soil",
+    "hk_stalk": "zomboidcraft:block/city/hk_stalk",
+    "hk_terracotta": "zomboidcraft:block/city/hk_terracotta",
+    "particle": "zomboidcraft:block/city/hk_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        4.5
+      ],
+      "to": [
+        11.5,
+        0.8,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_terracotta"
+        },
+        "south": {
+          "texture": "#hk_terracotta"
+        },
+        "east": {
+          "texture": "#hk_terracotta"
+        },
+        "west": {
+          "texture": "#hk_terracotta"
+        },
+        "up": {
+          "texture": "#hk_terracotta"
+        },
+        "down": {
+          "texture": "#hk_terracotta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0.8,
+        5.5
+      ],
+      "to": [
+        10.5,
+        6,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_terracotta"
+        },
+        "south": {
+          "texture": "#hk_terracotta"
+        },
+        "east": {
+          "texture": "#hk_terracotta"
+        },
+        "west": {
+          "texture": "#hk_terracotta"
+        },
+        "up": {
+          "texture": "#hk_terracotta"
+        },
+        "down": {
+          "texture": "#hk_terracotta"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        5
+      ],
+      "to": [
+        11,
+        7.2,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_terracotta"
+        },
+        "south": {
+          "texture": "#hk_terracotta"
+        },
+        "east": {
+          "texture": "#hk_terracotta"
+        },
+        "west": {
+          "texture": "#hk_terracotta"
+        },
+        "up": {
+          "texture": "#hk_terracotta"
+        },
+        "down": {
+          "texture": "#hk_terracotta"
+        }
+      }
+    },
+    {
+      "from": [
+        5.8,
+        6.4,
+        5.8
+      ],
+      "to": [
+        10.2,
+        6.9,
+        10.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_soil"
+        },
+        "south": {
+          "texture": "#hk_soil"
+        },
+        "east": {
+          "texture": "#hk_soil"
+        },
+        "west": {
+          "texture": "#hk_soil"
+        },
+        "up": {
+          "texture": "#hk_soil"
+        },
+        "down": {
+          "texture": "#hk_soil"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        6.9,
+        7
+      ],
+      "to": [
+        7.5,
+        13,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_stalk"
+        },
+        "south": {
+          "texture": "#hk_stalk"
+        },
+        "east": {
+          "texture": "#hk_stalk"
+        },
+        "west": {
+          "texture": "#hk_stalk"
+        },
+        "up": {
+          "texture": "#hk_stalk"
+        },
+        "down": {
+          "texture": "#hk_stalk"
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.25,
+          6.9,
+          7.25
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        8.6,
+        6.9,
+        8
+      ],
+      "to": [
+        9.1,
+        13,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_stalk"
+        },
+        "south": {
+          "texture": "#hk_stalk"
+        },
+        "east": {
+          "texture": "#hk_stalk"
+        },
+        "west": {
+          "texture": "#hk_stalk"
+        },
+        "up": {
+          "texture": "#hk_stalk"
+        },
+        "down": {
+          "texture": "#hk_stalk"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.85,
+          6.9,
+          8.25
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        8,
+        6.9,
+        9
+      ],
+      "to": [
+        8.5,
+        13,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_stalk"
+        },
+        "south": {
+          "texture": "#hk_stalk"
+        },
+        "east": {
+          "texture": "#hk_stalk"
+        },
+        "west": {
+          "texture": "#hk_stalk"
+        },
+        "up": {
+          "texture": "#hk_stalk"
+        },
+        "down": {
+          "texture": "#hk_stalk"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        6.9,
+        8.6
+      ],
+      "to": [
+        7.9,
+        13,
+        9.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_stalk"
+        },
+        "south": {
+          "texture": "#hk_stalk"
+        },
+        "east": {
+          "texture": "#hk_stalk"
+        },
+        "west": {
+          "texture": "#hk_stalk"
+        },
+        "up": {
+          "texture": "#hk_stalk"
+        },
+        "down": {
+          "texture": "#hk_stalk"
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.65,
+          6.9,
+          8.85
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

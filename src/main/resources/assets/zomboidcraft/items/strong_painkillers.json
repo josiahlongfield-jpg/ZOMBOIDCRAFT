@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/strong_painkillers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/strong_painkillers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/strong_painkillers",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/decoy_duck"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/decoy_duck",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/decoy_duck",
+   "part": "body"
+  }
  }
 }

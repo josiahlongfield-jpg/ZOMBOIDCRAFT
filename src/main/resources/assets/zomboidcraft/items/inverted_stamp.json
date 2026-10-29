@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/inverted_stamp"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/inverted_stamp",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/inverted_stamp",
+   "part": "body"
+  }
  }
 }

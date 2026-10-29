@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/lucky_rabbit_foot"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/lucky_rabbit_foot",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/lucky_rabbit_foot",
+   "part": "body"
+  }
  }
 }
