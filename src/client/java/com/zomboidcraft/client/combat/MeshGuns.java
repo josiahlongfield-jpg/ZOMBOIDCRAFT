@@ -25,6 +25,7 @@ import net.minecraft.resources.Identifier;
  * The bought guns (Josiah 2026-10-29: real meshes, toon-painted, in place of the block guns). Loads a packed
  * assets/zomboidcraft/meshes/ID.zmesh (tools/meshguns/pack.py) the first time it's drawn and draws its parts in item
  * model space, so a gun's item model can swap its block body for {@link MeshGunRenderer} and keep everything else.
+ * Drawn culled (entityCutoutCull; 26.3's plain entityCutout draws both sides), which the outline shell relies on.
  */
 public final class MeshGuns {
     /** Triangles in item pixels (muzzle toward -z), uvs, each triangle's flat normal and each corner's smooth one. */
@@ -69,9 +70,9 @@ public final class MeshGuns {
         }
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
-        out.submitCustomGeometry(pose, RenderTypes.entityCutout(gun.texture()), (at, buffer) -> solid(p, at, buffer, light));
+        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> solid(p, at, buffer, light));
         if (inkOn) {
-            out.submitCustomGeometry(pose, RenderTypes.entityCutout(gun.texture()), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
+            out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
         pose.popPose();
     }
