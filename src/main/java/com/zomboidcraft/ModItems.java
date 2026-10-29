@@ -186,6 +186,18 @@ public final class ModItems {
     public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
     public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
     public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
+    public static final Item PURSE = bag("purse", com.zomboidcraft.carry.BagSpec.PURSE);
+    public static final Item BRIEFCASE = bag("briefcase", com.zomboidcraft.carry.BagSpec.BRIEFCASE);
+    public static final Item GYM_BAG = bag("gym_bag", com.zomboidcraft.carry.BagSpec.GYM_BAG);
+    public static final Item DOCTORS_BAG = bag("doctors_bag", com.zomboidcraft.carry.BagSpec.DOCTORS_BAG);
+    public static final Item PLASTIC_BAG = bag("plastic_bag", com.zomboidcraft.carry.BagSpec.PLASTIC_BAG);
+    public static final Item PAPER_BAG = bag("paper_bag", com.zomboidcraft.carry.BagSpec.PAPER_BAG);
+    public static final Item SUITCASE = bag("suitcase", com.zomboidcraft.carry.BagSpec.SUITCASE);
+    public static final Item LUNCHBOX = bag("lunchbox", com.zomboidcraft.carry.BagSpec.LUNCHBOX);
+    public static final Item COOLER = bag("cooler", com.zomboidcraft.carry.BagSpec.COOLER);
+    public static final Item MAIL_BAG = bag("mail_bag", com.zomboidcraft.carry.BagSpec.MAIL_BAG);
+    public static final Item TOOL_BAG = bag("tool_bag", com.zomboidcraft.carry.BagSpec.TOOL_BAG);
+    public static final Item AMMO_POUCH_BELT = bag("ammo_pouch_belt", com.zomboidcraft.carry.BagSpec.AMMO_POUCH_BELT);
 
     // Gun cases and an ammo can: carried in the off hand, packed when found (combat/CaseItem).
     public static final Item RIFLE_CASE = gunCase("rifle_case", CaseItem.Kind.RIFLE, com.zomboidcraft.carry.BagSpec.RIFLE_CASE);
