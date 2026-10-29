@@ -464,6 +464,23 @@ public final class CountyAtlas {
     // ------------------------------------------------------------------ drawing a tile
 
     private static final Map<String, Integer> COLOURS = new ConcurrentHashMap<>();
+    /** Our own blocks' colours from above (tools/map/map_colours.py), NO_COLOUR for props a map leaves out. */
+    private static final Map<String, Integer> OURS = ours();
+
+    private static Map<String, Integer> ours() {
+        Map<String, Integer> out = new java.util.HashMap<>();
+        try (InputStream in = CountyAtlas.class.getResourceAsStream("/assets/zomboidcraft/map_colours.txt")) {
+            if (in == null) return out;
+            for (String line : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n")) {
+                String[] f = line.trim().split(" ");
+                if (f.length < 3) continue;
+                out.put(ZomboidCraft.MOD_ID + ":" + f[0], f[2].equals("1") ? NO_COLOUR : 0xFF000000 | Integer.parseInt(f[1], 16));
+            }
+        } catch (IOException | RuntimeException e) {
+            ZomboidCraft.LOGGER.warn("Map colours unreadable", e);
+        }
+        return out;
+    }
     private static final int NO_COLOUR = 0;
 
     /** A block's colour on a map, 0 for ones a map sees through (glass, air). */
@@ -475,6 +492,8 @@ public final class CountyAtlas {
             if (name.equals("air") || name.equals("minecraft:air")) return NO_COLOUR;
             Identifier id = Identifier.tryParse(name.contains(":") ? name : ZomboidCraft.MOD_ID + ":" + name);
             if (id == null) return 0xFF7A7670;
+            Integer own = OURS.get(id.toString());
+            if (own != null) return own;
             Block found = BuiltInRegistries.BLOCK.getOptional(id).orElse(null);
             if (found == null) return 0xFF7A7670;
             MapColor map = found.defaultMapColor();
