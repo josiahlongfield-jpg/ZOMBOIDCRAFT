@@ -1133,6 +1133,8 @@ import market  # noqa: E402
 market.register(sys.modules[__name__])
 import waterfront  # noqa: E402
 waterfront.register(sys.modules[__name__])
+import tents  # noqa: E402
+tents.register(sys.modules[__name__])
 
 
 

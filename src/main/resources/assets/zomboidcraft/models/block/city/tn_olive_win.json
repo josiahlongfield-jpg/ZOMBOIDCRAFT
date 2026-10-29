@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_olive_liner": "zomboidcraft:block/city/tn_olive_liner",
+    "tn_olive_win": "zomboidcraft:block/city/tn_olive_win",
+    "particle": "zomboidcraft:block/city/tn_olive_win"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.3
+      ],
+      "to": [
+        16,
+        16,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_win"
+        },
+        "south": {
+          "texture": "#tn_olive_liner"
+        },
+        "east": {
+          "texture": "#tn_olive_win",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_olive_win",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_olive_win",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tn_olive_win",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

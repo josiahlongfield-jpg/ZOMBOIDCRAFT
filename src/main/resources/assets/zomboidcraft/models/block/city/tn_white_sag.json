@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_white_fold": "zomboidcraft:block/city/tn_white_fold",
+    "tn_white_liner": "zomboidcraft:block/city/tn_white_liner",
+    "particle": "zomboidcraft:block/city/tn_white_fold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.65,
+        -3.3
+      ],
+      "to": [
+        16,
+        8.35,
+        19.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_fold"
+        },
+        "south": {
+          "texture": "#tn_white_liner"
+        },
+        "east": {
+          "texture": "#tn_white_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "west": {
+          "texture": "#tn_white_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "up": {
+          "texture": "#tn_white_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_white_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

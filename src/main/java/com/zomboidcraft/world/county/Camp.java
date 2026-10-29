@@ -266,129 +266,28 @@ final class Camp {
     // ------------------------------------------------------------------ canvas
 
     /**
-     * A GP tent 6 wide (x) and len deep from (x, z): canvas walls 2 high, a pitched roof, the
-     * door flap open at the front, cots down both sides. Fallen in, it's a heap of canvas.
+     * A GP tent 6 wide (x) and len deep from (x, z), its door at the front ({@link Tents}): olive
+     * for green canvas with soldiers' cots, white an aid tent, the rest a relief shelter; the
+     * stores without cots. Fallen in, it's a heap of canvas.
      */
     void tent(int x, int z, int len, String canvas, boolean cots) {
-        if (chance() < 0.15 + hit * 0.35) {
-            // blown down or pulled down: canvas over whatever was inside
-            for (int i = 0; i < 6; i++) {
-                for (int k = 0; k < len; k++) {
-                    if (chance() < 0.85) {
-                        p.set(x + i, 1, z + k, chance() < 0.2 ? "debris_chunk" : canvas);
-                    }
-                }
-            }
-            p.set(x + 2 + rng.nextInt(2), 2, z + rng.nextInt(len), canvas);
-            return;
-        }
-        for (int k = 0; k < len; k++) {
-            boolean end = k == 0 || k == len - 1;
-            for (int i = 0; i < 6; i++) {
-                p.set(x + i, 0, z + k, chance() < 0.7 ? "minecraft:spruce_planks" : "minecraft:coarse_dirt");
-                boolean side = i == 0 || i == 5;
-                if (side) {
-                    p.set(x + i, 1, z + k, canvas);
-                    p.set(x + i, 2, z + k, canvas);
-                } else if (end && !(k == 0 && (i == 2 || i == 3))) {
-                    for (int y = 1; y <= (i == 1 || i == 4 ? 3 : 4); y++) {
-                        p.set(x + i, y, z + k, canvas);
-                    }
-                } else {
-                    p.set(x + i, 1, z + k, "air");
-                    p.set(x + i, 2, z + k, "air");
-                }
-            }
-            p.set(x, 3, z + k, canvas);
-            p.set(x + 5, 3, z + k, canvas);
-            p.set(x + 1, 4, z + k, canvas);
-            p.set(x + 4, 4, z + k, canvas);
-            p.set(x + 2, 5, z + k, canvas);
-            p.set(x + 3, 5, z + k, canvas);
-            if (!end) {
-                p.set(x + 1, 3, z + k, "air");
-                p.set(x + 4, 3, z + k, "air");
-                p.set(x + 2, 3, z + k, "air");
-                p.set(x + 3, 3, z + k, "air");
-                p.set(x + 2, 4, z + k, "air");
-                p.set(x + 3, 4, z + k, "air");
-            }
-        }
-        // guy ropes out to pegs
-        for (int k = 1; k < len - 1; k += 3) {
-            p.setIfAir(x - 1, 1, z + k, "minecraft:tripwire");
-            p.setIfAir(x + 6, 1, z + k, "minecraft:tripwire");
-        }
-        if (cots) {
-            for (int k = 2; k + 1 < len - 1; k += 3) {
-                for (int i : new int[] {1, 4}) {
-                    if (chance() < 0.8) {
-                        p.set(x + i, 1, z + k, "minecraft:green_bed[part=head,facing=north]");
-                        p.set(x + i, 1, z + k + 1, "minecraft:green_bed[part=foot,facing=north]");
-                    }
-                }
-            }
-            p.set(x + 2, 1, z + len - 2, any("crate", "minecraft:barrel[facing=up,loot=storage]", "cardboard_box"));
-        }
-        if (chance() < 0.3 + hit * 0.4) {
-            p.setIfAir(x + 2, 1, z + 1 + rng.nextInt(Math.max(1, len - 2)), chance() < 0.5 ? "blood_splat" : "trash_bag[facing=north]");
-        }
+        Tents t = new Tents(p, rng);
+        t.hit = hit;
+        String c = canvas.contains("green") ? "olive" : canvas.contains("white") ? "white" : "tan";
+        String use = !cots ? "supply" : c.equals("olive") ? "gp" : c.equals("white") ? "triage" : "shelter";
+        t.tent(x, z, 6, len, c, use, 0.15 + hit * 0.35);
     }
 
     /**
-     * The field hospital: a long white tent bw wide (x) and len deep, walls 3 high, a pitched
-     * roof with a red cross on it and on the front, rows of beds and the screens between them.
+     * The field hospital: a long white frame tent bw wide (x; 6, 10 or 18) and len deep, doors at
+     * both ends of a long one, red crosses on its walls, beds between screens ({@link Tents}).
      */
     void hospital(int x, int z, int bw, int len) {
-        String c = "minecraft:white_wool", c2 = "minecraft:light_gray_wool";
-        int mid = bw / 2;
-        for (int k = 0; k < len; k++) {
-            boolean end = k == 0 || k == len - 1;
-            for (int i = 0; i < bw; i++) {
-                p.set(x + i, 0, z + k, "floor_lino");
-                boolean side = i == 0 || i == bw - 1;
-                int rise = Math.min(i, bw - 1 - i);
-                int top = 3 + rise / 2;
-                for (int y = 1; y <= top; y++) {
-                    boolean wall = side || end && !(k == 0 && Math.abs(i - mid) <= 1 && y <= 3);
-                    if (wall || y == top) {
-                        p.set(x + i, y, z + k, chance() < 0.8 ? c : c2);
-                    } else {
-                        p.set(x + i, y, z + k, "air");
-                    }
-                }
-            }
-        }
-        // the red cross on the front and on the roof
-        int fy = 3 + mid / 2 - 1;
-        for (int d = -1; d <= 1; d++) {
-            p.set(x + mid + d, fy, z - 1 + 1, "minecraft:red_wool");
-            p.set(x + mid, fy + d, z, "minecraft:red_wool");
-        }
-        int ry = 3 + mid / 2, rz = z + len / 2;
-        for (int d = -2; d <= 2; d++) {
-            p.set(x + mid + d, ry, rz, "minecraft:red_wool");
-            p.set(x + mid, ry, rz + d, "minecraft:red_wool");
-        }
-        // beds down both walls, screens between, a crash cart, the mess
-        for (int k = 2; k < len - 2; k += 3) {
-            for (int side = 0; side < 2; side++) {
-                int bx = side == 0 ? x + 1 : x + bw - 2;
-                if (chance() < 0.85) {
-                    p.set(bx, 1, z + k, "minecraft:white_bed[part=head,facing=" + (side == 0 ? "west" : "east") + "]");
-                    p.set(side == 0 ? bx + 1 : bx - 1, 1, z + k, "minecraft:white_bed[part=foot,facing=" + (side == 0 ? "west" : "east") + "]");
-                }
-                if (chance() < 0.5) {
-                    p.set(bx, 1, z + k + 1, "minecraft:white_stained_glass_pane");
-                }
-                if (chance() < 0.25 + hit * 0.4) {
-                    p.setIfAir(side == 0 ? bx + 2 : bx - 2, 1, z + k, "blood_splat");
-                }
-            }
-        }
-        for (int k = 3; k < len - 3; k += 6) {
-            p.setIfAir(x + mid, 1, z + k, any("crate", "minecraft:barrel[facing=up,loot=storage]", "cardboard_box", "trash_bag[facing=east]"));
-        }
+        Tents t = new Tents(p, rng);
+        t.hit = hit;
+        t.lit = 0.25;
+        t.backDoor = len >= 12;
+        t.tent(x, z, bw, len, "white", "ward", 0.05 + hit * 0.15);
     }
 
     // ------------------------------------------------------------------ buildings

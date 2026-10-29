@@ -367,7 +367,7 @@ final class CityCivic {
         Camp camp = new Camp(q, rng, hit);
         int len = Math.min(14, ld - 2);
         int x = 1;
-        camp.hospital(x, 1, 9, len);
+        camp.hospital(x, 1, 10, len);
         x += 11;
         String[] canvas = {"minecraft:white_wool", "minecraft:white_wool", "minecraft:light_gray_wool", "minecraft:light_blue_wool"};
         while (x + 6 <= lw - 10) {

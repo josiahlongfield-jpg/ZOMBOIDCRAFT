@@ -2622,58 +2622,12 @@ final class Stadium {
      * length, its door and its word on the north end; collapsed, its canvas lies where it fell.
      */
     private void tent(int lx, int lz, int len, String label, boolean collapsed) {
+        Tents t = new Tents(p.shifted(cx, 0, cz), rng);
+        t.hit = 0.6;
         if (collapsed) {
-            for (int x = 0; x < 6; x++) {
-                for (int z = 0; z < len; z++) {
-                    if (chance() < 0.6) {
-                        fset(lx + x, 1, lz + z, (chance() < 0.5 ? "st_tent_roof_lo" : "st_tent_roof_hi") + "[facing=" + DIRS[rng.nextInt(4)] + "]");
-                    } else if (chance() < 0.15) {
-                        fset(lx + x, 1, lz + z, "sc_cot_foot[facing=" + DIRS[rng.nextInt(4)] + "]");
-                    }
-                }
-            }
-            return;
-        }
-        for (int z = 0; z < len; z++) {
-            for (int y = 1; y <= 2; y++) {
-                fset(lx, y, lz + z, "st_tent_wall[facing=west]");
-                fset(lx + 5, y, lz + z, "st_tent_wall[facing=east]");
-            }
-            fset(lx, 3, lz + z, "st_tent_roof_lo[facing=west]");
-            fset(lx + 1, 3, lz + z, "st_tent_roof_hi[facing=west]");
-            fset(lx + 2, 4, lz + z, "st_tent_roof_lo[facing=west]");
-            fset(lx + 5, 3, lz + z, "st_tent_roof_lo[facing=east]");
-            fset(lx + 4, 3, lz + z, "st_tent_roof_hi[facing=east]");
-            fset(lx + 3, 4, lz + z, "st_tent_roof_lo[facing=east]");
-        }
-        for (int end = 0; end < 2; end++) {
-            int z = end == 0 ? lz : lz + len - 1;
-            String f = end == 0 ? "north" : "south";
-            for (int x = 1; x <= 4; x++) {
-                boolean door = end == 0 && (x == 2 || x == 3);
-                for (int y = 1; y <= 2; y++) {
-                    fset(lx + x, y, z, door ? "air" : "st_tent_wall[facing=" + f + "]");
-                }
-                if (door) {
-                    fset(lx + x, 2, z, "st_tent_flap[facing=" + f + "]");
-                }
-            }
-            // the word on the gable: tile 0 at the reader's left
-            fset(lx + (end == 0 ? 3 : 2), 3, z, "st_tent_" + label + "_0[facing=" + f + "]");
-            fset(lx + (end == 0 ? 2 : 3), 3, z, "st_tent_" + label + "_1[facing=" + f + "]");
-        }
-        for (int z = lz + 2; z < lz + len - 2; z += 2) {
-            for (int x : new int[] {lx + 1, lx + 4}) {
-                if (chance() < 0.85) {
-                    boolean triage = label.equals("triage");
-                    fset(x, 1, z, (triage ? "st_stretcher" : chance() < 0.5 ? "sc_cot_head_b" : "sc_cot_head") + "[facing=north]");
-                    if (!triage) {
-                        fset(x, 1, z + 1, "sc_cot_foot[facing=north]");
-                    } else if (chance() < 0.5) {
-                        fset(x, 1, z + 1, "bunk_iv_stand");
-                    }
-                }
-            }
+            t.fallen(lx, lz, 6, len, Tents.canvasFor(label), label);
+        } else {
+            t.pitch(lx, lz, 6, len, Tents.canvasFor(label), label);
         }
     }
 

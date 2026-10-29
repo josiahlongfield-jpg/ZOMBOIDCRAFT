@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_tan_fold": "zomboidcraft:block/city/tn_tan_fold",
+    "tn_tan_liner": "zomboidcraft:block/city/tn_tan_liner",
+    "particle": "zomboidcraft:block/city/tn_tan_fold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.65,
+        -3.3
+      ],
+      "to": [
+        16,
+        8.35,
+        19.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_tan_fold"
+        },
+        "south": {
+          "texture": "#tn_tan_liner"
+        },
+        "east": {
+          "texture": "#tn_tan_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "west": {
+          "texture": "#tn_tan_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "up": {
+          "texture": "#tn_tan_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_tan_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

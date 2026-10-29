@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_tan_liner": "zomboidcraft:block/city/tn_tan_liner",
+    "tn_tan_wall": "zomboidcraft:block/city/tn_tan_wall",
+    "particle": "zomboidcraft:block/city/tn_tan_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.3
+      ],
+      "to": [
+        16,
+        16,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_tan_wall"
+        },
+        "south": {
+          "texture": "#tn_tan_liner"
+        },
+        "east": {
+          "texture": "#tn_tan_wall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_tan_wall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_tan_wall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tn_tan_wall",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
