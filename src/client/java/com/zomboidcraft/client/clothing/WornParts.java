@@ -38,7 +38,27 @@ final class WornParts {
             Map.entry("balaclava", List.of("head")),
             Map.entry("surgical_mask_worn", List.of("head")),
             Map.entry("cranial_helmet", List.of("head")),
-            Map.entry("pilot_helmet", List.of("head")));
+            Map.entry("pilot_helmet", List.of("head")),
+            Map.entry("band_tshirt", List.of("body", "left_arm", "right_arm")),
+            Map.entry("tank_top", List.of("body")),
+            Map.entry("dress_shirt", List.of("body", "left_arm", "right_arm")),
+            Map.entry("polo_shirt", List.of("body", "left_arm", "right_arm")),
+            Map.entry("hawaiian_shirt", List.of("body", "left_arm", "right_arm")),
+            Map.entry("sweater", List.of("body", "left_arm", "right_arm")),
+            Map.entry("sweatshirt", List.of("body", "left_arm", "right_arm")),
+            Map.entry("turtleneck", List.of("body", "left_arm", "right_arm")),
+            Map.entry("scrubs_top", List.of("body", "left_arm", "right_arm")),
+            Map.entry("dress", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("wedding_dress", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("leather_jacket", List.of("body", "left_arm", "right_arm")),
+            Map.entry("bomber_jacket", List.of("body", "left_arm", "right_arm")),
+            Map.entry("varsity_jacket", List.of("body", "left_arm", "right_arm")),
+            Map.entry("windbreaker", List.of("body", "left_arm", "right_arm")),
+            Map.entry("raincoat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("trench_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("suit_jacket", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("lab_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("hi_vis_vest", List.of("body")));
 
     private WornParts() {
     }
