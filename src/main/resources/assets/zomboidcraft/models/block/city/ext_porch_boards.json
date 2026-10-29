@@ -1,9 +1,9 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "ext_fascia": "zomboidcraft:block/city/ext_fascia",
     "ext_porch_boards": "zomboidcraft:block/city/ext_porch_boards",
-    "particle": "zomboidcraft:block/city/ext_fascia"
+    "hk_porch_skirt": "zomboidcraft:block/city/hk_porch_skirt",
+    "particle": "zomboidcraft:block/city/hk_porch_skirt"
   },
   "elements": [
     {
@@ -19,19 +19,19 @@
       ],
       "faces": {
         "north": {
-          "texture": "#ext_fascia",
+          "texture": "#hk_porch_skirt",
           "cullface": "north"
         },
         "south": {
-          "texture": "#ext_fascia",
+          "texture": "#hk_porch_skirt",
           "cullface": "south"
         },
         "east": {
-          "texture": "#ext_fascia",
+          "texture": "#hk_porch_skirt",
           "cullface": "east"
         },
         "west": {
-          "texture": "#ext_fascia",
+          "texture": "#hk_porch_skirt",
           "cullface": "west"
         },
         "up": {

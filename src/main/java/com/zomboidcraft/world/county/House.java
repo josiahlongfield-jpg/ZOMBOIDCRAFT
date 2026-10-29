@@ -41,7 +41,7 @@ public final class House {
     private static final String[] TIN = {"tin_galv", "tin_galv", "tin_red", "tin_green"};
     private static final String[] SHUTTERS = {"black", "black", "green", "maroon", "blue"};
     private static final String[] DOORS = {"red", "green", "navy", "white", "black", "oak"};
-    private static final String[] FLOORS = {"minecraft:oak_planks", "minecraft:spruce_planks", "minecraft:dark_oak_planks",
+    private static final String[] FLOORS = {"home_floor_oak", "home_floor_oak", "home_floor_parquet",
             "floor_boards"};
     private static final String[] SIDES = {"north", "east", "south", "west"};
     private static final int[][] STEP = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
@@ -127,7 +127,7 @@ public final class House {
         String wall;
         double r = rng.nextDouble();
         if (style == Style.CABIN) {
-            wall = rng.nextBoolean() ? "minecraft:spruce_log" : "minecraft:dark_oak_log";
+            wall = "hk_cabin_log";
         } else if (style == Style.TRAILER) {
             wall = r < 0.5 ? "siding_white" : r < 0.75 ? "siding_grey" : "siding_yellow";
         } else if (style == Style.MANSION) {
@@ -139,7 +139,7 @@ public final class House {
         } else {
             wall = PLASTER[rng.nextInt(PLASTER.length)];
         }
-        String trim = rng.nextDouble() < 0.7 ? "minecraft:pale_oak_planks" : "minecraft:dark_oak_planks";
+        String trim = rng.nextDouble() < 0.7 ? "front_trim_white" : "front_trim_brown";
         String roof = switch (style) {
             case FARMHOUSE -> TIN[rng.nextInt(TIN.length)];
             case TRAILER -> "tin_galv";
@@ -148,7 +148,7 @@ public final class House {
             default -> SHINGLES[rng.nextInt(SHINGLES.length)];
         };
         String floor = FLOORS[rng.nextInt(FLOORS.length)];
-        String foundation = wall.startsWith("brick") ? "concrete_dark" : rng.nextBoolean() ? "minecraft:stone_bricks" : "concrete_panel";
+        String foundation = wall.startsWith("brick") ? "concrete_dark" : rng.nextBoolean() ? "stone_trim" : "concrete_panel";
         String frame = style == Style.TRAILER ? "alu" : style == Style.CABIN || rng.nextDouble() < 0.22 ? "brown" : "white";
         double shutters = switch (style) {
             case COLONIAL -> 0.9;
@@ -176,10 +176,10 @@ public final class House {
     /** The wall block at a spot, with weathered variants scattered over it. */
     private String wall(int x, int y, int z) {
         String base = pal.wall;
-        if (base.startsWith("minecraft:")) {
-            return base.endsWith("_log") ? base + "[axis=" + (z == z0 || z == z1 ? "x" : "z") + "]" : base;
-        }
         double r = rng.nextDouble();
+        if (base.endsWith("_log")) {
+            return base + (cond == Condition.BURNT && r < 0.45 ? "_soot" : "") + "[axis=" + (z == z0 || z == z1 ? "x" : "z") + "]";
+        }
         if (cond == Condition.BURNT && r < 0.45) {
             return base + "_soot";
         }
@@ -283,7 +283,7 @@ public final class House {
                         continue;
                     }
                     boolean corner = (x == a0 || x == a1) && (z == b0 || z == b1);
-                    p.set(x, y, z, corner && !pal.wall.endsWith("_log") ? pal.trim : wall(x, y, z));
+                    p.set(x, y, z, corner ? (pal.wall.endsWith("_log") ? "hk_cabin_corner" : pal.trim) : wall(x, y, z));
                 }
             }
         }
@@ -699,7 +699,7 @@ public final class House {
         }
         if (span % 2 == 1) {
             int v = rv0 - 1 + half;
-            String beam = "minecraft:stripped_spruce_log[axis=" + (alongZ ? "z" : "x") + "]";
+            String beam = "hk_ridge_beam[axis=" + (alongZ ? "z" : "x") + "]";
             for (int u = ru0 - 1; u <= ru1 + 1; u++) {
                 if (cond == Condition.BURNT && within(holes, 0, u, half - 1)) {
                     continue;
@@ -825,7 +825,7 @@ public final class House {
             p.setIfAir(doorX + 2, 1, z0 - 1, "ext_cooler" + face(SIDES[rng.nextInt(4)]));
         }
         if (rng.nextDouble() < 0.5) {
-            p.setIfAir(right ? a0 + 1 : a1 - 1, 1, z0 - 1, "minecraft:flower_pot");
+            p.setIfAir(right ? a0 + 1 : a1 - 1, 1, z0 - 1, "hk_pot");
         }
     }
 
@@ -915,7 +915,7 @@ public final class House {
     private String masonry(int y, int top, boolean stone, String brick) {
         double r = rng.nextDouble();
         if (stone) {
-            return y <= 2 && r < 0.5 || r < 0.25 ? "minecraft:mossy_cobblestone" : "minecraft:cobblestone";
+            return y <= 2 && r < 0.5 || r < 0.25 ? "fm_fieldstone_moss" : "fm_fieldstone";
         }
         if (y >= top - 1 && r < 0.5 || cond == Condition.BURNT && r < 0.4) {
             return brick + "_soot";
