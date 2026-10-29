@@ -3,7 +3,10 @@ handle, slide and magazine becomes the "zomboidcraft:mesh" special model (MeshGu
 base model, so its display transforms, the reload pieces and the attachments all stay where they were.
 
 skins.json maps our gun to the packed mesh: {"shotgun": "pbr_shotgun"}, or {"assault_rifle": {"mesh": ...,
-"keep": ["irons_up"]}} to keep some block models (a mesh with no iron sights of its own keeps ours). kit.py applies it every time it writes a
+"keep": ["irons_up"]}} to keep some block models (a mesh with no iron sights of its own keeps ours), "parts":
+{"bolt": "pbr_crossbow_bolt"} to draw one of the gun's pieces from a mesh of its own, and "models":
+{"part/crossbow_bolt": "pbr_bolt"} to swap any block model (under item/weapon/) the item files name, e.g. ammo.
+A melee weapon's one model (and its _worn twin) becomes the whole mesh. kit.py applies it every time it writes a
 gun's item definitions, so a weapons.py regen keeps it; run this file to apply it without regenerating.
 """
 import json, os, re
@@ -40,38 +43,51 @@ def skins():
     return json.load(open(SKINS)) if os.path.exists(SKINS) else {}
 
 
-def swap(node, gun, mesh, keep=()):
+def special(base, mesh, part='body'):
+    return {'type': 'minecraft:special', 'base': base, 'model': {'type': 'zomboidcraft:mesh', 'id': mesh, 'part': part}}
+
+
+def swap(node, gun, mesh, keep=(), parts={}, models={}):
     if isinstance(node, list):
-        return [swap(n, gun, mesh, keep) for n in node]
+        return [swap(n, gun, mesh, keep, parts, models) for n in node]
     if not isinstance(node, dict):
         return node
     if node.get('type') == 'minecraft:model':
+        path = node['model'].removeprefix('zomboidcraft:item/weapon/')
+        if path in models:
+            return special(node['model'], models[path])
+        if mesh and re.fullmatch(rf'zomboidcraft:item/weapon/{gun}(?:_worn)?', node['model']):      # a melee weapon: one model
+            return {'type': 'minecraft:special', 'base': node['model'], 'model': {'type': 'zomboidcraft:mesh', 'id': mesh}}
         m = re.fullmatch(rf'zomboidcraft:item/weapon/{gun}/(?:.+/)?([a-z_]+)', node['model'])
         if m and m.group(1) in keep:
             return node
+        if m and m.group(1) in parts:
+            return special(node['model'], parts[m.group(1)])
+        if not mesh:
+            return node
         if m and m.group(1) in PARTS:
-            model = {'type': 'zomboidcraft:mesh', 'id': mesh, 'part': PARTS[m.group(1)]}
+            out = special(node['model'], mesh, PARTS[m.group(1)])
             off = offset(gun, m.group(1))
             if off:
-                model['offset'] = off
-            return {'type': 'minecraft:special', 'base': node['model'], 'model': model}
+                out['model']['offset'] = off
+            return out
         if m and m.group(1) in DROP:
             return {'type': 'minecraft:empty'}
         return node
-    return {k: swap(v, gun, mesh, keep) for k, v in node.items()}
+    return {k: swap(v, gun, mesh, keep, parts, models) for k, v in node.items()}
 
 
 def apply(gun, items=ITEMS):
     mesh = skins().get(gun)
     if not mesh:
         return
-    keep = ()
+    keep, parts, models = (), {}, {}
     if isinstance(mesh, dict):
-        mesh, keep = mesh['mesh'], tuple(mesh.get('keep', ()))
+        mesh, keep, parts, models = mesh.get('mesh'), tuple(mesh.get('keep', ())), mesh.get('parts', {}), mesh.get('models', {})
     for name in [gun] + [f[:-5] for f in os.listdir(items) if f.startswith(gun + '_loose_') and f.endswith('.json')]:
         path = os.path.join(items, name + '.json')
         data = json.load(open(path))
-        out = swap(data, gun, mesh, keep)
+        out = swap(data, gun, mesh, keep, parts, models)
         if out != data:
             with open(path, 'w') as f:
                 f.write(json.dumps(out, indent=1) + '\n')

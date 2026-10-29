@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GunLookTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCGUN");
-    private static final String[] GUNS = System.getProperty("zc.gun", "assault_rifle,smg,pistol,magnum,shotgun,hunting_rifle").split(",");
+    private static final String[] GUNS = System.getProperty("zc.gun", "assault_rifle,smg,pistol,magnum,shotgun,hunting_rifle,crossbow,machete").split(",");
 
     @Override
     public void runTest(ClientGameTestContext ctx) {

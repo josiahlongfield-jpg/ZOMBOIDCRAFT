@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -38,8 +48,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -53,8 +68,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -70,8 +90,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -85,8 +110,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
@@ -97,8 +127,13 @@
          {
           "when": "bolt",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
           }
          },
          {
@@ -109,8 +144,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -119,8 +159,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -134,8 +179,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
@@ -146,8 +196,13 @@
          {
           "when": "bolt",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
           }
          },
          {
@@ -158,8 +213,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_in/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -175,8 +235,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -190,8 +255,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
@@ -202,8 +272,13 @@
          {
           "when": "bolt",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
           }
          },
          {
@@ -214,8 +289,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -224,8 +304,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -239,8 +324,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
@@ -251,8 +341,13 @@
          {
           "when": "bolt",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
           }
          },
          {
@@ -263,8 +358,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/charge/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -279,8 +379,13 @@
     "type": "minecraft:composite",
     "models": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/crossbow/ads/body"
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/crossbow/ads/body",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "pbr_crossbow",
+       "part": "body"
+      }
      },
      {
       "type": "minecraft:select",
@@ -294,8 +399,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/ads/charging_handle"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/ads/charging_handle",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "handle"
+       }
       }
      },
      {
@@ -306,8 +416,13 @@
        {
         "when": "bolt",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/ads/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        },
        {
@@ -318,8 +433,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/ads/bolt"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/ads/bolt",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow_bolt",
+        "part": "body"
+       }
       }
      }
     ]
@@ -331,8 +451,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -346,8 +471,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "handle"
+        }
        }
       },
       {
@@ -358,8 +488,13 @@
         {
          "when": "bolt",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
          }
         },
         {
@@ -370,8 +505,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow_bolt",
+         "part": "body"
+        }
        }
       }
      ]
@@ -380,8 +520,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -395,8 +540,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "handle"
+        }
        }
       },
       {
@@ -407,8 +557,13 @@
         {
          "when": "bolt",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
          }
         },
         {
@@ -419,8 +574,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/hip/bolt",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow_bolt",
+         "part": "body"
+        }
        }
       }
      ]

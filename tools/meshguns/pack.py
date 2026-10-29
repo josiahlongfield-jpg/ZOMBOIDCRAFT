@@ -12,6 +12,8 @@ SPEC (paths may be relative to the spec file):
     textures   one base colour per object in the OBJ, in order (null leaves that object out: lens planes and such)
     forward    the source axis the muzzle points along, e.g. "+z" or "-x"
     up         the source axis that's up, e.g. "+y"
+    axes       instead of forward/up, the source axes that become our x, y and z, e.g. ["-z", "+y", "+x"] (must be a
+               turn, not a mirror): for things that aren't held like a gun, such as a blade standing up its model's y
     fit        one of our guns (models/item/weapon/<fit>/body.json): the mesh is scaled to that gun's length, its
                muzzle put on that gun's muzzle and its bore on the flash, so the hands, sights and flash still land
     unit_mm    if set, the mesh keeps its real size instead (source units in mm; the pbr pack is in cm, so 10) at
@@ -20,6 +22,9 @@ SPEC (paths may be relative to the spec file):
                with a stock: fitted to our gun from the muzzle back to its receiver)
     pieces     {name: {"z": [from, to], "y": [from, to], "x": [from, to]}}: triangles whose centre is in that box (item
                pixels after fitting; y and x optional) are cut out into their own part, e.g. the pump as "handle"
+    shift      [x, y, z] item pixels to move the fitted mesh by (a crossbow, which has no flash to put its bore on)
+    box        instead of fit, one of our plain item models (models/item/weapon/<box>.json, e.g. "machete"): the mesh is
+               scaled to that model's longest side and centred on it, for melee weapons and other things with no muzzle
     outline    outline thickness in item pixels (default 0.03; small things want less)
 
 Writes src/main/resources/assets/zomboidcraft/meshes/<id>.zmesh (the id may hold a folder, e.g. loot/coin): zlib-deflated, then XORed with the same xorshift32
@@ -66,6 +71,14 @@ def turn(forward, up):
     return src
 
 
+def axes(names):
+    """The rotation whose rows are the source axes that become x, y and z."""
+    m = np.array([axis(a) for a in names])
+    if np.linalg.det(m) < 0:
+        raise SystemExit(f"axes {names} mirror the model (its faces would turn inside out): flip one of them")
+    return m
+
+
 def model_elements(name):
     m = json.load(open(os.path.join(WEAPONS, name + '.json')))
     while 'elements' not in m:
@@ -95,6 +108,14 @@ def fit(v, gun, unit_mm=None, length=None):
     return v
 
 
+def fit_box(v, model):
+    """Scale and move the mesh onto one of our plain models: same longest side, same middle."""
+    lo, hi = model_elements(model)
+    a = int(np.argmax(hi - lo))
+    v = v * (hi[a] - lo[a]) / (v[:, a].max() - v[:, a].min())
+    return v + (lo + hi) / 2 - (v.max(0) + v.min(0)) / 2
+
+
 def smooth_normals(v, faces):
     """Each corner's normal averaged over every face sharing its position (seams split by uv still agree)."""
     key = np.round(v, 4)
@@ -122,8 +143,12 @@ def main(spec_path):
         uv[:, 1] = (k + 1 - uv[:, 1]) / len(used)            # flip v and stack this texture's band
         verts.append(np.asarray(g.vertices, float)); uvs.append(uv); faces.append(np.asarray(g.faces) + n)
         n += len(g.vertices)
-    v = np.concatenate(verts) @ turn(spec['forward'], spec['up']).T
-    v = fit(v, spec['fit'], spec.get('unit_mm'), spec.get('length'))
+    v = np.concatenate(verts) @ (axes(spec['axes']) if 'axes' in spec else turn(spec['forward'], spec['up'])).T
+    if 'box' in spec:
+        v = fit_box(v, spec['box'])
+    else:
+        v = fit(v, spec['fit'], spec.get('unit_mm'), spec.get('length'))
+    v = v + np.array(spec.get('shift', [0, 0, 0]), float)
     uv = np.concatenate(uvs); f = np.concatenate(faces)
     normals = smooth_normals(v, f)
     centre = v[f].mean(1)
@@ -162,7 +187,7 @@ def main(spec_path):
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     open(dest, 'wb').write(data)
     lo, hi = v.min(0), v.max(0)
-    print(f"{spec['id']}: fitted to {spec['fit']}, {lo.round(2)} .. {hi.round(2)} px, wrote {len(data) // 1024} KB")
+    print(f"{spec['id']}: fitted to {spec.get('fit') or spec['box']}, {lo.round(2)} .. {hi.round(2)} px, wrote {len(data) // 1024} KB")
 
 
 if __name__ == '__main__':
