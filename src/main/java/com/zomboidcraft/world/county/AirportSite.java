@@ -2,6 +2,10 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
 import com.zomboidcraft.world.city.Placer;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SplittableRandom;
 
 /**
  * One tile of Grayhaven International ({@link Airport}): everything of the airport that falls in
@@ -87,6 +91,59 @@ final class AirportSite extends Site {
         approach();
         signs();
         fence();
+        if (ax1 >= AirportTerminal.BX0 && ax0 <= AirportTerminal.BX1 && az1 >= AirportTerminal.BZ0 && az0 <= AirportTerminal.BZ1) {
+            copy(terminal());
+        }
+    }
+
+    // ------------------------------------------------------------------ the big pieces
+
+    /**
+     * The pieces too big for one tile (the terminal) are built whole, once, in the frame, then
+     * each tile copies its part: their builders draw their choices one after another, so a tile
+     * building only its own part would draw different ones from its neighbour.
+     */
+    private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
+            return size() > 2;
+        }
+    };
+
+    private Voxels terminal() {
+        String key = "terminal@" + rx + "," + rz;
+        synchronized (PIECES) {
+            Voxels v = PIECES.get(key);
+            if (v == null) {
+                v = new Voxels();
+                new AirportTerminal(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ 0x7E2A1L)).build();
+                PIECES.put(key, v);
+            }
+            return v;
+        }
+    }
+
+    /** Copies the part of a piece built in the frame that falls in this tile. */
+    private void copy(Voxels v) {
+        List<String> palette = v.palette();
+        v.forEach((x, y, z, id) -> {
+            if (x >= ax0 && x <= ax1 && z >= az0 && z <= az1) {
+                a.set(x, y, z, palette.get(id));
+            }
+        });
+        for (Voxels.Car c : v.cars) {
+            if (c.models() == null) {
+                a.car(c.x(), c.y(), c.z(), c.yaw(), c.minLength(), c.maxLength(), c.seed());
+            } else {
+                a.vehicle(c.x(), c.y(), c.z(), c.yaw(), c.models(), c.seed());
+            }
+        }
+        for (Voxels.Mark m : v.marks) {
+            if (m.x() < ax0 || m.x() > ax1 || m.z() < az0 || m.z() > az1) {
+                continue;
+            }
+            a.mark(m.what(), m.x(), m.y(), m.z());
+        }
     }
 
     // ------------------------------------------------------------------ the ground

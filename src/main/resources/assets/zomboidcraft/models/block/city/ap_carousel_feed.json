@@ -1,0 +1,168 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_belt": "zomboidcraft:block/city/ap_belt",
+    "ap_skirt": "zomboidcraft:block/city/ap_skirt",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        6,
+        0
+      ],
+      "to": [
+        13,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#ap_belt"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6,
+          16
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        0
+      ],
+      "to": [
+        3,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6,
+          16
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        13,
+        6,
+        0
+      ],
+      "to": [
+        14,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6,
+          16
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        12
+      ],
+      "to": [
+        14,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_skirt"
+        },
+        "south": {
+          "texture": "#ap_skirt",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_skirt"
+        },
+        "west": {
+          "texture": "#ap_skirt"
+        },
+        "up": {
+          "texture": "#ap_skirt"
+        },
+        "down": {
+          "texture": "#ap_skirt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

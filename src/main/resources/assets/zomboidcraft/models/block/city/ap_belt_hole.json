@@ -1,0 +1,179 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_counter_front": "zomboidcraft:block/city/ap_counter_front",
+    "ap_curtain": "zomboidcraft:block/city/ap_curtain",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/ap_counter_front"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_counter_front"
+        },
+        "south": {
+          "texture": "#ap_counter_front"
+        },
+        "east": {
+          "texture": "#ap_counter_front",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ap_counter_front",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ap_counter_front",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ap_counter_front"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        2,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_counter_front"
+        },
+        "south": {
+          "texture": "#ap_counter_front"
+        },
+        "east": {
+          "texture": "#ap_counter_front"
+        },
+        "west": {
+          "texture": "#ap_counter_front",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ap_counter_front"
+        },
+        "down": {
+          "texture": "#ap_counter_front",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_counter_front"
+        },
+        "south": {
+          "texture": "#ap_counter_front"
+        },
+        "east": {
+          "texture": "#ap_counter_front",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ap_counter_front"
+        },
+        "up": {
+          "texture": "#ap_counter_front"
+        },
+        "down": {
+          "texture": "#ap_counter_front",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0.5,
+        7.5
+      ],
+      "to": [
+        14,
+        6,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_curtain"
+        },
+        "south": {
+          "texture": "#ap_curtain"
+        },
+        "east": {
+          "texture": "#ap_curtain"
+        },
+        "west": {
+          "texture": "#ap_curtain"
+        },
+        "up": {
+          "texture": "#ap_curtain"
+        },
+        "down": {
+          "texture": "#ap_curtain"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        6
+      ],
+      "to": [
+        14,
+        0.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
