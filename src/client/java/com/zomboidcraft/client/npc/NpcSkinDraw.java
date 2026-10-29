@@ -10,8 +10,9 @@ import org.joml.Matrix4f;
 
 /**
  * Draws a skinned companion (NpcSkin) posed by NpcSkinAnimator: each mesh of the pieces she has on, at full detail up close
- * and the thinned copy further off, every vertex moved by up to four bones. Closed meshes (her body, eyes, teeth, heels) are
- * drawn one-sided; sheets (hair, lashes, underwear, bra, stockings) both sides, cut out where their texture is clear.
+ * and the thinned copy further off, every vertex moved by up to four bones. Every mesh is drawn with both sides kept (so
+ * culling the wrong side can never show her through herself); sheets (hair, lashes, underwear, bra, stockings) are cut out
+ * where their texture is clear.
  * With her heels off she stands on the floor herself.
  */
 final class NpcSkinDraw {
@@ -48,7 +49,7 @@ final class NpcSkinDraw {
             }
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
-            collector.submitCustomGeometry(poseStack, gr.bothSides ? RenderTypes.entityCutout(tex) : RenderTypes.entityCutoutCull(tex),
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex),
                     (pose, out) -> draw(gr, pos, normal, pose, out, light, overlay));
         }
         poseStack.popPose();
