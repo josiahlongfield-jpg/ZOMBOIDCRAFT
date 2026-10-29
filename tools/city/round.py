@@ -10,7 +10,8 @@ middle, every 2) put it on the circle. Names: rd_{mat}_{turn}_{depth} with turn 
 and depth 0..8.
 
 - walls: stave (concrete staves), stave_hoop (with its steel hoop), blue (glass-lined), bin
-  (corrugated grain bin), brick;
+  (corrugated grain bin), brick; wood (a water tower's timber staves, wood_hoop with its iron hoop),
+  wtw / wtb (a steel water tower's white or blue shell); soot (a smokestack's blackened lip);
 - a roof's tiers: rd_{galv,blue,tinred}_{s,m}_{turn}_{depth}, a block-high ring of four courses
   stepping in 2 px (s, steep) or 4 px (m, 45 degrees) each, filled flat behind; the top of the roof
   is rd_{galv,blue,tinred}_flat;
@@ -29,13 +30,16 @@ DEPTHS = [-8, -6, -4, -2, 0, 2, 4, 6, 8]
 INSIDE = "concrete_dark"
 WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick": "brick_red",
          "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards",
-         "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip", "lhw": "lh_white", "lhr": "lh_red"}
+         "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip", "lhw": "lh_white", "lhr": "lh_red",
+         "wood": "wt_stave", "wtw": "tank_white", "wtb": "tank_blue", "soot": "brick_dark_soot"}
 # what each wall shows inside (a stock tank and a corn crib's mesh are the same both sides)
-INNER = {"tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
+INNER = {"wood": "wt_stave", "tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
 TITLES = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo", "field": "Stone Curb",
           "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen", "oil": "Fuel Tank", "oilrust": "Fuel Tank",
-          "slip": "Grain Silo", "lhw": "Lighthouse", "lhr": "Lighthouse"}
-TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof", "lhcap": "lh_cap"}
+          "slip": "Grain Silo", "lhw": "Lighthouse", "lhr": "Lighthouse", "wood": "Water Tank",
+          "wtw": "Water Tank", "wtb": "Water Tank", "soot": "Smokestack"}
+TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof", "lhcap": "lh_cap",
+         "wood": "wt_roof", "wtw": "tank_white", "wtb": "tank_blue"}
 GALV = "ext_galv"
 
 
@@ -185,9 +189,11 @@ def blocks():
         for i, d in enumerate(DEPTHS):
             for mat, tex in WALLS.items():
                 extra = {"render": "cutout"} if mat in ("crib", "paddock") else {}
-                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock", "oil", "oilrust") else 3),
-                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib", "oil", "oilrust") else "WOOD" if mat == "paddock" else "STONE", **extra)
+                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock", "oil", "oilrust", "wtw", "wtb") else 3),
+                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib", "oil", "oilrust", "wtw", "wtb")
+                    else "WOOD" if mat in ("paddock", "wood") else "STONE", **extra)
             add(f"rd_stave_hoop_{k}_{i}", panel(t, d, WALLS["stave"], hoop=True), "Stave Silo", "STONE")
+            add(f"rd_wood_hoop_{k}_{i}", panel(t, d, WALLS["wood"], INNER.get("wood", INSIDE), hoop=True), "Water Tank", "WOOD")
             for mat in ("oil", "oilrust"):
                 add(f"rd_{mat}_hoop_{k}_{i}", panel(t, d, WALLS[mat], thick=1, girder=WALLS[mat]), "Fuel Tank", "METAL")
             for mat, tex in TIERS.items():

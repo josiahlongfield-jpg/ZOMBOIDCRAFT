@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "wt_stave": "zomboidcraft:block/city/wt_stave",
+    "particle": "zomboidcraft:block/city/wt_stave"
+  },
+  "elements": [
+    {
+      "from": [
+        -1.172,
+        0,
+        10.828
+      ],
+      "to": [
+        22.828,
+        16,
+        13.828
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#wt_stave"
+        },
+        "west": {
+          "texture": "#wt_stave"
+        },
+        "up": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            10.828,
+            16,
+            13.828
+          ]
+        },
+        "down": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            2.1720000000000006,
+            16,
+            5.172000000000001
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.828,
+          8,
+          10.828
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        -1.172,
+        7,
+        10.228
+      ],
+      "to": [
+        22.828,
+        8,
+        10.828
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            10.228,
+            16,
+            10.828
+          ]
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            5.172000000000001,
+            16,
+            5.772
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.828,
+          8,
+          10.828
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}
