@@ -581,7 +581,21 @@ def blocks():
         add(f"ext_roof_{kind}_ridge", [[0, 0, 0, 16, 4, 4, ridge], [0, 0, 4, 16, 8, 12, ridge],
                                        [0, 0, 12, 16, 4, 16, ridge], [0, 8, 3.5, 16, 9.5, 12.5, f"ext_{kind}_cap"]],
             title, snd)
-        add(f"ext_roof_{kind}_crest", steps(tread, riser) + [[0, 16, 0, 16, 17.5, 3.5, f"ext_{kind}_cap"]], title, snd)
+        # a hipped roof's outer corner: high to the north and the east, both slopes' courses meeting
+        # on the diagonal; the _eave one carries the gutter round both low sides
+        hip = []
+        for j in range(4):
+            for i in range(4):
+                h = 16 - 4 * max(j, 3 - i)
+                hip.append([4 * i, 0, 4 * j, 4 * i + 4, h, 4 * j + 4,
+                            {"up": tread, "south": riser, "west": riser, "north": "ext_soffit",
+                             "east": "ext_soffit", "down": "ext_soffit"}])
+        add(f"ext_roof_{kind}_hip", hip, title, snd)
+        lip = {"up": tread, "side": fascia, "down": "ext_soffit"}
+        add(f"ext_roof_{kind}_hip_eave", hip + [
+            [0, 3.5, 12, 16, 4.5, 15.5, lip], [0.5, 3.5, 0, 4, 4.5, 12, lip],
+            [0, 1, 14, 16, 4, 17.5, gut], [-1.5, 1, 0, 2, 4, 17.5, gut]], title, snd)
+        add(f"ext_roof_{kind}_crest",steps(tread, riser) + [[0, 16, 0, 16, 17.5, 3.5, f"ext_{kind}_cap"]], title, snd)
         porch = {"up": tread, "down": "ext_porch_ceiling", "side": fascia}
         add(f"ext_porch_roof_{kind}", [[0, 0, 0, 16, 4, 16, porch]], "Porch Roof", snd)
         add(f"ext_porch_roof_{kind}_edge", [[0, 0, 0, 16, 4, 16, porch], [0, 1, -2.5, 16, 4, 0, gut]], "Porch Roof", snd)

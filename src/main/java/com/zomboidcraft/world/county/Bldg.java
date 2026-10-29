@@ -250,11 +250,37 @@ final class Bldg {
     }
 
     /**
+     * The house kit's roof (tools/city/exterior.py) for the vanilla stairs family an older builder
+     * names, so every pitched roof is laid in the kit's courses: slate for deepslate tile, shingle for
+     * the woods, galvanised or green tin for the andesites, tuff and the coppers; null for a family
+     * of the mod's own.
+     */
+    static String kitRoof(String family) {
+        return switch (family) {
+            case "minecraft:deepslate_tile", "minecraft:deepslate_brick", "minecraft:polished_deepslate" -> "slate";
+            case "minecraft:cobbled_deepslate", "minecraft:blackstone", "minecraft:polished_blackstone" -> "charcoal";
+            case "minecraft:dark_oak", "minecraft:spruce", "minecraft:oak", "minecraft:pale_oak", "minecraft:birch",
+                 "minecraft:mud_brick" -> "brown";
+            case "minecraft:waxed_weathered_cut_copper", "minecraft:waxed_exposed_cut_copper",
+                 "minecraft:waxed_oxidized_cut_copper", "minecraft:waxed_cut_copper" -> "tin_green";
+            case "minecraft:polished_andesite", "minecraft:andesite", "minecraft:stone", "minecraft:smooth_stone" -> "tin_galv";
+            case "minecraft:polished_tuff", "minecraft:tuff", "minecraft:tuff_brick" -> "tin_red";
+            case "minecraft:brick", "minecraft:granite", "minecraft:polished_granite" -> "red";
+            default -> family.startsWith("minecraft:") ? "grey" : null;
+        };
+    }
+
+    /**
      * A gable roof over x0..x1, z0..z1 sitting on y, its ridge along x (or along z), overhanging
      * by `over`, the gable ends filled with `gableWall`. family is a vanilla stairs family
-     * ("minecraft:deepslate_tile").
+     * ("minecraft:deepslate_tile"), laid in the house kit's roof ({@link #kitRoof}).
      */
     void gable(int x0, int x1, int z0, int z1, int y, String family, boolean ridgeAlongZ, String gableWall, int over) {
+        String kind = kitRoof(family);
+        if (kind != null) {
+            roofGable(x0, x1, z0, z1, y, kind, ridgeAlongZ, gableWall, over);
+            return;
+        }
         if (!ridgeAlongZ) {
             int b0 = z0 - over, b1 = z1 + over;
             int half = (b1 - b0 + 1) / 2;
@@ -343,26 +369,37 @@ final class Bldg {
         }
     }
 
-    /** A hipped roof (four slopes) over x0..x1, z0..z1 from y, rising one block per step in. */
+    /**
+     * A hipped roof (four slopes) over x0..x1, z0..z1 from y, rising one block per step in, in the
+     * house kit's courses ({@link #kitRoof}) or the family's own stairs.
+     */
     void hip(int x0, int x1, int z0, int z1, int y, String family, int over) {
+        String kind = kitRoof(family);
         int a0 = x0 - over, a1 = x1 + over, b0 = z0 - over, b1 = z1 + over;
         for (int i = 0; a0 + i <= a1 - i && b0 + i <= b1 - i; i++) {
             int lx = a0 + i, hx = a1 - i, lz = b0 + i, hz = b1 - i;
+            String k = kind == null ? null : "ext_roof_" + kind + (i == 0 ? "_eave" : "");
             if (lx == hx || lz == hz) {
                 for (int x = lx; x <= hx; x++) {
                     for (int z = lz; z <= hz; z++) {
-                        tile(x, y + i, z, family + "_slab[type=bottom]");
+                        tile(x, y + i, z, kind == null ? family + "_slab[type=bottom]"
+                                : "ext_roof_" + kind + "_ridge[facing=" + (lx == hx ? "east" : "north") + "]");
                     }
                 }
                 break;
             }
+            // the outer corners take the kit's hip piece, where two slopes meet on the hip line
+            String c = k == null ? null : "ext_roof_" + kind + (i == 0 ? "_hip_eave" : "_hip");
             for (int x = lx; x <= hx; x++) {
-                tile(x, y + i, lz, stairs(family, "south", false));
-                tile(x, y + i, hz, stairs(family, "north", false));
+                boolean end = c != null && (x == lx || x == hx);
+                tile(x, y + i, lz, k == null ? stairs(family, "south", false)
+                        : end ? c + (x == lx ? "[facing=east]" : "[facing=south]") : k + "[facing=south]");
+                tile(x, y + i, hz, k == null ? stairs(family, "north", false)
+                        : end ? c + (x == lx ? "[facing=north]" : "[facing=west]") : k + "[facing=north]");
             }
             for (int z = lz + 1; z < hz; z++) {
-                tile(lx, y + i, z, stairs(family, "east", false));
-                tile(hx, y + i, z, stairs(family, "west", false));
+                tile(lx, y + i, z, k == null ? stairs(family, "east", false) : k + "[facing=east]");
+                tile(hx, y + i, z, k == null ? stairs(family, "west", false) : k + "[facing=west]");
             }
         }
     }
