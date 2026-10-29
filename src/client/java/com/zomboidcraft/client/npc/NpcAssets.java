@@ -181,7 +181,7 @@ public final class NpcAssets {
     }
 
     /** Undoes pack.py's xorshift32 scramble (seeded from the model id). */
-    private static void unscramble(byte[] data, String model) {
+    static void unscramble(byte[] data, String model) {
         int x = 0x3C6EF372 ^ model.hashCode();
         if (x == 0) {
             x = 1;
