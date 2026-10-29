@@ -1,0 +1,207 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_brass": "zomboidcraft:block/city/fit_brass",
+    "of_teak": "zomboidcraft:block/city/of_teak",
+    "of_velvet_green": "zomboidcraft:block/city/of_velvet_green",
+    "particle": "zomboidcraft:block/city/of_teak"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        4.5
+      ],
+      "to": [
+        5.5,
+        10,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        0,
+        4.5
+      ],
+      "to": [
+        11.5,
+        10,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        0,
+        10.5
+      ],
+      "to": [
+        5.5,
+        10,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        0,
+        10.5
+      ],
+      "to": [
+        11.5,
+        10,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        4,
+        4.5
+      ],
+      "to": [
+        11.5,
+        4.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_brass"
+        },
+        "south": {
+          "texture": "#fit_brass"
+        },
+        "east": {
+          "texture": "#fit_brass"
+        },
+        "west": {
+          "texture": "#fit_brass"
+        },
+        "up": {
+          "texture": "#fit_brass"
+        },
+        "down": {
+          "texture": "#fit_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        10,
+        3.5
+      ],
+      "to": [
+        12.5,
+        13,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_velvet_green"
+        },
+        "south": {
+          "texture": "#of_velvet_green"
+        },
+        "east": {
+          "texture": "#of_velvet_green"
+        },
+        "west": {
+          "texture": "#of_velvet_green"
+        },
+        "up": {
+          "texture": "#of_velvet_green"
+        },
+        "down": {
+          "texture": "#of_teak"
+        }
+      }
+    }
+  ]
+}

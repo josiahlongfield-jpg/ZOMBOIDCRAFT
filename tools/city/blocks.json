@@ -377998,7 +377998,7 @@
      11,
      10,
      0,
-     "window_lit"
+     "of_neon_blue"
     ]
    ],
    "title": "Pool Light",
@@ -391948,6 +391948,742 @@
    },
    "title": "Copper Dome Rib",
    "sound": "METAL"
+  },
+  "of_reception_marble": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     1.5,
+     2,
+     16,
+     14,
+     16,
+     "home_white"
+    ],
+    [
+     0,
+     1.5,
+     1.2,
+     16,
+     14,
+     2,
+     {
+      "north": "bk_marble_white",
+      "side": "bk_marble_white",
+      "up": "bk_marble_white",
+      "down": "bk_marble_white"
+     }
+    ],
+    [
+     1,
+     0,
+     2.5,
+     15,
+     1.5,
+     15,
+     "window_lit"
+    ],
+    [
+     0,
+     14,
+     0.5,
+     16,
+     15.5,
+     16,
+     "of_teak"
+    ],
+    [
+     0,
+     9,
+     13,
+     16,
+     10,
+     16,
+     "of_teak"
+    ]
+   ],
+   "title": "Reception Desk",
+   "sound": "STONE",
+   "rotate": "facing",
+   "light": 5
+  },
+  "of_slat_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     "of_teak"
+    ],
+    [
+     1,
+     0,
+     12.5,
+     3,
+     16,
+     14,
+     "of_slats"
+    ],
+    [
+     4,
+     0,
+     12.5,
+     6,
+     16,
+     14,
+     "of_slats"
+    ],
+    [
+     7,
+     0,
+     12.5,
+     9,
+     16,
+     14,
+     "of_slats"
+    ],
+    [
+     10,
+     0,
+     12.5,
+     12,
+     16,
+     14,
+     "of_slats"
+    ],
+    [
+     13,
+     0,
+     12.5,
+     15,
+     16,
+     14,
+     "of_slats"
+    ]
+   ],
+   "title": "Slatted Wall",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "of_firm_sign": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     4,
+     14.5,
+     15,
+     12,
+     16,
+     {
+      "north": "of_firm_sign",
+      "side": "of_iron"
+     }
+    ]
+   ],
+   "title": "Firm Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "of_vitals_stand": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     7.4,
+     12,
+     0.6,
+     8.6,
+     "home_chrome"
+    ],
+    [
+     7.4,
+     0,
+     4,
+     8.6,
+     0.6,
+     12,
+     "home_chrome"
+    ],
+    [
+     7.4,
+     0.6,
+     7.4,
+     8.6,
+     11,
+     8.6,
+     "home_chrome"
+    ],
+    [
+     5,
+     10,
+     6,
+     11,
+     15,
+     10,
+     {
+      "north": "of_screen",
+      "side": "home_plastic_beige",
+      "up": "home_plastic_beige",
+      "down": "home_plastic_beige"
+     }
+    ],
+    [
+     5.5,
+     6,
+     8.6,
+     10.5,
+     8,
+     11,
+     "home_steel"
+    ]
+   ],
+   "title": "Vitals Monitor",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "of_elliptical": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     1,
+     10,
+     1.5,
+     15,
+     "bunk_grey"
+    ],
+    [
+     4,
+     1.5,
+     9,
+     6.5,
+     2.5,
+     13,
+     "home_plastic_black"
+    ],
+    [
+     9.5,
+     1.5,
+     9,
+     12,
+     2.5,
+     13,
+     "home_plastic_black"
+    ],
+    [
+     5,
+     0,
+     1,
+     11,
+     6,
+     5,
+     {
+      "side": "home_plastic_black",
+      "north": "of_plate",
+      "up": "bunk_grey",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     3.5,
+     2.5,
+     3,
+     4.5,
+     14,
+     4,
+     "bunk_grey"
+    ],
+    [
+     11.5,
+     2.5,
+     3,
+     12.5,
+     14,
+     4,
+     "bunk_grey"
+    ],
+    [
+     6,
+     9,
+     2,
+     10,
+     13,
+     4,
+     {
+      "north": "of_console",
+      "side": "home_plastic_black"
+     }
+    ]
+   ],
+   "title": "Elliptical Trainer",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "of_drink_fountain": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     7,
+     9,
+     13,
+     10,
+     16,
+     "home_steel"
+    ],
+    [
+     7,
+     2,
+     14,
+     9,
+     7,
+     16,
+     "home_steel"
+    ],
+    [
+     7.5,
+     10,
+     11,
+     8.5,
+     11.5,
+     12,
+     "home_chrome"
+    ]
+   ],
+   "title": "Drinking Fountain",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "of_stool_velvet": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     4.5,
+     5.5,
+     10,
+     5.5,
+     "of_teak"
+    ],
+    [
+     10.5,
+     0,
+     4.5,
+     11.5,
+     10,
+     5.5,
+     "of_teak"
+    ],
+    [
+     4.5,
+     0,
+     10.5,
+     5.5,
+     10,
+     11.5,
+     "of_teak"
+    ],
+    [
+     10.5,
+     0,
+     10.5,
+     11.5,
+     10,
+     11.5,
+     "of_teak"
+    ],
+    [
+     4.5,
+     4,
+     4.5,
+     11.5,
+     4.6,
+     11.5,
+     "fit_brass"
+    ],
+    [
+     3.5,
+     10,
+     3.5,
+     12.5,
+     13,
+     12.5,
+     {
+      "up": "of_velvet_green",
+      "side": "of_velvet_green",
+      "down": "of_teak"
+     }
+    ]
+   ],
+   "title": "Velvet Bar Stool",
+   "sound": "WOOD"
+  },
+  "of_wine_cask": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.0,
+     1,
+     1.0,
+     14.0,
+     13,
+     15.0,
+     "of_teak"
+    ],
+    [
+     2.0,
+     2.5,
+     1.5,
+     14.0,
+     14.5,
+     14.5,
+     "of_teak"
+    ],
+    [
+     2.25,
+     3.5,
+     2.0,
+     13.75,
+     15,
+     14.0,
+     "of_teak"
+    ],
+    [
+     2,
+     0,
+     3,
+     14,
+     1.5,
+     4,
+     "of_teak"
+    ],
+    [
+     2,
+     0,
+     12,
+     14,
+     1.5,
+     13,
+     "of_teak"
+    ],
+    [
+     1.8,
+     1,
+     4.5,
+     14.2,
+     15.2,
+     5,
+     "of_iron"
+    ],
+    [
+     1.8,
+     1,
+     11,
+     14.2,
+     15.2,
+     11.5,
+     "of_iron"
+    ],
+    [
+     7,
+     6,
+     0.5,
+     9,
+     8,
+     1,
+     "of_iron"
+    ]
+   ],
+   "title": "Wine Cask",
+   "sound": "WOOD",
+   "loot": "liquor",
+   "rotate": "axis"
+  },
+  "of_iron_scroll": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     14,
+     0,
+     9,
+     15.5,
+     16,
+     "fit_brass"
+    ],
+    [
+     7.5,
+     1,
+     0,
+     8.5,
+     2,
+     16,
+     "of_iron"
+    ],
+    [
+     7.6,
+     2,
+     14.5,
+     8.4,
+     14,
+     15.5,
+     "of_iron"
+    ],
+    [
+     7.6,
+     2,
+     7.5,
+     8.4,
+     14,
+     8.5,
+     "of_iron"
+    ],
+    [
+     7.6,
+     2,
+     0.5,
+     8.4,
+     14,
+     1.5,
+     "of_iron"
+    ],
+    [
+     7.7,
+     5,
+     9.5,
+     8.3,
+     5.8,
+     14.5,
+     "of_iron"
+    ],
+    [
+     7.7,
+     10.2,
+     9.5,
+     8.3,
+     11,
+     14.5,
+     "of_iron"
+    ],
+    [
+     7.7,
+     5.8,
+     14.2,
+     8.3,
+     10.2,
+     15,
+     "of_iron"
+    ],
+    [
+     7.7,
+     5.8,
+     9,
+     8.3,
+     10.2,
+     9.8,
+     "of_iron"
+    ],
+    [
+     7.7,
+     7.4,
+     11.6,
+     8.3,
+     8.6,
+     12.4,
+     "fit_brass"
+    ],
+    [
+     7.7,
+     5,
+     2.0,
+     8.3,
+     5.8,
+     7.0,
+     "of_iron"
+    ],
+    [
+     7.7,
+     10.2,
+     2.0,
+     8.3,
+     11,
+     7.0,
+     "of_iron"
+    ],
+    [
+     7.7,
+     5.8,
+     6.699999999999999,
+     8.3,
+     10.2,
+     7.5,
+     "of_iron"
+    ],
+    [
+     7.7,
+     5.8,
+     1.5,
+     8.3,
+     10.2,
+     2.3000000000000007,
+     "of_iron"
+    ],
+    [
+     7.7,
+     7.4,
+     4.1,
+     8.3,
+     8.6,
+     4.9,
+     "fit_brass"
+    ]
+   ],
+   "title": "Iron Balustrade",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "of_newel_brass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     1.5,
+     11,
+     "of_iron"
+    ],
+    [
+     6,
+     1.5,
+     6,
+     10,
+     13,
+     10,
+     "of_iron"
+    ],
+    [
+     5.5,
+     13,
+     5.5,
+     10.5,
+     14,
+     10.5,
+     "of_iron"
+    ],
+    [
+     6,
+     14,
+     6,
+     10,
+     16,
+     10,
+     "fit_brass"
+    ]
+   ],
+   "title": "Newel Post",
+   "sound": "METAL"
+  },
+  "of_rose_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "of_teak"
+    ],
+    [
+     4,
+     3,
+     4,
+     12,
+     9,
+     12,
+     "of_roses"
+    ],
+    [
+     5,
+     9,
+     3.5,
+     11,
+     15,
+     9,
+     "of_roses"
+    ],
+    [
+     3.5,
+     11,
+     7,
+     9,
+     16,
+     12.5,
+     "of_roses"
+    ]
+   ],
+   "title": "Climbing Rose",
+   "sound": "GRASS"
+  },
+  "of_planter_bench": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     7,
+     16,
+     {
+      "side": "of_slats",
+      "up": "of_teak",
+      "down": "of_teak"
+     }
+    ],
+    [
+     2,
+     7,
+     2,
+     14,
+     8,
+     14,
+     "bp_grass_a"
+    ],
+    [
+     3.5,
+     8,
+     3.5,
+     12.5,
+     14,
+     12.5,
+     "of_roses"
+    ],
+    [
+     5.5,
+     14,
+     5.5,
+     10.5,
+     16,
+     10.5,
+     "of_roses"
+    ]
+   ],
+   "title": "Planter Bench",
+   "sound": "WOOD"
   },
   "of_finial": {
    "model": "boxes",
