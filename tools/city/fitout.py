@@ -591,6 +591,9 @@ def blocks():
         "Sauna Bench", "WOOD", rotate="axis")
     add("of_sauna_stove", [[2, 0, 2, 14, 9, 14, steel], [3, 9, 3, 13, 12, 13, "pt_stone_rough"], [5, 12, 5, 11, 13, 11, "of_ember"]],
         "Sauna Stove", "METAL", rotate=None, light=7)
+    # the pool's lights: a lit lens set in the tile wall, facing into the water
+    add("of_pool_light", [[0, 0, 1, 16, 16, 16, {"all": "of_pool_tile"}], [4, 5, 0, 12, 11, 1, chrome], [5, 6, -0.5, 11, 10, 0, "window_lit"]],
+        "Pool Light", "STONE", light=9)
     add("of_car_lift", None, "Car Lift Platform", "METAL", rotate=None, tex={"up": "deck_steel", "side": steel, "down": steel})
     add("of_cedar_wall", None, "Cedar Lining", "WOOD", rotate=None, tex={"all": "of_cedar"})
     add("of_carpet_red", None, "Red Carpet", "WOOL", rotate=None, tex={"up": "cv_carpet_red", "side": "of_velvet_red", "down": "of_velvet_red"})
@@ -635,9 +638,31 @@ def blocks():
                         # seen from the north the block's left is +x: mirror so col runs left to right
                         boxes.append([16 - x1, ly, 4 - depth[c], 16 - x0, ly + 1, 4, tex])
                 add(f"of_burst_{mat}_{col}{row}", boxes, "Sunburst Panel", "METAL", light=6)
+        # the band at each tier's foot, after the Chrysler's: a drip moulding over a row of raised
+        # chevrons on a bead, lit glass in the V's; its corner turns the moulding round both faces
+        band = [[0, 0, 4, 16, 16, 16, clad], [0, 13, 0.5, 16, 16, 4, clad], [0, 0, 2.5, 16, 1.5, 4, clad]]
+        for ly in range(2, 12):
+            runs, cur, start = [], None, 0
+            for lx in range(17):
+                c = None
+                if lx < 16:
+                    d = abs((lx + 0.5) % 8 - 4)
+                    arm = abs(d - (11.5 - ly - 0.5) * 0.36)
+                    c = "ray" if arm < 0.9 else "glass" if d < (11.5 - ly - 0.5) * 0.36 - 0.9 and ly > 4 else None
+                if c != cur:
+                    if cur is not None:
+                        runs.append((start, lx, cur))
+                    cur, start = c, lx
+            for x0, x1, c in runs:
+                band.append([x0, ly, 2 if c == "ray" else 3.5, x1, ly + 1, 4, clad if c == "ray" else "window_lit"])
+        add(f"of_chevron_{mat}", band, "Chevron Band", "METAL", light=4)
+        add(f"of_chevron_corner_{mat}", [[0, 0, 0, 16, 13, 16, clad], [-0.5, 13, -0.5, 16.5, 16, 16.5, clad], [1, 0, 1, 15, 2, 15, clad]],
+            "Chevron Band", "METAL", rotate=None)
         # fluted cladding between the bursts: three ribs on a plate
         add(f"of_flute_{mat}", [[0, 0, 3, 16, 16, 16, clad], [1, 0, 1, 4, 16, 3, clad], [6.5, 0, 1, 9.5, 16, 3, clad], [12, 0, 1, 15, 16, 3, clad]],
             "Fluted Cladding", "METAL")
+    # the observatory dome's ribs: standing-seam verdigris copper
+    add("of_copper_rib", None, "Copper Dome Rib", "METAL", rotate=None, tex={"side": "cv_copper_seam", "up": "cv_copper_seam", "down": "cv_copper"})
     add("of_finial", [[2, 0, 2, 14, 4, 14, "stone_trim"], [3, 4, 3, 13, 8, 13, "stone_trim"], [4.5, 8, 4.5, 11.5, 12, 11.5, "stone_trim"],
                       [6, 12, 6, 10, 15, 10, "stone_trim"], [7, 15, 7, 9, 16, 9, chrome]], "Finial", "STONE", rotate=None)
     return out
