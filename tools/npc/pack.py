@@ -3,12 +3,17 @@
 The source models must never be committed (the repo is public and their licences forbid
 redistributing them). Keep them in the project's files (zomboid-mod/assets/<pack>/) and run
 
-    python3 tools/npc/pack.py ID SOURCE.glb
+    python3 tools/npc/pack.py ID SOURCE.glb|SOURCE.obj [--height M] [--out DIR]
 
-which writes src/main/resources/assets/zomboidcraft/npc/<ID>.znpc with two looks of the one mesh:
+which writes src/main/resources/assets/zomboidcraft/npc/<ID>.znpc (or DIR/<ID>.znpc) with two looks of
+the one mesh:
     raw   the model's own texture, as bought
     toon  the texture flattened into paint (mode filter, posterised, the muted character grade);
           the game adds three light bands and an ink outline (NpcRenderer)
+
+An OBJ's materials (one map_Kd each, looked up by file name under the OBJ's folder) are packed into one
+texture atlas. Models of characters someone else owns go out with --out to a folder outside the repo; the
+player copies the file into config/zomboidcraft/npc/ and the game loads it from there (NpcAssets).
 
 A .znpc is zlib-deflated, then XORed with an xorshift32 stream seeded from the id (like a .zcar),
 so the file in the jar isn't a usable model on its own. Deflated payload, big-endian:
@@ -22,8 +27,8 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-HEIGHT = 1.85  # metres, top of the head (or hair) to the soles
-TEX = 1024
+HEIGHT = 1.85  # metres, top of the head (or hair) to the soles, unless --height says otherwise
+TEX = 1024  # glb textures; OBJ atlases stay 2048 (many materials share them)
 
 
 def java_hash(s):
@@ -69,6 +74,67 @@ def read_glb(path):
             acc(p['attributes']['TEXCOORD_0']).astype(np.float64), acc(p['indices']).reshape(-1, 3).astype(np.int64), tex)
 
 
+def read_obj(path):
+    """Triangles from a Wavefront OBJ, every corner its own (position, uv, normal), materials tiled into one atlas."""
+    folder = os.path.dirname(os.path.abspath(path))
+    vs, vts, vns, corners, mats = [], [], [], [], []
+    names, mat = [], None
+    for line in open(path, errors='replace'):
+        t = line.split()
+        if not t:
+            continue
+        if t[0] == 'v':
+            vs.append([float(x) for x in t[1:4]])
+        elif t[0] == 'vt':
+            vts.append([float(x) for x in t[1:3]])
+        elif t[0] == 'vn':
+            vns.append([float(x) for x in t[1:4]])
+        elif t[0] == 'usemtl':
+            mat = t[1]
+            if mat not in names:
+                names.append(mat)
+        elif t[0] == 'f':
+            c = [tuple(int(x) - 1 if x else -1 for x in (k.split('/') + ['', ''])[:3]) for k in t[1:]]
+            for i in range(1, len(c) - 1):
+                corners.append((c[0], c[i], c[i + 1]))
+                mats.append(names.index(mat))
+    maps = {}
+    mtl = os.path.splitext(path)[0] + '.mtl'
+    cur = None
+    for line in open(mtl, errors='replace'):
+        t = line.split(None, 1)
+        if len(t) == 2 and t[0] == 'newmtl':
+            cur = t[1].strip()
+        elif len(t) == 2 and t[0] == 'map_Kd':
+            want = os.path.basename(t[1].strip().replace('\\', '/'))
+            for root, _, files in os.walk(folder):
+                if want in files:
+                    maps[cur] = os.path.join(root, want)
+    V, T, N = np.array(vs), np.array(vts), np.array(vns)
+    C = np.array(corners)  # tris x 3 corners x (v, vt, vn)
+    tiles = int(np.ceil(np.sqrt(len(names))))
+    tile = 2048 // tiles
+    atlas = Image.new('RGB', (tile * tiles, tile * tiles), (128, 128, 128))
+    for i, name in enumerate(names):
+        if name in maps:
+            atlas.paste(Image.open(maps[name]).convert('RGB').resize((tile, tile), Image.LANCZOS), (i % tiles * tile, i // tiles * tile))
+        else:
+            print('no texture for', name)
+    uv = T[C[..., 1]]  # tris x 3 x 2, OBJ v runs up
+    uv -= np.floor(uv.mean(1, keepdims=True))  # tiled uvs back into 0..1 per triangle
+    uv = uv.clip(0.002, 0.998)
+    m = np.array(mats)[:, None]
+    u = (m % tiles + uv[..., 0]) / tiles
+    v = (m // tiles + 1 - uv[..., 1]) / tiles
+    P = V[C[..., 0]].reshape(-1, 3)
+    NN = N[C[..., 2]].reshape(-1, 3) if len(N) else np.tile([0, 1, 0], (len(P), 1))
+    UV = np.stack([u, v], -1).reshape(-1, 2)
+    # weld corners that share position, uv and normal
+    key = np.concatenate([np.round(P * 1e4), np.round(UV * 1e5), np.round(NN * 100)], 1)
+    _, first, inv = np.unique(key, axis=0, return_index=True, return_inverse=True)
+    return P[first].astype(np.float64), NN[first].astype(np.float64), UV[first], inv.reshape(-1, 3), atlas
+
+
 def dilate(img):
     """Spreads each UV island's colour into the empty texture round it, so filtering never pulls in black."""
     rgba = np.asarray(img.convert('RGBA'), np.float64)
@@ -108,18 +174,27 @@ def jpeg(img):
 
 
 def main():
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    opts = {}
+    for flag in ('--height', '--out'):
+        if flag in args:
+            k = args.index(flag)
+            opts[flag] = args[k + 1]
+            del args[k:k + 2]
+    if len(args) != 2:
         sys.exit(__doc__)
-    model_id, src = sys.argv[1], sys.argv[2]
-    P, N, UV, I, tex = read_glb(src)
+    model_id, src = args
+    P, N, UV, I, tex = read_obj(src) if src.lower().endswith('.obj') else read_glb(src)
     P[:, 1] -= P[:, 1].min()
-    P *= HEIGHT / P[:, 1].max()
+    P *= float(opts.get('--height', HEIGHT)) / P[:, 1].max()
     P[:, 0] -= (P[:, 0].min() + P[:, 0].max()) / 2
     P[:, 2] -= (P[:, 2].min() + P[:, 2].max()) / 2
     N /= np.linalg.norm(N, axis=1, keepdims=True) + 1e-9
     if len(P) > 65535:
         sys.exit('too many vertices for char indices')
-    base = dilate(tex).resize((TEX, TEX), Image.LANCZOS)
+    base = dilate(tex)
+    if base.size[0] > 2048 or src.lower().endswith('.glb'):
+        base = base.resize((TEX, TEX), Image.LANCZOS)
     looks = [('raw', jpeg(base)), ('toon', jpeg(toon(base)))]
 
     out = io.BytesIO()
@@ -135,7 +210,7 @@ def main():
         nb = name.encode()
         out.write(struct.pack('>H', len(nb)) + nb + struct.pack('>i', len(data)) + data)
     packed = scramble(zlib.compress(out.getvalue(), 9), model_id)
-    dest = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/npc', model_id + '.znpc')
+    dest = os.path.join(opts.get('--out') or os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/npc'), model_id + '.znpc')
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     open(dest, 'wb').write(packed)
     print(f'{model_id}: {len(P)} vertices, {len(I)} triangles, {len(packed) // 1024} KB -> {dest}')

@@ -58,6 +58,8 @@ public final class ZcConfig {
     public GunStats leverAction = GunStats.leverAction();
     /** The crossbow's own numbers, and how often its bolts break. */
     public CrossbowStats crossbow = new CrossbowStats();
+    /** The Warthog's mounted minigun: its rounds, rate, spin-up and belt. */
+    public MinigunStats minigun = new MinigunStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -202,6 +204,8 @@ public final class ZcConfig {
         public float hitPlayerPerSpeed = 1.2f;
         /** OTTO, the robot conductor, talks in chat to riders and people on the platform. */
         public boolean ottoTalks = true;
+        /** OTTO keeps quiet except for his one greeting when someone boards (Josiah 2026-10-29); false for all his lines. */
+        public boolean ottoOnlyGreets = true;
         /** Seconds between OTTO's remarks while running between stops. */
         public int ottoChatter = 45;
         /** Zombies ride the trains: share of trains that start with some aboard, and most a train carries. */
@@ -1222,6 +1226,27 @@ public final class ZcConfig {
     }
 
     /** Settings every gun shares, and the assault rifle's own numbers. */
+    /** A mounted three-barrel minigun, fed a belt loaded from the gunner's own 5.56 rounds. */
+    public static class MinigunStats extends GunStats {
+        {
+            damage = 12.0;
+            hipSpread = 1.2;
+            aimSpread = 1.2;
+            shotNoise = 140.0;
+            range = 160.0;
+            autoRpm = 1500.0;
+        }
+
+        /** Seconds the barrels take to spin up before it fires, and to run down after. */
+        public double spinUpSeconds = 0.6;
+        public double spinDownSeconds = 2.0;
+        /** Rounds the belt holds, and seconds to load it. */
+        public int beltSize = 300;
+        public double beltLoadSeconds = 3.0;
+        /** One round in this many is a tracer. */
+        public int tracerEvery = 3;
+    }
+
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
@@ -1337,7 +1362,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 14;
+    private static final int DEFAULTS = 15;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1504,6 +1529,11 @@ public final class ZcConfig {
             if (c.trains.curveGrip == 2.0) {
                 c.trains.curveGrip = 4.0;
             }
+        }
+        if (c.defaultsVersion < 15) {
+            // 2026-10-29 (Josiah): three cars, OTTO's included, on both lines
+            c.trains.railCars = Math.min(c.trains.railCars, 3);
+            c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
         }
         c.defaultsVersion = DEFAULTS;
     }

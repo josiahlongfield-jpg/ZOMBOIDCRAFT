@@ -46,6 +46,8 @@ public final class Floorplan {
     /** The open floor the floor's type fills (cells not in a room, not corridor). */
     final List<int[]> open = new ArrayList<>();
     int band;
+    /** Laid out open plan: no corridor ring round the floor, just the ways out from the core. */
+    boolean airy;
     /** Shell cells that are not the outside (a stair hall, a void's rail): rooms still wall themselves off from them. */
     boolean[] inner;
 
@@ -137,7 +139,7 @@ public final class Floorplan {
     void corridor(int want, boolean ring) {
         int deep = deepest();
         band = Math.max(2, Math.min(want, deep - 4));
-        if (ring && deep >= band + 3) {
+        if (ring && !airy && deep >= band + 3) {
             for (int i = 0; i < g.length; i++) {
                 if (g[i] == OPEN && (dist[i] == band + 1 || dist[i] == band + 2)) {
                     g[i] = WALK;
@@ -530,11 +532,16 @@ public final class Floorplan {
      * go back to open floor.
      */
     List<Room> cut(int[] b, int minSize, int maxSize, Kinds kinds, String wall, boolean openFloor) {
+        return cut(b, minSize, maxSize, kinds, wall, openFloor, Integer.MAX_VALUE);
+    }
+
+    /** As above, stopping after cap rooms: the rest of the strip stays open floor. */
+    List<Room> cut(int[] b, int minSize, int maxSize, Kinds kinds, String wall, boolean openFloor, int cap) {
         List<Room> out = new ArrayList<>();
         boolean alongX = b[2] - b[0] >= b[3] - b[1];
         int a0 = alongX ? b[0] : b[1], a1 = alongX ? b[2] : b[3];
         int at = a0;
-        while (at < a1) {
+        while (at < a1 && out.size() < cap) {
             String kind = kinds.next(this);
             int size = kinds.size(kind, minSize, maxSize, rng);
             int next = at + size;
@@ -580,7 +587,7 @@ public final class Floorplan {
             if (b == null) {
                 break;
             }
-            List<Room> got = cut(b, minSize, maxSize, kinds, wall, openFloor);
+            List<Room> got = cut(b, minSize, maxSize, kinds, wall, openFloor, airy ? maxRooms - out.size() : Integer.MAX_VALUE);
             if (got.isEmpty()) {
                 // nothing would take: leave the strip as floor but stop trying it
                 for (int z = b[1]; z <= b[3]; z++) {
@@ -663,6 +670,16 @@ public final class Floorplan {
      * of it must stay clear too (a desk's chair, a bed's side), or null.
      */
     boolean place(int x, int z, String block, int[] front) {
+        if (facesWall(x, z, block)) {
+            // a seat looking at a wall a step or two away: turn it round if that way is open
+            int s = facing(block);
+            String turned = block.replace("facing=" + face(s), "facing=" + face(s + 2));
+            if (facesWall(x, z, turned)) {
+                return false;
+            }
+            block = turned;
+            front = front == null ? null : step(x, z, s + 2);
+        }
         byte v = at(x, z);
         if (v != ROOM && v != OPEN) {
             return false;
@@ -681,6 +698,37 @@ public final class Floorplan {
             put(front[0], front[1], CLEAR);
         }
         return true;
+    }
+
+    /** A sofa or chair whose sitter would look at a room wall or the core one or two cells ahead. */
+    private boolean facesWall(int x, int z, String block) {
+        if (!(block.contains("sofa") || block.contains("armchair") || block.contains("chair_ward") || block.contains("bench"))
+                || !block.contains("facing=")) {
+            return false;
+        }
+        int s = facing(block);
+        for (int k = 1, xx = x, zz = z; k <= 2; k++) {
+            xx += DIRS[s][0];
+            zz += DIRS[s][1];
+            byte v = at(xx, zz);
+            if (v == WALL || v == CORE || v == DOOR) {
+                return true;
+            }
+            if (v == SHELL || v == ITEM) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private static int facing(String block) {
+        String f = block.substring(block.indexOf("facing=") + 7).split("[],]")[0];
+        return switch (f) {
+            case "north" -> 0;
+            case "east" -> 1;
+            case "south" -> 2;
+            default -> 3;
+        };
     }
 
     /** Every walkable neighbour of a newly taken cell still joins up with the others round it. */
@@ -886,7 +934,9 @@ public final class Floorplan {
                         // glass rooms: a wall of glass between drywall posts
                         boolean ex = walled(x - 1, z) || walled(x + 1, z), ez = walled(x, z - 1) || walled(x, z + 1);
                         boolean alongX = ex;
-                        boolean post = (alongX ? x : z) % 3 == 0 || isCorner(x, z) || ex == ez;
+                        // glass only mid-run, with plain wall (no doorway) on both sides along it
+                        boolean straight = alongX ? at(x - 1, z) == WALL && at(x + 1, z) == WALL : at(x, z - 1) == WALL && at(x, z + 1) == WALL;
+                        boolean post = (alongX ? x : z) % 3 == 0 || isCorner(x, z) || ex == ez || !straight;
                         for (int k = 1; k <= rows; k++) {
                             String b = r.glass && !post && k < rows ? Placer.inWall("window", alongX) : r.wall;
                             set(x, k, z, b);

@@ -344,13 +344,17 @@ final class MilitarySite extends Site {
                 new Camp(g.shifted(tx - 2, 0, 2), rng, hit).watchtower(0, 0);
             }
             c.floodMast(-rw - 2, 4, 9);
-            c.floodMast(rw + 7, 6, 9);
+            c.lightTower(rw + 7, 9, true);
             // the queue that never got in
             for (int i = 0; i < 3; i++) {
                 if (chance() < 0.7) {
                     g.vehicle(rw / 2.0 * (i % 2 == 0 ? -1 : 1), 1, -6 - i * 6, 0, "sedan,hatchback,pickup,suv,minivan,wagon", rng.nextLong());
                 }
             }
+        }
+        // a light tower trailer towed up to light the lane, wound down on some
+        if (!isMain && chance() < 0.6) {
+            c.lightTower(-rw - 4, 6, chance() < 0.7);
         }
         // claim round the gate so nothing else lands on it
         int[] a = g.world(-rw - 12, -6), b = g.world(rw + 12, 18);
@@ -552,7 +556,7 @@ final class MilitarySite extends Site {
             Placer t = new Placer(out, s[0], 0, s[1], 0);
             for (int i = 0; i < 6; i++) {
                 if (chance() < 0.4) {
-                    t.vehicle(2.5 + i * 5, 1, 4, chance() < 0.85 ? 0 : 180, "jeep,jeep_open,box_truck,swat_van,moving_truck", rng.nextLong());
+                    t.vehicle(2.5 + i * 5, 1, 4, chance() < 0.85 ? 0 : 180, "jeep,jeep_open,box_truck,swat_van,moving_truck,warthog", rng.nextLong());
                 } else if (chance() < 0.4) {
                     new Camp(t, rng, hit).litter(1 + i * 5, 3);
                 }

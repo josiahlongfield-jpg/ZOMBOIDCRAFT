@@ -28,11 +28,32 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Characters from bought models, spawned by command to see how they look in game:
  * {@code /zc npc <model> [raw|toon|both]} puts one (or one of each look, side by side) a few blocks ahead, facing you;
- * {@code /zc npc clear} removes them all.
+ * {@code /zc npc clear} removes them all. A model from a player's local folder ({@link #localFolder}) can be spawned by name
+ * on a server too; players without the file just don't see it.
  */
 public final class Npcs {
     /** Every model with a file in assets/zomboidcraft/npc/ (tools/npc/pack.py). */
     public static final List<String> MODELS = List.of("dark_elf");
+
+    /**
+     * Models kept off the repo and out of the jar (characters someone else owns) live on the player's own PC in this
+     * folder; only players who have the file there see them.
+     */
+    public static java.nio.file.Path localFolder() {
+        return net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft").resolve("npc");
+    }
+
+    /** The shipped models, then any in this PC's local folder. */
+    static List<String> known() {
+        List<String> out = new java.util.ArrayList<>(MODELS);
+        try (var files = java.nio.file.Files.list(localFolder())) {
+            files.map(f -> f.getFileName().toString()).filter(n -> n.endsWith(".znpc"))
+                    .map(n -> n.substring(0, n.length() - 5)).filter(n -> !out.contains(n)).sorted().forEach(out::add);
+        } catch (java.io.IOException | RuntimeException e) {
+            // no local folder: just the shipped models
+        }
+        return out;
+    }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
 
     private static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("npc"));
@@ -49,7 +70,7 @@ public final class Npcs {
                         .then(Commands.literal("npc")
                                 .then(Commands.literal("clear").executes(Npcs::clear))
                                 .then(Commands.argument("model", StringArgumentType.word())
-                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(MODELS, b))
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(known(), b))
                                         .executes(ctx -> spawn(ctx, StringArgumentType.getString(ctx, "model"), "both"))
                                         .then(Commands.argument("look", StringArgumentType.word())
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(LOOKS, b))
@@ -58,8 +79,8 @@ public final class Npcs {
     }
 
     private static int spawn(CommandContext<CommandSourceStack> ctx, String model, String look) throws CommandSyntaxException {
-        if (!MODELS.contains(model)) {
-            ctx.getSource().sendFailure(Component.literal("No NPC model called " + model + ". Models: " + String.join(", ", MODELS)));
+        if (!model.matches("[a-z0-9_]+")) {
+            ctx.getSource().sendFailure(Component.literal("No NPC model called " + model + ". Models: " + String.join(", ", known())));
             return 0;
         }
         if (!LOOKS.contains(look)) {

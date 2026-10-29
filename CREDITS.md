@@ -65,6 +65,8 @@ The street cars, vans, trucks and buses are from the [American Cars 80s Pack](ht
 
 The aircraft on the carrier are three models bought on CGTrader and used under its Royalty Free licence: [Lockheed Martin F-22 Raptor](https://www.cgtrader.com/3d-models/aircraft/military-aircraft/lockheed-martin-f-22-raptor-73212c3c-8419-4d38-81b5-443f1ca23646) (the Corvid), "Sukhoi Su-27 with interior" (the Gyrfalcon) and "Apache AH64D Low" (the Hornbill helicopter). tools/cars/aircraft.py repainted them with made-up markings, weathered and damaged them, and packs them into the mod (tools/cars/cockpit_glow.py adds their cockpit lighting and the made-up screen pages, packed the same way); the original files are not part of this repository and may not be redistributed or used to train AI models.
 
+The mod can also load vehicles kept on the player's own computer (config/zomboidcraft/vehicles), which it does not ship: tools/cars/warthog_bake.py and tools/cars/warthog.py make one from a model a player supplies. Neither that model nor anything made from it is part of this repository or the mod.
+
 ## Characters
 
 The dark elf NPC is a royalty-free model bought by the project's owner. tools/npc/pack.py packs it into the mod as a scrambled mesh with its texture as bought and a toon-painted copy; the original files are not part of this repository and may not be redistributed.
@@ -423,3 +425,19 @@ The jets' cannon and the Apache's chain gun on their strike runs (world events),
 |---|---|---|---|
 | world.strike.cannon | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 52 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | world.strike.chaingun | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 10.4 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+
+## Bought gun models
+
+Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-painted and packed by tools/meshguns/pack.py into scrambled assets/zomboidcraft/meshes/*.zmesh files. The original models and textures are not included.
+
+| Mesh | Model | From | Licence |
+|---|---|---|---|
+| pbr_assault_rifle (the assault rifle) | Automatic Rifle 03, recoloured black (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_smg (the SMG) | Automatic Rifle 04 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_pistol (the pistol) | Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_magnum (the magnum) | Gun 03, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_shotgun (the pump shotgun) | Shotgun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_hunting_rifle (the hunting rifle) | Sniper Rifle 02, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_crossbow (the crossbow) | Crossbow, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_crossbow_bolt, pbr_bolt (crossbow bolts) | Arrow (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_machete (the machete) | Knife (PBR Weapons Pack) | CGTrader | Royalty Free |

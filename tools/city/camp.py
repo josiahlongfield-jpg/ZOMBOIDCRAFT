@@ -25,6 +25,14 @@ light-towers) refine it when they land.
 - fuel: the bladder in its berm (cp_bladder, _ring the cells inside its edge, _e the edge on the
   model's north, _c the north-west corner, _valve; each with a _slack twin, run dry);
 - cp_porta_down: a portable toilet blown over onto its back, two blocks long;
+- the gate booth, three by three (refs/military/gate-guard-booths): cp_gb_wall / cp_gb_wall_corner (the
+  waist-high wall on the model's north, _corner with the west side too), cp_gb_win(_corner)(_broken)
+  the glazing above it, cp_gb_head(_corner) the band over the windows with the roof reaching over,
+  cp_gb_roof the middle with the ceiling light and the beacon;
+- the light tower trailer (refs/military/light-towers), its lamps looking north and the tow bar to
+  the south: cp_lt_rear_{olive,white} (the mast end over the axle) with cp_lt_front_* in the cell
+  south of it, cp_lt_cap_rear / cp_lt_cap_front on top of them, then cp_lt_mast sections and
+  cp_lt_head(_lit), the four lamps; with no mast sections it's wound down for the road;
 - the dead: cp_grave_cross, cp_grave_helmet (a helmet hung on it), cp_stake (the trench's marker);
 - the assault course: cp_post, cp_log (along x), cp_wall / cp_wall_top (the climbing wall),
   cp_step, cp_bars / cp_bars_end, cp_rope / cp_rope_end;
@@ -220,6 +228,115 @@ def tape(seed):
     return t
 
 
+# the light tower trailer's genset housing (refs/military/light-towers): olive for the army, white
+# with the red band for the hire fleet
+LT = {"olive": ((84, 92, 58), None, (222, 218, 196), "LT-07"),
+      "white": ((226, 224, 214), (184, 40, 32), (184, 40, 32), "BRIGHTMAST")}
+
+
+def lt_paint(seed, c):
+    return painted(seed, LT[c][0], 0.3, 0.015)
+
+
+def lt_seams(t, x0, y0, x1, y1):
+    """A door's outline: the shadowed gap and a lit edge inside it."""
+    area(t, x0, y0, x1, y0 + 1, mul=(0.45, 0.45, 0.45), dh=-0.4)
+    area(t, x0, y1 - 1, x1, y1, mul=(0.45, 0.45, 0.45), dh=-0.4)
+    area(t, x0, y0, x0 + 1, y1, mul=(0.45, 0.45, 0.45), dh=-0.4)
+    area(t, x1 - 1, y0, x1, y1, mul=(0.45, 0.45, 0.45), dh=-0.4)
+    area(t, x0 + 1, y0 + 1, x1 - 1, y0 + 2, mul=(1.12, 1.12, 1.12))
+
+
+def lt_louvres(t, x0, y0, x1, y1):
+    for y in range(y0, y1, 3):
+        area(t, x0, y, x1, y + 1, mul=(0.3, 0.3, 0.3), dh=-0.5)
+        area(t, x0, y + 1, x1, y + 2, mul=(1.15, 1.15, 1.15), dh=0.2)
+
+
+def lt_side(seed, c, panel):
+    """A side door of the housing: the louvred one over the engine at the back, at the front the
+    control panel door with the maker's name; the hire fleet's red band across both."""
+    rgb, band, ink, name = LT[c]
+    t = lt_paint(seed, c)
+    lt_seams(t, 3, 3, 61, 61)
+    if band:
+        area(t, 0, 36, N, 42, col=band)
+    if panel:
+        from bunker import stencil
+        stencil(t, name, ink, 9 if c == "white" else 12, x=8, y=14, w=48, h=16, chip=0.15)
+        area(t, 40, 46, 52, 54, col=(222, 196, 40))
+        area(t, 42, 48, 50, 49, col=(30, 30, 30))
+        area(t, 42, 51, 48, 52, col=(30, 30, 30))
+    else:
+        lt_louvres(t, 9, 8, 55, 32)
+        lt_louvres(t, 9, 45, 55, 57)
+    area(t, 54, 30, 58, 36, col=(34, 34, 34), dh=-0.3)
+    area(t, 5, 8, 7, 14, col=(70, 70, 66), dh=0.2)
+    area(t, 5, 50, 7, 56, col=(70, 70, 66), dh=0.2)
+    t.grime(0.35, (58, 52, 40))
+    return t
+
+
+def lt_grille(seed, c):
+    """The radiator end: the grille of slots, the lifting slots under it."""
+    t = lt_paint(seed, c)
+    lt_seams(t, 4, 6, 60, 46)
+    for x in range(8, 57, 4):
+        area(t, x, 10, x + 2, 42, col=(28, 28, 26), dh=-0.6)
+    if LT[c][1]:
+        area(t, 0, 50, N, 55, col=LT[c][1])
+    t.grime(0.45, (40, 36, 30))
+    return t
+
+
+def lt_end(seed, c):
+    """The mast end: the cable gland, the data plate, the hazard label."""
+    t = lt_paint(seed, c)
+    lt_seams(t, 4, 4, 60, 60)
+    area(t, 40, 10, 54, 18, col=(196, 196, 186))
+    for y in (12, 14, 16):
+        area(t, 41, y, 52, y + 1, col=(60, 60, 60))
+    area(t, 10, 40, 22, 52, col=(230, 196, 36))
+    area(t, 13, 43, 19, 49, col=(24, 24, 24))
+    if LT[c][1]:
+        area(t, 0, 30, N, 35, col=LT[c][1])
+    t.grime(0.4, (58, 52, 40))
+    return t
+
+
+def lt_top(seed, c):
+    t = lt_paint(seed, c)
+    area(t, 0, 31, N, 33, mul=(0.6, 0.6, 0.6), dh=-0.3)
+    lt_louvres(t, 12, 6, 52, 24)
+    t.grime(0.5, (60, 54, 44))
+    t.speckle(0.03, (110, 64, 34), 0.6, -0.05)
+    return t
+
+
+# the gate booth (refs/military/gate-guard-booths): a prefab of ribbed white steel, glazed all round
+# above the waist, a flat roof reaching well out over the sides
+
+def gb_clad(seed):
+    """The cladding: vertical ribs every quarter, rust weeping from the foot, road dirt splashed up."""
+    t = painted(seed, (224, 222, 212), 0.2, 0.01)
+    for x in range(0, N, 16):
+        area(t, x, 0, x + 2, N, mul=(0.78, 0.78, 0.78), dh=0.5)
+        area(t, x + 2, 0, x + 3, N, mul=(1.1, 1.1, 1.1), dh=0.3)
+    yy = np.mgrid[0:N, 0:N][0]
+    splash = np.clip((yy - 40) / 24.0, 0, 1) * np.clip(P.fbm(t.rng) + 0.6, 0, 1)
+    t.mix(splash * 0.55, (96, 84, 64))
+    return t
+
+
+def gb_roof(seed):
+    """Roofing felt, patched, a puddle's dried ring, moss in the low spots."""
+    t = F.plain(seed, (74, 74, 72), 0.08, 0.3)
+    t.speckle(0.05, (120, 118, 110), 0.4)
+    area(t, 20, 8, 44, 30, mul=(0.85, 0.85, 0.85), dh=0.2)
+    t.mix(np.clip(P.fbm(t.rng) - 0.2, 0, 1) * 0.5, (70, 84, 48))
+    return t
+
+
 def textures():
     return {
         "cp_timber": lambda: timber(49000),
@@ -245,6 +362,22 @@ def textures():
         "cp_lens_lit": lambda: lens(49020, True),
         "cp_lamp": lambda: painted(49021, (70, 72, 70), 0.2),
         "cp_tape": lambda: tape(49022),
+        "cp_gb_clad": lambda: gb_clad(49060),
+        "cp_gb_inner": lambda: painted(49061, (206, 204, 190), 0.25),
+        "cp_gb_trim": lambda: painted(49062, (70, 72, 74), 0.15),
+        "cp_gb_roof": lambda: gb_roof(49063),
+        "cp_lt_paint_olive": lambda: lt_paint(49030, "olive"),
+        "cp_lt_door_olive": lambda: lt_side(49031, "olive", False),
+        "cp_lt_panel_olive": lambda: lt_side(49032, "olive", True),
+        "cp_lt_grille_olive": lambda: lt_grille(49033, "olive"),
+        "cp_lt_end_olive": lambda: lt_end(49034, "olive"),
+        "cp_lt_top_olive": lambda: lt_top(49035, "olive"),
+        "cp_lt_paint_white": lambda: lt_paint(49040, "white"),
+        "cp_lt_door_white": lambda: lt_side(49041, "white", False),
+        "cp_lt_panel_white": lambda: lt_side(49042, "white", True),
+        "cp_lt_grille_white": lambda: lt_grille(49043, "white"),
+        "cp_lt_end_white": lambda: lt_end(49044, "white"),
+        "cp_lt_top_white": lambda: lt_top(49045, "white"),
     }
 
 
@@ -470,7 +603,9 @@ def porta_down():
     s = "st_porta"
     return [[1, 0, 0, 15, 14, 15, {"north": s, "south": s, "east": s, "west": s, "down": s, "up": "st_porta_hi"}],
             [1, 0, 15, 15, 14, 30, {"north": s, "south": s, "east": s, "west": s, "down": s, "up": "st_porta_lo"}],
-            [0.5, 0.5, -1.5, 15.5, 14.5, 0, "cp_mast_w"], [3, 3, -2.5, 13, 12, -1.5, "cp_mast_w"],
+            [0.5, 0.5, -1.2, 15.5, 14.5, 0, s], [1, 1, -2.4, 15, 14, -1.2, "st_porta_roof"],
+            [2.2, 2.2, -3.6, 13.8, 12.8, -2.4, "st_porta_roof"], [4, 4, -4.4, 12, 11, -3.6, "st_porta_roof"],
+            [12.4, 12.4, -7.5, 13.8, 13.8, -1.2, "home_plastic_black"],
             [0.5, 0, 30, 15.5, 14.5, 30.6, s]]
 
 
@@ -543,6 +678,202 @@ def flagpole(top):
     return b
 
 
+# ---------------------------------------------------------------- the light tower trailer
+
+FULL = {d: [0, 0, 16, 16] for d in ("north", "south", "east", "west", "up", "down")}
+TYRE, DARK = "gs_tyre", "cp_lamp"
+
+
+def skin(x0, y0, z0, x1, y1, z1, tex):
+    """A box with each face's texture stretched over the whole face, so a door or a grille drawn
+    on one tile fits the side of the housing however big it is."""
+    return [x0, y0, z0, x1, y1, z1, tex, FULL]
+
+
+def wheel(x0, x1, z, r=5.0):
+    """A road wheel on the axle at z: the tyre an octagon of two boxes, the rim and hub cap."""
+    turned = turn("x", 45, (8, r, z))
+    rim, a = "st_galv", r * 0.4142
+    tyre = [[x0, 0, z - a, x1, 2 * r, z + a, TYRE], [x0, r - a, z - r, x1, r + a, z + r, TYRE]]
+    return tyre + [t + [None, turned] for t in tyre] + [
+            [x0 - 0.2, r - 2.6, z - 2.6, x1 + 0.2, r + 2.6, z + 2.6, rim],
+            [x0 - 0.5, r - 1, z - 1, x1 + 0.5, r + 1, z + 1, DARK]]
+
+
+def outrigger(z, side):
+    """A stabiliser leg swung out from the chassis: the box beam, the screw jack at its end, the
+    crank on top and the foot pad on the ground."""
+    if side < 0:
+        beam, jx = (-9, 1), -9
+    else:
+        beam, jx = (15, 25), 23
+    return [[beam[0], 5, z, beam[1], 7, z + 2, "cp_yellow"],
+            [jx, 1, z - 0.2, jx + 2, 9, z + 2.2, "cp_yellow"],
+            [jx + 0.6, 0.6, z + 0.4, jx + 1.4, 2, z + 1.6, "st_galv"],
+            [jx - 1.5, 0, z - 1.5, jx + 3.5, 0.6, z + 3.5, "st_galv"],
+            [jx + 0.6, 9, z + 0.6, jx + 1.4, 11, z + 1.4, "st_galv"],
+            [jx - 1.4, 10.2, z + 0.6, jx + 3.4, 11, z + 1.4, "st_galv"]]
+
+
+def lt_rear(c):
+    """The mast end of the trailer: the housing's back half over the axle, the wheels and their
+    mudguards, the mast foot on its bracket with the winch beside it, the tail lights and the
+    stabiliser legs swung out."""
+    pt = "cp_lt_paint_" + c
+    side = {"east": "cp_lt_door_" + c, "west": "cp_lt_door_" + c, "north": "cp_lt_end_" + c,
+            "south": pt, "up": "cp_lt_top_" + c, "down": DARK}
+    b = [skin(1, 6.5, 4, 15, 22, 16, side),
+         [0.6, 22, 3.6, 15.4, 23, 16, pt],
+         [3, 4.5, 3.4, 5, 6.5, 16, DARK], [11, 4.5, 3.4, 13, 6.5, 16, DARK], [1, 4.5, 3.4, 15, 6.5, 4.6, DARK],
+         [1, 4.2, 15.2, 15, 5.2, 16.8, DARK]]
+    b += wheel(-1.6, 1.0, 16) + wheel(15.0, 17.6, 16)
+    for x0, x1 in ((-2, 1.2), (14.8, 18)):
+        b += [[x0, 10.4, 10, x1, 11.2, 22, pt], [x0, 6, 9.6, x1, 11.2, 10.4, pt], [x0, 6, 21.6, x1, 11.2, 22.4, pt]]
+    b += outrigger(5, -1) + outrigger(5, 1)
+    # the mast foot: the hinge bracket bolted to the end wall, the first section rising out of it,
+    # the winch that runs it up with its crank, the coiled cable to the lamps
+    b += [[5.4, 6.5, 0, 10.6, 9, 4, "st_galv"], [5.4, 9, 3, 10.6, 20, 4, "st_galv"],
+          [6.25, 9, 0.3, 9.75, 22, 3.7, "st_galv"], [5.9, 9, 0, 10.1, 10.4, 4, "st_galv"],
+          [10.8, 11, 1.4, 14, 14.4, 3.6, DARK], [11.2, 11.4, 0.8, 13.6, 14, 1.4, "st_galv"],
+          [13.2, 12.4, 0, 14, 13.2, 0.8, "st_galv"], [13.2, 9.6, -0.4, 14, 13.2, 0.4, "st_galv"]]
+    for i, y in enumerate((10, 12.4, 14.8, 17.2, 19.6)):
+        b.append([4.6 if i % 2 else 5.0, y, 1.2, 6.2, y + 1.2, 2.6, "home_plastic_black"])
+    # tail lights and reflectors either side, the plate between them low down
+    b += [[1.4, 7.2, 3.4, 3.8, 9, 4, "ch_redglass"], [12.2, 7.2, 3.4, 14.6, 9, 4, "ch_redglass"],
+          [1.4, 9.2, 3.5, 3.8, 10.2, 4, "trade_glass_amber"], [12.2, 9.2, 3.5, 14.6, 10.2, 4, "trade_glass_amber"],
+          [1.2, 4.6, 2.6, 4.6, 7.2, 3.4, "cp_mast_w"]]
+    return b
+
+
+def lt_front(c):
+    """The tow end: the housing's front half with the control panel door and the radiator grille,
+    the A-frame drawbar out to the coupling, the jockey wheel wound down, the safety chains, the
+    extinguisher on its bracket and the front stabilisers."""
+    pt = "cp_lt_paint_" + c
+    side = {"east": "cp_lt_panel_" + c, "west": "cp_lt_panel_" + c, "north": pt,
+            "south": "cp_lt_grille_" + c, "up": "cp_lt_top_" + c, "down": DARK}
+    b = [skin(1, 6.5, 0, 15, 22, 16, side),
+         [0.6, 22, 0, 15.4, 23, 16.4, pt],
+         [3, 4.5, 0, 5, 6.5, 16, DARK], [11, 4.5, 0, 13, 6.5, 16, DARK], [1, 4.5, 15, 15, 6.5, 16.4, DARK]]
+    # the A-frame: two arms from the chassis rails meeting at the coupling
+    b += [[3.6, 4.6, 16, 5.4, 6.4, 27.4, DARK, None, turn("y", 22.5, (4.5, 5.5, 16))],
+          [10.6, 4.6, 16, 12.4, 6.4, 27.4, DARK, None, turn("y", -22.5, (11.5, 5.5, 16))],
+          [7, 4.6, 16.4, 9, 6.4, 28, DARK],
+          [6.4, 4.2, 26, 9.6, 7.2, 30.6, "st_galv"], [6.8, 3.2, 28.4, 9.2, 4.2, 30.6, DARK],
+          [7.4, 7.2, 27, 8.6, 9, 28.6, "steel_red"]]
+    # the chains, a link or two hanging slack
+    b += [[6, 3.8, 24, 6.6, 4.6, 29, "st_galv"], [9.4, 3.8, 24, 10, 4.6, 29, "st_galv"]]
+    # the jockey wheel: the clamp on the drawbar, the tube, the handle, the little wheel
+    b += [[9, 4, 21, 11.6, 7.4, 23.4, "st_galv"], [9.6, 2.6, 21.5, 11, 12, 22.9, "st_galv"],
+          [9.4, 12, 21.3, 11.2, 12.8, 23.1, DARK], [10.1, 12.8, 22, 10.5, 13.6, 22.4, "st_galv"],
+          [10.1, 13.2, 22, 13.6, 13.8, 22.4, "st_galv"],
+          [9.8, 0, 20.6, 10.8, 3.4, 24, TYRE], [9.4, 1.2, 21.8, 11.2, 2.2, 22.8, "st_galv"]]
+    # the extinguisher strapped to the front of the chassis
+    b += [[2.2, 6.5, 16, 4.8, 13, 18.6, "steel_red"], [2.8, 13, 16.6, 4.2, 14.4, 18, DARK],
+          [3.2, 14, 16.8, 5.8, 14.6, 17.6, DARK], [2, 9, 15.8, 5, 10, 18.8, "st_galv"]]
+    b += outrigger(12, -1) + outrigger(12, 1)
+    # the fuel filler, the door handle, the panel's sockets under their flap
+    b += [[15, 13, 3, 15.6, 15, 5, DARK], [14.6, 15, 3.4, 15.4, 15.4, 4.6, "st_galv"],
+          [0.4, 9, 9, 1, 11.4, 13, DARK], [0.6, 11.4, 9, 1.2, 11.8, 13, pt]]
+    return b
+
+
+def lt_cap_rear():
+    """On top at the mast end: the mast going on up through its guide, the lifting eye."""
+    return [[6.25, 0, 0.3, 9.75, 16, 3.7, "st_galv"], [5.6, 6, -0.2, 10.4, 8, 4.2, "st_galv"],
+            [5.4, 7, 4, 10.6, 8, 6, "st_galv"],
+            [6, 7, 12, 7, 11, 13, "st_galv"], [9, 7, 12, 10, 11, 13, "st_galv"], [6, 10, 12, 10, 11, 13, "st_galv"],
+            [4.7, 6, 1.4, 6.2, 16, 2.4, "home_plastic_black"]]
+
+
+def lt_cap_front():
+    """On top at the tow end: the exhaust stack with its rain flap, the radiator cap."""
+    flap = turn("x", 22.5, (12.25, 13.6, 7.2))
+    return [[11.6, 7, 6, 12.9, 13.6, 7.3, DARK], [11, 7, 5.4, 13.5, 8, 7.9, DARK],
+            [11.5, 13.6, 5.9, 13, 13.9, 7.4, DARK, None, flap],
+            [3, 7, 12, 5, 7.8, 14, "st_galv"], [3.4, 7.8, 12.4, 4.6, 8.4, 13.6, DARK]]
+
+
+def lt_mast():
+    """A telescoping section: the tube, the collar where the next one slides in, the cable coil."""
+    b = [[6.6, 0, 0.6, 9.4, 16, 3.4, "st_galv"], [6.1, 0, 0.1, 9.9, 1.4, 3.9, "st_galv"],
+         [6.4, 1.4, 0.4, 9.6, 1.8, 3.6, DARK]]
+    for i, y in enumerate((2, 5.2, 8.4, 11.6, 14.8)):
+        b.append([5.0 if i % 2 else 5.4, y, 1.4, 6.6, y + 1.1, 2.6, "home_plastic_black"])
+    return b
+
+
+def lt_head(lit):
+    """The lamp frame on the mast's top: the crossbar, four heads two by two angled down, the
+    junction box between them and the cable going in."""
+    b = [[6.25, 0, 0.3, 9.75, 3, 3.7, "st_galv"], [-3.4, 6, 0.8, 19.4, 7.6, 2.8, "st_galv"],
+         [-3.4, 0, 0.8, -1.8, 14.6, 2.8, "st_galv"], [17.8, 0, 0.8, 19.4, 14.6, 2.8, "st_galv"],
+         [-3.4, 13.4, 0.8, 19.4, 14.6, 2.8, "st_galv"],
+         [6, 7.6, 0, 10, 12.4, 3.6, DARK], [6.6, 12.4, 0.4, 9.4, 13.4, 3.2, "st_galv"]]
+    for x0 in (-1.2, 10.2):
+        for y0 in (0.2, 7.8):
+            b += lamp(y0, lit, z0=-6.2, x0=x0, w=7, h=5.4, tilt=-22.5)
+    return b
+
+
+# ---------------------------------------------------------------- the gate booth
+
+GB, GBI, GBT = "cp_gb_clad", "cp_gb_inner", "cp_gb_trim"
+
+
+def gb_panel(corner):
+    """The waist-high wall on the model's north (and west, for a corner): cladding outside, the
+    painted lining in, on a concrete plinth with the kick plate along its foot."""
+    f = {"north": GB, "south": GBI, "east": GB, "west": GB, "up": GBT, "down": GBT}
+    b = [[0, 0, -1, 16, 2, 2.5, "concrete_panel"], [0, 2, 0, 16, 16, 2, f], [0, 2, -0.4, 16, 3.2, 0, GBT]]
+    if corner:
+        fw = {"west": GB, "east": GBI, "north": GB, "south": GB, "up": GBT, "down": GBT}
+        b += [[-1, 0, 0, 2.5, 2, 16, "concrete_panel"], [0, 2, 0, 2, 16, 16, fw], [-0.4, 2, 0, 0, 3.2, 16, GBT],
+              [-0.8, 2, -0.8, 1.6, 16, 1.6, GBT]]
+    return b
+
+
+def gb_window(corner, broken):
+    """The glazing above the waist: the aluminium frame, a mullion, the pane, the sill outside and
+    the ledge inside the guard writes on."""
+    glass = "cc_glass_broken" if broken else "cc_glass"
+    b = [[0, 0, -1.2, 16, 1, 2, GBT], [0, 0, 0, 16, 1.4, 2, GBT], [0, 14.6, 0, 16, 16, 2, GBT],
+         [7.4, 1.4, 0, 8.6, 14.6, 2, GBT], [15.2, 1.4, 0, 16, 14.6, 2, GBT],
+         [0, 1.4, 0.8, 16, 14.6, 1.2, glass],
+         [0, 0, 2, 16, 0.8, 6, "desk_laminate"]]
+    if corner:
+        b += [[-1.2, 0, 0, 0, 1, 16, GBT], [0, 0, 0, 2, 1.4, 16, GBT], [0, 14.6, 0, 2, 16, 16, GBT],
+              [0, 1.4, 7.4, 2, 14.6, 8.6, GBT], [0, 1.4, 15.2, 2, 14.6, 16, GBT],
+              [0.8, 1.4, 0, 1.2, 14.6, 16, glass], [0, 1.4, 0, 1.6, 14.6, 1.6, GBT],
+              [2, 0, 6, 6, 0.8, 16, "desk_laminate"]]
+    return b
+
+
+def gb_head(corner):
+    """The band over the windows and the roof on it, reaching 6 over the side with its fascia, the
+    drip edge and the soffit under it."""
+    f = {"north": GB, "south": GBI, "east": GB, "west": GB, "up": GBT, "down": GBT}
+    x0 = -6 if corner else 0
+    b = [[0, 0, 0, 16, 12.6, 2, f],
+         [x0, 12.6, -6, 16, 14.6, 16, faces("cp_gb_roof", north=GBT, up="cp_gb_roof")],
+         [x0 - 0.6, 12, -6.6, 16, 15.2, -6, GBT],
+         [x0, 12.4, -6, 16, 12.6, 0, "ext_soffit"]]
+    if corner:
+        fw = {"west": GB, "east": GBI, "north": GB, "south": GB, "up": GBT, "down": GBT}
+        b += [[0, 0, 0, 2, 12.6, 16, fw], [-6.6, 12, -6.6, -6, 15.2, 16, GBT], [-6, 12.4, 0, 0, 12.6, 16, "ext_soffit"],
+              [-0.8, 0, -0.8, 1.6, 12.6, 1.6, GBT]]
+    return b
+
+
+def gb_roof_mid():
+    """The middle of the roof: the ceiling under it with the strip light, the beacon on top."""
+    return [[0, 12.6, 0, 16, 14.6, 16, faces("cp_gb_roof", up="cp_gb_roof")],
+            [0, 12.4, 0, 16, 12.6, 16, GBI],
+            [3, 11.4, 7, 13, 12.4, 9, faces(GBT, up=GBT, north=GBT)], [3.4, 11.2, 7.3, 12.6, 11.4, 8.7, "lamp_glass"],
+            [6.5, 14.6, 6.5, 9.5, 15.4, 9.5, GBT], [6.8, 15.4, 6.8, 9.2, 17.8, 9.2, "trade_glass_amber"],
+            [7.2, 17.8, 7.2, 8.8, 18.4, 8.8, GBT], [11, 14.6, 2, 13, 16.6, 4, "st_galv"]]
+
+
 def blocks():
     out = {}
 
@@ -603,6 +934,26 @@ def blocks():
         add("cp_bladder_e" + v, bladder_boxes("e", top * 0.88), "Fuel Bladder", "WOOL", shape=[[0, 0, 3, 16, top * 0.7, 16]])
         add("cp_bladder_c" + v, bladder_boxes("c", top * 0.88), "Fuel Bladder", "WOOL", shape=[[3, 0, 3, 16, top * 0.7, 16]])
     add("cp_porta_down", porta_down(), "Portable Toilet", "WOOD", shape=[[1, 0, 0, 15, 14, 16]])
+    add("cp_gb_wall", gb_panel(False), "Booth Wall", "METAL", shape=[[0, 0, 0, 16, 16, 2]])
+    add("cp_gb_wall_corner", gb_panel(True), "Booth Wall", "METAL", shape=[[0, 0, 0, 16, 16, 2], [0, 0, 0, 2, 16, 16]])
+    for v, broken in (("", False), ("_broken", True)):
+        add("cp_gb_win" + v, gb_window(False, broken), "Booth Window", "GLASS", shape=[[0, 0, 0, 16, 16, 2]])
+        add("cp_gb_win_corner" + v, gb_window(True, broken), "Booth Window", "GLASS",
+            shape=[[0, 0, 0, 16, 16, 2], [0, 0, 0, 2, 16, 16]])
+    add("cp_gb_head", gb_head(False), "Booth Roof", "METAL", shape=[[0, 0, 0, 16, 12.6, 2], [0, 12.6, 0, 16, 14.6, 16]])
+    add("cp_gb_head_corner", gb_head(True), "Booth Roof", "METAL",
+        shape=[[0, 0, 0, 16, 12.6, 2], [0, 0, 0, 2, 12.6, 16], [0, 12.6, 0, 16, 14.6, 16]])
+    add("cp_gb_roof", gb_roof_mid(), "Booth Roof", "METAL", shape=[[0, 12.6, 0, 16, 14.6, 16]])
+    for c in LT:
+        add("cp_lt_rear_" + c, lt_rear(c), "Light Tower", "METAL", shape=[[1, 0, 4, 15, 16, 16]])
+        add("cp_lt_front_" + c, lt_front(c), "Light Tower", "METAL", shape=[[1, 0, 0, 15, 16, 16]],
+            loot="basement_supplies")
+    add("cp_lt_cap_rear", lt_cap_rear(), "Light Tower", "METAL", shape=[[1, 0, 4, 15, 7, 16], [6.25, 0, 0.3, 9.75, 16, 3.7]])
+    add("cp_lt_cap_front", lt_cap_front(), "Light Tower", "METAL", shape=[[1, 0, 0, 15, 7, 16]])
+    add("cp_lt_mast", lt_mast(), "Light Tower Mast", "METAL", shape=[[6.1, 0, 0.1, 9.9, 16, 3.9]])
+    for lit in (False, True):
+        add("cp_lt_head" + ("_lit" if lit else ""), lt_head(lit), "Light Tower Lamps", "METAL",
+            shape=[[6.25, 0, 0.3, 9.75, 3, 3.7]], light=15 if lit else None)
     add("cp_grave_cross", cross(False), "Grave Marker", "WOOD", shape=[[6.5, 0, 6.5, 9.5, 15, 9]])
     add("cp_grave_helmet", cross(True), "Grave Marker", "WOOD", shape=[[6.5, 0, 6.5, 9.5, 15, 9]])
     add("cp_stake", stake(), "Marker Stake", "WOOD", decor=True)

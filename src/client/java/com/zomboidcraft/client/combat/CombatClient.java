@@ -76,6 +76,9 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
         KeyMappingHelper.registerKeyMapping(SHOULDER);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
+            if (com.zomboidcraft.world.cars.Turret.isGunner(player)) {
+                return true;    // at a mounted gun the button works its trigger (see gunner)
+            }
             ItemStack hand = player.getMainHandItem();
             if (!com.zomboidcraft.world.cars.CarProp.mayUse(player, hand)) {
                 return true;    // driving: a hand on the wheel, nothing but a handgun
@@ -97,6 +100,7 @@ public final class CombatClient {
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
         ClientTickEvents.END_CLIENT_TICK.register(HoldPoses::faceLook);
         RaisedProperty.register();
+        MeshGunRenderer.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 
@@ -110,8 +114,37 @@ public final class CombatClient {
         if (!client.options.keyAttack.isDown() || client.gui.screen() != null || client.isPaused()
                 || com.zomboidcraft.client.building.Placer.building() != null) {
             burstLeft = -1;
-        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
+        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()
+                && !com.zomboidcraft.world.cars.Turret.isGunner(player)) {
             pullTrigger(client, player, hand, true);
+        }
+    }
+
+    /** The trigger of the mounted gun this player stands at, as the server last heard it; and the belt last shown. */
+    private static boolean triggerSent;
+    private static int beltShown = -1;
+    private static long beltShownAt;
+
+    /** At a mounted gun: the attack button held or let go works its trigger, and the rounds left show above the hotbar. */
+    private static void gunner(Minecraft client, LocalPlayer player) {
+        boolean at = com.zomboidcraft.world.cars.Turret.isGunner(player);
+        boolean held = at && client.options.keyAttack.isDown() && client.gui.screen() == null && !client.isPaused();
+        if (held != triggerSent) {
+            triggerSent = held;
+            ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(held ? com.zomboidcraft.world.cars.CarNet.TRIGGER_ON
+                    : com.zomboidcraft.world.cars.CarNet.TRIGGER_OFF, 0, 0, 0));
+        }
+        if (!at) {
+            beltShown = -1;
+            return;
+        }
+        int belt = ((com.zomboidcraft.world.cars.CarProp) player.getVehicle()).belt();
+        long now = System.currentTimeMillis();
+        if (belt != beltShown && (held || now - beltShownAt > 1500) || now - beltShownAt > 4000) {
+            beltShown = belt;
+            beltShownAt = now;
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(belt > 0 ? "Minigun: " + belt + " rounds"
+                    : "Minigun: belt empty, R loads it from your 5.56"));
         }
     }
 
@@ -144,8 +177,11 @@ public final class CombatClient {
             shoulderSent = shoulder;
             ClientPlayNetworking.send(new CombatNet.Action(shoulder ? CombatNet.Action.SHOULDER_ON : CombatNet.Action.SHOULDER_OFF));
         }
+        gunner(client, player);
         while (RELOAD.consumeClick()) {
-            if (GunType.isGun(player.getMainHandItem())) {
+            if (com.zomboidcraft.world.cars.Turret.isGunner(player)) {
+                ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(com.zomboidcraft.world.cars.CarNet.BELT, 0, 0, 0));
+            } else if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RELOAD));
             }
         }

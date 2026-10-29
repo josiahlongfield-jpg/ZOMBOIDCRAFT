@@ -7,14 +7,24 @@
    {
     "when": "nickel",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/magnum/nickel/slide"
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/magnum/nickel/slide",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "pbr_magnum",
+      "part": "slide"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/magnum/slide"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/magnum/slide",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "pbr_magnum",
+    "part": "slide"
+   }
   }
  }
 }

@@ -1038,6 +1038,17 @@ def porta(seed, part=None):
     return t
 
 
+def porta_roof(seed):
+    """The toilet's moulded roof: translucent off-white to let the light in, gone grey-green where
+    the rain sits, leaves and grit in its ribs."""
+    t = F.plain(seed, (222, 220, 206), 0.05, 0.3)
+    for x in range(4, N, 12):
+        area(t, x, 0, x + 3, N, mul=0.9, dh=0.15)
+    t.grime(0.35, col=(110, 116, 92))
+    t.speckle(0.01, (90, 70, 40), 0.7, 0.1)
+    return t
+
+
 @lru_cache(maxsize=None)
 def razor_pic():
     p = Pic(1, 1, (0, 0, 0, 0), seed=13)
@@ -1248,6 +1259,7 @@ def textures():
     T["st_porta"] = lambda: porta(9797)
     T["st_porta_lo"] = lambda: porta(9798, "lo")
     T["st_porta_hi"] = lambda: porta(9799, "hi")
+    T["st_porta_roof"] = lambda: porta_roof(9800)
     T["st_razor"] = lambda: razor()
     return T
 
@@ -1568,9 +1580,18 @@ def blocks():
                     [6.3, 5, 6.3, 9.7, 9, 9.7, "st_cone"], [7, 9, 7, 9, 12, 9, "st_cone"]], "Traffic Cone", "WOOL", rotate=None,
         decor=True)
     shell = {"side": "st_porta", "up": "st_porta", "down": "st_porta"}
-    add("st_porta_lo", [[1, 0, 1, 15, 16, 15, {**shell, "north": "st_porta_lo"}], [0.5, 0, 0.5, 15.5, 0.6, 15.5, "home_plastic_black"]],
+    # the moulded shell (photos: refs/military/portable-toilets): its corner ribs, the skid it
+    # stands on, the door's pull handle; up top the translucent domed roof and the vent stack
+    ribs = [[0.5, 0, 0.5, 1.3, 16, 1.3, "st_porta"], [14.7, 0, 0.5, 15.5, 16, 1.3, "st_porta"],
+            [0.5, 0, 14.7, 1.3, 16, 15.5, "st_porta"], [14.7, 0, 14.7, 15.5, 16, 15.5, "st_porta"]]
+    add("st_porta_lo", [[1, 0, 1, 15, 16, 15, {**shell, "north": "st_porta_lo"}], [0.5, 0, 0.5, 15.5, 0.6, 15.5, "home_plastic_black"],
+                        [11.6, 9, 0.3, 12.6, 14, 1, "st_galv"], [11.6, 13, 0.3, 13.6, 14, 1, "st_galv"]] + ribs,
         "Portable Toilet", "WOOD")
-    add("st_porta_hi", [[1, 0, 1, 15, 14, 15, {**shell, "north": "st_porta_hi"}], [0.5, 14, 0.5, 15.5, 16, 15.5, "st_porta"]],
+    roof = "st_porta_roof"
+    add("st_porta_hi", [[1, 0, 1, 15, 13, 15, {**shell, "north": "st_porta_hi"}], [0.5, 12.6, 0.5, 15.5, 13.8, 15.5, "st_porta"],
+                        [1, 13.8, 1, 15, 15, 15, roof], [2.2, 15, 2.2, 13.8, 16.2, 13.8, roof], [4, 16.2, 4, 12, 17, 12, roof],
+                        [12.4, 13.8, 12.4, 13.8, 19.5, 13.8, "home_plastic_black"],
+                        [12, 19.5, 12, 14.2, 20.2, 14.2, "home_plastic_black"]] + [b[:4] + [13] + b[5:] for b in ribs],
         "Portable Toilet", "WOOD")
     add("st_razor", None, "Razor Wire", "METAL", rotate=None, tex="st_razor", model="cross")
     add("st_lot_base", [[4, 0, 4, 12, 10, 12, "st_precast_plain"], [6.5, 10, 6.5, 9.5, 16, 9.5, "st_galv"]], "Light Pole", "STONE",

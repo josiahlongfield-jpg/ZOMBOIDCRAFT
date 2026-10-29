@@ -310,7 +310,9 @@ public class LiftMachine extends BlockEntity {
         BlockPos a = shaft.door(at, 0), c = shaft.door(at, shaft.w - 1);
         AABB box = new AABB(Math.min(a.getX(), c.getX()), a.getY(), Math.min(a.getZ(), c.getZ()),
                 Math.max(a.getX(), c.getX()) + 1, a.getY() + 2, Math.max(a.getZ(), c.getZ()) + 1).deflate(0.02);
-        return !level.getEntities((Entity) null, box, e -> !(e instanceof LiftCar) && !e.isSpectator() && e.isAlive()).isEmpty();
+        // standing in the doorway itself, not just brushing it from inside the car or the landing
+        return !level.getEntities((Entity) null, box, e -> !(e instanceof LiftCar) && !e.isSpectator() && e.isAlive()
+                && box.contains(e.getX(), box.minY + 0.5, e.getZ())).isEmpty();
     }
 
     /** Opens or shuts a landing's doors (the blocks: while they slide the car draws them). */
@@ -393,6 +395,10 @@ public class LiftMachine extends BlockEntity {
             return;
         }
         calls[i] = true;
+        // a floor chosen with the doors open: they shut soon, as a real car's do
+        if (phase == OPEN) {
+            hold = Math.min(hold, 30);
+        }
         setChanged();
     }
 

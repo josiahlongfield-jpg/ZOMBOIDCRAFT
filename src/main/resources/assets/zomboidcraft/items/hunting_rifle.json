@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -193,8 +203,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -208,8 +223,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -380,8 +400,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -395,8 +420,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -584,8 +614,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -599,8 +634,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -795,8 +835,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -810,8 +855,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -999,8 +1049,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -1014,8 +1069,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -1216,8 +1276,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -1231,8 +1296,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_hunting_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -1390,8 +1460,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -1405,8 +1480,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_hunting_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -1564,8 +1644,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_hunting_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -1579,8 +1664,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_hunting_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -1737,8 +1827,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/hunting_rifle/ads/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/hunting_rifle/ads/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_hunting_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1752,8 +1847,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/ads/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/ads/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "handle"
+        }
        }
       },
       {
@@ -1945,8 +2045,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_hunting_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1960,8 +2065,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "handle"
+        }
        }
       },
       {
@@ -2149,8 +2259,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/hunting_rifle/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/hunting_rifle/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_hunting_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -2164,8 +2279,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/hunting_rifle/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/hunting_rifle/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_hunting_rifle",
+         "part": "handle"
+        }
        }
       },
       {

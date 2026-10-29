@@ -13,23 +13,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -44,8 +33,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_mag_out/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -218,23 +233,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/mag_out/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/mag_out/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -249,8 +253,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/mag_out/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/mag_out/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -430,23 +460,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -461,8 +480,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_mag_in/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -659,23 +704,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/mag_in/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/mag_in/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -690,8 +724,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/mag_in/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/mag_in/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -895,23 +955,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_charge/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_charge/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -926,8 +975,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/raised_charge/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/raised_charge/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -1124,23 +1199,12 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/charge/body"
-       },
-       {
-        "type": "minecraft:select",
-        "property": "minecraft:display_context",
-        "cases": [
-         {
-          "when": "firstperson_righthand",
-          "model": {
-           "type": "minecraft:empty"
-          }
-         }
-        ],
-        "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/charge/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "body"
         }
        },
        {
@@ -1155,8 +1219,34 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/pistol/charge/slide"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/pistol/charge/slide",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_pistol",
+          "part": "slide"
+         }
         }
        },
        {
@@ -1359,23 +1449,12 @@
     "type": "minecraft:composite",
     "models": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/pistol/ads/body"
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:display_context",
-      "cases": [
-       {
-        "when": "firstperson_righthand",
-        "model": {
-         "type": "minecraft:empty"
-        }
-       }
-      ],
-      "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/pistol/ads/charging_handle"
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/pistol/ads/body",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "pbr_pistol",
+       "part": "body"
       }
      },
      {
@@ -1390,8 +1469,34 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/pistol/ads/slide"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/pistol/ads/charging_handle",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_pistol",
+        "part": "handle"
+       }
+      }
+     },
+     {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+       {
+        "when": "firstperson_righthand",
+        "model": {
+         "type": "minecraft:empty"
+        }
+       }
+      ],
+      "fallback": {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/pistol/ads/slide",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_pistol",
+        "part": "slide"
+       }
       }
      },
      {
@@ -1591,23 +1696,12 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/pistol/raised_hip/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_hip/charging_handle"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/pistol/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_pistol",
+        "part": "body"
        }
       },
       {
@@ -1622,8 +1716,34 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/raised_hip/slide"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/raised_hip/slide",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "slide"
+        }
        }
       },
       {
@@ -1820,23 +1940,12 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/pistol/hip/body"
-      },
-      {
-       "type": "minecraft:select",
-       "property": "minecraft:display_context",
-       "cases": [
-        {
-         "when": "firstperson_righthand",
-         "model": {
-          "type": "minecraft:empty"
-         }
-        }
-       ],
-       "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/hip/charging_handle"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/pistol/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_pistol",
+        "part": "body"
        }
       },
       {
@@ -1851,8 +1960,34 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/pistol/hip/slide"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/pistol/hip/slide",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_pistol",
+         "part": "slide"
+        }
        }
       },
       {

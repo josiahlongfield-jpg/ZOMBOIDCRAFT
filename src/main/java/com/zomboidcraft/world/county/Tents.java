@@ -92,9 +92,71 @@ final class Tents {
     // ------------------------------------------------------------------ standing
 
     void pitch(int lx, int lz, int w, int len, String canvas, String use) {
-        frame(lx, lz, width(canvas, w), len, len, canvas, use);
-        fitOut(lx, lz, width(canvas, w), len, use);
-        yard(lx, lz, width(canvas, w), len, canvas, use);
+        w = width(canvas, w);
+        // the army's frame tents mostly have an entry vestibule: the first two rows of the plot
+        int v = len >= 8 && (use.equals("gp") || use.equals("ward")) && chance() < 0.7 ? 2 : 0;
+        frame(lx, lz + v, w, len - v, len - v, canvas, use);
+        if (v > 0) {
+            vestibule(lx, lz, w, canvas, use);
+        }
+        fitOut(lx, lz + v, w, len - v, use);
+        yard(lx, lz, w, len, canvas, use);
+    }
+
+    /**
+     * The entry vestibule: a little frame tent four wide and two deep out in front of the door,
+     * its own door at the front, open through to the tent behind; the ground either side of it bare.
+     */
+    private void vestibule(int lx, int lz, int w, String canvas, String use) {
+        String t = "tn_" + canvas + "_";
+        int x0 = lx + w / 2 - 2, x1 = x0 + 3;
+        boolean curtain = use.equals("ward");
+        String floor = bare ? null : use.equals("ward") ? "tn_mat" : "tn_ply";
+        for (int i = 0; i < 2; i++) {
+            int z = lz + i;
+            boolean front = i == 0;
+            if (floor != null) {
+                for (int x = x0; x <= x1; x++) {
+                    p.set(x, 0, z, floor);
+                }
+            }
+            for (int s = 0; s < 2; s++) {
+                int x = s == 0 ? x0 : x1;
+                if (front) {
+                    String f = s == 0 ? "north" : "east";
+                    p.set(x, 1, z, t + "corner_lo[facing=" + f + "]");
+                    p.set(x, 2, z, t + "corner[facing=" + f + "]");
+                } else {
+                    String out = s == 0 ? "west" : "east";
+                    p.set(x, 1, z, t + "wall_lo[facing=" + out + "]");
+                    p.set(x, 2, z, t + (chance() < 0.5 ? "win" : "wall") + "[facing=" + out + "]");
+                }
+            }
+            for (int k = 0; k < 2; k++) {
+                for (int s = 0; s < 2; s++) {
+                    int x = s == 0 ? x0 + k : x1 - k;
+                    String f = s == 0 ? "west" : "east";
+                    String r = k == 1 ? "r" : "";
+                    if (!front) {
+                        p.set(x, 3, z, t + "roof_" + k + r + "[facing=" + f + "]");
+                        continue;
+                    }
+                    p.set(x, 3, z, t + "roofend_" + k + r + "_" + (s == 0 ? "a" : "b") + "[facing=" + f + "]");
+                    if (k == 1) {
+                        String lr = s == 0 ? "l" : "r";
+                        if (curtain) {
+                            p.set(x, 1, z, "tn_curtain_lo[facing=north]");
+                            p.set(x, 2, z, t + "curtain_hi[facing=north]");
+                        } else {
+                            p.set(x, 1, z, t + "door_lo_" + lr + "[facing=north]");
+                            p.set(x, 2, z, t + "door_hi_" + lr + "[facing=north]");
+                        }
+                    }
+                }
+            }
+        }
+        p.setIfAir(x0 - 1, 1, lz + 1, "tn_guy[facing=west]");
+        p.setIfAir(x1 + 1, 1, lz + 1, "tn_guy[facing=east]");
     }
 
     /** The canvas and its frame: rows 0..upTo-1 of the tent (the rest is down). */

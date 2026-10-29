@@ -7,6 +7,9 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== mesh guns"
+classes 'renderer/special/' | head -60
+for c in net.minecraft.client.renderer.special.SpecialModelRenderer 'net.minecraft.client.renderer.special.SpecialModelRenderer$Unbaked' 'net.minecraft.client.renderer.special.SpecialModelRenderer$BakingContext' net.minecraft.client.renderer.special.NoDataSpecialModelRenderer net.minecraft.client.renderer.special.SpecialModelRenderers net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.rendertype.RenderTypes; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
 echo "===== entity id"
 javap -cp "$CP" -p -c net.minecraft.world.entity.Entity 2>&1 | grep -A25 -E 'public int getId\(\);|public void setId\(int\);' | head -70
 javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E ' id;|ID|idAssigned|UNASSIGNED'

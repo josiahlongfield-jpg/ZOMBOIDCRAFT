@@ -7,14 +7,24 @@
    {
     "when": "nickel",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/magnum/nickel/charging_handle"
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/magnum/nickel/charging_handle",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "pbr_magnum",
+      "part": "handle"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/magnum/charging_handle"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/magnum/charging_handle",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "pbr_magnum",
+    "part": "handle"
+   }
   }
  }
 }

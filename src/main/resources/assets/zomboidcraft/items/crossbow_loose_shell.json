@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/crossbow/loose_shell"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/crossbow/loose_shell",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "pbr_crossbow_bolt",
+   "part": "body"
+  }
  }
 }

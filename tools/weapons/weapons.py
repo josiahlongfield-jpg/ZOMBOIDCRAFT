@@ -1421,6 +1421,7 @@ def main():
         item_def(spec.name, {'type': 'minecraft:range_dispatch', 'property': 'minecraft:damage',
                              'entries': [{'threshold': 0.5, 'model': ref(spec.name + '_worn')}],
                              'fallback': ref(spec.name)})
+        kit.mesh_skin(spec.name, ASSETS)
         lang[f'item.{NS}.{spec.name}'] = spec.title
         summary.append(f'{spec.name}: {len(m.parts)} boxes, {T}px')
 
@@ -1571,6 +1572,8 @@ def main():
                                  'double_barrel': db_hold, 'revolver': rv_hold, 'rimfire': rm_hold, 'smg': sm_hold,
                                  'sawn_off': so_hold, 'magnum': mg_hold, 'lever_action': la_hold, 'crossbow': xb_hold},
                                 (mh, mG, mkeys), lenses, reloads)
+    for name in kit.mesh_skins():       # ammo and parts with a bought mesh, which no gun or melee pass rewrites
+        kit.mesh_skin(name, ASSETS)
     print('\n'.join(summary))
     if preview:
         write_preview(preview)

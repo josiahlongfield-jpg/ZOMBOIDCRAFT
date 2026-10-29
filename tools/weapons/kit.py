@@ -18,7 +18,9 @@ glass texture), and gun_slots/<gun>.json saying where each slot's mount point is
 """
 import json
 import math
+import sys
 import zlib
+from pathlib import Path
 
 import numpy as np
 
@@ -487,6 +489,21 @@ def opened(m, axis, angle, origin):
     return out
 
 
+def _meshskin():
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'meshguns'))
+    import skin
+    return skin
+
+
+def mesh_skin(name, assets):
+    """A bought mesh in place of the block weapon (tools/meshguns/skins.json), if it has one."""
+    _meshskin().apply(name, str(assets / 'items'))
+
+
+def mesh_skins():
+    return list(_meshskin().skins())
+
+
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
     Every finish comes in each of the WEARS skins, laid out alike. Returns a summary line and the data the
@@ -679,6 +696,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         else:
             model = ref(f'{base}/{loose_flash.get(key, key)}')      # the flash has no finish
         M.dump({'model': model}, assets / f'items/{gun.name}_loose_{name}.json')
+    mesh_skin(gun.name, assets)
 
     # ghosts and the weapon screen's slot data
     slot_data = []

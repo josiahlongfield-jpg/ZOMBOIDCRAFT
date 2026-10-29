@@ -1,0 +1,350 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_gb_inner": "zomboidcraft:block/city/cp_gb_inner",
+    "cp_gb_roof": "zomboidcraft:block/city/cp_gb_roof",
+    "cp_gb_trim": "zomboidcraft:block/city/cp_gb_trim",
+    "lamp_glass": "zomboidcraft:block/city/lamp_glass",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "trade_glass_amber": "zomboidcraft:block/city/trade_glass_amber",
+    "particle": "zomboidcraft:block/city/cp_gb_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12.6,
+        0
+      ],
+      "to": [
+        16,
+        14.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_gb_roof",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_gb_roof",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_gb_roof",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cp_gb_roof",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cp_gb_roof"
+        },
+        "down": {
+          "texture": "#cp_gb_roof"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12.4,
+        0
+      ],
+      "to": [
+        16,
+        12.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_gb_inner",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_gb_inner",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_gb_inner",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cp_gb_inner",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cp_gb_inner"
+        },
+        "down": {
+          "texture": "#cp_gb_inner"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        11.4,
+        7
+      ],
+      "to": [
+        13,
+        12.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_gb_trim"
+        },
+        "south": {
+          "texture": "#cp_gb_trim"
+        },
+        "east": {
+          "texture": "#cp_gb_trim"
+        },
+        "west": {
+          "texture": "#cp_gb_trim"
+        },
+        "up": {
+          "texture": "#cp_gb_trim"
+        },
+        "down": {
+          "texture": "#cp_gb_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        3.4,
+        11.2,
+        7.3
+      ],
+      "to": [
+        12.6,
+        11.4,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_glass"
+        },
+        "south": {
+          "texture": "#lamp_glass"
+        },
+        "east": {
+          "texture": "#lamp_glass"
+        },
+        "west": {
+          "texture": "#lamp_glass"
+        },
+        "up": {
+          "texture": "#lamp_glass"
+        },
+        "down": {
+          "texture": "#lamp_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        14.6,
+        6.5
+      ],
+      "to": [
+        9.5,
+        15.4,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_gb_trim"
+        },
+        "south": {
+          "texture": "#cp_gb_trim"
+        },
+        "east": {
+          "texture": "#cp_gb_trim"
+        },
+        "west": {
+          "texture": "#cp_gb_trim"
+        },
+        "up": {
+          "texture": "#cp_gb_trim"
+        },
+        "down": {
+          "texture": "#cp_gb_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        15.4,
+        6.8
+      ],
+      "to": [
+        9.2,
+        17.8,
+        9.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trade_glass_amber",
+          "uv": [
+            6.800000000000001,
+            0,
+            9.2,
+            2.4000000000000004
+          ]
+        },
+        "south": {
+          "texture": "#trade_glass_amber",
+          "uv": [
+            6.8,
+            0,
+            9.2,
+            2.4000000000000004
+          ]
+        },
+        "east": {
+          "texture": "#trade_glass_amber",
+          "uv": [
+            6.800000000000001,
+            0,
+            9.2,
+            2.4000000000000004
+          ]
+        },
+        "west": {
+          "texture": "#trade_glass_amber",
+          "uv": [
+            6.8,
+            0,
+            9.2,
+            2.4000000000000004
+          ]
+        },
+        "up": {
+          "texture": "#trade_glass_amber"
+        },
+        "down": {
+          "texture": "#trade_glass_amber"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        17.8,
+        7.2
+      ],
+      "to": [
+        8.8,
+        18.4,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_gb_trim",
+          "uv": [
+            7.199999999999999,
+            0,
+            8.8,
+            0.5999999999999979
+          ]
+        },
+        "south": {
+          "texture": "#cp_gb_trim",
+          "uv": [
+            7.2,
+            0,
+            8.8,
+            0.5999999999999979
+          ]
+        },
+        "east": {
+          "texture": "#cp_gb_trim",
+          "uv": [
+            7.199999999999999,
+            0,
+            8.8,
+            0.5999999999999979
+          ]
+        },
+        "west": {
+          "texture": "#cp_gb_trim",
+          "uv": [
+            7.2,
+            0,
+            8.8,
+            0.5999999999999979
+          ]
+        },
+        "up": {
+          "texture": "#cp_gb_trim"
+        },
+        "down": {
+          "texture": "#cp_gb_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        14.6,
+        2
+      ],
+      "to": [
+        13,
+        16.6,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "uv": [
+            3,
+            0,
+            5,
+            2.0000000000000018
+          ]
+        },
+        "south": {
+          "texture": "#st_galv",
+          "uv": [
+            11,
+            0,
+            13,
+            2.0000000000000018
+          ]
+        },
+        "east": {
+          "texture": "#st_galv",
+          "uv": [
+            12,
+            0,
+            14,
+            2.0000000000000018
+          ]
+        },
+        "west": {
+          "texture": "#st_galv",
+          "uv": [
+            2,
+            0,
+            4,
+            2.0000000000000018
+          ]
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}
