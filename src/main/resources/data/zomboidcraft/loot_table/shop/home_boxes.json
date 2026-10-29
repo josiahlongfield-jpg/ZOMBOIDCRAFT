@@ -10,66 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather_helmet",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_chestplate",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_leggings",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_boots",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:golf_club",
           "weight": 2,
           "functions": [
@@ -180,17 +120,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:home_preserves",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:glass_soda",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rag",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -205,12 +145,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hand_drill",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:vhs_tape",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -225,17 +165,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:instant_camera",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:kerosene_lantern",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:candle",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -250,27 +190,27 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sleeping_bag",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:board_game",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:baseball_cards",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:art_print",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:art_print",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:jigsaw_puzzle",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -285,7 +225,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:snow_globe",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -300,12 +240,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:newspaper_bundle",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:broken_radio",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -320,7 +260,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:church_candle",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
