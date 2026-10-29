@@ -14,8 +14,8 @@ import org.joml.Vector3f;
 /**
  * Draws one Harvestman as the Spider 7 creature: its animator's pose skinned onto the mesh each frame (four bones a
  * vertex), stood on the surface it holds (its feet on the floor, wall or ceiling under its body) and turned the way its
- * body lies. Its red seams and core are its glow map: dark when it hides (the red painted over too, and its red skull
- * dulled), drawn lit over the top when it shows itself or feeds, pulsing as it feeds. One per Harvestman, client only.
+ * body lies. Its skull always glows. Its red seams and core are its glow map: dark when it hides (the red painted over
+ * too), drawn lit over the top when it shows itself or feeds, pulsing as it feeds. One per Harvestman, client only.
  */
 public final class SpiderDraw {
     private static final int FULL_BRIGHT = 0xF000F0;
@@ -120,13 +120,14 @@ public final class SpiderDraw {
         for (int g = 0; g < model.groups.length; g++) {
             SpiderModel.Group gr = model.groups[g];
             int gi = g;
-            // hidden, its red goes dark; its red skull dulls too
-            float dull = gr.name.equals("skull") ? 1 - 0.55f * camo : 1;
+            // its skull always glows, lit however dark it is round it; the rest of its red goes dark as it hides
+            boolean skull = gr.name.equals("skull");
+            float hide = skull ? 0 : camo, lit = skull ? 1 : show;
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(gr.texture),
-                    (pose, out) -> body(gr, pos[gi], normal[gi], pose, out, light, overlay, dull, camo));
-            if (show > 0.02f && gr.glowTexture != null && gr.glowTris != null && gr.glowTris.length > 0) {
+                    (pose, out) -> body(gr, pos[gi], normal[gi], pose, out, skull ? FULL_BRIGHT : light, overlay, 1, hide));
+            if (lit > 0.02f && gr.glowTexture != null && gr.glowTris != null && gr.glowTris.length > 0) {
                 collector.submitCustomGeometry(poseStack, shaders ? RenderTypes.beaconBeam(gr.glowTexture, true) : RenderTypes.eyes(gr.glowTexture),
-                        (pose, out) -> glow(gr, pos[gi], normal[gi], pose, out, show, shaders));
+                        (pose, out) -> glow(gr, pos[gi], normal[gi], pose, out, lit, shaders));
             }
         }
         poseStack.popPose();
