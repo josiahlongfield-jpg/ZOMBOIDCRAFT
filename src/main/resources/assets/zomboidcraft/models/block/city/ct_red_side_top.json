@@ -1,0 +1,453 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ct_red": "zomboidcraft:block/city/ct_red",
+    "particle": "zomboidcraft:block/city/ct_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0,
+        1.2
+      ],
+      "to": [
+        16.0,
+        13.4,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        0,
+        0.0
+      ],
+      "to": [
+        2.6,
+        13.4,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.6,
+        0,
+        0.0
+      ],
+      "to": [
+        6.6,
+        13.4,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.6,
+        0,
+        0.0
+      ],
+      "to": [
+        10.6,
+        13.4,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.6,
+        0,
+        0.0
+      ],
+      "to": [
+        14.6,
+        13.4,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13.4,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13.0,
+        0.2
+      ],
+      "to": [
+        16,
+        13.4,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red"
+        },
+        "east": {
+          "texture": "#ct_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        14.6,
+        2.0
+      ],
+      "to": [
+        16.0,
+        15.3,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        15.3,
+        2.0
+      ],
+      "to": [
+        2.6,
+        15.8,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        4.6,
+        15.3,
+        2.0
+      ],
+      "to": [
+        6.6,
+        15.8,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        8.6,
+        15.3,
+        2.0
+      ],
+      "to": [
+        10.6,
+        15.8,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        12.6,
+        15.3,
+        2.0
+      ],
+      "to": [
+        14.6,
+        15.8,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red"
+        },
+        "west": {
+          "texture": "#ct_red"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2.0
+      ],
+      "to": [
+        16,
+        14.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_red"
+        },
+        "south": {
+          "texture": "#ct_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_red"
+        },
+        "down": {
+          "texture": "#ct_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

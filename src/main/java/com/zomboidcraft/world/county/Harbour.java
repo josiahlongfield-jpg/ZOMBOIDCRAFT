@@ -59,19 +59,7 @@ final class Harbour {
 
     /** A shipping container 12 long along x (or z) from (x, y, z), 3 x 3, doors at the low end. */
     void box(int x, int y, int z, String colour, boolean alongX) {
-        for (int i = 0; i < 12; i++) {
-            for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < 3; j++) {
-                    boolean door = i == 0 && k == 1 && j < 2;
-                    String b = door ? colour + "_door[facing=" + (alongX ? "west" : "north") + "]" : colour;
-                    if (alongX) {
-                        p.set(x + i, y + j, z + k, b);
-                    } else {
-                        p.set(x + k, y + j, z + i, b);
-                    }
-                }
-            }
-        }
+        Boxes.place(p, x, y, z, 12, colour, alongX, true, false);
     }
 
     String boxColour() {

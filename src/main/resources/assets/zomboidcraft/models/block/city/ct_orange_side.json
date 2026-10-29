@@ -1,0 +1,222 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ct_orange": "zomboidcraft:block/city/ct_orange",
+    "particle": "zomboidcraft:block/city/ct_orange"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0,
+        1.2
+      ],
+      "to": [
+        16.0,
+        16,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange"
+        },
+        "south": {
+          "texture": "#ct_orange"
+        },
+        "east": {
+          "texture": "#ct_orange",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_orange",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        0,
+        0.0
+      ],
+      "to": [
+        2.6,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_orange"
+        },
+        "east": {
+          "texture": "#ct_orange"
+        },
+        "west": {
+          "texture": "#ct_orange"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.6,
+        0,
+        0.0
+      ],
+      "to": [
+        6.6,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_orange"
+        },
+        "east": {
+          "texture": "#ct_orange"
+        },
+        "west": {
+          "texture": "#ct_orange"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.6,
+        0,
+        0.0
+      ],
+      "to": [
+        10.6,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_orange"
+        },
+        "east": {
+          "texture": "#ct_orange"
+        },
+        "west": {
+          "texture": "#ct_orange"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.6,
+        0,
+        0.0
+      ],
+      "to": [
+        14.6,
+        16,
+        1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ct_orange"
+        },
+        "east": {
+          "texture": "#ct_orange"
+        },
+        "west": {
+          "texture": "#ct_orange"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_orange"
+        },
+        "south": {
+          "texture": "#ct_orange",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ct_orange",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ct_orange",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ct_orange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ct_orange",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
