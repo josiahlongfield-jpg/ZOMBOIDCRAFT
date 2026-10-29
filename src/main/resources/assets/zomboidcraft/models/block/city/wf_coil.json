@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_rope": "zomboidcraft:block/city/wf_rope",
+    "particle": "zomboidcraft:block/city/wf_rope"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_rope"
+        },
+        "south": {
+          "texture": "#wf_rope"
+        },
+        "east": {
+          "texture": "#wf_rope"
+        },
+        "west": {
+          "texture": "#wf_rope"
+        },
+        "up": {
+          "texture": "#wf_rope"
+        },
+        "down": {
+          "texture": "#wf_rope",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "to": [
+        12,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_rope"
+        },
+        "south": {
+          "texture": "#wf_rope"
+        },
+        "east": {
+          "texture": "#wf_rope"
+        },
+        "west": {
+          "texture": "#wf_rope"
+        },
+        "up": {
+          "texture": "#wf_rope"
+        },
+        "down": {
+          "texture": "#wf_rope"
+        }
+      }
+    }
+  ]
+}

@@ -266,6 +266,8 @@ public final class ZcConfig {
         public int perStep = 24;
         /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
         public double emptyHouses = 0.5;
+        /** Buildings where the dead gathered at the end draw extra indoors: hospital x3, police x2.5, mall x2, fire station and school x1.5. */
+        public boolean hotspots = true;
         /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
         public int respawnDays = 0;
         /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */

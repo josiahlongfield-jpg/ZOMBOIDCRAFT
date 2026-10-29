@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ship_lifebuoy": "zomboidcraft:block/city/ship_lifebuoy",
+    "wf_white": "zomboidcraft:block/city/wf_white",
+    "particle": "zomboidcraft:block/city/wf_white"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_white"
+        },
+        "south": {
+          "texture": "#wf_white"
+        },
+        "east": {
+          "texture": "#wf_white"
+        },
+        "west": {
+          "texture": "#wf_white"
+        },
+        "up": {
+          "texture": "#wf_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        4.5
+      ],
+      "to": [
+        13,
+        6,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_lifebuoy"
+        },
+        "south": {
+          "texture": "#ship_lifebuoy"
+        },
+        "east": {
+          "texture": "#ship_lifebuoy"
+        },
+        "west": {
+          "texture": "#ship_lifebuoy"
+        },
+        "up": {
+          "texture": "#ship_lifebuoy"
+        },
+        "down": {
+          "texture": "#ship_lifebuoy"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        12,
+        4.5
+      ],
+      "to": [
+        13,
+        14,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_lifebuoy"
+        },
+        "south": {
+          "texture": "#ship_lifebuoy"
+        },
+        "east": {
+          "texture": "#ship_lifebuoy"
+        },
+        "west": {
+          "texture": "#ship_lifebuoy"
+        },
+        "up": {
+          "texture": "#ship_lifebuoy"
+        },
+        "down": {
+          "texture": "#ship_lifebuoy"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        4.5
+      ],
+      "to": [
+        5,
+        12,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_lifebuoy"
+        },
+        "south": {
+          "texture": "#ship_lifebuoy"
+        },
+        "east": {
+          "texture": "#ship_lifebuoy"
+        },
+        "west": {
+          "texture": "#ship_lifebuoy"
+        },
+        "up": {
+          "texture": "#ship_lifebuoy"
+        },
+        "down": {
+          "texture": "#ship_lifebuoy"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        6,
+        4.5
+      ],
+      "to": [
+        13,
+        12,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ship_lifebuoy"
+        },
+        "south": {
+          "texture": "#ship_lifebuoy"
+        },
+        "east": {
+          "texture": "#ship_lifebuoy"
+        },
+        "west": {
+          "texture": "#ship_lifebuoy"
+        },
+        "up": {
+          "texture": "#ship_lifebuoy"
+        },
+        "down": {
+          "texture": "#ship_lifebuoy"
+        }
+      }
+    }
+  ]
+}

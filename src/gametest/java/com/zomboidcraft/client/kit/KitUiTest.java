@@ -227,6 +227,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            bookTest(sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
@@ -694,6 +695,44 @@ public class KitUiTest implements FabricClientGameTest {
             return "from 3 forward -> " + (forward + 1) + ", from there back -> " + (back + 1) + ", key 7 -> " + (key + 1);
         });
         LOG.info("ZCUI quick slot scroll: {}", scrolled);
+        // the other rigs worn: a shoulder holster with a knife on the belt, then a thigh holster
+        for (boolean shoulder : new boolean[]{true, false}) {
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(ModItems.LEATHER_BELT));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HOLSTER,
+                        new ItemStack(shoulder ? ModItems.SHOULDER_HOLSTER : ModItems.THIGH_HOLSTER));
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHEATH, shoulder ? new ItemStack(ModItems.KNIFE_SHEATH) : ItemStack.EMPTY);
+                for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+                p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+                if (shoulder) p.getInventory().setItem(4, new ItemStack(ModItems.KITCHEN_KNIFE));
+            });
+            ctx.waitTicks(5);
+            for (float turn : new float[]{0f, 150f, 210f}) {
+                ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+                ctx.waitTicks(3);
+                ctx.takeScreenshot("rig-figure-" + (shoulder ? "shoulder-" : "thigh-") + Math.round(turn));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        }
+    }
+
+    /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
+    private static void bookTest(TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var skill = com.zomboidcraft.skills.Skill.CARPENTRY;
+            var item = com.zomboidcraft.loot.items.LootItems.item("skillbook_carpentry");
+            int a = com.zomboidcraft.skills.Skills.xp(p, skill);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int b = com.zomboidcraft.skills.Skills.xp(p, skill);
+            new ItemStack(item).finishUsingItem(p.level(), p);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int c = com.zomboidcraft.skills.Skills.xp(p, skill);
+            LOG.info("ZCUI skill book: item {} plain +{} read +{} vol1 read {}", item == null ? "missing" : item.getClass().getSimpleName(),
+                    b - a, c - b, com.zomboidcraft.skills.SkillBooks.read(p, skill, 1));
+        });
     }
 
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
