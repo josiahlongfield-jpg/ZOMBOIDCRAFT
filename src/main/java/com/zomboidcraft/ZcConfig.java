@@ -204,6 +204,8 @@ public final class ZcConfig {
         public float hitPlayerPerSpeed = 1.2f;
         /** OTTO, the robot conductor, talks in chat to riders and people on the platform. */
         public boolean ottoTalks = true;
+        /** OTTO keeps quiet except for his one greeting when someone boards (Josiah 2026-10-29); false for all his lines. */
+        public boolean ottoOnlyGreets = true;
         /** Seconds between OTTO's remarks while running between stops. */
         public int ottoChatter = 45;
         /** Zombies ride the trains: share of trains that start with some aboard, and most a train carries. */
@@ -1360,7 +1362,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 14;
+    private static final int DEFAULTS = 15;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1527,6 +1529,11 @@ public final class ZcConfig {
             if (c.trains.curveGrip == 2.0) {
                 c.trains.curveGrip = 4.0;
             }
+        }
+        if (c.defaultsVersion < 15) {
+            // 2026-10-29 (Josiah): three cars, OTTO's included, on both lines
+            c.trains.railCars = Math.min(c.trains.railCars, 3);
+            c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
         }
         c.defaultsVersion = DEFAULTS;
     }

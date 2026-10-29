@@ -170,7 +170,15 @@ final class Otto {
         run.aboard.addAll(riding);
         if (run.riderCooldown <= 0 && (left || boarded)) {
             boolean jumped = left && run.phase == TrainRun.Phase.RUN && run.speedPerSecond() > 4;
-            say(level, run, clips(pick(jumped ? OttoLines.JUMPED : left ? OttoLines.ALIGHT : OttoLines.BOARD, level), null), true);
+            if (ZcConfig.get().trains.ottoOnlyGreets) {
+                if (boarded) {
+                    greeting = true;
+                    say(level, run, clips(pick(OttoLines.GREET, level), null), true);
+                    greeting = false;
+                }
+            } else {
+                say(level, run, clips(pick(jumped ? OttoLines.JUMPED : left ? OttoLines.ALIGHT : OttoLines.BOARD, level), null), true);
+            }
             run.riderCooldown = 160;
         }
         if (now % 100 == 0 && run.zombieCooldown <= 0 && zombiesAbout(level, run, train) >= 4) {
@@ -275,10 +283,13 @@ final class Otto {
 
     /** Over the station speaker to whoever pressed the call button. */
     private static void tell(ServerPlayer by, List<String> clips) {
-        if (ZcConfig.get().trains.ottoTalks) {
+        if (ZcConfig.get().trains.ottoTalks && !ZcConfig.get().trains.ottoOnlyGreets) {
             ServerPlayNetworking.send(by, new TrainNet.OttoSay(-1, clips));
         }
     }
+
+    /** Set while he says his greeting, the one line he says when trains.ottoOnlyGreets keeps him quiet otherwise. */
+    private static boolean greeting;
 
     /** Says a line out loud to everyone riding and everyone near the train (and, at a stop, on its platform). */
     static void say(ServerLevel level, TrainRun run, List<String> clips, boolean platform) {
@@ -287,7 +298,7 @@ final class Otto {
 
     /** The same, and to one more player wherever they are (the one he's shouting at). */
     static void say(ServerLevel level, TrainRun run, List<String> clips, boolean platform, ServerPlayer also) {
-        if (!ZcConfig.get().trains.ottoTalks || clips.isEmpty()) {
+        if (!ZcConfig.get().trains.ottoTalks || clips.isEmpty() || ZcConfig.get().trains.ottoOnlyGreets && !greeting) {
             return;
         }
         run.quiet = 0;
