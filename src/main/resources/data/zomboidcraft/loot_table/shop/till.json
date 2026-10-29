@@ -10,23 +10,17 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
+          "name": "minecraft:name_tag",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 10
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 3,
+          "name": "zomboidcraft:cash_bundle",
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -40,7 +34,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
+          "name": "zomboidcraft:coin_roll",
           "weight": 8,
           "functions": [
             {
@@ -48,34 +42,10 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 6
+                "max": 2
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_nugget",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:name_tag",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:empty",
-          "weight": 10
         }
       ]
     }

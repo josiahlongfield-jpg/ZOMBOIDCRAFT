@@ -239,6 +239,51 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_blunt",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_aiming",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:county_map",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:case_file",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:evidence_bag",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:whistle",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:handcuffs",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:duty_belt",
           "weight": 24
         },
@@ -327,6 +372,16 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:binoculars",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_badge",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_radio_belt",
+          "weight": 3
         }
       ]
     }

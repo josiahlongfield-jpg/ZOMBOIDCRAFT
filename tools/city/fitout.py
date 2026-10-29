@@ -427,7 +427,7 @@ def blocks():
     # the DJ booth faces the crowd north; the DJ stands behind it
     add("of_dj_booth", [[0, 0, 0, 16, 11, 2.5, face("of_dj_front", "of_dj_front")], [0, 0, 2.5, 16, 10, 14, "of_dj_front"],
                         [0, 10, 1, 16, 11, 15, {"up": "of_decks", "side": black, "down": black}],
-                        [2, 11, 4, 14, 11.6, 12, {"up": "of_decks", "side": black}]], "DJ Booth", "METAL", loot="storage")
+                        [2, 11, 4, 14, 11.6, 12, {"up": "of_decks", "side": black}]], "DJ Booth", "METAL", loot="dj")
     add("of_speaker", [[1.5, 0, 2, 14.5, 16, 14, face("of_speaker", "of_dj_front", black)]], "Speaker Stack", "WOOD")
     add("of_high_table", [[7, 0, 7, 9, 11, 9, chrome], [4, 0, 4, 12, 0.6, 12, chrome],
                           [2, 11, 2, 14, 12, 14, {"up": "home_vanity_top", "side": black, "down": black}]], "High Table", "METAL")
@@ -477,9 +477,9 @@ def blocks():
     add("of_fire_pit", [[2, 0, 2, 14, 5, 14, "pt_stone_rough"], [1, 4, 1, 15, 5, 15, "stone_trim"], [3, 5, 3, 13, 5.5, 13, "of_ember"]],
         "Fire Pit", "STONE", rotate=None, light=11)
     add("of_bbq", [[1, 0, 3, 15, 9, 14, face(steel, steel)], [1, 9, 3, 15, 10, 14, {"up": "of_grate", "side": steel}], [1, 10, 11, 15, 15, 14, chrome],
-                   [15, 8, 4, 16, 9, 13, steel], [0, 8, 4, 1, 9, 13, steel], [4, 6, 2, 12, 7, 3, chrome]], "Outdoor Grill", "METAL", loot="storage")
+                   [15, 8, 4, 16, 9, 13, steel], [0, 8, 4, 1, 9, 13, steel], [4, 6, 2, 12, 7, 3, chrome]], "Outdoor Grill", "METAL", loot="grill")
     add("of_out_counter", [[0, 0, 1, 16, 14, 16, {"north": "home_drw_white", "side": steel, "up": steel}], [0, 14, 0, 16, 15, 16, "marble_white"]],
-        "Outdoor Kitchen", "STONE", loot="storage")
+        "Outdoor Kitchen", "STONE", loot="grill")
     add("of_parasol_pole", [[7.5, 0, 7.5, 8.5, 16, 8.5, chrome], [5, 0, 5, 11, 1, 11, steel]], "Parasol", "METAL", rotate=None, decor=True)
     add("of_parasol_top", [[7.5, 0, 7.5, 8.5, 6, 8.5, chrome], [0, 4, 0, 16, 5, 16, cu], [3, 5, 3, 13, 6, 13, cu], [6, 6, 6, 10, 7, 10, cu]],
         "Parasol", "WOOL", rotate=None, decor=True)
@@ -504,7 +504,7 @@ def blocks():
                          [9, 9, 6.5, 10.5, 13, 9, "bk_bronze"]], "Sculpture", "STONE")
     add("of_screen", [[0, 0, 15.2, 16, 16, 16, face("of_screen", black)]], "Cinema Screen", "WOOL", decor=True)
     add("of_island", [[0, 0, 1, 16, 14, 15, face("home_drw_white", "home_white")], [0, 14, 0, 16, 15, 16, "marble_white"]], "Kitchen Island", "STONE",
-        loot="storage")
+        loot="home_cupboard")
     return out
 
 

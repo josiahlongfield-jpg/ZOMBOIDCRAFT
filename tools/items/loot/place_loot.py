@@ -20,8 +20,8 @@ NS = 'zomboidcraft'
 
 # table -> the place tags it stocks (tag: weight multiplier)
 WHERE = {
-    'car/ambulance': {'amb': 2, 'hosp': 1}, 'car/bus': {'kids': 1, 'school': 1, 'bus': 1}, 'car/fire': {'fire': 1},
-    'car/glovebox': {'glove': 1}, 'car/police': {'police': 1, 'glove': 1}, 'car/swat': {'mil': 1},
+    'car/ambulance': {'amb': 2, 'hosp': 1}, 'car/bus': {'kids': 1, 'school': 1, 'bus': 1}, 'car/fire': {'fire': 1, 'firetruck': 1},
+    'car/glovebox': {'glove': 1}, 'car/police': {'police': 1, 'glove': 1, 'pcar': 1}, 'car/swat': {'mil': 1},
     'car/trunk': {'trunk': 2, 'camp': 1, 'auto': 1}, 'car/work': {'worktruck': 2, 'build': 1, 'hard': 1},
     'shop/basement_food': {'bunker': 2, 'pantry': 1}, 'shop/basement_medicine': {'bunker': 1, 'bath': 1},
     'shop/basement_supplies': {'bunker': 1, 'camp': 1}, 'shop/drinks': {'conv': 1}, 'shop/farm': {'farm': 1, 'vet': 1},
@@ -29,14 +29,16 @@ WHERE = {
     'shop/home_cupboard': {'pantry': 1}, 'shop/home_desk': {'desk': 1}, 'shop/home_freezer': {'freez': 1},
     'shop/home_fridge': {'fridge': 1}, 'shop/home_garage': {'garage': 1, 'auto': 1}, 'shop/home_laundry': {'laund': 1},
     'shop/home_medicine': {'bath': 1}, 'shop/home_nightstand': {'night': 1}, 'shop/home_pantry': {'pantry': 1},
-    'shop/home_sink': {'laund': 1, 'garage': 1}, 'shop/home_trash': {'trash': 1}, 'shop/home_toys': {'kids': 1},
+    'shop/home_sink': {'laund': 1, 'garage': 1}, 'shop/home_trash': {'trash': 1}, 'shop/home_toys': {'kids': 1, 'toyshop': 1},
     'shop/home_boxes': {'attic': 1}, 'shop/home_dresser': {'bed': 1}, 'shop/home_wardrobe': {'bed': 1},
     'shop/kitchen': {'diner': 1}, 'shop/laundromat': {'laund': 1}, 'shop/liquor': {'liq': 1},
     'shop/office': {'office': 1}, 'shop/pharmacy': {'pharm': 1}, 'shop/police': {'police': 1},
-    'shop/school': {'school': 1}, 'shop/school_gym': {'gym': 1}, 'shop/scraps': {'trash': 1},
+    'shop/school': {'school': 1}, 'shop/school_gym': {'gym': 1, 'stadium': 1}, 'shop/scraps': {'trash': 1},
     'shop/storage': {'attic': 1, 'factory': 1, 'dock': 1},
     'shop/hardware': {'hard': 2, 'build': 1}, 'shop/home_tools': {'garage': 1, 'hard': 1},
-    'shop/pawn': {'pawn': 2, 'elec': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1},
+    'shop/pawn': {'pawn': 2, 'elec': 1, 'jewel': 1},
+    'shop/home_books': {'books': 2, 'desk': 1}, 'shop/bank': {'bank': 1}, 'shop/till': {'till': 1},
+    'shop/cash': {'bank': 1, 'till': 1}, 'shop/mail': {'post': 1}, 'shop/guns': {'gun': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1},
 }
 # things a table stocks that no place tag says (an oven holds what was cooking; sinks keep the cleaning things)
 EXTRA = {
@@ -47,16 +49,28 @@ EXTRA = {
     'shop/mail': ['fancy_chocolates'],
     'shop/pawn': ['portable_tv'], 'shop/home_boxes': ['church_candle'], 'shop/home_garage': ['radiator_hose'],
     'car/work': ['tie_down_chain'], 'shop/clothes': ['thread_spool'], 'shop/guns': ['paracord'],
+    # the hotel penthouse terrace grill and outdoor kitchen, and the nightclub DJ booth (floor fit-out thread)
+    'shop/grill': ['charcoal', 'lighter_fluid', 'matches', 'lighter', 'spatula', 'cast_iron_skillet', 'aluminium_foil',
+                   'paper_towels', 'hot_dogs', 'steak', 'canned_beer', 'bottled_beer'],
+    'shop/dj': ['cassette_tape', 'mixtape', 'headphones', 'champagne', 'vodka', 'cigarettes', 'cash_bundle', 'glow_stick',
+                'lighter'],
 }
 # the vanilla stand-ins the live waves replace, wherever they are. Vanilla things that still do something our items
-# don't yet (torch, bucket, compass, clock, flint and steel, shears, lantern, seeds, saddle) stay until ours work
+# don't yet (torch, bucket, compass, clock, flint and steel, shears, lantern, seeds, saddle, book and quill, name tag,
+# music discs, totems, paintings, bones) stay until ours work
 REPLACED = {f'minecraft:{n}' for n in (
     'potion', 'honey_bottle', 'milk_bucket', 'cookie', 'bread', 'dried_kelp', 'sugar', 'apple', 'egg', 'carrot',
     'potato', 'baked_potato', 'pumpkin_pie', 'sweet_berries', 'melon_slice', 'beetroot', 'cooked_beef',
     'cooked_porkchop', 'cooked_chicken', 'cooked_mutton', 'beef', 'porkchop', 'chicken', 'mutton', 'cod', 'salmon',
     'mushroom_stew', 'beetroot_soup', 'rabbit_stew', 'cake', 'cocoa_beans', 'golden_apple', 'golden_carrot',
     'enchanted_golden_apple', 'rotten_flesh', 'sponge',
-    'string', 'stick', 'oak_planks', 'coal', 'lead', 'candle', 'bowl')}
+    'string', 'stick', 'oak_planks', 'coal', 'lead', 'candle', 'bowl',
+    'paper', 'book', 'gold_nugget', 'iron_nugget', 'emerald', 'diamond', 'gold_ingot', 'amethyst_shard', 'ink_sac',
+    'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball')}
+# an entry another thread customised (a named note, a marked map, a set count of something special) is theirs, not a
+# stand-in, even when it's a stand-in item
+CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore', 'minecraft:set_custom_data',
+          'minecraft:exploration_map', 'minecraft:copy_components'}
 KEEP_ON_FARM = {'minecraft:potato', 'minecraft:carrot', 'minecraft:beetroot', 'minecraft:egg', 'minecraft:apple'}
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
@@ -131,7 +145,8 @@ def main():
             keep = []
             for e in pool.get('entries', []):
                 name = e.get('name')
-                if name in mine or name in drop:
+                custom = any(fn.get('function') in CUSTOM for fn in e.get('functions', ()))
+                if name in mine or (name in drop and not custom):
                     if name in drop:
                         removed += e.get('weight', 1)
                     if pi == 0:

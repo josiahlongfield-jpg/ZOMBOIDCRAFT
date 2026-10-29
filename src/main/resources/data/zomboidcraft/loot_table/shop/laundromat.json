@@ -40,21 +40,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
-          "weight": 56,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:glass_bottle",
           "weight": 56,
           "functions": [
@@ -80,7 +65,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rag",
-          "weight": 12,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -95,7 +80,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:ripped_sheet",
-          "weight": 12,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -110,22 +95,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bleach",
-          "weight": 36
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:detergent",
-          "weight": 36
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sewing_kit",
-          "weight": 6
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 12,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,7 +125,37 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:safety_pins",
-          "weight": 12,
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:coin_roll",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:coat_hanger",
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -155,7 +170,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:leather_belt",
-          "weight": 24
+          "weight": 32
         }
       ]
     }

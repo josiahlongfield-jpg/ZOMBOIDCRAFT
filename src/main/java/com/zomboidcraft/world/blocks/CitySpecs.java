@@ -7085,7 +7085,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("of_dance_d", PLAIN, 0, 9, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 16);
         s("of_dance_d_off", PLAIN, 0, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 16);
         s("of_dj_booth", FACING, LOOT, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 11, 2.5, 0, 0, 2.5, 16, 10, 14, 0, 10, 1, 16, 11, 15, 2, 11, 4, 14, 11.6, 12);
-        loot("of_dj_booth", "storage");
+        loot("of_dj_booth", "dj");
         s("of_speaker", FACING, 0, 0, SoundType.WOOD, 1f, 1.5, 0, 2, 14.5, 16, 14);
         s("of_high_table", FACING, 0, 0, SoundType.METAL, 2f, 7, 0, 7, 9, 11, 9, 4, 0, 4, 12, 0.6, 12, 2, 11, 2, 14, 12, 14);
         s("of_mirrorball", PLAIN, DECOR, 6, SoundType.GLASS, 0f, 7.6, 12, 7.6, 8.4, 16, 8.4, 5, 6, 5, 11, 12, 11);
@@ -7106,9 +7106,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("of_patio_chair", FACING, 0, 0, SoundType.WOOD, 1f, 3, 0, 2, 4.5, 7, 3.5, 11.5, 0, 2, 13, 7, 3.5, 3, 0, 12, 4.5, 15, 13.5, 11.5, 0, 12, 13, 15, 13.5, 3, 6, 2, 13, 7, 13.5, 3.5, 7, 2.5, 12.5, 8, 12, 3, 9, 12.5, 13, 15, 13.5);
         s("of_fire_pit", PLAIN, 0, 11, SoundType.STONE, 2f, 2, 0, 2, 14, 5, 14, 1, 4, 1, 15, 5, 15, 3, 5, 3, 13, 5.5, 13);
         s("of_bbq", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 3, 15, 9, 14, 1, 9, 3, 15, 10, 14, 1, 10, 11, 15, 15, 14, 15, 8, 4, 16, 9, 13, 0, 8, 4, 1, 9, 13, 4, 6, 2, 12, 7, 3);
-        loot("of_bbq", "storage");
+        loot("of_bbq", "grill");
         s("of_out_counter", FACING, LOOT, 0, SoundType.STONE, 2f, 0, 0, 1, 16, 14, 16, 0, 14, 0, 16, 15, 16);
-        loot("of_out_counter", "storage");
+        loot("of_out_counter", "grill");
         s("of_parasol_pole", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7.5, 0, 7.5, 8.5, 16, 8.5, 5, 0, 5, 11, 1, 11);
         s("of_parasol_top", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 7.5, 0, 7.5, 8.5, 6, 8.5, 0, 4, 0, 16, 5, 16, 3, 5, 3, 13, 6, 13, 6, 6, 6, 10, 7, 10);
         s("of_tree_pot", PLAIN, SEE_THROUGH, 0, SoundType.STONE, 2f, 3, 0, 3, 13, 9, 13, 3.5, 8.6, 3.5, 12.5, 9, 12.5, 7, 9, 7, 9, 16, 9);
@@ -7123,7 +7123,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("of_sculpture", FACING, 0, 0, SoundType.STONE, 2f, 4, 0, 4, 12, 9, 12, 5.5, 9, 7, 8, 16, 9.5, 7, 12, 6, 11, 15, 10, 9, 9, 6.5, 10.5, 13, 9);
         s("of_screen", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("of_island", FACING, LOOT, 0, SoundType.STONE, 2f, 0, 0, 1, 16, 14, 15, 0, 14, 0, 16, 15, 16);
-        loot("of_island", "storage");
+        loot("of_island", "home_cupboard");
         s("hs_lino", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("hs_lino_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("hs_lino_blood", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);

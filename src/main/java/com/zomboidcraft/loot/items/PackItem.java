@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /** A sealed kit or pack: use it to open it out into what it holds (Packs). */
-public class PackItem extends Item {
+public class PackItem extends LootItem {
     private final String id;
 
     public PackItem(Properties properties, String id) {
