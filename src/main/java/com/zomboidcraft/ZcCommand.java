@@ -254,17 +254,20 @@ public final class ZcCommand {
         return 1;
     }
 
-    /** /zc event jet|heli|siren|explosion: starts one of the shared world events around you now. */
+    /**
+     * /zc event jet|heli|siren|explosion|strafe|bomb|hunt: starts one of the shared world events around you now (a
+     * strike with no crowd of zombies about makes its run at the ground ahead of you).
+     */
     private static int worldEvent(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         com.zomboidcraft.world.events.WorldEvents.Kind kind;
         try {
             kind = com.zomboidcraft.world.events.WorldEvents.Kind.valueOf(name.toUpperCase(java.util.Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren or explosion)"));
+            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren, explosion, strafe, bomb or hunt)"));
             return 0;
         }
-        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player);
+        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player, true);
         ctx.getSource().sendSuccess(() -> Component.literal(String.format("Started %s at %d %d %d", name, (int) e.x(), (int) e.y(),
                 (int) e.z())), false);
         return 1;

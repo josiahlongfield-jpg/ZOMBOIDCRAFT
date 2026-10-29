@@ -1111,6 +1111,29 @@ import glassline  # noqa: E402
 glassline.register(sys.modules[__name__])
 import fitout  # noqa: E402
 fitout.register(sys.modules[__name__])
+import mall  # noqa: E402
+mall.register(sys.modules[__name__])
+import hospital  # noqa: E402
+hospital.register(sys.modules[__name__])
+import university  # noqa: E402
+university.register(sys.modules[__name__])
+import civiccentre  # noqa: E402
+civiccentre.register(sys.modules[__name__])
+import museum  # noqa: E402
+museum.register(sys.modules[__name__])
+import arena  # noqa: E402
+arena.register(sys.modules[__name__])
+import ballpark  # noqa: E402
+ballpark.register(sys.modules[__name__])
+import broadcast  # noqa: E402
+broadcast.register(sys.modules[__name__])
+import power  # noqa: E402
+power.register(sys.modules[__name__])
+import market  # noqa: E402
+market.register(sys.modules[__name__])
+import harvestman_den  # noqa: E402
+harvestman_den.register(sys.modules[__name__])
+
 
 
 def build(name):

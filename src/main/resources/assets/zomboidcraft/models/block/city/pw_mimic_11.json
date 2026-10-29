@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_mimic_11": "zomboidcraft:block/city/pw_mimic_11",
+    "particle": "zomboidcraft:block/city/pw_mimic_11"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_mimic_11"
+        },
+        "south": {
+          "texture": "#pw_mimic_11",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_mimic_11",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_mimic_11",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_mimic_11",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_mimic_11",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -52,6 +52,7 @@ final class TrainMesh {
     static final Mat RAIL = Mat.of(4, 13), SLEEPER = Mat.of(4, 14), SLEEPER_CONCRETE = Mat.of(4, 15);
     static final Mat OTTO_SHELL = Mat.of(5, 0), OTTO_DARK = Mat.of(5, 1), OTTO_FACE = Mat.of(5, 2), OTTO_TALK = Mat.of(5, 3);
     static final Mat OTTO_CHEST = Mat.of(5, 4), BELLOWS = Mat.of(5, 6), WARNING = Mat.of(5, 7), ADS = Mat.of(5, 8, 9, 10, 11);
+    static final Mat CLOSE_DOORS = Mat.of(6, 0);
     static final Mat MAP = Mat.of(5, 12), EMERGENCY = Mat.of(5, 13), HAZARD = Mat.of(5, 14), LAMP = Mat.of(5, 15);
 
     /** How a quad is lit: by the world outside, by the car's own lights inside, or glowing itself. */
@@ -219,13 +220,16 @@ final class TrainMesh {
             pole(0, z);
         }
         // a stop button on the pole beside each door, facing in: press it (interact) to be let off
-        for (double[] b : TrainCar.STOP_BUTTONS) {
+        // and over it a close-doors button, to send the train on its way
+        for (int k = 0; k < TrainCar.STOP_BUTTONS.length * 2; k++) {
+            double[] b = k % 2 == 0 ? TrainCar.STOP_BUTTONS[k / 2] : TrainCar.CLOSE_BUTTONS[k / 2];
+            Mat face = k % 2 == 0 ? EMERGENCY : CLOSE_DOORS;
             double in = b[0] > 0 ? -1 : 1;     // the side of the pole toward the aisle
             double x0 = Math.min(b[0], b[0] - in * 0.05), x1 = Math.max(b[0], b[0] - in * 0.05);
             light = GLOW;
             stretch = true;
             box(x0, b[1] - 0.14, b[2] - 0.09, x1, b[1] + 0.14, b[2] + 0.09,
-                    in > 0 ? null : EMERGENCY, in > 0 ? EMERGENCY : null, null, null, null, null);
+                    in > 0 ? null : face, in > 0 ? face : null, null, null, null, null);
             stretch = false;
             light = INSIDE;
             box(x0 + 0.005, b[1] - 0.14, b[2] - 0.09, x1 - 0.005, b[1] + 0.14, b[2] + 0.09, null, null, OTTO_DARK, OTTO_DARK, OTTO_DARK, OTTO_DARK);

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_hedge": "zomboidcraft:block/city/un_hedge",
+    "particle": "zomboidcraft:block/city/un_hedge"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_hedge",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#un_hedge",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_hedge",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_hedge",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_hedge"
+        },
+        "down": {
+          "texture": "#un_hedge",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

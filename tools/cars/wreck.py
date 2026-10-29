@@ -810,8 +810,10 @@ def build_variant(car, vname, seed, boot_mode='car', theme='trunk'):
     spec = np.concatenate([spec, np.zeros((img.shape[0] - spec.shape[0],) + spec.shape[1:], np.float32)])
     colour = Image.fromarray((img * 255 + 0.5).astype(np.uint8))
     specular = Image.fromarray((spec * 255 + 0.5).astype(np.uint8), 'RGBA')
+    # which source pane each glass triangle is (the windows the game breaks and winds one at a time; glass.py)
+    pane = np.where(glass & (origin >= 0), car.pane[np.maximum(origin, 0)], -1)
     return {'tris': tris, 'uv': uv, 'lid': lid, 'lids': lids, 'wheel': wheel, 'wheels': wheels, 'glass': glass,
-            'origin': origin, 'lit': lit, 'colour': colour, 'specular': specular}
+            'origin': origin, 'lit': lit, 'colour': colour, 'specular': specular, 'pane': pane}
 
 
 def make_variant(car, vname, seed, out_dir, opened=0.0):

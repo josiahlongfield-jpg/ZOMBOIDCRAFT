@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_sb_23": "zomboidcraft:block/city/bp_sb_23",
+    "bp_sb_house": "zomboidcraft:block/city/bp_sb_house",
+    "particle": "zomboidcraft:block/city/bp_sb_23"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_sb_23",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bp_sb_house",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_sb_house",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_sb_house",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bp_sb_house",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_sb_house",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

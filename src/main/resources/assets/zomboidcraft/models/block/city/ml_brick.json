@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_brick": "zomboidcraft:block/city/ml_brick",
+    "particle": "zomboidcraft:block/city/ml_brick"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_brick",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ml_brick",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_brick",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_brick",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_brick",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_brick",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_boards": "zomboidcraft:block/city/mu_boards",
+    "particle": "zomboidcraft:block/city/mu_boards"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        13
+      ],
+      "to": [
+        4,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards"
+        },
+        "west": {
+          "texture": "#mu_boards"
+        },
+        "up": {
+          "texture": "#mu_boards",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        0,
+        12.5
+      ],
+      "to": [
+        4.5,
+        4,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards"
+        },
+        "west": {
+          "texture": "#mu_boards"
+        },
+        "up": {
+          "texture": "#mu_boards"
+        },
+        "down": {
+          "texture": "#mu_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        13.5
+      ],
+      "to": [
+        7,
+        16,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards"
+        },
+        "west": {
+          "texture": "#mu_boards"
+        },
+        "up": {
+          "texture": "#mu_boards",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0,
+        13
+      ],
+      "to": [
+        7.5,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards"
+        },
+        "west": {
+          "texture": "#mu_boards"
+        },
+        "up": {
+          "texture": "#mu_boards"
+        },
+        "down": {
+          "texture": "#mu_boards",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

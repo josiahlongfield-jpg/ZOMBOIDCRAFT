@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_ad_savings_2": "zomboidcraft:block/city/bp_ad_savings_2",
+    "bp_green": "zomboidcraft:block/city/bp_green",
+    "particle": "zomboidcraft:block/city/bp_ad_savings_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_ad_savings_2"
+        },
+        "south": {
+          "texture": "#bp_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bp_green",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_green",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

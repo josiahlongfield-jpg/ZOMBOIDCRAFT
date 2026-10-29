@@ -57,6 +57,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);
+        com.zomboidcraft.client.creature.HarvestmanClient.register();
         com.zomboidcraft.client.zombie.body.ZBodyAnimator.register();
         SoundSliders.register();
         com.zomboidcraft.client.interact.Interactables.register();

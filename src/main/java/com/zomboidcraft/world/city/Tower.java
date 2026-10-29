@@ -51,7 +51,7 @@ public final class Tower {
         this.cz0 = (d - CORE_D) / 2;
         // tall towers wide enough to keep the core step in by 4 blocks part way up
         boolean canStep = floors >= 16 && cx0 >= 6 && cz0 >= 6;
-        this.setbackFloor = canStep && rng.nextDouble() < 0.7 ? floors / 2 + rng.nextInt(floors / 4) : Integer.MAX_VALUE;
+        int setback = canStep && rng.nextDouble() < 0.7 ? floors / 2 + rng.nextInt(floors / 4) : Integer.MAX_VALUE;
         // a few floors still have power from a generator somewhere: their lights and windows glow
         this.powered = new boolean[floors + 2];
         for (int k = 1; k <= floors; k++) {
@@ -59,6 +59,18 @@ public final class Tower {
         }
         this.purpose = Floors.officePurpose(rng, floors);
         this.program = Floors.program(purpose, floors, rng);
+        // a hotel's penthouse steps in from the outer walls all round: a terrace on every side
+        this.setbackFloor = penthouseTop() && cx0 >= 6 && cz0 >= 6 ? floors : setback;
+    }
+
+    /** The top floor is the hotel's penthouse. */
+    private boolean penthouseTop() {
+        return floors >= 1 && program[floors] == Floors.Type.PENTHOUSE;
+    }
+
+    /** The penthouse has the terrace the tower steps in for. */
+    private boolean penthouseTerrace() {
+        return penthouseTop() && setbackFloor == floors;
     }
 
     public boolean hotel() {
@@ -92,6 +104,9 @@ public final class Tower {
         facade(roofY);
         core(roofY);
         roof(roofY);
+        if (penthouseTerrace()) {
+            terrace(floorY(floors));
+        }
     }
 
     private static int floorY(int k) {
@@ -145,9 +160,11 @@ public final class Tower {
                     for (int z = 0; z < d; z++) {
                         boolean outer = x == 0 || z == 0 || x == w - 1 || z == d - 1;
                         if (x < in || z < in || x >= w - in || z >= d - in) {
-                            p.set(x, y, z, outer ? trim() : "roof");
+                            boolean deck = k == floors && penthouseTerrace();
+                            p.set(x, y, z, outer ? trim() : deck ? "of_deck" : "roof");
                             if (outer) {
-                                p.set(x, y + 1, z, trim());
+                                // the penthouse's terrace has a glass rail; a plain one a parapet
+                                p.set(x, y + 1, z, deck ? "tx_glass_rail[axis=" + (z == 0 || z == d - 1 ? "x" : "z") + "]" : trim());
                             }
                         }
                     }
@@ -336,7 +353,8 @@ public final class Tower {
         for (int i = 0; i < n; i++) {
             int x = x0 + rng.nextInt(x1 - x0 + 1);
             int z = z0 + rng.nextInt(z1 - z0 + 1);
-            if (!inCore(x, z)) {
+            // nothing in or just in front of the core: the stair and lift doors stay clear
+            if (!inCore(x, z) && !inCore(x, z + 1) && !inCore(x, z + 2)) {
                 p.set(x, y, z, rng.nextBoolean() ? "rubble_pile" : "moss_carpet");
             }
         }
@@ -559,7 +577,7 @@ public final class Tower {
         // beams under the hanging side every few blocks, back into the roof slab
         for (int x = px0; x <= px1; x += Math.max(1, (px1 - px0) / Math.max(1, (px1 - px0) / 4))) {
             for (int z = pz0; z < in + 2; z++) {
-                p.set(x, y - 1, z, "fit_girder[axis=z]");
+                p.set(x, y - 1, z, "steel_mullion");
             }
         }
         p.set(px0 + 1, y + 1, pz1 + 1, "of_pool_ladder[facing=south]");
@@ -581,6 +599,162 @@ public final class Tower {
                 p.set(bx, y + 1, z, "trade_bar[facing=west]");
                 p.set(bx - 1, y + 1, z, rng.nextDouble() < 0.3 ? "home_chair_tipped[facing=east]" : "pk_bar_chair[facing=east]");
             }
+        }
+    }
+
+    /**
+     * The penthouse's terrace, four wide all round where the outer walls stepped in: glass doors
+     * out of every side, the pool's glass belly overhead at the front with daybeds under it, a
+     * long fire trough and outdoor sofas down one side, the summer kitchen and a sunken hot tub
+     * down the other, a dining table under a pergola at the back, olive trees in pots and a
+     * telescope in the corners. The row by the glass stays clear all the way round.
+     */
+    private void terrace(int y) {
+        int in = inset(floors);
+        // glass doors out of every side, between the mullions
+        for (int x = in + 3; x < w - in - 3; x += 6) {
+            terraceDoor(x, y, in, "north", 0, -1);
+            terraceDoor(x, y, d - 1 - in, "south", 0, 1);
+        }
+        for (int z = in + 3; z < d - in - 3; z += 6) {
+            terraceDoor(in, y, z, "west", -1, 0);
+            terraceDoor(w - 1 - in, y, z, "east", 1, 0);
+        }
+        // front, under the pool: daybeds at the rail looking out, side tables between
+        for (int x = in; x < w - in; x++) {
+            switch (Math.floorMod(x - in, 4)) {
+                case 0, 1 -> out(x, y, 1, "of_daybed[facing=north]");
+                case 2 -> out(x, y, 1, rng.nextDouble() < 0.15 ? "home_chair_tipped[facing=south]" : "home_lamp_table[facing=north]");
+                default -> { }
+            }
+        }
+        // west: a long fire trough between two rows of outdoor sofas
+        int mz = d / 2;
+        for (int x = 1; x <= 2; x++) {
+            out(x, y, mz - 1, "of_fire_pit");
+            out(x, y, mz, "of_fire_pit");
+            out(x, y, mz - 2, "of_out_sofa[facing=south]");
+            out(x, y, mz + 1, "of_out_sofa[facing=north]");
+        }
+        out(1, y, mz - 4, "of_patio_chair[facing=east]");
+        out(1, y, mz + 3, "of_patio_chair[facing=east]");
+        parasol(2, y, in + 1);
+        out(1, y, in + 1, "of_lounger[facing=west]");
+        out(1, y, in + 2, "of_lounger[facing=west]");
+        // east: the summer kitchen up front, the hot tub sunk in the deck behind
+        int ex = w - 2;
+        out(ex, y, in + 1, "of_out_counter[facing=west]");
+        out(ex, y, in + 2, "of_bbq[facing=west]");
+        out(ex, y, in + 3, "of_out_counter[facing=west]");
+        out(ex, y, in + 4, "of_out_counter[facing=west]");
+        int tz1 = d - in - 2, tz0 = Math.max(in + 7, tz1 - 3);
+        for (int x = w - 3; x <= w - 2; x++) {
+            for (int z = tz0; z <= tz1; z++) {
+                p.set(x, y - 1, z, "of_pool_tile");
+                p.set(x, y, z, "minecraft:water");
+            }
+        }
+        for (int z = tz0 - 2; z >= in + 6; z -= 2) {
+            out(ex, y, z, "of_lounger[facing=east]");
+        }
+        // back: one long table at the rail under a pergola, the chairs looking out over it
+        int bz = d - 2, ax = in + 1, bx = w - in - 2;
+        for (int x = ax; x <= bx; x++) {
+            boolean post = x == ax || x == bx || Math.floorMod(x - ax, 5) == 0;
+            if (post) {
+                p.fill(x, y + 1, bz, x, y + 3, bz, "of_pergola_post");
+            } else {
+                out(x, y, bz, "of_patio_table[axis=x]");
+                out(x, y, bz - 1, rng.nextDouble() < 0.12 ? "home_chair_tipped[facing=north]" : "of_patio_chair[facing=south]");
+            }
+            for (int z = d - 1 - in + 1; z <= bz; z++) {
+                p.set(x, y + 4, z, "of_pergola_beam[axis=x]");
+            }
+        }
+        // the corners: olive trees in pots, the telescope at the front corner over the kitchen
+        olive(1, y, 1);
+        olive(2, y, d - 2);
+        olive(1, y, d - 3);
+        olive(w - 2, y, d - 2);
+        out(w - 3, y, 2, "of_telescope[facing=north]");
+        olive(w - 2, y, 1);
+        // the long runs between: olive trees at the rail, loungers under parasols, turn about
+        int[][] sides = {{0, 1, 0, 1, 0}, {0, d - 2, 0, -1, 2}, {1, 0, 1, 0, 3}, {w - 2, 0, -1, 0, 1}};
+        for (int[] sd : sides) {
+            boolean alongX = sd[2] == 0;
+            int n = alongX ? w : d, k = 0;
+            for (int a = in + 1; a < n - in - 2; a++) {
+                int x = alongX ? a : sd[0], z = alongX ? sd[1] : a;
+                int x2 = x + sd[2], z2 = z + sd[3];
+                int nx = x + (alongX ? 1 : 0), nz = z + (alongX ? 0 : 1);
+                boolean free = isAir(x, y + 1, z) && isAir(x2, y + 1, z2) && isAir(nx, y + 1, nz) && isAir(x, y + 3, z);
+                if (!free) {
+                    k = 0;
+                    continue;
+                }
+                if (++k % 3 != 0) {
+                    continue;
+                }
+                String look = new String[] {"north", "east", "south", "west"}[sd[4]];
+                if (rng.nextBoolean()) {
+                    olive(x, y, z);
+                } else {
+                    out(x, y, z, "of_lounger[facing=" + look + "]");
+                    out(nx, y, nz, "of_lounger[facing=" + look + "]");
+                    parasol(x2, y, z2);
+                }
+                a++;
+                k = 0;
+            }
+        }
+    }
+
+    /** A pair of glass doors out of the penthouse where nothing stands either side of them. */
+    private void terraceDoor(int x, int y, int z, String out, int dx, int dz) {
+        int ix = x - dx, iz = z - dz;
+        boolean inside = isAir(ix, y + 1, iz) && isAir(ix, y + 2, iz);
+        boolean outside = isAir(x + dx, y + 1, z + dz) && isAir(x + dx, y + 2, z + dz);
+        if (inside && outside) {
+            Doors.abandoned(p, rng, x, y + 1, z, Doors.SHOP, opposite(out), Doors.hinge(rng));
+        }
+    }
+
+    private static String opposite(String f) {
+        return switch (f) {
+            case "north" -> "south";
+            case "south" -> "north";
+            case "east" -> "west";
+            default -> "east";
+        };
+    }
+
+    private boolean isAir(int x, int y, int z) {
+        String b = p.get(x, y, z);
+        return b == null || b.equals("air") || b.equals("minecraft:air");
+    }
+
+    /** Terrace furniture: only on the deck, and never in the clear row by the glass. */
+    private void out(int x, int y, int z, String block) {
+        int in = inset(floors);
+        boolean lane = x == in - 1 || x == w - in || z == in - 1 || z == d - in;
+        boolean onTerrace = x >= 1 && z >= 1 && x <= w - 2 && z <= d - 2 && (x < in - 1 || z < in - 1 || x > w - in || z > d - in);
+        if (!lane && onTerrace && isAir(x, y + 1, z)) {
+            p.set(x, y + 1, z, block);
+        }
+    }
+
+    private void olive(int x, int y, int z) {
+        if (isAir(x, y + 1, z) && isAir(x, y + 2, z)) {
+            out(x, y, z, "of_tree_pot");
+            p.set(x, y + 2, z, "of_tree_crown");
+        }
+    }
+
+    private void parasol(int x, int y, int z) {
+        if (isAir(x, y + 1, z) && isAir(x, y + 2, z) && isAir(x, y + 3, z)) {
+            out(x, y, z, "of_parasol_pole");
+            p.set(x, y + 2, z, "of_parasol_pole");
+            p.set(x, y + 3, z, "of_parasol_top");
         }
     }
 

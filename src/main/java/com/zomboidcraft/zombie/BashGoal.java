@@ -65,7 +65,7 @@ public class BashGoal extends Goal {
      * What a window becomes when it gives: glass (or lit) to its _broken block, broken to its _empty one (an open frame
      * a zombie can climb through), plain glass to nothing. Null for anything that isn't a window, or one already open.
      */
-    static @Nullable BlockState broken(BlockState state) {
+    public static @Nullable BlockState broken(BlockState state) {
         net.minecraft.world.level.block.Block next = NEXT.computeIfAbsent(state.getBlock(), BashGoal::nextBlock).orElse(null);
         if (next == null) {
             return null;

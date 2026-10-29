@@ -28,6 +28,7 @@ final class TrackRenderer {
 
     static void register() {
         LevelRenderEvents.COLLECT_SUBMITS.register(TrackRenderer::draw);
+        LevelRenderEvents.COLLECT_SUBMITS.register(StationMaps::draw);
     }
 
     private static void draw(LevelRenderContext context) {

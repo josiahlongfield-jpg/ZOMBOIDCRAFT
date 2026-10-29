@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_dio_rock": "zomboidcraft:block/city/mu_dio_rock",
+    "particle": "zomboidcraft:block/city/mu_dio_rock"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_dio_rock",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_dio_rock",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_dio_rock",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_dio_rock",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_dio_rock"
+        },
+        "down": {
+          "texture": "#mu_dio_rock",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        3
+      ],
+      "to": [
+        13,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_dio_rock"
+        },
+        "south": {
+          "texture": "#mu_dio_rock"
+        },
+        "east": {
+          "texture": "#mu_dio_rock"
+        },
+        "west": {
+          "texture": "#mu_dio_rock"
+        },
+        "up": {
+          "texture": "#mu_dio_rock"
+        },
+        "down": {
+          "texture": "#mu_dio_rock"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        14,
+        5
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_dio_rock"
+        },
+        "south": {
+          "texture": "#mu_dio_rock"
+        },
+        "east": {
+          "texture": "#mu_dio_rock"
+        },
+        "west": {
+          "texture": "#mu_dio_rock"
+        },
+        "up": {
+          "texture": "#mu_dio_rock",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_dio_rock"
+        }
+      }
+    }
+  ]
+}

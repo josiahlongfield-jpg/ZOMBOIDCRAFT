@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "pw_cable": "zomboidcraft:block/city/pw_cable",
+    "pw_reel": "zomboidcraft:block/city/pw_reel",
+    "particle": "zomboidcraft:block/city/pw_reel"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        1,
+        0
+      ],
+      "to": [
+        15,
+        15,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_reel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_reel"
+        },
+        "east": {
+          "texture": "#pw_reel"
+        },
+        "west": {
+          "texture": "#pw_reel"
+        },
+        "up": {
+          "texture": "#pw_reel"
+        },
+        "down": {
+          "texture": "#pw_reel"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        1,
+        14
+      ],
+      "to": [
+        15,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_reel"
+        },
+        "south": {
+          "texture": "#pw_reel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_reel"
+        },
+        "west": {
+          "texture": "#pw_reel"
+        },
+        "up": {
+          "texture": "#pw_reel"
+        },
+        "down": {
+          "texture": "#pw_reel"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        2
+      ],
+      "to": [
+        13,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_cable"
+        },
+        "south": {
+          "texture": "#pw_cable"
+        },
+        "east": {
+          "texture": "#pw_cable"
+        },
+        "west": {
+          "texture": "#pw_cable"
+        },
+        "up": {
+          "texture": "#pw_cable"
+        },
+        "down": {
+          "texture": "#pw_cable"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        2
+      ],
+      "to": [
+        9,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

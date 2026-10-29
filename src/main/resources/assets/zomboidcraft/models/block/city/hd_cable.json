@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_cable": "zomboidcraft:block/city/hd_cable",
+    "particle": "zomboidcraft:block/city/hd_cable"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_cable"
+        },
+        "south": {
+          "texture": "#hd_cable"
+        },
+        "east": {
+          "texture": "#hd_cable"
+        },
+        "west": {
+          "texture": "#hd_cable"
+        },
+        "up": {
+          "texture": "#hd_cable",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hd_cable",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

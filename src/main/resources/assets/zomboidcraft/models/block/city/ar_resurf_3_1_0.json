@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/home_plastic_black"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        10
+      ],
+      "to": [
+        8,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        4,
+        6
+      ],
+      "to": [
+        12,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_enamel_white": "zomboidcraft:block/city/hs_enamel_white",
+    "hs_steel": "zomboidcraft:block/city/hs_steel",
+    "un_fume_hi": "zomboidcraft:block/city/un_fume_hi",
+    "particle": "zomboidcraft:block/city/un_fume_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_fume_hi"
+        },
+        "south": {
+          "texture": "#hs_enamel_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_enamel_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_enamel_white"
+        },
+        "down": {
+          "texture": "#hs_enamel_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_enamel_white"
+        },
+        "south": {
+          "texture": "#hs_enamel_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_enamel_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_enamel_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_enamel_white"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        16,
+        8
+      ],
+      "to": [
+        10,
+        32,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_steel",
+          "uv": [
+            6,
+            0,
+            10,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hs_steel",
+          "uv": [
+            6,
+            0,
+            10,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hs_steel",
+          "uv": [
+            4,
+            0,
+            8,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#hs_steel",
+          "uv": [
+            8,
+            0,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#hs_steel"
+        },
+        "down": {
+          "texture": "#hs_steel"
+        }
+      }
+    }
+  ]
+}

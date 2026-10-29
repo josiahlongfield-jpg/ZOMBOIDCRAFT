@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ar_net": "zomboidcraft:block/city/ar_net",
+    "ar_red": "zomboidcraft:block/city/ar_red",
+    "particle": "zomboidcraft:block/city/ar_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        2,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_red"
+        },
+        "south": {
+          "texture": "#ar_red"
+        },
+        "east": {
+          "texture": "#ar_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ar_red"
+        },
+        "down": {
+          "texture": "#ar_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        0.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_net"
+        },
+        "south": {
+          "texture": "#ar_net"
+        },
+        "east": {
+          "texture": "#ar_net"
+        },
+        "west": {
+          "texture": "#ar_net"
+        },
+        "up": {
+          "texture": "#ar_net"
+        },
+        "down": {
+          "texture": "#ar_net",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        1.6,
+        15.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_red"
+        },
+        "south": {
+          "texture": "#ar_red"
+        },
+        "east": {
+          "texture": "#ar_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ar_red"
+        },
+        "down": {
+          "texture": "#ar_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

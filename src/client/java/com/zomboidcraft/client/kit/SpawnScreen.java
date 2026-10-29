@@ -239,8 +239,13 @@ public final class SpawnScreen extends Screen {
         y += 4;
         wake = new int[]{x + in, y, tw, 16};
         boolean hw = in(wake, mx, my);
-        g.fill(x + in, y, x + in + tw, y + 16, hw ? 0xFFFFFFFF : 0xFFE8E4DA);
-        KitDraw.capsCentred(g, font, "Wake up here", x + w / 2f, y + 5, 0xFF1D1B16, 0.9f);
+        // a flat bone slab: a lighter top edge, a darker foot, and the label in plain ink with no shadow
+        g.fill(x + in, y, x + in + tw, y + 16, hw ? 0xFFF7F4EE : 0xFFE8E4DA);
+        g.fill(x + in, y, x + in + tw, y + 1, hw ? 0xFFFFFFFF : 0xFFF4F1EA);
+        g.fill(x + in, y + 15, x + in + tw, y + 16, 0xFFB9B4A8);
+        String label = "Wake up here";
+        float lw = KitDraw.capsWidth(font, label, 0.9f);
+        com.zomboidcraft.client.hud.Hud.caps(g, font, label, x + w / 2f - lw / 2, y + 4.5f, 0xFF1D1B16, 0.9f, 0.9f, false);
         y += 20;
         random = new int[]{x + in, y, tw, 14};
         KitDraw.frame(g, x + in, y, tw, 14, in(random, mx, my) ? 0xFFF2EFE8 : 0x73E8E4DA);

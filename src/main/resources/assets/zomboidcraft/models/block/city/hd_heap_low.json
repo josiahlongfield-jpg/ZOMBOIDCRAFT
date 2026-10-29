@@ -1,0 +1,168 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_scrap": "zomboidcraft:block/city/hd_scrap",
+    "hd_scrap_b": "zomboidcraft:block/city/hd_scrap_b",
+    "hd_sheet": "zomboidcraft:block/city/hd_sheet",
+    "hd_tangle": "zomboidcraft:block/city/hd_tangle",
+    "particle": "zomboidcraft:block/city/hd_scrap"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap"
+        },
+        "south": {
+          "texture": "#hd_scrap"
+        },
+        "east": {
+          "texture": "#hd_scrap"
+        },
+        "west": {
+          "texture": "#hd_scrap"
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        1,
+        3
+      ],
+      "to": [
+        10,
+        2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_sheet"
+        },
+        "south": {
+          "texture": "#hd_sheet"
+        },
+        "east": {
+          "texture": "#hd_sheet"
+        },
+        "west": {
+          "texture": "#hd_sheet"
+        },
+        "up": {
+          "texture": "#hd_sheet"
+        },
+        "down": {
+          "texture": "#hd_sheet"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        7,
+        1.5,
+        6
+      ],
+      "to": [
+        15,
+        2.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap_b"
+        },
+        "south": {
+          "texture": "#hd_scrap_b"
+        },
+        "east": {
+          "texture": "#hd_scrap_b"
+        },
+        "west": {
+          "texture": "#hd_scrap_b"
+        },
+        "up": {
+          "texture": "#hd_scrap_b"
+        },
+        "down": {
+          "texture": "#hd_scrap_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        6,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle"
+        },
+        "south": {
+          "texture": "#hd_tangle"
+        },
+        "east": {
+          "texture": "#hd_tangle"
+        },
+        "west": {
+          "texture": "#hd_tangle"
+        },
+        "up": {
+          "texture": "#hd_tangle"
+        },
+        "down": {
+          "texture": "#hd_tangle"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

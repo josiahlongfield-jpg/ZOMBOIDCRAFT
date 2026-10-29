@@ -1,0 +1,181 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "glass_shards": {
+      "sprite": "zomboidcraft:block/city/glass_shards",
+      "force_translucent": true
+    },
+    "mu_case_glass_broken": {
+      "sprite": "zomboidcraft:block/city/mu_case_glass_broken",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        8,
+        0.5
+      ],
+      "to": [
+        15.5,
+        9,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_case_glass_broken"
+        },
+        "south": {
+          "texture": "#mu_case_glass_broken"
+        },
+        "east": {
+          "texture": "#mu_case_glass_broken"
+        },
+        "west": {
+          "texture": "#mu_case_glass_broken"
+        },
+        "up": {
+          "texture": "#mu_case_glass_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_case_glass_broken"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        15.6,
+        0.8
+      ],
+      "to": [
+        15.2,
+        16,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        6
+      ],
+      "to": [
+        6,
+        9.5,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#glass_shards"
+        },
+        "south": {
+          "texture": "#glass_shards"
+        },
+        "east": {
+          "texture": "#glass_shards"
+        },
+        "west": {
+          "texture": "#glass_shards"
+        },
+        "up": {
+          "texture": "#glass_shards"
+        },
+        "down": {
+          "texture": "#glass_shards"
+        }
+      }
+    }
+  ]
+}

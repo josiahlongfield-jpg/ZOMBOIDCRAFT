@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_gauges": "zomboidcraft:block/city/fit_gauges",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/painted_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        9
+      ],
+      "to": [
+        10,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        10
+      ],
+      "to": [
+        15,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_gauges"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ar_sb_house": "zomboidcraft:block/city/ar_sb_house",
+    "ar_vban_sixteen_2": "zomboidcraft:block/city/ar_vban_sixteen_2",
+    "particle": "zomboidcraft:block/city/ar_vban_sixteen_2"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        7.6
+      ],
+      "to": [
+        15,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_vban_sixteen_2"
+        },
+        "south": {
+          "texture": "#ar_vban_sixteen_2"
+        },
+        "east": {
+          "texture": "#ar_sb_house"
+        },
+        "west": {
+          "texture": "#ar_sb_house"
+        },
+        "up": {
+          "texture": "#ar_sb_house",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ar_sb_house",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

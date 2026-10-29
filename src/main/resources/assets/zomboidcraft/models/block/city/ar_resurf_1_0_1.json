@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ar_resurf": "zomboidcraft:block/city/ar_resurf",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/ar_resurf"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_resurf",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ar_resurf"
+        },
+        "east": {
+          "texture": "#ar_resurf",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_resurf",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ar_resurf",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ar_resurf"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        4,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

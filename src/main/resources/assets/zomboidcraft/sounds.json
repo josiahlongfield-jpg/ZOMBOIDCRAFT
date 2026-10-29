@@ -1,4 +1,145 @@
 {
+  "creature.harvestman.tap": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "creature.harvestman.scrape": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/scrape/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "creature.harvestman.click": {
+    "sounds": []
+  },
+  "creature.harvestman.hiss": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/3",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "creature.harvestman.screech": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/screech/1"
+      }
+    ]
+  },
+  "creature.harvestman.feed": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/feed/1",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "creature.harvestman.clang": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/3",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/4",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "creature.harvestman.hurt": {
+    "sounds": []
+  },
+  "creature.harvestman.leg_off": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/leg_off/1"
+      }
+    ]
+  },
+  "creature.harvestman.death": {
+    "sounds": []
+  },
+  "creature.harvestman.call": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/call/1"
+      }
+    ]
+  },
+  "creature.harvestman.chitter": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/1",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/2",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/3",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "creature.harvestman.creak": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/3",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "creature.harvestman.hum": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/hum/1"
+      }
+    ]
+  },
   "weapon.rifle.shot": {
     "sounds": [
       {
@@ -783,12 +924,7 @@
     ]
   },
   "car.stall": {
-    "sounds": [
-      {
-        "name": "zomboidcraft:car/stall/1",
-        "attenuation_distance": 32
-      }
-    ]
+    "sounds": []
   },
   "car.idle": {
     "sounds": [
@@ -1781,10 +1917,6 @@
       {
         "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
         "attenuation_distance": 24
-      },
-      {
-        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
-        "attenuation_distance": 24
       }
     ]
   },
@@ -1884,10 +2016,6 @@
       },
       {
         "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
         "attenuation_distance": 48
       }
     ]
@@ -3055,6 +3183,42 @@
     ],
     "subtitle": "subtitles.zomboidcraft.otto"
   },
+  "otto.doors_shut_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
   "weapon.bullet.head_burst": {
     "sounds": [
       {
@@ -3564,6 +3728,47 @@
       {
         "name": "zomboidcraft:weapon/throw/fire/5",
         "attenuation_distance": 16
+      }
+    ]
+  },
+  "train.buzzer": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:train/buzzer",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.buzzer"
+  },
+  "world.strike.cannon": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/strike/cannon/1",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/strike/cannon/2",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/strike/cannon/3",
+        "attenuation_distance": 640
+      }
+    ]
+  },
+  "world.strike.chaingun": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/strike/chaingun/1",
+        "attenuation_distance": 480
+      },
+      {
+        "name": "zomboidcraft:world/strike/chaingun/2",
+        "attenuation_distance": 480
+      },
+      {
+        "name": "zomboidcraft:world/strike/chaingun/3",
+        "attenuation_distance": 480
       }
     ]
   }

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_name_gate_19": "zomboidcraft:block/city/un_name_gate_19",
+    "particle": "zomboidcraft:block/city/un_name_gate_19"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_name_gate_19"
+        },
+        "south": {
+          "texture": "#un_name_gate_19",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_name_gate_19",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_name_gate_19",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_name_gate_19",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_name_gate_19",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_crate": "zomboidcraft:block/city/mu_crate",
+    "mu_crate_plain": "zomboidcraft:block/city/mu_crate_plain",
+    "particle": "zomboidcraft:block/city/mu_crate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_crate"
+        },
+        "south": {
+          "texture": "#mu_crate_plain"
+        },
+        "east": {
+          "texture": "#mu_crate_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_crate_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_crate_plain",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_crate_plain",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

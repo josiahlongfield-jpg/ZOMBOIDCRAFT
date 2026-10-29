@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "pw_machine": "zomboidcraft:block/city/pw_machine",
+    "particle": "zomboidcraft:block/city/pw_machine"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_machine"
+        },
+        "south": {
+          "texture": "#pw_machine"
+        },
+        "east": {
+          "texture": "#pw_machine"
+        },
+        "west": {
+          "texture": "#pw_machine"
+        },
+        "up": {
+          "texture": "#pw_machine"
+        },
+        "down": {
+          "texture": "#pw_machine",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        5
+      ],
+      "to": [
+        12,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_machine"
+        },
+        "south": {
+          "texture": "#pw_machine"
+        },
+        "east": {
+          "texture": "#pw_machine"
+        },
+        "west": {
+          "texture": "#pw_machine"
+        },
+        "up": {
+          "texture": "#pw_machine"
+        },
+        "down": {
+          "texture": "#pw_machine"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        6
+      ],
+      "to": [
+        4,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey"
+        },
+        "south": {
+          "texture": "#bunk_grey"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        9,
+        6
+      ],
+      "to": [
+        15,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grey"
+        },
+        "south": {
+          "texture": "#bunk_grey"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    }
+  ]
+}

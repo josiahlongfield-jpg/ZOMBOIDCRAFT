@@ -222,6 +222,52 @@ final class Layout {
             // the trains run through the station's top floor; the subway passes its front
             return lot(s, PlaceType.LANDMARK, "union_station", 2, 2, h);
         }
+        if (s.id().equals("mall")) {
+            // the galleria: four blocks along the front, three deep, the car park and decks round it
+            return lot(s, PlaceType.LANDMARK, "mall", 4, 3, h);
+        }
+        if (s.id().equals("mercy")) {
+            // Mercy General: two blocks square, nudged off the street the subway runs under so its
+            // Mercy General platform stays under the street in front (the Glass Line deeper still)
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "mercy", 2880, -320, s.flags(), s.name()),
+                    PlaceType.LANDMARK, "mercy", 2, 2, h);
+        }
+        if (s.id().equals("university")) {
+            // State University: three blocks square, nudged east of the street the subway runs under
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "university", 2760, -1720, s.flags(), s.name()),
+                    PlaceType.LANDMARK, "university", 3, 3, h);
+        }
+        if (s.id().equals("civic")) {
+            // the Civic Center: City Hall, the council chamber and the plaza, two blocks square
+            return lot(s, PlaceType.LANDMARK, "civic", 2, 2, h);
+        }
+        if (s.id().equals("park")) {
+            // City Park and the museum along its north side, three blocks square
+            return lot(s, PlaceType.LANDMARK, "park", 3, 3, h);
+        }
+        if (s.id().equals("arena")) {
+            // Harbor Arena: three blocks along the shore, two deep, nudged west off the water
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "arena", 3640, -480, s.flags(), s.name()),
+                    PlaceType.LANDMARK, "arena", 3, 2, h);
+        }
+        if (s.id().equals("ballpark")) {
+            // Grayhaven Ballpark: three blocks square by the west shore, the outfield toward the water
+            return lot(s, PlaceType.LANDMARK, "ballpark", 3, 3, h);
+        }
+        if (s.id().equals("tower")) {
+            // the Broadcast Center: two blocks square, its front to the street the subway runs under
+            return lot(s, PlaceType.LANDMARK, "tower", 2, 2, h);
+        }
+        if (s.id().equals("power")) {
+            // Harbor Point Generating Station: three blocks along the subway's street, two deep, nudged
+            // west so the street the subway runs under is its front
+            return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "power", 3800, s.z(), s.flags(), s.name()),
+                    PlaceType.LANDMARK, "power", 3, 2, h);
+        }
+        if (s.id().equals("market")) {
+            // the Old Market: the market house down the middle of three blocks by two, the lanes and rows either side
+            return lot(s, PlaceType.LANDMARK, "market", 3, 2, h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);

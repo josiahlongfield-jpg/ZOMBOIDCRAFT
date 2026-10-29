@@ -1,0 +1,151 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_front_blue": "zomboidcraft:block/city/om_front_blue",
+    "om_ice_fish": "zomboidcraft:block/city/om_ice_fish",
+    "particle": "zomboidcraft:block/city/om_front_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_blue"
+        },
+        "south": {
+          "texture": "#om_front_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_front_blue"
+        },
+        "down": {
+          "texture": "#om_front_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        1
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_blue"
+        },
+        "south": {
+          "texture": "#om_front_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_ice_fish"
+        },
+        "down": {
+          "texture": "#om_front_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        6
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_blue"
+        },
+        "south": {
+          "texture": "#om_front_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_ice_fish"
+        },
+        "down": {
+          "texture": "#om_front_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        11
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_blue"
+        },
+        "south": {
+          "texture": "#om_front_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_ice_fish"
+        },
+        "down": {
+          "texture": "#om_front_blue"
+        }
+      }
+    }
+  ]
+}

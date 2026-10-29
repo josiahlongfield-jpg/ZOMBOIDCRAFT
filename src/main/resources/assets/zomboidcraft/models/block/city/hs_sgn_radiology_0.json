@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_sgn_radiology_0": "zomboidcraft:block/city/hs_sgn_radiology_0",
+    "particle": "zomboidcraft:block/city/hs_sgn_radiology_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_sgn_radiology_0"
+        },
+        "south": {
+          "texture": "#hs_sgn_radiology_0",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_sgn_radiology_0",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_sgn_radiology_0",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_sgn_radiology_0",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_sgn_radiology_0",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

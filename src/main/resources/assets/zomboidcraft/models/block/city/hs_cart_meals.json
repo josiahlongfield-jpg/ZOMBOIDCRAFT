@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "hs_steel": "zomboidcraft:block/city/hs_steel",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        1.8
+      ],
+      "to": [
+        13,
+        15,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_steel"
+        },
+        "south": {
+          "texture": "#hs_steel"
+        },
+        "east": {
+          "texture": "#hs_steel"
+        },
+        "west": {
+          "texture": "#hs_steel"
+        },
+        "up": {
+          "texture": "#hs_steel"
+        },
+        "down": {
+          "texture": "#hs_steel"
+        }
+      }
+    }
+  ]
+}

@@ -433,6 +433,21 @@ for i, rows in enumerate(["###.###..#..###", "#....#..#.#.#.#", "###..#..#.#.###
         if ch == '#':
             d.point((8 + j, 23 + i), fill=(24, 22, 20, 255))
 put(img, 13, 5)
+img, _ = tile(0, 6)                          # close-doors button: a dark plate, a big green button with the doors-shut arrows, CLOSE under it
+noise_fill(img, (52, 56, 58), 8, 6150)
+d = ImageDraw.Draw(img)
+d.rectangle([0, 0, T - 1, T - 1], outline=(20, 20, 20, 255), width=2)
+d.ellipse([7, 3, 24, 20], fill=(10, 50, 18, 255))
+d.ellipse([8, 4, 23, 19], fill=(40, 176, 70, 255))
+d.ellipse([11, 6, 17, 11], fill=(140, 240, 160, 255))
+d.rectangle([15, 7, 16, 16], fill=(16, 30, 18, 255))
+d.polygon([(10, 8), (14, 11), (14, 12), (10, 15)], fill=(16, 30, 18, 255))
+d.polygon([(21, 8), (17, 11), (17, 12), (21, 15)], fill=(16, 30, 18, 255))
+for i, rows in enumerate(["###.#...###.###.###", "#...#...#.#.#...#..", "#...#...#.#.###.###", "#...#...#.#...#.#..", "###.###.###.###.###"]):
+    for j, ch in enumerate(rows):
+        if ch == '#':
+            d.point((6 + j, 23 + i), fill=(230, 232, 226, 255))
+put(img, 0, 6)
 img, _ = tile(14, 5)                         # hazard stripes
 for y in range(T):
     for x in range(T):

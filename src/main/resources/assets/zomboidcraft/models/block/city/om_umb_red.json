@@ -1,0 +1,243 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "om_canvas_red": "zomboidcraft:block/city/om_canvas_red",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -12,
+        8,
+        -12
+      ],
+      "to": [
+        28,
+        10,
+        28
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            6,
+            16,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            6,
+            16,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            6,
+            16,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            6,
+            16,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -6,
+        10,
+        -6
+      ],
+      "to": [
+        22,
+        12,
+        22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            4,
+            16,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            4,
+            16,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            4,
+            16,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            4,
+            16,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#om_canvas_red",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_canvas_red"
+        },
+        "south": {
+          "texture": "#om_canvas_red"
+        },
+        "east": {
+          "texture": "#om_canvas_red"
+        },
+        "west": {
+          "texture": "#om_canvas_red"
+        },
+        "up": {
+          "texture": "#om_canvas_red"
+        },
+        "down": {
+          "texture": "#om_canvas_red"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        13,
+        7
+      ],
+      "to": [
+        9,
+        15,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

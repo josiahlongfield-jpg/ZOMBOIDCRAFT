@@ -135,11 +135,42 @@ public final class TrainNet {
         }
     }
 
-    /** A stop button pressed inside a train (its entity id): stop and let me off. */
-    public record StopRequest(int train) implements CustomPacketPayload {
+    /** Four times a second, for the station maps: where each of a line's trains is, its speed (blocks a tick), and whether it's running to a call. */
+    public record Positions(String line, double[] s, float[] v, boolean[] called) implements CustomPacketPayload {
+        public static final Type<Positions> TYPE = new Type<>(ZomboidCraft.id("train_positions"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Positions> CODEC = StreamCodec.of((buf, p) -> {
+            buf.writeUtf(p.line);
+            buf.writeVarInt(p.s.length);
+            for (int i = 0; i < p.s.length; i++) {
+                buf.writeDouble(p.s[i]);
+                buf.writeFloat(p.v[i]);
+                buf.writeBoolean(p.called[i]);
+            }
+        }, buf -> {
+            String line = buf.readUtf();
+            int n = buf.readVarInt();
+            double[] s = new double[n];
+            float[] v = new float[n];
+            boolean[] called = new boolean[n];
+            for (int i = 0; i < n; i++) {
+                s[i] = buf.readDouble();
+                v[i] = buf.readFloat();
+                called[i] = buf.readBoolean();
+            }
+            return new Positions(line, s, v, called);
+        });
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    /** A button pressed inside a train (its entity id): stop and let me off, or (close) shut the doors and go. */
+    public record StopRequest(int train, boolean close) implements CustomPacketPayload {
         public static final Type<StopRequest> TYPE = new Type<>(ZomboidCraft.id("train_stop_request"));
         public static final StreamCodec<RegistryFriendlyByteBuf, StopRequest> CODEC = StreamCodec.composite(
-                ByteBufCodecs.VAR_INT, StopRequest::train, StopRequest::new);
+                ByteBufCodecs.VAR_INT, StopRequest::train, ByteBufCodecs.BOOL, StopRequest::close, StopRequest::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {

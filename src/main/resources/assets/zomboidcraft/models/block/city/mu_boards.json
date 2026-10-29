@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_boards": "zomboidcraft:block/city/mu_boards",
+    "particle": "zomboidcraft:block/city/mu_boards"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_boards",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_boards",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_boards",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_boards",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_boards",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

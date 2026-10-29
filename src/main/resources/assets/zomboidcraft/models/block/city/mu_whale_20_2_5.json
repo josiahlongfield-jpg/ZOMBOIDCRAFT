@@ -1,0 +1,210 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_whalebone": "zomboidcraft:block/city/mu_whalebone",
+    "particle": "zomboidcraft:block/city/mu_whalebone"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        0
+      ],
+      "to": [
+        8,
+        14,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        6,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_whalebone"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        6.89
+      ],
+      "to": [
+        2.44,
+        0.22,
+        10.89
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.89,
+        0,
+        5.78
+      ],
+      "to": [
+        6.89,
+        0.44,
+        9.78
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.33,
+        0,
+        4.67
+      ],
+      "to": [
+        11.33,
+        0.67,
+        8.67
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.78,
+        0,
+        3.56
+      ],
+      "to": [
+        15.78,
+        0.89,
+        7.56
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone"
+        },
+        "up": {
+          "texture": "#mu_whalebone"
+        },
+        "down": {
+          "texture": "#mu_whalebone",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

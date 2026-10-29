@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_fan_4": {
+      "sprite": "zomboidcraft:block/city/om_fan_4",
+      "force_translucent": true
+    },
+    "om_fang_4": {
+      "sprite": "zomboidcraft:block/city/om_fang_4",
+      "force_translucent": true
+    },
+    "om_front_cream": "zomboidcraft:block/city/om_front_cream",
+    "om_granite": "zomboidcraft:block/city/om_granite",
+    "particle": "zomboidcraft:block/city/om_fan_4"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_fan_4",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_fan_4"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_fang_4"
+        },
+        "south": {
+          "texture": "#om_fang_4"
+        },
+        "east": {
+          "texture": "#om_front_cream",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_cream",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_front_cream",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_front_cream",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        9
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_fan_4"
+        },
+        "south": {
+          "texture": "#om_fan_4",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

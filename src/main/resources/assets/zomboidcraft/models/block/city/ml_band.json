@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_band": "zomboidcraft:block/city/ml_band",
+    "particle": "zomboidcraft:block/city/ml_band"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_band",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ml_band",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_band",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_band",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_band",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_band",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "mu_case_glass": {
+      "sprite": "zomboidcraft:block/city/mu_case_glass",
+      "force_translucent": true
+    },
+    "mu_gold": "zomboidcraft:block/city/mu_gold",
+    "mu_lapis": "zomboidcraft:block/city/mu_lapis",
+    "mu_terracotta": "zomboidcraft:block/city/mu_terracotta",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        8,
+        0.5
+      ],
+      "to": [
+        15.5,
+        9,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_case_glass"
+        },
+        "south": {
+          "texture": "#mu_case_glass"
+        },
+        "east": {
+          "texture": "#mu_case_glass"
+        },
+        "west": {
+          "texture": "#mu_case_glass"
+        },
+        "up": {
+          "texture": "#mu_case_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_case_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        15.6,
+        0.8
+      ],
+      "to": [
+        15.2,
+        16,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        6
+      ],
+      "to": [
+        5,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_terracotta"
+        },
+        "south": {
+          "texture": "#mu_terracotta"
+        },
+        "east": {
+          "texture": "#mu_terracotta"
+        },
+        "west": {
+          "texture": "#mu_terracotta"
+        },
+        "up": {
+          "texture": "#mu_terracotta"
+        },
+        "down": {
+          "texture": "#mu_terracotta"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        9,
+        6
+      ],
+      "to": [
+        8,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        6
+      ],
+      "to": [
+        11,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_terracotta"
+        },
+        "south": {
+          "texture": "#mu_terracotta"
+        },
+        "east": {
+          "texture": "#mu_terracotta"
+        },
+        "west": {
+          "texture": "#mu_terracotta"
+        },
+        "up": {
+          "texture": "#mu_terracotta"
+        },
+        "down": {
+          "texture": "#mu_terracotta"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        9,
+        6
+      ],
+      "to": [
+        14,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_lapis"
+        },
+        "south": {
+          "texture": "#mu_lapis"
+        },
+        "east": {
+          "texture": "#mu_lapis"
+        },
+        "west": {
+          "texture": "#mu_lapis"
+        },
+        "up": {
+          "texture": "#mu_lapis"
+        },
+        "down": {
+          "texture": "#mu_lapis"
+        }
+      }
+    }
+  ]
+}

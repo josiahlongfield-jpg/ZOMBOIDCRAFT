@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_art_harbor_2": "zomboidcraft:block/city/mu_art_harbor_2",
+    "particle": "zomboidcraft:block/city/mu_art_harbor_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_art_harbor_2"
+        },
+        "south": {
+          "texture": "#mu_art_harbor_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_art_harbor_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_art_harbor_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_art_harbor_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_art_harbor_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "tv_flat": "zomboidcraft:block/city/tv_flat",
+    "tv_flat_back": "zomboidcraft:block/city/tv_flat_back",
+    "particle": "zomboidcraft:block/city/tv_flat"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_flat"
+        },
+        "south": {
+          "texture": "#tv_flat_back"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        1,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_serving_on": "zomboidcraft:block/city/cc_serving_on",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "hs_steel": "zomboidcraft:block/city/hs_steel",
+    "particle": "zomboidcraft:block/city/cc_serving_on"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        2,
+        13
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_serving_on"
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        14,
+        14
+      ],
+      "to": [
+        8.5,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_steel"
+        },
+        "south": {
+          "texture": "#hs_steel"
+        },
+        "east": {
+          "texture": "#hs_steel"
+        },
+        "west": {
+          "texture": "#hs_steel"
+        },
+        "up": {
+          "texture": "#hs_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_steel"
+        }
+      }
+    }
+  ]
+}

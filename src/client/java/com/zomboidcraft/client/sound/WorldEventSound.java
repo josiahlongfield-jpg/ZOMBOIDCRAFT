@@ -100,11 +100,11 @@ public final class WorldEventSound {
      */
     private static void recording(Minecraft mc, Pending p, double t) {
         WorldEvents.Event e = p.event();
-        Vec3 ear = mc.player.getEyePosition(), v = e.velocity();
+        Vec3 ear = mc.player.getEyePosition(), v = e.velocity(0);
         double end = e.ticks() / 20.0;
         double tc = Mth.clamp(ear.subtract(e.at(0)).dot(v) / v.lengthSqr(), 0, end);
         double dc = e.at(tc).distanceTo(ear);
-        double range = e.kind() == WorldEvents.Kind.JET ? JET_RANGE : HELI_RANGE;
+        double range = e.jet() ? JET_RANGE : HELI_RANGE;
         double begin = tc + dc / WorldEvents.SOUND_SPEED - PEAK;
         if (dc > range || t > begin + 3) {
             p.played()[0] = t > begin;      // out of earshot, or we came too late to hear it come in
@@ -112,7 +112,7 @@ public final class WorldEventSound {
         }
         if (t >= begin) {
             p.played()[0] = true;
-            SoundEvent[] takes = e.kind() == WorldEvents.Kind.JET ? WorldEvents.FLYBY_JET : WorldEvents.FLYBY_HELI;
+            SoundEvent[] takes = e.jet() ? WorldEvents.FLYBY_JET : WorldEvents.FLYBY_HELI;
             SoundEvent take = takes[Math.min(e.sound(), takes.length) - 1];
             mc.getSoundManager().play(new Recording(take, e, (float) Math.pow(1 - dc / range, 1.4)));
         }
@@ -252,10 +252,10 @@ public final class WorldEventSound {
         private float near = 0;
 
         Flyby(WorldEvents.Event e) {
-            super(e.kind() == WorldEvents.Kind.JET ? AirSounds.JET_DISTANT : AirSounds.HELI_DISTANT, SoundSource.NEUTRAL,
+            super(e.jet() ? AirSounds.JET_DISTANT : AirSounds.HELI_DISTANT, SoundSource.NEUTRAL,
                     SoundInstance.createUnseededRandom());
             this.event = e;
-            this.range = e.kind() == WorldEvents.Kind.JET ? JET_RANGE : HELI_RANGE;
+            this.range = e.jet() ? JET_RANGE : HELI_RANGE;
             this.looping = true;
             this.delay = 0;
             this.attenuation = SoundInstance.Attenuation.NONE;
@@ -296,7 +296,7 @@ public final class WorldEventSound {
             this.y = from.y;
             this.z = from.z;
             Vec3 toEar = ear.subtract(from).normalize();
-            double closing = event.velocity().dot(toEar);
+            double closing = event.velocity(ts).dot(toEar);
             this.pitch = (float) Mth.clamp(1 / (1 - closing / WorldEvents.SOUND_SPEED), 0.6, 1.8);
             // the aircraft itself is here: its own engines carry the sound now
             Vec3 now = event.at(t);

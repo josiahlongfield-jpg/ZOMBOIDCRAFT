@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_whalebone": "zomboidcraft:block/city/mu_whalebone",
+    "particle": "zomboidcraft:block/city/mu_whalebone"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        15.5,
+        6.5
+      ],
+      "to": [
+        2.0,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_whalebone"
+        },
+        "south": {
+          "texture": "#mu_whalebone"
+        },
+        "east": {
+          "texture": "#mu_whalebone"
+        },
+        "west": {
+          "texture": "#mu_whalebone",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_whalebone",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_whalebone"
+        }
+      }
+    }
+  ]
+}
