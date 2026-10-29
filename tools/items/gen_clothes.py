@@ -718,13 +718,14 @@ def build_motorcycle_helmet(g):
 
 def build_police_cap(g):
     g.box('head', (-4.45, -6.4, -4.45), (4.45, EYES_HIGH - 0.25, 4.45), 'cloth')     # band
-    g.box('head', (-5.3, -7.6, -5.6), (5.3, -6.4, 5.0), 'cloth')                    # the wide flat top
-    g.box('head', (-4.9, -7.9, -5.2), (4.9, -7.6, 4.6), 'cloth')
+    # the wide flat top, its crown clear of the skin's hat layer (0.25 over the head), or hair shows through it
+    g.box('head', (-5.3, -8.4, -5.6), (5.3, -6.4, 5.0), 'cloth')
+    g.box('head', (-4.9, -8.7, -5.2), (4.9, -8.4, 4.6), 'cloth')
     g.box('head', (-3.8, EYES_HIGH - 0.55, -7.0), (3.8, EYES_HIGH - 0.2, -4.45), 'visor')
     g.box('head', (-3.9, -5.2, -4.62), (3.9, -4.95, -4.45), 'cord')                 # gold chin cord
     for s in (-1, 1):
         g.box('head', (s * 3.9 - 0.2, -5.3, -4.7), (s * 3.9 + 0.2, -4.85, -4.5), 'button')
-    g.box('head', (-0.9, -7.2, -5.7), (0.9, -5.4, -5.55), 'badge')
+    g.box('head', (-0.9, -7.8, -5.7), (0.9, -5.8, -5.55), 'badge')
     g.box('head', (-4.5, -5.0, -4.5), (4.5, EYES_HIGH - 0.25, 4.5), 'checker')      # chequered band
 
 
