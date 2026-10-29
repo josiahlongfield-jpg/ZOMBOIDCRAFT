@@ -56,8 +56,8 @@ EXTRA = {
                 'lighter'],
 }
 # the vanilla stand-ins the live waves replace, wherever they are. Vanilla things that still do something our items
-# don't yet (torch, bucket, compass, clock, flint and steel, shears, lantern, seeds, saddle, book and quill, name tag,
-# music discs, totems, paintings, bones) stay until ours work
+# don't yet (bucket, shears, seeds, saddle, book and quill, name tag, music discs, totems, paintings, bones) stay until
+# ours work; torches, lanterns, compasses, clocks and flint and steel went once ours lit, struck and told the time
 REPLACED = {f'minecraft:{n}' for n in (
     'potion', 'honey_bottle', 'milk_bucket', 'cookie', 'bread', 'dried_kelp', 'sugar', 'apple', 'egg', 'carrot',
     'potato', 'baked_potato', 'pumpkin_pie', 'sweet_berries', 'melon_slice', 'beetroot', 'cooked_beef',
@@ -66,7 +66,8 @@ REPLACED = {f'minecraft:{n}' for n in (
     'enchanted_golden_apple', 'rotten_flesh', 'sponge',
     'string', 'stick', 'oak_planks', 'coal', 'lead', 'candle', 'bowl',
     'paper', 'book', 'gold_nugget', 'iron_nugget', 'emerald', 'diamond', 'gold_ingot', 'amethyst_shard', 'ink_sac',
-    'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball')}
+    'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball',
+    'torch', 'lantern', 'soul_lantern', 'soul_torch', 'compass', 'clock', 'flint_and_steel')}
 # an entry another thread customised (a named note, a marked map, a set count of something special) is theirs, not a
 # stand-in, even when it's a stand-in item
 CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore', 'minecraft:set_custom_data',
