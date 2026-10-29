@@ -108,7 +108,7 @@ GEAR = {
     'shop/farm': [('machete_sheath', 'S', 3)], 'shop/storage': [('machete_sheath', 'R', 1)],
 }
 # worn gear still waiting on its model (it would show as the missing texture): kept out until the UI thread says
-GEAR_NO_MODEL = {'shoulder_holster', 'thigh_holster', 'knife_sheath', 'machete_sheath'}
+GEAR_NO_MODEL = set()   # all of UI's worn gear has body models now (2026-10-29)
 # roster rows the worn gear above stands in for
 NOT_PLACED = {'hunting_knife_sheath'}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
