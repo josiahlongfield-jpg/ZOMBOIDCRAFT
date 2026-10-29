@@ -429,23 +429,13 @@ public final class HarvestmanMind {
     private long spottedAt = -100_000;
 
     /**
-     * Its rage, where they can see it: when someone turns and finds it close; when it has the one it hunts in sight
-     * again after a while (to let them know it's seen them); and now and then, for no reason it gives.
+     * Its rage, where they can see it: when it has the one it hunts in sight again after a while (to let them know
+     * it's seen them); and now and then, for no reason it gives.
      */
     private void rages(ServerLevel level, Vec3 c, boolean was) {
         if (h.held() != null || plan == FLEE || plan == DRAG || plan == FEED || plan == LAIR || plan == REST || plan == HIDE
                 || plan == STRIKE && phase >= 1) {
             return;
-        }
-        if (watched && !was) {
-            for (ServerPlayer p : level.players()) {
-                if (!p.isSpectator() && p.distanceToSqr(c) < 10 * 10 && lookingAt(p, c)) {
-                    if (h.getRandom().nextFloat() < 0.6f && h.rage(p.getEyePosition(), false)) {
-                        return;
-                    }
-                    break;
-                }
-            }
         }
         ServerPlayer t = target(level);
         if (t == null) {
@@ -458,11 +448,11 @@ public final class HarvestmanMind {
         long now = level.getGameTime();
         if (now - spottedAt > 20 * 90) {
             spottedAt = now;
-            if (h.getRandom().nextFloat() < 0.6f && h.rage(t.getEyePosition(), false)) {
+            if (h.getRandom().nextFloat() < 0.4f && h.rage(t.getEyePosition(), false)) {
                 return;
             }
         }
-        if (d < 32 && h.getRandom().nextFloat() < 0.006f) {
+        if (d < 32 && h.getRandom().nextFloat() < 0.0015f) {
             h.rage(t.getEyePosition(), false);
         }
     }
@@ -1030,12 +1020,8 @@ public final class HarvestmanMind {
         start(prey instanceof Zombie ? ZOMBIE : STRIKE, prey.position(), BURST);
         quarry = prey;
         h.wantFloor = true;
-        if (prey instanceof Player p) {
+        if (prey instanceof Player) {
             alert = 1;
-            // before it comes for them: always if they're watching it, sometimes even if they aren't
-            if (lookingAt(p, h.centre()) || h.getRandom().nextFloat() < 0.3f) {
-                h.rage(p.getEyePosition(), false);
-            }
         }
     }
 
@@ -1369,7 +1355,7 @@ public final class HarvestmanMind {
             return;
         }
         // hurt: now and then it stands its ground and rages at them, to scare them off
-        if (by instanceof ServerPlayer p && plan != STRIKE && h.getRandom().nextFloat() < 0.35f && h.rage(p.getEyePosition(), false)) {
+        if (by instanceof ServerPlayer p && plan != STRIKE && h.getRandom().nextFloat() < 0.2f && h.rage(p.getEyePosition(), false)) {
             return;
         }
         // hurt, but not badly: now and then it only pretends to run, back to somewhere it can wait over them

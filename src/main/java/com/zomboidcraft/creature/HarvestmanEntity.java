@@ -263,7 +263,7 @@ public class HarvestmanEntity extends Mob {
     }
 
     /** How long a rage holds it still (its rage played a little quick), and the least time between two. */
-    public static final int RAGE_TICKS = 86, RAGE_GAP = 20 * 20;
+    public static final int RAGE_TICKS = 86, RAGE_GAP = 20 * 75;
     private long rageAt = -RAGE_GAP;
 
     /** Still raging at someone. */
