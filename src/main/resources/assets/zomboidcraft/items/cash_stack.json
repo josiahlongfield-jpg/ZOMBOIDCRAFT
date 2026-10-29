@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cash_stack"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cash_stack",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cash_stack",
+   "part": "body"
+  }
  }
 }

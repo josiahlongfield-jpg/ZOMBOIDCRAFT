@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/playing_cards"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/playing_cards",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/playing_cards",
+   "part": "body"
+  }
  }
 }

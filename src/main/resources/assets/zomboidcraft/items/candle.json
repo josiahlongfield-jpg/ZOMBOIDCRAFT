@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/candle"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/candle",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/candle",
+   "part": "body"
+  }
  }
 }

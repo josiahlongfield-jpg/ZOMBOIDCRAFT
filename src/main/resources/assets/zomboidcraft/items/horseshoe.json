@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/horseshoe"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/horseshoe",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/horseshoe",
+   "part": "body"
+  }
  }
 }

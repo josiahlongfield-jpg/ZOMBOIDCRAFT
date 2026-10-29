@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cb_radio"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cb_radio",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cb_radio",
+   "part": "body"
+  }
  }
 }

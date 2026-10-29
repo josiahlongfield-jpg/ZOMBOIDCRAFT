@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/traffic_cone"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/traffic_cone",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/traffic_cone",
+   "part": "body"
+  }
  }
 }

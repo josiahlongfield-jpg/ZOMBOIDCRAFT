@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/umbrella"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/umbrella",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/umbrella",
+   "part": "body"
+  }
  }
 }

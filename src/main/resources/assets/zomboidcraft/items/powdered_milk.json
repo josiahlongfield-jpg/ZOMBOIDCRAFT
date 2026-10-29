@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/powdered_milk"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/powdered_milk",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/powdered_milk",
+   "part": "body"
+  }
  }
 }

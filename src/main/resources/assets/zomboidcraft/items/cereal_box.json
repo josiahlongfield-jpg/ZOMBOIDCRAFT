@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cereal_box"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cereal_box",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cereal_box",
+   "part": "body"
+  }
  }
 }

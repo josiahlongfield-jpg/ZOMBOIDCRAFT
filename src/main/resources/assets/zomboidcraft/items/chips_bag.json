@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/chips_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/chips_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/chips_bag",
+   "part": "body"
+  }
  }
 }

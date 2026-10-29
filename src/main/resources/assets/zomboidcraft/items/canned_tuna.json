@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_tuna"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_tuna",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_tuna",
+   "part": "body"
+  }
  }
 }

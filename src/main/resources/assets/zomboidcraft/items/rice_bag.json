@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rice_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rice_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rice_bag",
+   "part": "body"
+  }
  }
 }

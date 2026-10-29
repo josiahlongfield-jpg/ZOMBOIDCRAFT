@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/wedding_ring"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/wedding_ring",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/wedding_ring",
+   "part": "body"
+  }
  }
 }

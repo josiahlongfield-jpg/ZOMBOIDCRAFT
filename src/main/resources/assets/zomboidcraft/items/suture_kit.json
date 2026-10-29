@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/suture_kit"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/suture_kit",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/suture_kit",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/perfume"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/perfume",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/perfume",
+   "part": "body"
+  }
  }
 }

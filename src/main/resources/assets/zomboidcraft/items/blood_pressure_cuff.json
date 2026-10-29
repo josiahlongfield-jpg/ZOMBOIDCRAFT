@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/blood_pressure_cuff"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/blood_pressure_cuff",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/blood_pressure_cuff",
+   "part": "body"
+  }
  }
 }

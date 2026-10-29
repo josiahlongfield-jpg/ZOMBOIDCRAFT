@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/county_map"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/county_map",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/county_map",
+   "part": "body"
+  }
  }
 }

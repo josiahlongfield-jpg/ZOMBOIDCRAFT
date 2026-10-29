@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/water_bottle"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/water_bottle",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/water_bottle",
+   "part": "body"
+  }
  }
 }

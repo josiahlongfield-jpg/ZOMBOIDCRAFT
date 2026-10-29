@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sandpaper"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sandpaper",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sandpaper",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rc_car"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rc_car",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rc_car",
+   "part": "body"
+  }
  }
 }

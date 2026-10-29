@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mixtape"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mixtape",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mixtape",
+   "part": "body"
+  }
  }
 }

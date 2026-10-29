@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fishing_trophy"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fishing_trophy",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fishing_trophy",
+   "part": "body"
+  }
  }
 }

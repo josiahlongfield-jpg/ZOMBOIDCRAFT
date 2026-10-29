@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/brake_fluid"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/brake_fluid",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/brake_fluid",
+   "part": "body"
+  }
  }
 }

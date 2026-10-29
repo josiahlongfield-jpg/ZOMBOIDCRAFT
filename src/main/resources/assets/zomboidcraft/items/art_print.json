@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/art_print"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/art_print",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/art_print",
+   "part": "body"
+  }
  }
 }

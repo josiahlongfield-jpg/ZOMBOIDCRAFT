@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/jam_jar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/jam_jar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/jam_jar",
+   "part": "body"
+  }
  }
 }

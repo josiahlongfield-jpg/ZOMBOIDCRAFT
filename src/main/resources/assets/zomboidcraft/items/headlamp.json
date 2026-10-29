@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/headlamp"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/headlamp",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/headlamp",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/textbook"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/textbook",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/textbook",
+   "part": "body"
+  }
  }
 }

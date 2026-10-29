@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/old_shoe"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/old_shoe",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/old_shoe",
+   "part": "body"
+  }
  }
 }

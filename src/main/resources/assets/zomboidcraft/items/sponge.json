@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sponge"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sponge",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sponge",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/kneeboard"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/kneeboard",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/kneeboard",
+   "part": "body"
+  }
  }
 }

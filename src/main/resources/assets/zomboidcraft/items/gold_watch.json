@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/gold_watch"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/gold_watch",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/gold_watch",
+   "part": "body"
+  }
  }
 }

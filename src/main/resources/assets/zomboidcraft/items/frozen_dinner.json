@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/frozen_dinner"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/frozen_dinner",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/frozen_dinner",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/safety_pins"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/safety_pins",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/safety_pins",
+   "part": "body"
+  }
  }
 }

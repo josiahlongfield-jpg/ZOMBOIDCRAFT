@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/dog_tags"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/dog_tags",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/dog_tags",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sleeping_pills"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sleeping_pills",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sleeping_pills",
+   "part": "body"
+  }
  }
 }

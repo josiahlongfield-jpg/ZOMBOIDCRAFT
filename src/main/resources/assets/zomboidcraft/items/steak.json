@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/steak"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/steak",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/steak",
+   "part": "body"
+  }
  }
 }

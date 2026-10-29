@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_pineapple"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_pineapple",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_pineapple",
+   "part": "body"
+  }
  }
 }

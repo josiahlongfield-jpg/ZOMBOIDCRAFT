@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/crackers_cheese"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/crackers_cheese",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/crackers_cheese",
+   "part": "body"
+  }
  }
 }

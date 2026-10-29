@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/whiskey"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/whiskey",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/whiskey",
+   "part": "body"
+  }
  }
 }

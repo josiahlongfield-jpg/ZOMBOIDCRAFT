@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/comb"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/comb",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/comb",
+   "part": "body"
+  }
  }
 }

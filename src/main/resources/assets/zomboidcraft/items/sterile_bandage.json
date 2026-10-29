@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sterile_bandage"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sterile_bandage",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sterile_bandage",
+   "part": "body"
+  }
  }
 }

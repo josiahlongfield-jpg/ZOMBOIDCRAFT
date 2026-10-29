@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/drivers_license"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/drivers_license",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/drivers_license",
+   "part": "body"
+  }
  }
 }

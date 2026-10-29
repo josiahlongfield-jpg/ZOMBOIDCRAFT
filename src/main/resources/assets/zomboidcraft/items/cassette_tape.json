@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cassette_tape"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cassette_tape",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cassette_tape",
+   "part": "body"
+  }
  }
 }

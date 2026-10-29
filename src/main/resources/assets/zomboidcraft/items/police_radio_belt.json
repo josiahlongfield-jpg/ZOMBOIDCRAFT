@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/police_radio_belt"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/police_radio_belt",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/police_radio_belt",
+   "part": "body"
+  }
  }
 }

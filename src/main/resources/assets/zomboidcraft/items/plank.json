@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/plank"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/plank",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/plank",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/timetable"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/timetable",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/timetable",
+   "part": "body"
+  }
  }
 }

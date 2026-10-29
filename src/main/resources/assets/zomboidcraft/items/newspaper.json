@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/newspaper"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/newspaper",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/newspaper",
+   "part": "body"
+  }
  }
 }

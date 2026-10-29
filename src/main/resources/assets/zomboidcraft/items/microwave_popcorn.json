@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/microwave_popcorn"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/microwave_popcorn",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/microwave_popcorn",
+   "part": "body"
+  }
  }
 }

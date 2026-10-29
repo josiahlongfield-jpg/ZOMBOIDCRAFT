@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/chocolate_bar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/chocolate_bar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/chocolate_bar",
+   "part": "body"
+  }
  }
 }

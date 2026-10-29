@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/skillbook_maintenance"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/skillbook_maintenance",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/skillbook_maintenance",
+   "part": "body"
+  }
  }
 }

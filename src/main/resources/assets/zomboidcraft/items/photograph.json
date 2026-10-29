@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/photograph"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/photograph",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/photograph",
+   "part": "body"
+  }
  }
 }

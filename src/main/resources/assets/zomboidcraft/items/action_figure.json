@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/action_figure"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/action_figure",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/action_figure",
+   "part": "body"
+  }
  }
 }

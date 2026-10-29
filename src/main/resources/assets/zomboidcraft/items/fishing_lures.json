@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fishing_lures"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fishing_lures",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fishing_lures",
+   "part": "body"
+  }
  }
 }

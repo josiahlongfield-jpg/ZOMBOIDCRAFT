@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sleeping_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sleeping_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sleeping_bag",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/game_cartridge"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/game_cartridge",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/game_cartridge",
+   "part": "body"
+  }
  }
 }

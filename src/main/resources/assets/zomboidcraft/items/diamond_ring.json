@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/diamond_ring"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/diamond_ring",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/diamond_ring",
+   "part": "body"
+  }
  }
 }

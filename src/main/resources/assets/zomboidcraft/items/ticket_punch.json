@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/ticket_punch"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/ticket_punch",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/ticket_punch",
+   "part": "body"
+  }
  }
 }

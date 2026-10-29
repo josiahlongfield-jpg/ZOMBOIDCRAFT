@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/polaroid_photo"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/polaroid_photo",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/polaroid_photo",
+   "part": "body"
+  }
  }
 }

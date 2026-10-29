@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/church_candle"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/church_candle",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/church_candle",
+   "part": "body"
+  }
  }
 }

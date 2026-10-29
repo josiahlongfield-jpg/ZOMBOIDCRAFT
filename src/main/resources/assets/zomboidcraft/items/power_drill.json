@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/power_drill"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/power_drill",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/power_drill",
+   "part": "body"
+  }
  }
 }

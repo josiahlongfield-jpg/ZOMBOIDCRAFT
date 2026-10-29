@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/harmonica"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/harmonica",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/harmonica",
+   "part": "body"
+  }
  }
 }

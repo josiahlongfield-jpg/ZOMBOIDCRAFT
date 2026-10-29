@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/silverware_set"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/silverware_set",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/silverware_set",
+   "part": "body"
+  }
  }
 }

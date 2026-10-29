@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/penlight"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/penlight",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/penlight",
+   "part": "body"
+  }
  }
 }

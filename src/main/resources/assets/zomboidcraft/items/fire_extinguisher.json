@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fire_extinguisher"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fire_extinguisher",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fire_extinguisher",
+   "part": "body"
+  }
  }
 }

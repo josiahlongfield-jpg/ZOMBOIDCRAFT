@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/toy_truck"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/toy_truck",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/toy_truck",
+   "part": "body"
+  }
  }
 }

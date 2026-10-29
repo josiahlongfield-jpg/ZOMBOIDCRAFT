@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/boombox"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/boombox",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/boombox",
+   "part": "body"
+  }
  }
 }

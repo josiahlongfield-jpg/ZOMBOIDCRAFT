@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/hand_warmers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/hand_warmers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/hand_warmers",
+   "part": "body"
+  }
  }
 }

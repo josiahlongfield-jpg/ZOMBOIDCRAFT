@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/extension_cord"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/extension_cord",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/extension_cord",
+   "part": "body"
+  }
  }
 }

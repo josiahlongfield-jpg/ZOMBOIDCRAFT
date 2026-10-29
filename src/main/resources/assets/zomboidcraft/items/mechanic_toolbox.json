@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mechanic_toolbox"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mechanic_toolbox",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mechanic_toolbox",
+   "part": "body"
+  }
  }
 }

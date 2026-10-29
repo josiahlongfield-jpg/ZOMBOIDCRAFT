@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/medical_tape"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/medical_tape",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/medical_tape",
+   "part": "body"
+  }
  }
 }

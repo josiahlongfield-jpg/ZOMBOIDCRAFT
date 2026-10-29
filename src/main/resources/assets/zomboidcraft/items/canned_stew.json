@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_stew"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_stew",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_stew",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bone_scrap"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bone_scrap",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bone_scrap",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/glow_stick"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/glow_stick",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/glow_stick",
+   "part": "body"
+  }
  }
 }

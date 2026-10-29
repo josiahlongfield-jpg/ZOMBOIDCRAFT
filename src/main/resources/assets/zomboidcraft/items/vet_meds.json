@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/vet_meds"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/vet_meds",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/vet_meds",
+   "part": "body"
+  }
  }
 }

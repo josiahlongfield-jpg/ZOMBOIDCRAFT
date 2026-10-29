@@ -8,11 +8,17 @@ box, rotated exactly. Output is triangles in item model space (0-16) with uvs in
     python3 mesh.py --only 'canned_beans|flashlight' --out /tmp/x     # preview json + atlas png per item
 """
 import argparse
+import importlib.util
+import io
 import json
 import math
 import re
+import struct
 import sys
+import zlib
 from pathlib import Path
+
+from PIL import Image
 
 import numpy as np
 
@@ -20,6 +26,13 @@ import gen_loot as G
 
 M, kit = G.M, G.kit
 SEGS = 24                  # sides on a full cylinder
+OUTLINE = 0.04             # ink outline, item pixels
+ROOT = Path(__file__).resolve().parents[3]
+MESHES = ROOT / 'src/main/resources/assets/zomboidcraft/meshes'
+_cars = importlib.util.spec_from_file_location('cars_pack', ROOT / 'tools/cars/pack.py')
+_cars_pack = importlib.util.module_from_spec(_cars)
+_cars.loader.exec_module(_cars_pack)
+scramble = _cars_pack.scramble      # the same stream as the cars and the mesh guns
 
 
 # ---------------------------------------------------------------- free angles
@@ -309,20 +322,83 @@ def build(name):
     return mesh, img, T
 
 
+def smooth_normals(v):
+    """Each corner's normal averaged over every corner at the same spot, for the outline shell to follow."""
+    key = np.round(v, 3)
+    _, idx = np.unique(key, axis=0, return_inverse=True)
+    idx = idx.reshape(-1)
+    tri = v.reshape(-1, 3, 3)
+    fn = np.repeat(np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]), 3, axis=0)
+    acc = np.zeros((idx.max() + 1, 3))
+    np.add.at(acc, idx, fn)
+    acc /= np.linalg.norm(acc, axis=1, keepdims=True) + 1e-12
+    return acc[idx]
+
+
+def zmesh(mesh_id, mesh, img, outline=OUTLINE):
+    """The .zmesh file (v3, tools/meshguns/pack.py): one part, "body"."""
+    v, uv = np.array(mesh.v, float), np.array(mesh.uv, float)
+    n = smooth_normals(v)
+    rgb = (np.clip(img['rgb'][..., :3], 0, 1) * 255).astype(np.uint8)
+    png = io.BytesIO()
+    Image.fromarray(rgb).save(png, 'PNG', optimize=True)
+    out = io.BytesIO()
+    out.write(b'ZMSH')
+    out.write(struct.pack('>i', 3))
+    out.write(struct.pack('>f', outline))
+    out.write(struct.pack('>i', len(png.getvalue())))
+    out.write(png.getvalue())
+    out.write(struct.pack('>i', 1))
+    rec = np.zeros(len(v), dtype=[('x', '>i2'), ('y', '>i2'), ('z', '>i2'), ('u', '>u2'), ('v', '>u2'),
+                                  ('nx', 'i1'), ('ny', 'i1'), ('nz', 'i1')])
+    q = np.clip(np.round(v * 1000), -32768, 32767)
+    rec['x'], rec['y'], rec['z'] = q[:, 0], q[:, 1], q[:, 2]
+    rec['u'] = np.round(np.clip(uv[:, 0], 0, 1) * 65535)
+    rec['v'] = np.round(np.clip(uv[:, 1], 0, 1) * 65535)
+    nq = np.round(n * 127)
+    rec['nx'], rec['ny'], rec['nz'] = nq[:, 0], nq[:, 1], nq[:, 2]
+    b = b'body'
+    out.write(struct.pack('>H', len(b)))
+    out.write(b)
+    out.write(struct.pack('>i', len(v) // 3))
+    out.write(rec.tobytes())
+    return scramble(zlib.compress(out.getvalue(), 9), mesh_id)
+
+
+def item_json(name):
+    """The item model: the mesh, drawn under the block model so its display transforms carry over."""
+    return {'model': {'type': 'minecraft:special', 'base': f'{G.NS}:item/loot/{name}',
+                      'model': {'type': f'{G.NS}:mesh', 'id': f'loot/{name}', 'part': 'body'}}}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--only', default='.')
-    ap.add_argument('--out', required=True)
+    ap.add_argument('--out', default=None, help='preview: json + atlas per item here instead of the mod files')
     a = ap.parse_args()
-    out = Path(a.out)
-    out.mkdir(parents=True, exist_ok=True)
-    for name in [n for n in G.ITEMS if re.search(a.only, n)]:
+    import gen_java
+    live = {r['id'] for r in gen_java.rows() if r['live']}
+    names = [n for n in G.ITEMS if n in live and re.search(a.only, n)]
+    out = Path(a.out) if a.out else None
+    total = 0
+    for name in names:
         mesh, img, T = build(name)
-        kit.save_textures(img, out / f'{name}.png')
-        json.dump({'tex': f'{name}.png', 'v': np.round(np.array(mesh.v), 4).tolist(),
-                   'uv': np.round(np.array(mesh.uv), 5).tolist(), 'n': np.round(np.array(mesh.n), 3).tolist()},
-                  open(out / f'{name}.mesh.json', 'w'))
+        if out:
+            out.mkdir(parents=True, exist_ok=True)
+            kit.save_textures(img, out / f'{name}.png')
+            json.dump({'tex': f'{name}.png', 'v': np.round(np.array(mesh.v), 4).tolist(),
+                       'uv': np.round(np.array(mesh.uv), 5).tolist(), 'n': np.round(np.array(mesh.n), 3).tolist()},
+                      open(out / f'{name}.mesh.json', 'w'))
+        else:
+            data = zmesh(f'loot/{name}', mesh, img)
+            dest = MESHES / 'loot' / f'{name}.zmesh'
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(data)
+            M.dump(item_json(name), G.ASSETS / f'items/{name}.json')
+            total += len(data)
         print(name, len(mesh.v) // 3, 'tris', f'{T}px')
+    if not out:
+        print(f'{len(names)} meshes, {total // 1024} KB')
 
 
 if __name__ == '__main__':

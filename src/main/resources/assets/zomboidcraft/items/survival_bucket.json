@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/survival_bucket"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/survival_bucket",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/survival_bucket",
+   "part": "body"
+  }
  }
 }

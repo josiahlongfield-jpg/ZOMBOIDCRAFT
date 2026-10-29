@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/hinges"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/hinges",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/hinges",
+   "part": "body"
+  }
  }
 }

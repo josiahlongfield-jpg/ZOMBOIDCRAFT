@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/file_tool"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/file_tool",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/file_tool",
+   "part": "body"
+  }
  }
 }

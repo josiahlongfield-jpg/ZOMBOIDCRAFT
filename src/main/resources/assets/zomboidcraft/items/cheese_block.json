@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cheese_block"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cheese_block",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cheese_block",
+   "part": "body"
+  }
  }
 }

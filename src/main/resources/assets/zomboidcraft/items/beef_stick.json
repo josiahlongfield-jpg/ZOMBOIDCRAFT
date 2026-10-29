@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/beef_stick"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/beef_stick",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/beef_stick",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bleach"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bleach",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bleach",
+   "part": "body"
+  }
  }
 }

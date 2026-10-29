@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/chicken_whole"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/chicken_whole",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/chicken_whole",
+   "part": "body"
+  }
  }
 }

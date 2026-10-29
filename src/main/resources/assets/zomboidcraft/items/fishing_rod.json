@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fishing_rod"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fishing_rod",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fishing_rod",
+   "part": "body"
+  }
  }
 }

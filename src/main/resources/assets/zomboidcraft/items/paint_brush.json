@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/paint_brush"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/paint_brush",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/paint_brush",
+   "part": "body"
+  }
  }
 }

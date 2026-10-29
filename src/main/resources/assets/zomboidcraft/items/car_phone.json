@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/car_phone"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/car_phone",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/car_phone",
+   "part": "body"
+  }
  }
 }

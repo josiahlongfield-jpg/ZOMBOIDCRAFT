@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/trash_bags"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/trash_bags",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/trash_bags",
+   "part": "body"
+  }
  }
 }

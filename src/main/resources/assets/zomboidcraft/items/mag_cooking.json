@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mag_cooking"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mag_cooking",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mag_cooking",
+   "part": "body"
+  }
  }
 }

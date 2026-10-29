@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/rag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/rag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/rag",
+   "part": "body"
+  }
  }
 }

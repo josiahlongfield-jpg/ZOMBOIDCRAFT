@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/watering_can"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/watering_can",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/watering_can",
+   "part": "body"
+  }
  }
 }

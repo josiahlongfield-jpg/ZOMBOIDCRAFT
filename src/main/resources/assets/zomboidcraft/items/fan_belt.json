@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fan_belt"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fan_belt",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fan_belt",
+   "part": "body"
+  }
  }
 }

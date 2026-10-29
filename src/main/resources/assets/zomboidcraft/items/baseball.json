@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/baseball"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/baseball",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/baseball",
+   "part": "body"
+  }
  }
 }

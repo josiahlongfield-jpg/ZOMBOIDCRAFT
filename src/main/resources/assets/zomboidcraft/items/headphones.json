@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/headphones"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/headphones",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/headphones",
+   "part": "body"
+  }
  }
 }

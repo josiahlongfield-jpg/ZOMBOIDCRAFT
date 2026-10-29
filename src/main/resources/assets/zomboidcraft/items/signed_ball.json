@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/signed_ball"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/signed_ball",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/signed_ball",
+   "part": "body"
+  }
  }
 }

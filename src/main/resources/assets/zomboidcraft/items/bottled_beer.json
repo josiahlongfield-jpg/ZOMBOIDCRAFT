@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bottled_beer"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bottled_beer",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bottled_beer",
+   "part": "body"
+  }
  }
 }

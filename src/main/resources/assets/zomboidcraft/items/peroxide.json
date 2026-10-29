@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/peroxide"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/peroxide",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/peroxide",
+   "part": "body"
+  }
  }
 }

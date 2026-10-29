@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/oil_filter"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/oil_filter",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/oil_filter",
+   "part": "body"
+  }
  }
 }

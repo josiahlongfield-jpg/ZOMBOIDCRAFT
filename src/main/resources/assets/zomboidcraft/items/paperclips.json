@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/paperclips"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/paperclips",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/paperclips",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/skillbook_masonry"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/skillbook_masonry",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/skillbook_masonry",
+   "part": "body"
+  }
  }
 }

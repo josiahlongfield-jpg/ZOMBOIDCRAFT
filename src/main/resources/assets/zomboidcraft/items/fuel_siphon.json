@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fuel_siphon"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fuel_siphon",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fuel_siphon",
+   "part": "body"
+  }
  }
 }

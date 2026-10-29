@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/mag_guns"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/mag_guns",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/mag_guns",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pry_bar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pry_bar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pry_bar",
+   "part": "body"
+  }
  }
 }

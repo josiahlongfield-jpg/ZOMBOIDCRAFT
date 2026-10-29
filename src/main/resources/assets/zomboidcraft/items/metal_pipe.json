@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/metal_pipe"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/metal_pipe",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/metal_pipe",
+   "part": "body"
+  }
  }
 }

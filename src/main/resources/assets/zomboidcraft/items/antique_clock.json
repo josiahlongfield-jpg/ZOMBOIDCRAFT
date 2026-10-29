@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/antique_clock"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/antique_clock",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/antique_clock",
+   "part": "body"
+  }
  }
 }

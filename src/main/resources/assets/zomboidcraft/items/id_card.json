@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/id_card"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/id_card",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/id_card",
+   "part": "body"
+  }
  }
 }

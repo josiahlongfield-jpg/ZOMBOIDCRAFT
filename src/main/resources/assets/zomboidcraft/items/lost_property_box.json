@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/lost_property_box"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/lost_property_box",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/lost_property_box",
+   "part": "body"
+  }
  }
 }
