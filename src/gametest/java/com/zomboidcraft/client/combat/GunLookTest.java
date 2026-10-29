@@ -27,7 +27,8 @@ public class GunLookTest implements FabricClientGameTest {
             ctx.getInput().resizeWindow(1280, 720);
             ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
             ctx.waitTicks(30);
-            LOG.info("ZCGUN holding {}", ctx.computeOnClient(mc -> mc.player.getMainHandItem().toString()));
+            String held = ctx.computeOnClient(mc -> mc.player.getMainHandItem().toString());
+            LOG.info("ZCGUN holding {}", held);
             ctx.takeScreenshot("gun-fp-hip");
             ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
             ctx.waitTicks(10);
