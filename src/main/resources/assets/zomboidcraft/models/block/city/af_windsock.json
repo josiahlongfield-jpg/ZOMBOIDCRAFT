@@ -1,0 +1,398 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "af_sock": "zomboidcraft:block/city/af_sock",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        7.3,
+        0,
+        7.3
+      ],
+      "to": [
+        8.7,
+        10.5,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        9.5,
+        2
+      ],
+      "to": [
+        8.5,
+        10.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        13,
+        1
+      ],
+      "to": [
+        12,
+        13.6,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        1
+      ],
+      "to": [
+        12,
+        6.6,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        1
+      ],
+      "to": [
+        4.6,
+        13.6,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        11.4,
+        6,
+        1
+      ],
+      "to": [
+        12,
+        13.6,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4.4,
+        6.4,
+        -4
+      ],
+      "to": [
+        11.6,
+        13.2,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_sock"
+        },
+        "south": {
+          "texture": "#af_sock"
+        },
+        "east": {
+          "texture": "#af_sock",
+          "uv": [
+            11,
+            2.8000000000000007,
+            16,
+            9.6
+          ]
+        },
+        "west": {
+          "texture": "#af_sock",
+          "uv": [
+            0,
+            2.8000000000000007,
+            5,
+            9.6
+          ]
+        },
+        "up": {
+          "texture": "#af_sock",
+          "uv": [
+            4.4,
+            0,
+            11.6,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#af_sock",
+          "uv": [
+            4.4,
+            11,
+            11.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9.8,
+          1.5
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        5,
+        7,
+        -9
+      ],
+      "to": [
+        11,
+        12.6,
+        -4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_sock"
+        },
+        "south": {
+          "texture": "#af_sock"
+        },
+        "east": {
+          "texture": "#af_sock",
+          "uv": [
+            11,
+            3.4000000000000004,
+            16,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#af_sock",
+          "uv": [
+            0,
+            3.4000000000000004,
+            5,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#af_sock",
+          "uv": [
+            5,
+            0,
+            11,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#af_sock",
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9.8,
+          1.5
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        5.8,
+        7.8,
+        -13
+      ],
+      "to": [
+        10.2,
+        11.8,
+        -9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_sock"
+        },
+        "south": {
+          "texture": "#af_sock"
+        },
+        "east": {
+          "texture": "#af_sock",
+          "uv": [
+            12,
+            4.199999999999999,
+            16,
+            8.2
+          ]
+        },
+        "west": {
+          "texture": "#af_sock",
+          "uv": [
+            0,
+            4.199999999999999,
+            4,
+            8.2
+          ]
+        },
+        "up": {
+          "texture": "#af_sock",
+          "uv": [
+            5.8,
+            0,
+            10.2,
+            4
+          ]
+        },
+        "down": {
+          "texture": "#af_sock",
+          "uv": [
+            5.8,
+            12,
+            10.2,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9.8,
+          1.5
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "af_hold": "zomboidcraft:block/city/af_hold",
+    "particle": "zomboidcraft:block/city/af_hold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_hold",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#af_hold",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#af_hold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#af_hold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#af_hold"
+        },
+        "down": {
+          "texture": "#af_hold",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
