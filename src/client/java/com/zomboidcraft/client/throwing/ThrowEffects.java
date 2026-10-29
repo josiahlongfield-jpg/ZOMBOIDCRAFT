@@ -29,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class ThrowEffects {
     private static final DustParticleOptions FLARE_RED = new DustParticleOptions(0xFF2A1A, 1.0f);
-    private static final DustParticleOptions SPARK = new DustParticleOptions(0xFFD27A, 0.6f);
     private static final DustParticleOptions ARC = new DustParticleOptions(0xE8E2C8, 0.45f);
     private static final DustParticleOptions ARC_END = new DustParticleOptions(0xFFFFFF, 0.9f);
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
@@ -54,12 +53,6 @@ public final class ThrowEffects {
         RandomSource r = level.getRandom();
         ThrowKind kind = t.kind();
         Vec3 at = t.position().add(0, 0.12, 0);
-        if (t.lit()) {
-            level.addParticle(SPARK, at.x, at.y + 0.1, at.z, (r.nextDouble() - 0.5) * 0.1, 0.08, (r.nextDouble() - 0.5) * 0.1);
-            if (r.nextInt(3) == 0) {
-                level.addParticle(ParticleTypes.SMOKE, at.x, at.y + 0.1, at.z, 0, 0.02, 0);
-            }
-        }
         switch (kind) {
             case FLARE -> {
                 if (t.phase() == Thrown.FLYING || t.phase() == Thrown.GOING) {
