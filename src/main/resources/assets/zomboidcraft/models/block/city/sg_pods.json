@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_crust_1": "zomboidcraft:block/city/sg_crust_1",
+    "sg_pod": "zomboidcraft:block/city/sg_pod",
+    "particle": "zomboidcraft:block/city/sg_pod"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        8,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_pod"
+        },
+        "south": {
+          "texture": "#sg_pod"
+        },
+        "east": {
+          "texture": "#sg_pod"
+        },
+        "west": {
+          "texture": "#sg_pod"
+        },
+        "up": {
+          "texture": "#sg_pod"
+        },
+        "down": {
+          "texture": "#sg_pod",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        6
+      ],
+      "to": [
+        14,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_pod"
+        },
+        "south": {
+          "texture": "#sg_pod"
+        },
+        "east": {
+          "texture": "#sg_pod"
+        },
+        "west": {
+          "texture": "#sg_pod"
+        },
+        "up": {
+          "texture": "#sg_pod"
+        },
+        "down": {
+          "texture": "#sg_pod",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        9,
+        5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_pod"
+        },
+        "south": {
+          "texture": "#sg_pod"
+        },
+        "east": {
+          "texture": "#sg_pod"
+        },
+        "west": {
+          "texture": "#sg_pod"
+        },
+        "up": {
+          "texture": "#sg_pod"
+        },
+        "down": {
+          "texture": "#sg_pod",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_crust_1",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_crust_1",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_crust_1",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_crust_1",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_crust_1"
+        },
+        "down": {
+          "texture": "#sg_crust_1",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

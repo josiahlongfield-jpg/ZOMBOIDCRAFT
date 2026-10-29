@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_cap": "zomboidcraft:block/city/sg_cap",
+    "sg_flesh": "zomboidcraft:block/city/sg_flesh",
+    "sg_gills": "zomboidcraft:block/city/sg_gills",
+    "particle": "zomboidcraft:block/city/sg_flesh"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        8,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_flesh"
+        },
+        "down": {
+          "texture": "#sg_flesh",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_cap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_cap",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_cap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_cap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_cap"
+        },
+        "down": {
+          "texture": "#sg_gills"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "to": [
+        14,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_cap"
+        },
+        "south": {
+          "texture": "#sg_cap"
+        },
+        "east": {
+          "texture": "#sg_cap"
+        },
+        "west": {
+          "texture": "#sg_cap"
+        },
+        "up": {
+          "texture": "#sg_cap"
+        },
+        "down": {
+          "texture": "#sg_gills"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        5
+      ],
+      "to": [
+        11,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_cap"
+        },
+        "south": {
+          "texture": "#sg_cap"
+        },
+        "east": {
+          "texture": "#sg_cap"
+        },
+        "west": {
+          "texture": "#sg_cap"
+        },
+        "up": {
+          "texture": "#sg_cap"
+        },
+        "down": {
+          "texture": "#sg_cap"
+        }
+      }
+    }
+  ]
+}

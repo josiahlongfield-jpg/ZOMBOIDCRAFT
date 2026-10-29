@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_ring_face": "zomboidcraft:block/city/rl_ring_face",
+    "rl_ring_front": "zomboidcraft:block/city/rl_ring_front",
+    "particle": "zomboidcraft:block/city/rl_ring_front"
+  },
+  "elements": [
+    {
+      "from": [
+        16,
+        -0.25,
+        0
+      ],
+      "to": [
+        32,
+        16.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_ring_front",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_ring_front",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_ring_face",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rl_ring_face",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rl_ring_face",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rl_ring_face",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

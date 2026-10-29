@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_mass": "zomboidcraft:block/city/sg_mass",
+    "particle": "zomboidcraft:block/city/sg_mass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_mass",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_mass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_mass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_mass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_mass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sg_mass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

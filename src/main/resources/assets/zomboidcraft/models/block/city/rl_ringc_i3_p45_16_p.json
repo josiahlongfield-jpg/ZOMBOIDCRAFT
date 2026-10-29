@@ -1,0 +1,124 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_plug": "zomboidcraft:block/city/rl_plug",
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_steel_flange"
+  },
+  "elements": [
+    {
+      "from": [
+        -4,
+        -16,
+        -2
+      ],
+      "to": [
+        20,
+        0,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug"
+        },
+        "south": {
+          "texture": "#rl_plug",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_plug",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_plug",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_plug",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_plug",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

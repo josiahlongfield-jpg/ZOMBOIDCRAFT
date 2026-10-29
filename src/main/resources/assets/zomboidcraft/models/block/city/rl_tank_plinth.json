@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_hazard": "zomboidcraft:block/city/rl_hazard",
+    "rl_steel": "zomboidcraft:block/city/rl_steel",
+    "particle": "zomboidcraft:block/city/rl_hazard"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_hazard",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_hazard",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_hazard",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_hazard",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

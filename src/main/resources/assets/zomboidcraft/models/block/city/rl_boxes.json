@@ -1,0 +1,85 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_boxes": "zomboidcraft:block/city/rl_boxes",
+    "particle": "zomboidcraft:block/city/rl_boxes"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_boxes"
+        },
+        "south": {
+          "texture": "#rl_boxes"
+        },
+        "east": {
+          "texture": "#rl_boxes",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_boxes",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_boxes"
+        },
+        "down": {
+          "texture": "#rl_boxes",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        8,
+        2
+      ],
+      "to": [
+        15,
+        15,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_boxes"
+        },
+        "south": {
+          "texture": "#rl_boxes"
+        },
+        "east": {
+          "texture": "#rl_boxes"
+        },
+        "west": {
+          "texture": "#rl_boxes"
+        },
+        "up": {
+          "texture": "#rl_boxes"
+        },
+        "down": {
+          "texture": "#rl_boxes"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    }
+  ]
+}

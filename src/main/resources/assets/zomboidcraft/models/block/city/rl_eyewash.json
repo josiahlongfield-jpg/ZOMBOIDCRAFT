@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_eyewash": "zomboidcraft:block/city/rl_eyewash",
+    "rl_steel": "zomboidcraft:block/city/rl_steel",
+    "particle": "zomboidcraft:block/city/rl_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        13
+      ],
+      "to": [
+        9,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel"
+        },
+        "south": {
+          "texture": "#rl_steel"
+        },
+        "east": {
+          "texture": "#rl_steel"
+        },
+        "west": {
+          "texture": "#rl_steel"
+        },
+        "up": {
+          "texture": "#rl_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        13,
+        8
+      ],
+      "to": [
+        13,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_eyewash"
+        },
+        "south": {
+          "texture": "#rl_eyewash"
+        },
+        "east": {
+          "texture": "#rl_eyewash"
+        },
+        "west": {
+          "texture": "#rl_eyewash"
+        },
+        "up": {
+          "texture": "#rl_eyewash"
+        },
+        "down": {
+          "texture": "#rl_eyewash"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        6,
+        12
+      ],
+      "to": [
+        8.5,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_eyewash"
+        },
+        "south": {
+          "texture": "#rl_eyewash"
+        },
+        "east": {
+          "texture": "#rl_eyewash"
+        },
+        "west": {
+          "texture": "#rl_eyewash"
+        },
+        "up": {
+          "texture": "#rl_eyewash"
+        },
+        "down": {
+          "texture": "#rl_eyewash"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        9
+      ],
+      "to": [
+        11,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_eyewash"
+        },
+        "south": {
+          "texture": "#rl_eyewash"
+        },
+        "east": {
+          "texture": "#rl_eyewash"
+        },
+        "west": {
+          "texture": "#rl_eyewash"
+        },
+        "up": {
+          "texture": "#rl_eyewash"
+        },
+        "down": {
+          "texture": "#rl_eyewash"
+        }
+      }
+    }
+  ]
+}
