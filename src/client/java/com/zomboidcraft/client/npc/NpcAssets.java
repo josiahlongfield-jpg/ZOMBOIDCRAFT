@@ -2,6 +2,7 @@ package com.zomboidcraft.client.npc;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.npc.Npcs;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -18,8 +19,9 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 
 /**
- * Loads an NPC's packed file (assets/zomboidcraft/npc/ID.znpc, written by tools/npc/pack.py) the first time one is drawn:
- * unscrambles and inflates it, and turns each look's texture into a GPU texture once something wears it.
+ * Loads an NPC's packed file the first time one is drawn: config/zomboidcraft/npc/ID.znpc on this PC if it's there (models
+ * that must never ship with the mod), otherwise assets/zomboidcraft/npc/ID.znpc in the jar (both written by tools/npc/pack.py);
+ * it unscrambles and inflates it, and turns each look's texture into a GPU texture once something wears it.
  */
 public final class NpcAssets {
     /** Vertices in model space (blocks, feet at y=0, facing +z), their uvs and smooth normals, and triangles over them. */
@@ -89,8 +91,13 @@ public final class NpcAssets {
 
     private static Model read(String model) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("npc/" + model + ".znpc"))) {
-            data = in.readAllBytes();
+        java.nio.file.Path local = Npcs.localFolder().resolve(model + ".znpc");
+        if (java.nio.file.Files.isRegularFile(local)) {
+            data = java.nio.file.Files.readAllBytes(local);
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("npc/" + model + ".znpc"))) {
+                data = in.readAllBytes();
+            }
         }
         unscramble(data, model);
         Model out = new Model();
