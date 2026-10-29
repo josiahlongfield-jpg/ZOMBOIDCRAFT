@@ -1,0 +1,274 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_exhaust_plug": "zomboidcraft:block/city/al_exhaust_plug",
+    "particle": "zomboidcraft:block/city/al_exhaust_plug"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        4.0,
+        2.664,
+        0.48
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            13.336,
+            4.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            15.52,
+            13.336,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            13.336,
+            0.48,
+            16.0
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            0.48
+          ]
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            15.52,
+            4.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        8.0,
+        0.924,
+        0.48
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            15.076,
+            8.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            15.52,
+            15.076,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            15.076,
+            0.48,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            0.48
+          ]
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            15.52,
+            8.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.48
+      ],
+      "to": [
+        4.0,
+        0.495,
+        5.76
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            15.505,
+            4.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.24,
+            15.505,
+            15.52,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.48,
+            15.505,
+            5.76,
+            16.0
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.48,
+            4.0,
+            5.76
+          ]
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            10.24,
+            4.0,
+            15.52
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        12.8,
+        0.0
+      ],
+      "to": [
+        2.72,
+        16.0,
+        9.6
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            0.0,
+            2.72,
+            3.2
+          ]
+        },
+        "east": {
+          "texture": "#al_cowl",
+          "uv": [
+            6.4,
+            0.0,
+            16.0,
+            3.2
+          ]
+        },
+        "down": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            6.4,
+            2.72,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        4.0,
+        0.0
+      ],
+      "to": [
+        2.4,
+        15.2,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            0.8,
+            16.0,
+            12.0
+          ]
+        },
+        "up": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            0.0,
+            2.4,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            0.0,
+            2.4,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

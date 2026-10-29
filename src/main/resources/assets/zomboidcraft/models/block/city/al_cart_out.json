@@ -1,0 +1,232 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cart_front": "zomboidcraft:block/city/al_cart_front",
+    "al_coffee": "zomboidcraft:block/city/al_coffee",
+    "al_galley_steel": "zomboidcraft:block/city/al_galley_steel",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "particle": "zomboidcraft:block/city/al_cart_front"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        1,
+        1
+      ],
+      "to": [
+        13,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_cart_front"
+        },
+        "south": {
+          "texture": "#al_cart_front"
+        },
+        "east": {
+          "texture": "#al_galley_steel"
+        },
+        "west": {
+          "texture": "#al_galley_steel"
+        },
+        "up": {
+          "texture": "#al_galley_steel"
+        },
+        "down": {
+          "texture": "#al_galley_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        0,
+        2
+      ],
+      "to": [
+        5,
+        1,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        2
+      ],
+      "to": [
+        12.5,
+        1,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        0,
+        12.5
+      ],
+      "to": [
+        5,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        12.5
+      ],
+      "to": [
+        12.5,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_rubber"
+        },
+        "south": {
+          "texture": "#home_rubber"
+        },
+        "east": {
+          "texture": "#home_rubber"
+        },
+        "west": {
+          "texture": "#home_rubber"
+        },
+        "up": {
+          "texture": "#home_rubber"
+        },
+        "down": {
+          "texture": "#home_rubber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        15,
+        3
+      ],
+      "to": [
+        12,
+        16.5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_coffee",
+          "uv": [
+            4,
+            0,
+            12,
+            1.5
+          ]
+        },
+        "south": {
+          "texture": "#al_coffee",
+          "uv": [
+            4,
+            0,
+            12,
+            1.5
+          ]
+        },
+        "east": {
+          "texture": "#al_coffee",
+          "uv": [
+            10,
+            0,
+            13,
+            1.5
+          ]
+        },
+        "west": {
+          "texture": "#al_coffee",
+          "uv": [
+            3,
+            0,
+            6,
+            1.5
+          ]
+        },
+        "up": {
+          "texture": "#al_coffee"
+        },
+        "down": {
+          "texture": "#al_coffee"
+        }
+      }
+    }
+  ]
+}

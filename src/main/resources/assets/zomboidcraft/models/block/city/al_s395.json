@@ -1,0 +1,236 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_fan_11": "zomboidcraft:block/city/al_fan_11",
+    "al_intake": "zomboidcraft:block/city/al_intake",
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "particle": "zomboidcraft:block/city/al_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        3.949,
+        -0.495,
+        0.0
+      ],
+      "to": [
+        7.949,
+        16.962,
+        4.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            8.051,
+            0,
+            12.051,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            12.0,
+            0,
+            16.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_intake",
+          "uv": [
+            0.0,
+            0,
+            4.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.949,
+          8.234,
+          2.0
+        ],
+        "axis": "z",
+        "angle": 10.025
+      }
+    },
+    {
+      "from": [
+        8.378,
+        -0.527,
+        4.0
+      ],
+      "to": [
+        10.878,
+        16.873,
+        8.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_cowl",
+          "uv": [
+            8.0,
+            0,
+            12.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_intake",
+          "uv": [
+            4.0,
+            0,
+            8.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.878,
+          8.173,
+          6.0
+        ],
+        "axis": "z",
+        "angle": 8.825
+      }
+    },
+    {
+      "from": [
+        8.378,
+        -0.527,
+        8.0
+      ],
+      "to": [
+        10.878,
+        16.873,
+        12.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_cowl",
+          "uv": [
+            4.0,
+            0,
+            8.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_intake",
+          "uv": [
+            8.0,
+            0,
+            12.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.878,
+          8.173,
+          10.0
+        ],
+        "axis": "z",
+        "angle": 8.825
+      }
+    },
+    {
+      "from": [
+        8.378,
+        -0.527,
+        12.0
+      ],
+      "to": [
+        10.878,
+        16.873,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_cowl",
+          "uv": [
+            0.0,
+            0,
+            4.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_intake",
+          "uv": [
+            12.0,
+            0,
+            16.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.878,
+          8.173,
+          14.0
+        ],
+        "axis": "z",
+        "angle": 8.825
+      }
+    },
+    {
+      "from": [
+        0.0,
+        0.0,
+        8.8
+      ],
+      "to": [
+        4.0,
+        15.758,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_fan_11",
+          "uv": [
+            12.0,
+            0.242,
+            16.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_fan_11",
+          "uv": [
+            5.6,
+            0.242,
+            7.2,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_fan_11",
+          "uv": [
+            8.8,
+            0.242,
+            10.4,
+            16.0
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_fan_11",
+          "uv": [
+            0.0,
+            8.8,
+            4.0,
+            10.4
+          ]
+        }
+      }
+    }
+  ]
+}

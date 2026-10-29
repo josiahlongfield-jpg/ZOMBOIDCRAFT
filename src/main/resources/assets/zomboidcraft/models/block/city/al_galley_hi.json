@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_galley_lockers": "zomboidcraft:block/city/al_galley_lockers",
+    "al_galley_steel": "zomboidcraft:block/city/al_galley_steel",
+    "particle": "zomboidcraft:block/city/al_galley_lockers"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_galley_lockers"
+        },
+        "south": {
+          "texture": "#al_galley_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_galley_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_galley_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_galley_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_galley_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

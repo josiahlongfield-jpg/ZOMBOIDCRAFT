@@ -5,7 +5,6 @@
       "sprite": "zomboidcraft:block/city/ap_name_11",
       "force_translucent": true
     },
-    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
     "particle": "zomboidcraft:block/city/ap_name_11"
   },
   "elements": [
@@ -13,7 +12,7 @@
       "from": [
         0,
         0,
-        13
+        14.5
       ],
       "to": [
         16,
@@ -25,23 +24,23 @@
           "texture": "#ap_name_11"
         },
         "south": {
-          "texture": "#ext_black_metal",
+          "texture": "#ap_name_11",
           "cullface": "south"
         },
         "east": {
-          "texture": "#ext_black_metal",
+          "texture": "#ap_name_11",
           "cullface": "east"
         },
         "west": {
-          "texture": "#ext_black_metal",
+          "texture": "#ap_name_11",
           "cullface": "west"
         },
         "up": {
-          "texture": "#ext_black_metal",
+          "texture": "#ap_name_11",
           "cullface": "up"
         },
         "down": {
-          "texture": "#ext_black_metal",
+          "texture": "#ap_name_11",
           "cullface": "down"
         }
       }

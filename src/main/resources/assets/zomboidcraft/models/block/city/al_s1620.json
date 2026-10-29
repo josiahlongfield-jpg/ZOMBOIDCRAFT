@@ -1,0 +1,427 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "al_tailplane": "zomboidcraft:block/city/al_tailplane",
+    "al_wing_under": "zomboidcraft:block/city/al_wing_under",
+    "particle": "zomboidcraft:block/city/al_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        9.6,
+        0.0,
+        4.0
+      ],
+      "to": [
+        16.0,
+        0.688,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            15.312,
+            6.4,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            9.6,
+            15.312,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            4.0,
+            15.312,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            9.6,
+            4.0,
+            16.0,
+            8.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.6,
+        0.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        1.26,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            14.74,
+            6.4,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            9.6,
+            14.74,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            14.74,
+            12.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_tailplane",
+          "uv": [
+            9.6,
+            8.0,
+            16.0,
+            12.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.6,
+        0.0,
+        12.0
+      ],
+      "to": [
+        16.0,
+        1.496,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            14.504,
+            6.4,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            9.6,
+            14.504,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            12.0,
+            14.504,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_tailplane",
+          "uv": [
+            9.6,
+            12.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.6,
+        0.134,
+        8.8
+      ],
+      "to": [
+        9.6,
+        1.54,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            6.4,
+            14.46,
+            14.4,
+            15.866
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            1.6,
+            14.46,
+            9.6,
+            15.866
+          ]
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            4.0,
+            14.46,
+            7.2,
+            15.866
+          ]
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            8.8,
+            14.46,
+            12.0,
+            15.866
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            1.6,
+            8.8,
+            9.6,
+            12.0
+          ]
+        },
+        "down": {
+          "texture": "#al_metal",
+          "uv": [
+            1.6,
+            4.0,
+            9.6,
+            7.2
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.6,
+        0.0,
+        12.0
+      ],
+      "to": [
+        9.6,
+        2.11,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            6.4,
+            13.89,
+            14.4,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            1.6,
+            13.89,
+            9.6,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            13.89,
+            4.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            12.0,
+            13.89,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_tailplane",
+          "uv": [
+            1.6,
+            12.0,
+            9.6,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.615,
+        -0.079,
+        8.64
+      ],
+      "to": [
+        10.585,
+        2.126,
+        10.56
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            5.415,
+            13.795,
+            15.385,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            0.615,
+            13.795,
+            10.585,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            5.44,
+            13.795,
+            7.36,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            8.64,
+            13.795,
+            10.56,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            0.615,
+            8.64,
+            10.585,
+            10.56
+          ]
+        },
+        "down": {
+          "texture": "#al_metal",
+          "uv": [
+            0.615,
+            5.44,
+            10.585,
+            7.36
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.6,
+          0.64,
+          9.6
+        ],
+        "axis": "y",
+        "angle": 30.964
+      }
+    },
+    {
+      "from": [
+        0.0,
+        1.161,
+        13.6
+      ],
+      "to": [
+        1.6,
+        2.381,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            14.4,
+            13.619,
+            16.0,
+            14.839
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            13.619,
+            1.6,
+            14.839
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            13.619,
+            2.4,
+            14.839
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            13.6,
+            1.6,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            0.0,
+            1.6,
+            2.4
+          ]
+        }
+      }
+    }
+  ]
+}
