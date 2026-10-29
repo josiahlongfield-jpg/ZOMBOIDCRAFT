@@ -27,6 +27,14 @@ public final class Voxels implements BlockSink {
     /** Spots the builders marked: {@link BlockSink#mark}. */
     public final List<Mark> marks = new ArrayList<>();
     private int maxY = 0;
+    /**
+     * The section last used: builders write and read a box or a column at a time, so most calls hit it, and the
+     * map look-up (boxing the key, often colliding bins) was a large share of building a place. One immutable
+     * holder, so threads reading a finished place each see a whole entry.
+     */
+    private volatile Last last = new Last(Long.MIN_VALUE, null, null);
+
+    private record Last(long k, short[] s, long[] w) {}
 
     public record Mark(String what, int x, int y, int z) {}
 
@@ -46,15 +54,20 @@ public final class Voxels implements BlockSink {
             ids.put(block, id);
         }
         long k = key(x >> 4, (y - MIN_Y) >> 4, z >> 4);
-        short[] s = sections.get(k);
-        if (s == null) {
-            s = new short[4096];
-            sections.put(k, s);
-            written.put(k, new long[64]);
+        Last l = last;
+        if (l.k != k || l.s == null) {
+            short[] s = sections.get(k);
+            if (s == null) {
+                s = new short[4096];
+                sections.put(k, s);
+                written.put(k, new long[64]);
+            }
+            l = new Last(k, s, written.get(k));
+            last = l;
         }
         int i = ((y - MIN_Y) & 15) << 8 | (z & 15) << 4 | (x & 15);
-        s[i] = id;
-        written.get(k)[i >> 6] |= 1L << (i & 63);
+        l.s[i] = id;
+        l.w[i >> 6] |= 1L << (i & 63);
         maxY = Math.max(maxY, y);
     }
 
@@ -63,7 +76,17 @@ public final class Voxels implements BlockSink {
         if (y < MIN_Y) {
             return null;
         }
-        short[] s = sections.get(key(x >> 4, (y - MIN_Y) >> 4, z >> 4));
+        long k = key(x >> 4, (y - MIN_Y) >> 4, z >> 4);
+        Last l = last;
+        short[] s;
+        if (l.k == k) {
+            s = l.s;
+        } else {
+            s = sections.get(k);
+            if (s != null) {
+                last = new Last(k, s, written.get(k));
+            }
+        }
         short id = s == null ? 0 : s[((y - MIN_Y) & 15) << 8 | (z & 15) << 4 | (x & 15)];
         return id == 0 ? null : palette.get(id);
     }

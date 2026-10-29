@@ -389,7 +389,7 @@ public final class Plan {
                 double ax = x(s), az = z(s), bx = x(s + 1), bz = z(s + 1);
                 double vx = bx - ax, vz = bz - az, len2 = vx * vx + vz * vz;
                 double t = len2 == 0 ? 0 : Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / len2));
-                double px = ax + vx * t, pz = az + vz * t, dist = Math.hypot(x - px, z - pz);
+                double px = ax + vx * t, pz = az + vz * t, dist = Math.sqrt((x - px) * (x - px) + (z - pz) * (z - pz));
                 if (dist < best) {
                     best = dist;
                     double len = Math.sqrt(len2);
@@ -439,7 +439,8 @@ public final class Plan {
         static double segDist(double x, double z, double ax, double az, double bx, double bz) {
             double vx = bx - ax, vz = bz - az, len2 = vx * vx + vz * vz;
             double t = len2 == 0 ? 0 : Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / len2));
-            return Math.hypot(x - ax - vx * t, z - az - vz * t);
+            double ex = x - ax - vx * t, ez = z - az - vz * t;
+            return Math.sqrt(ex * ex + ez * ez);
         }
     }
 }
