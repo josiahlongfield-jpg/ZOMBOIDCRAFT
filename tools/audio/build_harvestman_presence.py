@@ -1,10 +1,15 @@
 """Builds the sounds that give the Harvestman away before it's seen, from scratch (no recordings).
 
-    python3 tools/audio/build_harvestman_presence.py
+    python3 tools/audio/build_harvestman_presence.py [name ...]
+
+With names (chitter, creak, breathe, hum), only those are rebuilt; the others' files are left as they are (Vorbis
+encoding isn't byte-for-byte repeatable, and some may have been trimmed by hand since).
 
 - chitter: a dry, uneven run of knocks, like hard points rattled against each other in another room; muffled and
   given a little room tail, so it reads as heard through a wall (not the bright synthetic clicks Josiah cut).
 - creak: boards or a ceiling panel taking weight: a slow stick-slip run of pulses through a woody resonance.
+- breathe: what you hear through a door it's waiting behind: a slow, dry draw of air through something that isn't a
+  throat, a long rasping let-out, and the faint tick of plates settling as it does.
 - hum: a low drone it gives off, a few beating partials and a faint buzz, as a seamless 8 second loop (every partial
   makes whole cycles in the loop, so it never clicks where it wraps).
 
@@ -13,6 +18,7 @@ assets/zomboidcraft/sounds.json (kept with the creature's other entries at the t
 """
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -112,6 +118,32 @@ def creak(seed):
     return room(lowpass(body * env, 2400), seed + 3, 0.18)
 
 
+def breathe(seed):
+    rng = np.random.default_rng(seed)
+    dur = rng.uniform(3.2, 4.2)
+    n = int(RATE * dur)
+    t = np.arange(n) / RATE
+    noise = rng.normal(0, 1, n)
+    # in (shorter, higher) then out (long, low and rasping), with a gap between
+    inn, gap = rng.uniform(0.9, 1.2), rng.uniform(0.25, 0.4)
+    out_at = inn + gap
+    env_in = np.where(t < inn, np.sin(np.pi * np.clip(t / inn, 0, 1)) ** 1.5, 0)
+    env_out = np.where((t >= out_at) & (t < dur - 0.1), np.sin(np.pi * np.clip((t - out_at) / (dur - 0.1 - out_at), 0, 1)) ** 0.9, 0)
+    draw = resonator(noise * env_in, rng.uniform(700, 900), 3) * 0.6
+    # the rasp: the breath chopped by a slow flutter, through two hollow resonances
+    flutter = 0.55 + 0.45 * np.sign(np.sin(2 * np.pi * rng.uniform(26, 34) * t)) * (0.6 + 0.4 * np.sin(2 * np.pi * 3.1 * t))
+    rasp = resonator(noise * env_out * flutter, rng.uniform(260, 340), 4) + 0.5 * resonator(noise * env_out, rng.uniform(560, 680), 5)
+    x = lowpass(draw + rasp, 1400)
+    # plates settling: two or three soft ticks during the let-out
+    for _ in range(rng.integers(2, 4)):
+        at = int(RATE * rng.uniform(out_at, dur - 0.3))
+        ln = int(RATE * 0.03)
+        k = np.arange(ln) / RATE
+        tick = resonator(rng.normal(0, 1, ln) * np.exp(-k * 300), rng.uniform(1000, 1400), 8)
+        x[at:at + ln] += tick * 0.25 * np.abs(x).max() / max(1e-9, np.abs(tick).max())
+    return room(x, seed + 5, 0.15)
+
+
 def hum():
     dur = 8.0
     n = int(RATE * dur)
@@ -128,16 +160,19 @@ def hum():
 SOUNDS = {
     "chitter": (40, [lambda: chitter(101), lambda: chitter(202), lambda: chitter(303)]),
     "creak": (20, [lambda: creak(11), lambda: creak(22), lambda: creak(33)]),
+    "breathe": (12, [lambda: breathe(7), lambda: breathe(8), lambda: breathe(9)]),
     "hum": (None, [hum]),
 }
 
 
 def main():
+    only = set(sys.argv[1:])
     entries = {}
     for name, (dist, takes) in SOUNDS.items():
         rows = []
         for n, make in enumerate(takes, 1):
-            write(make(), RES / "sounds" / FOLDER / name / f"{n}.ogg", -3.0 if name == "hum" else PEAK)
+            if not only or name in only:
+                write(make(), RES / "sounds" / FOLDER / name / f"{n}.ogg", -3.0 if name == "hum" else PEAK)
             row = {"name": f"zomboidcraft:{FOLDER}/{name}/{n}"}
             if dist:
                 row["attenuation_distance"] = dist
