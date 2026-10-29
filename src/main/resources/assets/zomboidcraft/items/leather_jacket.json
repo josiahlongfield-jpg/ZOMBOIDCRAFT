@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/leather_jacket"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/leather_jacket",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/leather_jacket",
+    "part": "loot"
+   }
   }
  }
 }

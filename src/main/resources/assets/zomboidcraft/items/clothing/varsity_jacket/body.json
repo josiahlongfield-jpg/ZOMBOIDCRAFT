@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/varsity_jacket/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/varsity_jacket/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/varsity_jacket",
+   "part": "body"
+  }
  }
 }

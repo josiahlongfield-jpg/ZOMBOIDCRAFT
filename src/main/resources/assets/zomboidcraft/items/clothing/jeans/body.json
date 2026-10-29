@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/jeans/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/jeans/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/jeans",
+   "part": "body"
+  }
  }
 }

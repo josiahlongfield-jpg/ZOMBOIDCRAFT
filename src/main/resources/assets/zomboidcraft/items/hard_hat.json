@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/hard_hat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hard_hat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hard_hat",
+    "part": "loot"
+   }
   }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/band_tshirt"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/band_tshirt",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/band_tshirt",
+    "part": "loot"
+   }
   }
  }
 }

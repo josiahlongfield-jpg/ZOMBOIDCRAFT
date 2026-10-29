@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/work_boots/left_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/work_boots/left_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/work_boots",
+   "part": "left_leg"
+  }
  }
 }

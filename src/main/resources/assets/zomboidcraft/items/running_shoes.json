@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/running_shoes"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/running_shoes",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/running_shoes",
+    "part": "loot"
+   }
   }
  }
 }

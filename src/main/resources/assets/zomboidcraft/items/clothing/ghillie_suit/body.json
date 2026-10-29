@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/ghillie_suit/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/ghillie_suit/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/ghillie_suit",
+   "part": "body"
+  }
  }
 }

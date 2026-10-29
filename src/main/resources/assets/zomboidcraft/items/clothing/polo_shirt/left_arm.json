@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/polo_shirt/left_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/polo_shirt/left_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/polo_shirt",
+   "part": "left_arm"
+  }
  }
 }

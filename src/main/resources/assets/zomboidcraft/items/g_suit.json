@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/g_suit"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/g_suit",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/g_suit",
+    "part": "loot"
+   }
   }
  }
 }

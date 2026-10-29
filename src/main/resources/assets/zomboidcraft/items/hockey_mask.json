@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/hockey_mask"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hockey_mask",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hockey_mask",
+    "part": "loot"
+   }
   }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/bucket_hat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/bucket_hat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/bucket_hat",
+    "part": "loot"
+   }
   }
  }
 }

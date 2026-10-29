@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/fire_coat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/fire_coat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/fire_coat",
+    "part": "loot"
+   }
   }
  }
 }

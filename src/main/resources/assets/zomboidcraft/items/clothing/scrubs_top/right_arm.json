@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/scrubs_top/right_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/scrubs_top/right_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/scrubs_top",
+   "part": "right_arm"
+  }
  }
 }

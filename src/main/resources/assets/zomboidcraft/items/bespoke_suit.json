@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/bespoke_suit"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/bespoke_suit",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/bespoke_suit",
+    "part": "loot"
+   }
   }
  }
 }

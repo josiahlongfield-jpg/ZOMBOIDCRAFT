@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/gas_mask"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/gas_mask",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/gas_mask",
+    "part": "loot"
+   }
   }
  }
 }

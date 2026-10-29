@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/denim_jacket/left_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/denim_jacket/left_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/denim_jacket",
+   "part": "left_arm"
+  }
  }
 }

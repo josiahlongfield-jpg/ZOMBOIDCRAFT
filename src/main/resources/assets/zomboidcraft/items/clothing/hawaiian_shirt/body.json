@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/hawaiian_shirt/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/hawaiian_shirt/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/hawaiian_shirt",
+   "part": "body"
+  }
  }
 }

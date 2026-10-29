@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/dress/right_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/dress/right_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/dress",
+   "part": "right_leg"
+  }
  }
 }

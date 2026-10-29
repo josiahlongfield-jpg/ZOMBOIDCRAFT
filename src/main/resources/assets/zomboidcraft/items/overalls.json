@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/overalls"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/overalls",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/overalls",
+    "part": "loot"
+   }
   }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/scrubs_pants"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/scrubs_pants",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/scrubs_pants",
+    "part": "loot"
+   }
   }
  }
 }

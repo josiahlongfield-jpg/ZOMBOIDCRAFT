@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/necktie/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/necktie/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/necktie",
+   "part": "body"
+  }
  }
 }
