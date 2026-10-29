@@ -35,6 +35,7 @@ sys.path.insert(0, str(ROOT / 'tools/items/loot'))
 import model as M  # noqa: E402
 import paint as P  # noqa: E402
 import gen_bags as B  # noqa: E402
+import toon as T  # noqa: E402
 
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
 NS = 'zomboidcraft'
@@ -114,14 +115,13 @@ def grade(c, amount=0.45):
 
 
 def toon(f, c, ink=True, stitch=None):
-    """Lit tops, dark undersides, a light line under the top edge of side faces, a 1-texel ink outline and, on
-    faces big enough, a row of stitches just inside the edge."""
+    """The cloth's own marks before the shared toon pass (tools/weapons/toon.py, as the guns and loot use): a light
+    line under the top edge of side faces and, on faces big enough, a row of stitches just inside the garment's
+    outside edge. The lit tops, shaded undersides, chipped edges and the outline round each piece come from
+    toon.style in paint(); ink=False marks materials that never get an outline (they're listed in toon.PLAIN or
+    are too small to take one)."""
     ny = f.n[1]
-    if ny > 0.5:
-        c = c * 1.1
-    elif ny < -0.5:
-        c = c * 0.72
-    else:
+    if abs(ny) <= 0.5:
         top = f.box['hi'][1] - f.Y
         c = np.where(((top > TX) & (top < 2 * TX))[..., None], c * 1.18 + 0.02, c)
     if stitch is not None:
@@ -130,8 +130,6 @@ def toon(f, c, ink=True, stitch=None):
             u, v = f.uv[..., 0], f.uv[..., 1]
             st = (np.abs(f.edge - 0.32) < TX * 0.6) & ((np.floor((u + v) / (2 * TX)) % 2) == 0)
             c = np.where(st[..., None], P.mix(c, P.col(stitch), 0.55), c)
-    if ink:
-        c = np.where((f.edge < TX)[..., None], c * 0.32, c)
     return c
 
 
@@ -1237,7 +1235,7 @@ def build_lab_coat(g):
 
 
 def build_hi_vis_vest(g):
-    d = 1.0
+    d = VEST_D
     g.shell('body', 0.8, 10.6, d, 'mesh')
     for s in (-1, 1):                                                               # over the shoulders
         x0, x1 = (-3.6, -1.6) if s < 0 else (1.6, 3.6)
@@ -1697,7 +1695,7 @@ LOWER = {
 
 
 # ------------------------------------------------------------------ batch 5: uniforms, armour and aircrew
-VEST_D = JACKET + 0.3     # a vest sits over a jacket
+VEST_D = 1.4     # a vest sits over the bulkiest coat (a parka is 1.1 out, its storm flap 1.35)
 
 
 def stencil(base, ink):
@@ -2085,6 +2083,33 @@ def names():
     return out
 
 
+def paint(m, look, wear, seed):
+    """Paints every visible face in the shared toon style, the way kit.paint does the guns: each run of touching
+    boxes of one material is one piece, so where a garment's blocks join there's no line, and only the outside
+    of each piece (and each pocket, strap or buckle on it) gets the outline and worn edges."""
+    piece = T.pieces(m.parts)
+    rng = np.random.default_rng(seed)
+    patches = []
+    for i, p in enumerate(m.parts):
+        mates = [q for j, q in enumerate(m.parts) if j != i and piece[j] == piece[i]]
+        for name, (_ax, _sgn, ua, _ud, va, _vd) in M.FACES.items():
+            if name in p.get('skip', ()):
+                continue
+            pos, n, _edge, uv = M.face_grid(p, name)
+            covers = T.cover(p, name, pos, n, mates, M.PX)
+            if T.step_face(p, pos, n, mates):
+                covers = [np.ones(pos.shape[:2], bool)] * 4
+            edge = T.outer_edge(p, name, covers, M.PX)
+            f = P.Face(pos, n, edge, p, rng, wear, seed + i, uv)
+            rgb = P.round_shade(f, look[p['mat']](f))
+            for fx in look.get('_after', []):
+                rgb = fx(f, rgb)
+            lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
+            rgb, _ink = T.style(f, rgb, p['mat'], M.PX, n[1], lu, lv)
+            patches.append((i, name, np.clip(rgb, 0, 1)))
+    return patches
+
+
 def main(only):
     lang_path = ASSETS / 'lang/en_us.json'
     lang = json.loads(lang_path.read_text())
@@ -2099,7 +2124,7 @@ def main(only):
         seed = zlib.crc32(gid.encode()) % 1000
         lo, hi = m.bounds()
         look = dict(mats, _after=worn(wear, low=lo[1] + 4))
-        patches = M.paint_model(m, look, wear, seed)
+        patches = paint(m, look, wear, seed)
         img, uvs, T = M.pack(patches)
         tex = ASSETS / f'textures/item/clothing/{gid}.png'
         tex.parent.mkdir(parents=True, exist_ok=True)
