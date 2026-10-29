@@ -614,6 +614,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bucket_hat",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_blade",
           "weight": 2
         },
@@ -777,6 +792,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:water_filter",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gas_mask",
+          "weight": 1
         },
         {
           "type": "minecraft:item",

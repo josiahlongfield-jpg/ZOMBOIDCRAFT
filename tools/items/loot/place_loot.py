@@ -90,7 +90,12 @@ SWAP = {f'minecraft:{a}': f'{NS}:{b}' for a, b in (
     ('iron_leggings', 'work_pants'), ('iron_boots', 'work_boots'))}
 # the clothing thread's garments that are registered with worn models: placed by their roster places like ours
 WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'jeans', 'work_pants', 'sneakers',
-              'work_boots', 'baseball_cap', 'beanie', 'work_gloves', 'sunglasses', 'bandana'}
+              'work_boots', 'baseball_cap', 'beanie', 'work_gloves', 'sunglasses', 'bandana'} | set('''
+    trucker_cap cowboy_hat bucket_hat hard_hat bike_helmet football_helmet hockey_mask motorcycle_helmet
+    police_cap fire_helmet riot_helmet gas_mask welding_goggles aviator_sunglasses reading_glasses balaclava
+    surgical_mask_worn cranial_helmet pilot_helmet band_tshirt tank_top dress_shirt polo_shirt hawaiian_shirt
+    sweater sweatshirt turtleneck scrubs_top dress wedding_dress leather_jacket bomber_jacket
+    varsity_jacket windbreaker raincoat trench_coat suit_jacket lab_coat hi_vis_vest'''.split())  # batches 2 (headwear) and 3 (tops)
 KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have

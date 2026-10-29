@@ -239,6 +239,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bike_helmet",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:band_tshirt",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:hoodie",
           "weight": 4,
           "functions": [
@@ -251,6 +271,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sweatshirt",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:varsity_jacket",
+          "weight": 2
         },
         {
           "type": "minecraft:item",

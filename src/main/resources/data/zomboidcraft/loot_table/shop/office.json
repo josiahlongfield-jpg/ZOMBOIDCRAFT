@@ -369,6 +369,41 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:dress_shirt",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:trench_coat",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:suit_jacket",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:notebook",
           "weight": 4,
           "functions": [

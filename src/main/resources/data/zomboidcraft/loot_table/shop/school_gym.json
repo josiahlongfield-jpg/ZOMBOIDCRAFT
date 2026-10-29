@@ -374,6 +374,61 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:football_helmet",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tank_top",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:polo_shirt",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sweatshirt",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:varsity_jacket",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:sneakers",
           "weight": 4,
           "functions": [
@@ -545,6 +600,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:portable_defib",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hockey_mask",
           "weight": 1
         },
         {

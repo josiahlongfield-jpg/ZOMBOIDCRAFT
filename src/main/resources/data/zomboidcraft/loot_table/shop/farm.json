@@ -644,6 +644,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:trucker_cap",
+          "weight": 52,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cowboy_hat",
+          "weight": 26
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:flannel_shirt",
           "weight": 52,
           "functions": [

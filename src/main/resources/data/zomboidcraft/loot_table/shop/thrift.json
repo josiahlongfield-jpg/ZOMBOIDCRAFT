@@ -234,7 +234,42 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:trucker_cap",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:beanie",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cowboy_hat",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bucket_hat",
           "weight": 8,
           "functions": [
             {
@@ -279,7 +314,62 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:band_tshirt",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:flannel_shirt",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hawaiian_shirt",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sweater",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:turtleneck",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:dress",
           "weight": 8,
           "functions": [
             {
@@ -296,6 +386,16 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:denim_jacket",
           "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:leather_jacket",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:trench_coat",
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -435,6 +535,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:boombox",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wedding_dress",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bomber_jacket",
           "weight": 1
         },
         {
