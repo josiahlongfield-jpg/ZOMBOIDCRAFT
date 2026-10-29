@@ -40,6 +40,12 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
 
     public static void register() {
         EntityRendererRegistry.register(Npcs.NPC, NpcRenderer::new);
+        try {
+            // made up front so it's there to drop local model files into
+            java.nio.file.Files.createDirectories(Npcs.localFolder());
+        } catch (java.io.IOException e) {
+            // the folder is only a convenience
+        }
     }
 
     public static class State extends EntityRenderState {
