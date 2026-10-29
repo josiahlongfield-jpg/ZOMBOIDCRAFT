@@ -128,7 +128,7 @@ jobs:
           echo 'zc lift call' >&3
           sleep 12
           echo 'zc lift list' >&3
-          sleep 32  # it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
+          sleep 20  # (12 s went on the lift above) it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
           echo 'zc train list' >&3
           sleep 2
           echo 'stop' >&3
