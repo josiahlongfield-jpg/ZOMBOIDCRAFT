@@ -227,6 +227,18 @@ final class StationMaps {
         f.back(HW + 0.06, HH + 0.06, FRAME);
         f.post(-HW + 0.4);
         f.post(HW - 0.4);
+        // the hood over it against the rain, a lamp strip under the hood, the frame's depth round the sides, bolts
+        f.flat(-HW - 0.14, HW + 0.14, HH + 0.1, -0.05, 0.34, FRAME);
+        f.flat(-HW - 0.14, HW + 0.14, HH + 0.07, -0.05, 0.34, FRAME);
+        f.box(-HW - 0.14, HH + 0.03, HW + 0.14, HH + 0.1, 0.34, FRAME);
+        f.flat(-HW + 0.1, HW - 0.1, HH + 0.065, 0.12, 0.2, 0xFFF4F0DC);
+        f.side(-HW - 0.06, -HH - 0.06, HH + 0.06, -0.03, 0.06, FRAME);
+        f.side(HW + 0.06, -HH - 0.06, HH + 0.06, -0.03, 0.06, FRAME);
+        for (double bu : new double[] {-HW - 0.03, HW + 0.03}) {
+            for (double bv : new double[] {-HH - 0.03, HH + 0.03}) {
+                f.box(bu - 0.018, bv - 0.018, bu + 0.018, bv + 0.018, 0.034, 0xFF6A6E72);
+            }
+        }
         int lineColour = line.kind == Line.Kind.SUBWAY ? 0xFFE89A2C : 0xFF3FAE5A;
         // title bar: the line's colour, its name, and LIVE
         f.box(-HW, HH - 0.3, HW, HH, 0.05, BAR);
@@ -309,6 +321,36 @@ final class StationMaps {
 
         void corner(double u, double v, double lift, int colour) {
             vertex(out, pose, o.x + rx() * u + b.nx * lift, o.y + v, o.z + rz() * u + b.nz * lift, colour, b.nx, b.nz);
+        }
+
+        void corner(double u, double v, double lift, int colour, double nx, double ny, double nz) {
+            out.addVertex(pose, (float) (o.x + rx() * u + b.nx * lift), (float) (o.y + v), (float) (o.z + rz() * u + b.nz * lift))
+                    .setColor(colour).setUv(U, V).setOverlay(OverlayTexture.NO_OVERLAY).setLight(FULL)
+                    .setNormal(pose, (float) nx, (float) ny, (float) nz);
+        }
+
+        /** A level panel at height v, from u0 to u1 and from lift l0 out to l1: both faces. */
+        void flat(double u0, double u1, double v, double l0, double l1, int colour) {
+            corner(u0, v, l0, colour, 0, 1, 0);
+            corner(u0, v, l1, colour, 0, 1, 0);
+            corner(u1, v, l1, colour, 0, 1, 0);
+            corner(u1, v, l0, colour, 0, 1, 0);
+            corner(u1, v, l0, colour, 0, -1, 0);
+            corner(u1, v, l1, colour, 0, -1, 0);
+            corner(u0, v, l1, colour, 0, -1, 0);
+            corner(u0, v, l0, colour, 0, -1, 0);
+        }
+
+        /** An upright panel edge-on to the board at u, from v0 to v1 and lift l0 to l1: both faces. */
+        void side(double u, double v0, double v1, double l0, double l1, int colour) {
+            corner(u, v1, l0, colour, rx(), 0, rz());
+            corner(u, v0, l0, colour, rx(), 0, rz());
+            corner(u, v0, l1, colour, rx(), 0, rz());
+            corner(u, v1, l1, colour, rx(), 0, rz());
+            corner(u, v1, l1, colour, -rx(), 0, -rz());
+            corner(u, v0, l1, colour, -rx(), 0, -rz());
+            corner(u, v0, l0, colour, -rx(), 0, -rz());
+            corner(u, v1, l0, colour, -rx(), 0, -rz());
         }
 
         void box(double u0, double v0, double u1, double v1, double lift, int colour) {
