@@ -124,11 +124,11 @@ final class CharacterPage {
 
         // clothing: what it adds up to; the pieces themselves are on the Clothing page
         KitDraw.heading(g, font, "Clothing", x + 400, y + 58, 179, true);
-        com.zomboidcraft.clothing.Clothes.Totals worn = com.zomboidcraft.clothing.Clothes.totals(player);
+        com.zomboidcraft.clothing.Clothes.Totals dressed = com.zomboidcraft.clothing.Clothes.totals(player);
         String[] cl = {"Warmth", "Stops bites", "Stops scratches", "Rain kept off"};
-        String[] cv = {String.valueOf(worn.warmth()), Math.round(worn.meanBite() * 100) + "%", Math.round(worn.meanScratch() * 100) + "%",
-                Math.round(worn.water() * 100) + "%"};
-        float[] cb = {worn.warmth() / 20f, worn.meanBite(), worn.meanScratch(), worn.water()};
+        String[] cv = {String.valueOf(dressed.warmth()), Math.round(dressed.meanBite() * 100) + "%", Math.round(dressed.meanScratch() * 100) + "%",
+                Math.round(dressed.water() * 100) + "%"};
+        float[] cb = {dressed.warmth() / 20f, dressed.meanBite(), dressed.meanScratch(), dressed.water()};
         for (int i = 0; i < cl.length; i++) {
             int cy = y + 70 + i * 24;
             KitDraw.caps(g, font, cl[i], x + 400, cy, KitDraw.DIM, 0.62f);
