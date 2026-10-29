@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -156,8 +166,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -171,8 +186,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -306,8 +326,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -321,8 +346,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -451,8 +481,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/smg/raised_mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/smg/raised_mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_smg",
+            "part": "mag"
+           }
           }
          },
          {
@@ -463,8 +498,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/raised_mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/raised_mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "mag"
+         }
         }
        }
       ]
@@ -473,8 +513,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -488,8 +533,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -618,8 +668,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/smg/mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/smg/mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_smg",
+            "part": "mag"
+           }
           }
          },
          {
@@ -630,8 +685,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "mag"
+         }
         }
        }
       ]
@@ -647,8 +707,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -662,8 +727,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -792,8 +862,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/smg/raised_charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/smg/raised_charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_smg",
+            "part": "mag"
+           }
           }
          },
          {
@@ -804,8 +879,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/raised_charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/raised_charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "mag"
+         }
         }
        }
       ]
@@ -814,8 +894,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -829,8 +914,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "handle"
+         }
         }
        },
        {
@@ -959,8 +1049,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/smg/charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/smg/charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_smg",
+            "part": "mag"
+           }
           }
          },
          {
@@ -971,8 +1066,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "mag"
+         }
         }
        }
       ]
@@ -987,8 +1087,13 @@
     "type": "minecraft:composite",
     "models": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/smg/ads/body"
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/smg/ads/body",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "pbr_smg",
+       "part": "body"
+      }
      },
      {
       "type": "minecraft:select",
@@ -1002,8 +1107,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/smg/ads/charging_handle"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/smg/ads/charging_handle",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_smg",
+        "part": "handle"
+       }
       }
      },
      {
@@ -1132,8 +1242,13 @@
        {
         "when": "mag",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/smg/ads/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/smg/ads/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_smg",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1144,8 +1259,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/smg/ads/mag"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/smg/ads/mag",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_smg",
+        "part": "mag"
+       }
       }
      }
     ]
@@ -1157,8 +1277,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/smg/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/smg/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_smg",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1172,8 +1297,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "handle"
+        }
        }
       },
       {
@@ -1302,8 +1432,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/smg/raised_hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/smg/raised_hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_smg",
+           "part": "mag"
+          }
          }
         },
         {
@@ -1314,8 +1449,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/raised_hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/raised_hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "mag"
+        }
        }
       }
      ]
@@ -1324,8 +1464,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/smg/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/smg/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_smg",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1339,8 +1484,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "handle"
+        }
        }
       },
       {
@@ -1469,8 +1619,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/smg/hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/smg/hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_smg",
+           "part": "mag"
+          }
          }
         },
         {
@@ -1481,8 +1636,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/smg/hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/smg/hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_smg",
+         "part": "mag"
+        }
        }
       }
      ]

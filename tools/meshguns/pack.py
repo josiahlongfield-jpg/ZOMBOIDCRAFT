@@ -16,8 +16,10 @@ SPEC (paths may be relative to the spec file):
                muzzle put on that gun's muzzle and its bore on the flash, so the hands, sights and flash still land
     unit_mm    if set, the mesh keeps its real size instead (source units in mm; the pbr pack is in cm, so 10) at
                our scale of 31 mm a pixel, still muzzle on muzzle: for a bought gun shorter or longer than ours
-    pieces     {name: {"z": [from, to], "y": [from, to]}}: triangles whose centre is in that box (item pixels after
-               fitting; y optional) are cut out into their own part, e.g. the pump as "handle"
+    length     if set, the mesh is scaled to this many pixels long instead (a stockless gun standing in for one of ours
+               with a stock: fitted to our gun from the muzzle back to its receiver)
+    pieces     {name: {"z": [from, to], "y": [from, to], "x": [from, to]}}: triangles whose centre is in that box (item
+               pixels after fitting; y and x optional) are cut out into their own part, e.g. the pump as "handle"
     outline    outline thickness in item pixels (default 0.03; small things want less)
 
 Writes src/main/resources/assets/zomboidcraft/meshes/<id>.zmesh (the id may hold a folder, e.g. loot/coin): zlib-deflated, then XORed with the same xorshift32
@@ -72,7 +74,7 @@ def model_elements(name):
     return np.minimum(a, b).min(0), np.maximum(a, b).max(0)
 
 
-def fit(v, gun, unit_mm=None):
+def fit(v, gun, unit_mm=None, length=None):
     """Scale and move the mesh onto our gun: same length, same muzzle, bore through the flash, centred in x."""
     lo, hi = model_elements(gun + '/body')
     try:
@@ -80,7 +82,7 @@ def fit(v, gun, unit_mm=None):
         bore = (flo[1] + fhi[1]) / 2
     except (FileNotFoundError, KeyError):
         bore = None
-    s = unit_mm / 31.0 if unit_mm else (hi[2] - lo[2]) / (v[:, 2].max() - v[:, 2].min())
+    s = unit_mm / 31.0 if unit_mm else (length or hi[2] - lo[2]) / (v[:, 2].max() - v[:, 2].min())
     v = v * s
     v[:, 2] += lo[2] - v[:, 2].min()
     v[:, 0] += 8 - (v[:, 0].max() + v[:, 0].min()) / 2
@@ -121,7 +123,7 @@ def main(spec_path):
         verts.append(np.asarray(g.vertices, float)); uvs.append(uv); faces.append(np.asarray(g.faces) + n)
         n += len(g.vertices)
     v = np.concatenate(verts) @ turn(spec['forward'], spec['up']).T
-    v = fit(v, spec['fit'], spec.get('unit_mm'))
+    v = fit(v, spec['fit'], spec.get('unit_mm'), spec.get('length'))
     uv = np.concatenate(uvs); f = np.concatenate(faces)
     normals = smooth_normals(v, f)
     centre = v[f].mean(1)
@@ -130,6 +132,8 @@ def main(spec_path):
         take = left & (centre[:, 2] >= box['z'][0]) & (centre[:, 2] <= box['z'][1])
         if 'y' in box:
             take &= (centre[:, 1] >= box['y'][0]) & (centre[:, 1] <= box['y'][1])
+        if 'x' in box:
+            take &= (centre[:, 0] >= box['x'][0]) & (centre[:, 0] <= box['x'][1])
         parts.append((name, f[take])); left &= ~take
     parts.insert(0, ('body', f[left]))
 

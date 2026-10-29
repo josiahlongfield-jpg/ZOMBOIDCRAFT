@@ -431,3 +431,8 @@ Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-p
 | Mesh | Model | From | Licence |
 |---|---|---|---|
 | pbr_assault_rifle (the assault rifle) | Automatic Rifle 03, recoloured black (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_smg (the SMG) | Automatic Rifle 04 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_pistol (the pistol) | Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_magnum (the magnum) | Gun 03, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_shotgun (the pump shotgun) | Shotgun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_hunting_rifle (the hunting rifle) | Sniper Rifle 02, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |

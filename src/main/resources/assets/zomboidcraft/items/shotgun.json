@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -38,8 +48,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -53,8 +68,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -70,8 +90,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -85,8 +110,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -95,8 +125,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -110,8 +145,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -127,8 +167,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -142,8 +187,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -152,8 +202,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -167,8 +222,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/shotgun/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/shotgun/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_shotgun",
+          "part": "handle"
+         }
         }
        }
       ]
@@ -183,8 +243,13 @@
     "type": "minecraft:composite",
     "models": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/shotgun/ads/body"
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/shotgun/ads/body",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "pbr_shotgun",
+       "part": "body"
+      }
      },
      {
       "type": "minecraft:select",
@@ -198,8 +263,13 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/shotgun/ads/charging_handle"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/shotgun/ads/charging_handle",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_shotgun",
+        "part": "handle"
+       }
       }
      }
     ]
@@ -211,8 +281,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/shotgun/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/shotgun/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_shotgun",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -226,8 +301,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "handle"
+        }
        }
       }
      ]
@@ -236,8 +316,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/shotgun/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/shotgun/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_shotgun",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -251,8 +336,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/shotgun/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/shotgun/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_shotgun",
+         "part": "handle"
+        }
        }
       }
      ]

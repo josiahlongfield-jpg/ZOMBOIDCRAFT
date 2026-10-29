@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.mixin.client.SpecialModelRenderersAccessor;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
@@ -24,10 +25,12 @@ import org.joml.Vector3fc;
 public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     private final String id;
     private final String part;
+    private final List<Float> offset;
 
-    private MeshGunRenderer(String id, String part) {
+    private MeshGunRenderer(String id, String part, List<Float> offset) {
         this.id = id;
         this.part = part;
+        this.offset = offset;
     }
 
     public static void register() {
@@ -36,7 +39,14 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
 
     @Override
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        if (offset.isEmpty()) {
+            MeshGuns.draw(id, part, pose, out, light);
+            return;
+        }
+        pose.pushPose();
+        pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
         MeshGuns.draw(id, part, pose, out, light);
+        pose.popPose();
     }
 
     /** Where the mesh reaches, from its file; a gun-sized box round the middle of the block if it can't be read. */
@@ -51,10 +61,12 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         }
     }
 
-    public record Unbaked(String id, String part) implements SpecialModelRenderer.Unbaked<Void> {
+    /** offset: item pixels to move the part by, for a piece our block gun draws somewhere else (a revolver's cylinder swung out). */
+    public record Unbaked(String id, String part, List<Float> offset) implements SpecialModelRenderer.Unbaked<Void> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
-                Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part)
+                Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part),
+                Codec.FLOAT.listOf(3, 3).optionalFieldOf("offset", List.of()).forGetter(Unbaked::offset)
         ).apply(i, Unbaked::new));
 
         @Override
@@ -64,7 +76,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
 
         @Override
         public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
-            return new MeshGunRenderer(id, part);
+            return new MeshGunRenderer(id, part, offset);
         }
     }
 }
