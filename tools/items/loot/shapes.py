@@ -264,8 +264,9 @@ def soft_bag(m, w=8.0, h=5.0, d=3.5, zip_colour=True, straps=False):
 def ball(m, r, mat, squash=1.0, cy=None):
     cy = r * squash if cy is None else cy
     h = r * squash
-    m.rod(cy - h, cy + h, r * 0.82, mat)
-    m.rod(cy - h * 0.8, cy + h * 0.8, r, mat)
+    tag = (round(cy, 4), r, squash)     # tells mesh.py these two rods are one ball
+    m.rod(cy - h, cy + h, r * 0.82, mat, ball=tag)
+    m.rod(cy - h * 0.8, cy + h * 0.8, r, mat, ball=tag)
 
 
 def apple(m, r=1.5):
