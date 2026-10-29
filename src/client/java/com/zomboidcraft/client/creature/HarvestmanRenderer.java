@@ -26,7 +26,7 @@ import org.joml.Vector3f;
  * each leg's thigh and lower leg where its rig (HarvestmanRig) puts them this frame, with the lower legs that were shot
  * off lying where they fell. The model's colours are baked into its corners (on a plain white texture). Its red seams
  * and core glow, darkened as far as it chooses to hide (black while it roams and hunts, lit when it feeds), and pulse
- * while it feeds; its six small eyes always glow. Red-tinted for a moment when hit. Past about twenty blocks it's drawn
+ * while it feeds; its six small eyes always glow, and flare when a light catches them. Red-tinted for a moment when hit. Past about twenty blocks it's drawn
  * from lighter models
  * (near, middle, far; each about a fifth to a twelfth of the preview mesh), and its shadow always from the far one.
  */
@@ -42,7 +42,7 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
         boolean ready, feedArms, hurt;
         int lod;
         int lost;
-        float camo, pulse;
+        float camo, pulse, eyeShine;
         /** Body, then thigh and lower leg for each leg, relative to where the entity is drawn. */
         final Matrix4f[] parts = new Matrix4f[9];
         final List<Matrix4f> flying = new ArrayList<>();
@@ -92,6 +92,7 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
         state.lost = rig.lost;
         state.camo = rig.camo;
         state.pulse = rig.glowPulse;
+        state.eyeShine = rig.eyeShine;
         state.feedArms = rig.feedArms;
         state.hurt = entity.hurtTime > 0 && entity.isAlive();
         state.flying.clear();
@@ -129,7 +130,7 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
                 emit(level[front ? HarvestmanModel.LOW_F : HarvestmanModel.LOW_R], state.flying.get(k), pose, out, light,
                         OverlayTexture.NO_OVERLAY, 1f, 1f);
             }
-            eyes(state.parts[0], pose, out);
+            eyes(state.parts[0], pose, out, state.eyeShine);
         });
     }
 
@@ -171,8 +172,14 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
         }
     }
 
-    /** Its six eyes: small glowing red beads, three down each side of its front. */
-    private static void eyes(Matrix4f body, PoseStack.Pose pose, VertexConsumer out) {
+    /**
+     * Its six eyes: small glowing red beads, three down each side of its front. Caught in a light they flare: bigger,
+     * and burning toward orange-white.
+     */
+    private static void eyes(Matrix4f body, PoseStack.Pose pose, VertexConsumer out, float shine) {
+        float grow = 1 + 1.3f * shine;
+        int r = 0xFF, g = (int) (0x24 + (0xC0 - 0x24) * shine * 0.75f), bl = (int) (0x14 + (0x80 - 0x14) * shine * 0.6f);
+        int colour = 0xFF000000 | r << 16 | g << 8 | bl;
         Matrix4f w = new Matrix4f(pose.pose()).mul(body);
         Vector3f p = new Vector3f();
         float[][] dirs = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
@@ -182,9 +189,10 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
             for (int[] f : faces) {
                 for (int k = 0; k < 4; k++) {
                     float[] d = dirs[f[Math.min(k, 2)]];
-                    w.transformPosition(e[0] + d[0] * e[3], e[1] + d[1] * e[3], e[2] + d[2] * e[3], p);
+                    float s = e[3] * grow;
+                    w.transformPosition(e[0] + d[0] * s, e[1] + d[1] * s, e[2] + d[2] * s, p);
                     out.addVertex(p.x, p.y, p.z)
-                            .setColor(0xFFFF2414)
+                            .setColor(colour)
                             .setUv(0.5f, 0.5f)
                             .setOverlay(OverlayTexture.NO_OVERLAY)
                             .setLight(FULL_BRIGHT)

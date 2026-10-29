@@ -22,8 +22,13 @@ public final class HarvestmanLegs {
     /** A wave: left rear, left front, right rear, right front. */
     private static final double[] GAIT_OFF = {0.25, 0, 0.75, 0.5};
 
+    /** The wave's order of legs (by GAIT_OFF): with legs gone, the rest share the beat evenly (a three-legged limp). */
+    private static final int[] WAVE = {1, 0, 3, 2};
+
     private static final class Step {
         Vec3 p0, n0, p1, n1;
+        /** A probe: the point swings out to touch here, then comes back to where it was. */
+        Vec3 via;
         double u, dur, lift;
         boolean fixed;
     }
@@ -38,6 +43,10 @@ public final class HarvestmanLegs {
     private double phase, prevPhase, still, fid = 2.5;
     private Vec3 lastCentre, lastFwd, vel = Vec3.ZERO;
     private double spd, turn;
+    /** A leg held out to a point (reaching round a corner as it peeks), and how far it's there, 0..1. */
+    private int reachLeg = -1;
+    private Vec3 reachAt;
+    private double reachK;
 
     private static Vec3 norm(Vec3 v) {
         double l = v.length();
@@ -129,6 +138,67 @@ public final class HarvestmanLegs {
                 lift[li] = Math.max(lift[li], rear);
             }
         }
+        // a leg reached out round a corner (peeking), the point set lightly on the edge
+        reachK = Mth.approach((float) reachK, reachLeg >= 0 && reachAt != null ? 1f : 0f, (float) (dt * 2.2));
+        if (reachK > 0.01 && reachLeg >= 0 && reachAt != null && (lost >> reachLeg & 1) == 0) {
+            double k = reachK * reachK * (3 - 2 * reachK);
+            feet[reachLeg] = feet[reachLeg].lerp(reachAt, k);
+            lift[reachLeg] = Math.max(lift[reachLeg], 0.2 * (1 - reachK));
+        } else if (reachK <= 0.01 && reachLeg >= 0 && reachAt == null) {
+            reachLeg = -1;
+        }
+    }
+
+    /** Holds a leg out to a point (null lets it go back down). */
+    public void reach(int leg, Vec3 at) {
+        if (at == null) {
+            reachAt = null;
+            return;
+        }
+        if (reachLeg != leg) {
+            reachK = 0;
+        }
+        reachLeg = leg;
+        reachAt = at;
+    }
+
+    /** Is this leg busy reaching? (its stepping leaves it alone) */
+    private boolean reaching(int li) {
+        return li == reachLeg && reachK > 0.01;
+    }
+
+    /** Swings a point out to touch a spot (testing a ledge before it trusts it) and brings it back. */
+    public void probe(int li, Vec3 at) {
+        if (feet[li] == null || steps[li] != null) {
+            return;
+        }
+        Step st = new Step();
+        st.p0 = feet[li];
+        st.n0 = footN[li];
+        st.p1 = feet[li];
+        st.n1 = footN[li];
+        st.via = at;
+        st.dur = 0.75;
+        st.lift = 0.35;
+        st.fixed = true;
+        steps[li] = st;
+    }
+
+    /** The point skids out from under it (ice, a wet floor): it slides a little and is stepped again quickly. */
+    public void slip(int li, Vec3 out) {
+        if (feet[li] == null) {
+            return;
+        }
+        feet[li] = feet[li].add(out);
+        Step st = new Step();
+        st.p0 = feet[li];
+        st.n0 = footN[li];
+        st.p1 = targets[li] != null ? targets[li] : feet[li].subtract(out);
+        st.n1 = targetN[li] != null ? targetN[li] : footN[li];
+        st.dur = 0.22;
+        st.lift = 0.3;
+        st.fixed = true;
+        steps[li] = st;
     }
 
     private static BlockHitResult cast(Level level, Entity e, Vec3 from, Vec3 to) {
@@ -249,7 +319,13 @@ public final class HarvestmanLegs {
             }
             double u = Math.min(1, st.u), ease = u * u * (3 - 2 * u);
             Vec3 nm = norm(st.n0.add(st.n1).add(up.scale(2)));
-            feet[i] = st.p0.lerp(st.p1, ease).add(nm.scale(Math.pow(Math.sin(Math.PI * u), 0.8) * st.lift));
+            if (st.via != null) {
+                // out to touch the spot, a beat there, and back
+                double w = u < 0.4 ? u / 0.4 : u < 0.6 ? 1 : 1 - (u - 0.6) / 0.4, we = w * w * (3 - 2 * w);
+                feet[i] = st.p0.lerp(st.via, we).add(nm.scale(Math.sin(Math.PI * Math.min(1, w)) * st.lift * (1 - we)));
+            } else {
+                feet[i] = st.p0.lerp(st.p1, ease).add(nm.scale(Math.pow(Math.sin(Math.PI * u), 0.8) * st.lift));
+            }
             footN[i] = norm(st.n0.lerp(st.n1, ease));
             lift[i] = Math.sin(Math.PI * u);
             if (st.u >= 1) {
@@ -262,13 +338,14 @@ public final class HarvestmanLegs {
             }
         }
         boolean moving = cyc > 0.05;
-        // a leg short (three legs left), the others step quicker to make up for it
+        // a leg short (three legs left), the others step quicker to make up for it, sharing the beat between them
         double hurry = 1 + 0.35 * Integer.bitCount(lost);
+        double[] off = gait(lost);
         for (int i = 0; i < 4; i++) {
-            if (steps[i] != null || (lost >> i & 1) != 0 || rear > 0.3 && (i & 1) == 0) {
+            if (steps[i] != null || (lost >> i & 1) != 0 || rear > 0.3 && (i & 1) == 0 || reaching(i)) {
                 continue;
             }
-            double a = prevPhase * hurry + GAIT_OFF[i], b = phase * hurry + GAIT_OFF[i];
+            double a = prevPhase * hurry + off[i], b = phase * hurry + off[i];
             boolean due = moving && Math.floor(b) > Math.floor(a);
             double far = feet[i].distanceTo(targets[i]);
             if (!solid[i]) {
@@ -284,7 +361,7 @@ public final class HarvestmanLegs {
             int worst = -1;
             double wd = 0.35;
             for (int i = 0; i < 4; i++) {
-                if ((lost >> i & 1) != 0 || rear > 0.3 && (i & 1) == 0) {
+                if ((lost >> i & 1) != 0 || rear > 0.3 && (i & 1) == 0 || reaching(i)) {
                     continue;
                 }
                 double d = solid[i] ? feet[i].distanceTo(targets[i]) : 0;
@@ -299,13 +376,28 @@ public final class HarvestmanLegs {
                 fid -= dt;
                 if (fid <= 0) {
                     int i = random.nextInt(4);
-                    if ((lost >> i & 1) == 0) {
+                    if ((lost >> i & 1) == 0 && !reaching(i)) {
                         lift(i, 0.75, true, spd);
                     }
                     fid = 2.5 + random.nextDouble() * 3.5;
                 }
             }
         }
+    }
+
+    /** Each leg's place in the wave: all four as GAIT_OFF, or the ones left spaced evenly round the beat. */
+    private static double[] gait(int lost) {
+        if (lost == 0) {
+            return GAIT_OFF;
+        }
+        double[] off = new double[4];
+        int n = 4 - Integer.bitCount(lost), k = 0;
+        for (int li : WAVE) {
+            if ((lost >> li & 1) == 0) {
+                off[li] = (double) k++ / Math.max(1, n);
+            }
+        }
+        return off;
     }
 
     private void lift(int i, double dur, boolean fixed, double spd) {
