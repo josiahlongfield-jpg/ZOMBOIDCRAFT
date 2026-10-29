@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_truss": "zomboidcraft:block/city/wf_truss",
+    "particle": "zomboidcraft:block/city/wf_truss"
+  },
+  "elements": [
+    {
+      "from": [
+        -1.5,
+        -4,
+        4.5
+      ],
+      "to": [
+        5.5,
+        20,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_truss",
+          "uv": [
+            9.0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#wf_truss",
+          "uv": [
+            0,
+            0,
+            7.0,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#wf_truss",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#wf_truss",
+          "uv": [
+            4.5,
+            0,
+            11.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#wf_truss",
+          "uv": [
+            0,
+            4.5,
+            7.0,
+            11.5
+          ]
+        },
+        "down": {
+          "texture": "#wf_truss",
+          "uv": [
+            0,
+            4.5,
+            7.0,
+            11.5
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    }
+  ]
+}

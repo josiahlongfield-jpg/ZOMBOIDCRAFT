@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_bulbs_lit": "zomboidcraft:block/city/wf_bulbs_lit",
+    "particle": "zomboidcraft:block/city/wf_bulbs_lit"
+  },
+  "elements": [
+    {
+      "from": [
+        -4,
+        5.5,
+        5.5
+      ],
+      "to": [
+        20,
+        10.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_bulbs_lit",
+          "uv": [
+            0,
+            5.5,
+            16,
+            10.5
+          ]
+        },
+        "south": {
+          "texture": "#wf_bulbs_lit",
+          "uv": [
+            0,
+            5.5,
+            16,
+            10.5
+          ]
+        },
+        "east": {
+          "texture": "#wf_bulbs_lit"
+        },
+        "west": {
+          "texture": "#wf_bulbs_lit"
+        },
+        "up": {
+          "texture": "#wf_bulbs_lit",
+          "uv": [
+            0,
+            5.5,
+            16,
+            10.5
+          ]
+        },
+        "down": {
+          "texture": "#wf_bulbs_lit",
+          "uv": [
+            0,
+            5.5,
+            16,
+            10.5
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    }
+  ]
+}

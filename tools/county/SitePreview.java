@@ -36,8 +36,10 @@ public final class SitePreview {
         int w = Integer.parseInt(args[3]), d = Integer.parseInt(args[4]);
         long seed = args.length > 5 ? Long.parseLong(args[5]) : 1L;
         int m = args.length > 6 ? Integer.parseInt(args[6]) : 24;
-        int basin = type == PlaceType.PORT ? d * 2 / 5 : -1;
-        Place p = new Place(type, variant, 0, 0, w - 1, d - 1, 64, seed, type == PlaceType.PORT ? 0 : -1, basin);
+        // the Waterfront's harbour is east of its seawall (Waterfront.SEAWALL, x = 36), as Layout lays it out
+        boolean harbour = variant.equals("waterfront");
+        int basin = type == PlaceType.PORT ? d * 2 / 5 : harbour ? w - 1 - 36 : -1;
+        Place p = new Place(type, variant, 0, 0, w - 1, d - 1, 64, seed, type == PlaceType.PORT ? 0 : harbour ? 1 : -1, basin);
         Voxels v = new Voxels();
         long t = System.currentTimeMillis();
         Builders.build(p, new County(seed), v);
@@ -69,7 +71,7 @@ public final class SitePreview {
         int water = LEVEL - 4;
         for (int x = -m; x < w + m; x++) {
             for (int z = -m; z < d + m; z++) {
-                boolean basinHere = basin > 0 && z < basin && x >= -m;
+                boolean basinHere = basin > 0 && (p.waterSide == 1 ? x > w - 1 - basin : z < basin && x >= -m);
                 int top = basinHere ? LEVEL - 13 : LEVEL;
                 for (int y = 0; y < top; y++) {
                     set.set(x, y, z, y < top - 3 ? "minecraft:stone" : "minecraft:dirt");

@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_wheel": "zomboidcraft:block/city/wf_wheel",
+    "particle": "zomboidcraft:block/city/wf_wheel"
+  },
+  "elements": [
+    {
+      "from": [
+        -3,
+        13.1,
+        7.1
+      ],
+      "to": [
+        19,
+        14.9,
+        8.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_wheel",
+          "uv": [
+            0,
+            1.0999999999999996,
+            16,
+            2.9000000000000004
+          ]
+        },
+        "south": {
+          "texture": "#wf_wheel",
+          "uv": [
+            0,
+            1.0999999999999996,
+            16,
+            2.9000000000000004
+          ]
+        },
+        "east": {
+          "texture": "#wf_wheel"
+        },
+        "west": {
+          "texture": "#wf_wheel"
+        },
+        "up": {
+          "texture": "#wf_wheel",
+          "uv": [
+            0,
+            7.1,
+            16,
+            8.9
+          ]
+        },
+        "down": {
+          "texture": "#wf_wheel",
+          "uv": [
+            0,
+            7.1,
+            16,
+            8.9
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 """The Waterfront: the wf_ kit for Grayhaven island's harbour front (world/county/Waterfront.java,
 WaterfrontTerminal.java, WaterfrontPier.java).
 
-No photos of it in the library yet (city/waterfront-* to be queued): this follows the harbour fronts
+Photos: refs/city/waterfront-pier-ferris-wheel (pier wheels at Navy Pier, Scheveningen, Blackpool; a
+seafront arcade). Otherwise it follows the harbour fronts
 the old ports rebuilt in the 1970s and 80s for the tourists. A granite seawall with an iron rail and
 a promenade of brick pavers along it; the ferry terminal, a steel and glass shed with a clock tower,
 its commuter ferry tied up alongside; a timber pier of little shingled shops (clams, taffy, gifts,
-the arcade, the chowder house) with a carousel under a striped tent at its end; the marina's floats
+the arcade, the chowder house), a carousel under a striped tent, and the Ferris wheel at its end; the marina's floats
 and its boats, the harbormaster's office, the bait shop, the dry stack shed. The last weeks: the
 terminal was the island's evacuation point, the queues held back by barriers and soldiers until the
 last ferry went; then the crowd took what boats were left.
@@ -23,6 +24,8 @@ its back at z = 16):
   wf_tees, wf_gifts, wf_menu_0..1, wf_shop_KEY_0..3, wf_pier_0..5 (the arch's board, three by two);
 - the carousel: wf_ride_floor, wf_horse_a, wf_horse_b, wf_horse_c, wf_brass, wf_canopy_a, wf_canopy_b,
   wf_drum, wf_crest;
+- the wheel: wf_rim_K, wf_rim_lit_K, wf_spoke_K (K the member's direction in 22.5 degree steps from
+  +x toward +y; _p / _m six pixels off centre along the member's left normal), wf_leg_K (the same in lattice), wf_truss, wf_hub, wf_gondola_a, wf_gondola_b;
 - the marina: wf_pump, wf_rack (axis), wf_cover, wf_outboard, wf_mast, wf_boom (axis), wf_windshield;
 - wf_sgn_KEY_0..1, wf_spray_KEY_i.
 
@@ -467,7 +470,7 @@ def pier_pic():
     p.ellipse(2, 6, W - 2, H + 60, fill=NAVY)
     p.ellipse(2, 6, W - 2, H + 60, outline=(206, 166, 70), width=3)
     p.text(W / 2, 46, "PIER 9", OLD, 40, (206, 166, 70), anchor="mm")
-    p.text(W / 2, 86, "SHOPS  -  FOOD  -  CAROUSEL", BOLD, civic.fit("SHOPS  -  FOOD  -  CAROUSEL", BOLD, 11, W - 40), CREAM, anchor="mm")
+    p.text(W / 2, 86, "SHOPS  -  FOOD  -  RIDES", BOLD, civic.fit("SHOPS  -  FOOD  -  RIDES", BOLD, 11, W - 40), CREAM, anchor="mm")
     p.rect(2, 104, W - 2, H, fill=NAVY)
     return p
 
@@ -704,6 +707,11 @@ def textures():
     T["wf_alu"] = lambda: alu(44061)
     T["wf_pump"] = lambda: pump_face(44062)
     T["wf_sail"] = lambda: F.plain(44063, (232, 228, 214), 0.04, 0.2)
+    T["wf_wheel"] = lambda: wheel_paint(44064)
+    T["wf_bulbs"] = lambda: bulbs(44065, False)
+    T["wf_bulbs_lit"] = lambda: bulbs(44066, True)
+    T["wf_truss"] = lambda: truss(44067)
+    T["wf_hub"] = lambda: hub(44068)
     for key in SIGNS:
         for i in range(2):
             T[f"wf_sgn_{key}_{i}"] = lambda key=key, i=i: sign(key, i)
@@ -711,6 +719,55 @@ def textures():
         for i in range(cols):
             T[f"wf_spray_{key}_{i}"] = lambda key=key, i=i: spray(key, i)
     return T
+
+
+def wheel_paint(seed):
+    """The wheel's white enamel, chalky and rust-bled at the bolts."""
+    t = F.plain(seed, (230, 228, 220), 0.04, 0.55)
+    t.f0[:] = 25
+    for k in range(4, N, 16):
+        disc(t, k, k, 1.4, col=(150, 110, 80))
+    t.streaks(0.25, 0.9)
+    t.grime(0.2, (90, 80, 70))
+    return t
+
+
+def bulbs(seed, lit):
+    """The rim's chaser lights: bulbs on a white member, dead or burning."""
+    t = wheel_paint(seed)
+    for k in range(4, N, 8):
+        disc(t, k, N // 2, 2.6, col=(250, 236, 180) if lit else (196, 196, 186), f0=60)
+        disc(t, k, N // 2, 3.4, col=(170, 168, 160), ring=0.8)
+    if lit:
+        for k in range(4, N, 8):
+            disc(t, k, N // 2, 2.6, col=(255, 246, 200))
+        t.emit[:] = 0.0
+        yy, xx = np.mgrid[0:N, 0:N]
+        for k in range(4, N, 8):
+            t.emit[np.hypot(xx - k, yy - N // 2) <= 2.6] = 1.0
+    return t
+
+
+def truss(seed):
+    """The legs' lattice: chords at the edges and an X of bracing between, the sky through it."""
+    t = wheel_paint(seed)
+    t.alpha[:] = 0
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.alpha[(xx < 5) | (xx >= N - 5) | (yy < 4) | (yy >= N - 4)] = 255
+    t.alpha[(np.abs(xx - yy) < 3) | (np.abs(xx + yy - (N - 1)) < 3)] = 255
+    return t
+
+
+def hub(seed):
+    """The hub's face: white, the gilt ring and its bolt circle, the line's star in the middle."""
+    t = wheel_paint(seed)
+    disc(t, N // 2, N // 2, N * 0.45, col=(204, 164, 70), ring=5, f0=80)
+    for k in range(12):
+        a = k * np.pi / 6
+        disc(t, N / 2 + np.cos(a) * N * 0.33, N / 2 + np.sin(a) * N * 0.33, 1.6, col=(80, 70, 60))
+    disc(t, N // 2, N // 2, 8, col=(176, 36, 34))
+    disc(t, N // 2, N // 2, 3, col=(204, 164, 70), f0=80)
+    return t
 
 
 def P_canvas(seed, rgb):
@@ -882,6 +939,46 @@ def blocks():
     add("wf_drum", None, "Carousel Drum", "WOOD", rotate=None, tex={"side": "wf_drum", "up": "wf_gilt", "down": "wf_gilt"})
     add("wf_crest", [[3, 0, 3, 13, 4, 13, "wf_gilt"], [5, 4, 5, 11, 9, 11, "wf_canopy_a"], [7, 9, 7, 9, 16, 9, "wf_gilt"]],
         "Carousel Crest", "METAL", rotate=None, shape=[[3, 0, 3, 13, 16, 13]])
+
+    # ---- the Ferris wheel at the pier's end: members in the wheel's plane (x, y), turned in steps
+    # of 22.5 degrees; k is the member's direction in steps from +x toward +y. A positive angle
+    # about z turns a model from +x toward +y (checked in the wheel's preview).
+    def member(k, half, lo, hi, tex, o=0.0):
+        """A member in direction k (22.5 degree steps), o pixels off the cell's centre along its left normal."""
+        a = (k % 8) * 22.5
+        if a <= 45:
+            box = [lo, 8 + o - half, 8 - half, hi, 8 + o + half, 8 + half, tex]
+            return [box + [None, {"axis": "z", "angle": a, "origin": [8, 8, 8]}]] if a else [box]
+        if a < 135:
+            r = a - 90
+            box = [8 - o - half, lo, 8 - half, 8 - o + half, hi, 8 + half, tex]
+            return [box + [None, {"axis": "z", "angle": r, "origin": [8, 8, 8]}]] if r else [box]
+        box = [lo, 8 - o - half, 8 - half, hi, 8 - o + half, 8 + half, tex]
+        return [box + [None, {"axis": "z", "angle": a - 180, "origin": [8, 8, 8]}]]
+    # each member three ways: on the cell's centre, or six pixels either side (_p, _m) so a ring
+    # of them follows the true circle instead of stepping cell to cell
+    for k in range(8):
+        for sfx, o in (("", 0.0), ("_p", 6.0), ("_m", -6.0)):
+            add(f"wf_rim_{k}{sfx}", member(k, 2.5, -4, 20, "wf_bulbs", o), "Wheel Rim", "METAL", rotate=None,
+                shape=[[5, 5, 5, 11, 11, 11]])
+            add(f"wf_rim_lit_{k}{sfx}", member(k, 2.5, -4, 20, "wf_bulbs_lit", o), "Wheel Rim", "METAL", rotate=None, light=10,
+                shape=[[5, 5, 5, 11, 11, 11]])
+            add(f"wf_spoke_{k}{sfx}", member(k, 0.9, -3, 19, "wf_wheel", o), "Wheel Spoke", "METAL", rotate=None, render="cutout",
+                shape=[[7, 7, 7, 9, 9, 9]])
+            add(f"wf_leg_{k}{sfx}", member(k, 3.5, -4, 20, "wf_truss", o), "Wheel Leg", "METAL", rotate=None, render="cutout",
+                shape=[[4, 4, 4, 12, 12, 12]])
+    add("wf_truss", None, "Wheel Leg", "METAL", rotate=None, tex={"all": "wf_truss"}, render="cutout")
+    add("wf_hub", None, "Wheel Hub", "METAL", rotate=None, tex={"north": "wf_hub", "south": "wf_hub", "side": "wf_gilt",
+                                                                 "up": "wf_gilt", "down": "wf_gilt"})
+    for k, cap in (("a", "wf_canopy_a"), ("b", "wf_canopy_b")):
+        # the cabin hangs from its axle (the rod between the two rims, a block either side along z)
+        add(f"wf_gondola_{k}", [[7.2, 13.5, -8, 8.8, 15.1, 24, "wf_wheel"], [7, 9.5, 7, 9, 13.5, 9, "wf_wheel"],
+                                [1.5, 8, -1.5, 14.5, 9.5, 17.5, cap], [3, 9.5, 1, 13, 10.5, 15, cap],
+                                [2, -11, -1, 14, 8, 17, glass], [1.5, -12.5, -1.5, 14.5, -11, 17.5, cap],
+                                [1.6, -11, -1.6, 2.6, 8, -0.6, "wf_wheel"], [13.4, -11, -1.6, 14.4, 8, -0.6, "wf_wheel"],
+                                [1.6, -11, 16.6, 2.6, 8, 17.6, "wf_wheel"], [13.4, -11, 16.6, 14.4, 8, 17.6, "wf_wheel"],
+                                [1.8, -5, -1.4, 14.2, -4, 17.4, "wf_wheel"]],
+            "Wheel Gondola", "METAL", rotate=None, render="translucent", decor=True, shape=[[2, 0, 0, 14, 16, 16]])
 
     # ---- the marina
     add("wf_pump", [[3, 0, 5, 13, 15, 11, face("wf_pump", "vessel_hull_grey")], [4, 15, 6, 12, 16, 10, steel],

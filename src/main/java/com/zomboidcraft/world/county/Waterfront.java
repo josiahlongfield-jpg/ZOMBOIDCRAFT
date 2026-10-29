@@ -84,7 +84,7 @@ final class Waterfront extends Grounds {
             for (int y = BED; y < 0; y++) {
                 set(SEAWALL, y, z, y < SEA + 2 ? "wf_wall_slime" : "wf_wall");
             }
-            if (z % 30 == 17 && (z < PZ0 - 2 || z > PZ1 + 2)) {
+            if (z % 30 == 17 && (z < PZ0 - 2 || z > PZ1 + 2) && Math.abs(z - MA) > 3 && Math.abs(z - MB) > 3) {
                 for (int y = SEA - 1; y <= 0; y++) {
                     set(SEAWALL + 1, y, z, "bunk_ladder[facing=east]");
                 }
@@ -400,6 +400,9 @@ final class Waterfront extends Grounds {
         for (int z = 2; z < d - 2; z++) {
             for (int x = TX1 + 1; x < SEAWALL; x++) {
                 if (empty(x, 1, z) && get(x, 0, z) != null && get(x, 0, z).startsWith("wf_pavers") && chance() < 0.035) {
+                    if (x == TX1 + 1) {
+                        continue;  // the row along the terminal, where the gate's doors open
+                    }
                     double r = chance();
                     set(x, 1, z, r < 0.35 ? "paper" : r < 0.55 ? "wf_bags_" + any("a", "b", "c") : r < 0.7 ? "blood_splat"
                             : r < 0.8 ? "trash_bag[facing=" + dir() + "]" : r < 0.9 ? "glass_shards" : "home_blood_pool");
