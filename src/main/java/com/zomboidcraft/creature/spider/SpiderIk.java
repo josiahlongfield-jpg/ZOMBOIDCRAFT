@@ -1,6 +1,7 @@
-package com.zomboidcraft.client.creature.spider;
+package com.zomboidcraft.creature.spider;
 
 import com.zomboidcraft.creature.HarvestmanEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -12,63 +13,79 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * Fits the animation to where the Harvestman really is, each frame, on top of its clips (SpiderAnimator): every foot
- * finds the surface under where the clip puts it (a stair, a slope, a wall or ceiling it's holding, a ledge) and the leg
- * bends to put its point there, still lifting and swinging as the clip does; its body rides the average of its feet and
- * tilts with the ground (nose up a stair, leaning on a slope); under a low ceiling or through a doorway it sinks and
- * folds forward at the waist; with a leg gone it leans toward that side; a slipping foot lurches it; and its head turns
- * to what it's listening to. Model space throughout (+y off the surface it holds, +z ahead, +x its left).
+ * Fits the animation to where the Harvestman really is, on top of its clips (SpiderAnimator): every foot finds the
+ * surface under where the clip puts it (a stair, a slope, a wall or ceiling it's holding, a ledge) and the leg bends to
+ * put its point there, still lifting and swinging as the clip does. Where there's nothing to stand on that far out (a
+ * beam, a ledge, the top of a wall) or the clip's foot would be in a wall (a corridor), it draws that foot in toward its
+ * body until it finds footing, so it perches narrow where it must. Its body rides the average of its feet and tilts
+ * with the ground; under a low ceiling or through a doorway it sinks and folds forward at the waist; with a leg gone it
+ * leans toward that side; a slipping foot lurches it; and its head turns to what it's listening to. Model space
+ * throughout (+y off the surface it holds, +z ahead, +x its left). Server and client both run it.
  */
 final class SpiderIk {
     /** How far above and below the clip's foot it looks for a surface. */
     private static final float ABOVE = 1.05f, BELOW = 1.5f;
     /** The most it sinks its body, and how far it folds forward at the waist beyond that. */
     private static final float SINK = 0.55f, FOLD = 0.95f;
+    /** How far in it tries a foot that's found nothing (as a share of how far out the clip has it). */
+    private static final float[] IN = {1f, 0.8f, 0.64f, 0.5f, 0.38f};
 
     private final SpiderModel model;
-    /** Each foot's ground: how far the surface under it is above (+) or below the clip's floor, eased. */
-    private final float[] ground = new float[4];
-    private final boolean[] onGround = new boolean[4];
+    /** Each foot's ground (how far the surface under it is above the clip's floor) and how far in it's drawn, eased. */
+    private final float[] ground = new float[4], spread = {1, 1, 1, 1};
     private float lift, pitch, roll, look, stumble;
     private int stumbleLeg, stumblesSeen = -1;
     private final Vector3f lookAt = new Vector3f();
+    /** Where it found footing for each foot this time. */
+    private final float[] want = new float[4], wantSpread = {1, 1, 1, 1};
 
     SpiderIk(SpiderModel model) {
         this.model = model;
     }
 
     /**
-     * @param place model space to the entity's drawn position (rotation and offset)
-     * @param drawnAt where the entity's drawn
+     * @param place model space to the entity's position (rotation and offset)
+     * @param origin the entity's position place is relative to
+     * @param drop how far below its standing height its body is held (a low ceiling, a doorway)
      */
-    void apply(HarvestmanEntity e, SpiderAnimator a, Level level, Matrix4f place, Vec3 drawnAt, float dt) {
+    void apply(HarvestmanEntity e, SpiderAnimator a, Level level, Matrix4f place, Vec3 origin, float drop, float dt) {
         Quaternionf[] q = a.q;
         Vector3f[] p = a.p;
         boolean dead = e.pose() == HarvestmanEntity.DEAD;
         int lost = e.lost();
-        float k = 1 - (float) Math.exp(-dt * 14);
 
-        // where the clip puts each foot, and the surface under it
+        // where the clip puts each foot, and the surface under it (drawn in where there's none that far out)
         Vector3f[] clip = new Vector3f[4];
         Matrix4f toModel = new Matrix4f(place).invert();
         boolean feel = !dead && !a.airborne();
+        Vector3f centre = new Vector3f(p[model.pelvis].x, 0, p[model.pelvis].z);
         for (int l = 0; l < 4; l++) {
             clip[l] = tipOf(a, l);
-            float want = 0;
-            boolean hit = false;
-            if (feel && (lost >> l & 1) == 0) {
-                Vector3f from = place.transformPosition(new Vector3f(clip[l].x, ABOVE, clip[l].z));
-                Vector3f to = place.transformPosition(new Vector3f(clip[l].x, -BELOW, clip[l].z));
-                BlockHitResult r = level.clip(new ClipContext(drawnAt.add(from.x, from.y, from.z), drawnAt.add(to.x, to.y, to.z),
-                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, e));
-                if (r.getType() != HitResult.Type.MISS) {
-                    Vec3 h = r.getLocation().subtract(drawnAt);
-                    want = toModel.transformPosition(new Vector3f((float) h.x, (float) h.y, (float) h.z)).y;
-                    hit = true;
+            if (!feel || (lost >> l & 1) != 0) {
+                want[l] = 0;
+                wantSpread[l] = 1;
+                continue;
+            }
+            boolean found = false;
+            for (float s : IN) {
+                float x = centre.x + (clip[l].x - centre.x) * s, z = centre.z + (clip[l].z - centre.z) * s;
+                float g = feel(e, level, place, toModel, origin, x, z);
+                if (!Float.isNaN(g)) {
+                    want[l] = g;
+                    wantSpread[l] = s;
+                    found = true;
+                    break;
                 }
             }
-            onGround[l] = hit;
-            ground[l] = Mth.lerp(k, ground[l], want);
+            if (!found) {
+                want[l] = 0;
+                wantSpread[l] = 1;
+            }
+        }
+        float kg = 1 - (float) Math.exp(-dt * 9), kw = 1 - (float) Math.exp(-dt * 4);
+        for (int l = 0; l < 4; l++) {
+            ground[l] = Mth.lerp(kg, ground[l], want[l]);
+            spread[l] = Mth.lerp(kw, spread[l], wantSpread[l]);
         }
 
         // the body over its feet: risen or sunk with them, tilted to them, and leaning off any leg it's lost
@@ -90,9 +107,8 @@ final class SpiderIk {
                 pitchWant += (l & 1) == 0 ? 0.09f : -0.05f;
             }
         }
-        // under something low: how far it must come down (it holds its body ~2.05 off a wall, 2.5 off a floor)
-        float drop = dead ? 0 : Mth.clamp(2.05f - e.lift(), 0, SINK + 1.2f);
-        float ks = 1 - (float) Math.exp(-dt * 6);
+        drop = dead ? 0 : Mth.clamp(drop, 0, SINK + 1.2f);
+        float ks = 1 - (float) Math.exp(-dt * 5);
         lift = Mth.lerp(ks, lift, dead ? 0 : avg * 0.8f - Math.min(drop, SINK));
         pitch = Mth.lerp(ks, pitch, pitchWant);
         roll = Mth.lerp(ks, roll, rollWant);
@@ -128,21 +144,43 @@ final class SpiderIk {
                 if ((lost >> l & 1) != 0) {
                     continue;
                 }
-                Vector3f target = new Vector3f(clip[l].x, clip[l].y + ground[l], clip[l].z);
+                float s = spread[l];
+                Vector3f target = new Vector3f(centre.x + (clip[l].x - centre.x) * s, clip[l].y + ground[l], centre.z + (clip[l].z - centre.z) * s);
                 reach(a, l, target);
             }
         }
 
         // its head to what it's listening to
         Vec3 heard = e.lookingAt();
-        look = Mth.lerp(1 - (float) Math.exp(-dt * 5), look, heard != null && !dead ? 1 : 0);
+        look = Mth.lerp(1 - (float) Math.exp(-dt * 4), look, heard != null && !dead ? 1 : 0);
         if (heard != null) {
-            Vec3 h = heard.subtract(drawnAt);
+            Vec3 h = heard.subtract(origin);
             lookAt.set(toModel.transformPosition(new Vector3f((float) h.x, (float) h.y, (float) h.z)));
         }
         if (look > 0.01f && model.neck >= 0 && model.head >= 0) {
             turnHead(a);
         }
+    }
+
+    /**
+     * The surface under a point of the model's floor: its height (model y) if there's something to stand on within
+     * reach and the point isn't inside a wall, otherwise NaN.
+     */
+    private static float feel(HarvestmanEntity e, Level level, Matrix4f place, Matrix4f toModel, Vec3 origin, float x, float z) {
+        Vector3f from = place.transformPosition(new Vector3f(x, ABOVE, z));
+        Vector3f to = place.transformPosition(new Vector3f(x, -BELOW, z));
+        Vec3 a = origin.add(from.x, from.y, from.z), b = origin.add(to.x, to.y, to.z);
+        // a foot that would start inside something solid (a corridor's wall): no good
+        BlockPos at = BlockPos.containing(a);
+        if (!level.getBlockState(at).getCollisionShape(level, at).isEmpty()) {
+            return Float.NaN;
+        }
+        BlockHitResult r = level.clip(new ClipContext(a, b, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, e));
+        if (r.getType() == HitResult.Type.MISS) {
+            return Float.NaN;
+        }
+        Vec3 h = r.getLocation().subtract(origin);
+        return toModel.transformPosition(new Vector3f((float) h.x, (float) h.y, (float) h.z)).y;
     }
 
     /** A leg's point as posed now. */
@@ -155,7 +193,7 @@ final class SpiderIk {
     private void reach(SpiderAnimator a, int l, Vector3f target) {
         Quaternionf[] q = a.q;
         Vector3f[] p = a.p;
-        for (int pass = 0; pass < 4; pass++) {
+        for (int pass = 0; pass < 5; pass++) {
             for (int k = 2; k >= 0; k--) {
                 int bone = model.legs[l][k];
                 Vector3f joint = new Vector3f(p[bone]);
@@ -168,8 +206,8 @@ final class SpiderIk {
                 if (angle < 1e-4f) {
                     continue;
                 }
-                // the hip only nudges; the knee and ankle do the bending
-                float most = k == 0 ? 0.25f : 0.6f;
+                // the hip swings the leg in and out; the knee and ankle do the bending
+                float most = k == 0 ? 0.35f : 0.6f;
                 if (angle > most) {
                     r = new Quaternionf().slerp(r, most / angle);
                 }

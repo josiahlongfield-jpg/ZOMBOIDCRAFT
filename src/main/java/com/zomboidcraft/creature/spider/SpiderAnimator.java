@@ -1,4 +1,4 @@
-package com.zomboidcraft.client.creature.spider;
+package com.zomboidcraft.creature.spider;
 
 import com.zomboidcraft.creature.HarvestmanEntity;
 import net.minecraft.util.Mth;
@@ -23,9 +23,10 @@ public final class SpiderAnimator {
     private static final String[] CALM = {"Idle_2", "Idle_5", "Idle_8"};
 
     private final SpiderModel model;
-    private long lastNanos;
     /** Seconds since the frame before (what SpiderIk eases by). */
     float dt;
+    /** Its own, so the server's posing never draws on the entity's (its mind's). */
+    private final java.util.Random rand = new java.util.Random();
     private float time;
     private Vec3 lastAt;
     private Vector3f lastFwd;
@@ -37,6 +38,8 @@ public final class SpiderAnimator {
     private float wIdle = 1, wWalk, wBack, wLeft, wRight, wRun, wTurnL, wTurnR, wFeed, wFall, wClutch;
     /** How fast it's going along its up (falling, dropping off a ceiling, is fast and down). */
     private float climb;
+    private float hz = 0.6f;
+    private boolean walking, turning;
     private String idle = "Idle_1", idleOld;
     private float idleT, idleOldT, idleFade = 1, turnT, feedT;
     /** The move played over the top. */
@@ -52,7 +55,7 @@ public final class SpiderAnimator {
     public final Matrix4f[] skin;
     /** The pose this frame: each bone's turn and position in model space (SpiderIk works on these before bake). */
     final Quaternionf[] q;
-    final Vector3f[] p;
+    public final Vector3f[] p;
     private final float[] sum;
 
     public SpiderAnimator(SpiderModel model) {
@@ -75,15 +78,14 @@ public final class SpiderAnimator {
      * @param at where it's drawn this frame
      * @param turn how it lies (model to world)
      * @param frameKey this frame (tick plus partial tick)
+     * @param dt seconds since the last one
      */
-    public boolean update(HarvestmanEntity e, Vec3 at, Quaternionf turn, float camo, float frameKey) {
+    public boolean update(HarvestmanEntity e, Vec3 at, Quaternionf turn, float frameKey, float dt) {
         if (frameKey == posedAt) {
             return false;
         }
         posedAt = frameKey;
-        long now = System.nanoTime();
-        float dt = lastNanos == 0 ? 0 : (float) Math.min(0.1, (now - lastNanos) / 1e9);
-        lastNanos = now;
+        dt = Math.min(dt, 0.1f);
         this.dt = dt;
         time += dt;
         Vector3f fwd = turn.transform(new Vector3f(0, 0, 1));
@@ -92,30 +94,41 @@ public final class SpiderAnimator {
             Vec3 d = at.subtract(lastAt).scale(1 / dt);
             Vector3f local = new Quaternionf(turn).conjugate().transform(new Vector3f((float) d.x, (float) d.y, (float) d.z));
             local.y = 0;
-            float k = 1 - (float) Math.exp(-dt * 8);
+            // eased well, so a body that shuffles or stops and starts doesn't flicker between its walk and its idle
+            float k = 1 - (float) Math.exp(-dt * 4);
             vel.lerp(local, k);
             float rise = (float) (d.x * up.x + d.y * up.y + d.z * up.z);
             climb = Mth.lerp(1 - (float) Math.exp(-dt * 10), climb, rise);
             float swing = (float) Math.atan2(new Vector3f(lastFwd).cross(fwd).dot(up), lastFwd.dot(fwd)) / dt;
-            yawRate = Mth.lerp(1 - (float) Math.exp(-dt * 6), yawRate, swing);
+            yawRate = Mth.lerp(1 - (float) Math.exp(-dt * 3), yawRate, swing);
         }
         lastAt = at;
         lastFwd = fwd;
 
         int pose = e.pose();
         boolean dead = pose == HarvestmanEntity.DEAD, feeding = pose == HarvestmanEntity.FEED;
-        triggers(e, pose, camo);
+        triggers(e, pose);
 
         // what's wanted underneath
         float speed = (float) Math.sqrt(vel.x * vel.x + vel.z * vel.z);
-        float move = dead || feeding ? 0 : smooth(0.08f, 0.35f, speed);
+        // it walks once it's really going somewhere; under that it stands (its idles shift its weight themselves),
+        // and once walking it keeps on down to a slower pace, so it doesn't flick between the two
+        walking = speed > (walking ? 0.12f : 0.3f);
+        float move = dead || feeding || !walking ? 0 : smooth(0.12f, 0.45f, speed);
         float run = smooth(1.4f, 2.6f, speed);
         float c = speed > 1e-3f ? vel.z / speed : 1, s = speed > 1e-3f ? vel.x / speed : 0;
-        float f = Math.max(0, c) * Math.max(0, c), b = Math.max(0, -c) * Math.max(0, -c);
-        float l = Math.max(0, s) * Math.max(0, s), r = Math.max(0, -s) * Math.max(0, -s);
-        float spin = dead || feeding ? 0 : (1 - move) * smooth(0.5f, 1.3f, Math.abs(yawRate));
+        // which way: mostly one clip (the walks' feet fall at different times, so an even mix shuffles)
+        float f = (float) Math.pow(Math.max(0, c), 4), b = (float) Math.pow(Math.max(0, -c), 4);
+        float l = (float) Math.pow(Math.max(0, s), 4), r = (float) Math.pow(Math.max(0, -s), 4);
+        float all = Math.max(1e-4f, f + b + l + r);
+        f /= all;
+        b /= all;
+        l /= all;
+        r /= all;
+        turning = Math.abs(yawRate) > (turning ? 0.45f : 0.8f);
+        float spin = dead || feeding || !turning ? 0 : (1 - move) * smooth(0.45f, 1.2f, Math.abs(yawRate));
         float still = 1 - move - spin;
-        float k = 1 - (float) Math.exp(-dt * 7);
+        float k = 1 - (float) Math.exp(-dt * 4);
         wWalk = Mth.lerp(k, wWalk, move * f * (1 - run));
         wRun = Mth.lerp(k, wRun, move * f * run);
         wBack = Mth.lerp(k, wBack, move * b);
@@ -133,7 +146,8 @@ public final class SpiderAnimator {
 
         // the feet in step with the ground: one stride a cycle, the walk's or the run's
         float stride = Mth.lerp(run, WALK_STRIDE, RUN_STRIDE);
-        float hz = move > 0.01f ? Mth.clamp(speed / stride, 0.35f, 2.4f) : 0.6f;
+        float hzWant = move > 0.01f ? Mth.clamp(speed / stride, 0.35f, 2.4f) : 0.6f;
+        hz = Mth.lerp(1 - (float) Math.exp(-dt * 3), hz, hzWant);
         phase = (phase + dt * hz) % 1f;
         turnT += dt * Mth.clamp(Math.abs(yawRate) / 1.2f, 0.6f, 2f);
         feedT += dt * 0.45f;
@@ -143,7 +157,7 @@ public final class SpiderAnimator {
         SpiderModel.Clip idleClip = model.clips.get(idle);
         if (idleClip != null && idleT >= idleClip.seconds()) {
             boolean alert = e.lookingAt() != null;
-            String next = alert ? "Idle_9" : e.getRandom().nextFloat() < 0.65f ? "Idle_1" : CALM[e.getRandom().nextInt(CALM.length)];
+            String next = alert ? "Idle_9" : rand.nextFloat() < 0.65f ? "Idle_1" : CALM[rand.nextInt(CALM.length)];
             if (next.equals(idle)) {
                 idleT -= idleClip.seconds();
             } else {
@@ -220,6 +234,16 @@ public final class SpiderAnimator {
         return true;
     }
 
+    /** How far into its rage it is, 0..1..0 (its whole skull lights up). */
+    public float rage() {
+        if (!"Rage_1".equals(act)) {
+            return 0;
+        }
+        SpiderModel.Clip clip = model.clips.get(act);
+        float len = clip == null ? 1 : clip.seconds();
+        return Math.min(1, actT / 0.4f) * Math.min(1, (len - actT) / 0.6f);
+    }
+
     /** Whether it's in the air (its feet shouldn't look for the ground). */
     public boolean airborne() {
         return wFall > 0.5f;
@@ -233,7 +257,7 @@ public final class SpiderAnimator {
     }
 
     /** Starts a move when its entity does something new. */
-    private void triggers(HarvestmanEntity e, int pose, float camo) {
+    private void triggers(HarvestmanEntity e, int pose) {
         if (pose == HarvestmanEntity.DEAD) {
             if (poseWas != HarvestmanEntity.DEAD) {
                 play((e.getId() & 1) == 0 ? "Death_1" : "Death_2", 1, 1, true);
@@ -253,7 +277,7 @@ public final class SpiderAnimator {
         float rear = e.rear();
         boolean raging = "Rage_1".equals(act);
         if (pose == HarvestmanEntity.HUNT && rear > 0.45f && rearWas <= 0.45f && !actHold && !raging) {
-            play(e.getRandom().nextBoolean() ? "Attack_6" : "Attack_7", 1.25f, 1, false);
+            play(rand.nextBoolean() ? "Attack_6" : "Attack_7", 1.25f, 1, false);
         }
         rearWas = rear;
         if (recoilSeen >= 0 && e.recoils() != recoilSeen) {

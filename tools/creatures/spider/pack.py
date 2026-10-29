@@ -5,7 +5,7 @@ Inputs (made in headless Chromium with three.js, see README.md):
   spider.glb  - the pack's mesh and its 30 clips (export.html: FBX -> GLB, Walk_Right rebuilt as a mirror of Walk_left)
   bake.json   - bake.html: the out space (metres, +y up, +z toward the head, +x its left, feet on y = 0), each bone's
                 inverse bind and every clip's bone transforms at 30 fps
-  tex/        - the pack's textures cut to 2K JPEG (body_<skin>_c, skull_<skin>_c, body_red_e, skull_red_e)
+  tex/        - the pack's textures cut to 2K JPEG (body_<skin>_c, skull_<skin>_c, body/skull_red_e and _blue_e)
 
 The mesh is cut from 157k vertices to about 1/6 with quadric decimation. Each new corner takes its texture position and
 bone weights from the original triangle nearest it within the same UV island as the triangle it belongs to, so seams
@@ -217,7 +217,8 @@ def main():
         for tri in t:
             W("iii", *[int(x) for x in tri])
     looks = [("body", f"{tex}/body_{body_skin}_c.jpg"), ("skull", f"{tex}/skull_{skull_skin}_c.jpg"),
-             ("body_glow", f"{tex}/body_red_e.jpg"), ("skull_glow", f"{tex}/skull_red_e.jpg")]
+             ("body_glow", f"{tex}/body_red_e.jpg"), ("skull_glow", f"{tex}/skull_red_e.jpg"),
+             ("body_glow_blue", f"{tex}/body_blue_e.jpg"), ("skull_glow_blue", f"{tex}/skull_blue_e.jpg")]
     W("i", len(looks))
     for name, path in looks:
         data = open(path, "rb").read()
