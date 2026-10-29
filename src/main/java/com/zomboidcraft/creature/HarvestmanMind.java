@@ -1252,6 +1252,10 @@ public final class HarvestmanMind {
         if (plan == STRIKE || plan == DRAG || plan == FEED || tricks.madeIt(level, pos)) {
             return;
         }
+        // shot at while it stands lit up for them: the red goes out and it's gone
+        if (loud >= 24 && tricks.shotAt(level, pos)) {
+            return;
+        }
         heard = pos;
         heardAt = level.getGameTime();
         heardLoud = loud;
@@ -1311,6 +1315,10 @@ public final class HarvestmanMind {
             end();
             start(FLEE, lair != null ? Vec3.atCenterOf(lair) : by instanceof Player p ? hideFrom(level, p) : spot(HIDE, 20), SPRINT);
             level.playSound(null, h.getX(), h.getY(), h.getZ(), HarvestmanSounds.HISS, SoundSource.HOSTILE, 1.4f, 0.8f);
+            return;
+        }
+        // hit while it stands lit up for them: it doesn't stay to be shot at
+        if (tricks.shotAt(level, by != null ? by.position() : h.centre())) {
             return;
         }
         // hurt, but not badly: now and then it only pretends to run, back to somewhere it can wait over them
