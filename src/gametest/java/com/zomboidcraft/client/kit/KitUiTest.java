@@ -694,6 +694,27 @@ public class KitUiTest implements FabricClientGameTest {
             return "from 3 forward -> " + (forward + 1) + ", from there back -> " + (back + 1) + ", key 7 -> " + (key + 1);
         });
         LOG.info("ZCUI quick slot scroll: {}", scrolled);
+        // the other rigs worn: a shoulder holster with a knife on the belt, then a thigh holster
+        for (boolean shoulder : new boolean[]{true, false}) {
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(ModItems.LEATHER_BELT));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HOLSTER,
+                        new ItemStack(shoulder ? ModItems.SHOULDER_HOLSTER : ModItems.THIGH_HOLSTER));
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHEATH, shoulder ? new ItemStack(ModItems.KNIFE_SHEATH) : ItemStack.EMPTY);
+                for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+                p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+                if (shoulder) p.getInventory().setItem(4, new ItemStack(ModItems.KITCHEN_KNIFE));
+            });
+            ctx.waitTicks(5);
+            for (float turn : new float[]{0f, 150f, 210f}) {
+                ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+                ctx.waitTicks(3);
+                ctx.takeScreenshot("rig-figure-" + (shoulder ? "shoulder-" : "thigh-") + Math.round(turn));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        }
     }
 
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {

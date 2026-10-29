@@ -45,10 +45,15 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
 
-    /** Worn pieces with a body-scale model so far; the rest aren't drawn on you until theirs is made. */
+    /** Worn pieces with a body-scale model; anything else in those slots isn't drawn on you. */
     private static final java.util.Set<net.minecraft.world.item.Item> BODY_SCALE = java.util.Set.of(
             com.zomboidcraft.ModItems.LEATHER_BELT, com.zomboidcraft.ModItems.TOOL_BELT, com.zomboidcraft.ModItems.DUTY_BELT,
-            com.zomboidcraft.ModItems.HIP_HOLSTER);
+            com.zomboidcraft.ModItems.HIP_HOLSTER, com.zomboidcraft.ModItems.SHOULDER_HOLSTER,
+            com.zomboidcraft.ModItems.THIGH_HOLSTER, com.zomboidcraft.ModItems.KNIFE_SHEATH,
+            com.zomboidcraft.ModItems.MACHETE_SHEATH);
+
+    /** Where the right leg hangs from, in body pixels: the thigh rig is drawn on the leg so it swings with it. */
+    private static final float LEG_X = -1.9f, LEG_Y = 12f;
 
     /** How far down the body a belt's bottom edge sits, less the 0.8 px its model is built below centre. */
     private static final float BELT_DOWN = 11.7f - 0.8f;
@@ -104,7 +109,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
             if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
             pose.pushPose();
-            getParentModel().body.translateAndRotate(pose);
+            onPart(pose, worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER));
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
             items.updateForLiving(item, worn.get(i), ItemDisplayContext.NONE, player);
@@ -115,17 +120,37 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             if (!worn.get(Carry.WORN_BACK).isEmpty()) {
                 sling(pose, collector, light, state, player, worn.get(Carry.WORN_BACK), packOut);
             }
-            hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1);
-            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1);
+            ItemStack holster = worn.get(GearStore.HOLSTER), sheath = worn.get(GearStore.SHEATH);
+            // the handgun sits down in its holster's pouch (gen_holsters.py), its grip out of the top
+            if (holster.is(com.zomboidcraft.ModItems.SHOULDER_HOLSTER)) {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, 3.1f, 5.7f, -2.55f, 5.5f);
+            } else if (holster.is(com.zomboidcraft.ModItems.THIGH_HOLSTER)) {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, true, -4.9f, 16.2f, -0.1f, 6.5f);
+            } else {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, -5.1f, 11.5f, -0.4f, 6.5f);
+            }
+            boolean machete = sheath.is(com.zomboidcraft.ModItems.MACHETE_SHEATH);
+            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1, false, 4.7f, machete ? 12.6f : 11.5f, 0.2f,
+                    machete ? 10f : 7.5f);
+        }
+    }
+
+    /** Moves to the body, or to the right leg in the body's frame (so a piece built round the waist lines up). */
+    private void onPart(PoseStack pose, boolean leg) {
+        if (leg) {
+            getParentModel().rightLeg.translateAndRotate(pose);
+            pose.translate(-LEG_X / 16f, -LEG_Y / 16f, 0);
+        } else {
+            getParentModel().body.translateAndRotate(pose);
         }
     }
 
     /**
-     * A holstered handgun on the right hip or a sheathed blade on the left (side -1 or 1), hanging grip up along the
-     * thigh, about as long as a hand span on the body.
+     * A holstered handgun or a sheathed blade (side -1 or 1), hanging grip up at (x, y, z) body pixels, {@code size}
+     * pixels long.
      */
     private void hip(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player, ItemStack stack,
-                     int side) {
+                     int side, boolean leg, float x, float y, float z, float size) {
         if (stack.isEmpty()) return;
         items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
         if (item.isEmpty()) return;
@@ -133,11 +158,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         boolean alongZ = box.getZsize() >= Math.max(box.getXsize(), box.getYsize());
         double length = alongZ ? box.getZsize() : Math.max(box.getXsize(), box.getYsize());
         if (length <= 0) return;
-        float k = (float) ((side < 0 ? 6.5f : 7.5f) / 16f / length);
+        float k = (float) (size / 16f / length);
         pose.pushPose();
-        getParentModel().body.translateAndRotate(pose);
-        // the handgun sits down in the hip holster's shell (gen_holsters.py), its grip out of the top
-        pose.translate(side < 0 ? -5.1f / 16f : 4.7f / 16f, 11.5f / 16f, (side < 0 ? -0.4f : 0.2f) / 16f);
+        onPart(pose, leg);
+        pose.translate(x / 16f, y / 16f, z / 16f);
         pose.scale(-k, -k, k);
         // guns point their muzzle down the thigh; a blade's tip hangs down
         if (alongZ) {
