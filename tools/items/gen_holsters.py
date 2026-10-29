@@ -9,7 +9,8 @@ leather shoulder rig: a pouch with a snap strap over the grip, hung from a harne
 holsters/10-11 (western drop holsters tied down on the thigh); sheaths/01-03 (a stitched leather knife sheath with a
 snap strap and a belt loop); sheaths/04, 06 (machete sheaths: black nylon, riveted edges, a strap round the handle).
 
-The shoulder rig hangs at the left armpit (+x), the knife and machete on the left hip, and the thigh rig is drawn on
+The shoulder rig hangs at the left armpit (+x), the knife cross-draw on the front of the left hip and the machete
+behind it (out from under the arm), and the thigh rig is drawn on
 the right leg (WornGearLayer), in the same frame moved down to the thigh.
 
     python3 tools/items/gen_holsters.py
@@ -144,28 +145,33 @@ def build_thigh(m):
         m.box([*X(0.25, 0.4)[:1], y - 0.1, -0.3], [X(0.25, 0.4)[1], y + 0.6, 0.3], 'buckle')
 
 
-def build_sheath(m, length, width, top):
-    # on the left hip: a loop over the belt, the sheath hanging off it, a strap round the handle
-    x0 = G.HALF_X + G.STRAP
-    m.box([x0, -0.5, -0.5], [x0 + 0.2, 1.9, 0.5], 'loop')
-    m.box([x0 - 0.5, 1.6, -0.5], [x0, 1.9, 0.5], 'loop')
+def build_sheath(m, length, width, top, cx, front):
+    """A sheath hung flat against the body off a loop over the belt, a strap round the handle. It rides on the front
+    (cross-draw, the knife) or the back (the machete) of the left hip: on the side it would hide under the arm."""
+    d = 1 if front else -1
+    z0 = d * (G.HALF_Z + G.STRAP)
+    def box(x0, x1, y0, y1, o0, o1, mat):          # o: how far out from the belt, x across
+        za, zb = sorted((z0 + d * o0, z0 + d * o1))
+        m.box([cx + x0, y0, za], [cx + x1, y1, zb], mat)
+    box(-0.5, 0.5, -0.5, 1.9, 0.0, 0.2, 'loop')
+    box(-0.5, 0.5, 1.6, 1.9, -0.5, 0.0, 'loop')                       # over the top of the belt
     w = width / 2
-    m.box([x0 + 0.2, top - length, -w], [x0 + 1.0, top, w], 'body')
-    m.box([x0 + 0.3, top - length - 0.4, -w * 0.6], [x0 + 0.9, top - length, w * 0.5], 'body')   # the point
-    m.box([x0 + 0.15, top - 0.35, -w - 0.08], [x0 + 1.05, top, w + 0.08], 'welt')                 # the throat
-    m.box([x0 + 0.2, top, -w - 0.1], [x0 + 0.35, top + 1.3, -w + 0.15], 'strap')                 # retaining strap
-    m.box([x0 + 0.2, top + 1.15, -w - 0.1], [x0 + 1.1, top + 1.4, w + 0.1], 'strap')
-    m.box([x0 + 1.1, top + 1.18, -0.15], [x0 + 1.18, top + 1.37, 0.15], 'snap')
+    box(-w, w, top - length, top, 0.2, 1.0, 'body')
+    box(-w * 0.6, w * 0.5, top - length - 0.4, top - length, 0.3, 0.9, 'body')     # the point
+    box(-w - 0.08, w + 0.08, top - 0.35, top, 0.15, 1.05, 'welt')                   # the throat
+    box(-w - 0.1, -w + 0.15, top, top + 1.3, 0.2, 0.35, 'strap')                    # retaining strap
+    box(-w - 0.1, w + 0.1, top + 1.15, top + 1.4, 0.2, 1.1, 'strap')
+    box(-0.15, 0.15, top + 1.18, top + 1.37, 1.1, 1.18, 'snap')
+    return box
 
 
 def build_knife(m):
-    build_sheath(m, 5.0, 1.3, 0.4)
+    build_sheath(m, 5.0, 1.3, 0.4, 2.8, True)
 
 
 def build_machete(m):
-    build_sheath(m, 7.6, 1.9, 1.1)
-    x0 = G.HALF_X + G.STRAP
-    m.box([x0 + 0.3, -4.6, -0.95], [x0 + 1.1, -3.4, 0.95], 'welt')       # a sharpener pocket over the face
+    box = build_sheath(m, 7.6, 1.9, 1.1, 2.6, False)
+    box(-0.95, 0.95, -4.6, -3.4, 0.3, 1.1, 'welt')                   # a sharpener pocket over the face
 
 
 HOLSTERS = [

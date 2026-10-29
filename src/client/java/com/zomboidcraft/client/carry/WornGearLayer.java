@@ -123,15 +123,16 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             ItemStack holster = worn.get(GearStore.HOLSTER), sheath = worn.get(GearStore.SHEATH);
             // the handgun sits down in its holster's pouch (gen_holsters.py), its grip out of the top
             if (holster.is(com.zomboidcraft.ModItems.SHOULDER_HOLSTER)) {
-                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, 3.1f, 5.7f, -2.55f, 5.5f);
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, 4.1f, 6.5f, -2.55f, 5.5f);
             } else if (holster.is(com.zomboidcraft.ModItems.THIGH_HOLSTER)) {
-                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, true, -4.9f, 16.2f, -0.1f, 6.5f);
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, true, -3.8f, 16.2f, -0.1f, 6.5f);
             } else {
                 hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, -5.1f, 11.5f, -0.4f, 6.5f);
             }
             boolean machete = sheath.is(com.zomboidcraft.ModItems.MACHETE_SHEATH);
-            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1, false, 4.7f, machete ? 12.6f : 11.5f, 0.2f,
-                    machete ? 10f : 7.5f);
+            // a knife cross-draw on the front of the left hip, a machete behind it (gen_holsters.py)
+            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1, false, machete ? 2.6f : 2.8f,
+                    machete ? 12.6f : 11.5f, machete ? 2.9f : -2.9f, machete ? 10f : 7.5f);
         }
     }
 
