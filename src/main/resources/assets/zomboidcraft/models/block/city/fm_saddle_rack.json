@@ -1,0 +1,269 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "fm_leather": "zomboidcraft:block/city/fm_leather",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/cp_timber_h"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        6,
+        10
+      ],
+      "to": [
+        10,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        7,
+        4
+      ],
+      "to": [
+        13,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_leather"
+        },
+        "south": {
+          "texture": "#fm_leather"
+        },
+        "east": {
+          "texture": "#fm_leather"
+        },
+        "west": {
+          "texture": "#fm_leather"
+        },
+        "up": {
+          "texture": "#fm_leather"
+        },
+        "down": {
+          "texture": "#fm_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        10,
+        6
+      ],
+      "to": [
+        11,
+        11.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_leather"
+        },
+        "south": {
+          "texture": "#fm_leather"
+        },
+        "east": {
+          "texture": "#fm_leather"
+        },
+        "west": {
+          "texture": "#fm_leather"
+        },
+        "up": {
+          "texture": "#fm_leather"
+        },
+        "down": {
+          "texture": "#fm_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        5
+      ],
+      "to": [
+        5,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_leather"
+        },
+        "south": {
+          "texture": "#fm_leather"
+        },
+        "east": {
+          "texture": "#fm_leather"
+        },
+        "west": {
+          "texture": "#fm_leather"
+        },
+        "up": {
+          "texture": "#fm_leather"
+        },
+        "down": {
+          "texture": "#fm_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        5,
+        5
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_leather"
+        },
+        "south": {
+          "texture": "#fm_leather"
+        },
+        "east": {
+          "texture": "#fm_leather"
+        },
+        "west": {
+          "texture": "#fm_leather"
+        },
+        "up": {
+          "texture": "#fm_leather"
+        },
+        "down": {
+          "texture": "#fm_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        2,
+        6
+      ],
+      "to": [
+        8.7,
+        7,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        6,
+        14.5
+      ],
+      "to": [
+        14,
+        14,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_leather"
+        },
+        "south": {
+          "texture": "#fm_leather"
+        },
+        "east": {
+          "texture": "#fm_leather"
+        },
+        "west": {
+          "texture": "#fm_leather"
+        },
+        "up": {
+          "texture": "#fm_leather"
+        },
+        "down": {
+          "texture": "#fm_leather"
+        }
+      }
+    },
+    {
+      "from": [
+        12.5,
+        13,
+        14.5
+      ],
+      "to": [
+        14.5,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

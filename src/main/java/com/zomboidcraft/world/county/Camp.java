@@ -22,9 +22,14 @@ import java.util.SplittableRandom;
  * </ul>
  */
 final class Camp {
-    /** Floodlights: mostly a cold white, some dead. */
+    /** A floodlight on its bracket, looking -z: stands on a beam or bolts to the wall behind it; some dead. */
     static String flood(SplittableRandom rng, double dead) {
-        return rng.nextDouble() < dead ? "minecraft:smooth_quartz" : "minecraft:sea_lantern";
+        return lamp(rng, dead, "cp_flood", "north");
+    }
+
+    /** One of the camp kit's lamps (cp_flood, cp_flood_hang, cp_flood_bar) facing that way, lit or dead. */
+    static String lamp(SplittableRandom rng, double dead, String kind, String facing) {
+        return kind + (rng.nextDouble() < dead ? "" : "_lit") + "[facing=" + facing + "]";
     }
 
     private final Placer p;
@@ -157,7 +162,7 @@ final class Camp {
             }
         }
         if (chance() < 0.6) {
-            p.setIfAir(x, 1, z, any("crate", "trash_bag[facing=north]", "minecraft:barrel[facing=up,loot=storage]"));
+            p.setIfAir(x, 1, z, any("crate", "trash_bag[facing=north]", "bunk_crate_ammo[facing=north]"));
         }
         if (chance() < 0.3 + hit * 0.4) {
             p.setIfAir(x - 1, 1, z + 1, "blood_splat");
@@ -167,63 +172,88 @@ final class Camp {
     // ------------------------------------------------------------------ towers and lights
 
     /**
-     * A watchtower over (x, z) to (x + 4, z + 4): four timber legs braced, a ladder, a floor at 7
-     * with sandbags round it, a tin roof, and a floodlight on the corner facing out (-z).
+     * A watchtower over (x, z) to (x + 4, z + 4): four timber legs X-braced in two tiers, a plank
+     * deck at 7 with sandbags round it, the ladder up the back through a hatch, a tin roof on its
+     * corner posts, a floodlight hung under the eave looking out (-z).
      */
     void watchtower(int x, int z) {
         int deck = 7;
-        for (int[] c : new int[][] {{0, 0}, {4, 0}, {0, 4}, {4, 4}}) {
-            for (int y = 1; y < deck; y++) {
-                p.set(x + c[0], y, z + c[1], "minecraft:stripped_spruce_log[axis=y]");
-            }
-            for (int y = deck + 1; y <= deck + 3; y++) {
-                p.set(x + c[0], y, z + c[1], "minecraft:spruce_fence");
+        int[][] corner = {{0, 0}, {4, 0}, {4, 4}, {0, 4}};
+        String[] turn = {"north", "east", "south", "west"};
+        for (int c = 0; c < 4; c++) {
+            String f = "[facing=" + turn[c] + "]";
+            int cx = x + corner[c][0], cz = z + corner[c][1];
+            for (int y = 1; y <= deck + 3; y++) {
+                p.set(cx, y, cz, (y == deck ? "cp_tw_deck_post" : "cp_tw_leg") + f);
             }
         }
-        for (int i = 1; i < 4; i++) {
-            p.set(x + i, 3, z, "minecraft:spruce_fence");
-            p.set(x + i, 3, z + 4, "minecraft:spruce_fence");
-            p.set(x, 3, z + i, "minecraft:spruce_fence");
-            p.set(x + 4, 3, z + i, "minecraft:spruce_fence");
-        }
-        for (int i = 0; i <= 4; i++) {
-            for (int k = 0; k <= 4; k++) {
-                p.set(x + i, deck, z + k, "minecraft:spruce_planks");
-                p.set(x + i, deck + 4, z + k, "corrugated_grey");
-                boolean edge = i == 0 || k == 0 || i == 4 || k == 4;
-                boolean corner = (i == 0 || i == 4) && (k == 0 || k == 4);
-                if (edge && !corner && !(i == 2 && k == 4)) {
-                    p.set(x + i, deck + 1, z + k, "sandbags[facing=" + (k == 0 || k == 4 ? "north" : "east") + "]");
+        // the X braces on each face, in tiers three high, the girt along the top of each tier
+        for (int c = 0; c < 4; c++) {
+            for (int u = 1; u <= 3; u++) {
+                int[] at = switch (c) {
+                    case 0 -> new int[] {x + u, z};
+                    case 1 -> new int[] {x + 4, z + u};
+                    case 2 -> new int[] {x + 4 - u, z + 4};
+                    default -> new int[] {x, z + 4 - u};
+                };
+                if (c == 2 && u == 2) {
+                    continue;  // the ladder's side
+                }
+                for (int t = 1; t < deck; t += 3) {
+                    for (int v = 0; v < 3; v++) {
+                        boolean up = u - 1 == v, down = 3 - u == v;
+                        String b = up && down ? "cp_tw_brace_x" : up ? "cp_tw_brace_a" : down ? "cp_tw_brace_b" : null;
+                        if (v == 2 && !(up && down)) {
+                            b = b == null ? "cp_tw_girt" : b + "_g";
+                        }
+                        if (b != null && chance() > hit * 0.08) {
+                            p.set(at[0], t + v, at[1], b + "[facing=" + turn[c] + "]");
+                        }
+                    }
                 }
             }
         }
-        // the ladder up the back on its own post, onto the deck through the gap in the sandbags
-        for (int y = 1; y < deck; y++) {
-            p.set(x + 2, y, z + 4, "minecraft:stripped_spruce_log[axis=y]");
+        for (int i = 0; i <= 4; i++) {
+            for (int k = 0; k <= 4; k++) {
+                boolean edge = i == 0 || k == 0 || i == 4 || k == 4;
+                boolean corner4 = (i == 0 || i == 4) && (k == 0 || k == 4);
+                if (!corner4 && !(i == 2 && k == 4)) {
+                    p.set(x + i, deck, z + k, "cp_tw_deck");
+                }
+                if (edge && !corner4 && !(i == 2 && k == 4)) {
+                    p.set(x + i, deck + 1, z + k, "sandbags[facing=" + (k == 0 || k == 4 ? "north" : "east") + "]");
+                }
+                String sides = (k == 0 ? "n" : k == 4 ? "s" : "") + (i == 0 ? "w" : i == 4 ? "e" : "");
+                String roof = "cp_tw_roof" + (sides.isEmpty() ? "" : "_" + sides);
+                if (chance() > hit * 0.12) {
+                    p.set(x + i, deck + 4, z + k, roof);
+                }
+            }
         }
+        // the ladder up the back face, through the hatch in the deck and the gap in the sandbags
         for (int y = 1; y <= deck; y++) {
-            p.set(x + 2, y, z + 5, "minecraft:ladder[facing=south]");
+            p.set(x + 2, y, z + 4, "ladder[facing=north]");
         }
-        // the floodlight on its bracket, looking out
-        p.set(x + 1, deck + 3, z - 1, flood(rng, 0.25 + hit * 0.3));
-        p.set(x + 1, deck + 3, z, "minecraft:iron_bars");
+        // the floodlight under the eave, looking out; on some a second one over the side
+        p.set(x + 2, deck + 3, z, lamp(rng, 0.25 + hit * 0.3, "cp_flood_hang", "north"));
         if (chance() < 0.4) {
-            p.set(x + 3, deck + 1, z + 2, "minecraft:barrel[facing=up,loot=storage]");
+            p.set(x + 4, deck + 3, z + 2, lamp(rng, 0.25 + hit * 0.3, "cp_flood_hang", "east"));
+        }
+        if (chance() < 0.5) {
+            p.set(x + 3, deck + 1, z + 2, "bunk_crate_ammo[facing=west]");
         }
         if (chance() < hit * 0.5) {
             p.set(x + 1, deck + 1, z + 1, "blood_splat");
         }
     }
 
-    /** A floodlight mast: a steel pole h high with a bar of two lamps facing -z. */
+    /** A floodlight mast: a steel pole h high, the crossbar of two lamps on top facing -z. */
     void floodMast(int x, int z, int h) {
         for (int y = 1; y < h; y++) {
             p.set(x, y, z, "streetlight_pole");
         }
         p.set(x, 0, z, "concrete_dark");
-        p.set(x - 1, h, z, flood(rng, 0.35 + hit * 0.3));
-        p.set(x, h, z, "steel_olive");
-        p.set(x + 1, h, z, flood(rng, 0.35 + hit * 0.3));
+        p.set(x, h, z, lamp(rng, 0.35 + hit * 0.3, "cp_flood_bar", "north"));
     }
 
     /**
@@ -240,25 +270,26 @@ final class Camp {
             b.window(3, 2, i, "east", 1, null);
         }
         b.door(1, 1, 3, "flat_door", "south");
-        b.flat(0, 0, 3, 3, 3, "concrete_panel", 0, "minecraft:smooth_stone_slab[type=bottom]");
+        b.flat(0, 0, 3, 3, 3, "concrete_panel", 0, "stone_trim");
         Placer s = p.shifted(x, 0, z);
         s.set(2, 1, 1, "desk[facing=north]");
         s.set(2, 2, -1, flood(rng, 0.4));
     }
 
     /**
-     * A barrier arm at (x, z) across the lane of length len along x: the striped arm on its
-     * post, raised (standing up) or down across the road.
+     * A barrier at (x, z) across the lane of length len along x: the yellow housing, the striped
+     * arm on its rest post, or raised standing up over the housing.
      */
     void boom(int x, int z, int len, boolean down) {
-        p.set(x, 1, z, "steel_yellow");
+        p.set(x, 1, z, "cp_boom_post[facing=north]");
         if (down) {
             for (int i = 1; i <= len; i++) {
-                p.set(x + i, 1, z, i % 2 == 0 ? "steel_red" : "minecraft:white_concrete");
+                p.set(x + i, 1, z, (i == len ? "cp_boom_tip" : "cp_boom_arm") + "[facing=north]");
             }
         } else {
-            for (int y = 2; y <= Math.min(len, 6); y++) {
-                p.set(x, y, z, y % 2 == 0 ? "steel_red" : "minecraft:white_concrete");
+            int top = Math.min(len, 6);
+            for (int y = 2; y <= top; y++) {
+                p.set(x, y, z, (y == top ? "cp_boom_cap" : "cp_boom_up") + "[facing=north]");
             }
         }
     }
@@ -315,8 +346,13 @@ final class Camp {
             for (int[] side : new int[][] {{1, 2}, {bd - 2, bd - 3}}) {
                 if (chance() < 0.85) {
                     String f = side[0] == 1 ? "south" : "north";
-                    p.set(x, 1, side[0], "minecraft:green_bed[part=head,facing=" + (side[0] == 1 ? "north" : "south") + "]");
-                    p.set(x, 1, side[1], "minecraft:green_bed[part=foot,facing=" + (side[0] == 1 ? "north" : "south") + "]");
+                    String g = side[0] == 1 ? "south" : "north";
+                    p.set(x, 1, side[0], "bunk_bed_head[facing=" + g + "]");
+                    p.set(x, 1, side[1], "bunk_bed_foot[facing=" + g + "]");
+                    if (chance() < 0.7) {
+                        p.set(x, 2, side[0], "bunk_bed_head_top[facing=" + g + "]");
+                        p.set(x, 2, side[1], "bunk_bed_foot_top[facing=" + g + "]");
+                    }
                     if (chance() < 0.4) {
                         p.set(x + 1, 1, side[0], "filing_cabinet[facing=" + f + "]");
                     }
@@ -352,7 +388,7 @@ final class Camp {
         b.doors(cx - 1, 1, 0, "shop_door", "north");
         for (int x = cx - 3; x <= cx + 2; x++) {
             for (int z = -3; z <= -1; z++) {
-                p.set(x, 4, z, "minecraft:smooth_stone_slab[type=top]");
+                p.set(x, 4, z, "stone_trim");
                 p.set(x, 0, z, "floor_concrete");
             }
         }
@@ -361,16 +397,15 @@ final class Camp {
                 p.set(x, y, -3, "concrete_panel");
             }
         }
-        b.flat(0, 0, bw - 1, bd - 1, 8, "concrete_panel", 1, "minecraft:smooth_stone_slab[type=bottom]");
+        b.flat(0, 0, bw - 1, bd - 1, 8, "concrete_panel", 1, "stone_trim");
         // antennas and a dish on the roof
         for (int i = 0; i < 3; i++) {
             int ax = 2 + rng.nextInt(Math.max(1, bw - 4)), az = 2 + rng.nextInt(Math.max(1, bd - 4));
             for (int y = 9; y < 9 + 3 + rng.nextInt(5); y++) {
-                p.set(ax, y, az, "minecraft:iron_bars");
+                p.set(ax, y, az, "ext_mast");
             }
         }
-        p.set(bw - 4, 9, bd - 4, "minecraft:smooth_quartz");
-        p.set(bw - 4, 10, bd - 4, "minecraft:smooth_quartz_slab[type=bottom]");
+        p.set(bw - 4, 9, bd - 4, "tv_dish_small[facing=" + any("north", "east", "south", "west") + "]");
         // desks and cabinets in rows behind the windows, a stair up at the back
         for (int y : new int[] {1, 5}) {
             for (int x = 2; x < bw - 2; x += 4) {
@@ -409,7 +444,7 @@ final class Camp {
                     continue;
                 }
                 if (chance() < 0.9) {
-                    p.set(x, 1, z, "minecraft:spruce_slab[type=top]");
+                    p.set(x, 1, z, "bunk_mess_table[axis=x]");
                 }
                 if (chance() < 0.3) {
                     p.set(x, 1, z - 1, "office_chair[facing=south]");
@@ -417,7 +452,7 @@ final class Camp {
             }
         }
         for (int x = 2; x < bw - 2; x++) {
-            p.set(x, 1, bd - 3, x % 5 == 0 ? "minecraft:smoker[facing=north]" : "minecraft:smooth_stone_slab[type=top]");
+            p.set(x, 1, bd - 3, x % 5 == 0 ? "bunk_range[facing=north]" : "store_counter[facing=north]");
         }
         b.lights(1, 1, bw - 2, bd - 2, 4, 0);
         b.mess(1, 1, bw - 2, bd - 2, 1, 0.08 + hit * 0.06);
@@ -458,7 +493,7 @@ final class Camp {
         }
         for (int i = 0; i < 3; i++) {
             p.setIfAir(x + 2 + rng.nextInt(2 * r - 3), 1, z + 3 + rng.nextInt(Math.max(1, len - 6)),
-                    any("crate", "minecraft:barrel[facing=up,loot=storage]", "tire[axis=x]", "minecraft:anvil[facing=north]"));
+                    any("crate", "bunk_crate_ammo[facing=north]", "tire_stack", "bunk_jerry_cans[facing=north]"));
         }
         p.set(x + r, r + 1, z - 1, flood(rng, 0.4));
     }
@@ -483,7 +518,7 @@ final class Camp {
             }
         }
         for (int i = 0; i < 4; i++) {
-            p.setIfAir(x + rng.nextInt(len), 1, z + 8, any("tire[axis=x]", "minecraft:barrel[facing=up,loot=storage]", "crate"));
+            p.setIfAir(x + rng.nextInt(len), 1, z + 8, any("tire_stack", "barrel", "crate"));
         }
     }
 
@@ -496,11 +531,11 @@ final class Camp {
                 double dist = Math.hypot(i - 7, k - 7);
                 String m = chance() < 0.12 ? "floor_concrete_crack" : "floor_concrete";
                 if (dist >= 6 && dist < 7) {
-                    m = "minecraft:yellow_concrete";
+                    m = "cp_pad_yellow";
                 }
                 boolean h = (i == 4 || i == 10) && k >= 4 && k <= 10 || k == 7 && i > 4 && i < 10;
                 if (h) {
-                    m = "minecraft:white_concrete";
+                    m = "cp_pad_white";
                 }
                 p.set(x + i, 0, z + k, m);
                 p.set(x + i, 1, z + k, "air");
@@ -512,75 +547,18 @@ final class Camp {
     }
 
     /**
-     * A transport helicopter with its nose at -z over (cx, cz): the olive body with its cockpit
-     * glass and open doors, the tail boom and fin, the rotor head and four blades. A wreck is
-     * burnt black on its side of the pad, blades snapped, the tail broken off.
+     * The helicopter on the pad with its nose at -z over (cx, cz): the attack helicopter left
+     * where it landed, or what's left of it, burnt out with its wreckage thrown round the pad.
      */
     void helicopter(int cx, int cz, boolean wreck) {
-        String hull = wreck ? any("minecraft:blackstone", "minecraft:polished_blackstone") : "steel_olive";
-        String dark = wreck ? "minecraft:black_concrete" : "minecraft:gray_concrete";
-        // cabin: 3 wide, 3 high, 7 long, doors open amidships
-        for (int k = 0; k < 7; k++) {
-            for (int i = -1; i <= 1; i++) {
-                for (int y = 1; y <= 3; y++) {
-                    boolean side = i != 0;
-                    boolean door = side && y <= 2 && k >= 2 && k <= 4;
-                    boolean inside = !side && y <= 2 && k > 0;
-                    if (door || inside) {
-                        p.set(cx + i, y, cz + k, "air");
-                        continue;
-                    }
-                    p.set(cx + i, y, cz + k, wreck && chance() < 0.25 ? "debris_chunk" : hull);
-                }
-            }
-        }
-        // the cockpit: a sloped glass nose
-        for (int i = -1; i <= 1; i++) {
-            p.set(cx + i, 1, cz - 1, hull);
-            p.set(cx + i, 2, cz - 1, wreck ? "air" : "minecraft:black_stained_glass");
-            p.set(cx + i, 1, cz - 2, dark);
-        }
-        p.set(cx, 3, cz - 1, hull);
-        // tail boom, fin and the little rotor
-        int tail = wreck ? 4 : 8;
-        for (int k = 7; k < 7 + tail; k++) {
-            p.set(cx, 2, cz + k, hull);
-            if (k < 9) {
-                p.set(cx, 3, cz + k, hull);
-            }
-        }
-        if (!wreck) {
-            p.set(cx, 3, cz + 14, hull);
-            p.set(cx, 4, cz + 14, hull);
-            p.set(cx, 5, cz + 14, hull);
-            p.set(cx + 1, 4, cz + 14, "minecraft:iron_bars");
-            p.set(cx + 1, 3, cz + 15, "minecraft:iron_bars");
-            p.set(cx + 1, 5, cz + 13, "minecraft:iron_bars");
-        } else {
-            // the broken tail lying off to one side
-            for (int k = 0; k < 5; k++) {
-                p.set(cx + 3 + k / 3, 1, cz + 12 + k, hull);
-            }
-        }
-        // rotor head and blades
-        p.set(cx, 4, cz + 3, dark);
-        p.set(cx, 5, cz + 3, "minecraft:iron_bars");
-        int blade = wreck ? 3 : 8;
-        for (int s = 1; s <= blade; s++) {
-            String b = "minecraft:polished_blackstone_slab[type=bottom]";
-            p.set(cx + s, 6, cz + 3, b);
-            p.set(cx - s, 6, cz + 3, b);
-            if (!wreck || s < 2) {
-                p.set(cx, 6, cz + 3 + s, b);
-                p.set(cx, 6, cz + 3 - s, b);
-            }
-        }
+        String state = wreck ? (chance() < 0.5 ? "burnt" : "wrecked") : (chance() < 0.75 ? "abandoned" : "usable");
+        p.vehicle(cx + 0.5, 1, cz + 4, 180, "=heli_hornbill@" + state, rng.nextLong());
         if (wreck) {
-            for (int i = 0; i < 12; i++) {
-                int x = cx - 5 + rng.nextInt(11), z = cz - 4 + rng.nextInt(20);
-                p.setIfAir(x, 1, z, chance() < 0.5 ? "debris_chunk" : "minecraft:polished_blackstone_slab[type=bottom]");
-                if (chance() < 0.6) {
-                    p.set(x, 0, z, chance() < 0.5 ? "minecraft:black_concrete_powder" : "minecraft:coal_block");
+            for (int i = 0; i < 14; i++) {
+                int x = cx - 6 + rng.nextInt(13), z = cz - 5 + rng.nextInt(20);
+                p.setIfAir(x, 1, z, chance() < 0.55 ? "debris_chunk[facing=" + any("north", "east", "south", "west") + "]" : "scorch");
+                if (chance() < 0.4) {
+                    p.set(x, 0, z, "burnt_ground");
                 }
             }
         }
@@ -597,7 +575,7 @@ final class Camp {
                     int h = 1 + rng.nextInt(3);
                     for (int y = 1; y <= h; y++) {
                         p.set(x + i, y, z + k, chance() < 0.65 ? "crate" : chance() < 0.5 ? "cardboard_box"
-                                : "minecraft:barrel[facing=up,loot=storage]");
+                                : "bunk_crate_ammo[facing=north]");
                     }
                 }
                 if (chance() > hit * 0.3) {
@@ -607,30 +585,39 @@ final class Camp {
         }
         for (int[] c : new int[][] {{-1, -1}, {w, -1}, {-1, d}, {w, d}, {w / 2, -1}, {w / 2, d}}) {
             for (int y = 1; y <= 4; y++) {
-                p.set(x + c[0], y, z + c[1], "minecraft:spruce_fence");
+                p.set(x + c[0], y, z + c[1], "tn_pole");
             }
         }
     }
 
-    /** Fuel tanks in a row along x from (x, z), round, white, in an earth berm with a pump. */
+    /**
+     * Fuel bladders in a row along x from (x, z), seven blocks square each, black pillows in an
+     * earth berm with the hose run to the pump.
+     */
     void fuelTanks(int x, int z, int n) {
         int r = 3;
+        String[] turn = {"north", "east", "south", "west"};
         for (int t = 0; t < n; t++) {
             int cx = x + r + 1 + t * (2 * r + 3), cz = z + r + 1;
+            boolean slack = chance() < 0.3 + hit * 0.3;  // drained, or holed and run dry
             for (int dx = -r; dx <= r; dx++) {
                 for (int dz = -r; dz <= r; dz++) {
-                    double dist = Math.hypot(dx, dz);
-                    if (dist <= r + 0.3) {
-                        for (int y = 1; y <= 5; y++) {
-                            p.set(cx + dx, y, cz + dz, dist > r - 0.8 || y == 5 ? (y == 5 ? "minecraft:smooth_quartz_slab[type=bottom]"
-                                    : chance() < 0.15 ? "minecraft:light_gray_concrete" : "minecraft:white_concrete") : "air");
-                        }
+                    boolean ex = Math.abs(dx) == r, ez = Math.abs(dz) == r;
+                    String v = slack ? "_slack" : "", b;
+                    if (ex && ez) {
+                        b = "cp_bladder_c" + v + "[facing=" + turn[dz < 0 ? (dx < 0 ? 0 : 1) : (dx > 0 ? 2 : 3)] + "]";
+                    } else if (ez || ex) {
+                        b = "cp_bladder_e" + v + "[facing=" + (dz < 0 && ez ? "north" : dz > 0 && ez ? "south" : dx > 0 ? "east" : "west") + "]";
+                    } else if (dx == 0 && dz == 0) {
+                        b = "cp_bladder_valve" + v + "[facing=north]";
+                    } else {
+                        b = (Math.abs(dx) == r - 1 || Math.abs(dz) == r - 1 ? "cp_bladder_ring" : "cp_bladder") + v;
                     }
+                    p.set(cx + dx, 1, cz + dz, b);
                 }
             }
-            for (int y = 1; y <= 6; y++) {
-                p.set(cx + r + 1, y, cz, "minecraft:ladder[facing=east]");
-            }
+            // the hose from the valve, over the berm to the pump
+            p.setIfAir(cx, 1, z - 2, "tn_cable[axis=z]");
         }
         int bw = n * (2 * r + 3) + 1, bd = 2 * r + 3;
         for (int i = -1; i <= bw; i++) {
@@ -642,38 +629,37 @@ final class Camp {
             p.set(x + bw, 1, z + k, "minecraft:coarse_dirt");
         }
         p.set(x + bw / 2, 1, z - 3, "gas_pump[facing=north]");
+        p.set(x + bw / 2 + 1, 1, z - 3, "tn_genset[facing=north]");
         p.set(x + 1, 1, z - 2, "sign_post");
     }
 
-    /** A lattice radio mast h high at (x, z): two-by-two of bars, braced, a dead red lamp on top. */
+    /**
+     * A lattice radio mast h high at (x, z): sections in the red and white aviation bands, the head
+     * with its whips and yagi, the beacon on top (mostly dead), the equipment cabinet at its foot.
+     */
     void mast(int x, int z, int h) {
         for (int y = 1; y <= h; y++) {
-            for (int[] c : new int[][] {{0, 0}, {1, 0}, {0, 1}, {1, 1}}) {
-                p.set(x + c[0], y, z + c[1], y % 4 == 0 ? "steel_girder" : "minecraft:iron_bars");
-            }
+            p.set(x, y, z, ((y - 1) / 3) % 2 == 0 ? "cp_mast_r" : "cp_mast_w");
         }
-        p.set(x, h + 1, z, "minecraft:iron_bars");
-        p.set(x, h + 2, z, "minecraft:iron_bars");
-        p.set(x, h + 3, z, "minecraft:red_concrete");
-        p.set(x + 1, 0, z + 1, "concrete_dark");
-        p.set(x - 1, 1, z + 3, "minecraft:smooth_stone");
+        p.set(x, h + 1, z, "cp_mast_top[facing=" + any("north", "east", "south", "west") + "]");
+        p.set(x, h + 2, z, chance() < 0.25 ? "tv_beacon_lit" : "tv_beacon");
+        p.set(x, 0, z, "concrete_dark");
+        p.set(x - 1, 1, z + 2, "cp_cabinet[facing=north]");
+        for (int k = 1; k <= 2; k++) {
+            p.setIfAir(x, 1, z + k, "tn_cable[axis=z]");
+        }
     }
 
-    /** A row of n portable toilets along x from (x, z), doors facing -z, one on its side. */
+    /** A row of n portable toilets along x from (x, z), doors facing -z, one blown over on its back. */
     void toilets(int x, int z, int n) {
         for (int t = 0; t < n; t++) {
             int tx = x + t * 2;
             if (chance() < 0.12 + hit * 0.2) {
-                p.set(tx, 1, z, "minecraft:blue_concrete");
-                p.set(tx, 1, z + 1, "minecraft:blue_concrete");
-                continue;  // knocked over
+                p.set(tx, 1, z, "cp_porta_down[facing=north]");
+                continue;
             }
-            p.set(tx, 1, z, "minecraft:dark_oak_door[facing=south,half=lower,hinge=left,open=" + (chance() < 0.4) + "]");
-            p.set(tx, 2, z, "minecraft:dark_oak_door[facing=south,half=upper,hinge=left,open=false]");
-            p.set(tx, 3, z, "minecraft:blue_concrete");
-            p.set(tx, 1, z + 1, "minecraft:blue_concrete");
-            p.set(tx, 2, z + 1, "minecraft:blue_concrete");
-            p.set(tx, 3, z + 1, "minecraft:white_concrete");
+            p.set(tx, 1, z, "st_porta_lo[facing=north]");
+            p.set(tx, 2, z, "st_porta_hi[facing=north]");
         }
     }
 
@@ -687,16 +673,17 @@ final class Camp {
                 double dist = Math.hypot(dx, dz) + chance() * 0.8;
                 int x = cx + dx, z = cz + dz;
                 if (dist < r) {
-                    p.set(x, 0, z, any("minecraft:soul_soil", "minecraft:black_concrete_powder", "minecraft:gray_concrete_powder",
-                            "minecraft:coal_block"));
+                    p.set(x, 0, z, any("burnt_ground", "burnt_ground", "minecraft:coarse_dirt"));
                     p.set(x, 1, z, "air");
                     double q = chance();
                     if (q < 0.18) {
-                        p.set(x, 1, z, "minecraft:bone_block[axis=" + (chance() < 0.5 ? "x" : "z") + "]");
+                        p.set(x, 1, z, "bunk_bodybag[facing=" + any("north", "east", "south", "west") + "]");
                     } else if (q < 0.3) {
                         p.set(x, 1, z, "trash_bag[facing=" + any("north", "east") + "]");
                     } else if (q < 0.36) {
                         p.set(x, 1, z, "debris_chunk");
+                    } else if (q < 0.6) {
+                        p.set(x, 1, z, "scorch");
                     }
                 } else if (dist < r + 1.5) {
                     p.set(x, 0, z, "minecraft:coarse_dirt");
@@ -706,7 +693,7 @@ final class Camp {
         }
         p.set(cx, 1, cz, "minecraft:campfire[lit=" + (chance() < 0.2) + "]");
         for (int i = 0; i < 3; i++) {
-            p.setIfAir(cx + r + 2, 1, cz - 1 + i, "minecraft:barrel[facing=up]");
+            p.setIfAir(cx + r + 2, 1, cz - 1 + i, i == 1 ? "bunk_jerry_cans[facing=west]" : "barrel");
         }
     }
 
@@ -720,7 +707,7 @@ final class Camp {
                 p.set(x + i, 0, z + k, "air");
                 p.set(x + i, -1, z + k, chance() < 0.3 ? "minecraft:white_concrete_powder" : "minecraft:coarse_dirt");
                 if (i < len * 0.7 && chance() < 0.75) {
-                    p.set(x + i, -1, z + k, "trash_bag[facing=" + (k % 2 == 0 ? "east" : "north") + "]");
+                    p.set(x + i, -1, z + k, "bunk_bodybag[facing=" + (k % 2 == 0 ? "east" : "west") + "]");
                     p.set(x + i, -2, z + k, "minecraft:coarse_dirt");
                 }
             }
@@ -736,19 +723,17 @@ final class Camp {
                 p.set(x + i, 0, z + k, "minecraft:rooted_dirt");
             }
             if (i % 2 == 0) {
-                p.set(x + i, 1, z + 1, "minecraft:birch_fence");
+                p.set(x + i, 1, z + 1, "cp_stake");
             }
         }
     }
 
-    /** A grave: a mound and a cross of two sticks, a helmet on some. */
+    /** A grave: a mound and a cross of two battens lashed together, a helmet hung on some. */
     void grave(int x, int z) {
         p.set(x, 0, z, "minecraft:rooted_dirt");
         p.set(x, 0, z + 1, "minecraft:rooted_dirt");
-        p.set(x, 1, z - 1, "minecraft:birch_fence");
-        if (chance() < 0.4) {
-            p.set(x, 2, z - 1, "minecraft:birch_button[face=floor,facing=north]");
-        }
+        p.set(x, 1, z, "ch_grave_mound");
+        p.set(x, 1, z - 1, (chance() < 0.4 ? "cp_grave_helmet" : "cp_grave_cross") + "[facing=north]");
         if (chance() < 0.3) {
             p.setIfAir(x, 1, z + 1, chance() < 0.5 ? "minecraft:poppy" : "minecraft:dandelion");
         }
@@ -790,10 +775,10 @@ final class Camp {
                     // hurdles: logs across on posts, two of them
                     for (int h = 0; h < 2; h++) {
                         for (int k : new int[] {1, 5, 9}) {
-                            p.set(a + h * 3, 1, z + k, "minecraft:spruce_fence");
+                            p.set(a + h * 3, 1, z + k, "cp_post");
                         }
                         for (int k = 1; k <= 9; k++) {
-                            p.set(a + h * 3, 2, z + k, "minecraft:stripped_spruce_log[axis=z]");
+                            p.set(a + h * 3, 2, z + k, "cp_log[facing=east]");
                         }
                     }
                 }
@@ -801,32 +786,32 @@ final class Camp {
                     // the wall, a platform behind to drop off
                     for (int k = 1; k <= 9; k++) {
                         for (int y = 1; y <= 3; y++) {
-                            p.set(a + 1, y, z + k, chance() < 0.06 * (1 + hit) ? "air" : "minecraft:spruce_planks");
+                            p.set(a + 1, y, z + k, chance() < 0.06 * (1 + hit) ? "air" : (y == 3 ? "cp_wall_top" : "cp_wall") + "[facing=west]");
                         }
-                        p.set(a + 2, 1, z + k, "minecraft:spruce_slab[type=bottom]");
+                        p.set(a + 2, 1, z + k, "cp_step[facing=east]");
                     }
                 }
                 case 2 -> {
                     // the tyre run
                     for (int i2 = 0; i2 < 5; i2++) {
                         for (int k = 1; k <= 9; k += 2) {
-                            p.set(a + i2, 1, z + k + (i2 % 2), "tire[axis=z]");
+                            p.set(a + i2, 1, z + k + (i2 % 2), "tire_flat");
                         }
                     }
                 }
                 case 3 -> {
-                    // monkey bars on four posts
-                    for (int[] c : new int[][] {{0, 3}, {5, 3}, {0, 7}, {5, 7}}) {
-                        for (int y = 1; y <= 4; y++) {
-                            p.set(a + c[0], y, z + c[1], "minecraft:stripped_spruce_log[axis=y]");
+                    // monkey bars, two runs, each between its pairs of posts
+                    for (int run : new int[] {3, 7}) {
+                        for (int[] c : new int[][] {{0, run - 1}, {5, run - 1}, {0, run + 1}, {5, run + 1}}) {
+                            for (int y = 1; y <= 4; y++) {
+                                p.set(a + c[0], y, z + c[1], "cp_post");
+                            }
                         }
-                    }
-                    for (int i2 = 1; i2 < 5; i2++) {
-                        p.set(a + i2, 4, z + 3, "minecraft:iron_bars");
-                        p.set(a + i2, 4, z + 7, "minecraft:iron_bars");
-                    }
-                    for (int k = 4; k < 7; k += 2) {
-                        p.set(a, 4, z + k, "minecraft:iron_bars");
+                        p.set(a, 4, z + run, "cp_bars_end[facing=north]");
+                        p.set(a + 5, 4, z + run, "cp_bars_end[facing=south]");
+                        for (int i2 = 1; i2 < 5; i2++) {
+                            p.set(a + i2, 4, z + run, "cp_bars[facing=north]");
+                        }
                     }
                 }
                 case 4 -> {
@@ -847,16 +832,16 @@ final class Camp {
                     // the rope frame: a log gantry six high, ropes hanging
                     for (int k : new int[] {1, 9}) {
                         for (int y = 1; y <= 6; y++) {
-                            p.set(a + 2, y, z + k, "minecraft:stripped_spruce_log[axis=y]");
+                            p.set(a + 2, y, z + k, "cp_post");
                         }
                     }
                     for (int k = 2; k <= 8; k++) {
-                        p.set(a + 2, 6, z + k, "minecraft:stripped_spruce_log[axis=z]");
+                        p.set(a + 2, 6, z + k, "cp_log[facing=east]");
                     }
                     for (int k = 3; k <= 7; k += 2) {
                         int drop = 2 + rng.nextInt(3);
                         for (int y = 6 - drop; y < 6; y++) {
-                            p.set(a + 2, y, z + k, "minecraft:iron_chain[axis=y]");
+                            p.set(a + 2, y, z + k, y == 6 - drop ? "cp_rope_end" : "cp_rope");
                         }
                     }
                 }
@@ -891,26 +876,21 @@ final class Camp {
             if (chance() < 0.5) {
                 p.set(lx, 1, z + 2, chance() < 0.5 ? "debris_chunk" : "crate");
             }
-            p.set(lx - 2, 1, z, "minecraft:spruce_fence");
+            p.set(lx - 2, 1, z, "cp_lane_post[facing=north]");
             // the target frame down range, some shot to bits
             int tz = z + d - 7;
             if (chance() < 0.8) {
-                p.set(lx - 1, 1, tz, "minecraft:spruce_fence");
-                p.set(lx + 1, 1, tz, "minecraft:spruce_fence");
-                p.set(lx - 1, 2, tz, "minecraft:spruce_fence");
-                p.set(lx + 1, 2, tz, "minecraft:spruce_fence");
-                p.set(lx, 2, tz, "minecraft:target");
-                p.set(lx, 3, tz, chance() < 0.7 ? "minecraft:target" : "air");
+                p.set(lx, 1, tz, "cp_target_lo[facing=north]");
+                p.set(lx, 2, tz, (chance() < 0.4 + hit * 0.3 ? "cp_target_hi_shot" : "cp_target_hi") + "[facing=north]");
             } else {
-                p.set(lx, 1, tz, "minecraft:target");
+                p.set(lx, 1, tz, "cp_target_down[facing=" + any("north", "south") + "]");
             }
         }
         // the red flag at the end of the line, the control hut
-        for (int y = 1; y <= 6; y++) {
-            p.set(x - 2, y, z + 1, "minecraft:spruce_fence");
+        for (int y = 1; y < 6; y++) {
+            p.set(x - 2, y, z + 1, "cp_flagpole");
         }
-        p.set(x - 1, 6, z + 1, "minecraft:red_wool");
-        p.set(x - 1, 5, z + 1, chance() < 0.5 ? "minecraft:red_wool" : "air");
+        p.set(x - 2, 6, z + 1, "cp_flag[facing=north]");
         booth(x - 6, z - 2);
     }
 
@@ -923,17 +903,17 @@ final class Camp {
         b.damage = 0.15 + hit * 0.3;
         b.shell(0, 0, bw - 1, bd - 1, 1, 4, "concrete_panel", "floor_concrete", "floor_concrete");
         for (int x = 2; x < bw - 2; x += 4) {
-            p.set(x, 3, 0, "minecraft:iron_bars");
-            p.set(x, 3, bd - 1, "minecraft:iron_bars");
+            p.set(x, 3, 0, "cv_cell_bars[facing=north]");
+            p.set(x, 3, bd - 1, "cv_cell_bars[facing=south]");
         }
         boolean forced = chance() < 0.4 + hit * 0.5;
         if (forced) {
             p.set(bw / 2, 1, 0, "air");  // the door's gone, blown or cut out
             p.set(bw / 2, 2, 0, "air");
         } else {
-            b.door(bw / 2, 1, 0, "minecraft:iron_door", "north");
+            b.door(bw / 2, 1, 0, "bunk_door_steel", "north");
         }
-        b.flat(0, 0, bw - 1, bd - 1, 4, "concrete_panel", 1, "minecraft:smooth_stone_slab[type=bottom]");
+        b.flat(0, 0, bw - 1, bd - 1, 4, "concrete_panel", 1, "stone_trim");
         for (int x = 1; x < bw - 1; x++) {
             if (Math.abs(x - bw / 2) <= 1) {
                 continue;
@@ -981,7 +961,7 @@ final class Camp {
         if (chance() < 0.65) {
             p.vehicle(x + 3.5, 1, z + 5, 180, models, rng.nextLong());
         } else if (chance() < 0.5) {
-            p.set(x + 3, 1, z + 4, any("tire[axis=x]", "minecraft:barrel[facing=up,loot=storage]", "crate"));
+            p.set(x + 3, 1, z + 4, any("tire_stack", "barrel", "crate"));
         }
         if (chance() < 0.25) {
             p.set(x + 3, 3, z + 10, "camo_net");
@@ -1019,7 +999,7 @@ final class Camp {
             for (int k = 1; k < len; k += 2) {
                 if (chance() < 0.18 + hit * 0.15) {
                     p.set(cx + rng.nextInt(2), 1, z + k, any("cardboard_box", "trash_bag[facing=north]", "blood_splat", "debris_chunk",
-                            "minecraft:white_carpet"));
+                            "tn_groundsheet"));
                 }
             }
             // the desk at the end of the chute, the chair knocked over
@@ -1042,18 +1022,17 @@ final class Camp {
                 }
             }
             case 1 -> {
-                p.setIfAir(x, 1, z, "minecraft:barrel[facing=up,loot=storage]");
-                p.setIfAir(x + 1, 1, z, "minecraft:barrel[facing=up]");
-                p.setIfAir(x, 1, z + 1, "minecraft:barrel[facing=north]");
+                p.setIfAir(x, 1, z, "barrel");
+                p.setIfAir(x + 1, 1, z, "barrel");
+                p.setIfAir(x, 1, z + 1, "bunk_jerry_cans[facing=north]");
             }
             case 2 -> {
-                p.setIfAir(x, 1, z, "minecraft:spruce_slab[type=bottom]");
-                p.setIfAir(x + 1, 1, z, "minecraft:spruce_slab[type=bottom]");
+                p.setIfAir(x, 1, z, "st_pallet[facing=north]");
+                p.setIfAir(x + 1, 1, z, "st_pallet[facing=east]");
                 p.setIfAir(x, 2, z, chance() < 0.5 ? "crate" : "air");
             }
             case 3 -> {
-                p.setIfAir(x, 1, z, "minecraft:white_bed[part=head,facing=north]");
-                p.setIfAir(x, 1, z + 1, "minecraft:white_bed[part=foot,facing=north]");
+                p.setIfAir(x, 1, z, "st_stretcher[facing=north]");
                 p.setIfAir(x + 1, 1, z, "blood_splat");
             }
             case 4 -> {
@@ -1062,8 +1041,8 @@ final class Camp {
                 p.setIfAir(x, 1, z + 1, "blood_splat");
             }
             default -> {
-                p.setIfAir(x, 1, z, "tire[axis=x]");
-                p.setIfAir(x, 2, z, "tire[axis=z]");
+                p.setIfAir(x, 1, z, "tire_stack");
+                p.setIfAir(x + 1, 1, z + 1, "tire_flat");
                 p.setIfAir(x + 1, 1, z, "debris_chunk");
             }
         }

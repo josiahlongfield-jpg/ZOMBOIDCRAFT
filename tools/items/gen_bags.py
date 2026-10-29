@@ -81,6 +81,39 @@ def reflective(f):
     return c * (0.85 + 0.3 * P.white(f.shape, f.rng))[..., None]
 
 
+def hide(base, stitch=None):
+    """Bag leather: oiled grain, darker toward the cut edges, a saddle stitch inside them when stitch is given."""
+    def fn(f):
+        c = P.leather(f, base)
+        c = c * (0.8 + 0.2 * np.clip(f.edge / 0.5, 0, 1))[..., None]
+        if stitch is not None and min(f.dims[i] for i in range(3) if abs(f.n[i]) < 0.5) > 1.2:
+            u, v = f.uv[..., 0], f.uv[..., 1]
+            run = (np.abs(f.edge - 0.3) < 0.07) & ((np.floor((u + v) * 3.2) % 2) == 0)
+            c = np.where(run[..., None], P.col(stitch) * 0.9, c)
+        return c
+    return fn
+
+
+def kraft(f):
+    """Brown paper: a fibrous mottle and soft creases."""
+    c = P.plain(f, '#a67c4f', 0.1)
+    crease = np.abs(np.sin(f.along() * 2.3 + f.noise(0.4, 77, 2) * 4)) < 0.08
+    return np.where(crease[..., None], c * 0.82, c)
+
+
+def film(base='#e9e7df', print_='#b03a2e'):
+    """A thin plastic carrier bag: pale, crumpled, a printed band across its middle."""
+    def fn(f):
+        c = P.plain(f, base, 0.08)
+        crumple = f.noise(0.6, 91, 3)
+        c = c * (0.86 + 0.22 * crumple)[..., None]
+        if abs(f.n[2]) > 0.5:
+            band = np.abs(f.Y - 6.5) < 1.1
+            c = np.where(band[..., None], P.mix(c, P.col(print_), 0.75), c)
+        return c
+    return fn
+
+
 def worn_look(wear, blood=0.25, **mats):
     d = dict(mats)
     d['_after'] = [
@@ -185,6 +218,146 @@ def build_fanny(m):
     m.box([-0.6, 1.5, -1.75], [0.6, 2.7, -1.45], 'buckle')
 
 
+# The twelve everyday bags (refs/items/bags/): what people were carrying when it happened.
+
+
+def handle(m, x0, x1, y, z, mat='handle', h=1.6, t=0.45):
+    """A carry handle: two posts and a grip over them."""
+    for x in (x0, x1 - t):
+        m.box([x, y, z - t / 2], [x + t, y + h, z + t / 2], mat)
+    m.box([x0, y + h - t, z - t / 2], [x1, y + h, z + t / 2], mat)
+
+
+def build_purse(m):
+    # a stiff handbag: a trapezoid body, a flap with a clasp, one rolled top handle (purse/03)
+    m.box([-3.5, 0, -1.3], [3.5, 3.2, 1.3], 'body')
+    m.box([-3.1, 3.2, -1.1], [3.1, 4.4, 1.1], 'body')
+    m.box([-3.2, 2.2, 1.25], [3.2, 4.5, 1.5], 'flap')
+    m.box([-0.6, 2.4, 1.48], [0.6, 3.0, 1.68], 'clasp')
+    m.box([-3.6, -0.15, -1.4], [3.6, 0.15, 1.4], 'flap')                # base welt
+    handle(m, -2.2, 2.2, 4.4, 0, h=2.2, t=0.5)
+
+
+def build_briefcase(m):
+    # hard leather case: slim, two brass latches, a stitched handle (briefcase/02-03)
+    m.box([-6, 0, -1.2], [6, 8, 1.2], 'body')
+    m.box([-6.1, 7.4, -1.3], [6.1, 8.2, 1.3], 'lid')                     # the lid's lip
+    for x in (-4.4, 3.4):
+        m.box([x, 6.6, 1.2], [x + 1.0, 7.8, 1.45], 'brass')
+        m.box([x + 0.2, -0.3, -0.9], [x + 0.8, 0, 0.9], 'brass')        # feet
+    m.box([-0.8, 7.1, 1.2], [0.8, 7.6, 1.38], 'brass')                   # lock
+    handle(m, -2, 2, 8.2, 0, h=1.5, t=0.55)
+
+
+def build_gym(m):
+    # a barrel bag: a long round body, end discs, a printed side band, two handles (gym-bag/04)
+    m.box([-6.5, 0.4, -2.6], [6.5, 5.0, 2.6], 'body')
+    m.box([-6.5, 0, -2.1], [6.5, 5.4, 2.1], 'body')
+    for x in (-6.9, 6.5):
+        m.box([x, 0.5, -2.3], [x + 0.4, 4.9, 2.3], 'end')
+    m.box([-4.8, 1.4, 2.55], [4.8, 3.0, 2.7], 'band')
+    m.box([-5.8, 5.3, -0.18], [5.8, 5.6, 0.18], 'zip')
+    for z in (-1.2, 1.2):
+        handle(m, -2, 2, 5.3, z, 'strap', h=1.8)
+
+
+def build_doctors(m):
+    # a Gladstone bag: wide flat base, hinged frame mouth, a strap and buckle round it (doctors-bag/01, 04)
+    m.box([-6, 0, -2.8], [6, 5.2, 2.8], 'body')
+    m.box([-5.5, 5.2, -2.2], [5.5, 6.4, 2.2], 'body')
+    m.box([-5.7, 6.2, -0.35], [5.7, 6.9, 0.35], 'frame')                 # the steel frame along the mouth
+    m.box([-6.2, -0.2, -3.0], [6.2, 0.4, 3.0], 'welt')
+    for x in (-3.6, 3.0):                                                 # a strap round it
+        m.box([x, 0, 2.8], [x + 0.6, 6.3, 3.0], 'welt')
+    m.box([-0.5, 5.6, 2.2], [0.5, 6.4, 2.45], 'clasp')
+    handle(m, -1.8, 1.8, 6.8, 0, h=1.8, t=0.6)
+
+
+def build_plastic(m):
+    # a T-shirt carrier bag, full and sagging, its two loop handles up (plastic-shopping-bag/01)
+    m.box([-3.8, 0, -1.8], [3.8, 7, 1.8], 'body')
+    m.box([-3.4, 7, -1.4], [3.4, 8.2, 1.4], 'body')
+    for x in (-3.4, 1.8):
+        m.box([x, 8.2, -0.5], [x + 1.6, 10.8, 0.5], 'body')
+    m.box([-3.4, 10.4, -0.4], [3.4, 11.0, 0.4], 'body')
+
+
+def build_paper(m):
+    # a grocery sack: square-bottomed, its top folded over once
+    m.box([-3.6, 0, -2.2], [3.6, 9, 2.2], 'body')
+    m.box([-3.7, 8.2, -2.3], [3.7, 9.4, 2.3], 'fold')
+    m.box([-3.0, 9.4, -1.6], [-1.6, 10.6, 1.6], 'greens')                # a bunch of something sticking out
+
+
+def build_suitcase(m):
+    # an old hard suitcase: two shells, a lid seam, corner caps, two latches, a top handle (suitcase/02-03)
+    m.box([-7, 0, -2.4], [7, 10, 2.4], 'body')
+    m.box([-7.1, 4.6, -2.5], [7.1, 5.2, 2.5], 'seam')
+    for x in (-7.15, 6.15):
+        for y in (-0.1, 9.1):
+            m.box([x, y, -2.55], [x + 1.0, y + 1.0, 2.55], 'corner')
+    for x in (-4.6, 3.6):
+        m.box([x, 9.4, -0.5], [x + 1.0, 10.15, 0.5], 'brass')
+    m.box([-3.5, 3.0, 2.4], [-1.0, 4.8, 2.5], 'sticker')
+    m.box([2.0, 6.0, 2.4], [4.2, 7.6, 2.5], 'sticker2')
+    handle(m, -2, 2, 10, 0, h=1.5, t=0.6)
+
+
+def build_lunchbox(m):
+    # a domed metal lunch pail with a wire handle and side latch (lunchbox/02)
+    m.box([-4, 0, -2], [4, 3.6, 2], 'tin')
+    m.box([-4, 3.6, -1.6], [4, 4.6, 1.6], 'lid')
+    m.box([-3.6, 4.6, -1.0], [3.6, 5.1, 1.0], 'lid')
+    m.box([-0.4, 2.6, 2.0], [0.4, 4.0, 2.25], 'steel')
+    handle(m, -2.4, 2.4, 5.1, 0, 'steel', h=1.4, t=0.3)
+
+
+def build_cooler(m):
+    # a picnic cooler: red tub, white lid, moulded handles at the ends (cooler/04)
+    m.box([-6, 0, -3.5], [6, 6.5, 3.5], 'tub')
+    m.box([-6.2, 6.5, -3.7], [6.2, 8, 3.7], 'lid')
+    m.box([-5.4, 8, -3.0], [5.4, 8.3, 3.0], 'lid')
+    for x in (-6.9, 6.0):
+        m.box([x, 4.4, -1.6], [x + 0.9, 5.2, 1.6], 'lid')
+    m.box([-4.5, 1.2, 3.5], [4.5, 1.6, 3.6], 'tub')                     # moulded rib
+    m.box([-2.5, 6.0, 3.55], [2.5, 6.6, 3.75], 'lid')                    # the lid's lip at the front
+
+
+def build_mail(m):
+    # a carrier's satchel: canvas body, a leather flap and a wide strap over the shoulder (mail-bag/04, 01)
+    m.box([-5, 0, -1.6], [5, 8, 1.6], 'body')
+    m.box([-5.1, 4.8, 1.5], [5.1, 8.1, 1.9], 'flap')
+    m.box([-0.6, 4.4, 1.85], [0.6, 5.4, 2.05], 'brass')
+    for x in (-5.6, 5.0):
+        m.box([x, 7, -0.5], [x + 0.6, 12, 0.5], 'strap')
+    m.box([-5.6, 12, -0.5], [5.6, 12.6, 0.5], 'strap')
+    m.box([-3.8, 2.4, 1.6], [3.8, 3.4, 1.7], 'print')
+
+
+def build_tool(m):
+    # an open-mouth tool bag: stiff canvas, leather base and handles, tools showing (tool-bag/01)
+    m.box([-6, 0, -2.4], [6, 6, 2.4], 'body')
+    m.box([-6.2, 0, -2.6], [6.2, 1.2, 2.6], 'base')
+    m.box([-6.1, 5.6, -2.5], [6.1, 6.3, 2.5], 'base')                    # the stiffened rim
+    for x0, x1 in ((-5.2, -2.4), (2.4, 5.2)):                             # pockets on the front
+        m.box([x0, 1.4, 2.4], [x1, 4.4, 2.9], 'body')
+    m.box([-3.0, 6.3, -1.0], [-2.4, 9.2, -0.4], 'steel')                  # a hammer shaft
+    m.box([-3.8, 8.6, -1.2], [-1.6, 9.4, -0.2], 'steel')
+    m.box([1.0, 6.3, 0.4], [1.5, 8.2, 0.9], 'grip')                      # a screwdriver
+    for z in (-1.4, 1.4):
+        handle(m, -3, 3, 6.3, z, 'base', h=2.2, t=0.55)
+
+
+def build_ammo_pouch(m):
+    # a belt pouch for magazines: a box with a snap flap, belt loop behind (ammo-pouch/02, 04)
+    m.box([-2.4, 0, -1.4], [2.4, 4.4, 1.4], 'body')
+    m.box([-2.5, 3.0, -1.5], [2.5, 4.8, 1.6], 'flap')
+    m.box([-0.4, 3.2, 1.55], [0.4, 3.9, 1.75], 'snap')
+    m.box([-1.8, 1.0, -1.9], [1.8, 4.2, -1.4], 'body')                    # belt loop
+    m.box([-8, 2.0, -2.2], [-2.4, 3.0, -1.6], 'belt')
+    m.box([2.4, 2.0, -2.2], [8, 3.0, -1.6], 'belt')
+
+
 BAGS = [
     ('school_backpack', build_school, 0.6, 0.3, dict(
         body=fabric('#7a2f2a'), pocket=fabric('#2d3a55'), zip=zipper(), strap=webbing('#1f2026'),
@@ -204,6 +377,35 @@ BAGS = [
     ('fanny_pack', build_fanny, 0.55, 0.15, dict(
         body=fabric('#1d2b2c'), pocket=fabric('#2a6a6c'), zip=zipper(), strap=webbing('#151515'),
         buckle=lambda f: P.polymer(f, '#121212'))),
+    ('purse', build_purse, 0.4, 0.15, dict(
+        body=hide('#5f7a2c'), flap=hide('#506826', '#d9d2b4'), clasp=lambda f: P.chrome(f), handle=hide('#4a6022'))),
+    ('briefcase', build_briefcase, 0.5, 0.15, dict(
+        body=hide('#1b1715', '#4a4038'), lid=hide('#141110'), brass=lambda f: P.brass(f), handle=hide('#141110'))),
+    ('gym_bag', build_gym, 0.5, 0.2, dict(
+        body=fabric('#17181a'), end=fabric('#101112'), band=lambda f: P.plain(f, '#d9c22a', 0.1), zip=zipper(),
+        strap=webbing('#121213'))),
+    ('doctors_bag', build_doctors, 0.6, 0.3, dict(
+        body=hide('#4b2a17', '#a88a62'), welt=hide('#3a2012'), frame=lambda f: P.steel(f, 0.45),
+        clasp=lambda f: P.brass(f), handle=hide('#3a2012'))),
+    ('plastic_bag', build_plastic, 0.3, 0.1, dict(body=film())),
+    ('paper_bag', build_paper, 0.4, 0.1, dict(body=kraft, fold=kraft, greens=lambda f: P.plain(f, '#4f7a2e', 0.25))),
+    ('suitcase', build_suitcase, 0.6, 0.15, dict(
+        body=hide('#7a3a22'), seam=hide('#4a2414'), corner=hide('#3a1f12'), brass=lambda f: P.brass(f),
+        sticker=lambda f: P.plain(f, '#d8c79a', 0.15), sticker2=lambda f: P.plain(f, '#3e6d8a', 0.15),
+        handle=hide('#3a1f12'))),
+    ('lunchbox', build_lunchbox, 0.6, 0.1, dict(
+        tin=lambda f: P.paint(f, '#1c1d20', chips=0.12), lid=lambda f: P.paint(f, '#24262a', chips=0.12),
+        steel=lambda f: P.steel(f, 0.5))),
+    ('cooler', build_cooler, 0.5, 0.2, dict(
+        tub=lambda f: P.polymer(f, '#b8262a'), lid=lambda f: P.polymer(f, '#e3e0d6', 0.05))),
+    ('mail_bag', build_mail, 0.6, 0.15, dict(
+        body=fabric('#b5a27a'), flap=hide('#6b4524', '#d9c9a0'), brass=lambda f: P.brass(f), strap=hide('#5a3a1e'),
+        print=lambda f: P.plain(f, '#2f3a5a', 0.15))),
+    ('tool_bag', build_tool, 0.7, 0.2, dict(
+        body=fabric('#6d5f3e', weave=0.2), base=hide('#3b2617'), steel=lambda f: P.steel(f, 0.5),
+        grip=lambda f: P.polymer(f, '#b8352a'))),
+    ('ammo_pouch_belt', build_ammo_pouch, 0.6, 0.15, dict(
+        body=fabric('#4d4f36'), flap=fabric('#45472f'), snap=lambda f: P.polymer(f, '#141414'), belt=webbing('#3c3d2a'))),
 ]
 
 

@@ -11,7 +11,7 @@ import java.util.Map;
 final class PropSwaps {
     static final Map<String, String[]> TABLE = Map.ofEntries(
         Map.entry("apple_crate", new String[] {"apple_crate", "pk_crate_1", "pk_crate_2"}),
-        Map.entry("barrel", new String[] {"barrel", "pk_barrel_1", "pk_barrel_2", "pk_barrel_3"}),
+        Map.entry("barrel", new String[] {"!barrel", "pk_barrel_1", "pk_barrel_2", "pk_barrel_3"}),
         Map.entry("bunk_crate_ammo", new String[] {"bunk_crate_ammo", "pk_military_crate_old", "pk_military_crate_old_b"}),
         Map.entry("bunk_crate_gun", new String[] {"bunk_crate_gun", "pk_military_crate"}),
         Map.entry("crate", new String[] {"!crate", "pk_crate_1", "pk_crate_2"}),

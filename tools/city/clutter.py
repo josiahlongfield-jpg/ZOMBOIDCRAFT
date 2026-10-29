@@ -11,7 +11,9 @@ Same names, same facings, so every place that set the old ones gets these:
   coil rods at the corners, the dirt in the top;
 - cardboard_box: two taped boxes, the small one's flaps open;
 - rubble_pile, debris_chunk: broken slabs at angles, brick, rebar sticking out, dust;
-- camo_net: the net sagging between its poles.
+- camo_net: the net sagging between its poles;
+- tire: a truck tyre standing on its tread, an octagon of tread round the steel rim (it's also the
+  carrier tugs' wheels); tire_flat a car tyre lying flat, tire_stack four of them piled.
 The wooden crates and the bin bags come from the props' scans now (tools/props/props.py, always).
 
     python3 tools/city/clutter.py          rewrites those entries in blocks.json
@@ -32,7 +34,7 @@ from furniture import area  # noqa: E402
 
 N = P.N
 HERE = Path(__file__).parent
-NAMES = ("jersey_barrier", "sandbags", "hesco", "cardboard_box", "rubble_pile", "debris_chunk", "camo_net")
+NAMES = ("jersey_barrier", "sandbags", "hesco", "cardboard_box", "rubble_pile", "debris_chunk", "camo_net", "tire")
 
 
 # ---------------------------------------------------------------- textures
@@ -69,8 +71,35 @@ def tape(seed):
     return t
 
 
+def tread(seed):
+    """Tyre tread: chunky blocks either side of a centre rib, worn, dusty in the grooves."""
+    t = F.plain(seed, (40, 40, 40), 0.04, 0.35)
+    yy, xx = np.mgrid[0:N, 0:N]
+    groove = ((yy % 8) < 2) & ((xx < 28) | (xx > 36)) | ((xx >= 28) & (xx < 30)) | ((xx > 34) & (xx <= 36))
+    t.c[groove] = (22, 22, 22)
+    t.h[groove] -= 0.3
+    t.mix(groove * 0.25, (110, 100, 84))
+    t.grime(0.3, (90, 82, 70))
+    return t
+
+
+def sidewall(seed):
+    """The sidewall: black rubber, the raised rings and the moulded lettering's ghost, kerb scuffs."""
+    t = F.plain(seed, (44, 44, 44), 0.04, 0.4)
+    yy, xx = np.mgrid[0:N, 0:N]
+    for y in (6, 58):
+        area(t, 0, y, N, y + 1, mul=1.3, dh=0.15)
+    for x in range(8, 56, 5):
+        area(t, x, 30, x + 3, 34, mul=1.18, dh=0.1)
+    t.speckle(0.01, (90, 90, 86), 0.5)
+    t.grime(0.3, (100, 92, 78))
+    return t
+
+
 def textures():
     return {
+        "tire_tread": lambda: tread(48003),
+        "tire_wall": lambda: sidewall(48004),
         "hesco_cage": lambda: cage(48000),
         "hesco_liner": lambda: liner(48001),
         "tape_brown": lambda: tape(48002),
@@ -196,6 +225,46 @@ def camo():
             [14 - hl, 14.0, 4, 14 + hl, 14.4, 12, n, None, turn("z", 22.5, (14, 14.2, 8))]]
 
 
+def ring(axis, c, R, r, a0, a1, side, rim=None):
+    """An octagon ring about `axis` (z: in the xy plane, y: lying in xz) centred c, outer apothem R,
+    inner r, spanning a0..a1 along the axis: four straight slabs and four turned 45 degrees."""
+    s = R * math.tan(math.radians(22.5)) + 0.25
+    cx, cy = c
+    out = []
+    for k, (u0, u1, v0, v1) in enumerate(((-s, s, r, R), (-s, s, -R, -r), (r, R, -s, s), (-R, -r, -s, s))):
+        for ang in ((0,) if k > 1 else (0, 45, -45)):
+            if axis == "z":
+                b = [cx + u0, cy + v0, a0, cx + u1, cy + v1, a1]
+                f = {"north": side, "south": side, "east": "tire_tread", "west": "tire_tread", "up": "tire_tread", "down": "tire_tread"}
+                rot = turn("z", ang, (cx, cy, (a0 + a1) / 2)) if ang else None
+            else:
+                b = [cx + u0, a0, cy + v0, cx + u1, a1, cy + v1]
+                f = {"up": side, "down": side, "north": "tire_tread", "south": "tire_tread", "east": "tire_tread", "west": "tire_tread"}
+                rot = turn("y", ang, (cx, (a0 + a1) / 2, cy)) if ang else None
+            out.append([round(v, 3) for v in b] + [f] + ([None, rot] if rot else []))
+    if rim:
+        m = r + 0.3
+        for ang in (0, 45):
+            if axis == "z":
+                b = [cx - m, cy - m, rim[0], cx + m, cy + m, rim[1]]
+                rot = turn("z", ang, (cx, cy, 8)) if ang else None
+            else:
+                b = [cx - m, rim[0], cy - m, cx + m, rim[1], cy + m]
+                rot = turn("y", ang, (cx, 8, cy)) if ang else None
+            out.append([round(v, 3) for v in b] + [rim[2]] + ([None, rot] if rot else []))
+    return out
+
+
+def tire():
+    b = ring("z", (8, 8), 7.6, 4.4, 4.5, 11.5, "tire_wall", (6, 10, "rust"))
+    b += [[6.5, 6.5, 5.6, 9.5, 9.5, 10.4, "st_galv"]]
+    return b
+
+
+def tire_flat(y0=0.0, dx=0.0):
+    return ring("y", (8 + dx, 8), 6.6, 4.0, y0, y0 + 3.4, "tire_wall")
+
+
 def blocks(old):
     out = {}
 
@@ -212,6 +281,10 @@ def blocks(old):
     keep("rubble_pile", rubble(48020, True), shape=[[0, 0, 0, 16, 3, 16], [3, 3, 3, 13, 6, 13]])
     keep("debris_chunk", rubble(48021, False))
     keep("camo_net", camo())
+    keep("tire", tire(), model="boxes", shape=[[0.5, 0, 4.5, 15.5, 15.5, 11.5]], title="Tyre", sound="WOOL")
+    out["tire_flat"] = {"model": "boxes", "boxes": tire_flat(), "title": "Tyre", "sound": "WOOL", "shape": [[1.5, 0, 1.5, 14.5, 3.4, 14.5]]}
+    out["tire_stack"] = {"model": "boxes", "boxes": sum((tire_flat(i * 3.45, (0.6, -0.4, 0.3, -0.5)[i]) for i in range(4)), []),
+                         "title": "Tyres", "sound": "WOOL", "shape": [[1.5, 0, 1.5, 14.5, 13.8, 14.5]]}
     return out
 
 

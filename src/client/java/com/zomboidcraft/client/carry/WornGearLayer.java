@@ -40,7 +40,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             "hiking_backpack", new Fit(1f, 1f, 1f, 4.65f, 5.55f, false),
             "military_rucksack", new Fit(0.85f, 0.85f, 0.85f, 4.53f, 5.78f, false),
             "plate_carrier", new Fit(0.95f, 1f, 1f, 5.1f, -0.75f, true),
-            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true));
+            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true),
+            // the satchel hangs low on the back from its shoulder strap; the pouch sits at the belt's front
+            "mail_bag", new Fit(0.8f, 0.8f, 0.8f, 6.2f, 3.4f, false),
+            "ammo_pouch_belt", new Fit(0.62f, 0.85f, 0.85f, 10.9f, -3.73f, true));
     private static final Fit BACK = new Fit(1f, 1f, 1f, 5.3f, 5.5f, false);
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);

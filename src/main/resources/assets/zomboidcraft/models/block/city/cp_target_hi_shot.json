@@ -1,0 +1,151 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_target_hi_shot": "zomboidcraft:block/city/cp_target_hi_shot",
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "tn_ply": "zomboidcraft:block/city/tn_ply",
+    "particle": "zomboidcraft:block/city/cp_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        8
+      ],
+      "to": [
+        3.5,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.5,
+        0,
+        8
+      ],
+      "to": [
+        14.5,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        7.2
+      ],
+      "to": [
+        15,
+        11,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_target_hi_shot"
+        },
+        "south": {
+          "texture": "#tn_ply"
+        },
+        "east": {
+          "texture": "#tn_ply"
+        },
+        "west": {
+          "texture": "#tn_ply"
+        },
+        "up": {
+          "texture": "#tn_ply"
+        },
+        "down": {
+          "texture": "#tn_ply",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        11,
+        7.2
+      ],
+      "to": [
+        15,
+        13,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_target_hi_shot"
+        },
+        "south": {
+          "texture": "#tn_ply"
+        },
+        "east": {
+          "texture": "#tn_ply"
+        },
+        "west": {
+          "texture": "#tn_ply"
+        },
+        "up": {
+          "texture": "#tn_ply"
+        },
+        "down": {
+          "texture": "#tn_ply"
+        }
+      },
+      "rotation": {
+        "origin": [
+          7,
+          11,
+          7.6
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    }
+  ]
+}

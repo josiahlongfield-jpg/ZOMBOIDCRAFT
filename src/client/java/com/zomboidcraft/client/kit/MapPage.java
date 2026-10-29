@@ -20,8 +20,8 @@ import org.joml.Matrix3x2fStack;
 /**
  * The map page. In the county it's the whole county ({@link CountyAtlas}): every roof, street and wood from above,
  * the rail and subway lines with their stations, the names of the city's districts and the towns, and every survivor
- * where they stand. Elsewhere it's your own map of where you've been. Pins on top for safehouses, loot, danger and
- * notes. Drag to pan, scroll to zoom; it starts on you.
+ * roughly where they are. Nothing else: no pins (Josiah 2026-10-29, a bare map). Elsewhere it's your own map of
+ * where you've been, with pins for safehouses, loot, danger and notes. Drag to pan, scroll to zoom; it starts on you.
  */
 final class MapPage {
     private static final int VX = 37, VY = 33, VW = 376, VH = 287;
@@ -57,7 +57,7 @@ final class MapPage {
 
     boolean pressed(double mx, double my, int button) {
         if (!inView(mx, my)) return false;
-        if (button == 1) {
+        if (button == 1 && !CountyAtlas.active()) {
             MapStore.Pin pin = pinAt(mx, my);
             if (pin != null) {
                 MapStore.unpin(pin);
@@ -88,7 +88,7 @@ final class MapPage {
     boolean released(double mx, double my) {
         if (!pressed) return false;
         pressed = false;
-        if (!dragged && inView(mx, my) && pinAt(mx, my) == null) {
+        if (!dragged && !CountyAtlas.active() && inView(mx, my) && pinAt(mx, my) == null) {
             MapStore.pin(kind, (int) Math.floor(worldX(mx)), (int) Math.floor(worldZ(my)));
             UiSounds.play(UiSounds.CLICK);
         }
@@ -143,8 +143,10 @@ final class MapPage {
         side(g, font, player, x + 425, y + 33, mx, my);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
-        hx += KitDraw.hint(g, font, "LMB", "Pin", hx, hy);
-        hx += KitDraw.hint(g, font, "RMB", "Remove", hx, hy);
+        if (!CountyAtlas.active()) {
+            hx += KitDraw.hint(g, font, "LMB", "Pin", hx, hy);
+            hx += KitDraw.hint(g, font, "RMB", "Remove", hx, hy);
+        }
         hx += KitDraw.hint(g, font, "Drag", "Pan", hx, hy);
         hx += KitDraw.hint(g, font, "Wheel", "Zoom", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
@@ -184,8 +186,9 @@ final class MapPage {
         g.disableScissor();
 
         // pins
-        MapStore.Pin hovered = KitDraw.in(mx, my, vx, vy, VW, VH) ? pinAt(mx, my) : null;
-        for (MapStore.Pin p : MapStore.pins()) {
+        boolean bare = CountyAtlas.active();
+        MapStore.Pin hovered = !bare && KitDraw.in(mx, my, vx, vy, VW, VH) ? pinAt(mx, my) : null;
+        for (MapStore.Pin p : bare ? List.<MapStore.Pin>of() : MapStore.pins()) {
             int sx = Math.round((float) (vx + VW / 2.0 + (p.x + 0.5 - cx) * zoom));
             int sy = Math.round((float) (vy + VH / 2.0 + (p.z + 0.5 - cz) * zoom));
             if (sx < vx + 4 || sy < vy + 4 || sx > vx + VW - 4 || sy > vy + VH - 4) continue;
@@ -403,7 +406,7 @@ final class MapPage {
         KitDraw.caps(g, font, text, left, y, colour, scale);
     }
 
-    /** Everyone else, where they stand and which way they face, with their name. */
+    /** Everyone else: a ring over the area they're in (the server only sends that), with their name. */
     private void others(GuiGraphicsExtractor g, Font font, LocalPlayer me, int vx, int vy) {
         String dim = me.level().dimension().identifier().toString();
         for (MapNet.Spot p : MapPlayers.spots()) {
@@ -418,9 +421,24 @@ final class MapPage {
                 KitDraw.diamond(g, Math.round(x), Math.round(y), 3, colour);
                 continue;
             }
-            arrow(g, x, y, p.yaw(), colour);
-            halo(g, font, p.name(), x, y + 6, colour, 0.62f, true);
+            int r = Math.max(5, Math.round(MapNet.AREA * 0.6f * zoom));
+            ring(g, Math.round(x), Math.round(y), r, colour & 0x00FFFFFF | 0x33000000, colour);
+            // no pin-point in a ring big enough to read: they're somewhere inside it
+            if (r < 10) KitDraw.diamond(g, Math.round(x), Math.round(y), 3, colour);
+            halo(g, font, p.name(), x, y + Math.min(r, 14) + 2, colour, 0.62f, true);
         }
+    }
+
+    /** A filled circle with a rim, a pixel row at a time. */
+    private static void ring(GuiGraphicsExtractor g, int cx, int cy, int r, int fill, int rim) {
+        for (int dy = -r; dy <= r; dy++) {
+            int half = (int) Math.round(Math.sqrt(r * r - dy * dy));
+            g.fill(cx - half, cy + dy, cx + half + 1, cy + dy + 1, fill);
+            g.fill(cx - half, cy + dy, cx - half + 1, cy + dy + 1, rim);
+            g.fill(cx + half, cy + dy, cx + half + 1, cy + dy + 1, rim);
+        }
+        g.fill(cx - 1, cy - r, cx + 2, cy - r + 1, rim);
+        g.fill(cx - 1, cy + r, cx + 2, cy + r + 1, rim);
     }
 
     private static void arrow(GuiGraphicsExtractor g, float px, float py, float yawDeg, int colour) {
@@ -441,6 +459,10 @@ final class MapPage {
     /** Pin kinds, your pins and the maps you've read. */
     private void side(GuiGraphicsExtractor g, Font font, LocalPlayer player, int x, int y, int mx, int my) {
         int w = 154;
+        if (CountyAtlas.active()) {
+            survivors(g, font, player, x, y, w);
+            return;
+        }
         KitDraw.heading(g, font, "Pins", x, y, w, true);
         MapStore.PinKind[] kinds = MapStore.PinKind.values();
         for (int i = 0; i < kinds.length; i++) {
@@ -482,10 +504,6 @@ final class MapPage {
         }
 
         int my0 = y + 220;
-        if (CountyAtlas.active()) {
-            survivors(g, font, player, x, my0, w, mx, my);
-            return;
-        }
         KitDraw.heading(g, font, "Maps read", x, my0, w, true);
         List<String> read = MapStore.read();
         if (read.isEmpty()) {
@@ -498,32 +516,23 @@ final class MapPage {
         }
     }
 
-    /** Everyone in the world: how far off they are, and a click takes the map to them. */
-    private void survivors(GuiGraphicsExtractor g, Font font, LocalPlayer me, int x, int y, int w, int mx, int my) {
+    /** Everyone on the server and roughly where they are: the nearest named place, never a spot to go to. */
+    private void survivors(GuiGraphicsExtractor g, Font font, LocalPlayer me, int x, int y, int w) {
         KitDraw.heading(g, font, "Survivors", x, y, w, true);
         String dim = me.level().dimension().identifier().toString();
         int row = 0;
         for (MapNet.Spot p : MapPlayers.spots()) {
-            if (row >= 5) break;
+            if (row >= 16) break;
             int ry = y + 10 + row++ * 13;
             boolean self = p.id().equals(me.getUUID()), here = p.dim().equals(dim);
-            boolean over = here && screen.hovered(x, ry, w, 12, mx, my);
-            if (over) g.fill(x, ry, x + w, ry + 12, 0x1AE8E4DA);
             KitDraw.diamond(g, x + 4, ry + 5, 3, self ? 0xFFE0C25E : MapPlayers.colour(p.id()));
             KitDraw.text(g, font, self ? p.name() + " (you)" : p.name(), x + 11, ry + 2, KitDraw.BRIGHT, 0.8f);
-            String far = !here ? "Elsewhere" : self ? "" : Math.round(Math.hypot(p.x() - me.getX(), p.z() - me.getZ())) + " blocks";
-            KitDraw.textRight(g, font, far, x + w, ry + 2, KitDraw.DIM, 0.75f);
-            if (here) {
-                screen.hot(x, ry, w, 12, () -> {
-                    cx = p.x();
-                    cz = p.z();
-                    follow = self;
-                });
-            }
+            String where = !here ? "Elsewhere" : near(p.x(), p.z());
+            KitDraw.textRight(g, font, where.startsWith(" · ") ? where.substring(3) : where, x + w, ry + 2, KitDraw.DIM, 0.7f);
         }
         if (row == 0) KitDraw.text(g, font, "Only you.", x, y + 12, KitDraw.FAINT, 0.85f);
         if (CountyAtlas.sketching()) {
-            KitDraw.text(g, font, "Drawing the county...", x, y + 82, KitDraw.FAINT, 0.75f);
+            KitDraw.text(g, font, "Drawing the county...", x, y + 12 + Math.max(1, row) * 13 + 6, KitDraw.FAINT, 0.75f);
         }
     }
 }

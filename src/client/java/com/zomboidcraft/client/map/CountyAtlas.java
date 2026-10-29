@@ -557,7 +557,8 @@ public final class CountyAtlas {
                     for (int y = v.maxY(); y >= Voxels.MIN_Y; y--) {
                         String b = v.get(lx, y, lz);
                         if (b == null) continue;
-                        if (b.contains("water")) {
+                        // the water itself, not a water barrel or cooler (those showed as blue dots)
+                        if (b.equals("water") || b.startsWith("water[") || b.startsWith("minecraft:water")) {
                             wet = true;
                             c = WATER;
                             top = y;

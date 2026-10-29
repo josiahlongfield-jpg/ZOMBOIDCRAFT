@@ -1,0 +1,222 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_red_cap": "zomboidcraft:block/city/ext_red_cap",
+    "ext_red_riser": "zomboidcraft:block/city/ext_red_riser",
+    "ext_red_tread": "zomboidcraft:block/city/ext_red_tread",
+    "fm_boards": "zomboidcraft:block/city/fm_boards",
+    "particle": "zomboidcraft:block/city/ext_red_riser"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_red_riser",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_red_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_boards"
+        },
+        "south": {
+          "texture": "#ext_red_riser",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_red_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_red_riser"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_red_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_boards"
+        },
+        "south": {
+          "texture": "#ext_red_riser"
+        },
+        "east": {
+          "texture": "#ext_red_riser",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_riser",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_tread"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        6
+      ],
+      "to": [
+        16,
+        13.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_red_cap"
+        },
+        "south": {
+          "texture": "#ext_red_cap"
+        },
+        "east": {
+          "texture": "#ext_red_cap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_cap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_cap"
+        },
+        "down": {
+          "texture": "#ext_red_cap"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11.5,
+        5.5
+      ],
+      "to": [
+        16,
+        12.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_red_cap"
+        },
+        "south": {
+          "texture": "#ext_red_cap"
+        },
+        "east": {
+          "texture": "#ext_red_cap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_red_cap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_red_cap"
+        },
+        "down": {
+          "texture": "#ext_red_cap"
+        }
+      }
+    }
+  ]
+}

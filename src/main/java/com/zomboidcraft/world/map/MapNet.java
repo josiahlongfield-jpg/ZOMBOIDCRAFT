@@ -53,6 +53,13 @@ public final class MapNet {
     }
 
     /** One survivor on the map. */
+    /** How coarse the map's player marks are, in blocks. */
+    public static final int AREA = 64;
+
+    private static float area(double v) {
+        return (float) (Math.floor(v / AREA) * AREA + AREA / 2.0);
+    }
+
     public record Spot(java.util.UUID id, String name, String dim, float x, float z, float yaw) {
     }
 
@@ -97,14 +104,15 @@ public final class MapNet {
             }
         }));
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> {
-            if (server.getTickCount() % 10 != 0) return;
+            // only the general area goes out (Josiah 2026-10-29): the middle of the 64-block square someone is in
+            if (server.getTickCount() % 40 != 0) return;
             var players = server.getPlayerList().getPlayers();
             if (players.isEmpty()) return;
             java.util.List<Spot> spots = new java.util.ArrayList<>(players.size());
             for (var p : players) {
                 if (p.isSpectator()) continue;
                 spots.add(new Spot(p.getUUID(), p.getName().getString(), p.level().dimension().identifier().toString(),
-                        (float) p.getX(), (float) p.getZ(), p.getYRot()));
+                        area(p.getX()), area(p.getZ()), 0));
             }
             Players packet = new Players(spots);
             for (var p : players) {

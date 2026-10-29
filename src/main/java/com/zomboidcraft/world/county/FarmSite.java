@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
@@ -445,7 +446,7 @@ final class FarmSite extends Site {
         for (int y = 1; y <= 3; y++) {
             for (int x = y - 1; x < sw - y + 1; x++) {
                 for (int z = 0; z < sd; z++) {
-                    q.set(x, y, z, y == 3 && chance() < 0.5 ? "tarp_green" : "minecraft:hay_block[axis=z]");
+                    q.set(x, y, z, y == 3 && chance() < 0.5 ? "tarp_green" : y == 3 ? "fm_bales_low[axis=z]" : "fm_bales[axis=z]");
                 }
             }
         }
@@ -606,7 +607,7 @@ final class FarmSite extends Site {
                         bk.set(x, y, z, wall2 ? "concrete_dark" : z > 3 && y <= 2 ? "minecraft:packed_mud" : "air");
                     }
                     if (!wall2 && z > 3) {
-                        bk.set(x, 3, z, z > 6 || chance() < 0.4 ? "minecraft:black_carpet" : "air");
+                        bk.set(x, 3, z, z > 6 || chance() < 0.4 ? "fm_silage" : "air");
                         if (z > 6 && (x + z) % 3 == 0 && chance() < 0.7) {
                             bk.set(x, 3, z, "tire[axis=x]");
                         }
@@ -619,9 +620,8 @@ final class FarmSite extends Site {
         if (ch != null) {
             for (int i = 0; i < 5; i++) {
                 int x = i * 4 + 1;
-                ch.fill(x, 1, 3, x + 1, 2, 5, "minecraft:white_concrete");
-                ch.set(x, 1, 3, "air");
-                ch.set(x, 2, 3, chance() < 0.5 ? "air" : "minecraft:white_concrete");
+                ch.set(x, 1, 3, "fm_hutch_front[facing=north]");
+                ch.set(x, 1, 4, "fm_hutch_back[facing=north]");
                 ch.fill(x, 0, 3, x + 1, 0, 5, "straw_floor");
                 Kit.chainlink(ch, rng, x - 1, 0, x + 2, 0, 1);
                 if (chance() < 0.3) {
@@ -664,16 +664,16 @@ final class FarmSite extends Site {
                 weights(0.7, 0, 0, 0.3, 0, 0, 0, 0), 28, 26);
         // the log gate over the drive with the ranch's name
         for (int y = 1; y <= 6; y++) {
-            yp.set(ydx - 4, y, 3, "minecraft:spruce_log[axis=y]");
-            yp.set(ydx + 4, y, 3, "minecraft:spruce_log[axis=y]");
+            yp.set(ydx - 4, y, 3, "tree_spruce_log");
+            yp.set(ydx + 4, y, 3, "tree_spruce_log");
         }
         for (int x = ydx - 5; x <= ydx + 5; x++) {
-            yp.set(x, 7, 3, "minecraft:spruce_log[axis=x]");
+            yp.set(x, 7, 3, "fm_beam[axis=x]");
         }
         Placer sign = yp.turned(ydx - 2, 0, 3, 0);
         for (int i = 0; i < 4; i++) {
             sign.set(3 - i, 5, -1, "sign_ranch_" + i + "[facing=south]");
-            sign.set(3 - i, 6, -1, "minecraft:iron_chain[axis=y]");
+            sign.set(3 - i, 6, -1, "fm_chain");
         }
         // the horse barn: a long gable with cupolas, the stalls down both sides
         String wall = chance() < 0.5 ? "barn_grey" : "siding_white";
@@ -692,24 +692,20 @@ final class FarmSite extends Site {
                         rp.set(x, 0, z, chance() < 0.7 ? "minecraft:sand" : "minecraft:coarse_dirt");
                     }
                     if (dd >= 7.5 && dd < 8.5) {
-                        rp.set(x, 1, z, x == 8 && z == 16 ? "minecraft:pale_oak_fence_gate[facing=north,open=true]" : "minecraft:pale_oak_fence");
+                        rp.set(x, 1, z, "air");
                     }
                 }
             }
         }
+        if (rp != null) {
+            // the round pen's white boards, smooth round on their posts, the gate at the south
+            Round.wall(rp, 8.5, 8.5, 8.3, 1, 1, "paddock", 0);
+            Doors.place(rp, 8, 1, 16, "fm_gate", "south", "left", true);
+        }
         // a horse trailer and its truck
         Placer ht = put(4, 9, 0, ydx + 7, yardEnd - 12, 1);
         if (ht != null) {
-            for (int z = 0; z < 8; z++) {
-                for (int x = 0; x < 3; x++) {
-                    boolean wheel = (z == 2 || z == 5) && x != 1;
-                    ht.set(x, 1, z, wheel ? "tire[axis=x]" : "minecraft:smooth_quartz");
-                    ht.set(x, 2, z, x == 1 && z > 0 && z < 7 ? "air" : "minecraft:smooth_quartz");
-                    ht.set(x, 3, z, z % 3 == 0 ? "minecraft:smooth_quartz" : x == 1 ? "minecraft:smooth_quartz" : "minecraft:iron_bars");
-                    ht.set(x, 4, z, "minecraft:smooth_quartz_slab[type=bottom]");
-                }
-            }
-            ht.set(1, 2, 7, "minecraft:iron_trapdoor[facing=north,half=bottom,open=true]");
+            ht.vehicle(1.5, 1, 4.5, 180, "=horse_trailer", rng.nextLong());
             yp.vehicle(ydx + 8.5, 1, yardEnd - 18, 0, "pickup", rng.nextLong());
         }
         Placer m = put(8, 6, 0, ydx - 14, yd - 10, 1);
@@ -755,7 +751,7 @@ final class FarmSite extends Site {
                 }
             }
             for (int x = 2; x < 20; x++) {
-                ps.set(x, 1, 1, x == 2 || x == 19 ? "minecraft:barrel[facing=up]" : "rail[axis=x]");
+                ps.set(x, 1, 1, x == 2 || x == 19 ? "fm_drum" : "rail[axis=x]");
             }
         }
         barnComplex(12, 20, chance() < 0.7 ? "barn_red" : "barn_grey", any("minecraft:deepslate_tile", Farmstead.TIN[0]), true,
@@ -768,9 +764,6 @@ final class FarmSite extends Site {
         if (hw != null) {
             Farmstead fs = new Farmstead(hw, rng, hit);
             fs.hayWagon(0, 0, 1);
-            for (int z = 0; z < 6; z += 2) {
-                hw.set(1, 2, z, "apple_crate");
-            }
         }
         // a few trees in the yard itself, the oldest of the orchard
         for (int i = 0; i < 3; i++) {
@@ -821,7 +814,13 @@ final class FarmSite extends Site {
                 for (int z = 0; z < 10; z++) {
                     boolean edge = x == 0 || z == 0 || x == 13 || z == 9;
                     if (edge) {
-                        kg.set(x, 1, z, x == 6 && z == 0 ? "minecraft:spruce_fence_gate[facing=north,open=true]" : "minecraft:spruce_fence");
+                        boolean corner = (x == 0 || x == 13) && (z == 0 || z == 9);
+                        if (x == 6 && z == 0) {
+                            Doors.place(kg, x, 1, z, "fm_gate", "north", "left", true);
+                        } else {
+                            kg.set(x, 1, z, corner ? "fm_post" : "chainlink[axis=" + (z == 0 || z == 9 ? "x" : "z") + "]");
+                            kg.set(x, 2, z, corner ? "fm_post" : "chainlink[axis=" + (z == 0 || z == 9 ? "x" : "z") + "]");
+                        }
                         continue;
                     }
                     if (z % 3 == 0) {
@@ -853,10 +852,10 @@ final class FarmSite extends Site {
             kit.pond(at[0], at[1], 4);
         }
         // the split rail fence round the yard
-        Kit.fenceLine(yp, rng, 0, 0, ydx - 3, 0, "minecraft:spruce_fence", 0.08);
-        Kit.fenceLine(yp, rng, ydx + 3, 0, yw - 1, 0, "minecraft:spruce_fence", 0.08);
-        Kit.fenceLine(yp, rng, 0, 1, 0, yd - 1, "minecraft:spruce_fence", 0.1);
-        Kit.fenceLine(yp, rng, yw - 1, 1, yw - 1, yd - 1, "minecraft:spruce_fence", 0.1);
+        Kit.railFence(yp, rng, 0, 0, ydx - 3, 0, false, 0.08);
+        Kit.railFence(yp, rng, ydx + 3, 0, yw - 1, 0, false, 0.08);
+        Kit.railFence(yp, rng, 0, 1, 0, yd - 1, false, 0.1);
+        Kit.railFence(yp, rng, yw - 1, 1, yw - 1, yd - 1, false, 0.1);
         yp.vehicle(ydx + (houseLeft ? 4 : -4), 1, yardEnd - 6, (float) (chance() * 360), "pickup", rng.nextLong());
         yardStory();
     }
@@ -895,20 +894,20 @@ final class FarmSite extends Site {
         String post, rail;
         switch (f.crop()) {
             case PASTURE -> {
-                post = "minecraft:spruce_fence";
+                post = "fm_post";
                 rail = "barbed_wire";
             }
             case PADDOCK, ARENA -> {
-                post = "minecraft:pale_oak_fence";
-                rail = "minecraft:pale_oak_fence";
+                post = "fm_rail_post_w";
+                rail = "fm_rail_w";
             }
             case GARDEN -> {
-                post = "minecraft:spruce_fence";
+                post = "fm_post";
                 rail = "chainlink";
             }
             default -> {
-                post = "minecraft:spruce_fence";
-                rail = "minecraft:spruce_fence";
+                post = "fm_rail_post";
+                rail = "fm_rail";
             }
         }
         int gateSide = roadSide(f);
@@ -928,19 +927,23 @@ final class FarmSite extends Site {
             return;
         }
         if (gate) {
-            out.set(x, 1, z, "minecraft:spruce_fence_gate[facing=" + side + ",open=" + (chance() < 0.5) + "]");
+            Doors.place(new Placer(out, 0, 0, 0, 0), x, 1, z, "fm_gate", side, "left", chance() < 0.5);
             return;
         }
         double r = chance();
         if (r < 0.05) {
             return;  // gone
         }
+        String a = "[axis=" + axis + "]";
         if (isPost || r < 0.08) {
-            out.set(x, 1, z, post);
-        } else if (rail.equals("barbed_wire") || rail.equals("chainlink")) {
-            out.set(x, 1, z, rail + "[axis=" + axis + "]");
+            out.set(x, 1, z, post.startsWith("fm_rail") ? post + a : post);
+        } else if (rail.equals("barbed_wire")) {
+            // a steel T-post between the wooden ones
+            out.set(x, 1, z, ((axis.equals("x") ? x : z) % 2 == 0 ? "fm_tpost" : rail) + a);
+        } else if (rail.equals("fm_rail") && r < 0.14) {
+            out.set(x, 1, z, "fm_rail_broken" + a);
         } else {
-            out.set(x, 1, z, rail);
+            out.set(x, 1, z, rail + a);
         }
     }
 
@@ -1041,9 +1044,9 @@ final class FarmSite extends Site {
                 out.set(x, 0, z, chance() < 0.6 ? "minecraft:grass_block" : "minecraft:coarse_dirt");
                 double r = chance();
                 if (r < 0.14) {
-                    out.set(x, 1, z, "minecraft:pumpkin");
+                    out.set(x, 1, z, "fm_pumpkin[facing=" + any(Farmstead.DIRS) + "]");
                 } else if (r < 0.15) {
-                    out.set(x, 1, z, "minecraft:carved_pumpkin[facing=" + any(Farmstead.DIRS) + "]");
+                    out.set(x, 1, z, "fm_pumpkin_carved[facing=" + any(Farmstead.DIRS) + "]");
                 } else if (r < 0.45) {
                     out.set(x, 1, z, "minecraft:short_grass");
                 } else if (r < 0.55) {
@@ -1067,7 +1070,8 @@ final class FarmSite extends Site {
                 }
                 int row = f.alongX() ? z - z0 : x - x0, along = f.alongX() ? x - x0 : z - z0;
                 if (row % 9 == 4 && along % 7 == 3 && chance() < 0.75) {
-                    out.set(x, 1, z, chance() < 0.3 ? "bale_wrap" : "minecraft:hay_block[axis=" + (f.alongX() ? "x" : "z") + "]");
+                    String ax = "[axis=" + (f.alongX() ? "x" : "z") + "]";
+                    out.set(x, 1, z, chance() < 0.3 ? "fm_wrap" + ax : chance() < 0.15 ? "fm_bale_up" : (chance() < 0.4 ? "fm_bale_grey" : "fm_bale") + ax);
                 }
             }
         }
@@ -1075,7 +1079,7 @@ final class FarmSite extends Site {
         for (int y = 1; y <= 3; y++) {
             for (int i = y - 1; i < 7 - y; i++) {
                 for (int j = 0; j < 3; j++) {
-                    out.set(x0 + 1 + i, y, z0 + 1 + j, "minecraft:hay_block[axis=x]");
+                    out.set(x0 + 1 + i, y, z0 + 1 + j, y == 3 || i == y - 1 || i == 6 - y ? "fm_bales_low[axis=x]" : "fm_bales[axis=x]");
                 }
             }
         }
@@ -1105,15 +1109,15 @@ final class FarmSite extends Site {
                 out.set(gx + dx, 2, gz + dz, "air");
             }
         }
-        out.set(gx, 1, gz, "minecraft:water_cauldron[level=" + (1 + rng.nextInt(3)) + "]");
-        out.set(gx + 1, 1, gz, "minecraft:cauldron");
+        out.set(gx, 1, gz, "fm_water_trough[axis=x]");
+        out.set(gx + 1, 1, gz, "fm_water_trough[axis=x]");
         if (f.w() > 24 && f.d() > 24) {
             kit.tree(chance() < 0.6 ? Trees.Kind.OAK : Trees.Kind.MAPLE, (x0 + x1) / 2 - 6, (z0 + z1) / 2);
         }
         if (chance() < 0.4) {
             int bx = x0 + 3 + rng.nextInt(Math.max(1, x1 - x0 - 6)), bz = z0 + 3 + rng.nextInt(Math.max(1, z1 - z0 - 6));
-            out.set(bx, 1, bz, "minecraft:bone_block[axis=x]");
-            out.set(bx + 1, 1, bz, "minecraft:bone_block[axis=x]");
+            out.set(bx, 1, bz, "fm_bones[facing=east]");
+            out.set(bx + 1, 1, bz, "fm_bones[facing=north]");
             out.set(bx + 1, 1, bz + 1, "blood_splat");
         }
         if (f.crop() == Crop.PADDOCK) {
@@ -1127,7 +1131,8 @@ final class FarmSite extends Site {
                     for (int y = 1; y <= 3; y++) {
                         out.set(x, y, z, back || sides ? (y == 3 ? "barn_grey" : "barn_grey_b") : "air");
                     }
-                    out.set(x, 4, z, Farmstead.TIN[1] + "_slab[type=bottom]");
+                    boolean front = roadSide(f) == 0 ? z == sz : z == sz + 3;
+                    out.set(x, 4, z, "ext_porch_roof_tin_red" + (front ? "_edge" : "") + "[facing=" + (roadSide(f) == 0 ? "north" : "south") + "]");
                     if (!back && !sides && chance() < 0.5) {
                         out.set(x, 1, z, "straw_floor");
                     }
@@ -1160,7 +1165,7 @@ final class FarmSite extends Site {
         }
         int trunk = 2 + rng.nextInt(2);
         for (int y = 1; y <= trunk; y++) {
-            out.set(x, y, z, "minecraft:oak_log[axis=y]");
+            out.set(x, y, z, "tree_oak_log");
         }
         double r = 2.2 + chance() * 0.6;
         for (int dx = -3; dx <= 3; dx++) {
@@ -1201,8 +1206,8 @@ final class FarmSite extends Site {
                 appleTree(x, z);
                 if (r > 0.92) {
                     // a picker's ladder still leaning in it, a crate half full beneath
-                    out.set(x + 1, 1, z, "ladder[facing=east]");
-                    out.set(x + 1, 2, z, "ladder[facing=east]");
+                    out.set(x + 1, 1, z, "fm_ladder[facing=east]");
+                    out.set(x + 1, 2, z, "fm_ladder[facing=east]");
                     out.set(x + 2, 1, z, "apple_crate");
                 }
             }
@@ -1227,13 +1232,14 @@ final class FarmSite extends Site {
                 }
                 boolean rail = in && (x == ax0 || x == ax1 || z == az0 || z == az1);
                 if (rail) {
-                    out.set(x, 1, z, "minecraft:pale_oak_fence");
-                    out.set(x, 2, z, (x + z) % 3 == 0 ? "minecraft:pale_oak_fence" : "air");
+                    String a = "[axis=" + (z == az0 || z == az1 ? "x" : "z") + "]";
+                    boolean corner = (x == ax0 || x == ax1) && (z == az0 || z == az1);
+                    out.set(x, 1, z, corner ? "fm_post_w" : (x + z) % 4 == 0 ? "fm_rail_post_w" + a : "fm_rail_w" + a);
+                    out.set(x, 2, z, "air");
                 }
             }
         }
-        out.set((ax0 + ax1) / 2, 1, az0, "minecraft:pale_oak_fence_gate[facing=north,open=true]");
-        out.set((ax0 + ax1) / 2, 2, az0, "air");
+        Doors.place(new Placer(out, 0, 0, 0, 0), (ax0 + ax1) / 2, 1, az0, "fm_gate", "north", "left", true);
         // the jumps: rails between white standards, a barrel jump
         for (int k = 0; k < 4; k++) {
             int jx = ax0 + 6 + rng.nextInt(Math.max(1, ax1 - ax0 - 12)), jz = az0 + 4 + rng.nextInt(Math.max(1, az1 - az0 - 8));
@@ -1241,9 +1247,10 @@ final class FarmSite extends Site {
             for (int i = 0; i < 4; i++) {
                 int x = jx + (alongX ? i : 0), z = jz + (alongX ? 0 : i);
                 boolean end = i == 0 || i == 3;
-                out.set(x, 1, z, k == 3 && !end ? "minecraft:barrel[facing=" + (alongX ? "east" : "south") + "]" : end ? "minecraft:pale_oak_fence" : "minecraft:birch_fence");
+                String a = "[axis=" + (alongX ? "x" : "z") + "]";
+                out.set(x, 1, z, k == 3 && !end ? "fm_drum" : end ? "fm_post_w" : "fm_rail_w" + a);
                 if (end) {
-                    out.set(x, 2, z, "minecraft:pale_oak_fence");
+                    out.set(x, 2, z, "fm_post_w");
                 }
             }
         }
@@ -1322,9 +1329,9 @@ final class FarmSite extends Site {
                 int lx = g[0] + sx * 4, lz = g[1] + fx;
                 if (inside(lx, lz) && kit.use(lx, lz) != Kit.ROAD) {
                     for (int y = 1; y <= 4; y++) {
-                        out.set(lx, y, lz, "minecraft:spruce_fence");
+                        out.set(lx, y, lz, "pole_wood");
                     }
-                    out.set(lx, 5, lz, chance() < 0.5 ? "minecraft:lantern" : "minecraft:iron_chain[axis=y]");
+                    out.set(lx, 5, lz, (chance() < 0.4 ? "streetlight_head" : "streetlight_head_off") + "[facing=" + (fx == 1 ? "south" : "north") + "]");
                 }
             }
             String sign = switch (p.variant) {
@@ -1350,7 +1357,7 @@ final class FarmSite extends Site {
                 }
             } else if (chance() < 0.15) {
                 int z = roadSide(f) == 0 ? f.z0() : f.z1();
-                out.set(f.x1() - 4, 1, z, "minecraft:spruce_fence");
+                out.set(f.x1() - 4, 1, z, "fm_post");
             }
         }
         kit.abandonedCars(main, 1.2);
@@ -1361,7 +1368,7 @@ final class FarmSite extends Site {
             double[] q = main.point(main.length() * (0.2 + chance() * 0.6));
             int x = (int) (q[0] + q[3] * (main.style.half + 2)), z = (int) (q[1] - q[2] * (main.style.half + 2));
             if (inside(x, z) && inside(x + 3, z + 5) && kit.free(x, z, x + 2, z + 4)) {
-                new Farmstead(new Placer(out, x, 0, z, rng.nextInt(4)), rng, hit).tractor(0, 0, any("red", "green"));
+                new Farmstead(new Placer(out, x, 0, z, rng.nextInt(4)), rng, hit).tractor(0, 0, any("red", "green"), any("@abandoned", "@wrecked", "@burnt"));
             }
         }
     }

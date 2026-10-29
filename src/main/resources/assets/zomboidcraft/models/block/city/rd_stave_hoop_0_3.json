@@ -1,0 +1,125 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "silo_stave": "zomboidcraft:block/city/silo_stave",
+    "particle": "zomboidcraft:block/city/silo_stave"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.25,
+        0,
+        10.0
+      ],
+      "to": [
+        16.25,
+        16,
+        13.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#silo_stave",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#silo_stave"
+        },
+        "west": {
+          "texture": "#silo_stave"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            10.0,
+            16,
+            13.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            3.0,
+            16,
+            6.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -0.25,
+        7,
+        9.4
+      ],
+      "to": [
+        16.25,
+        8,
+        10.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            9.4,
+            16,
+            10.0
+          ]
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "uv": [
+            0,
+            6.0,
+            16,
+            6.6
+          ]
+        }
+      }
+    }
+  ]
+}

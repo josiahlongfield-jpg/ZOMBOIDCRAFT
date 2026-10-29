@@ -1,0 +1,125 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fm_sq_end": "zomboidcraft:block/city/fm_sq_end",
+    "fm_sq_side": "zomboidcraft:block/city/fm_sq_side",
+    "fm_sq_top": "zomboidcraft:block/city/fm_sq_top",
+    "particle": "zomboidcraft:block/city/fm_sq_end"
+  },
+  "elements": [
+    {
+      "from": [
+        0.28,
+        0,
+        0.68
+      ],
+      "to": [
+        7.88,
+        7.8,
+        16.28
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_sq_end"
+        },
+        "south": {
+          "texture": "#fm_sq_end"
+        },
+        "east": {
+          "texture": "#fm_sq_side",
+          "uv": [
+            0,
+            8.2,
+            15.600000000000001,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fm_sq_side",
+          "uv": [
+            0.3999999999999986,
+            8.2,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#fm_sq_top",
+          "uv": [
+            0.28,
+            0.3999999999999986,
+            7.88,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#fm_sq_top",
+          "uv": [
+            0.28,
+            0,
+            7.88,
+            15.600000000000001
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.37,
+        0,
+        -0.13
+      ],
+      "to": [
+        15.97,
+        7.8,
+        15.47
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_sq_end"
+        },
+        "south": {
+          "texture": "#fm_sq_end"
+        },
+        "east": {
+          "texture": "#fm_sq_side",
+          "uv": [
+            0.40000000000000036,
+            8.2,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fm_sq_side",
+          "uv": [
+            0,
+            8.2,
+            15.600000000000001,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#fm_sq_top",
+          "uv": [
+            8.37,
+            0,
+            15.97,
+            15.600000000000001
+          ]
+        },
+        "down": {
+          "texture": "#fm_sq_top",
+          "uv": [
+            8.37,
+            0.40000000000000036,
+            15.97,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
