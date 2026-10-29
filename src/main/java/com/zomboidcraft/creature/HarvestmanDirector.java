@@ -73,6 +73,11 @@ public final class HarvestmanDirector {
         /** Where it's travelling to while away: its target, or home. */
         boolean homeward;
         String state = "";
+        /** What it's learned of its ground and the people on it (HarvestmanGoals). */
+        HarvestmanTerritory land = new HarvestmanTerritory();
+        /** What it had learned (HarvestmanMind.learned), and when it was last in reach (game time). */
+        double[] learned;
+        long leftAt;
     }
 
     private static final Map<String, Record> RECORDS = new LinkedHashMap<>();
@@ -118,6 +123,7 @@ public final class HarvestmanDirector {
                 if (r != null && h.isAlive() && entity.getRemovalReason() != null && !entity.getRemovalReason().shouldDestroy()) {
                     copy(h, r);
                     r.away = h.position();
+                    r.leftAt = level.getGameTime();
                 }
             }
         });
@@ -161,6 +167,11 @@ public final class HarvestmanDirector {
             server.execute(h::discard);
             return;
         }
+        // the time it spent out of reach: it's that much hungrier
+        if (r.leftAt > 0) {
+            h.mind.away((level.getGameTime() - r.leftAt) / 1000.0);
+            r.leftAt = 0;
+        }
         r.away = null;
         LOADED.put(id, h);
     }
@@ -171,6 +182,7 @@ public final class HarvestmanDirector {
         r.stage = h.mind.stage;
         r.lair = h.mind.lair;
         r.state = h.mind.doing();
+        r.learned = h.mind.learned();
     }
 
     /** Brings one out of the dark at a place, as the next copy of itself. */
@@ -184,6 +196,8 @@ public final class HarvestmanDirector {
         h.mind.gen = r.gen;
         h.mind.lair = r.lair;
         h.mind.stage = r.stage;
+        h.mind.learned(r.learned, r.leftAt > 0 ? (level.getGameTime() - r.leftAt) / 1000.0 : 0);
+        r.leftAt = 0;
         h.snapTo(at.x, at.y, at.z, level.getRandom().nextFloat() * 360f, 0f);
         h.setHealth((float) Math.max(1, r.health));
         for (int i = 0; i < 4; i++) {
@@ -239,6 +253,33 @@ public final class HarvestmanDirector {
         }
         ServerPlayer p = level.getServer().getPlayerList().getPlayer(target);
         return p != null && p.level() == level && !p.isSpectator() && !p.isCreative() && p.isAlive() ? p : null;
+    }
+
+    /** What this Harvestman knows of its ground: kept with its record, so it travels with it. */
+    static HarvestmanTerritory land(HarvestmanEntity h) {
+        Record r = RECORDS.get(h.mind.hid);
+        return r != null ? r.land : null;
+    }
+
+    /** The other Harvestmen's dens (their grounds are theirs: it keeps off them). */
+    static List<BlockPos> otherDens(HarvestmanEntity h) {
+        List<BlockPos> dens = new ArrayList<>();
+        for (Record r : RECORDS.values()) {
+            if (!r.id.equals(h.mind.hid) && r.lair != null) {
+                dens.add(r.lair);
+            }
+        }
+        return dens;
+    }
+
+    /** The quiet after a hunt, when the world is left alone. */
+    static boolean grace(ServerLevel level) {
+        return level.getGameTime() < graceUntil;
+    }
+
+    /** This one is the hunter (whether or not its target is about). */
+    static boolean isHunter(HarvestmanEntity h) {
+        return h.mind.hid.equals(hunter) && target != null;
     }
 
     /** A noise: every Harvestman in earshot hears it (they hear further than zombies). */
@@ -779,6 +820,17 @@ public final class HarvestmanDirector {
                     r.away = o.has("ax") ? new Vec3(o.get("ax").getAsDouble(), o.get("ay").getAsDouble(), o.get("az").getAsDouble()) : null;
                     r.homeward = o.has("homeward") && o.get("homeward").getAsBoolean();
                     r.state = o.has("state") ? o.get("state").getAsString() : "";
+                    if (o.has("land")) {
+                        r.land = HarvestmanTerritory.load(o.getAsJsonObject("land"));
+                    }
+                    if (o.has("learned")) {
+                        JsonArray l = o.getAsJsonArray("learned");
+                        r.learned = new double[l.size()];
+                        for (int i = 0; i < l.size(); i++) {
+                            r.learned[i] = l.get(i).getAsDouble();
+                        }
+                    }
+                    r.leftAt = o.has("leftAt") ? o.get("leftAt").getAsLong() : 0;
                     RECORDS.put(r.id, r);
                 }
                 JsonObject players = root.getAsJsonObject("players");
@@ -850,6 +902,15 @@ public final class HarvestmanDirector {
             }
             o.addProperty("homeward", r.homeward);
             o.addProperty("state", r.state);
+            o.add("land", r.land.save());
+            if (r.learned != null) {
+                JsonArray l = new JsonArray();
+                for (double v : r.learned) {
+                    l.add(v);
+                }
+                o.add("learned", l);
+            }
+            o.addProperty("leftAt", r.leftAt);
             records.add(o);
         }
         root.add("records", records);
