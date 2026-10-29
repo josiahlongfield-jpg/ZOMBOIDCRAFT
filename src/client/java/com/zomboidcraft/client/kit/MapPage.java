@@ -423,7 +423,8 @@ final class MapPage {
             }
             int r = Math.max(5, Math.round(MapNet.AREA * 0.6f * zoom));
             ring(g, Math.round(x), Math.round(y), r, colour & 0x00FFFFFF | 0x33000000, colour);
-            KitDraw.diamond(g, Math.round(x), Math.round(y), 3, colour);
+            // no pin-point in a ring big enough to read: they're somewhere inside it
+            if (r < 10) KitDraw.diamond(g, Math.round(x), Math.round(y), 3, colour);
             halo(g, font, p.name(), x, y + Math.min(r, 14) + 2, colour, 0.62f, true);
         }
     }
