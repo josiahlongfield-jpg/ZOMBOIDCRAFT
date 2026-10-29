@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -147,11 +148,10 @@ public final class Guns {
         st.flashLeft = FLASH_TICKS;
         setModelData(gun, 0, config.muzzleFlash ? 1 : 0);
 
-        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
+        // the bang: the shooter's client plays the close one at once; everyone else hears it by how far off they are.
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1f,
+        bang(level, player, type, suppressed, suppressed ? (float) config.suppressedVolume : 1f,
                 (suppressed ? (float) stats.suppressedPitch : 1f) * (0.95f + player.getRandom().nextFloat() * 0.1f));
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
@@ -369,6 +369,39 @@ public final class Guns {
             player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
                     net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.BULLET_WHIZZ), SoundSource.PLAYERS,
                     at.x, at.y, at.z, 0.8f, 0.9f + player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
+        }
+    }
+
+    /** Within this many blocks of a shot you hear the close bang; past FAR_BANG the far-off take; between, a crossfade. */
+    private static final double CLOSE_BANG = 16, FAR_BANG = 48;
+
+    /** A shot as each other player hears it: the close bang near the shooter, fading into the far-off take with distance. */
+    private static void bang(ServerLevel level, ServerPlayer shooter, GunType type, boolean suppressed, float volume, float pitch) {
+        SoundEvent close = type.shot(suppressed, false), far = type.shot(suppressed, true);
+        double range = Math.max(close.getRange(volume), far.getRange(volume));
+        long seed = shooter.getRandom().nextLong();
+        double x = shooter.getX(), y = shooter.getEyeY(), z = shooter.getZ();
+        for (ServerPlayer p : level.players()) {
+            double d = Math.sqrt(p.distanceToSqr(x, y, z));
+            if (p == shooter || d > range) {
+                continue;
+            }
+            // equal-power, so the shot doesn't dip in loudness halfway between
+            double t = close == far ? 0 : Mth.clamp((d - CLOSE_BANG) / (FAR_BANG - CLOSE_BANG), 0, 1) * Math.PI / 2;
+            if (t < Math.PI / 2) {
+                send(p, close, x, y, z, volume * (float) Math.cos(t), pitch, seed);
+            }
+            if (t > 0) {
+                send(p, far, x, y, z, volume * (float) Math.sin(t), pitch, seed);
+            }
+        }
+    }
+
+    private static void send(ServerPlayer p, SoundEvent sound, double x, double y, double z, float volume, float pitch, long seed) {
+        if (volume > 0.01f) {
+            p.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
+                    net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), SoundSource.PLAYERS,
+                    x, y, z, volume, pitch, seed));
         }
     }
 
