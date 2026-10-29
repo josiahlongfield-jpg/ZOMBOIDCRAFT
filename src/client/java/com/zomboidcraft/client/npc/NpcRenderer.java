@@ -44,7 +44,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     private static final float LX, LY, LZ;
     private static final float LIT = 1.06f, MID = 0.86f, SHADE = 0.68f;
     /** Where the right wrist is on the rest pose (the dark elf's), and which way her forearm runs from the elbow. */
-    private static final Vector3f WRIST = new Vector3f(-0.57f, 0.98f, 0f), FOREARM = new Vector3f(-0.24f, -0.23f, 0f).normalize();
+    private static final Vector3f WRIST = new Vector3f(-0.50f, 1.03f, -0.09f), FOREARM = new Vector3f(-0.17f, -0.16f, -0.03f).normalize();
 
     static {
         float x = -0.4f, y = 0.8f, z = 0.45f, len = (float) Math.sqrt(x * x + y * y + z * z);
