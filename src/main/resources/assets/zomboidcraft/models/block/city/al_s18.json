@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_radome": "zomboidcraft:block/city/al_radome",
+    "particle": "zomboidcraft:block/city/al_radome"
+  },
+  "elements": [
+    {
+      "from": [
+        11.734,
+        -1.211,
+        0.0
+      ],
+      "to": [
+        14.734,
+        3.743,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_radome",
+          "uv": [
+            1.266,
+            11.046,
+            4.266,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_dark",
+          "uv": [
+            11.734,
+            11.046,
+            14.734,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_radome",
+          "uv": [
+            14.0,
+            11.046,
+            16.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0.0,
+            11.046,
+            2.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          14.734,
+          1.266,
+          1.0
+        ],
+        "axis": "z",
+        "angle": -44.65
+      }
+    },
+    {
+      "from": [
+        14.578,
+        0.324,
+        2.0
+      ],
+      "to": [
+        16.736,
+        3.324,
+        4.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_radome",
+          "uv": [
+            0,
+            12.676,
+            2.158,
+            15.676
+          ]
+        },
+        "south": {
+          "texture": "#al_dark",
+          "uv": [
+            13.842,
+            12.676,
+            16,
+            15.676
+          ]
+        },
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            13.842,
+            2.0,
+            16,
+            4.0
+          ]
+        },
+        "down": {
+          "texture": "#al_radome",
+          "uv": [
+            13.842,
+            12.0,
+            16,
+            14.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          15.657,
+          0.324,
+          3.0
+        ],
+        "axis": "z",
+        "angle": 44.375
+      }
+    }
+  ]
+}

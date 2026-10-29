@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "zomboidcraft:block/city/cr_strut_white_3_p1"
+    },
+    "facing=east": {
+      "model": "zomboidcraft:block/city/cr_strut_white_3_p1",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "zomboidcraft:block/city/cr_strut_white_3_p1",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "zomboidcraft:block/city/cr_strut_white_3_p1",
+      "y": 270
     }
   }
 }

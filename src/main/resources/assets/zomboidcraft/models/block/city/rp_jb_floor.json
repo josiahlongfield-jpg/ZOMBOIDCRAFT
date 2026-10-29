@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_clad": "zomboidcraft:block/city/rp_clad",
+    "rp_tread": "zomboidcraft:block/city/rp_tread",
+    "rp_under": "zomboidcraft:block/city/rp_under",
+    "particle": "zomboidcraft:block/city/rp_clad"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_clad",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rp_clad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_under",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

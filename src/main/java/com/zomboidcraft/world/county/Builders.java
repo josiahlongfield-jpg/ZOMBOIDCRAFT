@@ -198,7 +198,7 @@ public final class Builders {
             "floor|terrazzo|parquet|lino|carpet|boards|plank|deck|tile|concrete|slab|marble|grate|plate");
 
     /** Ladders a hatch can stand over (not a stepladder, a slide's or the monkey bars). */
-    private static final Set<String> LADDERS = Set.of("ladder", "bunk_ladder", "minecraft:ladder", "vessel_pilot_ladder");
+    private static final Set<String> LADDERS = Set.of("ladder", "bunk_ladder", "fm_ladder", "fm_ladder_broken", "minecraft:ladder", "vessel_pilot_ladder");
 
     /**
      * Every hatch over a ladder hinges on the far side from it: open, its leaf stands against the

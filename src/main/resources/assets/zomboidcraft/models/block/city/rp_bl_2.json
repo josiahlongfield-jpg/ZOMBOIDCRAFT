@@ -1,0 +1,262 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_belt": "zomboidcraft:block/city/rp_belt",
+    "rp_white": "zomboidcraft:block/city/rp_white",
+    "rp_yellow": "zomboidcraft:block/city/rp_yellow",
+    "particle": "zomboidcraft:block/city/rp_white"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        7,
+        -1.044
+      ],
+      "to": [
+        14,
+        8,
+        17.044
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_white"
+        },
+        "south": {
+          "texture": "#rp_white"
+        },
+        "east": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#rp_belt",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rp_white",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -26.56505117707799
+      }
+    },
+    {
+      "from": [
+        1,
+        6.5,
+        -1.044
+      ],
+      "to": [
+        2,
+        10,
+        17.044
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_white"
+        },
+        "south": {
+          "texture": "#rp_white"
+        },
+        "east": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            6,
+            16,
+            9.5
+          ]
+        },
+        "west": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            6,
+            16,
+            9.5
+          ]
+        },
+        "up": {
+          "texture": "#rp_white",
+          "uv": [
+            1,
+            0,
+            2,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rp_white",
+          "uv": [
+            1,
+            0,
+            2,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -26.56505117707799
+      }
+    },
+    {
+      "from": [
+        14,
+        6.5,
+        -1.044
+      ],
+      "to": [
+        15,
+        10,
+        17.044
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_white"
+        },
+        "south": {
+          "texture": "#rp_white"
+        },
+        "east": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            6,
+            16,
+            9.5
+          ]
+        },
+        "west": {
+          "texture": "#rp_white",
+          "uv": [
+            0,
+            6,
+            16,
+            9.5
+          ]
+        },
+        "up": {
+          "texture": "#rp_white",
+          "uv": [
+            14,
+            0,
+            15,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rp_white",
+          "uv": [
+            14,
+            0,
+            15,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -26.56505117707799
+      }
+    },
+    {
+      "from": [
+        7,
+        -12,
+        6
+      ],
+      "to": [
+        9,
+        7,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_yellow",
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rp_yellow",
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rp_yellow",
+          "uv": [
+            8,
+            0,
+            10,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rp_yellow",
+          "uv": [
+            6,
+            0,
+            8,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rp_yellow"
+        },
+        "down": {
+          "texture": "#rp_yellow"
+        }
+      }
+    }
+  ]
+}

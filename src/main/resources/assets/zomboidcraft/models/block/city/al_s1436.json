@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_navy": "zomboidcraft:block/city/al_navy",
+    "particle": "zomboidcraft:block/city/al_navy"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        14.496
+      ],
+      "to": [
+        0.476,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_navy",
+          "uv": [
+            15.524,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_navy",
+          "uv": [
+            0.0,
+            8.0,
+            0.476,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_navy",
+          "uv": [
+            16.0,
+            8.0,
+            14.496,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            0.0,
+            14.496,
+            0.476,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            0.0,
+            0.0,
+            0.476,
+            1.504
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -2.013,
+        -1.755,
+        14.336
+      ],
+      "to": [
+        2.013,
+        9.755,
+        16.256
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_navy",
+          "uv": [
+            11.974,
+            4.49,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_navy",
+          "uv": [
+            0,
+            4.49,
+            4.026,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_navy",
+          "uv": [
+            0,
+            4.49,
+            1.92,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_navy",
+          "uv": [
+            14.08,
+            4.49,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            0,
+            14.08,
+            4.026,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            0,
+            0,
+            4.026,
+            1.92
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.0,
+          4.0,
+          15.296
+        ],
+        "axis": "x",
+        "angle": 42.614
+      }
+    }
+  ]
+}

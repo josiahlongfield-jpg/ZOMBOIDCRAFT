@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_navy": "zomboidcraft:block/city/rp_navy",
+    "particle": "zomboidcraft:block/city/rp_navy"
+  },
+  "elements": [
+    {
+      "from": [
+        0.4,
+        0,
+        1
+      ],
+      "to": [
+        1.4,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy"
+        },
+        "south": {
+          "texture": "#rp_navy"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_navy",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.6,
+        0,
+        1
+      ],
+      "to": [
+        15.6,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy"
+        },
+        "south": {
+          "texture": "#rp_navy"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_navy",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.4,
+        0,
+        14
+      ],
+      "to": [
+        1.4,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy"
+        },
+        "south": {
+          "texture": "#rp_navy"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_navy",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.6,
+        0,
+        14
+      ],
+      "to": [
+        15.6,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy"
+        },
+        "south": {
+          "texture": "#rp_navy"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_navy",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

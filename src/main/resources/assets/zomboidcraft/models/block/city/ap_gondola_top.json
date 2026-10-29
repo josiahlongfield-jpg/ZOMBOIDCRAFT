@@ -1,0 +1,180 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_books_retail": "zomboidcraft:block/city/ap_books_retail",
+    "ap_laminate": "zomboidcraft:block/city/ap_laminate",
+    "ap_store_books_1": "zomboidcraft:block/city/ap_store_books_1",
+    "particle": "zomboidcraft:block/city/ap_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        0.2
+      ],
+      "to": [
+        7.5,
+        12,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate"
+        },
+        "south": {
+          "texture": "#ap_laminate"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        0,
+        0.2
+      ],
+      "to": [
+        14,
+        12,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate"
+        },
+        "south": {
+          "texture": "#ap_laminate"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        0,
+        0
+      ],
+      "to": [
+        8.5,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        0
+      ],
+      "to": [
+        14,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        13,
+        0
+      ],
+      "to": [
+        14.5,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_store_books_1"
+        },
+        "west": {
+          "texture": "#ap_store_books_1"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_clad": "zomboidcraft:block/city/rp_clad",
+    "rp_lining": "zomboidcraft:block/city/rp_lining",
+    "particle": "zomboidcraft:block/city/rp_clad"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_lining"
+        },
+        "east": {
+          "texture": "#rp_lining",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_clad",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_clad",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad"
+        },
+        "south": {
+          "texture": "#rp_lining",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rp_lining"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_clad",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_clad",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

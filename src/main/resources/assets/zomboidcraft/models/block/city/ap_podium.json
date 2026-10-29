@@ -1,0 +1,222 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_counter_front": "zomboidcraft:block/city/ap_counter_front",
+    "ap_counter_top": "zomboidcraft:block/city/ap_counter_top",
+    "home_plastic_beige": "zomboidcraft:block/city/home_plastic_beige",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/ap_counter_front"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_counter_front"
+        },
+        "south": {
+          "texture": "#ap_counter_front"
+        },
+        "east": {
+          "texture": "#ap_counter_front"
+        },
+        "west": {
+          "texture": "#ap_counter_front"
+        },
+        "up": {
+          "texture": "#ap_counter_top"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        3
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_counter_top"
+        },
+        "south": {
+          "texture": "#ap_counter_top"
+        },
+        "east": {
+          "texture": "#ap_counter_top"
+        },
+        "west": {
+          "texture": "#ap_counter_top"
+        },
+        "up": {
+          "texture": "#ap_counter_top"
+        },
+        "down": {
+          "texture": "#ap_counter_top"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        13,
+        8
+      ],
+      "to": [
+        11,
+        17,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "uv": [
+            5,
+            0,
+            6,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#st_galv",
+          "uv": [
+            10,
+            0,
+            11,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#st_galv",
+          "uv": [
+            7,
+            0,
+            8,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#st_galv",
+          "uv": [
+            8,
+            0,
+            9,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        17,
+        7
+      ],
+      "to": [
+        12,
+        18,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            4,
+            0,
+            7.5,
+            1
+          ]
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            8.5,
+            0,
+            12,
+            1
+          ]
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            6,
+            0,
+            9,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            7,
+            0,
+            10,
+            1
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        13,
+        6
+      ],
+      "to": [
+        9,
+        13.6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_beige"
+        },
+        "south": {
+          "texture": "#home_plastic_beige"
+        },
+        "east": {
+          "texture": "#home_plastic_beige"
+        },
+        "west": {
+          "texture": "#home_plastic_beige"
+        },
+        "up": {
+          "texture": "#home_plastic_beige"
+        },
+        "down": {
+          "texture": "#home_plastic_beige"
+        }
+      }
+    }
+  ]
+}

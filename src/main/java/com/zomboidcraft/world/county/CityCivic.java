@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,7 @@ final class CityCivic {
     /** A city lamp head: the purple most of them are, now and then green or amber, some dead. */
     String cityLamp(double dead) {
         if (chance() < dead) {
-            return "minecraft:smooth_quartz";
+            return "ceiling_light_off";
         }
         double r = chance();
         return r < 0.7 ? "minecraft:pearlescent_froglight" : r < 0.85 ? "minecraft:verdant_froglight" : "minecraft:ochre_froglight";
@@ -118,10 +119,9 @@ final class CityCivic {
             return;
         }
         p.set(x, 1, z, "lamp_base");
-        p.set(x, 2, z, "lamp_post");
-        p.set(x, 3, z, "lamp_post");
-        p.set(x, 4, z, lit ? cityLamp(0) : "minecraft:smooth_quartz");
-        p.set(x, 5, z, "minecraft:polished_blackstone_slab[type=bottom]");
+        p.set(x, 2, z, "cv_lamp_post");
+        p.set(x, 3, z, "cv_lamp_post");
+        p.set(x, 4, z, lit ? "cv_lamp_globe_lit" : "cv_lamp_globe");
     }
 
     /** A raised stone bed three blocks square with what grew wild in it. */
@@ -129,8 +129,7 @@ final class CityCivic {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
                 boolean rim = dx != 0 || dz != 0;
-                out.set(x + dx, 1, z + dz, rim ? any("minecraft:stone_bricks", "minecraft:stone_bricks", "minecraft:cracked_stone_bricks",
-                        "minecraft:mossy_stone_bricks") : "minecraft:rooted_dirt");
+                out.set(x + dx, 1, z + dz, rim ? any("stone_trim", "stone_trim", "stone_trim_crack", "stone_trim_moss") : "minecraft:rooted_dirt");
                 if (rim && chance() < 0.2) {
                     out.set(x + dx, 2, z + dz, "minecraft:moss_carpet");
                 }
@@ -145,13 +144,13 @@ final class CityCivic {
         }
     }
 
-    /** A bench three long along an axis, its back to one side; a slat or two gone. */
+    /** A bench three long along an axis, facing one side; a section or two gone. */
     void bench(int x, int z, String axis) {
         boolean ax = axis.equals("x");
         String f = ax ? (chance() < 0.5 ? "north" : "south") : (chance() < 0.5 ? "east" : "west");
         for (int k = -1; k <= 1; k++) {
             int bx = ax ? x + k : x, bz = ax ? z : z + k;
-            out.set(bx, 1, bz, chance() < 0.05 + 0.12 * hit ? "minecraft:dark_oak_slab[type=bottom]" : "minecraft:dark_oak_stairs[facing=" + f + "]");
+            out.set(bx, 1, bz, chance() < 0.05 + 0.12 * hit ? "debris_chunk[facing=" + f + "]" : "mu_bench[facing=" + f + "]");
         }
     }
 
@@ -188,18 +187,15 @@ final class CityCivic {
 
     private void chandelier(Placer p, int x, int z, int h) {
         if (chance() < 0.15 * hit) {
-            p.set(x, 1, z, "glass_shards");
-            p.setIfAir(x + 1, 1, z, "minecraft:iron_chain[axis=x]");
+            p.set(x, 1, z, "tr_chandelier");
+            p.setIfAir(x + 1, 1, z, "glass_shards");
             p.setIfAir(x, 1, z + 1, "glass_shards");
-            p.set(x, h - 1, z, "minecraft:iron_chain[axis=y]");
+            p.set(x, h - 1, z, "cv_chain");
             return;
         }
-        p.set(x, h - 1, z, "minecraft:iron_chain[axis=y]");
-        p.set(x, h - 2, z, "minecraft:iron_chain[axis=y]");
-        p.set(x, h - 3, z, cityLamp(0.2));
-        for (int[] o : new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
-            p.set(x + o[0], h - 3, z + o[1], "minecraft:iron_bars");
-        }
+        p.set(x, h - 1, z, "cv_chain");
+        p.set(x, h - 2, z, "cv_chain");
+        p.set(x, h - 3, z, chance() < 0.2 ? "tr_chandelier" : "tr_chandelier_on");
     }
 
     // ------------------------------------------------------------------ the plaza
@@ -217,8 +213,8 @@ final class CityCivic {
             for (int z = z0; z <= z1; z++) {
                 boolean band = Math.floorMod(x - cx, 8) == 0 || Math.floorMod(z - cz, 8) == 0;
                 double r = chance();
-                out.set(x, 0, z, band ? (r < 0.85 ? "minecraft:deepslate_tiles" : "minecraft:cracked_deepslate_tiles")
-                        : r < 0.45 ? "minecraft:stone_bricks" : r < 0.7 ? "minecraft:polished_andesite" : r < 0.86 ? "minecraft:cracked_stone_bricks"
+                out.set(x, 0, z, band ? "pt_granite_black"
+                        : r < 0.45 ? "om_flags" : r < 0.7 ? "tx_paver" : r < 0.86 ? "tx_paver_b"
                         : r < 0.94 ? "minecraft:moss_block" : "minecraft:coarse_dirt");
                 if (chance() < 0.035) {
                     out.set(x, 1, z, any("weeds", "grass_tuft", "leaf_litter", "paper", "minecraft:short_grass"));
@@ -264,7 +260,7 @@ final class CityCivic {
             int x = x0 + rng.nextInt(x1 - x0 + 1), z = z0 + rng.nextInt(z1 - z0 + 1);
             if (out.get(x, 1, z) == null) {
                 out.set(x, 1, z, any("paper", "paper", "blood_splat", "trash_bag[facing=north]", "cardboard_box", "glass_shards", "leaf_litter",
-                        "minecraft:skeleton_skull[rotation=" + rng.nextInt(16) + "]"));
+                        "fm_bones[facing=" + any("north", "east", "south", "west") + "]"));
             }
         }
     }
@@ -280,12 +276,10 @@ final class CityCivic {
                     continue;
                 }
                 if (dd > r - 0.6) {
-                    out.set(x, -1, z, "minecraft:stone_bricks");
-                    out.set(x, 0, z, chance() < 0.8 ? "minecraft:stone_bricks" : "minecraft:mossy_stone_bricks");
-                    out.set(x, 1, z, chance() < 0.08 ? "air" : chance() < 0.7 ? "minecraft:smooth_stone_slab[type=bottom]"
-                            : "minecraft:mossy_stone_brick_slab[type=bottom]");
+                    out.set(x, -1, z, "stone_trim");
+                    out.set(x, 0, z, chance() < 0.8 ? "stone_trim" : "stone_trim_moss");
                 } else {
-                    out.set(x, -1, z, "minecraft:stone_bricks");
+                    out.set(x, -1, z, "stone_trim");
                     if (dry) {
                         out.set(x, 0, z, any("minecraft:mud", "minecraft:coarse_dirt", "minecraft:moss_block", "minecraft:packed_mud"));
                         if (chance() < 0.2) {
@@ -300,45 +294,41 @@ final class CityCivic {
                 }
             }
         }
+        // the basin's curb, round (Round), a stone a course; the odd one gone
+        for (Round.Cell c : Round.ring(cx + 0.5, cz + 0.5, r + 0.3)) {
+            if (chance() > 0.06) {
+                world.set(c.x(), 1, c.z(), "rd_field_" + c.suffix() + "[facing=" + c.facing() + "]");
+            }
+        }
         // the pedestal and on it a figure in bronze gone green, or an obelisk
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
-                out.set(cx + dx, -1, cz + dz, "minecraft:stone_bricks");
-                out.set(cx + dx, 0, cz + dz, "minecraft:stone_bricks");
-                out.set(cx + dx, 1, cz + dz, dx == 0 && dz == 0 ? "minecraft:chiseled_stone_bricks" : "minecraft:stone_bricks");
-                out.set(cx + dx, 2, cz + dz, "minecraft:polished_andesite");
+                out.set(cx + dx, -1, cz + dz, "stone_trim");
+                out.set(cx + dx, 0, cz + dz, "stone_trim");
+                out.set(cx + dx, 1, cz + dz, dx == 0 && dz == 0 ? "stone_trim_b" : chance() < 0.2 ? "stone_trim_moss" : "stone_trim");
             }
         }
+        out.set(cx, 2, cz, "mu_plinth");
+        String face = any("north", "east", "south", "west");
         int s = 3;
         if (chance() < 0.6) {
-            out.set(cx, s, cz, "minecraft:oxidized_copper");
-            out.set(cx, s + 1, cz, "minecraft:oxidized_copper");
-            out.set(cx, s + 2, cz, "minecraft:oxidized_cut_copper");
-            out.set(cx + 1, s + 1, cz, "minecraft:oxidized_cut_copper_slab[type=top]");
-            out.set(cx - 1, s + 2, cz, "minecraft:oxidized_cut_copper_slab[type=bottom]");
-            out.set(cx - 1, s + 3, cz, "minecraft:lightning_rod");
+            out.set(cx, s, cz, "ch_statue[facing=" + face + "]");
             if (chance() < 0.3 * hit) {
                 // the head knocked off, lying in the basin
-                out.set(cx, s + 2, cz, "air");
-                out.set(cx + 2, 1, cz + 1, "minecraft:oxidized_cut_copper");
+                out.set(cx + 2, 1, cz + 1, "debris_chunk[facing=" + face + "]");
+            } else {
+                out.set(cx, s + 1, cz, "ch_statue_top[facing=" + face + "]");
             }
         } else {
-            for (int dx = -1; dx <= 1; dx++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    for (int y = s; y < s + 4; y++) {
-                        out.set(cx + dx, y, cz + dz, "minecraft:smooth_stone");
-                    }
-                }
+            for (int y = s; y < s + 3; y++) {
+                out.set(cx, y, cz, "ch_obelisk[facing=" + face + "]");
             }
-            for (int y = s + 4; y < s + 12; y++) {
-                out.set(cx, y, cz, y == s + 11 ? "minecraft:polished_andesite" : "minecraft:smooth_stone");
-            }
-            out.set(cx, s + 12, cz, "minecraft:lightning_rod");
+            out.set(cx, s + 3, cz, "ch_obelisk_top");
         }
         // a lamp at each corner of the pedestal
         for (int[] c : new int[][] {{-1, -1}, {1, -1}, {-1, 1}, {1, 1}}) {
             if (chance() < 0.6) {
-                out.set(cx + c[0], 3, cz + c[1], cityLamp(0.3));
+                out.set(cx + c[0], 2, cz + c[1], chance() < 0.3 ? "cv_lamp_globe" : "cv_lamp_globe_lit");
             }
         }
     }
@@ -534,21 +524,15 @@ final class CityCivic {
         }
         if (!Boards.fascia(p, rng, "emergency", c0, 5, 2, c1 - c0 + 1)) {
             for (int x = c0; x <= c1; x++) {
-                p.set(x, 5, 2, "minecraft:red_concrete");
+                p.set(x, 5, 2, "hs_spandrel");
             }
         }
-        // the red cross, lit, high on the tower's front, and the name along its top
+        // the red cross, three by three and mostly still lit, high on the tower's front (tile 0 top
+        // left as seen, so at the higher x), and the name along its top
         int crossY = top - 5;
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dy = -2; dy <= 2; dy++) {
-                boolean cross = dx == 0 || dy == 0;
-                if (cross) {
-                    p.set(ex + dx, crossY + dy, tz0, "minecraft:glowstone");
-                    p.set(ex + dx, crossY + dy, tz0 - 1, "minecraft:red_stained_glass");
-                } else {
-                    p.set(ex + dx, crossY + dy, tz0, "minecraft:white_concrete");
-                }
-            }
+        String lit = chance() < 0.75 ? "_on" : "";
+        for (int i = 0; i < 9; i++) {
+            p.set(ex + 1 - i % 3, crossY + 1 - i / 3, tz0 - 1, "hs_cross_" + i + lit + "[facing=north]");
         }
         Boards.fascia(p, rng, "mercy", tx0, top + 1, tz0 - 1, tx1 - tx0 + 1);
         Boards.fascia(p, rng, "mercy", x0, 2 * S - 1, z0 - 1, x1 - x0 + 1);
@@ -625,10 +609,7 @@ final class CityCivic {
         for (int z = z0 + 3; z <= z0 + 5; z += 2) {
             for (int x = x0 + 3; x <= x1 - 3; x++) {
                 if (Math.abs(x - ex) > 1 && chance() < 0.75) {
-                    p.set(x, 1, z, chance() < 0.12 ? "office_chair_fallen[facing=" + DIRS[rng.nextInt(4)] + "]" : "minecraft:blue_terracotta");
-                    if (chance() < 0.85) {
-                        p.set(x, 1, z, "minecraft:dark_oak_stairs[facing=north]");
-                    }
+                    p.set(x, 1, z, chance() < 0.12 ? "fit_chair_ward_tipped[facing=" + DIRS[rng.nextInt(4)] + "]" : "fit_chair_ward[facing=south]");
                 }
             }
         }
@@ -711,21 +692,22 @@ final class CityCivic {
             if (bx > a1 || chance() < 0.12) {
                 continue;
             }
-            p.set(bx, y + 1, wallZ, "minecraft:white_bed[facing=" + head + ",part=head]");
-            p.set(bx, y + 1, wallZ + in, "minecraft:white_bed[facing=" + head + ",part=foot]");
+            boolean bloody = chance() < 0.2 * hit;
+            p.set(bx, y + 1, wallZ, (bloody ? "hs_bed_head_blood" : "hs_bed_head") + "[facing=" + face + "]");
+            p.set(bx, y + 1, wallZ + in, (bloody ? "hs_bed_foot_blood" : "hs_bed_foot") + "[facing=" + face + "]");
             if (chance() < 0.35 * hit + 0.1) {
                 p.set(bx, y + 1, wallZ + in * 2, "blood_splat");
             }
         }
         if (chance() < 0.7) {
-            p.set(a0 + 1, y + 1, wallZ, "minecraft:white_stained_glass_pane");
-            p.set(a0 + 1, y + 2, wallZ, "minecraft:white_stained_glass_pane");
+            p.set(a0 + 1, y + 1, wallZ, (chance() < 0.2 * hit ? "hs_curtain_blood" : "hs_curtain") + "[facing=east]");
+            p.set(a0 + 1, y + 2, wallZ, "hs_curtain_top[facing=east]");
         }
         if (chance() < 0.3) {
             p.set(a1, y + 1, wallZ, "store_shelf_pharmacy[facing=" + face + "]");
         }
         if (chance() < 0.5) {
-            p.set(a0 + 2, y + 1, wallZ + in, "minecraft:lightning_rod");
+            p.set(a0 + 2, y + 1, wallZ + in, "bunk_iv_stand");
         }
     }
 
@@ -781,12 +763,12 @@ final class CityCivic {
         int ex = (x0 + x1) / 2;
         // the blue band round it above the ground floor
         for (int x = x0; x <= x1; x++) {
-            p.set(x, S - 1, z0, "minecraft:blue_terracotta");
-            p.set(x, S - 1, z1, "minecraft:blue_terracotta");
+            p.set(x, S - 1, z0, "pt_panel_blue");
+            p.set(x, S - 1, z1, "pt_panel_blue");
         }
         for (int z = z0; z <= z1; z++) {
-            p.set(x0, S - 1, z, "minecraft:blue_terracotta");
-            p.set(x1, S - 1, z, "minecraft:blue_terracotta");
+            p.set(x0, S - 1, z, "pt_panel_blue");
+            p.set(x1, S - 1, z, "pt_panel_blue");
         }
         for (int s = 0; s < floors; s++) {
             int y = s * S + 2;
@@ -806,21 +788,16 @@ final class CityCivic {
         }
         b.doors(ex, 1, z0, "shop_door", "north");
         b.door(x1 - 3, 1, z1, "fire_door", "south");
-        // the panel with the star over the doors, the sign under it
-        String[] star = {"..G..", "GGGGG", ".GGG.", ".G.G.", "G...G"};
-        for (int row = 0; row < 5; row++) {
-            for (int i = 0; i < 5; i++) {
-                p.set(ex - 2 + i, S + 5 - row, z0 - 1, star[row].charAt(i) == 'G' ? "minecraft:gold_block" : "minecraft:blue_concrete");
-            }
+        // the star over the doors, two by two (0 top left as seen, so at the higher x), the sign under it
+        for (int i = 0; i < 4; i++) {
+            p.set(ex + 1 - i % 2, S + 4 - i / 2, z0 - 1, "sh_star_" + i + "[facing=north]");
         }
-        if (!Boards.fascia(p, rng, "police", ex - 3, 3, z0 - 1, 8)) {
-            p.fill(ex - 2, 3, z0 - 1, ex + 2, 3, z0 - 1, "minecraft:blue_concrete");
-        }
+        Boards.fascia(p, rng, "police", ex - 3, 3, z0 - 1, 8);
         Boards.fascia(p, rng, "precinct", x0, top - 1, z0 - 1, x1 - x0 + 1);
         for (int lx : new int[] {ex - 3, ex + 4}) {
-            p.set(lx, 1, z0 - 1, "minecraft:polished_blackstone_wall");
-            p.set(lx, 2, z0 - 1, "minecraft:polished_blackstone_wall");
-            p.set(lx, 3, z0 - 1, chance() < 0.8 ? "minecraft:soul_lantern" : "minecraft:lantern");
+            p.set(lx, 1, z0 - 1, "cv_lamp_post");
+            p.set(lx, 2, z0 - 1, "cv_lamp_post");
+            p.set(lx, 3, z0 - 1, chance() < 0.3 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
         }
         Civic civic = new Civic(p, rng);
         civic.flagpole(2, 1, 10);
@@ -871,18 +848,17 @@ final class CityCivic {
             }
             for (int i = 1; i <= 3; i++) {
                 for (int y = 1; y < S; y++) {
-                    p.set(x + i, y, cz + 4, y <= 2 && i == 2 ? "air" : "minecraft:iron_bars");
+                    p.set(x + i, y, cz + 4, y <= 2 && i == 2 ? "air" : y < S - 1 ? "cv_cell_bars[axis=x]" : "concrete_panel");
                 }
             }
-            p.set(x + 2, 1, cz + 4, "minecraft:iron_door[facing=north,half=lower,hinge=left,open=" + (chance() < 0.4 + hit * 0.3) + "]");
-            p.set(x + 2, 2, cz + 4, "minecraft:iron_door[facing=north,half=upper,hinge=left,open=false]");
+            Doors.place(p, x + 2, 1, cz + 4, "bunk_door_cage", "north", "left", chance() < 0.4 + hit * 0.3);
             if (z1 - cz > 7) {
-                p.set(x + 1, 1, z1 - 1, "minecraft:gray_bed[facing=south,part=head]");
-                p.set(x + 1, 1, z1 - 2, "minecraft:gray_bed[facing=south,part=foot]");
-                p.set(x + 3, 1, z1 - 1, "minecraft:cauldron");
+                p.set(x + 1, 1, z1 - 2, "sh_bunk_l[facing=east]");
+                p.set(x + 1, 1, z1 - 1, "sh_bunk_r[facing=east]");
+                p.set(x + 3, 1, z1 - 1, "fit_toilet_steel[facing=north]");
             }
             if (chance() < 0.3 + hit * 0.3) {
-                p.setIfAir(x + 2, 1, z1 - 3, chance() < 0.5 ? "blood_splat" : "minecraft:skeleton_skull[rotation=" + rng.nextInt(16) + "]");
+                p.setIfAir(x + 2, 1, z1 - 3, chance() < 0.5 ? "blood_splat" : "fm_bones[facing=" + DIRS[rng.nextInt(4)] + "]");
             }
         }
         for (int z = cz + 1; z < z1; z++) {
@@ -892,8 +868,7 @@ final class CityCivic {
             p.set(x1 - 1, 1, z, "store_gun_rack[facing=west]");
             p.set(x1 - 1, 2, z, "store_gun_rack[facing=west]");
         }
-        p.set(armoury, 1, cz + 2, "minecraft:iron_door[facing=west,half=lower,hinge=right,open=" + (chance() < 0.5) + "]");
-        p.set(armoury, 2, cz + 2, "minecraft:iron_door[facing=west,half=upper,hinge=right,open=false]");
+        Doors.place(p, armoury, 1, cz + 2, "bunk_door_steel", "west", "right", chance() < 0.5);
         for (int x = armoury + 2; x < x1 - 2; x++) {
             p.set(x, 1, z1 - 1, "store_shelf_ammo[facing=north]");
         }
@@ -975,7 +950,7 @@ final class CityCivic {
                 for (int z = 1; z < gd - 1; z++) {
                     boolean row = z <= 5 || z >= gd - 6 || Math.abs(z - gd / 2) <= 2;
                     if (row && chance() < 0.7) {
-                        p.set(x, y, z, k == 0 ? "road_line_white[axis=z]" : "minecraft:white_concrete");
+                        p.set(x, y, z, k == 0 ? "road_line_white[axis=z]" : "park_line[axis=z]");
                     }
                 }
             }
@@ -1006,7 +981,7 @@ final class CityCivic {
                     }
                     int surf = k * H + full + 1;
                     if (half == 1) {
-                        p.set(x, surf, z, "minecraft:smooth_stone_slab[type=bottom]");
+                        p.set(x, surf, z, "stairs_concrete[facing=" + ((k & 1) == 0 ? "south" : "north") + "]");
                         surf++;
                     }
                     for (int yy = surf; yy < surf + 3 && yy <= (k + 1) * H + (t == 2 * H - 1 ? 0 : 3); yy++) {
@@ -1031,9 +1006,7 @@ final class CityCivic {
         }
         // the entrance: barrier arm, the sign over it
         new Camp(p, rng, hit).boom(laneA - 4, 2, 5, chance() < 0.5);
-        if (!Boards.fascia(p, rng, "parking", laneA - 6, H - 1, -1, 12)) {
-            p.set(laneA - 2, H - 1, -1, "minecraft:blue_concrete");
-        }
+        Boards.fascia(p, rng, "parking", laneA - 6, H - 1, -1, 12);
     }
 
     /** A surface lot len x dep: cracked asphalt and faded bays, a booth, chain-link with gaps, a few cars. */
@@ -1132,10 +1105,11 @@ final class CityCivic {
                 if (inCore) {
                     continue;
                 }
+                int h = 0;
                 if (colX && colZ) {
-                    int h = frameTop - (chance() < 0.3 ? S * (1 + rng.nextInt(2)) : 0);
+                    h = frameTop - (chance() < 0.3 ? S * (1 + rng.nextInt(2)) : 0);
                     for (int y = 1; y <= h; y++) {
-                        p.set(x, y, z, "steel_girder");
+                        p.set(x, y, z, y == 1 ? "sf_col_base" : "sf_col");
                     }
                 }
                 for (int k = 1; k <= floors; k++) {
@@ -1146,9 +1120,11 @@ final class CityCivic {
                         if (k == done && chance() < 0.04) {
                             p.set(x, y + 1, z, "rebar");
                         }
+                    } else if (colX && colZ && y <= h) {
+                        p.set(x, y, z, "sf_col_joint");
                     } else if (colX || colZ) {
                         if (edge || chance() < 0.9) {
-                            p.set(x, y, z, "steel_girder");
+                            p.set(x, y, z, "sf_beam[axis=" + (colX && !colZ ? "z" : "x") + "]");
                         }
                     }
                 }
@@ -1167,15 +1143,14 @@ final class CityCivic {
                 }
             }
         }
-        // scaffolding up the front face, walkways every floor
+        // scaffolding up the front face (sf_ kit): standards every third block, ledgers and guard
+        // rails between, a lift of boards every floor, a brace across every other bay
         for (int x = x0; x <= x1; x++) {
             boolean pole = (x - x0) % 3 == 0;
             for (int y = 1; y <= done * S; y++) {
-                if (pole) {
-                    p.set(x, y, z0 - 2, "minecraft:scaffolding[bottom=false,distance=0]");
-                } else if (y % S == 0) {
-                    p.set(x, y, z0 - 2, chance() < 0.9 ? "minecraft:spruce_slab[type=top]" : "air");
-                }
+                String piece = y % S == 0 ? (chance() < 0.08 ? (pole ? "sf_std" : "sf_bay") : pole ? "sf_deck_std" : "sf_deck")
+                        : pole ? "sf_std" : (x - x0) % 6 == 1 && y % S == 2 ? "sf_brace" : "sf_bay";
+                p.set(x, y, z0 - 1, piece + "[facing=north]");
             }
         }
         crane(p, x1 + 3, (z0 + z1) / 2, frameTop + 14, x1 - x0 + 4);
@@ -1188,22 +1163,22 @@ final class CityCivic {
             int sx = x0 + 2 + rng.nextInt(Math.max(1, x1 - x0 - 10)), sz = z1 + 2 + rng.nextInt(2);
             for (int k = 0; k < 6; k++) {
                 for (int y = 1; y <= 1 + rng.nextInt(2); y++) {
-                    p.setIfAir(sx + k, y, sz, chance() < 0.7 ? "steel_girder" : "store_lumber[facing=north]");
+                    p.setIfAir(sx + k, y, sz, chance() < 0.7 ? "sf_beam[axis=x]" : "store_lumber[facing=north]");
                 }
             }
         }
         for (int i = 0; i < 10; i++) {
             p.setIfAir(1 + rng.nextInt(len - 2), 1, 3 + rng.nextInt(dep - 5), any("rebar", "crate", "cardboard_box", "tire[axis=x]",
-                    "minecraft:light_gray_concrete_powder", "rubble_pile", "debris_chunk"));
+                    "bulk_sand_1", "rubble_pile", "debris_chunk"));
         }
         if (chance() < 0.7) {
             vehicle(p, gate + 0.5, 1, 4.5, (float) (chance() * 40 - 20), "box_truck,pickup,tow_truck,step_van");
         }
         for (int[] c : new int[][] {{3, dep - 4}, {len - 4, dep - 4}}) {
             for (int y = 1; y <= 6; y++) {
-                p.set(c[0], y, c[1], "steel_girder");
+                p.set(c[0], y, c[1], y == 1 ? "sf_col_base" : "sf_col");
             }
-            p.set(c[0], 7, c[1], chance() < 0.6 ? "minecraft:ochre_froglight" : Camp.flood(rng, 0.4));
+            p.set(c[0], 7, c[1], Camp.flood(rng, 0.4));
         }
     }
 
@@ -1244,17 +1219,20 @@ final class CityCivic {
         }
         p.set(mx, jy + 6, mz, "aviation_light");
         p.set(mx - jib, jy + 1, mz, "aviation_light");
-        line(p, mx, jy + 5, mz, mx - jib * 2 / 3, jy + 1, mz, "minecraft:iron_chain[axis=x]");
-        line(p, mx, jy + 5, mz, mx + counter - 1, jy + 1, mz, "minecraft:iron_chain[axis=x]");
+        // the pendant ties from the A-frame down to the jib and the counter-jib: stays drawn in a
+        // frame turned so its z runs along x (Harbour.member works in the y-z plane)
+        Harbour ties = new Harbour(p.turned(0, 0, mz, 3), rng, hit);
+        ties.member(0, jy + 5, mx, jy + 1, mx - jib * 2 / 3, "cr_stay");
+        ties.member(0, jy + 5, mx, jy + 1, mx + counter - 1, "cr_stay");
         // the trolley and hook with its load hanging
         int tx = mx - jib / 2 - rng.nextInt(Math.max(1, jib / 3));
         int hookY = Math.max(6, jy - 8 - rng.nextInt(Math.max(1, jy / 2)));
         p.set(tx, jy - 1, mz, "steel_yellow");
         for (int y = hookY + 1; y < jy - 1; y++) {
-            p.set(tx, y, mz, "minecraft:iron_chain[axis=y]");
+            p.set(tx, y, mz, "vessel_chain_v");
         }
         if (chance() < 0.5) {
-            p.fill(tx - 2, hookY, mz, tx + 2, hookY, mz, "steel_girder");
+            p.fill(tx - 2, hookY, mz, tx + 2, hookY, mz, "sf_beam[axis=x]");
         } else {
             p.set(tx, hookY, mz, "crate");
         }
@@ -1290,18 +1268,18 @@ final class CityCivic {
                 for (int y = bed - 1; y <= top; y++) {
                     String b;
                     if (wall && !(a <= 5 && (x == x0 || x == x1) && y >= bed + 1 && y <= -7)) {
-                        b = y == -8 ? "minecraft:green_terracotta" : y == bed - 1 || y < plat ? "concrete_dark"
-                                : chance() < 0.85 ? "minecraft:quartz_bricks" : "minecraft:calcite";
+                        b = y == -8 ? "rw_tile_band" : y == bed - 1 || y < plat ? "concrete_dark"
+                                : y <= plat + 2 ? "rw_tile_dado" : chance() < 0.85 ? "rw_tile" : "rw_tile_broken";
                     } else if (a >= 6) {
-                        b = y < plat ? "concrete_dark" : y == plat ? (a == 6 ? "minecraft:yellow_concrete" : chance() < 0.85 ? "floor_concrete"
+                        b = y < plat ? "concrete_dark" : y == plat ? (a == 6 ? "rw_platform_edge[facing=" + (dz < 0 ? "south" : "north") + "]" : chance() < 0.85 ? "floor_concrete"
                                 : "floor_concrete_crack") : "air";
                     } else {
-                        b = y == bed - 1 ? "concrete_dark" : y == bed ? (chance() < 0.7 ? "minecraft:gravel" : "minecraft:tuff") : "air";
+                        b = y == bed - 1 ? "concrete_dark" : y == bed ? "rw_ballast" : "air";
                     }
                     out.set(x, y, z, b);
                 }
-                if (a == 2 || a == 4) {
-                    out.set(x, bed + 1, z, "rail[axis=x]");
+                if (a >= 2 && a <= 4) {
+                    out.set(x, bed + 1, z, a == 3 ? "tb_sleeper[axis=x]" : "tb_rail[axis=x]");
                 }
             }
             // the columns down the middle, between the tracks
@@ -1327,7 +1305,7 @@ final class CityCivic {
             for (int s = -1; s <= 1; s += 2) {
                 int z = cz + s * 12;
                 double r = chance();
-                out.set(x, plat + 1, z, r < 0.45 ? "minecraft:dark_oak_stairs[facing=" + (s < 0 ? "north" : "south") + "]"
+                out.set(x, plat + 1, z, r < 0.45 ? "rw_bench[facing=" + (s < 0 ? "south" : "north") + "]"
                         : r < 0.6 ? "bin_ribbed" : r < 0.75 ? "store_vending[facing=" + (s < 0 ? "south" : "north") + "]" : "air");
                 if (r >= 0.6 && r < 0.75) {
                     out.set(x, plat + 2, z, "store_vending_top[facing=" + (s < 0 ? "south" : "north") + "]");
@@ -1338,7 +1316,7 @@ final class CityCivic {
             int x = x0 + 1 + rng.nextInt(x1 - x0 - 1), z = cz + (chance() < 0.5 ? -1 : 1) * (7 + rng.nextInt(5));
             if (out.get(x, plat + 1, z) == null) {
                 out.set(x, plat + 1, z, any("paper", "paper", "blood_splat", "trash_bag[facing=east]", "cardboard_box", "glass_shards",
-                        "minecraft:skeleton_skull[rotation=" + rng.nextInt(16) + "]"));
+                        "fm_bones[facing=" + any("north", "east", "south", "west") + "]"));
             }
         }
         train(x0 + 3, x1 - 3, cz + 1, cz + 5, cz + 5, plat + 1);
@@ -1360,7 +1338,7 @@ final class CityCivic {
 
     private String subwayLamp() {
         double r = chance();
-        return r < 0.3 ? "minecraft:smooth_quartz" : r < 0.65 ? "minecraft:verdant_froglight" : r < 0.92 ? "minecraft:pearlescent_froglight"
+        return r < 0.3 ? "ceiling_light_off" : r < 0.65 ? "minecraft:verdant_froglight" : r < 0.92 ? "minecraft:pearlescent_froglight"
                 : "minecraft:ochre_froglight";
     }
 
@@ -1408,17 +1386,17 @@ final class CityCivic {
                 }
             }
             if (i > 0) {
-                out.set(x, 1, inner, "minecraft:iron_bars");
-                out.set(x, 1, outer, "minecraft:iron_bars");
+                out.set(x, 1, inner, "cv_iron_fence[axis=x]");
+                out.set(x, 1, outer, "cv_iron_fence[axis=x]");
             }
         }
         int end = ex + dir * (depth + 1);
-        out.set(end, 1, a, "minecraft:iron_bars");
-        out.set(end, 1, b, "minecraft:iron_bars");
+        out.set(end, 1, a, "cv_iron_fence[axis=z]");
+        out.set(end, 1, b, "cv_iron_fence[axis=z]");
         for (int z : new int[] {inner, outer}) {
-            out.set(ex - dir, 1, z, "lamp_base");
-            out.set(ex - dir, 2, z, "lamp_post");
-            out.set(ex - dir, 3, z, chance() < 0.75 ? "minecraft:verdant_froglight" : "minecraft:smooth_quartz");
+            out.set(ex - dir, 1, z, "rw_globe_post");
+            out.set(ex - dir, 2, z, "rw_globe_post");
+            out.set(ex - dir, 3, z, "rw_globe");
         }
         // the sign on its posts at the far end, facing back toward the way in
         // turned 3 the sign runs toward -z from its origin, turned 1 toward +z: cover the outer three rows
@@ -1453,12 +1431,12 @@ final class CityCivic {
                     }
                     out.set(x, y, z, b);
                 }
-                if (a == 2 || a == 4) {
-                    out.set(x, -12, z, "rail[axis=x]");
+                if (a >= 2 && a <= 4) {
+                    out.set(x, -12, z, a == 3 ? "tb_sleeper[axis=x]" : "tb_rail[axis=x]");
                 }
             }
             if (x % 24 == 0) {
-                out.set(x, -7, cz - 5, chance() < 0.2 ? "minecraft:verdant_froglight" : "ceiling_light_off");
+                out.set(x, -7, cz - 5, chance() < 0.2 ? "rw_tunnel_lamp" : "ceiling_light_off");
             }
             if (chance() < 0.01) {
                 out.set(x, -12, cz + (chance() < 0.5 ? -3 : 3), any("debris_chunk", "trash_bag[facing=east]", "rubble_pile", "blood_splat"));
@@ -1471,7 +1449,7 @@ final class CityCivic {
             int hgt = 7 - i * 7 / 9;
             for (int dz = -5; dz <= 5; dz++) {
                 for (int y = -12; y < -12 + hgt + (chance() < 0.4 ? 1 : 0); y++) {
-                    out.set(x, y, cz + dz, chance() < 0.85 ? "rubble" : "minecraft:cobblestone");
+                    out.set(x, y, cz + dz, chance() < 0.85 ? "rubble" : "concrete_dark_crack");
                 }
             }
         }
@@ -1499,7 +1477,7 @@ final class CityCivic {
                 }
                 int heap = -12 + (int) Math.round((4.5 - dd) * 0.9 + chance());
                 for (int y = -12; y <= heap; y++) {
-                    out.set(x, y, z, chance() < 0.6 ? "rubble" : chance() < 0.5 ? "asphalt_crack" : "minecraft:cobblestone");
+                    out.set(x, y, z, chance() < 0.6 ? "rubble" : chance() < 0.5 ? "asphalt_crack" : "concrete_dark_crack");
                 }
             }
         }
@@ -1552,8 +1530,8 @@ final class CityCivic {
                 }
                 // seats along both sides, poles and a light down the middle
                 if (x > c0 + 1 && x < c1 - 1 && Math.floorMod(x - c0 - 2, 6) >= 2) {
-                    out.set(x, floor, z0 + 1, "minecraft:blue_terracotta");
-                    out.set(x, floor, z1 - 1, "minecraft:blue_terracotta");
+                    out.set(x, floor, z0 + 1, "rw_bench[facing=south]");
+                    out.set(x, floor, z1 - 1, "rw_bench[facing=north]");
                 }
                 if (Math.floorMod(x - c0, 4) == 1) {
                     out.set(x, floor + 2, (z0 + z1) / 2, chance() < 0.15 ? "ceiling_light" : "ceiling_light_off");
@@ -1593,12 +1571,12 @@ final class CityCivic {
                 out.set(x, deck, z, chance() < 0.9 ? "concrete_dark" : "concrete_dark_crack");
                 if (Math.abs(dz) == 3) {
                     out.set(x, deck - 1, z, "steel_girder");
-                    out.set(x, deck + 1, z, "minecraft:iron_bars");
+                    out.set(x, deck + 1, z, "cv_iron_fence[axis=x]");
                 } else if (x % 4 == 0) {
                     out.set(x, deck - 1, z, "steel_girder");
                 }
                 if (Math.abs(dz) == 2 || Math.abs(dz) == 1) {
-                    out.set(x, deck + 1, z, "rail[axis=x]");
+                    out.set(x, deck + 1, z, "tb_rail[axis=x]");
                 }
             }
             if (x % 16 == 8 && !crossing(kit, x, cz)) {
@@ -1653,11 +1631,11 @@ final class CityCivic {
                 for (int s = -1; s <= 1; s += 2) {
                     for (int a = 4; a <= 6; a++) {
                         int z = cz + s * a;
-                        out.set(x, deck, z, a == 4 ? "minecraft:yellow_concrete" : chance() < 0.85 ? "floor_concrete" : "floor_concrete_crack");
+                        out.set(x, deck, z, a == 4 ? "rw_platform_edge[facing=" + (s < 0 ? "south" : "north") + "]" : chance() < 0.85 ? "floor_concrete" : "floor_concrete_crack");
                         out.set(x, deck - 1, z, "steel_girder");
                     }
                     out.set(x, deck + 1, cz + s * 3, "air");
-                    out.set(x, deck + 1, cz + s * 7, "minecraft:iron_bars");
+                    out.set(x, deck + 1, cz + s * 7, "cv_iron_fence[axis=x]");
                     out.set(x, deck + 5, cz + s * 5, "corrugated_green");
                     out.set(x, deck + 5, cz + s * 6, "corrugated_green");
                     out.set(x, deck + 5, cz + s * 4, "corrugated_green");
@@ -1668,7 +1646,7 @@ final class CityCivic {
                         out.set(x, deck + 4, cz + s * 5, cityLamp(0.3));
                     }
                     if ((x - st) % 8 == 3) {
-                        out.set(x, deck + 1, cz + s * 6, "minecraft:dark_oak_stairs[facing=" + (s < 0 ? "north" : "south") + "]");
+                        out.set(x, deck + 1, cz + s * 6, "rw_bench[facing=" + (s < 0 ? "south" : "north") + "]");
                     }
                 }
             }
@@ -1682,7 +1660,7 @@ final class CityCivic {
                     out.set(x, y, sz, "air");
                     out.set(x, y, sz + 1, "air");
                 }
-                out.set(x, deck - i + 1, sz + 2, "minecraft:iron_bars");
+                out.set(x, deck - i + 1, sz + 2, "cv_iron_fence[axis=x]");
             }
             for (int x = st - 1; x <= st + deck + 1; x++) {
                 for (int z = sz; z <= sz + 2; z++) {

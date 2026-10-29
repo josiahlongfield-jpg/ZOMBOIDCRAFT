@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "af_apron_jj": "zomboidcraft:block/city/af_apron_jj",
+    "particle": "zomboidcraft:block/city/af_apron_jj"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_apron_jj",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#af_apron_jj",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#af_apron_jj",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#af_apron_jj",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#af_apron_jj"
+        },
+        "down": {
+          "texture": "#af_apron_jj",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

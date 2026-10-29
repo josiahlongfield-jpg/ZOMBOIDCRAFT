@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_diamond": "zomboidcraft:block/city/rp_diamond",
+    "rp_navy": "zomboidcraft:block/city/rp_navy",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/rp_navy"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        4,
+        0
+      ],
+      "to": [
+        4,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_navy",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy"
+        },
+        "down": {
+          "texture": "#rp_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        4,
+        0
+      ],
+      "to": [
+        15,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_navy",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy"
+        },
+        "down": {
+          "texture": "#rp_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        6
+      ],
+      "to": [
+        15,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_navy"
+        },
+        "south": {
+          "texture": "#rp_navy"
+        },
+        "east": {
+          "texture": "#rp_navy"
+        },
+        "west": {
+          "texture": "#rp_navy"
+        },
+        "up": {
+          "texture": "#rp_navy"
+        },
+        "down": {
+          "texture": "#rp_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        0
+      ],
+      "to": [
+        12,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#rp_diamond"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

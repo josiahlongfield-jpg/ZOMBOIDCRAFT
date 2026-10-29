@@ -1,0 +1,449 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rw_ballast": "zomboidcraft:block/city/rw_ballast",
+    "rw_ballast_side": "zomboidcraft:block/city/rw_ballast_side",
+    "rw_subballast": "zomboidcraft:block/city/rw_subballast",
+    "tb_rust": "zomboidcraft:block/city/tb_rust",
+    "tb_sleeper": "zomboidcraft:block/city/tb_sleeper",
+    "particle": "zomboidcraft:block/city/tb_sleeper"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1.5
+      ],
+      "to": [
+        16,
+        2.5,
+        6.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_sleeper"
+        },
+        "south": {
+          "texture": "#tb_sleeper"
+        },
+        "east": {
+          "texture": "#tb_sleeper",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tb_sleeper",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tb_sleeper"
+        },
+        "down": {
+          "texture": "#tb_sleeper",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        9.5
+      ],
+      "to": [
+        16,
+        2.5,
+        14.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_sleeper"
+        },
+        "south": {
+          "texture": "#tb_sleeper"
+        },
+        "east": {
+          "texture": "#tb_sleeper",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tb_sleeper",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tb_sleeper"
+        },
+        "down": {
+          "texture": "#tb_sleeper",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        7.6,
+        1.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_ballast_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_ballast_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_ballast_side"
+        },
+        "west": {
+          "texture": "#rw_ballast_side",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_ballast"
+        },
+        "down": {
+          "texture": "#rw_subballast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.4,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rw_ballast_side",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rw_ballast_side",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rw_ballast_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rw_ballast_side"
+        },
+        "up": {
+          "texture": "#rw_ballast"
+        },
+        "down": {
+          "texture": "#rw_subballast",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        2.5,
+        2.0
+      ],
+      "to": [
+        11.5,
+        3,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        3.1
+      ],
+      "to": [
+        5.8,
+        3.8,
+        3.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        10.2,
+        3,
+        3.1
+      ],
+      "to": [
+        11.0,
+        3.8,
+        3.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        2.5,
+        10.0
+      ],
+      "to": [
+        11.5,
+        3,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        11.1
+      ],
+      "to": [
+        5.8,
+        3.8,
+        11.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        10.2,
+        3,
+        11.1
+      ],
+      "to": [
+        11.0,
+        3.8,
+        11.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust"
+        },
+        "south": {
+          "texture": "#tb_rust"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        5.6,
+        3,
+        0
+      ],
+      "to": [
+        10.4,
+        3.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tb_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        3.6,
+        0
+      ],
+      "to": [
+        8.6,
+        5.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tb_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        5.6,
+        0
+      ],
+      "to": [
+        9.2,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tb_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tb_rust"
+        },
+        "west": {
+          "texture": "#tb_rust"
+        },
+        "up": {
+          "texture": "#tb_rust"
+        },
+        "down": {
+          "texture": "#tb_rust"
+        }
+      }
+    }
+  ]
+}

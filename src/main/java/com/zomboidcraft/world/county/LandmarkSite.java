@@ -50,6 +50,10 @@ final class LandmarkSite extends Site {
 
     @Override
     void build() {
+        if (p.variant.startsWith("airport@")) {
+            new AirportSite(p, out).build();
+            return;
+        }
         if (variant("union_station")) {
             // the front to the south: the head house from x = 0, the train hall over the el, the terminal to the lot's far side
             Placer q = lot(0, 0, w, d, 2);

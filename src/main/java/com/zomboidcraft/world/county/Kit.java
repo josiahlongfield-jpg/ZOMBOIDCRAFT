@@ -564,12 +564,17 @@ final class Kit {
         }
     }
 
-    /** A lamp post with a lantern on top, for parks, drives and old town squares. */
+    /**
+     * A cast-iron lamp standard with its globe on top, for parks, drives and old town squares: the
+     * plinth, the fluted shaft, the globe (lit on the generator, or dark), now and then smashed out.
+     */
     void postLamp(int x, int z, boolean lit) {
-        out.set(x, 1, z, "minecraft:polished_blackstone_wall");
-        out.set(x, 2, z, "minecraft:polished_blackstone_wall");
-        out.set(x, 3, z, "minecraft:polished_blackstone_wall");
-        out.set(x, 4, z, lit ? "minecraft:lantern" : "minecraft:iron_chain[axis=y]");
+        out.set(x, 1, z, "lamp_base");
+        out.set(x, 2, z, "cv_lamp_post");
+        out.set(x, 3, z, "cv_lamp_post");
+        if (lit || rng.nextDouble() < 0.85) {
+            out.set(x, 4, z, lit ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+        }
     }
 
     /**
@@ -591,12 +596,13 @@ final class Kit {
             if (k % spacing == 0) {
                 down = rng.nextDouble() < 0.08;
                 if (down) {
-                    // snapped at the base and lying across the verge
-                    out.set(x, 1, z, "minecraft:stripped_spruce_log");
-                    for (int i = 1; i <= 5; i++) {
+                    // snapped a block up and lying across the verge, the crossarm at the far end
+                    out.set(x, 1, z, "pl_stump");
+                    String fell = alongX ? "north" : "west";  // the pl_ pieces are drawn falling south
+                    for (int i = 1; i <= 6; i++) {
                         int fx = x + (alongX ? 0 : i), fz = z + (alongX ? i : 0);
                         if (inside(fx, fz) && out.get(fx, 1, fz) == null) {
-                            out.set(fx, 1, fz, "minecraft:stripped_spruce_log[axis=" + across + "]");
+                            out.set(fx, 1, fz, (i == 6 ? "pl_down_top[facing=" : "pl_down[facing=") + fell + "]");
                         }
                     }
                     continue;
@@ -606,10 +612,14 @@ final class Kit {
                 }
                 out.set(x, y, z, "pole_top[axis=" + across + "]");
                 if (rng.nextDouble() < 0.3) {
-                    out.set(x, y - 2, z, "minecraft:lightning_rod");  // a transformer can's stand-in
+                    String side = alongX ? (rng.nextBoolean() ? "north" : "south") : (rng.nextBoolean() ? "east" : "west");
+                    out.set(x, y - 2, z, "pl_transformer[facing=" + side + "]");
                 }
             } else if (!down && out.get(x, y, z) == null) {
                 out.set(x, y, z, "power_line[axis=" + run + "]");
+            } else if (down && k % spacing <= 4 && out.get(x, 1, z) == null) {
+                // the wires came down with it and lie slack in the verge
+                out.set(x, 1, z, "pl_wire[axis=" + run + "]");
             }
         }
     }
@@ -1127,7 +1137,7 @@ final class Kit {
             int bx = (int) Math.round(cx + Math.cos(a) * (r + 2)), bz = (int) Math.round(cz + Math.sin(a) * (r + 2));
             if (i % 2 == 0) {
                 String f = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? "west" : "east") : (Math.sin(a) > 0 ? "north" : "south");
-                out.set(bx, 1, bz, "minecraft:dark_oak_stairs[facing=" + opposite(f) + "]");
+                out.set(bx, 1, bz, "mu_bench[facing=" + f + "]");
             } else {
                 postLamp(bx, bz, rng.nextDouble() < 0.4);
             }
@@ -1154,7 +1164,7 @@ final class Kit {
             }
         }
         if (rng.nextBoolean()) {
-            out.set(cx + r + 2, 1, cz + r, "minecraft:cauldron");
+            out.set(cx + r + 2, 1, cz + r, rng.nextDouble() < 0.3 ? "ext_trash_can_tipped" : "ext_trash_can");
         }
     }
 
@@ -1264,29 +1274,42 @@ final class Kit {
         }
     }
 
-    /** A little white gazebo with a pyramid roof. */
+    /**
+     * The park bandstand, five blocks square at (x, z), from the gz_ kit (tools/city/gazebo.py):
+     * the deck raised a step on its boarded skirt, the steps up on the south, the turned posts at
+     * the corners with their brackets, the frieze under the plate, the balustrade round the rest
+     * (a length of it kicked in now and then), the hipped slate roof and the spire on top.
+     */
     void gazebo(int x, int z) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                out.set(x + i, 0, z + j, "minecraft:pale_oak_planks");
-                boolean corner = (i == 0 || i == 4) && (j == 0 || j == 4);
-                boolean rail = (i == 0 || i == 4 || j == 0 || j == 4) && !corner && !(i == 2 && j == 4);
-                if (corner) {
-                    out.set(x + i, 1, z + j, "minecraft:pale_oak_fence");
-                    out.set(x + i, 2, z + j, "minecraft:pale_oak_fence");
-                    out.set(x + i, 3, z + j, "minecraft:pale_oak_fence");
-                } else if (rail && rng.nextDouble() < 0.85) {
-                    out.set(x + i, 1, z + j, "minecraft:pale_oak_fence");
-                }
-                out.set(x + i, 4, z + j, i == 0 || i == 4 || j == 0 || j == 4 ? "minecraft:deepslate_tile_slab[type=bottom]" : "minecraft:deepslate_tiles");
+                out.set(x + i, 1, z + j, "gz_deck");
             }
         }
-        out.set(x + 2, 5, z + 2, "minecraft:deepslate_tile_slab[type=bottom]");
-        out.set(x + 1, 5, z + 2, "minecraft:deepslate_tile_slab[type=bottom]");
-        out.set(x + 3, 5, z + 2, "minecraft:deepslate_tile_slab[type=bottom]");
-        out.set(x + 2, 5, z + 1, "minecraft:deepslate_tile_slab[type=bottom]");
-        out.set(x + 2, 5, z + 3, "minecraft:deepslate_tile_slab[type=bottom]");
-        out.set(x + 2, 6, z + 2, "minecraft:lightning_rod");
+        int[][] corners = {{0, 0}, {4, 0}, {4, 4}, {0, 4}};
+        for (int c = 0; c < 4; c++) {
+            int px = x + corners[c][0], pz = z + corners[c][1];
+            out.set(px, 2, pz, "gz_post");
+            out.set(px, 3, pz, "gz_post");
+            out.set(px, 4, pz, "gz_post_top[facing=" + FACING[c] + "]");
+        }
+        for (int k = 1; k <= 3; k++) {
+            int[][] edges = {{x + k, z, 0}, {x + k, z + 4, 0}, {x, z + k, 1}, {x + 4, z + k, 1}};
+            for (int[] e : edges) {
+                String axis = e[2] == 0 ? "x" : "z";
+                out.set(e[0], 4, e[1], "gz_frieze[axis=" + axis + "]");
+                boolean steps = e[0] == x + 2 && e[1] == z + 4;
+                if (!steps) {
+                    out.set(e[0], 2, e[1], (rng.nextDouble() < 0.15 ? "gz_rail_broken" : "gz_rail") + "[axis=" + axis + "]");
+                }
+            }
+        }
+        out.set(x + 2, 1, z + 5, "gz_step[facing=north]");
+        new Bldg(new Placer(out, 0, 0, 0, 0), rng).hip(x, x + 4, z, z + 4, 5, "minecraft:deepslate_tile", 1);
+        out.set(x + 2, 8, z + 2, "gz_finial");  // in place of the hip's little apex ridge
+        if (rng.nextBoolean()) {
+            out.set(x + 1 + rng.nextInt(3), 2, z + 1, "mu_bench[facing=south]");
+        }
     }
 
     /** A cracked basketball court with two hoops on goosenecks, the chain nets rusted, one gone. */

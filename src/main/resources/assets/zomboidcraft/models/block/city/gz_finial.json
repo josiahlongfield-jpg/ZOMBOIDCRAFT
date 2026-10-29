@@ -1,0 +1,237 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "front_iron": "zomboidcraft:block/city/front_iron",
+    "gz_cream": "zomboidcraft:block/city/gz_cream",
+    "gz_green": "zomboidcraft:block/city/gz_green",
+    "mm_bronze": "zomboidcraft:block/city/mm_bronze",
+    "particle": "zomboidcraft:block/city/gz_green"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        2,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_green"
+        },
+        "south": {
+          "texture": "#gz_green"
+        },
+        "east": {
+          "texture": "#gz_green"
+        },
+        "west": {
+          "texture": "#gz_green"
+        },
+        "up": {
+          "texture": "#gz_green"
+        },
+        "down": {
+          "texture": "#gz_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.3,
+        2,
+        6.3
+      ],
+      "to": [
+        9.7,
+        4,
+        9.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_cream"
+        },
+        "south": {
+          "texture": "#gz_cream"
+        },
+        "east": {
+          "texture": "#gz_cream"
+        },
+        "west": {
+          "texture": "#gz_cream"
+        },
+        "up": {
+          "texture": "#gz_cream"
+        },
+        "down": {
+          "texture": "#gz_cream"
+        }
+      }
+    },
+    {
+      "from": [
+        6.6,
+        4,
+        6.6
+      ],
+      "to": [
+        9.4,
+        6.6,
+        9.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_bronze"
+        },
+        "south": {
+          "texture": "#mm_bronze"
+        },
+        "east": {
+          "texture": "#mm_bronze"
+        },
+        "west": {
+          "texture": "#mm_bronze"
+        },
+        "up": {
+          "texture": "#mm_bronze"
+        },
+        "down": {
+          "texture": "#mm_bronze"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        6.6,
+        7.3
+      ],
+      "to": [
+        8.7,
+        8,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_green"
+        },
+        "south": {
+          "texture": "#gz_green"
+        },
+        "east": {
+          "texture": "#gz_green"
+        },
+        "west": {
+          "texture": "#gz_green"
+        },
+        "up": {
+          "texture": "#gz_green"
+        },
+        "down": {
+          "texture": "#gz_green"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        8,
+        7.6
+      ],
+      "to": [
+        8.4,
+        15,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron"
+        },
+        "west": {
+          "texture": "#front_iron"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        7.8
+      ],
+      "to": [
+        11,
+        11.4,
+        8.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron"
+        },
+        "west": {
+          "texture": "#front_iron"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        7.8,
+        11,
+        5
+      ],
+      "to": [
+        8.2,
+        11.4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_iron"
+        },
+        "south": {
+          "texture": "#front_iron"
+        },
+        "east": {
+          "texture": "#front_iron"
+        },
+        "west": {
+          "texture": "#front_iron"
+        },
+        "up": {
+          "texture": "#front_iron"
+        },
+        "down": {
+          "texture": "#front_iron"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mm_die": "zomboidcraft:block/city/mm_die",
+    "mm_granite": "zomboidcraft:block/city/mm_granite",
+    "particle": "zomboidcraft:block/city/mm_die"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_die"
+        },
+        "south": {
+          "texture": "#mm_granite"
+        },
+        "east": {
+          "texture": "#mm_granite"
+        },
+        "west": {
+          "texture": "#mm_granite"
+        },
+        "up": {
+          "texture": "#mm_granite"
+        },
+        "down": {
+          "texture": "#mm_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        0,
+        1.5
+      ],
+      "to": [
+        14.5,
+        1.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_granite"
+        },
+        "south": {
+          "texture": "#mm_granite"
+        },
+        "east": {
+          "texture": "#mm_granite"
+        },
+        "west": {
+          "texture": "#mm_granite"
+        },
+        "up": {
+          "texture": "#mm_granite"
+        },
+        "down": {
+          "texture": "#mm_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.4,
+        13,
+        1.4
+      ],
+      "to": [
+        14.6,
+        14.6,
+        14.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_granite"
+        },
+        "south": {
+          "texture": "#mm_granite"
+        },
+        "east": {
+          "texture": "#mm_granite"
+        },
+        "west": {
+          "texture": "#mm_granite"
+        },
+        "up": {
+          "texture": "#mm_granite"
+        },
+        "down": {
+          "texture": "#mm_granite"
+        }
+      }
+    },
+    {
+      "from": [
+        2.4,
+        14.6,
+        2.4
+      ],
+      "to": [
+        13.6,
+        16,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_granite"
+        },
+        "south": {
+          "texture": "#mm_granite"
+        },
+        "east": {
+          "texture": "#mm_granite"
+        },
+        "west": {
+          "texture": "#mm_granite"
+        },
+        "up": {
+          "texture": "#mm_granite",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mm_granite"
+        }
+      }
+    }
+  ]
+}

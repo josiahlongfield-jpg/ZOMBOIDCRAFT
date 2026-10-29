@@ -1,0 +1,241 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sf_board": "zomboidcraft:block/city/sf_board",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        13
+      ],
+      "to": [
+        16,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        1.2
+      ],
+      "to": [
+        16,
+        16,
+        5.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_board"
+        },
+        "south": {
+          "texture": "#sf_board"
+        },
+        "east": {
+          "texture": "#sf_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sf_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sf_board",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_board"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        6.2
+      ],
+      "to": [
+        16,
+        16,
+        10.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_board"
+        },
+        "south": {
+          "texture": "#sf_board"
+        },
+        "east": {
+          "texture": "#sf_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sf_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sf_board",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_board"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        11.2
+      ],
+      "to": [
+        16,
+        16,
+        15.799999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_board"
+        },
+        "south": {
+          "texture": "#sf_board"
+        },
+        "east": {
+          "texture": "#sf_board",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sf_board",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sf_board",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_board"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        16,
+        0.6
+      ],
+      "to": [
+        16,
+        19,
+        1.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_board",
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#sf_board",
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#sf_board",
+          "uv": [
+            14.6,
+            0,
+            15.4,
+            3
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sf_board",
+          "uv": [
+            0.6,
+            0,
+            1.4,
+            3
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sf_board"
+        },
+        "down": {
+          "texture": "#sf_board"
+        }
+      }
+    }
+  ]
+}

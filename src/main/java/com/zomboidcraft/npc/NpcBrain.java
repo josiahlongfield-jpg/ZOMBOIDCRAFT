@@ -70,6 +70,7 @@ final class NpcBrain {
                 return false;
             }
             npc.getNavigation().moveTo(away.x, away.y, away.z, 1.7);
+            npc.say(NpcLines.Kind.FLEE);
             return true;
         }
 
@@ -114,12 +115,16 @@ final class NpcBrain {
         public void start() {
             npc.getNavigation().stop();
             npc.setAiming(true);
+            npc.say(NpcLines.Kind.SPOTTED);
             raised = 0;
         }
 
         @Override
         public void stop() {
             npc.setAiming(false);
+            if (target != null && !target.isAlive() && nearestZombie(npc, SHOOT_RANGE, true) == null) {
+                npc.say(NpcLines.Kind.CLEAR);
+            }
             target = null;
         }
 
@@ -155,6 +160,7 @@ final class NpcBrain {
             cooldown = Math.max(type.fireDelay(), 4) + npc.getRandom().nextInt(6);
             if (--npc.rounds <= 0) {
                 npc.reloadLeft = RELOAD;
+                npc.say(NpcLines.Kind.RELOAD);
             }
         }
 
@@ -242,6 +248,7 @@ final class NpcBrain {
             }
             if (item.distanceToSqr(npc) < 1.8 * 1.8) {
                 npc.setItemSlot(EquipmentSlot.MAINHAND, item.getItem().copy());
+                npc.say(NpcLines.Kind.GUN);
                 npc.rounds = -1;
                 npc.reloadLeft = 0;
                 item.discard();

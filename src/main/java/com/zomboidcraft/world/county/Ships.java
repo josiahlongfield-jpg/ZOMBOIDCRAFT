@@ -48,9 +48,13 @@ final class Ships {
     record Hull(int len, int beam, int keel, int deck, double bow, double stern) {
         /** Half the beam of the hull's section at x, height y; negative outside its length. */
         double half(int x, int y) {
+            return halfAt(x + 0.5, y);
+        }
+
+        /** Half the beam at any point cx along her (x + 0.5 is the middle of block x), height y. */
+        double halfAt(double cx, int y) {
             double f = (y - keel) / (double) Math.max(1, deck - keel);
             double length = len - len * 0.05 * (1 - f);
-            double cx = x + 0.5;
             if (cx < 0 || cx >= length) {
                 return -1;
             }
