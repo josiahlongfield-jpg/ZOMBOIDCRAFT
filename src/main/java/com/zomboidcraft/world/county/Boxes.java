@@ -22,6 +22,21 @@ final class Boxes {
     }
 
     /**
+     * The cell a box's skin faces: if another box's skin is there, it goes a plain cube and so does
+     * this one (returned); otherwise this one's piece stands.
+     */
+    private static String hide(Placer p, int x, int y, int z, String piece, String c) {
+        String n = p.get(x, y, z);
+        if (n == null || !(n.startsWith("ct_") || n.startsWith("container_"))) {
+            return piece;
+        }
+        if (n.startsWith("ct_") && n.indexOf("_end_") < 0 && n.indexOf("_door_") < 0) {
+            p.set(x, y, z, "container_" + n.substring(3, n.indexOf('_', 3)));
+        }
+        return piece.startsWith("ct_") ? "container_" + c : piece;
+    }
+
+    /**
      * A container from (x, y, z), len long along x (or z), its colour given as container_red and
      * the like; the doors at the low end, the high end or both.
      */
@@ -49,11 +64,21 @@ final class Boxes {
                     } else {
                         b = "container_" + c;
                     }
-                    if (alongX) {
-                        p.set(x + i, y + j, z + k, b);
-                    } else {
-                        p.set(x + k, y + j, z + i, b);
+                    int px = alongX ? x + i : x + k, pz = alongX ? z + k : z + i, py = y + j;
+                    // a side or roof against another box's skin is never seen: both go plain cubes,
+                    // so a stack doesn't draw thousands of hidden ribs
+                    if (!low && !high && k != 1) {
+                        int out = k == 0 ? -1 : 1;
+                        b = hide(p, alongX ? px : px + out, py, alongX ? pz + out : pz, b, c);
+                    } else if (!low && !high && j == 2) {
+                        b = hide(p, px, py + 1, pz, b, c);
+                    } else if (!low && !high && j == 0) {
+                        String under = p.get(px, py - 1, pz);
+                        if (under != null && under.startsWith("ct_") && under.contains("_roof")) {
+                            p.set(px, py - 1, pz, "container_" + under.substring(3, under.indexOf('_', 3)));
+                        }
                     }
+                    p.set(px, py, pz, b);
                 }
             }
         }

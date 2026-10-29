@@ -504,8 +504,8 @@ final class PortSite extends Site {
         }
         int tipY = 34 + rng.nextInt(6), tipZ = -18 - rng.nextInt(6);
         Harbour h = new Harbour(s, rng, hit);
-        h.line(5, 4, 1, 5, tipY, tipZ, "truss_yellow");
-        h.line(6, 4, 1, 6, tipY, tipZ, "truss_yellow");
+        h.member(5, 4, 1, tipY, tipZ, "cr_lattice_yellow");
+        h.member(6, 4, 1, tipY, tipZ, "cr_lattice_yellow");
         for (int y = tipY - 1; y > tipY - 8; y--) {
             s.set(5, y, tipZ, "vessel_chain_v");
         }
@@ -729,7 +729,7 @@ final class PortSite extends Site {
             if (cx > lw - 12) {
                 break;
             }
-            hb(cx, quay + 9, 0).harbourCrane(26 + rng.nextInt(10), any("steel_yellow", "minecraft:white_concrete", "steel_red"));
+            hb(cx, quay + 9, 0).harbourCrane(26 + rng.nextInt(10), any("steel_yellow", "cr_steel_white", "steel_red"));
             kit.claim(cx - 9, quay + 1, cx + 9, quay + 18, Kit.BUILT);
         }
         // behind the lane: three yards side by side, either side of the road in (the wider side split)
@@ -856,7 +856,7 @@ final class PortSite extends Site {
             f.set(px, y, quay + 1, "steel_girder");
         }
         f.set(px, 6, quay, "steel_yellow");
-        hb.line(px, 6, quay, px, 2, quay - 4, "steel_yellow");
+        hb.member(px, 6, quay, 2, quay - 4, "cr_strut_yellow");
     }
 
     /** The grain elevator: its silos, the head house and the gallery out to the quay. */

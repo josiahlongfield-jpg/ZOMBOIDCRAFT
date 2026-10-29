@@ -57,6 +57,38 @@ final class Harbour {
         }
     }
 
+    /**
+     * A straight member in the plane x from (y0, z0) to (y1, z1): cr_ member blocks (tools/city/ports.py)
+     * turned to the nearest 11.25 degrees and set off their cells' centres (3 px steps) to follow the true line,
+     * instead of a staircase of whole blocks. family is cr_stay, cr_strut_red, cr_boom_yellow...
+     */
+    void member(int x, double y0, double z0, double y1, double z1, String family) {
+        double dz = z1 - z0, dy = y1 - y0;
+        int k = Math.floorMod((int) Math.round(Math.atan2(dy, dz) / (Math.PI / 16)), 16);
+        double n = k * Math.PI / 16 + Math.PI / 2, nz = Math.cos(n), ny = Math.sin(n);
+        int steps = (int) Math.ceil(Math.max(Math.abs(dz), Math.abs(dy)));
+        boolean fine = family.equals("cr_stay"); // a thin stay steps by 1.5 px, the rest by 3
+        double step = fine ? 1.5 : 3;
+        int lim = fine ? 6 : 3;
+        for (int i = 0; i <= steps; i++) {
+            double pz = z0 + dz * i / steps, py = y0 + dy * i / steps;
+            int cz = (int) Math.round(pz), cy = (int) Math.round(py);
+            int o = (int) Math.round(((pz - cz) * nz + (py - cy) * ny) * 16 / step);
+            o = Math.max(-lim, Math.min(lim, o));
+            p.set(x, cy, cz, family + "_" + k + (o > 0 ? "_p" + o : o < 0 ? "_m" + (-o) : ""));
+        }
+    }
+
+    /** The member family for a crane's steel colour: steel_red -> cr_strut_red. */
+    static String strut(String steel) {
+        return "cr_strut_" + (steel.endsWith("red") ? "red" : steel.endsWith("white") ? "white" : "yellow");
+    }
+
+    /** The crane plating for a steel colour: steel_red -> cr_plate_red, its welds and splice straps. */
+    static String plate(String steel) {
+        return "cr_plate_" + (steel.endsWith("red") ? "red" : steel.endsWith("white") ? "white" : "yellow");
+    }
+
     /** A shipping container 12 long along x (or z) from (x, y, z), 3 x 3, doors at the low end. */
     void box(int x, int y, int z, String colour, boolean alongX) {
         Boxes.place(p, x, y, z, 12, colour, alongX, true, false);
@@ -215,19 +247,25 @@ final class Harbour {
      */
     void gantry(int pw, int gauge, int reach, boolean raised, String steel, int top) {
         int apex = top + 18, back = 14;
+        String strut = strut(steel);
+        steel = plate(steel);
         for (int[] c : new int[][] {{0, 0}, {pw - 1, 0}, {0, gauge - 1}, {pw - 1, gauge - 1}}) {
             for (int y = 1; y <= top; y++) {
                 for (int i = 0; i < 2; i++) {
                     for (int k = 0; k < 2; k++) {
-                        p.set(c[0] + i, y, c[1] + k, y <= 3 ? (y == 1 ? "deck_steel" : "hazard_stripes") : steel);
+                        p.set(c[0] + i, y, c[1] + k, y <= 3 ? (y == 1 ? "deck_steel" : "hazard_stripes") : y % 5 == 0 ? steel + "_seam" : steel);
                     }
                 }
             }
-            // the bogie along the rail
+            // the wheel trucks along the rail
             for (int x = c[0] - 2; x <= c[0] + 3; x++) {
-                p.set(x, 1, c[1], "deck_steel");
-                p.set(x, 1, c[1] + 1, "deck_steel");
+                p.set(x, 1, c[1], "cr_bogie[axis=x]");
+                p.set(x, 1, c[1] + 1, "cr_bogie[axis=x]");
             }
+        }
+        // the portal braces down each side, leg to leg
+        for (int x : new int[] {0, pw - 1}) {
+            member(x, 9, 2, top - 1, gauge - 3, strut);
         }
         for (int x = 0; x <= pw; x++) {
             for (int z : new int[] {0, 1, gauge - 2, gauge - 1}) {
@@ -259,12 +297,11 @@ final class Harbour {
             tipY = top + 1 + reach;
             tipZ = -1 - reach / 6;
             for (int x : new int[] {b0, b1}) {
-                line(x, top + 1, -1, x, tipY, tipZ, steel);
-                line(x, top + 1, -2, x, tipY, tipZ - 1, steel);
+                member(x, top + 1, -1.5, tipY, tipZ - 0.5, steel.endsWith("red") ? "cr_boom_red" : "cr_boom_yellow");
             }
             for (int y = top + 6; y < tipY; y += 6) {
                 int z = -1 - (y - top - 1) / 6;
-                for (int x = b0; x <= b1; x++) {
+                for (int x = b0 + 1; x < b1; x++) {
                     p.set(x, y, z, steel);
                 }
             }
@@ -279,12 +316,16 @@ final class Harbour {
                         p.set(x, top + 2, z, steel);
                     }
                 }
+                // the festoon cables looped under the boom, the trolley's power
+                if (z % 3 == 0) {
+                    p.set(b1 - 1, top, z, "cr_festoon[axis=z]");
+                }
             }
             // the trolley out over the ship, the cab under it, a box on the spreader
             int tz = -reach + 6 + rng.nextInt(Math.max(1, reach - 4));
             for (int x = b0; x <= b1; x++) {
                 for (int z = tz; z < tz + 3; z++) {
-                    p.set(x, top + 3, z, "steel_yellow");
+                    p.set(x, top + 3, z, "cr_plate_yellow");
                 }
             }
             for (int y = top - 2; y <= top; y++) {
@@ -298,8 +339,9 @@ final class Harbour {
                 p.set(b1 - 1, y, tz + 1, "vessel_rope_v");
             }
             int sy = top - drop - 1;
-            for (int x = 0; x < pw; x++) {
-                p.set(x, sy, tz + 1, "steel_yellow");
+            for (int x = pw / 2 - 6; x < pw / 2 + 6; x++) {
+                p.set(x, sy, tz + 1, x == pw / 2 - 6 ? "cr_spreader_end[facing=west]" : x == pw / 2 + 5 ? "cr_spreader_end[facing=east]"
+                        : "cr_spreader[axis=x]");
             }
             if (chance() < 0.6) {
                 box(Math.max(0, pw / 2 - 6), sy - 3, tz, boxColour(), true);
@@ -307,39 +349,59 @@ final class Harbour {
         }
         // the A-frame and its stays
         for (int x : new int[] {0, pw - 1}) {
-            line(x, top, 0, x, apex, 3, steel);
-            line(x, top, gauge - 1, x, apex, 3, steel);
+            member(x, top, 0, apex, 3, strut);
+            member(x, top, gauge - 1, apex, 3, strut);
         }
         for (int x = 0; x < pw; x++) {
             p.set(x, apex, 3, steel);
         }
         for (int x : new int[] {b0, b1}) {
-            line(x, apex, 3, x, tipY, tipZ, "steel_girder");
-            line(x, apex, 3, x, top + 2, gauge + back, "steel_girder");
+            member(x, apex, 3, tipY, tipZ, "cr_stay");
+            member(x, apex, 3, top + 2, gauge + back, "cr_stay");
         }
-        // the machinery house on the back reach
+        // the machinery house on the back reach: ribbed cladding between steel corner posts, a door
+        // off the A-frame's side, louvres over the hoist motors, a handrail round its roof
+        int z0 = gauge + 3, z1 = gauge + back - 1, y0 = top + 3, y1 = top + 7;
         for (int x = b0; x <= b1; x++) {
-            for (int z = gauge + 3; z <= gauge + back - 1; z++) {
-                for (int y = top + 3; y <= top + 7; y++) {
-                    boolean side = x == b0 || x == b1 || z == gauge + 3 || z == gauge + back - 1 || y == top + 7;
-                    p.set(x, y, z, side ? (chance() < 0.1 + hit * 0.1 ? "corrugated_grey_stain" : "corrugated_grey") : "air");
+            for (int z = z0; z <= z1; z++) {
+                boolean ex = x == b0 || x == b1, ez = z == z0 || z == z1;
+                for (int y = y0; y <= y1; y++) {
+                    String face = x == b0 ? "west" : x == b1 ? "east" : z == z0 ? "north" : "south";
+                    String row = y == y0 ? "side_bot" : y == y1 - 1 ? "side_top" : "side";
+                    p.set(x, y, z, y == y1 ? "ct_white_roof[facing=north]" : ex && ez ? "cr_plate_white"
+                            : ex || ez ? "ct_white_" + row + "[facing=" + face + "]" : "air");
+                }
+                if (ex || ez) {
+                    String out = ez ? (z == z0 ? "north" : "south") : x == b0 ? "west" : "east";
+                    p.set(x, y1 + 1, z, "cr_rail[facing=" + out + "]");
                 }
             }
+        }
+        p.set(b0 + 2, y0, z0, "bunk_door_steel[facing=south,half=lower,hinge=left,open=false]");
+        p.set(b0 + 2, y0 + 1, z0, "bunk_door_steel[facing=south,half=upper,hinge=left,open=false]");
+        for (int z = z0 + 2; z < z1 - 1; z += 3) {
+            p.set(b0 - 1, y0 + 1, z, "fit_louvre[facing=west]");
+            p.set(b1 + 1, y0 + 1, z, "fit_louvre[facing=east]");
         }
         p.set(0, apex + 1, 3, "aviation_light");
         p.set(pw - 1, apex + 1, 3, "aviation_light");
         p.set(pw / 2, top - 1, gauge / 2, lamp(0.3));
-        // a ladder up the landside leg
+        // a caged ladder up the landside leg, the walkways down both sides of the boom
         for (int y = 2; y < top; y++) {
-            p.set(0, y, gauge, "bunk_ladder[facing=south]");
+            p.set(0, y, gauge, "cr_cage_ladder[facing=south]");
+        }
+        for (int z = raised ? -1 : -reach; z <= gauge + back; z++) {
+            p.set(b0 - 1, top + 1, z, "cr_walk[facing=west]");
+            p.set(b1 + 1, top + 1, z, "cr_walk[facing=east]");
         }
     }
 
     /** A rubber-tyred gantry len along x and span across z, h high, over a block of stacks. */
     void rtg(int len, int span, int h, String steel) {
+        steel = plate(steel);
         for (int[] c : new int[][] {{0, 0}, {len, 0}, {0, span}, {len, span}}) {
             for (int y = 2; y <= h; y++) {
-                p.set(c[0], y, c[1], steel);
+                p.set(c[0], y, c[1], y % 5 == 0 ? steel + "_seam" : steel);
             }
             p.set(c[0], 1, c[1], "tire[axis=x]");
             p.set(c[0] - 1, 1, c[1], "tire[axis=x]");
@@ -364,11 +426,14 @@ final class Harbour {
         p.set(len / 2, h, tz, "window[axis=x]");
         p.set(len / 2, h - 1, tz, "window[axis=x]");
         p.set(1, h + 2, 0, lamp(0.4));
-        // the engine house on the leg
+        // the engine house on the leg, a caged ladder up the far one
         for (int y = 4; y <= 6; y++) {
             for (int x = 1; x <= 3; x++) {
                 p.set(x, y, -1, "corrugated_grey");
             }
+        }
+        for (int y = 4; y <= h; y++) {
+            p.set(len, y, span + 1, "cr_cage_ladder[facing=south]");
         }
     }
 
@@ -377,22 +442,32 @@ final class Harbour {
      * boom out over the water toward -z, the hook hanging.
      */
     void harbourCrane(int boom, String steel) {
+        String strut = strut(steel);
+        steel = plate(steel);
+        // the carrier on its tyres, the outriggers out to their jacks
         for (int x = -4; x <= 4; x++) {
             for (int z = -4; z <= 4; z++) {
-                p.set(x, 1, z, Math.abs(x) == 4 || Math.abs(z) == 4 ? "tire[axis=x]" : "deck_steel");
-                p.set(x, 2, z, "deck_steel");
+                p.set(x, 1, z, Math.abs(z) == 4 && x != 0 ? "tire[axis=x]" : Math.abs(z) < 3 ? "cr_plate_grey" : "air");
+                p.set(x, 2, z, Math.abs(x) == 4 || Math.abs(z) == 4 ? "hazard_stripes" : "deck_steel");
             }
         }
-        for (int[] d : new int[][] {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}) {
-            line(d[0] * 4, 2, d[1] * 4, d[0] * 8, 1, d[1] * 8, steel);
-            p.set(d[0] * 8, 1, d[1] * 8, "deck_steel");
+        for (int sx : new int[] {-1, 1}) {
+            for (int z : new int[] {-3, 3}) {
+                for (int x = 5; x <= 7; x++) {
+                    p.set(sx * x, 2, z, "cr_outrigger[axis=x]");
+                }
+                p.set(sx * 8, 1, z, "cr_pad[facing=north]");
+                p.set(sx * 8, 2, z, "cr_plate_white");
+            }
         }
+        // the tower, plated, a caged ladder up its back
         for (int y = 3; y <= 16; y++) {
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
-                    p.set(x, y, z, Math.abs(x) + Math.abs(z) == 2 ? steel : y % 4 == 0 ? steel : "air");
+                    p.set(x, y, z, y % 5 == 0 ? steel + "_seam" : steel);
                 }
             }
+            p.set(0, y, 2, "cr_cage_ladder[facing=south]");
         }
         for (int x = -2; x <= 3; x++) {
             for (int z = -2; z <= 2; z++) {
@@ -404,15 +479,15 @@ final class Harbour {
             }
         }
         int tipY = 20 + boom * 3 / 5, tipZ = -boom * 4 / 5;
-        line(-1, 18, -3, -1, tipY, tipZ, "truss_yellow");
-        line(1, 18, -3, 1, tipY, tipZ, "truss_yellow");
+        member(-1, 18, -3, tipY, tipZ, "cr_lattice_yellow");
+        member(1, 18, -3, tipY, tipZ, "cr_lattice_yellow");
         for (int y = tipY - 1; y > tipY - 10; y--) {
-            p.set(0, y, tipZ, "minecraft:iron_chain[axis=y]");
+            p.set(0, y, tipZ, "vessel_rope_v");
         }
-        p.set(0, tipY - 10, tipZ, "steel_yellow");
+        p.set(0, tipY - 10, tipZ, "cr_headblock[axis=z]");
         p.set(0, tipY + 1, tipZ, "aviation_light");
-        line(0, 20, 3, 0, 26, 0, steel);
-        line(0, 26, 0, 0, tipY, tipZ, "steel_girder");
+        member(0, 20, 3, 26, 0, strut);
+        member(0, 26, 0, tipY, tipZ, "cr_stay");
     }
 
     /** A high lighting mast at (x, z), h tall, its head of lamps. */
@@ -589,7 +664,7 @@ final class Harbour {
                 p.set(x + dx, y, z1 - 1, "steel_girder");
             }
         }
-        line(x, y1, z1 - 2, x, y1 - 6, z1 - 7, "steel_yellow");
+        member(x, y1, z1 - 2, y1 - 6, z1 - 7, "cr_strut_yellow");
     }
 
     /** A siding along x from x0 to x1 on row z: ballast three wide, the rails, a buffer stop at each end. */

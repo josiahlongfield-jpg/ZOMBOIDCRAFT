@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_red": "zomboidcraft:block/city/cr_plate_red",
+    "particle": "zomboidcraft:block/city/cr_plate_red"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        -6,
+        -5.0
+      ],
+      "to": [
+        15,
+        22,
+        9.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            1,
+            0,
+            15,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            1,
+            0,
+            15,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            2.0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            0,
+            0,
+            14.0,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            1,
+            0,
+            15,
+            14.0
+          ]
+        },
+        "down": {
+          "texture": "#cr_plate_red",
+          "uv": [
+            1,
+            2.0,
+            15,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

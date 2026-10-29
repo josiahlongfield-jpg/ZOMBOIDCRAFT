@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_white": "zomboidcraft:block/city/cr_plate_white",
+    "hazard_stripes": "zomboidcraft:block/city/hazard_stripes",
+    "particle": "zomboidcraft:block/city/cr_plate_white"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        0
+      ],
+      "to": [
+        13,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_white",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cr_plate_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cr_plate_white"
+        },
+        "west": {
+          "texture": "#cr_plate_white"
+        },
+        "up": {
+          "texture": "#cr_plate_white"
+        },
+        "down": {
+          "texture": "#cr_plate_white"
+        }
+      }
+    },
+    {
+      "from": [
+        2.8,
+        6,
+        7
+      ],
+      "to": [
+        13.2,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hazard_stripes"
+        },
+        "south": {
+          "texture": "#hazard_stripes"
+        },
+        "east": {
+          "texture": "#hazard_stripes"
+        },
+        "west": {
+          "texture": "#hazard_stripes"
+        },
+        "up": {
+          "texture": "#hazard_stripes"
+        },
+        "down": {
+          "texture": "#hazard_stripes"
+        }
+      }
+    }
+  ]
+}

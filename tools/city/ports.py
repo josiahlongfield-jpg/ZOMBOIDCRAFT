@@ -1,4 +1,4 @@
-"""The ct_ kit: shipping containers built to the landmarks' detail in place of 12 x 3 x 3 painted
+"""The ct_ and cr_ kits: shipping containers built to the landmarks' detail in place of 12 x 3 x 3 painted
 cubes (Josiah, 2026-10-29: "Everything in this world must be of the same level of detail and
 effort"). world/county/Boxes.java lays them out; Harbour, BigShip, Camp and the civic yards call it.
 
@@ -14,6 +14,16 @@ face it shows on the north (z = 0), rotate=facing:
   keepers, the hinges, the header and the sill, the owner's code stencilled on the left door.
 
 The middle of the box (never seen) stays the plain container_<c> cube.
+
+The cranes' sloping members (Harbour.member): the A-frames, stays, raised booms and lattice jibs
+were lines of whole blocks stepping up a staircase. cr_<family>_<k>[_p|_m] is one member in the
+y-z plane, k its direction in 11.25 degree steps from +z toward +y (free model angles, 1.21.6 on),
+_p1.._p3 / _m1.._m3 three pixels a step off the cell's centre along its left normal, overlapping the
+next so a run reads as one straight member (the Ferris wheel's trick, waterfront.py, made finer):
+
+- cr_stay: a tension bar; cr_strut_<red|yellow|white>: a 0.5 m box member; cr_boom_<red|yellow>:
+  a raised boom's 0.9 m girder; cr_lattice_yellow: a lattice jib, see-through;
+- cr_steel_white: the white cranes' plating, a cube.
 
     python3 tools/city/ports.py         rewrites the ct_ entries in blocks.json
 
@@ -59,6 +69,17 @@ def paint(seed, rgb):
     return t
 
 
+def flat(seed, rgb):
+    """The plain container cube's paint (a box's hidden middle, and the odd body built of whole
+    blocks): the corrugations painted in light and shade, four a block, salt-streaked."""
+    t = paint(seed, rgb)
+    x = np.arange(N, dtype=np.float32)
+    wave = np.cos((x / N * 4) * 2 * np.pi)
+    t.c = t.c * (1 + 0.12 * wave)[None, :, None]
+    t.h = np.clip(t.h * 0.5 + 0.5 + 0.45 * wave[None, :], 0, 1)
+    return t
+
+
 def code(seed, rgb, text):
     """The left door's top: the owner's code in white stencil over the paint."""
     t = paint(seed, rgb)
@@ -81,11 +102,60 @@ def casting(seed):
     return t
 
 
+def white_steel(seed):
+    t = F.mat("PaintedMetal004", (206, 206, 200), 0.35, span=3, seed=seed)
+    rust(t, 0.15)
+    t.streaks(0.9, 0.7)
+    return t
+
+
+def lattice(seed):
+    """A jib's lattice face: chords down both edges, diagonals between, the sky through the rest."""
+    t = F.mat("PaintedMetal001", (200, 150, 40), 0.4, span=3, seed=seed)
+    rust(t, 0.15)
+    yy, xx = np.mgrid[0:N, 0:N]
+    w = N // 10
+    keep = (xx < w) | (xx >= N - w) | (np.abs((xx - yy) % N) < w) | (np.abs((xx + yy) % N) < w) | (yy < w // 2)
+    t.alpha[:] = np.where(keep, 255, 0)
+    return t
+
+
+PLATES = {"red": (150, 46, 36), "yellow": (204, 152, 42), "white": (206, 206, 200), "grey": (118, 122, 124)}
+
+
+def plate(seed, rgb, seam=False):
+    """A crane's box-girder plating: marine enamel over steel plate, a stiffener's faint shadow down
+    the middle; the seam piece has the butt weld and its bolted splice strap along the top, rust
+    weeping from the bolts (one in every few metres of a leg)."""
+    t = F.mat("PaintedMetal004", rgb, 0.1 if sum(rgb) > 540 else 0.15, span=3, seed=seed)
+    t.vary(0.03)
+    rust(t, 0.08)
+    dark = tuple(int(v * 0.62) for v in rgb)
+    y0 = 0
+    if seam:
+        t.rect(0, 0, N, 2, col=dark, h=0.2)
+        t.rect(0, 2, N, 7, col=tuple(int(v * 1.04) for v in rgb), h=0.85)
+        t.rect(0, 7, N, 8, col=dark, h=0.3)
+        for x in range(4, N, 8):
+            t.rect(x, 3, x + 2, 5, col=(min(255, rgb[0] + 18), min(255, rgb[1] + 18), min(255, rgb[2] + 18)), h=1.0)
+            t.rect(x, 5, x + 2, 9 + (x * 7 % 5), col=(110, 62, 36))
+        y0 = 8
+    t.rect(N // 2 - 1, y0, N // 2 + 1, N, col=tuple(int(v * 0.92) for v in rgb), h=0.6)
+    t.streaks(0.7, 0.72)
+    t.grime(0.12, (60, 54, 46))
+    return t
+
+
 def textures():
-    out = {"ct_casting": lambda: casting(49300)}
+    out = {"ct_casting": lambda: casting(49300), "cr_steel_white": lambda: white_steel(49330),
+           "cr_lattice_yellow": lambda: lattice(49331)}
+    for i, (c, rgb) in enumerate(PLATES.items()):
+        out["cr_plate_" + c] = lambda rgb=rgb, i=i: plate(49340 + i, rgb)
+        out["cr_plate_" + c + "_seam"] = lambda rgb=rgb, i=i: plate(49340 + i, rgb, True)
     for i, (c, rgb) in enumerate(COLOURS.items()):
         out["ct_" + c] = lambda rgb=rgb, i=i: paint(49310 + i, rgb)
         out["ct_" + c + "_code"] = lambda rgb=rgb, i=i, c=c: code(49320 + i, rgb, CODES[c])
+        out["ct_" + c + "_flat"] = lambda rgb=rgb, i=i: flat(49350 + i, rgb)
     return out
 
 
@@ -231,6 +301,130 @@ def end(c, row, col, door):
     return b
 
 
+SIGN = -1  # a turn about x that takes a model from +z toward +y (checked in the crane preview)
+
+
+STEPS = 16  # directions over a half turn
+OFFSETS = (("", 0.0), ("_p1", 3.0), ("_p2", 6.0), ("_p3", 9.0), ("_m1", -3.0), ("_m2", -6.0), ("_m3", -9.0))
+
+
+def member(k, half, tex, o=0.0, lo=-6, hi=22):
+    """A member in the y-z plane, direction k (11.25 degree steps from +z toward +y), o pixels off
+    the cell's centre along its left normal."""
+    a = (k % STEPS) * 180 / STEPS
+    if a <= 45:
+        box = [8 - half, 8 + o - half, lo, 8 + half, 8 + o + half, hi, tex]
+        r = a
+    elif a < 135:
+        box = [8 - half, lo, 8 - o - half, 8 + half, hi, 8 - o + half, tex]
+        r = a - 90
+    else:
+        box = [8 - half, 8 - o - half, lo, 8 + half, 8 - o + half, hi, tex]
+        r = a - 180
+    return [box + [None, {"axis": "x", "angle": SIGN * r, "origin": [8, 8, 8]}]] if r else [box]
+
+
+MEMBERS = {"cr_stay": (1.5, "painted_steel"), "cr_strut_red": (4, "cr_plate_red"), "cr_strut_yellow": (4, "cr_plate_yellow"),
+           "cr_strut_white": (4, "cr_plate_white"), "cr_boom_red": (7, "cr_plate_red"), "cr_boom_yellow": (7, "cr_plate_yellow"),
+           "cr_lattice_yellow": (4, "cr_lattice_yellow")}
+# a stay is thin enough that a 3 px step shows: its pieces step by 1.5 px
+FINE = (("", 0.0),) + tuple((f"_p{i}", 1.5 * i) for i in range(1, 7)) + tuple((f"_m{i}", -1.5 * i) for i in range(1, 7))
+
+
+# ---------------------------------------------------------------- crane fittings
+
+GALV = "painted_steel"
+RUBBER = "tire"
+
+
+def rail_boxes(paint):
+    """A handrail along the front (north) edge: posts every half block, knee and hand rails, toe board."""
+    b = [[0, 1, 0, 16, 2.6, 0.6, paint], [0, 7.4, 0.2, 16, 8.4, 1.2, paint], [0, 14.2, 0, 16, 15.4, 1.4, paint]]
+    for x in (0.4, 8.4):
+        b.append([x, 1, 0.2, x + 1.2, 14.2, 1.4, paint])
+    return b
+
+
+def walk():
+    """A boom walkway: open grating on angle bearers, the handrail on its outer (north) edge."""
+    return [[0, 0, 0, 16, 1, 16, "grate"], [0, -1.5, 0.5, 16, 0, 2, GALV], [0, -1.5, 14, 16, 0, 15.5, GALV]] + rail_boxes("cr_plate_yellow")
+
+
+def cage_ladder():
+    """A caged ladder against a leg (the leg behind it, south): stiles and rungs, hoops and straps."""
+    b = [[3, 0, 13.6, 4.2, 16, 15, GALV], [11.8, 0, 13.6, 13, 16, 15, GALV]]
+    for y in (1.5, 5.5, 9.5, 13.5):
+        b.append([4.2, y, 14, 11.8, y + 0.9, 14.8, GALV])
+    for y in (3, 11):
+        b += [[1.6, y, 2, 14.4, y + 0.8, 2.8, GALV], [1.6, y, 2.8, 2.4, y + 0.8, 14, GALV], [13.6, y, 2.8, 14.4, y + 0.8, 14, GALV]]
+    b += [[7.6, 0, 2, 8.4, 16, 2.8, GALV], [1.6, 0, 7.6, 2.4, 16, 8.4, GALV], [13.6, 0, 7.6, 14.4, 16, 8.4, GALV]]
+    return b
+
+
+def wheel(z0):
+    """A rail wheel seen side on: an octagon from two crossed boxes, the hub proud of it."""
+    c = (8, 3.2, z0 + 3.2)
+    return [[5.5, 0, z0, 10.5, 6.4, z0 + 6.4, "deck_steel"],
+            [5.5, 0, z0, 10.5, 6.4, z0 + 6.4, "deck_steel", None, {"axis": "x", "angle": 45, "origin": list(c)}],
+            [4.8, 2.2, z0 + 2.2, 11.2, 4.2, z0 + 4.2, "painted_steel"]]
+
+
+def bogie():
+    """A gantry's wheel truck along its rail (drawn along z): two wheels under an equaliser beam."""
+    return (wheel(0.8) + wheel(8.8) +
+            [[3.5, 6.4, 0, 12.5, 12, 16, "cr_plate_yellow"], [2.5, 12, 0, 13.5, 13.4, 16, "cr_plate_yellow"],
+             [3, 8, -0.2, 13, 10, 0.4, "hazard_stripes"], [3, 8, 15.6, 13, 10, 16.2, "hazard_stripes"],
+             [6.5, 13.4, 6, 9.5, 16, 10, "painted_steel"]])
+
+
+def spreader():
+    """The spreader's beam (drawn along z): the box beam, the telescoping arms' rails either side,
+    a cable tray on top."""
+    return [[5, 6, 0, 11, 12, 16, "cr_plate_yellow"], [3, 7, 0, 5, 10, 16, "cr_plate_grey"], [11, 7, 0, 13, 10, 16, "cr_plate_grey"],
+            [6, 12, 2, 10, 13.5, 14, GALV], [6.4, 13.5, 2, 6.8, 14.5, 14, RUBBER], [9.2, 13.5, 2, 9.6, 14.5, 14, RUBBER]]
+
+
+def spreader_end():
+    """A spreader's end beam (its outer face north): the cross beam, a twistlock housing at each
+    corner, the guide flippers swung down, a cable gland on top."""
+    b = [[0, 6, 2, 16, 12, 8, "cr_plate_yellow"], [5, 6, 8, 11, 12, 16, "cr_plate_yellow"]]
+    for x in (0, 12):
+        b += [[x, 3, 1, x + 4, 6, 7, "cr_plate_grey"], [x + 1.5, 1.6, 3, x + 2.5, 3, 4.4, "ct_casting"],
+              [x, -4, 0, x + 4, 3, 1, "cr_plate_yellow", None, {"axis": "x", "angle": -22.5, "origin": [x + 2, 3, 1]}]]
+    b.append([6.5, 12, 1.6, 9.5, 14, 3, GALV])
+    return b
+
+
+def festoon():
+    """Festoon cables (drawn along z) hanging in loops from their trolley under the boom: flat
+    rubber cables, three loops deep."""
+    b = [[5, 13.5, 4, 11, 16, 12, GALV], [4.4, 12.5, 3, 11.6, 13.5, 13, "cr_plate_grey"]]
+    for i, d in enumerate((4, 8, 12)):
+        x0 = 5.6 + i * 1.8
+        b += [[x0, 12.5 - d, 0, x0 + 1, 12.5 - d + 1.2, 16, RUBBER]]
+        b += [[x0, 12.5 - d, 0, x0 + 1, 12.5, 1.2, RUBBER], [x0, 12.5 - d, 14.8, x0 + 1, 12.5, 16, RUBBER]]
+    return b
+
+
+def headblock():
+    """The hook's headblock (drawn along z): sheave cheek plates, the sheaves' rims, the hook."""
+    return [[4, 6, 2, 5.4, 15, 14, "cr_plate_yellow"], [10.6, 6, 2, 12, 15, 14, "cr_plate_yellow"],
+            [5.4, 7, 3, 10.6, 14, 13, GALV], [7.2, 14, 7.2, 8.8, 16, 8.8, GALV],
+            [7, 2, 7, 9, 6, 9, "painted_steel"], [6.4, 0, 6, 9.6, 2, 7, "painted_steel"], [6.4, 0, 9, 9.6, 2, 10, "painted_steel"],
+            [6.4, 0, 6, 9.6, 1, 10, "painted_steel"]]
+
+
+def pad():
+    """An outrigger's jack: the cylinder down from the beam to a steel float on a timber mat."""
+    return [[0, 0, 0, 16, 1.2, 16, "hk_timber"], [2, 1.2, 2, 14, 2.6, 14, "deck_steel"], [6, 2.6, 6, 10, 12, 10, GALV],
+            [5, 12, 5, 11, 16, 11, "cr_plate_white"]]
+
+
+def outrigger():
+    """An outrigger beam (drawn along z): the box beam with its hazard-striped end plates."""
+    return [[3, 4, 0, 13, 12, 16, "cr_plate_white"], [2.8, 6, 7, 13.2, 10, 9, "hazard_stripes"]]
+
+
 def blocks():
     out = {}
 
@@ -247,13 +441,43 @@ def blocks():
             for col in range(3):
                 add(f"ct_{c}_end_{row}{col}", end(c, row, col, False), "Shipping Container")
                 add(f"ct_{c}_door_{row}{col}", end(c, row, col, True), "Container Doors")
+    out["cr_steel_white"] = {"tex": "cr_steel_white", "title": "Steel", "sound": "METAL"}
+    for c in COLOURS:  # the plain cube a box's hidden cells (and whole-block bodies) are
+        out["container_" + c] = {"tex": "ct_" + c + "_flat", "title": "Shipping Container", "sound": "METAL"}
+    for c in PLATES:
+        out["cr_plate_" + c] = {"tex": "cr_plate_" + c, "title": "Crane Steel", "sound": "METAL"}
+        out["cr_plate_" + c + "_seam"] = {"tex": "cr_plate_" + c + "_seam", "title": "Crane Steel", "sound": "METAL"}
+
+    def fit(name, boxes, title, rotate, shape, cutout=False):
+        out[name] = {"model": "boxes", "boxes": [[round(v, 3) if isinstance(v, float) else v for v in q] for q in boxes],
+                     "title": title, "sound": "METAL", "rotate": rotate, "shape": shape}
+        if cutout:
+            out[name]["render"] = "cutout"
+    fit("cr_walk", walk(), "Boom Walkway", "facing", [[0, 0, 0, 16, 1, 16], [0, 1, 0, 16, 15.4, 1.4]], cutout=True)
+    fit("cr_rail", rail_boxes("cr_plate_yellow"), "Handrail", "facing", [[0, 0, 0, 16, 15.4, 1.4]])
+    fit("cr_cage_ladder", cage_ladder(), "Caged Ladder", "facing", [[3, 0, 13.6, 13, 16, 15]])
+    fit("cr_bogie", bogie(), "Gantry Bogie", "axis", [[2.5, 0, 0, 13.5, 16, 16]])
+    fit("cr_spreader", spreader(), "Spreader", "axis", [[3, 6, 0, 13, 14.5, 16]])
+    fit("cr_spreader_end", spreader_end(), "Spreader", "facing", [[0, 3, 0, 16, 14, 16]])
+    fit("cr_festoon", festoon(), "Festoon Cables", "axis", [[5, 12.5, 3, 11, 16, 13]])
+    fit("cr_headblock", headblock(), "Hook Block", "axis", [[4, 0, 2, 12, 16, 14]])
+    fit("cr_pad", pad(), "Outrigger Jack", "facing", [[0, 0, 0, 16, 16, 16]])
+    fit("cr_outrigger", outrigger(), "Outrigger", "axis", [[3, 4, 0, 13, 12, 16]])
+    for fam, (half, tex) in MEMBERS.items():
+        for k in range(STEPS):
+            for sfx, o in (FINE if fam == "cr_stay" else OFFSETS):
+                spec = {"model": "boxes", "boxes": member(k, half, tex, o), "title": "Steel Member", "sound": "METAL",
+                        "shape": [[8 - min(half, 4), 8 - min(half, 4), 8 - min(half, 4), 8 + min(half, 4), 8 + min(half, 4), 8 + min(half, 4)]]}
+                if "lattice" in fam:
+                    spec["render"] = "cutout"
+                out[f"{fam}_{k}{sfx}"] = spec
     return out
 
 
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith("ct_")}
+    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_")) and k not in {"container_" + c for c in COLOURS}}
     made = blocks()
     kept.update(made)
     data["blocks"] = kept
