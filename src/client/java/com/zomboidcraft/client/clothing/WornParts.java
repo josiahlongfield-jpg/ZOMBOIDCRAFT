@@ -19,7 +19,26 @@ final class WornParts {
             Map.entry("beanie", List.of("head")),
             Map.entry("work_gloves", List.of("left_arm", "right_arm")),
             Map.entry("sunglasses", List.of("head")),
-            Map.entry("bandana", List.of("head")));
+            Map.entry("bandana", List.of("head")),
+            Map.entry("trucker_cap", List.of("head")),
+            Map.entry("cowboy_hat", List.of("head")),
+            Map.entry("bucket_hat", List.of("head")),
+            Map.entry("hard_hat", List.of("head")),
+            Map.entry("bike_helmet", List.of("head")),
+            Map.entry("football_helmet", List.of("head")),
+            Map.entry("hockey_mask", List.of("head")),
+            Map.entry("motorcycle_helmet", List.of("head")),
+            Map.entry("police_cap", List.of("head")),
+            Map.entry("fire_helmet", List.of("head")),
+            Map.entry("riot_helmet", List.of("head")),
+            Map.entry("gas_mask", List.of("head")),
+            Map.entry("welding_goggles", List.of("head")),
+            Map.entry("aviator_sunglasses", List.of("head")),
+            Map.entry("reading_glasses", List.of("head")),
+            Map.entry("balaclava", List.of("head")),
+            Map.entry("surgical_mask_worn", List.of("head")),
+            Map.entry("cranial_helmet", List.of("head")),
+            Map.entry("pilot_helmet", List.of("head")));
 
     private WornParts() {
     }
