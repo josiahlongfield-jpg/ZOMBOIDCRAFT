@@ -165,6 +165,26 @@ public final class ModSounds {
     public static final SoundEvent RADIO_POWER_ON = register("item.radio.power_on");
     public static final SoundEvent RADIO_POWER_OFF = register("item.radio.power_off");
 
+    /** Throwables (combat/throwing): the throw, and each one landing or going off. */
+    public static final SoundEvent THROW = register("weapon.throw.swing", 12f);
+    public static final SoundEvent BOTTLE_SMASH = register("weapon.throw.bottle_smash", 32f);
+    public static final SoundEvent CAN_CLATTER = register("weapon.throw.can_clatter", 20f);
+    public static final SoundEvent BRICK_THUD = register("weapon.throw.brick_thud", 16f);
+    public static final SoundEvent FIRECRACKER = register("weapon.throw.firecracker", 64f);
+    public static final SoundEvent FUSE = register("weapon.throw.fuse", 12f);
+    public static final SoundEvent FLARE_HISS = register("weapon.throw.flare_hiss", 16f);
+    public static final SoundEvent FLARE_STRIKE = register("weapon.throw.flare_strike", 12f);
+    public static final SoundEvent ALARM_TICK = register("weapon.throw.alarm_tick", 6f);
+    public static final SoundEvent ALARM_RING = register("weapon.throw.alarm_ring", 48f);
+    public static final SoundEvent MOLOTOV_BURST = register("weapon.throw.molotov_burst", 32f);
+    public static final SoundEvent PIN_PULL = register("weapon.throw.pin_pull", 8f);
+    public static final SoundEvent SMOKE_POP = register("weapon.throw.smoke_pop", 24f);
+    public static final SoundEvent FLASHBANG = register("weapon.throw.flashbang", 96f);
+    public static final SoundEvent EAR_RING = register("weapon.throw.ear_ring", 4f);
+    public static final SoundEvent BLAST = register("weapon.throw.blast", 128f);
+    public static final SoundEvent BLAST_FAR = register("weapon.throw.blast_far", 256f);
+    public static final SoundEvent FIRE_BURN = register("weapon.throw.fire_burn", 16f);
+
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));

@@ -116,10 +116,14 @@ public final class Decay {
 
     /** The block's name without any weathering suffix ("brick_red_moss" -> "brick_red"). */
     private static String material(String block) {
+        // remembered per block name: it ran a string test against every material for each block of a city
+        return block == null ? null : MATERIAL.computeIfAbsent(block, Decay::findMaterial);
+    }
+
+    private static final java.util.Map<String, String> MATERIAL = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static String findMaterial(String block) {
         String b = base(block);
-        if (b == null) {
-            return null;
-        }
         for (String m : VARIANTS.keySet()) {
             if (b.startsWith(m + "_") && !b.equals("sidewalk_cracked")) {
                 return m;

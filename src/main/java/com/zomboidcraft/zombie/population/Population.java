@@ -210,6 +210,7 @@ public final class Population {
         RandomSource random = RandomSource.create(level.getSeed() ^ (bx * 341873128712L + bz * 132897987541L) ^ (old == null ? 0 : old.day()));
         long seed = level.getSeed();
         double empty = Math.min(0.95, Math.max(0, cfg.emptyHouses));
+        double hot = cfg.hotspots ? hotspot(sections) : 1;
         int[][] out = {new int[32]};
         int[] n = {0};
         List<BlockPos> clear = clearNear(level, bx, bz);
@@ -222,7 +223,7 @@ public final class Population {
             for (int i = 0; i < places.size(); i++) {
                 Place p = places.get(i);
                 if (p.contains(x, z, 0)) {
-                    rate = indoor ? rin[i] : rout[i];
+                    rate = indoor ? rin[i] * hot : rout[i];
                     if (indoor && empty > 0 && Budgets.houses(p)) {
                         if (emptyHouse(seed, x, z, empty)) {
                             return;
@@ -403,6 +404,48 @@ public final class Population {
             net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p,
                     new CrowdPayload(baseX, baseZ, names, sx, sz, sy, so));
         }
+    }
+
+    // ---- hotspots: where the dead gathered at the end
+
+    /** Each building kit's prefix and how many more of the dead it holds indoors. */
+    private static final String[][] HOT = {{"hs_", "3"}, {"sh_", "2.5"}, {"ml_", "2"}, {"fs_", "1.5"}, {"sc_", "1.5"}};
+    private static final Map<net.minecraft.world.level.block.Block, Double> HOT_BLOCKS = new java.util.IdentityHashMap<>();
+
+    /**
+     * How crowded indoors this chunk is for the building it holds, found from the blocks it's built with: the
+     * hospital's kit (people brought their sick and bitten there), the police and sheriff's (holding cells, the last
+     * stand), the mall's (shelter), the fire station's and the school's. 1 for anything else.
+     */
+    private static double hotspot(net.minecraft.world.level.chunk.LevelChunkSection[] sections) {
+        double best = 1;
+        for (net.minecraft.world.level.chunk.LevelChunkSection section : sections) {
+            if (section.hasOnlyAir()) {
+                continue;
+            }
+            for (String[] h : HOT) {
+                double m = Double.parseDouble(h[1]);
+                if (m > best && section.maybeHas(state -> hot(state.getBlock()) == m)) {
+                    best = m;
+                }
+            }
+        }
+        return best;
+    }
+
+    private static double hot(net.minecraft.world.level.block.Block block) {
+        return HOT_BLOCKS.computeIfAbsent(block, b -> {
+            String path = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(b).getPath();
+            if (path.startsWith("hs_pad")) {
+                return 1.0;   // a helipad on some other roof isn't a hospital
+            }
+            for (String[] h : HOT) {
+                if (path.startsWith(h[0])) {
+                    return Double.parseDouble(h[1]);
+                }
+            }
+            return 1.0;
+        });
     }
 
     // ---- Grayhaven island: one pool over every place on it

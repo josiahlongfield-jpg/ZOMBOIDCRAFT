@@ -23,7 +23,8 @@ public final class Sight {
         if (distance <= config.closeRange) {
             return zombie.getSensing().hasLineOfSight(player);
         }
-        if (distance > range(zombie, player, config) || !inCone(zombie, player, config.sightConeDegrees)) {
+        if (distance > range(zombie, player, config) || !inCone(zombie, player, config.sightConeDegrees)
+                || com.zomboidcraft.combat.throwing.Smoke.blocks(zombie.level(), zombie.getEyePosition(), player.getEyePosition())) {
             return false;
         }
         return zombie.getSensing().hasLineOfSight(player);

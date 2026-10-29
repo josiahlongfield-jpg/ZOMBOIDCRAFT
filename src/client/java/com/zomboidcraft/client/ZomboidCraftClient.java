@@ -57,6 +57,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
+        EntityRendererRegistry.register(com.zomboidcraft.combat.throwing.Throwing.THROWN, com.zomboidcraft.client.throwing.ThrownRenderer::new);
+        com.zomboidcraft.client.throwing.ThrowEffects.register();
         EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);
         com.zomboidcraft.client.creature.HarvestmanClient.register();
         com.zomboidcraft.client.zombie.body.ZBodyAnimator.register();

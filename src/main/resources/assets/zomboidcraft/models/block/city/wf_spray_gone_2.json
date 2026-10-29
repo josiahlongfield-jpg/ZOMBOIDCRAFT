@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_spray_gone_2": {
+      "sprite": "zomboidcraft:block/city/wf_spray_gone_2",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/wf_spray_gone_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_spray_gone_2"
+        },
+        "south": {
+          "texture": "#wf_spray_gone_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wf_spray_gone_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_spray_gone_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_spray_gone_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_spray_gone_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

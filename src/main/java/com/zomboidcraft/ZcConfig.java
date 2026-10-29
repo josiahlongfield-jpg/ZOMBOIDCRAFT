@@ -78,6 +78,88 @@ public final class ZcConfig {
     public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
+    /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
+    public Throwing throwing = new Throwing();
+
+    public static class Throwing {
+        public boolean enabled = true;
+        /** Ticks of wind-up for a full-strength throw, and its speed then (blocks a tick); a tap throws at a third. */
+        public int fullDrawTicks = 12;
+        public double throwSpeed = 1.35;
+        /** Endurance each throw costs. */
+        public double throwEndurance = 4;
+        /** Fire, blasts and flashbangs hurt players too, friends included. */
+        public boolean friendlyFire = true;
+        /** Show where it will land while you wind up: a dotted arc and a mark where it comes down. */
+        public boolean arcPreview = true;
+        /** How hard a throw off the quick-use wheel is, as a share of a full wind-up (0 to 1). */
+        public double quickThrowPower = 0.7;
+
+        /** How far zombies hear each one (blocks). */
+        public double bottleNoise = 20;
+        public double canNoise = 12;
+        public double brickNoise = 10;
+        public double firecrackerNoise = 45;
+        public double flareNoise = 20;
+        public double alarmNoise = 35;
+        public double molotovNoise = 18;
+        public double smokeNoise = 10;
+        public double flashbangNoise = 60;
+        public double fragNoise = 80;
+
+        /** Damage a hit with a thrown bottle, can or brick does; a brick to the head staggers for this many ticks. */
+        public double bottleDamage = 2;
+        public double canDamage = 1;
+        public double brickDamage = 4;
+        public int brickStagger = 20;
+
+        /** Ticks the firecrackers bang for, a flare burns, and a thrown alarm clock rings (it waits the time it's set to). */
+        public int firecrackerTicks = 120;
+        public int flareTicks = 1200;
+        public int alarmRingTicks = 400;
+        /** Light a burning flare gives (0-15). */
+        public int flareLight = 14;
+
+        /** The molotov's fire pool: radius (blocks), and how long the spilled fuel burns (ticks). */
+        public double molotovRadius = 1.6;
+        public int molotovBurnTicks = 200;
+        /** Ticks a zombie or player that catches fire keeps burning. */
+        public int burnTicks = 160;
+
+        /** The smoke cloud's radius (blocks) and how long it lasts (ticks). */
+        public double smokeRadius = 5;
+        public int smokeTicks = 400;
+
+        /** Fuses from the moment the pin's pulled or the fuse is lit (ticks). Hold on too long and it goes off in hand. */
+        public int flashbangFuse = 30;
+        public int fragFuse = 90;
+        /** The flashbang: zombies within this radius are stunned this long; players near it are blinded and deafened. */
+        public double flashbangRadius = 6;
+        public int flashbangStun = 80;
+        public int flashbangBlind = 100;
+        /** Blasts: the radius they kill or maim in, the damage at the middle, and a frag's shrapnel reach past that. */
+        public double fragRadius = 5;
+        public double fragDamage = 50;
+        public double fragShrapnel = 10;
+        public double shrapnelDamage = 8;
+
+        /**
+         * Fires from blasts, molotovs and flares never break blocks themselves and never run away across the world:
+         * each spreads at most fireReach blocks from where it started, holds at most fireMaxBlocks flames, and
+         * burns out after fireLifeTicks. Left alone it burns wooden and soft blocks (fireBurnChance per check);
+         * rain puts it out (fireRainChance), and so does water.
+         */
+        public boolean fireSpreads = true;
+        public int fireReach = 2;
+        public int fireMaxBlocks = 60;
+        public int fireLifeTicks = 1200;
+        public double fireSpreadChance = 0.3;
+        public double fireBurnChance = 0.08;
+        public double fireRainChance = 0.35;
+        /** Share of the flammable spots in a blast's radius that catch. */
+        public double blastFireChance = 0.35;
+    }
+
     public Start start = new Start();
 
     public static class Start {
@@ -184,6 +266,8 @@ public final class ZcConfig {
         public int perStep = 24;
         /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
         public double emptyHouses = 0.5;
+        /** Buildings where the dead gathered at the end draw extra indoors: hospital x3, police x2.5, mall x2, fire station and school x1.5. */
+        public boolean hotspots = true;
         /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
         public int respawnDays = 0;
         /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
@@ -843,7 +927,7 @@ public final class ZcConfig {
         /** Bursting for every other gun (0 = never). */
         public double burstOtherGuns = 0;
         /**
-         * Pipe bombs and grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
+         * Grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
          * of one the head sometimes bursts.
          */
         public boolean blasts = true;

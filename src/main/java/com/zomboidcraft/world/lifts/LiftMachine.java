@@ -33,6 +33,8 @@ public class LiftMachine extends BlockEntity {
 
     private LiftShaft shaft;
     private int retry;
+    /** The machines ticking now, for /zc lift list and call. */
+    static final java.util.Set<LiftMachine> LOADED = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
     private boolean scanned;
     /** The car's floor height, last tick's, its speed (blocks a tick, up positive). */
     double y = Double.NaN, yO = Double.NaN, v;
@@ -106,6 +108,7 @@ public class LiftMachine extends BlockEntity {
     // ------------------------------------------------------------------ running
 
     void tick(ServerLevel level) {
+        LOADED.add(this);
         if (!scanned) {
             if (retry-- > 0) {
                 return;
@@ -437,6 +440,30 @@ public class LiftMachine extends BlockEntity {
 
     int phase() {
         return phase;
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        LOADED.remove(this);
+    }
+
+    /** One line on the lift for /zc lift list: where it is, its floors, where the car is and what it's doing. */
+    String describe() {
+        BlockPos m = getBlockPos();
+        String where = m.getX() + " " + m.getY() + " " + m.getZ();
+        if (shaft == null) {
+            return "lift at " + where + ": no shaft found yet (retry in " + Math.max(0, retry) + " ticks)";
+        }
+        return String.format(java.util.Locale.ROOT, "lift at %s: %d floors, car y %.2f at %d, going %d, phase %d, doors %.2f, calls %s, car entity %s",
+                where, shaft.landings.length, y, at, dir, phase, doors, callsString(), car != null && !car.isRemoved() ? "yes" : "no");
+    }
+
+    /** Calls the car to its top floor (or the bottom one if it's at the top): /zc lift call. */
+    void callFar(ServerLevel level) {
+        if (shaft != null) {
+            hallCall(level, at == shaft.landings.length - 1 ? 0 : shaft.landings.length - 1);
+        }
     }
 
     // ------------------------------------------------------------------ saving

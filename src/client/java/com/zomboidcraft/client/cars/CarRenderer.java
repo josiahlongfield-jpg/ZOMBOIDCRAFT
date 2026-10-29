@@ -239,8 +239,10 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         if (state.highlight != null) {
             float[] h = state.highlight;
             float size = state.highlightSize;
-            boolean shaders = state.shaders;
-            collector.submitCustomGeometry(poseStack, CarLights.glowType(shaders), (pose, out) -> highlight(h, size, eye, shaders, pose, out));
+            // a shader pack's on or not, whatever the car's lamps are doing (state.shaders is only set for lit cars)
+            boolean shaders = CarLights.shaderPackOn();
+            collector.submitCustomGeometry(poseStack, com.zomboidcraft.client.interact.Interactables.type(shaders),
+                    (pose, out) -> highlight(h, size, eye, shaders, pose, out));
         }
         if (state.arms != CarHands.NONE && state.driverEye != null && model != null && model.steering != null) {
             CarArms.draw(poseStack, collector, light, state.driverEye, model.steering, state.wheelTurn, state.arms);

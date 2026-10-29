@@ -268,6 +268,15 @@ final class Layout {
             // the Old Market: the market house down the middle of three blocks by two, the lanes and rows either side
             return lot(s, PlaceType.LANDMARK, "market", 3, 2, h);
         }
+        if (s.id().equals("waterfront")) {
+            // the Waterfront: from the avenue the subway runs under out over the harbour, two blocks
+            // east of it by three along the shore; the land to a straight new seawall, the rest the
+            // basin the pier, the ferry and the marina stand in (left as water, see County.ground)
+            int i0 = Math.floorDiv(s.x() + PITCH, PITCH), j0 = (int) Math.round(s.z() / (double) PITCH - 1.5);
+            int x0 = i0 * PITCH + EDGE + 1, z0 = j0 * PITCH + EDGE + 1;
+            int x1 = (i0 + 2) * PITCH - EDGE - 1, z1 = (j0 + 3) * PITCH - EDGE - 1;
+            return new Place(PlaceType.LANDMARK, "waterfront", x0, z0, x1, z1, Terrain.CITY, h, 1, x1 - x0 - Waterfront.SEAWALL);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);
