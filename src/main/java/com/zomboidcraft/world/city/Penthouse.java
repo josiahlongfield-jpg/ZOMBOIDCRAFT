@@ -813,14 +813,20 @@ final class Penthouse {
                 p.set(x, y2, z, stone);
             }
         }
-        // rails where a landing looks down a flight's void
+        // a wrought-iron balustrade under a brass rail where a landing looks down a flight's void,
+        // brass-capped newels at its ends, after the grand stair photos
         for (int x = hx; x <= hx + 1; x++) {
-            p.set(x, y1 + 1, hz + 1, "tx_glass_rail[axis=x]");
-            p.set(x, y2 + 1, hz + 1, "tx_glass_rail[axis=x]");
-            p.set(x, y2 + 1, hz + 6, "tx_glass_rail[axis=x]");
+            p.set(x, y1 + 1, hz + 1, "of_iron_scroll[axis=x]");
+            p.set(x, y2 + 1, hz + 1, "of_iron_scroll[axis=x]");
+            p.set(x, y2 + 1, hz + 6, "of_iron_scroll[axis=x]");
         }
         for (int x = hx + 3; x <= hx + 4; x++) {
-            p.set(x, y2 + 1, hz + 6, "tx_glass_rail[axis=x]");
+            p.set(x, y2 + 1, hz + 6, "of_iron_scroll[axis=x]");
+        }
+        for (int yy : new int[] {y1, y2}) {
+            if ("air".equals(String.valueOf(p.get(hx + 2, yy + 1, hz + 1)))) {
+                p.set(hx + 2, yy + 1, hz + 1, "of_newel_brass");
+            }
         }
         // under lane B on the ground floor: a bust in its alcove
         p.set(hx + 4, y0 + 1, hz + 3, "mu_bust[facing=west]");
@@ -974,6 +980,13 @@ final class Penthouse {
                 p.set(x, y - 1, z, "of_pool_glass");
                 p.set(x, y, z, ring ? lightAt(k, x, z, x0, z0) : "minecraft:water");
                 p.set(x, y + 1, z, ring ? edge ? "of_pool_glass" : "of_coping" : "minecraft:water");
+            }
+        }
+        // chrome ladders at each end of the long side, on the walk with their rails over the coping
+        // (as the tower's pool deck has them, mirrored for the north side)
+        for (int x : new int[] {x0 + 2, x1 - 2}) {
+            if (resAt(k, x, r[1]) && !at(per[k], x, r[1]) && resAt(k, x, z0) && "air".equals(String.valueOf(p.get(x, y + 1, r[1])))) {
+                p.set(x, y + 1, r[1], "of_pool_ladder[facing=north]");
             }
         }
         if (!columns) {
@@ -1314,7 +1327,7 @@ final class Penthouse {
                 if (!byRail && !grid) {
                     continue;
                 }
-                String[] kinds = {"olive", "lounger", "parasol", "sofa", "olive", "daybed", "fire"};
+                String[] kinds = {"olive", "lounger", "rose", "parasol", "sofa", "bench", "olive", "daybed", "fire"};
                 if (deckItem(k, x, z, kinds[i % kinds.length])) {
                     i += 1 + rng.nextInt(2);
                 }
@@ -1369,6 +1382,13 @@ final class Penthouse {
             }
             case "sofa" -> p.set(x, y + 1, z, "of_out_sofa[facing=" + face + "]");
             case "daybed" -> p.set(x, y + 1, z, "of_daybed[facing=" + face + "]");
+            case "rose" -> {
+                // a rose arbour: the post wrapped in roses, a pergola beam over it along the rail
+                p.set(x, y + 1, z, "of_rose_post");
+                p.set(x, y + 2, z, "of_rose_post");
+                p.set(x, y + 3, z, "of_pergola_beam[axis=" + (look % 2 == 0 ? "x" : "z") + "]");
+            }
+            case "bench" -> p.set(x, y + 1, z, "of_planter_bench");
             default -> p.set(x, y + 1, z, "of_fire_pit");
         }
         return true;
