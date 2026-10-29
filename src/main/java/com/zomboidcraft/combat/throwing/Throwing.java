@@ -27,8 +27,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 
 /**
- * Throwing things: the thrown object, the contained fire it can start, and the wind-up. Fused throwables (grenades,
- * the pipe bomb) are live from the moment the wind-up starts; we remember when, so holding on too long sets one off
+ * Throwing things: the thrown object, the contained fire it can start, and the wind-up. Fused throwables (grenades)
+ * are live from the moment the wind-up starts; we remember when, so holding on too long sets one off
  * in the hand and putting it away mid wind-up drops it at your feet, still burning down.
  */
 public final class Throwing {
@@ -62,7 +62,7 @@ public final class Throwing {
     static void windUp(ServerPlayer player, ThrowKind kind) {
         SoundEvent sound = switch (kind) {
             case FLASHBANG, FRAG, SMOKE -> ModSounds.PIN_PULL;
-            case PIPE_BOMB, FIRECRACKERS -> ModSounds.FUSE;
+            case FIRECRACKERS -> ModSounds.FUSE;
             case MOLOTOV -> ModSounds.FLARE_STRIKE;
             default -> null;
         };

@@ -141,7 +141,6 @@ public final class ModItems {
     public static final Item MOLOTOV = throwable(ThrowKind.MOLOTOV, 4);
     public static final Item SMOKE_GRENADE = throwable(ThrowKind.SMOKE, 4);
     public static final Item FLASHBANG = throwable(ThrowKind.FLASHBANG, 4);
-    public static final Item PIPE_BOMB = throwable(ThrowKind.PIPE_BOMB, 4);
     public static final Item FRAG_GRENADE = throwable(ThrowKind.FRAG, 4);
 
     private static Item throwable(ThrowKind kind, int stack) {

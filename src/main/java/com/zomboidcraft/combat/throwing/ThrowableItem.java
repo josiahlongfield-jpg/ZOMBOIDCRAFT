@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 /**
  * Something to throw: hold use to wind up (the longer, the farther, up to a full throw), let go to throw it. A
- * grenade's pin comes out, or a pipe bomb's fuse is lit, as the wind-up starts: hold on past its fuse and it goes off
+ * grenade's pin comes out as the wind-up starts: hold on past its fuse and it goes off
  * in your hand, and putting it away mid wind-up drops it at your feet, still live (Throwing.tick).
  */
 public class ThrowableItem extends Item {

@@ -57,7 +57,7 @@ import net.minecraft.world.phys.Vec3;
  * A big enough hit to the head bursts it: a hunting rifle headshot, or most of a blast of buckshot up close. Most of
  * a blast of buckshot in the chest from point-blank range blows a hole right through it.
  *
- * A pipe bomb or grenade going off tears at every limb at once, the ones facing it and nearest it most ({@link #blast}),
+ * A grenade going off tears at every limb at once, the ones facing it and nearest it most ({@link #blast}),
  * and right on top of one the head sometimes goes too.
  */
 public final class Dismember {
@@ -613,7 +613,7 @@ public final class Dismember {
     }
 
     /**
-     * A pipe bomb or grenade going off near a walker: it tears at every limb at once, adding to what shots have done
+     * A grenade going off near a walker: it tears at every limb at once, adding to what shots have done
      * to them, and the limbs facing the blast and nearest it take the most (one stood over a grenade on the floor
      * loses its legs first; its arms may go too, and the side turned away mostly keeps them). Whatever passes its
      * toughness comes off and flies away from the blast as hard as buckshot throws it; legs lost, it hops or falls

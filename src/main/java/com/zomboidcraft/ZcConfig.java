@@ -105,7 +105,6 @@ public final class ZcConfig {
         public double molotovNoise = 18;
         public double smokeNoise = 10;
         public double flashbangNoise = 60;
-        public double pipeBombNoise = 80;
         public double fragNoise = 80;
 
         /** Damage a hit with a thrown bottle, can or brick does; a brick to the head staggers for this many ticks. */
@@ -133,15 +132,12 @@ public final class ZcConfig {
 
         /** Fuses from the moment the pin's pulled or the fuse is lit (ticks). Hold on too long and it goes off in hand. */
         public int flashbangFuse = 30;
-        public int pipeBombFuse = 60;
         public int fragFuse = 90;
         /** The flashbang: zombies within this radius are stunned this long; players near it are blinded and deafened. */
         public double flashbangRadius = 6;
         public int flashbangStun = 80;
         public int flashbangBlind = 100;
         /** Blasts: the radius they kill or maim in, the damage at the middle, and a frag's shrapnel reach past that. */
-        public double pipeBombRadius = 4;
-        public double pipeBombDamage = 40;
         public double fragRadius = 5;
         public double fragDamage = 50;
         public double fragShrapnel = 10;
@@ -907,7 +903,7 @@ public final class ZcConfig {
         /** Bursting for every other gun (0 = never). */
         public double burstOtherGuns = 0;
         /**
-         * Pipe bombs and grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
+         * Grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
          * of one the head sometimes bursts.
          */
         public boolean blasts = true;

@@ -20,7 +20,6 @@ public enum ThrowKind {
     MOLOTOV("molotov", 0.9, 0.0, false, false),
     SMOKE("smoke_grenade", 0.85, 0.25, false, false),
     FLASHBANG("flashbang", 0.85, 0.25, true, false),
-    PIPE_BOMB("pipe_bomb", 0.8, 0.2, true, false),
     FRAG("frag_grenade", 0.85, 0.25, true, false);
 
     public final String id;
@@ -45,7 +44,6 @@ public enum ThrowKind {
         ZcConfig.Throwing c = ZcConfig.get().throwing;
         return switch (this) {
             case FLASHBANG -> c.flashbangFuse;
-            case PIPE_BOMB -> c.pipeBombFuse;
             case FRAG -> c.fragFuse;
             default -> 0;
         };
@@ -64,7 +62,6 @@ public enum ThrowKind {
             case MOLOTOV -> c.molotovNoise;
             case SMOKE -> c.smokeNoise;
             case FLASHBANG -> c.flashbangNoise;
-            case PIPE_BOMB -> c.pipeBombNoise;
             case FRAG -> c.fragNoise;
         };
     }

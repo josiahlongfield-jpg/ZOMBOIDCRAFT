@@ -118,11 +118,6 @@ public class Thrown extends Entity {
         return entityData.get(PHASE);
     }
 
-    /** A fuse burns on it (the client shows sparks). */
-    public boolean lit() {
-        return kind() == ThrowKind.PIPE_BOMB && phase() != GOING;
-    }
-
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(ITEM, ItemStack.EMPTY);
@@ -234,7 +229,7 @@ public class Thrown extends Entity {
             return;
         }
         SoundEvent sound = switch (kind()) {
-            case CAN, SMOKE, FLASHBANG, FRAG, PIPE_BOMB -> ModSounds.CAN_CLATTER;
+            case CAN, SMOKE, FLASHBANG, FRAG -> ModSounds.CAN_CLATTER;
             default -> ModSounds.BRICK_THUD;
         };
         float loud = (float) Math.min(1, speed);
@@ -383,7 +378,6 @@ public class Thrown extends Entity {
         ZcConfig.Throwing c = ZcConfig.get().throwing;
         switch (kind()) {
             case FLASHBANG -> flash(level, c);
-            case PIPE_BOMB -> blast(level, c.pipeBombRadius, c.pipeBombDamage, 0, 0);
             case FRAG -> blast(level, c.fragRadius, c.fragDamage, c.fragShrapnel, c.shrapnelDamage);
             default -> {
             }
