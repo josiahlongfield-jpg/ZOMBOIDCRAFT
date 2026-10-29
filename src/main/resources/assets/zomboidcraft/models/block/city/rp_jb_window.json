@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_clad": "zomboidcraft:block/city/rp_clad",
+    "rp_glass": {
+      "sprite": "zomboidcraft:block/city/rp_glass",
+      "force_translucent": true
+    },
+    "rp_lining": "zomboidcraft:block/city/rp_lining",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/rp_clad"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_lining"
+        },
+        "east": {
+          "texture": "#rp_clad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_clad"
+        },
+        "down": {
+          "texture": "#rp_clad",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_lining"
+        },
+        "east": {
+          "texture": "#rp_clad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_clad",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_clad"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        0.6
+      ],
+      "to": [
+        16,
+        12,
+        1.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_glass"
+        },
+        "south": {
+          "texture": "#rp_glass"
+        },
+        "east": {
+          "texture": "#rp_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_glass"
+        },
+        "down": {
+          "texture": "#rp_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        0
+      ],
+      "to": [
+        1,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        5,
+        0
+      ],
+      "to": [
+        16,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4.5,
+        2
+      ],
+      "to": [
+        16,
+        5.5,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

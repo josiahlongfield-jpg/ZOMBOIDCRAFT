@@ -1171,6 +1171,8 @@ import airport  # noqa: E402
 airport.register(sys.modules[__name__])
 import airliner  # noqa: E402
 airliner.register(sys.modules[__name__])
+import ramp  # noqa: E402
+ramp.register(sys.modules[__name__])
 
 
 

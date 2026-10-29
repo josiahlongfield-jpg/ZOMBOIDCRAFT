@@ -1,0 +1,253 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_fish": "zomboidcraft:block/city/ap_fish",
+    "ap_laminate": "zomboidcraft:block/city/ap_laminate",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "tx_glass": {
+      "sprite": "zomboidcraft:block/city/tx_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/ap_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate"
+        },
+        "south": {
+          "texture": "#st_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ap_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        10,
+        5
+      ],
+      "to": [
+        15.5,
+        11,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_fish"
+        },
+        "south": {
+          "texture": "#ap_fish"
+        },
+        "east": {
+          "texture": "#ap_fish"
+        },
+        "west": {
+          "texture": "#ap_fish"
+        },
+        "up": {
+          "texture": "#ap_fish"
+        },
+        "down": {
+          "texture": "#ap_fish"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        4
+      ],
+      "to": [
+        0.6,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        15.4,
+        10,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        15.4,
+        9
+      ],
+      "to": [
+        15.4,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass"
+        },
+        "south": {
+          "texture": "#tx_glass",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_glass"
+        },
+        "west": {
+          "texture": "#tx_glass"
+        },
+        "up": {
+          "texture": "#tx_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tx_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        10,
+        3.5
+      ],
+      "to": [
+        15.4,
+        16.6,
+        4.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass",
+          "uv": [
+            0.5999999999999996,
+            0,
+            15.4,
+            6.600000000000001
+          ]
+        },
+        "south": {
+          "texture": "#tx_glass",
+          "uv": [
+            0.6,
+            0,
+            15.4,
+            6.600000000000001
+          ]
+        },
+        "east": {
+          "texture": "#tx_glass",
+          "uv": [
+            11.9,
+            0,
+            12.5,
+            6.600000000000001
+          ]
+        },
+        "west": {
+          "texture": "#tx_glass",
+          "uv": [
+            3.5,
+            0,
+            4.1,
+            6.600000000000001
+          ]
+        },
+        "up": {
+          "texture": "#tx_glass"
+        },
+        "down": {
+          "texture": "#tx_glass"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          10,
+          4
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

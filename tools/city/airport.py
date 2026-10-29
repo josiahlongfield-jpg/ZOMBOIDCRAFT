@@ -27,6 +27,17 @@ world/county/AirportTerminal sets them out. Everything faces north (rotate=facin
   ap_claim_<1..3>: a carousel's number; ap_name_<0..15>: GRAYHAVEN INTERNATIONAL AIRPORT in
   channel letters over the kerb; ap_notice_<k>: the evacuation's paper notices.
 
+The west pier's shops (the Terminal homage, Josiah 19:51 "Main concourse + one pier"), made-up names:
+
+- ap_store_<k>_<0..2>: a shop's backlit name box over its front (grilltown the burger counter,
+  sakana the sushi bar, books the walk-through bookshop, coffee the coffee bar); ap_menu_<k>_<0..2>:
+  the backlit menu boards behind a counter (grilltown, sakana, coffee);
+- ap_sushi_belt: the sushi bar's counter with the plates going round on its belt, along z
+  (rotate=axis); ap_sushi_case: the glass case of fish on the chef's side, its front north;
+- ap_gondola / ap_gondola_top: a bookshop's double-sided shelf run, along z (rotate=axis), two
+  high; ap_gondola_end: its end cap of books face out (north); ap_book_table: a table of new books
+  in stacks; ap_mag_rack: the magazine rack, the covers facing north; ap_tray_rack: the trays' trolley.
+
     python3 tools/city/airport.py      rewrites the ap_ entries in blocks.json
 
 photo_textures.py draws the textures (airport.register()).
@@ -68,12 +79,30 @@ AIRLINES = {
 WAYS = {
     "ticketing": ("TICKETING", "left"),
     "claim": ("BAGGAGE CLAIM", "right"),
-    "gates_a": ("GATES 1-6", "left"),
-    "gates_b": ("GATES 7-12", "right"),
+    "gates_a": ("GATES 1-4", "left"),
+    "gates_b": ("GATES 5-10", "right"),
     "security": ("SECURITY", "up"),
     "ground": ("GROUND TRANSPORT", "right"),
     "rest": ("RESTROOMS", "left"),
     "exit": ("EXIT", "up"),
+}
+
+# the pier's shops: key -> (name, the line under it, the box's colour, the letters' colour)
+STORES = {
+    "grilltown": ("GRILLTOWN", "BURGERS  FRIES  SHAKES", (172, 32, 34), (250, 208, 64)),
+    "sakana": ("SAKANA", "SUSHI BAR", (22, 22, 24), (236, 234, 226)),
+    "books": ("AIRSIDE BOOKS", "BOOKS  NEWS  GIFTS", (24, 68, 58), (238, 232, 212)),
+    "coffee": ("HANGAR COFFEE", "ESPRESSO BAR", (66, 42, 30), (236, 220, 188)),
+}
+
+# the menus: key -> rows of (item, price) over three boards
+MENUS = {
+    "grilltown": ["DOUBLE STACK|5.49", "GRILLTOWN CLASSIC|4.29", "BACON MELT|5.99", "CHICKEN CLUB|5.29",
+                  "FRIES|1.99", "ONION RINGS|2.49", "CHILI DOG|3.29", "SHAKE|2.79", "SODA|1.49"],
+    "sakana": ["SALMON NIGIRI|3.50", "TUNA NIGIRI|3.75", "CALIFORNIA ROLL|5.95", "SPICY TUNA ROLL|6.50",
+               "EEL ROLL|7.25", "EDAMAME|2.95", "MISO SOUP|1.95", "BENTO BOX|9.95", "GREEN TEA|1.50"],
+    "coffee": ["DRIP|1.65", "ESPRESSO|1.95", "CAPPUCCINO|2.95", "LATTE|3.25", "MOCHA|3.45",
+               "HOT CHOCOLATE|2.25", "MUFFIN|1.95", "BAGEL|1.75", "COOKIE|1.25"],
 }
 
 NOTICES = {
@@ -309,9 +338,9 @@ def claim_sign(n):
     return p.tile(0, 30570 + n, smooth=0.4, grime=0.12)
 
 
-FLIGHTS = [("GE 214", "BOSTON", "7"), ("CA 1180", "ATLANTA", "3"), ("NS 66", "CHICAGO", "9"), ("SX 402", "PITTSBURGH", "2"),
-           ("GE 238", "WASHINGTON", "8"), ("CA 77", "MIAMI", "4"), ("NS 912", "DETROIT", "11"), ("SX 418", "NEW YORK", "1"),
-           ("GE 301", "PHILADELPHIA", "6"), ("CA 1202", "CHARLOTTE", "5"), ("NS 140", "DENVER", "12"), ("SX 455", "BALTIMORE", "10")]
+FLIGHTS = [("GE 214", "BOSTON", "1"), ("CA 1180", "ATLANTA", "3"), ("NS 66", "CHICAGO", "9"), ("SX 402", "PITTSBURGH", "2"),
+           ("GE 238", "WASHINGTON", "8"), ("CA 77", "MIAMI", "4"), ("NS 912", "DETROIT", "7"), ("SX 418", "NEW YORK", "1"),
+           ("GE 301", "PHILADELPHIA", "6"), ("CA 1202", "CHARLOTTE", "5"), ("NS 140", "DENVER", "10"), ("SX 455", "BALTIMORE", "10")]
 
 
 @lru_cache(maxsize=None)
@@ -383,6 +412,156 @@ def notice(k):
     return t
 
 
+@lru_cache(maxsize=None)
+def store_pic(k):
+    """A shop's name box: the name big, the line under it, a mark at the left (a burger, a fish, a
+    book, a cup)."""
+    name, sub, ground, ink = STORES[k]
+    p = Pic(3, 1, (20, 20, 22), 31000 + sum(map(ord, k)))
+    W = p.W
+    p.rect(0, 8, W, 56, fill=ground)
+    p.rect(0, 8, W, 10, fill=ink)
+    p.rect(0, 54, W, 56, fill=ink)
+    size = civic.fit(name, BOLD, 24, W - 76)
+    p.text(W / 2 + 14, 14, name, BOLD, size, ink, anchor="ma")
+    p.text(W / 2 + 14, 40, sub, BOLD, 8, ink, anchor="ma")
+    if k == "grilltown":
+        p.ellipse(10, 16, 46, 30, fill=(226, 150, 60))
+        p.rect(10, 29, 46, 33, fill=(90, 160, 60))
+        p.rect(10, 33, 46, 38, fill=(110, 56, 30))
+        p.ellipse(10, 36, 46, 48, fill=(226, 150, 60))
+    elif k == "sakana":
+        p.ellipse(12, 16, 46, 48, fill=(196, 30, 30))
+        p.poly([(18, 32), (34, 24), (42, 32), (34, 40)], fill=ink)
+        p.poly([(18, 32), (12, 26), (12, 38)], fill=ink)
+    elif k == "books":
+        p.poly([(10, 22), (28, 18), (28, 46), (10, 50)], fill=ink)
+        p.poly([(30, 18), (48, 22), (48, 50), (30, 46)], fill=ink)
+    else:
+        p.rect(14, 22, 38, 46, fill=ink)
+        p.ellipse(34, 26, 46, 38, outline=ink, width=3)
+        p.line([(18, 18), (20, 12)], ink, 2)
+        p.line([(28, 18), (30, 12)], ink, 2)
+    return p
+
+
+def store(k, i):
+    t = store_pic(k).tile(i, 31100 + sum(map(ord, k)) * 3 + i, smooth=0.5, grime=0.15)
+    t.alpha[:8] = 0
+    t.alpha[56:] = 0
+    t.emit[8:56] = 0.3
+    weather(t, rust=0.0, streak=0.25, grime=0.1)
+    return t
+
+
+@lru_cache(maxsize=None)
+def menu_pic(k):
+    """Three backlit boards over a counter: dark ground, the items and prices in rows, a picture
+    of the food on the middle one."""
+    items = MENUS[k]
+    _, _, ground, ink = STORES[k]
+    p = Pic(3, 1, (16, 16, 18), 31200 + sum(map(ord, k)))
+    W = p.W
+    p.rect(0, 2, W, 62, fill=(24, 24, 26))
+    for b in range(3):
+        x0 = b * N + 2
+        p.rect(x0, 4, x0 + N - 4, 60, fill=(32, 30, 30))
+        p.rect(x0, 4, x0 + N - 4, 12, fill=ground)
+        p.text(x0 + (N - 4) / 2, 5.5, ("MEALS", "FAVORITES", "SIDES & DRINKS")[b], BOLD, 5, ink, anchor="ma")
+        if b == 1:
+            p.ellipse(x0 + 14, 14, x0 + 46, 30, fill=(226, 150, 60) if k != "sakana" else (236, 236, 230))
+            if k == "sakana":
+                p.rect(x0 + 18, 18, x0 + 42, 25, fill=(232, 110, 70))
+        for r in range(3):
+            item, price = items[b * 3 + r].split("|")
+            y = (34 if b == 1 else 16) + r * 9
+            p.text(x0 + 3, y, item, BOLD, 3.8, (236, 232, 222))
+            p.text(x0 + N - 7, y, price, BOLD, 3.8, ink, anchor="ra")
+    return p
+
+
+def menu(k, i):
+    t = menu_pic(k).tile(i, 31300 + sum(map(ord, k)) * 3 + i, smooth=0.6, grime=0.1)
+    t.emit[4:60] = 0.35
+    return t
+
+
+def books_retail(seed):
+    """New books on a shop shelf: bright spines of every height, the price stickers, the shelf's
+    edge strip with the labels."""
+    t = F.plain(seed, (30, 28, 26), 0.02, 0.3)
+    rng = t.rng
+    pal = [(196, 40, 36), (30, 60, 140), (236, 200, 60), (30, 120, 90), (230, 230, 220), (20, 20, 22),
+           (220, 110, 40), (120, 50, 120), (90, 150, 190)]
+    for y0 in (2, 34):
+        x = 1
+        while x < N - 2:
+            w = int(rng.integers(3, 7))
+            h = int(rng.integers(18, 28))
+            col = pal[rng.integers(len(pal))]
+            area(t, x, y0 + 28 - h, x + w, y0 + 28, col=col, dh=0.3)
+            area(t, x, y0 + 28 - h, x + 1, y0 + 28, mul=(0.7, 0.7, 0.7))
+            if rng.random() < 0.6:
+                area(t, x + 1, y0 + 30 - h, x + w - 1, y0 + 31 - h, col=(236, 220, 140))
+            x += w
+        area(t, 0, y0 + 28, N, y0 + 31, col=(200, 200, 196))
+        area(t, 4, y0 + 28, 12, y0 + 31, col=(236, 236, 236))
+    t.grime(0.15)
+    return t
+
+
+def books_face(seed):
+    """Books face out: covers in a grid, each a block of colour with its title bar."""
+    t = F.plain(seed, (40, 38, 36), 0.02, 0.3)
+    rng = t.rng
+    pal = [(196, 40, 36), (30, 60, 140), (236, 200, 60), (30, 120, 90), (230, 230, 220), (20, 20, 22), (220, 110, 40)]
+    for gy in range(2):
+        for gx in range(3):
+            x0, y0 = 2 + gx * 21, 2 + gy * 31
+            col = pal[rng.integers(len(pal))]
+            area(t, x0, y0, x0 + 18, y0 + 27, col=col, dh=0.3)
+            area(t, x0 + 2, y0 + 4, x0 + 16, y0 + 8, col=(236, 232, 220) if sum(col) < 400 else (20, 20, 20))
+            area(t, x0 + 4, y0 + 18, x0 + 14, y0 + 20, col=(236, 232, 220) if sum(col) < 400 else (20, 20, 20))
+    t.grime(0.12)
+    return t
+
+
+def mags(seed):
+    """Magazine covers in a rack: each a photo-coloured block, the masthead across its top."""
+    t = F.plain(seed, (50, 50, 50), 0.02, 0.5)
+    rng = t.rng
+    for gy in range(3):
+        for gx in range(4):
+            x0, y0 = 1 + gx * 16, 1 + gy * 21
+            base = rng.integers(60, 230, 3)
+            area(t, x0, y0, x0 + 14, y0 + 19, col=tuple(int(v) for v in base), smooth=0.7)
+            area(t, x0, y0, x0 + 14, y0 + 4, col=(200, 30, 30) if rng.random() < 0.5 else (240, 240, 240))
+            area(t, x0 + 3, y0 + 7, x0 + 11, y0 + 17, mul=(0.8, 0.75, 0.7))
+    return t
+
+
+def conveyor(seed):
+    """The sushi belt: stainless crescent plates in a chain, the gap between each."""
+    t = F.plain(seed, (176, 178, 178), 0.03, 0.75)
+    t.f0[:] = 200
+    for y in range(0, N, 8):
+        area(t, 0, y, N, y + 1, (60, 60, 60), dh=-0.3)
+    t.grime(0.1)
+    return t
+
+
+def fish(seed):
+    """The case's tray: crushed ice, slabs of salmon and tuna and white fish, a leaf between."""
+    t = F.plain(seed, (220, 228, 232), 0.06, 0.8)
+    t.speckle(0.2, (250, 252, 255), 0.5, 0.2)
+    for x0, col in ((4, (236, 116, 70)), (22, (176, 40, 50)), (40, (236, 228, 214))):
+        area(t, x0, 10, x0 + 14, 54, col=col, dh=0.4, smooth=0.6)
+        for y in range(14, 54, 5):
+            area(t, x0, y, x0 + 14, y + 1, mul=(1.15, 1.15, 1.15))
+    area(t, 19, 20, 21, 44, col=(60, 140, 50))
+    return t
+
+
 def textures():
     out = {
         "ap_counter_front": lambda: counter_front(30001),
@@ -422,6 +601,21 @@ def textures():
         out[f"ap_name_{i}"] = lambda i=i: name_tile(i)
     for k in NOTICES:
         out[f"ap_notice_{k}"] = lambda k=k: notice(k)
+    for k in STORES:
+        for i in range(3):
+            out[f"ap_store_{k}_{i}"] = lambda k=k, i=i: store(k, i)
+    for k in MENUS:
+        for i in range(3):
+            out[f"ap_menu_{k}_{i}"] = lambda k=k, i=i: menu(k, i)
+    out.update({
+        "ap_books_retail": lambda: books_retail(31401),
+        "ap_books_face": lambda: books_face(31402),
+        "ap_mags": lambda: mags(31403),
+        "ap_conveyor": lambda: conveyor(31404),
+        "ap_fish": lambda: fish(31405),
+        "ap_laminate": lambda: F.plain(31406, (226, 224, 218), 0.02, 0.5),
+        "ap_wood": lambda: F.plain(31407, (150, 108, 70), 0.06, 0.4),
+    })
     return out
 
 
@@ -672,6 +866,81 @@ def flat_notice(face):
     return [[0.5, 2, 15.6, 15.5, 15, 16, {"north": face, "south": face, "side": face, "up": face, "down": face}]]
 
 
+def sushi_belt():
+    """The counter along z: the lacquer front both sides, the belt down the middle with its
+    rails, the plates riding on it, the ledge either side."""
+    front = {"side": "dn_booth_r", "north": "ap_laminate", "south": "ap_laminate", "up": "ap_laminate", "down": STEEL}
+    b = [[1, 0, 0, 15, 12, 16, {"east": "sc_fabric_red", "west": "sc_fabric_red", "north": "ap_laminate",
+                                "south": "ap_laminate", "up": "ap_laminate", "down": STEEL}],
+         [0, 12, 0, 4, 13, 16, "ap_wood"], [12, 12, 0, 16, 13, 16, "ap_wood"],
+         [5, 12, 0, 11, 13, 16, "ap_conveyor"], [4.4, 12, 0, 5, 14, 16, CHROME], [11, 12, 0, 11.6, 14, 16, CHROME]]
+    for z, col in ((2, "home_white"), (7, "home_plastic_beige"), (12, "home_white")):
+        b += [[5.6, 13, z, 10.4, 13.5, z + 3.5, col], [6.4, 13.5, z + 0.8, 9.6, 14.2, z + 2.7, "ap_fish"]]
+    del front
+    return b
+
+
+def sushi_case():
+    """The chef's case: the trays of fish on ice under the sloped glass, its front north."""
+    return [[0, 0, 4, 16, 10, 16, {"side": "ap_laminate", "north": "ap_laminate", "south": STEEL, "up": STEEL, "down": STEEL}],
+            [0.5, 10, 5, 15.5, 11, 15, "ap_fish"],
+            [0, 10, 4, 0.6, 16, 16, CHROME], [15.4, 10, 4, 16, 16, 16, CHROME],
+            [0.6, 15.4, 9, 15.4, 16, 16, "tx_glass"],
+            [0.6, 10, 3.5, 15.4, 16.6, 4.1, "tx_glass", None, {"axis": "x", "angle": 22.5, "origin": [8, 10, 4]}]]
+
+
+def gondola(top=False):
+    """A bookshop's shelf run along z, books both sides: the base, the back panel, four shelves in
+    two blocks (the top one with the header strip)."""
+    tex = {"east": "ap_books_retail", "west": "ap_books_retail", "north": "ap_laminate", "south": "ap_laminate",
+           "up": "ap_laminate", "down": "ap_laminate"}
+    if not top:
+        return [[1, 0, 0, 15, 2, 16, "ap_laminate"], [7.5, 2, 0, 8.5, 16, 16, "ap_laminate"],
+                [1.5, 2, 0.2, 7.5, 16, 15.8, tex], [8.5, 2, 0.2, 14.5, 16, 15.8, tex],
+                [1, 7.8, 0, 7.5, 8.2, 16, "ap_laminate"], [8.5, 7.8, 0, 15, 8.2, 16, "ap_laminate"]]
+    return [[2, 0, 0.2, 7.5, 12, 15.8, tex], [8.5, 0, 0.2, 14, 12, 15.8, tex],
+            [7.5, 0, 0, 8.5, 15, 16, "ap_laminate"], [2, 12, 0, 14, 13, 16, "ap_laminate"],
+            [1.5, 13, 0, 14.5, 15, 16, {"side": "ap_store_books_1", "north": "ap_laminate", "south": "ap_laminate",
+                                         "up": "ap_laminate", "down": "ap_laminate"}]]
+
+
+def gondola_end():
+    face = {"north": "ap_books_face", "side": "ap_laminate", "south": "ap_laminate", "up": "ap_laminate",
+            "down": "ap_laminate"}
+    return [[1, 0, 2, 15, 2, 14, "ap_laminate"], [1, 2, 6, 15, 16, 14, "ap_laminate"],
+            [1.5, 2, 3, 14.5, 15, 6, face], [1, 8, 2.5, 15, 8.4, 6, "ap_laminate"]]
+
+
+def book_table():
+    b = [[1, 0, 1, 3, 9, 3, "ap_wood"], [13, 0, 1, 15, 9, 3, "ap_wood"], [1, 0, 13, 3, 9, 15, "ap_wood"],
+         [13, 0, 13, 15, 9, 15, "ap_wood"], [0, 9, 0, 16, 10.5, 16, "ap_wood"]]
+    for x0, z0, h in ((1.5, 1.5, 3), (6, 2, 4.5), (10.5, 1.5, 2), (2, 7, 5), (8, 8, 3.5), (12, 9, 2.5)):
+        b.append([x0, 10.5, z0, x0 + 4, 10.5 + h, z0 + 5.5, {"up": "ap_books_face", "side": "ap_books_retail",
+                                                            "north": "ap_books_retail", "south": "ap_books_retail",
+                                                            "down": "ap_laminate"}])
+    return b
+
+
+def mag_rack():
+    """Three tiers leaning back, the covers north, the wire lips."""
+    b = [[0, 0, 10, 16, 16, 16, {"north": "ap_laminate", "side": "ap_laminate", "south": "ap_laminate",
+                                 "up": "ap_laminate", "down": "ap_laminate"}]]
+    for k in range(3):
+        y0, z0 = 1 + k * 5, 6 + k * 1.3
+        b += [[0.5, y0, z0, 15.5, y0 + 5, z0 + 1, {"north": "ap_mags", "side": "ap_laminate", "south": "ap_laminate",
+                                                    "up": "ap_laminate", "down": "ap_laminate"}],
+              [0.5, y0, z0 - 1.5, 15.5, y0 + 1.2, z0 - 1.1, CHROME]]
+    return b
+
+
+def tray_rack():
+    b = [[1, 0, 1, 2, 16, 2, CHROME], [14, 0, 1, 15, 16, 2, CHROME], [1, 0, 14, 2, 16, 15, CHROME],
+         [14, 0, 14, 15, 16, 15, CHROME]]
+    for y in range(3, 16, 3):
+        b.append([1.5, y, 1.5, 14.5, y + 0.6, 14.5, "sc_fabric_red"])
+    return b
+
+
 def blocks():
     out = {}
 
@@ -736,6 +1005,23 @@ def blocks():
         add(f"ap_name_{i}", letters(f"ap_name_{i}"), "Sign", [[0, 0, 14.5, 16, 16, 16]], decor=True)
     for k in NOTICES:
         add(f"ap_notice_{k}", flat_notice(f"ap_notice_{k}"), "Notice", [[0.5, 2, 15.6, 15.5, 15, 16]], sound="WOOL", decor=True)
+    for k in STORES:
+        for i in range(3):
+            n = f"ap_store_{k}_{i}"
+            add(n, header(n), "Shop Sign", [[0, 2.5, 12, 16, 13.5, 16]], light=8, decor=True)
+    for k in MENUS:
+        for i in range(3):
+            n = f"ap_menu_{k}_{i}"
+            add(n, [[0, 0, 13, 16, 16, 16, {"north": n, "side": BLACK_METAL, "up": BLACK_METAL, "down": BLACK_METAL,
+                                           "south": BLACK_METAL}]], "Menu Board", [[0, 0, 13, 16, 16, 16]], light=6, decor=True)
+    add("ap_sushi_belt", sushi_belt(), "Sushi Counter", [[0, 0, 0, 16, 14, 16]], rotate="axis")
+    add("ap_sushi_case", sushi_case(), "Sushi Case", [[0, 0, 3.5, 16, 16, 16]])
+    add("ap_gondola", gondola(), "Book Shelves", [[1, 0, 0, 15, 16, 16]], rotate="axis", sound="WOOD")
+    add("ap_gondola_top", gondola(True), "Book Shelves", [[1.5, 0, 0, 14.5, 15, 16]], rotate="axis", sound="WOOD")
+    add("ap_gondola_end", gondola_end(), "Book Display", [[1, 0, 2, 15, 16, 14]], sound="WOOD")
+    add("ap_book_table", book_table(), "Book Table", [[0, 0, 0, 16, 15.5, 16]], sound="WOOD")
+    add("ap_mag_rack", mag_rack(), "Magazine Rack", [[0, 0, 5, 16, 16, 16]])
+    add("ap_tray_rack", tray_rack(), "Tray Trolley", [[1, 0, 1, 15, 16, 15]])
     return out
 
 

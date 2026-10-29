@@ -1,0 +1,214 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_books_retail": "zomboidcraft:block/city/ap_books_retail",
+    "ap_laminate": "zomboidcraft:block/city/ap_laminate",
+    "particle": "zomboidcraft:block/city/ap_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        2,
+        0
+      ],
+      "to": [
+        8.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        2,
+        0.2
+      ],
+      "to": [
+        7.5,
+        16,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate"
+        },
+        "south": {
+          "texture": "#ap_laminate"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        2,
+        0.2
+      ],
+      "to": [
+        14.5,
+        16,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate"
+        },
+        "south": {
+          "texture": "#ap_laminate"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        7.8,
+        0
+      ],
+      "to": [
+        7.5,
+        8.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        7.8,
+        0
+      ],
+      "to": [
+        15,
+        8.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_laminate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_laminate"
+        },
+        "west": {
+          "texture": "#ap_laminate"
+        },
+        "up": {
+          "texture": "#ap_laminate"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    }
+  ]
+}

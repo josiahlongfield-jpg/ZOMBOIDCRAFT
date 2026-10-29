@@ -21,9 +21,16 @@ import java.util.SplittableRandom;
  * arches and tables, the glass line they hold; and the airside concourse along the back, over the
  * bag room: the food court, the newsstand and the bar, the shops, seats along the windows looking
  * out over the apron.</li>
- * <li>Pier A (gates 1 to 6) and pier B (7 to 12) out from the concourse: the corridor down the
- * middle, the gate lounges either side with their seats facing the windows, the podiums and the
- * jet bridge doors, the gate numbers hung over them, the end lounge; the ramp rooms under them.</li>
+ * <li>Pier B (gates 5 to 10) out from the concourse: the corridor down the middle, the gate
+ * lounges either side with their seats facing the windows, the podiums and the jet bridge doors,
+ * the gate numbers hung over them, the end lounge; the ramp rooms under them.</li>
+ * <li>Pier A (gates 1 to 4), after Modern Warfare 2's "Terminal" (Josiah, 2026-10-29: "Main
+ * concourse + one pier", the layout and the feel, our own art and names): wider, glass to its
+ * roof, a mezzanine down its east side with the food court on it (Grilltown's burgers, the Sakana
+ * sushi bar), Airside Books to walk through and the Hangar Coffee bar under it, the escalators up;
+ * the gate lounges along the west windows, and at the end gate 1, Gray Eagle 214 parked nose in
+ * with the jet bridge at its front door and the stair truck at its back, the ramp's gear about it
+ * ({@link #homagePier}).</li>
  * </ul>
  *
  * <p>What happened here: the airport was the county's evacuation point. The flights were suspended,
@@ -39,15 +46,21 @@ final class AirportTerminal extends Grounds {
     static final int UP = 6, ROOF = 16, PROOF = 13;
     /** The security mezzanine's half width (x -MEZ..MEZ over the lobby). */
     static final int MEZ = 40;
-    /** Each pier's west wall (25 wide), and where the piers end. */
-    static final int[] PIER_X = {-132, 108};
+    /** Each pier's west wall, pier B's width (pier A runs to HX1), and where the piers end. */
+    static final int[] PIER_X = {-140, 108};
     static final int PIER_W = 24, PIER_Z1 = -215;
+    /** Pier A's east wall; its mezzanine's floor, west edge and south edge; its roof. */
+    static final int HX1 = -100, MZ = 14, MZ_X0 = -120, MZ_Z1 = -263, HROOF = 23;
+    /** A gate with no sign over the corridor. */
+    private static final int NO_SIGN = Integer.MIN_VALUE;
+    /** Gray Eagle 214 at gate 1: its middle and its nose (the plane's frame origin). */
+    static final int PLANE_X = -116, PLANE_Z = -212;
     /** The gates down each pier, the jet bridge doors' middles. */
     static final int[] GATE_Z = {-312, -274, -236};
     /** The kerb's canopy, out from the north face. */
     static final int CANOPY_Z = -404;
     /** Everything the terminal builds lies within these (in the frame). */
-    static final int BX0 = -150, BX1 = 150, BZ0 = -420, BZ1 = -200;
+    static final int BX0 = -150, BX1 = 150, BZ0 = -420, BZ1 = -150;
     /** The four airlines' counter runs, west to east, from x = -137 every 23. */
     static final String[] AIRLINES = {"eagle", "coastal", "north", "skyline"};
 
@@ -64,9 +77,8 @@ final class AirportTerminal extends Grounds {
         bagRoom();
         security();
         concourse();
-        for (int i = 0; i < 2; i++) {
-            pier(PIER_X[i], i * 6 + 1);
-        }
+        homagePier();
+        pier(PIER_X[1], 5);
         lights();
         roof();
         aftermath();
@@ -154,11 +166,16 @@ final class AirportTerminal extends Grounds {
 
     private static boolean inPier(int x) {
         for (int px : PIER_X) {
-            if (x >= px && x <= px + PIER_W) {
+            if (x >= px && x <= px + pierW(px)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /** A pier's width from its west wall to its east. */
+    private static int pierW(int px) {
+        return px == PIER_X[0] ? HX1 - PIER_X[0] : PIER_W;
     }
 
     /** What the outer wall is at (x, y, z): the kerb face glass from end to end, the rest precast with glass bands. */
@@ -194,7 +211,7 @@ final class AirportTerminal extends Grounds {
         for (int dx = -1; dx <= 2; dx++) {
             for (int y = 1; y <= 3; y++) {
                 set(x + dx, y, Z0, "air");
-                set(x + dx, y, Z0 + 3, dx == -1 || dx == 2 ? "tx_glass[axis=x]" : "air");
+                set(x + dx, y, Z0 + 3, dx == -1 || dx == 2 ? "tx_glass[axis=z]" : "air");
             }
             set(x + dx, 4, Z0 + 3, "wf_steel");
             set(x + dx, 4, Z0, "wf_steel");
@@ -829,6 +846,500 @@ final class AirportTerminal extends Grounds {
         set(dx + 1, y + 2, z1 + 1, (men ? "tr_sign_men" : "tr_sign_ladies") + "[facing=south]");
     }
 
+    // ------------------------------------------------------------------ pier A, the Terminal homage
+
+    /**
+     * Pier A after Modern Warfare 2's "Terminal": x PIER_X[0]..HX1, glass from the concourse's
+     * floor to its roof at HROOF down both sides and across the end; the mezzanine at MZ down the
+     * east side (x MZ_X0..HX1, from the concourse to MZ_Z1) with Grilltown and the Sakana sushi bar
+     * on it, Hangar Coffee and Airside Books under it; the escalators and stair up to it off its
+     * south edge; the gate lounges for gates 2 to 4 along the west windows; gate 1's lounge at the
+     * end looking out on Gray Eagle 214; the ramp rooms on the ground floor, as pier B's.
+     */
+    private void homagePier() {
+        int x0 = PIER_X[0], x1 = HX1, z0 = Z1, z1 = PIER_Z1, y = UP + 1;
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0 + 1; z <= z1; z++) {
+                boolean side = x == x0 || x == x1, end = z == z1;
+                set(x, 0, z, side || end ? "concrete_dark" : "floor_concrete");
+                for (int yy = 1; yy < HROOF; yy++) {
+                    String s = "air";
+                    if (side || end) {
+                        String out = side ? (x == x0 ? "west" : "east") : "south";
+                        boolean mull = Math.floorMod(side ? z : x, 6) == 0;
+                        boolean band = yy == UP || yy == HROOF - 1 || yy == MZ && x == x1 && z <= MZ_Z1;
+                        s = band ? "ml_precast_band" : yy < UP ? precast() : mull ? "wf_steel" : glass(out, 0.15);
+                    }
+                    set(x, yy, z, s);
+                }
+                if (!side && !end) {
+                    set(x, UP, z, x < MZ_X0 - 6 || z > MZ_Z1 + 8 ? "un_slab_carpet" : "un_slab_terrazzo");
+                }
+            }
+        }
+        // the mouth: the concourse's south wall opened upstairs, the pier's own wall over the hall's roof
+        for (int x = x0 + 1; x < x1; x++) {
+            for (int yy = y; yy < ROOF; yy++) {
+                set(x, yy, Z1, "air");
+            }
+            set(x, UP, Z1, "un_slab_terrazzo");
+        }
+        for (int x = x0; x <= x1; x++) {
+            for (int yy = ROOF + 1; yy < HROOF; yy++) {
+                set(x, yy, Z1, yy == HROOF - 1 ? "ml_precast_band" : Math.floorMod(x, 6) == 0 ? "wf_steel" : glass("north", 0.1));
+            }
+        }
+        pierGround(x0, x1, -125, -121);
+        // the gates down the west windows, the signs hung from the roof
+        for (int g = 0; g < GATE_Z.length; g++) {
+            gate(x0, GATE_Z[g], 2 + g, true, NO_SIGN, HROOF);
+        }
+        mezzanine();
+        escalators(-119, MZ_Z1 + 9);
+        coffee();
+        bookshop();
+        grilltown();
+        sakana();
+        stair(-105, Z1 + 1, true, new int[] {0, UP, MZ, HROOF}, "ml_precast", "un_roof");
+        gateOne();
+        // the lights: pendants from the roof over the open lounges, troffers under the mezzanine
+        for (int x = x0 + 4; x < x1; x += 8) {
+            for (int z = z0 + 4; z < z1; z += 8) {
+                if (empty(x, HROOF - 1, z)) {
+                    set(x, HROOF - 1, z, power && chance() < 0.3 ? "tx_pendant" : "tx_pendant_off");
+                }
+                if (x >= MZ_X0 && z <= MZ_Z1 && empty(x, MZ - 1, z)) {
+                    set(x, MZ - 1, z, power && chance() < 0.3 ? "ceiling_light" : "ceiling_light_off");
+                }
+            }
+        }
+        hungSign("gates_a", (x0 + x1) / 2 - 8, MZ - 2, z0 + 4, "north");
+        rods((x0 + x1) / 2 - 8, MZ - 1, z0 + 4, HROOF);
+    }
+
+    /** The mezzanine's floor, its columns and its glass rail along the open sides. */
+    private void mezzanine() {
+        for (int x = MZ_X0; x < HX1; x++) {
+            for (int z = Z1 + 1; z <= MZ_Z1; z++) {
+                set(x, MZ, z, "un_slab_terrazzo");
+            }
+        }
+        for (int z = Z1 + 1; z <= MZ_Z1; z++) {
+            set(MZ_X0, MZ + 1, z, "tx_glass_rail[axis=z]");
+        }
+        for (int x = MZ_X0; x < HX1; x++) {
+            if (x < -119 || x > -115) {
+                set(x, MZ + 1, MZ_Z1, "tx_glass_rail[axis=x]");
+            }
+        }
+        for (int z = Z1 + 7; z <= MZ_Z1; z += 12) {
+            for (int yy = UP + 1; yy < MZ; yy++) {
+                set(MZ_X0, yy, z, yy == UP + 1 ? "tx_column_base" : yy == MZ - 1 ? "tx_column_cap" : "tx_column");
+            }
+        }
+    }
+
+    /**
+     * The escalator pair (x ex, ex + 1: down, up) and the stair (ex + 3, ex + 4) rising north from
+     * the lounge's floor at z0 to land on the mezzanine's south edge, the balustrade between them.
+     */
+    private void escalators(int ex, int z0) {
+        int rise = MZ - UP;
+        for (int k = 1; k <= rise; k++) {
+            int z = z0 - k, yk = UP + k;
+            for (int x = ex - 1; x <= ex + 5; x++) {
+                for (int yy = UP + 1; yy < yk; yy++) {
+                    set(x, yy, z, "stone_trim");
+                }
+                if (x == ex - 1 || x == ex + 2 || x == ex + 5) {
+                    set(x, yk, z, "stone_trim");
+                    set(x, yk + 1, z, "tx_glass_rail[axis=z]");
+                    continue;
+                }
+                boolean esc = x <= ex + 1;
+                set(x, yk, z, esc ? "zomboidcraft:escalator[facing=north,run=" + (x == ex ? "down" : "up") + "]" : "stairs_concrete[facing=north]");
+                if (esc) {
+                    set(x, yk + 1, z, "tx_esc_side_" + (x == ex + 1 ? "r" : "l") + "[facing=north]");
+                }
+                for (int yy = yk + (esc ? 2 : 1); yy <= yk + Builders.HEADROOM && yy < MZ; yy++) {
+                    set(x, yy, z, "air");
+                }
+            }
+        }
+        for (int x = ex; x <= ex + 1; x++) {
+            String hand = x == ex + 1 ? "r" : "l";
+            set(x, UP, z0, "tx_esc_plate[facing=north]");
+            set(x, UP + 1, z0, "tx_esc_newel_" + hand + "[facing=south]");
+            set(x, MZ, z0 - rise - 1, "tx_esc_plate[facing=south]");
+            set(x, MZ + 1, z0 - rise - 1, "tx_esc_newel_" + hand + "[facing=north]");
+        }
+    }
+
+    /** Tables with their chairs every four over the box at floor y, a few gone. */
+    private void cafeTables(int x0, int z0, int x1, int z1, int y) {
+        for (int x = x0; x <= x1; x += 4) {
+            for (int z = z0; z <= z1; z += 4) {
+                if (chance() < 0.15 || !empty(x, y + 1, z)) {
+                    continue;
+                }
+                set(x, y + 1, z, chance() < 0.1 ? "trade_folding_chair_tipped[facing=" + dir() + "]" : "store_table");
+                for (int[] c : new int[][] {{1, 0, 3}, {-1, 0, 1}, {0, 1, 2}, {0, -1, 0}}) {
+                    if (chance() < 0.7 && empty(x + c[0], y + 1, z + c[1])) {
+                        set(x + c[0], y + 1, z + c[1], (chance() < 0.15 ? "trade_folding_chair_tipped" : "store_chair") + "[facing=" + DIRS[c[2]] + "]");
+                    }
+                }
+            }
+        }
+    }
+
+    /** A back-lit board of a picture three wide over a counter, the bulkhead it hangs on behind it. */
+    private void boards(String prefix, int x, int y, int zc, String facing) {
+        row(prefix, 3, x, y, zc - 1, facing, 0.0);
+    }
+
+    /** Hangar Coffee under the mezzanine's north end: the counter facing west, the machines behind, the boards over it, tables out front. */
+    private void coffee() {
+        int y = UP + 1, cx = -109, za = Z1 + 11, zb = Z1 + 19;
+        for (int x = cx; x < HX1; x++) {
+            for (int z = za; z <= zb; z++) {
+                set(x, UP, z, "home_floor_tile");
+            }
+        }
+        for (int z = za; z <= zb; z++) {
+            set(cx, y, z, z == za + 4 ? "store_register[facing=west]" : "store_counter[facing=west]");
+            set(cx + 2, y, z, (z % 3 == 0 ? "store_coffee" : z % 3 == 1 ? "home_fridge" : "store_shelf_grocery") + "[facing=west]");
+            for (int yy = MZ - 3; yy < MZ; yy++) {
+                set(cx, yy, z, "drywall");
+            }
+        }
+        set(cx, y, zb, "air");
+        boards("ap_menu_coffee_", cx - 1, MZ - 3, za + 4, "west");
+        boards("ap_store_coffee_", cx - 1, MZ - 2, za + 4, "west");
+        cafeTables(-118, Z1 + 3, -112, Z1 + 21, UP);
+    }
+
+    /**
+     * Airside Books under the mezzanine, x MZ_X0..HX1, z -306..-278: glass to the lounge with two
+     * ways in, doors in both ends, so the way runs through it; shelf runs down it, tables, the
+     * magazines, the till by the south door.
+     */
+    private void bookshop() {
+        int y = UP + 1, za = -306, zb = -278;
+        for (int x = MZ_X0; x < HX1; x++) {
+            for (int z = za + 1; z < zb; z++) {
+                set(x, UP, z, "un_slab_vct");
+            }
+            for (int yy = y; yy < MZ; yy++) {
+                set(x, yy, za, "drywall");
+                set(x, yy, zb, "drywall");
+            }
+        }
+        for (int z = za + 1; z < zb; z++) {
+            for (int yy = y; yy < MZ; yy++) {
+                boolean way = (z >= za + 5 && z <= za + 7 || z >= zb - 7 && z <= zb - 5) && yy <= y + 3;
+                if (get(MZ_X0, yy, z) != null && get(MZ_X0, yy, z).startsWith("tx_column")) {
+                    continue;
+                }
+                set(MZ_X0, yy, z, way ? "air" : yy <= y + 3 ? "tx_glass[axis=z]" : "wf_panel");
+            }
+        }
+        for (int x = -112; x <= -110; x++) {
+            for (int yy = y; yy <= y + 2; yy++) {
+                set(x, yy, za, "air");
+                set(x, yy, zb, "air");
+            }
+        }
+        row("ap_store_books_", 3, MZ_X0 - 1, MZ - 3, (za + zb) / 2 - 1, "west", 0.0);
+        // the shelf runs: two lengths each with the cross aisle between, the end caps
+        for (int gx : new int[] {-117, -113, -108}) {
+            for (int[] run : new int[][] {{za + 3, za + 10}, {zb - 12, zb - 4}}) {
+                for (int z = run[0]; z <= run[1]; z++) {
+                    set(gx, y, z, chance() < 0.08 ? "home_books_stack_low" : "ap_gondola[axis=z]");
+                    set(gx, y + 1, z, "ap_gondola_top[axis=z]");
+                }
+                set(gx, y, run[0] - 1, "ap_gondola_end[facing=north]");
+                set(gx, y, run[1] + 1, "ap_gondola_end[facing=south]");
+            }
+        }
+        for (int z = za + 2; z <= zb - 2; z++) {
+            set(HX1 - 2, y, z, "home_bookcase[facing=west]");
+            set(HX1 - 2, y + 1, z, "home_bookcase_top[facing=west]");
+        }
+        set(-110, y, za + 8, "ap_book_table[facing=north]");
+        set(-110, y, zb - 8, "ap_book_table[facing=north]");
+        set(-119, y, za + 13, "ap_book_table[facing=north]");
+        for (int x = MZ_X0 + 1; x <= MZ_X0 + 5; x++) {
+            set(x, y, zb - 1, "ap_mag_rack[facing=north]");
+        }
+        for (int z = zb - 6; z <= zb - 3; z++) {
+            set(-105, y, z, z == zb - 4 ? "store_register[facing=west]" : "store_counter[facing=west]");
+        }
+        for (int x = MZ_X0 + 2; x < HX1 - 1; x += 4) {
+            for (int z = za + 3; z < zb; z += 4) {
+                if (empty(x, MZ - 1, z)) {
+                    set(x, MZ - 1, z, power && chance() < 0.3 ? "ceiling_light" : "ceiling_light_off");
+                }
+            }
+        }
+    }
+
+    /** Grilltown up on the mezzanine against the east windows: the kitchen, the counter facing west, the boards over it, the tables. */
+    private void grilltown() {
+        int y = MZ + 1, za = -318, zb = -302, cx = -107;
+        String[] kit = {"store_grill", "dn_fryer", "store_oven", "home_fridge", "st_fountain", "dn_fryer"};
+        for (int x = cx; x < HX1; x++) {
+            for (int z = za; z <= zb; z++) {
+                set(x, MZ, z, "home_floor_tile");
+            }
+            for (int yy = y; yy < y + 5; yy++) {
+                set(x, yy, za - 1, "home_wall_tile_white");
+                set(x, yy, zb + 1, "home_wall_tile_white");
+            }
+        }
+        for (int z = za; z <= zb; z++) {
+            for (int yy = y; yy < y + 5; yy++) {
+                set(HX1 - 1, yy, z, "home_wall_tile_white");
+            }
+            set(cx, y, z, z == za + 5 || z == zb - 5 ? "store_register[facing=west]" : "store_counter[facing=west]");
+            set(HX1 - 2, y, z, kit[Math.floorMod(z, kit.length)] + "[facing=west]");
+            set(cx + 2, y, z, z % 4 == 0 ? "store_counter[facing=east]" : "air");
+            for (int yy = y + 3; yy < HROOF - 1; yy++) {
+                set(cx, yy, z, "drywall");
+            }
+        }
+        set(cx, y, zb, "air");
+        set(cx, y + 1, zb, "air");
+        boards("ap_menu_grilltown_", cx - 1, y + 3, za + 5, "west");
+        boards("ap_menu_grilltown_", cx - 1, y + 3, zb - 5, "west");
+        row("ap_store_grilltown_", 3, cx - 1, y + 5, (za + zb) / 2 - 1, "west", 0.0);
+        set(cx - 1, y, za - 2, "ap_tray_rack[facing=west]");
+        set(cx - 1, y, zb + 2, "home_trash_can");
+        cafeTables(-119, Z1 + 3, -111, za - 4, MZ);
+        cafeTables(-119, za, -111, zb, MZ);
+        cafeTables(-119, -282, -105, MZ_Z1 - 2, MZ);
+    }
+
+    /** The Sakana sushi bar: an island on the mezzanine, the belt round it with stools outside, the chefs' cases inside. */
+    private void sakana() {
+        int y = MZ + 1, xa = -116, xb = -110, za = -299, zb = -285;
+        for (int z = za + 1; z < zb; z++) {
+            set(xa, y, z, "ap_sushi_belt[axis=z]");
+            set(xb, y, z, "ap_sushi_belt[axis=z]");
+            set(xa - 1, y, z, chance() < 0.15 ? "dn_stool_torn" : "dn_stool_b");
+            set(xb + 1, y, z, chance() < 0.15 ? "dn_stool_torn" : "dn_stool_b");
+            if (z % 3 == 0) {
+                set(xa + 1, y, z, "ap_sushi_case[facing=west]");
+                set(xb - 1, y, z, "ap_sushi_case[facing=east]");
+            }
+        }
+        for (int x = xa; x <= xb; x++) {
+            set(x, y, za, "ap_sushi_belt[axis=x]");
+            set(x, y, zb, x == (xa + xb) / 2 ? "air" : "ap_sushi_belt[axis=x]");
+            set(x, y, za - 1, chance() < 0.15 ? "dn_stool_torn" : "dn_stool_b");
+            for (int z = za + 1; z < zb; z++) {
+                set(x, MZ, z, x > xa && x < xb ? "home_floor_tile" : get(x, MZ, z));
+            }
+        }
+        // the name and the menu hung over each end of the island
+        for (int[] e : new int[][] {{za, 0}, {zb, 1}}) {
+            String f = e[1] == 0 ? "north" : "south";
+            row("ap_menu_sakana_", 3, xa + 2, y + 3, e[0], f, 0.0);
+            row("ap_store_sakana_", 3, xa + 2, y + 4, e[0], f, 0.0);
+            for (int x = xa + 2; x <= xa + 4; x++) {
+                rods(x, y + 5, e[0], HROOF);
+            }
+        }
+    }
+
+    // ---- gate 1 and its plane
+
+    /** Gate 1 at the pier's end: its lounge, Gray Eagle 214 nose in outside, the jet bridge, the stair truck, the gear. */
+    private void gateOne() {
+        int y = UP + 1, z1 = PIER_Z1;
+        // the lounge: rows facing the end windows and the plane, the podium by the bridge's door
+        for (int z = z1 - 4; z >= z1 - 16; z -= 3) {
+            for (int x = -123; x <= -104; x++) {
+                if (x == -114 || !empty(x, y, z)) {
+                    continue;
+                }
+                double r = chance();
+                if (r > 0.04) {
+                    set(x, y, z, (r < 0.12 ? "ap_seats_bag" : r < 0.2 ? "ap_seats_torn" : "ap_seats") + "[facing=south]");
+                }
+            }
+        }
+        set(-130, y, z1 - 2, "ap_gate_desk[facing=east]");
+        set(-127, y + 4, z1 - 1, "ap_gate_1[facing=north]");
+        rods(-127, y + 5, z1 - 1, HROOF);
+        boolean dead = !power || chance() < 0.5;
+        set(-118, y, z1 - 20, "ap_fids_lo" + (dead ? "_dead" : "") + "[facing=south]");
+        set(-118, y + 1, z1 - 20, "ap_fids_hi" + (dead ? "_dead" : "") + "[facing=south]");
+        Airliner.place(p, PLANE_X, 0, PLANE_Z);
+        jetBridge();
+        stairTruck(PLANE_X + Airliner.WEST - 1, PLANE_Z + Airliner.L2);
+        rampGear();
+    }
+
+    /** True inside the jet bridge: down from the pier's end at x -128..-126, then east to the plane's front door. */
+    private static boolean inBridge(int x, int z) {
+        int door = PLANE_Z + Airliner.L1, ex = PLANE_X + Airliner.WEST - 1;
+        return x >= -128 && x <= -126 && z > PIER_Z1 && z <= door + 2
+                || x > -126 && x <= ex && z >= door && z <= door + 2;
+    }
+
+    /**
+     * The jet bridge from the pier's end to Gray Eagle 214's front door: the walk on its floor at
+     * UP, the sides with their window band, the roof with its lights, the rotunda's column by the
+     * pier, the drive leg and its wheels under the cab, the canopy against the fuselage.
+     */
+    private void jetBridge() {
+        int y = UP, ex = PLANE_X + Airliner.WEST - 1;
+        String[] faces = {"north", "east", "south", "west"};
+        int[][] step = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        // the door through the pier's end
+        for (int x = -128; x <= -126; x++) {
+            for (int yy = y + 1; yy <= y + 4; yy++) {
+                set(x, yy, PIER_Z1, "air");
+            }
+        }
+        for (int x = -130; x <= ex + 1; x++) {
+            for (int z = PIER_Z1 + 1; z <= PLANE_Z + Airliner.L1 + 3; z++) {
+                if (inBridge(x, z)) {
+                    boolean ns = x <= -126;
+                    set(x, y, z, "rp_jb_floor[facing=" + (ns ? "south" : "east") + "]");
+                    for (int yy = y + 1; yy <= y + 4; yy++) {
+                        set(x, yy, z, "air");
+                    }
+                    boolean lamp = (ns ? z : x) % 3 == 0;
+                    set(x, y + 5, z, x == ex ? "rp_jb_bellows_top[facing=east]"
+                            : lamp ? "rp_jb_roof_lamp" + (power && chance() < 0.4 ? "_lit" : "") + "[facing=east]" : "rp_jb_roof[facing=east]");
+                    continue;
+                }
+                if (x > ex) {
+                    continue;
+                }
+                // a side: which ways the inside lies
+                int sides = 0, n = 0;
+                for (int d = 0; d < 4; d++) {
+                    if (inBridge(x - step[d][0], z - step[d][1])) {
+                        sides |= 1 << d;
+                        n++;
+                    }
+                }
+                String wall = null;
+                int f = -1;
+                if (n == 1) {
+                    f = Integer.numberOfTrailingZeros(sides);
+                    wall = "wall";
+                } else if (n == 2) {
+                    // an inside corner: the sides face away from both; the corner piece's two are f and the one anticlockwise of it
+                    for (int d = 0; d < 4; d++) {
+                        if ((sides >> d & 1) == 1 && (sides >> ((d + 3) % 4) & 1) == 1) {
+                            f = d;
+                        }
+                    }
+                    wall = "corner";
+                } else {
+                    for (int d = 0; d < 4; d++) {
+                        int dd = (d + 3) % 4;
+                        if (inBridge(x - step[d][0] - step[dd][0], z - step[d][1] - step[dd][1])) {
+                            f = d;
+                            wall = "corner";
+                        }
+                    }
+                }
+                if (wall == null || !empty(x, y + 1, z)) {
+                    continue;
+                }
+                set(x, y, z, "rp_jb_floor[facing=east]");
+                for (int yy = y + 1; yy <= y + 4; yy++) {
+                    String piece = wall.equals("corner") ? "rp_jb_corner" : yy == y + 2 ? "rp_jb_window" : yy == y + 3 ? "rp_jb_wall_band" : "rp_jb_wall";
+                    set(x, yy, z, piece + "[facing=" + faces[f] + "]");
+                }
+                set(x, y + 5, z, "rp_jb_eave[facing=" + faces[f] + "]");
+            }
+        }
+        set(ex, y + 1, PLANE_Z + Airliner.L1 + 2, "rp_jb_console[facing=east]");
+        // the rotunda's column by the pier, the drive leg under the cab
+        for (int yy = 1; yy < y; yy++) {
+            set(-127, yy, PIER_Z1 + 2, "rp_jb_column[facing=north]");
+        }
+        int lx = ex - 2;
+        for (int z : new int[] {PLANE_Z + Airliner.L1, PLANE_Z + Airliner.L1 + 2}) {
+            set(lx, 1, z, "rp_jb_bogie[facing=east]");
+            for (int yy = 2; yy < y; yy++) {
+                set(lx, yy, z, yy < 4 ? "rp_jb_leg_lo[facing=north]" : "rp_jb_leg[facing=north]");
+            }
+        }
+    }
+
+    /**
+     * The stair truck at the plane's back door, its platform in the cell x by the door (two wide,
+     * z and z + 1), the stairs coming down to the west, the cab under the platform.
+     */
+    private void stairTruck(int x, int z) {
+        for (int dz = 0; dz <= 1; dz++) {
+            int zz = z + dz;
+            set(x, UP, zz, "rp_as_top[facing=east]");
+            set(x, UP + 1, zz, "rp_as_rail[facing=east]");
+            for (int yy = UP + 2; yy <= UP + 4; yy++) {
+                set(x, yy, zz, "rp_as_post[facing=east]");
+            }
+            set(x, UP + 5, zz, "rp_as_roof[facing=east]");
+            set(x, 1, zz, "rp_as_cab_lo[facing=east]");
+            set(x, 2, zz, "rp_as_cab_hi[facing=east]");
+            for (int yy = 3; yy < UP; yy++) {
+                set(x, yy, zz, "rp_as_lift[facing=east]");
+            }
+            for (int k = 1; k < UP; k++) {
+                int sx = x - k, sy = UP - k;
+                set(sx, sy, zz, "rp_as_step[facing=east]");
+                for (int yy = 1; yy < sy; yy++) {
+                    set(sx, yy, zz, yy == 1 ? (k == 2 ? "rp_as_bed_wheels[facing=east]" : "rp_as_bed[facing=east]") : "rp_as_lift[facing=east]");
+                }
+            }
+        }
+    }
+
+    /** The ground crew's gear about the plane: the belt loader at the front hold, the baggage train, containers, the power cart, chocks and cones. */
+    private void rampGear() {
+        int ex = PLANE_X - Airliner.WEST + 1, hz = PLANE_Z + 15;
+        // the belt loader up to the front hold on the right side, rising west
+        set(ex + 3, 1, hz, "rp_bl_0[facing=west]");
+        set(ex + 2, 1, hz, "rp_bl_1[facing=west]");
+        set(ex + 1, 2, hz, "rp_bl_2[facing=west]");
+        set(ex, 2, hz, "rp_bl_3[facing=west]");
+        // the train: the tug and three carts, stopped under the wing's tip
+        int tx = PLANE_X + 13, tz = PLANE_Z + 22;
+        set(tx, 1, tz, "rp_tug_front[facing=north]");
+        set(tx, 1, tz + 1, "rp_tug_rear[facing=north]");
+        for (int k = 0; k < 3; k++) {
+            boolean bags = chance() < 0.7;
+            set(tx, 1, tz + 3 + k * 3, "rp_dolly_front" + (bags ? "_bags" : "") + "[facing=north]");
+            set(tx, 1, tz + 4 + k * 3, "rp_dolly_rear" + (bags ? "_bags" : "") + "[facing=north]");
+        }
+        set(tx + 3, 1, tz - 4, "rp_dolly_tipped[facing=" + dir() + "]");
+        set(tx + 2, 1, tz - 6, "ap_bag_open[facing=" + dir() + "]");
+        set(tx + 4, 1, tz - 3, "ap_bag_flat[facing=" + dir() + "]");
+        set(tx + 1, 1, tz - 2, "ap_bag_up_b[facing=" + dir() + "]");
+        // containers by the loader, one burst
+        set(ex + 6, 1, hz - 2, "rp_uld[facing=west]");
+        set(ex + 7, 1, hz - 2, "rp_uld[facing=west]");
+        set(ex + 6, 1, hz + 2, "rp_uld_open[facing=west]");
+        set(ex + 8, 1, hz + 1, "rp_uld_spill[facing=south]");
+        // the power cart at the nose, the chocks at the wheels, cones round the wingtips and tail
+        set(PLANE_X + 3, 1, PLANE_Z + 3, "rp_gpu[facing=west]");
+        set(PLANE_X, 1, PLANE_Z + 8, "rp_chocks[facing=north]");
+        set(PLANE_X - 5, 1, PLANE_Z + 31, "rp_chocks[facing=north]");
+        set(PLANE_X + 4, 1, PLANE_Z + 31, "rp_chocks[facing=north]");
+        set(PLANE_X - 7, 1, PLANE_Z + 4, "rp_wand[facing=" + dir() + "]");
+        for (int[] c : new int[][] {{-28, 31}, {28, 31}, {0, 58}, {-2, -2}, {2, -2}}) {
+            if (empty(PLANE_X + c[0], 1, PLANE_Z + c[1])) {
+                set(PLANE_X + c[0], 1, PLANE_Z + c[1], "st_cone");
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ the piers
 
     /**
@@ -867,30 +1378,7 @@ final class AirportTerminal extends Grounds {
             }
             set(x, UP, Z1, "un_slab_terrazzo");
         }
-        // the ground floor: a corridor down the middle, rooms off it, doors out to the ramp
-        for (int z = z0 + 1; z < z1; z++) {
-            wallZ(cx0 - 1, z, z, 0, UP - 1, "tx_wall");
-            wallZ(cx1 + 1, z, z, 0, UP - 1, "tx_wall");
-        }
-        for (int z = z0 + 20; z < z1; z += 22) {
-            wallX(x0 + 1, cx0 - 2, z, 0, UP - 1, "tx_wall");
-            wallX(cx1 + 2, x1 - 1, z, 0, UP - 1, "tx_wall");
-            rampRoom(x0 + 1, z - 21, cx0 - 2, z - 1, true);
-            rampRoom(cx1 + 2, z - 21, x1 - 1, z - 1, false);
-        }
-        for (int z = z0 + 10; z < z1; z += 22) {
-            for (int x : new int[] {cx0 - 1, cx1 + 1}) {
-                set(x, 1, z, "air");
-                set(x, 2, z, "air");
-                door(x, 0, z, Doors.FLAT, x == cx0 - 1 ? "west" : "east");
-            }
-        }
-        for (int x = cx0; x <= cx1; x += 2) {
-            set(x, 1, z1, "air");
-            set(x, 2, z1, "air");
-        }
-        Doors.pair(p, rng, cx0 + 1, 1, z1, Doors.STEEL, "south");
-        lamps(x0, z0, x1, z1, UP, 0.25);
+        pierGround(x0, x1, cx0, cx1);
         // the gates: doors in the side walls for the jet bridges, podiums, numbers, seats facing out
         for (int g = 0; g < GATE_Z.length; g++) {
             int gz = GATE_Z[g];
@@ -931,11 +1419,44 @@ final class AirportTerminal extends Grounds {
         hungSign(first == 1 ? "gates_a" : "gates_b", (cx0 + cx1) / 2, PROOF - 3, z0 + 6, "north");
     }
 
+    /** A pier's ground floor: a corridor down the middle x cx0..cx1, rooms off it, doors out to the ramp. */
+    private void pierGround(int x0, int x1, int cx0, int cx1) {
+        int z0 = Z1, z1 = PIER_Z1;
+        for (int z = z0 + 1; z < z1; z++) {
+            wallZ(cx0 - 1, z, z, 0, UP - 1, "tx_wall");
+            wallZ(cx1 + 1, z, z, 0, UP - 1, "tx_wall");
+        }
+        for (int z = z0 + 20; z < z1; z += 22) {
+            wallX(x0 + 1, cx0 - 2, z, 0, UP - 1, "tx_wall");
+            wallX(cx1 + 2, x1 - 1, z, 0, UP - 1, "tx_wall");
+            rampRoom(x0 + 1, z - 21, cx0 - 2, z - 1, true);
+            rampRoom(cx1 + 2, z - 21, x1 - 1, z - 1, false);
+        }
+        for (int z = z0 + 10; z < z1; z += 22) {
+            for (int x : new int[] {cx0 - 1, cx1 + 1}) {
+                set(x, 1, z, "air");
+                set(x, 2, z, "air");
+                door(x, 0, z, Doors.FLAT, x == cx0 - 1 ? "west" : "east");
+            }
+        }
+        for (int x = cx0; x <= cx1; x += 2) {
+            set(x, 1, z1, "air");
+            set(x, 2, z1, "air");
+        }
+        Doors.pair(p, rng, cx0 + 1, 1, z1, Doors.STEEL, "south");
+        lamps(x0, z0, x1, z1, UP, 0.25);
+    }
+
     /**
      * A gate at gz on the side wall at x (west when west): the jet bridge's door, the podium by it,
      * the number hung over the lounge, rows of seats facing the window, a screen.
      */
     private void gate(int x, int gz, int n, boolean west, int corridor) {
+        gate(x, gz, n, west, corridor, PROOF);
+    }
+
+    /** As above, under a roof (or ceiling) at top: the signs hung from it on rods; no corridor sign when corridor is NO_SIGN. */
+    private void gate(int x, int gz, int n, boolean west, int corridor, int top) {
         int y = UP + 1, in = west ? 1 : -1;
         String out = west ? "west" : "east", back = west ? "east" : "west";
         // the door: three wide, four high, a steel frame; the bridge meets it outside
@@ -949,7 +1470,10 @@ final class AirportTerminal extends Grounds {
         set(x, y, gz + 2, "wf_steel");
         set(x + in * 2, y, gz + 3, "ap_gate_desk[facing=" + back + "]");
         set(x + in * 2, y + 4, gz, "ap_gate_" + n + "[facing=" + back + "]");
-        set(corridor, PROOF - 2, gz, "ap_gate_" + n + "[facing=north]");
+        rods(x + in * 2, y + 5, gz, top);
+        if (corridor != NO_SIGN) {
+            set(corridor, top - 2, gz, "ap_gate_" + n + "[facing=north]");
+        }
         // the rows: back to back pairs from the window in, along z, gaps for the walk to the door
         for (int r = 0; r < 2; r++) {
             int rx = x + in * (3 + r * 3);
@@ -990,6 +1514,15 @@ final class AirportTerminal extends Grounds {
         door(ox, 0, mz + 4, Doors.STEEL, west ? "west" : "east");
     }
 
+    /** The rods a hung sign or lamp hangs on, from y up to the ceiling at top. */
+    private void rods(int x, int y, int z, int top) {
+        for (int yy = y; yy < top; yy++) {
+            if (empty(x, yy, z)) {
+                set(x, yy, z, "tx_rod");
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ lights, roof, the end of it
 
     /** Pendants down from the halls' roof, troffers in the ceilings under the upper floor. */
@@ -1006,7 +1539,7 @@ final class AirportTerminal extends Grounds {
                 }
             }
         }
-        for (int px : PIER_X) {
+        for (int px : new int[] {PIER_X[1]}) {
             for (int z = Z1 + 4; z < PIER_Z1; z += 6) {
                 for (int x = px + 4; x < px + PIER_W; x += 8) {
                     if (empty(x, PROOF - 1, z)) {
@@ -1025,12 +1558,13 @@ final class AirportTerminal extends Grounds {
         }
         b.flat(X0, Z0, X1, Z1, ROOF, "ml_precast", 1, "ml_precast");
         for (int px : PIER_X) {
-            for (int x = px; x <= px + PIER_W; x++) {
+            int top = px == PIER_X[0] ? HROOF : PROOF;
+            for (int x = px; x <= px + pierW(px); x++) {
                 for (int z = Z1 + 1; z <= PIER_Z1; z++) {
-                    set(x, PROOF, z, "un_roof");
+                    set(x, top, z, "un_roof");
                 }
             }
-            b.flat(px, Z1 + 1, px + PIER_W, PIER_Z1, PROOF, "ml_precast", 1, "ml_precast");
+            b.flat(px, Z1 + 1, px + pierW(px), PIER_Z1, top, "ml_precast", 1, "ml_precast");
         }
     }
 
@@ -1042,8 +1576,11 @@ final class AirportTerminal extends Grounds {
         scatter(X0 + 1, Z0 + 1, X1 - 1, BACK - 1, 0, 0.012);
         scatter(X0 + 1, BACK + 1, X1 - 1, Z1 - 1, UP, 0.008);
         for (int px : PIER_X) {
-            scatter(px + 1, Z1 + 1, px + PIER_W - 1, PIER_Z1 - 1, UP, 0.01);
+            scatter(px + 1, Z1 + 1, px + pierW(px) - 1, PIER_Z1 - 1, UP, 0.01);
         }
+        scatter(MZ_X0, Z1 + 1, HX1 - 1, MZ_Z1, MZ, 0.01);
+        mess(PIER_X[0] + 1, Z1 + 1, HX1 - 1, PIER_Z1 - 1, UP, 0.015);
+        mess(MZ_X0, Z1 + 1, HX1 - 1, MZ_Z1, MZ, 0.015);
         mess(X0 + 1, Z0 + 1, X1 - 1, BACK - 1, 0, 0.02);
         mess(-MEZ, Z0 + 1, MEZ, BACK - 1, UP, 0.03);
         mess(X0 + 1, BACK + 1, X1 - 1, Z1 - 1, UP, 0.015);

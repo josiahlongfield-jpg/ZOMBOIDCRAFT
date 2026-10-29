@@ -1,0 +1,373 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_books_face": "zomboidcraft:block/city/ap_books_face",
+    "ap_books_retail": "zomboidcraft:block/city/ap_books_retail",
+    "ap_laminate": "zomboidcraft:block/city/ap_laminate",
+    "ap_wood": "zomboidcraft:block/city/ap_wood",
+    "particle": "zomboidcraft:block/city/ap_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        3,
+        9,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_wood"
+        },
+        "south": {
+          "texture": "#ap_wood"
+        },
+        "east": {
+          "texture": "#ap_wood"
+        },
+        "west": {
+          "texture": "#ap_wood"
+        },
+        "up": {
+          "texture": "#ap_wood"
+        },
+        "down": {
+          "texture": "#ap_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        9,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_wood"
+        },
+        "south": {
+          "texture": "#ap_wood"
+        },
+        "east": {
+          "texture": "#ap_wood"
+        },
+        "west": {
+          "texture": "#ap_wood"
+        },
+        "up": {
+          "texture": "#ap_wood"
+        },
+        "down": {
+          "texture": "#ap_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        13
+      ],
+      "to": [
+        3,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_wood"
+        },
+        "south": {
+          "texture": "#ap_wood"
+        },
+        "east": {
+          "texture": "#ap_wood"
+        },
+        "west": {
+          "texture": "#ap_wood"
+        },
+        "up": {
+          "texture": "#ap_wood"
+        },
+        "down": {
+          "texture": "#ap_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        13
+      ],
+      "to": [
+        15,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_wood"
+        },
+        "south": {
+          "texture": "#ap_wood"
+        },
+        "east": {
+          "texture": "#ap_wood"
+        },
+        "west": {
+          "texture": "#ap_wood"
+        },
+        "up": {
+          "texture": "#ap_wood"
+        },
+        "down": {
+          "texture": "#ap_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        0
+      ],
+      "to": [
+        16,
+        10.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_wood",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ap_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ap_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ap_wood"
+        },
+        "down": {
+          "texture": "#ap_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        10.5,
+        1.5
+      ],
+      "to": [
+        5.5,
+        13.5,
+        7.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        10.5,
+        2
+      ],
+      "to": [
+        10,
+        15.0,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        10.5,
+        1.5
+      ],
+      "to": [
+        14.5,
+        12.5,
+        7.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10.5,
+        7
+      ],
+      "to": [
+        6,
+        15.5,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        10.5,
+        8
+      ],
+      "to": [
+        12,
+        14.0,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        10.5,
+        9
+      ],
+      "to": [
+        16,
+        13.0,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_books_retail"
+        },
+        "south": {
+          "texture": "#ap_books_retail"
+        },
+        "east": {
+          "texture": "#ap_books_retail",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ap_books_retail"
+        },
+        "up": {
+          "texture": "#ap_books_face"
+        },
+        "down": {
+          "texture": "#ap_laminate"
+        }
+      }
+    }
+  ]
+}
