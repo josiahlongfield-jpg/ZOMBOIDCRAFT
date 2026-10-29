@@ -1135,6 +1135,8 @@ import waterfront  # noqa: E402
 waterfront.register(sys.modules[__name__])
 import tents  # noqa: E402
 tents.register(sys.modules[__name__])
+import clutter  # noqa: E402
+clutter.register(sys.modules[__name__])
 
 
 

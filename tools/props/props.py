@@ -369,12 +369,14 @@ PROPS = {
     "trash_can": dict(src=ph("metal_trash_can", "^metal_trash_can_rust"), height=0.95, sit="middle", title="Trash Can", sound="METAL",
                       swap={"000": "ext_trash_can"}),
     "trash_bag": dict(src=ph("trashbag"), height=0.45, sit="middle", title="Trash Bag", sound="WOOL",
-                      swap={"000": "trash_bag"}),
+                      swap={"000": "trash_bag"}, always=True),
     "barrel_1": dict(src=ph("Barrel_01"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
     "barrel_2": dict(src=ph("Barrel_02"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
     "barrel_3": dict(src=ph("barrel_03"), height=0.95, sit="middle", title="Barrel", sound="METAL", swap={"000": "barrel"}),
-    "crate_1": dict(src=ph("wooden_crate_01"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}]),
-    "crate_2": dict(src=ph("wooden_crate_02"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}]),
+    "crate_1": dict(src=ph("wooden_crate_01"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}],
+                    always=["crate"]),
+    "crate_2": dict(src=ph("wooden_crate_02"), height=0.85, sit="middle", title="Crate", swap=[{"000": "crate"}, {"000": "apple_crate"}],
+                    always=["crate"]),
     "aircon": dict(src=ph("exterior_aircon_unit", "^exterior_aircon_unit_rusted$"), width=0.94, sit="middle",
                    title="Air Conditioner", sound="METAL", shine=0.3, swap={"000": "hvac"}),
     "aircon_clean": dict(src=ph("exterior_aircon_unit", "^exterior_aircon_unit$"), width=0.94, sit="middle",
@@ -872,7 +874,9 @@ def write_swaps(layout):
         for swap in swaps(cfg):
             key = tuple(sorted(swap.items()))
             groups.setdefault(key, []).append({c: cells.get(int(c), "air") for c in swap})
-    always = {tuple(sorted(w.items())) for cfg in PROPS.values() if cfg.get("always") for w in swaps(cfg)}
+    # always: True for every block the prop stands in for, or a list of the ones it always replaces
+    always = {tuple(sorted(w.items())) for cfg in PROPS.values() if cfg.get("always") for w in swaps(cfg)
+              if cfg["always"] is True or set(w.values()) & set(cfg["always"])}
     entries = []
     for key, variants in sorted(groups.items()):
         first = ("!" if key in always else "") + key[0][1]
