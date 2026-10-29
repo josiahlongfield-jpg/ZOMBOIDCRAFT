@@ -82,7 +82,7 @@ public final class Road {
             double t = len2 == 0 ? 0 : ((x - ax) * vx + (z - az) * vz) / len2;
             t = Math.max(0, Math.min(1, t));
             double px = ax + vx * t, pz = az + vz * t;
-            double d = Math.hypot(x - px, z - pz);
+            double d = Math.sqrt((x - px) * (x - px) + (z - pz) * (z - pz));
             if (d < hit.distance) {
                 double len = Math.sqrt(len2);
                 hit.distance = d;
