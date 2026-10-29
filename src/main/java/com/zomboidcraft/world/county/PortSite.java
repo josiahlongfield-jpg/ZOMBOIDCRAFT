@@ -973,13 +973,23 @@ final class PortSite extends Site {
                         }
                         new Ships(at(cx, bz, 3), rng, hit).trawler(blen, sunk);
                         bz -= blen + 3;
-                    } else if (r < 0.6) {
+                    } else if (r < 0.62) {
+                        // lobster boats, and sloops, lie their length along the jetty a step off it
+                        boolean lob = chance() < 0.6;
                         int cx = side < 0 ? jx - 3 : jx + jw + 2;
-                        new Ships(at(cx, bz, 3), rng, hit).sailboat(9 + rng.nextInt(3));
-                        bz -= 13;
+                        if (bz - 12 < quay - jlen - 2) {
+                            break;
+                        }
+                        Ships s = new Ships(at(cx, bz, 3), rng, hit);
+                        if (lob) {
+                            s.lobster(sunk);
+                        } else {
+                            s.sailboat(sunk);
+                        }
+                        bz -= 14;
                     } else if (r < 0.85) {
                         int cx = side < 0 ? jx - 2 : jx + jw + 1;
-                        new Ships(at(cx, bz, 3), rng, hit).skiff(5 + rng.nextInt(3), sunk);
+                        new Ships(at(cx, bz, 3), rng, hit).skiff(sunk);
                         bz -= 8;
                     } else {
                         bz -= 10;
@@ -1094,7 +1104,8 @@ final class PortSite extends Site {
             if (chance() < 0.5) {
                 new Ships(up, rng, hit).trawler(14 + rng.nextInt(3), false);
             } else {
-                new Ships(up.shifted(0, -2, 0), rng, hit).sailboat(10);
+                at(bx + 4, z0 + 2, 1).vehicle(4.85, 2, 0.0, -90, "=boat_sloop@" + (chance() < 0.5 ? "abandoned" : "usable"),
+                        rng.nextLong());
             }
         }
         // the travel hoist over the end
