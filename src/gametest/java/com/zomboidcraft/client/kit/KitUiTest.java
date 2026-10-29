@@ -236,6 +236,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            mapTest(ctx);
             bookTest(sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
@@ -725,6 +726,40 @@ public class KitUiTest implements FabricClientGameTest {
             }
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
         }
+    }
+
+    /**
+     * The map page over the planned county (the test world isn't one, so the atlas is opened by hand): the whole
+     * county, the island, then streets close in, each once its tiles are drawn.
+     */
+    private static void mapTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.open(12345L, true));
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.MAP);
+        });
+        float[][] views = {{0, 0, 0.022f, 3}, {3100, -1500, 0.09f, 2}, {3350, -1250, 0.3f, 1}, {3350, -1250, 1.2f, 0}};
+        String[] names = {"county", "island", "downtown", "streets"};
+        for (int v = 0; v < views.length; v++) {
+            float[] view = views[v];
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.map.look(view[0], view[1], view[2]);
+            });
+            long start = System.currentTimeMillis();
+            boolean ready = false;
+            while (System.currentTimeMillis() - start < 150_000) {
+                ctx.waitTicks(20);
+                ready = ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.ready((int) view[3], view[0], view[1]));
+                if (ready) break;
+            }
+            ctx.waitTicks(10);
+            LOG.info("ZCUI map {}: ready {} after {} s, {} tiles drawn", names[v], ready, (System.currentTimeMillis() - start) / 1000,
+                    ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.made()));
+            ctx.takeScreenshot("map-" + names[v]);
+        }
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
