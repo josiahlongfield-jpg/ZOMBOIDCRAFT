@@ -376,6 +376,7 @@ Picked by Josiah Longfield on the Dead Air Throwables page, cut by tools/audio/b
 | weapon.throw.alarm_tick | [Clock.Windup.Bell.Antique.wav by jessepash](https://freesound.org/people/jessepash/sounds/139958/) | jessepash | Freesound, CC0 1.0 |
 | weapon.throw.alarm_ring | [alarm clock.wav by jackjames_tomknevitt](https://freesound.org/people/jackjames_tomknevitt/sounds/209536/) | jackjames_tomknevitt | Freesound, CC0 1.0 |
 | weapon.throw.alarm_ring | [2018 07 alarm clock.flac by arseniiv](https://freesound.org/people/arseniiv/sounds/459701/) | arseniiv | Freesound, CC0 1.0 |
+| weapon.throw.pin_pull | gun_grenade_launcher_trigger_02 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
 | weapon.throw.molotov_burst | [Lighting a Fire by plasterbrain](https://freesound.org/people/plasterbrain/sounds/534702/) | plasterbrain | Freesound, CC0 1.0 |
 | weapon.throw.smoke_pop | [R27-34-Fuse Burning.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483320/) | craigsmith | Freesound, CC0 1.0 |
 | weapon.throw.flashbang | [Cherry Bomb Explodes, Normal Speed by CHallSmith](https://freesound.org/people/CHallSmith/sounds/870713/) | CHallSmith | Freesound, CC0 1.0 |
