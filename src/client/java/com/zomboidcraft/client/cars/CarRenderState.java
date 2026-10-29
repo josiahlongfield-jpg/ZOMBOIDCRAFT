@@ -35,6 +35,9 @@ public class CarRenderState extends EntityRenderState {
     public com.zomboidcraft.world.cars.CarProp aircraft;
     /** An aircraft: turned by its attitude about a point pivot metres up, rotors at rotor radians. */
     public boolean air;
+    /** A mounted gun: its turn on the post and tilt (radians, see Turret), its barrels' turn, and whether it's firing. */
+    public float turretYaw, turretTilt, barrels;
+    public boolean turretFiring;
     public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
     public float pivot;
     public double rotor;
