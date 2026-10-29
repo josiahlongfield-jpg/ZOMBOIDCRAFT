@@ -269,37 +269,37 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:canteen",
-          "weight": 16
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mess_kit",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sterile_bandage",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:body_bag",
-          "weight": 16
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:paracord",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:barbed_wire_roll",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:glow_stick",
-          "weight": 16,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -314,62 +314,87 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:firestarter",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sleeping_bag",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bedroll",
-          "weight": 16
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:compass",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_purification_tabs",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:balaclava",
-          "weight": 8
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cargo_pants",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:camo_pants",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:combat_boots",
+          "weight": 18
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_aiming",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:dog_tags",
-          "weight": 16
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wheel_chock",
-          "weight": 16
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:signal_mirror",
-          "weight": 8
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:entrenching_tool",
-          "weight": 24
+          "weight": 18
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mil_canteen_cup",
-          "weight": 16,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -384,7 +409,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:duty_belt",
-          "weight": 24
+          "weight": 18
         }
       ]
     },
@@ -485,6 +510,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bomber_jacket",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tactical_gloves",
           "weight": 1
         },
         {

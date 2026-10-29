@@ -95,7 +95,10 @@ WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'je
     police_cap fire_helmet riot_helmet gas_mask welding_goggles aviator_sunglasses reading_glasses balaclava
     surgical_mask_worn cranial_helmet pilot_helmet band_tshirt tank_top dress_shirt polo_shirt hawaiian_shirt
     sweater sweatshirt turtleneck scrubs_top dress wedding_dress leather_jacket bomber_jacket
-    varsity_jacket windbreaker raincoat trench_coat suit_jacket lab_coat hi_vis_vest'''.split())  # batches 2 (headwear) and 3 (tops)
+    varsity_jacket windbreaker raincoat trench_coat suit_jacket lab_coat hi_vis_vest
+    cargo_pants camo_pants slacks sweatpants shorts skirt overalls scrubs_pants
+    leather_chaps running_shoes dress_shoes cowboy_boots hiking_boots rubber_boots combat_boots slippers
+    leather_gloves winter_gloves rubber_gloves tactical_gloves scarf necktie'''.split())  # batches 2 (headwear), 3 (tops) and 4 (legs, feet, hands, neck)
 KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
