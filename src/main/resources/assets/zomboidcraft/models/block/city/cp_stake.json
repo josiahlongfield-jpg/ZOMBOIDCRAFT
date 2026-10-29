@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_tape": "zomboidcraft:block/city/cp_tape",
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "particle": "zomboidcraft:block/city/cp_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        7.2,
+        0,
+        7.2
+      ],
+      "to": [
+        8.8,
+        9,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.1,
+        6.6,
+        7.1
+      ],
+      "to": [
+        8.9,
+        7.8,
+        8.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_tape"
+        },
+        "south": {
+          "texture": "#cp_tape"
+        },
+        "east": {
+          "texture": "#cp_tape"
+        },
+        "west": {
+          "texture": "#cp_tape"
+        },
+        "up": {
+          "texture": "#cp_tape"
+        },
+        "down": {
+          "texture": "#cp_tape"
+        }
+      }
+    },
+    {
+      "from": [
+        8.8,
+        5,
+        7.6
+      ],
+      "to": [
+        12,
+        7.6,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_tape"
+        },
+        "south": {
+          "texture": "#cp_tape"
+        },
+        "east": {
+          "texture": "#cp_tape"
+        },
+        "west": {
+          "texture": "#cp_tape"
+        },
+        "up": {
+          "texture": "#cp_tape"
+        },
+        "down": {
+          "texture": "#cp_tape"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.8,
+          7.6,
+          7.8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    }
+  ]
+}

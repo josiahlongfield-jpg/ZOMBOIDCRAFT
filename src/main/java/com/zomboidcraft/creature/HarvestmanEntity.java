@@ -293,6 +293,33 @@ public class HarvestmanEntity extends Mob {
         signs.tick(level);
     }
 
+    /**
+     * Client only: stands an apparition (one only its viewer sees, HarvestmanGlimpse) on the floor where it is, facing
+     * a point: its turn and its feet are set here, since no server moves it.
+     */
+    public void standPhantom(Vec3 face) {
+        Vec3 f = face.subtract(centre()).multiply(1, 0, 1);
+        up = new Vec3(0, 1, 0);
+        fwd = f.lengthSqr() < 1e-4 ? new Vec3(0, 0, 1) : f.normalize();
+        Vec3 x = up.cross(fwd).normalize();
+        Vector3f cx = new Vector3f((float) x.x, (float) x.y, (float) x.z), cy = new Vector3f(0, 1, 0);
+        Vector3f cz = new Vector3f().set(cx).cross(cy);
+        Quaternionf q = new Quaternionf().setFromNormalized(new Matrix3f(cx, cy, cz));
+        entityData.set(TURN, q);
+        turn.set(q);
+        turnO.set(q);
+        setYRot((float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z)));
+        yBodyRot = getYRot();
+        legs.tick(this, centre(), up, fwd, STAND, 0, false, 0, random);
+        for (int i = 0; i < 4; i++) {
+            Vec3 ft = legs.feet[i];
+            entityData.set(FEET.get(i), new Vector3f((float) ft.x, (float) ft.y, (float) ft.z));
+            for (int k = 0; k < 4; k++) {
+                feetSeen[i][k] = ft;
+            }
+        }
+    }
+
     private static double dist2(Vec3 a, org.joml.Vector3fc b) {
         double dx = a.x - b.x(), dy = a.y - b.y(), dz = a.z - b.z();
         return dx * dx + dy * dy + dz * dz;

@@ -40,16 +40,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:shears",
-          "weight": 14
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:flint_and_steel",
-          "weight": 14
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:lead_pipe",
           "weight": 7
         },
@@ -864,6 +854,66 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bike_helmet",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:welding_goggles",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_boots",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:work_gloves",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cooler",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tool_bag",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_carpentry",
           "weight": 2
         },
@@ -1140,6 +1190,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tent",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:motorcycle_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:leather_chaps",
           "weight": 1
         }
       ]

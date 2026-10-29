@@ -1,0 +1,342 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "barn_grey": "zomboidcraft:block/city/barn_grey",
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "fm_boards": "zomboidcraft:block/city/fm_boards",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/barn_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#barn_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#barn_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#barn_grey",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#barn_grey",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#barn_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#barn_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        -0.6
+      ],
+      "to": [
+        14,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_boards"
+        },
+        "south": {
+          "texture": "#fm_boards"
+        },
+        "east": {
+          "texture": "#fm_boards",
+          "uv": [
+            15.399999999999999,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fm_boards",
+          "uv": [
+            0,
+            0,
+            0.6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#fm_boards",
+          "uv": [
+            2,
+            0,
+            14,
+            0.6
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "uv": [
+            2,
+            15.399999999999999,
+            14,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        -1
+      ],
+      "to": [
+        13,
+        3.5,
+        -0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h"
+        },
+        "east": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            15.600000000000001,
+            12.5,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            12.5,
+            0.4,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            3,
+            0,
+            13,
+            0.4
+          ]
+        },
+        "down": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            3,
+            15.600000000000001,
+            13,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        12,
+        -1
+      ],
+      "to": [
+        13,
+        13.5,
+        -0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h"
+        },
+        "east": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            15.600000000000001,
+            2.5,
+            16,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            2.5,
+            0.4,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            3,
+            0,
+            13,
+            0.4
+          ]
+        },
+        "down": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            3,
+            15.600000000000001,
+            13,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3.5,
+        -1
+      ],
+      "to": [
+        4.5,
+        12,
+        -0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber",
+          "uv": [
+            15.600000000000001,
+            4,
+            16,
+            12.5
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber",
+          "uv": [
+            0,
+            4,
+            0.4,
+            12.5
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber",
+          "uv": [
+            3,
+            0,
+            4.5,
+            0.4
+          ]
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "uv": [
+            3,
+            15.600000000000001,
+            4.5,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          -0.8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        12,
+        7,
+        -1.1
+      ],
+      "to": [
+        13,
+        8.5,
+        -0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "uv": [
+            15.5,
+            7.5,
+            16,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "uv": [
+            0,
+            7.5,
+            0.5000000000000001,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#painted_steel",
+          "uv": [
+            12,
+            0,
+            13,
+            0.5000000000000001
+          ]
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "uv": [
+            12,
+            15.5,
+            13,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

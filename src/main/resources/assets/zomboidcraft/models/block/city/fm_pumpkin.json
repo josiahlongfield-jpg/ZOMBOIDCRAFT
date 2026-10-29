@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fm_pumpkin": "zomboidcraft:block/city/fm_pumpkin",
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "particle": "zomboidcraft:block/city/fm_pumpkin"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_pumpkin"
+        },
+        "south": {
+          "texture": "#fm_pumpkin"
+        },
+        "east": {
+          "texture": "#fm_pumpkin"
+        },
+        "west": {
+          "texture": "#fm_pumpkin"
+        },
+        "up": {
+          "texture": "#fm_pumpkin"
+        },
+        "down": {
+          "texture": "#fm_pumpkin",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        4
+      ],
+      "to": [
+        12,
+        9.6,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_pumpkin"
+        },
+        "south": {
+          "texture": "#fm_pumpkin"
+        },
+        "east": {
+          "texture": "#fm_pumpkin"
+        },
+        "west": {
+          "texture": "#fm_pumpkin"
+        },
+        "up": {
+          "texture": "#fm_pumpkin"
+        },
+        "down": {
+          "texture": "#fm_pumpkin"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        9.6,
+        7.3
+      ],
+      "to": [
+        8.7,
+        12,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_carpet_red": "zomboidcraft:block/city/cv_carpet_red",
+    "of_velvet_red": "zomboidcraft:block/city/of_velvet_red",
+    "particle": "zomboidcraft:block/city/of_velvet_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_velvet_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_velvet_red",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_velvet_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_velvet_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_carpet_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_velvet_red",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

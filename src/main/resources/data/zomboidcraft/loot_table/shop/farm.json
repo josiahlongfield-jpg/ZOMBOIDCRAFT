@@ -10,197 +10,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:wheat_seeds",
-          "weight": 264,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 12
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:beetroot_seeds",
-          "weight": 132,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 8
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:pumpkin_seeds",
-          "weight": 99,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:melon_seeds",
-          "weight": 66,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:potato",
-          "weight": 165,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:carrot",
-          "weight": 165,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:wheat",
-          "weight": 132,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 8
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:egg",
-          "weight": 99,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:apple",
-          "weight": 99,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bone_meal",
-          "weight": 132,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 8
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 66
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:shears",
-          "weight": 66,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:saddle",
-          "weight": 33
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather",
-          "weight": 99,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_hoe",
+          "name": "zomboidcraft:shovel",
           "weight": 33,
           "functions": [
             {
@@ -215,7 +25,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:stone_hoe",
+          "name": "zomboidcraft:shovel",
           "weight": 66,
           "functions": [
             {
@@ -365,7 +175,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:canned_dog_food",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -380,22 +190,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:honey_jar",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:home_preserves",
-          "weight": 48
+          "weight": 72
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:flour_bag",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:dried_beans",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -410,7 +220,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:apple",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -425,7 +235,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lettuce",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -440,7 +250,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tomato",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -455,7 +265,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:potato",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -470,7 +280,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:onion",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -485,7 +295,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:carrot",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -500,7 +310,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cabbage",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -515,7 +325,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:eggs_carton",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -530,17 +340,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:chicken_whole",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:venison",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_jug_empty",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -555,22 +365,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cast_iron_skillet",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:scalpel",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:vet_meds",
-          "weight": 48
+          "weight": 72
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:handsaw",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -585,22 +395,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:whetstone",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:welding_mask",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:welding_rods",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:garden_trowel",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -615,7 +425,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:garden_shears",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -630,62 +440,62 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rope",
-          "weight": 32
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:chain",
-          "weight": 32
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:wire_spool",
-          "weight": 32
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:plank",
-          "weight": 32
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:cement_bag",
-          "weight": 32
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:barbed_wire_roll",
           "weight": 48
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:chain",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wire_spool",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:plank",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cement_bag",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:barbed_wire_roll",
+          "weight": 72
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:fence_posts",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cinder_block",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:propane_cylinder",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:gas_can",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:car_battery",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:transistor_radio",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -700,37 +510,37 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cb_radio",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:kerosene_lantern",
-          "weight": 48
+          "weight": 72
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:kerosene",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:firewood",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:snare_wire",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:animal_trap",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tomato_seeds",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -745,7 +555,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lettuce_seeds",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -760,7 +570,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:corn_seeds",
-          "weight": 96,
+          "weight": 144,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -775,12 +585,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fertilizer",
-          "weight": 96
+          "weight": 144
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:watering_can",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -795,12 +605,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:feed_sack",
-          "weight": 96
+          "weight": 144
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:egg_basket",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -815,12 +625,97 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:milk_pail",
-          "weight": 32
+          "weight": 48
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:horseshoe",
-          "weight": 32,
+          "weight": 48,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:trucker_cap",
+          "weight": 48,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cowboy_hat",
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:flannel_shirt",
+          "weight": 48,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:work_pants",
+          "weight": 48,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:overalls",
+          "weight": 144
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:work_boots",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cowboy_boots",
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_boots",
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:work_gloves",
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -835,17 +730,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_metalworking",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mag_farming",
-          "weight": 48
+          "weight": 72
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:motor_oil",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -860,22 +755,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tow_strap",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fuel_siphon",
-          "weight": 16
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:diesel_can",
-          "weight": 48
+          "weight": 72
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bone_scrap",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -890,7 +785,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wood_scraps",
-          "weight": 32,
+          "weight": 48,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -905,7 +800,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sheet_of_tin",
-          "weight": 32
+          "weight": 48
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:machete_sheath",
+          "weight": 72
         }
       ]
     },

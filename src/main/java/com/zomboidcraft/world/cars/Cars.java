@@ -193,7 +193,8 @@ public final class Cars {
                     continue;
                 }
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
-                if (level.getBlockState(pos).canBeReplaced()) {
+                BlockState there = level.getBlockState(pos);
+                if (there.canBeReplaced() && (i == 0 || !m.boat() || there.getFluidState().isEmpty())) {
                     level.setBlock(pos, hull(layers[i]), 2);
                 }
             }
@@ -211,7 +212,9 @@ public final class Cars {
             for (int i = 0; i <= 7; i++) {
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                 if (level.getBlockState(pos).is(HULL)) {
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                    // a boat's bottom row stood in the sea: give the water back
+                    boolean sea = m.boat() && i == 0 && level.getFluidState(pos.below()).is(net.minecraft.tags.FluidTags.WATER);
+                    level.setBlock(pos, (sea ? Blocks.WATER : Blocks.AIR).defaultBlockState(), 2);
                 }
             }
         }

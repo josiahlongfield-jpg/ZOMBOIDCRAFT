@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "rust": "zomboidcraft:block/city/rust",
+    "particle": "zomboidcraft:block/city/rust"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        7.4,
+        -3.8149999999999995
+      ],
+      "to": [
+        8.4,
+        8.6,
+        19.814999999999998
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "west": {
+          "texture": "#rust",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "up": {
+          "texture": "#rust",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rust",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        7.6,
+        7.4,
+        -3.8149999999999995
+      ],
+      "to": [
+        8.4,
+        8.6,
+        19.814999999999998
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "west": {
+          "texture": "#rust",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "up": {
+          "texture": "#rust",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rust",
+          "uv": [
+            7.6,
+            0,
+            8.4,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        7.5,
+        7.4,
+        7.4
+      ],
+      "to": [
+        8.5,
+        8.6,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_panel": "zomboidcraft:block/city/concrete_panel",
+    "cp_boom": "zomboidcraft:block/city/cp_boom",
+    "cp_boom_v": "zomboidcraft:block/city/cp_boom_v",
+    "cp_yellow": "zomboidcraft:block/city/cp_yellow",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/cp_boom_v"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        10.4,
+        6.4
+      ],
+      "to": [
+        12,
+        13.6,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom_v"
+        },
+        "south": {
+          "texture": "#cp_boom_v"
+        },
+        "east": {
+          "texture": "#cp_boom_v"
+        },
+        "west": {
+          "texture": "#cp_boom_v",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cp_boom"
+        },
+        "down": {
+          "texture": "#cp_boom"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10.4,
+        6.4
+      ],
+      "to": [
+        12,
+        13.6,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom_v"
+        },
+        "south": {
+          "texture": "#cp_boom_v"
+        },
+        "east": {
+          "texture": "#cp_boom_v"
+        },
+        "west": {
+          "texture": "#cp_boom_v"
+        },
+        "up": {
+          "texture": "#cp_boom"
+        },
+        "down": {
+          "texture": "#cp_boom"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          12,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        12,
+        10,
+        6
+      ],
+      "to": [
+        13,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        6.5
+      ],
+      "to": [
+        11,
+        10.4,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_yellow"
+        },
+        "south": {
+          "texture": "#cp_yellow"
+        },
+        "east": {
+          "texture": "#cp_yellow"
+        },
+        "west": {
+          "texture": "#cp_yellow"
+        },
+        "up": {
+          "texture": "#cp_yellow"
+        },
+        "down": {
+          "texture": "#cp_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        9.6,
+        5.5
+      ],
+      "to": [
+        11.5,
+        10.4,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        5.5
+      ],
+      "to": [
+        12,
+        0.8,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_panel"
+        },
+        "south": {
+          "texture": "#concrete_panel"
+        },
+        "east": {
+          "texture": "#concrete_panel"
+        },
+        "west": {
+          "texture": "#concrete_panel"
+        },
+        "up": {
+          "texture": "#concrete_panel"
+        },
+        "down": {
+          "texture": "#concrete_panel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

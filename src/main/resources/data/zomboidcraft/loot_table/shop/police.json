@@ -140,23 +140,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_helmet",
+          "name": "zomboidcraft:combat_helmet",
           "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.3,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_chestplate",
-          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -236,6 +221,26 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:big_flashlight",
           "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_cap",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:balaclava",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_jacket",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:combat_boots",
+          "weight": 2
         },
         {
           "type": "minecraft:item",
@@ -375,6 +380,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:riot_helmet",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gas_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_vest",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tactical_gloves",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:police_badge",
           "weight": 3
         },
@@ -382,6 +407,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:police_radio_belt",
           "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:shoulder_holster",
+          "weight": 2
         }
       ]
     }

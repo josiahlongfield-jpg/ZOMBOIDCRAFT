@@ -713,45 +713,11 @@ final class Hospital {
 
     /**
      * A shelter tent on the lot, six across from x and len along from z, its door and word at its
-     * north end (the stadium's tent kit).
+     * north end ({@link Tents}).
      */
     private void tent(Placer q, int lx, int lz, int len, String label) {
-        for (int z = 0; z < len; z++) {
-            for (int y = 1; y <= 2; y++) {
-                q.set(lx, y, lz + z, "st_tent_wall[facing=west]");
-                q.set(lx + 5, y, lz + z, "st_tent_wall[facing=east]");
-            }
-            q.set(lx, 3, lz + z, "st_tent_roof_lo[facing=west]");
-            q.set(lx + 1, 3, lz + z, "st_tent_roof_hi[facing=west]");
-            q.set(lx + 2, 4, lz + z, "st_tent_roof_lo[facing=west]");
-            q.set(lx + 5, 3, lz + z, "st_tent_roof_lo[facing=east]");
-            q.set(lx + 4, 3, lz + z, "st_tent_roof_hi[facing=east]");
-            q.set(lx + 3, 4, lz + z, "st_tent_roof_lo[facing=east]");
-        }
-        for (int end = 0; end < 2; end++) {
-            int z = end == 0 ? lz : lz + len - 1;
-            String f = end == 0 ? "north" : "south";
-            for (int x = 1; x <= 4; x++) {
-                boolean door = end == 0 && (x == 2 || x == 3);
-                for (int y = 1; y <= 2; y++) {
-                    q.set(lx + x, y, z, door ? "air" : "st_tent_wall[facing=" + f + "]");
-                }
-                if (door) {
-                    q.set(lx + x, 2, z, "st_tent_flap[facing=" + f + "]");
-                }
-            }
-            q.set(lx + (end == 0 ? 3 : 2), 3, z, "st_tent_" + label + "_0[facing=" + f + "]");
-            q.set(lx + (end == 0 ? 2 : 3), 3, z, "st_tent_" + label + "_1[facing=" + f + "]");
-        }
-        for (int z = lz + 2; z < lz + len - 2; z += 2) {
-            for (int x : new int[] {lx + 1, lx + 4}) {
-                if (chance() < 0.85) {
-                    q.set(x, 1, z, (label.equals("triage") ? "st_stretcher" : "sc_cases_blankets") + "[facing=north]");
-                    if (label.equals("triage") && chance() < 0.5) {
-                        q.set(x, 1, z + 1, "bunk_iv_stand");
-                    }
-                }
-            }
-        }
+        Tents t = new Tents(q, rng);
+        t.hit = 0.5;
+        t.tent(lx, lz, 6, len, Tents.canvasFor(label), label, 0.08);
     }
 }

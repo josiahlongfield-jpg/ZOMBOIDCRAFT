@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fm_fieldstone": "zomboidcraft:block/city/fm_fieldstone",
+    "particle": "zomboidcraft:block/city/fm_fieldstone"
+  },
+  "elements": [
+    {
+      "from": [
+        -9.657,
+        0,
+        2.343
+      ],
+      "to": [
+        14.343,
+        16,
+        5.343
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_fieldstone",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#fm_fieldstone",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#fm_fieldstone"
+        },
+        "west": {
+          "texture": "#fm_fieldstone"
+        },
+        "up": {
+          "texture": "#fm_fieldstone",
+          "uv": [
+            0,
+            2.343,
+            16,
+            5.343
+          ]
+        },
+        "down": {
+          "texture": "#fm_fieldstone",
+          "uv": [
+            0,
+            10.657,
+            16,
+            13.657
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.343,
+          8,
+          2.343
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}

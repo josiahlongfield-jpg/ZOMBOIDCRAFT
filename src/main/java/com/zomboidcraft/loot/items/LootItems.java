@@ -32,6 +32,8 @@ public final class LootItems {
 
     public static void register() {
         Spoil.register();
+        LightItem.register();
+        InfoItem.register();
         for (LootSpec spec : LootSpecs.ALL) {
             BY_ID.put(spec.id(), spec);
         }
@@ -64,6 +66,12 @@ public final class LootItems {
                     spec.id().substring("skillbook_".length()).toUpperCase(java.util.Locale.ROOT)));
         } else if (Packs.has(spec.id())) {
             item = new PackItem(props, spec.id());
+        } else if (LightItem.SPECS.containsKey(spec.id())) {
+            item = new LightItem(props, LightItem.SPECS.get(spec.id()));
+        } else if (FireItem.STRIKES.containsKey(spec.id())) {
+            item = new FireItem(props, FireItem.STRIKES.get(spec.id()));
+        } else if (InfoItem.KINDS.containsKey(spec.id())) {
+            item = new InfoItem(props, InfoItem.KINDS.get(spec.id()));
         } else if (food == null) {
             item = new LootItem(props);
         } else if (food.is(LootSpec.Food.CAN)) {

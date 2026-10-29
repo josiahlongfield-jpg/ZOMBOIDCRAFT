@@ -1,0 +1,112 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_olive_fold": "zomboidcraft:block/city/tn_olive_fold",
+    "particle": "zomboidcraft:block/city/tn_olive_fold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_fold",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tn_olive_fold",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tn_olive_fold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_olive_fold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_olive_fold"
+        },
+        "down": {
+          "texture": "#tn_olive_fold",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0.4,
+        3.5
+      ],
+      "to": [
+        16,
+        0.9,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_fold"
+        },
+        "south": {
+          "texture": "#tn_olive_fold"
+        },
+        "east": {
+          "texture": "#tn_olive_fold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_olive_fold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_olive_fold"
+        },
+        "down": {
+          "texture": "#tn_olive_fold"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0.4,
+        10
+      ],
+      "to": [
+        13,
+        0.7,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_fold"
+        },
+        "south": {
+          "texture": "#tn_olive_fold"
+        },
+        "east": {
+          "texture": "#tn_olive_fold"
+        },
+        "west": {
+          "texture": "#tn_olive_fold"
+        },
+        "up": {
+          "texture": "#tn_olive_fold"
+        },
+        "down": {
+          "texture": "#tn_olive_fold"
+        }
+      }
+    }
+  ]
+}

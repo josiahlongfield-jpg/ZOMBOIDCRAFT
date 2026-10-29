@@ -1,7 +1,409 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/block",
   "textures": {
-    "all": "zomboidcraft:block/city/tire",
-    "particle": "zomboidcraft:block/city/tire"
-  }
+    "rust": "zomboidcraft:block/city/rust",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "tire_tread": "zomboidcraft:block/city/tire_tread",
+    "tire_wall": "zomboidcraft:block/city/tire_wall",
+    "particle": "zomboidcraft:block/city/tire_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        4.602,
+        12.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        15.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      }
+    },
+    {
+      "from": [
+        4.602,
+        12.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        15.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        4.602,
+        12.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        15.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        4.602,
+        0.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        3.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      }
+    },
+    {
+      "from": [
+        4.602,
+        0.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        3.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        4.602,
+        0.4,
+        4.5
+      ],
+      "to": [
+        11.398,
+        3.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        12.4,
+        4.602,
+        4.5
+      ],
+      "to": [
+        15.6,
+        11.398,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      }
+    },
+    {
+      "from": [
+        0.4,
+        4.602,
+        4.5
+      ],
+      "to": [
+        3.6,
+        11.398,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire_wall"
+        },
+        "south": {
+          "texture": "#tire_wall"
+        },
+        "east": {
+          "texture": "#tire_tread"
+        },
+        "west": {
+          "texture": "#tire_tread"
+        },
+        "up": {
+          "texture": "#tire_tread"
+        },
+        "down": {
+          "texture": "#tire_tread"
+        }
+      }
+    },
+    {
+      "from": [
+        3.3,
+        3.3,
+        6
+      ],
+      "to": [
+        12.7,
+        12.7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        3.3,
+        3.3,
+        6
+      ],
+      "to": [
+        12.7,
+        12.7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        6.5,
+        6.5,
+        5.6
+      ],
+      "to": [
+        9.5,
+        9.5,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
 }

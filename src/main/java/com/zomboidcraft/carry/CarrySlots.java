@@ -25,7 +25,7 @@ public final class CarrySlots {
         return !player.level().isClientSide() || clientShows.test(slot);
     }
 
-    /** Back, vest and waist bags, and the belt, holster, sheath and watch. */
+    /** Back, vest and waist bags, the belt, holster, sheath and watch, and the clothing layers kept here. */
     public static final class GearSlot extends Slot {
         private final Player player;
         public final int gear;
@@ -38,6 +38,13 @@ public final class CarrySlots {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
+            com.zomboidcraft.clothing.ClothingSlot clothing = com.zomboidcraft.clothing.Clothes.slot(stack);
+            if (clothing != null && clothing.gear == gear) {
+                return true;
+            }
+            if (gear > GearStore.WRIST) {
+                return false;
+            }
             if (gear >= GearStore.BELT) {
                 return QuickSlots.gearSlot(stack) == gear;
             }

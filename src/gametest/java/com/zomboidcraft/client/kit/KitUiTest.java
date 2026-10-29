@@ -69,9 +69,17 @@ public class KitUiTest implements FabricClientGameTest {
                     "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
                     "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
                     "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8",
-                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg")) {
+                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg",
+                    "item replace entity @a armor.head with zomboidcraft:beanie", "item replace entity @a armor.chest with zomboidcraft:hoodie",
+                    "item replace entity @a armor.legs with zomboidcraft:jeans", "item replace entity @a armor.feet with zomboidcraft:work_boots")) {
                 sp.getServer().runCommand(c);
             }
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHIRT, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("t_shirt"))));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HANDS, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("work_gloves"))));
+            });
             ctx.waitTicks(20);
             ctx.getInput().resizeWindow(1999, 1089);
             ctx.runOnClient(mc -> {
@@ -111,8 +119,9 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the pack page: left click a tile with something in it picks it up, again puts it down
-            if (tabs.size() > 1) {
-                click(ctx, tabs.get(1)[0], tabs.get(1)[1], 0);
+            int packTab = KitScreen.Page.PACK.ordinal(), benchTab = KitScreen.Page.BENCH.ordinal();
+            if (tabs.size() > packTab) {
+                click(ctx, tabs.get(packTab)[0], tabs.get(packTab)[1], 0);
                 int[] tile = ctx.computeOnClient(mc -> {
                     if (mc.gui.screen() instanceof KitScreen<?> k) {
                         for (KitScreen.Hot h : hots(k)) {
@@ -174,8 +183,8 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the bench, then a drag across the gun
-            if (tabs.size() > 3) {
-                click(ctx, tabs.get(3)[0], tabs.get(3)[1], 0);
+            if (tabs.size() > benchTab) {
+                click(ctx, tabs.get(benchTab)[0], tabs.get(benchTab)[1], 0);
                 ctx.takeScreenshot("bench");
                 log(ctx, "bench");
                 // every weapon carried goes on the 3D stage, guns without sockets and melee too
@@ -227,6 +236,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            mapTest(ctx);
             bookTest(sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
@@ -716,6 +726,44 @@ public class KitUiTest implements FabricClientGameTest {
             }
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
         }
+    }
+
+    /**
+     * The map page over the planned county (the test world isn't one, so the atlas is opened by hand): the whole
+     * county, the island, then streets close in, each once its tiles are drawn.
+     */
+    private static void mapTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.open(12345L, true));
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of(
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {1}), "Rowan", "minecraft:overworld", 3296, -1248, 0),
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {2}), "Mags", "minecraft:overworld", 3424, -1312, 0))));
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.MAP);
+        });
+        float[][] views = {{0, 0, 0.022f, 3}, {3100, -1500, 0.09f, 2}, {3350, -1250, 0.3f, 1}, {3350, -1250, 1.2f, 0}};
+        String[] names = {"county", "island", "downtown", "streets"};
+        for (int v = 0; v < views.length; v++) {
+            float[] view = views[v];
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.map.look(view[0], view[1], view[2]);
+            });
+            long start = System.currentTimeMillis();
+            boolean ready = false;
+            while (System.currentTimeMillis() - start < 150_000) {
+                ctx.waitTicks(20);
+                ready = ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.ready((int) view[3], view[0], view[1]));
+                if (ready) break;
+            }
+            ctx.waitTicks(10);
+            LOG.info("ZCUI map {}: ready {} after {} s, {} tiles drawn", names[v], ready, (System.currentTimeMillis() - start) / 1000,
+                    ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.made()));
+            ctx.takeScreenshot("map-" + names[v]);
+        }
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of()));
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     /** A skill book read for your band multiplies the XP you earn (SkillBooks). */

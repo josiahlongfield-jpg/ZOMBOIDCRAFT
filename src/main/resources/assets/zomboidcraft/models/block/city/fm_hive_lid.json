@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "brick_red": "zomboidcraft:block/city/brick_red",
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "particle": "zomboidcraft:block/city/ext_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        1.5
+      ],
+      "to": [
+        14.5,
+        2,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        6
+      ],
+      "to": [
+        11,
+        4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_red"
+        },
+        "south": {
+          "texture": "#brick_red"
+        },
+        "east": {
+          "texture": "#brick_red"
+        },
+        "west": {
+          "texture": "#brick_red"
+        },
+        "up": {
+          "texture": "#brick_red"
+        },
+        "down": {
+          "texture": "#brick_red"
+        }
+      }
+    }
+  ]
+}

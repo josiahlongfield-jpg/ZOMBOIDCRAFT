@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_white_liner": "zomboidcraft:block/city/tn_white_liner",
+    "tn_white_win": "zomboidcraft:block/city/tn_white_win",
+    "particle": "zomboidcraft:block/city/tn_white_win"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.3
+      ],
+      "to": [
+        16,
+        16,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_win"
+        },
+        "south": {
+          "texture": "#tn_white_liner"
+        },
+        "east": {
+          "texture": "#tn_white_win",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_white_win",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_white_win",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tn_white_win",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

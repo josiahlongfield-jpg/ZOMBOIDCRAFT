@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_boom": "zomboidcraft:block/city/cp_boom",
+    "particle": "zomboidcraft:block/city/cp_boom"
+  },
+  "elements": [
+    {
+      "from": [
+        10.9,
+        0,
+        6.4
+      ],
+      "to": [
+        14.1,
+        16,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom"
+        },
+        "south": {
+          "texture": "#cp_boom"
+        },
+        "east": {
+          "texture": "#cp_boom"
+        },
+        "west": {
+          "texture": "#cp_boom"
+        },
+        "up": {
+          "texture": "#cp_boom",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cp_boom",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.9,
+        0,
+        6.4
+      ],
+      "to": [
+        14.1,
+        16,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom"
+        },
+        "south": {
+          "texture": "#cp_boom"
+        },
+        "east": {
+          "texture": "#cp_boom"
+        },
+        "west": {
+          "texture": "#cp_boom"
+        },
+        "up": {
+          "texture": "#cp_boom"
+        },
+        "down": {
+          "texture": "#cp_boom"
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.5,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

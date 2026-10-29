@@ -2,54 +2,62 @@
   "parent": "minecraft:block/block",
   "textures": {
     "brick_red": "zomboidcraft:block/city/brick_red",
-    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
-    "stone_trim": "zomboidcraft:block/city/stone_trim",
-    "particle": "zomboidcraft:block/city/concrete_dark"
+    "rubble": "zomboidcraft:block/city/rubble",
+    "rust": "zomboidcraft:block/city/rust",
+    "particle": "zomboidcraft:block/city/rubble"
   },
   "elements": [
     {
       "from": [
-        2,
+        7.33,
         0,
-        3
+        9.35
       ],
       "to": [
-        9,
-        4,
-        10
+        10.48,
+        2.13,
+        11.86
       ],
       "faces": {
         "north": {
-          "texture": "#concrete_dark"
+          "texture": "#rubble"
         },
         "south": {
-          "texture": "#concrete_dark"
+          "texture": "#rubble"
         },
         "east": {
-          "texture": "#concrete_dark"
+          "texture": "#rubble"
         },
         "west": {
-          "texture": "#concrete_dark"
+          "texture": "#rubble"
         },
         "up": {
-          "texture": "#concrete_dark"
+          "texture": "#rubble"
         },
         "down": {
-          "texture": "#concrete_dark",
-          "cullface": "down"
+          "texture": "#rubble"
         }
+      },
+      "rotation": {
+        "origin": [
+          8.906,
+          0,
+          10.604
+        ],
+        "axis": "y",
+        "angle": -45.0
       }
     },
     {
       "from": [
-        8,
+        5.04,
         0,
-        7
+        8.22
       ],
       "to": [
-        14,
-        2,
-        14
+        8.37,
+        3.03,
+        10.88
       ],
       "faces": {
         "north": {
@@ -68,42 +76,140 @@
           "texture": "#brick_red"
         },
         "down": {
-          "texture": "#brick_red",
-          "cullface": "down"
+          "texture": "#brick_red"
         }
+      },
+      "rotation": {
+        "origin": [
+          6.705,
+          0,
+          9.551
+        ],
+        "axis": "y",
+        "angle": 45.0
       }
     },
     {
       "from": [
-        4,
+        7.39,
         0,
-        11
+        3.87
       ],
       "to": [
-        7,
-        1.5,
-        15
+        12.03,
+        3.43,
+        7.59
       ],
       "faces": {
         "north": {
-          "texture": "#stone_trim"
+          "texture": "#rubble"
         },
         "south": {
-          "texture": "#stone_trim"
+          "texture": "#rubble"
         },
         "east": {
-          "texture": "#stone_trim"
+          "texture": "#rubble"
         },
         "west": {
-          "texture": "#stone_trim"
+          "texture": "#rubble"
         },
         "up": {
-          "texture": "#stone_trim"
+          "texture": "#rubble"
         },
         "down": {
-          "texture": "#stone_trim",
-          "cullface": "down"
+          "texture": "#rubble"
         }
+      },
+      "rotation": {
+        "origin": [
+          9.708,
+          0,
+          5.73
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        9.36,
+        0,
+        7.52
+      ],
+      "to": [
+        13.98,
+        1.76,
+        11.22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_red"
+        },
+        "south": {
+          "texture": "#brick_red"
+        },
+        "east": {
+          "texture": "#brick_red"
+        },
+        "west": {
+          "texture": "#brick_red"
+        },
+        "up": {
+          "texture": "#brick_red"
+        },
+        "down": {
+          "texture": "#brick_red"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.67,
+          0,
+          9.367
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        8.65,
+        1,
+        7.62
+      ],
+      "to": [
+        9.1,
+        9.78,
+        8.07
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.648,
+          1,
+          7.62
+        ],
+        "axis": "z",
+        "angle": 22.5
       }
     }
   ]

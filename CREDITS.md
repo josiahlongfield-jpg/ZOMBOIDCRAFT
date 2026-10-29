@@ -65,6 +65,10 @@ The street cars, vans, trucks and buses are from the [American Cars 80s Pack](ht
 
 The aircraft on the carrier are three models bought on CGTrader and used under its Royalty Free licence: [Lockheed Martin F-22 Raptor](https://www.cgtrader.com/3d-models/aircraft/military-aircraft/lockheed-martin-f-22-raptor-73212c3c-8419-4d38-81b5-443f1ca23646) (the Corvid), "Sukhoi Su-27 with interior" (the Gyrfalcon) and "Apache AH64D Low" (the Hornbill helicopter). tools/cars/aircraft.py repainted them with made-up markings, weathered and damaged them, and packs them into the mod (tools/cars/cockpit_glow.py adds their cockpit lighting and the made-up screen pages, packed the same way); the original files are not part of this repository and may not be redistributed or used to train AI models.
 
+## Characters
+
+The dark elf NPC is a royalty-free model bought by the project's owner. tools/npc/pack.py packs it into the mod as a scrambled mesh with its texture as bought and a toon-painted copy; the original files are not part of this repository and may not be redistributed.
+
 ## Looting and item sounds
 
 CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_loot_sounds.py.
@@ -376,6 +380,7 @@ Picked by Josiah Longfield on the Dead Air Throwables page, cut by tools/audio/b
 | weapon.throw.alarm_tick | [Clock.Windup.Bell.Antique.wav by jessepash](https://freesound.org/people/jessepash/sounds/139958/) | jessepash | Freesound, CC0 1.0 |
 | weapon.throw.alarm_ring | [alarm clock.wav by jackjames_tomknevitt](https://freesound.org/people/jackjames_tomknevitt/sounds/209536/) | jackjames_tomknevitt | Freesound, CC0 1.0 |
 | weapon.throw.alarm_ring | [2018 07 alarm clock.flac by arseniiv](https://freesound.org/people/arseniiv/sounds/459701/) | arseniiv | Freesound, CC0 1.0 |
+| weapon.throw.pin_pull | gun_grenade_launcher_trigger_02 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
 | weapon.throw.molotov_burst | [Lighting a Fire by plasterbrain](https://freesound.org/people/plasterbrain/sounds/534702/) | plasterbrain | Freesound, CC0 1.0 |
 | weapon.throw.smoke_pop | [R27-34-Fuse Burning.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483320/) | craigsmith | Freesound, CC0 1.0 |
 | weapon.throw.flashbang | [Cherry Bomb Explodes, Normal Speed by CHallSmith](https://freesound.org/people/CHallSmith/sounds/870713/) | CHallSmith | Freesound, CC0 1.0 |

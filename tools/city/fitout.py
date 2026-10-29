@@ -314,6 +314,53 @@ def grate(seed):
     return t
 
 
+def velvet(seed, rgb):
+    """Crushed velvet: deep colour, a soft sheen that wanders, tufted buttons in a grid."""
+    t = F.plain(seed, rgb, 0.08, 0.15)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.9 + 0.12 * np.sin((xx * 0.21 + yy * 0.13)))[..., None]
+    for x in range(8, N, 16):
+        for y in range(8, N, 16):
+            area(t, x - 1, y - 1, x + 1, y + 1, tuple(int(c * 0.5) for c in rgb), dh=-0.4)
+    t.grime(0.05)
+    return t
+
+
+def neon(seed, rgb):
+    """A neon tube's glow: hot white core fading to the colour."""
+    t = F.plain(seed, rgb, 0.02, 0.05)
+    yy, xx = np.mgrid[0:N, 0:N]
+    core = np.exp(-((yy - N / 2) / (N / 7)) ** 2)
+    t.c = t.c * (0.7 + 0.3 * core[..., None]) + 255 * 0.45 * core[..., None]
+    return t
+
+
+def felt(seed):
+    """Billiard felt: deep green, nap scuffed paler where the balls ran."""
+    t = F.plain(seed, (28, 96, 52), 0.05, 0.05)
+    t.speckle(0.04, (60, 130, 80), 0.3, 0.0)
+    t.grime(0.05)
+    return t
+
+
+def sheet(seed):
+    """A dust sheet thrown over a car: off-white cotton, folds and dust."""
+    t = F.plain(seed, (206, 200, 186), 0.06, 0.2)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.88 + 0.12 * np.sin(xx * 0.35 + np.sin(yy * 0.2) * 2))[..., None]
+    t.grime(0.15, (120, 110, 90))
+    return t
+
+
+def cedar(seed):
+    """Sauna cedar: pale pinkish-gold slats with dark gaps."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (196, 150, 104), 0.9)
+    for y in range(0, N, 10):
+        area(t, 0, y, N, y + 1, mul=0.45, dh=-0.3)
+    return t
+
+
 def textures():
     T = {}
     T["of_rubber"] = lambda: rubber(9901)
@@ -346,6 +393,13 @@ def textures():
     T["of_screen"] = lambda: screen(9966)
     T["of_ember"] = lambda: ember(9967)
     T["of_grate"] = lambda: grate(9968)
+    T["of_velvet_red"] = lambda: velvet(9970, (120, 18, 34))
+    T["of_velvet_purple"] = lambda: velvet(9971, (70, 24, 96))
+    T["of_neon_pink"] = lambda: neon(9972, (240, 40, 170))
+    T["of_neon_blue"] = lambda: neon(9973, (40, 150, 250))
+    T["of_felt"] = lambda: felt(9974)
+    T["of_sheet"] = lambda: sheet(9975)
+    T["of_cedar"] = lambda: cedar(9976)
     return T
 
 
@@ -505,6 +559,112 @@ def blocks():
     add("of_screen", [[0, 0, 15.2, 16, 16, 16, face("of_screen", black)]], "Cinema Screen", "WOOL", decor=True)
     add("of_island", [[0, 0, 1, 16, 14, 15, face("home_drw_white", "home_white")], [0, 14, 0, 16, 15, 16, "marble_white"]], "Kitchen Island", "STONE",
         loot="home_cupboard")
+    # ---- the millionaire penthouses: the club stage, the collector's cars, billiards, cards, the sauna
+    brass, vr, vp = "fit_brass", "of_velvet_red", "of_velvet_purple"
+    add("of_dance_pole", [[7, 0, 7, 9, 16, 9, brass], [5, 0, 5, 11, 0.5, 11, brass]], "Dance Pole", "METAL", rotate=None)
+    add("of_pole_top", [[7, 0, 7, 9, 15, 9, brass], [5, 15, 5, 11, 16, 11, brass]], "Dance Pole", "METAL", rotate=None)
+    # the velvet booth: sits facing north, its high back along z = 16
+    add("of_booth", [[0, 0, 2, 16, 7, 15, face(vr, vr)], [0, 7, 3, 16, 9, 14, vr], [0, 0, 13, 16, 18, 16, vr], [0, 18, 13, 16, 19, 16, brass]],
+        "Velvet Booth", "WOOL")
+    add("of_booth_purple", [[0, 0, 2, 16, 7, 15, face(vp, vp)], [0, 7, 3, 16, 9, 14, vp], [0, 0, 13, 16, 18, 16, vp], [0, 18, 13, 16, 19, 16, brass]],
+        "Velvet Booth", "WOOL")
+    add("of_neon_pink", [[0, 6, 15, 16, 8, 16, "of_neon_pink"], [0, 12, 15, 16, 14, 16, "of_neon_pink"]], "Neon Tube", "GLASS", decor=True, light=12)
+    add("of_neon_blue", [[0, 6, 15, 16, 8, 16, "of_neon_blue"], [0, 12, 15, 16, 14, 16, "of_neon_blue"]], "Neon Tube", "GLASS", decor=True, light=12)
+    add("of_champagne", [[4, 0, 4, 12, 10, 12, chrome], [5, 10, 5, 11, 11, 11, "of_ember"], [6, 10, 6, 8, 16, 8, "home_bottle_green"],
+                         [9, 10, 8, 11, 15, 10, "home_bottle_green"]], "Champagne Bucket", "METAL", rotate=None)
+    # a dust-sheeted car, three blocks nose to tail along its axis
+    sh = "of_sheet"
+    add("of_car_sheet_f", [[1, 0, 0, 15, 8, 16, sh], [2, 8, 0, 14, 9, 16, sh], [0, 0, 3, 1, 5, 7, "gs_tyre"], [15, 0, 3, 16, 5, 7, "gs_tyre"]],
+        "Covered Car", "WOOL", rotate="axis")
+    add("of_car_sheet_m", [[1, 0, 0, 15, 9, 16, sh], [2, 9, 2, 14, 18, 14, sh], [3, 18, 4, 13, 19, 12, sh]], "Covered Car", "WOOL", rotate="axis")
+    add("of_car_sheet_b", [[1, 0, 0, 15, 9, 16, sh], [2, 9, 0, 14, 10, 13, sh], [0, 0, 9, 1, 5, 13, "gs_tyre"], [15, 0, 9, 16, 5, 13, "gs_tyre"]],
+        "Covered Car", "WOOL", rotate="axis")
+    wd = "home_wood_dark"
+    add("of_pool_table_l", [[0, 10, 0, 16, 13, 16, {"up": "of_felt", "side": wd, "down": wd}], [0, 13, 0, 16, 14, 2, wd], [0, 13, 14, 16, 14, 16, wd],
+                            [0, 13, 0, 2, 14, 16, wd], [2, 0, 2, 5, 10, 5, wd], [2, 0, 11, 5, 10, 14, wd]], "Pool Table", "WOOD")
+    add("of_pool_table_r", [[0, 10, 0, 16, 13, 16, {"up": "of_felt", "side": wd, "down": wd}], [0, 13, 0, 16, 14, 2, wd], [0, 13, 14, 16, 14, 16, wd],
+                            [14, 13, 0, 16, 14, 16, wd], [11, 0, 2, 14, 10, 5, wd], [11, 0, 11, 14, 10, 14, wd]], "Pool Table", "WOOD")
+    add("of_card_table", [[1, 11, 1, 15, 12, 15, {"up": "of_felt", "side": wd, "down": wd}], [0, 10, 0, 16, 11, 16, wd], [7, 0, 7, 9, 10, 9, wd],
+                          [4, 0, 4, 12, 1, 12, wd], [5, 12, 6, 8, 12.4, 9, "home_white"]], "Card Table", "WOOD", rotate=None, loot="dj")
+    add("of_humidor", [[2, 0, 3, 14, 14, 13, face("dn_menucase", wd)], [1, 14, 2, 15, 15, 14, wd]], "Humidor", "WOOD", loot="dj")
+    add("of_sauna_bench", [[0, 6, 0, 16, 8, 16, {"up": "of_cedar", "side": "of_cedar"}], [1, 0, 1, 3, 6, 15, "of_cedar"], [13, 0, 1, 15, 6, 15, "of_cedar"]],
+        "Sauna Bench", "WOOD", rotate="axis")
+    add("of_sauna_stove", [[2, 0, 2, 14, 9, 14, steel], [3, 9, 3, 13, 12, 13, "pt_stone_rough"], [5, 12, 5, 11, 13, 11, "of_ember"]],
+        "Sauna Stove", "METAL", rotate=None, light=7)
+    # the pool's lights: a lit lens set in the tile wall, facing into the water
+    add("of_pool_light", [[0, 0, 1, 16, 16, 16, {"all": "of_pool_tile"}], [4, 5, 0, 12, 11, 1, chrome], [5, 6, -0.5, 11, 10, 0, "window_lit"]],
+        "Pool Light", "STONE", light=9)
+    add("of_car_lift", None, "Car Lift Platform", "METAL", rotate=None, tex={"up": "deck_steel", "side": steel, "down": steel})
+    add("of_cedar_wall", None, "Cedar Lining", "WOOD", rotate=None, tex={"all": "of_cedar"})
+    add("of_carpet_red", None, "Red Carpet", "WOOL", rotate=None, tex={"up": "cv_carpet_red", "side": "of_velvet_red", "down": "of_velvet_red"})
+    add("of_velvet_wall", None, "Velvet Wall", "WOOL", rotate=None, tex={"all": "of_velvet_red"})
+    # ---- the penthouse crown: stainless steel like the Chrysler's, a needle spire, stone finials
+    add("of_deco_steel", None, "Stainless Cladding", "METAL", rotate=None, tex={"all": chrome})
+    add("of_deco_brass", None, "Brass Cladding", "METAL", rotate=None, tex={"all": brass})
+    add("of_spire_a", [[4, 0, 4, 12, 16, 12, chrome], [3.5, 0, 3.5, 12.5, 1, 12.5, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_b", [[5, 0, 5, 11, 16, 11, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_c", [[6, 0, 6, 10, 16, 10, chrome], [5.5, 7, 5.5, 10.5, 8, 10.5, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_tip", [[6.5, 0, 6.5, 9.5, 6, 9.5, chrome], [7, 6, 7, 9, 11, 9, chrome], [7.5, 11, 7.5, 8.5, 16, 8.5, chrome]], "Spire", "METAL",
+        rotate=None)
+    # the crown's sunburst: a module 4 blocks wide by 3 high, a half-round arch of raised rim
+    # with rays fanning out from its hub and lit glass between them, cut into twelve blocks; each
+    # has a solid back and the relief on its north face. In steel, brass or stone.
+    import math
+
+    def burst(px, py):
+        dx, r = px - 32, math.hypot(px - 32, py)
+        if r >= 34:
+            return "bg"
+        if r >= 30 or r < 5:
+            return "rim"
+        a = math.atan2(py, dx)
+        return "ray" if int(a / (math.pi / 9)) % 2 == 0 else "glass"
+
+    depth = {"bg": 1.5, "rim": 4, "ray": 3, "glass": 0.5}
+    for mat, clad in (("steel", chrome), ("brass", brass), ("stone", "stone_trim")):
+        for col in range(4):
+            for row in range(3):
+                boxes = [[0, 0, 4, 16, 16, 16, clad]]
+                for ly in range(16):
+                    runs, cur, start = [], None, 0
+                    for lx in range(17):
+                        c = burst(col * 16 + lx + 0.5, row * 16 + ly + 0.5) if lx < 16 else None
+                        if c != cur:
+                            if cur is not None:
+                                runs.append((start, lx, cur))
+                            cur, start = c, lx
+                    for x0, x1, c in runs:
+                        tex = "window_lit" if c == "glass" else clad
+                        # seen from the north the block's left is +x: mirror so col runs left to right
+                        boxes.append([16 - x1, ly, 4 - depth[c], 16 - x0, ly + 1, 4, tex])
+                add(f"of_burst_{mat}_{col}{row}", boxes, "Sunburst Panel", "METAL", light=6)
+        # the band at each tier's foot, after the Chrysler's: a drip moulding over a row of raised
+        # chevrons on a bead, lit glass in the V's; its corner turns the moulding round both faces
+        band = [[0, 0, 4, 16, 16, 16, clad], [0, 13, 0.5, 16, 16, 4, clad], [0, 0, 2.5, 16, 1.5, 4, clad]]
+        for ly in range(2, 12):
+            runs, cur, start = [], None, 0
+            for lx in range(17):
+                c = None
+                if lx < 16:
+                    d = abs((lx + 0.5) % 8 - 4)
+                    arm = abs(d - (11.5 - ly - 0.5) * 0.36)
+                    c = "ray" if arm < 0.9 else "glass" if d < (11.5 - ly - 0.5) * 0.36 - 0.9 and ly > 4 else None
+                if c != cur:
+                    if cur is not None:
+                        runs.append((start, lx, cur))
+                    cur, start = c, lx
+            for x0, x1, c in runs:
+                band.append([x0, ly, 2 if c == "ray" else 3.5, x1, ly + 1, 4, clad if c == "ray" else "window_lit"])
+        add(f"of_chevron_{mat}", band, "Chevron Band", "METAL", light=4)
+        add(f"of_chevron_corner_{mat}", [[0, 0, 0, 16, 13, 16, clad], [-0.5, 13, -0.5, 16.5, 16, 16.5, clad], [1, 0, 1, 15, 2, 15, clad]],
+            "Chevron Band", "METAL", rotate=None)
+        # fluted cladding between the bursts: three ribs on a plate
+        add(f"of_flute_{mat}", [[0, 0, 3, 16, 16, 16, clad], [1, 0, 1, 4, 16, 3, clad], [6.5, 0, 1, 9.5, 16, 3, clad], [12, 0, 1, 15, 16, 3, clad]],
+            "Fluted Cladding", "METAL")
+    # the observatory dome's ribs: standing-seam verdigris copper
+    add("of_copper_rib", None, "Copper Dome Rib", "METAL", rotate=None, tex={"side": "cv_copper_seam", "up": "cv_copper_seam", "down": "cv_copper"})
+    add("of_finial", [[2, 0, 2, 14, 4, 14, "stone_trim"], [3, 4, 3, 13, 8, 13, "stone_trim"], [4.5, 8, 4.5, 11.5, 12, 11.5, "stone_trim"],
+                      [6, 12, 6, 10, 15, 10, "stone_trim"], [7, 15, 7, 9, 16, 9, chrome]], "Finial", "STONE", rotate=None)
     return out
 
 

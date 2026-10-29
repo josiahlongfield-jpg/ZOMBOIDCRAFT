@@ -151,7 +151,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_chestplate",
+          "name": "zomboidcraft:plate_carrier",
           "weight": 38,
           "functions": [
             {
@@ -166,7 +166,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_helmet",
+          "name": "zomboidcraft:combat_helmet",
           "weight": 38,
           "functions": [
             {
@@ -193,26 +193,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:shield",
-          "weight": 38,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:compass",
-          "weight": 19
         },
         {
           "type": "minecraft:item",
@@ -530,6 +510,46 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:police_cap",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sunglasses",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:aviator_sunglasses",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:balaclava",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_jacket",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:combat_boots",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_blunt",
           "weight": 2
         },
@@ -737,6 +757,26 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:binoculars",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:riot_helmet",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gas_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:police_vest",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tactical_gloves",
           "weight": 1
         },
         {

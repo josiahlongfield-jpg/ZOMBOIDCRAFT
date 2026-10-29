@@ -48,6 +48,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
         com.zomboidcraft.loot.items.LootItems.register();
+        com.zomboidcraft.clothing.ClothingItems.register();
         com.zomboidcraft.loot.items.LootHooks.register();
         com.zomboidcraft.carry.Carry.register();
         com.zomboidcraft.spawn.SpawnPicker.register();
@@ -81,6 +82,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();
         com.zomboidcraft.creature.Harvestmen.register();
+        com.zomboidcraft.npc.Npcs.register();
         com.zomboidcraft.combat.StuckBolts.register();
         com.zomboidcraft.combat.Stamina.register();
         com.zomboidcraft.combat.GunRaise.register();

@@ -10,26 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 144
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:glass_bottle",
-          "weight": 240,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:pipe_wrench",
           "weight": 96,
           "functions": [
@@ -65,26 +45,6 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_jug_empty",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:stove_fuel",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rag",
           "weight": 8,
           "functions": [
             {
@@ -99,8 +59,28 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:stove_fuel",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rag",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:ripped_sheet",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -115,17 +95,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bleach",
-          "weight": 12
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:detergent",
-          "weight": 12
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:trash_bags",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,7 +120,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:broom",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -155,12 +135,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sewing_kit",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -175,7 +155,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:safety_pins",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -190,7 +170,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bug_spray",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -205,7 +185,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:screwdriver",
-          "weight": 12,
+          "weight": 24,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -220,12 +200,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:screwdriver_set",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pliers",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -240,7 +220,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:adjustable_wrench",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -255,12 +235,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:socket_set",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tape_measure",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -275,7 +255,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:handsaw",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -290,12 +270,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hacksaw",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:utility_knife",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -310,12 +290,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:whetstone",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:file_tool",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -330,7 +310,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:chisel",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -345,12 +325,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hand_drill",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:staple_gun",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -365,7 +345,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:paint_brush",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -380,12 +360,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:paint_can",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pry_bar",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -400,17 +380,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:toolbox",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:welding_mask",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:padlock",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -425,17 +405,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fishing_rod",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tackle_box",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:garden_trowel",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -450,7 +430,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:garden_shears",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -465,7 +445,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:screws",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -480,7 +460,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hinges",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -495,7 +475,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:electrical_tape",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -510,7 +490,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:superglue",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -525,22 +505,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rope",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:chain",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wire_spool",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:zip_ties",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -555,7 +535,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sandpaper",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -570,42 +550,42 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:plank",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:metal_pipe",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:propane_cylinder",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:gas_can",
-          "weight": 6
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:car_battery",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:lantern_battery",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:extension_cord",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:lantern_battery",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:extension_cord",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:fuse_box",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -620,12 +600,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:jumper_cables",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:transistor_radio",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -640,7 +620,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:flashlight",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -655,17 +635,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lantern_battery_light",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:kerosene",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lighter_fluid",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -680,22 +660,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:charcoal",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sleeping_bag",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fishing_lures",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:decoy_duck",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -710,7 +690,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tomato_seeds",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -725,12 +705,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fertilizer",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:watering_can",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -744,18 +724,148 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bike_helmet",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:welding_goggles",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:t_shirt",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:scrubs_top",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:jeans",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:scrubs_pants",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_boots",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:work_gloves",
+          "weight": 24,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_gloves",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cooler",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_maintenance",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mag_mechanics",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:padlock_key",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -770,7 +880,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coin_roll",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -785,7 +895,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tennis_racket",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -800,12 +910,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skateboard",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:frisbee",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -820,22 +930,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fishing_trophy",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:spare_tire",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:tire_iron",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:spare_tire",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tire_iron",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:motor_oil",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -850,12 +960,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:antifreeze",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:brake_fluid",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -870,7 +980,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:spark_plugs",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -885,7 +995,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fan_belt",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -900,7 +1010,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wiper_blades",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -915,7 +1025,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:oil_filter",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -930,7 +1040,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:car_wax",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -945,17 +1055,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fuel_siphon",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:newspaper_bundle",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:newspaper_bundle",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:broken_radio",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -970,7 +1080,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coat_hanger",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -985,7 +1095,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wood_scraps",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -1000,7 +1110,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:dish_soap",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -1015,7 +1125,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sponge",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -1045,6 +1155,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:tent",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:motorcycle_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:leather_chaps",
           "weight": 1
         }
       ]

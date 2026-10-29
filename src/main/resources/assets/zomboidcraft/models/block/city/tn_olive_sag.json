@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_olive_fold": "zomboidcraft:block/city/tn_olive_fold",
+    "tn_olive_liner": "zomboidcraft:block/city/tn_olive_liner",
+    "particle": "zomboidcraft:block/city/tn_olive_fold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.65,
+        -3.3
+      ],
+      "to": [
+        16,
+        8.35,
+        19.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_fold"
+        },
+        "south": {
+          "texture": "#tn_olive_liner"
+        },
+        "east": {
+          "texture": "#tn_olive_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "west": {
+          "texture": "#tn_olive_fold",
+          "uv": [
+            0,
+            7.65,
+            16,
+            8.35
+          ]
+        },
+        "up": {
+          "texture": "#tn_olive_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_olive_fold",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

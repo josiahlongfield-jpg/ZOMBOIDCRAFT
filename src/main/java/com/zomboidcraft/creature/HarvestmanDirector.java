@@ -85,12 +85,16 @@ public final class HarvestmanDirector {
     private static String hunter;
     private static UUID target;
     private static long graceUntil, huntStart, nextLair, nextScare;
+    /** Its call, a few minutes after its target logs back in (it knows they're back); 0 for none due. */
+    private static long loginCall;
     private static int population;
     private static boolean loaded;
     private static int tick;
     private static MinecraftServer server;
 
     public static void register() {
+        HarvestmanNights.register();
+        HarvestmanGlimpse.register();
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             server = s;
             load(s);
@@ -118,6 +122,11 @@ public final class HarvestmanDirector {
             }
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (entity instanceof ServerPlayer p && (source.getEntity() instanceof HarvestmanEntity
+                    || source.is(HarvestmanEntity.DRAINED)) && p.level() instanceof ServerLevel level) {
+                // it'll bring them back to their door
+                HarvestmanNights.killed(level, p);
+            }
             if (entity instanceof ServerPlayer p && p.getUUID().equals(target)) {
                 endHunt(true);
             }
@@ -126,8 +135,8 @@ public final class HarvestmanDirector {
             ServerPlayer p = handler.getPlayer();
             NAMES.put(p.getUUID(), p.getName().getString());
             if (p.getUUID().equals(target)) {
-                // it knows they're back
-                nextScare = p.level().getGameTime() + 20 * (30 + p.getRandom().nextInt(60));
+                // it knows they're back: its call, far off, within their first few minutes
+                loginCall = p.level().getGameTime() + 20 * (45 + p.getRandom().nextInt(120));
             }
         }));
         ServerTickEvents.END_SERVER_TICK.register(HarvestmanDirector::tick);
@@ -284,6 +293,7 @@ public final class HarvestmanDirector {
         }
         if (tick % 20 == 0) {
             hunt(s, level, now);
+            HarvestmanNights.tick(level, target != null ? s.getPlayerList().getPlayer(target) : null);
             travel(s, level);
             lairs(s, level);
             for (Map.Entry<String, HarvestmanEntity> e : LOADED.entrySet()) {
@@ -336,8 +346,21 @@ public final class HarvestmanDirector {
                 }
             }
             if (!can.isEmpty()) {
-                // the worst grudge, or else whoever's alone the most
+                // the worst grudge, or else whoever strays furthest from the rest
                 ServerPlayer pick = can.get(level.getRandom().nextInt(can.size()));
+                double apart = -1;
+                for (ServerPlayer p : can) {
+                    double nearest = 1e6;
+                    for (ServerPlayer q : can) {
+                        if (q != p) {
+                            nearest = Math.min(nearest, q.distanceTo(p));
+                        }
+                    }
+                    if (can.size() > 1 && nearest > apart) {
+                        apart = nearest;
+                        pick = p;
+                    }
+                }
                 double worst = 0;
                 for (ServerPlayer p : can) {
                     double g = GRUDGES.getOrDefault(p.getUUID(), 0.0);
@@ -606,7 +629,8 @@ public final class HarvestmanDirector {
 
     /** Its target alone hears it now and then: a far-off call, taps above them, a scrape behind. */
     private static void scare(MinecraftServer s, long now) {
-        if (target == null || hunter == null || now < nextScare) {
+        boolean login = loginCall > 0 && now >= loginCall;
+        if (target == null || hunter == null || now < nextScare && !login) {
             return;
         }
         ServerPlayer t = s.getPlayerList().getPlayer(target);
@@ -614,12 +638,21 @@ public final class HarvestmanDirector {
             return;
         }
         RandomSource rnd = t.getRandom();
-        nextScare = now + 20 * (60 + rnd.nextInt(180));
+        if (login) {
+            loginCall = 0;
+        } else {
+            nextScare = now + 20 * (60 + rnd.nextInt(180));
+        }
         HarvestmanEntity h = LOADED.get(hunter);
         if (h != null && (h.mind.plan == HarvestmanMind.STRIKE || h.held() != null)) {
             return;
         }
-        int kind = rnd.nextInt(3);
+        // now and then, instead of a sound, it lets them alone see it for a moment at the edge of their sight
+        if (!login && rnd.nextInt(4) == 0 && t.level() instanceof ServerLevel tl && (h == null || h.distanceTo(t) > 30)
+                && HarvestmanGlimpse.show(tl, t)) {
+            return;
+        }
+        int kind = login ? 0 : rnd.nextInt(3);
         double a = rnd.nextDouble() * Math.PI * 2;
         Vec3 at;
         SoundEvent sound;
@@ -678,6 +711,9 @@ public final class HarvestmanDirector {
             b.append(String.format("\nNo hunt: left alone for %.1f more in-game hours", (graceUntil - now) / 1000.0));
         } else {
             b.append("\nNo hunt yet");
+        }
+        if (HarvestmanNights.patient(s.overworld())) {
+            b.append("\nA patient night: the hunter only watches until the next dusk");
         }
         for (Record r : RECORDS.values()) {
             HarvestmanEntity h = LOADED.get(r.id);

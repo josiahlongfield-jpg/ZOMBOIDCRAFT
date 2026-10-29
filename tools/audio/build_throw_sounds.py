@@ -13,7 +13,8 @@ unzipped Gamemaster Gun Sound Pack (its ProSoundCollection_BonusSounds folder); 
   firecracker  a single pop, at random, as often as every 0.15 s -> the string cut at each bang
   fuse         once, when it is lit                  -> 1.5 s of steady burning
   smoke_pop    once, for the 20 s the smoke pours out
-weapon.throw.pin_pull and ear_ring were not picked and keep WEAPONS' stand-ins.
+pin_pull and ear_ring came from a second page (2026-10-29), after none of the first round fitted; the ear ringing is
+made here from tones (ring() below), since real recordings of tinnitus are rare.
 """
 import json
 import subprocess
@@ -25,7 +26,7 @@ import numpy as np
 from build_zombie_sounds import RES, ROOT
 
 RATE = 44100
-# a piece: (source, how to cut). source is "fs:<id>", "sx:<id>" (Sonniss) or "gm:<file name>" (Gamemaster bonus sounds)
+# a piece: (source, how to cut). source is "fs:<id>", "sx:<id>" (Sonniss), "gm:<file name>" (Gamemaster) or "syn:ring"
 # cut: None = the whole recording; ("span", start, end); ("chunks", start, end, length) = back-to-back pieces;
 # ("hits", gap, longest) = one piece per bang, bangs at least gap s apart, each at most longest s
 EVENTS = {
@@ -42,6 +43,9 @@ EVENTS = {
     "weapon.throw.alarm_tick": ("weapon/throw/alarm_tick", 6, [("fs:139958", ("span", 0.0, 1.0))]),
     "weapon.throw.alarm_ring": ("weapon/throw/alarm_ring", 48, [("fs:209536", ("chunks", 0.1, 4.0, 0.55)),
                                                                 ("fs:459701", ("chunks", 0.7, 5.1, 0.55))]),
+    "weapon.throw.pin_pull": ("weapon/throw/pin", 8, [("gm:gun_grenade_launcher_trigger_02", None)]),
+    # a 4.5 kHz ring over a muffled rumble, both fading over 8 s: "ring with muffled rumble" on the second page
+    "weapon.throw.ear_ring": ("weapon/throw/ear_ring", 4, [("syn:ring", None)]),
     "weapon.throw.molotov_burst": ("weapon/throw/molotov", 32, [("fs:534702", None)]),
     "weapon.throw.smoke_pop": ("weapon/throw/smoke", 24, [("fs:483320", ("span", 0.0, 20.0))]),
     "weapon.throw.flashbang": ("weapon/throw/flashbang", 96, [("fs:870713", None)]),
@@ -58,6 +62,19 @@ def load(path):
     raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(path), "-ac", "1", "-ar", str(RATE), "-f", "f32le", "-"],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.float32).copy()
+
+
+def ring():
+    """Ears ringing after a flashbang: a steady 4.5 kHz tone that holds 1.5 s then fades, over low-passed noise (the
+    world sounding muffled) that dies away faster. Seeded, so a rebuild gives the same file."""
+    t = np.arange(8 * RATE) / RATE
+    noise = np.random.default_rng(3).standard_normal(len(t))
+    f = np.fft.rfft(noise)
+    f /= 1 + (np.fft.rfftfreq(len(t), 1 / RATE) / 250) ** 4
+    rumble = np.fft.irfft(f, len(t))
+    rumble /= np.abs(rumble).max()
+    tone = np.sin(2 * np.pi * 4500 * t) * np.minimum(1, t / 0.05) * np.exp(-np.maximum(0, t - 1.5) / (7 / 3))
+    return (tone * 0.6 + rumble * 0.5 * np.exp(-t / 2.5) * np.minimum(1, t / 0.02)).astype(np.float32)
 
 
 def hits(a, gap):
@@ -134,6 +151,9 @@ def main():
                 info, path = sx["sx" + sid], sx_dir / sx["sx" + sid]["file"]
                 rec = f"{info['title']} ({info['pack']})"
                 credits.setdefault(rec, (info["bundle"], "Sonniss royalty-free", []))
+            elif kind == "syn":
+                takes += pieces(ring(), cut)
+                continue
             else:
                 path = next(gm_dir.rglob(sid + ".wav"))
                 rec = f"{sid} (Gun Sound Pack bonus sounds)"

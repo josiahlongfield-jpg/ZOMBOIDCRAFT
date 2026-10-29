@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "tn_cord": "zomboidcraft:block/city/tn_cord",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        0.1
+      ],
+      "to": [
+        8.5,
+        2.2,
+        1.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.75,
+        0,
+        1.1
+      ],
+      "to": [
+        8.25,
+        0.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_cord"
+        },
+        "south": {
+          "texture": "#tn_cord"
+        },
+        "east": {
+          "texture": "#tn_cord"
+        },
+        "west": {
+          "texture": "#tn_cord"
+        },
+        "up": {
+          "texture": "#tn_cord"
+        },
+        "down": {
+          "texture": "#tn_cord",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.25,
+        0,
+        8.5
+      ],
+      "to": [
+        12,
+        0.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_cord"
+        },
+        "south": {
+          "texture": "#tn_cord"
+        },
+        "east": {
+          "texture": "#tn_cord"
+        },
+        "west": {
+          "texture": "#tn_cord"
+        },
+        "up": {
+          "texture": "#tn_cord"
+        },
+        "down": {
+          "texture": "#tn_cord",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.5,
+        0,
+        9
+      ],
+      "to": [
+        12,
+        0.4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_cord"
+        },
+        "south": {
+          "texture": "#tn_cord"
+        },
+        "east": {
+          "texture": "#tn_cord"
+        },
+        "west": {
+          "texture": "#tn_cord"
+        },
+        "up": {
+          "texture": "#tn_cord"
+        },
+        "down": {
+          "texture": "#tn_cord",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

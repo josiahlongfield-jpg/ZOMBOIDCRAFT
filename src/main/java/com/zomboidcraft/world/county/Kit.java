@@ -1361,14 +1361,18 @@ final class Kit {
 
     // ------------------------------------------------------------------ fences
 
-    /** A fence of the given block from (x0, z0) to (x1, z1) along one axis, in a lot's frame, a few gaps. */
-    static void fenceLine(Placer p, SplittableRandom rng, int x0, int z0, int x1, int z1, String block, double broken) {
+    /** A post-and-rail fence (white paddock boards when white) from (x0, z0) to (x1, z1) along one axis, in a lot's frame: a post every three, rails broken or gone here and there. */
+    static void railFence(Placer p, SplittableRandom rng, int x0, int z0, int x1, int z1, boolean white, double broken) {
+        String w = white ? "_w" : "", axis = "[axis=" + (z0 == z1 ? "x" : "z") + "]";
+        int n = 0;
         for (int x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
             for (int z = Math.min(z0, z1); z <= Math.max(z0, z1); z++) {
-                if (rng.nextDouble() < broken) {
+                boolean post = n++ % 3 == 0;
+                double r = rng.nextDouble();
+                if (r < broken * 0.5) {
                     continue;
                 }
-                p.set(x, 1, z, block);
+                p.set(x, 1, z, post ? "fm_rail_post" + w + axis : !white && r < broken ? "fm_rail_broken" + axis : "fm_rail" + w + axis);
             }
         }
     }

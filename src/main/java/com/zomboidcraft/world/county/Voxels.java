@@ -111,9 +111,16 @@ public final class Voxels implements BlockSink {
             cars.add(car);
             return;
         }
-        String model = bodies.pick(car.minLength(), car.maxLength(), car.models(), car.seed());
+        // a state pinned after the names ("...@wrecked") goes along with the model picked
+        String models = car.models(), state = "";
+        int at = models == null ? -1 : models.indexOf('@');
+        if (at >= 0) {
+            state = models.substring(at);
+            models = models.substring(0, at);
+        }
+        String model = bodies.pick(car.minLength(), car.maxLength(), models, car.seed());
         if (model != null && spacing.claim(model, car.x(), car.y(), car.z(), car.yaw())) {
-            cars.add(new Car(car.x(), car.y(), car.z(), car.yaw(), 0, 99, car.seed(), "=" + model));
+            cars.add(new Car(car.x(), car.y(), car.z(), car.yaw(), 0, 99, car.seed(), "=" + model + state));
         }
     }
 

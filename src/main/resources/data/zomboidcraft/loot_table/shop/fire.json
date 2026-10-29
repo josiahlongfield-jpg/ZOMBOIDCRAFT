@@ -35,53 +35,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_helmet",
+          "name": "zomboidcraft:combat_helmet",
           "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_chestplate",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_leggings",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_boots",
-          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -154,48 +109,48 @@
           "weight": 4
         },
         {
-          "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 8
-        },
-        {
           "type": "minecraft:empty",
           "weight": 32
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coffee_thermos",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:burn_ointment",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rope",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:big_flashlight",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:skillbook_first_aid",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:fire_extinguisher",
+          "name": "zomboidcraft:burn_ointment",
           "weight": 12
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:rope",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:big_flashlight",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_gloves",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_first_aid",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_extinguisher",
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:fire_hose_nozzle",
-          "weight": 6
+          "weight": 12
         }
       ]
     },
@@ -232,6 +187,26 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:bolt_cutters",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_helmet",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gas_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_coat",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_pants",
+          "weight": 3
         },
         {
           "type": "minecraft:item",

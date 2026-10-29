@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "st_precast_plain": "zomboidcraft:block/city/st_precast_plain",
+    "particle": "zomboidcraft:block/city/st_precast_plain"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        -1
+      ],
+      "to": [
+        16,
+        2.5,
+        17
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_precast_plain"
+        },
+        "south": {
+          "texture": "#st_precast_plain"
+        },
+        "east": {
+          "texture": "#st_precast_plain",
+          "uv": [
+            0,
+            13.5,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_precast_plain",
+          "uv": [
+            0,
+            13.5,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_precast_plain",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#st_precast_plain",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2.5,
+        0
+      ],
+      "to": [
+        16,
+        3.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_precast_plain",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_precast_plain",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_precast_plain",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_precast_plain",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_precast_plain"
+        },
+        "down": {
+          "texture": "#st_precast_plain"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -1
+      ],
+      "to": [
+        16,
+        0.6,
+        -0.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark",
+          "uv": [
+            15.399999999999999,
+            15.4,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            15.4,
+            0.6,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            15.399999999999999,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        16.4
+      ],
+      "to": [
+        16,
+        0.6,
+        17
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            15.4,
+            0.6000000000000014,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#concrete_dark",
+          "uv": [
+            15.399999999999999,
+            15.4,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            15.399999999999999,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            0.6000000000000014
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

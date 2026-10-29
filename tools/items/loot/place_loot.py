@@ -38,7 +38,7 @@ WHERE = {
     'shop/hardware': {'hard': 2, 'build': 1}, 'shop/home_tools': {'garage': 1, 'hard': 1},
     'shop/pawn': {'pawn': 2, 'elec': 1, 'jewel': 1},
     'shop/home_books': {'books': 2, 'desk': 1}, 'shop/bank': {'bank': 1}, 'shop/till': {'till': 1},
-    'shop/cash': {'bank': 1, 'till': 1}, 'shop/mail': {'post': 1}, 'shop/guns': {'gun': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1},
+    'shop/cash': {'bank': 1, 'till': 1}, 'shop/mail': {'post': 1}, 'shop/guns': {'gun': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1}, 'shop/clothes': {'cloth': 1},
 }
 # things a table stocks that no place tag says (an oven holds what was cooking; sinks keep the cleaning things)
 EXTRA = {
@@ -56,8 +56,8 @@ EXTRA = {
                 'lighter'],
 }
 # the vanilla stand-ins the live waves replace, wherever they are. Vanilla things that still do something our items
-# don't yet (torch, bucket, compass, clock, flint and steel, shears, lantern, seeds, saddle, book and quill, name tag,
-# music discs, totems, paintings, bones) stay until ours work
+# don't yet (bucket, shears, seeds, saddle, book and quill, name tag, music discs, totems, paintings, bones) stay until
+# ours work; torches, lanterns, compasses, clocks and flint and steel went once ours lit, struck and told the time
 REPLACED = {f'minecraft:{n}' for n in (
     'potion', 'honey_bottle', 'milk_bucket', 'cookie', 'bread', 'dried_kelp', 'sugar', 'apple', 'egg', 'carrot',
     'potato', 'baked_potato', 'pumpkin_pie', 'sweet_berries', 'melon_slice', 'beetroot', 'cooked_beef',
@@ -66,12 +66,44 @@ REPLACED = {f'minecraft:{n}' for n in (
     'enchanted_golden_apple', 'rotten_flesh', 'sponge',
     'string', 'stick', 'oak_planks', 'coal', 'lead', 'candle', 'bowl',
     'paper', 'book', 'gold_nugget', 'iron_nugget', 'emerald', 'diamond', 'gold_ingot', 'amethyst_shard', 'ink_sac',
-    'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball')}
+    'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball',
+    'torch', 'lantern', 'soul_lantern', 'soul_torch', 'compass', 'clock', 'flint_and_steel',
+    # no purpose here: fantasy, vanilla-only mechanics, building blocks dropped in as loot (Josiah 2026-10-29)
+    'totem_of_undying', 'name_tag', 'saddle', 'goat_horn', 'bone_meal', 'snowball', 'ice', 'flower_pot', 'red_carpet',
+    'iron_bars', 'oak_trapdoor', 'ladder', 'chest', 'item_frame',
+    # ours do these: bottles, rags/sheets/thread, maps, notebooks, seeds and produce, buckets, shears, binoculars...
+    'glass_bottle', 'white_wool', 'light_gray_wool', 'gray_wool', 'blue_wool', 'brown_wool', 'black_wool', 'map',
+    'writable_book', 'wheat', 'wheat_seeds', 'pumpkin_seeds', 'melon_seeds', 'beetroot_seeds', 'water_bucket',
+    'bucket', 'shears', 'spyglass', 'bone', 'painting', 'leather', 'shield', 'gunpowder')}
 # an entry another thread customised (a named note, a marked map, a set count of something special) is theirs, not a
 # stand-in, even when it's a stand-in item
 CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore', 'minecraft:set_custom_data',
           'minecraft:exploration_map', 'minecraft:copy_components'}
-KEEP_ON_FARM = {'minecraft:potato', 'minecraft:carrot', 'minecraft:beetroot', 'minecraft:egg', 'minecraft:apple'}
+# vanilla weapons and helmets the mod already has its own of: the entry keeps its weight and rolls, as ours
+SWAP = {f'minecraft:{a}': f'{NS}:{b}' for a, b in (
+    ('iron_sword', 'machete'), ('iron_axe', 'fire_axe'), ('iron_pickaxe', 'crowbar'), ('stone_hoe', 'shovel'),
+    ('iron_hoe', 'shovel'), ('bow', 'crossbow'), ('crossbow', 'crossbow'), ('arrow', 'crossbow_bolt'),
+    ('iron_helmet', 'combat_helmet'), ('golden_helmet', 'combat_helmet'),
+    # clothes from the clothing thread (batch 1) and the plate carrier take the armour stand-ins' places
+    ('leather_chestplate', 'denim_jacket'), ('leather_leggings', 'jeans'), ('leather_boots', 'work_boots'),
+    ('leather_helmet', 'baseball_cap'), ('iron_chestplate', 'plate_carrier'), ('diamond_chestplate', 'plate_carrier'),
+    ('iron_leggings', 'work_pants'), ('iron_boots', 'work_boots'))}
+# the clothing thread's garments that are registered with worn models: placed by their roster places like ours
+WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'jeans', 'work_pants', 'sneakers',
+              'work_boots', 'baseball_cap', 'beanie', 'work_gloves', 'sunglasses', 'bandana'} | set('''
+    trucker_cap cowboy_hat bucket_hat hard_hat bike_helmet football_helmet hockey_mask motorcycle_helmet
+    police_cap fire_helmet riot_helmet gas_mask welding_goggles aviator_sunglasses reading_glasses balaclava
+    surgical_mask_worn cranial_helmet pilot_helmet band_tshirt tank_top dress_shirt polo_shirt hawaiian_shirt
+    sweater sweatshirt turtleneck scrubs_top dress wedding_dress leather_jacket bomber_jacket
+    varsity_jacket windbreaker raincoat trench_coat suit_jacket lab_coat hi_vis_vest
+    cargo_pants camo_pants slacks sweatpants shorts skirt overalls scrubs_pants
+    leather_chaps running_shoes dress_shoes cowboy_boots hiking_boots rubber_boots combat_boots slippers
+    leather_gloves winter_gloves rubber_gloves tactical_gloves scarf necktie
+    flight_deck_jersey police_jacket fire_coat field_jacket ghillie_suit ww2_flight_jacket fur_coat bespoke_suit
+    poncho flak_vest police_vest survival_vest fire_gloves fire_pants g_suit
+    purse briefcase gym_bag doctors_bag plastic_bag paper_bag suitcase lunchbox cooler mail_bag tool_bag
+    ammo_pouch_belt'''.split())  # clothing batches 2 to 5, then the UI thread's 12 bags
+KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
 MIN_SHARE = {'shop/hardware': 0.7, 'shop/home_tools': 0.6, 'shop/home_garage': 0.5, 'car/work': 0.5,
@@ -95,7 +127,7 @@ GEAR = {
     'shop/farm': [('machete_sheath', 'S', 3)], 'shop/storage': [('machete_sheath', 'R', 1)],
 }
 # worn gear still waiting on its model (it would show as the missing texture): kept out until the UI thread says
-GEAR_NO_MODEL = {'shoulder_holster', 'thigh_holster', 'knife_sheath', 'machete_sheath'}
+GEAR_NO_MODEL = set()   # all of UI's worn gear has body models now (2026-10-29)
 # roster rows the worn gear above stands in for
 NOT_PLACED = {'hunting_knife_sheath'}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
@@ -129,7 +161,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry', action='store_true')
     a = ap.parse_args()
-    rows = [r for r in gen_java.rows() if r['live']]
+    rows = [r for r in gen_java.rows() if r['live'] or r['id'] in WORN_READY]
     mine = {f'{NS}:{r["id"]}' for r in rows} | {f'{NS}:{i}' for g in GEAR.values() for i, _r, _w in g}
     for path in sorted(TABLES.glob('*/*.json')):
         table = f'{path.parent.name}/{path.stem}'
@@ -145,6 +177,8 @@ def main():
             keep = []
             for e in pool.get('entries', []):
                 name = e.get('name')
+                if name in SWAP:
+                    e['name'] = name = SWAP[name]
                 custom = any(fn.get('function') in CUSTOM for fn in e.get('functions', ()))
                 if name in mine or (name in drop and not custom):
                     if name in drop:

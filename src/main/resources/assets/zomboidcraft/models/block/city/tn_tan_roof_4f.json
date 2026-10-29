@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "tn_tan_liner": "zomboidcraft:block/city/tn_tan_liner",
+    "tn_tan_roof_seam": "zomboidcraft:block/city/tn_tan_roof_seam",
+    "particle": "zomboidcraft:block/city/tn_tan_roof_seam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        13.473376490862842,
+        -0.8091376023391526
+      ],
+      "to": [
+        16,
+        14.173376490862841,
+        16.809137602339153
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_tan_roof_seam"
+        },
+        "south": {
+          "texture": "#tn_tan_roof_seam"
+        },
+        "east": {
+          "texture": "#tn_tan_roof_seam",
+          "uv": [
+            0,
+            1.8266235091371588,
+            16,
+            2.526623509137158
+          ]
+        },
+        "west": {
+          "texture": "#tn_tan_roof_seam",
+          "uv": [
+            0,
+            1.8266235091371588,
+            16,
+            2.526623509137158
+          ]
+        },
+        "up": {
+          "texture": "#tn_tan_roof_seam",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_tan_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          13.823,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        7.3,
+        12.073376490862842,
+        -0.8091376023391526
+      ],
+      "to": [
+        8.7,
+        13.473376490862842,
+        16.809137602339153
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            2.526623509137158,
+            16,
+            3.9266235091371584
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            2.526623509137158,
+            16,
+            3.9266235091371584
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.3,
+            0,
+            8.7,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.3,
+            0,
+            8.7,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          13.823,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

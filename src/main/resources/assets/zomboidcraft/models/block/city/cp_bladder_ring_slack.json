@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_bladder": "zomboidcraft:block/city/cp_bladder",
+    "cp_bladder_top": "zomboidcraft:block/city/cp_bladder_top",
+    "particle": "zomboidcraft:block/city/cp_bladder"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2.64,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_bladder",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_bladder",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_bladder",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cp_bladder",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cp_bladder_top"
+        },
+        "down": {
+          "texture": "#cp_bladder_top",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

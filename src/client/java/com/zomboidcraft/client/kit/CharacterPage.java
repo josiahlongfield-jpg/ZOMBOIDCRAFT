@@ -21,7 +21,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -37,8 +36,6 @@ final class CharacterPage {
     private static final int[] WEAPON_SLOTS = {QuickSlots.HANDS, QuickSlots.BACK, QuickSlots.HOLSTER};
     /** The rest, small along the belt. */
     private static final int[] BELT_SLOTS = {QuickSlots.HIP, QuickSlots.HIP_2, QuickSlots.SHEATH, QuickSlots.POUCH, QuickSlots.POUCH_2};
-    private static final String[] CLOTHING_LABELS = {"Head", "Torso", "Legs", "Feet"};
-    private static final EquipmentSlot[] CLOTHING_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     private static final String[] CARRY_LABELS = {"Back", "Vest", "Waist", "Off hand"};
     private static final String[] WORN_LABELS = {"Belt", "Holster", "Sheath", "Wrist"};
     private static final String[] WORN_EMPTY = {"Opens two hip slots", "Opens the holster slot", "Opens the sheath slot", "Shows the time"};
@@ -125,29 +122,24 @@ final class CharacterPage {
         }
         load(g, font, player, x + 37, y + 258);
 
-        // clothing down the right
+        // clothing: what it adds up to; the pieces themselves are on the Clothing page
         KitDraw.heading(g, font, "Clothing", x + 400, y + 58, 179, true);
-        for (int i = 0; i < 4; i++) {
-            int slot = InventoryMenu.ARMOR_SLOT_START + i;
-            int tx = x + 547, ty = y + 66 + i * 37;
-            ItemStack stack = menu.slots.get(slot).getItem();
-            KitDraw.tile(g, font, stack, tx, ty, 32, 32, screen.hovered(tx, ty, 32, 32, mx, my));
-            EquipmentSlot on = CLOTHING_SLOTS[i];
-            String label = CLOTHING_LABELS[i];
-            screen.hot(tx, ty, 32, 32, stack,
-                    () -> screen.pick(label, slot, choices(slot, s -> KitItems.wornOn(s) == on, null), tx - 104, ty, 30, 30),
-                    stack.isEmpty() ? null : () -> screen.unequip(slot), stack.isEmpty() ? label + ": nothing worn" : null, slot);
-            KitDraw.capsRight(g, font, CLOTHING_LABELS[i], tx - 6, ty + 2, KitDraw.DIM, 0.72f);
-            if (stack.isEmpty()) {
-                KitDraw.textRight(g, font, "Nothing worn", tx - 6, ty + 12, KitDraw.FAINT, 1f);
-                continue;
-            }
-            String name = stack.getHoverName().getString();
-            KitDraw.capsRight(g, font, name, tx - 6, ty + 11, KitDraw.BRIGHT, KitDraw.capsWidth(font, name, 1.1f) > 130 ? 0.85f : 1.1f);
-            KitItems.Rarity r = KitItems.rarity(stack);
-            String line = r.label + (stack.isDamageableItem() ? " · " + KitItems.conditionWord(KitItems.condition(stack)) : "");
-            KitDraw.textRight(g, font, line, tx - 6, ty + 22, KitDraw.DIM, 0.8f);
+        com.zomboidcraft.clothing.Clothes.Totals dressed = com.zomboidcraft.clothing.Clothes.totals(player);
+        String[] cl = {"Warmth", "Stops bites", "Stops scratches", "Rain kept off"};
+        String[] cv = {String.valueOf(dressed.warmth()), Math.round(dressed.meanBite() * 100) + "%", Math.round(dressed.meanScratch() * 100) + "%",
+                Math.round(dressed.water() * 100) + "%"};
+        float[] cb = {dressed.warmth() / 20f, dressed.meanBite(), dressed.meanScratch(), dressed.water()};
+        for (int i = 0; i < cl.length; i++) {
+            int cy = y + 70 + i * 24;
+            KitDraw.caps(g, font, cl[i], x + 400, cy, KitDraw.DIM, 0.62f);
+            KitDraw.capsRight(g, font, cv[i], x + 579, cy - 1, KitDraw.BRIGHT, 1f);
+            KitDraw.bar(g, x + 400, cy + 10, 179, 1, Math.min(1, cb[i]), Float.NaN);
         }
+        String clothes = "Everything you wear: Clothing ›";
+        float cw = KitDraw.width(font, clothes, 0.9f);
+        boolean overClothes = screen.hovered(Math.round(x + 579 - cw), y + 166, Math.round(cw), 11, mx, my);
+        KitDraw.textRight(g, font, clothes, x + 579, y + 168, overClothes ? 0xFFFFF1B8 : KitDraw.LINK, 0.9f);
+        screen.hot(Math.round(x + 579 - cw), y + 166, Math.round(cw), 11, () -> screen.open(KitScreen.Page.CLOTHING));
 
         // carry gear: bags and the off hand, then the belt kit that opens quick slots
         KitDraw.heading(g, font, "Carry", x + 420, y + 216, 159, true);
@@ -253,7 +245,7 @@ final class CharacterPage {
     }
 
     /** Carried slots, other than the target, holding something that passes the test; best first. */
-    private List<Integer> choices(int target, Predicate<ItemStack> test, ToIntFunction<ItemStack> order) {
+    List<Integer> choices(int target, Predicate<ItemStack> test, ToIntFunction<ItemStack> order) {
         List<Integer> out = new ArrayList<>();
         AbstractContainerMenu menu = screen.menu();
         for (int i : screen.carried()) {

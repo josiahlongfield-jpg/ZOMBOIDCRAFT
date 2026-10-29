@@ -9,26 +9,6 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:writable_book",
-          "weight": 42
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:map",
-          "weight": 28
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:compass",
-          "weight": 14
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:clock",
-          "weight": 14
-        },
-        {
           "type": "minecraft:empty",
           "weight": 112
         },
@@ -160,6 +140,26 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:compass",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:reading_glasses",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:briefcase",
           "weight": 2
         },
         {

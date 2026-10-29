@@ -123,7 +123,7 @@ public final class ChunkWriter implements ChunkSink {
      */
     static java.util.function.Predicate<CarModels.Model> filter(double minLength, double maxLength, String models) {
         if (models == null) {
-            return m -> !m.jet() && m.length() >= minLength && m.length() <= maxLength;
+            return m -> !m.jet() && !m.boat() && !m.farm() && m.length() >= minLength && m.length() <= maxLength;
         }
         if (models.startsWith("=")) {
             String id = models.substring(1);
@@ -192,7 +192,9 @@ public final class ChunkWriter implements ChunkSink {
             for (int i = 0; i < layers.length; i++) {
                 if (layers[i] != 0 && col[0] >= bx && col[0] <= bx + 15 && col[1] >= bz && col[1] <= bz + 15) {
                     BlockState there = chunk.getBlockState(pos.set(col[0], base + i, col[1]));
-                    if (there.canBeReplaced()) {
+                    // a boat's hull takes the sea only in its bottom row: that keeps the water out of one
+                    // afloat, and leaves the surface whole over one sunk at her lines
+                    if (there.canBeReplaced() && (i == 0 || !model.boat() || there.getFluidState().isEmpty())) {
                         chunk.getSection(chunk.getSectionIndex(base + i)).setBlockState(col[0] & 15, (base + i) & 15, col[1] & 15,
                                 Cars.hull(layers[i]), false);
                     }

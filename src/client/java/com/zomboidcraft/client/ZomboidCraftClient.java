@@ -33,6 +33,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.kit.SpawnScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
+        com.zomboidcraft.client.map.CountyAtlas.register();
+        com.zomboidcraft.client.map.MapPlayers.register();
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
         // the sky eases toward the weather the server last sent
@@ -45,6 +47,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.gear.NightVisionClient.register();
         com.zomboidcraft.client.gear.RadioClient.register();
         RailLights.register();
+        com.zomboidcraft.client.gear.HandLights.register();
         com.zomboidcraft.client.building.Placer.register();
         com.zomboidcraft.client.zombie.body.Gibs.register();
         com.zomboidcraft.client.zombie.body.CrowdFx.register();
@@ -60,6 +63,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.throwing.ThrowEffects.register();
         EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);
         com.zomboidcraft.client.creature.HarvestmanClient.register();
+        com.zomboidcraft.client.npc.NpcRenderer.register();
         com.zomboidcraft.client.zombie.body.ZBodyAnimator.register();
         SoundSliders.register();
         com.zomboidcraft.client.interact.Interactables.register();

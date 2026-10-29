@@ -2,6 +2,7 @@
   "parent": "minecraft:block/block",
   "textures": {
     "cardboard": "zomboidcraft:block/city/cardboard",
+    "tape_brown": "zomboidcraft:block/city/tape_brown",
     "particle": "zomboidcraft:block/city/cardboard"
   },
   "elements": [
@@ -40,6 +41,134 @@
     },
     {
       "from": [
+        6.1,
+        8,
+        3
+      ],
+      "to": [
+        6.9,
+        8.15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tape_brown"
+        },
+        "south": {
+          "texture": "#tape_brown"
+        },
+        "east": {
+          "texture": "#tape_brown"
+        },
+        "west": {
+          "texture": "#tape_brown"
+        },
+        "up": {
+          "texture": "#tape_brown"
+        },
+        "down": {
+          "texture": "#tape_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        6.1,
+        5.4,
+        2.85
+      ],
+      "to": [
+        6.9,
+        8,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tape_brown"
+        },
+        "south": {
+          "texture": "#tape_brown"
+        },
+        "east": {
+          "texture": "#tape_brown"
+        },
+        "west": {
+          "texture": "#tape_brown"
+        },
+        "up": {
+          "texture": "#tape_brown"
+        },
+        "down": {
+          "texture": "#tape_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        6.1,
+        5.4,
+        12
+      ],
+      "to": [
+        6.9,
+        8,
+        12.15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tape_brown"
+        },
+        "south": {
+          "texture": "#tape_brown"
+        },
+        "east": {
+          "texture": "#tape_brown"
+        },
+        "west": {
+          "texture": "#tape_brown"
+        },
+        "up": {
+          "texture": "#tape_brown"
+        },
+        "down": {
+          "texture": "#tape_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        3
+      ],
+      "to": [
+        6.4,
+        8.25,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cardboard"
+        },
+        "south": {
+          "texture": "#cardboard"
+        },
+        "east": {
+          "texture": "#cardboard"
+        },
+        "west": {
+          "texture": "#cardboard"
+        },
+        "up": {
+          "texture": "#cardboard"
+        },
+        "down": {
+          "texture": "#cardboard"
+        }
+      }
+    },
+    {
+      "from": [
         8,
         0,
         9
@@ -69,6 +198,161 @@
           "texture": "#cardboard",
           "cullface": "down"
         }
+      }
+    },
+    {
+      "from": [
+        8,
+        1.5,
+        8.85
+      ],
+      "to": [
+        15,
+        2.3,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tape_brown"
+        },
+        "south": {
+          "texture": "#tape_brown"
+        },
+        "east": {
+          "texture": "#tape_brown"
+        },
+        "west": {
+          "texture": "#tape_brown"
+        },
+        "up": {
+          "texture": "#tape_brown"
+        },
+        "down": {
+          "texture": "#tape_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        5,
+        8.7
+      ],
+      "to": [
+        15,
+        8.2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cardboard"
+        },
+        "south": {
+          "texture": "#cardboard"
+        },
+        "east": {
+          "texture": "#cardboard"
+        },
+        "west": {
+          "texture": "#cardboard"
+        },
+        "up": {
+          "texture": "#cardboard"
+        },
+        "down": {
+          "texture": "#cardboard"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.5,
+          5,
+          9
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        8,
+        5,
+        15
+      ],
+      "to": [
+        15,
+        7.8,
+        15.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cardboard"
+        },
+        "south": {
+          "texture": "#cardboard"
+        },
+        "east": {
+          "texture": "#cardboard"
+        },
+        "west": {
+          "texture": "#cardboard"
+        },
+        "up": {
+          "texture": "#cardboard"
+        },
+        "down": {
+          "texture": "#cardboard"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.5,
+          5,
+          15
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        7.7,
+        5,
+        9.3
+      ],
+      "to": [
+        8,
+        7.4,
+        14.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cardboard"
+        },
+        "south": {
+          "texture": "#cardboard"
+        },
+        "east": {
+          "texture": "#cardboard"
+        },
+        "west": {
+          "texture": "#cardboard"
+        },
+        "up": {
+          "texture": "#cardboard"
+        },
+        "down": {
+          "texture": "#cardboard"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          5,
+          12
+        ],
+        "axis": "z",
+        "angle": 45
       }
     }
   ]

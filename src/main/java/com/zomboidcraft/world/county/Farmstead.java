@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.county;
 
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.SplittableRandom;
 
@@ -21,12 +22,10 @@ import java.util.SplittableRandom;
  */
 final class Farmstead {
     /** White-painted trim: corner boards, door frames, the edge of a gable. */
-    static final String TRIM = "minecraft:pale_oak_planks";
+    static final String TRIM = "fm_trim";
     /** Tin roofs: galvanized, gone dull, and rusted through. */
     static final String[] TIN = {"minecraft:polished_andesite", "minecraft:polished_tuff",
             "minecraft:waxed_exposed_cut_copper"};
-    /** Galvanized steel: domes, cones, tanks. */
-    static final String GALV = "minecraft:polished_andesite";
     static final String[] DIRS = {"north", "east", "south", "west"};
 
     private final Placer p;
@@ -52,17 +51,8 @@ final class Farmstead {
         return rng.nextDouble();
     }
 
-    private static boolean ring(int dx, int dz, double r) {
-        double dd = Math.sqrt(dx * dx + dz * dz);
-        return dd <= r && dd > r - 1.2;
-    }
-
     private static boolean disc(int dx, int dz, double r) {
         return dx * dx + dz * dz <= r * r;
-    }
-
-    private static String stairs(String family, String facing, boolean top) {
-        return family + "_stairs[facing=" + facing + ",half=" + (top ? "top" : "bottom") + "]";
     }
 
     /** A roof block, unless the weather or a fire took it. */
@@ -73,94 +63,115 @@ final class Farmstead {
         p.set(x, y, z, block);
     }
 
-    /** The cardinal a stair on a ring round (0, 0) faces to rise toward the middle. */
-    private static String inward(int dx, int dz) {
-        if (Math.abs(dx) >= Math.abs(dz)) {
-            return dx > 0 ? "west" : "east";
-        }
-        return dz > 0 ? "north" : "south";
+    // ------------------------------------------------------------------ roofs
+
+    /** The kit roof for a vanilla stairs family (as Bldg's), grey when it has none. */
+    private static String kind(String family) {
+        String k = Bldg.kitRoof(family);
+        return k == null ? "grey" : k;
     }
 
-    // ------------------------------------------------------------------ roofs
+    /** The last roof's peak in 16ths of a block above world y = 0 of this placer (for cupolas). */
+    private int peak;
 
     /**
      * A gambrel roof over walls x0..x1 (an even width), its ridge running along z from z0 to z1,
-     * sitting on y, overhanging a block all round: a steep lower slope, then a shallow upper one.
-     * The gable ends are filled with `wall` and trimmed white under the roof line. Returns the
-     * ridge's top y.
+     * sitting on y, overhanging a block all round, in the fm_gam_ kit (tools/city/farm.py): the
+     * flared eave, the steep lower slope rising two blocks a column, the shallow upper one half a
+     * block a column, the ridge cap where they meet. The side walls are carried up under the eave
+     * and the gable ends filled with `wall`; with `hood` the top of the roof reaches out three
+     * more blocks over the front (the hay hood). Returns the top block of the ridge.
      */
-    int gambrelRoof(int x0, int x1, int z0, int z1, int y, String family, String wall) {
+    int gambrelRoof(int x0, int x1, int z0, int z1, int y, String family, String wall, boolean hood) {
+        String k = kind(family), g = "fm_gam_" + k + "_";
         int a0 = x0 - 1, a1 = x1 + 1, span = a1 - a0 + 1, half = span / 2;
-        int[] hh = new int[half];
         int steep = Math.max(2, (int) Math.round(half * 0.4));
+        int h = 0;  // the roof's height at the column's outer edge, in 16ths over y
         for (int i = 0; i < half; i++) {
-            hh[i] = i == 0 ? 2 : i < steep ? hh[i - 1] + 4 : hh[i - 1] + (i % 2 == 0 ? 2 : 1);
-        }
-        int top = y;
-        for (int i = 0; i < half; i++) {
-            int t = hh[i], tp = i == 0 ? 0 : hh[i - 1];
-            roofColumn(a0 + i, x0, x1, z0, z1, y, t, tp, family, "east", wall);
-            roofColumn(a1 - i, x0, x1, z0, z1, y, t, tp, family, "west", wall);
-            top = Math.max(top, y + (t + 1) / 2 - 1);
+            boolean crest = i == half - 1 && span % 2 == 0;
+            int base = y + h / 16;
+            String[] pieces;
+            if (i == 0) {
+                pieces = new String[] {g + "eave"};
+                h += 16;
+            } else if (i < steep) {
+                pieces = new String[] {g + "steep_lo", g + "steep_hi"};
+                h += 32;
+            } else {
+                pieces = new String[] {g + (h % 16 == 0 ? "low" : "high") + (crest ? "_crest" : "")};
+                h += 8;
+            }
+            int front = z0 - 1 - (hood && i >= half - 2 ? 3 : 0);
+            for (int side = 0; side < 2; side++) {
+                int x = side == 0 ? a0 + i : a1 - i;
+                String f = "[facing=" + (side == 0 ? "east" : "west") + "]";
+                for (int z = front; z <= z1 + 1; z++) {
+                    for (int j = 0; j < pieces.length; j++) {
+                        tile(x, base + j, z, pieces[j] + f);
+                    }
+                }
+                underRoof(x, x0, x1, z0, z1, y, base, wall);
+            }
         }
         if (span % 2 == 1) {
-            int t = hh[half - 1] + 1;
-            roofColumn(a0 + half, x0, x1, z0, z1, y, t, hh[half - 1], family, null, wall);
-            top = Math.max(top, y + (t + 1) / 2 - 1);
+            int x = a0 + half, base = y + h / 16;
+            for (int z = z0 - 1 - (hood ? 3 : 0); z <= z1 + 1; z++) {
+                tile(x, base, z, g + (h % 16 == 0 ? "ridge_low" : "ridge_high") + "[facing=east]");
+            }
+            underRoof(x, x0, x1, z0, z1, y, base, wall);
+            h += 4;
         }
-        return top;
+        peak = y * 16 + h;
+        return y + (h + 15) / 16 - 1;
     }
 
-    /** One column of a profiled roof: t half-blocks high over the eave, tp its outer neighbour's. */
-    private void roofColumn(int x, int x0, int x1, int z0, int z1, int y, int t, int tp, String family, String face, String wall) {
-        int full = t / 2;
-        boolean slab = (t & 1) == 1;
-        int from = Math.max(0, tp / 2 - 1);
-        if (x >= x0 && x <= x1) {
-            for (int z : new int[] {z0, z1}) {
-                for (int yy = y; yy < y + from; yy++) {
-                    p.set(x, yy, z, yy == y + from - 1 ? TRIM : b.wall(wall, yy));
+    /** Under a roof column at x from y to below its first piece: the side wall carried up, or the gable ends. */
+    private void underRoof(int x, int x0, int x1, int z0, int z1, int y, int below, String wall) {
+        if (x < x0 || x > x1) {
+            return;
+        }
+        for (int yy = y; yy < below; yy++) {
+            if (x == x0 || x == x1) {
+                for (int z = z0; z <= z1; z++) {
+                    p.set(x, yy, z, b.wall(wall, yy));
                 }
-            }
-        }
-        String block = Bldg.full(family);
-        for (int z = z0 - 1; z <= z1 + 1; z++) {
-            for (int k = from; k < full; k++) {
-                boolean cap = k == full - 1 && !slab && face != null;
-                tile(x, y + k, z, cap ? stairs(family, face, false) : block);
-            }
-            if (slab) {
-                tile(x, y + full, z, family + "_slab[type=bottom]");
+            } else {
+                p.set(x, yy, z0, b.wall(wall, yy));
+                p.set(x, yy, z1, b.wall(wall, yy));
             }
         }
     }
 
-    /** A shallow lean-to roof of slabs from x0 (against a wall, at y) falling a half block a column to x1. */
-    private void leanRoof(int x0, int x1, int z0, int z1, int y, String family) {
+    /**
+     * A shed roof from x0 (against a wall) falling half a block a column to x1, its high edge at
+     * h16 sixteenths over world y = 0, in the gambrel kit's shallow pieces.
+     */
+    private void shedRoof(int x0, int x1, int z0, int z1, int h16, String family) {
         int dir = Integer.signum(x1 - x0);
+        String g = "fm_gam_" + kind(family) + "_", f = "[facing=" + (dir > 0 ? "west" : "east") + "]";
         for (int i = 0; i <= Math.abs(x1 - x0); i++) {
-            int h = 2 * y + 1 - i;  // in half blocks
-            String s = (h & 1) == 1 ? family + "_slab[type=bottom]" : family + "_slab[type=top]";
-            int yy = (h & 1) == 1 ? (h - 1) / 2 : h / 2 - 1;
+            int low = h16 - 8 * (i + 1);
             for (int z = z0; z <= z1; z++) {
-                tile(x0 + dir * i, yy, z, s);
+                tile(x0 + dir * i, low / 16, z, g + (low % 16 == 0 ? "low" : "high") + f);
             }
         }
     }
 
-    /** A small cupola on a ridge: a louvred box, a cap, the weathervane. */
-    private void cupola(int x, int z, int y, int size, String family) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                p.set(x + i, y, z + j, TRIM);
-                p.set(x + i, y + 1, z + j, "minecraft:pale_oak_fence");
-                p.set(x + i, y + 2, z + j, family + "_slab[type=bottom]");
-            }
+    /** A cupola on the ridge line x = cx (a block boundary) at z, standing on the roof's peak. */
+    private void cupola(int cx, int z, String family) {
+        String c = "fm_cupola_" + kind(family);
+        if (peak % 16 == 0) {
+            p.set(cx, peak / 16, z, c);
+        } else {
+            p.set(cx, peak / 16 + 1, z, c + "_high");
         }
-        p.set(x + size / 2, y + 3, z + size / 2, "minecraft:lightning_rod");
     }
 
     // ------------------------------------------------------------------ barns
+
+    private String footing(boolean stone) {
+        return stone ? (chance() < 0.3 ? "fm_fieldstone_moss" : "fm_fieldstone") : "fm_cinder";
+    }
 
     /** What a barn was built for: its ground floor. */
     enum Use { STALLS, HORSES, HAY }
@@ -198,7 +209,7 @@ final class Farmstead {
         }
         if (state == 3) {
             for (int i = 0; i < 3; i++) {
-                q.setIfAir(c - 3 + rng.nextInt(6), 1, -1 - rng.nextInt(3), pick("debris_chunk[facing=east]", "minecraft:spruce_slab[type=bottom]"));
+                q.setIfAir(c - 3 + rng.nextInt(6), 1, -1 - rng.nextInt(3), pick("debris_chunk[facing=east]", "fm_bale_one[facing=" + pick(DIRS) + "]"));
             }
         }
     }
@@ -216,7 +227,7 @@ final class Farmstead {
                 q.set(c + 1, y + 1 - j, -1, "barn_loft_0" + j + "[facing=north]");
                 q.set(c - 2, y + 1 - j, -1, "barn_loft_1" + j + "[facing=north]");
             }
-            q.set(c - 1, y - 1, 1, "minecraft:hay_block");
+            q.set(c - 1, y - 1, 1, "fm_bale_one[facing=" + pick(DIRS) + "]");
         }
         for (int x = c - 2; x <= c + 1; x++) {
             q.set(x, y + 2, 0, TRIM);
@@ -242,14 +253,15 @@ final class Farmstead {
                 p.set(x, 0, z, drive ? b.wall("floor_concrete", 1) : pick("minecraft:packed_mud", "minecraft:coarse_dirt", "minecraft:dirt"));
             }
         }
-        // the footing, walls, corner boards
+        // the footing (fieldstone on the old barns, cinder block on the rest), walls, corner boards
+        boolean stone = chance() < 0.6;
         for (int x = 0; x < w; x++) {
-            p.set(x, 1, 0, pick("minecraft:cobblestone", "minecraft:mossy_cobblestone", "minecraft:stone_bricks"));
-            p.set(x, 1, d - 1, pick("minecraft:cobblestone", "minecraft:mossy_cobblestone", "minecraft:stone_bricks"));
+            p.set(x, 1, 0, footing(stone));
+            p.set(x, 1, d - 1, footing(stone));
         }
         for (int z = 0; z < d; z++) {
-            p.set(0, 1, z, pick("minecraft:cobblestone", "minecraft:mossy_cobblestone", "minecraft:stone_bricks"));
-            p.set(w - 1, 1, z, pick("minecraft:cobblestone", "minecraft:mossy_cobblestone", "minecraft:stone_bricks"));
+            p.set(0, 1, z, footing(stone));
+            p.set(w - 1, 1, z, footing(stone));
         }
         b.walls(0, 0, w - 1, d - 1, 2, top, wall);
         for (int y = 2; y <= top; y++) {
@@ -260,10 +272,11 @@ final class Farmstead {
         }
         int ridge;
         if (gambrel) {
-            ridge = gambrelRoof(0, w - 1, 0, d - 1, top + 1, roof, wall);
+            ridge = gambrelRoof(0, w - 1, 0, d - 1, top + 1, roof, wall, true);
         } else {
             b.gable(0, w - 1, 0, d - 1, top + 1, roof, true, wall, 1);
             ridge = top + 1 + (w + 2) / 2;
+            peak = ridge * 16;
         }
         // the front and back gable ends
         Placer back = p.turned(w - 1, 0, d - 1, 2);
@@ -273,17 +286,8 @@ final class Farmstead {
         loftDoor(p, c, top + 2, chance() < 0.4);
         if (gambrel) {
             loftDoor(back, c, top + 2, false);
-            // the hay hood: the ridge carried out over the loft door, a hook hanging from it
-            for (int x = c - 2; x <= c + 1; x++) {
-                String face = x < c ? "east" : "west";
-                int yy = x == c - 2 || x == c + 1 ? ridge - 1 : ridge;
-                for (int z = -3; z <= -2; z++) {
-                    p.set(x, yy, z, stairs(roof, face, false));
-                }
-            }
-            p.set(c, ridge - 1, -3, "minecraft:iron_chain[axis=y]");
-            p.set(c, ridge - 2, -3, "minecraft:iron_chain[axis=y]");
-            p.set(c, ridge - 3, -3, "minecraft:lightning_rod[facing=down]");
+            // the hay hood is the roof's top reaching out over the loft door; the fork's track under it
+            p.set(c, (peak - 8) / 16 - 1, -3, "fm_hay_track");
         }
         // windows down both sides, a man door near the front
         for (int z = 3; z < d - 2; z += 4) {
@@ -291,12 +295,12 @@ final class Farmstead {
             b.window(w - 1, 3, z, "east", 1, null);
         }
         int side = chance() < 0.5 ? 0 : w - 1;
-        b.door(side, 1, 2, "minecraft:spruce_door", side == 0 ? "west" : "east");
+        b.door(side, 1, 2, wall.startsWith("barn_red") ? "ext_door_white" : "ext_door_red", side == 0 ? "west" : "east");
         p.set(side, 3, 2, TRIM);
         // cupolas on the ridge
         int cups = d >= 28 ? 2 : 1;
         for (int k = 1; k <= cups; k++) {
-            cupola(c - 1, d * k / (cups + 1) - 1, ridge, 2, roof);
+            cupola(c, d * k / (cups + 1), roof);
         }
         interior(w, d, c, top, loft, use);
         return ridge;
@@ -307,23 +311,28 @@ final class Farmstead {
         int lx0 = 1, lx1 = c - 3, hx0 = c + 2, hx1 = w - 2;
         int z0 = 3, z1 = d - 4;
         if (use != Use.HAY) {
-            int pitch = use == Use.HORSES ? 4 : 3;
+            boolean horses = use == Use.HORSES;
+            int pitch = horses ? 4 : 3;
             for (int z = z0; z <= z1; z += pitch) {
                 for (int[] bay : new int[][] {{lx0, lx1, lx1}, {hx0, hx1, hx0}}) {
+                    // the partition between stalls: boards and bars for horses, a pipe divider for cattle
                     for (int x = bay[0]; x <= bay[1]; x++) {
-                        p.set(x, 1, z, use == Use.HORSES ? "minecraft:spruce_planks" : "minecraft:spruce_fence");
-                        if (use == Use.HORSES) {
-                            p.set(x, 2, z, "minecraft:iron_bars");
+                        p.set(x, 1, z, horses ? "fm_stall_boards[axis=x]" : "fm_loop[axis=x]");
+                        if (horses) {
+                            p.set(x, 2, z, "fm_stall_bars[axis=x]");
                         }
                     }
-                    // the stall's front onto the drive, its gate
+                    // the stall's front onto the drive, its door
                     for (int zz = z + 1; zz < Math.min(z + pitch, z1 + 1); zz++) {
                         boolean gate = zz == z + 1;
-                        String facing = bay[2] == lx1 ? "east" : "west";
-                        p.set(bay[2], 1, zz, gate ? "minecraft:spruce_fence_gate[facing=" + facing + ",open=" + (chance() < 0.3 + hit * 0.4) + "]"
-                                : use == Use.HORSES ? "minecraft:spruce_planks" : "minecraft:spruce_fence");
-                        if (use == Use.HORSES && !gate) {
-                            p.set(bay[2], 2, zz, "minecraft:iron_bars");
+                        String facing = bay[2] == lx1 ? "west" : "east";
+                        if (gate) {
+                            Doors.place(p, bay[2], 1, zz, horses ? "fm_stall_door" : "fm_gate", facing, Doors.hinge(rng), chance() < 0.3 + hit * 0.4);
+                        } else {
+                            p.set(bay[2], 1, zz, horses ? "fm_stall_boards[axis=z]" : "fm_loop[axis=z]");
+                            if (horses) {
+                                p.set(bay[2], 2, zz, "fm_stall_bars[axis=z]");
+                            }
                         }
                         // straw down, the manger at the wall, a water bucket
                         for (int x = bay[0]; x <= bay[1]; x++) {
@@ -332,10 +341,12 @@ final class Farmstead {
                             }
                         }
                     }
+                    // the manger at the wall, a water trough or a bucket beside it
                     int wallX = bay[2] == lx1 ? lx0 : hx1;
-                    p.set(wallX, 1, z + 1, chance() < 0.6 ? "minecraft:hay_block" : "minecraft:composter[level=" + rng.nextInt(8) + "]");
+                    String out = wallX == lx0 ? "east" : "west";
+                    p.set(wallX, 1, z + 1, "fm_manger[facing=" + out + "]");
                     if (chance() < 0.4) {
-                        p.set(wallX, 1, z + 2, "minecraft:cauldron");
+                        p.set(wallX, 1, z + 2, chance() < 0.6 ? "fm_water_trough[axis=z]" : "sc_bucket[facing=" + out + "]");
                     }
                 }
             }
@@ -346,7 +357,7 @@ final class Farmstead {
                     for (int z = z0; z <= z1; z++) {
                         int hgt = 1 + rng.nextInt(3);
                         for (int y = 1; y <= hgt && y < loft; y++) {
-                            p.set(x, y, z, "minecraft:hay_block[axis=" + (chance() < 0.5 ? "x" : "z") + "]");
+                            p.set(x, y, z, bales(y == hgt && chance() < 0.4, chance() < 0.5 ? "x" : "z"));
                         }
                     }
                 }
@@ -356,16 +367,18 @@ final class Farmstead {
         for (int[] bay : new int[][] {{lx0, lx1}, {hx0, hx1}}) {
             for (int x = bay[0]; x <= bay[1]; x++) {
                 for (int z = 1; z <= d - 2; z++) {
-                    p.set(x, loft, z, chance() < 0.04 + hit * 0.06 ? "air" : "minecraft:spruce_planks");
+                    p.set(x, loft, z, chance() < 0.04 + hit * 0.06 ? "air" : "floor_boards");
                 }
             }
         }
-        for (int z = 1; z <= d - 2; z += 2) {
-            p.set(lx1, loft + 1, z, "minecraft:spruce_fence");
-            p.set(hx0, loft + 1, z, "minecraft:spruce_fence");
+        // the loft's edge rail along the drive
+        for (int z = 1; z <= d - 2; z++) {
+            String r = (z - 1) % 4 == 0 ? "fm_rail_post[axis=z]" : chance() < 0.06 + hit * 0.1 ? "fm_rail_broken[axis=z]" : "fm_rail[axis=z]";
+            p.set(lx1, loft + 1, z, r);
+            p.set(hx0, loft + 1, z, r);
         }
         for (int y = 1; y <= loft; y++) {
-            p.set(lx1, y, 1, "ladder[facing=south]");
+            p.set(lx1, y, 1, chance() < 0.15 ? "fm_ladder_broken[facing=south]" : "fm_ladder[facing=south]");
         }
         // hay in the loft, in heaps up under the roof
         for (int[] bay : new int[][] {{lx0, lx1}, {hx0, hx1}}) {
@@ -373,21 +386,24 @@ final class Farmstead {
                 for (int z = 3; z <= d - 3; z++) {
                     double hh = 2.5 * Math.sin(z * 0.35 + x) + 1.2 + chance();
                     for (int y = 1; y <= hh; y++) {
-                        p.set(x, loft + y, z, chance() < 0.85 ? "minecraft:hay_block[axis=" + (chance() < 0.5 ? "x" : "z") + "]" : "straw_floor");
+                        p.set(x, loft + y, z, chance() < 0.85 ? bales(y + 1 > hh, chance() < 0.5 ? "x" : "z") : "straw_floor");
                     }
                 }
             }
         }
         // the feed room by the doors: feed, tools, the grain barrels; a lantern hanging over the drive
-        p.set(lx0, 1, 1, "minecraft:barrel[facing=up,loot=farm]");
+        p.set(lx0, 1, 1, "fm_feed_bin[facing=east,loot=farm]");
         p.set(lx0 + 1, 1, 1, "crate");
-        p.set(hx1, 1, 1, "minecraft:barrel[facing=up,loot=farm]");
+        p.set(hx1, 1, 1, "fm_feed_bin[facing=west,loot=farm]");
         p.set(hx1, 2, 1, "store_pegboard[facing=north,loot=hardware]");
-        p.set(hx1 - 1, 1, 1, chance() < 0.5 ? "minecraft:grindstone[face=floor,facing=east]" : "minecraft:chipped_anvil[facing=east]");
-        p.set(hx1, 1, d - 2, "minecraft:barrel[facing=up,loot=farm]");
+        p.set(hx1 - 1, 1, 1, chance() < 0.5 ? "fm_grindstone[facing=east]" : "fm_anvil[facing=east]");
+        p.set(hx1, 1, d - 2, use == Use.HORSES ? "fm_tack_trunk[facing=west,loot=farm]" : "fm_drum[loot=farm]");
+        if (use == Use.HORSES) {
+            p.set(hx1, 2, d - 2, "fm_saddle_rack[facing=west]");
+        }
         for (int z = d / 3; z < d - 2; z += d / 3) {
-            p.set(c, top + 3, z, "minecraft:iron_chain[axis=y]");
-            p.set(c, top + 2, z, chance() < 0.5 ? "minecraft:lantern[hanging=true]" : "minecraft:iron_chain[axis=y]");
+            p.set(c, top + 3, z, "fm_chain");
+            p.set(c, top + 2, z, chance() < 0.5 ? (chance() < 0.3 ? "fm_lantern_lit" : "fm_lantern") : "fm_chain");
         }
         // what happened here
         double r = chance();
@@ -396,11 +412,11 @@ final class Farmstead {
             for (int y = 1; y <= loft; y++) {
                 p.set(lx1, y, 1, "air");
             }
-            p.set(hx0 + 1, loft + 1, 2, "minecraft:brown_bed[facing=east,part=foot]");
-            p.set(hx0 + 2, loft + 1, 2, "minecraft:brown_bed[facing=east,part=head]");
+            p.set(hx0 + 1, loft + 1, 2, "fm_bedroll[facing=west]");
+            p.set(hx0 + 2, loft + 1, 2, "air");
             p.set(hx0 + 1, loft + 1, 3, "crate");
-            p.set(hx0 + 2, loft + 1, 3, "minecraft:barrel[facing=up,loot=grocery]");
-            p.set(hx0, loft + 1, 4, "minecraft:lantern");
+            p.set(hx0 + 2, loft + 1, 3, "crate[loot=grocery]");
+            p.set(hx0, loft + 1, 4, "fm_lantern_floor");
             for (int i = 0; i < 6; i++) {
                 p.setIfAir(hx0 + rng.nextInt(Math.max(1, hx1 - hx0)), loft + 1, 1 + rng.nextInt(4), pick("paper", "glass_shards", "blood_splat"));
             }
@@ -408,13 +424,19 @@ final class Farmstead {
             // bales stacked across the doors, pushed in
             for (int x = c - 2; x <= c + 1; x++) {
                 for (int y = 1; y <= 1 + rng.nextInt(2); y++) {
-                    p.set(x, y, 2 + rng.nextInt(2), "minecraft:hay_block[axis=x]");
+                    p.set(x, y, 2 + rng.nextInt(2), "fm_bales[axis=x]");
                 }
             }
         }
         for (int i = 0; i < d / 3; i++) {
-            p.setIfAir(c - 2 + rng.nextInt(4), 1, 1 + rng.nextInt(d - 2), pick("straw_floor", "straw_floor", "blood_splat", "paper", "minecraft:hay_block"));
+            p.setIfAir(c - 2 + rng.nextInt(4), 1, 1 + rng.nextInt(d - 2), pick("straw_floor", "straw_floor", "blood_splat", "paper",
+                    "fm_bale_one[facing=" + pick(DIRS) + "]"));
         }
+    }
+
+    /** Square bales stacked a block, or the top layer of a stack (one layer) when `low`. */
+    private static String bales(boolean low, String axis) {
+        return (low ? "fm_bales_low" : "fm_bales") + "[axis=" + axis + "]";
     }
 
     /**
@@ -429,22 +451,23 @@ final class Farmstead {
             }
             if ((z - z0) % 4 == 0 || z == z1) {
                 for (int yy = 1; yy < y - lw / 2; yy++) {
-                    p.set(outer, yy, z, "minecraft:stripped_spruce_log[axis=y]");
+                    p.set(outer, yy, z, yy == y - lw / 2 - 1 ? "fm_pole[facing=" + (dir > 0 ? "east" : "west") + "]" : "fm_pole[facing=north]");
                 }
             }
         }
-        leanRoof(wallX + dir, outer + dir, z0 - 1, z1 + 1, y, tin);
+        shedRoof(wallX + dir, outer + dir, z0 - 1, z1 + 1, y * 16 + 8, tin);
         for (int z = z0 + 1; z <= z1; z += 2) {
             double r = chance();
             if (r < 0.3) {
+                // split wood stacked along the wall (the splits lie across it)
                 for (int yy = 1; yy <= 2; yy++) {
-                    p.set(wallX + dir, yy, z, "minecraft:oak_log[axis=x]");
-                    p.set(wallX + dir, yy, z + 1, "minecraft:birch_log[axis=x]");
+                    p.set(wallX + dir, yy, z, "fm_firewood[axis=x]");
+                    p.set(wallX + dir, yy, z + 1, "fm_firewood[axis=x]");
                 }
             } else if (r < 0.45) {
                 p.set(wallX + dir * 2, 1, z, "tire[axis=z]");
             } else if (r < 0.55) {
-                p.set(wallX + dir, 1, z, "minecraft:barrel[facing=up,loot=hardware]");
+                p.set(wallX + dir, 1, z, "fm_drum[loot=hardware]");
             }
         }
     }
@@ -492,11 +515,11 @@ final class Farmstead {
             bay += 5;
         }
         for (int z = 1; z < d - 1; z += 3) {
-            p.set(w - 2, 1, z, pick("minecraft:barrel[facing=up,loot=hardware]", "tire[axis=x]", "minecraft:barrel[facing=up]", "crate"));
+            p.set(w - 2, 1, z, pick("fm_drum[loot=hardware]", "tire[axis=x]", "fm_drum", "crate"));
         }
         p.set(1, 1, d - 2, "store_lumber[facing=south,loot=hardware]");
         p.set(2, 2, d - 2, "store_pegboard[facing=south,loot=hardware]");
-        p.set(3, 1, d - 2, "minecraft:smithing_table");
+        p.set(3, 1, d - 2, "home_workbench[facing=north]");
         p.set(4, 1, d - 2, "propane_tank[axis=x]");
         b.mess(1, 1, w - 2, d - 2, 1, 0.03);
     }
@@ -518,8 +541,8 @@ final class Farmstead {
             p.set(w - 1, 1, z, "concrete_dark");
             if (z % 4 == 0 || z == d - 1) {
                 for (int y = 2; y <= 4; y++) {
-                    p.set(0, y, z, "minecraft:stripped_spruce_log[axis=y]");
-                    p.set(w - 1, y, z, "minecraft:stripped_spruce_log[axis=y]");
+                    p.set(0, y, z, y == 4 ? "fm_pole[facing=west]" : "fm_pole[facing=north]");
+                    p.set(w - 1, y, z, y == 4 ? "fm_pole[facing=east]" : "fm_pole[facing=north]");
                 }
             } else if (chance() < 0.6) {
                 // the curtain, rolled up or torn
@@ -537,20 +560,18 @@ final class Farmstead {
             for (int x = c - 2; x <= c + 1; x++) {
                 p.set(x, 0, z, b.wall("floor_concrete", 1));
                 if (chance() < 0.25) {
-                    p.set(x, 1, z, chance() < 0.6 ? "straw_floor" : "minecraft:hay_block");
+                    p.set(x, 1, z, chance() < 0.6 ? "straw_floor" : "fm_bale_one[facing=" + pick(DIRS) + "]");
                 }
             }
             if (z > 0 && z < d - 1) {
-                p.set(c - 3, 1, z, "minecraft:iron_bars");
-                p.set(c + 2, 1, z, "minecraft:iron_bars");
-                p.set(c - 3, 2, z, "minecraft:iron_bars");
-                p.set(c + 2, 2, z, "minecraft:iron_bars");
+                p.set(c - 3, 1, z, "fm_headlock[axis=z]");
+                p.set(c + 2, 1, z, "fm_headlock[axis=z]");
             }
         }
         // stall loops out to the walls, with a back alley behind them
         for (int z = 2; z < d - 2; z += 2) {
             for (int x : new int[] {1, 2, w - 3, w - 2}) {
-                p.set(x, 1, z, "minecraft:iron_bars");
+                p.set(x, 1, z, "fm_loop[axis=x]");
             }
             for (int x : new int[] {1, w - 2}) {
                 if (chance() < 0.6) {
@@ -560,7 +581,8 @@ final class Farmstead {
         }
         for (int x : new int[] {3, w - 4}) {
             for (int z = 3; z < d - 3; z += 9) {
-                p.set(x, 1, z, "minecraft:water_cauldron[level=" + (1 + rng.nextInt(3)) + "]");
+                p.set(x, 1, z, "fm_water_trough[axis=z]");
+                p.set(x, 1, z + 1, "fm_water_trough[axis=z]");
             }
         }
         for (int x : new int[] {2, w - 3}) {
@@ -568,7 +590,7 @@ final class Farmstead {
             p.set(x, 4, d - 2, "hvac");
         }
         for (int i = 0; i < d / 4; i++) {
-            p.setIfAir(1 + rng.nextInt(w - 2), 1, 1 + rng.nextInt(d - 2), pick("blood_splat", "minecraft:bone_block[axis=x]", "straw_floor", "paper"));
+            p.setIfAir(1 + rng.nextInt(w - 2), 1, 1 + rng.nextInt(d - 2), pick("blood_splat", "fm_bones[facing=" + pick(DIRS) + "]", "straw_floor", "paper"));
         }
     }
 
@@ -581,7 +603,7 @@ final class Farmstead {
         }
         b.walls(0, 0, w - 1, d - 1, 1, 3, "concrete_panel");
         b.flat(0, 0, w - 1, d - 1, 4, "concrete_panel", 1, "stone_trim");
-        b.door(w / 2, 1, 0, "minecraft:iron_door", "north");
+        b.door(w / 2, 1, 0, "ext_door_white", "north");
         b.window(1, 2, 0, "north", 1, null);
         b.window(w - 1, 2, d / 2, "east", 1, null);
         for (int z = 1; z < d - 1; z++) {
@@ -590,16 +612,16 @@ final class Farmstead {
                 p.set(x, 2, z, z == 1 || z == d - 2 ? "air" : "tank_white");
             }
         }
-        p.set(w - 2, 1, 1, "minecraft:water_cauldron[level=1]");
-        p.set(w - 2, 1, d - 2, "minecraft:barrel[facing=up,loot=kitchen]");
+        p.set(w - 2, 1, 1, "home_sink_white[facing=west]");
+        p.set(w - 2, 1, d - 2, "crate[loot=kitchen]");
         b.lights(0, 0, w - 1, d - 1, 3, 0.1);
     }
 
     /** A horse barn's tack and wash: done by barn(..., Use.HORSES); this adds the paddock gate sign and saddle racks. */
     void tackWall(int x, int z0, int z1) {
         for (int z = z0; z <= z1; z++) {
-            p.set(x, 2, z, z % 2 == 0 ? "minecraft:spruce_fence" : "minecraft:brown_wall_banner[facing=east]");
-            p.set(x, 1, z, z % 3 == 0 ? "minecraft:barrel[facing=up,loot=farm]" : "minecraft:spruce_trapdoor[facing=east,half=top,open=false]");
+            p.set(x, 2, z, z % 2 == 0 ? "fm_saddle_rack[facing=east]" : "air");
+            p.set(x, 1, z, z % 3 == 0 ? "fm_tack_trunk[facing=east,loot=farm]" : "fm_feed_bin[facing=east,loot=farm]");
         }
     }
 
@@ -613,7 +635,6 @@ final class Farmstead {
      * its cage, the unloader's shed at the foot.
      */
     void silo(int cx, int cz, int r, int h, Silo kind) {
-        String brick = pick("brick_red", "brick_buff", "brick_orange");
         for (int dx = -r - 1; dx <= r + 1; dx++) {
             for (int dz = -r - 1; dz <= r + 1; dz++) {
                 if (disc(dx, dz, r + 0.5)) {
@@ -621,66 +642,22 @@ final class Farmstead {
                 }
             }
         }
-        for (int y = 1; y <= h; y++) {
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (ring(dx, dz, r + 0.5)) {
-                        String m = switch (kind) {
-                            case STAVE -> y % 7 == 0 && chance() < 0.3 ? "rust" : "silo_stave";
-                            case BRICK -> b.wall(brick, y);
-                            case BLUE -> "silo_blue";
-                        };
-                        p.set(cx + dx, y, cz + dz, m);
-                    }
-                }
-            }
+        // the drum: concrete staves with a steel hoop every other block, brick, or glass-lined steel,
+        // smooth round (Round); then the dome (the brick one's tin cone) and its cap
+        double ox = cx + 0.5, oz = cz + 0.5, R = r + 0.3;
+        switch (kind) {
+            case STAVE -> Round.wall(p, ox, oz, R, 1, h, "stave", 2);
+            case BRICK -> Round.wall(p, ox, oz, R, 1, h, "brick", 0);
+            case BLUE -> Round.wall(p, ox, oz, R, 1, h, "blue", 0);
         }
-        // the roof
-        if (kind == Silo.BRICK) {
-            String tin = pick(TIN);
-            int y = h + 1;
-            for (double rr = r + 1.5; rr > 0.4; rr -= 1, y++) {
-                for (int dx = -r - 1; dx <= r + 1; dx++) {
-                    for (int dz = -r - 1; dz <= r + 1; dz++) {
-                        if (ring(dx, dz, rr)) {
-                            tile(cx + dx, y, cz + dz, stairs(tin, inward(dx, dz), false));
-                        } else if (disc(dx, dz, rr - 1.2)) {
-                            p.set(cx + dx, y, cz + dz, tin);
-                        }
-                    }
-                }
-            }
-            p.set(cx, y, cz, "minecraft:lightning_rod");
-        } else {
-            String m = kind == Silo.BLUE ? "silo_blue" : pick(GALV, TIN[0]);
-            double R = r + 0.5;
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    double dd = Math.hypot(dx, dz);
-                    if (dd > R) {
-                        continue;
-                    }
-                    double hgt = Math.sqrt(R * R - dd * dd) * 0.8;
-                    int full = (int) hgt;
-                    for (int y = 1; y <= full; y++) {
-                        p.set(cx + dx, h + y, cz + dz, m);
-                    }
-                    if (hgt - full > 0.45 && kind != Silo.BLUE) {
-                        p.set(cx + dx, h + full + 1, cz + dz, m + "_slab[type=bottom]");
-                    }
-                }
-            }
-            p.set(cx, h + (int) (R * 0.8) + 1, cz, "minecraft:lightning_rod");
-        }
-        // the caged ladder up the north side, the chute cap over the dome
+        int top = kind == Silo.BRICK
+                ? Round.roof(p, ox, oz, R + 0.4, Round.cone(R + 0.4), h + 1, "tinred")
+                : Round.roof(p, ox, oz, R + 0.1, Round.dome(R), h + 1, kind == Silo.BLUE ? "blue" : "galv");
+        p.set(cx, top, cz, "rd_finial");
+        // the ladder up the north side, caged from head height, onto the dome
         int lz = cz - r - 1;
         for (int y = 1; y <= h + 1; y++) {
-            p.set(cx, y, lz, "ladder[facing=north]");
-            if (y >= 4) {
-                p.set(cx - 1, y, lz, y % 2 == 0 ? "minecraft:iron_bars" : "air");
-                p.set(cx + 1, y, lz, y % 2 == 0 ? "minecraft:iron_bars" : "air");
-                p.set(cx, y, lz - 1, "minecraft:iron_bars");
-            }
+            p.set(cx, y, lz, y >= 4 && y <= h ? "rd_cage[facing=north]" : "bunk_ladder[facing=north]");
         }
         // the unloader shed at the foot
         for (int y = 1; y <= 3; y++) {
@@ -695,13 +672,13 @@ final class Farmstead {
         }
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -4; dz <= 0; dz++) {
-                p.set(cx + dx + r + 3, 4, cz + dz + 2, TIN[1] + "_slab[type=bottom]");
+                p.set(cx + dx + r + 3, 4, cz + dz + 2, dz == -4 ? "ext_porch_roof_tin_red_edge[facing=north]" : "ext_porch_roof_tin_red");
             }
         }
         if (chance() < 0.4) {
             // a pile of old silage spilling out
             for (int i = 0; i < 5; i++) {
-                p.setIfAir(cx + r + 1 + rng.nextInt(4), 1, cz - 3 + rng.nextInt(6), pick("minecraft:moss_carpet", "minecraft:hay_block", "straw_floor"));
+                p.setIfAir(cx + r + 1 + rng.nextInt(4), 1, cz - 3 + rng.nextInt(6), pick("straw_floor", "straw_floor", "fm_bale_one[facing=" + pick(DIRS) + "]"));
             }
         }
     }
@@ -718,48 +695,26 @@ final class Farmstead {
                 }
             }
         }
-        for (int y = 1; y <= h; y++) {
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (ring(dx, dz, r + 0.5)) {
-                        p.set(cx + dx, y, cz + dz, "bin_ribbed");
-                    }
-                }
-            }
-        }
+        double ox = cx + 0.5, oz = cz + 0.5, R = r + 0.3;
+        Round.wall(p, ox, oz, R, 1, h, "bin", 0);
         // what's left of last year's corn, a slope of it inside
         for (int dx = -r + 1; dx <= r - 1; dx++) {
             for (int dz = -r + 1; dz <= r - 1; dz++) {
                 if (disc(dx, dz, r - 0.5)) {
                     int fill = (int) (h * 0.4 - Math.hypot(dx, dz) * 0.4);
                     for (int y = 1; y <= fill; y++) {
-                        p.set(cx + dx, y, cz + dz, "minecraft:honeycomb_block");
+                        p.set(cx + dx, y, cz + dz, "straw_floor");
                     }
                 }
             }
         }
-        // the cone: rings of slabs stepping in a block every half block up
-        int k = 0;
-        int y = h + 1;
-        for (double rr = r + 1.5; rr > 0.5; rr -= 1, k++) {
-            boolean upper = (k & 1) == 1;
-            int yy = y + k / 2;
-            for (int dx = -r - 1; dx <= r + 1; dx++) {
-                for (int dz = -r - 1; dz <= r + 1; dz++) {
-                    if (disc(dx, dz, rr) && !disc(dx, dz, rr - 1)) {
-                        tile(cx + dx, yy, cz + dz, GALV + "_slab[type=" + (upper ? "top" : "bottom") + "]");
-                    }
-                }
-            }
-        }
-        int capY = y + k / 2;
-        p.set(cx, capY, cz, GALV);
-        p.set(cx, capY + 1, cz, "minecraft:lightning_rod");
+        // the shallow cone, its eave a little out over the wall, the cap and vent at the peak
+        int capY = Round.roof(p, ox, oz, R + 0.4, Round.cone(R + 0.4), h + 1, "galv");
+        p.set(cx, capY, cz, "rd_bin_cap");
         for (int yy = 1; yy <= h; yy++) {
-            p.set(cx, yy, cz - r - 1, "ladder[facing=north]");
+            p.set(cx, yy, cz - r - 1, "bunk_ladder[facing=north]");
         }
-        p.set(cx + r + 1, 1, cz, "hvac");
-        p.set(cx + r + 1, 2, cz, "minecraft:iron_bars");
+        p.set(cx + r + 1, 1, cz, "rd_fan[facing=east]");
         p.set(cx, 1, cz + r, chance() < 0.5 ? "air" : "flat_door[facing=north,half=lower,hinge=left,open=false]");
         if (p.get(cx, 1, cz + r) == null) {
             p.set(cx, 2, cz + r, "air");
@@ -776,16 +731,16 @@ final class Farmstead {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 2; dz++) {
                 p.set(x + dx, height + 1, z + dz, "corrugated_rust");
-                p.set(x + dx, height + 2, z + dz, TIN[2] + "_slab[type=bottom]");
+                p.set(x + dx, height + 2, z + dz, dz == -1 ? "ext_porch_roof_tin_galv_edge[facing=north]" : "ext_porch_roof_tin_galv[facing=north]");
                 p.set(x + dx, 0, z + dz, "grate");
             }
         }
         for (int[] t : binTops) {
-            line(x, height, z, t[0], t[1] + 1, t[2], "minecraft:andesite_wall");
+            line(x, height, z, t[0], t[1] + 1, t[2], "fm_spout");
         }
         // the truck dump at its foot and a catwalk out to the first bin
         for (int y = 1; y <= height; y++) {
-            p.set(x - 1, y, z + 1, "ladder[facing=west]");
+            p.set(x - 1, y, z + 1, "bunk_ladder[facing=west]");
         }
     }
 
@@ -801,30 +756,27 @@ final class Farmstead {
     /** A round wire corn crib centred on (cx, cz): mesh walls with last year's ears showing through, a tin cone. */
     void cornCrib(int cx, int cz) {
         int r = 2, h = 5;
-        for (int y = 1; y <= h; y++) {
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (ring(dx, dz, r + 0.5)) {
-                        String axis = Math.abs(dz) >= Math.abs(dx) ? "x" : "z";
-                        p.set(cx + dx, y, cz + dz, "chainlink[axis=" + axis + "]");
-                    } else if (disc(dx, dz, r - 0.5) && y <= 3) {
-                        p.set(cx + dx, y, cz + dz, "minecraft:honeycomb_block");
+        double ox = cx + 0.5, oz = cz + 0.5, R = r + 0.3;
+        for (int dx = -r - 1; dx <= r + 1; dx++) {
+            for (int dz = -r - 1; dz <= r + 1; dz++) {
+                if (disc(dx, dz, r + 0.8)) {
+                    p.set(cx + dx, 0, cz + dz, "concrete_dark");
+                }
+            }
+        }
+        Round.wall(p, ox, oz, R, 1, h, "crib", 0);
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                if (disc(dx, dz, r - 0.5)) {
+                    for (int y = 1; y <= 3 - (Math.abs(dx) + Math.abs(dz) > 1 ? 1 : 0); y++) {
+                        p.set(cx + dx, y, cz + dz, "fm_corn");
                     }
                 }
             }
         }
-        String tin = pick(TIN);
-        int y = h + 1;
-        for (double rr = r + 1.5; rr > 0.4; rr -= 1, y++) {
-            for (int dx = -r - 1; dx <= r + 1; dx++) {
-                for (int dz = -r - 1; dz <= r + 1; dz++) {
-                    if (ring(dx, dz, rr)) {
-                        tile(cx + dx, y, cz + dz, stairs(tin, inward(dx, dz), false));
-                    }
-                }
-            }
-        }
-        p.set(cx, y, cz, tin);
+        String tin = Bldg.kitRoof(pick(TIN));
+        int top = Round.roof(p, ox, oz, R + 0.4, Round.cone(R + 0.4), h + 1, tin.equals("tin_red") ? "tinred" : "galv");
+        p.set(cx, top, cz, "rd_finial");
     }
 
     // ------------------------------------------------------------------ the windmill
@@ -842,12 +794,13 @@ final class Farmstead {
                     p.set(cx + sx * off, y, cz + sz * off, "fence_post");
                 }
             }
-            if (y % 4 == 0) {
+            if (y % 2 == 0) {
+                // the X bracing between the legs, every other block
                 for (int i = -off + 1; i < off; i++) {
-                    p.set(cx + i, y, cz - off, "minecraft:iron_bars");
-                    p.set(cx + i, y, cz + off, "minecraft:iron_bars");
-                    p.set(cx - off, y, cz + i, "minecraft:iron_bars");
-                    p.set(cx + off, y, cz + i, "minecraft:iron_bars");
+                    p.set(cx + i, y, cz - off, "fm_girt[axis=x]");
+                    p.set(cx + i, y, cz + off, "fm_girt[axis=x]");
+                    p.set(cx - off, y, cz + i, "fm_girt[axis=z]");
+                    p.set(cx + off, y, cz + i, "fm_girt[axis=z]");
                 }
             }
         }
@@ -884,92 +837,58 @@ final class Farmstead {
         }
         // the pump rod down the middle, the pump, the pipe to the tank
         for (int y = 2; y < h; y++) {
-            p.set(cx, y, cz, "minecraft:iron_chain[axis=y]");
+            p.set(cx, y, cz, "fm_pump_rod");
         }
-        p.set(cx, 1, cz, "minecraft:lightning_rod[facing=up]");
+        p.set(cx, 1, cz, "fm_pump[facing=north]");
         p.set(cx, 0, cz, "concrete_dark");
         if (tank) {
+            // the round galvanised stock tank, full of green water, mud trodden round it
             int tx = cx + 5;
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
+            for (int dx = -3; dx <= 3; dx++) {
+                for (int dz = -3; dz <= 3; dz++) {
                     if (disc(dx, dz, 2.5)) {
-                        p.set(tx + dx, 0, cz + dz, "minecraft:stone");
-                        p.set(tx + dx, 1, cz + dz, ring(dx, dz, 2.5) ? GALV : "minecraft:water");
+                        p.set(tx + dx, 0, cz + dz, "concrete_dark");
+                        p.set(tx + dx, 1, cz + dz, "minecraft:water");
                     } else if (disc(dx, dz, 3.5)) {
                         p.set(tx + dx, 0, cz + dz, chance() < 0.6 ? "minecraft:mud" : "minecraft:coarse_dirt");
                     }
                 }
             }
-            p.set(cx + 1, 2, cz, "minecraft:lightning_rod[facing=east]");
-            p.set(cx + 2, 2, cz, "minecraft:lightning_rod[facing=east]");
-            p.set(cx + 3, 2, cz, "minecraft:lightning_rod[facing=east]");
+            Round.wall(p, tx + 0.5, cz + 0.5, 2.6, 1, 1, "tank", 0);
+            p.set(cx + 1, 1, cz, "fm_pipe[axis=x]");
+            p.set(cx + 2, 1, cz, "fm_pipe[axis=x]");
         }
     }
 
     // ------------------------------------------------------------------ machinery
 
-    /** Paint for a tractor: body block and the carpet its fenders are cut from. */
-    private static String[] paint(String colour) {
-        return switch (colour) {
-            case "green" -> new String[] {"minecraft:green_concrete", "minecraft:green_carpet", "minecraft:yellow_concrete"};
-            case "yellow" -> new String[] {"steel_yellow", "minecraft:yellow_carpet", "minecraft:black_concrete"};
-            case "orange" -> new String[] {"minecraft:orange_terracotta", "minecraft:orange_carpet", "minecraft:light_gray_concrete"};
-            default -> new String[] {"steel_red", "minecraft:red_carpet", "minecraft:light_gray_concrete"};
-        };
-    }
-
-    /** A tractor 3 wide and 5 long from (x, z), nose toward -z: big rear tyres, hood, exhaust stack, seat. */
+    /**
+     * A tractor (tools/cars/farm_machines.py) in the 3 x 5 blocks from (x, z), nose toward -z: the
+     * green one for "green" or "yellow", else the red one. It's a vehicle, so it can be driven off.
+     */
     void tractor(int x, int z, String colour) {
-        String[] c = paint(colour);
-        String body = c[0];
-        p.set(x, 1, z, "tire[axis=x]");
-        p.set(x + 2, 1, z, "tire[axis=x]");
-        for (int dz = 3; dz <= 4; dz++) {
-            for (int y = 1; y <= 2; y++) {
-                p.set(x, y, z + dz, "tire[axis=x]");
-                p.set(x + 2, y, z + dz, "tire[axis=x]");
-            }
-            p.set(x, 3, z + dz, c[1]);
-            p.set(x + 2, 3, z + dz, c[1]);
-        }
-        for (int dz = 0; dz <= 4; dz++) {
-            p.set(x + 1, 1, z + dz, chance() < 0.12 ? "rust" : dz == 0 ? c[2] : body);
-        }
-        for (int dz = 0; dz <= 2; dz++) {
-            p.set(x + 1, 2, z + dz, chance() < 0.1 ? "rust" : body);
-        }
-        p.set(x + 1, 2, z - 1, "minecraft:iron_trapdoor[facing=south,half=bottom,open=true]");
-        p.set(x + 1, 3, z + 1, "minecraft:iron_chain[axis=y]");
-        p.set(x + 1, 4, z + 1, "minecraft:iron_chain[axis=y]");
-        p.set(x + 1, 2, z + 3, body);
-        p.set(x + 1, 3, z + 3, "minecraft:lever[face=floor,facing=south,powered=false]");
-        p.set(x + 1, 2, z + 4, "minecraft:polished_blackstone_stairs[facing=south,half=bottom]");
+        tractor(x, z, colour, "");
     }
 
-    /** A flat hay wagon 3 wide and 6 long from (x, z), loaded with bales `load` high in places. */
+    /** As {@link #tractor(int, int, String)}, left as state says ("@abandoned", "@wrecked"...; "" for any). */
+    void tractor(int x, int z, String colour, String state) {
+        String model = colour.equals("green") || colour.equals("yellow") ? "=tractor_green" : "=tractor_red";
+        p.vehicle(x + 1.5, 1, z + 2.5, 180, model + state, rng.nextLong());
+    }
+
+    /** A flat hay wagon in the 3 x 6 blocks from (x, z), its tongue toward -z: loaded with bales if load > 1. */
     void hayWagon(int x, int z, int load) {
-        for (int dz = 0; dz < 6; dz++) {
-            for (int dx = 0; dx < 3; dx++) {
-                boolean wheel = (dz == 1 || dz == 4) && dx != 1;
-                p.set(x + dx, 1, z + dz, wheel ? "tire[axis=x]" : "minecraft:spruce_slab[type=top]");
-                for (int y = 2; y < 2 + load; y++) {
-                    if (chance() < 0.75 - (y - 2) * 0.15) {
-                        p.set(x + dx, y, z + dz, "minecraft:hay_block[axis=z]");
-                    }
-                }
-            }
-        }
-        p.set(x + 1, 1, z - 1, "minecraft:iron_chain[axis=z]");
+        p.vehicle(x + 1.5, 1, z + 3.0, 180, load > 1 ? "=hay_wagon" : "=hay_wagon_empty", rng.nextLong());
     }
 
     // ------------------------------------------------------------------ the small buildings
 
-    /** A chicken coop w x d: board walls, a tin lean roof, nest boxes and roosts, the wire run in front. */
+    /** A chicken coop w x d: board walls, a tin shed roof, nest boxes and roosts, the wire run in front. */
     void coop(int w, int d, String wall) {
         String tin = pick(TIN);
         for (int x = 0; x < w; x++) {
             for (int z = 0; z < d; z++) {
-                p.set(x, 0, z, "minecraft:spruce_planks");
+                p.set(x, 0, z, "floor_boards");
             }
         }
         b.walls(0, 0, w - 1, d - 1, 1, 2, wall);
@@ -980,123 +899,109 @@ final class Farmstead {
             p.set(0, 3, z, z >= d / 2 ? b.wall(wall, 3) : "air");
             p.set(w - 1, 3, z, z >= d / 2 ? b.wall(wall, 3) : "air");
         }
-        // the roof falls toward the front
+        // the roof falls toward the front, overhanging a block all round
+        String k = "ext_porch_roof_" + kind(tin);
         for (int x = -1; x <= w; x++) {
             for (int z = -1; z <= d; z++) {
-                String s = z >= d / 2 ? tin + "_slab[type=top]" : tin + "_slab[type=bottom]";
-                tile(x, z >= d / 2 ? 3 : 3, z, s);
+                tile(x, z >= d / 2 ? 4 : 3, z, k + (z == -1 ? "_edge" : "") + "[facing=north]");
             }
         }
-        b.door(1, 1, 0, "minecraft:spruce_door", "north");
-        p.set(w - 2, 2, 0, "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]");
+        b.door(1, 1, 0, "ext_door_white", "north");
         for (int x = 1; x < w - 1; x++) {
-            p.set(x, 1, d - 2, x % 2 == 0 ? "minecraft:hay_block" : "minecraft:barrel[facing=north,loot=farm]");
+            p.set(x, 1, d - 2, "fm_nest_boxes[facing=north]");
             if (chance() < 0.5) {
-                p.setIfAir(x, 1, 1 + rng.nextInt(Math.max(1, d - 3)), pick("straw_floor", "minecraft:white_carpet", "blood_splat"));
+                p.setIfAir(x, 1, 1 + rng.nextInt(Math.max(1, d - 3)), pick("straw_floor", "fm_feathers", "blood_splat"));
             }
         }
-        p.set(w - 2, 2, 1, "minecraft:spruce_fence");
+        p.set(w - 2, 1, 1, "fm_roost[axis=x]");
+        p.set(w - 3, 1, 1, "fm_roost[axis=x]");
         // the run: chicken wire on posts, the gate hanging open
         int rz = -6;
         for (int x = -1; x <= w; x++) {
             for (int z = rz; z <= -1; z++) {
                 p.set(x, 0, z, chance() < 0.7 ? "minecraft:coarse_dirt" : "minecraft:packed_mud");
                 if (chance() < 0.08) {
-                    p.set(x, 1, z, pick("minecraft:white_carpet", "blood_splat", "straw_floor"));
+                    p.set(x, 1, z, pick("fm_feathers", "blood_splat", "straw_floor"));
                 }
             }
         }
         Kit.chainlink(p, rng, -1, rz, w, rz, 1);
         Kit.chainlink(p, rng, -1, rz + 1, -1, -1, 1);
         Kit.chainlink(p, rng, w, rz + 1, w, -1, 1);
-        p.set(w / 2, 1, rz, "minecraft:spruce_fence_gate[facing=north,open=true]");
-        p.set(1, 1, rz + 2, "minecraft:cauldron");
+        Doors.place(p, w / 2, 1, rz, "fm_gate", "north", Doors.hinge(rng), true);
+        p.set(1, 1, rz + 2, "fm_waterer");
     }
 
-    /** A dug well: a stone curb, a little shingled roof on two posts, the windlass and its chain. */
+    /** A dug well: a round fieldstone curb, the little shingled roof on two posts, the windlass and its bucket. */
     void well(int x, int z) {
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                boolean mid = dx == 0 && dz == 0;
-                p.set(x + dx, 0, z + dz, mid ? "minecraft:water" : "minecraft:cobblestone");
-                p.set(x + dx, 1, z + dz, mid ? "air" : chance() < 0.3 ? "minecraft:mossy_cobblestone_wall" : "minecraft:cobblestone_wall");
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                if (disc(dx, dz, 2.3)) {
+                    p.set(x + dx, 0, z + dz, dx == 0 && dz == 0 ? "minecraft:water" : "fm_fieldstone");
+                }
             }
         }
         for (int y = -3; y < 0; y++) {
             p.set(x, y, z, "minecraft:water");
         }
-        for (int y = 2; y <= 3; y++) {
-            p.set(x - 1, y, z, "minecraft:spruce_fence");
-            p.set(x + 1, y, z, "minecraft:spruce_fence");
-        }
-        p.set(x, 3, z, "minecraft:stripped_spruce_log[axis=x]");
-        p.set(x, 2, z, "minecraft:iron_chain[axis=y]");
-        for (int dz = -1; dz <= 1; dz++) {
-            p.set(x - 1, 4, z + dz, "minecraft:spruce_stairs[facing=east,half=bottom]");
-            p.set(x, 4, z + dz, "minecraft:spruce_slab[type=bottom]");
-            p.set(x + 1, 4, z + dz, "minecraft:spruce_stairs[facing=west,half=bottom]");
-        }
+        Round.wall(p, x + 0.5, z + 0.5, 1.4, 1, 1, "field", 0);
+        p.set(x, 1, z, "air");
+        p.set(x, 2, z, "fm_well[facing=" + pick("north", "east") + "]");
     }
 
-    /** An outhouse: two by two of boards, a door with the moon cut in it, a slab roof. */
+    /** An outhouse of grey boards, the moon cut in its door, a block square. */
     void outhouse(int x, int z) {
-        String wall = pick("minecraft:spruce_planks", "barn_grey", "minecraft:oak_planks");
-        for (int dx = 0; dx < 2; dx++) {
-            for (int dz = 0; dz < 2; dz++) {
-                p.set(x + dx, 0, z + dz, "minecraft:spruce_planks");
-                for (int y = 1; y <= 2; y++) {
-                    p.set(x + dx, y, z + dz, dz == 0 && dx == 0 ? "air" : wall);
-                }
-                p.set(x + dx, 3, z + dz, "minecraft:spruce_slab[type=bottom]");
-            }
+        p.set(x, 0, z, "floor_boards");
+        String f = "[facing=" + pick("north", "north", "east", "west") + "]";
+        p.set(x, 1, z, "fm_outhouse_lo" + f);
+        p.set(x, 2, z, "fm_outhouse_hi" + f);
+        if (chance() < 0.4) {
+            p.setIfAir(x + 1, 1, z - 1, "paper");
         }
-        p.set(x + 1, 1, z + 1, "minecraft:spruce_trapdoor[facing=north,half=top,open=false]");
-        b.door(x, 1, z, "minecraft:spruce_door", "north");
     }
 
-    /** Split firewood stacked between posts, a chopping block with the axe still in it. */
+    /** Split firewood stacked along x between stakes, a chopping block with the axe still in it. */
     void woodpile(int x, int z, int len) {
         for (int i = 0; i < len; i++) {
-            int hgt = 1 + rng.nextInt(3);
+            int hgt = 1 + rng.nextInt(2);
             for (int y = 1; y <= hgt; y++) {
-                p.set(x + i, y, z, pick("minecraft:oak_log[axis=z]", "minecraft:birch_log[axis=z]", "minecraft:spruce_log[axis=z]"));
+                // the splits lie across the pile (the model's run is along z)
+                p.set(x + i, y, z, "fm_firewood[axis=z]");
             }
         }
-        p.set(x - 1, 1, z, "minecraft:spruce_fence");
-        p.set(x + len, 1, z, "minecraft:spruce_fence");
-        p.set(x + len + 1, 1, z + 2, "minecraft:stripped_oak_log[axis=y]");
-        p.set(x + len, 1, z + 2, "minecraft:oak_slab[type=bottom]");
+        p.set(x - 1, 1, z, "fm_post");
+        p.set(x + len, 1, z, "fm_post");
+        p.set(x + len + 1, 1, z + 2, "fm_chop_block[facing=" + pick(DIRS) + "]");
     }
 
-    /** A row of beehives on cinder blocks, a couple knocked over. */
+    /** A row of beehives on cinder blocks, their lids weighted with bricks, a couple knocked over. */
     void hives(int x, int z, int n) {
         for (int i = 0; i < n; i++) {
-            p.set(x + i * 2, 1, z, chance() < 0.2 ? "minecraft:beehive[facing=" + DIRS[rng.nextInt(4)] + ",honey_level=0]"
-                    : "minecraft:beehive[facing=north,honey_level=" + rng.nextInt(6) + "]");
-            p.set(x + i * 2, 0, z, "minecraft:cobblestone");
+            if (chance() < 0.2 + hit * 0.2) {
+                p.set(x + i * 2, 1, z, "fm_hive_tipped[facing=" + pick(DIRS) + "]");
+            } else {
+                p.set(x + i * 2, 1, z, "fm_hive[facing=north]");
+                p.set(x + i * 2, 2, z, "fm_hive_lid[facing=" + pick(DIRS) + "]");
+            }
         }
     }
 
-    /** A scarecrow in a field: a post, a bale for a body, a pumpkin head, its arms out. */
+    /** A scarecrow in a field: the post, its legs in overalls, a flannel shirt, arms out, a burlap head and straw hat. */
     void scarecrow(int x, int z, String facing) {
-        p.set(x, 1, z, "minecraft:spruce_fence");
-        p.set(x, 2, z, "minecraft:hay_block");
-        p.set(x, 3, z, "minecraft:carved_pumpkin[facing=" + facing + "]");
-        boolean alongX = facing.equals("north") || facing.equals("south");
-        p.set(x + (alongX ? 1 : 0), 2, z + (alongX ? 0 : 1), "minecraft:spruce_fence");
-        p.set(x - (alongX ? 1 : 0), 2, z - (alongX ? 0 : 1), "minecraft:spruce_fence");
+        p.set(x, 1, z, "fm_scarecrow_lo[facing=" + facing + "]");
+        p.set(x, 2, z, "fm_scarecrow_hi[facing=" + facing + "]");
     }
 
     /** The farm's diesel tank up on its stand, the hose hanging, a stain under it. */
     void fuelTank(int x, int z) {
         for (int dz = 0; dz < 3; dz++) {
-            p.set(x, 1, z + dz, dz == 1 ? "air" : "steel_girder");
-            p.set(x, 2, z + dz, "propane_tank[axis=z]");
+            p.set(x, 1, z + dz, "fm_fuel_stand[axis=z]");
             p.set(x, 0, z + dz, "minecraft:coarse_dirt");
         }
-        p.set(x, 0, z + 1, "scorch");
-        p.set(x + 1, 1, z + 1, "minecraft:iron_chain[axis=y]");
-        p.set(x + 1, 2, z + 1, "minecraft:lightning_rod[facing=east]");
+        p.set(x, 2, z, "fm_fuel_tank_end[facing=north]");
+        p.set(x, 2, z + 1, "fm_fuel_tank[axis=z]");
+        p.set(x, 2, z + 2, "fm_fuel_tank_end[facing=south]");
+        p.set(x, 0, z - 1, "scorch");
     }
 
     /** Graves dug in a row in the yard: mounds, crosses of two sticks, one hole still open. */
@@ -1105,19 +1010,16 @@ final class Farmstead {
             int gx = x + i * 2;
             boolean open = i == n - 1 && chance() < 0.5;
             for (int dz = 0; dz < 3; dz++) {
-                p.set(gx, 0, z + dz, open ? "air" : "minecraft:coarse_dirt");
-                if (open) {
-                    p.set(gx, -1, z + dz, "minecraft:dirt");
-                } else if (dz > 0) {
-                    p.set(gx, 1, z + dz, "minecraft:rooted_dirt");
+                p.set(gx, 0, z + dz, "minecraft:coarse_dirt");
+                if (dz > 0) {
+                    p.set(gx, 1, z + dz, open ? "ch_grave_open[facing=south]" : "ch_grave_mound");
                 }
             }
             if (open) {
                 p.set(gx + 1, 1, z + 1, "minecraft:coarse_dirt");
-                p.set(gx + 1, 1, z + 2, "minecraft:dirt");
+                p.set(gx + 1, 1, z + 2, "fm_bones[facing=" + pick(DIRS) + "]");
             }
-            p.set(gx, 1, z, "minecraft:spruce_fence");
-            p.set(gx, 2, z, "minecraft:spruce_trapdoor[facing=south,half=top,open=false]");
+            p.set(gx, 1, z, "cp_grave_cross[facing=south]");
         }
     }
 
@@ -1131,32 +1033,34 @@ final class Farmstead {
                 }
                 p.set(x + dx, 0, z + dz, dd < r ? "burnt_ground" : "minecraft:coarse_dirt");
                 if (dd < r - 0.5 && chance() < 0.5) {
-                    p.set(x + dx, 1, z + dz, pick("minecraft:bone_block[axis=x]", "minecraft:bone_block[axis=z]",
-                            "minecraft:stripped_dark_oak_log[axis=x]", "minecraft:blackstone_slab[type=bottom]", "scorch"));
+                    p.set(x + dx, 1, z + dz, pick("fm_char_logs", "fm_char_logs", "fm_bones[facing=" + pick(DIRS) + "]", "scorch"));
                 }
             }
         }
-        p.set(x, 1, z, "minecraft:campfire[lit=false,facing=north]");
+        p.set(x, 1, z, "fm_char_logs");
     }
 
     /** A roadside produce stand facing the road (-z): a tin roof on posts, a counter, crates, the sign. */
     void produceStand(int x, int z, String sign) {
-        String tin = pick(TIN);
+        String k = "ext_porch_roof_" + kind(pick(TIN));
         for (int dx = 0; dx < 5; dx++) {
             for (int dz = 0; dz < 3; dz++) {
-                p.set(x + dx, 0, z + dz, "minecraft:spruce_planks");
-                p.set(x + dx, 4, z + dz, tin + "_slab[type=bottom]");
+                p.set(x + dx, 0, z + dz, "ext_porch_boards");
+            }
+            for (int dz = -1; dz < 3; dz++) {
+                p.set(x + dx, 4, z + dz, k + (dz == -1 ? "_edge" : "") + "[facing=north]");
             }
             p.set(x + dx, 1, z, dx == 2 ? "store_register[facing=north,loot=till]" : "store_produce[facing=north,loot=grocery]");
-            p.set(x + dx, 1, z + 2, dx % 2 == 0 ? "minecraft:pumpkin" : "crate");
+            p.set(x + dx, 1, z + 2, dx % 2 == 0 ? "fm_pumpkin[facing=" + pick(DIRS) + "]" : "crate");
         }
         for (int y = 1; y <= 3; y++) {
-            p.set(x, y, z + 2, "minecraft:spruce_fence");
-            p.set(x + 4, y, z + 2, "minecraft:spruce_fence");
+            p.set(x, y, z + 2, y == 1 ? "fm_pumpkin[facing=north]" : "ext_post");
+            p.set(x + 4, y, z + 2, y == 1 ? "crate" : "ext_post");
         }
-        p.set(x - 1, 1, z - 1, "minecraft:carved_pumpkin[facing=north]");
-        p.set(x + 5, 1, z - 1, "minecraft:jack_o_lantern[facing=north]");
-        p.set(x + 5, 1, z, "minecraft:hay_block");
+        p.set(x - 1, 1, z - 1, "fm_pumpkin_carved[facing=north]");
+        p.set(x + 5, 1, z - 1, "fm_pumpkin_lit[facing=north]");
+        p.set(x + 5, 1, z, "fm_bales_low[axis=x]");
         Boards.board(p, rng, sign, x, 2, z - 4);
     }
+
 }

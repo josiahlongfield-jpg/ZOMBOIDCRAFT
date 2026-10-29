@@ -40,7 +40,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             "hiking_backpack", new Fit(1f, 1f, 1f, 4.65f, 5.55f, false),
             "military_rucksack", new Fit(0.85f, 0.85f, 0.85f, 4.53f, 5.78f, false),
             "plate_carrier", new Fit(0.95f, 1f, 1f, 5.1f, -0.75f, true),
-            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true));
+            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true),
+            // the satchel hangs low on the back from its shoulder strap; the pouch sits at the belt's front
+            "mail_bag", new Fit(0.8f, 0.8f, 0.8f, 6.2f, 3.4f, false),
+            "ammo_pouch_belt", new Fit(0.62f, 0.85f, 0.85f, 10.9f, -3.73f, true));
     private static final Fit BACK = new Fit(1f, 1f, 1f, 5.3f, 5.5f, false);
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
@@ -106,12 +109,16 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
         // the belt, holster and sheath are built at body scale round the waist (tools/items/gen_belts.py,
         // gen_holsters.py): they only need moving down to it
+        // over trousers or a shirt tail the belt sits out on the cloth (clothing/ClothingLayer's waistband)
+        float[] out = com.zomboidcraft.client.clothing.ClothingLayer.beltOut(player);
         for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
             if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
+            boolean thigh = worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER);
             pose.pushPose();
-            onPart(pose, worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER));
+            onPart(pose, thigh);
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
+            if (!thigh) pose.scale(out[0], 1f, out[1]);
             items.updateForLiving(item, worn.get(i), ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();

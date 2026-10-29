@@ -8,6 +8,7 @@ plus OUT_DIR/manifest.json (title, author, page, licence, tags, downloads) for p
 """
 import json
 import re
+import socket
 import sys
 import time
 import urllib.parse
@@ -168,11 +169,20 @@ QUERIES = {
     "thr_molotov": ["molotov", "molotov cocktail", "fire whoosh ignite", "petrol ignite", "gasoline fire burst", "fireball whoosh"],
     "thr_grenade": ["grenade pin", "pin pull", "grenade spoon", "smoke grenade", "smoke canister hiss", "flashbang", "stun grenade"],
     "thr_ring": ["tinnitus", "ear ringing", "high pitch ringing", "ringing ears explosion"],
+    # round 2: Josiah found none of the first pin pulls or ear ringings fitted
+    "thr_pin": ["grenade pin pull", "pulling pin", "cotter pin", "metal pin removal", "split ring", "key ring metal",
+                "safety pin metal click", "grenade arm", "grenade spoon release", "metal clip pull", "lever release spring",
+                "metal ring pull", "weapon foley metal click", "military gear click"],
+    "thr_ring2": ["tinnitus effect", "tinnitus high", "shell shock", "shellshock", "after explosion ringing",
+                  "deaf ringing", "concussion ringing", "flashbang ringing", "ears ringing", "sine whine high",
+                  "high frequency whine", "head ringing", "bomb aftermath", "dazed muffled"],
     "thr_blast": ["grenade explosion", "explosion close", "explosion", "big explosion", "distant explosion", "explosion far",
                   "explosion rumble", "explosion debris"],
     "thr_fire": ["fire burning", "fire crackle", "burning fire loop", "flames burning", "gasoline fire", "bonfire crackle"],
 }
 PER_QUERY = 6
+# a stalled download once hung a whole runner until the job timed out; no single read may wait longer than this
+socket.setdefaulttimeout(30)
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}
 
 

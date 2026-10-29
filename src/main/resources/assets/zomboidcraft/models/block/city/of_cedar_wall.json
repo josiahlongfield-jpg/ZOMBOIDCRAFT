@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_cedar": "zomboidcraft:block/city/of_cedar",
+    "particle": "zomboidcraft:block/city/of_cedar"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cedar",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_cedar",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_cedar",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_cedar",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_cedar",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_cedar",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

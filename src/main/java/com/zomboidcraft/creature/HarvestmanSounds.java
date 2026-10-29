@@ -29,6 +29,8 @@ public final class HarvestmanSounds {
     public static final SoundEvent CHITTER = register("creature.harvestman.chitter");
     public static final SoundEvent CREAK = register("creature.harvestman.creak");
     public static final SoundEvent HUM = register("creature.harvestman.hum");
+    /** Its slow rasping breath, through the door it waits behind. */
+    public static final SoundEvent BREATHE = register("creature.harvestman.breathe");
 
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);

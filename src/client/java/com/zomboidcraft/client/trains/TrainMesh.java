@@ -53,6 +53,8 @@ final class TrainMesh {
     static final Mat OTTO_SHELL = Mat.of(5, 0), OTTO_DARK = Mat.of(5, 1), OTTO_FACE = Mat.of(5, 2), OTTO_TALK = Mat.of(5, 3);
     static final Mat OTTO_CHEST = Mat.of(5, 4), BELLOWS = Mat.of(5, 6), WARNING = Mat.of(5, 7), ADS = Mat.of(5, 8, 9, 10, 11);
     static final Mat CLOSE_DOORS = Mat.of(6, 0);
+    static final Mat TIE_PLATE = Mat.of(6, 1), BALLAST = Mat.of(6, 2), WEED = Mat.of(6, 3), INSULATOR = Mat.of(6, 4),
+            RAIL_COVER = Mat.of(6, 5), CLIP = Mat.of(6, 6);
     static final Mat MAP = Mat.of(5, 12), EMERGENCY = Mat.of(5, 13), HAZARD = Mat.of(5, 14), LAMP = Mat.of(5, 15);
 
     /** How a quad is lit: by the world outside, by the car's own lights inside, or glowing itself. */
@@ -108,8 +110,8 @@ final class TrainMesh {
         // ---- the shell
         light = OUTSIDE;
         // skirts below the floor and the underframe
-        box(-w, -0.85, -h, -w + 0.1, 0, h, skin, null, null, null, null, null);
-        box(w - 0.1, -0.85, -h, w, 0, h, null, skin, null, null, null, null);
+        box(-w, -0.32, -h, -w + 0.1, 0, h, skin, null, UNDER, null, null, null);
+        box(w - 0.1, -0.32, -h, w, 0, h, null, skin, UNDER, null, null, null);
         box(-w + 0.1, -0.5, -h, w - 0.1, -0.05, h, null, null, UNDER, null, UNDER, UNDER);
         // roof
         box(-w, ceil, -h, w, TrainCar.ROOF, h, skin, skin, null, ROOF, skin, skin);
@@ -177,16 +179,13 @@ final class TrainMesh {
         if (!back) {
             bellows(-h - 0.3, -h);
         }
-        // running gear: two bogies with four wheels each
+        // running gear, the gear slung under the floor, and the roof, door and end fittings
         for (double bz : new double[] {-TrainCar.BOGIE, TrainCar.BOGIE}) {
-            box(-1.3, -0.95, bz - 1.3, 1.3, -0.45, bz + 1.3, BOGIE, BOGIE, BOGIE, BOGIE, BOGIE, BOGIE);
-            for (double wz : new double[] {bz - 0.8, bz + 0.8}) {
-                for (int sx = -1; sx <= 1; sx += 2) {
-                    double c = sx * 0.72;
-                    box(c - 0.1, -1.0, wz - 0.45, c + 0.1, -0.1, wz + 0.45, WHEEL, WHEEL, null, null, null, null);
-                }
-            }
+            bogie(bz);
         }
+        underfloor(subway);
+        roofGear(subway, front);
+        fittings(subway, front, back);
 
         // ---- the inside
         light = INSIDE;
@@ -200,15 +199,36 @@ final class TrainMesh {
             double zc = -h + t + lampPitch * (i + 0.5);
             lamp(zc - 1.15, zc + 1.15);
         }
-        // benches along the walls, with backs
+        // benches along the walls: a seat each, cushion and back on a steel frame, an armrest every two,
+        // the heater under them
         for (int side = -1; side <= 1; side += 2) {
             for (double[] run : TrainCar.seatRuns(front)) {
                 double x0 = side > 0 ? w - t - TrainCar.SEAT_DEPTH : -w + t, x1 = side > 0 ? w - t : -w + t + TrainCar.SEAT_DEPTH;
-                box(x0, 0, run[0], x1, TrainCar.SEAT_HEIGHT, run[1], seat, seat, null, seat, seat, seat);
-                double bx0 = side > 0 ? w - t - 0.12 : -w + t, bx1 = side > 0 ? w - t : -w + t + 0.12;
-                box(bx0, TrainCar.SEAT_HEIGHT, run[0], bx1, 1.05, run[1], seat, seat, null, seat, seat, seat);
+                double sh = TrainCar.SEAT_HEIGHT;
+                double front0 = side > 0 ? x0 : x1;
+                // the frame: a plinth set back with the heater grille, a steel lip
+                double p0 = side > 0 ? x0 + 0.08 : x0, p1 = side > 0 ? x1 : x1 - 0.08;
+                box(p0, 0, run[0], p1, sh - 0.1, run[1], WALL_IN, WALL_IN, null, null, WALL_IN, WALL_IN);
+                box(side > 0 ? p0 - 0.01 : p1, 0.06, run[0] + 0.1, side > 0 ? p0 : p1 + 0.01, sh - 0.18, run[1] - 0.1,
+                        side > 0 ? CLIP : null, side > 0 ? null : CLIP, null, null, null, null);
+                box(x0, sh - 0.12, run[0], x1, sh - 0.1, run[1], CHROME, CHROME, CHROME, CHROME, CHROME, CHROME);
+                int seats = Math.max(1, (int) Math.round((run[1] - run[0]) / 0.55));
+                double pitch = (run[1] - run[0]) / seats;
+                for (int i = 0; i < seats; i++) {
+                    double a = run[0] + pitch * i + 0.02, b = run[0] + pitch * (i + 1) - 0.02;
+                    // cushion, dipped a touch at the front, and the back leaning out from the wall
+                    box(x0 + (side > 0 ? 0.02 : 0), sh - 0.1, a, x1 - (side > 0 ? 0 : 0.02), sh, b, seat, seat, null, seat, seat, seat);
+                    double bx0 = side > 0 ? w - t - 0.14 : -w + t, bx1 = side > 0 ? w - t : -w + t + 0.14;
+                    box(bx0, sh + 0.04, a, bx1, 1.05, b, seat, seat, null, seat, seat, seat);
+                    if (i % 2 == 0 && i > 0) {
+                        double ax = front0 + (side > 0 ? 0.02 : -0.02);
+                        box(Math.min(ax, side > 0 ? x1 : x0), sh, a - 0.04, Math.max(ax, side > 0 ? x1 : x0), sh + 0.22, a,
+                                CHROME, CHROME, null, CHROME, CHROME, CHROME);
+                    }
+                }
             }
         }
+        interiorDetail(subway, front, w, t, h, ceil, winLow);
         // grab poles by the doors and down the middle, and the overhead rails
         for (double d : TrainCar.DOORS) {
             for (int side = -1; side <= 1; side += 2) {
@@ -460,6 +480,212 @@ final class TrainMesh {
         jawPivot = new float[] {(float) ox + OttoModel.JAW_PIVOT[0], OttoModel.JAW_PIVOT[1], (float) oz + OttoModel.JAW_PIVOT[2]};
         part = STATIC;
         light = OUTSIDE;
+    }
+
+    /** Inside: hand straps off the overhead rails, vents and speakers in the ceiling, sills, door thresholds, and litter. */
+    private void interiorDetail(boolean subway, boolean front, double w, double t, double h, double ceil, double winLow) {
+        byte was = light;
+        light = INSIDE;
+        double end = (front ? TrainCar.CAB : h) - 0.5;
+        // straps: a loop on a strap every 0.7 along both overhead rails
+        for (int side = -1; side <= 1; side += 2) {
+            for (double z = -h + 0.7; z < end; z += 0.7) {
+                double x = side * 1.05;
+                box(x - 0.012, 2.25, z - 0.025, x + 0.012, 2.55, z + 0.025, RUBBER, RUBBER, null, null, RUBBER, RUBBER);
+                box(x - 0.015, 2.12, z - 0.07, x + 0.015, 2.25, z + 0.07, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL);
+            }
+            // air vents along the ceiling either side of the lamps, and the window sills
+            box(side * 0.55 - 0.12, ceil - 0.04, -h + 0.5, side * 0.55 + 0.12, ceil - 0.02, end, null, null, CLIP, null, null, null);
+            double sx0 = side > 0 ? w - t - 0.08 : -w + t, sx1 = side > 0 ? w - t : -w + t + 0.08;
+            box(sx0, winLow - 0.03, -h + 0.4, sx1, winLow, end, CHROME, CHROME, null, CHROME, CHROME, CHROME);
+        }
+        for (double z = -h + 2; z < end; z += 4.5) {
+            box(-0.18, ceil - 0.04, z - 0.18, 0.18, ceil - 0.02, z + 0.18, null, null, CLIP, null, null, null);   // speakers
+        }
+        // a yellow threshold strip at each doorway
+        for (double d : TrainCar.DOORS) {
+            for (int side = -1; side <= 1; side += 2) {
+                double x0 = side > 0 ? w - t - 0.25 : -w + t, x1 = side > 0 ? w - t : -w + t + 0.25;
+                box(x0, 0, d - TrainCar.DOOR_HALF, x1, 0.012, d + TrainCar.DOOR_HALF, null, null, null, HAZARD, null, null);
+            }
+        }
+        // what was left behind: newspapers, a dropped bag
+        java.util.Random r = new java.util.Random(seed * 977L);
+        for (int i = 0; i < 4; i++) {
+            double x = (r.nextDouble() - 0.5) * 1.6, z = -h + 1 + r.nextDouble() * (end + h - 2);
+            double a = 0.15 + r.nextDouble() * 0.12, b = 0.2 + r.nextDouble() * 0.12;
+            box(x - a, 0, z - b, x + a, 0.008 + i * 0.002, z + b, null, null, null, CREAM, null, null);
+        }
+        if (r.nextBoolean()) {
+            double z = -h + 2 + r.nextDouble() * (end + h - 4), x = (r.nextBoolean() ? 1 : -1) * 1.1;
+            box(x - 0.18, 0, z - 0.25, x + 0.18, 0.28, z + 0.25, RUBBER, RUBBER, null, RUBBER, RUBBER, RUBBER);
+            box(x - 0.03, 0.28, z - 0.15, x + 0.03, 0.36, z + 0.15, RUBBER, RUBBER, null, RUBBER, RUBBER, RUBBER);
+        }
+        light = was;
+    }
+
+    // ------------------------------------------------------------------ the fine parts outside
+
+    private void solid(double x0, double y0, double z0, double x1, double y1, double z1, Mat m) {
+        box(x0, y0, z0, x1, y1, z1, m, m, m, m, m, m);
+    }
+
+    /** A wheel in the y-z plane at (x, y, z): an octagon of three boxes, the flange inside, the hub out. */
+    private void wheel(double x0, double x1, double y, double z, double r, int inSide) {
+        double k = r * 0.42, d = r * 0.8;
+        solid(x0, y - k, z - r, x1, y + k, z + r, WHEEL);
+        solid(x0, y - r, z - k, x1, y + r, z + k, WHEEL);
+        solid(x0, y - d, z - d, x1, y + d, z + d, WHEEL);
+        double fx = inSide > 0 ? x1 : x0 - 0.03, fx1 = inSide > 0 ? x1 + 0.03 : x0;
+        solid(fx, y - (r + 0.04) * 0.42, z - r - 0.04, fx1, y + (r + 0.04) * 0.42, z + r + 0.04, WHEEL);
+        solid(fx, y - r - 0.04, z - (r + 0.04) * 0.42, fx1, y + r + 0.04, z + (r + 0.04) * 0.42, WHEEL);
+        double hx = inSide > 0 ? x0 - 0.05 : x1, hx1 = inSide > 0 ? x0 : x1 + 0.05;
+        solid(hx, y - 0.11, z - 0.11, hx1, y + 0.11, z + 0.11, CLIP);
+    }
+
+    /** A bogie: side frames with axle boxes on springs, a bolster across, brake gear at each wheel, two axles. */
+    private void bogie(double bz) {
+        double wy = -0.55, r = 0.43;
+        for (double wz : new double[] {bz - 0.9, bz + 0.9}) {
+            // the axle and its wheels (the gauge: rails at +-0.72)
+            solid(-0.72, wy - 0.06, wz - 0.06, 0.72, wy + 0.06, wz + 0.06, CLIP);
+            for (int sx = -1; sx <= 1; sx += 2) {
+                double c = sx * 0.72;
+                wheel(c - 0.06, c + 0.06, wy, wz, r, -sx);
+                // axle box on its springs, outside the wheel
+                double ax0 = sx > 0 ? 0.82 : -1.02, ax1 = sx > 0 ? 1.02 : -0.82;
+                solid(ax0, wy - 0.16, wz - 0.18, ax1, wy + 0.14, wz + 0.18, BOGIE);
+                solid(ax0 + 0.03, wy - 0.2, wz - 0.13, ax1 - 0.03, wy - 0.16, wz + 0.13, CLIP);
+                for (int coil = 0; coil < 4; coil++) {
+                    double cw = coil % 2 == 0 ? 0.09 : 0.07, cy = wy + 0.14 + coil * 0.055;
+                    solid((ax0 + ax1) / 2 - cw, cy, wz - cw, (ax0 + ax1) / 2 + cw, cy + 0.04, wz + cw, CLIP);
+                }
+                // brake shoe on the tread, its hanger and the cylinder working it
+                double bzs = wz + (wz < bz ? -1 : 1) * (r + 0.03);
+                solid(c - 0.07, wy - 0.17, bzs - 0.04, c + 0.07, wy + 0.17, bzs + 0.04, CLIP);
+                solid(c - 0.03, wy + 0.17, bzs - 0.03, c + 0.03, wy + 0.36, bzs + 0.03, CLIP);
+            }
+        }
+        for (int sx = -1; sx <= 1; sx += 2) {
+            // the side frame: a deep beam between the axle boxes, sagging in the middle under the bolster
+            double f0 = sx > 0 ? 0.85 : -0.99, f1 = sx > 0 ? 0.99 : -0.85;
+            solid(f0, wy + 0.18, bz - 1.25, f1, wy + 0.33, bz + 1.25, BOGIE);
+            solid(f0, wy - 0.12, bz - 0.55, f1, wy + 0.18, bz + 0.55, BOGIE);
+            // brake cylinder on the frame
+            solid(sx > 0 ? 0.99 : -1.15, wy - 0.02, bz - 0.25, sx > 0 ? 1.15 : -0.99, wy + 0.16, bz + 0.05, CLIP);
+            solid(sx > 0 ? 1.0 : -1.06, wy + 0.04, bz + 0.05, sx > 0 ? 1.06 : -1.0, wy + 0.1, bz + 0.3, CHROME);
+        }
+        // the bolster carrying the car, its centre bearing and the air springs on it
+        solid(-1.0, wy + 0.2, bz - 0.28, 1.0, wy + 0.42, bz + 0.28, BOGIE);
+        for (int sx = -1; sx <= 1; sx += 2) {
+            solid(sx * 0.7 - 0.16, wy + 0.42, bz - 0.16, sx * 0.7 + 0.16, -0.32, bz + 0.16, RUBBER);
+        }
+        solid(-0.2, wy + 0.42, bz - 0.2, 0.2, -0.32, bz + 0.2, CLIP);
+    }
+
+    /** The gear slung under the floor between the bogies: boxes, tanks and pipes, a different run on each side. */
+    private void underfloor(boolean subway) {
+        double z0 = -TrainCar.BOGIE + 1.7, z1 = TrainCar.BOGIE - 1.7;
+        java.util.Random r = new java.util.Random(seed * 131L);
+        for (int sx = -1; sx <= 1; sx += 2) {
+            double z = z0;
+            while (z < z1 - 0.6) {
+                double len = 0.8 + r.nextDouble() * 1.8;
+                double zb = Math.min(z1, z + len);
+                int kind = r.nextInt(4);
+                double out = 1.72, in = 0.9 + r.nextDouble() * 0.4, low = -0.82 + r.nextDouble() * 0.2;
+                double x0 = sx > 0 ? in : -out, x1 = sx > 0 ? out : -in;
+                if (kind == 0) {
+                    // an air reservoir: a long drum (octagon) on two straps
+                    double cx = sx * 1.3, cy = -0.55, rr = 0.22;
+                    solid(cx - rr, cy - rr * 0.42, z, cx + rr, cy + rr * 0.42, zb, UNDER);
+                    solid(cx - rr * 0.42, cy - rr, z, cx + rr * 0.42, cy + rr, zb, UNDER);
+                    solid(cx - rr * 0.8, cy - rr * 0.8, z, cx + rr * 0.8, cy + rr * 0.8, zb, UNDER);
+                    for (double sz : new double[] {z + 0.15, zb - 0.2}) {
+                        solid(cx - rr - 0.02, cy - rr - 0.02, sz, cx + rr + 0.02, -0.32, sz + 0.05, CLIP);
+                    }
+                } else {
+                    // an equipment case: battery, inverter, compressor; lids, hinges and a vent grille
+                    solid(x0, low, z, x1, -0.32, zb, UNDER);
+                    double face = sx > 0 ? x1 : x0;
+                    solid(face - (sx > 0 ? 0 : 0.02), low + 0.05, z + 0.06, face + (sx > 0 ? 0.02 : 0), -0.38, zb - 0.06, CLIP);
+                    if (kind == 2) {
+                        for (double g = z + 0.2; g < zb - 0.2; g += 0.12) {
+                            solid(face - (sx > 0 ? 0 : 0.035), low + 0.12, g, face + (sx > 0 ? 0.035 : 0), -0.45, g + 0.04, UNDER);
+                        }
+                    }
+                }
+                z = zb + 0.15 + r.nextDouble() * 0.5;
+            }
+            // the brake pipe and the main reservoir pipe, the length of the car
+            solid(sx * 0.6 - 0.03, -0.42, -TrainCar.HALF + 0.2, sx * 0.6 + 0.03, -0.36, TrainCar.HALF - 0.2, CLIP);
+        }
+    }
+
+    /** On the roof: the air-conditioning units with their fans, vents down the middle, gutters along the eaves, a horn and aerial on the front car. */
+    private void roofGear(boolean subway, boolean front) {
+        double y = TrainCar.ROOF, w = TrainCar.HALF_WIDTH;
+        for (double z : new double[] {-5.2, 5.2}) {
+            solid(-0.95, y + 0.12, z - 1.5, 0.95, y + 0.48, z + 1.5, ROOF);
+            solid(-0.98, y + 0.15, z - 1.3, 0.98, y + 0.4, z + 1.3, CLIP);    // the louvred sides
+            solid(-0.95, y + 0.4, z - 1.5, 0.95, y + 0.48, z + 1.5, ROOF);
+            for (double fz : new double[] {z - 0.7, z + 0.7}) {
+                solid(-0.4, y + 0.48, fz - 0.4, 0.4, y + 0.54, fz + 0.4, CLIP);   // fan guards
+                solid(-0.08, y + 0.54, fz - 0.08, 0.08, y + 0.57, fz + 0.08, CHROME);
+            }
+        }
+        for (double z = -9; z <= 9; z += 3) {
+            if (Math.abs(Math.abs(z) - 5.2) > 1.8) {
+                solid(-0.25, y + 0.12, z - 0.2, 0.25, y + 0.24, z + 0.2, ROOF);
+                solid(-0.27, y + 0.24, z - 0.22, 0.27, y + 0.27, z + 0.22, CLIP);
+            }
+        }
+        for (int sx = -1; sx <= 1; sx += 2) {
+            solid(sx > 0 ? w : -w - 0.05, TrainCar.CEILING + 0.02, -TrainCar.HALF, sx > 0 ? w + 0.05 : -w, TrainCar.CEILING + 0.1, TrainCar.HALF, CLIP);
+        }
+        if (front) {
+            solid(-0.15, y + 0.12, TrainCar.HALF - 1.2, 0.15, y + 0.3, TrainCar.HALF - 0.6, CHROME);    // the horns
+            solid(0.6, y + 0.12, TrainCar.HALF - 2.4, 0.66, y + 0.75, TrainCar.HALF - 2.34, CLIP);      // radio aerial
+        }
+    }
+
+    /** Door frames and grab rails, car numbers, couplers between the cars. */
+    private void fittings(boolean subway, boolean front, boolean back) {
+        double w = TrainCar.HALF_WIDTH, h = TrainCar.HALF;
+        for (int sx = -1; sx <= 1; sx += 2) {
+            double o0 = sx > 0 ? w : -w - 0.03, o1 = sx > 0 ? w + 0.03 : -w;
+            for (double d : TrainCar.DOORS) {
+                double a = d - TrainCar.DOOR_HALF, b = d + TrainCar.DOOR_HALF;
+                // the frame round the doorway, and a rubber edge
+                solid(o0, 0, a - 0.08, o1, TrainCar.DOOR_HEIGHT + 0.08, a, CLIP);
+                solid(o0, 0, b, o1, TrainCar.DOOR_HEIGHT + 0.08, b + 0.08, CLIP);
+                solid(o0, TrainCar.DOOR_HEIGHT, a, o1, TrainCar.DOOR_HEIGHT + 0.08, b, CLIP);
+                // the door warning light over it
+                solid(o0 - (sx > 0 ? 0 : 0.03), TrainCar.DOOR_HEIGHT + 0.12, d - 0.08, o1 + (sx > 0 ? 0.03 : 0), TrainCar.DOOR_HEIGHT + 0.22, d + 0.08, HEADLIGHT);
+                // grab rails each side of the doorway, on stand-offs
+                double g0 = sx > 0 ? w + 0.06 : -w - 0.1, g1 = sx > 0 ? w + 0.1 : -w - 0.06;
+                for (double gz : new double[] {a - 0.25, b + 0.25}) {
+                    solid(g0, 0.7, gz - 0.02, g1, 1.9, gz + 0.02, CHROME);
+                    for (double gy : new double[] {0.75, 1.85}) {
+                        solid(Math.min(o1, g0), gy - 0.02, gz - 0.02, Math.max(o0, g1), gy + 0.02, gz + 0.02, CHROME);
+                    }
+                }
+            }
+            // the car's number, low at each end
+            for (int e = -1; e <= 1; e += 2) {
+                double nz = e * (h - 1.2);
+                solid(o0 - (sx > 0 ? 0 : 0.01), 0.35, nz - 0.35, o1 + (sx > 0 ? 0.01 : 0), 0.6, nz + 0.35, SIGN);
+            }
+        }
+        // couplers and the hoses beside them at both ends, reaching half the gap to the next car (or out in front)
+        for (int e = -1; e <= 1; e += 2) {
+            double z0 = e > 0 ? h : -h - 0.32, z1 = e > 0 ? h + 0.32 : -h;
+            solid(-0.12, -0.58, z0, 0.12, -0.34, z1, BOGIE);
+            solid(-0.2, -0.64, e > 0 ? z1 - 0.12 : z0, 0.2, -0.28, e > 0 ? z1 : z0 + 0.12, CLIP);
+            for (int sx = -1; sx <= 1; sx += 2) {
+                solid(sx * 0.4 - 0.04, -0.7, z0, sx * 0.4 + 0.04, -0.4, z1, RUBBER);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ boxes into quads

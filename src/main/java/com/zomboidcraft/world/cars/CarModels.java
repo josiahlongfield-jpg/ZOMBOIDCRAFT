@@ -75,6 +75,24 @@ public final class CarModels {
         public boolean jet() {
             return "jet".equals(kind);
         }
+
+        /** The marina's boats: afloat at their lines (y = 0 is the keel), searched but never sat in or driven. */
+        public boolean boat() {
+            return "boat".equals(kind);
+        }
+
+        /**
+         * The farm machines (tools/cars/farm_machines.py): never on a street, only where a farm puts
+         * them by name. A tractor's driven; the wagons and trailers have nowhere to sit and are searched.
+         */
+        public boolean farm() {
+            return "farm".equals(kind);
+        }
+
+        /** Something to search rather than sit in: a boat, or a wagon or trailer with no seat. */
+        public boolean searchedOnly() {
+            return boat() || farm() && (seats == null || seats.length == 0);
+        }
     }
 
     private static final class Index {

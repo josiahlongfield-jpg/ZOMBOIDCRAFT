@@ -1,0 +1,175 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "fm_denim": "zomboidcraft:block/city/fm_denim",
+    "straw_floor": "zomboidcraft:block/city/straw_floor",
+    "particle": "zomboidcraft:block/city/cp_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        4,
+        6.5
+      ],
+      "to": [
+        7.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_denim"
+        },
+        "south": {
+          "texture": "#fm_denim"
+        },
+        "east": {
+          "texture": "#fm_denim"
+        },
+        "west": {
+          "texture": "#fm_denim"
+        },
+        "up": {
+          "texture": "#fm_denim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fm_denim"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        4,
+        6.5
+      ],
+      "to": [
+        11,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_denim"
+        },
+        "south": {
+          "texture": "#fm_denim"
+        },
+        "east": {
+          "texture": "#fm_denim"
+        },
+        "west": {
+          "texture": "#fm_denim"
+        },
+        "up": {
+          "texture": "#fm_denim",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fm_denim"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        6
+      ],
+      "to": [
+        7.5,
+        4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#straw_floor"
+        },
+        "south": {
+          "texture": "#straw_floor"
+        },
+        "east": {
+          "texture": "#straw_floor"
+        },
+        "west": {
+          "texture": "#straw_floor"
+        },
+        "up": {
+          "texture": "#straw_floor"
+        },
+        "down": {
+          "texture": "#straw_floor"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        1,
+        6
+      ],
+      "to": [
+        11,
+        4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#straw_floor"
+        },
+        "south": {
+          "texture": "#straw_floor"
+        },
+        "east": {
+          "texture": "#straw_floor"
+        },
+        "west": {
+          "texture": "#straw_floor"
+        },
+        "up": {
+          "texture": "#straw_floor"
+        },
+        "down": {
+          "texture": "#straw_floor"
+        }
+      }
+    }
+  ]
+}

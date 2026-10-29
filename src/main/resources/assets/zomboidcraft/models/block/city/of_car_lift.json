@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "deck_steel": "zomboidcraft:block/city/deck_steel",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "particle": "zomboidcraft:block/city/home_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#home_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#deck_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

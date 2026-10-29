@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_mast_r": "zomboidcraft:block/city/cp_mast_r",
+    "cp_mast_w": "zomboidcraft:block/city/cp_mast_w",
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "particle": "zomboidcraft:block/city/cp_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        8,
+        6.4
+      ],
+      "to": [
+        12,
+        12,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_mast_w"
+        },
+        "south": {
+          "texture": "#cp_mast_w"
+        },
+        "east": {
+          "texture": "#cp_mast_w"
+        },
+        "west": {
+          "texture": "#cp_mast_w"
+        },
+        "up": {
+          "texture": "#cp_mast_w"
+        },
+        "down": {
+          "texture": "#cp_mast_w"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        8,
+        6.3
+      ],
+      "to": [
+        12,
+        9,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_mast_r"
+        },
+        "south": {
+          "texture": "#cp_mast_r"
+        },
+        "east": {
+          "texture": "#cp_mast_r"
+        },
+        "west": {
+          "texture": "#cp_mast_r"
+        },
+        "up": {
+          "texture": "#cp_mast_r"
+        },
+        "down": {
+          "texture": "#cp_mast_r"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_cord": "zomboidcraft:block/city/tn_cord",
+    "particle": "zomboidcraft:block/city/tn_cord"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        0,
+        7.4
+      ],
+      "to": [
+        8.6,
+        16,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_cord"
+        },
+        "south": {
+          "texture": "#tn_cord"
+        },
+        "east": {
+          "texture": "#tn_cord"
+        },
+        "west": {
+          "texture": "#tn_cord"
+        },
+        "up": {
+          "texture": "#tn_cord",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tn_cord",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
