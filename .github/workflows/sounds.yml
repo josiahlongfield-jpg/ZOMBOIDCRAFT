@@ -20,7 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - thr_ring2
+          - gun3_heavy
+          - gun3_battle
+          - gun3_precision
+          - gun3_pistol
+          - gun3_quiet
+          - gun3_launcher
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
