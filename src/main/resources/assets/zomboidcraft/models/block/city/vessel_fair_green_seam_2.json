@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_hull_green_seam": "zomboidcraft:block/city/vessel_hull_green_seam",
+    "particle": "zomboidcraft:block/city/vessel_hull_green_seam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_hull_green_seam"
+        },
+        "south": {
+          "texture": "#vessel_hull_green_seam",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_hull_green_seam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_hull_green_seam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_hull_green_seam",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_hull_green_seam",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -39816,6 +39816,456 @@
    "rotate": "facing",
    "loot": "liquor"
   },
+  "cellar_barrel": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.8,
+     0,
+     5.847,
+     13.2,
+     4,
+     10.153,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     5.847,
+     0,
+     2.8,
+     10.153,
+     4,
+     13.2,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     3.944,
+     0,
+     3.944,
+     12.056,
+     4,
+     12.056,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     2.2,
+     4,
+     5.599,
+     13.8,
+     11,
+     10.401,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     5.599,
+     4,
+     2.2,
+     10.401,
+     11,
+     13.8,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     3.476,
+     4,
+     3.476,
+     12.524,
+     11,
+     12.524,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     2.8,
+     11,
+     5.847,
+     13.2,
+     15,
+     10.153,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     5.847,
+     11,
+     2.8,
+     10.153,
+     15,
+     13.2,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     3.944,
+     11,
+     3.944,
+     12.056,
+     15,
+     12.056,
+     {
+      "side": "cellar_stave",
+      "up": "cellar_head",
+      "down": "cellar_stave"
+     }
+    ],
+    [
+     2.6,
+     1.5,
+     5.732,
+     13.4,
+     2.3,
+     10.268,
+     "ext_black_metal"
+    ],
+    [
+     5.732,
+     1.5,
+     2.6,
+     10.268,
+     2.3,
+     13.4,
+     "ext_black_metal"
+    ],
+    [
+     3.68,
+     1.5,
+     3.68,
+     12.32,
+     2.3,
+     12.32,
+     "ext_black_metal"
+    ],
+    [
+     2.0,
+     5,
+     5.48,
+     14.0,
+     5.8,
+     10.52,
+     "ext_black_metal"
+    ],
+    [
+     5.48,
+     5,
+     2.0,
+     10.52,
+     5.8,
+     14.0,
+     "ext_black_metal"
+    ],
+    [
+     3.2,
+     5,
+     3.2,
+     12.8,
+     5.8,
+     12.8,
+     "ext_black_metal"
+    ],
+    [
+     2.0,
+     10,
+     5.48,
+     14.0,
+     10.8,
+     10.52,
+     "ext_black_metal"
+    ],
+    [
+     5.48,
+     10,
+     2.0,
+     10.52,
+     10.8,
+     14.0,
+     "ext_black_metal"
+    ],
+    [
+     3.2,
+     10,
+     3.2,
+     12.8,
+     10.8,
+     12.8,
+     "ext_black_metal"
+    ],
+    [
+     2.6,
+     13.5,
+     5.732,
+     13.4,
+     14.3,
+     10.268,
+     "ext_black_metal"
+    ],
+    [
+     5.732,
+     13.5,
+     2.6,
+     10.268,
+     14.3,
+     13.4,
+     "ext_black_metal"
+    ],
+    [
+     3.68,
+     13.5,
+     3.68,
+     12.32,
+     14.3,
+     12.32,
+     "ext_black_metal"
+    ]
+   ],
+   "title": "Barrel",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "loot": "basement_food"
+  },
+  "cellar_barrel_side": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.8,
+     4.847,
+     1,
+     13.2,
+     9.153,
+     4.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     5.847,
+     1.8,
+     1,
+     10.153,
+     12.2,
+     4.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     3.944,
+     2.944,
+     1,
+     12.056,
+     11.056,
+     4.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     2.2,
+     4.599,
+     4.5,
+     13.8,
+     9.401,
+     11.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     5.599,
+     1.2,
+     4.5,
+     10.401,
+     12.8,
+     11.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     3.476,
+     2.476,
+     4.5,
+     12.524,
+     11.524,
+     11.5,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     2.8,
+     4.847,
+     11.5,
+     13.2,
+     9.153,
+     15,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     5.847,
+     1.8,
+     11.5,
+     10.153,
+     12.2,
+     15,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     3.944,
+     2.944,
+     11.5,
+     12.056,
+     11.056,
+     15,
+     {
+      "side": "cellar_stave",
+      "north": "cellar_head",
+      "south": "cellar_head"
+     }
+    ],
+    [
+     2.6,
+     4.7,
+     2.5,
+     13.4,
+     9.3,
+     3.3,
+     "ext_black_metal"
+    ],
+    [
+     5.7,
+     1.6,
+     2.5,
+     10.3,
+     12.4,
+     3.3,
+     "ext_black_metal"
+    ],
+    [
+     3.7,
+     2.7,
+     2.5,
+     12.3,
+     11.3,
+     3.3,
+     "ext_black_metal"
+    ],
+    [
+     2.6,
+     4.7,
+     12.7,
+     13.4,
+     9.3,
+     13.5,
+     "ext_black_metal"
+    ],
+    [
+     5.7,
+     1.6,
+     12.7,
+     10.3,
+     12.4,
+     13.5,
+     "ext_black_metal"
+    ],
+    [
+     3.7,
+     2.7,
+     12.7,
+     12.3,
+     11.3,
+     13.5,
+     "ext_black_metal"
+    ],
+    [
+     2,
+     0,
+     3,
+     14,
+     2,
+     5,
+     "home_wood_dark"
+    ],
+    [
+     2,
+     0,
+     11,
+     14,
+     2,
+     13,
+     "home_wood_dark"
+    ],
+    [
+     7.4,
+     4,
+     0,
+     8.6,
+     5.2,
+     1,
+     "tr_brass"
+    ],
+    [
+     7.6,
+     3,
+     0.2,
+     8.4,
+     4,
+     0.8,
+     "tr_brass"
+    ]
+   ],
+   "title": "Cask",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "loot": "liquor"
+  },
   "bunk_concrete": {
    "tex": "bunk_concrete",
    "title": "Poured Concrete",
@@ -48030,6 +48480,618 @@
     "bottom": "vessel_bulkhead"
    },
    "title": "Bulkhead"
+  },
+  "vessel_fair_black_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_black"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_black_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_black"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_black_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_black"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_black_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_black_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_black_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_black_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_black_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_black_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_navy"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_navy"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_navy"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_navy_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_navy_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_navy_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_navy_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_green"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_green"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_green"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_green_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_green_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_green_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_green_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_maroon_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_maroon_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_grey"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_grey"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_grey"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_hull_grey_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_hull_grey_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_grey_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_hull_grey_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_bottom"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_bottom"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_bottom"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_seam_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "vessel_bottom_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_seam_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16,
+     "vessel_bottom_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "vessel_fair_bottom_seam_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     16,
+     16,
+     "vessel_bottom_seam"
+    ]
+   ],
+   "title": "Hull Plating",
+   "sound": "METAL",
+   "rotate": "facing"
   },
   "navy_hull": {
    "tex": "navy_hull",
@@ -623901,6 +624963,193 @@
    "light": 12,
    "decor": true
   },
+  "rs_meter": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.2,
+     0,
+     7.2,
+     8.8,
+     10,
+     8.8,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     0.6,
+     9.5,
+     "st_galv"
+    ],
+    [
+     5,
+     11,
+     6,
+     11,
+     15.5,
+     10,
+     {
+      "north": "rs_meter",
+      "side": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     5.5,
+     15.5,
+     6.5,
+     10.5,
+     16.5,
+     9.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     10,
+     7,
+     9.5,
+     11,
+     9,
+     "st_galv"
+    ]
+   ],
+   "title": "Parking Meter",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     6,
+     11,
+     16,
+     10
+    ]
+   ],
+   "render": "cutout"
+  },
+  "rs_meter_bent": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     0.6,
+     9.5,
+     "st_galv"
+    ],
+    [
+     7.2,
+     0,
+     7.2,
+     8.8,
+     1.5,
+     8.8,
+     "st_galv"
+    ],
+    [
+     7.2,
+     1,
+     7.2,
+     8.8,
+     10,
+     8.8,
+     "st_galv",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       1,
+       8
+      ]
+     }
+    ],
+    [
+     5,
+     11,
+     6,
+     11,
+     15.5,
+     10,
+     {
+      "north": "rs_meter",
+      "side": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       1,
+       8
+      ]
+     }
+    ],
+    [
+     5.5,
+     15.5,
+     6.5,
+     10.5,
+     16.5,
+     9.5,
+     "st_galv",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       1,
+       8
+      ]
+     }
+    ],
+    [
+     6.5,
+     10,
+     7,
+     9.5,
+     11,
+     9,
+     "st_galv",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       1,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Parking Meter",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     0,
+     11,
+     6,
+     10
+    ]
+   ],
+   "render": "cutout"
+  },
   "sf_col": {
    "model": "boxes",
    "boxes": [
@@ -624817,6 +626066,8494 @@
    },
    "title": "Level Crossing",
    "sound": "WOOD"
+  },
+  "tb_buffer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1.5,
+     16,
+     2.5,
+     6.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     9.5,
+     16,
+     2.5,
+     14.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     0,
+     7.6,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     8.4,
+     0,
+     0,
+     16,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     0,
+     9,
+     0,
+     16,
+     14,
+     2.5,
+     {
+      "north": "hazard_stripes",
+      "side": "tb_sleeper",
+      "up": "tb_sleeper",
+      "down": "tb_sleeper",
+      "south": "tb_sleeper"
+     }
+    ],
+    [
+     6.8,
+     2.5,
+     2.5,
+     9.2,
+     14,
+     4.5,
+     "tb_rust"
+    ],
+    [
+     6.8,
+     5.6,
+     4.5,
+     9.2,
+     7,
+     16,
+     "tb_rust"
+    ],
+    [
+     7.4,
+     3.6,
+     4.5,
+     8.6,
+     5.6,
+     16,
+     "tb_rust"
+    ],
+    [
+     6.8,
+     3,
+     4.5,
+     9.2,
+     5,
+     18,
+     "tb_rust",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       4,
+       4.5
+      ]
+     }
+    ]
+   ],
+   "title": "Buffer Stop",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     14,
+     16
+    ]
+   ]
+  },
+  "tb_buffer_mid": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1.5,
+     16,
+     2.5,
+     6.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     9.5,
+     16,
+     2.5,
+     14.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     0,
+     7.6,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     8.4,
+     0,
+     0,
+     16,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     0,
+     9,
+     0,
+     16,
+     14,
+     2.5,
+     {
+      "north": "hazard_stripes",
+      "side": "tb_sleeper",
+      "up": "tb_sleeper",
+      "down": "tb_sleeper",
+      "south": "tb_sleeper"
+     }
+    ],
+    [
+     3,
+     14,
+     0.6,
+     13,
+     22,
+     1.6,
+     {
+      "north": "fw_target",
+      "south": "fw_steel",
+      "side": "fw_steel",
+      "up": "fw_steel",
+      "down": "fw_steel"
+     }
+    ],
+    [
+     7.4,
+     12,
+     1.6,
+     8.6,
+     14,
+     2.4,
+     "fw_steel"
+    ]
+   ],
+   "title": "Buffer Stop",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     14,
+     2.5
+    ]
+   ]
+  },
+  "fw_side_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_red"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_red_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_red_0",
+      "south": "fw_lining",
+      "side": "fw_mark_red_0",
+      "up": "fw_mark_red_0",
+      "down": "fw_mark_red_0"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_red_0"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_red_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_red_1",
+      "south": "fw_lining",
+      "side": "fw_mark_red_1",
+      "up": "fw_mark_red_1",
+      "down": "fw_mark_red_1"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_red_1"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_red_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_red_2",
+      "south": "fw_lining",
+      "side": "fw_mark_red_2",
+      "up": "fw_mark_red_2",
+      "down": "fw_mark_red_2"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_red_2"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_red_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_red"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_red"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     2,
+     -2.8,
+     14.6,
+     14,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     3,
+     -2.2,
+     15,
+     4,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     12,
+     -2.2,
+     15,
+     13,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     10.5,
+     8,
+     -2.4,
+     13.6,
+     9.2,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     11,
+     6.2,
+     -2.8,
+     12,
+     8,
+     -2.4,
+     "fs_red"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_red_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_red"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_red"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_red_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_red"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_red"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     0,
+     -2.8,
+     14.6,
+     6,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_red_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_red"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_red"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_end_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_red"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_brake_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_red"
+    ],
+    [
+     7.4,
+     0,
+     -3,
+     8.6,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     6,
+     2,
+     -3.4,
+     10,
+     3,
+     0,
+     "fw_steel"
+    ],
+    [
+     7.6,
+     11,
+     -4.5,
+     8.4,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     2,
+     13.5,
+     -5.2,
+     14,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     9.5,
+     -5.2,
+     13.5,
+     10.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -5.2,
+     3,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     13,
+     10,
+     -5.2,
+     14,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     7.5,
+     9.5,
+     -5.2,
+     8.5,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     11.6,
+     -5.2,
+     13.5,
+     12.4,
+     -4.4,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_corner_red_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_red"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_corner_red_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_red"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_roof_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_side_red",
+      "south": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_side_red"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     9.2,
+     4,
+     16,
+     10.2,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_red"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10.2,
+     16
+    ]
+   ]
+  },
+  "fw_end_top_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_red"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_red"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_red_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_red"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_red"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_red_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_red",
+      "south": "fw_lining",
+      "side": "fw_end_red",
+      "up": "fw_end_red",
+      "down": "fw_end_red"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_red"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     8,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_red",
+      "up": "fw_side_red",
+      "down": "fw_side_red"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_red"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_ridge_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10.2,
+     0,
+     16,
+     11,
+     16,
+     "fw_side_red"
+    ],
+    [
+     0,
+     11,
+     3,
+     1,
+     11.6,
+     13,
+     "fw_side_red"
+    ],
+    [
+     8,
+     11,
+     3,
+     9,
+     11.6,
+     13,
+     "fw_side_red"
+    ],
+    [
+     5,
+     11.6,
+     0,
+     11,
+     12.6,
+     16,
+     {
+      "up": "fw_lining",
+      "side": "fw_lining",
+      "down": "fw_lining"
+     }
+    ],
+    [
+     5,
+     11,
+     2,
+     11,
+     11.6,
+     3.5,
+     "fw_steel"
+    ],
+    [
+     5,
+     11,
+     10,
+     11,
+     11.6,
+     11.5,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12.6,
+     16
+    ]
+   ]
+  },
+  "fw_side_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_brown"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_brown_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_brown_0",
+      "south": "fw_lining",
+      "side": "fw_mark_brown_0",
+      "up": "fw_mark_brown_0",
+      "down": "fw_mark_brown_0"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_brown_0"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_brown_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_brown_1",
+      "south": "fw_lining",
+      "side": "fw_mark_brown_1",
+      "up": "fw_mark_brown_1",
+      "down": "fw_mark_brown_1"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_brown_1"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_brown_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_brown_2",
+      "south": "fw_lining",
+      "side": "fw_mark_brown_2",
+      "up": "fw_mark_brown_2",
+      "down": "fw_mark_brown_2"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_brown_2"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_brown_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_brown"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     2,
+     -2.8,
+     14.6,
+     14,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     3,
+     -2.2,
+     15,
+     4,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     12,
+     -2.2,
+     15,
+     13,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     10.5,
+     8,
+     -2.4,
+     13.6,
+     9.2,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     11,
+     6.2,
+     -2.8,
+     12,
+     8,
+     -2.4,
+     "fs_red"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_brown_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_brown"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_brown_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_brown"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     0,
+     -2.8,
+     14.6,
+     6,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_brown_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_brown"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_end_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_brown"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_brake_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     7.4,
+     0,
+     -3,
+     8.6,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     6,
+     2,
+     -3.4,
+     10,
+     3,
+     0,
+     "fw_steel"
+    ],
+    [
+     7.6,
+     11,
+     -4.5,
+     8.4,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     2,
+     13.5,
+     -5.2,
+     14,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     9.5,
+     -5.2,
+     13.5,
+     10.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -5.2,
+     3,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     13,
+     10,
+     -5.2,
+     14,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     7.5,
+     9.5,
+     -5.2,
+     8.5,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     11.6,
+     -5.2,
+     13.5,
+     12.4,
+     -4.4,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_corner_brown_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_corner_brown_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_roof_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_side_brown",
+      "south": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     9.2,
+     4,
+     16,
+     10.2,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_brown"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10.2,
+     16
+    ]
+   ]
+  },
+  "fw_end_top_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_brown"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_brown_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_brown"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_brown_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_brown",
+      "south": "fw_lining",
+      "side": "fw_end_brown",
+      "up": "fw_end_brown",
+      "down": "fw_end_brown"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_brown"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     8,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_brown",
+      "up": "fw_side_brown",
+      "down": "fw_side_brown"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_brown"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_ridge_brown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10.2,
+     0,
+     16,
+     11,
+     16,
+     "fw_side_brown"
+    ],
+    [
+     0,
+     11,
+     3,
+     1,
+     11.6,
+     13,
+     "fw_side_brown"
+    ],
+    [
+     8,
+     11,
+     3,
+     9,
+     11.6,
+     13,
+     "fw_side_brown"
+    ],
+    [
+     5,
+     11.6,
+     0,
+     11,
+     12.6,
+     16,
+     {
+      "up": "fw_lining",
+      "side": "fw_lining",
+      "down": "fw_lining"
+     }
+    ],
+    [
+     5,
+     11,
+     2,
+     11,
+     11.6,
+     3.5,
+     "fw_steel"
+    ],
+    [
+     5,
+     11,
+     10,
+     11,
+     11.6,
+     11.5,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12.6,
+     16
+    ]
+   ]
+  },
+  "fw_side_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_green"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_green_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_green_0",
+      "south": "fw_lining",
+      "side": "fw_mark_green_0",
+      "up": "fw_mark_green_0",
+      "down": "fw_mark_green_0"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_green_0"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_green_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_green_1",
+      "south": "fw_lining",
+      "side": "fw_mark_green_1",
+      "up": "fw_mark_green_1",
+      "down": "fw_mark_green_1"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_green_1"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_mark_green_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_mark_green_2",
+      "south": "fw_lining",
+      "side": "fw_mark_green_2",
+      "up": "fw_mark_green_2",
+      "down": "fw_mark_green_2"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_mark_green_2"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_green_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_green"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_green"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     2,
+     -2.8,
+     14.6,
+     14,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     3,
+     -2.2,
+     15,
+     4,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     12,
+     -2.2,
+     15,
+     13,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     10.5,
+     8,
+     -2.4,
+     13.6,
+     9.2,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     11,
+     6.2,
+     -2.8,
+     12,
+     8,
+     -2.4,
+     "fs_red"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_green_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_green"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     0,
+     "fw_door_green"
+    ],
+    [
+     0,
+     -0.8,
+     -2,
+     16,
+     0.4,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_green_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_green"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_green"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     13.6,
+     0,
+     -2.8,
+     14.6,
+     6,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_door_green_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_side_green"
+    ],
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     14.6,
+     0,
+     "fw_door_green"
+    ],
+    [
+     0,
+     14.6,
+     -2.4,
+     16,
+     16,
+     0,
+     "fw_steel"
+    ],
+    [
+     3,
+     13.6,
+     -2.8,
+     5,
+     15,
+     -2.2,
+     "fw_steel"
+    ],
+    [
+     11,
+     13.6,
+     -2.8,
+     13,
+     15,
+     -2.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Door",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     -1.6,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_end_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_green"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_brake_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_green"
+    ],
+    [
+     7.4,
+     0,
+     -3,
+     8.6,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     6,
+     2,
+     -3.4,
+     10,
+     3,
+     0,
+     "fw_steel"
+    ],
+    [
+     7.6,
+     11,
+     -4.5,
+     8.4,
+     12,
+     -1.8,
+     "fw_steel"
+    ],
+    [
+     2,
+     13.5,
+     -5.2,
+     14,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     9.5,
+     -5.2,
+     13.5,
+     10.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -5.2,
+     3,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     13,
+     10,
+     -5.2,
+     14,
+     14,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     7.5,
+     9.5,
+     -5.2,
+     8.5,
+     14.5,
+     -4.4,
+     "fw_steel"
+    ],
+    [
+     2.5,
+     11.6,
+     -5.2,
+     13.5,
+     12.4,
+     -4.4,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ]
+   ]
+  },
+  "fw_corner_green_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_green"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_corner_green_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     16,
+     0,
+     "fw_end_green"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     16,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     16,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     10,
+     -2.8,
+     14,
+     10.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     10,
+     -1.9,
+     2.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     10,
+     -1.9,
+     13.8,
+     10.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     14,
+     -2.8,
+     14,
+     14.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     14,
+     -1.9,
+     2.8,
+     14.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     14,
+     -1.9,
+     13.8,
+     14.9,
+     0,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.5
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_roof_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_side_green",
+      "south": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_side_green"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     9.2,
+     4,
+     16,
+     10.2,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_green"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10.2,
+     16
+    ]
+   ]
+  },
+  "fw_end_top_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_green"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_green"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_green_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_green"
+    ],
+    [
+     14.5,
+     0,
+     0,
+     16,
+     8,
+     16,
+     {
+      "west": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     14.5,
+     0,
+     -0.6,
+     16.4,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_green"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_corner_top_green_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     1.5,
+     {
+      "north": "fw_end_green",
+      "south": "fw_lining",
+      "side": "fw_end_green",
+      "up": "fw_end_green",
+      "down": "fw_end_green"
+     }
+    ],
+    [
+     0,
+     0,
+     -0.8,
+     1.4,
+     8,
+     0,
+     "fw_end_green"
+    ],
+    [
+     0,
+     0,
+     0,
+     1.5,
+     8,
+     16,
+     {
+      "east": "fw_lining",
+      "side": "fw_side_green",
+      "up": "fw_side_green",
+      "down": "fw_side_green"
+     }
+    ],
+    [
+     -0.4,
+     0,
+     -0.6,
+     1.5,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     0,
+     -2.6,
+     3,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     13,
+     0,
+     -2.6,
+     14,
+     8,
+     -1.6,
+     "fw_steel"
+    ],
+    [
+     2,
+     2,
+     -2.8,
+     14,
+     2.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     2,
+     -1.9,
+     2.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     2,
+     -1.9,
+     13.8,
+     2.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     2,
+     6,
+     -2.8,
+     14,
+     6.9,
+     -1.9,
+     "fw_steel"
+    ],
+    [
+     2.2,
+     6,
+     -1.9,
+     2.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     13.2,
+     6,
+     -1.9,
+     13.8,
+     6.9,
+     0,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     -1,
+     16,
+     9.2,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     7.2,
+     -1.4,
+     16,
+     8,
+     -0.6,
+     "fw_side_green"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.2,
+     16
+    ]
+   ]
+  },
+  "fw_ridge_green": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10.2,
+     0,
+     16,
+     11,
+     16,
+     "fw_side_green"
+    ],
+    [
+     0,
+     11,
+     3,
+     1,
+     11.6,
+     13,
+     "fw_side_green"
+    ],
+    [
+     8,
+     11,
+     3,
+     9,
+     11.6,
+     13,
+     "fw_side_green"
+    ],
+    [
+     5,
+     11.6,
+     0,
+     11,
+     12.6,
+     16,
+     {
+      "up": "fw_lining",
+      "side": "fw_lining",
+      "down": "fw_lining"
+     }
+    ],
+    [
+     5,
+     11,
+     2,
+     11,
+     11.6,
+     3.5,
+     "fw_steel"
+    ],
+    [
+     5,
+     11,
+     10,
+     11,
+     11.6,
+     11.5,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Roof",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12.6,
+     16
+    ]
+   ]
+  },
+  "fw_floor": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "fw_lining",
+      "side": "fw_steel",
+      "down": "fw_steel"
+     }
+    ],
+    [
+     0,
+     8.5,
+     0,
+     16,
+     12,
+     1.5,
+     "fw_steel"
+    ],
+    [
+     6,
+     8,
+     1.5,
+     10,
+     12,
+     16,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Floor",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     8,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_floor_mid": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     12,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "fw_lining",
+      "side": "fw_steel",
+      "down": "fw_steel"
+     }
+    ],
+    [
+     5,
+     2,
+     0,
+     11,
+     12,
+     16,
+     "fw_steel"
+    ],
+    [
+     4,
+     2,
+     0,
+     12,
+     3.4,
+     16,
+     "fw_steel"
+    ],
+    [
+     0,
+     8,
+     6,
+     16,
+     12,
+     10,
+     "fw_steel"
+    ]
+   ],
+   "title": "Boxcar Floor",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     0,
+     2,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "fw_truck": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.5,
+     0,
+     0,
+     6.0,
+     2.5,
+     16,
+     "tb_sleeper"
+    ],
+    [
+     9.5,
+     0,
+     0,
+     14.0,
+     2.5,
+     16,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     7.6,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     0,
+     0,
+     8.4,
+     16,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     2.0,
+     2.5,
+     4.5,
+     5.5,
+     3,
+     11.5,
+     "tb_rust"
+    ],
+    [
+     3.1,
+     3,
+     5,
+     3.9,
+     3.8,
+     5.8,
+     "tb_rust"
+    ],
+    [
+     3.1,
+     3,
+     10.2,
+     3.9,
+     3.8,
+     11.0,
+     "tb_rust"
+    ],
+    [
+     10.0,
+     2.5,
+     4.5,
+     13.5,
+     3,
+     11.5,
+     "tb_rust"
+    ],
+    [
+     11.1,
+     3,
+     5,
+     11.9,
+     3.8,
+     5.8,
+     "tb_rust"
+    ],
+    [
+     11.1,
+     3,
+     10.2,
+     11.9,
+     3.8,
+     11.0,
+     "tb_rust"
+    ],
+    [
+     0,
+     3,
+     5.6,
+     16,
+     3.6,
+     10.4,
+     "tb_rust"
+    ],
+    [
+     0,
+     3.6,
+     7.4,
+     16,
+     5.6,
+     8.6,
+     "tb_rust"
+    ],
+    [
+     0,
+     5.6,
+     6.8,
+     16,
+     7,
+     9.2,
+     "tb_rust"
+    ],
+    [
+     5,
+     7,
+     7.2,
+     11,
+     21,
+     8.8,
+     "fw_steel"
+    ],
+    [
+     3,
+     9,
+     7.2,
+     13,
+     19,
+     8.8,
+     "fw_steel"
+    ],
+    [
+     1,
+     11,
+     7.2,
+     15,
+     17,
+     8.8,
+     "fw_steel"
+    ],
+    [
+     1,
+     12,
+     8.8,
+     15,
+     16,
+     9.6,
+     "fw_steel"
+    ],
+    [
+     6.5,
+     12,
+     4.6,
+     9.5,
+     16,
+     7.2,
+     "fw_steel"
+    ],
+    [
+     0,
+     15,
+     3,
+     16,
+     18,
+     5,
+     "fw_steel"
+    ],
+    [
+     0,
+     10,
+     3.4,
+     16,
+     12,
+     4.6,
+     "fw_steel"
+    ],
+    [
+     5.5,
+     12,
+     2.6,
+     10.5,
+     15,
+     5.4,
+     "fw_steel"
+    ],
+    [
+     1.5,
+     12,
+     3.6,
+     3.0,
+     15,
+     4.4,
+     "fw_steel"
+    ],
+    [
+     13,
+     12,
+     3.6,
+     14.5,
+     15,
+     4.4,
+     "fw_steel"
+    ],
+    [
+     13.5,
+     9,
+     7.4,
+     15.5,
+     15,
+     8.6,
+     "fw_steel"
+    ]
+   ],
+   "title": "Wagon Truck",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2.5,
+     16
+    ],
+    [
+     0,
+     2.5,
+     3,
+     16,
+     16,
+     9.6
+    ]
+   ]
+  },
+  "fw_truck_mid": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1.5,
+     16,
+     2.5,
+     6.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     9.5,
+     16,
+     2.5,
+     14.0,
+     "tb_sleeper"
+    ],
+    [
+     0,
+     0,
+     0,
+     7.6,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     8.4,
+     0,
+     0,
+     16,
+     1.6,
+     16,
+     {
+      "up": "rw_ballast",
+      "side": "rw_ballast_side",
+      "down": "rw_subballast"
+     }
+    ],
+    [
+     0,
+     13.2,
+     7.2,
+     16,
+     14.8,
+     8.8,
+     "fw_steel"
+    ],
+    [
+     0,
+     17,
+     3,
+     16,
+     20,
+     13,
+     "fw_steel"
+    ],
+    [
+     0,
+     10,
+     12.5,
+     16,
+     11,
+     13.5,
+     "fw_steel"
+    ]
+   ],
+   "title": "Wagon Truck",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2.5,
+     16
+    ]
+   ]
+  },
+  "fw_coupler": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     4,
+     4,
+     10,
+     8,
+     16,
+     "fw_steel"
+    ],
+    [
+     5,
+     3,
+     0.5,
+     11,
+     9,
+     4,
+     "fw_steel"
+    ],
+    [
+     4,
+     5,
+     0,
+     6,
+     8,
+     2,
+     "fw_steel"
+    ],
+    [
+     2,
+     9.5,
+     2,
+     14,
+     10.3,
+     2.8,
+     "fw_steel"
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     12,
+     16,
+     "fw_steel"
+    ]
+   ],
+   "title": "Coupler",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     4,
+     3,
+     0,
+     12,
+     12,
+     16
+    ]
+   ]
+  },
+  "wv_loom_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     3,
+     13,
+     4,
+     "wv_iron"
+    ],
+    [
+     1,
+     0,
+     12,
+     3,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     0,
+     2,
+     3,
+     2,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     11,
+     2,
+     3,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     4,
+     4,
+     3,
+     6,
+     12,
+     "wv_iron"
+    ],
+    [
+     1,
+     1,
+     7.4,
+     16,
+     2.2,
+     8.6,
+     "wv_iron"
+    ],
+    [
+     1,
+     11,
+     13,
+     16,
+     12.2,
+     14,
+     "wv_iron"
+    ],
+    [
+     3,
+     7,
+     11,
+     16,
+     11,
+     15,
+     {
+      "side": "wv_warp",
+      "up": "wv_warp",
+      "down": "wv_warp",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     3,
+     11,
+     6,
+     16,
+     11.4,
+     11,
+     "wv_warp"
+    ],
+    [
+     3,
+     9,
+     6.5,
+     16,
+     15,
+     7.5,
+     {
+      "north": "wv_iron",
+      "south": "wv_iron",
+      "side": "wv_iron",
+      "up": "wv_iron"
+     }
+    ],
+    [
+     3,
+     11,
+     4.5,
+     16,
+     11.4,
+     6.5,
+     "wv_cloth"
+    ],
+    [
+     3,
+     8,
+     2.5,
+     16,
+     11,
+     5,
+     {
+      "side": "wv_cloth",
+      "up": "wv_cloth",
+      "down": "wv_cloth",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     3,
+     11.4,
+     5,
+     16,
+     12.6,
+     6.6,
+     "wv_iron"
+    ]
+   ],
+   "title": "Power Loom",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     15
+    ]
+   ]
+  },
+  "wv_loom_l_cut": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     3,
+     13,
+     4,
+     "wv_iron"
+    ],
+    [
+     1,
+     0,
+     12,
+     3,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     0,
+     2,
+     3,
+     2,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     11,
+     2,
+     3,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     1,
+     4,
+     4,
+     3,
+     6,
+     12,
+     "wv_iron"
+    ],
+    [
+     1,
+     1,
+     7.4,
+     16,
+     2.2,
+     8.6,
+     "wv_iron"
+    ],
+    [
+     1,
+     11,
+     13,
+     16,
+     12.2,
+     14,
+     "wv_iron"
+    ],
+    [
+     3,
+     7,
+     11,
+     16,
+     11,
+     15,
+     {
+      "side": "wv_warp",
+      "up": "wv_warp",
+      "down": "wv_warp",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     3,
+     2,
+     10.6,
+     16,
+     7,
+     11,
+     "wv_warp"
+    ],
+    [
+     3,
+     8,
+     2.5,
+     16,
+     11,
+     5,
+     {
+      "side": "wv_cloth",
+      "up": "wv_cloth",
+      "down": "wv_cloth",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     3,
+     11.4,
+     5,
+     16,
+     12.6,
+     6.6,
+     "wv_iron"
+    ]
+   ],
+   "title": "Power Loom",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     15
+    ]
+   ]
+  },
+  "wv_loom_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     13,
+     0,
+     2,
+     15,
+     13,
+     4,
+     "wv_iron"
+    ],
+    [
+     13,
+     0,
+     12,
+     15,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     0,
+     2,
+     15,
+     2,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     11,
+     2,
+     15,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     4,
+     4,
+     15,
+     6,
+     12,
+     "wv_iron"
+    ],
+    [
+     0,
+     1,
+     7.4,
+     15,
+     2.2,
+     8.6,
+     "wv_iron"
+    ],
+    [
+     0,
+     11,
+     13,
+     15,
+     12.2,
+     14,
+     "wv_iron"
+    ],
+    [
+     0,
+     7,
+     11,
+     13,
+     11,
+     15,
+     {
+      "side": "wv_warp",
+      "up": "wv_warp",
+      "down": "wv_warp",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     0,
+     11,
+     6,
+     13,
+     11.4,
+     11,
+     "wv_warp"
+    ],
+    [
+     0,
+     9,
+     6.5,
+     13,
+     15,
+     7.5,
+     {
+      "north": "wv_iron",
+      "south": "wv_iron",
+      "side": "wv_iron",
+      "up": "wv_iron"
+     }
+    ],
+    [
+     0,
+     11,
+     4.5,
+     13,
+     11.4,
+     6.5,
+     "wv_cloth"
+    ],
+    [
+     0,
+     8,
+     2.5,
+     13,
+     11,
+     5,
+     {
+      "side": "wv_cloth",
+      "up": "wv_cloth",
+      "down": "wv_cloth",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     0,
+     11.4,
+     5,
+     13,
+     12.6,
+     6.6,
+     "wv_iron"
+    ],
+    [
+     15,
+     4,
+     4,
+     16,
+     12,
+     12,
+     "wv_iron"
+    ],
+    [
+     15.5,
+     6,
+     3,
+     16,
+     10,
+     13,
+     "wv_iron"
+    ],
+    [
+     15.5,
+     3,
+     6,
+     16,
+     13,
+     10,
+     "wv_iron"
+    ]
+   ],
+   "title": "Power Loom",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     15
+    ]
+   ]
+  },
+  "wv_loom_r_cut": {
+   "model": "boxes",
+   "boxes": [
+    [
+     13,
+     0,
+     2,
+     15,
+     13,
+     4,
+     "wv_iron"
+    ],
+    [
+     13,
+     0,
+     12,
+     15,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     0,
+     2,
+     15,
+     2,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     11,
+     2,
+     15,
+     13,
+     14,
+     "wv_iron"
+    ],
+    [
+     13,
+     4,
+     4,
+     15,
+     6,
+     12,
+     "wv_iron"
+    ],
+    [
+     0,
+     1,
+     7.4,
+     15,
+     2.2,
+     8.6,
+     "wv_iron"
+    ],
+    [
+     0,
+     11,
+     13,
+     15,
+     12.2,
+     14,
+     "wv_iron"
+    ],
+    [
+     0,
+     7,
+     11,
+     13,
+     11,
+     15,
+     {
+      "side": "wv_warp",
+      "up": "wv_warp",
+      "down": "wv_warp",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     0,
+     2,
+     10.6,
+     13,
+     7,
+     11,
+     "wv_warp"
+    ],
+    [
+     0,
+     8,
+     2.5,
+     13,
+     11,
+     5,
+     {
+      "side": "wv_cloth",
+      "up": "wv_cloth",
+      "down": "wv_cloth",
+      "east": "wv_iron",
+      "west": "wv_iron"
+     }
+    ],
+    [
+     0,
+     11.4,
+     5,
+     13,
+     12.6,
+     6.6,
+     "wv_iron"
+    ],
+    [
+     15,
+     4,
+     4,
+     16,
+     12,
+     12,
+     "wv_iron"
+    ],
+    [
+     15.5,
+     6,
+     3,
+     16,
+     10,
+     13,
+     "wv_iron"
+    ],
+    [
+     15.5,
+     3,
+     6,
+     16,
+     13,
+     10,
+     "wv_iron"
+    ]
+   ],
+   "title": "Power Loom",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     13,
+     15
+    ]
+   ]
+  },
+  "wv_frame": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     3,
+     16,
+     3,
+     13,
+     "wv_iron"
+    ],
+    [
+     0,
+     3,
+     6,
+     16,
+     6,
+     10,
+     "wv_iron"
+    ],
+    [
+     0,
+     9,
+     4,
+     16,
+     10,
+     12,
+     "wv_iron"
+    ],
+    [
+     0,
+     13,
+     7,
+     16,
+     14,
+     9,
+     "wv_iron"
+    ],
+    [
+     1,
+     6,
+     2.5,
+     3,
+     9,
+     4.5,
+     "wv_cotton"
+    ],
+    [
+     1.7,
+     3,
+     3.2,
+     2.3,
+     10,
+     3.8,
+     "wv_iron"
+    ],
+    [
+     0.8,
+     14,
+     4.0,
+     3.2,
+     16.5,
+     6.0,
+     "wv_cotton"
+    ],
+    [
+     1,
+     6,
+     11.5,
+     3,
+     9,
+     13.5,
+     "wv_cotton"
+    ],
+    [
+     1.7,
+     3,
+     12.2,
+     2.3,
+     10,
+     12.8,
+     "wv_iron"
+    ],
+    [
+     0.8,
+     14,
+     10.0,
+     3.2,
+     16.5,
+     12.0,
+     "wv_cotton"
+    ],
+    [
+     5,
+     6,
+     2.5,
+     7,
+     9,
+     4.5,
+     "wv_cotton"
+    ],
+    [
+     5.7,
+     3,
+     3.2,
+     6.3,
+     10,
+     3.8,
+     "wv_iron"
+    ],
+    [
+     4.8,
+     14,
+     4.0,
+     7.2,
+     16.5,
+     6.0,
+     "wv_cotton"
+    ],
+    [
+     5,
+     6,
+     11.5,
+     7,
+     9,
+     13.5,
+     "wv_cotton"
+    ],
+    [
+     5.7,
+     3,
+     12.2,
+     6.3,
+     10,
+     12.8,
+     "wv_iron"
+    ],
+    [
+     4.8,
+     14,
+     10.0,
+     7.2,
+     16.5,
+     12.0,
+     "wv_cotton"
+    ],
+    [
+     9,
+     6,
+     2.5,
+     11,
+     9,
+     4.5,
+     "wv_cotton"
+    ],
+    [
+     9.7,
+     3,
+     3.2,
+     10.3,
+     10,
+     3.8,
+     "wv_iron"
+    ],
+    [
+     8.8,
+     14,
+     4.0,
+     11.2,
+     16.5,
+     6.0,
+     "wv_cotton"
+    ],
+    [
+     9,
+     6,
+     11.5,
+     11,
+     9,
+     13.5,
+     "wv_cotton"
+    ],
+    [
+     9.7,
+     3,
+     12.2,
+     10.3,
+     10,
+     12.8,
+     "wv_iron"
+    ],
+    [
+     8.8,
+     14,
+     10.0,
+     11.2,
+     16.5,
+     12.0,
+     "wv_cotton"
+    ],
+    [
+     13,
+     6,
+     2.5,
+     15,
+     9,
+     4.5,
+     "wv_cotton"
+    ],
+    [
+     13.7,
+     3,
+     3.2,
+     14.3,
+     10,
+     3.8,
+     "wv_iron"
+    ],
+    [
+     12.8,
+     14,
+     4.0,
+     15.2,
+     16.5,
+     6.0,
+     "wv_cotton"
+    ],
+    [
+     13,
+     6,
+     11.5,
+     15,
+     9,
+     13.5,
+     "wv_cotton"
+    ],
+    [
+     13.7,
+     3,
+     12.2,
+     14.3,
+     10,
+     12.8,
+     "wv_iron"
+    ],
+    [
+     12.8,
+     14,
+     10.0,
+     15.2,
+     16.5,
+     12.0,
+     "wv_cotton"
+    ],
+    [
+     0,
+     10,
+     5.5,
+     16,
+     11.2,
+     10.5,
+     "wv_iron"
+    ]
+   ],
+   "title": "Spinning Frame",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     14
+    ]
+   ]
+  },
+  "wv_bale": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     15,
+     12,
+     14,
+     {
+      "side": "wv_jute",
+      "up": "wv_jute",
+      "down": "wv_jute"
+     }
+    ],
+    [
+     2.5,
+     -0.1,
+     1.8,
+     3.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ],
+    [
+     7.5,
+     -0.1,
+     1.8,
+     8.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ],
+    [
+     12.5,
+     -0.1,
+     1.8,
+     13.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ]
+   ],
+   "title": "Cotton Bale",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     2,
+     15,
+     12,
+     14
+    ]
+   ]
+  },
+  "wv_bale_burst": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     15,
+     12,
+     14,
+     {
+      "side": "wv_jute",
+      "up": "wv_jute",
+      "down": "wv_jute"
+     }
+    ],
+    [
+     2.5,
+     -0.1,
+     1.8,
+     3.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ],
+    [
+     7.5,
+     -0.1,
+     1.8,
+     8.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ],
+    [
+     12.5,
+     -0.1,
+     1.8,
+     13.5,
+     12.2,
+     14.2,
+     "st_galv"
+    ],
+    [
+     4,
+     12,
+     5,
+     12,
+     14.5,
+     11,
+     "wv_cotton"
+    ],
+    [
+     2,
+     10,
+     1,
+     9,
+     13.5,
+     2.2,
+     "wv_cotton"
+    ],
+    [
+     6,
+     13.5,
+     6,
+     10,
+     15.5,
+     9,
+     "wv_cotton"
+    ]
+   ],
+   "title": "Cotton Bale",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     2,
+     15,
+     12,
+     14
+    ]
+   ]
+  },
+  "mm_gun": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.5,
+     0,
+     4,
+     2,
+     1.2,
+     12,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     12.8,
+     4,
+     2,
+     14,
+     12,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     4,
+     1,
+     2,
+     10,
+     2.2,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     4,
+     13.8,
+     2,
+     10,
+     15,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     1,
+     2,
+     2,
+     3.2,
+     4,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     1,
+     12,
+     2,
+     3.2,
+     14,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     10.8,
+     2,
+     2,
+     13,
+     4,
+     "fw_steel"
+    ],
+    [
+     0.5,
+     10.8,
+     12,
+     2,
+     13,
+     14,
+     "fw_steel"
+    ],
+    [
+     0.85,
+     1,
+     7.4,
+     1.65,
+     13,
+     8.6,
+     "rs_timber"
+    ],
+    [
+     0.85,
+     6.4,
+     2,
+     1.65,
+     7.6,
+     14,
+     "rs_timber"
+    ],
+    [
+     0.85,
+     1.2,
+     7.4,
+     1.65,
+     12.8,
+     8.6,
+     "rs_timber",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       1.25,
+       7,
+       8
+      ]
+     }
+    ],
+    [
+     0.85,
+     1.2,
+     7.4,
+     1.65,
+     12.8,
+     8.6,
+     "rs_timber",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       1.25,
+       7,
+       8
+      ]
+     }
+    ],
+    [
+     -0.1,
+     5.5,
+     6.5,
+     2.6,
+     8.5,
+     9.5,
+     "fw_steel"
+    ],
+    [
+     14,
+     0,
+     4,
+     15.5,
+     1.2,
+     12,
+     "fw_steel"
+    ],
+    [
+     14,
+     12.8,
+     4,
+     15.5,
+     14,
+     12,
+     "fw_steel"
+    ],
+    [
+     14,
+     4,
+     1,
+     15.5,
+     10,
+     2.2,
+     "fw_steel"
+    ],
+    [
+     14,
+     4,
+     13.8,
+     15.5,
+     10,
+     15,
+     "fw_steel"
+    ],
+    [
+     14,
+     1,
+     2,
+     15.5,
+     3.2,
+     4,
+     "fw_steel"
+    ],
+    [
+     14,
+     1,
+     12,
+     15.5,
+     3.2,
+     14,
+     "fw_steel"
+    ],
+    [
+     14,
+     10.8,
+     2,
+     15.5,
+     13,
+     4,
+     "fw_steel"
+    ],
+    [
+     14,
+     10.8,
+     12,
+     15.5,
+     13,
+     14,
+     "fw_steel"
+    ],
+    [
+     14.35,
+     1,
+     7.4,
+     15.15,
+     13,
+     8.6,
+     "rs_timber"
+    ],
+    [
+     14.35,
+     6.4,
+     2,
+     15.15,
+     7.6,
+     14,
+     "rs_timber"
+    ],
+    [
+     14.35,
+     1.2,
+     7.4,
+     15.15,
+     12.8,
+     8.6,
+     "rs_timber",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       14.75,
+       7,
+       8
+      ]
+     }
+    ],
+    [
+     14.35,
+     1.2,
+     7.4,
+     15.15,
+     12.8,
+     8.6,
+     "rs_timber",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       14.75,
+       7,
+       8
+      ]
+     }
+    ],
+    [
+     13.4,
+     5.5,
+     6.5,
+     16.1,
+     8.5,
+     9.5,
+     "fw_steel"
+    ],
+    [
+     2,
+     6.4,
+     7.4,
+     14,
+     7.6,
+     8.6,
+     "fw_steel"
+    ],
+    [
+     4,
+     6,
+     2,
+     5.5,
+     11,
+     16,
+     "rs_timber"
+    ],
+    [
+     10.5,
+     6,
+     2,
+     12,
+     11,
+     16,
+     "rs_timber"
+    ],
+    [
+     5.5,
+     3,
+     12,
+     10.5,
+     5,
+     16,
+     "rs_timber"
+    ],
+    [
+     6,
+     1,
+     15,
+     10,
+     3.5,
+     16,
+     "fw_steel"
+    ],
+    [
+     5.5,
+     9.5,
+     2,
+     10.5,
+     14,
+     13,
+     "mm_bronze"
+    ],
+    [
+     6,
+     10,
+     13,
+     10,
+     13.5,
+     14.5,
+     "mm_bronze"
+    ],
+    [
+     7,
+     11,
+     14.5,
+     9,
+     12.5,
+     15.6,
+     "mm_bronze"
+    ],
+    [
+     4.5,
+     11,
+     5.5,
+     11.5,
+     12.6,
+     7,
+     "mm_bronze"
+    ]
+   ],
+   "title": "Field Gun",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0.5,
+     0,
+     1,
+     15.5,
+     14,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_gun_muzzle": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     10,
+     0,
+     10,
+     13.5,
+     16,
+     "mm_bronze"
+    ],
+    [
+     5.6,
+     9.6,
+     0,
+     10.4,
+     13.9,
+     2,
+     "mm_bronze"
+    ],
+    [
+     6.3,
+     10.3,
+     14,
+     9.7,
+     13.2,
+     16,
+     "mm_bronze"
+    ],
+    [
+     7.3,
+     11.2,
+     -0.1,
+     8.7,
+     12.6,
+     0.2,
+     "fw_steel"
+    ]
+   ],
+   "title": "Field Gun",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     5.6,
+     9.6,
+     0,
+     10.4,
+     13.9,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_wreath": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     4,
+     7.5,
+     13,
+     6,
+     9,
+     "mm_leaves"
+    ],
+    [
+     3,
+     13,
+     7.5,
+     13,
+     15,
+     9,
+     "mm_leaves"
+    ],
+    [
+     2,
+     6,
+     7.5,
+     4,
+     13,
+     9,
+     "mm_leaves"
+    ],
+    [
+     12,
+     6,
+     7.5,
+     14,
+     13,
+     9,
+     "mm_leaves"
+    ],
+    [
+     6,
+     2,
+     7.2,
+     10,
+     4.5,
+     8.6,
+     "rs_paper_b0"
+    ],
+    [
+     7.6,
+     0,
+     9,
+     8.4,
+     9,
+     9.8,
+     "rs_timber"
+    ],
+    [
+     7.6,
+     0,
+     9,
+     8.4,
+     9,
+     9.8,
+     "rs_timber",
+     null,
+     {
+      "axis": "x",
+      "angle": 22.5,
+      "origin": [
+       8,
+       9,
+       9.4
+      ]
+     }
+    ]
+   ],
+   "title": "Wreath",
+   "sound": "GRASS",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     7,
+     14,
+     15,
+     10
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_die": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     13,
+     14,
+     {
+      "north": "mm_die",
+      "side": "mm_granite",
+      "up": "mm_granite",
+      "down": "mm_granite"
+     }
+    ],
+    [
+     1.5,
+     0,
+     1.5,
+     14.5,
+     1.5,
+     14.5,
+     "mm_granite"
+    ],
+    [
+     1.4,
+     13,
+     1.4,
+     14.6,
+     14.6,
+     14.6,
+     "mm_granite"
+    ],
+    [
+     2.4,
+     14.6,
+     2.4,
+     13.6,
+     16,
+     13.6,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     1.5,
+     0,
+     1.5,
+     14.5,
+     16,
+     14.5
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_shaft_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.4,
+     0,
+     3.4,
+     12.6,
+     16,
+     12.6,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.4,
+     0,
+     3.4,
+     12.6,
+     16,
+     12.6
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_shaft_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.9,
+     0,
+     3.9,
+     12.1,
+     16,
+     12.1,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.4,
+     0,
+     3.4,
+     12.6,
+     16,
+     12.6
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_shaft_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.4,
+     0,
+     4.4,
+     11.6,
+     16,
+     11.6,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.4,
+     0,
+     3.4,
+     12.6,
+     16,
+     12.6
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_shaft_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.9,
+     0,
+     4.9,
+     11.1,
+     16,
+     11.1,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.4,
+     0,
+     3.4,
+     12.6,
+     16,
+     12.6
+    ]
+   ],
+   "render": "cutout"
+  },
+  "mm_shaft_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.4,
+     0,
+     5.4,
+     10.6,
+     2,
+     10.6,
+     "mm_granite"
+    ],
+    [
+     6.0,
+     2,
+     6.0,
+     10.0,
+     4,
+     10.0,
+     "mm_granite"
+    ],
+    [
+     6.6,
+     4,
+     6.6,
+     9.4,
+     6,
+     9.4,
+     "mm_granite"
+    ],
+    [
+     7.2,
+     6,
+     7.2,
+     8.8,
+     8,
+     8.8,
+     "mm_granite"
+    ]
+   ],
+   "title": "Memorial",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     5.4,
+     0,
+     5.4,
+     10.6,
+     8,
+     10.6
+    ]
+   ],
+   "render": "cutout"
+  },
+  "gz_deck": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     13,
+     16,
+     {
+      "side": "gz_skirt",
+      "up": "gz_boards",
+      "down": "gz_boards"
+     }
+    ],
+    [
+     0,
+     13,
+     0,
+     16,
+     16,
+     16,
+     {
+      "side": "gz_cream",
+      "up": "gz_boards",
+      "down": "gz_boards"
+     }
+    ],
+    [
+     -0.3,
+     12,
+     -0.3,
+     16.3,
+     13,
+     16.3,
+     "gz_green"
+    ]
+   ],
+   "title": "Bandstand",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "gz_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     15,
+     16,
+     8,
+     {
+      "side": "gz_cream",
+      "up": "gz_boards",
+      "down": "gz_cream"
+     }
+    ],
+    [
+     1,
+     0,
+     8,
+     15,
+     8,
+     16,
+     {
+      "side": "gz_cream",
+      "up": "gz_boards",
+      "down": "gz_cream"
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     1,
+     16,
+     8,
+     "gz_green"
+    ],
+    [
+     15,
+     0,
+     0,
+     16,
+     16,
+     8,
+     "gz_green"
+    ],
+    [
+     0,
+     0,
+     8,
+     1,
+     8,
+     16,
+     "gz_green"
+    ],
+    [
+     15,
+     0,
+     8,
+     16,
+     8,
+     16,
+     "gz_green"
+    ]
+   ],
+   "title": "Bandstand Steps",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     8
+    ],
+    [
+     0,
+     0,
+     8,
+     16,
+     8,
+     16
+    ]
+   ],
+   "rotate": "facing"
+  },
+  "gz_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "gz_cream"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     3,
+     11,
+     "gz_green"
+    ],
+    [
+     5.4,
+     3,
+     5.4,
+     10.6,
+     3.6,
+     10.6,
+     "gz_cream"
+    ],
+    [
+     5.5,
+     9,
+     5.5,
+     10.5,
+     10,
+     10.5,
+     "gz_green"
+    ]
+   ],
+   "title": "Bandstand Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ],
+   "render": "cutout"
+  },
+  "gz_post_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     6,
+     10,
+     16,
+     10,
+     "gz_cream"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     3,
+     11,
+     "gz_green"
+    ],
+    [
+     5.4,
+     3,
+     5.4,
+     10.6,
+     3.6,
+     10.6,
+     "gz_cream"
+    ],
+    [
+     5.5,
+     12,
+     5.5,
+     10.5,
+     13,
+     10.5,
+     "gz_green"
+    ],
+    [
+     5,
+     14,
+     5,
+     11,
+     16,
+     11,
+     "gz_cream"
+    ],
+    [
+     7.4,
+     13,
+     10,
+     8.6,
+     16,
+     16,
+     "gz_cream"
+    ],
+    [
+     10,
+     13,
+     7.4,
+     16,
+     16,
+     8.6,
+     "gz_cream"
+    ],
+    [
+     7.4,
+     10,
+     10,
+     8.6,
+     13,
+     13.5,
+     "gz_cream"
+    ],
+    [
+     10,
+     10,
+     7.4,
+     13.5,
+     13,
+     8.6,
+     "gz_cream"
+    ],
+    [
+     7.4,
+     7,
+     10,
+     8.6,
+     10,
+     11.5,
+     "gz_cream"
+    ],
+    [
+     10,
+     7,
+     7.4,
+     11.5,
+     10,
+     8.6,
+     "gz_cream"
+    ]
+   ],
+   "title": "Bandstand Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ],
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "gz_frieze": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     13,
+     0,
+     9.5,
+     16,
+     16,
+     "gz_cream"
+    ],
+    [
+     6,
+     15.4,
+     0,
+     10,
+     16,
+     16,
+     "gz_green"
+    ],
+    [
+     7.2,
+     8.4,
+     0,
+     8.8,
+     9.2,
+     16,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     1,
+     8.4,
+     13,
+     1.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     3,
+     8.4,
+     13,
+     3.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     5,
+     8.4,
+     13,
+     5.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     7,
+     8.4,
+     13,
+     7.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     9,
+     8.4,
+     13,
+     9.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     11,
+     8.4,
+     13,
+     11.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     13,
+     8.4,
+     13,
+     13.8,
+     "gz_cream"
+    ],
+    [
+     7.6,
+     9.2,
+     15,
+     8.4,
+     13,
+     15.8,
+     "gz_cream"
+    ],
+    [
+     7.4,
+     6.8,
+     3.2,
+     8.6,
+     8.4,
+     4.8,
+     "gz_green"
+    ],
+    [
+     7.4,
+     6.8,
+     11.2,
+     8.6,
+     8.4,
+     12.8,
+     "gz_green"
+    ]
+   ],
+   "title": "Bandstand Frieze",
+   "sound": "WOOD",
+   "shape": [
+    [
+     6.5,
+     8.4,
+     0,
+     9.5,
+     16,
+     16
+    ]
+   ],
+   "rotate": "axis",
+   "render": "cutout"
+  },
+  "gz_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     0,
+     9,
+     2.5,
+     16,
+     "gz_cream"
+    ],
+    [
+     7.3,
+     2.5,
+     1.5,
+     8.7,
+     9,
+     2.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     1.3,
+     9.1,
+     6,
+     2.9,
+     "gz_green"
+    ],
+    [
+     7.3,
+     2.5,
+     4.5,
+     8.7,
+     9,
+     5.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     4.3,
+     9.1,
+     6,
+     5.9,
+     "gz_green"
+    ],
+    [
+     7.3,
+     2.5,
+     7.5,
+     8.7,
+     9,
+     8.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     7.3,
+     9.1,
+     6,
+     8.9,
+     "gz_green"
+    ],
+    [
+     7.3,
+     2.5,
+     10.5,
+     8.7,
+     9,
+     11.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     10.3,
+     9.1,
+     6,
+     11.9,
+     "gz_green"
+    ],
+    [
+     7.3,
+     2.5,
+     13.5,
+     8.7,
+     9,
+     14.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     13.3,
+     9.1,
+     6,
+     14.9,
+     "gz_green"
+    ],
+    [
+     6.5,
+     9,
+     0,
+     9.5,
+     10.5,
+     16,
+     "gz_cream"
+    ]
+   ],
+   "title": "Balustrade",
+   "sound": "WOOD",
+   "shape": [
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     16,
+     16
+    ]
+   ],
+   "rotate": "axis",
+   "render": "cutout"
+  },
+  "gz_rail_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     0,
+     9,
+     2.5,
+     16,
+     "gz_cream"
+    ],
+    [
+     7.3,
+     2.5,
+     1.5,
+     8.7,
+     9,
+     2.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     1.3,
+     9.1,
+     6,
+     2.9,
+     "gz_green"
+    ],
+    [
+     7.3,
+     2.5,
+     13.5,
+     8.7,
+     9,
+     14.7,
+     "gz_cream"
+    ],
+    [
+     6.9,
+     4.5,
+     13.3,
+     9.1,
+     6,
+     14.9,
+     "gz_green"
+    ],
+    [
+     6.5,
+     9,
+     0,
+     9.5,
+     10.5,
+     6,
+     "gz_cream"
+    ],
+    [
+     6.5,
+     9,
+     10,
+     9.5,
+     10.5,
+     16,
+     "gz_cream"
+    ],
+    [
+     6.5,
+     6,
+     6,
+     9.5,
+     7.5,
+     11,
+     "gz_cream",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       8,
+       7,
+       6
+      ]
+     }
+    ],
+    [
+     7.3,
+     2.5,
+     8,
+     8.7,
+     6,
+     9.2,
+     "gz_cream",
+     null,
+     {
+      "axis": "x",
+      "angle": 22.5,
+      "origin": [
+       8,
+       2.5,
+       8.6
+      ]
+     }
+    ]
+   ],
+   "title": "Balustrade",
+   "sound": "WOOD",
+   "shape": [
+    [
+     6.5,
+     0,
+     0,
+     9.5,
+     10.5,
+     16
+    ]
+   ],
+   "rotate": "axis",
+   "render": "cutout"
+  },
+  "gz_finial": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     2,
+     10.5,
+     "gz_green"
+    ],
+    [
+     6.3,
+     2,
+     6.3,
+     9.7,
+     4,
+     9.7,
+     "gz_cream"
+    ],
+    [
+     6.6,
+     4,
+     6.6,
+     9.4,
+     6.6,
+     9.4,
+     "mm_bronze"
+    ],
+    [
+     7.3,
+     6.6,
+     7.3,
+     8.7,
+     8,
+     8.7,
+     "gz_green"
+    ],
+    [
+     7.6,
+     8,
+     7.6,
+     8.4,
+     15,
+     8.4,
+     "front_iron"
+    ],
+    [
+     5,
+     11,
+     7.8,
+     11,
+     11.4,
+     8.2,
+     "front_iron"
+    ],
+    [
+     7.8,
+     11,
+     5,
+     8.2,
+     11.4,
+     11,
+     "front_iron"
+    ]
+   ],
+   "title": "Bandstand Spire",
+   "sound": "METAL",
+   "shape": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     15,
+     10.5
+    ]
+   ],
+   "render": "cutout"
+  },
+  "pl_stump": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     9,
+     10.5,
+     {
+      "up": "pl_splinter",
+      "side": "pole_wood",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     5.5,
+     9,
+     5.5,
+     7.0,
+     13,
+     7.1,
+     {
+      "side": "pl_splinter",
+      "up": "pl_splinter",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     8,
+     9,
+     6.2,
+     9.5,
+     15.5,
+     7.8,
+     {
+      "side": "pl_splinter",
+      "up": "pl_splinter",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     6.5,
+     9,
+     8.5,
+     8.0,
+     11.5,
+     10.1,
+     {
+      "side": "pl_splinter",
+      "up": "pl_splinter",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     9,
+     9,
+     8.8,
+     10.5,
+     12.5,
+     10.4,
+     {
+      "side": "pl_splinter",
+      "up": "pl_splinter",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     10.5,
+     4,
+     7.6,
+     12,
+     4.6,
+     8.2,
+     "st_galv"
+    ],
+    [
+     4,
+     7,
+     7.8,
+     5.5,
+     7.6,
+     8.4,
+     "st_galv"
+    ]
+   ],
+   "title": "Power Pole",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     12,
+     10.5
+    ]
+   ],
+   "render": "cutout"
+  },
+  "pl_down": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     0,
+     10.5,
+     5,
+     16,
+     "pole_wood"
+    ],
+    [
+     10.5,
+     2,
+     9,
+     12,
+     2.6,
+     9.6,
+     "st_galv"
+    ]
+   ],
+   "title": "Power Pole",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5.5,
+     0,
+     0,
+     10.5,
+     5,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "pl_down_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     0,
+     10.5,
+     5,
+     9,
+     {
+      "side": "pole_wood",
+      "south": "pl_splinter",
+      "north": "pole_wood",
+      "up": "pole_wood",
+      "down": "pole_wood"
+     }
+    ],
+    [
+     0,
+     0,
+     9.5,
+     16,
+     3,
+     12.5,
+     "pole_wood"
+    ],
+    [
+     7,
+     3,
+     9.5,
+     9,
+     6,
+     12.5,
+     "st_galv"
+    ],
+    [
+     1.5,
+     3,
+     10.3,
+     3.0,
+     4,
+     11.7,
+     "st_galv"
+    ],
+    [
+     1.3,
+     4,
+     10.1,
+     3.2,
+     6.5,
+     11.9,
+     "lamp_glass"
+    ],
+    [
+     13,
+     3,
+     10.3,
+     14.5,
+     4,
+     11.7,
+     "st_galv"
+    ],
+    [
+     12.8,
+     4,
+     10.1,
+     14.7,
+     6.5,
+     11.9,
+     "lamp_glass"
+    ],
+    [
+     2,
+     0.2,
+     12.5,
+     2.6,
+     0.7,
+     16,
+     "tire"
+    ]
+   ],
+   "title": "Power Pole",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5.5,
+     0,
+     0,
+     10.5,
+     5,
+     9
+    ],
+    [
+     0,
+     0,
+     9,
+     16,
+     6.5,
+     13
+    ]
+   ],
+   "render": "cutout"
+  },
+  "pl_wire": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.7,
+     0,
+     0,
+     4.2,
+     0.5,
+     6,
+     "tire"
+    ],
+    [
+     3.7,
+     0,
+     6,
+     4.2,
+     0.5,
+     11,
+     "tire",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       4,
+       0,
+       6
+      ]
+     }
+    ],
+    [
+     5.6,
+     0,
+     10,
+     6.1,
+     0.5,
+     16,
+     "tire"
+    ],
+    [
+     11.6,
+     0,
+     0,
+     12.1,
+     0.5,
+     9,
+     "tire"
+    ],
+    [
+     11.6,
+     0,
+     9,
+     12.1,
+     0.5,
+     16,
+     "tire",
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       12,
+       0,
+       9
+      ]
+     }
+    ],
+    [
+     9.5,
+     0.3,
+     4,
+     12,
+     0.8,
+     4.5,
+     "tire"
+    ]
+   ],
+   "title": "Downed Wires",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     3,
+     0,
+     0,
+     13,
+     1,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "pl_transformer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     16,
+     10.5,
+     "pole_wood"
+    ],
+    [
+     3.6,
+     2,
+     1.6,
+     12.4,
+     12,
+     5.4,
+     {
+      "north": "pl_can",
+      "side": "pl_can_side",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     4.6,
+     2,
+     0.6,
+     11.4,
+     12,
+     6.4,
+     {
+      "north": "pl_can",
+      "side": "pl_can_side",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     4,
+     12,
+     1,
+     12,
+     13,
+     6,
+     "st_galv"
+    ],
+    [
+     4.6,
+     1,
+     1.2,
+     11.4,
+     2,
+     5.8,
+     "st_galv"
+    ],
+    [
+     4.5,
+     4,
+     5.4,
+     11.5,
+     4.8,
+     11,
+     "st_galv"
+    ],
+    [
+     4.5,
+     9.5,
+     5.4,
+     11.5,
+     10.3,
+     11,
+     "st_galv"
+    ],
+    [
+     7.4,
+     13,
+     2.6,
+     8.6,
+     15.5,
+     3.8,
+     "lamp_glass"
+    ],
+    [
+     5,
+     13,
+     3,
+     6,
+     14.5,
+     4,
+     "lamp_glass"
+    ],
+    [
+     10,
+     13,
+     3,
+     11,
+     14.5,
+     4,
+     "lamp_glass"
+    ],
+    [
+     7.8,
+     15.5,
+     3,
+     8.2,
+     16,
+     3.4,
+     "tire"
+    ]
+   ],
+   "title": "Transformer",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.6,
+     0,
+     0.6,
+     12.4,
+     16,
+     10.5
+    ]
+   ],
+   "render": "cutout"
   }
  }
 }

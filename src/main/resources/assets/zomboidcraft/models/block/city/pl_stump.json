@@ -1,0 +1,236 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pl_splinter": "zomboidcraft:block/city/pl_splinter",
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/pole_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        5.5
+      ],
+      "to": [
+        10.5,
+        9,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood"
+        },
+        "west": {
+          "texture": "#pole_wood"
+        },
+        "up": {
+          "texture": "#pl_splinter"
+        },
+        "down": {
+          "texture": "#pole_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        5.5
+      ],
+      "to": [
+        7.0,
+        13,
+        7.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pl_splinter"
+        },
+        "south": {
+          "texture": "#pl_splinter"
+        },
+        "east": {
+          "texture": "#pl_splinter"
+        },
+        "west": {
+          "texture": "#pl_splinter"
+        },
+        "up": {
+          "texture": "#pl_splinter"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        9,
+        6.2
+      ],
+      "to": [
+        9.5,
+        15.5,
+        7.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pl_splinter"
+        },
+        "south": {
+          "texture": "#pl_splinter"
+        },
+        "east": {
+          "texture": "#pl_splinter"
+        },
+        "west": {
+          "texture": "#pl_splinter"
+        },
+        "up": {
+          "texture": "#pl_splinter"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        9,
+        8.5
+      ],
+      "to": [
+        8.0,
+        11.5,
+        10.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pl_splinter"
+        },
+        "south": {
+          "texture": "#pl_splinter"
+        },
+        "east": {
+          "texture": "#pl_splinter"
+        },
+        "west": {
+          "texture": "#pl_splinter"
+        },
+        "up": {
+          "texture": "#pl_splinter"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        8.8
+      ],
+      "to": [
+        10.5,
+        12.5,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pl_splinter"
+        },
+        "south": {
+          "texture": "#pl_splinter"
+        },
+        "east": {
+          "texture": "#pl_splinter"
+        },
+        "west": {
+          "texture": "#pl_splinter"
+        },
+        "up": {
+          "texture": "#pl_splinter"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        4,
+        7.6
+      ],
+      "to": [
+        12,
+        4.6,
+        8.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        7.8
+      ],
+      "to": [
+        5.5,
+        7.6,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

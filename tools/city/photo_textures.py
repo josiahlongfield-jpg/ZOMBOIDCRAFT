@@ -1157,6 +1157,16 @@ import scaffold  # noqa: E402
 scaffold.register(sys.modules[__name__])
 import trackbed  # noqa: E402
 trackbed.register(sys.modules[__name__])
+import freight  # noqa: E402
+freight.register(sys.modules[__name__])
+import weave  # noqa: E402
+weave.register(sys.modules[__name__])
+import memorial  # noqa: E402
+memorial.register(sys.modules[__name__])
+import gazebo  # noqa: E402
+gazebo.register(sys.modules[__name__])
+import poles  # noqa: E402
+poles.register(sys.modules[__name__])
 
 
 

@@ -225,7 +225,7 @@ final class Landmarks {
         }
         // the corbelled brick band at the top
         for (int x = -1; x <= bx1 + 1; x++) {
-            p.set(x, top, -1, "minecraft:brick_stairs[facing=south,half=top]");
+            p.set(x, top, -1, "front_corbel_" + wall.substring(6) + "[facing=north]");
             p.set(x, top + 1, -1, b.wall(wall, top + 1));
         }
         b.flat(0, 0, bx1, bd - 1, top, wall, 2, "stone_trim");
@@ -247,13 +247,23 @@ final class Landmarks {
         java.util.Arrays.fill(ways, "south");
         stair.build(floors, ways, true, "south");
         b.doors(tx + 1, 1, tz, "ext_door_oak", "north");
-        // the floors: looms in long rows, bobbins and bales strewn about
+        // the floors (wv_ kit): looms in long rows on the weaving floors, spinning frames on the
+        // others, bales of cotton strewn about
         for (int k = 0; k < floors; k++) {
             int y = k * storey + 1;
+            boolean weaving = k % 2 == 0;
             for (int z = 3; z < bd - 3; z += 3) {
-                for (int x = 3; x < bx1 - 2; x++) {
-                    if ((x - 3) % 6 < 4 && rng.nextDouble() < 0.85) {
-                        p.set(x, y, z, x % 2 == 0 ? "store_washer" : "minecraft:smooth_stone_slab[type=top]");
+                for (int x = 3; x + 1 < bx1 - 2; x++) {
+                    int m = (x - 3) % 6;
+                    if (!weaving) {
+                        if (m < 4) {
+                            p.set(x, y, z, "wv_frame[facing=north]");
+                        }
+                    } else if ((m == 0 || m == 2) && rng.nextDouble() < 0.85) {
+                        // a loom, two blocks, the weaver's side north: its l half on the west
+                        String cut = rng.nextDouble() < 0.2 ? "_cut" : "";
+                        p.set(x, y, z, "wv_loom_l" + cut + "[facing=north]");
+                        p.set(x + 1, y, z, "wv_loom_r" + cut + "[facing=north]");
                     }
                 }
             }
@@ -261,7 +271,7 @@ final class Landmarks {
             b.mess(1, 1, bx1 - 1, bd - 2, y, 0.05);
             for (int i = 0; i < bx1 / 6; i++) {
                 p.setIfAir(2 + rng.nextInt(bx1 - 3), y, 2 + rng.nextInt(bd - 4),
-                        rng.nextBoolean() ? "minecraft:white_wool" : "crate");
+                        rng.nextDouble() < 0.6 ? (rng.nextDouble() < 0.3 ? "wv_bale_burst" : "wv_bale") + "[facing=" + new String[] {"north", "east", "south", "west"}[rng.nextInt(4)] + "]" : "crate");
             }
         }
         // the weave shed behind: sawtooth bays, glass facing north
@@ -306,7 +316,7 @@ final class Landmarks {
         p.set(hx + 6, 1, hz + 4, "propane_tank[axis=x]");
         smokestack(hx + 5, hz + 13, 34 + rng.nextInt(10));
         for (int i = 0; i < 12; i++) {
-            p.setIfAir(hx - 3 + rng.nextInt(5), 1, hz + 2 + rng.nextInt(6), "minecraft:coal_block");
+            p.setIfAir(hx - 3 + rng.nextInt(5), 1, hz + 2 + rng.nextInt(6), "bulk_coal_" + (1 + rng.nextInt(3)));
         }
         // loading docks down the east end, roll-up doors, a box truck backed up to one
         for (int z = 2; z < bd - 2; z += 5) {
@@ -323,34 +333,43 @@ final class Landmarks {
 
     // ------------------------------------------------------------------ the memorial
 
-    /** The war memorial at (cx, cz): an obelisk on stepped stone, wreaths long dead, two old cannon. */
+    /**
+     * The war memorial at (cx, cz): an obelisk with the names on its face on a stepped stone base,
+     * wreaths long dead at its foot, and the two old field guns either side (mm_ kit), their muzzles
+     * to the north.
+     */
     void memorial(int cx, int cz) {
+        String[] dirs = {"north", "east", "south", "west"};
         for (int dx = -2; dx <= 2; dx++) {
             for (int dz = -2; dz <= 2; dz++) {
-                p.set(cx + dx, 0, cz + dz, "minecraft:stone_bricks");
-                p.set(cx + dx, 1, cz + dz, Math.abs(dx) == 2 || Math.abs(dz) == 2 ? "minecraft:stone_brick_slab[type=bottom]"
-                        : "minecraft:stone_bricks");
+                p.set(cx + dx, 0, cz + dz, "stone_trim");
+                boolean edge = Math.abs(dx) == 2 || Math.abs(dz) == 2;
+                // the step's riser toward the middle
+                String in = Math.abs(dz) >= Math.abs(dx) ? (dz < 0 ? "south" : "north") : dx < 0 ? "east" : "west";
+                p.set(cx + dx, 1, cz + dz, edge ? "cv_step_stone[facing=" + in + "]"
+                        : rng.nextDouble() < 0.2 ? "stone_trim_moss" : "stone_trim");
             }
         }
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
-                p.set(cx + dx, 2, cz + dz, "minecraft:polished_andesite");
+                boolean mid = dx == 0 && dz == 0;
+                p.set(cx + dx, 2, cz + dz, mid ? "stone_trim" : "cv_step_stone[facing="
+                        + (Math.abs(dz) >= Math.abs(dx) ? (dz < 0 ? "south" : "north") : dx < 0 ? "east" : "west") + "]");
             }
         }
-        for (int y = 3; y <= 9; y++) {
-            p.set(cx, y, cz, y == 3 ? "minecraft:chiseled_stone_bricks" : "minecraft:polished_andesite");
+        p.set(cx, 3, cz, "mm_die[facing=north]");
+        for (int k = 0; k < 4; k++) {
+            p.set(cx, 4 + k, cz, "mm_shaft_" + k);
         }
-        p.set(cx, 10, cz, "minecraft:polished_andesite_slab[type=bottom]");
-        p.set(cx, 2, cz - 2, "minecraft:dead_bush");
-        p.set(cx - 1, 3, cz, "minecraft:polished_andesite_stairs[facing=east]");
-        p.set(cx + 1, 3, cz, "minecraft:polished_andesite_stairs[facing=west]");
-        p.set(cx, 3, cz - 1, "minecraft:polished_andesite_stairs[facing=south]");
-        p.set(cx, 3, cz + 1, "minecraft:polished_andesite_stairs[facing=north]");
+        p.set(cx, 8, cz, "mm_shaft_top");
+        p.set(cx, 2, cz - 2, "mm_wreath[facing=north]");
+        if (rng.nextBoolean()) {
+            p.set(cx + 1, 3, cz - 1, "mm_wreath[facing=" + dirs[rng.nextInt(4)] + "]");
+        }
         for (int s = -1; s <= 1; s += 2) {
             int x = cx + s * 4;
-            p.set(x, 1, cz + 1, "minecraft:polished_blackstone_wall");
-            p.set(x, 1, cz, "minecraft:anvil[facing=north]");
-            p.set(x, 1, cz - 1, "minecraft:polished_blackstone_wall");
+            p.set(x, 1, cz, "mm_gun[facing=north]");
+            p.set(x, 1, cz - 1, "mm_gun_muzzle[facing=north]");
         }
     }
 }

@@ -306,8 +306,29 @@ def wine(seed):
     return F.wear(t, 0.35, 0)
 
 
+def stave(seed):
+    """A barrel's staves: oak gone grey-brown, the joints between the staves dark, damp at the foot."""
+    t = F.wood(seed, "oak")
+    for x in range(0, N, N // 6):
+        F.area(t, x, 0, x + 1, N, mul=0.5)
+    t.grime(0.35, (52, 40, 30))
+    return F.wear(t, 0.3, 0)
+
+
+def head(seed):
+    """A barrel's head: boards across, the bung plugged, a chalk tally of what went in it."""
+    t = F.wood(seed, "oak", rot=True)
+    for y in range(0, N, N // 4):
+        F.area(t, 0, y, N, y + 1, mul=0.5)
+    F.disc(t, N // 2 + 10, N // 2 + 6, 3, (60, 44, 30), h=0.8)
+    t.rect(N // 4, N // 4, N // 4 + 14, N // 4 + 2, col=(196, 192, 180), h=0.55)
+    t.rect(N // 4, N // 4 + 6, N // 4 + 9, N // 4 + 8, col=(196, 192, 180), h=0.55)
+    t.grime(0.3, (52, 40, 30))
+    return t
+
+
 def textures():
-    return {
+    return {"cellar_stave": lambda: stave(5014), "cellar_head": lambda: head(5015),
         "cellar_back": lambda: back(5000),
         "cellar_preserves": lambda: preserves(5001), "cellar_cans": lambda: cans(5002),
         "cellar_medical": lambda: medical(5003), "cellar_ammo": lambda: ammo(5004),
@@ -325,6 +346,39 @@ def register(ns):
 
 
 # ---------------------------------------------------------------- the blocks
+
+HOOP = "ext_black_metal"
+
+
+def barrel():
+    """An oak barrel stood on end: the staves bellied out at the middle (three courses of an
+    octagon), the iron hoops, the head with its chalk tally, the lid's rim."""
+    body = {"side": "cellar_stave", "up": "cellar_head", "down": "cellar_stave"}
+    b = []
+    for y0, y1, r in ((0, 4, 5.2), (4, 11, 5.8), (11, 15, 5.2)):
+        a = r * 0.414
+        b += [[8 - r, y0, 8 - a, 8 + r, y1, 8 + a, body], [8 - a, y0, 8 - r, 8 + a, y1, 8 + r, body],
+              [8 - r * 0.78, y0, 8 - r * 0.78, 8 + r * 0.78, y1, 8 + r * 0.78, body]]
+    for y, r in ((1.5, 5.4), (5, 6.0), (10, 6.0), (13.5, 5.4)):
+        b += [[8 - r, y, 8 - r * 0.42, 8 + r, y + 0.8, 8 + r * 0.42, HOOP], [8 - r * 0.42, y, 8 - r, 8 + r * 0.42, y + 0.8, 8 + r, HOOP],
+              [8 - r * 0.8, y, 8 - r * 0.8, 8 + r * 0.8, y + 0.8, 8 + r * 0.8, HOOP]]
+    return [[round(v, 3) if isinstance(v, float) else v for v in q[:6]] + q[6:] for q in b]
+
+
+def barrel_side():
+    """A cask on its side in its cradle, its head to the north with the brass tap in it."""
+    body = {"side": "cellar_stave", "north": "cellar_head", "south": "cellar_head"}
+    b = []
+    for z0, z1, r in ((1, 4.5, 5.2), (4.5, 11.5, 5.8), (11.5, 15, 5.2)):
+        a = r * 0.414
+        b += [[8 - r, 7 - a, z0, 8 + r, 7 + a, z1, body], [8 - a, 7 - r, z0, 8 + a, 7 + r, z1, body],
+              [8 - r * 0.78, 7 - r * 0.78, z0, 8 + r * 0.78, 7 + r * 0.78, z1, body]]
+    for z in (2.5, 12.7):
+        b += [[8 - 5.4, 7 - 2.3, z, 8 + 5.4, 7 + 2.3, z + 0.8, HOOP], [8 - 2.3, 7 - 5.4, z, 8 + 2.3, 7 + 5.4, z + 0.8, HOOP],
+              [8 - 4.3, 7 - 4.3, z, 8 + 4.3, 7 + 4.3, z + 0.8, HOOP]]
+    b += [[2, 0, 3, 14, 2, 5, "home_wood_dark"], [2, 0, 11, 14, 2, 13, "home_wood_dark"],
+          [7.4, 4, 0, 8.6, 5.2, 1, "tr_brass"], [7.6, 3, 0.2, 8.4, 4, 0.8, "tr_brass"]]
+    return [[round(v, 3) if isinstance(v, float) else v for v in q[:6]] + q[6:] for q in b]
 
 def blocks():
     out = {}
@@ -378,6 +432,8 @@ def blocks():
     for x, z in ((1.5, 2), (8.5, 2), (1.5, 9), (8.5, 9)):
         jugs += [[x, 0, z, x + 6, 9, z + 6, "cellar_jug"], [x + 2, 9, z + 2, x + 4, 11, z + 4, "ext_galv_lid"]]
     add("cellar_jugs", jugs, "Water Jugs", "WOOL")
+    add("cellar_barrel", barrel(), "Barrel", "WOOD", loot="basement_food")
+    add("cellar_barrel_side", barrel_side(), "Cask", "WOOD", loot="liquor")
     add("cellar_wine_rack", [[0, 0, 4, 16, 16, 16, {"north": "cellar_wine", "side": wood, "up": wood, "down": wood}]],
         "Wine Rack", "WOOD", loot="liquor")
     return out

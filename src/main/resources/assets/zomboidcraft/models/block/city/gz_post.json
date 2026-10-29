@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gz_cream": "zomboidcraft:block/city/gz_cream",
+    "gz_green": "zomboidcraft:block/city/gz_green",
+    "particle": "zomboidcraft:block/city/gz_cream"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_cream"
+        },
+        "south": {
+          "texture": "#gz_cream"
+        },
+        "east": {
+          "texture": "#gz_cream"
+        },
+        "west": {
+          "texture": "#gz_cream"
+        },
+        "up": {
+          "texture": "#gz_cream",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gz_cream",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_green"
+        },
+        "south": {
+          "texture": "#gz_green"
+        },
+        "east": {
+          "texture": "#gz_green"
+        },
+        "west": {
+          "texture": "#gz_green"
+        },
+        "up": {
+          "texture": "#gz_green"
+        },
+        "down": {
+          "texture": "#gz_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.4,
+        3,
+        5.4
+      ],
+      "to": [
+        10.6,
+        3.6,
+        10.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_cream"
+        },
+        "south": {
+          "texture": "#gz_cream"
+        },
+        "east": {
+          "texture": "#gz_cream"
+        },
+        "west": {
+          "texture": "#gz_cream"
+        },
+        "up": {
+          "texture": "#gz_cream"
+        },
+        "down": {
+          "texture": "#gz_cream"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        5.5
+      ],
+      "to": [
+        10.5,
+        10,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gz_green"
+        },
+        "south": {
+          "texture": "#gz_green"
+        },
+        "east": {
+          "texture": "#gz_green"
+        },
+        "west": {
+          "texture": "#gz_green"
+        },
+        "up": {
+          "texture": "#gz_green"
+        },
+        "down": {
+          "texture": "#gz_green"
+        }
+      }
+    }
+  ]
+}

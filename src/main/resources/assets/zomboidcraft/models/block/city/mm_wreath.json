@@ -1,0 +1,245 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mm_leaves": "zomboidcraft:block/city/mm_leaves",
+    "rs_paper_b0": "zomboidcraft:block/city/rs_paper_b0",
+    "rs_timber": "zomboidcraft:block/city/rs_timber",
+    "particle": "zomboidcraft:block/city/mm_leaves"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        4,
+        7.5
+      ],
+      "to": [
+        13,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_leaves"
+        },
+        "south": {
+          "texture": "#mm_leaves"
+        },
+        "east": {
+          "texture": "#mm_leaves"
+        },
+        "west": {
+          "texture": "#mm_leaves"
+        },
+        "up": {
+          "texture": "#mm_leaves"
+        },
+        "down": {
+          "texture": "#mm_leaves"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        13,
+        7.5
+      ],
+      "to": [
+        13,
+        15,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_leaves"
+        },
+        "south": {
+          "texture": "#mm_leaves"
+        },
+        "east": {
+          "texture": "#mm_leaves"
+        },
+        "west": {
+          "texture": "#mm_leaves"
+        },
+        "up": {
+          "texture": "#mm_leaves"
+        },
+        "down": {
+          "texture": "#mm_leaves"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        7.5
+      ],
+      "to": [
+        4,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_leaves"
+        },
+        "south": {
+          "texture": "#mm_leaves"
+        },
+        "east": {
+          "texture": "#mm_leaves"
+        },
+        "west": {
+          "texture": "#mm_leaves"
+        },
+        "up": {
+          "texture": "#mm_leaves"
+        },
+        "down": {
+          "texture": "#mm_leaves"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        6,
+        7.5
+      ],
+      "to": [
+        14,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mm_leaves"
+        },
+        "south": {
+          "texture": "#mm_leaves"
+        },
+        "east": {
+          "texture": "#mm_leaves"
+        },
+        "west": {
+          "texture": "#mm_leaves"
+        },
+        "up": {
+          "texture": "#mm_leaves"
+        },
+        "down": {
+          "texture": "#mm_leaves"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2,
+        7.2
+      ],
+      "to": [
+        10,
+        4.5,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_paper_b0"
+        },
+        "south": {
+          "texture": "#rs_paper_b0"
+        },
+        "east": {
+          "texture": "#rs_paper_b0"
+        },
+        "west": {
+          "texture": "#rs_paper_b0"
+        },
+        "up": {
+          "texture": "#rs_paper_b0"
+        },
+        "down": {
+          "texture": "#rs_paper_b0"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        0,
+        9
+      ],
+      "to": [
+        8.4,
+        9,
+        9.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_timber"
+        },
+        "south": {
+          "texture": "#rs_timber"
+        },
+        "east": {
+          "texture": "#rs_timber"
+        },
+        "west": {
+          "texture": "#rs_timber"
+        },
+        "up": {
+          "texture": "#rs_timber"
+        },
+        "down": {
+          "texture": "#rs_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        0,
+        9
+      ],
+      "to": [
+        8.4,
+        9,
+        9.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rs_timber"
+        },
+        "south": {
+          "texture": "#rs_timber"
+        },
+        "east": {
+          "texture": "#rs_timber"
+        },
+        "west": {
+          "texture": "#rs_timber"
+        },
+        "up": {
+          "texture": "#rs_timber"
+        },
+        "down": {
+          "texture": "#rs_timber"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9,
+          9.4
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

@@ -644,7 +644,7 @@ final class DowntownSite extends Site {
                             : "minecraft:grass_block");
                     if (chance() < 0.02) {
                         out.set(x, 1, z, kit.pick("trash_bag[facing=north]", "crate", "cardboard_box", "debris_chunk", "paper",
-                                "minecraft:barrel[facing=up,loot=storage]", "tire[axis=x]"));
+                                "fm_drum[loot=storage]", "tire[axis=x]"));
                     }
                 }
             }

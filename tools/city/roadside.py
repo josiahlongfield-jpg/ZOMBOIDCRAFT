@@ -13,7 +13,9 @@ Every piece is drawn with the road on its north (z = 0), rotate=facing:
 - rs_batten / rs_stringer: the back of the face, an upright and the rails, or the rails alone;
 - rs_brace: the kicker from the ground up to a leg, on its footing;
 - rs_walk: the catwalk under the face, galvanised grating, the rail on the road side;
-- rs_lamp(_lit): a gooseneck lamp on its arm out from the catwalk, the shade turned back to the face.
+- rs_lamp(_lit): a gooseneck lamp on its arm out from the catwalk, the shade turned back to the face;
+- rs_meter / rs_meter_bent: a parking meter on the sidewalk, the dial's window on the north, the
+  red EXPIRED flag up in it; the bent one knocked over at the post by a car.
 
     python3 tools/city/roadside.py      rewrites the rs_ entries in blocks.json
 
@@ -104,8 +106,23 @@ def timber(seed):
     return t
 
 
+def meter(seed):
+    """The parking meter's head: a dull grey casting, the dome window with the dial behind it,
+    the red EXPIRED flag up, the coin slot and the key lock under, scratched and fly-posted."""
+    t = F.plain(seed, (92, 96, 94), 0.06, 0.45)
+    t.rect(10, 6, N - 10, N // 2 + 6, col=(150, 162, 168), h=0.9, smooth=0.9)
+    t.rect(13, 9, N - 13, N // 2 + 3, col=(220, 214, 196), h=0.85, smooth=0.6)
+    t.rect(N // 2 - 2, 12, N // 2 + 8, 20, col=(196, 36, 32), h=0.9)
+    t.rect(N // 2 - 1, 22, N // 2 + 1, N // 2, col=(40, 40, 40), h=0.9)
+    t.rect(N // 2 - 4, N - 18, N // 2 + 4, N - 16, col=(24, 24, 24), h=0.2)
+    t.rect(N // 2 - 2, N - 10, N // 2 + 2, N - 6, col=(170, 160, 120), h=0.8, smooth=0.7)
+    t.grime(0.3, (52, 50, 46))
+    t.streaks(0.6, 0.75)
+    return t
+
+
 def textures():
-    out = {"rs_ply": lambda: ply(49400), "rs_timber": lambda: timber(49401)}
+    out = {"rs_ply": lambda: ply(49400), "rs_timber": lambda: timber(49401), "rs_meter": lambda: meter(49402)}
     for i, k in enumerate(PAPERS):
         for j in range(3):
             out[f"rs_paper_{k}{j}"] = lambda k=k, i=i, j=j: paper(49410 + i * 3 + j, k)
@@ -178,6 +195,11 @@ def lamp(lit):
             [5.5, 10.4, 3, 10.5, 11, 9, {"down": lens, "side": "cp_lamp", "up": "cp_lamp"}, None, tilt]]
 
 
+def meter_head():
+    head = {"north": "rs_meter", "side": GALV, "up": GALV, "down": GALV}
+    return [[5, 11, 6, 11, 15.5, 10, head], [5.5, 15.5, 6.5, 10.5, 16.5, 9.5, GALV], [6.5, 10, 7, 9.5, 11, 9, GALV]]
+
+
 def blocks():
     out = {}
 
@@ -205,6 +227,12 @@ def blocks():
     for lit in (False, True):
         add("rs_lamp" + ("_lit" if lit else ""), lamp(lit), "Billboard Lamp", "METAL", shape=[[5, 1, 2, 11, 15, 16]],
             light=12 if lit else None)
+    add("rs_meter", [[7.2, 0, 7.2, 8.8, 10, 8.8, GALV], [6.5, 0, 6.5, 9.5, 0.6, 9.5, GALV]] + meter_head(), "Parking Meter",
+        "METAL", shape=[[5, 0, 6, 11, 16, 10]], cutout=True)
+    lean = {"axis": "x", "angle": 45, "origin": [8, 1, 8]}
+    add("rs_meter_bent", [[6.5, 0, 6.5, 9.5, 0.6, 9.5, GALV], [7.2, 0, 7.2, 8.8, 1.5, 8.8, GALV]]
+        + [q + [None, lean] for q in [[7.2, 1, 7.2, 8.8, 10, 8.8, GALV]] + meter_head()], "Parking Meter", "METAL",
+        shape=[[5, 0, 0, 11, 6, 10]], cutout=True)
     return out
 
 
