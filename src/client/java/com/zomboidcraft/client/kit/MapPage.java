@@ -41,6 +41,14 @@ final class MapPage {
         this.screen = screen;
     }
 
+    /** Points the map at a spot and zoom (the UI test's views). */
+    void look(double x, double z, float zoom) {
+        cx = x;
+        cz = z;
+        this.zoom = Mth.clamp(zoom, MIN_ZOOM, MAX_ZOOM);
+        follow = false;
+    }
+
     // ------------------------------------------------------------------ the mouse
 
     private boolean inView(double mx, double my) {

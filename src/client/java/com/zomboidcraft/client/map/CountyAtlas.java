@@ -134,6 +134,12 @@ public final class CountyAtlas {
         return s != null && s.planned;
     }
 
+    /** Whether a tile has been drawn and is ready to show. */
+    public static boolean ready(int level, double x, double z) {
+        int span = PX * SCALE[level];
+        return loaded.containsKey(key(level, (int) Math.floor((x + HALF) / span), (int) Math.floor((z + HALF) / span)));
+    }
+
     /** Whether the far-out sketch is still being made. */
     public static boolean sketching() {
         State s = state;
@@ -142,7 +148,8 @@ public final class CountyAtlas {
 
     // ------------------------------------------------------------------ opening and closing
 
-    private static void open(long seed, boolean planned) {
+    /** Opens a county's atlas (the server's {@link MapNet.Atlas} does this; the UI test opens one directly). */
+    public static void open(long seed, boolean planned) {
         State old = state;
         if (old != null && old.seed == seed && old.planned == planned) return;
         close();
