@@ -171,6 +171,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         } else if (box.getYsize() < box.getXsize()) {
             pose.mulPose(new org.joml.Matrix4f().rotationZ((float) (Math.PI / 2)));
         }
+        if (side > 0 && !alongZ && box.getYsize() >= box.getXsize()) {
+            // held models stand handle down; turn a blade over so its handle stands out of the sheath
+            pose.mulPose(new org.joml.Matrix4f().rotationZ((float) Math.PI));
+        }
         pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
         item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         pose.popPose();
