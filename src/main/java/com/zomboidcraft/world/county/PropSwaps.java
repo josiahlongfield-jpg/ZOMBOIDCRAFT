@@ -14,7 +14,7 @@ final class PropSwaps {
         Map.entry("barrel", new String[] {"barrel", "pk_barrel_1", "pk_barrel_2", "pk_barrel_3"}),
         Map.entry("bunk_crate_ammo", new String[] {"bunk_crate_ammo", "pk_military_crate_old", "pk_military_crate_old_b"}),
         Map.entry("bunk_crate_gun", new String[] {"bunk_crate_gun", "pk_military_crate"}),
-        Map.entry("crate", new String[] {"crate", "pk_crate_1", "pk_crate_2"}),
+        Map.entry("crate", new String[] {"!crate", "pk_crate_1", "pk_crate_2"}),
         Map.entry("desk", new String[] {"desk", "pk_desk_metal"}),
         Map.entry("ext_trash_can", new String[] {"ext_trash_can", "pk_trash_can"}),
         Map.entry("filing_cabinet", new String[] {"filing_cabinet", "pk_file_cabinet"}),
@@ -63,7 +63,7 @@ final class PropSwaps {
         Map.entry("store_vending", new String[] {"store_vending", "pk_vending"}),
         Map.entry("store_vending_top", new String[] {"store_vending", "pk_vending_010"}),
         Map.entry("trade_barber_chair", new String[] {"trade_barber_chair", "pk_barber_chair"}),
-        Map.entry("trash_bag", new String[] {"trash_bag", "pk_trash_bag"}));
+        Map.entry("trash_bag", new String[] {"!trash_bag", "pk_trash_bag"}));
 
     private PropSwaps() {
     }
