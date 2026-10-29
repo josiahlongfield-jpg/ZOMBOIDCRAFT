@@ -119,8 +119,15 @@ jobs:
           echo 'execute as @e[tag=zc_tough] run say still alive after a body shot' >&3
           # A test train line gets laid and its train runs round it.
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
+          # A test lift is built and called to its top floor.
+          echo 'forceload add 40 40' >&3
+          echo 'execute positioned 40 100 40 run zc lift test 4' >&3
           sleep 8
           echo 'zc train list' >&3
+          echo 'zc lift list' >&3
+          echo 'zc lift call' >&3
+          sleep 12
+          echo 'zc lift list' >&3
           sleep 32  # it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
           echo 'zc train list' >&3
           sleep 2
@@ -129,6 +136,7 @@ jobs:
           exec 3>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
+          grep -E 'lift|Called' server.log | head -20 || true
           grep -E 'zomboidcraft|test_rail|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
@@ -177,12 +185,15 @@ jobs:
           done < places.txt
           echo 'forceload add -100 -100 100 100' >&4
           sleep 90
+          echo 'zc lift list' >&4
+          sleep 1
           echo 'stop' >&4
           for i in $(seq 1 24); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 4>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
           grep -E 'county|blocks (north|south|east|west)|ERROR|Exception' county.log | head -80 || true
+          grep -E 'lifts running|lift at' county.log | head -20 || true
           grep 'Unknown vanilla block' county.log | sort -u | head -40 || true
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
