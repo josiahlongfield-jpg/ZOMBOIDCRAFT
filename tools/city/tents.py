@@ -126,10 +126,11 @@ def canvas(seed, rgb, mud=False, seam=False, roof=False):
         t.speckle(0.006, (120, 80, 36), 0.7, 0.1)
         t.speckle(0.004, (150, 110, 50), 0.6, 0.1)
         t.speckle(0.003, (232, 230, 220), 0.8, 0.05)
-        t.grime(0.25, (50, 52, 40))
+        # white vinyl shows its grime in blotches: keep it to a film
+        t.grime(0.11 if lum > 200 else 0.25, (50, 52, 40))
     else:
         t.streaks(0.25, 0.86 if lum > 150 else 0.92)
-        t.grime(0.15, (60, 58, 46))
+        t.grime(0.07 if lum > 200 else 0.15, (60, 58, 46))
     if mud:
         n = np.clip(P.fbm(t.rng) * 0.6 + 0.5, 0, 1)
         m = np.clip((yy - 42) / 20.0, 0, 1) * (0.55 + 0.45 * n)
@@ -518,7 +519,11 @@ def roof_boxes(k, c, frame, ridge, x0=0, x1=16):
         out.append([0, -1.4, 0.2, 16, 0, 1.6, "ext_alu"])
         d = half + ov
         ez, ey = 8 - d * COS, yc - d * SIN
-        out.append([x0, ey - 4.2, ez - 0.3, x1, ey + 0.1, ez + 0.3, faces(up, dn)])
+        # scalloped: drawn tight to the frame at the block's edges, sagging deepest between them
+        for sx0, sx1, dep in ((0, 2, 2.4), (2, 4.5, 3.3), (4.5, 11.5, 4.2), (11.5, 14, 3.3), (14, 16, 2.4)):
+            sx0, sx1 = max(sx0, x0), min(sx1, x1)
+            if sx1 > sx0:
+                out.append([sx0, round(ey - dep, 3), ez - 0.3, sx1, ey + 0.1, ez + 0.3, faces(up, dn)])
     if frame:
         out.append([7.3, yc - 1.75, 8 - half, 8.7, yc - 0.35, 8 + half, "ext_alu", None, rot])
     if ridge:
@@ -582,7 +587,7 @@ def blocks():
     for c, (_, _, widths) in CANVAS.items():
         lin = f"tn_{c}_liner"
         kmax = max(widths) // 2
-        tops = {w // 2 - 1 for w in widths}
+        tops = {w // 2 - 1 for w in widths} | {1}  # 1: the entry vestibule's ridge
 
         def panel(tex):
             return [0, 0, 0.3, 16, 16, 0.9, faces(tex, lin)]

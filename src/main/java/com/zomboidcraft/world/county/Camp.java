@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.county;
 
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.SplittableRandom;
 
@@ -10,7 +11,7 @@ import java.util.SplittableRandom;
  * <li>walls and wire: double chain-link with barbed wire on top, hesco lines, shipping
  * containers stacked into a wall, jersey barriers, sandbag nests;</li>
  * <li>the watchtowers on their legs with a floodlight and a sandbagged platform, the guard
- * booth and its barrier at the gate, floodlight masts;</li>
+ * booth and its barrier at the gate, floodlight masts and light tower trailers;</li>
  * <li>canvas: the GP tents in their rows with cots inside, the big white field hospital with its
  * red cross, a tent fallen in;</li>
  * <li>buildings: barracks with their bunks, the headquarters, the mess hall, a quonset hangar,
@@ -257,23 +258,63 @@ final class Camp {
     }
 
     /**
-     * A guard booth 4 x 4 at (x, z): windows all round, a door at the back, a flat roof with a
-     * lamp under the eave, a stool and the log book on the desk.
+     * A light tower trailer at (x, z) to (x, z + 1), its lamps looking out (-z) and the tow bar back
+     * toward +z: olive army issue, or one of the hire fleet's white ones commandeered; the mast run up
+     * 3 to 5 sections, or wound down as it came off the truck.
+     */
+    void lightTower(int x, int z, boolean raised) {
+        String c = chance() < 0.75 ? "olive" : "white";
+        p.set(x, 1, z, "cp_lt_rear_" + c + "[facing=north]");
+        p.set(x, 1, z + 1, "cp_lt_front_" + c + "[facing=north]");
+        p.set(x, 2, z, "cp_lt_cap_rear[facing=north]");
+        p.set(x, 2, z + 1, "cp_lt_cap_front[facing=north]");
+        int h = raised ? 3 + rng.nextInt(3) : 0;
+        for (int y = 3; y < 3 + h; y++) {
+            p.set(x, y, z, "cp_lt_mast[facing=north]");
+        }
+        p.set(x, 3 + h, z, lamp(rng, 0.35 + hit * 0.3, "cp_lt_head", "north"));
+    }
+
+    /**
+     * A guard booth on the 4 x 4 at (x, z): the prefab three by three in the corner, white ribbed
+     * steel to the waist and glazed all round above it (some panes out), a glazed door at the back
+     * (+z), the flat roof reaching out over every side with the beacon on it; inside the ledge under
+     * the windows, the stool, the radio; bollards along the open side.
      */
     void booth(int x, int z) {
-        Bldg b = new Bldg(p.shifted(x, 0, z), rng);
-        b.damage = 0.4 + hit * 0.5;
-        b.shell(0, 0, 3, 3, 1, 3, "concrete_panel", "floor_concrete", "floor_concrete");
-        for (int i = 1; i <= 2; i++) {
-            b.window(i, 2, 0, "north", 1, null);
-            b.window(0, 2, i, "west", 1, null);
-            b.window(3, 2, i, "east", 1, null);
+        double damage = 0.4 + hit * 0.5;
+        String[] faces = {"north", "east", "south", "west"};
+        // the ring of cells round the middle, each with the side it looks out of; corners take the
+        // side clockwise after them as well (their piece's west)
+        int[][] ring = {{0, 0, 0, 1}, {1, 0, 0, 0}, {2, 0, 1, 1}, {2, 1, 1, 0}, {2, 2, 2, 1}, {1, 2, 2, 0}, {0, 2, 3, 1},
+            {0, 1, 3, 0}};
+        for (int[] c : ring) {
+            int cx = x + c[0], cz = z + c[1];
+            String f = "[facing=" + faces[c[2]] + "]", k = c[3] == 1 ? "_corner" : "";
+            p.set(cx, 0, cz, "floor_concrete");
+            p.set(cx, 3, cz, "cp_gb_head" + k + f);
+            if (c[0] == 1 && c[1] == 2) {
+                continue; // the door's cell
+            }
+            p.set(cx, 1, cz, "cp_gb_wall" + k + f);
+            p.set(cx, 2, cz, "cp_gb_win" + k + (chance() < 0.12 + damage * 0.35 ? "_broken" : "") + f);
         }
-        b.door(1, 1, 3, "flat_door", "south");
-        b.flat(0, 0, 3, 3, 3, "concrete_panel", 0, "stone_trim");
-        Placer s = p.shifted(x, 0, z);
-        s.set(2, 1, 1, "desk[facing=north]");
-        s.set(2, 2, -1, flood(rng, 0.4));
+        p.set(x + 1, 0, z + 1, "floor_concrete");
+        p.set(x + 1, 3, z + 1, "cp_gb_roof[facing=north]");
+        Doors.abandoned(p, rng, x + 1, 1, z + 2, Doors.SHOP, "north", Doors.hinge(rng));
+        p.set(x + 1, 0, z + 3, "curb");
+        // inside: the stool knocked over or not, the radio on the floor where it fell
+        p.set(x + 1, 1, z + 1, chance() < 0.3 + damage * 0.3 ? "un_stool" : "air");
+        if (chance() < 0.4) {
+            p.set(x + 1, 1, z + 1, "home_radio_low[facing=" + any("north", "east", "west") + "]");
+        }
+        // the bollards down the open side, the sandbags someone started
+        for (int i = 0; i < 4; i += 2) {
+            p.set(x + 3, 1, z + i, "gs_bollard");
+        }
+        if (chance() < 0.5 + hit * 0.3) {
+            p.set(x + 3, 1, z + 1, "sandbags[facing=north]");
+        }
     }
 
     /**
@@ -1006,8 +1047,8 @@ final class Camp {
             p.set(cx, 1, z + len + 1, "desk[facing=north]");
             p.set(cx + 1, 1, z + len + 1, chance() < 0.5 ? "filing_cabinet[facing=north]" : "office_chair_fallen");
         }
-        // a floodlight over the head of the line
-        floodMast(x + 5, z - 2, 7);
+        // a light tower trailer lighting the head of the line
+        lightTower(x + 5, z - 3, true);
     }
 
     /** Clutter dropped at (x, z): a sandbag heap, jerrycans, pallets, a stretcher, the dead. */
