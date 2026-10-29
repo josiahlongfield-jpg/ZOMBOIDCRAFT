@@ -84,6 +84,8 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Integer> STUMBLE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     /** Counts up each time it's shot in the eyes (the client throws it back). */
     private static final EntityDataAccessor<Integer> RECOIL = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Counts up each time it rages at someone (the client plays its rage). */
+    private static final EntityDataAccessor<Integer> RAGE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -235,6 +237,7 @@ public class HarvestmanEntity extends Mob {
         builder.define(WATCH, -1);
         builder.define(STUMBLE, 0);
         builder.define(RECOIL, 0);
+        builder.define(RAGE, 0);
     }
 
     /** Where it's looking, or null. */
@@ -253,6 +256,38 @@ public class HarvestmanEntity extends Mob {
 
     public int stumbles() {
         return entityData.get(STUMBLE);
+    }
+
+    public int rages() {
+        return entityData.get(RAGE);
+    }
+
+    /** How long a rage holds it still (its rage played a little quick), and the least time between two. */
+    public static final int RAGE_TICKS = 86, RAGE_GAP = 20 * 20;
+    private long rageAt = -RAGE_GAP;
+
+    /** Still raging at someone. */
+    public boolean raging() {
+        return level().getGameTime() - rageAt < RAGE_TICKS;
+    }
+
+    /**
+     * It stops, faces at, and rages: rears, screams, thrashes its arms (the client plays it). Not if it raged at
+     * someone only a little while ago (unless forced), nor while it holds something or is dead.
+     */
+    public boolean rage(Vec3 at, boolean force) {
+        long now = level().getGameTime();
+        if (!isAlive() || held != null || dropping || pose() == DEAD || raging() || !force && now - rageAt < RAGE_GAP) {
+            return false;
+        }
+        rageAt = now;
+        entityData.set(RAGE, rages() + 1);
+        pause = RAGE_TICKS;
+        pauseLook = at;
+        if (level() instanceof ServerLevel sl) {
+            playSound(sl, centre(), HarvestmanSounds.SCREECH, 1.8f, 0.8f);
+        }
+        return true;
     }
 
     public int recoils() {
