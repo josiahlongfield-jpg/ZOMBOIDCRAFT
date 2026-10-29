@@ -184,7 +184,7 @@ public final class ModSounds {
     public static final SoundEvent BLAST = register("weapon.throw.blast", 128f);
     /**
      * Wave two, on stand-ins (existing takes pitched) until the audio thread's own recordings land: the .50 a much
-     * heavier boom heard out to 256 blocks, the battle rifle a sharper .308, the precision rifle between the two, the
+     * heavier boom heard out to 256 blocks, the battle rifle a sharper .308, the
      * suppressed rifle only ever quiet, the machine pistol and pocket .380 lighter pistols, the launcher a hollow thump.
      */
     public static final SoundEvent HEAVY_SNIPER_SHOT = register("weapon.heavy_sniper.shot");
@@ -195,10 +195,6 @@ public final class ModSounds {
     public static final SoundEvent BATTLE_RIFLE_SHOT_DISTANT = register("weapon.battle_rifle.shot_distant", 176f);
     public static final SoundEvent BATTLE_RIFLE_SHOT_SUPPRESSED = register("weapon.battle_rifle.shot_suppressed");
     public static final SoundEvent BATTLE_RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.battle_rifle.shot_suppressed_distant", 48f);
-    public static final SoundEvent PRECISION_RIFLE_SHOT = register("weapon.precision_rifle.shot");
-    public static final SoundEvent PRECISION_RIFLE_SHOT_DISTANT = register("weapon.precision_rifle.shot_distant", 192f);
-    public static final SoundEvent PRECISION_RIFLE_SHOT_SUPPRESSED = register("weapon.precision_rifle.shot_suppressed");
-    public static final SoundEvent PRECISION_RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.precision_rifle.shot_suppressed_distant", 48f);
     public static final SoundEvent SUPPRESSED_RIFLE_SHOT = register("weapon.suppressed_rifle.shot");
     public static final SoundEvent SUPPRESSED_RIFLE_SHOT_DISTANT = register("weapon.suppressed_rifle.shot_distant", 40f);
     public static final SoundEvent MACHINE_PISTOL_SHOT = register("weapon.machine_pistol.shot");

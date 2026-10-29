@@ -291,8 +291,9 @@ public enum GunType {
             case MACHINE_PISTOL -> suppressed ? (distant ? ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED)
                     : distant ? ModSounds.MACHINE_PISTOL_SHOT_DISTANT : ModSounds.MACHINE_PISTOL_SHOT;
             case SUPPRESSED_RIFLE -> distant ? ModSounds.SUPPRESSED_RIFLE_SHOT_DISTANT : ModSounds.SUPPRESSED_RIFLE_SHOT;
-            case PRECISION_RIFLE -> suppressed ? (distant ? ModSounds.PRECISION_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.PRECISION_RIFLE_SHOT_SUPPRESSED)
-                    : distant ? ModSounds.PRECISION_RIFLE_SHOT_DISTANT : ModSounds.PRECISION_RIFLE_SHOT;
+            // Josiah keeps the precision rifle on the hunting rifle's .308 recordings, suppressed and not
+            case PRECISION_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
             case HEAVY_SNIPER -> suppressed ? (distant ? ModSounds.HEAVY_SNIPER_SHOT_SUPPRESSED_DISTANT : ModSounds.HEAVY_SNIPER_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HEAVY_SNIPER_SHOT_DISTANT : ModSounds.HEAVY_SNIPER_SHOT;
             case GRENADE_LAUNCHER -> distant ? ModSounds.GRENADE_LAUNCHER_SHOT_DISTANT : ModSounds.GRENADE_LAUNCHER_SHOT;
