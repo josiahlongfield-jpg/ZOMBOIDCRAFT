@@ -132,7 +132,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_chestplate",
+          "name": "zomboidcraft:plate_carrier",
           "weight": 72,
           "functions": [
             {
@@ -149,36 +149,6 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:combat_helmet",
           "weight": 72,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0,
-                "max": 0.4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_leggings",
-          "weight": 54,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0,
-                "max": 0.4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_boots",
-          "weight": 54,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -299,37 +269,37 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:canteen",
-          "weight": 8
+          "weight": 16
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mess_kit",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:sterile_bandage",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:body_bag",
           "weight": 8
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:sterile_bandage",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:body_bag",
+          "weight": 16
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:paracord",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:barbed_wire_roll",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:glow_stick",
-          "weight": 8,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -344,57 +314,57 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:firestarter",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sleeping_bag",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bedroll",
-          "weight": 8
+          "weight": 16
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:compass",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_purification_tabs",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_aiming",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:dog_tags",
-          "weight": 8
+          "weight": 16
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wheel_chock",
-          "weight": 8
+          "weight": 16
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:signal_mirror",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:entrenching_tool",
-          "weight": 12
+          "weight": 24
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mil_canteen_cup",
-          "weight": 8,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -409,7 +379,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:duty_belt",
-          "weight": 12
+          "weight": 24
         }
       ]
     },
@@ -424,7 +394,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond_chestplate",
+          "name": "zomboidcraft:plate_carrier",
           "weight": 1
         },
         {

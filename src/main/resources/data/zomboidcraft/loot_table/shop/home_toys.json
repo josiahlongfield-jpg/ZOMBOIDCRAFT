@@ -239,6 +239,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:hoodie",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:comic_book",
           "weight": 12,
           "functions": [

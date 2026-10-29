@@ -38,7 +38,7 @@ WHERE = {
     'shop/hardware': {'hard': 2, 'build': 1}, 'shop/home_tools': {'garage': 1, 'hard': 1},
     'shop/pawn': {'pawn': 2, 'elec': 1, 'jewel': 1},
     'shop/home_books': {'books': 2, 'desk': 1}, 'shop/bank': {'bank': 1}, 'shop/till': {'till': 1},
-    'shop/cash': {'bank': 1, 'till': 1}, 'shop/mail': {'post': 1}, 'shop/guns': {'gun': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1},
+    'shop/cash': {'bank': 1, 'till': 1}, 'shop/mail': {'post': 1}, 'shop/guns': {'gun': 1}, 'shop/theatre_candy': {'candy': 1}, 'shop/thrift': {'thrift': 1}, 'shop/clothes': {'cloth': 1},
 }
 # things a table stocks that no place tag says (an oven holds what was cooking; sinks keep the cleaning things)
 EXTRA = {
@@ -83,7 +83,14 @@ CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore'
 SWAP = {f'minecraft:{a}': f'{NS}:{b}' for a, b in (
     ('iron_sword', 'machete'), ('iron_axe', 'fire_axe'), ('iron_pickaxe', 'crowbar'), ('stone_hoe', 'shovel'),
     ('iron_hoe', 'shovel'), ('bow', 'crossbow'), ('crossbow', 'crossbow'), ('arrow', 'crossbow_bolt'),
-    ('iron_helmet', 'combat_helmet'), ('golden_helmet', 'combat_helmet'))}
+    ('iron_helmet', 'combat_helmet'), ('golden_helmet', 'combat_helmet'),
+    # clothes from the clothing thread (batch 1) and the plate carrier take the armour stand-ins' places
+    ('leather_chestplate', 'denim_jacket'), ('leather_leggings', 'jeans'), ('leather_boots', 'work_boots'),
+    ('leather_helmet', 'baseball_cap'), ('iron_chestplate', 'plate_carrier'), ('diamond_chestplate', 'plate_carrier'),
+    ('iron_leggings', 'work_pants'), ('iron_boots', 'work_boots'))}
+# the clothing thread's garments that are registered with worn models: placed by their roster places like ours
+WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'jeans', 'work_pants', 'sneakers',
+              'work_boots', 'baseball_cap', 'beanie', 'work_gloves', 'sunglasses', 'bandana'}
 KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
@@ -142,7 +149,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry', action='store_true')
     a = ap.parse_args()
-    rows = [r for r in gen_java.rows() if r['live']]
+    rows = [r for r in gen_java.rows() if r['live'] or r['id'] in WORN_READY]
     mine = {f'{NS}:{r["id"]}' for r in rows} | {f'{NS}:{i}' for g in GEAR.values() for i, _r, _w in g}
     for path in sorted(TABLES.glob('*/*.json')):
         table = f'{path.parent.name}/{path.stem}'

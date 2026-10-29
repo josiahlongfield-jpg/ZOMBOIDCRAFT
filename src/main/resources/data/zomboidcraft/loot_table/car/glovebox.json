@@ -259,6 +259,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:sunglasses",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:county_map",
           "weight": 6
         },
