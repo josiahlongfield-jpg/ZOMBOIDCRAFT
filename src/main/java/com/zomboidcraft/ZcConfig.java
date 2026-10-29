@@ -58,6 +58,8 @@ public final class ZcConfig {
     public GunStats leverAction = GunStats.leverAction();
     /** The crossbow's own numbers, and how often its bolts break. */
     public CrossbowStats crossbow = new CrossbowStats();
+    /** The Warthog's mounted minigun: its rounds, rate, spin-up and belt. */
+    public MinigunStats minigun = new MinigunStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -1222,6 +1224,27 @@ public final class ZcConfig {
     }
 
     /** Settings every gun shares, and the assault rifle's own numbers. */
+    /** A mounted three-barrel minigun, fed a belt loaded from the gunner's own 5.56 rounds. */
+    public static class MinigunStats extends GunStats {
+        {
+            damage = 12.0;
+            hipSpread = 1.2;
+            aimSpread = 1.2;
+            shotNoise = 140.0;
+            range = 160.0;
+            autoRpm = 1500.0;
+        }
+
+        /** Seconds the barrels take to spin up before it fires, and to run down after. */
+        public double spinUpSeconds = 0.6;
+        public double spinDownSeconds = 2.0;
+        /** Rounds the belt holds, and seconds to load it. */
+        public int beltSize = 300;
+        public double beltLoadSeconds = 3.0;
+        /** One round in this many is a tracer. */
+        public int tracerEvery = 3;
+    }
+
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto

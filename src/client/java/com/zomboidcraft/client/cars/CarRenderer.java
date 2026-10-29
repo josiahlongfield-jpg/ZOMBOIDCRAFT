@@ -79,6 +79,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.arms = driving ? CarHands.onWheel(mc.player) : CarHands.NONE;
         state.driverEye = driving ? m.seats[0] : null;
         state.air = car.aircraft();
+        net.minecraft.world.entity.player.Player gunner = m != null && m.turret != null ? com.zomboidcraft.world.cars.Turret.gunner(car) : null;
+        state.turretYaw = gunner == null ? 0 : com.zomboidcraft.world.cars.Turret.yaw(gunner.getYRot(partialTick), state.yaw);
+        state.turretTilt = gunner == null ? 0 : com.zomboidcraft.world.cars.Turret.pitch(m.turret, gunner.getXRot(partialTick));
+        state.barrels = car.barrelsO + (car.barrels - car.barrelsO) * partialTick;
+        state.turretFiring = car.turretFiring();
         state.aircraft = state.air ? car : null;
         state.broken = state.air && car.broken();
         if (state.air) {
@@ -138,6 +143,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             // the tail rotor turns about five times for each turn of the main one
             rotors[i] = spin(car.rotors().get(i), i == 0 ? state.rotor : state.rotor * 4.9);
         }
+        Turn[] turret = turret(car.turret(), state);
         boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
         CarAssets.Ready full = !state.lights && !state.dash ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
         CarLamps.Lamps lamps = full == null ? null : CarLamps.get(state.model, state.variant, full);
@@ -159,7 +165,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         AirSurfaces.Set surfaces = state.aircraft != null && state.lod == 0 && !state.broken ? AirSurfaces.of(state.model, car.mesh()) : null;
         Turn[] surface = surfaces == null ? null : AirSurfaces.turns(state.aircraft, state.model, surfaces);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, rotors, (mesh, turn) -> {
+            each(car, lids, wheels, rotors, turret, (mesh, turn) -> {
                 if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null || surface != null)) {
                     // the backlit dials and displays at full brightness, the steering wheel turned, the surfaces on their hinges, the rest as usual
                     int t = 0;
@@ -187,7 +193,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         CarGlassDraw.Set windows = CarGlassDraw.of(state, car, model);
         if (!state.inside && !state.smashed && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-                each(car, lids, wheels, rotors, (mesh, turn) -> {
+                each(car, lids, wheels, rotors, turret, (mesh, turn) -> {
                     if (windows != null) {
                         CarGlassDraw.glass(windows, mesh, turn, pose, out, light, GLASS);
                     } else {
@@ -198,7 +204,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
         if (windows != null && !state.smashed) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(CarGlassDraw.MARKS), (pose, out) ->
-                    each(car, lids, wheels, rotors, (mesh, turn) -> CarGlassDraw.marks(windows, mesh, turn, pose, out, light)));
+                    each(car, lids, wheels, rotors, turret, (mesh, turn) -> CarGlassDraw.marks(windows, mesh, turn, pose, out, light)));
         }
         // the instrument panel drawn sharp over a blurred one, in the aircraft you're in, powered or not
         CockpitPanel.Panel facePanel = state.liveCockpit != null && state.lod == 0
@@ -407,9 +413,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         void apply(float[] v, boolean normal);
     }
 
-    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, Turn[] rotors,
+    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, Turn[] rotors, Turn[] turret,
                              java.util.function.BiConsumer<CarAssets.Mesh, Turn> part) {
         part.accept(car.mesh(), null);
+        for (int i = 0; i < turret.length; i++) {
+            part.accept(car.turret().get(i).mesh(), turret[i]);
+        }
         for (int i = 0; i < rotors.length; i++) {
             part.accept(car.rotors().get(i).mesh(), rotors[i]);
         }
@@ -419,6 +428,40 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         for (int i = 0; i < wheels.length; i++) {
             part.accept(car.wheels().get(i).mesh(), wheels[i]);
         }
+    }
+
+    /**
+     * A mounted gun's parts moved (CarAssets.Ready.turret): the post turned on its upright axis, the gun tilted on the
+     * post and turned with it, the barrels spun in the gun, tilted and turned with it.
+     */
+    private static Turn[] turret(java.util.List<CarAssets.Rotor> parts, CarRenderState state) {
+        Turn[] out = new Turn[parts.size()];
+        Turn yaw = null, tilt = null;
+        for (int i = 0; i < out.length; i++) {
+            CarAssets.Rotor r = parts.get(i);
+            if (i == 0) {
+                yaw = state.turretYaw == 0 ? null : spin(r, state.turretYaw);
+                out[i] = yaw;
+            } else if (i == 1) {
+                Turn own = state.turretTilt == 0 ? null : spin(r, state.turretTilt), post = yaw;
+                tilt = then(own, post);
+                out[i] = tilt;
+            } else {
+                out[i] = then(spin(r, state.barrels), tilt);
+            }
+        }
+        return out;
+    }
+
+    /** first, then second (either may be null: nothing moves). */
+    private static Turn then(Turn first, Turn second) {
+        if (first == null || second == null) {
+            return first == null ? second : first;
+        }
+        return (v, normal) -> {
+            first.apply(v, normal);
+            second.apply(v, normal);
+        };
     }
 
     /** A lid turned about its hinge by open (0 to 1) of its full swing. */

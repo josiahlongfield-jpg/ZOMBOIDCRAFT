@@ -47,6 +47,10 @@ public final class CarModels {
         public float[][][] windows;
         /** Per look, per mesh (the body, then each lid), the window each of its glass triangles belongs to. */
         public int[][][] glassTris;
+        /** The seat that works the turret (standing behind the gun), or -1 where there's none. */
+        public int gunner = -1;
+        /** The mounted gun, or null. */
+        public Turret turret;
         transient CarGlass.Window[][] parsedWindows;
 
         public float length() {
@@ -89,10 +93,28 @@ public final class CarModels {
             return "farm".equals(kind);
         }
 
+        /**
+         * The army's own vehicles (tools/cars/warthog.py): never on a street, only where the army left them, or
+         * by name. They may carry a turret worked from the gunner's seat.
+         */
+        public boolean military() {
+            return "military".equals(kind);
+        }
+
         /** Something to search rather than sit in: a boat, or a wagon or trailer with no seat. */
         public boolean searchedOnly() {
             return boat() || farm() && (seats == null || seats.length == 0);
         }
+    }
+
+    /**
+     * A mounted gun (model space): the post turns about the upright through yaw, the gun on it tilts about the
+     * crosswise line through pitch, and its rounds leave at muzzle (where it is with the gun at rest, its barrels
+     * rest degrees above level). It tilts up to up degrees and down to down below level.
+     */
+    public static final class Turret {
+        public float[] yaw, pitch, muzzle;
+        public float rest, up, down;
     }
 
     private static final class Index {

@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -299,6 +300,71 @@ public final class Guns {
         if (!hits.isEmpty()) {
             Skills.addXp(player, Skill.AIMING, 2);
         }
+    }
+
+    /**
+     * One round from a mounted gun (the Warthog's minigun, see world/cars/Turret): from the muzzle toward dir, through
+     * glass and past the hull of the vehicle it's mounted on, striking like a rifle's bullet. Returns where it ended.
+     */
+    public static Vec3 mountedRound(ServerPlayer shooter, Vec3 muzzle, Vec3 dir, ZcConfig.GunStats stats, Entity mount,
+                                    boolean sounds) {
+        ServerLevel level = (ServerLevel) shooter.level();
+        Vec3 end = muzzle.add(dir.scale(stats.range));
+        java.util.List<BlockHitResult> panes = new java.util.ArrayList<>();
+        net.minecraft.world.phys.AABB own = mount.getBoundingBox().inflate(1.5);
+        BlockHitResult block = level.clip(new ClipContext(muzzle, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, shooter));
+        Vec3 from = muzzle;
+        for (int pass = 0; block.getType() != HitResult.Type.MISS && pass < 8; pass++) {
+            BlockState bs = level.getBlockState(block.getBlockPos());
+            Vec3 on;
+            if (panes.size() < 6 && GlassShots.isGlass(bs)) {
+                panes.add(block);
+                on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+            } else if (bs.is(com.zomboidcraft.world.cars.Cars.HULL) && own.contains(block.getLocation())) {
+                on = block.getLocation().add(dir.scale(0.05));     // its own vehicle's hull, under the gun
+            } else if (!bs.is(com.zomboidcraft.world.cars.Cars.HULL)
+                    || (on = com.zomboidcraft.world.cars.CarGlass.throughHull(level, block, from, dir)) == null) {
+                break;
+            }
+            from = on;
+            block = level.clip(new ClipContext(on, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, shooter));
+        }
+        Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
+        Dismember.BodyHit hit = Dismember.shot(shooter, muzzle, stop, e -> e instanceof LivingEntity && e.isAlive()
+                && !e.isSpectator() && e.isPickable() && e != shooter && e != mount && !mount.hasPassenger(e));
+        double reached = hit != null ? hit.getLocation().distanceTo(muzzle) : Double.MAX_VALUE;
+        float spent = 1f;
+        boolean struck = !sounds;
+        for (BlockHitResult pane : panes) {
+            if (pane.getLocation().distanceTo(muzzle) < reached) {
+                GlassShots.shot(level, shooter, pane, dir, level.getBlockState(pane.getBlockPos()), !struck);
+                struck = true;
+                spent *= GlassShots.THROUGH;
+            }
+        }
+        for (var c : com.zomboidcraft.world.cars.CarGlass.along(level, muzzle, hit != null ? hit.getLocation() : stop)) {
+            if (c.car() != mount) {
+                c.car().shootWindow(level, c.window(), c.u(), c.v(), c.at(), !struck);
+                struck = true;
+                spent *= GlassShots.THROUGH;
+            }
+        }
+        if (hit != null && hit.getEntity() instanceof LivingEntity target) {
+            Pellet p = pellet(target, hit, muzzle, stats, spent);
+            Dismember.pellet(shooter, target, hit, dir, p.tears(), p.head(), p.legs(), GunType.ASSAULT_RIFLE);
+            hitEntity(level, shooter, target, new Hit(dir).add(p), 1, stats);
+            return hit.getLocation();
+        }
+        if (block.getType() != HitResult.Type.MISS) {
+            BlockState bs = level.getBlockState(block.getBlockPos());
+            Impacts.block(level, block, dir, bs, (float) Math.min(1.6, 0.6 + stats.damage / 20));
+            if (!struck) {
+                Vec3 p = block.getLocation();
+                level.playSound(null, p.x, p.y, p.z, Surface.of(bs).impact(), SoundSource.PLAYERS, 0.7f,
+                        0.92f + shooter.getRandom().nextFloat() * 0.16f);
+            }
+        }
+        return stop;
     }
 
     /** What the pellets that struck one target add up to. */

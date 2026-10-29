@@ -18,9 +18,10 @@ import net.minecraft.world.phys.Vec3;
 public final class CarNet {
     /**
      * Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights,
-     * wind your window down or up.
+     * wind your window down or up; at a mounted gun, the trigger held and let go, and the belt loaded.
      */
-    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5, WINDOW = -6;
+    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5, WINDOW = -6,
+            TRIGGER_ON = -7, TRIGGER_OFF = -8, BELT = -9;
 
     /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
@@ -91,6 +92,8 @@ public final class CarNet {
                             case LIGHTS -> car.toggleLights(player);
                             case WINDOW -> car.windWindow(CarGlass.seatWindow(CarModels.get(car.model()), car.variantIndex(),
                                     car.seatOf(player)));
+                            case TRIGGER_ON, TRIGGER_OFF -> Turret.trigger(car, player, payload.car() == TRIGGER_ON);
+                            case BELT -> Turret.loadBelt(car, player);
                             default -> player.stopRiding();
                         }
                     }

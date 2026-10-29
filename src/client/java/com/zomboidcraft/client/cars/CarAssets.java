@@ -47,7 +47,11 @@ public final class CarAssets {
     public record Rotor(float ax, float ay, float az, float px, float py, float pz, Mesh mesh) {
     }
 
-    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, List<Rotor> rotors, Identifier texture) {
+    /**
+     * turret: a mounted gun's parts, in order the post (turns about its upright axis), the gun (tilts on the post) and
+     * its barrels (spin in the gun), each on its pivot and axis; empty for the rest.
+     */
+    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, List<Rotor> rotors, List<Rotor> turret, Identifier texture) {
     }
 
     private static final class Variant {
@@ -55,6 +59,7 @@ public final class CarAssets {
         List<Lid> lids;
         List<Wheel> wheels;
         List<Rotor> rotors = List.of();
+        List<Rotor> turret = List.of();
         byte[] jpeg;
         Identifier texture;
         /** The car at each level of detail, simplified the first time it's needed. */
@@ -124,7 +129,11 @@ public final class CarAssets {
             for (Rotor r : v.rotors) {
                 rotors.add(new Rotor(r.ax(), r.ay(), r.az(), r.px(), r.py(), r.pz(), CarLod.simplify(r.mesh(), level)));
             }
-            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, rotors, v.texture);
+            List<Rotor> turret = new ArrayList<>(v.turret.size());
+            for (Rotor r : v.turret) {
+                turret.add(new Rotor(r.ax(), r.ay(), r.az(), r.px(), r.py(), r.pz(), CarLod.simplify(r.mesh(), level)));
+            }
+            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, rotors, turret, v.texture);
             v.levels[level] = ready;
         }
         return ready;
@@ -167,7 +176,7 @@ public final class CarAssets {
             pieces.add(subset(m, bits, false));
         }
         // the rotors went with the rotor piece; the doors and wheels stay on the shell
-        b = new Broken(new Ready(subset(m, gone, true), whole.lids(), whole.wheels(), List.of(), whole.texture()), pieces);
+        b = new Broken(new Ready(subset(m, gone, true), whole.lids(), whole.wheels(), List.of(), whole.turret(), whole.texture()), pieces);
         BROKEN.put(key, b);
         return b;
     }
@@ -181,7 +190,8 @@ public final class CarAssets {
         Map<String, Variant> out = new HashMap<>();
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 3) {
+            int version = magic[0] == 'Z' && magic[1] == 'C' && magic[2] == 'A' && magic[3] == 'R' ? in.readInt() : -1;
+            if (version != 3 && version != 4) {
                 throw new IOException("not a car file");
             }
             int count = in.readInt();
@@ -203,6 +213,17 @@ public final class CarAssets {
                     float cx = in.readFloat(), cy = in.readFloat(), cz = in.readFloat(), r = in.readFloat();
                     boolean steers = in.readByte() == 1;
                     v.wheels.add(new Wheel(cx, cy, cz, r, steers, readMesh(in)));
+                }
+                if (version >= 4) {
+                    // the turret's parts (warthog.py): kind, pivot, axis, mesh
+                    int parts = in.readInt();
+                    v.turret = new ArrayList<>(parts);
+                    for (int k = 0; k < parts; k++) {
+                        in.readByte();
+                        float px = in.readFloat(), py = in.readFloat(), pz = in.readFloat();
+                        float ax = in.readFloat(), ay = in.readFloat(), az = in.readFloat();
+                        v.turret.add(new Rotor(ax, ay, az, px, py, pz, readMesh(in)));
+                    }
                 }
                 if ("usable".equals(name) || "abandoned".equals(name)) {
                     rotors(model, v);
