@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/trench_coat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/trench_coat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/trench_coat",
+    "part": "loot"
+   }
   }
  }
 }

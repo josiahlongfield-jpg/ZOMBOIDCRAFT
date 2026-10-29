@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/fire_helmet"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/fire_helmet",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/fire_helmet",
+    "part": "loot"
+   }
   }
  }
 }

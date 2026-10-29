@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/bandana/head"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/bandana/head",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/bandana",
+   "part": "head"
+  }
  }
 }

@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/raincoat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/raincoat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/raincoat",
+    "part": "loot"
+   }
   }
  }
 }

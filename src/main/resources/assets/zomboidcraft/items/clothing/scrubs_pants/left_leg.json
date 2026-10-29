@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/scrubs_pants/left_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/scrubs_pants/left_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/scrubs_pants",
+   "part": "left_leg"
+  }
  }
 }

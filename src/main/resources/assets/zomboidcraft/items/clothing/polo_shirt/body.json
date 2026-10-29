@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/polo_shirt/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/polo_shirt/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/polo_shirt",
+   "part": "body"
+  }
  }
 }

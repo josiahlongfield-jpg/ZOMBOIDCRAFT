@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/hawaiian_shirt"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hawaiian_shirt",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hawaiian_shirt",
+    "part": "loot"
+   }
   }
  }
 }

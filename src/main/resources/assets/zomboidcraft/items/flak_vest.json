@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/flak_vest"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/flak_vest",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/flak_vest",
+    "part": "loot"
+   }
   }
  }
 }

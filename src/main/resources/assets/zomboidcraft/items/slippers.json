@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/slippers"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/slippers",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/slippers",
+    "part": "loot"
+   }
   }
  }
 }

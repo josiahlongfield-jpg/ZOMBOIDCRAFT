@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/tank_top"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/tank_top",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/tank_top",
+    "part": "loot"
+   }
   }
  }
 }

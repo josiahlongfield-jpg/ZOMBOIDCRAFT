@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/ghillie_suit/right_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/ghillie_suit/right_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/ghillie_suit",
+   "part": "right_arm"
+  }
  }
 }

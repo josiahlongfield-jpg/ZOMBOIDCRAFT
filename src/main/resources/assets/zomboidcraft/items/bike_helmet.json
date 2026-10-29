@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/bike_helmet"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/bike_helmet",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/bike_helmet",
+    "part": "loot"
+   }
   }
  }
 }

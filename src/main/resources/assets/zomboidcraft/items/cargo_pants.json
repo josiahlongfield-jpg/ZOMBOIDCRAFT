@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/cargo_pants"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/cargo_pants",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/cargo_pants",
+    "part": "loot"
+   }
   }
  }
 }

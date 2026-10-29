@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/leather_chaps"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/leather_chaps",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/leather_chaps",
+    "part": "loot"
+   }
   }
  }
 }

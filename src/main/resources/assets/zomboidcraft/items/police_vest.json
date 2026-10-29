@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/police_vest"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/police_vest",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/police_vest",
+    "part": "loot"
+   }
   }
  }
 }

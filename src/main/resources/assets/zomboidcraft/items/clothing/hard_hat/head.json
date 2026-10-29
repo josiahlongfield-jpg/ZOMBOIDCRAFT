@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/hard_hat/head"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/hard_hat/head",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/hard_hat",
+   "part": "head"
+  }
  }
 }
