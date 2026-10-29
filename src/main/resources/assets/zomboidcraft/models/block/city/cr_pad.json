@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_white": "zomboidcraft:block/city/cr_plate_white",
+    "deck_steel": "zomboidcraft:block/city/deck_steel",
+    "hk_timber": "zomboidcraft:block/city/hk_timber",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/hk_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_timber",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_timber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hk_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hk_timber"
+        },
+        "down": {
+          "texture": "#hk_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        1.2,
+        2
+      ],
+      "to": [
+        14,
+        2.6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#deck_steel"
+        },
+        "south": {
+          "texture": "#deck_steel"
+        },
+        "east": {
+          "texture": "#deck_steel"
+        },
+        "west": {
+          "texture": "#deck_steel"
+        },
+        "up": {
+          "texture": "#deck_steel"
+        },
+        "down": {
+          "texture": "#deck_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2.6,
+        6
+      ],
+      "to": [
+        10,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_white"
+        },
+        "south": {
+          "texture": "#cr_plate_white"
+        },
+        "east": {
+          "texture": "#cr_plate_white"
+        },
+        "west": {
+          "texture": "#cr_plate_white"
+        },
+        "up": {
+          "texture": "#cr_plate_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cr_plate_white"
+        }
+      }
+    }
+  ]
+}

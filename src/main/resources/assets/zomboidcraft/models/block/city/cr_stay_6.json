@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/painted_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        -6,
+        6.5
+      ],
+      "to": [
+        9.5,
+        22,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

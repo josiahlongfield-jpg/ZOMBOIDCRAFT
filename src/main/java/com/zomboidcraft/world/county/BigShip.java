@@ -523,13 +523,7 @@ final class BigShip {
 
     /** A box 12 long along x and 3 x 3 from (x, y, z), its doors on the aft end. */
     private void box(int x, int y, int z, String colour) {
-        for (int i = 0; i < 12; i++) {
-            for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < 3; j++) {
-                    p.set(x + i, y + j, z + k, i == 0 && k == 1 && j < 2 ? colour + "_door[facing=west]" : colour);
-                }
-            }
-        }
+        Boxes.place(p, x, y, z, 12, colour, true, true, false);
     }
 
     /** The bulker's deck from x to end: hatch covers over the holds, a deck crane between every other pair. */

@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_lattice_yellow": "zomboidcraft:block/city/cr_lattice_yellow",
+    "particle": "zomboidcraft:block/city/cr_lattice_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        -6,
+        4.0
+      ],
+      "to": [
+        12,
+        22,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_lattice_yellow",
+          "uv": [
+            4,
+            0,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cr_lattice_yellow",
+          "uv": [
+            4,
+            0,
+            12,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cr_lattice_yellow",
+          "uv": [
+            4.0,
+            0,
+            12.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cr_lattice_yellow",
+          "uv": [
+            4.0,
+            0,
+            12.0,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cr_lattice_yellow"
+        },
+        "down": {
+          "texture": "#cr_lattice_yellow"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

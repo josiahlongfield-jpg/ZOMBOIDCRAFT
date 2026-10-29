@@ -194,8 +194,8 @@ final class PortSite extends Site {
             }
             switch (rng.nextInt(5)) {
                 case 0 -> {
-                    f.setIfAir(x, 1, z, "minecraft:barrel[facing=up,loot=storage]");
-                    f.setIfAir(x + 1, 1, z, "minecraft:barrel[facing=up]");
+                    f.setIfAir(x, 1, z, "fm_drum");
+                    f.setIfAir(x + 1, 1, z, "pk_barrel_1[facing=north]");
                 }
                 case 1 -> f.setIfAir(x, 1, z, chance() < 0.5 ? "crate" : "cardboard_box");
                 case 2 -> {
@@ -266,7 +266,7 @@ final class PortSite extends Site {
                 for (int y = 1; y <= 5; y++) {
                     f.set(x, y, quay + 1, "streetlight_pole");
                 }
-                f.set(x, 6, quay + 1, hb.lamp(0.2 + hit * 0.3));
+                f.set(x, 6, quay + 1, hb.head(0.2 + hit * 0.3, "south"));
             }
         }
         // hatch covers set down on the apron, a box or two dropped
@@ -504,8 +504,8 @@ final class PortSite extends Site {
         }
         int tipY = 34 + rng.nextInt(6), tipZ = -18 - rng.nextInt(6);
         Harbour h = new Harbour(s, rng, hit);
-        h.line(5, 4, 1, 5, tipY, tipZ, "truss_yellow");
-        h.line(6, 4, 1, 6, tipY, tipZ, "truss_yellow");
+        h.member(5, 4, 1, tipY, tipZ, "cr_lattice_yellow");
+        h.member(6, 4, 1, tipY, tipZ, "cr_lattice_yellow");
         for (int y = tipY - 1; y > tipY - 8; y--) {
             s.set(5, y, tipZ, "vessel_chain_v");
         }
@@ -520,8 +520,10 @@ final class PortSite extends Site {
         }
         f.set(x, 0, z, "concrete_dark");
         f.set(x, h, z, "navy_steel");
-        for (int[] d : new int[][] {{-1, 0}, {1, 0}, {0, -1}}) {
-            f.set(x + d[0], h, z + d[1], chance() < 0.3 + hit * 0.3 ? "navy_steel" : "minecraft:pearlescent_froglight");
+        String[] look = {"west", "east", "north"};
+        int[][] ds = {{-1, 0}, {1, 0}, {0, -1}};
+        for (int i = 0; i < 3; i++) {
+            f.set(x + ds[i][0], h, z + ds[i][1], Camp.lamp(rng, 0.3 + hit * 0.3, "cp_flood_bar", look[i]));
         }
         f.set(x, h + 1, z, "aviation_light");
     }
@@ -638,7 +640,7 @@ final class PortSite extends Site {
             }
         }
         for (int x = gx - half + 1; x < gx + half; x += 2) {
-            f.set(x, 6, z + 2, hb.lamp(0.4));
+            f.set(x, 6, z + 2, hb.hang(0.4));
         }
         for (int i = 0; i < 4; i++) {
             if (chance() < 0.55) {
@@ -661,7 +663,7 @@ final class PortSite extends Site {
             b.windowRow(2, bd - 3, 3, bw - 1, y, "east", 2, null);
         }
         b.doors(bw / 2 - 1, 1, 0, "shop_door", "north");
-        b.flat(0, 0, bw - 1, bd - 1, 12, "concrete_panel", 1, "minecraft:smooth_stone_slab[type=bottom]");
+        b.flat(0, 0, bw - 1, bd - 1, 12, "concrete_panel", 1, "stone_trim");
         for (int y : new int[] {1, 5, 9}) {
             for (int x = 2; x < bw - 2; x += 4) {
                 for (int z = 3; z < bd - 3; z += 4) {
@@ -676,7 +678,7 @@ final class PortSite extends Site {
         b.lights(1, 1, bw - 2, bd - 2, 3, 0);
         b.mess(1, 1, bw - 2, bd - 2, 1, 0.05 + hit * 0.05);
         for (int y = 13; y <= 18; y++) {
-            s.set(bw - 3, y, bd - 3, "minecraft:iron_bars");
+            s.set(bw - 3, y, bd - 3, "wf_mast");
         }
         s.set(bw - 3, 19, bd - 3, "aviation_light");
     }
@@ -729,7 +731,7 @@ final class PortSite extends Site {
             if (cx > lw - 12) {
                 break;
             }
-            hb(cx, quay + 9, 0).harbourCrane(26 + rng.nextInt(10), any("steel_yellow", "minecraft:white_concrete", "steel_red"));
+            hb(cx, quay + 9, 0).harbourCrane(26 + rng.nextInt(10), any("steel_yellow", "cr_steel_white", "steel_red"));
             kit.claim(cx - 9, quay + 1, cx + 9, quay + 18, Kit.BUILT);
         }
         // behind the lane: three yards side by side, either side of the road in (the wider side split)
@@ -827,12 +829,12 @@ final class PortSite extends Site {
             }
             for (int z = 1; z < 11; z++) {
                 q.set(7, 1, z, "jersey_barrier[facing=east]");
-                q.set(7, 5, z, "minecraft:iron_bars");
+                q.set(7, 5, z, "cv_iron_fence[axis=z]");
             }
             q.set(7, 4, 3, "steel_yellow");
             q.set(7, 4, 8, "steel_yellow");
-            q.set(3, 6, 6, hb.lamp(0.4));
-            q.set(12, 6, 6, hb.lamp(0.4));
+            q.set(3, 6, 6, hb.hang(0.4));
+            q.set(12, 6, 6, hb.hang(0.4));
             for (int b = 0; b < 2; b++) {
                 if (chance() < 0.6) {
                     q.vehicle(3.5 + b * 8.5, 1, 6, 0, "box_truck,step_van", rng.nextLong());
@@ -846,7 +848,7 @@ final class PortSite extends Site {
             b.shell(0, 0, 9, 7, 1, 4, any("concrete_panel", "brick_red", "corrugated_grey"), "floor_concrete", "floor_concrete");
             b.windowRow(2, 7, 3, 0, 2, "north", 2, null);
             b.doors(4, 1, 7, "flat_door", "south");
-            b.flat(0, 0, 9, 7, 4, "concrete_panel", 1, "minecraft:smooth_stone_slab[type=bottom]");
+            b.flat(0, 0, 9, 7, 4, "concrete_panel", 1, "stone_trim");
             b.lights(1, 1, 8, 6, 3, 0);
         }
         // the pipe rack to the quay, over the lane
@@ -856,7 +858,7 @@ final class PortSite extends Site {
             f.set(px, y, quay + 1, "steel_girder");
         }
         f.set(px, 6, quay, "steel_yellow");
-        hb.line(px, 6, quay, px, 2, quay - 4, "steel_yellow");
+        hb.member(px, 6, quay, 2, quay - 4, "cr_strut_yellow");
     }
 
     /** The grain elevator: its silos, the head house and the gallery out to the quay. */
@@ -1007,8 +1009,8 @@ final class PortSite extends Site {
         // promenade clutter: bollards are on the quay; nets, pots and crates heaped
         for (int x = 3; x < lw - 3; x += 7) {
             if (open(x, quay + 2, x + 1, quay + 3) && chance() < 0.5) {
-                f.set(x, 1, quay + 2, any("minecraft:cobweb", "crate", "minecraft:barrel[facing=up,loot=storage]", "minecraft:orange_concrete",
-                        "minecraft:scaffolding"));
+                f.set(x, 1, quay + 2, any("bunk_cobweb[facing=north]", "crate", "fm_drum", "cardboard_box",
+                        "st_pallet"));
             }
         }
         for (int x = 10; x < lw - 6; x += 24) {
@@ -1071,7 +1073,7 @@ final class PortSite extends Site {
         s.set(7, 1, 2, "desk[facing=north]");
         s.set(9, 1, 7, "filing_cabinet[facing=west]");
         for (int y = 1; y <= 14; y++) {
-            s.set(13, y, 8, "minecraft:iron_bars");
+            s.set(13, y, 8, "wf_mast");
         }
         s.set(13, 15, 8, "aviation_light");
         b.lights(1, 1, 10, 8, 3, 0);
@@ -1130,7 +1132,7 @@ final class PortSite extends Site {
         b.door(5, 1, 0, "flat_door", "north");
         b.gable(0, 10, 0, 8, 4, any("minecraft:dark_oak", "minecraft:spruce", "minecraft:deepslate_tile"), false, wall, 1);
         b.mess(1, 1, 9, 7, 1, 0.08);
-        s.set(2, 1, -2, chance() < 0.5 ? "minecraft:cobweb" : "crate");
+        s.set(2, 1, -2, chance() < 0.5 ? "bunk_cobweb[facing=north]" : "crate");
     }
 
     /** The list a builder's quarters would hand back: unused here, kept for symmetry with the other sites. */

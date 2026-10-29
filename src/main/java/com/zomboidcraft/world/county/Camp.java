@@ -119,16 +119,7 @@ final class Camp {
                     break;  // a box missing from the bottom row: the gap they came through
                 }
                 String box = BOXES[rng.nextInt(BOXES.length)];
-                for (int i = 0; i < boxLen; i++) {
-                    for (int k = 0; k < 3; k++) {
-                        for (int y = 1 + t * 3; y <= 3 + t * 3; y++) {
-                            int x = alongX ? a + s + i : x0 + k - 1, z = alongX ? z0 + k - 1 : a + s + i;
-                            boolean end = i == 0 || i == boxLen - 1;
-                            p.set(x, y, z, end && k == 1 && y < 3 + t * 3 ? box + "_door[facing=" + (alongX ? (i == 0 ? "west" : "east")
-                                    : (i == 0 ? "north" : "south")) + "]" : box);
-                        }
-                    }
-                }
+                Boxes.place(p, alongX ? a + s : x0 - 1, 1 + t * 3, alongX ? z0 - 1 : a + s, boxLen, box, alongX, true, true);
             }
         }
     }
