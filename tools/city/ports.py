@@ -146,9 +146,48 @@ def plate(seed, rgb, seam=False):
     return t
 
 
+def oil(seed, rgb, rusty):
+    """A fuel tank's shell: plate courses welded edge to edge (a seam across every block and down
+    every second), the paint chalked, rust weeping from the seams; the rusty one is mostly rust."""
+    t = F.mat("PaintedMetal004", rgb, 0.12, span=3, seed=seed)
+    rust(t, 0.35 if rusty else 0.1)
+    seam = tuple(int(v * 0.7) for v in rgb)
+    t.rect(0, N - 2, N, N, col=seam, h=0.9)
+    t.rect(0, N - 4, N, N - 2, col=tuple(int(v * 0.85) for v in rgb), h=0.8)
+    t.rect(N // 2 - 1, 0, N // 2 + 1, N - 4, col=seam, h=0.9)
+    for x in range(2, N, 9):
+        t.rect(x, N - 2, x + 2, N - 2 + 1, col=(120, 64, 36))
+    t.streaks(1.0 if rusty else 0.8, 0.66)
+    t.grime(0.2, (70, 60, 50))
+    return t
+
+
+def oil_roof(seed):
+    """A tank's low cone roof: grey-white sheets lapped round, rust in the laps, bird mess."""
+    t = F.mat("PaintedMetal004", (182, 182, 176), 0.15, span=3, seed=seed)
+    rust(t, 0.15)
+    for y in range(0, N, 16):
+        t.rect(0, y, N, y + 1, col=(120, 116, 108), h=0.4)
+    t.speckle(0.01, (222, 222, 214), 0.5)
+    return t
+
+
+def slip(seed):
+    """A slipformed grain silo: grey concrete, the lifts' faint lines every few inches, rain
+    stains down from the top, cracks."""
+    t = F.mat("Concrete034", (160, 158, 150), 0.6, seed=seed)
+    for y in range(0, N, 11):
+        t.rect(0, y, N, y + 1, col=(132, 130, 124), h=0.6)
+    t.streaks(1.0, 0.72)
+    t.crack(2, 0.25, (60, 58, 54))
+    return t
+
+
 def textures():
     out = {"ct_casting": lambda: casting(49300), "cr_steel_white": lambda: white_steel(49330),
-           "cr_lattice_yellow": lambda: lattice(49331)}
+           "cr_lattice_yellow": lambda: lattice(49331), "tk_oil": lambda: oil(49360, (198, 196, 186), False),
+           "tk_oil_rust": lambda: oil(49361, (132, 82, 58), True), "tk_oil_roof": lambda: oil_roof(49362),
+           "tk_slip": lambda: slip(49363)}
     for i, (c, rgb) in enumerate(PLATES.items()):
         out["cr_plate_" + c] = lambda rgb=rgb, i=i: plate(49340 + i, rgb)
         out["cr_plate_" + c + "_seam"] = lambda rgb=rgb, i=i: plate(49340 + i, rgb, True)
@@ -425,6 +464,35 @@ def outrigger():
     return [[3, 4, 0, 13, 12, 16, "cr_plate_white"], [2.8, 6, 7, 13.2, 10, 9, "hazard_stripes"]]
 
 
+def pipe(x0, y0, x1, y1, tex, z0=0, z1=16):
+    """A pipe along z with an octagon's section: a box and the same box turned 45 degrees."""
+    c = [(x0 + x1) / 2, (y0 + y1) / 2, 8]
+    return [[x0, y0, z0, x1, y1, z1, tex], [x0, y0, z0, x1, y1, z1, tex, None, {"axis": "z", "angle": 45, "origin": c}]]
+
+
+def tank_pipe():
+    """A tank's outlet main (drawn along z) on its sleeper."""
+    return pipe(4.5, 1.5, 11.5, 8.5, "bunk_pipe_red") + [[3, 0, 6, 13, 1, 10, "painted_steel"]]
+
+
+def tank_valve():
+    """The main's gate valve: flanges, the body, the bonnet, the stem and its handwheel."""
+    return (pipe(4.5, 1.5, 11.5, 8.5, "bunk_pipe_red") + [[3, 0, 6, 13, 1, 10, "painted_steel"],
+            [3.5, 0.5, 5, 12.5, 9.5, 6, "bunk_pipe_red"], [3.5, 0.5, 10, 12.5, 9.5, 11, "bunk_pipe_red"],
+            [5, 1, 6, 11, 10.5, 10, "painted_steel"], [6, 10.5, 6.5, 10, 13, 9.5, "painted_steel"],
+            [7.5, 13, 7.5, 8.5, 15, 8.5, GALV], [4, 15, 4, 12, 15.8, 12, "bunk_pipe_red"]])
+
+
+def rack_pipes(kind):
+    """A pipe rack's run (drawn along z): pipes side by side on the rack's cross beam."""
+    b = [[0, 0, 7, 16, 1.6, 9, "painted_steel"], [0, 1.6, 7.6, 16, 2, 8.4, "painted_steel"]]
+    if kind == "a":
+        b += pipe(1, 2, 6, 7, "bunk_pipe_red") + pipe(7, 2, 10, 5, "bunk_pipe_grey") + pipe(11, 2, 15.5, 6.5, "fit_lagging")
+    else:
+        b += pipe(0.5, 2, 4.5, 6, "bunk_pipe_grey") + pipe(5.5, 2, 11.5, 8, "bunk_pipe_red") + pipe(12.5, 2, 15, 4.5, "bunk_pipe_green")
+    return b
+
+
 def blocks():
     out = {}
 
@@ -463,6 +531,10 @@ def blocks():
     fit("cr_headblock", headblock(), "Hook Block", "axis", [[4, 0, 2, 12, 16, 14]])
     fit("cr_pad", pad(), "Outrigger Jack", "facing", [[0, 0, 0, 16, 16, 16]])
     fit("cr_outrigger", outrigger(), "Outrigger", "axis", [[3, 4, 0, 13, 12, 16]])
+    fit("tk_pipe", tank_pipe(), "Pipe", "axis", [[4, 0, 0, 12, 9, 16]])
+    fit("tk_valve", tank_valve(), "Gate Valve", "axis", [[3, 0, 0, 13, 15, 16]])
+    fit("tk_pipes_a", rack_pipes("a"), "Pipe Rack", "axis", [[0, 0, 0, 16, 8, 16]])
+    fit("tk_pipes_b", rack_pipes("b"), "Pipe Rack", "axis", [[0, 0, 0, 16, 8, 16]])
     for fam, (half, tex) in MEMBERS.items():
         for k in range(STEPS):
             for sfx, o in (FINE if fam == "cr_stay" else OFFSETS):
@@ -477,7 +549,7 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_")) and k not in {"container_" + c for c in COLOURS}}
+    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_", "tk_")) and k not in {"container_" + c for c in COLOURS}}
     made = blocks()
     kept.update(made)
     data["blocks"] = kept

@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "tk_oil": "zomboidcraft:block/city/tk_oil",
+    "particle": "zomboidcraft:block/city/tk_oil"
+  },
+  "elements": [
+    {
+      "from": [
+        -8.243,
+        0,
+        3.757
+      ],
+      "to": [
+        15.757,
+        16,
+        4.757
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tk_oil",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#tk_oil"
+        },
+        "west": {
+          "texture": "#tk_oil"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            3.757,
+            16,
+            4.757
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            11.243,
+            16,
+            12.243
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.757,
+          8,
+          3.757
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}

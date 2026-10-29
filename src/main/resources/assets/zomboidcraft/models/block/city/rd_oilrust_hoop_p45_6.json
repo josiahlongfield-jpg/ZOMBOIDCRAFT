@@ -1,0 +1,205 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "tk_oil_rust": "zomboidcraft:block/city/tk_oil_rust",
+    "particle": "zomboidcraft:block/city/tk_oil_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        -6.828,
+        0,
+        5.172
+      ],
+      "to": [
+        17.172,
+        16,
+        6.172
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#tk_oil_rust"
+        },
+        "west": {
+          "texture": "#tk_oil_rust"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            5.172,
+            16,
+            6.172
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            9.828,
+            16,
+            10.828
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.172,
+          8,
+          5.172
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        -6.828,
+        12,
+        2.772
+      ],
+      "to": [
+        17.172,
+        12.8,
+        5.172
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            3.1999999999999993,
+            16,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            3.1999999999999993,
+            16,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#tk_oil_rust"
+        },
+        "west": {
+          "texture": "#tk_oil_rust"
+        },
+        "up": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            2.772,
+            16,
+            5.172
+          ]
+        },
+        "down": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            10.828,
+            16,
+            13.228
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.172,
+          8,
+          5.172
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        -6.828,
+        10.6,
+        2.772
+      ],
+      "to": [
+        17.172,
+        12,
+        3.372
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            4,
+            16,
+            5.4
+          ]
+        },
+        "south": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            4,
+            16,
+            5.4
+          ]
+        },
+        "east": {
+          "texture": "#tk_oil_rust"
+        },
+        "west": {
+          "texture": "#tk_oil_rust"
+        },
+        "up": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            2.772,
+            16,
+            3.372
+          ]
+        },
+        "down": {
+          "texture": "#tk_oil_rust",
+          "uv": [
+            0,
+            12.628,
+            16,
+            13.228
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.172,
+          8,
+          5.172
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}
