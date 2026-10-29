@@ -33,6 +33,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.kit.SpawnScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
+        com.zomboidcraft.client.map.CountyAtlas.register();
+        com.zomboidcraft.client.map.MapPlayers.register();
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
         // the sky eases toward the weather the server last sent
