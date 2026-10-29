@@ -13414,5 +13414,18 @@ final class CitySpecs extends CityBlocks.Specs {
         s("mm_shaft_2", FACING, 0, 0, SoundType.STONE, 2f, 3.4, 0, 3.4, 12.6, 16, 12.6);
         s("mm_shaft_3", FACING, 0, 0, SoundType.STONE, 2f, 3.4, 0, 3.4, 12.6, 16, 12.6);
         s("mm_shaft_top", FACING, 0, 0, SoundType.STONE, 2f, 5.4, 0, 5.4, 10.6, 8, 10.6);
+        s("gz_deck", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16);
+        s("gz_step", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 8, 0, 0, 8, 16, 8, 16);
+        s("gz_post", PLAIN, 0, 0, SoundType.WOOD, 1f, 5, 0, 5, 11, 16, 11);
+        s("gz_post_top", FACING, 0, 0, SoundType.WOOD, 1f, 5, 0, 5, 11, 16, 11);
+        s("gz_frieze", AXIS, 0, 0, SoundType.WOOD, 1f, 6.5, 8.4, 0, 9.5, 16, 16);
+        s("gz_rail", AXIS, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 0, 9.5, 16, 16);
+        s("gz_rail_broken", AXIS, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 0, 9.5, 10.5, 16);
+        s("gz_finial", PLAIN, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 15, 10.5);
+        s("pl_stump", FACING, 0, 0, SoundType.WOOD, 1f, 5.5, 0, 5.5, 10.5, 12, 10.5);
+        s("pl_down", FACING, 0, 0, SoundType.WOOD, 1f, 5.5, 0, 0, 10.5, 5, 16);
+        s("pl_down_top", FACING, 0, 0, SoundType.WOOD, 1f, 5.5, 0, 0, 10.5, 5, 9, 0, 0, 9, 16, 6.5, 13);
+        s("pl_wire", AXIS, 0, 0, SoundType.METAL, 2f, 3, 0, 0, 13, 1, 16);
+        s("pl_transformer", FACING, 0, 0, SoundType.METAL, 2f, 3.6, 0, 0.6, 12.4, 16, 10.5);
     }
 }

@@ -1161,6 +1161,10 @@ import weave  # noqa: E402
 weave.register(sys.modules[__name__])
 import memorial  # noqa: E402
 memorial.register(sys.modules[__name__])
+import gazebo  # noqa: E402
+gazebo.register(sys.modules[__name__])
+import poles  # noqa: E402
+poles.register(sys.modules[__name__])
 
 
 
