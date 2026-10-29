@@ -69,9 +69,17 @@ public class KitUiTest implements FabricClientGameTest {
                     "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
                     "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
                     "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8",
-                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg")) {
+                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg",
+                    "item replace entity @a armor.head with zomboidcraft:beanie", "item replace entity @a armor.chest with zomboidcraft:hoodie",
+                    "item replace entity @a armor.legs with zomboidcraft:jeans", "item replace entity @a armor.feet with zomboidcraft:work_boots")) {
                 sp.getServer().runCommand(c);
             }
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHIRT, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("t_shirt"))));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HANDS, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("work_gloves"))));
+            });
             ctx.waitTicks(20);
             ctx.getInput().resizeWindow(1999, 1089);
             ctx.runOnClient(mc -> {
@@ -111,8 +119,9 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the pack page: left click a tile with something in it picks it up, again puts it down
-            if (tabs.size() > 1) {
-                click(ctx, tabs.get(1)[0], tabs.get(1)[1], 0);
+            int packTab = KitScreen.Page.PACK.ordinal(), benchTab = KitScreen.Page.BENCH.ordinal();
+            if (tabs.size() > packTab) {
+                click(ctx, tabs.get(packTab)[0], tabs.get(packTab)[1], 0);
                 int[] tile = ctx.computeOnClient(mc -> {
                     if (mc.gui.screen() instanceof KitScreen<?> k) {
                         for (KitScreen.Hot h : hots(k)) {
@@ -174,8 +183,8 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the bench, then a drag across the gun
-            if (tabs.size() > 3) {
-                click(ctx, tabs.get(3)[0], tabs.get(3)[1], 0);
+            if (tabs.size() > benchTab) {
+                click(ctx, tabs.get(benchTab)[0], tabs.get(benchTab)[1], 0);
                 ctx.takeScreenshot("bench");
                 log(ctx, "bench");
                 // every weapon carried goes on the 3D stage, guns without sockets and melee too
