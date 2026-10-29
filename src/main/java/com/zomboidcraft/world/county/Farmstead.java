@@ -862,58 +862,23 @@ final class Farmstead {
 
     // ------------------------------------------------------------------ machinery
 
-    /** Paint for a tractor: body block and the carpet its fenders are cut from. */
-    private static String[] paint(String colour) {
-        return switch (colour) {
-            case "green" -> new String[] {"minecraft:green_concrete", "minecraft:green_carpet", "minecraft:yellow_concrete"};
-            case "yellow" -> new String[] {"steel_yellow", "minecraft:yellow_carpet", "minecraft:black_concrete"};
-            case "orange" -> new String[] {"minecraft:orange_terracotta", "minecraft:orange_carpet", "minecraft:light_gray_concrete"};
-            default -> new String[] {"steel_red", "minecraft:red_carpet", "minecraft:light_gray_concrete"};
-        };
-    }
-
-    /** A tractor 3 wide and 5 long from (x, z), nose toward -z: big rear tyres, hood, exhaust stack, seat. */
+    /**
+     * A tractor (tools/cars/farm_machines.py) in the 3 x 5 blocks from (x, z), nose toward -z: the
+     * green one for "green" or "yellow", else the red one. It's a vehicle, so it can be driven off.
+     */
     void tractor(int x, int z, String colour) {
-        String[] c = paint(colour);
-        String body = c[0];
-        p.set(x, 1, z, "tire[axis=x]");
-        p.set(x + 2, 1, z, "tire[axis=x]");
-        for (int dz = 3; dz <= 4; dz++) {
-            for (int y = 1; y <= 2; y++) {
-                p.set(x, y, z + dz, "tire[axis=x]");
-                p.set(x + 2, y, z + dz, "tire[axis=x]");
-            }
-            p.set(x, 3, z + dz, c[1]);
-            p.set(x + 2, 3, z + dz, c[1]);
-        }
-        for (int dz = 0; dz <= 4; dz++) {
-            p.set(x + 1, 1, z + dz, chance() < 0.12 ? "rust" : dz == 0 ? c[2] : body);
-        }
-        for (int dz = 0; dz <= 2; dz++) {
-            p.set(x + 1, 2, z + dz, chance() < 0.1 ? "rust" : body);
-        }
-        p.set(x + 1, 2, z - 1, "minecraft:iron_trapdoor[facing=south,half=bottom,open=true]");
-        p.set(x + 1, 3, z + 1, "minecraft:iron_chain[axis=y]");
-        p.set(x + 1, 4, z + 1, "minecraft:iron_chain[axis=y]");
-        p.set(x + 1, 2, z + 3, body);
-        p.set(x + 1, 3, z + 3, "minecraft:lever[face=floor,facing=south,powered=false]");
-        p.set(x + 1, 2, z + 4, "minecraft:polished_blackstone_stairs[facing=south,half=bottom]");
+        tractor(x, z, colour, "");
     }
 
-    /** A flat hay wagon 3 wide and 6 long from (x, z), loaded with bales `load` high in places. */
+    /** As {@link #tractor(int, int, String)}, left as state says ("@abandoned", "@wrecked"...; "" for any). */
+    void tractor(int x, int z, String colour, String state) {
+        String model = colour.equals("green") || colour.equals("yellow") ? "=tractor_green" : "=tractor_red";
+        p.vehicle(x + 1.5, 1, z + 2.5, 180, model + state, rng.nextLong());
+    }
+
+    /** A flat hay wagon in the 3 x 6 blocks from (x, z), its tongue toward -z: loaded with bales if load > 1. */
     void hayWagon(int x, int z, int load) {
-        for (int dz = 0; dz < 6; dz++) {
-            for (int dx = 0; dx < 3; dx++) {
-                boolean wheel = (dz == 1 || dz == 4) && dx != 1;
-                p.set(x + dx, 1, z + dz, wheel ? "tire[axis=x]" : "minecraft:spruce_slab[type=top]");
-                for (int y = 2; y < 2 + load; y++) {
-                    if (chance() < 0.75 - (y - 2) * 0.15) {
-                        p.set(x + dx, y, z + dz, "minecraft:hay_block[axis=z]");
-                    }
-                }
-            }
-        }
-        p.set(x + 1, 1, z - 1, "minecraft:iron_chain[axis=z]");
+        p.vehicle(x + 1.5, 1, z + 3.0, 180, load > 1 ? "=hay_wagon" : "=hay_wagon_empty", rng.nextLong());
     }
 
     // ------------------------------------------------------------------ the small buildings

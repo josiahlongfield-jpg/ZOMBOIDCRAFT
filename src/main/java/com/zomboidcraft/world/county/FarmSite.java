@@ -705,16 +705,7 @@ final class FarmSite extends Site {
         // a horse trailer and its truck
         Placer ht = put(4, 9, 0, ydx + 7, yardEnd - 12, 1);
         if (ht != null) {
-            for (int z = 0; z < 8; z++) {
-                for (int x = 0; x < 3; x++) {
-                    boolean wheel = (z == 2 || z == 5) && x != 1;
-                    ht.set(x, 1, z, wheel ? "tire[axis=x]" : "minecraft:smooth_quartz");
-                    ht.set(x, 2, z, x == 1 && z > 0 && z < 7 ? "air" : "minecraft:smooth_quartz");
-                    ht.set(x, 3, z, z % 3 == 0 ? "minecraft:smooth_quartz" : x == 1 ? "minecraft:smooth_quartz" : "minecraft:iron_bars");
-                    ht.set(x, 4, z, "minecraft:smooth_quartz_slab[type=bottom]");
-                }
-            }
-            ht.set(1, 2, 7, "minecraft:iron_trapdoor[facing=north,half=bottom,open=true]");
+            ht.vehicle(1.5, 1, 4.5, 180, "=horse_trailer", rng.nextLong());
             yp.vehicle(ydx + 8.5, 1, yardEnd - 18, 0, "pickup", rng.nextLong());
         }
         Placer m = put(8, 6, 0, ydx - 14, yd - 10, 1);
@@ -773,9 +764,6 @@ final class FarmSite extends Site {
         if (hw != null) {
             Farmstead fs = new Farmstead(hw, rng, hit);
             fs.hayWagon(0, 0, 1);
-            for (int z = 0; z < 6; z += 2) {
-                hw.set(1, 2, z, "apple_crate");
-            }
         }
         // a few trees in the yard itself, the oldest of the orchard
         for (int i = 0; i < 3; i++) {
@@ -1380,7 +1368,7 @@ final class FarmSite extends Site {
             double[] q = main.point(main.length() * (0.2 + chance() * 0.6));
             int x = (int) (q[0] + q[3] * (main.style.half + 2)), z = (int) (q[1] - q[2] * (main.style.half + 2));
             if (inside(x, z) && inside(x + 3, z + 5) && kit.free(x, z, x + 2, z + 4)) {
-                new Farmstead(new Placer(out, x, 0, z, rng.nextInt(4)), rng, hit).tractor(0, 0, any("red", "green"));
+                new Farmstead(new Placer(out, x, 0, z, rng.nextInt(4)), rng, hit).tractor(0, 0, any("red", "green"), any("@abandoned", "@wrecked", "@burnt"));
             }
         }
     }

@@ -118,7 +118,7 @@ def pick(entry, index, variants=('usable', 'abandoned', 'wrecked', 'burnt')):
     if names:
         cands = [m for m in index if m['id'] in names or m['kind'] in names]
     else:
-        cands = [m for m in index if m['kind'] not in ('jet', 'boat') and entry[4] <= m['size'][2] <= entry[5]]
+        cands = [m for m in index if m['kind'] not in ('jet', 'boat', 'farm') and entry[4] <= m['size'][2] <= entry[5]]
     if not cands:
         return None, None
     m = cands[h % len(cands)]
