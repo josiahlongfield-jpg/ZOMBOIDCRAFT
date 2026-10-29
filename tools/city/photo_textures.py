@@ -1143,6 +1143,8 @@ import dress  # noqa: E402
 dress.register(sys.modules[__name__])
 import farm  # noqa: E402
 farm.register(sys.modules[__name__])
+import yard  # noqa: E402
+yard.register(sys.modules[__name__])
 
 
 

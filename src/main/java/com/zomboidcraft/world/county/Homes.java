@@ -1,5 +1,6 @@
 package com.zomboidcraft.world.county;
 
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.SplittableRandom;
 
@@ -21,9 +22,9 @@ final class Homes {
         }
     }
 
-    private static final String[] WALKS = {"sidewalk", "sidewalk", "minecraft:stone_bricks", "minecraft:mud_bricks", "minecraft:packed_mud"};
+    private static final String[] WALKS = {"sidewalk", "sidewalk", "pt_stone_flags", "pt_brick", "minecraft:packed_mud"};
     private static final String[] SHEDS = {"barn_red", "barn_grey", "siding_white", "siding_sage", "corrugated_grey",
-            "corrugated_rust", "minecraft:spruce_planks"};
+            "corrugated_rust", "barn_red"};
 
     private final Kit kit;
     private final SplittableRandom rng;
@@ -164,7 +165,7 @@ final class Homes {
             int mx = dx0 >= 0 ? (dx0 > doorX ? dx0 - 1 : dx1 + 1) : doorX + 2;
             if (mx >= 0 && mx < lw && p.get(mx, 1, 0) == null) {
                 p.set(mx, 0, 0, "minecraft:grass_block");
-                p.set(mx, 1, 0, rng.nextDouble() < 0.12 ? "minecraft:spruce_fence" : "mailbox[facing=north]");
+                p.set(mx, 1, 0, rng.nextDouble() < 0.12 ? "yd_deck_post" : "mailbox[facing=north]");
             }
         }
         // bins left out for a collection that never came
@@ -252,16 +253,14 @@ final class Homes {
             return;
         }
         String leaves = rng.nextBoolean() ? "minecraft:oak_leaves" : rng.nextBoolean() ? "minecraft:azalea_leaves" : "minecraft:dark_oak_leaves";
-        String pickets = rng.nextDouble() < 0.75 ? "minecraft:pale_oak_fence" : "minecraft:birch_fence";
+        String paint = rng.nextDouble() < 0.75 ? "white" : "bare";
         for (int x = 0; x < lw; x++) {
             boolean gap = Math.abs(x - doorX) <= (picket ? 0 : 1) || (dx0 >= 0 && x >= dx0 - 1 && x <= dx1 + 1);
             if (gap || p.get(x, 1, 0) != null) {
                 continue;
             }
             if (picket) {
-                if (rng.nextDouble() > 0.08) {
-                    p.set(x, 1, 0, pickets);
-                }
+                picket(p, x, 0, "x", paint, x % 4 == 0 || x == lw - 1 || x == doorX - 1 || x == doorX + 1 || x == dx0 - 2 || x == dx1 + 2);
             } else {
                 Kit.hedge(p, rng, x, 0, x, 0, leaves);
             }
@@ -269,17 +268,27 @@ final class Homes {
         if (picket && rng.nextDouble() < 0.6) {
             // the sides of the front yard too
             for (int z = 1; z < sb; z++) {
-                if (rng.nextDouble() > 0.08 && p.get(0, 1, z) == null) {
-                    p.set(0, 1, z, pickets);
+                if (p.get(0, 1, z) == null) {
+                    picket(p, 0, z, "z", paint, z % 4 == 0 || z == sb - 1);
                 }
-                if (rng.nextDouble() > 0.08 && p.get(lw - 1, 1, z) == null && !(dx0 >= 0 && dx1 >= lw - 2)) {
-                    p.set(lw - 1, 1, z, pickets);
+                if (p.get(lw - 1, 1, z) == null && !(dx0 >= 0 && dx1 >= lw - 2)) {
+                    picket(p, lw - 1, z, "z", paint, z % 4 == 0 || z == sb - 1);
                 }
             }
             if (rng.nextBoolean()) {
-                p.set(doorX, 1, 0, "minecraft:pale_oak_fence_gate[facing=north,open=" + rng.nextBoolean() + "]");
+                p.set(doorX, 1, 0, "yd_picket_gate_" + paint + (rng.nextBoolean() ? "_open" : "") + "[axis=x]");
             }
         }
+    }
+
+    /** One cell of picket fence along an axis: a post, a run of pickets, or a run with pickets kicked out. */
+    private void picket(Placer p, int x, int z, String axis, String paint, boolean post) {
+        double r = rng.nextDouble();
+        if (r < 0.05) {
+            return;
+        }
+        String kind = post ? "yd_picket_post_" : r < 0.15 ? "yd_picket_" + paint + "_broken" : "yd_picket_";
+        p.set(x, 1, z, kind + (kind.endsWith("_") ? paint : "") + "[axis=" + axis + "]");
     }
 
     /** AC unit, gas meter, the side gate. */
@@ -350,15 +359,17 @@ final class Homes {
                 if (z < 0) {
                     continue;
                 }
-                p.set(x, 0, z, "minecraft:spruce_planks");
-                boolean rail = (x == doorX - 2 || x == doorX + 2 || z == sb - 3) && !(x == doorX && z == sb - 3);
-                if (rail && rng.nextDouble() < 0.85) {
-                    p.set(x, 1, z, "minecraft:spruce_fence");
+                p.set(x, 0, z, "ext_porch_boards");
+                boolean side = x == doorX - 2 || x == doorX + 2, front = z == sb - 3;
+                if (side && front) {
+                    p.set(x, 1, z, "yd_deck_post");
+                } else if ((side || front) && !(x == doorX && front) && rng.nextDouble() < 0.9) {
+                    p.set(x, 1, z, "yd_deck_rail[axis=" + (front ? "x" : "z") + "]");
                 }
             }
         }
         if (sb - 4 >= 0) {
-            p.set(doorX, 0, sb - 4, "minecraft:spruce_slab[type=top]");
+            p.set(doorX, 0, sb - 4, "ext_stairs_wood[facing=south]");
         }
         if (rng.nextBoolean()) {
             p.setIfAir(doorX + 1, 1, sb - 2, "store_chair[facing=north]");
@@ -524,7 +535,7 @@ final class Homes {
     private void alleyGarage(Placer p, int lw, int ld, House.Palette pal) {
         int gw = Math.min(7, lw - 2), gd = 7;
         int x0 = lw - gw - 1, z0 = ld - gd;
-        String wall = rng.nextBoolean() ? pal.wall() : pick("siding_white", "barn_grey", "corrugated_grey", "minecraft:spruce_planks");
+        String wall = rng.nextBoolean() ? pal.wall() : pick("siding_white", "barn_grey", "corrugated_grey", "barn_red");
         boolean open = rng.nextDouble() < 0.4;
         for (int x = x0; x < x0 + gw; x++) {
             for (int z = z0; z < z0 + gd; z++) {
@@ -533,9 +544,9 @@ final class Homes {
                 for (int y = 1; y <= 3; y++) {
                     p.set(x, y, z, edge ? wall : "air");
                 }
-                p.set(x, 4, z, "minecraft:spruce_slab[type=bottom]");
             }
         }
+        tinRoof(p, x0, z0, x0 + gw - 1, z0 + gd - 1, 4);
         for (int x = x0 + 1; x < x0 + gw - 1; x++) {
             for (int y = 1; y <= 3; y++) {
                 p.set(x, y, z0 + gd - 1, open && y < 3 ? "air" : "garage_door[facing=south]");
@@ -543,11 +554,10 @@ final class Homes {
             // the apron out to the alley
             p.set(x, 0, ld - 1, "floor_concrete");
         }
-        p.set(x0 + 1, 1, z0, "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]");
-        p.set(x0 + 1, 2, z0, "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]");
-        p.set(x0 + gw - 2, 1, z0 + 1, "minecraft:barrel[facing=up,loot=hardware]");
-        p.set(x0 + gw - 2, 1, z0 + 2, rng.nextBoolean() ? "store_paint_cans" : "minecraft:barrel[facing=up,loot=storage]");
-        p.set(x0 + 1, 1, z0 + 2, "minecraft:crafting_table");
+        Doors.abandoned(p, rng, x0 + 1, 1, z0, "yd_shed_door", "north", "left");
+        p.set(x0 + gw - 2, 1, z0 + 1, "home_garage_shelf[facing=west,loot=hardware]");
+        p.set(x0 + gw - 2, 1, z0 + 2, rng.nextBoolean() ? "store_paint_cans" : "fm_drum[loot=storage]");
+        p.set(x0 + 1, 1, z0 + 2, "home_workbench[facing=east]");
         if (rng.nextDouble() < 0.4) {
             p.car(x0 + gw / 2.0, 1, z0 + gd / 2.0, 0, 0, 5.2, rng.nextLong());
         }
@@ -562,10 +572,11 @@ final class Homes {
         double r = rng.nextDouble();
         int fz = Math.max(1, houseBack - 3);
         if (r < mix.privacy()) {
-            Kit.privacyFence(p, rng, 0, fz, 0, ld - 1);
-            Kit.privacyFence(p, rng, lw - 1, fz, lw - 1, ld - 1);
+            String wood = pick("cedar", "grey", "grey", "brown");
+            Kit.privacyFence(p, rng, 0, fz, 0, ld - 1, wood);
+            Kit.privacyFence(p, rng, lw - 1, fz, lw - 1, ld - 1, wood);
             if (!mix.alleyGarage()) {
-                Kit.privacyFence(p, rng, 0, ld - 1, lw - 1, ld - 1);
+                Kit.privacyFence(p, rng, 0, ld - 1, lw - 1, ld - 1, wood);
             }
         } else if (r < mix.privacy() + mix.chainlink()) {
             Kit.chainlink(p, rng, 0, fz, 0, ld - 1, 1);
@@ -631,53 +642,55 @@ final class Homes {
         switch (kind) {
             case 0 -> shed(p, x, z, fw, fd);
             case 1 -> {
-                // two A-frame legs, a beam, two swings on chains; one swing hanging by a single chain
+                // the swing set: the A-frames at each end, three bays under the bar, a swing snapped
                 for (int y = 1; y <= 3; y++) {
-                    p.set(x, y, z + 1, "minecraft:iron_bars");
-                    p.set(x + 4, y, z + 1, "minecraft:iron_bars");
+                    p.set(x, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
+                    p.set(x + 4, y, z + 1, "sc_swing_leg_" + (y - 1) + "[axis=x]");
                 }
-                for (int i = 0; i < 5; i++) {
-                    p.set(x + i, 4, z + 1, "minecraft:iron_chain[axis=x]");
+                for (int i = 1; i <= 3; i++) {
+                    double r = rng.nextDouble();
+                    if (r < 0.75) {
+                        p.set(x + i, 1, z + 1, (r < 0.6 ? "sc_swing_seat" : "sc_swing_snapped") + "[axis=x]");
+                        p.set(x + i, 2, z + 1, "sc_swing_chain[axis=x]");
+                        p.set(x + i, 3, z + 1, "sc_swing_top[axis=x]");
+                    } else {
+                        p.set(x + i, 3, z + 1, (r < 0.9 ? "sc_swing_wrapped" : "sc_swing_bar") + "[axis=x]");
+                    }
+                    p.set(x + i, 0, z + 1, "minecraft:coarse_dirt");
                 }
-                p.set(x + 1, 3, z + 1, "minecraft:iron_chain[axis=y]");
-                p.set(x + 1, 2, z + 1, "minecraft:iron_chain[axis=y]");
-                p.set(x + 1, 1, z + 1, "minecraft:dark_oak_pressure_plate");
-                p.set(x + 3, 3, z + 1, "minecraft:iron_chain[axis=y]");
-                if (rng.nextBoolean()) {
-                    p.set(x + 3, 2, z + 1, "minecraft:iron_chain[axis=y]");
-                    p.set(x + 3, 1, z + 1, "minecraft:dark_oak_pressure_plate");
-                }
-                p.set(x + 2, 0, z + 1, "minecraft:coarse_dirt");
             }
             case 2 -> {
-                // an above-ground pool, green and full of leaves
-                String rim = pick("minecraft:light_blue_terracotta", "minecraft:cyan_terracotta", "siding_blue", "minecraft:white_terracotta");
+                // an above-ground pool, its walls printed and faded, green and full of leaves
+                String c = rng.nextBoolean() ? "blue" : "white";
+                int ladder = rng.nextInt(3);
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        boolean edge = i == 0 || j == 0 || i == 4 || j == 4;
-                        boolean corner = (i == 0 || i == 4) && (j == 0 || j == 4);
-                        if (corner) {
-                            continue;
-                        }
+                        boolean we = i == 0 || i == 4, ns = j == 0 || j == 4;
                         p.set(x + i, 0, z + j, "minecraft:sand");
-                        p.set(x + i, 1, z + j, edge ? rim : "minecraft:water");
-                        if (!edge && rng.nextDouble() < 0.3) {
-                            p.set(x + i, 2, z + j, rng.nextBoolean() ? "minecraft:lily_pad" : "minecraft:leaf_litter[segment_amount=2,facing=north]");
+                        String b;
+                        if (we && ns) {
+                            b = "yd_pool_corner_" + c + "[facing=" + (i == 0 ? (j == 0 ? "north" : "west") : (j == 0 ? "east" : "south")) + "]";
+                        } else if (we || ns) {
+                            String f = j == 0 ? "north" : j == 4 ? "south" : i == 0 ? "west" : "east";
+                            b = (j == 4 && i == 1 + ladder ? "yd_pool_ladder_" : "yd_pool_edge_") + c + "[facing=" + f + "]";
+                        } else {
+                            b = rng.nextDouble() < 0.25 ? "yd_pool_water_b" : "yd_pool_water";
                         }
+                        p.set(x + i, 1, z + j, b);
                     }
                 }
             }
             case 3 -> {
+                // a trampoline: the frame and the pad reach over the eight cells round the middle
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
-                        boolean corner = (i != 1) && (j != 1);
-                        p.set(x + i, 1, z + j, corner ? "minecraft:iron_bars" : "minecraft:polished_blackstone_slab[type=top]");
+                        p.set(x + i, 1, z + j, "air");
                     }
                 }
-                p.set(x + 1, 1, z + 1, rng.nextDouble() < 0.3 ? "minecraft:air" : "minecraft:polished_blackstone_slab[type=top]");
+                p.set(x + 1, 1, z + 1, rng.nextDouble() < 0.4 ? "yd_tramp_torn" : "yd_tramp");
             }
             case 4 -> {
-                String paving = pick("minecraft:smooth_stone", "minecraft:bricks", "sidewalk", "minecraft:polished_andesite");
+                String paving = pick("pt_stone_flags", "pt_brick", "sidewalk", "floor_concrete");
                 p.fill(x, 0, z, x + 3, 0, z + 3, paving);
                 p.set(x, 1, z, "store_grill[facing=south]");
                 p.set(x + 2, 1, z + 2, "store_table");
@@ -705,70 +718,74 @@ final class Homes {
                     }
                 }
                 if (rng.nextBoolean()) {
-                    p.set(x, 1, z, "minecraft:spruce_fence");
-                    p.set(x, 2, z, "minecraft:hay_block");
-                    p.set(x, 3, z, "minecraft:carved_pumpkin[facing=south]");
+                    p.set(x, 1, z, "fm_scarecrow_lo[facing=south]");
+                    p.set(x, 2, z, "fm_scarecrow_hi[facing=south]");
                 }
             }
             case 6 -> {
-                for (int y = 1; y <= 3; y++) {
-                    p.set(x, y, z, "minecraft:spruce_fence");
-                    p.set(x + 6, y, z, "minecraft:spruce_fence");
-                }
+                // the washing line between its T-posts, a sheet or the shirts still pegged out
+                p.set(x, 1, z, "yd_line_post[axis=x]");
+                p.set(x + 6, 1, z, "yd_line_post[axis=x]");
                 for (int i = 1; i < 6; i++) {
-                    p.set(x + i, 3, z, "minecraft:iron_chain[axis=x]");
-                }
-                if (rng.nextBoolean()) {
-                    p.setIfAir(x + 2, 1, z, "minecraft:white_carpet");
+                    double r = rng.nextDouble();
+                    p.set(x + i, 1, z, (r < 0.15 ? "yd_line_sheet" : r < 0.3 ? "yd_line_shirts" : "yd_line") + "[axis=x]");
                 }
             }
             case 7 -> {
-                // a dog house, its chain still staked out front
-                p.fill(x, 1, z, x + 1, 1, z + 2, "minecraft:spruce_planks");
-                p.set(x, 1, z, "minecraft:air");
-                p.fill(x, 2, z, x + 1, 2, z + 2, "minecraft:spruce_slab[type=bottom]");
+                // a dog house, its chain still staked out front, the bowl
+                p.set(x, 1, z + 1, "yd_doghouse_" + (rng.nextBoolean() ? "red" : "white") + "[facing=north]");
                 p.set(x, 0, z, "minecraft:coarse_dirt");
-                p.set(x + 1, 1, z, rng.nextBoolean() ? "minecraft:iron_chain[axis=z]" : "minecraft:spruce_planks");
+                p.set(x + 1, 1, z, rng.nextBoolean() ? "yd_dog_stake[facing=" + pick("north", "east", "south", "west") + "]" : "yd_dog_bowl");
             }
             case 8 -> {
+                // a sandbox, its timber edge round it, a bucket left in it
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
-                        boolean edge = i != 1 || j != 1;
-                        p.set(x + i, 0, z + j, "minecraft:sand");
-                        if (edge && (i == 0 || i == 2 || j == 0 || j == 2) && rng.nextDouble() < 0.6) {
-                            p.set(x + i, 1, z + j, "minecraft:oak_slab[type=bottom]");
+                        boolean n = j == 0, s = j == 2, w = i == 0, e = i == 2;
+                        String b;
+                        if ((n || s) && (w || e)) {
+                            b = "sc_sand_corner[facing=" + (n ? (w ? "north" : "east") : (e ? "south" : "west")) + "]";
+                        } else if (n || s || w || e) {
+                            b = "sc_sand_edge[facing=" + (n ? "north" : s ? "south" : w ? "west" : "east") + "]";
+                        } else {
+                            b = "sc_sand";
                         }
+                        p.set(x + i, 0, z + j, b);
+                        p.set(x + i, 1, z + j, "air");
                     }
                 }
-                p.set(x + 1, 1, z + 1, rng.nextBoolean() ? "minecraft:red_carpet" : "minecraft:yellow_carpet");
+                p.set(x + 1, 1, z + 1, "sc_bucket[facing=" + pick("north", "east", "south", "west") + "]");
             }
             case 9 -> {
+                // a fire pit: the ring of stones, the last fire's logs, a log and a stump to sit on
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
-                        p.set(x + i, 0, z + j, (i == 1 && j == 1) ? "minecraft:coarse_dirt" : "minecraft:cobblestone");
+                        p.set(x + i, 0, z + j, (i == 1 && j == 1) || rng.nextDouble() < 0.5 ? "minecraft:coarse_dirt" : "minecraft:gravel");
                     }
                 }
-                p.set(x + 1, 1, z + 1, "minecraft:campfire[lit=false]");
-                p.set(x, 1, z + 1, "minecraft:spruce_stairs[facing=east]");
-                p.set(x + 2, 1, z + 1, "minecraft:spruce_log[axis=z]");
+                p.set(x + 1, 1, z + 1, "yd_firering");
+                p.set(x + 1, 2, z + 1, "air");
+                p.set(x, 1, z + 2, "cp_log[facing=north]");
+                p.set(x + 2, 1, z, "fm_chop_block");
             }
             default -> {
                 if (rng.nextDouble() < 0.6) {
                     p.fill(x, 0, z, x + 3, 0, z + 6, "minecraft:coarse_dirt");
                     p.car(x + 2.0, 1, z + 3.5, rng.nextBoolean() ? 0 : 180, 0, 5.8, rng.nextLong());
                 } else {
-                    // a boat on blocks under a tarp
-                    for (int j = 1; j < 6; j++) {
-                        p.set(x + 1, 1, z + j, "minecraft:cobblestone_wall");
-                        p.set(x + 2, 1, z + j, "minecraft:cobblestone_wall");
-                        p.set(x + 1, 2, z + j, j == 1 ? "minecraft:white_terracotta" : "tarp_green");
-                        p.set(x + 2, 2, z + j, j == 1 ? "minecraft:white_terracotta" : "tarp_green");
+                    // a boat dragged up the yard for a winter that never ended, the grass grown up round her
+                    p.fill(x, 0, z, x + 3, 0, z + 6, "minecraft:coarse_dirt");
+                    for (int j = 0; j <= 6; j += 2) {
+                        p.setIfAir(x, 1, z + j, "minecraft:short_grass");
+                        p.setIfAir(x + 3, 1, z + j + 1, "minecraft:short_grass");
                     }
+                    p.vehicle(x + 2.0, 1, z + 3.5, rng.nextBoolean() ? 0 : 180,
+                            "=" + pick("boat_skiff", "boat_bowrider", "boat_console") + "@" + pick("abandoned", "abandoned", "wrecked"), rng.nextLong());
                 }
             }
         }
         if (rng.nextDouble() < 0.1 && pal != null) {
-            p.setIfAir(x + fw, 1, z, "minecraft:composter");
+            p.setIfAir(x + fw, 1, z, "yd_compost[facing=" + pick("north", "east", "south", "west") + "]");
         }
     }
 
@@ -778,20 +795,28 @@ final class Homes {
         for (int i = 0; i < sw; i++) {
             for (int j = 0; j < sd; j++) {
                 boolean edge = i == 0 || j == 0 || i == sw - 1 || j == sd - 1;
-                p.set(x + i, 0, z + j, "minecraft:spruce_planks");
+                p.set(x + i, 0, z + j, "floor_boards");
                 for (int y = 1; y <= 2; y++) {
                     p.set(x + i, y, z + j, edge ? wall : "air");
                 }
-                p.set(x + i, 3, z + j, j == 0 || j == sd - 1 ? "minecraft:spruce_slab[type=bottom]" : "minecraft:spruce_planks");
             }
         }
-        boolean open = rng.nextBoolean();
-        p.set(x + 1, 1, z, "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=" + open + "]");
-        p.set(x + 1, 2, z, "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=" + open + "]");
-        p.set(x + sw - 2, 1, z + sd - 2, "minecraft:barrel[facing=up,loot=hardware]");
-        p.set(x + sw - 2, 1, z + 1, rng.nextBoolean() ? "store_paint_cans" : "minecraft:barrel[facing=up,loot=storage]");
+        tinRoof(p, x, z, x + sw - 1, z + sd - 1, 3);
+        Doors.abandoned(p, rng, x + 1, 1, z, "yd_shed_door", "south", "left");
+        p.set(x + sw - 2, 1, z + sd - 2, "home_garage_shelf[facing=north,loot=hardware]");
+        p.set(x + sw - 2, 1, z + 1, rng.nextBoolean() ? "store_paint_cans" : "home_mower[facing=west]");
         if (rng.nextBoolean()) {
             p.set(x + 1, 1, z + sd - 2, "tire[axis=x]");
+        }
+    }
+
+    /** A tin roof from (x0, z0) to (x1, z1) at y: the sheets on their purlins, the edges reaching over the walls. */
+    private static void tinRoof(Placer p, int x0, int z0, int x1, int z1, int y) {
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                String sides = (z == z0 ? "n" : z == z1 ? "s" : "") + (x == x0 ? "w" : x == x1 ? "e" : "");
+                p.set(x, y, z, "cp_tw_roof" + (sides.isEmpty() ? "" : "_" + sides));
+            }
         }
     }
 

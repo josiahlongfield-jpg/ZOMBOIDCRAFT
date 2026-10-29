@@ -1,0 +1,419 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pt_stone_rough": "zomboidcraft:block/city/pt_stone_rough",
+    "yd_ash": "zomboidcraft:block/city/yd_ash",
+    "particle": "zomboidcraft:block/city/yd_ash"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        1.5
+      ],
+      "to": [
+        14.5,
+        0.3,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_ash"
+        },
+        "south": {
+          "texture": "#yd_ash"
+        },
+        "east": {
+          "texture": "#yd_ash"
+        },
+        "west": {
+          "texture": "#yd_ash"
+        },
+        "up": {
+          "texture": "#yd_ash"
+        },
+        "down": {
+          "texture": "#yd_ash",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.8,
+        0,
+        6.4
+      ],
+      "to": [
+        16.6,
+        2.2,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            0,
+            13.8,
+            4.800000000000001,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            11.2,
+            13.8,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            11.2,
+            6.4,
+            16,
+            9.6
+          ]
+        },
+        "down": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            11.2,
+            6.4,
+            16,
+            9.6
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          14.2,
+          0,
+          8.0
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        9.58,
+        0,
+        10.78
+      ],
+      "to": [
+        15.18,
+        3.0,
+        13.98
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.38,
+          0,
+          12.38
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        4.8,
+        0,
+        12.6
+      ],
+      "to": [
+        11.2,
+        2.2,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.0,
+          0,
+          14.2
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        1.22,
+        0,
+        10.78
+      ],
+      "to": [
+        6.02,
+        3.0,
+        13.98
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.62,
+          0,
+          12.38
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        -1.0,
+        0,
+        6.4
+      ],
+      "to": [
+        4.6,
+        2.2,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            10.4,
+            13.8,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            0,
+            13.8,
+            5.6,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            0,
+            6.4,
+            5.6,
+            9.6
+          ]
+        },
+        "down": {
+          "texture": "#pt_stone_rough",
+          "uv": [
+            0,
+            6.4,
+            5.6,
+            9.6
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.8,
+          0,
+          8.0
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        0.42,
+        0,
+        2.02
+      ],
+      "to": [
+        6.82,
+        3.0,
+        5.22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.62,
+          0,
+          3.62
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        5.6,
+        0,
+        0.2
+      ],
+      "to": [
+        10.4,
+        2.2,
+        3.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.0,
+          0,
+          1.8
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        9.58,
+        0,
+        2.02
+      ],
+      "to": [
+        15.18,
+        3.0,
+        5.22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.38,
+          0,
+          3.62
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

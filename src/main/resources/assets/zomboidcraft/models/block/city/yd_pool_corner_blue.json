@@ -1,0 +1,1100 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "yd_pool_blue": "zomboidcraft:block/city/yd_pool_blue",
+    "yd_pool_ledge": "zomboidcraft:block/city/yd_pool_ledge",
+    "yd_pool_liner": "zomboidcraft:block/city/yd_pool_liner",
+    "yd_pool_water": "zomboidcraft:block/city/yd_pool_water",
+    "particle": "zomboidcraft:block/city/yd_pool_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        12.9,
+        0,
+        0.0
+      ],
+      "to": [
+        16,
+        19,
+        0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            12.9,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            15.4,
+            0,
+            16.0,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            0.0,
+            0,
+            0.6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_blue"
+        },
+        "down": {
+          "texture": "#yd_pool_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.9,
+        0.5,
+        0.6
+      ],
+      "to": [
+        16,
+        18.6,
+        0.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            12.9,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            15.2,
+            0,
+            15.4,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0.6,
+            0,
+            0.8,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      }
+    },
+    {
+      "from": [
+        12.9,
+        19,
+        -1.0
+      ],
+      "to": [
+        16,
+        19.6,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.9,
+            0,
+            16,
+            0.6000000000000014
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.8,
+            0,
+            16,
+            0.6000000000000014
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.2,
+            0.6000000000000014
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.9,
+            0,
+            16,
+            3.2
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.9,
+            12.8,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        0,
+        12.9
+      ],
+      "to": [
+        0.6,
+        19,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            15.4,
+            0,
+            16.0,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            0.0,
+            0,
+            0.6,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            12.9,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_blue"
+        },
+        "down": {
+          "texture": "#yd_pool_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        0.5,
+        12.9
+      ],
+      "to": [
+        0.8,
+        18.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            15.2,
+            0,
+            15.4,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0.6,
+            0,
+            0.8,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            12.9,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      }
+    },
+    {
+      "from": [
+        -1.0,
+        19,
+        12.9
+      ],
+      "to": [
+        2.2,
+        19.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.8,
+            0,
+            16,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.2,
+            0.6000000000000014
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.0999999999999996,
+            0.6000000000000014
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.9,
+            0,
+            16,
+            0.6000000000000014
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            12.9,
+            3.2,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0,
+            0,
+            3.2,
+            3.0999999999999996
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.573,
+        0,
+        1.502
+      ],
+      "to": [
+        13.416,
+        19,
+        2.102
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            13.898,
+            0,
+            14.498,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            1.502,
+            0,
+            2.102,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_blue"
+        },
+        "down": {
+          "texture": "#yd_pool_blue"
+        }
+      },
+      "rotation": {
+        "origin": [
+          9.995,
+          0,
+          1.502
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        6.573,
+        0.5,
+        2.102
+      ],
+      "to": [
+        13.416,
+        18.6,
+        2.302
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            13.698,
+            0,
+            13.898,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            2.102,
+            0,
+            2.302,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      },
+      "rotation": {
+        "origin": [
+          9.995,
+          0,
+          1.502
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        6.573,
+        19,
+        0.502
+      ],
+      "to": [
+        13.416,
+        19.6,
+        3.702
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            0.6000000000000014
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.298,
+            0,
+            15.498,
+            0.6000000000000014
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0.502,
+            0,
+            3.702,
+            0.6000000000000014
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge"
+        },
+        "down": {
+          "texture": "#yd_pool_ledge"
+        }
+      },
+      "rotation": {
+        "origin": [
+          9.995,
+          0,
+          1.502
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        1.482,
+        0,
+        4.904
+      ],
+      "to": [
+        8.325,
+        19,
+        5.504
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            7.675000000000001,
+            0,
+            14.518,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            1.482,
+            0,
+            8.325,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            10.496,
+            0,
+            11.096,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            4.904,
+            0,
+            5.504,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_blue"
+        },
+        "down": {
+          "texture": "#yd_pool_blue"
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.904,
+          0,
+          4.904
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        1.482,
+        0.5,
+        5.504
+      ],
+      "to": [
+        8.325,
+        18.6,
+        5.704
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            7.675000000000001,
+            0,
+            14.518,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            1.482,
+            0,
+            8.325,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            10.296,
+            0,
+            10.496,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            5.504,
+            0,
+            5.704,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.904,
+          0,
+          4.904
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        1.482,
+        19,
+        3.904
+      ],
+      "to": [
+        8.325,
+        19.6,
+        7.104
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            7.675000000000001,
+            0,
+            14.518,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            1.482,
+            0,
+            8.325,
+            0.6000000000000014
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            8.896,
+            0,
+            12.096,
+            0.6000000000000014
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            3.904,
+            0,
+            7.104,
+            0.6000000000000014
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge"
+        },
+        "down": {
+          "texture": "#yd_pool_ledge"
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.904,
+          0,
+          4.904
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        1.502,
+        0,
+        6.573
+      ],
+      "to": [
+        2.102,
+        19,
+        13.416
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            13.898,
+            0,
+            14.498,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            1.502,
+            0,
+            2.102,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_blue",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_blue"
+        },
+        "down": {
+          "texture": "#yd_pool_blue"
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.502,
+          0,
+          9.995
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        2.102,
+        0.5,
+        6.573
+      ],
+      "to": [
+        2.302,
+        18.6,
+        13.416
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            13.698,
+            0,
+            13.898,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            2.102,
+            0,
+            2.302,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_liner",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_liner"
+        },
+        "down": {
+          "texture": "#yd_pool_liner"
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.502,
+          0,
+          9.995
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        0.502,
+        19,
+        6.573
+      ],
+      "to": [
+        3.702,
+        19.6,
+        13.416
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            12.298,
+            0,
+            15.498,
+            0.6000000000000014
+          ]
+        },
+        "south": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            0.502,
+            0,
+            3.702,
+            0.6000000000000014
+          ]
+        },
+        "east": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            2.5839999999999996,
+            0,
+            9.427,
+            0.6000000000000014
+          ]
+        },
+        "west": {
+          "texture": "#yd_pool_ledge",
+          "uv": [
+            6.573,
+            0,
+            13.416,
+            0.6000000000000014
+          ]
+        },
+        "up": {
+          "texture": "#yd_pool_ledge"
+        },
+        "down": {
+          "texture": "#yd_pool_ledge"
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.502,
+          0,
+          9.995
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        12.0,
+        15,
+        1.6
+      ],
+      "to": [
+        16,
+        15.2,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    },
+    {
+      "from": [
+        5.6,
+        15,
+        4
+      ],
+      "to": [
+        16,
+        15.2,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    },
+    {
+      "from": [
+        2.3,
+        15,
+        8
+      ],
+      "to": [
+        16,
+        15.2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        15,
+        12
+      ],
+      "to": [
+        16,
+        15.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water"
+        },
+        "south": {
+          "texture": "#yd_pool_water",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    }
+  ]
+}

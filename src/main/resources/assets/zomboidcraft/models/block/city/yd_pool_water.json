@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "yd_pool_water": "zomboidcraft:block/city/yd_pool_water",
+    "particle": "zomboidcraft:block/city/yd_pool_water"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        15.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_pool_water",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_pool_water",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_pool_water",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#yd_pool_water",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#yd_pool_water"
+        },
+        "down": {
+          "texture": "#yd_pool_water"
+        }
+      }
+    }
+  ]
+}
